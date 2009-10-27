@@ -1,32 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Query Statistics	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Query Statistics</h1><p><font color="#cc0000">This topic applies to Java version only</font> </p><p>QueryStarted and
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="576" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java">
+    <head><title>Query Statistics	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Query Statistics</h1>
+                <p><font color="#cc0000">&#160;</font>
+                </p>
+                <p>QueryStarted and
 QueryFinished events can be used to gather various statistics about query
 execution.</p>
-
-<p>For example you can use queryStarted() and queryFinished() events to calculate query
+                <p>For example you can use queryStarted() and queryFinished() events to calculate query
 time, and activated() event to count objects activated in a query.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java version provides an example of query events usage in QueryStats class from tools package.</p>
-
-<p>In
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java version provides an example of query events usage in QueryStats class from tools package.</p>
+                    <p>In
 order to use QueryStats:</p>
-
-<ol><li>Connect a QueryStats object
-     to the ObjectContainer</li><p><code>QueryStats
-stats = new QueryStats();</code></p><p><code>stats.connect(db);</code></p><li>Execute your query</li><p><code>ObjectSet
-result = q.execute();</code></p><li>Get the metrics from the
-     QueryStats object</li><p><code>long
-executionTime = stats.executionTime();</code></p><p><code>int
-activationCount = stats.activationCount();</code></p><li>After the work is done you
-     can disconnect QueryStats from the ObjectContainer</li><p><code>stats.disconnect();</code></p></ol>
-
-</p><p MadCap:conditions="Primary:java" /></div>
-    </div>
-    
-  </body></html>
+                    <ol>
+                        <li>Connect a QueryStats object
+     to the ObjectContainer</li>
+                        <p><code>QueryStats
+stats = new QueryStats();</code>
+                        </p>
+                        <p><code>stats.connect(db);</code>
+                        </p>
+                        <li>Execute your query</li>
+                        <p><code>ObjectSet
+result = q.execute();</code>
+                        </p>
+                        <li>Get the metrics from the
+     QueryStats object</li>
+                        <p><code>long
+executionTime = stats.executionTime();</code>
+                        </p>
+                        <p><code>int
+activationCount = stats.activationCount();</code>
+                        </p>
+                        <li>After the work is done you
+     can disconnect QueryStats from the ObjectContainer</li>
+                        <p><code>stats.disconnect();</code>
+                        </p>
+                    </ol>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+            </div>
+        </div>
+    </body>
+</html>

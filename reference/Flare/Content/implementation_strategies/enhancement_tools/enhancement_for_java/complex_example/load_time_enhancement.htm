@@ -1,37 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Load Time Enhancement	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Load Time Enhancement</h1>
-
-
-<p><font color="#990000">This topic applies to Java version only</font> </p><p>The following code is used to store and retrieve
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1900" MadCap:lastWidth="1110">
+    <head><title>Load Time Enhancement	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Load Time Enhancement</h1>
+                <p>The following code is used to store and retrieve
 MaintenanceQueue objects containing references to Car, Pilot and Id objects:</p>
-
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/main.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/configuration.flsnp" />
-<p>Please, run this method to see that in TA mode all the
+                <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/main.flsnp" />
+                <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/configuration.flsnp" />
+                <p>Please, run this method to see that in TA mode all the
 objects are fully activated immediately. Also NQ info reports that the queries
 run dynamically optimized.</p>
-
-<p>In order to use TA advantages (lazy activation), we launch the application through an instrumenting classloader. The following configuration options are available:</p><ul><li>A <i>ClassFilter</i> specifies which classes should be instrumented. In the example, we are using a filter that will only accept classes whose fully qualified name starts with a given prefix. The instrumentation API already comes with a variety of other filter implementations, and it's easy to create custom filters.</li><li>A sequence of <i>ClassEdits</i>. A ClassEdit is a single instrumentation step. In the example, we are applying two steps: First, we preoptimize all Native Query Predicates, then we instrument for Transparent Activation. Note that the order of steps is significant: Switching the order would leave the generated NQ optimization code unaware of TA. The db4otools package provides a convenience launcher with a hardwired sequence for combined NQ/TA instrumentation.</li><li>The <i>classpath</i> for the instrumented classes, represented by a sequence of URLs. This must contain all classes "reachable" from the classes to be instrumented - the easiest way probably is to provide the full application class path here. The classes to be instrumented need not be listed here, they are implicitly added to this classpath, anyway.  </li></ul>
-
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerStarter.java/main.flsnp" />
-<p>Try this code now - if everything is correct you will see
+                <p>In order to use TA advantages (lazy activation), we launch the application through an instrumenting classloader. The following configuration options are available:</p>
+                <ul>
+                    <li>A <i>ClassFilter</i> specifies which classes should be instrumented. In the example, we are using a filter that will only accept classes whose fully qualified name starts with a given prefix. The instrumentation API already comes with a variety of other filter implementations, and it's easy to create custom filters.</li>
+                    <li>A sequence of <i>ClassEdits</i>. A ClassEdit is a single instrumentation step. In the example, we are applying two steps: First, we preoptimize all Native Query Predicates, then we instrument for Transparent Activation. Note that the order of steps is significant: Switching the order would leave the generated NQ optimization code unaware of TA. The db4otools package provides a convenience launcher with a hardwired sequence for combined NQ/TA instrumentation.</li>
+                    <li>The <i>classpath</i> for the instrumented classes, represented by a sequence of URLs. This must contain all classes "reachable" from the classes to be instrumented - the easiest way probably is to provide the full application class path here. The classes to be instrumented need not be listed here, they are implicitly added to this classpath, anyway.  </li>
+                </ul>
+                <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerStarter.java/main.flsnp" />
+                <p>Try this code now - if everything is correct you will see
 that the objects are getting activated as they are requested. NQ info also
 should say that the queries are preoptimized.</p>
-
-
-<p>Note that for load time instrumentation to work, the application code has to make sure db4o operates on the appropriate classloader for the persistent model classes. </p></div>
-    </div>
-    
-
+                <p>Note that for load time instrumentation to work, the application code has to make sure db4o operates on the appropriate classloader for the persistent model classes. </p>
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="enhancementexamplejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-</body></html>
+    </body>
+</html>

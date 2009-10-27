@@ -1,19 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Using SSL For Client-Server Communication	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Using SSL For Client-Server Communication			</title></head>
+<body>   <div class="CommonContent">
       <div class="CommonContentArea">
         <h1>Using SSL For Client-Server Communication</h1>
-<P><FONT color=#990000>This topic applies to Java version only</FONT></P>
-<P>With the default settings db4o client-server communication is not encrypted and thus can potentially be a dangerous security hole. This can be fixed with a <a href="../pluggable_sockets.htm" class="wikiLink">new pluggable socket</a> client/server implementation. Let's look at a simple example - we will use SSL protocol to protect our communication channel.</P>
-<P>Basically the task is to create a NativeSocketFactory implementation that will create sockets able to communicate through an encrypted channel. In Java these would be SSLServerSocket and SSLSocket.</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SecureSocketFactory.java/SecureSocketFactory.java.flsnp" /><P>In order for this class to work correctly we need to provide a correctly initialized SSLContext. For those who are not familiar with Java SSL implementation it is recommended to get acquainted with Java documentation for SSLContext, TrustManager, KeyStore and KeyManagerFactory APIs.</P>
-<P>For encryption purposes we will need to create a new keystore. This can be done with the following command:</P>
-<P><code>keytool -genkey -keystore SSLcert -storepass password</code></P>
-<P>This command creates a file SSLcert, which contains a keystore protected by "password" password. For a test keystore you can provide any answers to the keytool questions and leave the key password the same as the keystore password. For easy access copy the SSLcert file into your projects directory.</P>
-<P>Now we are ready to create a SecureSocketFactory</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/createSecureSocketFactory.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/createTrustManager.flsnp" /><P>Starting a server and opening client connections with the new socket factory is as simple as usual:</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/main.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/storeObjectsRemotely.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/queryRemoteServer.flsnp" /></div>
+ <p>With the default settings db4o client-server communication is not encrypted and thus can potentially be a dangerous security hole. This can be fixed with a <a href="../pluggable_sockets.htm" class="wikiLink">new pluggable socket</a> client/server implementation. Let's look at a simple example - we will use SSL protocol to protect our communication channel.</p>
+ <p>Basically the task is to create a NativeSocketFactory implementation that will create sockets able to communicate through an encrypted channel. In Java these would be SSLServerSocket and SSLSocket.</p>
+ <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SecureSocketFactory.java/SecureSocketFactory.java.flsnp" /><p>In order for this class to work correctly we need to provide a correctly initialized SSLContext. For those who are not familiar with Java SSL implementation it is recommended to get acquainted with Java documentation for SSLContext, TrustManager, KeyStore and KeyManagerFactory APIs.</p>
+ <p>For encryption purposes we will need to create a new keystore. This can be done with the following command:</p>
+ <p><code>keytool -genkey -keystore SSLcert -storepass password</code></p>
+ <p>This command creates a file SSLcert, which contains a keystore protected by "password" password. For a test keystore you can provide any answers to the keytool questions and leave the key password the same as the keystore password. For easy access copy the SSLcert file into your projects directory.</p>
+ <p>Now we are ready to create a SecureSocketFactory</p>
+ <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/createSecureSocketFactory.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/createTrustManager.flsnp" /><p>Starting a server and opening client connections with the new socket factory is as simple as usual:</p>
+ <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/main.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/storeObjectsRemotely.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/queryRemoteServer.flsnp" /></div>
     </div>
     
 

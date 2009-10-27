@@ -1,34 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Java enumerations	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Java enumerations</h1><p><font color="#990000">This topic applies to Java version only</font>   </p>
-<p MadCap:conditions="Primary.Java">
-
-<p>Enumerated types were brought into Java with the JDK 1.5 release. In fact they represent a class with static fields similar to the one reviewed in the <a href="static_fields_api.htm" class="wikiLink">Static fields paragraph</a>.</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/Qualification.java/Qualification.java.flsnp" />
-<p>db4o takes care about storing enumeration objects automatically without any additional settings:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/setPilots.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/checkPilots.flsnp" />
-<p>Another specific feature of enums in db4o: deletion is not possible:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/deletePilots.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/checkPilots.flsnp" />
-<p>Deletion of references does not automatically delete the enum. Even explicit deletion does not work:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/deleteQualification.flsnp" />
-<p>Enum update works in the same way as for normal static objects - updated enum should be explicitly saved to database (#set(enum)).</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/updateQualification.flsnp" />
-<p>You can use either build-in Java enums or write your own. Db4o will take care of keeping object references unique and database file as small as possible.</p>
-
-</p><p MadCap:conditions="Primary:java" /></div>
-    </div>
-
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="3043" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java">
+    <head><title>Java enumerations	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Java enumerations</h1>
+                <p><font color="#990000">&#160;</font>
+                </p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Enumerated types were brought into Java with the JDK 1.5 release. In fact they represent a class with static fields similar to the one reviewed in the <a href="static_fields_api.htm" class="wikiLink">Static fields paragraph</a>.</p>
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/Qualification.java/Qualification.java.flsnp" />
+                    <p>db4o takes care about storing enumeration objects automatically without any additional settings:</p>
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/setPilots.flsnp" />
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/checkPilots.flsnp" />
+                    <p>Another specific feature of enums in db4o: deletion is not possible:</p>
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/deletePilots.flsnp" />
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/checkPilots.flsnp" />
+                    <p>Deletion of references does not automatically delete the enum. Even explicit deletion does not work:</p>
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/deleteQualification.flsnp" />
+                    <p>Enum update works in the same way as for normal static objects - updated enum should be explicitly saved to database (#set(enum)).</p>
+                    <MadCap:snippetBlock src="../../../Resources/Snippets/Java enumerations/EnumExample.java/updateQualification.flsnp" />
+                    <p>You can use either build-in Java enums or write your own. Db4o will take care of keeping object references unique and database file as small as possible.</p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="enumsvb.zip">VB.NET </a>
@@ -38,7 +35,5 @@
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="enumsjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

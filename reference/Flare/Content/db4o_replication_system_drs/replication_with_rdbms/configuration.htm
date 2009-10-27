@@ -1,67 +1,63 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Configuration</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#hibernate.cfg.xml">hibernate.cfg.xml</a></li><li><a href ="#Manual Creation of dRS Tables And Columns ">Manual Creation of dRS Tables And Columns </a></li><li><a href ="#Hibernate Mapping Files ">Hibernate Mapping Files </a></li></ul></div></div></div><p><font color="#990000">This topic applies to Java version only</font> </p>
-<a name="hibernate.cfg.xml"></a><h2>hibernate.cfg.xml</h2>
-<p>Hibernate requires a xml configuration file (hibernate.cfg.xml) to run.
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1284" MadCap:lastWidth="1017">
+    <head><title>Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Configuration</h1>
+                <div id="TOC">
+                    <div id="TOCinner"><span class="TOCtitle">Contents</span>
+                        <div class="TOCcontents">
+                            <ul>
+                                <li><a href="#hibernate.cfg.xml">hibernate.cfg.xml</a>
+                                </li>
+                                <li><a href="#Manual Creation of dRS Tables And Columns ">Manual Creation of dRS Tables And Columns </a>
+                                </li>
+                                <li><a href="#Hibernate Mapping Files ">Hibernate Mapping Files </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p><font color="#990000">&#160;</font>
+                </p><a name="hibernate.cfg.xml"></a>
+                <h2>hibernate.cfg.xml</h2>
+                <p>Hibernate requires a xml configuration file (hibernate.cfg.xml) to run.
 In order to run dRS with Hibernate, the user has to set some parameters
 in the configuration file. </p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Configuration/hibernate.cfg.xml/hibernate.cfg.xml.flsnp" />/p>
+                <MadCap:snippetBlock src="../../Resources/Snippets/Configuration/hibernate.cfg.xml/hibernate.cfg.xml.flsnp" />/p&gt;
 
 <p>For the property "hibernate.connection.pool_size", dRS requires only 1
 connection to the RDBMS, increasing it will not have any effect.
 "hibernate.jdbc.batch_size" is set to 0 is for easier debugging. You
 may increase it to batch SQL statements to potentially increase
-performance.</p>
-
-<p>It is a MUST that "hibernate.hbm2ddl.auto" be set to "update" because
+performance.</p><p>It is a MUST that "hibernate.hbm2ddl.auto" be set to "update" because
 the system will create some extra tables to store the metadata for
-replication to work properly.<code></code></p>
-
-<p><code>&lt;property name="hibernate.hbm2ddl.auto"&gt;update&lt;/property&gt;</code> </p>
-<a name="Manual Creation of dRS Tables And Columns "></a><h2>Manual Creation of dRS Tables And Columns </h2>
-<p>In some situations, you may not have the privilege to create or alter
+replication to work properly.<code></code></p><p><code>&lt;property name="hibernate.hbm2ddl.auto"&gt;update&lt;/property&gt;</code></p><a name="Manual Creation of dRS Tables And Columns "></a><h2>Manual Creation of dRS Tables And Columns </h2><p>In some situations, you may not have the privilege to create or alter
 tables. You may need to ask your DBA to create the tables for you
-before using dRS.</p>
-<p>You can turn off the automatic creation of dRS tables and columns by
+before using dRS.</p><p>You can turn off the automatic creation of dRS tables and columns by
 changing the "hibernate.hbm2ddl.auto" property to "validate" in
 hibernate.cfg.xml. By doing so, dRS will not create or alter any
 tables. Rather, it will check the existence of the dRS tables before
-starting replication. </p>
-<p>If the required dRS tables do not exist, dRS will throw a RuntimeException notifying the user and the replication will halt. </p>
-<a name="Hibernate Mapping Files "></a><h2>Hibernate Mapping Files </h2>
-<p>Persisted Objects are objects that the user wants to store to the database, e.g. cars, pilots, purchase orders. 
+starting replication. </p><p>If the required dRS tables do not exist, dRS will throw a RuntimeException notifying the user and the replication will halt. </p><a name="Hibernate Mapping Files "></a><h2>Hibernate Mapping Files </h2><p>Persisted Objects are objects that the user wants to store to the database, e.g. cars, pilots, purchase orders. 
 For dRS to operate properly, for each persisted object, the user MUST
 declare the primary key column of the database table in the hbm.xml
-mapping file as follow:</p>
-<p><code>&lt;id column="typed_id" type="long"&gt;</code> 
-<code>    &lt;generator class="native"/&gt;</code> 
-<code>&lt;/id&gt;</code>  </p>
-
-<p> 
+mapping file as follow:</p><p><code>&lt;id column="typed_id" type="long"&gt;</code><code>    &lt;generator class="native"/&gt;</code><code>&lt;/id&gt;</code></p><p> 
     - column - The name of the primary key column. The value can be well-formed string . "typed_id" is recommended. 
     - type - MUST be "long" 
     - class - MUST be "native" 
 The "typed_id" column stores the id used by Hibernate. It allows dRS to
 identify a persisted object by invoking
-org.hibernate.Session#getIdentifier(Object object).</p>
-<p>If you do not define getter/setter for property, make
+org.hibernate.Session#getIdentifier(Object object).</p><p>If you do not define getter/setter for property, make
 default-access="field". default-lazy="false" default-cascade="save-update" is required for replication to work
 properly. Note, you should not set the cascade style to "delete",
-otherwise deletion replication will not work. <a title="outline19" class="" name="outline19"></a></p>
-</div>
-    </div>
-
+otherwise deletion replication will not work. <a title="outline19" class="" name="outline19"></a></p></div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../../hibernate.zip">Java</a>
             </MadCap:conditionalText>
         </p>
-
-
-
-    
-</body></html>
+    </body>
+</html>
