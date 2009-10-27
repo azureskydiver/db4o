@@ -1,44 +1,85 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Embedded	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Embedded</h1>
-
-<p>From the API side, there's no real difference between transactions executing concurrently within the same VM and transactions executed against a remote server. To use concurrent transactions within a single VM, we just open a db4o server on our database file, directing it to run on port 0, thereby declaring that no networking will take place.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/accessLocalServer.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/AccessLocalServer.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/AccessLocalServer.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<p>Again, we will delegate opening and closing the server to our environment to focus on client interactions.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/queryLocalServer.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/QueryLocalServer.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/QueryLocalServer.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<p>The transaction level in db4o is <i>read committed</i>. However, each client container maintains its own weak reference cache of already known objects. To make all changes committed by other clients immediately, we have to explicitly refresh known objects from the server. We will delegate this task to a specialized version of our listResult() method.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/listRefreshedResult.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/ListRefreshedResult.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/ListRefreshedResult.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/demonstrateLocalReadCommitted.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/DemonstrateLocalReadCommitted.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/DemonstrateLocalReadCommitted.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<p>Simple rollbacks just work as you might expect now.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/demonstrateLocalRollback.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/DemonstrateLocalRollback.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/DemonstrateLocalRollback.flsnp" /></p><p MadCap:conditions="Primary:vb" /></div>
-    </div>
-    
-  <p>Download example code:</p>        <p><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="clientservervb.zip">VB.NET</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="clientservercs.zip">c#</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="clientserverjava.zip">Java</a></MadCap:conditionalText> </p></body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="4649" MadCap:lastWidth="1540">
+    <head><title>Embedded	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Embedded</h1>
+                <p>From the API side, there's no real difference between transactions executing concurrently within the same VM and transactions executed against a remote server. To use concurrent transactions within a single VM, we just open a db4o server on our database file, directing it to run on port 0, thereby declaring that no networking will take place.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/accessLocalServer.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/AccessLocalServer.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/AccessLocalServer.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>Again, we will delegate opening and closing the server to our environment to focus on client interactions.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/queryLocalServer.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/QueryLocalServer.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/QueryLocalServer.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>The transaction level in db4o is <i>read committed</i>. However, each client container maintains its own weak reference cache of already known objects. To make all changes committed by other clients immediately, we have to explicitly refresh known objects from the server. We will delegate this task to a specialized version of our listResult() method.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/listRefreshedResult.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/ListRefreshedResult.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/ListRefreshedResult.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/demonstrateLocalReadCommitted.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/DemonstrateLocalReadCommitted.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/DemonstrateLocalReadCommitted.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>Simple rollbacks just work as you might expect now.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/demonstrateLocalRollback.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/DemonstrateLocalRollback.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/DemonstrateLocalRollback.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+            </div>
+        </div>
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="clientservervb.zip">VB.NET </a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="clientservercs.zip">c# </a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="clientserverjava.zip">Java </a>
+            </MadCap:conditionalText>
+        </p>
+    </body>
+</html>

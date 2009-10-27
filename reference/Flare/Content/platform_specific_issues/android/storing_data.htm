@@ -17,5 +17,13 @@ including a reference to Pilot object) to each database.</p>
 
 <p>You can see that db4o handles adding objects to the database in a much more elegant way - #set(object) method is enough. In SQLite case it is much more difficult as you mush store different objects into different tables. Some of the additional work that SQLite developer will have to do is not visible in this example, i.e:</p><ul><li>the developer will have to ensure that the sequence of insert commands starts from children objects and goes up to the parent (this can be a really difficult task for relational models including lots of foreign key dependencies);</li><li>in most cases the data for insertion will come from business objects, which will mean that the object model will have to be transferred to relational model. </li></ul></div>
     </div>
+
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="dbcomparerefjava.zip">Java </a>
+            </MadCap:conditionalText>
+        </p>
+
+
     
-  <p>Download example code:</p>        <p></p></body></html>
+</body></html>
