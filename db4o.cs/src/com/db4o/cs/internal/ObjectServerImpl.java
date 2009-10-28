@@ -351,13 +351,21 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		while (_serverSocket != null) {
 			withEnvironment(new Runnable() { public void run() {
 				try {
+					Socket4 socket = _serverSocket.accept();
 					ServerMessageDispatcherImpl messageDispatcher = new ServerMessageDispatcherImpl(ObjectServerImpl.this, new ClientTransactionHandle(_transactionPool),
-							_serverSocket.accept(), newThreadId(), false, _container.lock());
+							socket, newThreadId(), false, _container.lock());
 					
 					addServerMessageDispatcher(messageDispatcher);
 						
 					threadPool().start(messageDispatcher);
 				} catch (Exception e) {
+					
+					// CatchAll because we can get expected timeout exceptions
+					// although we still want to continue to use the ServerSocket.
+					
+					// No nice way to catch a specific exception because 
+					// SocketTimeOutException is JDK 1.4 and above.
+					
 					//e.printStackTrace();
 				}
 			}});								
@@ -461,5 +469,9 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	
 	void withEnvironment(Runnable runnable) {
 		_container.withEnvironment(runnable);
+	}
+
+	public int transactionCount() {
+		return _transactionPool.openTransactionCount();
 	}	
 }
