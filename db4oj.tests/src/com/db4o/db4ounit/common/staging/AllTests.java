@@ -19,6 +19,7 @@ public class AllTests extends ComposibleTestSuite {
 							ActivateDepthTestCase.class,
 							InterfaceQueryTestCase.class, // COR-1131
 							LazyQueryDeleteTestCase.class,
+							RemovedFieldDefragmentTestCase.class,
 							SODAClassTypeDescend.class,
 							StoredClassUnknownClassQueryTestCase.class, // COR-1542
 							UnavailableEnumTestCase.class,
