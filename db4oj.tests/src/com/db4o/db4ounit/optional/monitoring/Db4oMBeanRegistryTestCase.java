@@ -14,10 +14,10 @@ import db4ounit.*;
 @decaf.Remove
 public class Db4oMBeanRegistryTestCase implements TestCase {
 
-	private static interface Mock1MBean {
+	public static interface Mock1MBean {
 	}
 
-	private static interface Mock2MBean {
+	public static interface Mock2MBean {
 	}
 
 	private static abstract class MockMBean extends MBeanRegistrationSupport {
@@ -40,13 +40,13 @@ public class Db4oMBeanRegistryTestCase implements TestCase {
 		}
 	}
 
-	private static class Mock1 extends MockMBean implements Mock1MBean {
+	public static class Mock1 extends MockMBean implements Mock1MBean {
 		public Mock1(ObjectContainer db, Class<?> type) {
 			super(db, type);
 		}
 	}
 
-	private static class Mock2 extends MockMBean implements Mock2MBean {
+	public static class Mock2 extends MockMBean implements Mock2MBean {
 		public Mock2(ObjectContainer db, Class<?> type) {
 			super(db, type);
 		}
