@@ -775,18 +775,21 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return this;
 	}
 
-	public ObjectReference id_remove(int id) {
-		int cmp = id - _id;
+	public ObjectReference id_remove(ObjectReference ref) {
+		int cmp = ref._id - _id;
 		if (cmp < 0) {
 			if (_idPreceding != null) {
-				_idPreceding = _idPreceding.id_remove(id);
+				_idPreceding = _idPreceding.id_remove(ref);
 			}
 		} else if (cmp > 0) {
 			if (_idSubsequent != null) {
-				_idSubsequent = _idSubsequent.id_remove(id);
+				_idSubsequent = _idSubsequent.id_remove(ref);
 			}
 		} else {
-			return id_remove();
+			if(this == ref){
+				return id_remove();
+			}
+			return this;
 		}
 		id_calculateSize();
 		return this;

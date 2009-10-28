@@ -96,7 +96,7 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
         	_hashCodeTree = _hashCodeTree.hc_remove(ref);
         }
         if(_idTree != null){
-        	_idTree = _idTree.id_remove(ref.getID());
+        	_idTree = _idTree.id_remove(ref);
         }
 	}
 

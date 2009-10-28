@@ -1,4 +1,4 @@
-/* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.common.references;
 
@@ -29,7 +29,7 @@ public class ReferenceSystemRegistryTestCase implements TestLifeCycle {
     }
     
     public void testRemoveId(){
-        addTestReference();
+        addTestReferenceToBothSystems();
         _registry.removeId(TEST_ID);
         assertTestReferenceNotPresent();
     }
@@ -39,21 +39,31 @@ public class ReferenceSystemRegistryTestCase implements TestLifeCycle {
     }
 
     public void testRemoveObject(){
-        ObjectReference testReference = addTestReference();
+        ObjectReference testReference = addTestReferenceToBothSystems();
         _registry.removeObject(testReference.getObject());
         assertTestReferenceNotPresent();
     }
     
     public void testRemoveReference(){
-        ObjectReference testReference = addTestReference();
+        ObjectReference testReference = addTestReferenceToBothSystems();
         _registry.removeReference(testReference);
         assertTestReferenceNotPresent();
     }
     
     public void testRemoveReferenceSystem(){
-        addTestReference();
+        addTestReferenceToBothSystems();
         _registry.removeReferenceSystem(_referenceSystem1);
         _registry.removeId(TEST_ID);
+        Assert.isNotNull(_referenceSystem1.referenceForId(TEST_ID));
+        Assert.isNull(_referenceSystem2.referenceForId(TEST_ID));
+    }
+    
+    public void testRemoveByObjectReference(){
+    	ObjectReference ref1 = newObjectReference();
+    	_referenceSystem1.addExistingReference(ref1);
+    	ObjectReference ref2 = newObjectReference();
+    	_referenceSystem2.addExistingReference(ref2);
+    	_registry.removeReference(ref2);
         Assert.isNotNull(_referenceSystem1.referenceForId(TEST_ID));
         Assert.isNull(_referenceSystem2.referenceForId(TEST_ID));
     }
@@ -63,13 +73,18 @@ public class ReferenceSystemRegistryTestCase implements TestLifeCycle {
         Assert.isNull(_referenceSystem2.referenceForId(TEST_ID));
     }
 
-    private ObjectReference addTestReference() {
-        ObjectReference ref = new ObjectReference(TEST_ID);
-        ref.setObject(new Object());
+    private ObjectReference addTestReferenceToBothSystems() {
+        ObjectReference ref = newObjectReference();
         _referenceSystem1.addExistingReference(ref);
         _referenceSystem2.addExistingReference(ref);
         return ref;
     }
+
+	private ObjectReference newObjectReference() {
+		ObjectReference ref = new ObjectReference(TEST_ID);
+        ref.setObject(new Object());
+		return ref;
+	}
     
     
 

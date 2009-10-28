@@ -302,6 +302,10 @@ public abstract class Transaction {
     public final ObjectReference referenceForId(int id) {
         ObjectReference ref = referenceSystem().referenceForId(id);
         if(ref != null){
+            if(ref.getObject() == null){
+            	removeReference(ref);
+            	return null;
+            }
             return ref;
         }
         if(parentTransaction() != null){
