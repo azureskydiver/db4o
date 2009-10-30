@@ -2069,7 +2069,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	public void withTransaction(Transaction transaction, Runnable runnable) {
 		synchronized (_lock) {
-			final Transaction old = transaction;
+			final Transaction old = _transaction;
 			_transaction = transaction;
 			try {
 				runnable.run();
