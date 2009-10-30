@@ -8,6 +8,12 @@ import db4ounit.*;
 
 public class ReferenceSystemIsolationTestCase extends EmbeddedAndNetworkingClientTestCaseBase {
 	
+	public static final class IncludeAllEvaluation implements Evaluation {
+		public void evaluate(Candidate candidate) {
+			candidate.include(true);
+		}
+	}
+
 	public static class Item{
 		
 	}
@@ -19,11 +25,7 @@ public class ReferenceSystemIsolationTestCase extends EmbeddedAndNetworkingClien
 		
 		Query query = networkingClient().query();
 		query.constrain(Item.class);
-		query.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				candidate.include(true);
-			}
-		});
+		query.constrain(new IncludeAllEvaluation());
 		query.execute();
 		
 		Assert.isNull(embeddedClient().transaction().referenceForId(id));
