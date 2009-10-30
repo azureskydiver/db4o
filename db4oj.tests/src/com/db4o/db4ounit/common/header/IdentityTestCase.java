@@ -9,10 +9,15 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class IdentityTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
+public class IdentityTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] arguments) {
-		new IdentityTestCase().runSolo();
+		new IdentityTestCase().runAll();
+	}
+	
+	public void testIdentitySignatureIsNotNull() {
+		Db4oDatabase identity = db().identity();
+		Assert.isNotNull(identity.getSignature());
 	}
 
 	public void testIdentityPreserved() throws Exception {
@@ -28,6 +33,9 @@ public class IdentityTestCase extends AbstractDb4oTestCase implements OptOutMult
 	}
 
 	public void testGenerateIdentity() throws Exception {
+		if(isMultiSession()){
+			return;
+		}
 
 		byte[] oldSignature = db().identity().getSignature();
 
