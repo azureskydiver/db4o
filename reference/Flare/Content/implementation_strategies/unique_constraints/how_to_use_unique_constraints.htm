@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>How To Use Unique Constraints	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -32,39 +32,30 @@ following 3 steps.</p>
 
 <p><code>configuration.ObjectClass(GetType(Item)).ObjectField("field").Indexed(true)</code></p>
 
-<p>[/filter] 
  
 2. Configure a unique constraint: 
-<span name="cs_wiki_filter" csw_filters="java"></p>
 
 <p>Java:</p>
 
 <p><code>configuration.add(new UniqueFieldValueConstraint(Item.class,
 "field"));</code></p>
 
-</span>
-
-<span name="cs_wiki_filter" csw_filters="cs">
 
 <p>c#:</p>
 
 <p><code>configuration.Add(new UniqueFieldValueConstraint(typeof(Item),
 "field"));</code></p>
 
-</span>
-
-<span name="cs_wiki_filter" csw_filters="vb">
 
 <p>VB:</p>
 
 <p><code>configuration.Add(New UniqueFieldValueConstraint(GetType(Item),
 "field"))</code></p>
 
-<p></span> 
+<p>
  
 3. Handle unique constraint violation:</p>
 
-<p><span name="cs_wiki_filter" csw_filters="java"></p>
 
 <p>Java: 
 <code>// open objectContainer</code> 
@@ -78,9 +69,6 @@ user</code>
 <code>  objectContainer.rollback();</code> 
 <code>}</code></p>
 
-</span>
-
-<span name="cs_wiki_filter" csw_filters="cs">
 
 <p>c#: 
 <code>// open objectContainer</code> 
@@ -94,9 +82,6 @@ user</code>
 <code>  objectContainer.Rollback();</code> 
 <code>}</code></p>
 
-</span>
-
-<p>[filter=vb]</p>
 
 <p>VB: 
 <code>// open objectContainer</code> 
