@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Using Automatic Properties	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -7,16 +7,20 @@
 <p>What
 happens if we use automatic properties with db4o persistent objects? Let's
 create classes with automatic fields and see what we can and can not do with
-them:</p><MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/Pilot.cs/Pilot.cs.flsnp" />
-<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/Car.cs/Car.cs.flsnp" />>Let's store
-some cars and query them using SODA:</p><MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/FillUpDb.flsnp" />
-<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/TestSODA.flsnp" />>If you run
+them:</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/Pilot.cs/Pilot.cs.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/Car.cs/Car.cs.flsnp" />Let's store
+some cars and query them using SODA:
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/FillUpDb.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/TestSODA.flsnp" />
+If you run
 this code you will see that replacing field names with properties does not work
 at all. Luckily we still have other query types to use: Query By Example, LINQ,
-NQ:</p><MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/TestQBE.flsnp" />
-<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/TestLINQ.flsnp" />>Unfortunately,
+NQ:
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/TestQBE.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Automatic Properties/PropertiesExample.cs/TestLINQ.flsnp" />Unfortunately,
 as we saw above SODA queries do not work, therefore QBE, LINQ and NQ will run
-unoptimized.</p>
+unoptimized.
 
 
  </div>

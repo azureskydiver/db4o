@@ -1,22 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Conflict Resolution	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
       <div class="CommonContentArea">
         <h1>Conflict Resolution</h1>
 <p>The most popular usage of replication callback events is conflict resolution. When an object was changed in both replicating databases you must have a strategy to decide, which value must be final. In the simplest case one of the databases is made "dominant" and the changes in this database always override other changes. The following example demonstrates this behavior:</p>
-<p><p MadCap:conditions="Primary.Java"> </p>
-<MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.java/conflictResolutionExample.flsnp" />/p>
-<p></p><p MadCap:conditions="Primary:java" /> </p>
-<p><p MadCap:conditions="Primary..NET,Primary.c#"> </p>
-<MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.cs/ConflictResolutionExample.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.cs/ConflictReplicationEventListener.flsnp" /><p></p><p MadCap:conditions="Primary:cs" /></p>
-<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"> </p>
 
-<MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.vb/ConflictResolutionExample.flsnp" />/p>
+
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.java/conflictResolutionExample.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.cs/ConflictResolutionExample.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.cs/ConflictReplicationEventListener.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.vb/ConflictResolutionExample.flsnp" />
 <MadCap:snippetBlock src="../../../Resources/Snippets/Conflict Resolution/EventsExample.vb/ConflictReplicationEventListener.flsnp" /> </p>
-
-<p></p><p MadCap:conditions="Primary:vb" />  
-</p>
+<p MadCap:conditions="Primary:vb" />  
 
 </div>
     </div>

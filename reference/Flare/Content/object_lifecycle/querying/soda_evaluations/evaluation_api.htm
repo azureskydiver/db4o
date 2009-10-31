@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Evaluation API	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -31,15 +31,15 @@ The Candidate interface provides three methods:</p>
 
 <p>Java:</p>
 
-<p> <code>public Object getObject()
+<p> public Object getObject()
 </p><p>public void include(boolean flag)
-</p><p>public ObjectContainer objectContainer()</code>
+</p><p>public ObjectContainer objectContainer()
 </p></p><p MadCap:conditions="Primary:java" />
 
 <p><p MadCap:conditions="Primary.Print"></p>
-<p>.NET:</p><p><code>public Object GetObject()
+<p>.NET:</p><p>public Object GetObject()
 </p><p>public void Include(bool flag)
-</p><p>public ObjectContainer ObjectContainer() </code>
+</p><p>public ObjectContainer ObjectContainer()
 </p><p MadCap:conditions="Primary:net" /></p>
 
 <p>An Evaluation implementation may call getObject() to retrieve the actual object instance to be evaluated, it may call include() to instruct db4o whether or not to include this object in the current candidate set, and finally it may access the current database directly by calling objectContainer().</p></div>
