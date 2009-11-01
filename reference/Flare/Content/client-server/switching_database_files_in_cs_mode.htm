@@ -1,54 +1,83 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Switching Database Files in CS Mode	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Switching Database Files in CS Mode</h1>
-		<div id="TOC">
-		<div id="TOCinner"><span class="TOCtitle">Contents</span>
-		<div class="TOCcontents">
-		<ul>
-			<li><a href ="#Switching Database Files">Switching Database Files</a></li>
-			<li><a href ="#Multiple Database Usecase">Multiple Database Usecase</a></li>
-		</ul></div></div></div> 
-<p><font color="#990000">This functionality is deprecated!</font>  </p>
-<p>ExtClient is an extended interface, which can be used to access database from the client side. ExtClient object can be simply cast from the ObjectContainer, returned by openClient method:</p>
-<ol>
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>ExtClient clientExt = (ExtClient) server.openClient()</code></p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<p>c#: <code>IExtClient clientExt = (IExtClient) server.OpenClient()</code></p>
-</p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<p>VB: <code>Dim clientExt IExtClient = CType(server.OpenClient(),IExtClient)</code></p>
-</p><p MadCap:conditions="Primary:vb" /></ol>
-<p>Please, note that this cast is only possible in embedded server mode. </p>
-<p>ExtClient is extending ExtObjectContainer interface. In addition ExtClient provides 3 client-specific methods:</p>
-<ul>
-<li>switchToFile(String fileName)/SwitchToFile(string fileName)</li>allows to switch your client database connection to another file using the same server connection. 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="2851" MadCap:lastWidth="1290">
+    <head><title>Switching Database Files in CS Mode	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Switching Database Files in CS Mode</h1>
+                <div id="TOC">
+                    <div id="TOCinner"><span class="TOCtitle">Contents</span>
+                        <div class="TOCcontents">
+                            <ul>
+                                <li><a href="#Switching Database Files">Switching Database Files</a>
+                                </li>
+                                <li><a href="#Multiple Database Usecase">Multiple Database Usecase</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p><font color="#990000">This functionality is deprecated!</font>
+                </p>
+                <p>ExtClient is an extended interface, which can be used to access database from the client side. ExtClient object can be simply cast from the ObjectContainer, returned by openClient method:</p>
+                <ol>
+                    <p MadCap:conditions="Primary.Java">
+                        <p>Java: <code>ExtClient clientExt = (ExtClient) server.openClient()</code></p>
+                    </p>
+                    <p MadCap:conditions="Primary:java" />
+                    <p MadCap:conditions="Primary..NET,Primary.c#">
+                        <p>c#: <code>IExtClient clientExt = (IExtClient) server.OpenClient()</code></p>
+                    </p>
+                    <p MadCap:conditions="Primary:cs" />
+                    <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                        <p>VB: <code>Dim clientExt IExtClient = CType(server.OpenClient(),IExtClient)</code></p>
+                    </p>
+                    <p MadCap:conditions="Primary:vb" />
+                </ol>
+                <p>Please, note that this cast is only possible in embedded server mode. </p>
+                <p>ExtClient is extending ExtObjectContainer interface. In addition ExtClient provides 3 client-specific methods:</p>
+                <ul>
+                    <li>switchToFile(String fileName)/SwitchToFile(string fileName)</li>allows to switch your client database connection to another file using the same server connection. 
 <li>switchToMainFile()/SwitchToMainFile() </li>switchs the connection back to the original database file. 
-<li>boolean isAlive()/IsAlive()</li>checks if the client is currently connected to a server, returns true if the client is alive.</ul>
-<a name="Switching Database Files"></a><h2>Switching Database Files</h2>
-<p>In some special cases you may want to store different objects to different files. </p>
-<p>This approach has the following advantages:</p>
-<ul>
-<li>easier rights management</li>
-<li>easier backup</li>
-<li>possible later load balancing to multiple servers</li>
-<li>better performance of smaller individual database files</li>
-<li>special debugging database files can be used</li></ul>
-<p>To make database switch handling easier you should consider using the ExtClient#switchToFile(fileName) and ExtClient#switchToMainFile() methods. This allows you to use single connection to the server for all database files, thus avoiding overhead of opening and managing new connections (a server starts a new thread for each connection). All you have to do is just point out which database file to use.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.java/switchExtClients.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.cs/SwitchExtClients.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.vb/SwitchExtClients.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<a name="Multiple Database Usecase"></a><h2>Multiple Database Usecase</h2>
-<p>The following can be an example usecase of multiple database usage.</p>
-<p>The main database file is used for login, user and rights management only. Multiple satellite database files are used for different applications or multiple user circles. User authorization to the satellite databases is not checked.</p>
-<p>Only one single db4o server session needs to be run. </p></div>
-    </div>
-    
-  <p>Download example code:</p>        <p><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="clientservervb.zip">VB.NET</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="clientservercs.zip">c#</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="clientserverjava.zip">Java</a></MadCap:conditionalText> </p></body></html>
+<li>boolean isAlive()/IsAlive()</li>checks if the client is currently connected to a server, returns true if the client is alive.</ul><a name="Switching Database Files"></a>
+                <h2>Switching Database Files</h2>
+                <p>In some special cases you may want to store different objects to different files. </p>
+                <p>This approach has the following advantages:</p>
+                <ul>
+                    <li>easier rights management</li>
+                    <li>easier backup</li>
+                    <li>possible later load balancing to multiple servers</li>
+                    <li>better performance of smaller individual database files</li>
+                    <li>special debugging database files can be used</li>
+                </ul>
+                <p>To make database switch handling easier you should consider using the ExtClient#switchToFile(fileName) and ExtClient#switchToMainFile() methods. This allows you to use single connection to the server for all database files, thus avoiding overhead of opening and managing new connections (a server starts a new thread for each connection). All you have to do is just point out which database file to use.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.java/switchExtClients.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.cs/SwitchExtClients.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.vb/SwitchExtClients.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" /><a name="Multiple Database Usecase"></a>
+                <h2>Multiple Database Usecase</h2>
+                <p>The following can be an example usecase of multiple database usage.</p>
+                <p>The main database file is used for login, user and rights management only. Multiple satellite database files are used for different applications or multiple user circles. User authorization to the satellite databases is not checked.</p>
+                <p>Only one single db4o server session needs to be run. </p>
+            </div>
+        </div>
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="clientservervb.zip">VB.NET</a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="clientservercs.zip">c#</a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="clientserverjava.zip">Java</a>
+            </MadCap:conditionalText>
+        </p>
+    </body>
+</html>
