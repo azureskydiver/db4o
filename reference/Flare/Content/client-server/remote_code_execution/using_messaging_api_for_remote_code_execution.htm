@@ -1,65 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Using Messaging API For Remote Code Execution	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Using Messaging API For Remote Code Execution</h1>
-
-<p>Messaging API gives you an easy and powerful tool for remote code execution. The short overview of the API is in <a href="../messaging.htm" class="wikiLink">Messaging chapter</a>. </p>
-<p>All you will need to do is to define specific message class or classes (should be shared between client and server).</p>
-<p>The client side can issue messages using:</p>
-
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>MessageSender#send(message) </code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<p>c#:   <code>IMessageSender#Send(message) </code></p>
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<p>VB:   <code>IMessageSender#Send(message) </code></p>
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>The server side should register a message listener:</p>
-
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>Configuration#setMessageRecipient(MessageRecipient)</code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<p>c#: <code>Configuration#SetMessageRecipient(IMessageRecipient)</code></p>
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<p>VB: <code>Configuration#SetMessageRecipient(IMessageRecipient)</code></p>
-</p><p MadCap:conditions="Primary:vb" />
-Message recipient should define a response to the different messages received in
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>processMessage(ObjectContainer objectContainer, Object message) </code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<p>c#:   <code>ProcessMessage(IObjectContainer objectContainer, object message) </code></p>
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<p><code>vb:   ProcessMessage(ByVal objectContainer As IObjectContainer, ByVal message As Object) </code></p>
-</p><p MadCap:conditions="Primary:vb" />
-<p>method. ObjectContainer parameter gives full control over the database.</p>
-<p>Let's reset our database and try updating using special UpdateServer message.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.java/setObjects.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.cs/SetObjects.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.vb/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-				<p>You can also put some information in the message being sent (UpdateServer class).</p>
-<p>The advantage of this method is that having predefined message types you can make any changes to the handling code only on the server side. In the situations with many distributed clients it can really save you lots of time on support.</p></div>
-    </div>
-    
-  <p>Download example code:</p>        <p><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="remote_code_executionremotevb.zip">VB.NET</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="remote_code_executionremotejava.zip">Java</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="remote_code_executionremotecs.zip">c#</a></MadCap:conditionalText> </p></body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="2101" MadCap:lastWidth="1104">
+    <head><title>Using Messaging API For Remote Code Execution	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Using Messaging API For Remote Code Execution</h1>
+                <p>Messaging API gives you an easy and powerful tool for remote code execution. The short overview of the API is in <a href="../messaging.htm" class="wikiLink">Messaging chapter</a>. </p>
+                <p>All you will need to do is to define specific message class or classes (should be shared between client and server).</p>
+                <p>The client side can issue messages using:</p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java: <code>MessageSender#send(message) </code></p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <p>c#:   <code>IMessageSender#Send(message) </code></p>
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <p>VB:   <code>IMessageSender#Send(message) </code></p>
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>The server side should register a message listener:</p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java: <code>Configuration#setMessageRecipient(MessageRecipient)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <p>c#: <code>Configuration#SetMessageRecipient(IMessageRecipient)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <p>VB: <code>Configuration#SetMessageRecipient(IMessageRecipient)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:vb" />Message recipient should define a response to the different messages received in
+<p MadCap:conditions="Primary.Java"><p>Java: <code>processMessage(ObjectContainer objectContainer, Object message) </code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#:   <code>ProcessMessage(IObjectContainer objectContainer, object message) </code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p><code>vb:   ProcessMessage(ByVal objectContainer As IObjectContainer, ByVal message As Object) </code></p></p><p MadCap:conditions="Primary:vb" /><p>method. ObjectContainer parameter gives full control over the database.</p><p>Let's reset our database and try updating using special UpdateServer message.</p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.java/setObjects.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.cs/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.vb/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>You can also put some information in the message being sent (UpdateServer class).</p><p>The advantage of this method is that having predefined message types you can make any changes to the handling code only on the server side. In the situations with many distributed clients it can really save you lots of time on support.</p></div>
+        </div>
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="remote_code_executionremotevb.zip">VB.NET</a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="remote_code_executionremotejava.zip">Java</a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="remote_code_executionremotecs.zip">c#</a>
+            </MadCap:conditionalText>
+        </p>
+    </body>
+</html>
