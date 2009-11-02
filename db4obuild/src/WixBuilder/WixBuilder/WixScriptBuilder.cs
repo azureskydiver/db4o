@@ -8,7 +8,7 @@ using System.Linq;
 
 public class WixScriptBuilder
 {
-	public const string WixNamespace = "http://schemas.microsoft.com/wix/2003/01/wi";
+	public const string WixNamespace = "http://schemas.microsoft.com/wix/2006/wi";
 
 	private readonly IDictionary<string, IList<string>> _featureComponents = new Dictionary<string, IList<string>>();
 
@@ -120,6 +120,22 @@ public class WixScriptBuilder
 		EndElement();
 	}
 
+	private void WriteEmptyElement(string elementName, params object[] args)
+	{
+		if (args.Length % 2 != 0)
+		{
+			throw new ArgumentException("arguments must be specified in pairs name/value");	
+		}
+
+		StartElement(elementName);
+		for (int i = 0; i < args.Length - 1; i += 2)
+		{
+			WriteAttribute(args[i].ToString(), args[i+1].ToString());
+		}
+		
+		EndElement();
+	}
+
 	private string WriteNonEmptyFeatureShortcutList(Feature feature)
 	{
 		if (feature.Shortcuts.Length == 0)
@@ -131,8 +147,22 @@ public class WixScriptBuilder
 		{
 			WriteShortcut(shortcut);
 		}
+		
+		WriteCreateFolder();
+		WriteKeyPath();
+
 		EndComponent();
 		return componentId;
+	}
+
+	private void WriteKeyPath()
+	{
+		WriteEmptyElement("RegistryValue", "Root", "HKCU", "Key", @"SOFTWARE\db4o\db4o\install", "Type", "string", "Value",  "dm", "KeyPath", "yes");
+	}
+
+	private void WriteCreateFolder()
+	{
+		WriteEmptyElement("CreateFolder");
 	}
 
 	private void WriteFeatures(IDictionary<string, IList<string>> componentsByFeatureId)
@@ -166,13 +196,6 @@ public class WixScriptBuilder
 	{
 		StartElement("Directory");
 		WriteAttribute("Id", id);
-
-		if (name.Length > 8)
-		{
-			WriteAttribute("LongName", name);
-			name = name.Substring(0, 8);
-		}
-
 		WriteAttribute("Name", name);
 	}
 
@@ -313,32 +336,12 @@ public class WixScriptBuilder
 	void WriteFile(IFileSystemItem file)
 	{
 		StartElement("File");
-		string id = WriteIdNameAndLongName(file);
-		WriteAttribute("src", file.FullPath);
+		WriteIdNameAndLongName(file);
+		WriteAttribute("Source", file.FullPath);
 		WriteAttribute("DiskId", "1");
 		WriteAttribute("Vital", "yes");
 
-		string shortcut = GetShortcutName(id);
-		if (null != shortcut)
-		{
-			WriteShortcut(shortcut, file, _currentDirectoryId);
-		}
 		EndElement();
-	}
-
-	string GetShortcutName(string id)
-	{
-		//if (null != _parameters)
-		//{
-		//    foreach (Shortcut item in _parameters.Shortcuts)
-		//    {
-		//        if (id == GetIdFromRelativePath(item.Path))
-		//        {
-		//            return item.Name;
-		//        }
-		//    }
-		//}
-		return null;
 	}
 
 	private void WriteShortcut(Shortcut shortcut)
@@ -354,8 +357,6 @@ public class WixScriptBuilder
 	    return _basePath.GetItem(filePath);
 	}
 
-    
-
     void WriteShortcut(string displayName, IFileSystemItem fileSystemItem, string workingDirectory)
 	{
 		string fileId = GetIdFromPath(fileSystemItem);
@@ -367,8 +368,7 @@ public class WixScriptBuilder
 		WriteAttribute("Icon", ext + ".ico");
 		WriteAttribute("IconIndex", "0");
 		WriteAttribute("Directory", "TargetMenuFolder");
-		WriteAttribute("Name", fileSystemItem.ShortPathName);
-		WriteAttribute("LongName", displayName);
+		WriteAttribute("Name", displayName);
 		WriteAttribute("Description", displayName);
 		WriteAttribute("Show", "normal");
 		WriteAttribute("WorkingDirectory", workingDirectory);
@@ -386,13 +386,7 @@ public class WixScriptBuilder
 
 	void WriteNameAndLongName(IFileSystemItem path)
 	{
-		string name = path.Name;
-		string shortName = path.ShortPathName;
-		WriteAttribute("Name", shortName);
-		if (name != shortName)
-		{
-			WriteAttribute("LongName", name);
-		}
+		WriteAttribute("Name", path.Name);
 	}
 
 	string GetIdFromPath(IFileSystemItem fileSystemItem)
@@ -405,11 +399,6 @@ public class WixScriptBuilder
 		string newId = "_" + NewGuid().Replace('-', '_');
 		_fileIdMapping.Add(path, newId);
 		return newId;
-	}
-
-	static string GetIdFromRelativePath(string path)
-	{
-		return path.Replace("\\", ".").Replace("/", ".").Replace("-", "_").Replace("$", "_").Replace(" ", "_");
 	}
 
 	static string NewGuid()

@@ -58,19 +58,15 @@ namespace WixBuilder.Tests.Wix
 	public class WixElement
 	{
 		private XmlElement _element;
-		private XmlNamespaceManager namespaces;
-
-		public WixElement()
-		{	
-		}
+		private XmlNamespaceManager _namespaces;
 
 		internal XmlElement XmlElement
 		{
 			set
 			{
 				_element = value;
-				namespaces = new XmlNamespaceManager(value.OwnerDocument.NameTable);
-				namespaces.AddNamespace("wix", WixScriptBuilder.WixNamespace);
+				_namespaces = new XmlNamespaceManager(value.OwnerDocument.NameTable);
+				_namespaces.AddNamespace("wix", WixScriptBuilder.WixNamespace);
 			}
 		}
 
@@ -86,7 +82,7 @@ namespace WixBuilder.Tests.Wix
 
 		public XmlNodeList SelectNodes(string xpath)
 		{
-			return _element.SelectNodes(xpath, namespaces);
+			return _element.SelectNodes(xpath, _namespaces);
 		}
 
 		public string GetAttribute(string attributeName)

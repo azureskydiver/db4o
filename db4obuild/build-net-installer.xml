@@ -56,7 +56,6 @@
 				<arg value="-out" />
 				<arg file="${output.dir}/files.wixobj" />
 				<arg file="${output.dir}/files.wxs" />			
-				<arg value="-sw1044" />
 			</args>
 		</exec-redirected>
 	
@@ -66,6 +65,10 @@
 				<arg file="${output.dir}/files.wixobj" />
 				<arg value="-out" />
 				<arg value="${installer.msi}" />
+				
+				<arg value="-sice:ICE20" />
+				<arg value="-sice:ICE69" />
+				<arg value="-sice:ICE64" />
 			</args>
 		</exec-redirected>
 		
