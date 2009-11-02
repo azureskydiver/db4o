@@ -82,10 +82,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 	        while (true) {
 				synchronized (_lock) {
 					
-					// Let the database engine continue to do 
-					// some work if it likes to.
-					Cool.sleepIgnoringInterruption(1);
-					
 					int read = _file.read(pos, buffer);
 					if (read <= 0) {
 						break;
@@ -93,6 +89,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 					_backupFile.write(pos, buffer, read);
 					pos += read;
 				}
+				
+				// Let the database engine continue to do 
+				// some work if it likes to.
+				Cool.sleepIgnoringInterruption(1);
+
 			}
 	
 	        synchronized (_lock) {
