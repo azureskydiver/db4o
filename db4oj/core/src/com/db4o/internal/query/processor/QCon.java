@@ -205,7 +205,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
             DTrace.DONOTINCLUDE.log(id());
         }
         if (Debug4.queries) {
-            System.out.println("QCon.doNotInclude " + id()
+            System.out.println("QCon.doNotInclude " + id() + " " + a_root._key
             );
         }
         if (i_parent != null) {

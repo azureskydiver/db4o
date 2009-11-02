@@ -38,6 +38,7 @@ public class AllTests extends Db4oTestSuite {
             QueryByExampleTestCase.class,
             QueryingForAllObjectsTestCase.class,
             QueryingVersionFieldTestCase.class,
+            SameChildOnDifferentParentQueryTestCase.class,
 		};
 	}
 }

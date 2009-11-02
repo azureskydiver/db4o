@@ -686,6 +686,10 @@ public class QCandidate extends TreeInt implements Candidate {
     private MarshallerFamily marshallerFamily(){
         return MarshallerFamily.version(_handlerVersion);
     }
-
+    
+    @Override
+    public boolean duplicates() {
+    	return _root != null;
+    }
     
 }
