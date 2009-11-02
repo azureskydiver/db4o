@@ -7,7 +7,6 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 using System.Windows.Forms;
-using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Drawing;
@@ -180,7 +179,7 @@ namespace OMAddin
 		}
 
 	    #endregion
-		DTEEvents eve;
+		DTEEvents _eve;
 		#region Connect Event Handlers
 
 		#region OnConnection
@@ -225,14 +224,13 @@ namespace OMAddin
 
 					try
 					{
-						EnvDTE.Events events = _applicationObject.Events;
+						Events events = _applicationObject.Events;
 						_windowsEvents = events.get_WindowEvents(null);
 						
-						_windowsEvents.WindowActivated += _windowsEvents_WindowActivated;
+						_windowsEvents.WindowActivated += OnWindowActivated;
 
-						eve = _applicationObject.Events.DTEEvents;
-
-						eve.ModeChanged += DesignDebugModeChanged;
+						_eve = _applicationObject.Events.DTEEvents;
+						_eve.ModeChanged += DesignDebugModeChanged;
 					}
 					catch (Exception oEx)
 					{
@@ -460,7 +458,7 @@ namespace OMAddin
 
 		#region Event Handlers
 
-		#region _windowsEvents_WindowActivated
+		#region OnWindowActivated
 		/// <summary>
 		/// This event handler gets the Activated event of tool window.
 		/// When db4o Browser opens for first time, it creates menu option under ObjectManager Enterprise menu.
@@ -468,11 +466,11 @@ namespace OMAddin
 		/// </summary>
 		/// <param name="gotFocus"></param>
 		/// <param name="lostFocus"></param>
-		void _windowsEvents_WindowActivated(Window gotFocus, Window lostFocus)
+		void OnWindowActivated(Window gotFocus, Window lostFocus)
 		{
 			try
 			{
-				if (gotFocus == null || lostFocus.Caption == "Closed")
+				if (gotFocus == null || (lostFocus != null && lostFocus.Caption == "Closed"))
 					return;
 
 				//TODO: Move this code closer to window instantiation.
