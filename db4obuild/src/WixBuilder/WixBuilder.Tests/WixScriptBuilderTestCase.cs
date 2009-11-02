@@ -171,9 +171,9 @@ namespace WixBuilder.Tests
             WixAssert.AssertDirectoryComponent(DirectoryFromRoot("native/Db4objects.Db4o/Config"), configComponent);
 
             WixDirectory configDirectory = configComponent.ParentElement.ToWix<WixDirectory>();
-            Assert.AreEqual(DirectoryFromRoot("native/Db4objects.Db4o/Config").ShortPathName, configDirectory.Name);
-            Assert.AreEqual(DirectoryFromRoot("native/Db4objects.Db4o").ShortPathName, configDirectory.ParentElement.ToWix<WixDirectory>().Name);
-            Assert.AreEqual(DirectoryFromRoot("native").ShortPathName, configDirectory.ParentElement.ToWix<WixDirectory>().ParentElement.ToWix<WixDirectory>().Name);
+            Assert.AreEqual(DirectoryFromRoot("native/Db4objects.Db4o/Config").Name, configDirectory.Name);
+            Assert.AreEqual(DirectoryFromRoot("native/Db4objects.Db4o").Name, configDirectory.ParentElement.ToWix<WixDirectory>().Name);
+            Assert.AreEqual(DirectoryFromRoot("native").Name, configDirectory.ParentElement.ToWix<WixDirectory>().ParentElement.ToWix<WixDirectory>().Name);
 
         }
 
@@ -378,7 +378,6 @@ namespace WixBuilder.Tests
 						}
 					},
 
-					
 					new Feature
 					{
 						Id="ApplicationFiles",
@@ -426,6 +425,62 @@ namespace WixBuilder.Tests
 						"Shortcut '" + shortcut.Name + "' is not referenced from feature '" + feature.Id + "'.");
 				}
 			}
+		}
+
+		[Test]
+		public void TestCreateFolderIsInjectedInFoldersStoringOnlyShortcuts()
+		{
+			var parameters = new WixBuilderParameters
+			{
+				Features = new[]
+				{
+					new Feature
+					{
+						Id = "Documentation",
+						Title = "Documentation",
+						Description = "all the docs",
+						Content = new Content
+						{
+							Include = @"Doc\*.*"
+						},
+						
+						Shortcuts = new[]
+						{
+							new Shortcut
+							{
+                                Name = "Foo documentation",
+								Path = @"Doc/foo.chm"
+							}
+						}
+					},
+				},
+
+				KnownIds = new[]
+				{
+					new KnownId
+					{
+						Id = "foo_help",
+						Path = @"Doc/foo.chm"
+					},
+				}
+			};
+
+			var wixDocument = WixDocumentFor(parameters);
+			var targetMenuFolder = wixDocument.ResolveDirectoryRef("TargetMenuFolder");
+
+			foreach (var shortcut in targetMenuFolder.Shortcuts)
+			{
+				WixComponent component = shortcut.ParentElement.ToWix<WixComponent>();
+				Assert.AreEqual(0, component.Files.Count());
+				Assert.AreEqual(1, component.SelectNodes("wix:CreateFolder").Count);
+		
+				AssertPerUserProfileComponentUsesRegistryKeyAsPath(component);
+			}
+		}
+
+		private static void AssertPerUserProfileComponentUsesRegistryKeyAsPath(WixComponent component)
+		{
+			Assert.GreaterOrEqual(component.SelectNodes("wix:RegistryValue").Count, 1);
 		}
 
 		private IFolder DirectoryFromRoot(string name)

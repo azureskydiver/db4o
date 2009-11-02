@@ -9,21 +9,13 @@ namespace WixBuilder.Tests
 	{
 		internal static void AssertFile(IFileSystemItem expected, WixElement actual)
 		{
-			Assert.AreEqual(expected.FullPath, actual.GetAttribute("src"));
+			Assert.AreEqual(expected.FullPath, actual.GetAttribute("Source"));
 		}
 
 		internal static void AssertWixDirectory(IFileSystemItem expected, XmlElement actual)
 		{
 			Assert.AreEqual("Directory", actual.Name);
-			if (expected.Name == expected.ShortPathName)
-			{
-				Assert.AreEqual(string.Empty, actual.GetAttribute("LongName"));
-			}
-			else
-			{
-				Assert.AreEqual(expected.Name, actual.GetAttribute("LongName"));
-			}
-			Assert.AreEqual(expected.ShortPathName, actual.GetAttribute("Name"));
+			Assert.AreEqual(expected.Name, actual.GetAttribute("Name"));
 		}
 
 		internal static void AssertDirectoryComponent(IFolder expectedDirectoryLayout, WixComponent actualComponent)
