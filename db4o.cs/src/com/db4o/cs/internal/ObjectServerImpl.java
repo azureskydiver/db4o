@@ -33,7 +33,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private LocalObjectContainer _container;
 	private ClientTransactionPool _transactionPool;
 
-	private final Object _startupLock=new Object();
+	private final Lock4 _startupLock = new Lock4();
 	
 	private Config4Impl _config;
 	
@@ -89,26 +89,29 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 			return;
 		}
 		
-		synchronized(_startupLock) {
+		_startupLock.run(new Closure4() { public Object run() {
 			startServerSocket();
 			startServerThread();
 			boolean started=false;
 			while(!started) {
 				try {
-					_startupLock.wait(START_THREAD_WAIT_TIMEOUT);
+					_startupLock.snooze(START_THREAD_WAIT_TIMEOUT);
 					started=true;
 				}
 				// not specialized to InterruptException for .NET conversion
 				catch (Exception exc) {
 				}
 			}
-		}
+			
+			return null;
+		}});
 	}
 
 	private void startServerThread() {
-		synchronized(_startupLock) {
-			threadPool().start(this);
-		}
+		_startupLock.run(new Closure4() { public Object run() {
+			threadPool().start(ObjectServerImpl.this);
+			return null;
+		}});
 	}
 
 	private ThreadPool4 threadPool() {
@@ -386,9 +389,10 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 
 	private void notifyThreadStarted() {
-		synchronized (_startupLock) {
-			_startupLock.notifyAll();
-		}
+		_startupLock.run(new Closure4() { public Object run() {
+			_startupLock.awake();
+			return null;
+		}});
 	}
 
 	private void logListeningOnPort() {

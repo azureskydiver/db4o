@@ -33,7 +33,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     private Tree                i_prefetchedIDs;
 
-    private Hashtable4          i_semaphores;
+    private Lock4 				_semaphoresLock = new Lock4();
+    private Hashtable4          _semaphores;
 
     private int _blockEndAddress;
     
@@ -600,32 +601,36 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         releaseSemaphore(null, name);
     }
 
-    public final void releaseSemaphore(Transaction trans, String name) {
+    public final void releaseSemaphore(final Transaction trans, final String name) {
         synchronized(_lock){
-            if (i_semaphores == null) {
+            if (_semaphores == null) {
                 return;
             }
         }
-        synchronized (i_semaphores) {
-            trans = checkTransaction(trans);
-            if (i_semaphores != null && trans == i_semaphores.get(name)) {
-                i_semaphores.remove(name);
+        _semaphoresLock.run(new Closure4() { public Object run() {
+            Transaction transaction = checkTransaction(trans);
+            if (_semaphores != null && transaction == _semaphores.get(name)) {
+                _semaphores.remove(name);
             }
-            i_semaphores.notifyAll();
-        }
+            _semaphoresLock.awake();
+            
+            return null;
+        }});
     }
 
-    public void releaseSemaphores(Transaction ta) {
-        if (i_semaphores != null) {
-            final Hashtable4 semaphores = i_semaphores;
-            synchronized (semaphores) {
+    public void releaseSemaphores(final Transaction ta) {
+        if (_semaphores != null) {
+            final Hashtable4 semaphores = _semaphores;
+            _semaphoresLock.run(new Closure4() { public Object run() {
                 semaphores.forEachKeyForIdentity(new Visitor4() {
                     public void visit(Object a_object) {
                         semaphores.remove(a_object);
                     }
                 }, ta);
-                semaphores.notifyAll();
-            }
+                
+                _semaphoresLock.awake();
+                return null;
+             }});            
         }
     }
 
@@ -642,53 +647,61 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return setSemaphore(null, name, timeout);
     }
 
-    public final boolean setSemaphore(Transaction trans, String name, int timeout) {
+    public final boolean setSemaphore(final Transaction trans, final String name, final int timeout) {
         if (name == null) {
             throw new NullPointerException();
         }
         synchronized (_lock) {
-        	if (i_semaphores == null) {
-            	i_semaphores = new Hashtable4(10);
+        	if (_semaphores == null) {
+            	_semaphores = new Hashtable4(10);
             }
         }
-        synchronized (i_semaphores) {
+        
+        final BooleanByRef acquired = new BooleanByRef();
+        _semaphoresLock.run(new Closure4() { public Object run() {
         	try{
-	            trans = checkTransaction(trans);
-	            Object obj = i_semaphores.get(name);
-	            if (obj == null) {
-	                i_semaphores.put(name, trans);
-	                return true;
+	            Transaction transaction = checkTransaction(trans);
+	            Object candidateTransaction = _semaphores.get(name);
+	            if (trans == candidateTransaction) {
+	            	acquired.value = true;
+	                return null;
 	            }
-	            if (trans == obj) {
-	                return true;
+	            
+	            if (candidateTransaction == null) {
+	                _semaphores.put(name, transaction);
+	                acquired.value = true;
+	                return null;
 	            }
+	            
 	            long endtime = System.currentTimeMillis() + timeout;
 	            long waitTime = timeout;
 	            while (waitTime > 0) {
-	                try {
-	                	i_semaphores.notifyAll();
-						i_semaphores.wait(waitTime);
-					} catch (InterruptedException e) {
-						// ignore
-					}
+	                _semaphoresLock.awake();
+					_semaphoresLock.snooze(waitTime);
+					
 	                if (classCollection() == null) {
-	                    return false;
+	                    acquired.value = false;
+	                	return null;
 	                }
 	
-	                obj = i_semaphores.get(name);
-	
-	                if (obj == null) {
-	                    i_semaphores.put(name, trans);
-	                    return true;
+	                candidateTransaction = _semaphores.get(name);	
+	                if (candidateTransaction == null) {
+	                    _semaphores.put(name, transaction);
+	                    acquired.value = true;
+	                    return null;
 	                }
 	
 	                waitTime = endtime - System.currentTimeMillis();
 	            }
-	            return false;
+	            
+	            acquired.value = false;
+	            return null;
         	} finally{
-        		i_semaphores.notifyAll();
-        	}
-        }
+        		_semaphoresLock.awake();
+        	}        	
+        }});
+        
+        return acquired.value;
     }
 
     public void setServer(boolean flag) {
