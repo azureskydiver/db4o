@@ -13,11 +13,11 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 
 	private static final int MAX_CHECKS = 10;
 	private static final long WAIT_TIME = 10;
-	private IntByRef _activated = new IntByRef(0);
-	private IntByRef _updated = new IntByRef(0);
-	private IntByRef _deleted = new IntByRef(0);
-	private IntByRef _created = new IntByRef(0);
-	private IntByRef _committed = new IntByRef(0);
+	private SafeCounter _activated = new SafeCounter();
+	private SafeCounter _updated = new SafeCounter();
+	private SafeCounter _deleted = new SafeCounter();
+	private SafeCounter _created = new SafeCounter();
+	private SafeCounter _committed = new SafeCounter();
 
 	/**
 	 * @param args
@@ -67,16 +67,8 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 		assertCount(_deleted, 1000, "deleted");
 	}
 
-	private void assertCount(IntByRef ref, int expected, String name) throws InterruptedException {
-		for(int checkCount = 0; checkCount < MAX_CHECKS; checkCount++) {
-			synchronized(ref) {
-				if(ref.value == expected) {
-					break;
-				}
-				ref.wait(WAIT_TIME);
-			}
-		}
-		Assert.areEqual(expected, ref.value, "Incorrect count for " + name);
+	private void assertCount(SafeCounter actual, int expected, String name) throws InterruptedException {
+		Assert.isTrue(actual.isEqual(expected, MAX_CHECKS));
 	}
 	
 	private void reopenAndRegister() throws Exception {
@@ -98,27 +90,27 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 		
 		deletionEventRegistry.deleted().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				increment(_deleted);
+				_deleted.increment();
 			}
 		});		
 		eventRegistry.activated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				increment(_activated);
+				_activated.increment();
 			}
 		});
 		eventRegistry.committed().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				increment(_committed);
+				_committed.increment();
 			}
 		});
 		eventRegistry.created().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				increment(_created);
+				_created.increment();
 			}
 		});
 		eventRegistry.updated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				increment(_updated);
+				_updated.increment();
 			}
 		});
 	}
@@ -131,11 +123,32 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 		public int _value;
 	}
 	
-	static void increment(IntByRef ref) {
-		synchronized(ref) {
-			ref.value++;
-			ref.notifyAll();
+	private static class SafeCounter {
+		private int _value;
+		private Lock4 _lock = new Lock4();		
+		
+		public void increment() {
+			_lock.run(new Closure4() { public Object run() {
+				_value++;
+				return null; 
+			}});
 		}
-	}
+
+		public boolean isEqual(final int expected, int maxChecks) {
+			final BooleanByRef ret = new BooleanByRef();
+			for(int checkCount = 0; checkCount < MAX_CHECKS && ret.value == false; checkCount++) {
+				_lock.run(new Closure4() { public Object run() {
+					if(_value == expected) {
+						ret.value = true;
+						return null;
+					}
+					_lock.snooze(WAIT_TIME);
+					return null;
+				}});
+			}
+			
+			return ret.value;
+		}
+	}	
 	
 }
