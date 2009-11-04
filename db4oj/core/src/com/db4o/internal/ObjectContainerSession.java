@@ -200,10 +200,8 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
     }
 
     public void releaseSemaphore(String name) {
-        synchronized(lock()){
-            checkClosed();
-            _server.releaseSemaphore(_transaction, name);
-        }
+    	checkClosed();
+        _server.releaseSemaphore(_transaction, name);
     }
 
     /**
