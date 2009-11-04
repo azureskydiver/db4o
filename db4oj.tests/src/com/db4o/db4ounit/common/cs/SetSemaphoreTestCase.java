@@ -14,28 +14,67 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
     private static final String SEMAPHORE_NAME = "hi";
 
 	public static void main(String[] args) {
-		new SetSemaphoreTestCase().runNetworking();
+		new SetSemaphoreTestCase().runAll();
     }
 
-    public void test() throws InterruptedException {
+    public void testSemaphoreReentrancy() {
+        ExtObjectContainer container = db();
+		
+        Assert.isTrue(container.setSemaphore(SEMAPHORE_NAME, 0));
+		Assert.isTrue(container.setSemaphore(SEMAPHORE_NAME, 0));
+		
+		container.releaseSemaphore(SEMAPHORE_NAME);
+    }
+    
+    public void testOwnedSemaphoreCannotBeTaken() {
+        ExtObjectContainer client1 = openNewSession();
+        
+        try {
+	        Assert.isTrue(db().setSemaphore(SEMAPHORE_NAME, 0));
+	        Assert.isFalse(client1.setSemaphore(SEMAPHORE_NAME, 0));
+        }
+        finally {
+        	client1.close();
+        }
+    }
+    
+    public void testPreviouslyOwnedSemaphoreCannotBeTaken() {
+        ExtObjectContainer client1 = openNewSession();
+        
+        try {
+	        Assert.isTrue(db().setSemaphore(SEMAPHORE_NAME, 0));
+	        Assert.isFalse(client1.setSemaphore(SEMAPHORE_NAME, 0));
+	        
+	        db().releaseSemaphore(SEMAPHORE_NAME);
+	        Assert.isTrue(client1.setSemaphore(SEMAPHORE_NAME, 0));
+	        Assert.isFalse(db().setSemaphore(SEMAPHORE_NAME, 0));
+        }
+        finally {
+        	client1.close();
+        }
+    }
+    
+    public void testClosingClientReleasesSemaphores() {
+    	ExtObjectContainer client1 = openNewSession();
+        
+	    Assert.isTrue(client1.setSemaphore(SEMAPHORE_NAME, 0));
+	    Assert.isFalse(db().setSemaphore(SEMAPHORE_NAME, 0));
+	        
+	    client1.close();
+	        
+	    Assert.isTrue(db().setSemaphore(SEMAPHORE_NAME, 0));
+    }
+    
+	public void testMultipleThreads() throws InterruptedException {
 
         final ExtObjectContainer[] clients = new ExtObjectContainer[5];
 
         clients[0] = db();
-
-        Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
-        Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
-
         for (int i = 1; i < clients.length; i++) {
             clients[i] = openNewSession();
         }
-
-        Assert.isFalse(clients[1].setSemaphore(SEMAPHORE_NAME, 0));
-        clients[0].releaseSemaphore(SEMAPHORE_NAME);
+        
         Assert.isTrue(clients[1].setSemaphore(SEMAPHORE_NAME, 50));
-        Assert.isFalse(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
-        Assert.isFalse(clients[2].setSemaphore(SEMAPHORE_NAME, 0));
-
         Thread[] threads = new Thread[clients.length];
 
         for (int i = 0; i < clients.length; i++) {
@@ -50,6 +89,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
 
         Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
         clients[0].close();
+        
 
         threads[2] = startGetAndReleaseThread(clients[2]);
         threads[1] = startGetAndReleaseThread(clients[1]);
@@ -57,13 +97,12 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
         threads[1].join();
         threads[2].join();
 
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < clients.length - 1; i++) {
             clients[i].close();
         }
 
         clients[4].setSemaphore(SEMAPHORE_NAME, 1000);
         clients[4].close();
-
     }
 
     private Thread startGetAndReleaseThread(ExtObjectContainer client) {
@@ -72,7 +111,6 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
         return t;
     }
 
-
 	private static void ensureMessageProcessed(ExtObjectContainer client) {
 		client.commit();
 		Cool.sleepIgnoringInterruption(50);
@@ -80,23 +118,17 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
 
     static class GetAndRelease implements Runnable {
 
-        ExtObjectContainer _client;
+        private ExtObjectContainer _client;
 
         public GetAndRelease(ExtObjectContainer client) {
-            this._client = client;
+            _client = client;
         }
 
         public void run() {
-            long time = System.currentTimeMillis();
-            Assert.isTrue(_client.setSemaphore(SEMAPHORE_NAME, 50000));
-            time = System.currentTimeMillis() - time;
-            // System.out.println("Time to get semaphore: " + time);
+	        Assert.isTrue(_client.setSemaphore(SEMAPHORE_NAME, 50000));
 
-            ensureMessageProcessed(_client);
-
-            // System.out.println("About to release semaphore.");
+        	ensureMessageProcessed(_client);
             _client.releaseSemaphore(SEMAPHORE_NAME);
         }
      }
-
 }
