@@ -11,7 +11,7 @@ import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
-class CommonConfigurationImpl implements CommonConfiguration {
+public class CommonConfigurationImpl implements CommonConfiguration {
 
 	private final Config4Impl _config;
 
@@ -53,6 +53,10 @@ class CommonConfigurationImpl implements CommonConfiguration {
 
 	public void callbacks(boolean flag) {
 		_config.callbacks(flag);
+	}
+
+	public void callbackMode(CallBackMode mode) {
+		_config.callbackMode(mode);
 	}
 
 	public void callConstructors(boolean flag) {
