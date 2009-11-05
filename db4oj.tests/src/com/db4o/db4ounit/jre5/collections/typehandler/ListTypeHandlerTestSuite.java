@@ -30,7 +30,7 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 			ListTypeHandlerTestVariables.LIST_FIXTURE_PROVIDER,
 			new SimpleFixtureProvider(
 				ListTypeHandlerTestVariables.ELEMENTS_SPEC,
-				elementSpecs
+				(Object[])elementSpecs
 			),
 			ListTypeHandlerTestVariables.TYPEHANDLER_FIXTURE_PROVIDER, 
 		};

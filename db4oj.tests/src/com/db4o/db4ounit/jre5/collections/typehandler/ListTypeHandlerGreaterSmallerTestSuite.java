@@ -24,7 +24,7 @@ public class ListTypeHandlerGreaterSmallerTestSuite extends FixtureBasedTestSuit
 			ListTypeHandlerTestVariables.LIST_FIXTURE_PROVIDER,
 			new SimpleFixtureProvider(
 				ListTypeHandlerTestVariables.ELEMENTS_SPEC,
-				elementSpecs
+				(Object[])elementSpecs
 			),
 			ListTypeHandlerTestVariables.TYPEHANDLER_FIXTURE_PROVIDER,
 		};
