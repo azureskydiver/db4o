@@ -2,8 +2,9 @@
 
 package com.db4o.db4ounit.common.cs;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import com.db4o.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -14,8 +15,13 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
     private static final String SEMAPHORE_NAME = "hi";
 
 	public static void main(String[] args) {
-		new SetSemaphoreTestCase().runAll();
+		new SetSemaphoreTestCase().runNetworking();
     }
+	
+	@Override
+	protected void configure(Configuration config) throws Exception {
+		config.storage(new MemoryStorage());
+	}
 
     public void testSemaphoreReentrancy() {
         ExtObjectContainer container = db();
@@ -46,6 +52,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
 	        Assert.isFalse(client1.setSemaphore(SEMAPHORE_NAME, 0));
 	        
 	        db().releaseSemaphore(SEMAPHORE_NAME);
+	        ensureMessageProcessed(db());
 	        Assert.isTrue(client1.setSemaphore(SEMAPHORE_NAME, 0));
 	        Assert.isFalse(db().setSemaphore(SEMAPHORE_NAME, 0));
         }
@@ -113,7 +120,6 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
 
 	private static void ensureMessageProcessed(ExtObjectContainer client) {
 		client.commit();
-		Cool.sleepIgnoringInterruption(50);
 	}
 
     static class GetAndRelease implements Runnable {
