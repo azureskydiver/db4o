@@ -2,6 +2,9 @@
 
 package com.db4o.cs.internal.config;
 
+import java.util.*;
+
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.config.*;
 import com.db4o.internal.*;
@@ -9,6 +12,8 @@ import com.db4o.internal.config.*;
 
 public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl implements ServerConfiguration {
 
+	private Set<ServerConfigurationItem> _configItems;
+	
 	public ServerConfigurationImpl(Config4Impl config) {
 		super(config);
 	}
@@ -24,6 +29,29 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 	public CommonConfiguration common() {
 		return Db4oLegacyConfigurationBridge.asCommonConfiguration(legacy());
 	}
-	
-	
+
+	public void timeoutServerSocket(int milliseconds) {
+		legacy().timeoutServerSocket(milliseconds);
+	}
+
+	public int timeoutServerSocketValue() {
+		return legacy().timeoutServerSocket();
+	}
+
+	public void addConfigurationItem(ServerConfigurationItem configItem) {
+		configItem.prepare(this);
+		if(_configItems == null) {
+			_configItems = new HashSet<ServerConfigurationItem>();
+		}
+		_configItems.add(configItem);
+	}
+
+	public void applyConfigurationItems(ObjectServer server) {
+		if(_configItems == null) {
+			return;
+		}
+		for (ServerConfigurationItem configItem : _configItems) {
+			configItem.apply(server);
+		}
+	}
 }

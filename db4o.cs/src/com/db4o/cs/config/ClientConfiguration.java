@@ -60,5 +60,20 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	 */
 	void prefetchSlotCacheSize(int slotCacheSize);
 
-
+	/**
+	 * configures the time a client waits for a message response 
+	 * from the server. <br>
+	 * <br>
+	 * Default value: 600000ms (10 minutes)<br>
+	 * <br>
+     * It is recommended to use the same values for {@link #timeoutClientSocket(int)}
+     * and {@link #timeoutServerSocket(int)}.
+     * <br>
+	 * This setting can be used on both client and server.<br><br> 
+	 * @param milliseconds
+	 *            time in milliseconds
+	 *            
+	 * @sharpen.property
+	 */
+	public void timeoutClientSocket(int milliseconds);
 }

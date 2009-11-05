@@ -37,7 +37,7 @@ public class StandardClientServerFactory implements ClientServerFactory{
             return null;
         }
         synchronized(container.lock()){
-            return new ObjectServerImpl(container, config.networking().socketFactory(), port);
+            return new ObjectServerImpl(container, config, port);
         }
 	}
 

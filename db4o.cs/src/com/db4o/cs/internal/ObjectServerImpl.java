@@ -6,12 +6,15 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.internal.events.*;
 import com.db4o.internal.threading.*;
 import com.db4o.types.*;
@@ -35,7 +38,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private final Lock4 _startupLock = new Lock4();
 	
-	private Config4Impl _config;
+	private ServerConfigurationImpl _serverConfig;
 	
 	private BlockingQueue _committedInfosQueue = new BlockingQueue();
 	
@@ -53,17 +56,17 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private final Event4Impl<ClientConnectionEventArgs> _clientConnected = Event4Impl.newInstance();
 	private final Event4Impl<ServerClosedEventArgs> _closed = Event4Impl.newInstance();
 	
-	public ObjectServerImpl(final LocalObjectContainer container, Socket4Factory socketFactory, int port) {
-		this(container, socketFactory, (port < 0 ? 0 : port), port == 0);
+	public ObjectServerImpl(final LocalObjectContainer container, ServerConfiguration serverConfig, int port) {
+		this(container, (ServerConfigurationImpl) serverConfig, (port < 0 ? 0 : port), port == 0);
 	}
-	
-	private ObjectServerImpl(final LocalObjectContainer container, Socket4Factory socketFactory, int port, boolean isEmbeddedServer) {
+
+	private ObjectServerImpl(final LocalObjectContainer container, ServerConfigurationImpl serverConfig, int port, boolean isEmbeddedServer) {
 		_isEmbeddedServer = isEmbeddedServer;
-		_socketFactory = socketFactory;
 		_container = container;
+		_serverConfig = serverConfig;
+		_socketFactory = serverConfig.networking().socketFactory();
 		_transactionPool = new ClientTransactionPool(container);
 		_port = port;
-		_config = _container.configImpl();
 		_name = "db4o ServerSocket FILE: " + container.toString() + "  PORT:"+ _port;
 		
 		_container.setServer(true);	
@@ -76,6 +79,9 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 			ensureLoadStaticClass();
 			startCommittedCallbackThread(_committedInfosQueue);
 			startServer();
+			if(_serverConfig != null) {
+				_serverConfig.applyConfigurationItems(this);
+			}
 			ok = true;
 		} finally {
 			if(!ok) {
@@ -125,7 +131,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
-		_serverSocket.setSoTimeout(_config.timeoutServerSocket());
+		_serverSocket.setSoTimeout(_serverConfig.timeoutServerSocketValue());
 	}
 
 	private boolean isEmbeddedServer() {
@@ -137,11 +143,10 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	}
 
 	private void configureObjectServer() {
-		_config.callbacks(false);
-		_config.isServer(true);
+		((CommonConfigurationImpl)_serverConfig.common()).callbackMode(CallBackMode.DELETE_ONLY);
 		// the minimum activation depth of com.db4o.User.class should be 1.
 		// Otherwise, we may get null password.
-		_config.objectClass(User.class).minimumActivationDepth(1);
+		_serverConfig.common().objectClass(User.class).minimumActivationDepth(1);
 	}
 
 	public void backup(String path) throws IOException {
@@ -232,7 +237,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	}
 
 	public Configuration configure() {
-		return _config;
+		return Db4oClientServerLegacyConfigurationBridge.asLegacy(_serverConfig);
 	}
 
 	public ExtObjectServer ext() {

@@ -33,14 +33,6 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 		_config.singleThreadedClient(flag);
 	}
 
-	public void timeoutClientSocket(int milliseconds) {
-		_config.timeoutClientSocket(milliseconds);
-	}
-
-	public void timeoutServerSocket(int milliseconds) {
-		_config.timeoutServerSocket(milliseconds);
-	}
-	
 	public void messageRecipient(MessageRecipient messageRecipient) {
 		_config.setMessageRecipient(messageRecipient);
 	}
