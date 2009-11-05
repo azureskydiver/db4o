@@ -28,6 +28,7 @@ public class AllTests extends ReflectionTestSuite {
 			CoolTestCase.class,
 			DynamicVariableTestCase.class,
 			EnvironmentsTestCase.class,
+			HashSet4TestCase.class,
 			Hashtable4TestCase.class,
 			IdentitySet4TestCase.class,
 			IntArrayListTestCase.class,
