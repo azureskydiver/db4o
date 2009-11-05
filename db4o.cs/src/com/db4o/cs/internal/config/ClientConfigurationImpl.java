@@ -42,7 +42,10 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 		legacy().timeoutClientSocket(milliseconds);
 	}
 
-	public int timeoutClientSocketValue() {
+	/**
+	 * @sharpen.property
+	 */
+	public int timeoutClientSocket() {
 		return legacy().timeoutClientSocket();
 	}
 
