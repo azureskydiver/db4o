@@ -22,6 +22,6 @@ public class Lock4 {
     }
 
     public void awake() {
-    	this.notify();
+    	this.notifyAll();
     }
 }
