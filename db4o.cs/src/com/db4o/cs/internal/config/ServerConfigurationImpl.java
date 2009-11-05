@@ -12,7 +12,7 @@ import com.db4o.internal.config.*;
 
 public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl implements ServerConfiguration {
 
-	private Set<ServerConfigurationItem> _configItems;
+	private List<ServerConfigurationItem> _configItems;
 	
 	public ServerConfigurationImpl(Config4Impl config) {
 		super(config);
@@ -42,9 +42,12 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 	}
 
 	public void addConfigurationItem(ServerConfigurationItem configItem) {
+		if(_configItems != null && _configItems.contains(configItem)) {
+			return;
+		}
 		configItem.prepare(this);
 		if(_configItems == null) {
-			_configItems = new HashSet<ServerConfigurationItem>();
+			_configItems = new ArrayList<ServerConfigurationItem>();
 		}
 		_configItems.add(configItem);
 	}
