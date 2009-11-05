@@ -30,12 +30,9 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 	@Override
 	protected ClientConfiguration clientConfiguration() {
 		ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
-		
 		clientConfig.networking().batchMessages(false);
 		clientConfig.prefetchIDCount(1);
-		
-		configurePingTimeouts(clientConfig.networking());
-		
+		clientConfig.timeoutClientSocket(Integer.MAX_VALUE);
 		return clientConfig;
 	}
 
@@ -43,17 +40,12 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 	protected ServerConfiguration serverConfiguration() {
 		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
 		serverConfig.common().add(new NetworkingMonitoringSupport());
-		configurePingTimeouts(serverConfig.networking());
+		serverConfig.timeoutServerSocket(Integer.MAX_VALUE);
 		
 		setupCountingSocketFactory(serverConfig.networking());		
 			
 		configureClock(serverConfig.common().environment());
 		return serverConfig;
-	}
-
-	private void configurePingTimeouts(NetworkingConfiguration networkingConfig) {
-		networkingConfig.timeoutClientSocket(Integer.MAX_VALUE);
-		networkingConfig.timeoutServerSocket(Integer.MAX_VALUE);
 	}
 
 	public void testBytesSentSingleClient() throws Exception {
