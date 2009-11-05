@@ -42,7 +42,7 @@ public final class EventDispatchers {
 	static final int CAN_NEW = 8;
 	static final int CAN_UPDATE = 9;
 	
-	static final int SERVER_COUNT = 2;
+	static final int DELETE_COUNT = 2;
 	static final int COUNT = 10;
 
 	private static class EventDispatcherImpl implements EventDispatcher {
@@ -123,12 +123,13 @@ public final class EventDispatchers {
     }
 
 	private static int eventCountFor(ObjectContainerBase container) {
-	    if (container.configImpl().callbacks()) {
-			return COUNT;
-		}
-		if (container.configImpl().isServer()) {
-			return SERVER_COUNT;
-		}
+	    CallBackMode callbackMode = container.configImpl().callbackMode();
+	    if(callbackMode == CallBackMode.ALL) {
+	    	return COUNT;
+	    }
+	    if(callbackMode == CallBackMode.DELETE_ONLY) {
+	    	return DELETE_COUNT;
+	    }
 	    return 0;
     }
 	

@@ -56,12 +56,12 @@ public final class Config4Impl implements Configuration, DeepClone,
     
     private final static KeySpec BTREE_NODE_SIZE_KEY=new KeySpec(119);
     
-	private final static KeySpec CALLBACKS_KEY=new KeySpec(true);
+	private final static KeySpec CALLBACKS_KEY=new KeySpec(CallBackMode.ALL);
     
 	private final static KeySpec CALL_CONSTRUCTORS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
 	
 	private final static KeySpec CONFIGURATION_ITEMS_KEY=new KeySpec(null);
-    
+
 	private final static KeySpec CONFIGURED_REFLECTOR_KEY=new KeySpec(null);
     
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY=new KeySpec(true);
@@ -116,8 +116,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
 	
-	private final static KeySpec IS_SERVER_KEY=new KeySpec(false);
-    
 	private final static KeySpec QUERY_EVALUATION_MODE_KEY=new KeySpec(QueryEvaluationMode.IMMEDIATE);
 	
 	private final static KeySpec LOCK_FILE_KEY=new KeySpec(true);
@@ -303,9 +301,13 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void callbacks(boolean turnOn) {
-        _config.put(CALLBACKS_KEY,turnOn);
+        callbackMode(turnOn ? CallBackMode.ALL : CallBackMode.NONE);
     }
-    
+
+    public void callbackMode(CallBackMode mode) {
+        _config.put(CALLBACKS_KEY, mode);
+    }
+
     public void callConstructors(boolean flag){
         _config.put(CALL_CONSTRUCTORS_KEY,TernaryBool.forBoolean(flag));
     }
@@ -795,8 +797,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsString(BLOB_PATH_KEY);
 	}
 
-	public boolean callbacks() {
-		return _config.getAsBoolean(CALLBACKS_KEY);
+	public CallBackMode callbackMode() {
+		return (CallBackMode)_config.get(CALLBACKS_KEY);
 	}
 
 	public TernaryBool callConstructors() {
@@ -868,14 +870,6 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _internStrings;
 	}
 	
-	public void isServer(boolean flag){
-		_config.put(IS_SERVER_KEY,flag);
-	}
-
-	boolean isServer() {
-		return _config.getAsBoolean(IS_SERVER_KEY);
-	}
-
 	public boolean lockFile() {
 		return _config.getAsBoolean(LOCK_FILE_KEY);
 	}
