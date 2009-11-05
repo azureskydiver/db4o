@@ -39,7 +39,7 @@ public class LegacyClientServerFactoryImpl implements LegacyClientServerFactory{
         }
 		ServerConfiguration serverConfig = Db4oClientServerLegacyConfigurationBridge.asServerConfiguration(config);
         synchronized(container.lock()){
-            return new ObjectServerImpl(container, serverConfig.networking().socketFactory(), port);
+            return new ObjectServerImpl(container, serverConfig, port);
         }
 	}
 

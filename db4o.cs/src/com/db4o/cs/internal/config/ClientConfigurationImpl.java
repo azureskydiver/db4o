@@ -37,4 +37,13 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 	public void prefetchSlotCacheSize(int slotCacheSize) {
 		legacy().prefetchSlotCacheSize(slotCacheSize); 
 	}
+	
+	public void timeoutClientSocket(int milliseconds) {
+		legacy().timeoutClientSocket(milliseconds);
+	}
+
+	public int timeoutClientSocketValue() {
+		return legacy().timeoutClientSocket();
+	}
+
 }
