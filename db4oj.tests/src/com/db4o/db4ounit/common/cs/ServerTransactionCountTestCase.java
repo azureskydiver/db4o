@@ -16,7 +16,7 @@ public class ServerTransactionCountTestCase implements TestCase {
 
 	public void test() throws Exception{
 		ServerConfiguration config = Db4oClientServer.newServerConfiguration();
-		config.networking().timeoutServerSocket(TIMEOUT);
+		config.timeoutServerSocket(TIMEOUT);
 		config.file().storage(new MemoryStorage());
 		ObjectServerImpl server = (ObjectServerImpl) Db4oClientServer.openServer(config, "", Db4oClientServer.ARBITRARY_PORT);
 		Thread.sleep(TIMEOUT * 2);

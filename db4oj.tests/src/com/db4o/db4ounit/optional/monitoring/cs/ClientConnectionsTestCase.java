@@ -65,35 +65,14 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 		super.setUp();
 		
 		ServerConfiguration serverConfiguration = Db4oClientServer.newServerConfiguration();
+		serverConfiguration.addConfigurationItem(new ClientConnectionsMonitoringSupport());
 		
 		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration, tempFile(), Db4oClientServer.ARBITRARY_PORT);
 		_server.grantAccess(USER, PASSWORD);
-
 		
 		// We depend on the order of client connection/disconnection event firing.
 		// We want the bean to be notified before the _listener in the test.
 		_listener = registerCloseEventNotification();
-		
-		registerBean();
-	}
-
-	// TODO: Where does this setup code go? COR-1779
-	private void registerBean() throws JMException {
-		final ClientConnections bean = Db4oMBeans.newClientConnectionsMBean(_server);
-		bean.register();
-		((ObjectServerEvents)_server).closed().addListener(new EventListener4<ServerClosedEventArgs>() {
-			public void onEvent(Event4<ServerClosedEventArgs> e, ServerClosedEventArgs args) {
-				bean.unregister();
-			}
-		});
-		
-		((ObjectServerEvents)_server).clientConnected().addListener(new EventListener4<ClientConnectionEventArgs>() { public void onEvent(Event4<ClientConnectionEventArgs> e, ClientConnectionEventArgs args) {
-			bean.notifyClientConnected();
-		}});
-		
-		((ObjectServerEvents)_server).clientDisconnected().addListener(new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
-			bean.notifyClientDisconnected();
-		}});
 	}
 
 	private EventListener4<StringEventArgs> registerCloseEventNotification() {

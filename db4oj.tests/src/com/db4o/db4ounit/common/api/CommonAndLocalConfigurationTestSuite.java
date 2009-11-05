@@ -63,7 +63,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			Assert.areEqual(42, legacy.bTreeNodeSize());
 			
 			common.callbacks(false);
-			Assert.isFalse(legacy.callbacks());
+			Assert.areEqual(CallBackMode.NONE, legacy.callbackMode());
 			
 			common.callConstructors(false);
 			Assert.isTrue(legacy.callConstructors().definiteNo());
