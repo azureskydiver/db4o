@@ -2,8 +2,7 @@
 
 package com.db4o.db4ounit.optional.monitoring.cs;
 
-import javax.management.*;
-
+import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.cs.internal.*;
@@ -23,6 +22,10 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 
 	private static final String USER = "db4o";
 	private static final String PASSWORD = "db4o";
+
+	private BooleanByRef _closeEventRaised = new BooleanByRef();	
+	private EventListener4<StringEventArgs> _listener;
+	private ObjectServerImpl _server;
 
 	public void testConnectedClients() {
 		for(int i=0; i < 5; i++) {
@@ -63,38 +66,45 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		
-		ServerConfiguration serverConfiguration = Db4oClientServer.newServerConfiguration();
-		serverConfiguration.addConfigurationItem(new ClientConnectionsMonitoringSupport());
-		
-		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration, tempFile(), Db4oClientServer.ARBITRARY_PORT);
-		_server.grantAccess(USER, PASSWORD);
-		
-		// We depend on the order of client connection/disconnection event firing.
-		// We want the bean to be notified before the _listener in the test.
-		_listener = registerCloseEventNotification();
-	}
-
-	private EventListener4<StringEventArgs> registerCloseEventNotification() {
-		EventListener4<StringEventArgs> listener = new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
+		_listener = new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
 			synchronized (_closeEventRaised) {
 				_closeEventRaised.value = true;
 				_closeEventRaised.notifyAll();
 			}
 		}};		
-		_server.clientDisconnected().addListener(listener);
-		return listener;
+		ServerConfiguration serverConfiguration = Db4oClientServer.newServerConfiguration();
+		// We depend on the order of client connection/disconnection event firing.
+		// We want the bean to be notified before the _listener in the test.
+		serverConfiguration.addConfigurationItem(new ConnectionCloseEventSupport(_listener));
+		serverConfiguration.addConfigurationItem(new ClientConnectionsMonitoringSupport());
+		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration, tempFile(), Db4oClientServer.ARBITRARY_PORT);
+		_server.grantAccess(USER, PASSWORD);
 	}
-	
+
 	public void tearDown() throws Exception {
 		_server.clientDisconnected().removeListener(_listener);
 		_server.close();
-		
 		super.tearDown();
 	}
 	
-	final BooleanByRef _closeEventRaised = new BooleanByRef();	
-	private EventListener4<StringEventArgs> _listener;
-	private ObjectServerImpl _server;
-	
+	private static class ConnectionCloseEventSupport implements ServerConfigurationItem {
+		private EventListener4<StringEventArgs> _listener;
+		
+		public ConnectionCloseEventSupport(EventListener4<StringEventArgs> listener) {
+			_listener = listener;
+		}
+		
+		public void prepare(ServerConfiguration configuration) {
+		}
+
+		public void apply(ObjectServer server) {
+			((ObjectServerEvents)server).clientDisconnected().addListener(_listener);
+		}
+	}
+
+	public static void main(String[] args) {
+		for(int i=0;i<100;i++) {
+			new ConsoleTestRunner(ClientConnectionsTestCase.class).run();
+		}
+	}
 }
