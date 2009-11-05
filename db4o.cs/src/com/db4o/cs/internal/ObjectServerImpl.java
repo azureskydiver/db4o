@@ -131,7 +131,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
-		_serverSocket.setSoTimeout(_serverConfig.timeoutServerSocketValue());
+		_serverSocket.setSoTimeout(_serverConfig.timeoutServerSocket());
 	}
 
 	private boolean isEmbeddedServer() {
