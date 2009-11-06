@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 				
 			com.db4o.db4ounit.common.cs.caching.AllTests.class,
+			com.db4o.db4ounit.common.cs.config.AllTests.class,
 			com.db4o.db4ounit.common.cs.objectexchange.AllTests.class,
 			
 			BatchActivationTestCase.class,

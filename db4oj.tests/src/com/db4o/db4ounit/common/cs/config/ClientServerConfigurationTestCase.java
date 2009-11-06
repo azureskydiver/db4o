@@ -1,6 +1,6 @@
 /* Copyright (C) 2008  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.cs;
+package com.db4o.db4ounit.common.cs.config;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 import db4ounit.mocking.*;
 
 /**
- * @sharpen.ignore
+ * @sharpen.remove
  */
 public class ClientServerConfigurationTestCase extends AbstractDb4oTestCase{
 	
@@ -57,7 +57,7 @@ public class ClientServerConfigurationTestCase extends AbstractDb4oTestCase{
 		Assert.isNull(Db4oClientServer.openServer(config, "file.db4o", 0xdb40));
 		
 		factoryStub.verify(new MethodCall[] {
-			new MethodCall("openServer", new Object[] { MethodCall.IGNORED_ARGUMENT, "file.db4o", 0xdb40, MethodCall.IGNORED_ARGUMENT }),
+			new MethodCall("openServer", new Object[] { MethodCall.IGNORED_ARGUMENT, "file.db4o", 0xdb40 }),
 		});
 	}
 
@@ -72,7 +72,7 @@ public class ClientServerConfigurationTestCase extends AbstractDb4oTestCase{
 		Assert.isNull(Db4oClientServer.openClient(config, "foo", 42, "u", "p"));
 		
 		factoryStub.verify(new MethodCall[] {
-			new MethodCall("openClient", new Object[] { MethodCall.IGNORED_ARGUMENT, "foo", 42, "u", "p", MethodCall.IGNORED_ARGUMENT }),
+			new MethodCall("openClient", new Object[] { MethodCall.IGNORED_ARGUMENT, "foo", 42, "u", "p" }),
 		});
 	}
 
