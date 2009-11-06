@@ -95,6 +95,14 @@ public class Arrays4 {
 		}
     }
 
+	public static Collection4 asList(Object[] arr) {
+		Collection4 coll = new Collection4();
+		for (int arrIdx = 0; arrIdx < arr.length; arrIdx++) {
+			coll.add(arr[arrIdx]);
+		}
+		return coll;
+	}
+	
 	/**
 	 * @sharpen.ignore
 	 */
