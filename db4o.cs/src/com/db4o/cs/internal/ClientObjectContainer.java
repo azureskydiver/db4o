@@ -8,7 +8,9 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.caching.ClientSlotCache;
+import com.db4o.cs.config.*;
 import com.db4o.cs.internal.caching.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.cs.internal.objectexchange.*;
 import com.db4o.events.*;
@@ -91,14 +93,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// Db4o.registerClientConstructor(new ClientConstructor());
 	}
 
-	public ClientObjectContainer(Configuration config, Socket4Adapter socket, String user, String password, boolean login) {
-		super(config);
+	public ClientObjectContainer(ClientConfiguration config, Socket4Adapter socket, String user, String password, boolean login) {
+		this((ClientConfigurationImpl)config, socket, user, password, login);
+	}
+	
+	public ClientObjectContainer(ClientConfigurationImpl config, Socket4Adapter socket, String user, String password, boolean login) {
+		super(Db4oClientServerLegacyConfigurationBridge.asLegacy(config));
 		_userName = user;
 		_password = password;
 		_login = login;
 		_heartbeat = new ClientHeartbeat(this);
 		setAndConfigSocket(socket);
 		open();
+		config.applyConfigurationItems(this);
 	}
 
 	private void setAndConfigSocket(Socket4Adapter socket) {
