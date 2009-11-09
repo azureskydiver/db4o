@@ -62,8 +62,7 @@ public class Db4oEmbedded {
 		if (null == config) {
 			throw new ArgumentNullException();
 		}
-		return ObjectContainerFactory.openObjectContainer(((LegacyConfigurationProvider)config).legacy(),
-				databaseFileName);
+		return ObjectContainerFactory.openObjectContainer(config, databaseFileName);
 	}
 	
 	/**

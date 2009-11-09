@@ -14,7 +14,7 @@ public class Db4oLegacyConfigurationBridge {
 		return new CommonConfigurationImpl((Config4Impl) config);
 	}
 
-	public static Config4Impl legacyFrom(final Object config) {
+	public static Config4Impl asLegacy(final Object config) {
 		return ((LegacyConfigurationProvider)config).legacy();
 	}
 
