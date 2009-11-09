@@ -23,7 +23,7 @@ public class StandardClientServerFactory implements ClientServerFactory{
 		Config4Impl config = asLegacy(clientConfig);
 		Config4Impl.assertIsNotTainted(config);
 		Socket4Adapter networkSocket = new Socket4Adapter(clientConfig.networking().socketFactory(), hostName, port);
-		return new ClientObjectContainer(config, networkSocket, user, password, true);
+		return new ClientObjectContainer(clientConfig, networkSocket, user, password, true);
 	}
 
 

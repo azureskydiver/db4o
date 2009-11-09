@@ -24,7 +24,7 @@ public class LegacyClientServerFactoryImpl implements LegacyClientServerFactory{
 		Config4Impl.assertIsNotTainted(config);
 		ClientConfiguration clientConfig = Db4oClientServerLegacyConfigurationBridge.asClientConfiguration(config);
 		Socket4Adapter networkSocket = new Socket4Adapter(clientConfig.networking().socketFactory(), hostName, port);
-		return new ClientObjectContainer(config, networkSocket, user, password, true);
+		return new ClientObjectContainer(clientConfig, networkSocket, user, password, true);
 	}
 
 

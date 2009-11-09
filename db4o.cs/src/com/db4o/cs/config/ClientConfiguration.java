@@ -3,6 +3,7 @@
 package com.db4o.cs.config;
 
 import com.db4o.config.*;
+import com.db4o.cs.internal.*;
 import com.db4o.messaging.*;
 
 /**
@@ -76,4 +77,12 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	 * @sharpen.property
 	 */
 	public void timeoutClientSocket(int milliseconds);
+
+	/**
+     * adds ConfigurationItems to be applied when
+     * a networking {@link ClientObjectContainer} is opened. 
+     * @param configItem the {@link ClientConfigurationItem}
+     * @since 7.12
+     */
+	public void addConfigurationItem(ClientConfigurationItem configItem);
 }
