@@ -3,7 +3,7 @@
 	<import file="common.xml" />	
 	<property name="tmpDir" location="tmpPoms"/>
 
-	<path id="maven-ant-tasks.classpath" path="maven/lib/maven-ant-tasks-2.0.9.jar" />
+	<path id="maven-ant-tasks.classpath" path="maven/lib/maven-ant-tasks-2.0.10.jar" />
 	
 	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant" classpathref="maven-ant-tasks.classpath" />
 
@@ -56,7 +56,8 @@
 	<!-- ================================= 
           target: deploy-maven              
          ================================= -->
-	<target name="deploy-maven">		
+	<target name="deploy-maven">
+		<echo message="Deploying maven artifacts to ${maven.repository.snapshots.url}" />
 		<copy todir="${tmpDir}/poms" overwrite="true">
 			<fileset dir="maven/poms" />
 		</copy>
