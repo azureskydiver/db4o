@@ -12,9 +12,11 @@ public class AllTests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
+				ClientConfigurationItemIntegrationTestCase.class,
+				ClientConfigurationItemUnitTestCase.class,
 				ClientServerConfigurationTestCase.class,
-				ServerConfigurationItemUnitTestCase.class,
 				ServerConfigurationItemIntegrationTestCase.class,
+				ServerConfigurationItemUnitTestCase.class,
 		};
 	}
 	

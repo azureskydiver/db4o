@@ -28,7 +28,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 		
 		public void test() {
 			final CommonConfigurationProvider config = subject();
-			final Config4Impl legacy = Db4oLegacyConfigurationBridge.legacyFrom(config);
+			final Config4Impl legacy = Db4oLegacyConfigurationBridge.asLegacy(config);
 			
 			final CommonConfiguration common = config.common();
 			common.activationDepth(42);		
@@ -167,7 +167,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			
 			final FileConfigurationProvider config = subject();
 			final FileConfiguration fileConfig = config.file();
-			final Config4Impl legacyConfig = Db4oLegacyConfigurationBridge.legacyFrom(config);
+			final Config4Impl legacyConfig = Db4oLegacyConfigurationBridge.asLegacy(config);
 			
 			fileConfig.blockSize(42);
 			Assert.areEqual(42, legacyConfig.blockSize());
