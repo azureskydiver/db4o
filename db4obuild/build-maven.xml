@@ -105,7 +105,7 @@
 		<attribute name="pom" />
 		
 		<sequential>
-			<artifact:deploy file="@{file}">
+			<artifact:deploy file="@{file}" uniqueversion="false">
 				<remoteRepository refid="@{repositoryId}"/>
 				<pom file="${tmpDir}/poms/@{pom}" />
 				<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
