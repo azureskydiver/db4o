@@ -17,6 +17,8 @@ public class AllTests extends ComposibleTestSuite {
 			        	ConfigurationOfObjectClassNotSupportedTestCase.class,
 			        	Config4ImplTestCase.class,
 			        	CustomStringEncodingTestCase.class,
+			        	EmbeddedConfigurationItemIntegrationTestCase.class,
+			        	EmbeddedConfigurationItemUnitTestCase.class,
 			        	GlobalVsNonStaticConfigurationTestCase.class,
 			        	LatinStringEncodingTestCase.class,
 			        	ObjectContainerCustomNameTestCase.class,

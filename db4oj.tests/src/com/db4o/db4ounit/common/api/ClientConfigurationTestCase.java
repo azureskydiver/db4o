@@ -15,7 +15,7 @@ import db4ounit.*;
 public class ClientConfigurationTestCase implements TestCase {
 	
 	final ClientConfiguration _subject = Db4oClientServer.newClientConfiguration();
-	final Config4Impl _legacy = Db4oLegacyConfigurationBridge.legacyFrom(_subject);
+	final Config4Impl _legacy = Db4oLegacyConfigurationBridge.asLegacy(_subject);
 	
 	public void testPrefetchDepth() {
 	

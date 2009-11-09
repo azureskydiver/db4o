@@ -1,20 +1,19 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
-package com.db4o.db4ounit.common.cs.config;
+package com.db4o.db4ounit.common.config;
 
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.cs.*;
-import com.db4o.cs.config.*;
-import com.db4o.cs.internal.config.*;
+import com.db4o.config.*;
+import com.db4o.internal.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.dbmock.*;
 
-public class ServerConfigurationItemUnitTestCase implements TestLifeCycle {
+public class EmbeddedConfigurationItemUnitTestCase implements TestLifeCycle {
 
 	private List<DummyConfigurationItem> _applied;
-	private ServerConfigurationImpl _config;
+	private EmbeddedConfigurationImpl _config;
 	
 	public void testPrepareApply() {
 		List<DummyConfigurationItem> items = Arrays.asList(
@@ -26,7 +25,7 @@ public class ServerConfigurationItemUnitTestCase implements TestLifeCycle {
 			Assert.areEqual(1, item.prepareCount());
 		}
 		Assert.areEqual(0, _applied.size());
-		_config.applyConfigurationItems(new MockServer());
+		_config.applyConfigurationItems(new MockEmbedded());
 		assertListsAreEqual(items, _applied);
 		for (DummyConfigurationItem item : items) {
 			Assert.areEqual(1, item.prepareCount());
@@ -37,9 +36,14 @@ public class ServerConfigurationItemUnitTestCase implements TestLifeCycle {
 		DummyConfigurationItem item = new DummyConfigurationItem(_applied);
 		_config.addConfigurationItem(item);
 		_config.addConfigurationItem(item);
-		_config.applyConfigurationItems(new MockServer());
+		_config.applyConfigurationItems(new MockEmbedded());
 		Assert.areEqual(1, item.prepareCount());
 		assertListsAreEqual(Arrays.asList(item), _applied);
+	}
+
+	public void setUp() throws Exception {
+		_applied = new ArrayList<DummyConfigurationItem>();
+		_config = (EmbeddedConfigurationImpl) Db4oEmbedded.newConfiguration();
 	}
 
 	private <T> void assertListsAreEqual(List<T> a, List<T> b) {
@@ -48,16 +52,11 @@ public class ServerConfigurationItemUnitTestCase implements TestLifeCycle {
 			Assert.areEqual(a.get(i), b.get(i));
 		}
 	}
-
-	public void setUp() throws Exception {
-		_applied = new ArrayList<DummyConfigurationItem>();
-		_config = (ServerConfigurationImpl) Db4oClientServer.newServerConfiguration();
-	}
-
+	
 	public void tearDown() throws Exception {
 	}
 
-	private static class DummyConfigurationItem implements ServerConfigurationItem {
+	private static class DummyConfigurationItem implements EmbeddedConfigurationItem {
 		private int _prepareCount = 0;
 		private List<DummyConfigurationItem> _applied;
 		
@@ -65,11 +64,11 @@ public class ServerConfigurationItemUnitTestCase implements TestLifeCycle {
 			_applied = applied;
 		}
 		
-		public void apply(ObjectServer server) {
+		public void apply(EmbeddedObjectContainer container) {
 			_applied.add(this);
 		}
 
-		public void prepare(ServerConfiguration configuration) {
+		public void prepare(EmbeddedConfiguration configuration) {
 			_prepareCount++;
 		}
 		
