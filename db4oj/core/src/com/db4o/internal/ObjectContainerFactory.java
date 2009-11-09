@@ -5,18 +5,19 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.internal.config.*;
 
 
 public class ObjectContainerFactory {
 	
-	public static EmbeddedObjectContainer openObjectContainer(Configuration config,
-			String databaseFileName) throws OldFormatException {		
-		
-		Config4Impl.assertIsNotTainted(config);
+	public static EmbeddedObjectContainer openObjectContainer(EmbeddedConfiguration config, String databaseFileName) throws OldFormatException {		
+		Configuration legacyConfig = Db4oLegacyConfigurationBridge.asLegacy(config);		
+		Config4Impl.assertIsNotTainted(legacyConfig);
 		
 		emitDebugInfo();		
-		EmbeddedObjectContainer oc = new IoAdaptedObjectContainer(config, databaseFileName);	
-		Messages.logMsg(config, 5, databaseFileName);
+		EmbeddedObjectContainer oc = new IoAdaptedObjectContainer(legacyConfig, databaseFileName);	
+		((EmbeddedConfigurationImpl)config).applyConfigurationItems(oc);
+		Messages.logMsg(legacyConfig, 5, databaseFileName);
 		return oc;
 	}
 

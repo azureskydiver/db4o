@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.reflect.*;
 
 /**
@@ -220,7 +221,7 @@ public class Db4o {
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {
 
-		return ObjectContainerFactory.openObjectContainer(config, databaseFileName);
+		return ObjectContainerFactory.openObjectContainer(Db4oLegacyConfigurationBridge.asEmbeddedConfiguration(config), databaseFileName);
 	}
 
 	protected static final ObjectContainer openMemoryFile1(

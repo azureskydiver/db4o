@@ -6,4 +6,12 @@ package com.db4o.config;
  */
 public interface EmbeddedConfiguration extends FileConfigurationProvider, CommonConfigurationProvider, CacheConfigurationProvider {
 
+	/**
+     * adds ConfigurationItems to be applied when
+     * a networking {@link EmbeddedObjectContainer} is opened. 
+     * @param configItem the {@link EmbeddedConfigurationItem}
+     * @since 7.12
+     */
+	void addConfigurationItem(EmbeddedConfigurationItem configItem);
+
 }
