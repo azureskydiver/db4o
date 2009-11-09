@@ -206,15 +206,6 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 				e.printStackTrace();
 			}
 		}
-		
-		i.reset();
-		while (i.moveNext()) {
-			try {
-				((ServerMessageDispatcher) i.current()).join();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public Iterator4 iterateDispatchers() {
