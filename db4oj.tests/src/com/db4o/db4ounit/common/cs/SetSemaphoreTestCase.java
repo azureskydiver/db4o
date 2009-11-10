@@ -3,7 +3,10 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.config.*;
+import com.db4o.cs.internal.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -15,7 +18,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
     private static final String SEMAPHORE_NAME = "hi";
 
 	public static void main(String[] args) {
-		new SetSemaphoreTestCase().runNetworking();
+		new SetSemaphoreTestCase().runAll();
     }
 	
 	@Override
@@ -62,15 +65,46 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
     }
     
     public void testClosingClientReleasesSemaphores() {
-    	ExtObjectContainer client1 = openNewSession();
+    	final ExtObjectContainer client1 = openNewSession();
         
 	    Assert.isTrue(client1.setSemaphore(SEMAPHORE_NAME, 0));
 	    Assert.isFalse(db().setSemaphore(SEMAPHORE_NAME, 0));
 	        
-	    client1.close();
-	        
-	    Assert.isTrue(db().setSemaphore(SEMAPHORE_NAME, 0));
+	    if (isNetworking()) {
+	    	closeConnectionInNetworkingCS(client1);	    
+	    } else {
+		    client1.close();
+	    }	    
+    	
+		Assert.isTrue(db().setSemaphore(SEMAPHORE_NAME, 0));
     }
+
+	private void closeConnectionInNetworkingCS(final ExtObjectContainer client) {
+		final BooleanByRef eventWasRaised = new BooleanByRef();
+		final Lock4 clientDisconnectedLock = new Lock4();
+		ObjectServerEvents serverEvents = (ObjectServerEvents) clientServerFixture().server();
+		serverEvents.clientDisconnected().addListener(new EventListener4<StringEventArgs>() {
+			public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
+				clientDisconnectedLock.run(new Closure4() { public Object run() {
+					eventWasRaised.value = true;
+				    clientDisconnectedLock.awake();
+				    
+				    return null;
+				}});				
+			}
+		});
+		
+		clientDisconnectedLock.run(new Closure4() { 
+			public Object run() {
+			    client.close();
+				clientDisconnectedLock.snooze(30000);	    	
+				
+				return null;
+			}
+		});
+		
+		Assert.isTrue(eventWasRaised.value, "ClientDisconnected event was not raised.");
+	}
     
 	public void testMultipleThreads() throws InterruptedException {
 
