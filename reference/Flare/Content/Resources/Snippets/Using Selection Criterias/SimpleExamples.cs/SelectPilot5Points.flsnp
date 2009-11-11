@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.cs: SelectPilot5Points
 private static void SelectPilot5Points()
-        ...{
+         {
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     IList&lt;Pilot&gt; result = container.Query&lt;Pilot&gt;(delegate(Pilot pilot)
-                    ...{
+                     {
                         // pilots with 5 points are included in the
                         // result
                         return pilot.Points == 5;
@@ -15,11 +15,11 @@ private static void SelectPilot5Points()
                     ListResult(result);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

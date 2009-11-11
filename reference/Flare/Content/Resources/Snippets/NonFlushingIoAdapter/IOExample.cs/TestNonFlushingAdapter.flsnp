@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.cs: TestNonFlushingAdapter
 private static void TestNonFlushingAdapter()
-        ...{
+         {
             File.Delete(Db4oFileName);
             RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter();
             NonFlushingIoAdapter nonFlushingIoAdapter =
@@ -10,7 +10,7 @@ private static void TestNonFlushingAdapter()
             configuration.Io(cachedIoAdapter);
             IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;);
                 container.Store(pilot);
                 long startTime = DateTime.Now.Ticks;
@@ -19,7 +19,7 @@ private static void TestNonFlushingAdapter()
                         (DateTime.Now.Ticks - startTime) + &quot; ticks&quot;);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
 
@@ -27,7 +27,7 @@ private static void TestNonFlushingAdapter()
             File.Delete(Db4oFileName);
             container = Db4oFactory.OpenFile(Db4oFileName);
             try
-            ...{
+             {
                 Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;);
                 container.Store(pilot);
                 long startTime = DateTime.Now.Ticks;
@@ -36,7 +36,7 @@ private static void TestNonFlushingAdapter()
                         (DateTime.Now.Ticks - startTime) + &quot; ticks&quot;);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

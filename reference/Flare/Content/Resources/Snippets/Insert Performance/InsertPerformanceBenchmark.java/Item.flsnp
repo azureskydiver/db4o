@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: Item
-public static class Item ...{
+public static class Item  {
         
         public String _name;
         public Item _child;
 
-        public Item()...{
+        public Item() {
             
         }
         
-        public Item(String name, Item child)...{
+        public Item(String name, Item child) {
             _name = name;
             _child = child;
         }

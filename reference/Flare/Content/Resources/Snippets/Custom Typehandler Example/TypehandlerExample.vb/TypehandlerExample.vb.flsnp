@@ -1,187 +1,186 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.vb
-1' Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com 
-2
-3Imports System.Text
-4Imports System.IO
-5
-6Imports Db4objects.Db4o
-7Imports Db4objects.Db4o.Config
-8Imports Db4objects.Db4o.Defragment
-9Imports Db4objects.Db4o.Ext
-0Imports Db4objects.Db4o.Query
-1Imports Db4objects.Db4o.Reflect
-2Imports Db4objects.Db4o.Reflect.Net
-3Imports Db4objects.Db4o.Reflect.Generic
-4Imports Db4objects.Db4o.Typehandlers
-5
-6Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
-7
-8    Public Class TypehandlerExampleClass TypehandlerExample
-9
-0        Private Shared ReadOnly Db4oFileName As String = &quot;reference.db4o&quot;
-1        Private Shared _container As IObjectContainer = Nothing
-2
-3
-4        Public Shared Sub Main()Sub Main(ByVal args As String())
-5            TestReadWriteDelete()
-6            'TestDefrag()
-7            TestCompare()
-8        End Sub
-9        ' end Main
-0
-1        Private Class TypeHandlerPredicateClass TypeHandlerPredicate
-2            Implements ITypeHandlerPredicate
-3
-4            Public Function Match()Function Match(ByVal classReflector As IReflectClass, ByVal version As Integer) As Boolean Implements ITypeHandlerPredicate.Match
-5                Dim reflector As IReflector = classReflector.Reflector()
-6                Dim claxx As IReflectClass = reflector.ForClass(GetType(StringBuilder))
-7                Dim res As Boolean = claxx Is classReflector
-8                Return res
-9
-0            End Function
-1
-2        End Class
-3        ' end TypeHandlerPredicate
-4
-5        Private Shared Function Configure()Function Configure() As IConfiguration
-6            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-7            ' add a custom typehandler support
-8
-9            configuration.RegisterTypeHandler(New TypeHandlerPredicate(), New StringBuilderHandler())
-0            Return configuration
-1        End Function
-2        ' end Configure
-3
-4
-5        Private Shared Sub TestReadWriteDelete()Sub TestReadWriteDelete()
-6            StoreCar()
-7            ' Does it still work after close? 
-8            RetrieveCar()
-9            ' Does deletion work?
-0            DeleteCar()
-1            RetrieveCar()
-2        End Sub
-3        ' end TestReadWriteDelete
-4
-5        Private Shared Sub RetrieveCar()Sub RetrieveCar()
-6            Dim container As IObjectContainer = Database(Configure())
-7            If container IsNot Nothing Then
-8                Try
-9                    Dim query As IQuery = container.Query()
-0                    query.Constrain(GetType(Car))
-1                    Dim result As IObjectSet = query.Execute()
-2                    Dim car As Car = Nothing
-3                    If result.HasNext() Then
-4                        car = DirectCast(result.[Next](), Car)
-5                    End If
-6                    If car Is Nothing Then
-7                        System.Console.WriteLine(&quot;Retrieved: Nothing&quot;)
-8                    Else
-9                        System.Console.WriteLine(&quot;Retrieved: &quot; + car.ToString())
-0                    End If
-1
-2                Finally
-3                    CloseDatabase()
-4                End Try
-5            End If
-6        End Sub
-7        ' end RetrieveCar
-8
-9        Private Shared Sub DeleteCar()Sub DeleteCar()
-0            Dim container As IObjectContainer = Database(Configure())
-1            If container IsNot Nothing Then
-2                Try
-3                    Dim result As IObjectSet = container.Query(GetType(Car))
-4                    Dim car As Car = Nothing
-5                    If result.HasNext() Then
-6                        car = DirectCast(result.[Next](), Car)
-7                    End If
-8                    container.Delete(car)
-9                    System.Console.WriteLine(&quot;Deleted: &quot; + car.ToString())
-0                Finally
-1                    CloseDatabase()
-2                End Try
-3            End If
-4        End Sub
-5        ' end DeleteCar
-6
-7        Private Shared Sub StoreCar()Sub StoreCar()
-8            File.Delete(Db4oFileName)
-9            Dim container As IObjectContainer = Database(Configure())
-0            If container IsNot Nothing Then
-1                Try
-2                    Dim car As New Car(&quot;BMW&quot;)
-3                    container.Store(car)
-4                    car = DirectCast(container.Query(GetType(Car)).[Next](), Car)
-5
-6                    System.Console.WriteLine(&quot;Stored: &quot; + car.ToString())
-7                Finally
-8                    CloseDatabase()
-9                End Try
-0            End If
-1        End Sub
-2        ' end StoreCar
-3
-4        Private Shared Sub TestCompare()Sub TestCompare()
-5            File.Delete(Db4oFileName)
-6            Dim container As IObjectContainer = Database(Configure())
-7            If container IsNot Nothing Then
-8                Try
-9                    Dim car As New Car(&quot;BMW&quot;)
-0                    container.Store(car)
-1                    car = New Car(&quot;Ferrari&quot;)
-2                    container.Store(car)
-3                    car = New Car(&quot;Mercedes&quot;)
-4                    container.Store(car)
-5                    Dim query As IQuery = container.Query()
-6                    query.Constrain(GetType(Car))
-7                    query.Descend(&quot;model&quot;).OrderAscending()
-8                    Dim result As IObjectSet = query.Execute()
-9
-0                    ListResult(result)
-1                Finally
-2                    CloseDatabase()
-3                End Try
-4            End If
-5        End Sub
-6        ' end TestCompare
-7
-8        Private Shared Sub TestDefrag()Sub TestDefrag()
-9            File.Delete(Db4oFileName + &quot;.backup&quot;)
-0            StoreCar()
-1            Defragment.Defrag(Db4oFileName)
-2            RetrieveCar()
-3        End Sub
-4        ' end TestDefrag
-5
-6        Private Shared Function Database()Function Database(ByVal configuration As IConfiguration) As IObjectContainer
-7            If _container Is Nothing Then
-8                Try
-9                    _container = Db4oFactory.OpenFile(configuration, Db4oFileName)
-0                Catch ex As DatabaseFileLockedException
-1                    System.Console.WriteLine(ex.Message)
-2                End Try
-3            End If
-4            Return _container
-5        End Function
-6        ' end Database
-7
-8        Private Shared Sub CloseDatabase()Sub CloseDatabase()
-9            If _container IsNot Nothing Then
-0                _container.Close()
-1                _container = Nothing
-2            End If
-3        End Sub
-4        ' end CloseDatabase
-5
-6
-7        Private Shared Sub ListResult()Sub ListResult(ByVal result As IObjectSet)
-8            System.Console.WriteLine(result.Size())
-9            While result.HasNext()
-0                System.Console.WriteLine(result.[Next]())
-1            End While
-2        End Sub
-3        ' end ListResult
-4
-5    End Class
-6End Namespace</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.vb
+' Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com 
+
+Imports System.Text
+Imports System.IO
+
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Defragment
+Imports Db4objects.Db4o.Ext
+Imports Db4objects.Db4o.Query
+Imports Db4objects.Db4o.Reflect
+Imports Db4objects.Db4o.Reflect.Net
+Imports Db4objects.Db4o.Reflect.Generic
+Imports Db4objects.Db4o.Typehandlers
+
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
+
+    Public Class TypehandlerExampleClass TypehandlerExample
+
+        Private Shared ReadOnly Db4oFileName As String = &quot;reference.db4o&quot;
+        Private Shared _container As IObjectContainer = Nothing
+
+
+        Public Shared Sub Main()Sub Main(ByVal args As String())
+            TestReadWriteDelete()
+            'TestDefrag()
+            TestCompare()
+        End Sub
+        ' end Main
+
+        Private Class TypeHandlerPredicateClass TypeHandlerPredicate
+            Implements ITypeHandlerPredicate
+
+            Public Function Match()Function Match(ByVal classReflector As IReflectClass, ByVal version As Integer) As Boolean Implements ITypeHandlerPredicate.Match
+                Dim reflector As IReflector = classReflector.Reflector()
+                Dim claxx As IReflectClass = reflector.ForClass(GetType(StringBuilder))
+                Dim res As Boolean = claxx Is classReflector
+                Return res
+
+            End Function
+
+        End Class
+        ' end TypeHandlerPredicate
+
+        Private Shared Function Configure()Function Configure() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            ' add a custom typehandler support
+
+            configuration.RegisterTypeHandler(New TypeHandlerPredicate(), New StringBuilderHandler())
+            Return configuration
+        End Function
+        ' end Configure
+
+
+        Private Shared Sub TestReadWriteDelete()Sub TestReadWriteDelete()
+            StoreCar()
+            ' Does it still work after close? 
+            RetrieveCar()
+            ' Does deletion work?
+            DeleteCar()
+            RetrieveCar()
+        End Sub
+        ' end TestReadWriteDelete
+        Private Shared Sub RetrieveCar()Sub RetrieveCar()
+            Dim container As IObjectContainer = Database(Configure())
+            If container IsNot Nothing Then
+                Try
+                    Dim query As IQuery = container.Query()
+                    query.Constrain(GetType(Car))
+                    Dim result As IObjectSet = query.Execute()
+                    Dim car As Car = Nothing
+                    If result.HasNext() Then
+                        car = DirectCast(result.[Next](), Car)
+                    End If
+                    If car Is Nothing Then
+                        System.Console.WriteLine(&quot;Retrieved: Nothing&quot;)
+                    Else
+                        System.Console.WriteLine(&quot;Retrieved: &quot; + car.ToString())
+                    End If
+
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub
+        ' end RetrieveCar
+
+        Private Shared Sub DeleteCar()Sub DeleteCar()
+            Dim container As IObjectContainer = Database(Configure())
+            If container IsNot Nothing Then
+                Try
+                    Dim result As IObjectSet = container.Query(GetType(Car))
+                    Dim car As Car = Nothing
+                    If result.HasNext() Then
+                        car = DirectCast(result.[Next](), Car)
+                    End If
+                    container.Delete(car)
+                    System.Console.WriteLine(&quot;Deleted: &quot; + car.ToString())
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub
+        ' end DeleteCar
+
+        Private Shared Sub StoreCar()Sub StoreCar()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Database(Configure())
+            If container IsNot Nothing Then
+                Try
+                    Dim car As New Car(&quot;BMW&quot;)
+                    container.Store(car)
+                    car = DirectCast(container.Query(GetType(Car)).[Next](), Car)
+
+                    System.Console.WriteLine(&quot;Stored: &quot; + car.ToString())
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub
+        ' end StoreCar
+
+        Private Shared Sub TestCompare()Sub TestCompare()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Database(Configure())
+            If container IsNot Nothing Then
+                Try
+                    Dim car As New Car(&quot;BMW&quot;)
+                    container.Store(car)
+                    car = New Car(&quot;Ferrari&quot;)
+                    container.Store(car)
+                    car = New Car(&quot;Mercedes&quot;)
+                    container.Store(car)
+                    Dim query As IQuery = container.Query()
+                    query.Constrain(GetType(Car))
+                    query.Descend(&quot;model&quot;).OrderAscending()
+                    Dim result As IObjectSet = query.Execute()
+
+                    ListResult(result)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub
+        ' end TestCompare
+
+        Private Shared Sub TestDefrag()Sub TestDefrag()
+            File.Delete(Db4oFileName + &quot;.backup&quot;)
+            StoreCar()
+            Defragment.Defrag(Db4oFileName)
+            RetrieveCar()
+        End Sub
+        ' end TestDefrag
+
+        Private Shared Function Database()Function Database(ByVal configuration As IConfiguration) As IObjectContainer
+            If _container Is Nothing Then
+                Try
+                    _container = Db4oFactory.OpenFile(configuration, Db4oFileName)
+                Catch ex As DatabaseFileLockedException
+                    System.Console.WriteLine(ex.Message)
+                End Try
+            End If
+            Return _container
+        End Function
+        ' end Database
+
+        Private Shared Sub CloseDatabase()Sub CloseDatabase()
+            If _container IsNot Nothing Then
+                _container.Close()
+                _container = Nothing
+            End If
+        End Sub
+        ' end CloseDatabase
+
+
+        Private Shared Sub ListResult()Sub ListResult(ByVal result As IObjectSet)
+            System.Console.WriteLine(result.Size())
+            While result.HasNext()
+                System.Console.WriteLine(result.[Next]())
+            End While
+        End Sub
+        ' end ListResult
+
+    End Class
+End Namespace</pre>    </body></html>

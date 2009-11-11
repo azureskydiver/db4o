@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.java: testSwitchDatabases
-private static void testSwitchDatabases() ...{
+private static void testSwitchDatabases()  {
     storeSensorPanel();
 
     ObjectContainer firstDb = Db4o.openFile(configureTA(), FIRST_DB_NAME);
     ObjectContainer secondDb = Db4o.openFile(configureTA(), SECOND_DB_NAME);
-    try ...{
+    try  {
       ObjectSet result = firstDb.queryByExample(new SensorPanelTA(1));
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         SensorPanelTA sensor = (SensorPanelTA) result.get(0);
         firstDb.close();
         // Migrating an object from the first database
         // into a second database
         secondDb.store(sensor);
       }
-    } finally ...{
+    } finally  {
       firstDb.close();
       secondDb.close();
     }

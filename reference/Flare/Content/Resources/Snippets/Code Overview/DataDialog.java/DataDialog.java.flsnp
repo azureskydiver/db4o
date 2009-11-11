@@ -1,208 +1,208 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DataDialog.java
-1package memoplugin.ui;
-2
-3import java.util.ArrayList;
-4
-5import org.eclipse.jface.dialogs.Dialog;
-6import org.eclipse.jface.dialogs.IDialogConstants;
-7import org.eclipse.jface.dialogs.MessageDialog;
-8import org.eclipse.swt.SWT;
-9import org.eclipse.swt.layout.GridData;
-0import org.eclipse.swt.widgets.Button;
-1import org.eclipse.swt.widgets.Composite;
-2import org.eclipse.swt.widgets.Control;
-3import org.eclipse.swt.widgets.Label;
-4import org.eclipse.swt.widgets.List;
-5import org.eclipse.swt.widgets.Shell;
-6import org.eclipse.swt.widgets.Text;
-7
-8import memoplugin.Db4oProvider;
-9
-0import com.db4o.ObjectSet;
-1
-2public class DataDialog extends Dialog ...{
-3  private static int ID_ADD = 100;
-4  private static int ID_DELETE = 101;
-5  private Shell _shell;
-6    /** *//**
-7     * The title of the dialog.
-8     */
-9    private String title;
-0
-1    /** *//**
-2     * The message to display, or &lt;code&gt;null&lt;/code&gt; if none.
-3     */
-4    private String message;
-5
-6    /** *//**
-7     * The input value; the empty string by default.
-8     */
-9    private String value = &quot;&quot;;//$NON-NLS-1$
-0
-1    
-2    /** *//**
-3     * Add button widget.
-4     */
-5    private Button addButton;
-6
-7    /** *//**
-8     * Delete button widget.
-9     */
-0    private Button deleteButton;
-1
-2    /** *//**
-3     * Input text widget.
-4     */
-5    private Text text;
-6
-7    /** *//**
-8     * List widget.
-9     */
-0    private List list;
-1    
-2
-3    public DataDialog(Shell parentShell, String dialogTitle,
-4            String dialogMessage, String initialValue) ...{
-5        super(parentShell);
-6        this.title = dialogTitle;
-7        message = dialogMessage;
-8        if (initialValue == null) ...{
-9      value = &quot;&quot;;//$NON-NLS-1$
-0    } else ...{
-1      value = initialValue;
-2    }
-3    }
-4    
-5    /**//*
-6     * (non-Javadoc)
-7     * 
-8     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-9     */
-0    protected void configureShell(Shell shell) ...{
-1        super.configureShell(shell);
-2        _shell = shell;
-3        if (title != null) ...{
-4      shell.setText(title);
-5    }
-6    }
-7
-8    /**//*
-9     * Clears the database before adding new data
-0     */
-1    private void clearDb()...{
-2      ObjectSet result = Db4oProvider.database().get(ArrayList.class);
-3    while (result.hasNext())...{
-4      Db4oProvider.database().delete(result.next());
-5    }
-6    }
-7    
-8    /**//*
-9     * (non-Javadoc)
-0     * Makes sure that all the data is saved to the 
-1     * database before closing the dialog
-2     */
-3    protected void handleShellCloseEvent() ...{
-4      clearDb();
-5      ArrayList data = new ArrayList();
-6      for (int i=0; i &lt; list.getItemCount(); i++)...{
-7        data.add(list.getItem(i));
-8      }
-9      Db4oProvider.database().set(data);
-0      Db4oProvider.database().commit();
-1      Db4oProvider.database().ext().purge(ArrayList.class);
-2      super.handleShellCloseEvent();
-3    }
-4    
-5    /**//*
-6     * Button events handler
-7     */
-8    protected void buttonPressed(int buttonId) ...{
-9        if (buttonId == ID_ADD) ...{
-0            value = text.getText();
-1            list.add(value);
-2        } else if (buttonId == ID_DELETE)...{
-3          int selectedId = list.getSelectionIndex();
-4          if (selectedId == -1)...{
-5            new MessageDialog(_shell, &quot;Error&quot;,
-6                      null, &quot;No item selected&quot;, MessageDialog.ERROR,
-7                      new String[]...{&quot;Ok&quot;}, 0).open(); 
-8          } else ...{
-9            list.remove(selectedId);
-0          }
-1            value = null;
-2        } else ...{
-3          super.buttonPressed(buttonId);
-4        }
-5    }
-6
-7    /**//*
-8     * (non-Javadoc)
-9     * 
-0     * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-1     */
-2    protected void createButtonsForButtonBar(Composite parent) ...{
-3        // create Add and Delete buttons by default
-4        addButton = createButton(parent, ID_ADD,
-5                &quot;Add&quot;, true);
-6        createButton(parent, ID_DELETE,
-7                &quot;Delete&quot;, false);
-8        //do this here because setting the text will set enablement on the ok
-9        // button
-0        text.setFocus();
-1        if (value != null) ...{
-2            text.setText(value);
-3            text.selectAll();
-4        }
-5    }
-6
-7    /**//*
-8     * (non-Javadoc) Creates the visual dialog representation
-9     */
-0    protected Control createDialogArea(Composite parent) ...{
-1        // create composite
-2        Composite composite = (Composite) super.createDialogArea(parent);
-3        // create message
-4        if (message != null) ...{
-5            Label label = new Label(composite, SWT.WRAP);
-6            label.setText(message);
-7            GridData gridData = new GridData(GridData.GRAB_HORIZONTAL
-8                    | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
-9                    | GridData.VERTICAL_ALIGN_CENTER);
-0            gridData.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
-1            label.setLayoutData(gridData);
-2            label.setFont(parent.getFont());
-3        }
-4        text = new Text(composite, SWT.SINGLE | SWT.BORDER);
-5        text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-6                | GridData.HORIZONTAL_ALIGN_FILL));
-7        
-8        list = new List(composite, SWT.SINGLE|SWT.H_SCROLL|SWT.V_SCROLL);
-9        GridData gridData = new GridData(SWT.FILL,SWT.FILL, true, true);
-0        gridData.heightHint = 50;
-1        list.setLayoutData(gridData);
-2        ObjectSet result = Db4oProvider.database().query(ArrayList.class);
-3        if (result.size() != 0)...{
-4          ArrayList data = (ArrayList)result.next();
-5          String[] items = new String[data.size()];
-6          for (int i=0; i &lt; data.size(); i++)...{
-7            items[i] = (String)data.get(i);
-8          }
-9          list.setItems(items);
-0        }
-1
-2      
-3        applyDialogFont(composite);
-4        return composite;
-5    }
-6
-7
-8    /** *//**
-9     * Returns the string typed into this input dialog.
-0     * 
-1     * @return the input string
-2     */
-3    public String getValue() ...{
-4        return value;
-5    }
-6
-7}</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DataDialog.java
+package memoplugin.ui;
+
+import java.util.ArrayList;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+import memoplugin.Db4oProvider;
+
+import com.db4o.ObjectSet;
+
+public class DataDialog extends Dialog  {
+  private static int ID_ADD = 100;
+  private static int ID_DELETE = 101;
+  private Shell _shell;
+    /** 
+     * The title of the dialog.
+     */
+    private String title;
+
+    /** 
+     * The message to display, or &lt;code&gt;null&lt;/code&gt; if none.
+     */
+    private String message;
+
+    /** 
+     * The input value; the empty string by default.
+     */
+    private String value = &quot;&quot;;//$NON-NLS-1$
+
+    
+    /** 
+     * Add button widget.
+     */
+    private Button addButton;
+
+    /** 
+     * Delete button widget.
+     */
+    private Button deleteButton;
+
+    /**
+     * Input text widget.
+     */
+    private Text text;
+
+    /** 
+     * List widget.
+     */
+    private List list;
+    
+
+    public DataDialog(Shell parentShell, String dialogTitle,
+            String dialogMessage, String initialValue)  {
+        super(parentShell);
+        this.title = dialogTitle;
+        message = dialogMessage;
+        if (initialValue == null)  {
+      value = &quot;&quot;;//$NON-NLS-1$
+    } else  {
+      value = initialValue;
+    }
+    }
+    
+    /**
+     * 
+     * 
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     */
+    protected void configureShell(Shell shell)  {
+        super.configureShell(shell);
+        _shell = shell;
+        if (title != null)  {
+      shell.setText(title);
+    }
+    }
+
+    /**
+     * Clears the database before adding new data
+     */
+    private void clearDb() {
+      ObjectSet result = Db4oProvider.database().get(ArrayList.class);
+    while (result.hasNext()) {
+      Db4oProvider.database().delete(result.next());
+    }
+    }
+    
+    /**
+     * 
+     * Makes sure that all the data is saved to the 
+     * database before closing the dialog
+     */
+    protected void handleShellCloseEvent()  {
+      clearDb();
+      ArrayList data = new ArrayList();
+      for (int i=0; i &lt; list.getItemCount(); i++) {
+        data.add(list.getItem(i));
+      }
+      Db4oProvider.database().set(data);
+      Db4oProvider.database().commit();
+      Db4oProvider.database().ext().purge(ArrayList.class);
+      super.handleShellCloseEvent();
+    }
+    
+    /**
+     * Button events handler
+     */
+    protected void buttonPressed(int buttonId)  {
+        if (buttonId == ID_ADD)  {
+            value = text.getText();
+            list.add(value);
+        } else if (buttonId == ID_DELETE) {
+          int selectedId = list.getSelectionIndex();
+          if (selectedId == -1) {
+            new MessageDialog(_shell, &quot;Error&quot;,
+                      null, &quot;No item selected&quot;, MessageDialog.ERROR,
+                      new String[] {&quot;Ok&quot;}, 0).open(); 
+          } else  {
+            list.remove(selectedId);
+          }
+            value = null;
+        } else  {
+          super.buttonPressed(buttonId);
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+     */
+    protected void createButtonsForButtonBar(Composite parent)  {
+        // create Add and Delete buttons by default
+        addButton = createButton(parent, ID_ADD,
+                &quot;Add&quot;, true);
+        createButton(parent, ID_DELETE,
+                &quot;Delete&quot;, false);
+        //do this here because setting the text will set enablement on the ok
+        // button
+        text.setFocus();
+        if (value != null)  {
+            text.setText(value);
+            text.selectAll();
+        }
+    }
+
+    /**
+     * Creates the visual dialog representation
+     */
+    protected Control createDialogArea(Composite parent)  {
+        // create composite
+        Composite composite = (Composite) super.createDialogArea(parent);
+        // create message
+        if (message != null)  {
+            Label label = new Label(composite, SWT.WRAP);
+            label.setText(message);
+            GridData gridData = new GridData(GridData.GRAB_HORIZONTAL
+                    | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
+                    | GridData.VERTICAL_ALIGN_CENTER);
+            gridData.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
+            label.setLayoutData(gridData);
+            label.setFont(parent.getFont());
+        }
+        text = new Text(composite, SWT.SINGLE | SWT.BORDER);
+        text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+                | GridData.HORIZONTAL_ALIGN_FILL));
+        
+        list = new List(composite, SWT.SINGLE|SWT.H_SCROLL|SWT.V_SCROLL);
+        GridData gridData = new GridData(SWT.FILL,SWT.FILL, true, true);
+        gridData.heightHint = 50;
+        list.setLayoutData(gridData);
+        ObjectSet result = Db4oProvider.database().query(ArrayList.class);
+        if (result.size() != 0) {
+          ArrayList data = (ArrayList)result.next();
+          String[] items = new String[data.size()];
+          for (int i=0; i &lt; data.size(); i++) {
+            items[i] = (String)data.get(i);
+          }
+          list.setItems(items);
+        }
+
+      
+        applyDialogFont(composite);
+        return composite;
+    }
+
+
+    /** 
+     * Returns the string typed into this input dialog.
+     * 
+     * @return the input string
+     */
+    public String getValue()  {
+        return value;
+    }
+
+}</pre>    </body></html>

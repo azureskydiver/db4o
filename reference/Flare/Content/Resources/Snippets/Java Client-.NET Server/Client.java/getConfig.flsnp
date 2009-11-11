@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.java: getConfig
-1private static ClientConfiguration getConfig() ...{
-2    ClientConfiguration config = Db4oClientServer.newClientConfiguration();
-3    config.common().add(new DotnetSupport(true));
-4    config.common().addAlias(
-5        new WildcardAlias(
-6            &quot;JavaDotnetClientServer.*, JavaDotnetClientServer&quot;,
-7            &quot;com.db4odoc.JavaDotNetClientServer.*&quot;));
-8    return config;
-9  }</pre>    </body></html>
+private static ClientConfiguration getConfig()  {
+    ClientConfiguration config = Db4oClientServer.newClientConfiguration();
+    config.common().add(new DotnetSupport(true));
+    config.common().addAlias(
+        new WildcardAlias(
+            &quot;JavaDotnetClientServer.*, JavaDotnetClientServer&quot;,
+            &quot;com.db4odoc.JavaDotNetClientServer.*&quot;));
+    return config;
+  }</pre>    </body></html>

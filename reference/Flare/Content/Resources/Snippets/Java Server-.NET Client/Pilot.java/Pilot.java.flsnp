@@ -4,22 +4,22 @@
 package com.db4odoc.JavaDotNetClientServer;
 
 
-public class Pilot ...{
+public class Pilot  {
   private String name;
     
-    public Pilot(String name) ...{
+    public Pilot(String name)  {
         this.name=name;
     }
 
-    public String getName() ...{
+    public String getName()  {
         return name;
     }
     
-    public void setName(String name)...{
+    public void setName(String name) {
       this.name = name;
     }
 
-    public String toString() ...{
+    public String toString()  {
         return name;
     }
 }</pre>    </body></html>

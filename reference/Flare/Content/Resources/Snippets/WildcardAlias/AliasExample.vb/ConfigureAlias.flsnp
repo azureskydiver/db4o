@@ -11,4 +11,4 @@ Private Shared Function ConfigureAlias()Function ConfigureAlias() As IEmbeddedCo
                                &quot;Runtime name for Db4odoc.Aliases.Pilot: &quot; + _
                                wAlias.ResolveStoredName (&quot;Db4odoc.Aliases.Pilot&quot;))
             Return configuration
-        End Function</div</pre>    </body></html>
+        End Function</pre>    </body></html>

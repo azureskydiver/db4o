@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.java: testGenerateUUID
-private static void testGenerateUUID() ...{
+private static void testGenerateUUID()  {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       Query query = container.query();
       query.constrain(Car.class);
       ObjectSet result = query.execute();
@@ -28,7 +28,7 @@ private static void testGenerateUUID() ...{
       Pilot pilotReturned = (Pilot) container.ext().getByUUID(
           pilotUUID);
       System.out.println(&quot;Pilot from UUID: &quot; + pilotReturned);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

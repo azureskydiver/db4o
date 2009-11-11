@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: WriteToBuffer
-1Private Shared Sub WriteToBuffer()Sub WriteToBuffer(ByVal buffer As IWriteBuffer, ByVal str As String)
-2            Dim length As Integer = str.Length
-3            Dim chars As Char() = New Char(length - 1) {}
-4            str.CopyTo(0, chars, 0, length)
-5            For i As Integer = 0 To length - 1
-6                buffer.WriteByte(CByte(AscW(chars(i)) And 255))
-7                buffer.WriteByte(CByte(AscW(chars(i)) &gt;&gt; 8))
-8            Next
-9        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: WriteToBuffer
+Private Shared Sub WriteToBuffer()Sub WriteToBuffer(ByVal buffer As IWriteBuffer, ByVal str As String)
+            Dim length As Integer = str.Length
+            Dim chars As Char() = New Char(length - 1) {}
+            str.CopyTo(0, chars, 0, length)
+            For i As Integer = 0 To length - 1
+                buffer.WriteByte(CByte(AscW(chars(i)) And 255))
+                buffer.WriteByte(CByte(AscW(chars(i)) &gt;&gt; 8))
+            Next
+        End Sub</pre>
+    </body>
+</html>

@@ -1,424 +1,424 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: Item
-1private void update(Object item) ...{
-2      objectContainer.store(item);
-3  }
-4    // end update
-5  
-6    
-7    private void runDifferentObjectsTest()...{
-8      System.out.println(&quot;Update test with different objects&quot;);
-9      int objectsToUpdate = 90;
-0      int updated = objectsToUpdate;
-1          
-2      initDifferentObjectsTest();
-3      
-4      clean();
-5      System.out.println(&quot; - primitive object with int field&quot;);
-6      open(configure());
-7      storeSimplest();
-8      
-9    ObjectSet result = objectContainer.queryByExample(null);
-0    startTimer();
-1    for (int i = 0; i &lt; objectsToUpdate; i ++)...{
-2      if (result.hasNext())...{
-3        SimplestItem item = (SimplestItem)result.next();
-4        item._id = 1;
-5          update(item);  
-6      } else ...{
-7        updated = i;
-8        break;
-9      }
-0    }
-1      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-2      close();
-3    
-4      clean();
-5      open(configure());
-6      System.out.println(&quot; - object with String field&quot;);
-7      store();
-8      updated = objectsToUpdate;
-9      result = objectContainer.queryByExample(null);
-0      startTimer();
-1      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
-2      if (result.hasNext())...{
-3        Item item = (Item)result.next();
-4        item._name = &quot;Updated&quot;;
-5          update(item);  
-6      } else ...{
-7        updated = i;
-8        break;
-9      }
-0    }
-1      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-2      close();
-3      
-4      clean();
-5      open(configure());
-6      System.out.println(&quot; - object with StringBuffer field&quot;);
-7      storeWithStringBuffer();
-8      
-9      updated = objectsToUpdate;
-0      result = objectContainer.queryByExample(null);
-1      startTimer();
-2      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
-3      if (result.hasNext())...{
-4        ItemWithStringBuffer item = (ItemWithStringBuffer)result.next();
-5        item._name = new StringBuffer(&quot;Updated&quot;);
-6          update(item);  
-7      } else ...{
-8        updated = i;
-9        break;
-0      }
-1    }
-2      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-3      close();
-4      
-5      clean();
-6      open(configure());
-7      System.out.println(&quot; - object with int array field&quot;);
-8      storeWithArray();
-9      updated = objectsToUpdate;
-0      result = objectContainer.queryByExample(null);
-1      startTimer();
-2      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
-3      if (result.hasNext())...{
-4        ItemWithArray item = (ItemWithArray)result.next();
-5        item._id = new int[]...{1,2,3};
-6          update(item);  
-7      } else ...{
-8        updated = i;
-9        break;
-0      }
-1    }
-2      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-3      close();
-4      
-5      clean();
-6      open(configure());
-7      System.out.println(&quot; - object with ArrayList field&quot;);
-8      storeWithArrayList();
-9      updated = objectsToUpdate;
-0      result = objectContainer.queryByExample(null);
-1      startTimer();
-2      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
-3      if (result.hasNext())...{
-4        ItemWithArrayList item = (ItemWithArrayList)result.next();
-5        item._ids = new ArrayList();
-6          update(item);  
-7      } else ...{
-8        updated = i;
-9        break;
-0      }
-1    }
-2      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-3      close();
-4    }
-5    // end runDifferentObjectsTest
-6    
-7    private void runIndexTest()...{
-8      System.out.println(&quot;Update test for objects with and without indexed fields&quot;);
-9          
-0      int objectsToUpdate = 100;
-1      init();
-2      System.out.println(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects&quot;);
-3      clean();
-4      open(configure());
-5      store();
-6      updateItems(objectsToUpdate);
-7      close();
-8      
-9      clean();
-0      init();
-1      System.out.println(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects with indexed field&quot;);
-2      open(configureIndexTest());
-3      store();
-4      updateItems(objectsToUpdate);
-5      close();
-6    }
-7    // end runIndexTest
-8
-9    
-0    private void init()...{
-1      _count = 1000;
-2        _depth = 90;
-3        _isClientServer = false;
-4          
-5    }
-6    // end init
-7    
-8    private void initDifferentObjectsTest()...{
-9      _count = 1000;
-0        _depth = 1;
-1        _isClientServer = false;
-2          
-3    }
-4    // end initDifferentObjectsTest
-5    
-6
-7    
-8    private void initForClientServer()...{
-9      _count = 1000;
-0        _depth = 90;
-1        _isClientServer = true;
-2        _host = &quot;localhost&quot;;  
-3    }
-4    // end initForClientServer
-5    
-6    private void initForRamDriveTest()...{
-7      _count = 30000;
-8        _depth = 1;
-9        _filePath = &quot;r:\\performance.db4o&quot;;
-0        _isClientServer = false;
-1          
-2    }
-3    // end initForRamDriveTest
-4    
-5    private void initForHardDriveTest()...{
-6      _count = 10000;
-7        _depth = 3;
-8        _filePath = &quot;performance.db4o&quot;;
-9        _isClientServer = false;
-0    }
-1    // end initForHardDriveTest
-2    
-3    private void initForCommitTest()...{
-4      _count = 10000;
-5      _commitInterval = 1000;
-6        _depth = 3;
-7        _isClientServer = false;
-8    }
-9    // end initForCommitTest
-0    
-1    private void clean()...{
-2      new File(_filePath).delete();
-3    }
-4    // end clean
-5    
-6    private Configuration configure()...{
-7      Configuration config = Db4o.newConfiguration();
-8      // using MemoryIoAdapter improves the performance 
-9      // by replacing the costly disk IO operations with 
-0      // memory access
-1        config.io(new MemoryIoAdapter());
-2        return config;
-3    }
-4    // end configure
-5
-6    private Configuration configureTP()...{
-7      Configuration config = Db4o.newConfiguration();
-8      // With Transparent Persistence enabled only modified
-9      // objects are written to disk. This allows to achieve 
-0      // better performance
-1        config.objectClass(Item.class).cascadeOnUpdate(true);
-2      return config;
-3    }
-4    // end configureTP
-5
-6    private Configuration configureCascade()...{
-7      Configuration config = Db4o.newConfiguration(); 
-8      // CascadeOnUpdate can be a performance-killer for 
-9      // deep object hierarchies
-0        config.objectClass(Item.class).cascadeOnUpdate(true);
-1        return config;
-2    }
-3    // end configureCascade
-4
-5    private Configuration configureIndexTest()...{
-6      Configuration config = Db4o.newConfiguration(); 
-7        config.io(new MemoryIoAdapter());
-8        config.objectClass(Item.class).objectField(&quot;_name&quot;).indexed(true);
-9        return config;
-0    }
-1    // end configureIndexTest
-2    
-3    private Configuration configureForCommitTest()...{
-4      Configuration config = Db4o.newConfiguration(); 
-5        config.lockDatabaseFile(false);
-6        // the commit information is physically written 
-7        // and in the correct order
-8        config.flushFileBuffers(true);
-9        return config;
-0    }
-1    // end configureForCommitTest
-2
-3
-4    private Configuration configureClientServer()...{
-5      Configuration config = Db4o.newConfiguration(); 
-6        config.clientServer().singleThreadedClient(true);
-7        return config;
-8    }
-9    // end configureClientServer
-0
-1    private Configuration configureDriveTest()...{
-2      Configuration config = Db4o.newConfiguration(); 
-3        config.flushFileBuffers(true);
-4        return config;
-5    }
-6    // end configureDriveTest
-7    
-8    private void store()...{
-9        startTimer();
-0        for (int i = 0; i &lt; _count ;i++) ...{
-1            Item item = new Item(&quot;level&quot; + i, null);
-2            for (int j = 1; j &lt; _depth; j++) ...{
-3                item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
-4            }
-5            objectContainer.store(item);
-6        }
-7        objectContainer.commit();
-8        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-9    }
-0    // end store
-1
-2    private void storeActivatableItems()...{
-3        startTimer();
-4        for (int i = 0; i &lt; _count ;i++) ...{
-5            ActivatableItem item = new ActivatableItem(&quot;level&quot; + i, null);
-6            for (int j = 1; j &lt; _depth; j++) ...{
-7                item = new ActivatableItem(&quot;level&quot; + i + &quot;/&quot; + j, item);
-8            }
-9            objectContainer.store(item);
-0        }
-1        objectContainer.commit();
-2        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-3    }
-4    // end storeActivatableItems
-5
-6    private void storeInherited()...{
-7        startTimer();
-8        for (int i = 0; i &lt; _count ;i++) ...{
-9            ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
-0            for (int j = 1; j &lt; _depth; j++) ...{
-1                item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
-2            }
-3            objectContainer.store(item);
-4        }
-5        objectContainer.commit();
-6        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-7    }
-8    // end storeInherited
-9
-0    
-1    private void storeWithStringBuffer()...{
-2        startTimer();
-3        for (int i = 0; i &lt; _count ;i++) ...{
-4            ItemWithStringBuffer item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i), null);
-5            for (int j = 1; j &lt; _depth; j++) ...{
-6                item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i + &quot;/&quot; + j), item);
-7            }
-8            objectContainer.store(item);
-9        }
-0        objectContainer.commit();
-1        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-2    }
-3    // end storeWithStringBuffer
-4    
-5    private void storeSimplest()...{
-6        startTimer();
-7        for (int i = 0; i &lt; _count ;i++) ...{
-8          SimplestItem item = new SimplestItem(i, null);
-9            for (int j = 1; j &lt; _depth; j++) ...{
-0                item = new SimplestItem(i, item);
-1            }
-2            objectContainer.store(item);
-3        }
-4        objectContainer.commit();
-5        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-6    }
-7    // end storeSimplest
-8    
-9    private void storeWithArray()...{
-0        startTimer();
-1        int[] array = new int[]...{1,2,3,4};
-2        for (int i = 0; i &lt; _count ;i++) ...{
-3          int[] id = new int[]...{1,2,3,4};
-4          ItemWithArray item = new ItemWithArray(id, null);
-5            for (int j = 1; j &lt; _depth; j++) ...{
-6              int[] id1 = new int[]...{1,2,3,4};
-7                item = new ItemWithArray(id1, item);
-8            }
-9            objectContainer.store(item);
-0        }
-1        objectContainer.commit();
-2        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-3    }
-4    // end storeWithArray
-5    
-6    private void storeWithArrayList()...{
-7      startTimer();
-8      ArrayList idList = new ArrayList();
-9      idList.add(1);
-0      idList.add(2);
-1      idList.add(3);
-2      idList.add(4);
-3        for (int i = 0; i &lt; _count ;i++) ...{
-4          ArrayList ids = new ArrayList();
-5          ids.addAll(idList);
-6          ItemWithArrayList item = new ItemWithArrayList(ids, null);
-7            for (int j = 1; j &lt; _depth; j++) ...{
-8              ArrayList ids1 = new ArrayList();
-9              ids1.addAll(idList);
-0              item = new ItemWithArrayList(ids1, item);
-1            }
-2            objectContainer.store(item);
-3        }
-4        objectContainer.commit();
-5        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-6    }
-7    // end storeWithArrayList
-8    
-9    private int totalObjects()...{
-0      return _count * _depth;
-1    }
-2    // end totalObjects
-3    
-4    private void open(Configuration config)...{
-5        if(_isClientServer)...{
-6          int port = TCP ? PORT : 0;
-7          String user = &quot;db4o&quot;;
-8          String password = user;
-9            objectServer = Db4o.openServer(_filePath, port);
-0            objectServer.grantAccess(user, password);
-1            objectContainer = TCP ? Db4o.openClient(_host, port, user,
-2          password) : objectServer.openClient();
-3        } else...{
-4            objectContainer = Db4o.openFile(config, _filePath);
-5        }
-6    }
-7    // end open
-8    
-9    private void close()...{
-0        objectContainer.close();
-1        if(_isClientServer)...{
-2            objectServer.close();
-3        }
-4    }
-5    //end close
-6    
-7    private void startTimer()...{
-8      startTime = System.currentTimeMillis();
-9    }
-0    // end startTimer
-1
-2    
-3    private void stopTimer(String message)...{
-4        long stop = System.currentTimeMillis();
-5        long duration = stop - startTime;
-6        System.out.println(message + &quot;: &quot; + duration + &quot;ms&quot;);
-7    }
-8    // end stopTimer
-9    
-0    public static class Item ...{
-1
-2      public String _name;
-3        public Item _child;
-4
-5        public Item()...{
-6            
-7        }
-8        
-9        public Item(String name, Item child)...{
-0            _name = name;
-1            _child = child;
-2        }
-3    }</pre>    </body></html>
+private void update(Object item)  {
+      objectContainer.store(item);
+  }
+    // end update
+  
+    
+    private void runDifferentObjectsTest() {
+      System.out.println(&quot;Update test with different objects&quot;);
+      int objectsToUpdate = 90;
+      int updated = objectsToUpdate;
+          
+      initDifferentObjectsTest();
+      
+      clean();
+      System.out.println(&quot; - primitive object with int field&quot;);
+      open(configure());
+      storeSimplest();
+      
+    ObjectSet result = objectContainer.queryByExample(null);
+    startTimer();
+    for (int i = 0; i &lt; objectsToUpdate; i ++) {
+      if (result.hasNext()) {
+        SimplestItem item = (SimplestItem)result.next();
+        item._id = 1;
+          update(item);  
+      } else  {
+        updated = i;
+        break;
+      }
+    }
+      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+      close();
+    
+      clean();
+      open(configure());
+      System.out.println(&quot; - object with String field&quot;);
+      store();
+      updated = objectsToUpdate;
+      result = objectContainer.queryByExample(null);
+      startTimer();
+      for (int i = 0; i &lt; objectsToUpdate; i ++) {
+      if (result.hasNext()) {
+        Item item = (Item)result.next();
+        item._name = &quot;Updated&quot;;
+          update(item);  
+      } else  {
+        updated = i;
+        break;
+      }
+    }
+      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+      close();
+      
+      clean();
+      open(configure());
+      System.out.println(&quot; - object with StringBuffer field&quot;);
+      storeWithStringBuffer();
+      
+      updated = objectsToUpdate;
+      result = objectContainer.queryByExample(null);
+      startTimer();
+      for (int i = 0; i &lt; objectsToUpdate; i ++) {
+      if (result.hasNext()) {
+        ItemWithStringBuffer item = (ItemWithStringBuffer)result.next();
+        item._name = new StringBuffer(&quot;Updated&quot;);
+          update(item);  
+      } else  {
+        updated = i;
+        break;
+      }
+    }
+      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+      close();
+      
+      clean();
+      open(configure());
+      System.out.println(&quot; - object with int array field&quot;);
+      storeWithArray();
+      updated = objectsToUpdate;
+      result = objectContainer.queryByExample(null);
+      startTimer();
+      for (int i = 0; i &lt; objectsToUpdate; i ++) {
+      if (result.hasNext()) {
+        ItemWithArray item = (ItemWithArray)result.next();
+        item._id = new int[] {1,2,3};
+          update(item);  
+      } else  {
+        updated = i;
+        break;
+      }
+    }
+      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+      close();
+      
+      clean();
+      open(configure());
+      System.out.println(&quot; - object with ArrayList field&quot;);
+      storeWithArrayList();
+      updated = objectsToUpdate;
+      result = objectContainer.queryByExample(null);
+      startTimer();
+      for (int i = 0; i &lt; objectsToUpdate; i ++) {
+      if (result.hasNext()) {
+        ItemWithArrayList item = (ItemWithArrayList)result.next();
+        item._ids = new ArrayList();
+          update(item);  
+      } else  {
+        updated = i;
+        break;
+      }
+    }
+      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+      close();
+    }
+    // end runDifferentObjectsTest
+    
+    private void runIndexTest() {
+      System.out.println(&quot;Update test for objects with and without indexed fields&quot;);
+          
+      int objectsToUpdate = 100;
+      init();
+      System.out.println(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects&quot;);
+      clean();
+      open(configure());
+      store();
+      updateItems(objectsToUpdate);
+      close();
+      
+      clean();
+      init();
+      System.out.println(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects with indexed field&quot;);
+      open(configureIndexTest());
+      store();
+      updateItems(objectsToUpdate);
+      close();
+    }
+    // end runIndexTest
+
+    
+    private void init() {
+      _count = 1000;
+        _depth = 90;
+        _isClientServer = false;
+          
+    }
+    // end init
+    
+    private void initDifferentObjectsTest() {
+      _count = 1000;
+        _depth = 1;
+        _isClientServer = false;
+          
+    }
+    // end initDifferentObjectsTest
+    
+
+    
+    private void initForClientServer() {
+      _count = 1000;
+        _depth = 90;
+        _isClientServer = true;
+        _host = &quot;localhost&quot;;  
+    }
+    // end initForClientServer
+    
+    private void initForRamDriveTest() {
+      _count = 30000;
+        _depth = 1;
+        _filePath = &quot;r:\\performance.db4o&quot;;
+        _isClientServer = false;
+          
+    }
+    // end initForRamDriveTest
+    
+    private void initForHardDriveTest() {
+      _count = 10000;
+        _depth = 3;
+        _filePath = &quot;performance.db4o&quot;;
+        _isClientServer = false;
+    }
+    // end initForHardDriveTest
+    
+    private void initForCommitTest() {
+      _count = 10000;
+      _commitInterval = 1000;
+        _depth = 3;
+        _isClientServer = false;
+    }
+    // end initForCommitTest
+    
+    private void clean() {
+      new File(_filePath).delete();
+    }
+    // end clean
+    
+    private Configuration configure() {
+      Configuration config = Db4o.newConfiguration();
+      // using MemoryIoAdapter improves the performance 
+      // by replacing the costly disk IO operations with 
+      // memory access
+        config.io(new MemoryIoAdapter());
+        return config;
+    }
+    // end configure
+
+    private Configuration configureTP() {
+      Configuration config = Db4o.newConfiguration();
+      // With Transparent Persistence enabled only modified
+      // objects are written to disk. This allows to achieve 
+      // better performance
+        config.objectClass(Item.class).cascadeOnUpdate(true);
+      return config;
+    }
+    // end configureTP
+
+    private Configuration configureCascade() {
+      Configuration config = Db4o.newConfiguration(); 
+      // CascadeOnUpdate can be a performance-killer for 
+      // deep object hierarchies
+        config.objectClass(Item.class).cascadeOnUpdate(true);
+        return config;
+    }
+    // end configureCascade
+
+    private Configuration configureIndexTest() {
+      Configuration config = Db4o.newConfiguration(); 
+        config.io(new MemoryIoAdapter());
+        config.objectClass(Item.class).objectField(&quot;_name&quot;).indexed(true);
+        return config;
+    }
+    // end configureIndexTest
+    
+    private Configuration configureForCommitTest() {
+      Configuration config = Db4o.newConfiguration(); 
+        config.lockDatabaseFile(false);
+        // the commit information is physically written 
+        // and in the correct order
+        config.flushFileBuffers(true);
+        return config;
+    }
+    // end configureForCommitTest
+
+
+    private Configuration configureClientServer() {
+      Configuration config = Db4o.newConfiguration(); 
+        config.clientServer().singleThreadedClient(true);
+        return config;
+    }
+    // end configureClientServer
+
+    private Configuration configureDriveTest() {
+      Configuration config = Db4o.newConfiguration(); 
+        config.flushFileBuffers(true);
+        return config;
+    }
+    // end configureDriveTest
+    
+    private void store() {
+        startTimer();
+        for (int i = 0; i &lt; _count ;i++)  {
+            Item item = new Item(&quot;level&quot; + i, null);
+            for (int j = 1; j &lt; _depth; j++)  {
+                item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end store
+
+    private void storeActivatableItems() {
+        startTimer();
+        for (int i = 0; i &lt; _count ;i++)  {
+            ActivatableItem item = new ActivatableItem(&quot;level&quot; + i, null);
+            for (int j = 1; j &lt; _depth; j++)  {
+                item = new ActivatableItem(&quot;level&quot; + i + &quot;/&quot; + j, item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end storeActivatableItems
+
+    private void storeInherited() {
+        startTimer();
+        for (int i = 0; i &lt; _count ;i++)  {
+            ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
+            for (int j = 1; j &lt; _depth; j++)  {
+                item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end storeInherited
+
+    
+    private void storeWithStringBuffer() {
+        startTimer();
+        for (int i = 0; i &lt; _count ;i++)  {
+            ItemWithStringBuffer item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i), null);
+            for (int j = 1; j &lt; _depth; j++)  {
+                item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i + &quot;/&quot; + j), item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end storeWithStringBuffer
+    
+    private void storeSimplest() {
+        startTimer();
+        for (int i = 0; i &lt; _count ;i++)  {
+          SimplestItem item = new SimplestItem(i, null);
+            for (int j = 1; j &lt; _depth; j++)  {
+                item = new SimplestItem(i, item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end storeSimplest
+    
+    private void storeWithArray() {
+        startTimer();
+        int[] array = new int[] {1,2,3,4};
+        for (int i = 0; i &lt; _count ;i++)  {
+          int[] id = new int[] {1,2,3,4};
+          ItemWithArray item = new ItemWithArray(id, null);
+            for (int j = 1; j &lt; _depth; j++)  {
+              int[] id1 = new int[] {1,2,3,4};
+                item = new ItemWithArray(id1, item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end storeWithArray
+    
+    private void storeWithArrayList() {
+      startTimer();
+      ArrayList idList = new ArrayList();
+      idList.add(1);
+      idList.add(2);
+      idList.add(3);
+      idList.add(4);
+        for (int i = 0; i &lt; _count ;i++)  {
+          ArrayList ids = new ArrayList();
+          ids.addAll(idList);
+          ItemWithArrayList item = new ItemWithArrayList(ids, null);
+            for (int j = 1; j &lt; _depth; j++)  {
+              ArrayList ids1 = new ArrayList();
+              ids1.addAll(idList);
+              item = new ItemWithArrayList(ids1, item);
+            }
+            objectContainer.store(item);
+        }
+        objectContainer.commit();
+        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
+    }
+    // end storeWithArrayList
+    
+    private int totalObjects() {
+      return _count * _depth;
+    }
+    // end totalObjects
+    
+    private void open(Configuration config) {
+        if(_isClientServer) {
+          int port = TCP ? PORT : 0;
+          String user = &quot;db4o&quot;;
+          String password = user;
+            objectServer = Db4o.openServer(_filePath, port);
+            objectServer.grantAccess(user, password);
+            objectContainer = TCP ? Db4o.openClient(_host, port, user,
+          password) : objectServer.openClient();
+        } else {
+            objectContainer = Db4o.openFile(config, _filePath);
+        }
+    }
+    // end open
+    
+    private void close() {
+        objectContainer.close();
+        if(_isClientServer) {
+            objectServer.close();
+        }
+    }
+    //end close
+    
+    private void startTimer() {
+      startTime = System.currentTimeMillis();
+    }
+    // end startTimer
+
+    
+    private void stopTimer(String message) {
+        long stop = System.currentTimeMillis();
+        long duration = stop - startTime;
+        System.out.println(message + &quot;: &quot; + duration + &quot;ms&quot;);
+    }
+    // end stopTimer
+    
+    public static class Item  {
+
+      public String _name;
+        public Item _child;
+
+        public Item() {
+            
+        }
+        
+        public Item(String name, Item child) {
+            _name = name;
+            _child = child;
+        }
+    }</pre>    </body></html>

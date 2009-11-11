@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EvaluationExample.cs: QueryWithEvaluation
-1private static void QueryWithEvaluation(IObjectContainer db)
-2    ...{
-3      IQuery query = db.Query();
-4      query.Constrain(typeof (Car));
-5      query.Constrain(new EvenHistoryEvaluation());
-6      IObjectSet result = query.Execute();
-7      ListResult(result);
-8    }</pre>    </body></html>
+private static void QueryWithEvaluation(IObjectContainer db)
+     {
+      IQuery query = db.Query();
+      query.Constrain(typeof (Car));
+      query.Constrain(new EvenHistoryEvaluation());
+      IObjectSet result = query.Execute();
+      ListResult(result);
+    }</pre>    </body></html>

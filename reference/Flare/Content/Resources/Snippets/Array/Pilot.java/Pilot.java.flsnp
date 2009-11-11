@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.java
-/**//* Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="594" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Pilot.java
+/** Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -23,7 +28,9 @@ package f1.collection.array;
 
 import f1.collection.Car;
 
-public class Pilot ...{
+public class Pilot  {
   String name;
   Car[] cars;
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

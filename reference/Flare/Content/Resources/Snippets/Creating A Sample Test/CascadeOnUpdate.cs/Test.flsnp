@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CascadeOnUpdate.cs: Test
 public virtual void Test()
-        ...{
+         {
             IQuery q = NewQuery(typeof(Atom));
             q.Descend(&quot;name&quot;).Constrain(&quot;Parent&quot;);
             IObjectSet objectSet = q.Execute();
             Atom atom = null;
             while (objectSet.HasNext())
-            ...{
+             {
                 // update child objects
                 atom = (Atom)objectSet.Next();
                 ((Atom)atom.child).name = &quot;Updated&quot;;
@@ -25,7 +25,7 @@ public virtual void Test()
             q.Descend(&quot;name&quot;).Constrain(&quot;Parent&quot;);
             objectSet = q.Execute();
             while (objectSet.HasNext())
-            ...{
+             {
                 atom = (Atom)objectSet.Next();
                 // check if the child objects were updated
                 Atom child = (Atom)atom.child;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: GetObjects
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: GetObjects
 Private Shared Sub GetObjects()Sub GetObjects(ByVal configuration As IConfiguration)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
@@ -11,4 +11,4 @@ Private Shared Sub GetObjects()Sub GetObjects(ByVal configuration As IConfigurat
             Finally
                 db.Close()
             End Try
-        End Sub</div</pre>    </body></html>
+        End Sub</pre>    </body></html>

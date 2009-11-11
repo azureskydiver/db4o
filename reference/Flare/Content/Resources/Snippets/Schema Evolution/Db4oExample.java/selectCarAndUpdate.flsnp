@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oExample.java: selectCarAndUpdate
-public static void selectCarAndUpdate() ...{
+public static void selectCarAndUpdate()  {
       ObjectContainer container = database();
-      if (container != null)...{
+      if (container != null) {
       Query query = container.query();
       query.constrain(Car.class);
       query.descend(&quot;pilot&quot;).descend(&quot;points&quot;).constrain(new Integer(15));
@@ -9,9 +9,9 @@ public static void selectCarAndUpdate() ...{
       long startTime = System.currentTimeMillis();
       ObjectSet  result = query.execute();
       result.reset();
-      if (!result.hasNext())...{
+      if (!result.hasNext()) {
         logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
-      } else ...{
+      } else  {
         Car car = (Car)result.next();
         logToConsole(startTime, &quot;Selected Car (&quot; + car + &quot;): &quot;, false);
         startTime = System.currentTimeMillis();

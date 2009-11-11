@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.java: retrieveArbitraryCodeNQ
 private static void retrieveArbitraryCodeNQ(
-      ObjectContainer container) ...{
-    final int[] points = ...{ 1, 100 };
-    ObjectSet result = container.query(new com.db4o.query.Predicate&lt;Pilot&gt;() ...{
-      public boolean match(Pilot pilot) ...{
-        for (int i = 0; i &lt; points.length; i++) ...{
-          if (pilot.getPoints() == points[i]) ...{
+      ObjectContainer container)  {
+    final int[] points =  { 1, 100 };
+    ObjectSet result = container.query(new com.db4o.query.Predicate&lt;Pilot&gt;()  {
+      public boolean match(Pilot pilot)  {
+        for (int i = 0; i &lt; points.length; i++)  {
+          if (pilot.getPoints() == points[i])  {
             return true;
           }
         }

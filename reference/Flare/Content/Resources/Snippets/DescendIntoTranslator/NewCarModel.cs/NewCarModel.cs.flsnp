@@ -1,14 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NewCarModel.cs
-/**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">NewCarModel.cs
+/** Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 
 namespace Db4objects.Db4odoc.Diagnostics
-...{
+ {
 
     public class NewCarModel : Db4objects.Db4o.Query.Predicate 
-  ...{
+   {
     public bool Match(Car car) 
-    ...{
-      return car.Model.EndsWith(&quot;2002&quot;);
+     {
+      return car.Model.EndsWith("2002");
     }
   }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

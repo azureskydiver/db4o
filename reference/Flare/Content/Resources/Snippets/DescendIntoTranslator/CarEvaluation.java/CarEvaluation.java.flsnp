@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CarEvaluation.java
-/**//* Copyright (C) 2004 - 2009 Versant Inc. http://www.db4o.com */
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="290" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CarEvaluation.java
+/** Copyright (C) 2004 - 2009 Versant Inc. http://www.db4o.com */
 package com.db4odoc.diagnostics;
 
 import com.db4o.query.*;
 
-public class CarEvaluation implements Evaluation ...{
+public class CarEvaluation implements Evaluation  {
   public void evaluate(Candidate candidate)
-  ...{
+   {
     Car car=(Car)candidate.getObject();
-    candidate.include(car.getModel().endsWith(&quot;2002&quot;));
+    candidate.include(car.getModel().endsWith("2002"));
   }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AliasExample.cs: ConfigureClassAlias
 private static IEmbeddedConfiguration ConfigureClassAlias()
-        ...{
+         {
             // create a new alias
             tAlias = new TypeAlias(&quot;Db4odoc.Aliases.Pilot, Db4odoc&quot;, &quot;Db4odoc.Aliases.Driver, Db4odoc&quot;);
             // add the alias to the db4o configuration 

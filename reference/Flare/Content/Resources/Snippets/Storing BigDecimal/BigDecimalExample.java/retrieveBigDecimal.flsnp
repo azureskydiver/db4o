@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BigDecimalExample.java: retrieveBigDecimal
-public static void retrieveBigDecimal(Configuration configuration) ...{
+public static void retrieveBigDecimal(Configuration configuration)  {
     ObjectContainer container = database(configuration);
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         ObjectSet result = container.query(BigDecimal.class);
         listResult(result);
         
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;Exception: &quot; + ex.toString());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }
-  }</div</pre>    </body></html>
+  }</pre>    </body></html>

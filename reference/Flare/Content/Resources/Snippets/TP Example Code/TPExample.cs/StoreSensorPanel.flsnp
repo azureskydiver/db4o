@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPExample.cs: StoreSensorPanel
 private static void StoreSensorPanel()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = Database(Db4oFactory.NewConfiguration());
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     // create a linked list with length 10
                     SensorPanel list = new SensorPanel().CreateList(10);
                     container.Store(list);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

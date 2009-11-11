@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.java: removeAndDeleteTest
-private static void removeAndDeleteTest() ...{
+private static void removeAndDeleteTest()  {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       // set update depth to 1 as we only
       // modify List field
       container.ext().configure().objectClass(ListObject.class).updateDepth(1);
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         // retrieve a ListObject
         ListObject lo1 = result.get(0);
         // create a copy of the objects list
@@ -16,21 +16,21 @@ private static void removeAndDeleteTest() ...{
         lo1.getData().removeAll(lo1.getData());
         // and delete them from the database
         Iterator&lt;DataObject&gt; it = tempList.iterator();
-        while (it.hasNext()) ...{
+        while (it.hasNext())  {
           container.delete(it.next());
         }
 
         container.set(lo1);
       }
-    } finally ...{
+    } finally  {
       container.close();
     }
     // check DataObjects in the list
     // and DataObjects in the database
     container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         ListObject lo1 = result.get(0);
         System.out.println(&quot;DataObjects in the list:  &quot;
             + lo1.getData().size());
@@ -39,7 +39,7 @@ private static void removeAndDeleteTest() ...{
           .&lt;DataObject&gt; query(DataObject.class);
       System.out.println(&quot;DataObjects in the database: &quot;
           + removedObjects.size());
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: ReadBuffer
-1Private Shared Function ReadBuffer()Function ReadBuffer(ByVal buffer As IReadBuffer, ByVal length As Integer) As String
-2            Dim chars As Char() = New Char(length - 1) {}
-3            For ii As Integer = 0 To length - 1
-4                chars(ii) = ChrW(((buffer.ReadByte() And 255) Or ((buffer.ReadByte() And 255) &lt;&lt; 8)))
-5            Next
-6            Return New String(chars, 0, length)
-7        End Function</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: ReadBuffer
+Private Shared Function ReadBuffer()Function ReadBuffer(ByVal buffer As IReadBuffer, ByVal length As Integer) As String
+            Dim chars As Char() = New Char(length - 1) {}
+            For ii As Integer = 0 To length - 1
+                chars(ii) = ChrW(((buffer.ReadByte() And 255) Or ((buffer.ReadByte() And 255) &lt;&lt; 8)))
+            Next
+            Return New String(chars, 0, length)
+        End Function</pre>
+    </body>
+</html>

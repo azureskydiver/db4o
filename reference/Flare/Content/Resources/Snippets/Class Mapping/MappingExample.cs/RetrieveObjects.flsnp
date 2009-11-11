@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MappingExample.cs: RetrieveObjects
 private static void RetrieveObjects()
-        ...{
+         {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
             configuration.ObjectClass(typeof(Pilot)).ReadAs(typeof(PilotReplacement));
             IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 IQuery query = container.Query();
                 query.Constrain(typeof(PilotReplacement));
                 IObjectSet result = query.Execute();
                 ListResult(result);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

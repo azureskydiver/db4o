@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.java: testIntegrityCheck
-private static void testIntegrityCheck() ...{
+private static void testIntegrityCheck()  {
     fillDB();
     final ObjectContainer container = Db4oEmbedded.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       EventRegistry registry = EventRegistryFactory
           .forObjectContainer(container);
       // register an event handler, which will stop deleting a pilot when
       // it is referenced from a car
-      registry.deleting().addListener(new EventListener4() ...{
-        public void onEvent(Event4 e, EventArgs args) ...{
+      registry.deleting().addListener(new EventListener4()  {
+        public void onEvent(Event4 e, EventArgs args)  {
           CancellableObjectEventArgs cancellableArgs = ((CancellableObjectEventArgs) args);
           Object obj = cancellableArgs.object();
-          if (obj instanceof Pilot) ...{
+          if (obj instanceof Pilot)  {
             Query q = container.query();
             q.constrain(Car.class);
             q.descend(&quot;pilot&quot;).constrain(obj);
             ObjectSet result = q.execute();
-            if (result.size() &gt; 0) ...{
+            if (result.size() &gt; 0)  {
               System.out
                   .println(&quot;Object &quot;
                       + (Pilot) obj
@@ -33,13 +33,13 @@ private static void testIntegrityCheck() ...{
 
       // try to delete all the pilots
       List&lt;Pilot&gt; pilots = container.query(Pilot.class);
-      for (Pilot p: pilots) ...{
+      for (Pilot p: pilots)  {
         container.delete(p);
       }
       // check if any of the objects were deleted
       result = container.queryByExample(null);
       listResult(result);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

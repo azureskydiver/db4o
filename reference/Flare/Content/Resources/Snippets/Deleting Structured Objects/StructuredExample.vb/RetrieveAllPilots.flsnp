@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveAllPilots
-1Private Shared Sub RetrieveAllPilots()Sub RetrieveAllPilots(ByVal db As IObjectContainer)
-2            Dim results As IObjectSet = db.Get(GetType(Pilot))
-3            ListResult(results)
-4        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveAllPilots
+Private Shared Sub RetrieveAllPilots()Sub RetrieveAllPilots(ByVal db As IObjectContainer)
+            Dim results As IObjectSet = db.Get(GetType(Pilot))
+            ListResult(results)
+        End Sub</pre>
+    </body>
+</html>

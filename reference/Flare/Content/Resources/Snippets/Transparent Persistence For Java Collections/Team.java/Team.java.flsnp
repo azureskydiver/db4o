@@ -3,37 +3,37 @@ package do4odoc.tacollections;
 
 import java.util.*;
 
-public class Team ...{
+public class Team  {
   
   private String name;
   
   private List&lt;Pilot&gt; pilots;
   
-  public Team(String name)...{
+  public Team(String name) {
     this.name = name;
   }
   
-  public void addPilot(Pilot pilot)...{
-    if(pilots == null)...{
+  public void addPilot(Pilot pilot) {
+    if(pilots == null) {
       pilots = new ArrayList&lt;Pilot&gt;();
     }
     pilots.add(pilot);
   }
   
   @Override
-  public String toString() ...{
+  public String toString()  {
     StringBuilder str = new StringBuilder();
     str.append(String.format(&quot;Team %s&quot;, name));
-    if(pilots != null)...{
+    if(pilots != null) {
       str.append(&quot; with pilots: \n&quot;);
-      for (Pilot p : pilots)...{
+      for (Pilot p : pilots) {
         str.append(String.format(&quot;    %s \n&quot;, p));
       }
     }
     return str.toString();
   }
   
-  public String getName()...{
+  public String getName() {
     return name;
   }
 

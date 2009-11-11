@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.java: readData
-public static void readData()...{
+public static void readData() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       ObjectSet result = container.get(new D());
       System.out.println();
       System.out.println(&quot;D class: &quot;);
@@ -11,7 +11,7 @@ public static void readData()...{
       System.out.println();
       System.out.println(&quot;E class: &quot;);
       listResult(result);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

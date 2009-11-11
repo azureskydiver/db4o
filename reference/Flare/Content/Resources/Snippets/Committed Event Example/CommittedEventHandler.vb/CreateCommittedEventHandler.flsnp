@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommittedEventHandler.vb: CreateCommittedEventHandler
-1Private Function CreateCommittedEventHandler()Function CreateCommittedEventHandler(ByVal objectContainer As IObjectContainer) As OnCommittedHandler
-2            Return AddressOf OnCommitted
-3        End Function</div</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommittedEventHandler.vb: CreateCommittedEventHandler
+Private Function CreateCommittedEventHandler()Function CreateCommittedEventHandler(ByVal objectContainer As IObjectContainer) As OnCommittedHandler
+            Return AddressOf OnCommitted
+        End Function</pre>    </body></html>

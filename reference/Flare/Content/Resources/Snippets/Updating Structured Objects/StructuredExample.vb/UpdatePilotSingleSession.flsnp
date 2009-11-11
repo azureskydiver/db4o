@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: UpdatePilotSingleSession
-1Private Shared Sub UpdatePilotSingleSession()Sub UpdatePilotSingleSession(ByVal db As IObjectContainer)
-2            Dim result As IObjectSet = db.Get(New Car(&quot;Ferrari&quot;))
-3            Dim found As Car = DirectCast(result.Next(), Car)
-4            found.Pilot.AddPoints(1)
-5            db.Set(found)
-6            result = db.Get(New Car(&quot;Ferrari&quot;))
-7            ListResult(result)
-8        End Sub</pre>    </body></html>
+Private Shared Sub UpdatePilotSingleSession()Sub UpdatePilotSingleSession(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car(&quot;Ferrari&quot;))
+            Dim found As Car = DirectCast(result.Next(), Car)
+            found.Pilot.AddPoints(1)
+            db.Set(found)
+            result = db.Get(New Car(&quot;Ferrari&quot;))
+            ListResult(result)
+        End Sub</pre>    </body></html>

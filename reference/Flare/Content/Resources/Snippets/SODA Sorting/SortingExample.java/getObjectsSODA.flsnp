@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.java: getObjectsSODA
-public static void getObjectsSODA() ...{
+public static void getObjectsSODA()  {
 
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       Query query = container.query();
       query.constrain(Pilot.class);
       query.descend(&quot;name&quot;).orderAscending();
@@ -14,7 +14,7 @@ public static void getObjectsSODA() ...{
       System.out.println(&quot;Time to query and sort with  SODA: &quot;
           + diff + &quot; ms.&quot;);
       listResult(result);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

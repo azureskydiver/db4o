@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.java: setCars
 private static void setCars()
-  ...{
+   {
      new File(DB4O_FILE_NAME).delete();
      ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       Car car1 = new Car(&quot;BMW&quot;);
       container.store(car1);
       Car car2 = new Car(&quot;Ferrari&quot;);
@@ -14,7 +14,7 @@ private static void setCars()
       query.constrain(Car.class);
       ObjectSet results = query.execute();
       listResult(results);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

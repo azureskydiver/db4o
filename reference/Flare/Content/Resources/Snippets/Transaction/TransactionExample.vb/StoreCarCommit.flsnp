@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: StoreCarCommit
-1Public Shared Sub StoreCarCommit()Sub StoreCarCommit(ByVal db As IObjectContainer)
-2            Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 99)
-3            Dim car As Car = New Car(&quot;BMW&quot;)
-4            car.Pilot = pilot
-5            db.Set(car)
-6            db.Commit()
-7        End Sub</pre>    </body></html>
+Public Shared Sub StoreCarCommit()Sub StoreCarCommit(ByVal db As IObjectContainer)
+            Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 99)
+            Dim car As Car = New Car(&quot;BMW&quot;)
+            car.Pilot = pilot
+            db.Set(car)
+            db.Commit()
+        End Sub</pre>    </body></html>

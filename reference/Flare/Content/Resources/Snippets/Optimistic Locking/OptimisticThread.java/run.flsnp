@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.java: run
-public void run() ...{
-      try ...{
+public void run()  {
+      try  {
         List&lt;Pilot&gt; result = _container.query(Pilot.class);
-        for (Pilot pilot: result)...{
+        for (Pilot pilot: result) {
           /**//* We will need to set a lock to make sure that the 
            * object version corresponds to the object retrieved.
            * (Prevent other client committing changes
            * at the time between object retrieval and version
            * retrieval )
            */
-          if (!_container.ext().setSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot), 3000))...{
+          if (!_container.ext().setSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot), 3000)) {
                 System.out.println(&quot;Error. The object is locked&quot;);
                 continue;
               }
@@ -29,7 +29,7 @@ public void run() ...{
               pilot.addPoints(1);
               _updateSuccess = false;
               randomWait();
-              if (!_container.ext().setSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot), 3000))...{
+              if (!_container.ext().setSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot), 3000)) {
                 System.out.println(&quot;Error. The object is locked&quot;);
                 continue;
               }
@@ -39,7 +39,7 @@ public void run() ...{
                */
               _container.commit();
               _container.ext().releaseSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot));
-              if (_updateSuccess)...{
+              if (_updateSuccess) {
                 System.out.println(getName() + &quot;Updated pilot: &quot; + pilot);
               }
               System.out.println();
@@ -49,7 +49,7 @@ public void run() ...{
               _idVersions.remove(id);
         }
           
-      } finally ...{
+      } finally  {
         _container.close();
       }
     }</pre>    </body></html>

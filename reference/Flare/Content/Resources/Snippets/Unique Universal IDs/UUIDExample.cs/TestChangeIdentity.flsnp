@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.cs: TestChangeIdentity
 private static void TestChangeIdentity()
-    ...{
+     {
       File.Delete(Db4oFileName);
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
       Db4oDatabase db;
       byte[] oldSignature;
       byte[] newSignature;
       try 
-      ...{
+       {
         db = container.Ext().Identity();
         oldSignature = db.GetSignature();
         Console.WriteLine(&quot;oldSignature: &quot; + PrintSignature(oldSignature));
                 ((LocalObjectContainer)container).GenerateNewIdentity();
       } 
       finally 
-      ...{
+       {
         container.Close();
       }        
       container = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         db = container.Ext().Identity();
         newSignature = db.GetSignature();
         Console.WriteLine(&quot;newSignature: &quot; + PrintSignature(newSignature));
       } 
       finally 
-      ...{
+       {
         container.Close();
       }
         
       bool same = true;
         
       for (int i = 0; i &lt; oldSignature.Length; i++) 
-      ...{
+       {
         if(oldSignature[i] != newSignature[i])
-        ...{
+         {
           same =false;
         }
       }
         
       if (same)
-      ...{
+       {
         Console.WriteLine(&quot;Database signatures are identical&quot;);
       } 
       else 
-      ...{
+       {
         Console.WriteLine(&quot;Database signatures are different&quot;);
       }
     }</pre>    </body></html>

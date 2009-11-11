@@ -1,103 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.cs
-1/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
-2using Db4objects.Db4o;
-3using Db4objects.Db4o.Activation;
-4using Db4objects.Db4o.TA;
-5
-6namespace Db4ojects.Db4odoc.TAExamples
-7...{
-8    public class SensorPanelTA /**//*must implement Activatable for TA*/: IActivatable
-9    ...{
-0        private object _sensor;
-1
-2        private SensorPanelTA _next;
-3
-4        /**//*activator registered for this class*/
-5        [System.NonSerialized]
-6        IActivator _activator;
-7
-8        public SensorPanelTA()
-9        ...{
-0            // default constructor for instantiation
-1        }
-2
-3        public SensorPanelTA(int value)
-4        ...{
-5            _sensor = value;
-6        }
-7
-8        /**//*Bind the class to the specified object container, create the activator*/
-9        public void Bind(IActivator activator)
-0        ...{
-1            if (_activator == activator)
-2            ...{
-3                return;
-4            }
-5            if (activator != null &amp;&amp; null != _activator)
-6            ...{
-7                throw new System.InvalidOperationException();
-8            }
-9            _activator = activator;
-0        }
-1
-2        /**//*Call the registered activator to activate the next level,
-3         * the activator remembers the objects that were already 
-4         * activated and won't activate them twice. 
-5         */
-6        public void Activate(ActivationPurpose purpose)
-7        ...{
-8            if (_activator == null)
-9                return;
-0            _activator.Activate(purpose);
-1        }
-2
-3        public SensorPanelTA Next
-4        ...{
-5            get
-6            ...{
-7                /**//*activate direct members*/
-8                Activate(ActivationPurpose.Read);
-9                return _next;
-0            }
-1        }
-2
-3        public object Sensor
-4        ...{
-5            get
-6            ...{
-7                /**//*activate direct members*/
-8                Activate(ActivationPurpose.Read);
-9                return _sensor;
-0            }
-1        }
-2
-3        public SensorPanelTA CreateList(int length)
-4        ...{
-5            return CreateList(length, 1);
-6        }
-7
-8        public SensorPanelTA CreateList(int length, int first)
-9        ...{
-0            int val = first;
-1            SensorPanelTA root = NewElement(first);
-2            SensorPanelTA list = root;
-3            while (--length &gt; 0)
-4            ...{
-5                list._next = NewElement(++val);
-6                list = list.Next;
-7            }
-8            return root;
-9        }
-0
-1        protected SensorPanelTA NewElement(int value)
-2        ...{
-3            return new SensorPanelTA(value);
-4        }
-5
-6        public override string ToString()
-7        ...{
-8            return &quot;Sensor #&quot; + Sensor;
-9        }
-0    }
-1
-2}</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.cs
+/** Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
+using Db4objects.Db4o;
+using Db4objects.Db4o.Activation;
+using Db4objects.Db4o.TA;
+
+namespace Db4ojects.Db4odoc.TAExamples
+ {
+    public class SensorPanelTA /**//*must implement Activatable for TA*/: IActivatable
+     {
+        private object _sensor;
+
+        private SensorPanelTA _next;
+
+        /**//*activator registered for this class*/
+        [System.NonSerialized]
+        IActivator _activator;
+
+        public SensorPanelTA()
+         {
+            // default constructor for instantiation
+        }
+
+        public SensorPanelTA(int value)
+         {
+            _sensor = value;
+        }
+
+        /**//*Bind the class to the specified object container, create the activator*/
+        public void Bind(IActivator activator)
+         {
+            if (_activator == activator)
+             {
+                return;
+            }
+            if (activator != null &amp;&amp; null != _activator)
+             {
+                throw new System.InvalidOperationException();
+            }
+            _activator = activator;
+        }
+
+        /**//*Call the registered activator to activate the next level,
+         * the activator remembers the objects that were already 
+         * activated and won't activate them twice. 
+         */
+        public void Activate(ActivationPurpose purpose)
+         {
+            if (_activator == null)
+                return;
+            _activator.Activate(purpose);
+        }
+
+        public SensorPanelTA Next
+         {
+            get
+             {
+                /**//*activate direct members*/
+                Activate(ActivationPurpose.Read);
+                return _next;
+            }
+        }
+
+        public object Sensor
+         {
+            get
+             {
+                /**//*activate direct members*/
+                Activate(ActivationPurpose.Read);
+                return _sensor;
+            }
+        }
+
+        public SensorPanelTA CreateList(int length)
+         {
+            return CreateList(length, 1);
+        }
+
+        public SensorPanelTA CreateList(int length, int first)
+         {
+            int val = first;
+            SensorPanelTA root = NewElement(first);
+            SensorPanelTA list = root;
+            while (--length &gt; 0)
+             {
+                list._next = NewElement(++val);
+                list = list.Next;
+            }
+            return root;
+        }
+
+        protected SensorPanelTA NewElement(int value)
+         {
+            return new SensorPanelTA(value);
+        }
+
+        public override string ToString()
+         {
+            return &quot;Sensor #&quot; + Sensor;
+        }
+    }
+
+}</pre>    </body></html>

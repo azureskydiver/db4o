@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: prepareComparison
-1public PreparedComparison prepareComparison(Context ctx, final Object obj) ...{
-2    return new PreparedComparison() ...{
-3      public int compareTo(Object target) ...{
-4        return compare((StringBuffer)obj, (StringBuffer)target);
-5      }
-6    };
-7  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: prepareComparison
+public PreparedComparison prepareComparison(Context ctx, final Object obj)  {
+    return new PreparedComparison()  {
+      public int compareTo(Object target)  {
+        return compare((StringBuffer)obj, (StringBuffer)target);
+      }
+    };
+  }</pre>
+    </body>
+</html>

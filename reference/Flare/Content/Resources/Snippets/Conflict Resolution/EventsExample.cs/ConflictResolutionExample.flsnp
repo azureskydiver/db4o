@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EventsExample.cs: ConflictResolutionExample
 private static void ConflictResolutionExample()
-        ...{
+         {
             IConfiguration config = Db4oFactory.NewConfiguration();
             config.GenerateUUIDs(ConfigScope.Globally);
             config.GenerateVersionNumbers(ConfigScope.Globally);
@@ -62,7 +62,7 @@ private static void ConflictResolutionExample()
             IObjectSet result = desktop.Query(typeof(Pilot));
             System.Console.WriteLine(result.Size());
             while (result.HasNext())
-            ...{
+             {
                 System.Console.WriteLine(result.Next());
             }
             handheld.Close();

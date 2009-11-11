@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CollectionExample.cs: UpdateTeam
 private static void UpdateTeam()
-    ...{
+     {
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         IQuery query =db.Query(); 
         query.Constrain(typeof(Team));
         query.Descend(&quot;_name&quot;).Constrain(&quot;Ferrari&quot;);
         IObjectSet result = query.Execute();
         if (result.HasNext()) 
-        ...{
+         {
           Team ferrariTeam = (Team)result.Next();
 
           Pilot pilot = new Pilot(&quot;David Schumacher&quot;, 100);
@@ -22,7 +22,7 @@ private static void UpdateTeam()
         ListResult(result);
       }  
       finally 
-      ...{
+       {
         db.Close();
       } 
     }</pre>    </body></html>

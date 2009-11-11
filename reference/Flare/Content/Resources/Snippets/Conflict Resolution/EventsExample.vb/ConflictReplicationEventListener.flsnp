@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EventsExample.vb: ConflictReplicationEventListener
-1Public Class ConflictReplicationEventListenerClass ConflictReplicationEventListener
-2            Implements Db4objects.Drs.IReplicationEventListener
-3            Public Overridable Sub OnReplicate()Sub OnReplicate(ByVal e As Db4objects.Drs.IReplicationEvent) Implements Db4objects.Drs.IReplicationEventListener.OnReplicate
-4                If e.IsConflict() Then
-5                    Dim chosenObjectState As IObjectState = e.StateInProviderB()
-6                    e.OverrideWith(chosenObjectState)
-7                End If
-8            End Sub
-9        End Class</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1720">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">EventsExample.vb: ConflictReplicationEventListener
+Public Class ConflictReplicationEventListenerClass ConflictReplicationEventListener
+            Implements Db4objects.Drs.IReplicationEventListener
+            Public Overridable Sub OnReplicate()Sub OnReplicate(ByVal e As Db4objects.Drs.IReplicationEvent) Implements Db4objects.Drs.IReplicationEventListener.OnReplicate
+                If e.IsConflict() Then
+                    Dim chosenObjectState As IObjectState = e.StateInProviderB()
+                    e.OverrideWith(chosenObjectState)
+                End If
+            End Sub
+        End Class</pre>
+    </body>
+</html>

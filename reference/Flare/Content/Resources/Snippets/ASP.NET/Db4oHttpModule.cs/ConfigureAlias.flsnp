@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.cs: ConfigureAlias
-1public void ConfigureAlias()
-2        ...{
-3            Assembly assembly = Assembly.GetExecutingAssembly();
-4            String assemblyName = &quot;Db4objects.Db4odoc.Web.Data.*, &quot; + assembly.GetName().ToString().Substring(0, assembly.GetName().ToString().LastIndexOf(&quot;Version&quot;) - 2);
-5            Db4oFactory.Configure().AddAlias(new WildcardAlias(&quot;Db4objects.Db4odoc.Web.Data.*, WebSite&quot;, assemblyName));
-6        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.cs: ConfigureAlias
+public void ConfigureAlias()
+         {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            String assemblyName = "Db4objects.Db4odoc.Web.Data.*, " + assembly.GetName().ToString().Substring(0, assembly.GetName().ToString().LastIndexOf("Version") - 2);
+            Db4oFactory.Configure().AddAlias(new WildcardAlias("Db4objects.Db4odoc.Web.Data.*, WebSite", assemblyName));
+        }</pre>
+    </body>
+</html>

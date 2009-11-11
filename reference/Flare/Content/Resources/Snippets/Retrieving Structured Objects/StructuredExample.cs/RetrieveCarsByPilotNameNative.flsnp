@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveCarsByPilotNameNative
-1private static void RetrieveCarsByPilotNameNative(IObjectContainer db) 
-2    ...{
-3      string pilotName = &quot;Rubens Barrichello&quot;;
-4      IObjectSet results = db.Query(new RetrieveCarsByPilotNamePredicate(pilotName));
-5      ListResult(results);
-6    }</pre>    </body></html>
+private static void RetrieveCarsByPilotNameNative(IObjectContainer db) 
+     {
+      string pilotName = &quot;Rubens Barrichello&quot;;
+      IObjectSet results = db.Query(new RetrieveCarsByPilotNamePredicate(pilotName));
+      ListResult(results);
+    }</pre>    </body></html>

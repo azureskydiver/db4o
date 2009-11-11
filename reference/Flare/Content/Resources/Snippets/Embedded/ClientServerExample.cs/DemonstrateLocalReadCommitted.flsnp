@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: DemonstrateLocalReadCommitted
 private static void DemonstrateLocalReadCommitted(IObjectServer server)
-    ...{
+     {
       IObjectContainer client1 =server.OpenClient();
       IObjectContainer client2 =server.OpenClient();
       Pilot pilot = new Pilot(&quot;David Coulthard&quot;, 98);

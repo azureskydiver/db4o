@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: CompareChars
-1Private Shared Function CompareChars()Function CompareChars(ByVal compare As Char(), ByVal [with] As Char()) As Integer
-2            Dim min As Integer = IIf(compare.Length &lt; [with].Length, compare.Length, [with].Length)
-3            For i As Integer = 0 To min - 1
-4                If compare(i) &lt;&gt; [with](i) Then
-5                    Return compare(i).CompareTo([with](i))
-6                End If
-7            Next
-8            Return compare.Length - [with].Length
-9        End Function</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: CompareChars
+Private Shared Function CompareChars()Function CompareChars(ByVal compare As Char(), ByVal [with] As Char()) As Integer
+            Dim min As Integer = IIf(compare.Length &lt; [with].Length, compare.Length, [with].Length)
+            For i As Integer = 0 To min - 1
+                If compare(i) &lt;&gt; [with](i) Then
+                    Return compare(i).CompareTo([with](i))
+                End If
+            Next
+            Return compare.Length - [with].Length
+        End Function</pre>
+    </body>
+</html>

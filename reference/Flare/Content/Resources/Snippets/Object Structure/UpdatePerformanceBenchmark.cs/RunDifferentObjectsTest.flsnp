@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunDifferentObjectsTest
-1private void RunDifferentObjectsTest()
-2        ...{
-3            System.Console.WriteLine(&quot;Update test with different objects&quot;);
-4            int objectsToUpdate = 90;
-5            int updated = objectsToUpdate;
-6
-7            InitDifferentObjectsTest();
-8
-9            Clean();
-0            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
-1            Open(Configure());
-2            StoreSimplest();
-3
-4            IObjectSet result = objectContainer.QueryByExample(null);
-5            StartTimer();
-6            for (int i = 0; i &lt; objectsToUpdate; i++)
-7            ...{
-8                if (result.HasNext())
-9                ...{
-0                    SimplestItem item = (SimplestItem)result.Next();
-1                    item._id = 1;
-2                    Update(item);
-3                }
-4                else
-5                ...{
-6                    updated = i;
-7                    break;
-8                }
-9            }
-0            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-1            Close();
-2
-3            Clean();
-4            Open(Configure());
-5            System.Console.WriteLine(&quot; - object with string field&quot;);
-6            Store();
-7            updated = objectsToUpdate;
-8            result = objectContainer.QueryByExample(null);
-9            StartTimer();
-0            for (int i = 0; i &lt; objectsToUpdate; i++)
-1            ...{
-2                if (result.HasNext())
-3                ...{
-4                    Item item = (Item)result.Next();
-5                    item._name = &quot;Updated&quot;;
-6                    Update(item);
-7                }
-8                else
-9                ...{
-0                    updated = i;
-1                    break;
-2                }
-3            }
-4            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-5            Close();
-6
-7            Clean();
-8            Open(Configure());
-9            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
-0            StoreWithStringBuilder();
-1
-2            updated = objectsToUpdate;
-3            result = objectContainer.QueryByExample(null);
-4            StartTimer();
-5            for (int i = 0; i &lt; objectsToUpdate; i++)
-6            ...{
-7                if (result.HasNext())
-8                ...{
-9                    ItemWithStringBuilder item = (ItemWithStringBuilder)result.Next();
-0                    item._name = new StringBuilder(&quot;Updated&quot;);
-1                    Update(item);
-2                }
-3                else
-4                ...{
-5                    updated = i;
-6                    break;
-7                }
-8            }
-9            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-0            Close();
-1
-2            Clean();
-3            Open(Configure());
-4            System.Console.WriteLine(&quot; - object with int array field&quot;);
-5            StoreWithArray();
-6            updated = objectsToUpdate;
-7            result = objectContainer.QueryByExample(null);
-8            StartTimer();
-9            for (int i = 0; i &lt; objectsToUpdate; i++)
-0            ...{
-1                if (result.HasNext())
-2                ...{
-3                    ItemWithArray item = (ItemWithArray)result.Next();
-4                    item._id = new int[] ...{ 1, 2, 3 };
-5                    Update(item);
-6                }
-7                else
-8                ...{
-9                    updated = i;
-0                    break;
-1                }
-2            }
-3            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-4            Close();
-5
-6            Clean();
-7            Open(Configure());
-8            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
-9            StoreWithArrayList();
-0            updated = objectsToUpdate;
-1            result = objectContainer.QueryByExample(null);
-2            StartTimer();
-3            for (int i = 0; i &lt; objectsToUpdate; i++)
-4            ...{
-5                if (result.HasNext())
-6                ...{
-7                    ItemWithArrayList item = (ItemWithArrayList)result.Next();
-8                    item._ids = new ArrayList();
-9                    Update(item);
-0                }
-1                else
-2                ...{
-3                    updated = i;
-4                    break;
-5                }
-6            }
-7            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
-8            Close();
-9        }</pre>    </body></html>
+private void RunDifferentObjectsTest()
+         {
+            System.Console.WriteLine(&quot;Update test with different objects&quot;);
+            int objectsToUpdate = 90;
+            int updated = objectsToUpdate;
+
+            InitDifferentObjectsTest();
+
+            Clean();
+            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
+            Open(Configure());
+            StoreSimplest();
+
+            IObjectSet result = objectContainer.QueryByExample(null);
+            StartTimer();
+            for (int i = 0; i &lt; objectsToUpdate; i++)
+             {
+                if (result.HasNext())
+                 {
+                    SimplestItem item = (SimplestItem)result.Next();
+                    item._id = 1;
+                    Update(item);
+                }
+                else
+                 {
+                    updated = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            Close();
+
+            Clean();
+            Open(Configure());
+            System.Console.WriteLine(&quot; - object with string field&quot;);
+            Store();
+            updated = objectsToUpdate;
+            result = objectContainer.QueryByExample(null);
+            StartTimer();
+            for (int i = 0; i &lt; objectsToUpdate; i++)
+             {
+                if (result.HasNext())
+                 {
+                    Item item = (Item)result.Next();
+                    item._name = &quot;Updated&quot;;
+                    Update(item);
+                }
+                else
+                 {
+                    updated = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            Close();
+
+            Clean();
+            Open(Configure());
+            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
+            StoreWithStringBuilder();
+
+            updated = objectsToUpdate;
+            result = objectContainer.QueryByExample(null);
+            StartTimer();
+            for (int i = 0; i &lt; objectsToUpdate; i++)
+             {
+                if (result.HasNext())
+                 {
+                    ItemWithStringBuilder item = (ItemWithStringBuilder)result.Next();
+                    item._name = new StringBuilder(&quot;Updated&quot;);
+                    Update(item);
+                }
+                else
+                 {
+                    updated = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            Close();
+
+            Clean();
+            Open(Configure());
+            System.Console.WriteLine(&quot; - object with int array field&quot;);
+            StoreWithArray();
+            updated = objectsToUpdate;
+            result = objectContainer.QueryByExample(null);
+            StartTimer();
+            for (int i = 0; i &lt; objectsToUpdate; i++)
+             {
+                if (result.HasNext())
+                 {
+                    ItemWithArray item = (ItemWithArray)result.Next();
+                    item._id = new int[]  { 1, 2, 3 };
+                    Update(item);
+                }
+                else
+                 {
+                    updated = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            Close();
+
+            Clean();
+            Open(Configure());
+            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
+            StoreWithArrayList();
+            updated = objectsToUpdate;
+            result = objectContainer.QueryByExample(null);
+            StartTimer();
+            for (int i = 0; i &lt; objectsToUpdate; i++)
+             {
+                if (result.HasNext())
+                 {
+                    ItemWithArrayList item = (ItemWithArrayList)result.Next();
+                    item._ids = new ArrayList();
+                    Update(item);
+                }
+                else
+                 {
+                    updated = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            Close();
+        }</pre>    </body></html>

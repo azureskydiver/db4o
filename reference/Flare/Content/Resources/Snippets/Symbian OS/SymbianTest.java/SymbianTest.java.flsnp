@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SymbianTest.java
-/**//* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.f1.symbian;
 
@@ -14,11 +14,11 @@ import com.db4o.ObjectSet;
 
 
 
-public class SymbianTest ...{
+public class SymbianTest  {
 
   public static final String YAPFILENAME = &quot;formula1.yap&quot;;
   
-  public static void main(String[] args) throws IOException ...{
+  public static void main(String[] args) throws IOException  {
     setObjects();
     setObjectsSymbian();
     getObjects();
@@ -26,69 +26,69 @@ public class SymbianTest ...{
   }
   // end main
   
-  public static void setObjects()...{
+  public static void setObjects() {
     System.out.println(&quot;\nSetting objects using RandomAccessFileAdapter&quot;);
     new File(YAPFILENAME).delete();
     Db4o.configure().io(new com.db4o.io.RandomAccessFileAdapter());
-    try ...{
+    try  {
       ObjectContainer db = Db4o.openFile(YAPFILENAME);
-      try ...{
+      try  {
         db.set(new SymbianTest());
-      } finally ...{
+      } finally  {
         db.close();
       }
-    } catch (Exception ex)...{
+    } catch (Exception ex) {
       System.out.println(&quot;Exception accessing file: &quot; + ex.getMessage());
     }
   }
   // end setObjects
 
-  public static void setObjectsSymbian()...{
+  public static void setObjectsSymbian() {
     System.out.println(&quot;\nSetting objects using SymbianIoAdapter&quot;);
     new File(YAPFILENAME).delete();
     Db4o.configure().io(new com.db4o.io.SymbianIoAdapter());
-    try ...{
+    try  {
       ObjectContainer db = Db4o.openFile(YAPFILENAME);
-      try ...{
+      try  {
         db.set(new SymbianTest());
-      } finally ...{
+      } finally  {
         db.close();
       }
-    } catch (Exception ex)...{
+    } catch (Exception ex) {
       System.out.println(&quot;Exception accessing file: &quot; + ex.getMessage());
     }
   }
   // end setObjectsSymbian
 
-  public static void getObjects()...{
+  public static void getObjects() {
     System.out.println(&quot;\nRetrieving objects using RandomAccessFileAdapter&quot;);
     Db4o.configure().io(new com.db4o.io.RandomAccessFileAdapter());
-    try ...{
+    try  {
       ObjectContainer db = Db4o.openFile(YAPFILENAME);
-      try ...{
+      try  {
          ObjectSet result=db.get(new Object());
          System.out.println(&quot;Objects in the database: &quot; + result.size());
-      } finally ...{
+      } finally  {
         db.close();
       }
-    } catch (Exception ex)...{
+    } catch (Exception ex) {
       System.out.println(&quot;Exception accessing file: &quot; + ex.getMessage());
     }
   }
   // end getObjects
   
-  public static void getObjectsSymbian()...{
+  public static void getObjectsSymbian() {
     System.out.println(&quot;\nRetrieving objects using SymbianIoAdapter&quot;);
     Db4o.configure().io(new com.db4o.io.SymbianIoAdapter());
-    try ...{
+    try  {
       ObjectContainer db = Db4o.openFile(YAPFILENAME);
-      try ...{
+      try  {
          ObjectSet result=db.get(new Object());
          System.out.println(&quot;Objects in the database: &quot; + result.size());
-      } finally ...{
+      } finally  {
         db.close();
       }
-    } catch (Exception ex)...{
+    } catch (Exception ex) {
       System.out.println(&quot;Exception accessing file: &quot; + ex.getMessage());
     }
   }

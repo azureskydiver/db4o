@@ -7,7 +7,7 @@ import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.messaging.*;
 
-public class Server implements ServerInfo, MessageRecipient ...{
+public class Server implements ServerInfo, MessageRecipient  {
     
     /** *//**
      * setting the value to true denotes that the server should be closed
@@ -18,7 +18,7 @@ public class Server implements ServerInfo, MessageRecipient ...{
      * starts a db4o server using the configuration from
      * {@link ServerInfo}.
      */
-    public static void main(String[] arguments) ...{
+    public static void main(String[] arguments)  {
       new Server().runServer();
     } 
     // end main
@@ -27,8 +27,8 @@ public class Server implements ServerInfo, MessageRecipient ...{
      * opens the ObjectServer, and waits forever until close() is called
      * or a StopServer message is being received.
      */
-    public void runServer()...{
-          synchronized(this)...{
+    public void runServer() {
+          synchronized(this) {
         ServerConfiguration c = Db4oClientServer.newServerConfiguration();
         
         ObjectServer db4oServer = Db4oClientServer.openServer(c, FILE, PORT);
@@ -44,12 +44,12 @@ public class Server implements ServerInfo, MessageRecipient ...{
         // We only need low priority since the db4o server has
         // it's own thread.
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        try ...{
-            if(! stop)...{
+        try  {
+            if(! stop) {
               // wait forever for notify() from close()
               this.wait(Long.MAX_VALUE);   
             }
-        } catch (Exception e) ...{
+        } catch (Exception e)  {
           e.printStackTrace();
         }
         db4oServer.close();
@@ -61,8 +61,8 @@ public class Server implements ServerInfo, MessageRecipient ...{
      * messaging callback
      * @see com.db4o.messaging.MessageRecipient#processMessage(ObjectContainer, Object)
      */
-    public void processMessage(MessageContext context, Object message) ...{
-      if(message instanceof StopServer)...{
+    public void processMessage(MessageContext context, Object message)  {
+      if(message instanceof StopServer) {
         close();
       }
     }
@@ -71,8 +71,8 @@ public class Server implements ServerInfo, MessageRecipient ...{
     /** *//**
      * closes this server.
      */
-    public void close()...{
-      synchronized(this)...{
+    public void close() {
+      synchronized(this) {
         stop = true;
         this.notify();
       }

@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: TryStoreWithoutCallConstructors
-1Private Shared Sub TryStoreWithoutCallConstructors()Sub TryStoreWithoutCallConstructors()
-2            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-3            configuration.ObjectClass(GetType(CultureInfo)).CallConstructor(False)
-4            ' trying to store objects that hold onto
-5            ' system resources can be pretty nasty
-6            ' uncomment the following line to see
-7            ' how nasty it can be
-8            'TryStoreAndRetrieve(configuration);
-9        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: TryStoreWithoutCallConstructors
+Private Shared Sub TryStoreWithoutCallConstructors()Sub TryStoreWithoutCallConstructors()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(CultureInfo)).CallConstructor(False)
+            ' trying to store objects that hold onto
+            ' system resources can be pretty nasty
+            ' uncomment the following line to see
+            ' how nasty it can be
+            'TryStoreAndRetrieve(configuration);
+        End Sub</pre>
+    </body>
+</html>

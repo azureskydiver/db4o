@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.java: nqListener
-1public static void nqListener() ...{
-2    ObjectContainer db = Db4o.openFile(DBFILENAME);
-3    ((InternalObjectContainer)db).getNativeQueryHandler().addListener(
-4        new Db4oQueryExecutionListener() ...{
-5          public void notifyQueryExecuted(NQOptimizationInfo info) ...{
-6            System.err.println(info);
-7          }
-8        });
-9  }</pre>    </body></html>
+public static void nqListener()  {
+    ObjectContainer db = Db4o.openFile(DBFILENAME);
+    ((InternalObjectContainer)db).getNativeQueryHandler().addListener(
+        new Db4oQueryExecutionListener()  {
+          public void notifyQueryExecuted(NQOptimizationInfo info)  {
+            System.err.println(info);
+          }
+        });
+  }</pre>    </body></html>

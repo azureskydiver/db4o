@@ -4,9 +4,9 @@
         /// see com.db4o.messaging.MessageRecipient#ProcessMessage()
         /// &lt;/summary&gt;
         public void ProcessMessage(IMessageContext context, object message)
-        ...{
+         {
             if (message is StopServer)
-            ...{
+             {
                 Close();
             }
         }</pre>    </body></html>

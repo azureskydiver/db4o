@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: DeleteFlat
-1private static void DeleteFlat(IObjectContainer db)
-2    ...{
-3      IObjectSet result = db.Get(new Car(&quot;Ferrari&quot;));
-4      Car found = (Car)result.Next();
-5      db.Delete(found);
-6      result = db.Get(new Car(null));
-7      ListResult(result);
-8    }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: DeleteFlat
+private static void DeleteFlat(IObjectContainer db)
+     {
+      IObjectSet result = db.Get(new Car("Ferrari"));
+      Car found = (Car)result.Next();
+      db.Delete(found);
+      result = db.Get(new Car(null));
+      ListResult(result);
+    }</pre>
+    </body>
+</html>

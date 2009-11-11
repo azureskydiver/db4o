@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: runDifferentObjectsTest
-private void runDifferentObjectsTest() ...{
+private void runDifferentObjectsTest()  {
 
     init();
     System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth

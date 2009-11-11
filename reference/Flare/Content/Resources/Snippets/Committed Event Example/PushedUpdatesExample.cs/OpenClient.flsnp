@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: OpenClient
 private IObjectContainer OpenClient()
-        ...{
+         {
             try
-            ...{
+             {
                 IObjectContainer client = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, Port, User,
                         Password);
                 EventHandler&lt;CommitEventArgs&gt; committedEventHandler = CommittedEventHandler;
@@ -14,7 +14,7 @@ private IObjectContainer OpenClient()
                 return client;
             }
             catch (Exception ex)
-            ...{
+             {
                 System.Console.WriteLine(ex.ToString());
             }
             return null;

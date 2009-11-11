@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.java: rollbackDeactivateStrategy
-1private static class RollbackDeactivateStrategy implements RollbackStrategy ...{
-2    public void rollback(ObjectContainer container, Object obj) ...{
-3      container.ext().deactivate(obj);
-4    }
-5  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPRollback.java: rollbackDeactivateStrategy
+private static class RollbackDeactivateStrategy implements RollbackStrategy  {
+    public void rollback(ObjectContainer container, Object obj)  {
+      container.ext().deactivate(obj);
+    }
+  }</pre>
+    </body>
+</html>

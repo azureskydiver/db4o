@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NotStorableTranslator.java
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 package com.db4odoc.translators;
 
 import com.db4o.*;
 import com.db4o.config.*;
 
-public class NotStorableTranslator implements ObjectConstructor ...{
+public class NotStorableTranslator implements ObjectConstructor  {
   public Object onStore(ObjectContainer container,
-      Object applicationObject) ...{
+      Object applicationObject)  {
     System.out.println(&quot;onStore for &quot; + applicationObject);
     NotStorable notStorable = (NotStorable) applicationObject;
-    return new Object[] ...{ new Integer(notStorable.getId()),
+    return new Object[]  { new Integer(notStorable.getId()),
         notStorable.getName() };
   }
 
   public Object onInstantiate(ObjectContainer container,
-      Object storedObject) ...{
+      Object storedObject)  {
     System.out.println(&quot;onInstantiate for &quot; + storedObject);
     Object[] raw = (Object[]) storedObject;
     int id = ((Integer) raw[0]).intValue();
@@ -24,12 +24,12 @@ public class NotStorableTranslator implements ObjectConstructor ...{
   }
 
   public void onActivate(ObjectContainer container,
-      Object applicationObject, Object storedObject) ...{
+      Object applicationObject, Object storedObject)  {
     System.out.println(&quot;onActivate for &quot; + applicationObject
         + &quot; / &quot; + storedObject);
   }
 
-  public Class storedClass() ...{
+  public Class storedClass()  {
     return Object[].class;
   }
 }</pre>    </body></html>

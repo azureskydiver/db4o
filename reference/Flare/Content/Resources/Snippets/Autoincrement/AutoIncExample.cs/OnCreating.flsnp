@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.cs: OnCreating
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.cs: OnCreating
 private static void OnCreating(object sender, CancellableObjectEventArgs args)
-        ...{
+         {
             IObjectContainer db = OpenContainer();
             object obj = args.Object;
             // only for the objects extending the CountedObject
             if (obj is CountedObject)
-            ...{
+             {
                 ((CountedObject)obj).Id = GetNextId(db);
             }
-        }</div</pre>    </body></html>
+        }</pre>    </body></html>

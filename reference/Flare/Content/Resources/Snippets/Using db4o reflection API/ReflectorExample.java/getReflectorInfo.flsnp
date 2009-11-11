@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.java: getReflectorInfo
 private static void getReflectorInfo()
-  ...{
+   {
     ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       System.out.println(&quot;Reflector in use: &quot; + container.ext().reflector());
       System.out.println(&quot;Reflector delegate&quot; +container.ext().reflector().getDelegate());
       ReflectClass[] knownClasses = container.ext().reflector().knownClasses();
       int count = knownClasses.length;
       System.out.println(&quot;Known classes: &quot; + count);
-      for (int i=0; i &lt;knownClasses.length; i++)...{
+      for (int i=0; i &lt;knownClasses.length; i++) {
         System.out.println(knownClasses[i]);
       }
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

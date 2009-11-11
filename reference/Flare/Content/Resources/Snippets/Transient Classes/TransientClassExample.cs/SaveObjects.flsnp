@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransientClassExample.cs: SaveObjects
 private static void SaveObjects()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
             try
-            ...{
+             {
                 // Save Test1 object with a NotStorable class field
                 Test1 test1 = new Test1(&quot;Test1&quot;, new NotStorable());
                 container.Set(test1);
@@ -13,7 +13,7 @@ private static void SaveObjects()
                 container.Set(test2);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

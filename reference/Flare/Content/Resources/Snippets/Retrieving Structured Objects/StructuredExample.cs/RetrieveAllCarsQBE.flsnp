@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveAllCarsQBE
-1private static void RetrieveAllCarsQBE(IObjectContainer db)
-2    ...{
-3      Car proto = new Car(null);
-4      IObjectSet result = db.Get(proto);
-5      ListResult(result);
-6    }</pre>    </body></html>
+private static void RetrieveAllCarsQBE(IObjectContainer db)
+     {
+      Car proto = new Car(null);
+      IObjectSet result = db.Get(proto);
+      ListResult(result);
+    }</pre>    </body></html>

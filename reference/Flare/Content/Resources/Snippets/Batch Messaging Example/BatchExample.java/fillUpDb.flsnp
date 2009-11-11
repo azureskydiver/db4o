@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BatchExample.java: fillUpDb
 private static void fillUpDb()
-      throws IOException ...{
+      throws IOException  {
     System.out.println(&quot;Testing inserts&quot;);
     ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
     // Uncomment the following line to test CS mode without batching
@@ -10,16 +10,16 @@ private static void fillUpDb()
     ObjectContainer container = Db4oClientServer.openClient(
         configuration, HOST, PORT, USER,
         PASS);
-    try ...{
+    try  {
       long t1 = System.currentTimeMillis();
-      for (int i = 0; i &lt; NO_OF_OBJECTS; i++) ...{
+      for (int i = 0; i &lt; NO_OF_OBJECTS; i++)  {
         Pilot pilot = new Pilot(&quot;pilot #&quot; + i, i);
         container.store(pilot);
       }
       long t2 = System.currentTimeMillis();
       long diff = t2 - t1;
       System.out.println(&quot;Operation time: &quot; + diff + &quot; ms.&quot;);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

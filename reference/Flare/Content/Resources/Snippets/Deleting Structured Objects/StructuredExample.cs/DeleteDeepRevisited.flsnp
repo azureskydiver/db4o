@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: DeleteDeepRevisited
 private static void DeleteDeepRevisited(IObjectContainer db)
-    ...{
+     {
       IObjectSet result = db.Get(new Pilot(&quot;Michael Schumacher&quot;, 0));
       Pilot pilot = (Pilot)result.Next();
       Car car1 = new Car(&quot;Ferrari&quot;);

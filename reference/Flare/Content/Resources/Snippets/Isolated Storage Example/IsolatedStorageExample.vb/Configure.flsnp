@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IsolatedStorageExample.vb: Configure
-1Private Shared Function Configure()Function Configure() As IConfiguration
-2            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-3            configuration.MessageLevel(1)
-4            configuration.Io(New IsolatedStorageFileAdapter())
-5            Return configuration
-6        End Function</pre>    </body></html>
+Private Shared Function Configure()Function Configure() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.MessageLevel(1)
+            configuration.Io(New IsolatedStorageFileAdapter())
+            Return configuration
+        End Function</pre>    </body></html>

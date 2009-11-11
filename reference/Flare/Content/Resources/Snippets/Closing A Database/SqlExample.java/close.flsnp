@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: close
-/** *//**
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="271" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SqlExample.java: close
+   *//**
      * Close database connection
      */
-    public static void close() ...{
-      if(_db != null)...{
+    public static void close()  {
+      if(_db != null) {
         long startTime = System.currentTimeMillis();
         _db.close();
-        logToConsole(startTime, &quot;Database committed and closed: &quot;, false);
+        logToConsole(startTime, "Database committed and closed: ", false);
         _db = null;
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

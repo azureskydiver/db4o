@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.java
-/**//* Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com
+/**//* Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.one_to_one;
 
-public class Pilot ...{
+public class Pilot  {
   String name;
   Helmet helmet;
 }</pre>    </body></html>

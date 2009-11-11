@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.cs: GetObjects
 private static void GetObjects(IConfiguration configuration)
-        ...{
+         {
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 DateTime dt1 = DateTime.UtcNow;
                 IObjectSet result = db.Get(null);
                 DateTime dt2 = DateTime.UtcNow;
@@ -12,7 +12,7 @@ private static void GetObjects(IConfiguration configuration)
                 Console.WriteLine(&quot;Objects in the database: &quot; + result.Count);
             }
             finally
-            ...{
+             {
                 db.Close();
             }
         }</pre>    </body></html>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: StoreCollection
 private static void StoreCollection()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer db = Database(ConfigureTA());
             if (db != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     // create a linked list with length 10
                     SensorPanel sensorPanel = new SensorPanel().CreateList(10);
                     // store all elements with one statement, since all elements are new    
                     db.Set(sensorPanel);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

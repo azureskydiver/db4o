@@ -8,46 +8,46 @@ import java.io.File;
 import com.db4o.ext.Status;
 import com.db4o.types.Blob;
 
-public class CarImage ...{
+public class CarImage  {
   Blob blob;
   private String fileName = null;
   private String inFolder = &quot;blobs\\in\\&quot;;  
   private String outFolder = &quot;blobs\\out\\&quot;;
   
-  public CarImage() ...{
+  public CarImage()  {
     
   }
 
-  public void setFile(String fileName)...{
+  public void setFile(String fileName) {
       this.fileName = fileName;
   }
   
-  public String getFile()...{
+  public String getFile() {
     return fileName;
   }
   
-  public boolean readFile() throws java.io.IOException ...{
+  public boolean readFile() throws java.io.IOException  {
     blob.readFrom(new File(inFolder + fileName));
     double status = blob.getStatus();
-    while(status &gt;  Status.COMPLETED)...{
-      try ...{
+    while(status &gt;  Status.COMPLETED) {
+      try  {
         Thread.sleep(50);
         status = blob.getStatus();
-      } catch (InterruptedException ex)...{
+      } catch (InterruptedException ex) {
         System.out.println(ex.getMessage());
       }
     }
         return (status == Status.COMPLETED);
   }
   
-  public boolean writeFile() throws java.io.IOException ...{
+  public boolean writeFile() throws java.io.IOException  {
     blob.writeTo(new File(outFolder + fileName));
     double status = blob.getStatus();
-    while(status &gt; Status.COMPLETED)...{
-      try ...{
+    while(status &gt; Status.COMPLETED) {
+      try  {
         Thread.sleep(50);
         status = blob.getStatus();
-      } catch (InterruptedException ex)...{
+      } catch (InterruptedException ex) {
         System.out.println(ex.getMessage());
       }
     }

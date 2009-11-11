@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.java: createDatabase
-private static void createDatabase(EmbeddedConfiguration config) ...{
+private static void createDatabase(EmbeddedConfiguration config)  {
     // the following line is only necessary for the database on disk
     new File(DB4O_URI).delete();
 
@@ -7,16 +7,16 @@ private static void createDatabase(EmbeddedConfiguration config) ...{
     // DB4O_URI will be the name of the database file for the default
     // configuration and the name of a MemoryBin for in-memory database
     ObjectContainer container = Db4oEmbedded.openFile(config, DB4O_URI);
-    try ...{
+    try  {
       Library lib = new Library();
-      for (int i = 0; i &lt; OBJECT_COUNT; i++) ...{
+      for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
         lib.addBook(new Book(&quot;title&quot; + i, lib));
       }
       container.store(lib);
       Book book = (Book) container.queryByExample(
           new Book(&quot;title1&quot;, null)).get(0);
       System.out.println(book);
-    } finally ...{
+    } finally  {
       container.close();
     }
     System.out.println(String.format(&quot;Time to create a database: %d ms&quot;,

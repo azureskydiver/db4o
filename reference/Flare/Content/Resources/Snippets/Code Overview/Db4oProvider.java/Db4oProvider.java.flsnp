@@ -7,20 +7,20 @@ import com.db4o.osgi.Db4oService;
  * This class is used to store db4o_osgi service instance and 
  * provide db4o services on request.
  */
-public class Db4oProvider ...{
+public class Db4oProvider  {
 
   private static ObjectContainer _db;
   private static String FILENAME = &quot;sample.db4o&quot;;
   
-  public static void Initialize(Db4oService db4oService)...{
+  public static void Initialize(Db4oService db4oService) {
     _db = db4oService.openFile(FILENAME);
   }
   
-  public static ObjectContainer database()...{
+  public static ObjectContainer database() {
     return _db;
   }
   
-  public static void UnInitialize()...{
+  public static void UnInitialize() {
     _db.close();
   }
   

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: configureRamDrive
-1private void configureRamDrive()...{
-2      Configuration config = Db4o.configure(); 
-3        config.lockDatabaseFile(false);
-4        config.weakReferences(false);
-5        config.flushFileBuffers(true);
-6    }</pre>    </body></html>
+private void configureRamDrive() {
+      Configuration config = Db4o.configure(); 
+        config.lockDatabaseFile(false);
+        config.weakReferences(false);
+        config.flushFileBuffers(true);
+    }</pre>    </body></html>

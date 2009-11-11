@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InterLanguageExample2.java: configureAlias
-1private static EmbeddedConfiguration configureAlias() ...{
-2    EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-3    configuration.common().addAlias(new WildcardAlias(
-4        &quot;Db4odoc.Aliases.*, Db4odoc&quot;,
-5        &quot;com.db4odoc.aliases.*&quot;));
-6    configuration.common().add(new DotnetSupport(false));    
-7    return configuration;
-8  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InterLanguageExample2.java: configureAlias
+private static EmbeddedConfiguration configureAlias()  {
+    EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+    configuration.common().addAlias(new WildcardAlias(
+        "Db4odoc.Aliases.*, Db4odoc",
+        "com.db4odoc.aliases.*"));
+    configuration.common().add(new DotnetSupport(false));    
+    return configuration;
+  }</pre>
+    </body>
+</html>

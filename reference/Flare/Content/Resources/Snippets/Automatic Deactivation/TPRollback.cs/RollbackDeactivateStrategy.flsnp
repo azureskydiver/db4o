@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.cs: RollbackDeactivateStrategy
-1private class RollbackDeactivateStrategy : IRollbackStrategy
-2        ...{
-3            public void Rollback(IObjectContainer container, Object obj)
-4            ...{
-5                container.Ext().Deactivate(obj);
-6            }
-7        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPRollback.cs: RollbackDeactivateStrategy
+private class RollbackDeactivateStrategy : IRollbackStrategy
+         {
+            public void Rollback(IObjectContainer container, Object obj)
+             {
+                container.Ext().Deactivate(obj);
+            }
+        }</pre>
+    </body>
+</html>

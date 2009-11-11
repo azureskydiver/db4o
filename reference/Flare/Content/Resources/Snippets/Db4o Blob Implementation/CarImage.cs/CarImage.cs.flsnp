@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CarImage.cs
 /**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 namespace Db4odoc.Blobs
-...{
+ {
     using Db4objects.Db4o.Ext;
     using Db4objects.Db4o.Types;
   using Sharpen.Lang;
   using Sharpen.IO;
 
-  public class CarImage ...{
+  public class CarImage  {
     IBlob _blob = null;
     private string _file = null;
     private string inFolder = &quot;blobs\\in\\&quot;;  
     private string outFolder = &quot;blobs\\out\\&quot;;
     
-    public CarImage() ...{
+    public CarImage()  {
       
     }
 
     public string FileName
-    ...{
+     {
       get
-      ...{
+       {
         return _file;
       }
             
       set
-      ...{
+       {
         _file = value;
       }
     }
     
     public bool ReadFile()
-    ...{
+     {
       _blob.ReadFrom(new File(inFolder + _file));
       double status = _blob.GetStatus();
-      while(status &gt;  Status.Completed)...{
+      while(status &gt;  Status.Completed) {
           Thread.Sleep(50);
           status = _blob.GetStatus();
       }
@@ -42,10 +42,10 @@ namespace Db4odoc.Blobs
     }
     
     public bool WriteFile()
-    ...{
+     {
       _blob.WriteTo(new File(outFolder + _file));
       double status = _blob.GetStatus();
-      while(status &gt; Status.Completed)...{
+      while(status &gt; Status.Completed) {
           Thread.Sleep(50);
           status = _blob.GetStatus();
       }

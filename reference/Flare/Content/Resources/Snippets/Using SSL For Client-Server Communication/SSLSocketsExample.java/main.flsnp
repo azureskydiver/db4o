@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SSLSocketsExample.java: main
-public static void main(String[] args) throws Exception ...{
+public static void main(String[] args) throws Exception  {
     
       // Create a SecureSocketFactory for the SSL context
     socketFactory = createSecureSocketFactory();
@@ -8,10 +8,10 @@ public static void main(String[] args) throws Exception ...{
     ObjectServer db4oServer = Db4o.openServer(config, FILE, PORT,
         socketFactory);
     db4oServer.grantAccess(USER, PASSWORD);
-    try ...{
+    try  {
       storeObjectsRemotely(HOST, PORT, USER, PASSWORD);
       queryRemoteServer(HOST, PORT, USER, PASSWORD);
-    } finally ...{
+    } finally  {
       db4oServer.close();
     }
   }</pre>    </body></html>

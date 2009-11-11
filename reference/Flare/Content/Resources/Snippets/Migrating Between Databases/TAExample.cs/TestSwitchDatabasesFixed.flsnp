@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.cs: TestSwitchDatabasesFixed
 private static void TestSwitchDatabasesFixed()
-        ...{
+         {
             StoreSensorPanel();
 
             IObjectContainer firstDb = Db4oFactory.OpenFile(ConfigureTA(), FirstDbName);
             IObjectContainer secondDb = Db4oFactory.OpenFile(ConfigureTA(), SecondDbName);
             try
-            ...{
+             {
                 IObjectSet result = firstDb.QueryByExample(new SensorPanelTA(1));
                 if (result.Count &gt; 0)
-                ...{
+                 {
                     SensorPanelTA sensor = (SensorPanelTA)result[0];
                     // Unbind the object from the first database
                     sensor.Bind(null);
@@ -21,7 +21,7 @@ private static void TestSwitchDatabasesFixed()
                             + FirstDbName + &quot;:&quot;);
                     SensorPanelTA next = sensor.Next;
                     while (next != null)
-                    ...{
+                     {
                         System.Console.WriteLine(next);
                         next = next.Next;
                     }
@@ -31,7 +31,7 @@ private static void TestSwitchDatabasesFixed()
                     firstDb.Activate(sensor, Int32.MaxValue);
                     next = sensor.Next;
                     while (next != null)
-                    ...{
+                     {
                         System.Console.WriteLine(next);
                         next = next.Next;
                     }
@@ -40,14 +40,14 @@ private static void TestSwitchDatabasesFixed()
                     result = secondDb.QueryByExample(new SensorPanelTA(1));
                     next = sensor.Next;
                     while (next != null)
-                    ...{
+                     {
                         System.Console.WriteLine(next);
                         next = next.Next;
                     }
                 }
             }
             finally
-            ...{
+             {
                 firstDb.Close();
                 secondDb.Close();
             }

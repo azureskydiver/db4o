@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: configure
-1private Configuration configure()...{
-2      Configuration config = Db4o.newConfiguration();
-3      // using MemoryIoAdapter improves the performance 
-4      // by replacing the costly disk IO operations with 
-5      // memory access
-6        config.io(new MemoryIoAdapter());
-7        return config;
-8    }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: configure
+private Configuration configure() {
+      Configuration config = Db4o.newConfiguration();
+      // using MemoryIoAdapter improves the performance 
+      // by replacing the costly disk IO operations with 
+      // memory access
+        config.io(new MemoryIoAdapter());
+        return config;
+   }</pre>
+    </body>
+</html>

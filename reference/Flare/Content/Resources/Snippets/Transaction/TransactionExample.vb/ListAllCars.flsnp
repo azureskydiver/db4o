@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1070">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: ListAllCars
-1Public Shared Sub ListAllCars()Sub ListAllCars(ByVal db As IObjectContainer)
-2            Dim result As IObjectSet = db.Get(GetType(Car))
-3            ListResult(result)
-4        End Sub</pre>
+Public Shared Sub ListAllCars()Sub ListAllCars(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(GetType(Car))
+            ListResult(result)
+        End Sub</pre>
     </body>
 </html>

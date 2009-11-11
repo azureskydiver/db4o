@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransientClassExample.java: retrieveObjects
-private static void retrieveObjects() ...{
+private static void retrieveObjects()  {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       // retrieve the results and check if the NotStorable
       // instances were saved
       ObjectSet result = container.get(null);
       listResult(result);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

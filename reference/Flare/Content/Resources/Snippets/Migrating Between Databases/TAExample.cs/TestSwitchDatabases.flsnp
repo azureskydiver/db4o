@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.cs: TestSwitchDatabases
 private static void TestSwitchDatabases()
-        ...{
+         {
             StoreSensorPanel();
 
             IObjectContainer firstDb = Db4oFactory.OpenFile(ConfigureTA(), FirstDbName);
             IObjectContainer secondDb = Db4oFactory.OpenFile(ConfigureTA(), SecondDbName);
             try
-            ...{
+             {
                 IObjectSet result = firstDb.QueryByExample(new SensorPanelTA(1));
                 if (result.Count &gt; 0)
-                ...{
+                 {
                     SensorPanelTA sensor = (SensorPanelTA)result[0];
                     firstDb.Close();
                     // Migrating an object from the first database
@@ -18,7 +18,7 @@ private static void TestSwitchDatabases()
                 }
             }
             finally
-            ...{
+             {
                 firstDb.Close();
                 secondDb.Close();
             }

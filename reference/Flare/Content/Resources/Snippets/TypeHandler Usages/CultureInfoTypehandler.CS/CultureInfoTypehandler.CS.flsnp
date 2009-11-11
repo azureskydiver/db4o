@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CultureInfoTypehandler.CS
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 using System.Globalization;
 
 using Db4objects.Db4o.Internal.Handlers;
@@ -9,27 +9,27 @@ using Db4objects.Db4o.Typehandlers;
 
 
 namespace Db4objects.Db4odoc.Typehandler.Translators
-...{
+ {
     public class CultureInfoTypehandler : FirstClassObjectHandler, ITypeHandler4, IFirstClassHandler, IVariableLengthTypeHandler
-    ...{
+     {
         private class Storable
-        ...{
+         {
             private string[] items;
 
             public Storable(string[] items)
-            ...{
+             {
                 this.Items = items;
             }
 
             public string[] Items
-            ...{
-                get ...{ return items; }
-                set ...{ items = value; }
+             {
+                get  { return items; }
+                set  { items = value; }
             }
         }
 
         public void Write(IWriteContext context, object obj)
-        ...{
+         {
             LocalizedItemList list = (LocalizedItemList)obj;
             Storable storable = new Storable(list.Items);
 
@@ -37,7 +37,7 @@ namespace Db4objects.Db4odoc.Typehandler.Translators
         }
 
         public object Read(IReadContext context)
-        ...{
+         {
             UnmarshallingContext _context = (UnmarshallingContext)context;
             LocalizedItemList list = (LocalizedItemList) _context.PersistentObject();
             Storable storable = (Storable)context.ReadObject();

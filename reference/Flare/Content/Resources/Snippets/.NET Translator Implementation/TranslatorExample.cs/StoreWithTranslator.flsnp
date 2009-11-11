@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: StoreWithTranslator
-1public static void StoreWithTranslator()
-2        ...{
-3            IConfiguration configuration = Db4oFactory.NewConfiguration();
-4            configuration.ObjectClass(typeof(CultureInfo))
-5                .Translate(new CultureInfoTranslator());
-6            TryStoreAndRetrieve(configuration);
-7        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: StoreWithTranslator
+public static void StoreWithTranslator()
+         {
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.ObjectClass(typeof(CultureInfo))
+                .Translate(new CultureInfoTranslator());
+            TryStoreAndRetrieve(configuration);
+        }</pre>
+    </body>
+</html>

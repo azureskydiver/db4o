@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnumExample.java: checkPilots
-private static void checkPilots()...{
+private static void checkPilots() {
     ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
           ObjectSet result = container.query(Pilot.class);
           System.out.println(&quot;Saved pilots: &quot; + result.size());
-          for(int x = 0; x &lt; result.size(); x++)...{
+          for(int x = 0; x &lt; result.size(); x++) {
             Pilot pilot = (Pilot )result.get(x);
-            if (pilot.getQualification() == Qualification.WINNER)...{
+            if (pilot.getQualification() == Qualification.WINNER) {
               System.out.println(&quot;Winner pilot: &quot; + pilot);
-            } else if (pilot.getQualification() == Qualification.PROFESSIONAL)...{
+            } else if (pilot.getQualification() == Qualification.PROFESSIONAL) {
               System.out.println(&quot;Professional pilot: &quot; + pilot);
-            }  else ...{
+            }  else  {
               System.out.println(&quot;Uncategorized pilot: &quot; + pilot);
             }
           }
-    } finally ...{
+    } finally  {
       container.close();
     }
     }</pre>    </body></html>

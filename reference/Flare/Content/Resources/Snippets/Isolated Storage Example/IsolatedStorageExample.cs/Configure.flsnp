@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IsolatedStorageExample.cs: Configure
-1private static IConfiguration Configure()
-2        ...{
-3            IConfiguration configuration = Db4oFactory.NewConfiguration();
-4            configuration.MessageLevel(1);
-5            configuration.Io(new IsolatedStorageFileAdapter());
-6            return configuration;
-7        }</pre>    </body></html>
+private static IConfiguration Configure()
+         {
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.MessageLevel(1);
+            configuration.Io(new IsolatedStorageFileAdapter());
+            return configuration;
+        }</pre>    </body></html>

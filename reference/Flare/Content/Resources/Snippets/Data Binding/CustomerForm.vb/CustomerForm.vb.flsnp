@@ -1,116 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CustomerForm.vb
-1Imports System
-2Imports System.IO
-3Imports Db4objects.Db4o
-4
-5' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
-6Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
-7
-8    Public Class CustomerFormClass CustomerForm
-9        Inherits System.Windows.Forms.Form
-0        Private _container As IObjectContainer = Nothing
-1        Private _customers As ArrayList = New ArrayList()
-2
-3        Public Sub New()Sub New()
-4            InitializeComponent()
-5            OpenDataFile()
-6            SetUpDataBindings()
-7        End Sub
-8
-9        Private Sub OpenDataFile()Sub OpenDataFile()
-0            Dim dataFile As String = Path.Combine(Application.UserAppDataPath, &quot;data.yap&quot;)
-1            _container = Db4oFactory.OpenFile(dataFile)
-2        End Sub
-3
-4        Private Sub SetUpDataBindings()Sub SetUpDataBindings()
-5            Dim os As ObjectSet = _container.Get(GetType(Customer))
-6            If 0 = os.Size() Then
-7                ' Generate some initial data
-8                _customers.Add(New Customer(&quot;John Cleese&quot;, &quot;55-98763333&quot;))
-9                _customers.Add(New Customer(&quot;Herman Hesse&quot;, &quot;32-33335555&quot;))
-0                _customers.Add(New Customer(&quot;Douglas Adams&quot;, &quot;42-42424242&quot;))
-1            Else
-2                While os.HasNext()
-3                    _customers.Add(os.Next())
-4                End While
-5            End If
-6            _cmbCustomers.DisplayMember = &quot;Name&quot;
-7            _cmbCustomers.DataSource = _customers
-8            _txtPhoneNumber.DataBindings.Add(&quot;Text&quot;, _customers, &quot;PhoneNumber&quot;)
-9        End Sub
-0
-1        Private Sub PersistChanges()Sub PersistChanges()
-2            Dim customer As Customer
-3            For Each customer In _customers
-4                _container.Set(customer)
-5            Next
-6        End Sub
-7
-8        Friend WithEvents _labelName As System.Windows.Forms.Label
-9        Friend WithEvents _labelPhone As System.Windows.Forms.Label
-0        Friend WithEvents _cmbCustomers As System.Windows.Forms.ComboBox
-1        Friend WithEvents _txtPhoneNumber As System.Windows.Forms.TextBox
-2
-3        Private Sub InitializeComponent()Sub InitializeComponent()
-4            Me._labelName = New System.Windows.Forms.Label
-5            Me._labelPhone = New System.Windows.Forms.Label
-6            Me._cmbCustomers = New System.Windows.Forms.ComboBox
-7            Me._txtPhoneNumber = New System.Windows.Forms.TextBox
-8            Me.SuspendLayout()
-9            '
-0            '_labelName
-1            '
-2            Me._labelName.AutoSize = True
-3            Me._labelName.Location = New System.Drawing.Point(12, 9)
-4            Me._labelName.Name = &quot;_labelName&quot;
-5            Me._labelName.Size = New System.Drawing.Size(51, 13)
-6            Me._labelName.TabIndex = 0
-7            Me._labelName.Text = &quot;Customer&quot;
-8            '
-9            '_labelPhone
-0            '
-1            Me._labelPhone.AutoSize = True
-2            Me._labelPhone.Location = New System.Drawing.Point(12, 40)
-3            Me._labelPhone.Name = &quot;_labelPhone&quot;
-4            Me._labelPhone.Size = New System.Drawing.Size(45, 13)
-5            Me._labelPhone.TabIndex = 1
-6            Me._labelPhone.Text = &quot;Phone#&quot;
-7            '
-8            '_cmbCustomers
-9            '
-0            Me._cmbCustomers.FormattingEnabled = True
-1            Me._cmbCustomers.Location = New System.Drawing.Point(103, 6)
-2            Me._cmbCustomers.Name = &quot;_cmbCustomers&quot;
-3            Me._cmbCustomers.Size = New System.Drawing.Size(177, 21)
-4            Me._cmbCustomers.TabIndex = 2
-5            '
-6            '_txtPhoneNumber
-7            '
-8            Me._txtPhoneNumber.Location = New System.Drawing.Point(103, 37)
-9            Me._txtPhoneNumber.Name = &quot;_txtPhoneNumber&quot;
-0            Me._txtPhoneNumber.Size = New System.Drawing.Size(177, 20)
-1            Me._txtPhoneNumber.TabIndex = 3
-2            '
-3            'CustomerForm
-4            '
-5            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-6            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-7            Me.ClientSize = New System.Drawing.Size(292, 66)
-8            Me.Controls.Add(Me._txtPhoneNumber)
-9            Me.Controls.Add(Me._cmbCustomers)
-0            Me.Controls.Add(Me._labelPhone)
-1            Me.Controls.Add(Me._labelName)
-2            Me.Name = &quot;CustomerForm&quot;
-3            Me.Text = &quot;Db4o Data Binding&quot;
-4            Me.ResumeLayout(False)
-5            Me.PerformLayout()
-6
-7        End Sub
-8
-9        Private Sub CustomerForm_FormClosing()Sub CustomerForm_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
-0            PersistChanges()
-1            _container.Close()
-2            MyBase.OnClosing(e)
-3        End Sub
-4    End Class
-5End Namespace</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CustomerForm.vb
+Imports System
+Imports System.IO
+Imports Db4objects.Db4o
+
+' Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com 
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
+
+    Public Class CustomerFormClass CustomerForm
+        Inherits System.Windows.Forms.Form
+        Private _container As IObjectContainer = Nothing
+        Private _customers As ArrayList = New ArrayList()
+
+        Public Sub New()Sub New()
+            InitializeComponent()
+            OpenDataFile()
+            SetUpDataBindings()
+        End Sub
+
+        Private Sub OpenDataFile()Sub OpenDataFile()
+            Dim dataFile As String = Path.Combine(Application.UserAppDataPath, &quot;data.yap&quot;)
+            _container = Db4oFactory.OpenFile(dataFile)
+        End Sub
+
+        Private Sub SetUpDataBindings()Sub SetUpDataBindings()
+            Dim os As ObjectSet = _container.Get(GetType(Customer))
+            If 0 = os.Size() Then
+                ' Generate some initial data
+                _customers.Add(New Customer(&quot;John Cleese&quot;, &quot;55-98763333&quot;))
+                _customers.Add(New Customer(&quot;Herman Hesse&quot;, &quot;32-33335555&quot;))
+                _customers.Add(New Customer(&quot;Douglas Adams&quot;, &quot;42-42424242&quot;))
+            Else
+                While os.HasNext()
+                    _customers.Add(os.Next())
+                End While
+            End If
+            _cmbCustomers.DisplayMember = &quot;Name&quot;
+            _cmbCustomers.DataSource = _customers
+            _txtPhoneNumber.DataBindings.Add(&quot;Text&quot;, _customers, &quot;PhoneNumber&quot;)
+        End Sub
+
+        Private Sub PersistChanges()Sub PersistChanges()
+            Dim customer As Customer
+            For Each customer In _customers
+                _container.Set(customer)
+            Next
+        End Sub
+
+        Friend WithEvents _labelName As System.Windows.Forms.Label
+        Friend WithEvents _labelPhone As System.Windows.Forms.Label
+        Friend WithEvents _cmbCustomers As System.Windows.Forms.ComboBox
+        Friend WithEvents _txtPhoneNumber As System.Windows.Forms.TextBox
+
+        Private Sub InitializeComponent()Sub InitializeComponent()
+            Me._labelName = New System.Windows.Forms.Label
+            Me._labelPhone = New System.Windows.Forms.Label
+            Me._cmbCustomers = New System.Windows.Forms.ComboBox
+            Me._txtPhoneNumber = New System.Windows.Forms.TextBox
+            Me.SuspendLayout()
+            '
+            '_labelName
+            '
+            Me._labelName.AutoSize = True
+            Me._labelName.Location = New System.Drawing.Point(12, 9)
+            Me._labelName.Name = &quot;_labelName&quot;
+            Me._labelName.Size = New System.Drawing.Size(51, 13)
+            Me._labelName.TabIndex = 0
+            Me._labelName.Text = &quot;Customer&quot;
+            '
+            '_labelPhone
+            '
+            Me._labelPhone.AutoSize = True
+            Me._labelPhone.Location = New System.Drawing.Point(12, 40)
+            Me._labelPhone.Name = &quot;_labelPhone&quot;
+            Me._labelPhone.Size = New System.Drawing.Size(45, 13)
+            Me._labelPhone.TabIndex = 1
+            Me._labelPhone.Text = &quot;Phone#&quot;
+            '
+            '_cmbCustomers
+            '
+            Me._cmbCustomers.FormattingEnabled = True
+            Me._cmbCustomers.Location = New System.Drawing.Point(103, 6)
+            Me._cmbCustomers.Name = &quot;_cmbCustomers&quot;
+            Me._cmbCustomers.Size = New System.Drawing.Size(177, 21)
+            Me._cmbCustomers.TabIndex = 2
+            '
+            '_txtPhoneNumber
+            '
+            Me._txtPhoneNumber.Location = New System.Drawing.Point(103, 37)
+            Me._txtPhoneNumber.Name = &quot;_txtPhoneNumber&quot;
+            Me._txtPhoneNumber.Size = New System.Drawing.Size(177, 20)
+            Me._txtPhoneNumber.TabIndex = 3
+            '
+            'CustomerForm
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.ClientSize = New System.Drawing.Size(292, 66)
+            Me.Controls.Add(Me._txtPhoneNumber)
+            Me.Controls.Add(Me._cmbCustomers)
+            Me.Controls.Add(Me._labelPhone)
+            Me.Controls.Add(Me._labelName)
+            Me.Name = &quot;CustomerForm&quot;
+            Me.Text = &quot;Db4o Data Binding&quot;
+            Me.ResumeLayout(False)
+            Me.PerformLayout()
+
+        End Sub
+
+        Private Sub CustomerForm_FormClosing()Sub CustomerForm_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
+            PersistChanges()
+            _container.Close()
+            MyBase.OnClosing(e)
+        End Sub
+    End Class
+End Namespace</pre>    </body></html>

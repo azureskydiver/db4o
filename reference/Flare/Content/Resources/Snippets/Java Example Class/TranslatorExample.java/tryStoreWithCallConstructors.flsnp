@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.java: tryStoreWithCallConstructors
-1private static void tryStoreWithCallConstructors() ...{
-2    Configuration configuration = Db4o.newConfiguration();
-3    configuration.exceptionsOnNotStorable(true);
-4    configuration.objectClass(NotStorable.class)
-5        .callConstructor(true);
-6    tryStoreAndRetrieve(configuration);
-7  }</pre>    </body></html>
+private static void tryStoreWithCallConstructors()  {
+    Configuration configuration = Db4o.newConfiguration();
+    configuration.exceptionsOnNotStorable(true);
+    configuration.objectClass(NotStorable.class)
+        .callConstructor(true);
+    tryStoreAndRetrieve(configuration);
+  }</pre>    </body></html>

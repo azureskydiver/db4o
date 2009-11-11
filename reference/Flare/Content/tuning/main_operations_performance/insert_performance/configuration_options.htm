@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="998" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="998" MadCap:lastWidth="1148">
     <head><title>Configuration Options	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -51,18 +51,18 @@ and removed the cleanup thread.</p>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:net" />
-                <p><i><a href="../../../implementation_strategies/io_adapter/nonflushingioadapter.htm" class="wikiLink">NonFlushingIoAdapter</a></i>- switching off flushFileBuffers can improve commit performance as the commit
+                <p><i><a href="../../../implementation_strategies/storage/nonflushingstorage.htm" class="wikiLink">NonFlushingStorage</a></i>- switching off flushFileBuffers can improve commit performance as the commit
 information will be cached by the operating system. However this setting is
 potentially dangerous and can lead to database corruption.</p>
                 <p MadCap:conditions="Primary.Java">
                     <p>Java:</p>
-                    <p><code>configuration.flushFileBuffers(false);</code>
+                    <p><code>config.file().storage(new NonFlushingStorage(new FileStorage()));</code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary.Print">
                     <p>.NET:</p>
-                    <p><code>configuration.FlushFileBuffers(false);</code>
+                    <p><code>config.File.Storage = new NonFlushingStorage(new FileStorage());</code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:net" />

@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Dangerous Practices	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Dangerous Practices</h1><p>Db4o
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="508" MadCap:lastWidth="1148">
+    <head><title>Dangerous Practices	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Dangerous Practices</h1>
+                <p>Db4o
 databases are well protected against corruption. However some specific
 configurations can make your database file vulnerable.
 </p>
-<ol>
-<li><code>Configuration#lockDatabaseFile(false)</code> 
-
-<p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
+                <ol>
+                    <li><code>Configuration#lockDatabaseFile(false)</code>
+                        <p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
 the same database file from different JVM sessions will corrupt the
 database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
 database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm" class="wikiLink">No lock file thread</a>.</p>
-</li>
-<li> <code><a href="../implementation_strategies/io_adapter/nonflushingioadapter.htm" class="wikiLink">NonFlushingIoAdapter</a></code>
-
-
-<p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
+                    </li>
+                    <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm" class="wikiLink">NonFlushingStorage</a></code>
+                        <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
 revert the order of writes to optimize file performance. db4o can
 enforce the correct order by flushing file buffers after every step of
@@ -27,14 +27,12 @@ transaction commit. Turning this setting off puts you in potential
 danger of data corruption if a system or hardware failure occurs during
 commit.
 </p>
+                    </li>
+                    <li>The following refactorings are incompatible with db4o:</li>
+                    <ol>
+                        <li>Adding classes within a class hierarchy or above a class hierarchy. Example:
 
-</li>
-<li>The following refactorings are incompatible with db4o:</li>
-<ol>
-<li>Adding classes within a class hierarchy or above a class hierarchy. Example:
-
-<p>
- Original
+<p>Original
  --------------
  class A
  class B extends A
@@ -47,7 +45,8 @@ commit.
  
  
 
-</p></li><li>Removing a class from the top or within a class hierarchy. Example:
+</p></li>
+                        <li>Removing a class from the top or within a class hierarchy. Example:
  
  Original
  --------------
@@ -62,7 +61,7 @@ commit.
  
  
 </li>
-<li>Changing the type of a field to be an array or back. Example:
+                        <li>Changing the type of a field to be an array or back. Example:
  
  Original
  --------------
@@ -77,13 +76,9 @@ commit.
  }
  
 </li>
-</ol>
-
-</ol>
- If you apply such a refactoring, you will not be able to read existing objects correctly.
-<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm" class="wikiLink">Refactoring and Schema Evolution</a> 
- 
-  </p></div>
-    </div>
-    
-  </body></html>
+                    </ol>
+                </ol>If you apply such a refactoring, you will not be able to read existing objects correctly.
+<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm" class="wikiLink">Refactoring and Schema Evolution</a></p></div>
+        </div>
+    </body>
+</html>

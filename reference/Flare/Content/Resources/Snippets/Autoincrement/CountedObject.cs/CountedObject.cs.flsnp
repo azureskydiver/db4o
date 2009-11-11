@@ -4,19 +4,19 @@
  * This class is used to mark classes that need to get an autoincremented ID
  */
 namespace Db4odoc.Autoincrement
-...{
+ {
     abstract class CountedObject
-    ...{
+     {
         protected int _id;
 
         public int Id
-        ...{
+         {
             get
-            ...{
+             {
                 return _id;
             }
             set
-            ...{
+             {
                 _id = value;
             }
         }

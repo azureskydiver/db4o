@@ -5,8 +5,8 @@
    * @see com.db4o.messaging.MessageRecipient#processMessage(ObjectContainer,
    *      Object)
    */
-  public void processMessage(MessageContext context, Object message) ...{
-    if (message instanceof StopServer) ...{
+  public void processMessage(MessageContext context, Object message)  {
+    if (message instanceof StopServer)  {
       close();
     }
   }</pre>    </body></html>

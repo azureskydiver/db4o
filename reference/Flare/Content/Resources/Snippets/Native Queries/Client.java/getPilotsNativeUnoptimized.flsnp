@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.java: getPilotsNativeUnoptimized
-private static void getPilotsNativeUnoptimized() throws IOException ...{
+private static void getPilotsNativeUnoptimized() throws IOException  {
     System.out.println(&quot;Retrieving Pilot objects: Native Query Unoptimized&quot;);
     ObjectContainer oc = Db4o.openClient(&quot;localhost&quot;, 0xdb40, &quot;db4o&quot;,&quot;db4o&quot;);
-    try ...{
-      List &lt;Pilot&gt; result = oc.query(new Predicate&lt;Pilot&gt;() ...{
-            public boolean match(Pilot pilot) ...{
+    try  {
+      List &lt;Pilot&gt; result = oc.query(new Predicate&lt;Pilot&gt;()  {
+            public boolean match(Pilot pilot)  {
                 return pilot.getPoints() % 2 == 0;
             }
         });
       listResult(result);
-    } finally ...{
+    } finally  {
       oc.close();
     }
   }</pre>    </body></html>

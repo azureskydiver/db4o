@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.java: querySyntax6
-private static void querySyntax6() ...{
+private static void querySyntax6()  {
     // this example will only work with java versions without
     // generics support
     ObjectContainer container = database();
-    if (container != null) ...{
-      try ...{
-        List result = container.query(new Predicate() ...{
-          public boolean match(Object obj) ...{
+    if (container != null)  {
+      try  {
+        List result = container.query(new Predicate()  {
+          public boolean match(Object obj)  {
             // each Pilot is included in the result
-            if (obj instanceof Pilot) ...{
+            if (obj instanceof Pilot)  {
               return true;
             }
             return false;
           }
-        }, new QueryComparator() ...{
-          public int compare(Object pilot1, Object pilot2) ...{
+        }, new QueryComparator()  {
+          public int compare(Object pilot1, Object pilot2)  {
             return ((Pilot) pilot1).getPoints()
                 - ((Pilot) pilot2).getPoints();
           }
         });
         listResult(result);
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransientClassExample.java: saveObjects
-private static void saveObjects() ...{
+private static void saveObjects()  {
     new File(DB4O_FILE_NAME).delete();
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       // Save Test1 object with a NotStorable class field
       Test1 test1 = new Test1(&quot;Test1&quot;, new NotStorable());
       container.set(test1);
       // Save Test2 object with a NotStorable class field
       Test2 test2 = new Test2(&quot;Test2&quot;, new NotStorable(), test1);
       container.set(test2);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

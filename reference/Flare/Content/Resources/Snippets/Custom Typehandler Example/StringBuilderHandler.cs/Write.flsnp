@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.cs: Write
-1public void Write(IWriteContext context, object obj)
-2        ...{
-3            string str = ((StringBuilder)obj).ToString();
-4            IWriteBuffer buffer = context;
-5            buffer.WriteInt(str.Length);
-6            WriteToBuffer(buffer, str);
-7        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.cs: Write
+public void Write(IWriteContext context, object obj)
+         {
+            string str = ((StringBuilder)obj).ToString();
+            IWriteBuffer buffer = context;
+            buffer.WriteInt(str.Length);
+            WriteToBuffer(buffer, str);
+        }</pre>
+    </body>
+</html>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MultiExamples.cs: CarPilotPredicate
 private class CarPilotPredicate : Predicate
-        ...{
+         {
             private IList&lt;Pilot&gt; pilots = null;
 
             private IList&lt;Pilot&gt; GetPilotsList()
-            ...{
+             {
                 if (pilots == null)
-                ...{
+                 {
                     pilots = Database().Query&lt;Pilot&gt;(
                             delegate(Pilot pilot)
-                            ...{
+                             {
                                 return pilot.Name.StartsWith(&quot;Test&quot;);
                             });
                 }
@@ -17,7 +17,7 @@ private class CarPilotPredicate : Predicate
             }
 
             public bool Match(Car car)
-            ...{
+             {
                 // all Cars that have pilot field in the
                 // Pilots array
                 return GetPilotsList().Contains(car.Pilot);

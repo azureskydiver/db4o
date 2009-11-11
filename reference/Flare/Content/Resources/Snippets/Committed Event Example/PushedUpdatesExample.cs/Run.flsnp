@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: Run
 public void Run()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectServer server = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, Port);
             try
-            ...{
+             {
                 server.GrantAccess(User, Password);
 
                 IObjectContainer client1 = OpenClient();
                 IObjectContainer client2 = OpenClient();
 
                 if (client1 != null &amp;&amp; client2 != null)
-                ...{
+                 {
                     try
-                    ...{
+                     {
                         // wait for the operations to finish
                         WaitForCompletion();
 
@@ -44,22 +44,22 @@ public void Run()
                         WaitForCompletion();
                     }
                     catch (Exception ex)
-                    ...{
+                     {
                         System.Console.WriteLine(ex.ToString());
                     }
                     finally
-                    ...{
+                     {
                         CloseClient(client1);
                         CloseClient(client2);
                     }
                 }
             }
             catch (Exception ex)
-            ...{
+             {
                 System.Console.WriteLine(ex.ToString());
             }
             finally
-            ...{
+             {
                 server.Close();
             }
         }</pre>    </body></html>

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RecordBook.cs
-/**//* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
 namespace Db4objects.Db4odoc.NoClasses.Client
-...{
+ {
 
-public class RecordBook ...{
+public class RecordBook  {
   private string[,] _notes;
   private int _recordCounter;
   
   
   public RecordBook()
-    ...{
+     {
     _notes = new string[20,3];
     _recordCounter = 0;
   }
   
   public void AddRecord(string period, string pilotName, string note)
-    ...{
+     {
     _notes[_recordCounter, 0] = period;
         _notes[_recordCounter, 1] = pilotName;
         _notes[_recordCounter, 2] = note;
@@ -23,10 +23,10 @@ public class RecordBook ...{
   }
   
   public override string ToString()
-    ...{
+     {
     string temp;
     temp = &quot;Record book: \n&quot;;
-    for (int i=0; i&lt;_recordCounter;i++ )...{
+    for (int i=0; i&lt;_recordCounter;i++ ) {
       temp = temp + _notes[i,0] + &quot;/&quot; + _notes[i,1] + &quot;/&quot; + _notes[i,2] + &quot;\n&quot;;
     }
     return temp;

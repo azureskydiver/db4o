@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveAllPilotsQBE
-1private static void RetrieveAllPilotsQBE(IObjectContainer db)
-2    ...{
-3      Pilot proto = new Pilot(null, 0);
-4      IObjectSet result = db.Get(proto);
-5      ListResult(result);
-6    }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveAllPilotsQBE
+private static void RetrieveAllPilotsQBE(IObjectContainer db)
+     {
+      Pilot proto = new Pilot(null, 0);
+      IObjectSet result = db.Get(proto);
+      ListResult(result);
+    }</pre>
+    </body>
+</html>

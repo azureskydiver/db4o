@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: updateCar
-public static void updateCar()...{
+public static void updateCar() {
         SQLiteDatabase db = database();
-        if (db != null)...{
+        if (db != null) {
           long startTime = System.currentTimeMillis();
           // insert a new pilot
           ContentValues updateValues = new ContentValues();
@@ -16,9 +16,9 @@ public static void updateCar()...{
           // update pilot in the car
           updateValues.put(&quot;pilot&quot;, 101);
           int count = db.update(DB_TABLE_CAR, updateValues, &quot;pilot in (select id from pilot where points = 15)&quot;, null);
-          if (count == 0)...{
+          if (count == 0) {
             logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
-          } else ...{  
+          } else  {  
             logToConsole(startTime, &quot;Updated selected object: &quot;, false);
           }
         }

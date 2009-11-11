@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ObjectDataSource.java
-/**//* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import net.sf.jasperreports.engine.JRField;
  * ObjectDataSource class is used to extract object field values for the report.
  * &lt;br&gt;&lt;br&gt;
  * usage:&lt;br&gt;
- * List pilots = ...&lt;br&gt;
+ * List pilots =  &lt;br&gt;
  * ObjectDataSource dataSource = new ObjectDataSource(pilots);&lt;br&gt;  
  * In the report (*.jrxml) you will need to define fields. For example: &lt;br&gt;
  *   &lt;field name=&quot;Name&quot; class=&quot;java.lang.String&quot;/&gt;&lt;br&gt;
@@ -22,36 +22,36 @@ import net.sf.jasperreports.engine.JRField;
  *   &quot;Id&quot; - for getId()&lt;br&gt; 
  *
  */
-public class ObjectDataSource implements JRDataSource ...{
+public class ObjectDataSource implements JRDataSource  {
 
   private Iterator iterator;
 
   private Object currentValue;
 
-  public ObjectDataSource(List list) ...{
+  public ObjectDataSource(List list)  {
     this.iterator = list.iterator();
   }
   // end ObjectDataSource
 
-  public Object getFieldValue(JRField field) throws JRException ...{
+  public Object getFieldValue(JRField field) throws JRException  {
     Object value = null;
-    try ...{
+    try  {
       // getter method signature is assembled from &quot;get&quot; + field name 
       // as specified in the report
       Method fieldAccessor = currentValue.getClass().getMethod(&quot;get&quot; + field.getName(), null);
       value = fieldAccessor.invoke(currentValue, null);
-    } catch (IllegalAccessException iae) ...{
+    } catch (IllegalAccessException iae)  {
       iae.printStackTrace();
-    } catch (InvocationTargetException ite) ...{
+    } catch (InvocationTargetException ite)  {
       ite.printStackTrace();
-    } catch (NoSuchMethodException nsme) ...{
+    } catch (NoSuchMethodException nsme)  {
       nsme.printStackTrace();
     }
     return value;
   }
   // end getFieldValue
 
-  public boolean next() throws JRException ...{
+  public boolean next() throws JRException  {
     currentValue = iterator.hasNext() ? iterator.next() : null;
     return (currentValue != null);
   }

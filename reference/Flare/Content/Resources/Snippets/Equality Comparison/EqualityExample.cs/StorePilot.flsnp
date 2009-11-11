@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EqualityExample.cs: StorePilot
 private static void StorePilot() 
-        ...{
+         {
     IObjectContainer container = Database();
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         Pilot pilot = new Pilot(&quot;Kimi Raikkonnen&quot;, 100);
         container.Set(pilot);
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
-      } finally ...{
+      } finally  {
         CloseDatabase();
       }
     }

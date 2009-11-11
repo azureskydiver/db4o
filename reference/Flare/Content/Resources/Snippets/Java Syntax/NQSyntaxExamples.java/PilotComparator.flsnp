@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.java: PilotComparator
-1private static class PilotComparator implements Comparator&lt;Pilot&gt; ...{
-2    public int compare(Pilot pilot1, Pilot pilot2) ...{
-3      return pilot1.getPoints() - pilot2.getPoints();
-4    }
-5  }</pre>    </body></html>
+private static class PilotComparator implements Comparator&lt;Pilot&gt;  {
+    public int compare(Pilot pilot1, Pilot pilot2)  {
+      return pilot1.getPoints() - pilot2.getPoints();
+    }
+  }</pre>    </body></html>

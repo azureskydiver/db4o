@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ComplexParameterizedExample.java: PersonNamePredicate
 private static class PersonNamePredicate&lt;T extends Person&gt; extends
-      Predicate&lt;T&gt; ...{
+      Predicate&lt;T&gt;  {
     private String startsWith;
 
-    public PersonNamePredicate(String startsWith) ...{
+    public PersonNamePredicate(String startsWith)  {
       this.startsWith = startsWith;
     }
 
-    public PersonNamePredicate(Class&lt;T&gt; clazz, String startsWith) ...{
+    public PersonNamePredicate(Class&lt;T&gt; clazz, String startsWith)  {
       super(clazz);
       this.startsWith = startsWith;
     }
 
-    public boolean match(T candidate) ...{
+    public boolean match(T candidate)  {
       return candidate.getName().startsWith(startsWith);
     }
   }</pre>    </body></html>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.java: testNonFlushingAdapter
-private static void testNonFlushingAdapter()...{
+private static void testNonFlushingAdapter() {
     new File(DB4O_FILE_NAME).delete();
     RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter();
     NonFlushingIoAdapter nonFlushingIoAdapter = 
@@ -8,28 +8,28 @@ private static void testNonFlushingAdapter()...{
     Configuration configuration = Db4o.newConfiguration();
     configuration.io(cachedIoAdapter);
     ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
-    try ...{
+    try  {
       Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;);
       container.store(pilot);
       long startTime = System.currentTimeMillis();
       container.commit();
       System.out.println(&quot;Commit time with NonFlushingIoAdapter: &quot; + 
           (System.currentTimeMillis() - startTime) + &quot; ms.&quot;);
-    } finally ...{
+    } finally  {
       container.close();
     }
     
     //
     new File(DB4O_FILE_NAME).delete();
     container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;);
       container.store(pilot);
       long startTime = System.currentTimeMillis();
       container.commit();
       System.out.println(&quot;Commit time with default IO Adapter: &quot; + 
           (System.currentTimeMillis() - startTime) + &quot; ms.&quot;);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

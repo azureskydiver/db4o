@@ -4,34 +4,34 @@ package enhancement.model;
 import tacustom.*;
 
 @Db4oPersistent
-public class Car ...{
+public class Car  {
 
   private String _model = null;
   Pilot _pilot;
 
-  public Car(String content, Pilot pilot) ...{
+  public Car(String content, Pilot pilot)  {
     _model = content;
     _pilot = pilot;
   }
   
-  public String content() ...{
+  public String content()  {
     return _model;
   }
 
-  public void content(String content) ...{
+  public void content(String content)  {
     _model = content;
   }
   
   @Override
-  public String toString() ...{
+  public String toString()  {
     return _model + &quot;/&quot; + _pilot;
   }
 
-  public String getModel() ...{
+  public String getModel()  {
     return _model;
   }
 
-  public Pilot getPilot() ...{
+  public Pilot getPilot()  {
     return _pilot;
   }
 }</pre>    </body></html>

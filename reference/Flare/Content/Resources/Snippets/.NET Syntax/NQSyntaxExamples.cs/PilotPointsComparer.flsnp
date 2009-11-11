@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.cs: PilotPointsComparer
-1private class PilotPointsComparer : IComparer
-2        ...{
-3            public int Compare(object pilot1, object pilot2)
-4            ...{
-5                return ((Pilot)pilot1).Points - ((Pilot)pilot2).Points;
-6            }
-7        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.cs: PilotPointsComparer
+private class PilotPointsComparer : IComparer
+         {
+            public int Compare(object pilot1, object pilot2)
+             {
+                return ((Pilot)pilot1).Points - ((Pilot)pilot2).Points;
+            }
+        }</pre>
+    </body>
+</html>

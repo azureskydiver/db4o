@@ -3,28 +3,28 @@
 using System;
 
 namespace JavaDotnetClientServer
-...{
+ {
     class Pilot
-    ...{
+     {
         private String name;
 
         public Pilot(String name)
-        ...{
+         {
             this.name = name;
         }
 
         public String getName()
-        ...{
+         {
             return name;
         }
 
         public void setName(String pilotName)
-        ...{
+         {
             this.name = pilotName;
         }
 
         public override String ToString()
-        ...{
+         {
             return name;
         }
     }

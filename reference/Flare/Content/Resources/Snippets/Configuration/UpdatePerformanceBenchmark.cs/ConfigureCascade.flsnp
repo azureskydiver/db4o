@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureCascade
-1private IConfiguration ConfigureCascade()
-2        ...{
-3            IConfiguration config = Db4oFactory.NewConfiguration();
-4            // CascadeOnUpdate can be a performance-killer for 
-5            // deep object hierarchies
-6            config.ObjectClass(typeof(Item)).CascadeOnUpdate(true);
-7            return config;
-8        }</div</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureCascade
+private IConfiguration ConfigureCascade()
+         {
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            // CascadeOnUpdate can be a performance-killer for 
+            // deep object hierarchies
+            config.ObjectClass(typeof(Item)).CascadeOnUpdate(true);
+            return config;
+        }</pre>    </body></html>

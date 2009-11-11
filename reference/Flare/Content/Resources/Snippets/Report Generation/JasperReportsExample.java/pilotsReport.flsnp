@@ -4,11 +4,11 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">JasperReportsExample.java: pilotsReport
-public static void pilotsReport() ...{
+public static void pilotsReport()  {
 
     // obtain a list of objects for the report
-    List&lt;Pilot&gt; pilots = database().query(new Predicate&lt;Pilot&gt;() ...{
-      public boolean match(Pilot pilot) ...{
+    List&lt;Pilot&gt; pilots = database().query(new Predicate&lt;Pilot&gt;()  {
+      public boolean match(Pilot pilot)  {
         // each Pilot is included in the result
         return true;
       }
@@ -18,7 +18,7 @@ public static void pilotsReport() ...{
     Map parameters = new HashMap();
     parameters.put("Title", "The Pilot Report");
 
-    try ...{
+    try  {
       // compile report design
       JasperReport jasperReport = JasperCompileManager
           .compileReport("reports/the-pilot-report.jrxml");
@@ -40,7 +40,7 @@ public static void pilotsReport() ...{
 
       // or view it immediately in the Jasper Viewer
       JasperViewer.viewReport(jasperPrint);
-    } catch (JRException e) ...{
+    } catch (JRException e)  {
       e.printStackTrace();
     }
   }</pre>

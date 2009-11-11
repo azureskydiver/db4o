@@ -4,9 +4,9 @@
         /// or a StopServer message is being received.
         /// &lt;/summary&gt;
         public void RunServer()
-        ...{
+         {
             lock(this)
-            ...{
+             {
                 // Using the messaging functionality to redirect all
                 // messages to this.processMessage
                 IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
@@ -16,15 +16,15 @@
                 db4oServer.GrantAccess(User, Password);
                 
                 try
-                ...{
+                 {
                     if (! stop)
-                    ...{
+                     {
                         // wait forever until Close will change stop variable
                         Monitor.Wait(this);   
                     }
                 }
                 catch (Exception e)
-                ...{
+                 {
                     Console.WriteLine(e.ToString());
                 }
                 db4oServer.Close();

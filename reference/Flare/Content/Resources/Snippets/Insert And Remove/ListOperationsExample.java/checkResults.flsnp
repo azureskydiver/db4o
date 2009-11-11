@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: checkResults
 private static void checkResults()
-        ...{
+         {
             ObjectContainer db = Db4o.openFile(DBFILE);
             try
-            ...{
+             {
                 List&lt;ListObject&gt; result = db.&lt;ListObject&gt;query(ListObject.class);
                 if (result.size() &gt; 0)
-                ...{
+                 {
                   // activation depth should be enough to activate 
                   // ListObject, DataObject and its list members
                     int activationDepth = 3;
                     db.ext().configure().activationDepth(activationDepth);
                     System.out.println(&quot;Result count was &quot; + result.size()+ &quot; looping with activation depth&quot; +  activationDepth);
-                    for (int i = 0; i &lt; result.size(); i++)...{
+                    for (int i = 0; i &lt; result.size(); i++) {
                       ListObject lo = (ListObject)result.get(i);
                         System.out.println(&quot;ListObj &quot; + lo.getName() + &quot; has &quot; + ((lo.getData() == null) ? &quot;&lt;null&gt;&quot; : lo.getData().size()) +&quot; objects&quot;);
                         System.out.println((lo.getData() != null &amp;&amp; lo.getData().size() &gt; 0) ? lo.getData().get(0).toString() : &quot;&lt;null&gt;&quot; + &quot;  at index 0&quot;);
@@ -21,7 +21,7 @@ private static void checkResults()
                 }
             }
             finally
-            ...{
+             {
                 db.close();
             }
         }</pre>    </body></html>

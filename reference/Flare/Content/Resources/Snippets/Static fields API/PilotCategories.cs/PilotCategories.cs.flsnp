@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PilotCategories.cs
 namespace Db4objects.Db4odoc.StaticFields
-...{
+ {
   public class PilotCategories
-  ...{
+   {
     private string _qualification = null;
     public static  PilotCategories Winner = new PilotCategories(&quot;WINNER&quot;);
     public static  PilotCategories Talented = new PilotCategories(&quot;TALENTED&quot;);
@@ -10,22 +10,22 @@ namespace Db4objects.Db4odoc.StaticFields
     public static  PilotCategories Disqualified = new PilotCategories(&quot;DISQUALIFIED&quot;);
   
     private PilotCategories(string qualification)
-    ...{
+     {
       this._qualification = qualification;
     }
   
     public PilotCategories()
-    ...{
+     {
     
     }
   
     public void TestChange(string qualification)
-    ...{
+     {
       this._qualification = qualification;
     }
 
     override public string ToString() 
-    ...{
+     {
       return _qualification;
     }
   }

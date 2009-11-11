@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: readBuffer
-1private static String readBuffer(ReadBuffer buffer, int length)...{
-2      char[] chars = new char[length];
-3    for(int ii = 0; ii &lt; length; ii++)...{
-4      chars[ii] = (char)((buffer.readByte() &amp; 0xff) | ((buffer.readByte() &amp; 0xff) &lt;&lt; 8));
-5    }
-6    return new String(chars, 0, length);
-7  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: readBuffer
+private static String readBuffer(ReadBuffer buffer, int length) {
+      char[] chars = new char[length];
+    for(int ii = 0; ii &lt; length; ii++) {
+      chars[ii] = (char)((buffer.readByte() &amp; 0xff) | ((buffer.readByte() &amp; 0xff) &lt;&lt; 8));
+    }
+    return new String(chars, 0, length);
+  }</pre>
+    </body>
+</html>

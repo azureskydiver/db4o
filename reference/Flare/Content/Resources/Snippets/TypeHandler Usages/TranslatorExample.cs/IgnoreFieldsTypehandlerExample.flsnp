@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: IgnoreFieldsTypehandlerExample
 private static void IgnoreFieldsTypehandlerExample()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IConfiguration configuration = IgnoreFieldsConfiguration();
             IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 PersistentItem persistentItem = new PersistentItem(&quot;1&quot;, new TransientItem(11));
                 System.Console.WriteLine(&quot;ORIGINAL: &quot; + persistentItem);
                 container.Store(persistentItem);
             }
             catch (Exception exc)
-            ...{
+             {
                 System.Console.WriteLine(exc.ToString());
                 return;
             }
             finally
-            ...{
+             {
                 container.Close();
             }
             container = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 IQuery query = container.Query();
                 query.Constrain(typeof(PersistentItem));
                 IObjectSet result = query.Execute();
                 while (result.HasNext())
-                ...{
+                 {
                     PersistentItem persistentItem = (PersistentItem)result.Next();
                     System.Console.WriteLine(&quot;RETRIEVED: &quot; + persistentItem);
                 }
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

@@ -3,7 +3,7 @@
  * ObjectDataSource class is used to extract object field values for the report.
  * &lt;br&gt;&lt;br&gt;
  * usage:&lt;br&gt;
- * List pilots = ...&lt;br&gt;
+ * List pilots =  &lt;br&gt;
  * ObjectDataSource dataSource = new ObjectDataSource(pilots);&lt;br&gt;  
  * In the report (*.jrxml) you will need to define fields. For example: &lt;br&gt;
  *   &lt;field name=&quot;Name&quot; class=&quot;java.lang.String&quot;/&gt;&lt;br&gt;
@@ -12,12 +12,12 @@
  *   &quot;Id&quot; - for getId()&lt;br&gt; 
  *
  */
-public class ObjectDataSource implements JRDataSource ...{
+public class ObjectDataSource implements JRDataSource  {
 
   private Iterator iterator;
 
   private Object currentValue;
 
-  public ObjectDataSource(List list) ...{
+  public ObjectDataSource(List list)  {
     this.iterator = list.iterator();
   }</pre>    </body></html>

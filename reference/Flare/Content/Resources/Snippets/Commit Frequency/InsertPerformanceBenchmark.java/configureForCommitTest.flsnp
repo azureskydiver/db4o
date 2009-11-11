@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: configureForCommitTest
-1private void configureForCommitTest()...{
-2      Configuration config = Db4o.configure(); 
-3        config.lockDatabaseFile(false);
-4        config.weakReferences(false);
-5        // flushFileBuffers should be set to true to ensure that
-6        // the commit information is physically written 
-7        // and in the correct order
-8        config.flushFileBuffers(true);
-9    }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: configureForCommitTest
+private void configureForCommitTest() {
+      Configuration config = Db4o.configure(); 
+        config.lockDatabaseFile(false);
+        config.weakReferences(false);
+        // flushFileBuffers should be set to true to ensure that
+        // the commit information is physically written 
+        // and in the correct order
+        config.flushFileBuffers(true);
+    }</pre>
+    </body>
+</html>

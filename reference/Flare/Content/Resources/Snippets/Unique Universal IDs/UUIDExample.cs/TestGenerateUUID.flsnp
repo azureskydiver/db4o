@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.cs: TestGenerateUUID
 private static void TestGenerateUUID()
-    ...{
+     {
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         IQuery query = container.Query();
         query.Constrain(typeof(Car));
         IObjectSet result = query.Execute();
@@ -25,7 +25,7 @@ private static void TestGenerateUUID()
         Console.WriteLine(&quot;Pilot from UUID: &quot; + pilotReturned);  
       } 
       finally 
-      ...{
+       {
         container.Close();
       }        
     }</pre>    </body></html>

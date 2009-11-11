@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.java: configureTA
-1private static Configuration configureTA() ...{
-2    Configuration configuration = Db4o.newConfiguration();
-3    // add TA support
-4    configuration.add(new TransparentActivationSupport());
-5    // activate TA diagnostics to reveal the classes that are not TA-enabled.
-6    activateDiagnostics(configuration);
-7    return configuration;  
-8  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TAExample.java: configureTA
+private static Configuration configureTA()  {
+    Configuration configuration = Db4o.newConfiguration();
+    // add TA support
+    configuration.add(new TransparentActivationSupport());
+    // activate TA diagnostics to reveal the classes that are not TA-enabled.
+    activateDiagnostics(configuration);
+    return configuration;  
+  }</pre>
+    </body>
+</html>

@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DefragmentExample.vb: SimplestDefragment
-1Public Shared Sub SimplestDefragment()Sub SimplestDefragment()
-2            Try
-3                Defragment.Defrag(DB_FILE)
-4            Catch ex As Exception
-5                System.Console.WriteLine(ex.Message)
-6            End Try
-7        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DefragmentExample.vb: SimplestDefragment
+Public Shared Sub SimplestDefragment()Sub SimplestDefragment()
+            Try
+                Defragment.Defrag(DB_FILE)
+            Catch ex As Exception
+                System.Console.WriteLine(ex.Message)
+            End Try
+        End Sub</pre>
+    </body>
+</html>

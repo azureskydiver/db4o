@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.java: removeTest
-private static void removeTest() ...{
+private static void removeTest()  {
     //  set update depth to 1 as we only
     // modify List field
     Configuration configuration = Db4o.newConfiguration();
     configuration.objectClass(ListObject.class).updateDepth(1);
     ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
-    try ...{
+    try  {
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         // retrieve a ListObject
         ListObject lo1 = result.get(0);
         // remove all the objects from the list
         lo1.getData().removeAll(lo1.getData());
         container.set(lo1);
       }
-    } finally ...{
+    } finally  {
       container.close();
     }
     // check DataObjects in the list
     // and DataObjects in the database
     container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         ListObject lo1 = result.get(0);
         System.out.println(&quot;DataObjects in the list:  &quot;
             + lo1.getData().size());
@@ -31,7 +31,7 @@ private static void removeTest() ...{
           .&lt;DataObject&gt; query(DataObject.class);
       System.out.println(&quot;DataObjects in the database: &quot;
           + removedObjects.size());
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

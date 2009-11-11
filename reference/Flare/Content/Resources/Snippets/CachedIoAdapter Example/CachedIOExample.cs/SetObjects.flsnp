@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.cs: SetObjects
 private static void SetObjects(IConfiguration configuration)
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 DateTime dt1 = DateTime.UtcNow;
-          for (int i = 0; i&lt; 50000; i++)...{
+          for (int i = 0; i&lt; 50000; i++) {
             Pilot pilot = new Pilot(&quot;Pilot #&quot;+i);
             db.Set(pilot);
           }
@@ -21,6 +21,6 @@ private static void SetObjects(IConfiguration configuration)
 
             }
             finally
-            ...{
+             {
                 db.Close();
             }       }</pre>    </body></html>

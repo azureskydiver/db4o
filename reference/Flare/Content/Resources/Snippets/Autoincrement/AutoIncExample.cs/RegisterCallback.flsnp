@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.cs: RegisterCallback
-1public static void RegisterCallback()
-2        ...{
-3            IObjectContainer db = OpenContainer();
-4            IEventRegistry registry = EventRegistryFactory.ForObjectContainer(db);
-5            // register an event handler, which will assign autoincremented IDs to any
-6            // object extending CountedObject, when the object is created
-7            registry.Creating += OnCreating;
-8        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">AutoIncExample.cs: RegisterCallback
+public static void RegisterCallback()
+         {
+            IObjectContainer db = OpenContainer();
+            IEventRegistry registry = EventRegistryFactory.ForObjectContainer(db);
+            // register an event handler, which will assign autoincremented IDs to any
+            // object extending CountedObject, when the object is created
+            registry.Creating += OnCreating;
+        }</pre>
+    </body>
+</html>

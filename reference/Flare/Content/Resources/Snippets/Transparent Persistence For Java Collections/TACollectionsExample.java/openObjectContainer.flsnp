@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TACollectionsExample.java: openObjectContainer
-1private static ObjectContainer openObjectContainer() ...{
-2    EmbeddedConfiguration embeddedConfiguration = Db4oEmbedded
-3        .newConfiguration();
-4    embeddedConfiguration.common().add(new TransparentPersistenceSupport());
-5    return Db4oEmbedded.openFile(embeddedConfiguration, DB4O_FILE_NAME);
-6  }</pre>    </body></html>
+private static ObjectContainer openObjectContainer()  {
+    EmbeddedConfiguration embeddedConfiguration = Db4oEmbedded
+        .newConfiguration();
+    embeddedConfiguration.common().add(new TransparentPersistenceSupport());
+    return Db4oEmbedded.openFile(embeddedConfiguration, DB4O_FILE_NAME);
+  }</pre>    </body></html>

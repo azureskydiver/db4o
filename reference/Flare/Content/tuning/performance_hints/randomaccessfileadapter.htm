@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="847" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="816" MadCap:lastWidth="1148">
     <head><title>RandomAccessFileAdapter	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <div class="CommonContent">
             <div class="CommonContentArea">
-                <h1>RandomAccessFileAdapter</h1>
+                <h1>FileStorage</h1>
                 <div id="TOC">
                     <div id="TOCinner"><span class="TOCtitle">Contents</span>
                         <div class="TOCcontents">
@@ -20,16 +20,15 @@
                         </div>
                     </div>
                 </div>
-                <p>This topic applies to db4o versions 6.2 and higher.</p>
                 <p MadCap:conditions="Primary.Java">
                     <p>Java: </p>
-                    <p><code>configuration.io(new RandomAccessFileAdapter())</code>
+                    <p><code>configuration.file().storage(new FileStorage())</code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary.Print">
                     <p>.NET: </p>
-                    <p><code>configuration.Io(new RandomAccessFileAdapter())</code>
+                    <p><code>configuration.File.Storage = new FileStorage()</code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:net" /><a name="Advantage"></a>
@@ -37,23 +36,23 @@
                 <p>Decreases memory consumption by using an IO
 adapter without caching.</p><a name="Effect"></a>
                 <h2>Effect</h2>
-                <p>Since db4o version 6.2 <a href="../../implementation_strategies/io_adapter/cachedioadapter.htm" class="wikiLink">CachedIoAdapter</a>is used by default. This IO adapter has some valuable advantages, however the
-disadvantage is increased memory consumption. Using RandomAccessFileAdapter can help to keep the
+                <p>Since db4o version 6.2 <a href="../../implementation_strategies/storage/cachingstorage.htm" class="wikiLink">CachingStorage </a>is used by default. This IO adapter has some valuable advantages, however the
+disadvantage is increased memory consumption. Using FileStorage can help to keep the
 memory consumption to the minimum.</p><a name="Alternate Strategies"></a>
                 <h2>Alternate Strategies</h2>
                 <p>An alternative way to control the memory consumption is to configure it
-in the CachedIoAdapter constructor:</p>
+in the CachingStorage:</p>
                 <p MadCap:conditions="Primary.Java">
                     <p>Java: </p>
-                    <p><code>configuration.io(new
-CachedIoAdapter(delegateAdapter, page_size, page_count));</code>
+                    <p><code>new
+CachedStorage(delegateAdapter, page_size, page_count);</code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary.Print">
                     <p>.NET: </p>
-                    <p><code>configuration.Io(new
-CachedIoAdapter(delegateAdapter, page_size, page_count));</code>
+                    <p><code>new
+CachingStorage(delegateAdapter, page_size, page_count);</code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:net" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringEncoderExample.cs: Configure
-1protected static IConfiguration Configure()
-2        ...{
-3            IConfiguration config = Db4oFactory.NewConfiguration();
-4            config.StringEncoding(new StringEncodingEncrypted());
-5            return config;
-6        }</pre>    </body></html>
+protected static IConfiguration Configure()
+         {
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            config.StringEncoding(new StringEncodingEncrypted());
+            return config;
+        }</pre>    </body></html>

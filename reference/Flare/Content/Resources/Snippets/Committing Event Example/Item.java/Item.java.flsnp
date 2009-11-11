@@ -4,24 +4,24 @@
 package com.db4odoc.commitcallbacks;
 
 
-public class Item ...{
+public class Item  {
   private int _number;
   private String _word;
   
-  public Item(int number, String word)...{
+  public Item(int number, String word) {
     _number = number;
     _word = word;
   }
   
-  public String getWord()...{
+  public String getWord() {
     return _word;
   }
   
-  public int getNumber()...{
+  public int getNumber() {
     return _number;
   }
   
-  public String toString()...{
+  public String toString() {
     return _number + &quot;/&quot; + _word;
   }
 }</pre>    </body></html>

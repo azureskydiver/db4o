@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oExample.java: configure
-1private static Configuration configure()...{
-2    Configuration configuration = Db4o.newConfiguration();
-3      configuration.objectClass(Car.class).objectField(&quot;pilot&quot;).indexed(true);
-4      configuration.objectClass(Pilot.class).objectField(&quot;points&quot;).indexed(true);
-5      configuration.lockDatabaseFile(false);
-6        
-7      return configuration;
-8    }</pre>    </body></html>
+private static Configuration configure() {
+    Configuration configuration = Db4o.newConfiguration();
+      configuration.objectClass(Car.class).objectField(&quot;pilot&quot;).indexed(true);
+      configuration.objectClass(Pilot.class).objectField(&quot;points&quot;).indexed(true);
+      configuration.lockDatabaseFile(false);
+        
+      return configuration;
+    }</pre>    </body></html>

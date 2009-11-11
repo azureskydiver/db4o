@@ -13,26 +13,26 @@ import com.db4o.messaging.*;
  * StopServer object as a message. {@link StartServer} will react in it's
  * processMessage method.
  */
-public class StopServer implements ServerSetup ...{
+public class StopServer implements ServerSetup  {
 
   /** *//**
    * stops a db4o Server started with StartServer.
    * 
    * @throws Exception
    */
-  public static void main(String[] args) ...{
+  public static void main(String[] args)  {
     ObjectContainer objectContainer = null;
-    try ...{
+    try  {
 
       // connect to the server
       objectContainer = Db4oClientServer.openClient(Db4oClientServer
           .newClientConfiguration(), HOST, PORT, USER, PASS);
 
-    } catch (Exception e) ...{
+    } catch (Exception e)  {
       e.printStackTrace();
     }
 
-    if (objectContainer != null) ...{
+    if (objectContainer != null)  {
 
       // get the messageSender for the ObjectContainer
       MessageSender messageSender = objectContainer.ext().configure()

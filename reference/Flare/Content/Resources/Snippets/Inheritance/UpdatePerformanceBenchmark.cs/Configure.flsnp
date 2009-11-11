@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: Configure
-1private IConfiguration Configure()
-2        ...{
-3            IConfiguration config = Db4oFactory.NewConfiguration();
-4            // using MemoryIoAdapter improves the performance 
-5            // by replacing the costly disk IO operations with 
-6            // memory access
-7            config.Io(new MemoryIoAdapter());
-8            return config;
-9        }</pre>    </body></html>
+private IConfiguration Configure()
+         {
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            // using MemoryIoAdapter improves the performance 
+            // by replacing the costly disk IO operations with 
+            // memory access
+            config.Io(new MemoryIoAdapter());
+            return config;
+        }</pre>    </body></html>

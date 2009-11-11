@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">default.aspx.vb
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">default.aspx.vb
 Imports Db4objects.Db4o
 Imports Db4objects.Db4odoc.Web.Data
 
@@ -56,4 +56,4 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Web
         ' end ButtonClear_Click
     End Class
 
-End Namespace</div</pre>    </body></html>
+End Namespace</pre>    </body></html>

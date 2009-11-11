@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.java: getPilotsEvaluation
-private static void getPilotsEvaluation() throws IOException ...{
+private static void getPilotsEvaluation() throws IOException  {
     System.out.println(&quot;Retrieving Pilot objects: Evaluation&quot;);
     ObjectContainer oc = Db4o.openClient(&quot;localhost&quot;, 0xdb40, &quot;db4o&quot;,&quot;db4o&quot;);
-    try ...{
+    try  {
       Query query = oc.query();
 
       query.constrain(Pilot.class);
-      query.constrain(new Evaluation()...{
-        public void evaluate(Candidate candidate) ...{
+      query.constrain(new Evaluation() {
+        public void evaluate(Candidate candidate)  {
           Pilot pilot = (Pilot) candidate.getObject();
           candidate.include(pilot.getPoints() % 2 == 0);
         }
       });
       ObjectSet result = query.execute();
       listResult(result);
-    } finally ...{
+    } finally  {
       oc.close();
     }
   }</pre>    </body></html>

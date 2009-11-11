@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrievePilotByCarModelQuery
-1private static void RetrievePilotByCarModelQuery(IObjectContainer db) 
-2    ...{
-3      IQuery carQuery = db.Query();
-4      carQuery.Constrain(typeof(Car));
-5      carQuery.Descend(&quot;_model&quot;).Constrain(&quot;Ferrari&quot;);
-6      IQuery pilotQuery = carQuery.Descend(&quot;_pilot&quot;);
-7      IObjectSet result = pilotQuery.Execute();
-8      ListResult(result);
-9    }</pre>    </body></html>
+private static void RetrievePilotByCarModelQuery(IObjectContainer db) 
+     {
+      IQuery carQuery = db.Query();
+      carQuery.Constrain(typeof(Car));
+      carQuery.Descend(&quot;_model&quot;).Constrain(&quot;Ferrari&quot;);
+      IQuery pilotQuery = carQuery.Descend(&quot;_pilot&quot;);
+      IObjectSet result = pilotQuery.Execute();
+      ListResult(result);
+    }</pre>    </body></html>

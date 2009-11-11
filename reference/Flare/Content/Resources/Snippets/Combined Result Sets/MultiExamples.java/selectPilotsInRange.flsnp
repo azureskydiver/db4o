@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MultiExamples.java: selectPilotsInRange
-private static void selectPilotsInRange() ...{
+private static void selectPilotsInRange()  {
     ObjectContainer container = database();
-    if (container != null) ...{
-      try ...{
-        List&lt;Car&gt; result = container.query(new Predicate&lt;Car&gt;() ...{
+    if (container != null)  {
+      try  {
+        List&lt;Car&gt; result = container.query(new Predicate&lt;Car&gt;()  {
           private List&lt;Pilot&gt; pilots = null;
 
-          private List getPilotsList() ...{
-            if (pilots == null) ...{
-              pilots = database().query(new Predicate&lt;Pilot&gt;() ...{
-                public boolean match(Pilot pilot) ...{
+          private List getPilotsList()  {
+            if (pilots == null)  {
+              pilots = database().query(new Predicate&lt;Pilot&gt;()  {
+                public boolean match(Pilot pilot)  {
                   return pilot.getName().startsWith(&quot;Test&quot;);
                 }
               });
@@ -17,16 +17,16 @@ private static void selectPilotsInRange() ...{
             return pilots;
           }
 
-          public boolean match(Car car) ...{
+          public boolean match(Car car)  {
             // all Cars that have pilot field in the
             // Pilots array
             return getPilotsList().contains(car.getPilot());
           }
         });
         listResult(result);
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

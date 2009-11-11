@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Default.aspx.vb: SaveMessage
-1Public Shared Sub SaveMessage()Sub SaveMessage(ByVal username As String, ByVal text As String)
-2
-3            Dim msg As Message = New Message(username, text)
-4            Db4oHttpModule.Client.Set(msg)
-5        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Default.aspx.vb: SaveMessage
+Public Shared Sub SaveMessage()Sub SaveMessage(ByVal username As String, ByVal text As String)
+
+            Dim msg As Message = New Message(username, text)
+            Db4oHttpModule.Client.Set(msg)
+        End Sub</pre>
+    </body>
+</html>

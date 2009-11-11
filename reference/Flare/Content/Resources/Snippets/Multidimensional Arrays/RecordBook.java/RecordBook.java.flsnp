@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RecordBook.java
-/**//* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.noclasses.client;
 
 
-public class RecordBook ...{
+public class RecordBook  {
   private String[][] notes;
   private int recordCounter;
   
   
-  public RecordBook()...{
+  public RecordBook() {
     notes = new String[20][3];
     recordCounter = 0;
   }
   
-  public void addRecord(String period, String pilotName, String note)...{
-    String[] tempArray = ...{period, pilotName, note}; 
+  public void addRecord(String period, String pilotName, String note) {
+    String[] tempArray =  {period, pilotName, note}; 
     notes[recordCounter] = tempArray;
     recordCounter ++;
   }
   
-  public String toString()...{
+  public String toString() {
     String temp;
     temp = &quot;Record book: \n&quot;;
-    for (int i=0; i&lt;recordCounter;i++ )...{
+    for (int i=0; i&lt;recordCounter;i++ ) {
       temp = temp + notes[i][0] + &quot;/&quot; + notes[i][1] + &quot;/&quot; + notes[i][2] + &quot;\n&quot;;
     }
     return temp;

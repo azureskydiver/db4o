@@ -1,124 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PersistentExample.java
-1package com.db4odoc.sharp;
-2
-3
-4import java.io.*;
-5
-6import com.db4o.*;
-7
-8public class PersistentExample ...{
-9  private final static String DB4O_FILE_NAME = &quot;reference.db4o&quot;;
-0
-1  public static void main(String[] args) ...{
-2    new File(DB4O_FILE_NAME).delete();
-3    accessDb4o();
-4    new File(DB4O_FILE_NAME).delete();
-5    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-6    try ...{
-7      storeFirstPilot(container);
-8      storeSecondPilot(container);
-9      retrieveAllPilots(container);
-0      retrievePilotByName(container);
-1      retrievePilotByExactPoints(container);
-2      updatePilot(container);
-3      deleteFirstPilotByName(container);
-4      deleteSecondPilotByName(container);
-5    } finally ...{
-6      container.close();
-7    }
-8  }
-9  // end main
-0
-1  private static void accessDb4o() ...{
-2    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-3    try ...{
-4      // do something with db4o
-5    } finally ...{
-6      container.close();
-7    }
-8  }
-9  // end accessDb4o
-0
-1  private static void storeFirstPilot(ObjectContainer container) ...{
-2    Pilot pilot1 = new Pilot(&quot;Michael Schumacher&quot;, 100);
-3    container.store(pilot1);
-4    System.out.println(&quot;Stored &quot; + pilot1);
-5  }
-6  // end storeFirstPilot
-7
-8  private static void storeSecondPilot(ObjectContainer container) ...{
-9    Pilot pilot2 = new Pilot(&quot;Rubens Barrichello&quot;, 99);
-0    container.store(pilot2);
-1    System.out.println(&quot;Stored &quot; + pilot2);
-2  }
-3  // end storeSecondPilot
-4
-5  private static void retrieveAllPilotQBE(ObjectContainer container) ...{
-6    Pilot proto = new Pilot(null, 0);
-7    ObjectSet result = container.queryByExample(proto);
-8    listResult(result);
-9  }
-0  // end retrieveAllPilotQBE
-1
-2  private static void retrieveAllPilots(ObjectContainer container) ...{
-3    ObjectSet result = container.queryByExample(Pilot.class);
-4    listResult(result);
-5  }
-6  // end retrieveAllPilots
-7
-8  private static void retrievePilotByName(ObjectContainer container) ...{
-9    Pilot proto = new Pilot(&quot;Michael Schumacher&quot;, 0);
-0    ObjectSet result = container.queryByExample(proto);
-1    listResult(result);
-2  }
-3  // end retrievePilotByName
-4
-5  private static void retrievePilotByExactPoints(
-6      ObjectContainer container) ...{
-7    Pilot proto = new Pilot(null, 100);
-8    ObjectSet result = container.queryByExample(proto);
-9    listResult(result);
-0  }
-1  // end retrievePilotByExactPoints
-2
-3  private static void updatePilot(ObjectContainer container) ...{
-4    ObjectSet result = container.queryByExample(new Pilot(
-5        &quot;Michael Schumacher&quot;, 0));
-6    Pilot found = (Pilot) result.next();
-7    found.addPoints(11);
-8    container.store(found);
-9    System.out.println(&quot;Added 11 points for &quot; + found);
-0    retrieveAllPilots(container);
-1  }
-2  // end updatePilot
-3
-4  private static void deleteFirstPilotByName(
-5      ObjectContainer container) ...{
-6    ObjectSet result = container.queryByExample(new Pilot(
-7        &quot;Michael Schumacher&quot;, 0));
-8    Pilot found = (Pilot) result.next();
-9    container.delete(found);
-0    System.out.println(&quot;Deleted &quot; + found);
-1    retrieveAllPilots(container);
-2  }
-3  // end deleteFirstPilotByName
-4
-5  private static void deleteSecondPilotByName(
-6      ObjectContainer container) ...{
-7    ObjectSet result = container.queryByExample(new Pilot(
-8        &quot;Rubens Barrichello&quot;, 0));
-9    Pilot found = (Pilot) result.next();
-0    container.delete(found);
-1    System.out.println(&quot;Deleted &quot; + found);
-2    retrieveAllPilots(container);
-3  }
-4  // end deleteSecondPilotByName
-5
-6  private static void listResult(ObjectSet result) ...{
-7    System.out.println(result.size());
-8    while (result.hasNext()) ...{
-9      System.out.println(result.next());
-0    }
-1  }
-2  // end listResult
-3}</pre>    </body></html>
+package com.db4odoc.sharp;
+
+
+import java.io.*;
+
+import com.db4o.*;
+
+public class PersistentExample  {
+  private final static String DB4O_FILE_NAME = &quot;reference.db4o&quot;;
+
+  public static void main(String[] args)  {
+    new File(DB4O_FILE_NAME).delete();
+    accessDb4o();
+    new File(DB4O_FILE_NAME).delete();
+    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+    try  {
+      storeFirstPilot(container);
+      storeSecondPilot(container);
+      retrieveAllPilots(container);
+      retrievePilotByName(container);
+      retrievePilotByExactPoints(container);
+      updatePilot(container);
+      deleteFirstPilotByName(container);
+      deleteSecondPilotByName(container);
+    } finally  {
+      container.close();
+    }
+  }
+  // end main
+
+  private static void accessDb4o()  {
+    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+    try  {
+      // do something with db4o
+    } finally  {
+      container.close();
+    }
+  }
+  // end accessDb4o
+
+  private static void storeFirstPilot(ObjectContainer container)  {
+    Pilot pilot1 = new Pilot(&quot;Michael Schumacher&quot;, 100);
+    container.store(pilot1);
+    System.out.println(&quot;Stored &quot; + pilot1);
+  }
+  // end storeFirstPilot
+
+  private static void storeSecondPilot(ObjectContainer container)  {
+    Pilot pilot2 = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+    container.store(pilot2);
+    System.out.println(&quot;Stored &quot; + pilot2);
+  }
+  // end storeSecondPilot
+
+  private static void retrieveAllPilotQBE(ObjectContainer container)  {
+    Pilot proto = new Pilot(null, 0);
+    ObjectSet result = container.queryByExample(proto);
+    listResult(result);
+  }
+  // end retrieveAllPilotQBE
+
+  private static void retrieveAllPilots(ObjectContainer container)  {
+    ObjectSet result = container.queryByExample(Pilot.class);
+    listResult(result);
+  }
+  // end retrieveAllPilots
+
+  private static void retrievePilotByName(ObjectContainer container)  {
+    Pilot proto = new Pilot(&quot;Michael Schumacher&quot;, 0);
+    ObjectSet result = container.queryByExample(proto);
+    listResult(result);
+  }
+  // end retrievePilotByName
+
+  private static void retrievePilotByExactPoints(
+      ObjectContainer container)  {
+    Pilot proto = new Pilot(null, 100);
+    ObjectSet result = container.queryByExample(proto);
+    listResult(result);
+  }
+  // end retrievePilotByExactPoints
+
+  private static void updatePilot(ObjectContainer container)  {
+    ObjectSet result = container.queryByExample(new Pilot(
+        &quot;Michael Schumacher&quot;, 0));
+    Pilot found = (Pilot) result.next();
+    found.addPoints(11);
+    container.store(found);
+    System.out.println(&quot;Added 11 points for &quot; + found);
+    retrieveAllPilots(container);
+  }
+  // end updatePilot
+
+  private static void deleteFirstPilotByName(
+      ObjectContainer container)  {
+    ObjectSet result = container.queryByExample(new Pilot(
+        &quot;Michael Schumacher&quot;, 0));
+    Pilot found = (Pilot) result.next();
+    container.delete(found);
+    System.out.println(&quot;Deleted &quot; + found);
+    retrieveAllPilots(container);
+  }
+  // end deleteFirstPilotByName
+
+  private static void deleteSecondPilotByName(
+      ObjectContainer container)  {
+    ObjectSet result = container.queryByExample(new Pilot(
+        &quot;Rubens Barrichello&quot;, 0));
+    Pilot found = (Pilot) result.next();
+    container.delete(found);
+    System.out.println(&quot;Deleted &quot; + found);
+    retrieveAllPilots(container);
+  }
+  // end deleteSecondPilotByName
+
+  private static void listResult(ObjectSet result)  {
+    System.out.println(result.size());
+    while (result.hasNext())  {
+      System.out.println(result.next());
+    }
+  }
+  // end listResult
+}</pre>    </body></html>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.java: checkReferenceCache
-private static void checkReferenceCache()...{
+private static void checkReferenceCache() {
     setObjects();
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       ObjectSet pilots = container.query(Pilot.class);
       Pilot pilot = (Pilot)pilots.get(0);
       String pilotName = pilot.getName();
@@ -10,7 +10,7 @@ private static void checkReferenceCache()...{
       System.out.println(&quot;Retrieving pilot by name: &quot; + pilotName);
       ObjectSet pilots1 = container.get(new Pilot(pilotName));
       listResult(pilots1);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

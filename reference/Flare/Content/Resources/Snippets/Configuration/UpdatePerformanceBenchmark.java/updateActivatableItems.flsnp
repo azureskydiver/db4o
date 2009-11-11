@@ -1,20 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: updateActivatableItems
-private void updateActivatableItems(int count) ...{
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: updateActivatableItems
+private void updateActivatableItems(int count)  {
     startTimer();
     Query query = objectContainer.query();
     query.constrain(ActivatableItem.class);
     query.descend(&quot;_name&quot;).constrain(&quot;level0&quot;).startsWith(true);
     ObjectSet result = query.execute();
     
-    for (int i = 0; i &lt; count; i ++)...{
-      if (result.hasNext())...{
+    for (int i = 0; i &lt; count; i ++) {
+      if (result.hasNext()) {
         ActivatableItem item = (ActivatableItem)result.next();
           item.setName(&quot;Updated&quot;);
           update(item);  
-      } else ...{
+      } else  {
         count = i;
         break;
       }
     }
       stopTimer(&quot;Updated &quot; + count + &quot; items&quot;);
-  }</div</pre>    </body></html>
+  }</pre>    </body></html>

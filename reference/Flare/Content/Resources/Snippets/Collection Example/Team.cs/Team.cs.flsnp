@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Team.cs
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1601" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Team.cs
+/** Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 using System.Collections.Generic;
 using System.Collections;
 
@@ -9,9 +14,9 @@ using Db4objects.Db4o.TA;
 using Db4objects.Db4o.Collections;
 
 namespace Db4objects.Db4odoc.TPExample
-...{
+ {
     public class Team : IActivatable
-    ...{
+     {
 
         IList&lt;Pilot&gt; _pilots = new ArrayList4&lt;Pilot&gt;();
         
@@ -24,13 +29,13 @@ namespace Db4objects.Db4odoc.TPExample
      
         //  Bind the class to an object container
         public void Bind(IActivator activator)
-        ...{
+         {
             if (_activator == activator)
-            ...{
+             {
                 return;
             }
             if (activator != null &amp;&amp; null != _activator)
-            ...{
+             {
                 throw new System.InvalidOperationException();
             }
             _activator = activator;
@@ -38,20 +43,20 @@ namespace Db4objects.Db4odoc.TPExample
 
         // activate object fields 
         public void Activate(ActivationPurpose purpose)
-        ...{
+         {
             if (_activator == null) return;
             _activator.Activate(purpose);
         }
 
         public void AddPilot(Pilot pilot)
-        ...{
+         {
       // activate before adding new pilots
       Activate(ActivationPurpose.Read);
       _pilots.Add(pilot);
         }
 
         public int Size()
-        ...{
+         {
             // activate before returning
             Activate(ActivationPurpose.Read);
             return _pilots.Count;
@@ -59,19 +64,19 @@ namespace Db4objects.Db4odoc.TPExample
         // end Size
 
         public void ListAllPilots()
-        ...{
+         {
             // activate before printing the collection members
             Activate(ActivationPurpose.Read);
             foreach (Pilot pilot in _pilots)
-            ...{
+             {
                 System.Console.WriteLine(pilot);
             }
         }
 
         public IList&lt;Pilot&gt; Pilots
-        ...{
+         {
             get 
-            ...{
+             {
                 Activate(ActivationPurpose.Read);
                 return _pilots; 
             }
@@ -79,4 +84,6 @@ namespace Db4objects.Db4odoc.TPExample
         // end Pilots
 
     }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

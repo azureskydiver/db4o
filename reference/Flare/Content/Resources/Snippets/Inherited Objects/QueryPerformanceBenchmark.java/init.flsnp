@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: init
-1private void init() ...{
-2    _filePath = &quot;performance.db4o&quot;;
-3    // amount of objects
-4    _count = 10000;
-5    // depth of objects
-6    _depth = 3;
-7    _isClientServer = false;
-8
-9  }</pre>    </body></html>
+private void init()  {
+    _filePath = &quot;performance.db4o&quot;;
+    // amount of objects
+    _count = 10000;
+    // depth of objects
+    _depth = 3;
+    _isClientServer = false;
+
+  }</pre>    </body></html>

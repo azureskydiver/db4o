@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: DemonstrateLocalRollback
 private static void DemonstrateLocalRollback(IObjectServer server)
-    ...{
+     {
       IObjectContainer client1 = server.OpenClient();
       IObjectContainer client2 = server.OpenClient();
       IList result = client1.QueryByExample(new Car(&quot;BMW&quot;));
