@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.java: updatePilotCategories
-private static void updatePilotCategories() ...{
+private static void updatePilotCategories()  {
     System.out.println(&quot;Updating PilotCategories explicitly:&quot;);
     ObjectContainer container = database();
-    if (container != null)...{
-      try ...{
+    if (container != null) {
+      try  {
         ObjectSet result = container.query(PilotCategories.class);
-        for (int x = 0; x &lt; result.size(); x++) ...{
+        for (int x = 0; x &lt; result.size(); x++)  {
           PilotCategories pc = (PilotCategories) result.get(x);
-          if (pc == PilotCategories.WINNER) ...{
+          if (pc == PilotCategories.WINNER)  {
             pc.testChange(&quot;WINNER2006&quot;);
             container.set(pc);
           }
         }
         printCategories(container);
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }
     System.out.println(&quot;Change the value back:&quot;);
     container = database();
-    if (container != null)...{
-      try ...{
+    if (container != null) {
+      try  {
         ObjectSet result = container.query(PilotCategories.class);
-        for (int x = 0; x &lt; result.size(); x++) ...{
+        for (int x = 0; x &lt; result.size(); x++)  {
           PilotCategories pc = (PilotCategories) result.get(x);
-          if (pc == PilotCategories.WINNER) ...{
+          if (pc == PilotCategories.WINNER)  {
             pc.testChange(&quot;WINNER&quot;);
             container.set(pc);
           }
         }
         printCategories(container);
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

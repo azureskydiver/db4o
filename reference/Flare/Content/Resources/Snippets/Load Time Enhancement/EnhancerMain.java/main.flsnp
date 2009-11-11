@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnhancerMain.java: main
-public static void main(String[] args) ...{
+public static void main(String[] args)  {
     new File(DB4O_FILE_NAME).delete();
     ObjectContainer db = Db4o.openFile(configuration(), DB4O_FILE_NAME);
     MaintenanceQueue&lt;Car&gt; queue = null;
-    for(int number = 0; number &lt; DEPTH; number++) ...{
+    for(int number = 0; number &lt; DEPTH; number++)  {
       queue = MaintenanceQueue.add(queue, new Car(&quot;Car&quot; + number, 
           new Pilot(&quot;Pilot #&quot; + number, new Id(&quot;110021&quot; + number))));
     }
@@ -12,21 +12,21 @@ public static void main(String[] args) ...{
 
     db = Db4o.openFile(configuration(), DB4O_FILE_NAME);
     EventRegistry registry = EventRegistryFactory.forObjectContainer(db);
-    registry.activated().addListener(new EventListener4() ...{
-      public void onEvent(Event4 event, EventArgs args) ...{
+    registry.activated().addListener(new EventListener4()  {
+      public void onEvent(Event4 event, EventArgs args)  {
         ObjectEventArgs objArgs = (ObjectEventArgs) args;
         System.out.println(&quot;ACTIVATED: &quot; + objArgs.object());
       }
     });
-    ((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() ...{
-      public void notifyQueryExecuted(NQOptimizationInfo info) ...{
+    ((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener()  {
+      public void notifyQueryExecuted(NQOptimizationInfo info)  {
         System.out.println(info);
       }
     });
     
-    List&lt;MaintenanceQueue&lt;Car&gt;&gt; result = db.query(new Predicate&lt;MaintenanceQueue&lt;Car&gt;&gt;() ...{
+    List&lt;MaintenanceQueue&lt;Car&gt;&gt; result = db.query(new Predicate&lt;MaintenanceQueue&lt;Car&gt;&gt;()  {
       @Override
-      public boolean match(MaintenanceQueue&lt;Car&gt; queue) ...{
+      public boolean match(MaintenanceQueue&lt;Car&gt; queue)  {
         return queue.value().getModel().equals(&quot;Car0&quot;);
       }
     });
@@ -38,7 +38,7 @@ public static void main(String[] args) ...{
       
       Pilot pilot = car.getPilot();
       System.out.println(pilot);
-      while (carQueue.hasNext())...{
+      while (carQueue.hasNext()) {
         carQueue = carQueue.next();
         car = carQueue.value();
         System.out.println(car);

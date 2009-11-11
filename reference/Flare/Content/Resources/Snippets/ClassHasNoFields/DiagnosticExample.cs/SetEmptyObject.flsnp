@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.cs: SetEmptyObject
-1private static void SetEmptyObject(IObjectContainer db)
-2        ...{
-3            Empty empty = new Empty();
-4            db.Store(empty);
-5        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.cs: SetEmptyObject
+private static void SetEmptyObject(IObjectContainer db)
+         {
+            Empty empty = new Empty();
+            db.Store(empty);
+        }</pre>
+    </body>
+</html>

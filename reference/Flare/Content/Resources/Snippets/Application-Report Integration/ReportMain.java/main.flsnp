@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReportMain.java: main
-public static void main(String[] args) throws BirtException ...{
+public static void main(String[] args) throws BirtException  {
     // create engine configuration
     EngineConfig config = new EngineConfig();
     // specify the path to the BIRT installation 

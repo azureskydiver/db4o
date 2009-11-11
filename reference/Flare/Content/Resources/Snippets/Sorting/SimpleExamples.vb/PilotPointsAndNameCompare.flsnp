@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotPointsAndNameCompare
-1Private Shared Function PilotPointsAndNameCompare()Function PilotPointsAndNameCompare(ByVal p1 As Pilot, ByVal p2 As Pilot) As Integer
-2            ' sort by name then by points: descending
-3            Dim compareResult As Integer = p1.Name.CompareTo(p2.Name)
-4            If (compareResult = 0) Then
-5                Return p1.Points - p2.Points
-6            Else
-7                Return -compareResult
-8            End If
-9        End Function</pre>    </body></html>
+Private Shared Function PilotPointsAndNameCompare()Function PilotPointsAndNameCompare(ByVal p1 As Pilot, ByVal p2 As Pilot) As Integer
+            ' sort by name then by points: descending
+            Dim compareResult As Integer = p1.Name.CompareTo(p2.Name)
+            If (compareResult = 0) Then
+                Return p1.Points - p2.Points
+            Else
+                Return -compareResult
+            End If
+        End Function</pre>    </body></html>

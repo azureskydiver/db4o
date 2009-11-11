@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.java: deletePilot
-public static void deletePilot() ...{
+public static void deletePilot()  {
       storePilot();
       ObjectContainer db=Db4o.openFile(YAPFILENAME);
-      try ...{
+      try  {
 //       first retrieve the object from the database
         ObjectSet result=db.get(new Pilot(&quot;Michael Schumacher&quot;,10));
         Pilot found=(Pilot)result.next();
         db.delete(found);
         System.out.println(&quot;Deleted &quot;+found);
-        } finally ...{
+        } finally  {
         db.close();
       }
         retrieveAllPilots();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.java: testBind
-private static void testBind()...{
+private static void testBind() {
     setObjects();
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       Query q = container.query();
       q.constrain(Car.class);
       q.descend(&quot;model&quot;).constrain(&quot;Ferrari&quot;);
@@ -15,7 +15,7 @@ private static void testBind()...{
 
       result = container.query(Car.class);
       listResult(result);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

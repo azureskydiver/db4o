@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.java
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.tpexample;
 
 import com.db4o.activation.*;
 import com.db4o.ta.*;
 
-public class SensorPanel implements Activatable ...{
+public class SensorPanel implements Activatable  {
 
   private Object _sensor;
 
@@ -15,22 +15,22 @@ public class SensorPanel implements Activatable ...{
   /**//*activator registered for this class*/
   transient Activator _activator;
   
-  public SensorPanel() ...{
+  public SensorPanel()  {
     // default constructor for instantiation
   }
   // end SensorPanelTA
 
-  public SensorPanel(int value) ...{
+  public SensorPanel(int value)  {
     _sensor = new Integer(value);
   }
   // end SensorPanelTA
 
   /**//*Bind the class to the specified object container, create the activator*/
-  public void bind(Activator activator) ...{
-      if (_activator == activator) ...{
+  public void bind(Activator activator)  {
+      if (_activator == activator)  {
         return;
       }
-      if (activator != null &amp;&amp; _activator != null) ...{
+      if (activator != null &amp;&amp; _activator != null)  {
             throw new IllegalStateException();
         }
     _activator = activator;
@@ -41,44 +41,44 @@ public class SensorPanel implements Activatable ...{
    * the activator remembers the objects that were already 
    * activated and won't activate them twice. 
    */
-  public void activate(ActivationPurpose purpose) ...{
+  public void activate(ActivationPurpose purpose)  {
     if (_activator == null)
       return;
     _activator.activate(purpose);
   }
   // end activate
   
-  public SensorPanel getNext() ...{
+  public SensorPanel getNext()  {
     /**//*activate direct members*/
     activate(ActivationPurpose.READ);
     return _next;
   }
   // end getNext
   
-  public Object getSensor() ...{
+  public Object getSensor()  {
     /**//*activate direct members*/
     activate(ActivationPurpose.READ);
     return _sensor;
   }
   // end getSensor
   
-  public void setSensor(Object sensor) ...{
+  public void setSensor(Object sensor)  {
     /**//*activate for persistence*/
     activate(ActivationPurpose.WRITE);
     _sensor = sensor;
   }
   // end setSensor
   
-  public SensorPanel createList(int length) ...{
+  public SensorPanel createList(int length)  {
     return createList(length, 1);
   }
   // end createList
 
-  public SensorPanel createList(int length, int first) ...{
+  public SensorPanel createList(int length, int first)  {
     int val = first;
     SensorPanel root = newElement(first);
     SensorPanel list = root;
-    while (--length &gt; 0) ...{
+    while (--length &gt; 0)  {
       list._next = newElement(++val);
       list = list._next;
     }
@@ -86,12 +86,12 @@ public class SensorPanel implements Activatable ...{
   }
   // end createList
 
-  protected SensorPanel newElement(int value) ...{
+  protected SensorPanel newElement(int value)  {
     return new SensorPanel(value);
   }
   // end newElement
 
-  public String toString() ...{
+  public String toString()  {
     return &quot;Sensor #&quot; + getSensor();
   }
   // end toString

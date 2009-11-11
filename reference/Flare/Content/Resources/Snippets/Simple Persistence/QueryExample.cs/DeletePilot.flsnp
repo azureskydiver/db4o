@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.cs: DeletePilot
 public static void DeletePilot() 
-    ...{
+     {
       StorePilot();
       IObjectContainer db=Db4oFactory.OpenFile(YapFileName);
       try 
-      ...{
+       {
         // first retrieve the object from the database
         IObjectSet result=db.Get(new Pilot(&quot;Michael Schumacher&quot;,10));
         Pilot found=(Pilot)result.Next();
@@ -12,7 +12,7 @@ public static void DeletePilot()
         System.Console.WriteLine(&quot;Deleted &quot;+found);
       } 
       finally 
-      ...{
+       {
         db.Close();
       }
       RetrieveAllPilots();

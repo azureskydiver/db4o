@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.java: testActivationConfig
-private static void testActivationConfig() ...{
+private static void testActivationConfig()  {
     storeSensorPanel();
     EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
     configuration.common().activationDepth(1);
     ObjectContainer container = Db4oEmbedded.openFile(configuration,
         DB4O_FILE_NAME);
-    try ...{
+    try  {
       System.out.println(&quot;Object container activation depth = 1&quot;);
       ObjectSet&lt;SensorPanel&gt; result = container
           .queryByExample(new SensorPanel(1));
       listResult(result);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         SensorPanel sensor = (SensorPanel) result.get(0);
         SensorPanel next = sensor.next;
-        while (next != null) ...{
+        while (next != null)  {
           System.out.println(next);
           next = next.next;
         }
       }
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

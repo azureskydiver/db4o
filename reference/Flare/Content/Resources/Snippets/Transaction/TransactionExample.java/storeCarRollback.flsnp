@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.java: storeCarRollback
-1private static void storeCarRollback(ObjectContainer container) ...{
-2        Pilot pilot=new Pilot(&quot;Michael Schumacher&quot;,100);
-3        Car car=new Car(&quot;Ferrari&quot;);
-4        car.setPilot(pilot);
-5        container.set(car);
-6        container.rollback();
-7    }</pre>    </body></html>
+private static void storeCarRollback(ObjectContainer container)  {
+        Pilot pilot=new Pilot(&quot;Michael Schumacher&quot;,100);
+        Car car=new Car(&quot;Ferrari&quot;);
+        car.setPilot(pilot);
+        container.set(car);
+        container.rollback();
+    }</pre>    </body></html>

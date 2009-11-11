@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: RollbackDeactivateStrategy
-1Private Class RollbackDeactivateStrategyClass RollbackDeactivateStrategy
-2            Implements IRollbackStrategy
-3            Public Sub Rollback()Sub Rollback(ByVal container As IObjectContainer, ByVal obj As Object) _
-4            Implements IRollbackStrategy.Rollback
-5                container.Ext().Deactivate(obj)
-6            End Sub
-7        End Class</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: RollbackDeactivateStrategy
+Private Class RollbackDeactivateStrategyClass RollbackDeactivateStrategy
+            Implements IRollbackStrategy
+            Public Sub Rollback()Sub Rollback(ByVal container As IObjectContainer, ByVal obj As Object) _
+            Implements IRollbackStrategy.Rollback
+                container.Ext().Deactivate(obj)
+            End Sub
+        End Class</pre>
+    </body>
+</html>

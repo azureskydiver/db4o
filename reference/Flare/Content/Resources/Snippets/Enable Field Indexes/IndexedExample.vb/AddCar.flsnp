@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IndexedExample.vb: AddCar
-1Private Shared Sub AddCar()Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
-2            Dim car As Car = New Car(&quot;BMW&quot;)
-3            Dim pilot As Pilot = New Pilot(&quot;Tester&quot;, points)
-4            car.Pilot = pilot
-5            db.Set(car)
-6        End Sub</pre>    </body></html>
+Private Shared Sub AddCar()Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
+            Dim car As Car = New Car(&quot;BMW&quot;)
+            Dim pilot As Pilot = New Pilot(&quot;Tester&quot;, points)
+            car.Pilot = pilot
+            db.Set(car)
+        End Sub</pre>    </body></html>

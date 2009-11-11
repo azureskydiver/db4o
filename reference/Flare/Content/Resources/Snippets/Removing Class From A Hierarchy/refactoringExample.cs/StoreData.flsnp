@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">refactoringExample.cs: StoreData
 public static void StoreData()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
             try
-            ...{
+             {
                 A a = new A();
                 a.name = &quot;A class&quot;;
                 container.Set(a);
@@ -20,7 +20,7 @@ public static void StoreData()
                 container.Set(c);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

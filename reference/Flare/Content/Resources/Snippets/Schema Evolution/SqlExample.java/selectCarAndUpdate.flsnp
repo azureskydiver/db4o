@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: selectCarAndUpdate
-public static void selectCarAndUpdate() ...{
+public static void selectCarAndUpdate()  {
     SQLiteDatabase db = database();
-    if (db != null) ...{
+    if (db != null)  {
       long startTime = System.currentTimeMillis();
       
       db.execSQL(&quot;insert into REG_RECORDS (id,year) values ('A1', DATETIME('NOW'))&quot;);
@@ -10,21 +10,21 @@ public static void selectCarAndUpdate() ...{
         // update car
           updateValues.put(&quot;reg_record&quot;, &quot;A1&quot;);
           int count = db.update(DB_TABLE_CAR, updateValues, &quot;pilot in (select id from pilot where points = 15)&quot;, null);
-          if (count == 0)...{
+          if (count == 0) {
             logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
-          } else ...{  
+          } else  {  
             Cursor c =
                   db.query(&quot;select c.model, r.id, r.year from car c, &quot; +
                       &quot;REG_RECORDS r, pilot p where c.reg_record = r.id &quot; +
                       &quot;and c.pilot = p.id and p.points = 15;&quot;, null);
-              if (c.count() == 0) ...{
+              if (c.count() == 0)  {
                 logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
                 return;
               }
               c.first();
               String date = c.getString(2);
               SimpleDateFormat sf = new SimpleDateFormat(&quot;yyyy-MM-dd H:mm:ss&quot;);
-              try ...{
+              try  {
                 Date dt = sf.parse(date);
                 RegistrationRecord record = new RegistrationRecord(c.getString(1), dt);
                 
@@ -32,7 +32,7 @@ public static void selectCarAndUpdate() ...{
                 car.setModel(c.getString(0));
                 car.setRegistration(record);
                 logToConsole(startTime, &quot;Updated Car (&quot; + car + &quot;): &quot;, true);
-              } catch (ParseException e)...{
+              } catch (ParseException e) {
                 Log.e(Db4oExample.class.getName(), e.toString());
               }
               

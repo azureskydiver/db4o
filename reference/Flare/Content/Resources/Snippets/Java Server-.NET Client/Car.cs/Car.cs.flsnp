@@ -3,31 +3,31 @@
 using System;
 
 namespace JavaDotnetClientServer
-...{
+ {
     class Car
-    ...{
+     {
         private String model;
         private Pilot pilot;
 
         public Car(String carModel, Pilot carPilot)
-        ...{
+         {
             this.model = carModel;
             this.pilot = carPilot;
         }
 
         public Pilot Pilot
-        ...{
-            get ...{ return pilot; }
+         {
+            get  { return pilot; }
         }
 
         public string Model
-        ...{
-            get ...{ return model; }
+         {
+            get  { return model; }
         }
 
 
         public override String ToString()
-        ...{
+         {
             return Model + &quot;[&quot; + Pilot + &quot;]&quot;;
         }
     }

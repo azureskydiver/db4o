@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oModule.java: readData
-public List readData() ...{
+public List readData()  {
     ObjectContainer container = Db4o.openFile(DB_FILE);
     List result = new ArrayList();
-    try ...{
+    try  {
       ObjectSet pilots = container.query(Pilot.class);
-      while (pilots.hasNext()) ...{
+      while (pilots.hasNext())  {
         Pilot pilot = (Pilot) pilots.next();
-        result.add(new String[] ...{ pilot.getName(),
+        result.add(new String[]  { pilot.getName(),
             String.format(&quot;%3d&quot;, pilot.getPoints()) });
       }
-    } finally ...{
+    } finally  {
       container.close();
     }
     return (result);

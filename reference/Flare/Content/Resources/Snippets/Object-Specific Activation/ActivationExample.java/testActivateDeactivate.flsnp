@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.java: testActivateDeactivate
-private static void testActivateDeactivate() ...{
+private static void testActivateDeactivate()  {
     storeSensorPanel();
     EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
     configuration.common().activationDepth(0);
     ObjectContainer container = Db4oEmbedded.openFile(configuration,
         DB4O_FILE_NAME);
-    try ...{
+    try  {
       System.out.println(&quot;Object container activation depth = 0&quot;);
       ObjectSet&lt;SensorPanel&gt; result = container
           .queryByExample(new SensorPanel(1));
@@ -35,7 +35,7 @@ private static void testActivateDeactivate() ...{
       // Deactivating list1 also deactivated list5
       System.out.println(&quot;Sensor 5 AFTER DEACTIVATE OF Sensor1.&quot;);
       testActivated(sensor5);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

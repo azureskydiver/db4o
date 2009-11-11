@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: TransferValues
 private static void TransferValues()
-    ...{
+     {
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         IStoredClass sc = container.Ext().StoredClass(typeof(Pilot));
         System.Console.WriteLine(&quot;Stored class:  &quot;+ sc.ToString());
         IStoredField sfOld = sc.StoredField(&quot;_name&quot;,typeof(string));
@@ -12,7 +12,7 @@ private static void TransferValues()
         q.Constrain(typeof(Pilot));
         IObjectSet result = q.Execute();
         foreach (object obj in result)
-        ...{
+         {
           Pilot pilot = (Pilot)obj;
           pilot.Name = new Identity(sfOld.Get(pilot).ToString(),&quot;&quot;);
           System.Console.WriteLine(&quot;Pilot=&quot;+ pilot);
@@ -20,7 +20,7 @@ private static void TransferValues()
         }
       } 
       finally 
-      ...{
+       {
         container.Close();
       }
     }</pre>    </body></html>

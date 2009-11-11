@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PessimisticThread.cs: run
 public void Run()
-        ...{
+         {
             try
-            ...{
+             {
                 IList&lt;Pilot&gt; result = _container.Query&lt;Pilot&gt;();
                 foreach (var pilot in result)
-                ...{
+                 {
 
                     /**//* with pessimistic approach the object is locked as soon 
                      * as we get it 
                      */
                     if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot; + _container.Ext().GetID(pilot), 0))
-                    ...{
+                     {
                         Console.WriteLine(&quot;Error. The object is locked&quot;);
                     }
 
@@ -28,7 +28,7 @@ public void Run()
                 }
             }
             finally
-            ...{
+             {
                 _container.Close();
             }
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.cs: TestCopyingWithPurge
 private static void TestCopyingWithPurge()
-    ...{
+     {
       SetObjects();
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         IObjectSet pilots = db.Get(typeof(Pilot));
         Pilot pilot = (Pilot)pilots[0];
         db.Ext().Purge(pilot);
@@ -13,7 +13,7 @@ private static void TestCopyingWithPurge()
         ListResult(pilots);
       } 
       finally 
-      ...{
+       {
         db.Close();
       }
     }</pre>    </body></html>

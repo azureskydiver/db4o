@@ -3,8 +3,8 @@
    * opens the ObjectServer, and waits forever until close() is called or a
    * StopServer message is being received.
    */
-  public void runServer() ...{
-    synchronized (this) ...{
+  public void runServer()  {
+    synchronized (this)  {
       // Using the messaging functionality to redirect all
       // messages to this.processMessage
       ServerConfiguration config = Db4oClientServer.newServerConfiguration();
@@ -21,12 +21,12 @@
       // We only need low priority since the db4o server has
       // it's own thread.
       Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-      try ...{
-        if (!stop) ...{
+      try  {
+        if (!stop)  {
           // wait forever for notify() from close()
           this.wait(Long.MAX_VALUE);
         }
-      } catch (Exception e) ...{
+      } catch (Exception e)  {
         e.printStackTrace();
       }
       db4oServer.close();

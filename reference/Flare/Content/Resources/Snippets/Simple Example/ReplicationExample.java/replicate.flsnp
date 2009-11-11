@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.java: replicate
-public static void replicate()...{
+public static void replicate() {
     ObjectContainer desktop=Db4o.openFile(configureReplication(), DTFILENAME);
     ObjectContainer handheld=Db4o.openFile(configureReplication(), HHFILENAME);
         //     Setup a replication session
@@ -12,7 +12,7 @@ public static void replicate()...{
      */
     ObjectSet changed =  replication.providerA().objectsChangedSinceLastReplication();
     
-    while (changed.hasNext()) ...{
+    while (changed.hasNext())  {
       replication.replicate(changed.next());
     }
     

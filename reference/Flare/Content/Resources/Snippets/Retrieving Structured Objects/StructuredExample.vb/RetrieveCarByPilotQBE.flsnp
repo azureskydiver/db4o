@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarByPilotQBE
-1Private Shared Sub RetrieveCarByPilotQBE()Sub RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
-2            Dim pilotproto As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 0)
-3            Dim carproto As Car = New Car(Nothing)
-4            carproto.Pilot = pilotproto
-5            Dim result As IObjectSet = db.Get(carproto)
-6            ListResult(result)
-7        End Sub</pre>    </body></html>
+Private Shared Sub RetrieveCarByPilotQBE()Sub RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
+            Dim pilotproto As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 0)
+            Dim carproto As Car = New Car(Nothing)
+            carproto.Pilot = pilotproto
+            Dim result As IObjectSet = db.Get(carproto)
+            ListResult(result)
+        End Sub</pre>    </body></html>

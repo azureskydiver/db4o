@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.cs: SelectJoin
 private static void SelectJoin()
-        ...{
+         {
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     var result = from Pilot p in container
                                   from Car c in container
                                   where p.Points &gt; 25
@@ -15,11 +15,11 @@ private static void SelectJoin()
                     ListResult(result);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: read
-1public Object read(ReadContext context) ...{
-2    ReadBuffer buffer = context;
-3    String str = &quot;&quot;;
-4    int length = buffer.readInt();
-5    if (length &gt; 0) ...{
-6      str = readBuffer(buffer, length);
-7    }
-8    return new StringBuffer(str);
-9  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: read
+public Object read(ReadContext context)  {
+    ReadBuffer buffer = context;
+    String str = "";
+    int length = buffer.readInt();
+    if (length &gt; 0)  {
+      str = readBuffer(buffer, length);
+    }
+    return new StringBuffer(str);
+  }</pre>
+    </body>
+</html>

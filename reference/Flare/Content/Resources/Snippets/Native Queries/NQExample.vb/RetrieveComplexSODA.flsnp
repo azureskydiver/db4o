@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.vb: RetrieveComplexSODA
-1Private Shared Sub RetrieveComplexSODA()Sub RetrieveComplexSODA(ByVal db As IObjectContainer)
-2            Dim query As IQuery = db.Query()
-3            query.Constrain(GetType(Pilot))
-4            Dim pointQuery As IQuery = query.Descend(&quot;_points&quot;)
-5            query.Descend(&quot;_name&quot;).Constrain(&quot;Rubens Barrichello&quot;).Or(pointQuery.Constrain(99).Greater().Or(pointQuery.Constrain(199).Smaller()))
-6            Dim result As IObjectSet = query.Execute()
-7            ListResult(result)
-8        End Sub</div</pre>    </body></html>
+Private Shared Sub RetrieveComplexSODA()Sub RetrieveComplexSODA(ByVal db As IObjectContainer)
+            Dim query As IQuery = db.Query()
+            query.Constrain(GetType(Pilot))
+            Dim pointQuery As IQuery = query.Descend(&quot;_points&quot;)
+            query.Descend(&quot;_name&quot;).Constrain(&quot;Rubens Barrichello&quot;).Or(pointQuery.Constrain(99).Greater().Or(pointQuery.Constrain(199).Smaller()))
+            Dim result As IObjectSet = query.Execute()
+            ListResult(result)
+        End Sub</pre>    </body></html>

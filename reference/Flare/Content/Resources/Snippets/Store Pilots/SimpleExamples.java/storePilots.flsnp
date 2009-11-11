@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.java: storePilots
-private static void storePilots() ...{
+private static void storePilots()  {
     new File(DB4O_FILE_NAME).delete();
     ObjectContainer container = database();
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         Pilot pilot;
-        for (int i = 0; i &lt; OBJECT_COUNT; i++) ...{
+        for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
           container.set(pilot);
         }
-        for (int i = 0; i &lt; OBJECT_COUNT; i++) ...{
+        for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           pilot = new Pilot(&quot;Professional Pilot #&quot; + (i + 10), i + 10);
           container.set(pilot);
         }
         container.commit();
-      } catch (Db4oException ex) ...{
+      } catch (Db4oException ex)  {
         System.out.println(&quot;Db4o Exception: &quot; + ex.getMessage());
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

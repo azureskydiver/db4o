@@ -1,32 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.cs
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1183" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Pilot.cs
+/** Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.TA;
 
 namespace Db4ojects.Db4odoc.TAExamples
-...{
+ {
     public class Pilot : IActivatable
-    ...{
+     {
         private string _name;
 
         [System.NonSerialized]
         IActivator _activator;
 
         public Pilot(string name)
-        ...{
+         {
             _name = name;
         }
 
         // Bind the class to an object container
         public void Bind(IActivator activator)
-        ...{
+         {
             if (_activator == activator)
-            ...{
+             {
                 return;
             }
             if (activator != null &amp;&amp; null != _activator)
-            ...{
+             {
                 throw new System.InvalidOperationException();
             }
             _activator = activator;
@@ -34,16 +39,16 @@ namespace Db4ojects.Db4odoc.TAExamples
 
         // activate the object fields
         public void Activate(ActivationPurpose purpose)
-        ...{
+         {
             if (_activator == null)
                 return;
             _activator.Activate(purpose);
         }
 
         public string Name
-        ...{
+         {
             get
-            ...{
+             {
                 // even simple string needs to be activated
                 Activate(ActivationPurpose.Read);
                 return _name;
@@ -51,10 +56,12 @@ namespace Db4ojects.Db4odoc.TAExamples
         }
 
         public override string ToString()
-        ...{
+         {
             // use Name property, which already contains activation call
             return Name;
         }
     }
 
-}</div</pre>    </body></html>
+}</pre>
+    </body>
+</html>

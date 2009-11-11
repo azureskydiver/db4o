@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Write
-1Public Sub Write()Sub Write(ByVal context As IWriteContext, ByVal obj As Object) Implements ITypeHandler4.Write
-2            Dim str As String = DirectCast(obj, StringBuilder).ToString()
-3            Dim buffer As IWriteBuffer = context
-4            buffer.WriteInt(str.Length)
-5            WriteToBuffer(buffer, str)
-6        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Write
+Public Sub Write()Sub Write(ByVal context As IWriteContext, ByVal obj As Object) Implements ITypeHandler4.Write
+            Dim str As String = DirectCast(obj, StringBuilder).ToString()
+            Dim buffer As IWriteBuffer = context
+            buffer.WriteInt(str.Length)
+            WriteToBuffer(buffer, str)
+        End Sub</pre>
+    </body>
+</html>

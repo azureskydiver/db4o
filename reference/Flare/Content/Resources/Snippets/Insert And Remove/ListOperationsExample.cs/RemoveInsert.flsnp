@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.cs: RemoveInsert
 private static void RemoveInsert()
-        ...{
+         {
             Stopwatch sw = new Stopwatch();
 
             IObjectContainer db = Db4oFactory.OpenFile(DbFile);
             try
-            ...{
+             {
                 // set activation depth to 1 for the quickest execution
                 db.Ext().Configure().UpdateDepth(1);
                 IList&lt;ListObject&gt; result = db.Query&lt;ListObject&gt;();
                 if (result.Count == 2)
-                ...{
+                 {
                     // retrieve 2 ListObjects
                     ListObject lo1 = result[0];
                     ListObject lo2 = result[1];
@@ -20,8 +20,8 @@ private static void RemoveInsert()
                     lo1.Data.Remove(dataObject);
                     lo2.Data.Add(dataObject);
 
-                    Console.WriteLine(&quot;Removed from the first list, count is {0}, setting data...&quot;, lo1.Data.Count);
-                    Console.WriteLine(&quot;Added to the second list, count is {0}, setting data...&quot;, lo2.Data.Count);
+                    Console.WriteLine(&quot;Removed from the first list, count is {0}, setting data &quot;, lo1.Data.Count);
+                    Console.WriteLine(&quot;Added to the second list, count is {0}, setting data &quot;, lo2.Data.Count);
                     sw.Start();
                     db.Set(lo1);
                     db.Set(lo2);
@@ -30,7 +30,7 @@ private static void RemoveInsert()
                 }
             }
             finally
-            ...{
+             {
                 db.Close();
             }
             Console.WriteLine(&quot;Storing took {0}&quot;, sw.Elapsed.ToString());

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AllTests.java: testCascadeOnUpdate
-1public void testCascadeOnUpdate() ...{
-2    Db4oFixture fixture=new ExcludingInMemoryFixture(new IndependentConfigurationSource());
-3    TestSuite suite = new Db4oTestSuiteBuilder(fixture, new Class[]...{CascadeOnUpdate.class}).build();
-4    FrameworkTestCase.runTestAndExpect(suite,0);
-5  }</pre>    </body></html>
+public void testCascadeOnUpdate()  {
+    Db4oFixture fixture=new ExcludingInMemoryFixture(new IndependentConfigurationSource());
+    TestSuite suite = new Db4oTestSuiteBuilder(fixture, new Class[] {CascadeOnUpdate.class}).build();
+    FrameworkTestCase.runTestAndExpect(suite,0);
+  }</pre>    </body></html>

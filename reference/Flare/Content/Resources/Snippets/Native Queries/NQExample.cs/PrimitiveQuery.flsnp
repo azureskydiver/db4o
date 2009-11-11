@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.cs: PrimitiveQuery
-1public static void PrimitiveQuery(IObjectContainer db)
-2    ...{
-3      IList pilots = db.Query(new PilotHundredPoints()); 
-4    }</pre>    </body></html>
+public static void PrimitiveQuery(IObjectContainer db)
+     {
+      IList pilots = db.Query(new PilotHundredPoints()); 
+    }</pre>    </body></html>

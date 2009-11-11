@@ -7,7 +7,7 @@ package com.db4odoc.JavaDotNetClientServer;
  * 
  * @sharpen.ignore
  */
-public interface ServerInfo ...{
+public interface ServerInfo  {
   
   /** *//**
    * the host to be used.

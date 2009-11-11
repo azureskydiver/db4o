@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.java: checkReferenceCacheWithPurge
-private static void checkReferenceCacheWithPurge()...{
+private static void checkReferenceCacheWithPurge() {
     setObjects();
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       ObjectSet pilots = container.query(Pilot.class);
       Pilot pilot = (Pilot)pilots.get(0);
       String pilotName = pilot.getName();
       pilot.setName(&quot;new name&quot;);
       System.out.println(&quot;Retrieving pilot by name: &quot; + pilotName);
       long pilotID = container.ext().getID(pilot);
-      if (container.ext().isCached(pilotID))...{
+      if (container.ext().isCached(pilotID)) {
         container.ext().purge(pilot);
       }
       ObjectSet pilots1 = container.get(new Pilot(pilotName));
       listResult(pilots1);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

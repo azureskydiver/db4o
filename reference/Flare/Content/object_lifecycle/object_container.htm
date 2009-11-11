@@ -34,7 +34,7 @@
 <P>VB: </P>
 <P><code>container.Close()</code></P>
 </p><p MadCap:conditions="Primary:vb" />
-<H1></H1>
+
 <P>Applications using db4o versions lower than 6.1can issue multiple calls to open the same file (without closing it). These calls will get the already existing open ObjectContainer instance and no error will be produced. However as many close calls will have to be issued to close the ObjectContainer.</P>
 <P>This behavior was changed since db4o version 6.1: only the first call against a file can be successful. Subsequent calls that request to open a database file that is already open will get a DatabaseFileLockedException. This behavior is much more intuitive and allows to simplify the internal db4o design as well.</P>
 

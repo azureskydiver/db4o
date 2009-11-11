@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: createCommittedEventListenerForEmbedded
 private EventListener4 createCommittedEventListenerForEmbedded(
-      final ObjectContainer objectContainer) ...{
-    return new EventListener4() ...{
-      public void onEvent(Event4 e, EventArgs args) ...{
+      final ObjectContainer objectContainer)  {
+    return new EventListener4()  {
+      public void onEvent(Event4 e, EventArgs args)  {
         Transaction trans = ((InternalObjectContainer)objectContainer).transaction();
 
         // get all the updated objects
         ObjectInfoCollection updated = ((CommitEventArgs) args)
             .updated();
         Iterator4 infos = updated.iterator();
-        while (infos.moveNext()) ...{
+        while (infos.moveNext())  {
           ObjectInfo info = (ObjectInfo) infos.current();
           // Obtain object reference in local cache by object id
              Object obj = trans.objectForIdFromCache((int)info.getInternalID());
 
-          if (obj != null) ...{
+          if (obj != null)  {
             // refresh object on the client
             objectContainer.ext().refresh(obj, 2);
           }

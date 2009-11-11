@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransientClassExample.cs: RetrieveObjects
 private static void RetrieveObjects()
-        ...{
+         {
             IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
             try
-            ...{
+             {
                 // retrieve the results and check if the NotStorable instances were saved
                 IList result = container.Get(null);
                 ListResult(result);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

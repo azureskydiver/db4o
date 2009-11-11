@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.cs: GetDefaultConfig
-1private static IEmbeddedConfiguration GetDefaultConfig() ...{
-2    IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
-3    return config;
-4  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.cs: GetDefaultConfig
+private static IEmbeddedConfiguration GetDefaultConfig()  {
+    IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
+    return config;
+  }</pre>
+    </body>
+</html>

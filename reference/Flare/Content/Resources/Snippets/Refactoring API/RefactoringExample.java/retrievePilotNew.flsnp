@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.java: retrievePilotNew
-1private static void retrievePilotNew()...{
-2    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-3    try ...{
-4      ObjectSet result = container.query(PilotNew.class);
-5      listResult(result);
-6    } finally ...{
-7      container.close();
-8    }
-9  }</pre>    </body></html>
+private static void retrievePilotNew() {
+    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+    try  {
+      ObjectSet result = container.query(PilotNew.class);
+      listResult(result);
+    } finally  {
+      container.close();
+    }
+  }</pre>    </body></html>

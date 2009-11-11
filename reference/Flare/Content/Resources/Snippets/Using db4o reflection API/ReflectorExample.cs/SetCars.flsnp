@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.cs: SetCars
 private static void SetCars()
-    ...{
+     {
       File.Delete(Db4oFileName);     
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         Car car1 = new Car(&quot;BMW&quot;);
         db.Set(car1);
         Car car2 = new Car(&quot;Ferrari&quot;);
@@ -17,7 +17,7 @@ private static void SetCars()
         ListResult(results);
       } 
       finally 
-      ...{
+       {
         db.Close();
       }
     }</pre>    </body></html>

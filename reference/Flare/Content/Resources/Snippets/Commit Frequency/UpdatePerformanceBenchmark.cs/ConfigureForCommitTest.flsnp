@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureForCommitTest
-1private IConfiguration ConfigureForCommitTest()
-2        ...{
-3            IConfiguration config = Db4oFactory.NewConfiguration();
-4            // the Commit information is physically written 
-5            // and in the correct order
-6            config.FlushFileBuffers(true);
-7            return config;
-8        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureForCommitTest
+private IConfiguration ConfigureForCommitTest()
+         {
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            // the Commit information is physically written 
+            // and in the correct order
+            config.FlushFileBuffers(true);
+            return config;
+        }</pre>
+    </body>
+</html>

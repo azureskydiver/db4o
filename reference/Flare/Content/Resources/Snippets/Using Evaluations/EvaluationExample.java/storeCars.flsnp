@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EvaluationExample.java: storeCars
-private static void storeCars(ObjectContainer container) ...{
+private static void storeCars(ObjectContainer container)  {
     Pilot pilot1 = new Pilot(&quot;Michael Schumacher&quot;, 100);
     Car car1 = new Car(&quot;Ferrari&quot;);
     car1.setPilot(pilot1);

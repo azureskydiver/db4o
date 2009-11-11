@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.java: retrievePilotByExactPoints
-1private static void retrievePilotByExactPoints(
-2      ObjectContainer container) ...{
-3    Query query = container.query();
-4    query.constrain(Pilot.class);
-5    query.descend(&quot;points&quot;).constrain(new Integer(100));
-6    ObjectSet result = query.execute();
-7    listResult(result);
-8  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryExample.java: retrievePilotByExactPoints
+private static void retrievePilotByExactPoints(
+      ObjectContainer container)  {
+    Query query = container.query();
+    query.constrain(Pilot.class);
+    query.descend("points").constrain(new Integer(100));
+    ObjectSet result = query.execute();
+    listResult(result);
+  }</pre>
+    </body>
+</html>

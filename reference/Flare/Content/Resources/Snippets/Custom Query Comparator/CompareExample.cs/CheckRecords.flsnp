@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CompareExample.cs: CheckRecords
 private static void CheckRecords(IConfiguration configuration)
-        ...{
+         {
             IObjectContainer container = Db4oFactory.OpenFile(configuration, FileName);
             try
-            ...{
+             {
                 IQuery q = container.Query();
                 q.Constrain(new Record(&quot;Rubens&quot;));
                 q.Descend(&quot;_record&quot;).Constraints().Contains();
@@ -11,7 +11,7 @@ private static void CheckRecords(IConfiguration configuration)
                 ListResult(result);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

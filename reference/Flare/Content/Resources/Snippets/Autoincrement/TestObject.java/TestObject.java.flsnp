@@ -2,14 +2,14 @@
 /**//* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
 package com.db4odoc.autoincrement;
 
-public class TestObject extends CountedObject...{
+public class TestObject extends CountedObject {
   String name;  
   
-  public TestObject(String name) ...{
+  public TestObject(String name)  {
     this.name = name;
   }
   
-  public String toString() ...{
+  public String toString()  {
     return name+&quot;/&quot;+id;
   }
   

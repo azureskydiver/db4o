@@ -5,9 +5,9 @@ Private Shared Sub Work()Sub Work()
                 ' do some work with db4o
                 db.Commit()
             Catch ex As Db4oException
-                ' handle exception ....
+                ' handle exception  .
             Catch ex As Exception
-                ' handle exception ....
+                ' handle exception  .
             Finally
                 db.Close()
             End Try

@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.vb: Configure
-1Private Shared Sub Configure()Sub Configure()
-2            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(Container)
-3            ' register an event handler, which will check object uniqueness on commit
-4            AddHandler registry.Committing, AddressOf OnCommitting
-5        End Sub</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.vb: Configure
+Private Shared Sub Configure()Sub Configure()
+            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(Container)
+            ' register an event handler, which will check object uniqueness on commit
+            AddHandler registry.Committing, AddressOf OnCommitting
+        End Sub</pre>
+    </body>
+</html>

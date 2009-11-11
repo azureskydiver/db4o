@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.cs: ConfigureReplication
-1public static IConfiguration ConfigureReplication()
-2        ...{
-3            IConfiguration db4oConfig = Db4oFactory.NewConfiguration();
-4            db4oConfig.GenerateUUIDs(ConfigScope.Globally);
-5            db4oConfig.GenerateVersionNumbers(ConfigScope.Globally);
-6            return db4oConfig;
-7        }</pre>    </body></html>
+public static IConfiguration ConfigureReplication()
+         {
+            IConfiguration db4oConfig = Db4oFactory.NewConfiguration();
+            db4oConfig.GenerateUUIDs(ConfigScope.Globally);
+            db4oConfig.GenerateVersionNumbers(ConfigScope.Globally);
+            return db4oConfig;
+        }</pre>    </body></html>

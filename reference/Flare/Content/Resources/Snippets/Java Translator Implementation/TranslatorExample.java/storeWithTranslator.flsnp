@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.java: storeWithTranslator
-1private static void storeWithTranslator() ...{
-2    Configuration configuration = Db4o.newConfiguration();
-3    configuration.objectClass(NotStorable.class).translate(
-4        new NotStorableTranslator());
-5    tryStoreAndRetrieve(configuration);
-6  }</pre>    </body></html>
+private static void storeWithTranslator()  {
+    Configuration configuration = Db4o.newConfiguration();
+    configuration.objectClass(NotStorable.class).translate(
+        new NotStorableTranslator());
+    tryStoreAndRetrieve(configuration);
+  }</pre>    </body></html>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: TestPilots6PointsMoreMatch
-1Private Shared Function TestPilots6PointsMoreMatch()Function TestPilots6PointsMoreMatch(ByVal p As Pilot) As Boolean
-2            ' all Pilots containing &quot;Test&quot; in the name
-3            ' and 6 point are included in the result
-4            Dim b1 As Boolean = p.Name.IndexOf(&quot;Test&quot;) &gt;= 0
-5            Dim b2 As Boolean = p.Points &gt; 6
-6            Return b1 AndAlso b2
-7        End Function</pre>    </body></html>
+Private Shared Function TestPilots6PointsMoreMatch()Function TestPilots6PointsMoreMatch(ByVal p As Pilot) As Boolean
+            ' all Pilots containing &quot;Test&quot; in the name
+            ' and 6 point are included in the result
+            Dim b1 As Boolean = p.Name.IndexOf(&quot;Test&quot;) &gt;= 0
+            Dim b2 As Boolean = p.Points &gt; 6
+            Return b1 AndAlso b2
+        End Function</pre>    </body></html>

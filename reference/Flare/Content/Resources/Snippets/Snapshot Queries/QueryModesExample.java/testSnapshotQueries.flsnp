@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.java: testSnapshotQueries
-private static void testSnapshotQueries() ...{
+private static void testSnapshotQueries()  {
     System.out
         .println(&quot;Testing query performance on 10000 pilot objects in Snapshot mode&quot;);
     fillUpDB(10000);
     Configuration configuration = Db4o.newConfiguration();
     configuration.queries().evaluationMode(QueryEvaluationMode.SNAPSHOT);
     ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
-    try ...{
+    try  {
       QueryStats stats = new QueryStats();
       stats.connect(container);
       Query query = container.query();
@@ -16,7 +16,7 @@ private static void testSnapshotQueries() ...{
       long executionTime = stats.executionTime();
       System.out.println(&quot;Query execution time: &quot;
           + executionTime);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Db4objects.Db4odoc.Typehandler.Translators
-...{
+ {
     public class PersistentItem
-    ...{
+     {
         string id;
         TransientItem item;
 
         public PersistentItem(string id, TransientItem item)
-        ...{
+         {
             this.id = id;
             this.item = item;
         }
 
         public override String ToString()
-        ...{
+         {
             return id + &quot;: &quot; + item.ToString();
         }
     }

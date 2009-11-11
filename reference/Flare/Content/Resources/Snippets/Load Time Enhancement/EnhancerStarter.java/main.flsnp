@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnhancerStarter.java: main
-1public static void main(String[] args) throws Exception ...{
-2    ClassFilter filter = new ByNameClassFilter(&quot;enhancement.&quot;, true);
-3    BloatClassEdit[] edits = ...{ new TranslateNQToSODAEdit() , new InjectTransparentActivationEdit(filter) };
-4    URL[] urls = ...{ new File(&quot;/work/workspaces/db4o/tatest/bin&quot;).toURI().toURL() };
-5    Db4oInstrumentationLauncher.launch(edits, urls, EnhancerMain.class.getName(), new String[]...{});
-6  }</pre>    </body></html>
+public static void main(String[] args) throws Exception  {
+    ClassFilter filter = new ByNameClassFilter(&quot;enhancement.&quot;, true);
+    BloatClassEdit[] edits =  { new TranslateNQToSODAEdit() , new InjectTransparentActivationEdit(filter) };
+    URL[] urls =  { new File(&quot;/work/workspaces/db4o/tatest/bin&quot;).toURI().toURL() };
+    Db4oInstrumentationLauncher.launch(edits, urls, EnhancerMain.class.getName(), new String[] {});
+  }</pre>    </body></html>

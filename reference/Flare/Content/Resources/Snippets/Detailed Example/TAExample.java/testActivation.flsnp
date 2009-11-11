@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.java: testActivation
-private static void testActivation() ...{
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.java: testActivation
+private static void testActivation()  {
     storeSensorPanel();
     Configuration configuration = configureTA();
 
     ObjectContainer container = database(configuration);
-    if (container != null) ...{
-    try ...{
+    if (container != null)  {
+    try  {
       ObjectSet result = container.queryByExample(new SensorPanelTA(1));
       listResult(result);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         SensorPanelTA sensor = (SensorPanelTA) result.get(0);
         // the object is a linked list, so each call to next()
         // will need to activate a new object
         SensorPanelTA next = sensor.getNext();
-        while (next != null) ...{
+        while (next != null)  {
           System.out.println(next);
           next = next.getNext();
         }
       }
-    } finally ...{
+    } finally  {
       closeDatabase();
     }
     } 
-  }</div</pre>    </body></html>
+  }</pre>    </body></html>

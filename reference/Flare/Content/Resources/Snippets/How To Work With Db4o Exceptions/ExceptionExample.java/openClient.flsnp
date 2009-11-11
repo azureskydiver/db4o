@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExceptionExample.java: openClient
-private static ObjectContainer openClient()...{
+private static ObjectContainer openClient() {
     ObjectContainer container = null;
-    try ...{
+    try  {
       container = Db4o.openClient(&quot;host&quot;, 0xdb40, &quot;user&quot;, &quot;password&quot;);
-    } catch(Db4oIOException ex) ...{
+    } catch(Db4oIOException ex)  {
       //System.out.println(ex.getMessage());
       // ask the user for new connection details, print
       // or log the exception message
       // and close the application,
       // find and fix the reason
       // and try again
-    } catch (OldFormatException ex) ...{
+    } catch (OldFormatException ex)  {
       // see above
-    } catch (InvalidPasswordException ex) ...{
+    } catch (InvalidPasswordException ex)  {
       // see above
     }
     return container;

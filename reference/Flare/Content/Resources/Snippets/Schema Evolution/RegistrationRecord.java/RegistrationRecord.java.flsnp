@@ -3,28 +3,28 @@ package com.db4odoc.android.compare.refactored;
 
 import java.util.Date;
 
-public class RegistrationRecord ...{
+public class RegistrationRecord  {
   private String number;
   private Date year;
 
-  public RegistrationRecord(String number, Date year)...{
+  public RegistrationRecord(String number, Date year) {
     this.number = number;
     this.year = year;
   }
 
-  public String getNumber() ...{
+  public String getNumber()  {
     return number;
   }
 
-  public void setNumber(String number) ...{
+  public void setNumber(String number)  {
     this.number = number;
   }
 
-  public Date getYear() ...{
+  public Date getYear()  {
     return year;
   }
 
-  public void setYear(Date year) ...{
+  public void setYear(Date year)  {
     this.year = year;
   }
   

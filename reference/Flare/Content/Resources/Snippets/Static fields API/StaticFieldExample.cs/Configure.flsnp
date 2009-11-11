@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.cs: Configure
-1private static void Configure() ...{
-2            System.Console.WriteLine(&quot;Saving static fields can be turned on for individual classes.&quot;);
-3            _configuration = Db4oFactory.NewConfiguration();
-4            _configuration.ObjectClass(typeof(PilotCategories)).PersistStaticFieldValues();
-5        }</pre>    </body></html>
+private static void Configure()  {
+            System.Console.WriteLine(&quot;Saving static fields can be turned on for individual classes.&quot;);
+            _configuration = Db4oFactory.NewConfiguration();
+            _configuration.ObjectClass(typeof(PilotCategories)).PersistStaticFieldValues();
+        }</pre>    </body></html>

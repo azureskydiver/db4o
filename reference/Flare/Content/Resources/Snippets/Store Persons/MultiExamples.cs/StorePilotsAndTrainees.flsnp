@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MultiExamples.cs: StorePilotsAndTrainees
 private static void StorePilotsAndTrainees()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     Pilot pilot;
                     Trainee trainee;
                     for (int i = 0; i &lt; ObjectCount; i++)
-                    ...{
+                     {
                         pilot = new Pilot(&quot;Professional Pilot #&quot; + i, i);
                         trainee = new Trainee(&quot;Trainee #&quot; + i, pilot);
                         container.Set(trainee);
@@ -18,15 +18,15 @@ private static void StorePilotsAndTrainees()
                     container.Commit();
                 }
                 catch (Db4oException ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

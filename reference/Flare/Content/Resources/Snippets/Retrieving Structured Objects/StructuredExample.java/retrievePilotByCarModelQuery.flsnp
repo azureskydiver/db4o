@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.java: retrievePilotByCarModelQuery
-1private static void retrievePilotByCarModelQuery(
-2      ObjectContainer container) ...{
-3    Query carquery = container.query();
-4    carquery.constrain(Car.class);
-5    carquery.descend(&quot;model&quot;).constrain(&quot;Ferrari&quot;);
-6    Query pilotquery = carquery.descend(&quot;pilot&quot;);
-7    ObjectSet result = pilotquery.execute();
-8    listResult(result);
-9  }</pre>    </body></html>
+private static void retrievePilotByCarModelQuery(
+      ObjectContainer container)  {
+    Query carquery = container.query();
+    carquery.constrain(Car.class);
+    carquery.descend(&quot;model&quot;).constrain(&quot;Ferrari&quot;);
+    Query pilotquery = carquery.descend(&quot;pilot&quot;);
+    ObjectSet result = pilotquery.execute();
+    listResult(result);
+  }</pre>    </body></html>

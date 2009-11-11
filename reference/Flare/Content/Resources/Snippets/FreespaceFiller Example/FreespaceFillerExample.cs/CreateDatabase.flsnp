@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">FreespaceFillerExample.cs: CreateDatabase
-private static void CreateDatabase(IEmbeddedConfiguration config) ...{
+private static void CreateDatabase(IEmbeddedConfiguration config)  {
     File.Delete(Db4oFileName);
 
     IObjectContainer container = Db4oEmbedded.OpenFile(config, Db4oFileName);
-    try ...{
+    try  {
       Item item;
-      for (int i = 0; i &lt; ObjectCount; i++) ...{
+      for (int i = 0; i &lt; ObjectCount; i++)  {
         item = new Item(&quot;Title&quot; + i, &quot;Just a description&quot;);
         container.Store(item);
       }
-    } finally ...{
+    } finally  {
       container.Close();
     }
   }</pre>    </body></html>

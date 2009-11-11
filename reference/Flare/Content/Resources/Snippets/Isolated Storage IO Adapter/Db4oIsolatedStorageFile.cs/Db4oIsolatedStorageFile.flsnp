@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oIsolatedStorageFile.cs: Db4oIsolatedStorageFile
 public class Db4oIsolatedStorageFile
-    ...{
+     {
         private IsolatedStorageFileStream _stream;
 
         [System.Runtime.InteropServices.DllImport(&quot;kernel32.dll&quot;, SetLastError = true)]
         static extern int FlushFileBuffers(IntPtr fileHandle);
 
         public Db4oIsolatedStorageFile(String file, String fileMode)
-        ...{
+         {
             try
-            ...{
+             {
                 IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForAssembly();
                 _stream = new IsolatedStorageFileStream(file, FileMode.OpenOrCreate,
                     fileMode.Equals(&quot;rw&quot;) ? FileAccess.ReadWrite : FileAccess.Read, isf);
             }
             catch (IOException x)
-            ...{
+             {
                 throw new DatabaseFileLockedException(file, x);
             }
         }</pre>    </body></html>

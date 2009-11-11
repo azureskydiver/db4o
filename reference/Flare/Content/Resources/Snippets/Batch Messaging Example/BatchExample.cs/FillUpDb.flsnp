@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BatchExample.cs: FillUpDb
 private static void FillUpDb()
-        ...{
+         {
             IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
             // Uncomment the following line to test CS mode without batching
             // configuration.Networking.BatchMessages = false;
@@ -9,11 +9,11 @@ private static void FillUpDb()
             IObjectContainer container = Db4oClientServer.OpenClient(configuration, Host, Port, User,
                         Password);
             try
-            ...{
+             {
                 Console.WriteLine(&quot;Testing inserts&quot;);
                 DateTime dt1 = DateTime.UtcNow;
                 for (int i = 0; i &lt; NoOfObjects; i++)
-                ...{
+                 {
                     Pilot pilot = new Pilot(&quot;pilot #&quot; + i, i);
                     container.Store(pilot);
                 }
@@ -22,7 +22,7 @@ private static void FillUpDb()
                 Console.WriteLine(&quot;Operation time: &quot; + diff.TotalMilliseconds + &quot; ms.&quot;);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
         }</pre>    </body></html>

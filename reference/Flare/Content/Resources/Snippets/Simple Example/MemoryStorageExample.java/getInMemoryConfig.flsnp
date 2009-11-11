@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.java: getInMemoryConfig
-1private static EmbeddedConfiguration getInMemoryConfig() ...{
-2    MemoryStorage ms = new MemoryStorage();
-3    EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-4    config.file().storage(ms);
-5    return config;
-6  }</pre>    </body></html>
+private static EmbeddedConfiguration getInMemoryConfig()  {
+    MemoryStorage ms = new MemoryStorage();
+    EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    config.file().storage(ms);
+    return config;
+  }</pre>    </body></html>

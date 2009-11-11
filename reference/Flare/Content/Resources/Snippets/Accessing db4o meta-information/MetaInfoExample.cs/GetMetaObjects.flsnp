@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.cs: GetMetaObjects
 private static void GetMetaObjects()
-    ...{
+     {
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         System.Console.WriteLine(&quot;Retrieve meta information for class: &quot;);
         IStoredClass sc = container.Ext().StoredClass(typeof(Car));
         System.Console.WriteLine(&quot;Stored class:  &quot;+ sc.ToString());
@@ -11,12 +11,12 @@ private static void GetMetaObjects()
         System.Console.WriteLine(&quot;Retrieve meta information for all classes in database: &quot;);
         IStoredClass[] sclasses = container.Ext().StoredClasses();
         foreach (IStoredClass sclass in sclasses)
-        ...{
+         {
           System.Console.WriteLine(sclass.GetName());  
         }
       } 
       finally 
-      ...{
+       {
         container.Close();
       }
     }</pre>    </body></html>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnumExample.java: deleteQualification
-private static void deleteQualification()...{
+private static void deleteQualification() {
     System.out.println(&quot;Explicit delete of Qualification enum&quot;);
     Configuration configuration = Db4o.newConfiguration();
     configuration.objectClass(Qualification.class).cascadeOnDelete(true);
     ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
-    try ...{
+    try  {
       ObjectSet  result = container.query(Qualification.class);
-          for(int x = 0; x &lt; result.size(); x++)...{
+          for(int x = 0; x &lt; result.size(); x++) {
             Qualification pq = (Qualification)result.get(x);
             container.delete(pq);
           }
-    } finally ...{
+    } finally  {
       container.close();
     }
     printQualification();

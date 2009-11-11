@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PropertiesExample.cs: TestLINQ
 private static void TestLinq()
-        ...{
+         {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
             configuration.Diagnostic().AddListener(new DiagnosticToTrace());
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 IEnumerable&lt;Car&gt; result = from Car c in db
                                             where c.Model.Equals(&quot;BMW&quot;) 
                                             select c;
@@ -14,7 +14,7 @@ private static void TestLinq()
                 ListResult(result);
             }
             finally
-            ...{
+             {
                 db.Close();
             }
         }</pre>    </body></html>

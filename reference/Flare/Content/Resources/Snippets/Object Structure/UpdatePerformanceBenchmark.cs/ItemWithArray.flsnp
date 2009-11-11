@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ItemWithArray
 public class ItemWithArray
-        ...{
+         {
 
             public int[] _id;
             public ItemWithArray _child;
 
             public ItemWithArray()
-            ...{
+             {
             }
 
             public ItemWithArray(int[] id, ItemWithArray child)
-            ...{
+             {
                 _id = id;
                 _child = child;
             }

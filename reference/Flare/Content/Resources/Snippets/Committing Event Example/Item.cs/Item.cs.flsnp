@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Item.cs
 /**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 namespace Db4odoc.CommitCallbacks
-...{
+ {
     public class Item
-    ...{
+     {
         private int _number;
         private string _word;
 
         public Item(int number, string word)
-        ...{
+         {
             _number = number;
             _word = word;
         }
 
         public string Word
-        ...{
+         {
             get
-            ...{
+             {
                 return _word;
             }
         }
 
         public int Number
-        ...{
+         {
             get
-            ...{
+             {
                 return _number;
             }
         }
 
         public override string ToString()
-        ...{
+         {
             return _number + &quot;/&quot; + _word;
         }
     }

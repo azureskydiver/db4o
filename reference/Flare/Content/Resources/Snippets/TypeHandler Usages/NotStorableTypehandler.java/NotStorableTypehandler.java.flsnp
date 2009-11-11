@@ -8,15 +8,15 @@ import com.db4o.typehandlers.*;
 
 public class NotStorableTypehandler extends FirstClassObjectHandler implements TypeHandler4, FirstClassHandler,
 VariableLengthTypeHandler
-...{
+ {
 
   private class Storable
-  ...{
+   {
     private int id;
     private String name;  
   }
   
-  public void write(WriteContext context, Object obj) ...{
+  public void write(WriteContext context, Object obj)  {
     NotStorable item = (NotStorable)obj;
     Storable storableItem = new Storable();
     storableItem.id = item.getId();
@@ -25,7 +25,7 @@ VariableLengthTypeHandler
     context.writeObject(storableItem);
     }
 
-    public Object read(ReadContext context) ...{
+    public Object read(ReadContext context)  {
       UnmarshallingContext _context = (UnmarshallingContext) context;
       NotStorable item = (NotStorable)_context.persistentObject();
       Storable storableItem = (Storable)context.readObject();

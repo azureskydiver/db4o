@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.cs: RunDifferentQueriesTest
 private void RunDifferentQueriesTest()
-        ...{
+         {
             Init();
 
             Clean();
@@ -35,7 +35,7 @@ private void RunDifferentQueriesTest()
             
             IEnumerator&lt;Item&gt; i = resultLINQ.GetEnumerator();
             if (i.MoveNext())
-            ...{
+             {
                 item = i.Current;
                 StopTimer(&quot;Select 1 object LINQ: &quot; + item._name);
             }
@@ -45,7 +45,7 @@ private void RunDifferentQueriesTest()
             System.Console.WriteLine(&quot;Native Query:&quot;);
             StartTimer();
             IList&lt;Item&gt; result = objectContainer.Query&lt;Item&gt;(delegate(Item it)
-            ...{
+             {
                 return it._name.Equals(&quot;level1/1&quot;);
             });
             item = result[0];
@@ -57,7 +57,7 @@ private void RunDifferentQueriesTest()
             System.Console.WriteLine(&quot;Native Query Unoptimized:&quot;);
             StartTimer();
             result = objectContainer.Query&lt;Item&gt;(delegate(Item it)
-            ...{
+             {
                 return it._name.Equals(&quot;level1/1&quot;);
             });
             item = result[0];

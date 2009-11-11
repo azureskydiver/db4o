@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: InitForClientServer
-1private void InitForClientServer()
-2        ...{
-3            _count = 1000;
-4            _depth = 90;
-5            _isClientServer = true;
-6            _host = &quot;localhost&quot;;
-7        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: InitForClientServer
+private void InitForClientServer()
+         {
+            _count = 1000;
+            _depth = 90;
+            _isClientServer = true;
+            _host = "localhost";
+        }</pre>
+    </body>
+</html>

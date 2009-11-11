@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: AllPilotsMatch
-1Private Shared Function AllPilotsMatch()Function AllPilotsMatch(ByVal p As Pilot) As Boolean
-2            ' each Pilot is included in the result
-3            Return True
-4        End Function</pre>    </body></html>
+Private Shared Function AllPilotsMatch()Function AllPilotsMatch(ByVal p As Pilot) As Boolean
+            ' each Pilot is included in the result
+            Return True
+        End Function</pre>    </body></html>

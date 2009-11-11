@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.java: getPilotsSortByNameAndPoints
-public static void getPilotsSortByNameAndPoints() ...{
+public static void getPilotsSortByNameAndPoints()  {
     ObjectContainer container = database();
-    try ...{
-      List result = container.query(new Predicate&lt;Pilot&gt;() ...{
-        public boolean match(Pilot pilot) ...{
+    try  {
+      List result = container.query(new Predicate&lt;Pilot&gt;()  {
+        public boolean match(Pilot pilot)  {
           return true;
         }
-      }, new QueryComparator&lt;Pilot&gt;() ...{
+      }, new QueryComparator&lt;Pilot&gt;()  {
         // sort by name then by points: descending
-        public int compare(Pilot p1, Pilot p2) ...{
+        public int compare(Pilot p1, Pilot p2)  {
           int result = p1.getName().compareTo(p2.getName());
-          if (result == 0) ...{
+          if (result == 0)  {
             return p1.getPoints() - p2.getPoints();
-          } else ...{
+          } else  {
             return -result;
           }
         }
       });
       listResult(result);
-    } finally ...{
+    } finally  {
       closeDatabase();
     }
   }</pre>    </body></html>

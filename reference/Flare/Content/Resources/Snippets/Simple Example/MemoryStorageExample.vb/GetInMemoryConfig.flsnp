@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: GetInMemoryConfig
-1Private Shared Function GetInMemoryConfig()Function GetInMemoryConfig() As IEmbeddedConfiguration
-2            Dim ms As New MemoryStorage()
-3            Dim config As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-4            config.File.Storage = ms
-5            Return config
-6        End Function</pre>    </body></html>
+Private Shared Function GetInMemoryConfig()Function GetInMemoryConfig() As IEmbeddedConfiguration
+            Dim ms As New MemoryStorage()
+            Dim config As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            config.File.Storage = ms
+            Return config
+        End Function</pre>    </body></html>

@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BigMathExample.java: configBigMathSupport
-1private static EmbeddedConfiguration configBigMathSupport() ...{
-2    EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-3    config.common().add(new BigMathSupport());
-4    return config;
-5  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BigMathExample.java: configBigMathSupport
+private static EmbeddedConfiguration configBigMathSupport()  {
+    EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    config.common().add(new BigMathSupport());
+    return config;
+  }</pre>
+    </body>
+</html>

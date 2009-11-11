@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PilotCategories.java
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.staticfields;
 
-public class PilotCategories ...{
+public class PilotCategories  {
   private String qualification = null;
 
   public final static PilotCategories WINNER = new PilotCategories(
@@ -18,19 +18,19 @@ public class PilotCategories ...{
   public final static PilotCategories DISQUALIFIED = new PilotCategories(
       &quot;DISQUALIFIED&quot;);
 
-  private PilotCategories(String qualification) ...{
+  private PilotCategories(String qualification)  {
     this.qualification = qualification;
   }
 
-  public PilotCategories() ...{
+  public PilotCategories()  {
 
   }
 
-  public void testChange(String qualification) ...{
+  public void testChange(String qualification)  {
     this.qualification = qualification;
   }
 
-  public String toString() ...{
+  public String toString()  {
     return qualification;
   }
 

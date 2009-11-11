@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IndexedExample.cs: PilotIndex
 private static void PilotIndex()
-        ...{
+         {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
             configuration.ObjectClass(typeof(Car)).ObjectField(&quot;_pilot&quot;).Indexed(true);
             configuration.ObjectClass(typeof(Pilot)).ObjectField(&quot;_points&quot;).Indexed(false);
       IObjectContainer db=Db4oFactory.OpenFile(configuration, Db4oFileName);
-      try ...{
+      try  {
           IQuery query = db.Query();
         query.Constrain(typeof(Car));
         query.Descend(&quot;_pilot&quot;).Descend(&quot;_points&quot;).Constrain(&quot;99&quot;);
@@ -18,7 +18,7 @@ private static void PilotIndex()
         Console.WriteLine(&quot;Execution time=&quot;+diff.TotalMilliseconds + &quot; ms&quot;);
         ListResult(result);
       }
-      finally ...{
+      finally  {
         db.Close();
       }
     }</pre>    </body></html>

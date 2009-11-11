@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsX6Match
-1Private Shared Function PilotsX6Match()Function PilotsX6Match(ByVal p As Pilot) As Boolean
-2            ' all Pilots with the name ending with 6 will
-3            ' be included
-4            Return p.Name.EndsWith(&quot;6&quot;)
-5        End Function</pre>    </body></html>
+Private Shared Function PilotsX6Match()Function PilotsX6Match(ByVal p As Pilot) As Boolean
+            ' all Pilots with the name ending with 6 will
+            ' be included
+            Return p.Name.EndsWith(&quot;6&quot;)
+        End Function</pre>    </body></html>

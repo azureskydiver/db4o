@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CascadeOnUpdate.java: test
-public void test() throws Exception ...{
+public void test() throws Exception  {
     Query q = newQuery(Atom.class);
     q.descend(&quot;name&quot;).constrain(&quot;parent&quot;);
     ObjectSet objectSet = q.execute();
     Atom atom = null;
-    while (objectSet.hasNext())...{
+    while (objectSet.hasNext()) {
       // update child objects
       atom = (Atom)objectSet.next();
       ((Atom)atom.child).name = &quot;updated&quot;;
@@ -22,7 +22,7 @@ public void test() throws Exception ...{
     q = newQuery(Atom.class);
     q.descend(&quot;name&quot;).constrain(&quot;parent&quot;);
     objectSet = q.execute();
-    while(objectSet.hasNext())...{
+    while(objectSet.hasNext()) {
       atom = (Atom) objectSet.next();
       Atom child = (Atom)atom.child;
       // check if the child objects were updated

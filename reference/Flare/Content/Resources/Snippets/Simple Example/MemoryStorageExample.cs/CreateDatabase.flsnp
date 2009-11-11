@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.cs: CreateDatabase
 private static void CreateDatabase(IEmbeddedConfiguration config)
-        ...{
+         {
             // the following line is only necessary for the database on disk
             File.Delete(Db4oUri);
 
@@ -9,10 +9,10 @@ private static void CreateDatabase(IEmbeddedConfiguration config)
             // configuration and the name of a MemoryBin for in-memory database
             IObjectContainer container = Db4oEmbedded.OpenFile(config, Db4oUri);
             try
-            ...{
+             {
                 Library lib = new Library();
                 for (int i = 0; i &lt; ObjectCount; i++)
-                ...{
+                 {
                     lib.AddBook(new Book(&quot;title&quot; + i, lib));
                 }
                 container.Store(lib);
@@ -21,7 +21,7 @@ private static void CreateDatabase(IEmbeddedConfiguration config)
                 System.Console.WriteLine(book);
             }
             finally
-            ...{
+             {
                 container.Close();
             }
             System.Console.WriteLine(String.Format(&quot;Time to create a database: {0} ticks&quot;,

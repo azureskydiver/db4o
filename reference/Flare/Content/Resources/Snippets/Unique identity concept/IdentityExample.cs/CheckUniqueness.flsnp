@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.cs: CheckUniqueness
 private static void CheckUniqueness()
-    ...{
+     {
       SetObjects();
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         IObjectSet cars = db.Get(typeof(Car));
         Car car = (Car)cars[0];
         String pilotName = car.Pilot.Name;
@@ -13,7 +13,7 @@ private static void CheckUniqueness()
         System.Console.WriteLine(&quot;Retrieved objects are identical: &quot; + (pilot == car.Pilot));
       } 
       finally 
-      ...{
+       {
         db.Close();
       }
     }</pre>    </body></html>

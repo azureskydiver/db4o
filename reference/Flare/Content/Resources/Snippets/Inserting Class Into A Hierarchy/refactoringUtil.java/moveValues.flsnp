@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">refactoringUtil.java: moveValues
-public static void moveValues()...{
+public static void moveValues() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       ObjectSet result = container.get(new C());
-      while (result.hasNext())...{
+      while (result.hasNext()) {
         C c = (C)result.next();
         E e = new E();
         e.name = c.name;
@@ -12,7 +12,7 @@ public static void moveValues()...{
         container.set(e);
       }
       
-    } finally ...{
+    } finally  {
       container.close();
       System.out.println(&quot;Done&quot;);
     }

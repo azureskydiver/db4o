@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.java: bind
 /**//*Bind the class to the specified object container, create the activator*/
-  public void bind(Activator activator) ...{
-      if (_activator == activator) ...{
+  public void bind(Activator activator)  {
+      if (_activator == activator)  {
         return;
       }
-      if (activator != null &amp;&amp; _activator != null) ...{
+      if (activator != null &amp;&amp; _activator != null)  {
             throw new IllegalStateException();
         }
     _activator = activator;

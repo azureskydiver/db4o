@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: AccessLocalServer
 private static void AccessLocalServer()
-    ...{
+     {
             IObjectServer server = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0);
       try
-      ...{
+       {
         IObjectContainer client = server.OpenClient();
         // Do something with this client, or open more clients
         client.Close();
       }
       finally
-      ...{
+       {
         server.Close();
       }
     }</pre>    </body></html>

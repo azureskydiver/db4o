@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DataObject.java
-/**//* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.listdeleting;
 
-public class DataObject ...{
+public class DataObject  {
         String _name;
         String _data;
 
         public DataObject() 
-        ...{ }
+         { }
 
         public String getName()
-        ...{
+         {
             return _name; 
         }
         
         public void setName(String name)
-        ...{
+         {
             _name = name; 
         }
 
         public String getData()
-        ...{
+         {
             return _data;
         }
         
-        public void setData(String data)...{
+        public void setData(String data) {
             _data = data;
         }
 
         public String toString()
-        ...{
+         {
             return String.format(&quot;%s/%s}&quot;, _name, _data);
         }
     }</pre>    </body></html>

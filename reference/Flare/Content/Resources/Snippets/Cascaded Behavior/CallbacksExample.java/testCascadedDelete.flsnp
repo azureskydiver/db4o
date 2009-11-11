@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.java: testCascadedDelete
-private static void testCascadedDelete() ...{
+private static void testCascadedDelete()  {
     fillDB();
     final ObjectContainer container = Db4oEmbedded.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       // check the contents of the database
       List&lt;Object&gt; result = container.queryByExample(null);
       listResult(result);
@@ -11,24 +11,24 @@ private static void testCascadedDelete() ...{
           .forObjectContainer(container);
       // register an event handler, which will delete the pilot when his
       // car is deleted
-      registry.deleted().addListener(new EventListener4() ...{
-        public void onEvent(Event4 e, EventArgs args) ...{
+      registry.deleted().addListener(new EventListener4()  {
+        public void onEvent(Event4 e, EventArgs args)  {
           ObjectEventArgs queryArgs = ((ObjectEventArgs) args);
           Object obj = queryArgs.object();
-          if (obj instanceof Car) ...{
+          if (obj instanceof Car)  {
             container.delete(((Car) obj).getPilot());
           }
         }
       });
       // delete all the cars
       List&lt;Car&gt; cars = container.query(Car.class);
-      for (Car c: cars) ...{
+      for (Car c: cars)  {
         container.delete(c);
       }
       // check if the database is empty
       result = container.queryByExample(null);
       listResult(result);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">C.vb
-1' Copyright (C) 2007  db4objects Inc.  http://www.db4o.com 
-2
-3Namespace Db4objectsNamespace Db4objects.Db4odoc.Refactoring.Initial
-4    Class CClass C
-5        Inherits B
-6    End Class
-7End Namespace</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">C.vb
+' Copyright (C) 2007  Versant Inc.  http://www.db4o.com 
+
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Refactoring.Initial
+    Class CClass C
+        Inherits B
+    End Class
+End Namespace</pre>
+    </body>
+</html>

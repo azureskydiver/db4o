@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingAdapter.cs
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+/**//* Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 using System.IO;
 
 namespace Db4objects.Db4odoc.IOs
-...{
-  public class LoggingAdapter : Db4objects.Db4o.IO.IoAdapter ...{
+ {
+  public class LoggingAdapter : Db4objects.Db4o.IO.IoAdapter  {
     private Sharpen.IO.RandomAccessFile _delegate;
     
     public LoggingAdapter()
-    ...{
+     {
     }
 
     protected internal LoggingAdapter(string path, bool lockFile, long initialLength, bool readOnly)
-    ...{
+     {
             string mode = readOnly ? &quot;r&quot; : &quot;rw&quot;;;
             _delegate = new Sharpen.IO.RandomAccessFile(path, mode);
       if (initialLength &gt; 0)
-      ...{
+       {
         _delegate.Seek(initialLength - 1);
-        _delegate.Write(new byte[] ...{ 0 });
+        _delegate.Write(new byte[]  { 0 });
       }
     }
 
     public void SetOut(TextWriter outs)
-    ...{
+     {
       System.Console.SetOut(outs);
     }
 
     public override void Close()
-    ...{
+     {
       System.Console.WriteLine(&quot;Closing file&quot;);
       _delegate.Close();
     }
 
     public override void Delete(string path)
-    ...{
+     {
       System.Console.WriteLine(&quot;Deleting file &quot; + path);
       new Sharpen.IO.File(path).Delete();
     }
 
     public override bool Exists(string path)
-    ...{
+     {
             Sharpen.IO.File existingFile = new Sharpen.IO.File(path);
       return existingFile.Exists() &amp;&amp; existingFile.Length() &gt; 0;
     }
 
     public override long GetLength()
-    ...{
+     {
       System.Console.WriteLine(&quot;File length:&quot; + _delegate.Length());
       return _delegate.Length();
     }
 
     public override Db4objects.Db4o .IO.IoAdapter  Open(string path, bool lockFile, long initialLength, bool readOnly)
-    ...{
+     {
       System.Console.WriteLine(&quot;Opening file &quot; + path);
             return new LoggingAdapter(path, lockFile, initialLength, readOnly);
     }
 
     public override int Read(byte[] bytes, int length)
-    ...{
+     {
       System.Console.WriteLine(&quot;Reading &quot; + length + &quot; bytes&quot;);
       return _delegate.Read(bytes, 0, length);
     }
 
     public override void Seek(long pos)
-    ...{
+     {
       System.Console.WriteLine(&quot;Setting pointer position to  &quot; + pos);
       _delegate.Seek(pos);
     }
 
     public override void Sync()
-    ...{
+     {
       System.Console.WriteLine(&quot;Synchronizing&quot;);
       _delegate.GetFD().Sync();
     }
 
     public override void Write(byte[] buffer, int length)
-    ...{
+     {
       System.Console.WriteLine(&quot;Writing &quot; + length + &quot; bytes&quot;);
       _delegate.Write(buffer, 0, length);
     }

@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.vb: GetNextId
-1Private Shared Function GetNextId()Function GetNextId(ByVal db As IObjectContainer) As Integer
-2            ' this function retrieves the next available ID from 
-3            ' the IncrementedId object
-4            Dim r As IncrementedId = IncrementedId.GetIdObject(db)
-5            Dim nRoll As Integer
-6            nRoll = r.GetNextID(db)
-7            Return nRoll
-8        End Function</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">AutoIncExample.vb: GetNextId
+Private Shared Function GetNextId()Function GetNextId(ByVal db As IObjectContainer) As Integer
+            ' this function retrieves the next available ID from 
+            ' the IncrementedId object
+            Dim r As IncrementedId = IncrementedId.GetIdObject(db)
+            Dim nRoll As Integer
+            nRoll = r.GetNextID(db)
+            Return nRoll
+        End Function</pre>
+    </body>
+</html>

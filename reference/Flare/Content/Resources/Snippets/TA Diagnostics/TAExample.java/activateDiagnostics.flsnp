@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.java: activateDiagnostics
-private static void activateDiagnostics(Configuration configuration) ...{
+private static void activateDiagnostics(Configuration configuration)  {
     // Add diagnostic listener that will show all the classes that are not
     // TA aware.
-    configuration.diagnostic().addListener(new DiagnosticListener() ...{
-      public void onDiagnostic(Diagnostic diagnostic) ...{
-        if (!(diagnostic instanceof NotTransparentActivationEnabled)) ...{
+    configuration.diagnostic().addListener(new DiagnosticListener()  {
+      public void onDiagnostic(Diagnostic diagnostic)  {
+        if (!(diagnostic instanceof NotTransparentActivationEnabled))  {
           return;
         }
         System.out.println(diagnostic.toString());

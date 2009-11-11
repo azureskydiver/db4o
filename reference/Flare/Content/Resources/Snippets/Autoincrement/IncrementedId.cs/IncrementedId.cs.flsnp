@@ -8,20 +8,20 @@ using System;
 using Db4objects.Db4o;
 
 namespace Db4odoc.Autoincrement
-...{
+ {
     class IncrementedId
-    ...{
+     {
         private int _no;
         private static IncrementedId _ref;
 
         private IncrementedId()
-        ...{
+         {
             _no = 0;
         }
         // end IncrementedId
 
         public int GetNextID(IObjectContainer db)
-        ...{
+         {
             _no++;
             db.Store(this);
             return _no;
@@ -29,10 +29,10 @@ namespace Db4odoc.Autoincrement
         // end increment
 
         public static IncrementedId GetIdObject(IObjectContainer db)
-        ...{
+         {
             // if _ref is not assigned yet:
             if (_ref == null)
-            ...{
+             {
                 // check if there is a stored instance from the previous 
                 // session in the database
                 IObjectSet os = db.QueryByExample(typeof(IncrementedId));
@@ -41,7 +41,7 @@ namespace Db4odoc.Autoincrement
             }
 
             if (_ref == null)
-            ...{
+             {
                 // create new instance and store it
                 Console.WriteLine(&quot;Id object is created&quot;);
                 _ref = new IncrementedId();

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EqualityExample.java: retrieveEqual
-private static void retrieveEqual() ...{
+private static void retrieveEqual()  {
     ObjectContainer container = database();
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         ObjectSet result = container.get(new Pilot(&quot;Kimi Raikkonnen&quot;, 100));
-        if (result.size() &gt; 0)...{
+        if (result.size() &gt; 0) {
           System.out.println(&quot;Found equal object: &quot; + result.next().toString());
-        } else ...{
+        } else  {
           System.out.println(&quot;No equal object exist in the database&quot;);
         }
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

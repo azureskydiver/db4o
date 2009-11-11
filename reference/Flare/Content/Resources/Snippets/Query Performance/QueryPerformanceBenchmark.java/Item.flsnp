@@ -2,8 +2,8 @@
 1//
 2    System.out.println(&quot;Native Query:&quot;);
 3    startTimer();
-4    List&lt;Item&gt; result = objectContainer.query(new Predicate&lt;Item&gt;() ...{
-5      public boolean match(Item item) ...{
+4    List&lt;Item&gt; result = objectContainer.query(new Predicate&lt;Item&gt;()  {
+5      public boolean match(Item item)  {
 6        return item._name.equals(&quot;level1/1&quot;);
 7      }
 8    });
@@ -15,8 +15,8 @@
 4    open(configureUnoptimizedNQ());
 5    System.out.println(&quot;Native Query Unoptimized:&quot;);
 6    startTimer();
-7    result = objectContainer.query(new Predicate&lt;Item&gt;() ...{
-8      public boolean match(Item item) ...{
+7    result = objectContainer.query(new Predicate&lt;Item&gt;()  {
+8      public boolean match(Item item)  {
 9        return item._name.equals(&quot;level1/1&quot;);
 0      }
 1    });
@@ -29,7 +29,7 @@
 8  // end runDifferentQueriesTest
 9
 0  
-1  private void runRamDiskTest() ...{
+1  private void runRamDiskTest()  {
 2
 3    initForHardDriveTest();
 4    clean();
@@ -66,7 +66,7 @@
 5
 6  // end runRamDiskTest
 7
-8  private void runClientServerTest() ...{
+8  private void runClientServerTest()  {
 9
 0    initForClientServer();
 1    clean();
@@ -103,7 +103,7 @@
 2
 3  // end runClientServerTest
 4
-5  private void runInheritanceTest() ...{
+5  private void runInheritanceTest()  {
 6    init();
 7    clean();
 8    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth);
@@ -138,7 +138,7 @@
 7
 8  // end runInheritanceTest
 9
-0  private void runDifferentObjectsTest() ...{
+0  private void runDifferentObjectsTest()  {
 1
 2    init();
 3    System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
@@ -236,7 +236,7 @@
 5
 6  // end runDifferentObjectsTest
 7
-8  private void runIndexTest() ...{
+8  private void runIndexTest()  {
 9
 0    init();
 1    System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
@@ -275,7 +275,7 @@
 4
 5  // end runIndexTest
 6
-7  private void init() ...{
+7  private void init()  {
 8    _filePath = &quot;performance.db4o&quot;;
 9    // amount of objects
 0    _count = 10000;
@@ -287,7 +287,7 @@
 6
 7  // end init
 8
-9  private void initLargeDb() ...{
+9  private void initLargeDb()  {
 0    _filePath = &quot;performance.db4o&quot;;
 1    _count = 100000;
 2    _depth = 3;
@@ -298,7 +298,7 @@
 7  // end initLargeDb
 8
 9  
-0  private void initForClientServer() ...{
+0  private void initForClientServer()  {
 1    _filePath = &quot;performance.db4o&quot;;
 2    _isClientServer = true;
 3    _host = &quot;localhost&quot;;
@@ -306,7 +306,7 @@
 5
 6  // end initForClientServer
 7
-8  private void initForRamDriveTest() ...{
+8  private void initForRamDriveTest()  {
 9    _count = 30000;
 0    _depth = 3;
 1    _filePath = &quot;r:\\performance.db4o&quot;;
@@ -316,7 +316,7 @@
 5
 6  // end initForRamDriveTest
 7
-8  private void initForHardDriveTest() ...{
+8  private void initForHardDriveTest()  {
 9    _count = 30000;
 0    _depth = 3;
 1    _filePath = &quot;performance.db4o&quot;;
@@ -327,27 +327,27 @@
 6  // end initForHardDriveTest
 7
 8
-9  private void clean() ...{
+9  private void clean()  {
 0    new File(_filePath).delete();
 1  }
 2
 3  // end clean
 4
-5  private Configuration configure() ...{
+5  private Configuration configure()  {
 6    Configuration config = Db4o.newConfiguration();
 7    return config;
 8  }
 9
 0  // end configure
 1
-2  private Configuration configureUnoptimizedNQ() ...{
+2  private Configuration configureUnoptimizedNQ()  {
 3    Configuration config = Db4o.newConfiguration();
 4    config.optimizeNativeQueries(false);
 5    return config;
 6  }
 7  // end configureUnoptimizedNQ
 8
-9  private Configuration configureIndex() ...{
+9  private Configuration configureIndex()  {
 0    Configuration config = Db4o.newConfiguration();
 1    config.objectClass(Item.class).objectField(&quot;_name&quot;).indexed(true);
 2    return config;
@@ -355,7 +355,7 @@
 4
 5  // end configureIndex
 6
-7  private Configuration configureClientServer() ...{
+7  private Configuration configureClientServer()  {
 8    Configuration config = Db4o.newConfiguration();
 9    config.queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
 0    config.clientServer().singleThreadedClient(true);
@@ -364,7 +364,7 @@
 3
 4  // end configureClientServer
 5
-6  private Configuration configureRamDrive() ...{
+6  private Configuration configureRamDrive()  {
 7    Configuration config = Db4o.newConfiguration();
 8    config.flushFileBuffers(true);
 9    return config;
@@ -372,11 +372,11 @@
 1
 2  // end configureRamDrive
 3
-4  private void store() ...{
+4  private void store()  {
 5    startTimer();
-6    for (int i = 0; i &lt; _count; i++) ...{
+6    for (int i = 0; i &lt; _count; i++)  {
 7      Item item = new Item(&quot;level&quot; + i, null);
-8      for (int j = 1; j &lt; _depth; j++) ...{
+8      for (int j = 1; j &lt; _depth; j++)  {
 9        item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
 0      }
 1      objectContainer.store(item);
@@ -387,11 +387,11 @@
 6
 7  // end store
 8
-9  private void storeInherited() ...{
+9  private void storeInherited()  {
 0    startTimer();
-1    for (int i = 0; i &lt; _count; i++) ...{
+1    for (int i = 0; i &lt; _count; i++)  {
 2      ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
-3      for (int j = 1; j &lt; _depth; j++) ...{
+3      for (int j = 1; j &lt; _depth; j++)  {
 4        item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
 5      }
 6      objectContainer.store(item);
@@ -402,12 +402,12 @@
 1
 2  // end storeInherited
 3
-4  private void storeWithStringBuffer() ...{
+4  private void storeWithStringBuffer()  {
 5    startTimer();
-6    for (int i = 0; i &lt; _count; i++) ...{
+6    for (int i = 0; i &lt; _count; i++)  {
 7      ItemWithStringBuffer item = new ItemWithStringBuffer(
 8          new StringBuffer(&quot;level&quot; + i), null);
-9      for (int j = 1; j &lt; _depth; j++) ...{
+9      for (int j = 1; j &lt; _depth; j++)  {
 0        item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i
 1            + &quot;/&quot; + j), item);
 2      }
@@ -419,11 +419,11 @@
 8
 9  // end storeWithStringBuffer
 0
-1  private void storeSimplest() ...{
+1  private void storeSimplest()  {
 2    startTimer();
-3    for (int i = 0; i &lt; _count; i++) ...{
+3    for (int i = 0; i &lt; _count; i++)  {
 4      SimplestItem item = new SimplestItem(i, null);
-5      for (int j = 1; j &lt; _depth; j++) ...{
+5      for (int j = 1; j &lt; _depth; j++)  {
 6        item = new SimplestItem(i, item);
 7      }
 8      objectContainer.store(item);
@@ -434,14 +434,14 @@
 3
 4  // end storeSimplest
 5
-6  private void storeWithArray() ...{
+6  private void storeWithArray()  {
 7    startTimer();
-8    int[] array = new int[] ...{ 1, 2, 3, 4 };
-9    for (int i = 0; i &lt; _count; i++) ...{
-0      int[] id = new int[] ...{ 1, 2, 3, 4 };
+8    int[] array = new int[]  { 1, 2, 3, 4 };
+9    for (int i = 0; i &lt; _count; i++)  {
+0      int[] id = new int[]  { 1, 2, 3, 4 };
 1      ItemWithArray item = new ItemWithArray(id, null);
-2      for (int j = 1; j &lt; _depth; j++) ...{
-3        int[] id1 = new int[] ...{ 1, 2, 3, 4 };
+2      for (int j = 1; j &lt; _depth; j++)  {
+3        int[] id1 = new int[]  { 1, 2, 3, 4 };
 4        item = new ItemWithArray(id1, item);
 5      }
 6      objectContainer.store(item);
@@ -452,18 +452,18 @@
 1
 2  // end storeWithArray
 3
-4  private void storeWithArrayList() ...{
+4  private void storeWithArrayList()  {
 5    startTimer();
 6    ArrayList idList = new ArrayList();
 7    idList.add(1);
 8    idList.add(2);
 9    idList.add(3);
 0    idList.add(4);
-1    for (int i = 0; i &lt; _count; i++) ...{
+1    for (int i = 0; i &lt; _count; i++)  {
 2      ArrayList ids = new ArrayList();
 3      ids.addAll(idList);
 4      ItemWithArrayList item = new ItemWithArrayList(ids, null);
-5      for (int j = 1; j &lt; _depth; j++) ...{
+5      for (int j = 1; j &lt; _depth; j++)  {
 6        ArrayList ids1 = new ArrayList();
 7        ids1.addAll(idList);
 8        item = new ItemWithArrayList(ids1, item);
@@ -476,14 +476,14 @@
 5
 6  // end storeWithArrayList
 7
-8  private int totalObjects() ...{
+8  private int totalObjects()  {
 9    return _count * _depth;
 0  }
 1
 2  // end totalObjects
 3
-4  private void open(Configuration configure) ...{
-5    if (_isClientServer) ...{
+4  private void open(Configuration configure)  {
+5    if (_isClientServer)  {
 6      int port = TCP ? PORT : 0;
 7      String user = &quot;db4o&quot;;
 8      String password = user;
@@ -492,29 +492,29 @@
 1      objectContainer = TCP ? Db4o
 2          .openClient(configure, _host, port, user, password) : objectServer
 3          .openClient(configure);
-4    } else ...{
+4    } else  {
 5      objectContainer = Db4o.openFile(configure, _filePath);
 6    }
 7  }
 8
 9  // end open
 0
-1  private void close() ...{
+1  private void close()  {
 2    objectContainer.close();
-3    if (_isClientServer) ...{
+3    if (_isClientServer)  {
 4      objectServer.close();
 5    }
 6  }
 7
 8  // end close
 9
-0  private void startTimer() ...{
+0  private void startTimer()  {
 1    startTime = System.currentTimeMillis();
 2  }
 3
 4  // end startTimer
 5
-6  private void stopTimer(String message) ...{
+6  private void stopTimer(String message)  {
 7    long stop = System.currentTimeMillis();
 8    long duration = stop - startTime;
 9    System.out.println(message + &quot;: &quot; + duration + &quot;ms&quot;);
@@ -522,16 +522,16 @@
 1
 2  // end stopTimer
 3
-4  public static class Item ...{
+4  public static class Item  {
 5
 6    public String _name;
 7    public Item _child;
 8
-9    public Item() ...{
+9    public Item()  {
 0
 1    }
 2
-3    public Item(String name, Item child) ...{
+3    public Item(String name, Item child)  {
 4      _name = name;
 5      _child = child;
 6    }

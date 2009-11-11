@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: CommittedEventHandler
 public static void CommittedEventHandler(object sender, CommitEventArgs args)
-                ...{
+                 {
                     Transaction trans = (Transaction)args.Transaction();
                     // get all the updated objects
                     IObjectInfoCollection updated = args.Updated;
 
                     foreach (IObjectInfo info in updated)
-                    ...{
+                     {
                         Object obj = info.GetObject();
                         // refresh object on the client
                         trans.ObjectContainer().Ext().Refresh(obj, 2);

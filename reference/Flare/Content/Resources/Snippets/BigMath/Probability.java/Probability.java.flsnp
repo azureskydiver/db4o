@@ -4,15 +4,15 @@ package com.db4odoc.BigMath;
 
 import java.math.*;
 
-public class Probability ...{
+public class Probability  {
   // Using BigDecimal to represent very small probabilities
   BigDecimal value;
   
-  public Probability(String sValue)...{
+  public Probability(String sValue) {
     this.value = new BigDecimal(sValue);
   }
   
-  public String toString()...{
+  public String toString() {
     return value.toString();
   }
 }</pre>    </body></html>

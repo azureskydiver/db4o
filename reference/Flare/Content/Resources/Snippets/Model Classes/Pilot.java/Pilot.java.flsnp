@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.java
-/**//* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
+/**//* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 package enhancement.model;
 
-public class Pilot ...{
+public class Pilot  {
   String _name;
   Id _id;
   
-  public Pilot(String name, Id id)...{
+  public Pilot(String name, Id id) {
     _name = name;
     _id = id;
   }
   
-  public String get_name() ...{
+  public String get_name()  {
     return _name;
   }
-  public void set_name(String _name) ...{
+  public void set_name(String _name)  {
     this._name = _name;
   }
-  public Id get_id() ...{
+  public Id get_id()  {
     return _id;
   }
-  public void set_id(Id _id) ...{
+  public void set_id(Id _id)  {
     this._id = _id;
   }
   
-  public String toString()...{
+  public String toString() {
     return _name + &quot;: &quot; + _id;
   }
 }</pre>    </body></html>

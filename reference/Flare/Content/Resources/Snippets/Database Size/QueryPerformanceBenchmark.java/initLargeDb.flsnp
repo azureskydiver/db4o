@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: initLargeDb
-1private void initLargeDb() ...{
-2    _filePath = &quot;performance.db4o&quot;;
-3    _count = 100000;
-4    _depth = 3;
-5    _isClientServer = false;
-6
-7  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: initLargeDb
+private void initLargeDb()  {
+    _filePath = "performance.db4o";
+    _count = 100000;
+    _depth = 3;
+    _isClientServer = false;
+  }</pre>
+    </body>
+</html>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: ItemDerived
-1public class ItemDerived : Item
-2    ...{
-3
-4        public ItemDerived(String name, ItemDerived child)
-5            : base(name, child)
-6        ...{
-7
-8        }
-9    }</pre>    </body></html>
+public class ItemDerived : Item
+     {
+
+        public ItemDerived(String name, ItemDerived child)
+            : base(name, child)
+         {
+
+        }
+    }</pre>    </body></html>

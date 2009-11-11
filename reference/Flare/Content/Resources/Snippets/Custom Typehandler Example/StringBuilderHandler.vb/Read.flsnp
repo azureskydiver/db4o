@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Read
-1Public Function Read()Function Read(ByVal context As IReadContext) As Object Implements ITypeHandler4.Read
-2            Dim buffer As IReadBuffer = context
-3            Dim str As String = &quot;&quot;
-4            Dim length As Integer = buffer.ReadInt()
-5            If length &gt; 0 Then
-6                str = ReadBuffer(buffer, length)
-7            End If
-8            Return New StringBuilder(str)
-9        End Function</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Read
+Public Function Read()Function Read(ByVal context As IReadContext) As Object Implements ITypeHandler4.Read
+            Dim buffer As IReadBuffer = context
+            Dim str As String = ""
+            Dim length As Integer = buffer.ReadInt()
+            If length &gt; 0 Then
+                str = ReadBuffer(buffer, length)
+            End If
+            Return New StringBuilder(str)
+        End Function</pre>
+    </body>
+</html>

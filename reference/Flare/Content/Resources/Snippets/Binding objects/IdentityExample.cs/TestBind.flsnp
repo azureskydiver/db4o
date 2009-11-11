@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.cs: TestBind
 private static void TestBind()
-    ...{
+     {
       SetObjects();
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         IQuery q = db.Query();
         q.Constrain(typeof(Car));
         q.Descend(&quot;_model&quot;).Constrain(&quot;Ferrari&quot;);
@@ -19,7 +19,7 @@ private static void TestBind()
         ListResult(result);
       } 
       finally 
-      ...{
+       {
         db.Close();
       }
     }</pre>    </body></html>

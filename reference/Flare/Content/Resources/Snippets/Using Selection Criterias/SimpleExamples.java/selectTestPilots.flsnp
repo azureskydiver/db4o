@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.java: selectTestPilots
-private static void selectTestPilots() ...{
+private static void selectTestPilots()  {
     ObjectContainer container = database();
-    if (container != null) ...{
-      try ...{
-        List&lt;Pilot&gt; result = container.query(new Predicate&lt;Pilot&gt;() ...{
-          public boolean match(Pilot pilot) ...{
+    if (container != null)  {
+      try  {
+        List&lt;Pilot&gt; result = container.query(new Predicate&lt;Pilot&gt;()  {
+          public boolean match(Pilot pilot)  {
             // all Pilots containing &quot;Test&quot; in the name
             // are included in the result
             return pilot.getName().indexOf(&quot;Test&quot;) &gt;= 0;
           }
         });
         listResult(result);
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

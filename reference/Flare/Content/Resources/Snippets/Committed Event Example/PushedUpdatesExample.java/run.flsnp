@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: run
-public void run() throws IOException, DatabaseFileLockedException ...{
+public void run() throws IOException, DatabaseFileLockedException  {
     new File(DB4O_FILE_NAME).delete();
     ObjectServer server = Db4oClientServer.openServer(Db4oClientServer
         .newServerConfiguration(), DB4O_FILE_NAME, PORT);
-    try ...{
+    try  {
       server.grantAccess(USER, PASSWORD);
 
       ObjectContainer client1 = openClient();
       ObjectContainer client2 = openClient();
 
-      if (client1 != null &amp;&amp; client2 != null) ...{
-        try ...{
+      if (client1 != null &amp;&amp; client2 != null)  {
+        try  {
           // wait for the operations to finish
           waitForCompletion();
 
@@ -40,16 +40,16 @@ public void run() throws IOException, DatabaseFileLockedException ...{
           System.out.println(client2Car);
 
           waitForCompletion();
-        } catch (Exception ex) ...{
+        } catch (Exception ex)  {
           ex.printStackTrace();
-        } finally ...{
+        } finally  {
           closeClient(client1);
           closeClient(client2);
         }
       }
-    } catch (Exception ex) ...{
+    } catch (Exception ex)  {
       ex.printStackTrace();
-    } finally ...{
+    } finally  {
       server.close();
     }
   }</pre>    </body></html>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.cs: UpdateObject
 private static void UpdateObject()
-        ...{
+         {
             Stopwatch sw = new Stopwatch();
 
             IObjectContainer db = Db4oFactory.OpenFile(DbFile);
             try
-            ...{
+             {
                 // we can set update depth to 0 
                 // as we update only the current object
                 db.Ext().Configure().UpdateDepth(0);
                 IList&lt;ListObject&gt; result = db.Query&lt;ListObject&gt;();
                 if (result.Count == 2)
-                ...{
+                 {
                     ListObject lo1 = result[0];
                     DataObject dataobject = lo1.Data[0];
                     dataobject.Name = &quot;Updated&quot;;
@@ -25,7 +25,7 @@ private static void UpdateObject()
                 }
             }
             finally
-            ...{
+             {
                 db.Close();
             }
             Console.WriteLine(&quot;Storing took {0}&quot;, sw.Elapsed.ToString());

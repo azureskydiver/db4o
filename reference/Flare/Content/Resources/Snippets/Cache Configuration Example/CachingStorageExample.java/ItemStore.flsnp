@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.java: ItemStore
-private static class ItemStore...{
+private static class ItemStore {
     ArrayList&lt;Item&gt; items;
     
-    public ItemStore()...{
+    public ItemStore() {
       this.items = new ArrayList&lt;Item&gt;();
     }
     
-    public void addItem(Item item)...{
+    public void addItem(Item item) {
       this.items.add(item);
     }
   }</pre>    </body></html>

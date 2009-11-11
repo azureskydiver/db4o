@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.java: deleteTest
-private static void deleteTest() ...{
+private static void deleteTest()  {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       // set cascadeOnDelete in order to delete member objects
       container.ext().configure().objectClass(ListObject.class).cascadeOnDelete(
           true);
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
-      if (result.size() &gt; 0) ...{
+      if (result.size() &gt; 0)  {
         // retrieve a ListObject
         ListObject lo1 = result.get(0);
         // delete the ListObject with all the field objects
         container.delete(lo1);
       }
-    } finally ...{
+    } finally  {
       container.close();
     }
     // check ListObjects and DataObjects in the database
     container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       List&lt;ListObject&gt; listObjects = container
           .&lt;ListObject&gt; query(ListObject.class);
       System.out.println(&quot;ListObjects in the database:  &quot;
@@ -26,7 +26,7 @@ private static void deleteTest() ...{
           .&lt;DataObject&gt; query(DataObject.class);
       System.out.println(&quot;DataObjects in the database: &quot;
           + dataObjects.size());
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

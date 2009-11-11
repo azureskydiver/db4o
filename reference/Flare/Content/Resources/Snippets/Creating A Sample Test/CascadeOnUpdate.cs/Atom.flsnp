@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CascadeOnUpdate.cs: Atom
 namespace Db4oUnit.Extensions.Tests
-...{
+ {
     public class CascadeOnUpdate : AbstractDb4oTestCase
-    ...{
+     {
         public class Atom
-        ...{
+         {
             public Atom child;
 
             public string name;
 
             public Atom()
-            ...{
+             {
             }
 
             public Atom(Atom child)
-            ...{
+             {
                 this.child = child;
             }
 
             public Atom(string name)
-            ...{
+             {
                 this.name = name;
             }
 
             public Atom(Atom child, string name)
                 : this(child)
-            ...{
+             {
                 this.name = name;
             }
         }</pre>    </body></html>

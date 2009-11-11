@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.cs: TestCascadedDelete
 private static void TestCascadedDelete()
-        ...{
+         {
         FillContainer();
             IObjectContainer container = OpenContainer();
-        try ...{
+        try  {
           // check the contents of the database
                 IList result = container.QueryByExample(null);
           ListResult(result);
@@ -14,13 +14,13 @@ private static void TestCascadedDelete()
           // delete all the cars
           IList&lt;Car&gt; cars = container.Query&lt;Car&gt;();
             foreach (var car in cars)
-            ...{
+             {
                   container.Delete(car);
               }
           // check if the database is empty
           result = container.QueryByExample(null);
           ListResult(result);
-        } finally ...{
+        } finally  {
                 CloseContainer();
         }
       }</pre>    </body></html>

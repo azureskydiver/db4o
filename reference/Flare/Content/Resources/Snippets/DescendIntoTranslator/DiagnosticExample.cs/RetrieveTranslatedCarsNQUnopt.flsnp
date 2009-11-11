@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.cs: RetrieveTranslatedCarsNQUnopt
 public static void RetrieveTranslatedCarsNQUnopt()
-        ...{
+         {
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
             configuration.Common.OptimizeNativeQueries = false;
             configuration.Common.Diagnostic.AddListener(new DiagnosticToConsole());
@@ -8,12 +8,12 @@ public static void RetrieveTranslatedCarsNQUnopt()
             configuration.Common.ObjectClass(typeof(Car)).CallConstructor(true);
             IObjectContainer db = Db4oEmbedded.OpenFile(configuration, Db4oFileName);
             try
-            ...{
+             {
                 IList result = db.Query(new NewCarModel());
                 ListResult(result);
             }
             finally
-            ...{
+             {
                 db.Close();
             }
         }</pre>    </body></html>

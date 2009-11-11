@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.java: listRefreshedResult
-1private static&lt;T&gt; void listRefreshedResult(ObjectContainer container,
-2      List&lt;T&gt; result, int depth) ...{
-3    System.out.println(result.size());
-4    for (T t : result) ...{
-5      container.ext().refresh(t, depth);
-6      System.out.println(t);
-7    }
-8  }</pre>    </body></html>
+private static&lt;T&gt; void listRefreshedResult(ObjectContainer container,
+      List&lt;T&gt; result, int depth)  {
+    System.out.println(result.size());
+    for (T t : result)  {
+      container.ext().refresh(t, depth);
+      System.out.println(t);
+    }
+  }</pre>    </body></html>

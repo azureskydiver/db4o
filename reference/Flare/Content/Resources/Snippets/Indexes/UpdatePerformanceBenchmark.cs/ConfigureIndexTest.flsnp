@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureIndexTest
-1private IConfiguration ConfigureIndexTest()
-2        ...{
-3            IConfiguration config = Db4oFactory.NewConfiguration();
-4            config.Io(new MemoryIoAdapter());
-5            config.ObjectClass(typeof(Item)).ObjectField(&quot;_name&quot;).Indexed(true);
-6            return config;
-7        }</pre>    </body></html>
+private IConfiguration ConfigureIndexTest()
+         {
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            config.Io(new MemoryIoAdapter());
+            config.ObjectClass(typeof(Item)).ObjectField(&quot;_name&quot;).Indexed(true);
+            return config;
+        }</pre>    </body></html>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: database
-public static SQLiteDatabase database()...{
+public static SQLiteDatabase database() {
     long startTime = 0;
-    try ...{
+    try  {
             _db = _context.openDatabase(DATABASE_NAME, null);
-        } catch (FileNotFoundException e) ...{
-            try ...{
+        } catch (FileNotFoundException e)  {
+            try  {
                 _db =
                   _context.createDatabase(DATABASE_NAME, DATABASE_VERSION, 0,
                         null);
@@ -21,7 +21,7 @@ public static SQLiteDatabase database()...{
                       &quot;FOREIGN KEY (pilot)&quot; +
                       &quot;REFERENCES pilot(id) on delete cascade);&quot;);
                 _db.execSQL(&quot;CREATE INDEX CAR_PILOT ON &quot; + DB_TABLE_CAR + &quot; (pilot);&quot;);
-            } catch (FileNotFoundException e1) ...{
+            } catch (FileNotFoundException e1)  {
                 _db = null;
             }
         }

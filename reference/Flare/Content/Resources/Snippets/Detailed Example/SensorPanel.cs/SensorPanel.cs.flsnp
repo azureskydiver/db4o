@@ -1,119 +1,119 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.cs
-1/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
-2using Db4objects.Db4o;
-3using Db4objects.Db4o.Activation;
-4using Db4objects.Db4o.TA;
-5
-6namespace Db4ojects.Db4odoc.TPExample
-7...{
-8    public class SensorPanel /**//*must implement Activatable for TA and TP */: IActivatable
-9    ...{
-0        private object _sensor;
-1
-2        private SensorPanel _next;
-3
-4        /**//*activator registered for this class*/
-5        [System.NonSerialized]
-6        IActivator _activator;
-7
-8        public SensorPanel()
-9        ...{
-0            // default constructor for instantiation
-1        }
-2        // end SensorPanel
-3
-4        public SensorPanel(int value)
-5        ...{
-6            _sensor = value;
-7        }
-8        // end SensorPanel
-9
-0        /**//*Bind the class to the specified object container, create the activator*/
-1        public void Bind(IActivator activator)
-2        ...{
-3            if (_activator == activator)
-4            ...{
-5                return;
-6            }
-7            if (activator != null &amp;&amp; null != _activator)
-8            ...{
-9                throw new System.InvalidOperationException();
-0            }
-1            _activator = activator;
-2        }
-3        // end Bind
-4
-5        /**//*Call the registered activator to activate the next level,
-6         * the activator remembers the objects that were already 
-7         * activated and won't activate them twice. 
-8         */
-9        public void Activate(ActivationPurpose purpose)
-0        ...{
-1            if (_activator == null)
-2                return;
-3            _activator.Activate(purpose);
-4        }
-5        // end Activate
-6
-7        public SensorPanel Next
-8        ...{
-9            get
-0            ...{
-1                /**//*activate direct members*/
-2                Activate(ActivationPurpose.Read);
-3                return _next;
-4            }
-5        }
-6        // end Next
-7
-8        public object Sensor
-9        ...{
-0            get
-1            ...{
-2                /**//*activate direct members*/
-3                Activate(ActivationPurpose.Read);
-4                return _sensor;
-5            }
-6            set
-7            ...{
-8                /**//*activate for persistense*/
-9                Activate(ActivationPurpose.Write);
-0                _sensor = value;
-1            }
-2        }
-3        // end Sensor
-4
-5        public SensorPanel CreateList(int length)
-6        ...{
-7            return CreateList(length, 1);
-8        }
-9        // end CreateList
-0
-1        public SensorPanel CreateList(int length, int first)
-2        ...{
-3            int val = first;
-4            SensorPanel root = NewElement(first);
-5            SensorPanel list = root;
-6            while (--length &gt; 0)
-7            ...{
-8                list._next = NewElement(++val);
-9                list = list.Next;
-0            }
-1            return root;
-2        }
-3        // end CreateList
-4
-5        protected SensorPanel NewElement(int value)
-6        ...{
-7            return new SensorPanel(value);
-8        }
-9        // end NewElement
-0
-1        public override string ToString()
-2        ...{
-3            return &quot;Sensor #&quot; + Sensor;
-4        }
-5        // end ToString
-6    }
-7
-8}</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.cs
+/** Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
+using Db4objects.Db4o;
+using Db4objects.Db4o.Activation;
+using Db4objects.Db4o.TA;
+
+namespace Db4ojects.Db4odoc.TPExample
+ {
+    public class SensorPanel /**//*must implement Activatable for TA and TP */: IActivatable
+     {
+        private object _sensor;
+
+        private SensorPanel _next;
+
+        /**//*activator registered for this class*/
+        [System.NonSerialized]
+        IActivator _activator;
+
+        public SensorPanel()
+         {
+            // default constructor for instantiation
+        }
+        // end SensorPanel
+
+        public SensorPanel(int value)
+         {
+            _sensor = value;
+        }
+        // end SensorPanel
+
+        /**//*Bind the class to the specified object container, create the activator*/
+        public void Bind(IActivator activator)
+         {
+            if (_activator == activator)
+             {
+                return;
+            }
+            if (activator != null &amp;&amp; null != _activator)
+             {
+                throw new System.InvalidOperationException();
+            }
+            _activator = activator;
+        }
+        // end Bind
+
+        /**//*Call the registered activator to activate the next level,
+         * the activator remembers the objects that were already 
+         * activated and won't activate them twice. 
+         */
+        public void Activate(ActivationPurpose purpose)
+         {
+            if (_activator == null)
+                return;
+            _activator.Activate(purpose);
+        }
+        // end Activate
+
+        public SensorPanel Next
+         {
+            get
+             {
+                /**//*activate direct members*/
+                Activate(ActivationPurpose.Read);
+                return _next;
+            }
+        }
+        // end Next
+
+        public object Sensor
+         {
+            get
+             {
+                /**//*activate direct members*/
+                Activate(ActivationPurpose.Read);
+                return _sensor;
+            }
+            set
+             {
+                /**//*activate for persistense*/
+                Activate(ActivationPurpose.Write);
+                _sensor = value;
+            }
+        }
+        // end Sensor
+
+        public SensorPanel CreateList(int length)
+         {
+            return CreateList(length, 1);
+        }
+        // end CreateList
+
+        public SensorPanel CreateList(int length, int first)
+         {
+            int val = first;
+            SensorPanel root = NewElement(first);
+            SensorPanel list = root;
+            while (--length &gt; 0)
+             {
+                list._next = NewElement(++val);
+                list = list.Next;
+            }
+            return root;
+        }
+        // end CreateList
+
+        protected SensorPanel NewElement(int value)
+         {
+            return new SensorPanel(value);
+        }
+        // end NewElement
+
+        public override string ToString()
+         {
+            return &quot;Sensor #&quot; + Sensor;
+        }
+        // end ToString
+    }
+
+}</pre>    </body></html>

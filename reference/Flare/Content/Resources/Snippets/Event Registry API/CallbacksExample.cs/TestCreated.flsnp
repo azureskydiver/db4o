@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.cs: TestCreated
 private static void TestCreated()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = OpenContainer();
             try
-            ...{
+             {
                 IEventRegistry registry = EventRegistryFactory.ForObjectContainer(container);
                 // register an event handler, which will print all the car objects, that have been Created
                 registry.Created += OnCreated;
@@ -13,7 +13,7 @@ private static void TestCreated()
                 container.Store(car);
             }
             finally
-            ...{
+             {
                 CloseContainer();
             }
         }</pre>    </body></html>

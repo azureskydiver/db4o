@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.cs: UpdatePilots
 private static void UpdatePilots()
-    ...{
+     {
       Console.WriteLine(&quot;Updating PilotCategory in pilot reference:&quot;);
             IObjectContainer db = Database();
             if (db != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     IObjectSet result = db.Get(typeof(Pilot));
                     foreach (object obj in result)
-                    ...{
+                     {
                         Pilot pilot = (Pilot)obj;
                         if (pilot.Category == PilotCategories.Winner)
-                        ...{
+                         {
                             Console.WriteLine(&quot;Winner pilot: &quot; + pilot);
                             PilotCategories pc = pilot.Category;
                             pc.TestChange(&quot;WINNER2006&quot;);
@@ -22,7 +22,7 @@ private static void UpdatePilots()
                     PrintCategories(db);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

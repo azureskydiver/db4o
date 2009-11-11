@@ -10,7 +10,7 @@ using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Messaging;
 
 namespace Db4odoc.ClientServer
-...{
+ {
     /**//// &lt;summary&gt;
     /// starts a db4o server with the settings from ServerSetup. 
     /// This is a typical setup for a long running server.
@@ -22,7 +22,7 @@ namespace Db4odoc.ClientServer
     /// configuration need to be executed on the client and on the server.
     /// &lt;/summary&gt;
     public class StartServer : ServerSetup, IMessageRecipient
-    ...{
+     {
         /**//// &lt;summary&gt;
         /// setting the value to true denotes that the server should be closed
         /// &lt;/summary&gt;
@@ -33,7 +33,7 @@ namespace Db4odoc.ClientServer
         /// ServerSetup.
         /// &lt;/summary&gt;
         public static void Main(string[] arguments)
-        ...{
+         {
             new StartServer().RunServer();
         } 
     // end Main
@@ -43,9 +43,9 @@ namespace Db4odoc.ClientServer
         /// or a StopServer message is being received.
         /// &lt;/summary&gt;
         public void RunServer()
-        ...{
+         {
             lock(this)
-            ...{
+             {
                 // Using the messaging functionality to redirect all
                 // messages to this.processMessage
                 IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
@@ -55,15 +55,15 @@ namespace Db4odoc.ClientServer
                 db4oServer.GrantAccess(User, Password);
                 
                 try
-                ...{
+                 {
                     if (! stop)
-                    ...{
+                     {
                         // wait forever until Close will change stop variable
                         Monitor.Wait(this);   
                     }
                 }
                 catch (Exception e)
-                ...{
+                 {
                     Console.WriteLine(e.ToString());
                 }
                 db4oServer.Close();
@@ -76,9 +76,9 @@ namespace Db4odoc.ClientServer
         /// see com.db4o.messaging.MessageRecipient#ProcessMessage()
         /// &lt;/summary&gt;
         public void ProcessMessage(IMessageContext context, object message)
-        ...{
+         {
             if (message is StopServer)
-            ...{
+             {
                 Close();
             }
         }
@@ -88,9 +88,9 @@ namespace Db4odoc.ClientServer
         /// closes this server.
         /// &lt;/summary&gt;
         public void Close()
-        ...{
+         {
             lock(this)
-            ...{
+             {
                 stop = true;
                 Monitor.PulseAll(this);
             }

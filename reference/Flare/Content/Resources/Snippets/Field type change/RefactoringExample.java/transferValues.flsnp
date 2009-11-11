@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.java: transferValues
-private static void transferValues()...{
+private static void transferValues() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
-    try ...{
+    try  {
       StoredClass sc = container.ext().storedClass(&quot;com.db4odoc.f1.refactoring.oldclasses.Pilot&quot;);
       System.out.println(&quot;Stored class:  &quot;+ sc.toString());
       StoredField sfOld = sc.storedField(&quot;name&quot;,String.class);
@@ -9,7 +9,7 @@ private static void transferValues()...{
       Query q = container.query();
       q.constrain(Pilot.class);
       ObjectSet result = q.execute();
-      for (int i = 0; i&lt; result.size(); i++)...{
+      for (int i = 0; i&lt; result.size(); i++) {
         Pilot pilot = (Pilot)result.get(i);
         System.out.println(&quot;Pilot=&quot;+ pilot);
         pilot.setName(new Identity(sfOld.get(pilot).toString(),&quot;&quot;));
@@ -17,7 +17,7 @@ private static void transferValues()...{
         container.set(pilot);
       }
       
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

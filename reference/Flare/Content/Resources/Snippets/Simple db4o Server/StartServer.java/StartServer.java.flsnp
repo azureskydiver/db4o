@@ -22,7 +22,7 @@
 1 * possible Db4oEmbedded.configure() calls to alter the db4o configuration need
 2 * to be executed on the client and on the server.
 3 */
-4public class StartServer implements ServerSetup, MessageRecipient ...{
+4public class StartServer implements ServerSetup, MessageRecipient  {
 5
 6  /** *//**
 7   * setting the value to true denotes that the server should be closed
@@ -33,7 +33,7 @@
 2   * starts a db4o server using the configuration from
 3   * {@link ServerSetup}.
 4   */
-5  public static void main(String[] arguments) ...{
+5  public static void main(String[] arguments)  {
 6    new StartServer().runServer();
 7  }
 8
@@ -43,8 +43,8 @@
 2   * opens the ObjectServer, and waits forever until close() is called or a
 3   * StopServer message is being received.
 4   */
-5  public void runServer() ...{
-6    synchronized (this) ...{
+5  public void runServer()  {
+6    synchronized (this)  {
 7      // Using the messaging functionality to redirect all
 8      // messages to this.processMessage
 9      ServerConfiguration config = Db4oClientServer.newServerConfiguration();
@@ -61,12 +61,12 @@
 0      // We only need low priority since the db4o server has
 1      // it's own thread.
 2      Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-3      try ...{
-4        if (!stop) ...{
+3      try  {
+4        if (!stop)  {
 5          // wait forever for notify() from close()
 6          this.wait(Long.MAX_VALUE);
 7        }
-8      } catch (Exception e) ...{
+8      } catch (Exception e)  {
 9        e.printStackTrace();
 0      }
 1      db4oServer.close();
@@ -81,8 +81,8 @@
 0   * @see com.db4o.messaging.MessageRecipient#processMessage(ObjectContainer,
 1   *      Object)
 2   */
-3  public void processMessage(MessageContext context, Object message) ...{
-4    if (message instanceof StopServer) ...{
+3  public void processMessage(MessageContext context, Object message)  {
+4    if (message instanceof StopServer)  {
 5      close();
 6    }
 7  }
@@ -92,8 +92,8 @@
 1  /** *//**
 2   * closes this server.
 3   */
-4  public void close() ...{
-5    synchronized (this) ...{
+4  public void close()  {
+5    synchronized (this)  {
 6      stop = true;
 7      this.notify();
 8    }

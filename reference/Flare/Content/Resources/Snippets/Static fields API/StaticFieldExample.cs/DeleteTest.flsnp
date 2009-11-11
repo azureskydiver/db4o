@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.cs: DeleteTest
 private static void DeleteTest()
-    ...{
+     {
             IObjectContainer db = Database();
             if (db != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     Console.WriteLine(&quot;Deleting Pilots :&quot;);
                     IObjectSet result = db.Get(typeof(Pilot));
                     foreach (object obj in result)
-                    ...{
+                     {
                         Pilot pilot = (Pilot)obj;
                         db.Delete(pilot);
                     }
@@ -17,14 +17,14 @@ private static void DeleteTest()
                     Console.WriteLine(&quot;Deleting PilotCategories :&quot;);
                     result = db.Get(typeof(PilotCategories));
                     foreach (object obj in result)
-                    ...{
+                     {
                         db.Delete(obj);
                     }
                     PrintCategories(db);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }
-    }</div</pre>    </body></html>
+    }</pre>    </body></html>

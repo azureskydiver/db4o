@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPExample.cs: TestTransparentPersistence
 private static void TestTransparentPersistence()
-        ...{
+         {
             StoreSensorPanel();
             IConfiguration configuration = ConfigureTA();
 
             IObjectContainer container = Database(configuration);
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     IObjectSet result = container.QueryByExample(new SensorPanel(1));
                     ListResult(result);
                     SensorPanel sensor = null;
                     if (result.Size() &gt; 0)
-                    ...{
+                     {
                         System.Console.WriteLine(&quot;Before modification: &quot;);
                         sensor = (SensorPanel)result[0];
                         // the object is a linked list, so each call to next()
                         // will need to activate a new object
                         SensorPanel next = sensor.Next;
                         while (next != null)
-                        ...{
+                         {
                             System.Console.WriteLine(next);
                             // modify the next sensor
                             next.Sensor = (object)(10 + (int)next.Sensor);
@@ -31,7 +31,7 @@ private static void TestTransparentPersistence()
                     }
                 }
                 finally
-                ...{
+                 {
                     // If there are unsaved changes to activatable objects, they 
                     // will be implicitly saved and committed when the database 
                     // is closed
@@ -41,26 +41,26 @@ private static void TestTransparentPersistence()
             // reopen the database and check the modifications
             container = Database(configuration);
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     IObjectSet result = container.QueryByExample(new SensorPanel(1));
                     ListResult(result);
                     SensorPanel sensor = null;
                     if (result.Size() &gt; 0)
-                    ...{
+                     {
                         System.Console.WriteLine(&quot;After modification: &quot;);
                         sensor = (SensorPanel)result[0];
                         SensorPanel next = sensor.Next;
                         while (next != null)
-                        ...{
+                         {
                             System.Console.WriteLine(next);
                             next = next.Next;
                         }
                     }
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

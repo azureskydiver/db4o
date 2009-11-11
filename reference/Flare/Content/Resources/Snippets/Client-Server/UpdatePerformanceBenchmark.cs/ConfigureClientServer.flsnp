@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureClientServer
-1private IConfiguration ConfigureClientServer()
-2        ...{
-3            IConfiguration config = Db4oFactory.NewConfiguration();
-4            config.ClientServer().SingleThreadedClient(true);
-5            return config;
-6        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureClientServer
+private IConfiguration ConfigureClientServer()
+         {
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            config.ClientServer().SingleThreadedClient(true);
+            return config;
+        }</pre>
+    </body>
+</html>

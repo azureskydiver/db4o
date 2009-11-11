@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CompareExample.java: storeRecords
-private static void storeRecords(Configuration configuration)...{
+private static void storeRecords(Configuration configuration) {
     new File(FILENAME).delete();
     ObjectContainer container = Db4o.openFile(configuration, FILENAME);
-    try ...{
+    try  {
       Record record = new Record(&quot;Michael Schumacher, points: 100&quot;);
       container.set(record);
       record = new Record(&quot;Rubens Barrichello, points: 98&quot;);
       container.set(record);
       record = new Record(&quot;Kimi Raikonnen, points: 55&quot;);
       container.set(record);
-    } finally ...{
+    } finally  {
       container.close();
     }
   }</pre>    </body></html>

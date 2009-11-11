@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.java
-/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1582" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.java
+/** Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.taexamples;
 
 import com.db4o.activation.*;
 import com.db4o.ta.*;
 
-public class SensorPanelTA /**//*must implement Activatable for TA*/implements Activatable ...{
+public class SensorPanelTA /**//*must implement Activatable for TA*/implements Activatable  {
 
   private Object _sensor;
 
@@ -15,20 +20,20 @@ public class SensorPanelTA /**//*must implement Activatable for TA*/implements A
   /**//*activator registered for this class*/
   transient Activator _activator;
   
-  public SensorPanelTA() ...{
+  public SensorPanelTA()  {
     // default constructor for instantiation
   }
 
-  public SensorPanelTA(int value) ...{
+  public SensorPanelTA(int value)  {
     _sensor = new Integer(value);
   }
 
   /**//*Bind the class to the specified object container, create the activator*/
-  public void bind(Activator activator) ...{
-      if (_activator == activator) ...{
+  public void bind(Activator activator)  {
+      if (_activator == activator)  {
         return;
       }
-      if (activator != null &amp;&amp; _activator != null) ...{
+      if (activator != null &amp;&amp; _activator != null)  {
             throw new IllegalStateException();
         }
     _activator = activator;
@@ -38,44 +43,46 @@ public class SensorPanelTA /**//*must implement Activatable for TA*/implements A
    * the activator remembers the objects that were already 
    * activated and won't activate them twice. 
    */
-  public void activate(ActivationPurpose purpose) ...{
+  public void activate(ActivationPurpose purpose)  {
     if (_activator == null)
       return;
     _activator.activate(purpose);
   }
   
-  public SensorPanelTA getNext() ...{
+  public SensorPanelTA getNext()  {
     /**//*activate direct members*/
     activate(ActivationPurpose.READ);
     return _next;
   }
   
-  public Object getSensor() ...{
+  public Object getSensor()  {
     /**//*activate direct members*/
     activate(ActivationPurpose.READ);
     return _sensor;
   }
   
-  public SensorPanelTA createList(int length) ...{
+  public SensorPanelTA createList(int length)  {
     return createList(length, 1);
   }
 
-  public SensorPanelTA createList(int length, int first) ...{
+  public SensorPanelTA createList(int length, int first)  {
     int val = first;
     SensorPanelTA root = newElement(first);
     SensorPanelTA list = root;
-    while (--length &gt; 0) ...{
+    while (--length &gt; 0)  {
       list._next = newElement(++val);
       list = list._next;
     }
     return root;
   }
 
-  protected SensorPanelTA newElement(int value) ...{
+  protected SensorPanelTA newElement(int value)  {
     return new SensorPanelTA(value);
   }
 
-  public String toString() ...{
-    return &quot;Sensor #&quot; + getSensor();
+  public String toString()  {
+    return "Sensor #" + getSensor();
   }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.cs: TestContains
 public static void TestContains()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     ArrayList list = new ArrayList();
                     Pilot pilot1 = new Pilot(&quot;Test 1&quot;, 1);
                     list.Add(pilot1);
@@ -22,15 +22,15 @@ public static void TestContains()
                     ListResult(result);
                 }
                 catch (Db4oException ex)
-                ...{
+                 {
                     Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CollectionExample.java: updateTeam
-private static void updateTeam()...{
+private static void updateTeam() {
     ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
-     try ...{
+     try  {
        Query query =container.query(); 
        query.constrain(Team.class);
        query.descend(&quot;name&quot;).constrain(&quot;Ferrari&quot;);
        ObjectSet result = query.execute();
-       if (result.hasNext()) ...{
+       if (result.hasNext())  {
          Team ferrariTeam = (Team)result.next();
           
          Pilot pilot = new Pilot(&quot;David Schumacher&quot;, 100);
@@ -17,7 +17,7 @@ private static void updateTeam()...{
        List protoList = CollectionFactory.newList();
        result = container.get(protoList);
        listResult(result);
-    }  finally ...{
+    }  finally  {
       container.close();
     } 
   }</pre>    </body></html>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.java: configureReplication
-1public static Configuration configureReplication()...{
-2    Configuration db4oConfig = Db4o.newConfiguration();
-3    db4oConfig.generateUUIDs(ConfigScope.GLOBALLY); 
-4    db4oConfig.generateVersionNumbers(ConfigScope.GLOBALLY);
-5    return db4oConfig;
-6  }</pre>    </body></html>
+public static Configuration configureReplication() {
+    Configuration db4oConfig = Db4o.newConfiguration();
+    db4oConfig.generateUUIDs(ConfigScope.GLOBALLY); 
+    db4oConfig.generateVersionNumbers(ConfigScope.GLOBALLY);
+    return db4oConfig;
+  }</pre>    </body></html>

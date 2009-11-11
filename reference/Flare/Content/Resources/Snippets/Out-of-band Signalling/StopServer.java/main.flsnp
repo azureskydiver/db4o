@@ -4,19 +4,19 @@
    * 
    * @throws Exception
    */
-  public static void main(String[] args) ...{
+  public static void main(String[] args)  {
     ObjectContainer objectContainer = null;
-    try ...{
+    try  {
 
       // connect to the server
       objectContainer = Db4oClientServer.openClient(Db4oClientServer
           .newClientConfiguration(), HOST, PORT, USER, PASS);
 
-    } catch (Exception e) ...{
+    } catch (Exception e)  {
       e.printStackTrace();
     }
 
-    if (objectContainer != null) ...{
+    if (objectContainer != null)  {
 
       // get the messageSender for the ObjectContainer
       MessageSender messageSender = objectContainer.ext().configure()

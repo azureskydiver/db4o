@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ComplexParameterizedExample.java: createPredicateCorrect
-1private static &lt;T extends Person&gt; Predicate&lt;T&gt; createPredicateCorrect(
-2      Class&lt;T&gt; clazz, String startsWith) ...{
-3    return new PersonNamePredicate&lt;T&gt;(clazz, startsWith);
-4  }</pre>    </body></html>
+private static &lt;T extends Person&gt; Predicate&lt;T&gt; createPredicateCorrect(
+      Class&lt;T&gt; clazz, String startsWith)  {
+    return new PersonNamePredicate&lt;T&gt;(clazz, startsWith);
+  }</pre>    </body></html>

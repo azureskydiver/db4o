@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.cs: ReadBuffer
-1private static string ReadBuffer(IReadBuffer buffer, int length)
-2        ...{
-3            char[] chars = new char[length];
-4            for (int ii = 0; ii &lt; length; ii++)
-5            ...{
-6                chars[ii] = (char)((buffer.ReadByte() &amp; 0xff) | ((buffer.ReadByte() &amp; 0xff) &lt;&lt; 8));
-7            }
-8            return new string(chars, 0, length);
-9        }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.cs: ReadBuffer
+private static string ReadBuffer(IReadBuffer buffer, int length)
+         {
+            char[] chars = new char[length];
+            for (int ii = 0; ii &lt; length; ii++)
+             {
+                chars[ii] = (char)((buffer.ReadByte() &amp; 0xff) | ((buffer.ReadByte() &amp; 0xff) &lt;&lt; 8));
+            }
+            return new string(chars, 0, length);
+        }</pre>
+    </body>
+</html>

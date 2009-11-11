@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ParameterizedExamples.java: byNameBeginning
-1private static List&lt;Pilot&gt; byNameBeginning(final String startsWith) ...{
-2    return database().query(new Predicate&lt;Pilot&gt;() ...{
-3      public boolean match(Pilot pilot) ...{
-4        return pilot.getName().startsWith(startsWith);
-5      }
-6    });
-7  }</pre>    </body></html>
+private static List&lt;Pilot&gt; byNameBeginning(final String startsWith)  {
+    return database().query(new Predicate&lt;Pilot&gt;()  {
+      public boolean match(Pilot pilot)  {
+        return pilot.getName().startsWith(startsWith);
+      }
+    });
+  }</pre>    </body></html>

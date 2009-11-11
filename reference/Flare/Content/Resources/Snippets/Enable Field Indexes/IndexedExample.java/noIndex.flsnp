@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IndexedExample.java: noIndex
-private static void noIndex() ...{
+private static void noIndex()  {
       ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
-        try ...{
+        try  {
         Query query = container.query();
       query.constrain(Car.class);
       query.descend(&quot;pilot&quot;).descend(&quot;points&quot;).constrain(new Integer(99));
@@ -14,7 +14,7 @@ private static void noIndex() ...{
       System.out.println(&quot;Execution time=&quot;+diff + &quot; ms&quot;);
       listResult(result);
         }
-        finally ...{
+        finally  {
             container.close();
         }
     }</pre>    </body></html>

@@ -6,14 +6,14 @@
 package com.db4odoc.autoincrement;
 
 
-public abstract class CountedObject ...{
+public abstract class CountedObject  {
   int id;
   
-  public void setId(int id)...{
+  public void setId(int id) {
     this.id = id;
   }
   
-  public int getId()...{
+  public int getId() {
     return id;
   }
 }</pre>    </body></html>

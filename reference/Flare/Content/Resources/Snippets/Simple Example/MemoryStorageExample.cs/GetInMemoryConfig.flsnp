@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.cs: GetInMemoryConfig
-1private static IEmbeddedConfiguration GetInMemoryConfig()
-2        ...{
-3            MemoryStorage ms = new MemoryStorage();
-4            IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
-5            config.File.Storage = ms;
-6            return config;
-7        }</pre>    </body></html>
+private static IEmbeddedConfiguration GetInMemoryConfig()
+         {
+            MemoryStorage ms = new MemoryStorage();
+            IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
+            config.File.Storage = ms;
+            return config;
+        }</pre>    </body></html>

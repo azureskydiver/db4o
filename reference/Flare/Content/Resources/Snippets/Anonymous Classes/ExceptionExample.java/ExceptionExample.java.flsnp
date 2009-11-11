@@ -7,27 +7,27 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-public class ExceptionExample ...{
+public class ExceptionExample  {
 
-  public static void main(String[] args) ...{
+  public static void main(String[] args)  {
     // TODO Auto-generated method stub
   }
 
   private final ObjectContainer _db;
   // more (non-persistable) state
 
-  public ExceptionExample(String hostName, int port, String userName, String password) ...{
+  public ExceptionExample(String hostName, int port, String userName, String password)  {
     Configuration config = Db4o.newConfiguration();
     _db = Db4o.openClient(config, hostName, port, userName, password);
   }
 
-  public List&lt;Item&gt; retrieveItems() ...{
-    ObjectSet&lt;Item&gt; result = _db.query(new Predicate&lt;Item&gt;() ...{
-      public boolean match(Item item) ...{
+  public List&lt;Item&gt; retrieveItems()  {
+    ObjectSet&lt;Item&gt; result = _db.query(new Predicate&lt;Item&gt;()  {
+      public boolean match(Item item)  {
         return true;
       }
-    }, new Comparator&lt;Item&gt;() ...{
-      public int compare(Item one, Item two) ...{
+    }, new Comparator&lt;Item&gt;()  {
+      public int compare(Item one, Item two)  {
         return one.getName().compareTo(two.getName());
       }
     });

@@ -9,17 +9,17 @@ package com.db4odoc.autoincrement;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-public class IncrementedId ...{
+public class IncrementedId  {
   private int no;
   private static IncrementedId ref;
 
-  private IncrementedId() ...{
+  private IncrementedId()  {
     this.no = 0;
   }
 
   // end IncrementedId
 
-  public int getNextID(ObjectContainer db) ...{
+  public int getNextID(ObjectContainer db)  {
     no++;
     db.store(this);
     return no;
@@ -27,9 +27,9 @@ public class IncrementedId ...{
 
   // end increment
 
-  public static IncrementedId getIdObject(ObjectContainer db) ...{
+  public static IncrementedId getIdObject(ObjectContainer db)  {
     // if ref is not assigned yet:
-    if (ref == null) ...{
+    if (ref == null)  {
       // check if there is a stored instance from the previous 
       // session in the database
       ObjectSet&lt;IncrementedId&gt; os = db.queryByExample(IncrementedId.class);
@@ -37,7 +37,7 @@ public class IncrementedId ...{
         ref = (IncrementedId) os.next();
     }
 
-    if (ref == null) ...{
+    if (ref == null)  {
       // create new instance and store it
       System.out.println(&quot;Id object is created&quot;);
       ref = new IncrementedId();

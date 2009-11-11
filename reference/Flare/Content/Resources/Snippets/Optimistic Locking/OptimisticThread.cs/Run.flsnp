@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.cs: Run
 public void Run()
-        ...{
-            try ...{
+         {
+            try  {
         IList&lt;Pilot&gt; result = _container.Query&lt;Pilot&gt;();
                 foreach (Pilot pilot in result)
-                ...{
+                 {
                     
                 
                 /**//* We will need to set a lock to make sure that the 
@@ -14,7 +14,7 @@ public void Run()
            * retrieval )
            */
                 if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot; + _container.Ext().GetID(pilot), 3000))
-                ...{
+                 {
                     Console.WriteLine(&quot;Error. The object is locked&quot;);
                     continue;
                 }
@@ -33,7 +33,7 @@ public void Run()
               pilot.AddPoints(1);
               _updateSuccess = false;
               RandomWait();
-              if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot;+_container.Ext().GetID(pilot), 3000))...{
+              if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot;+_container.Ext().GetID(pilot), 3000)) {
                 Console.WriteLine(&quot;Error. The object is locked&quot;);
                 continue;
               }
@@ -43,7 +43,7 @@ public void Run()
                */
               _container.Commit();
               _container.Ext().ReleaseSemaphore(&quot;LOCK_&quot;+_container.Ext().GetID(pilot));
-              if (_updateSuccess)...{
+              if (_updateSuccess) {
                 Console.WriteLine(Name + &quot;Updated pilot: &quot; + pilot);
               }
                 Console.WriteLine();
@@ -53,7 +53,7 @@ public void Run()
               _idVersions.Remove(id);
         }
           
-      } finally ...{
+      } finally  {
         _container.Close();
       }
        }</pre>    </body></html>

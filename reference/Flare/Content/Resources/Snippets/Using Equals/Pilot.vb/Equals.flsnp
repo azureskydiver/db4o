@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.vb: Equals
-1Public Overloads Overrides Function Equals()Function Equals(ByVal obj As Object) As Boolean
-2            Dim pilot As Pilot = DirectCast(obj, Pilot)
-3            Return pilot.Name.Equals(_name) AndAlso pilot.Points = _points
-4        End Function</pre>    </body></html>
+Public Overloads Overrides Function Equals()Function Equals(ByVal obj As Object) As Boolean
+            Dim pilot As Pilot = DirectCast(obj, Pilot)
+            Return pilot.Name.Equals(_name) AndAlso pilot.Points = _points
+        End Function</pre>    </body></html>

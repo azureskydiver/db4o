@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqExample.cs: SelectEverythingByName
 private static void SelectEverythingByName()
-        ...{
+         {
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     var result = from object o in container
                                                 where o.ToString().StartsWith(&quot;Test&quot;)
                                   select o;
@@ -13,11 +13,11 @@ private static void SelectEverythingByName()
                     ListResult(objects);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

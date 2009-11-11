@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MultiExamples.cs: StoreCars
 private static void StoreCars()
-        ...{
+         {
             File.Delete(Db4oFileName);
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     Car car;
                     for (int i = 0; i &lt; ObjectCount; i++)
-                    ...{
+                     {
                         car = new Car(&quot;BMW&quot;, new Pilot(&quot;Test Pilot #&quot; + i, i));
                         container.Set(car);
                     }
                     for (int i = 0; i &lt; ObjectCount; i++)
-                    ...{
+                     {
                         car = new Car(&quot;Ferrari&quot;, new Pilot(&quot;Professional Pilot #&quot;
                                 + (i + 10), (i + 10)));
                         container.Set(car);
@@ -22,15 +22,15 @@ private static void StoreCars()
                     container.Commit();
                 }
                 catch (Db4oException ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }

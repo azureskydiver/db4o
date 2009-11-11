@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.java: configureTPForRollback
-1private static Configuration configureTPForRollback() ...{
-2    Configuration configuration = Db4o.newConfiguration();
-3    // add TP support and rollback strategy
-4    configuration.add(new TransparentPersistenceSupport(
-5        new RollbackDeactivateStrategy()));
-6    return configuration;
-7  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPRollback.java: configureTPForRollback
+private static Configuration configureTPForRollback()  {
+    Configuration configuration = Db4o.newConfiguration();
+    // add TP support and rollback strategy
+    configuration.add(new TransparentPersistenceSupport(
+        new RollbackDeactivateStrategy()));
+    return configuration;
+  }</pre>
+    </body>
+</html>

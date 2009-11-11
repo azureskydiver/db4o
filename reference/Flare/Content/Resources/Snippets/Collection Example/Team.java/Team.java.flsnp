@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Team.java
-/**//* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1164" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Team.java
+/**Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 
 package com.db4odoc.tpexample;
 
@@ -10,7 +15,7 @@ import com.db4o.collections.*;
 import com.db4o.ta.*;
 
 
-public class Team implements Activatable ...{
+public class Team implements Activatable  {
 
   private List&lt;Pilot&gt; _pilots = new ArrayList4&lt;Pilot&gt;();
   
@@ -20,40 +25,42 @@ public class Team implements Activatable ...{
   transient Activator _activator;
   
   //  Bind the class to an object container
-  public void bind(Activator activator) ...{
-      if (_activator == activator) ...{
+  public void bind(Activator activator)  {
+      if (_activator == activator)  {
         return;
       }
-      if (activator != null &amp;&amp; _activator != null) ...{
+      if (activator != null &amp;&amp; _activator != null)  {
             throw new IllegalStateException();
         }
     _activator = activator;
   }
   
   // activate object fields 
-  public void activate(ActivationPurpose purpose) ...{
+  public void activate(ActivationPurpose purpose)  {
     if (_activator == null) return;
     _activator.activate(purpose);
   }
   
-  public void addPilot(Pilot pilot) ...{
+  public void addPilot(Pilot pilot)  {
     // activate before adding new pilots
     activate(ActivationPurpose.WRITE);
     _pilots.add(pilot);
   }
 
-  public void listAllPilots() ...{
+  public void listAllPilots()  {
     // activate before printing the collection members
     activate(ActivationPurpose.READ);
     
-    for (Iterator&lt;Pilot&gt; iter = _pilots.iterator(); iter.hasNext();) ...{
+    for (Iterator&lt;Pilot&gt; iter = _pilots.iterator(); iter.hasNext();)  {
       Pilot pilot = (Pilot) iter.next();
       System.out.println(pilot);
     }
   }
 
-  List&lt;Pilot&gt; getPilots() ...{
+  List&lt;Pilot&gt; getPilots()  {
     activate(ActivationPurpose.READ);
     return _pilots;
   }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

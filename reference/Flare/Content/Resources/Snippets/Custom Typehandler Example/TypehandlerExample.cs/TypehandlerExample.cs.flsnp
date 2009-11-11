@@ -1,216 +1,216 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.cs
-1/**//* Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com */
-2using System.Text;
-3using System.IO;
-4
-5using Db4objects.Db4o;
-6using Db4objects.Db4o.Config;
-7using Db4objects.Db4o.Defragment;
-8using Db4objects.Db4o.Ext;
-9using Db4objects.Db4o.Query;
-0using Db4objects.Db4o.Reflect;
-1using Db4objects.Db4o.Reflect.Net;
-2using Db4objects.Db4o.Reflect.Generic;
-3using Db4objects.Db4o.Typehandlers;
-4
-5namespace Db4objects.Db4odoc.Typehandler
-6...{
-7
-8    public class TypehandlerExample
-9    ...{
-0
-1        private readonly static string Db4oFileName = &quot;reference.db4o&quot;;
-2        private static IObjectContainer _container = null;
-3
-4
-5        public static void Main(string[] args)
-6        ...{
-7            TestReadWriteDelete();
-8            //TestDefrag();
-9            TestCompare();
-0        }
-1        // end Main
-2
-3        private class TypeHandlerPredicate : ITypeHandlerPredicate
-4        ...{
-5            public bool Match(IReflectClass classReflector, int version)
-6            ...{
-7                IReflector reflector = classReflector.Reflector();
-8                IReflectClass claxx = reflector.ForClass(typeof(StringBuilder));
-9                bool res = claxx.Equals(classReflector);
-0                return res;
-1
-2            }
-3        }
-4        // end TypeHandlerPredicate
-5
-6        private static IConfiguration Configure()
-7        ...{
-8            IConfiguration configuration = Db4oFactory.NewConfiguration();
-9            // add a custom typehandler support
-0
-1            configuration.RegisterTypeHandler(new TypeHandlerPredicate(),
-2                new StringBuilderHandler());
-3            return configuration;
-4        }
-5        // end Configure
-6
-7
-8        private static void TestReadWriteDelete()
-9        ...{
-0            StoreCar();
-1            // Does it still work after close? 
-2            RetrieveCar();
-3            // Does deletion work?
-4            DeleteCar();
-5            RetrieveCar();
-6        }
-7        // end TestReadWriteDelete
-8
-9        private static void RetrieveCar()
-0        ...{
-1            IObjectContainer container = Database(Configure());
-2            if (container != null)
-3            ...{
-4                try
-5                ...{
-6                    IObjectSet result = container.Query(typeof(Car));
-7                    Car car = null;
-8                    if (result.HasNext())
-9                    ...{
-0                        car = (Car)result.Next();
-1                    }
-2                    System.Console.WriteLine(&quot;Retrieved: &quot; + car);
-3                }
-4                finally
-5                ...{
-6                    CloseDatabase();
-7                }
-8            }
-9        }
-0        // end RetrieveCar
-1
-2        private static void DeleteCar()
-3        ...{
-4            IObjectContainer container = Database(Configure());
-5            if (container != null)
-6            ...{
-7                try
-8                ...{
-9                    IObjectSet result = container.Query(typeof(Car));
-0                    Car car = null;
-1                    if (result.HasNext())
-2                    ...{
-3                        car = (Car)result.Next();
-4                    }
-5                    container.Delete(car);
-6                    System.Console.WriteLine(&quot;Deleted: &quot; + car);
-7                }
-8                finally
-9                ...{
-0                    CloseDatabase();
-1                }
-2            }
-3        }
-4        // end DeleteCar
-5
-6        private static void StoreCar()
-7        ...{
-8            File.Delete(Db4oFileName);
-9            IObjectContainer container = Database(Configure());
-0            if (container != null)
-1            ...{
-2                try
-3                ...{
-4                    Car car = new Car(&quot;BMW&quot;);
-5                    container.Store(car);
-6                    car = (Car)container.Query(typeof(Car)).Next();
-7                    System.Console.WriteLine(&quot;Stored: &quot; + car);
-8
-9                }
-0                finally
-1                ...{
-2                    CloseDatabase();
-3                }
-4            }
-5        }
-6        // end StoreCar
-7
-8        private static void TestCompare()
-9        ...{
-0            File.Delete(Db4oFileName);
-1            IObjectContainer container = Database(Configure());
-2            if (container != null)
-3            ...{
-4                try
-5                ...{
-6                    Car car = new Car(&quot;BMW&quot;);
-7                    container.Store(car);
-8                    car = new Car(&quot;Ferrari&quot;);
-9                    container.Store(car);
-0                    car = new Car(&quot;Mercedes&quot;);
-1                    container.Store(car);
-2                    IQuery query = container.Query();
-3                    query.Constrain(typeof(Car));
-4                    query.Descend(&quot;model&quot;).OrderAscending();
-5                    IObjectSet result = query.Execute();
-6                    ListResult(result);
-7
-8                }
-9                finally
-0                ...{
-1                    CloseDatabase();
-2                }
-3            }
-4        }
-5        // end TestCompare
-6
-7        private static void TestDefrag()
-8        ...{
-9            File.Delete(Db4oFileName + &quot;.backup&quot;);
-0            StoreCar();
-1            Defragment.Defrag(Db4oFileName);
-2            RetrieveCar();
-3        }
-4        // end TestDefrag
-5
-6        private static IObjectContainer Database(IConfiguration configuration)
-7        ...{
-8            if (_container == null)
-9            ...{
-0                try
-1                ...{
-2                    _container = Db4oFactory.OpenFile(configuration, Db4oFileName);
-3                }
-4                catch (DatabaseFileLockedException ex)
-5                ...{
-6                    System.Console.WriteLine(ex.Message);
-7                }
-8            }
-9            return _container;
-0        }
-1        // end Database
-2
-3        private static void CloseDatabase()
-4        ...{
-5            if (_container != null)
-6            ...{
-7                _container.Close();
-8                _container = null;
-9            }
-0        }
-1        // end CloseDatabase
-2
-3
-4        private static void ListResult(IObjectSet result)
-5        ...{
-6            System.Console.WriteLine(result.Size());
-7            while (result.HasNext())
-8            ...{
-9                System.Console.WriteLine(result.Next());
-0            }
-1        }
-2        // end ListResult
-3
-4    }
-5}</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.cs
+/** Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com */
+using System.Text;
+using System.IO;
+
+using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Defragment;
+using Db4objects.Db4o.Ext;
+using Db4objects.Db4o.Query;
+using Db4objects.Db4o.Reflect;
+using Db4objects.Db4o.Reflect.Net;
+using Db4objects.Db4o.Reflect.Generic;
+using Db4objects.Db4o.Typehandlers;
+
+namespace Db4objects.Db4odoc.Typehandler
+ {
+
+    public class TypehandlerExample
+     {
+
+        private readonly static string Db4oFileName = &quot;reference.db4o&quot;;
+        private static IObjectContainer _container = null;
+
+
+        public static void Main(string[] args)
+         {
+            TestReadWriteDelete();
+            //TestDefrag();
+            TestCompare();
+        }
+        // end Main
+
+        private class TypeHandlerPredicate : ITypeHandlerPredicate
+         {
+            public bool Match(IReflectClass classReflector, int version)
+             {
+                IReflector reflector = classReflector.Reflector();
+                IReflectClass claxx = reflector.ForClass(typeof(StringBuilder));
+                bool res = claxx.Equals(classReflector);
+                return res;
+
+            }
+        }
+        // end TypeHandlerPredicate
+
+        private static IConfiguration Configure()
+         {
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            // add a custom typehandler support
+
+            configuration.RegisterTypeHandler(new TypeHandlerPredicate(),
+                new StringBuilderHandler());
+            return configuration;
+        }
+        // end Configure
+
+
+        private static void TestReadWriteDelete()
+         {
+            StoreCar();
+            // Does it still work after close? 
+            RetrieveCar();
+            // Does deletion work?
+            DeleteCar();
+            RetrieveCar();
+        }
+        // end TestReadWriteDelete
+
+        private static void RetrieveCar()
+         {
+            IObjectContainer container = Database(Configure());
+            if (container != null)
+             {
+                try
+                 {
+                    IObjectSet result = container.Query(typeof(Car));
+                    Car car = null;
+                    if (result.HasNext())
+                     {
+                        car = (Car)result.Next();
+                    }
+                    System.Console.WriteLine(&quot;Retrieved: &quot; + car);
+                }
+                finally
+                 {
+                    CloseDatabase();
+                }
+            }
+        }
+        // end RetrieveCar
+
+        private static void DeleteCar()
+         {
+            IObjectContainer container = Database(Configure());
+            if (container != null)
+             {
+                try
+                 {
+                    IObjectSet result = container.Query(typeof(Car));
+                    Car car = null;
+                    if (result.HasNext())
+                     {
+                        car = (Car)result.Next();
+                    }
+                    container.Delete(car);
+                    System.Console.WriteLine(&quot;Deleted: &quot; + car);
+                }
+                finally
+                 {
+                    CloseDatabase();
+                }
+            }
+        }
+        // end DeleteCar
+
+        private static void StoreCar()
+         {
+            File.Delete(Db4oFileName);
+            IObjectContainer container = Database(Configure());
+            if (container != null)
+             {
+                try
+                 {
+                    Car car = new Car(&quot;BMW&quot;);
+                    container.Store(car);
+                    car = (Car)container.Query(typeof(Car)).Next();
+                    System.Console.WriteLine(&quot;Stored: &quot; + car);
+
+                }
+                finally
+                 {
+                    CloseDatabase();
+                }
+            }
+        }
+        // end StoreCar
+
+        private static void TestCompare()
+         {
+            File.Delete(Db4oFileName);
+            IObjectContainer container = Database(Configure());
+            if (container != null)
+             {
+                try
+                 {
+                    Car car = new Car(&quot;BMW&quot;);
+                    container.Store(car);
+                    car = new Car(&quot;Ferrari&quot;);
+                    container.Store(car);
+                    car = new Car(&quot;Mercedes&quot;);
+                    container.Store(car);
+                    IQuery query = container.Query();
+                    query.Constrain(typeof(Car));
+                    query.Descend(&quot;model&quot;).OrderAscending();
+                    IObjectSet result = query.Execute();
+                    ListResult(result);
+
+                }
+                finally
+                 {
+                    CloseDatabase();
+                }
+            }
+        }
+        // end TestCompare
+
+        private static void TestDefrag()
+         {
+            File.Delete(Db4oFileName + &quot;.backup&quot;);
+            StoreCar();
+            Defragment.Defrag(Db4oFileName);
+            RetrieveCar();
+        }
+        // end TestDefrag
+
+        private static IObjectContainer Database(IConfiguration configuration)
+         {
+            if (_container == null)
+             {
+                try
+                 {
+                    _container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+                }
+                catch (DatabaseFileLockedException ex)
+                 {
+                    System.Console.WriteLine(ex.Message);
+                }
+            }
+            return _container;
+        }
+        // end Database
+
+        private static void CloseDatabase()
+         {
+            if (_container != null)
+             {
+                _container.Close();
+                _container = null;
+            }
+        }
+        // end CloseDatabase
+
+
+        private static void ListResult(IObjectSet result)
+         {
+            System.Console.WriteLine(result.Size());
+            while (result.HasNext())
+             {
+                System.Console.WriteLine(result.Next());
+            }
+        }
+        // end ListResult
+
+    }
+}</pre>    </body></html>

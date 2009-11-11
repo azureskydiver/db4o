@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InconsistentGraphExample.cs: Main
-1public static void Main(string[] args)
-2        ...{
-3            new InconsistentGraphExample().Run();
-4        }</pre>    </body></html>
+public static void Main(string[] args)
+         {
+            new InconsistentGraphExample().Run();
+        }</pre>    </body></html>

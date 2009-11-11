@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.vb: ConfigureTA
-1Private Shared Function ConfigureTA()Function ConfigureTA() As IConfiguration
-2            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
-3            ' add TA support
-4            configuration.Add(New TransparentActivationSupport)
-5            ' activate TA diagnostics to reveal the classes that are not TA-enabled.
-6            ' ActivateDiagnostics(configuration)
-7            Return configuration
-8        End Function</pre>    </body></html>
+Private Shared Function ConfigureTA()Function ConfigureTA() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
+            ' add TA support
+            configuration.Add(New TransparentActivationSupport)
+            ' activate TA diagnostics to reveal the classes that are not TA-enabled.
+            ' ActivateDiagnostics(configuration)
+            Return configuration
+        End Function</pre>    </body></html>

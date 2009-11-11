@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.java: storeCollection
-private static void storeCollection() ...{
+private static void storeCollection()  {
     new File(DB4O_FILE_NAME).delete();
     ObjectContainer container = database(configureTP());
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         Team team = new Team();
-        for (int i = 0; i &lt; 10; i++) ...{
+        for (int i = 0; i &lt; 10; i++)  {
           team.addPilot(new Pilot(&quot;Pilot #&quot; + i));
         }
         container.store(team);
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         ex.printStackTrace();
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

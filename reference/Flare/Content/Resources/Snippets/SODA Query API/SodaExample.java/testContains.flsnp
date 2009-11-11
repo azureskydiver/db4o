@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.java: testContains
-public static void testContains() ...{
+public static void testContains()  {
     new File(DB4O_FILE_NAME).delete();
     ObjectContainer container = database();
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         ArrayList list = new ArrayList();
         Pilot pilot1 = new Pilot(&quot;Test 1&quot;, 1);
         list.add(pilot1);
@@ -17,11 +17,11 @@ public static void testContains() ...{
         query.descend(&quot;pilots&quot;).constrain(pilot2).contains();
         ObjectSet result = query.execute();
         listResult(result);
-      } catch (Db4oException ex) ...{
+      } catch (Db4oException ex)  {
         System.out.println(&quot;Db4o Exception: &quot; + ex.getMessage());
-      } catch (Exception ex) ...{
+      } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Activator.java: start
-/**//*
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="271" MadCap:lastWidth="1148">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Activator.java: start
+/**
    * (non-Javadoc)
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
    * Obtains a db4o_osgi service reference and registers it with Db4oProvider
    */
-  public void start(BundleContext context) throws Exception ...{
+  public void start(BundleContext context) throws Exception  {
     super.start(context);
     ServiceReference serviceRef = context.getServiceReference(Db4oService.class.getName());
     Db4oService db4oService = (Db4oService)context.getService(serviceRef);
     Db4oProvider.Initialize(db4oService);
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

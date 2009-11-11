@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPExample.java: testTransparentPersistence
-private static void testTransparentPersistence() ...{
+private static void testTransparentPersistence()  {
     storeSensorPanel();
     Configuration configuration = configureTA();
 
     ObjectContainer container = database(configuration);
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         ObjectSet result = container.queryByExample(new SensorPanel(1));
         listResult(result);
         SensorPanel sensor = null;
-        if (result.size() &gt; 0) ...{
+        if (result.size() &gt; 0)  {
           System.out.println(&quot;Before modification: &quot;);
           sensor = (SensorPanel) result.get(0);
           // the object is a linked list, so each call to next()
           // will need to activate a new object
           SensorPanel next = sensor.getNext();
-          while (next != null) ...{
+          while (next != null)  {
             System.out.println(next);
             // modify the next sensor
             next.setSensor(new Integer(10 + (Integer)next.getSensor()));
@@ -24,7 +24,7 @@ private static void testTransparentPersistence() ...{
           // Explicit commit stores and commits the changes at any time
                     container.commit();
         }
-      } finally ...{
+      } finally  {
         // If there are unsaved changes to activatable objects, they 
                 // will be implicitly saved and committed when the database 
                 // is closed
@@ -33,21 +33,21 @@ private static void testTransparentPersistence() ...{
     }
     // reopen the database and check the modifications
     container = database(configuration);
-    if (container != null) ...{
-      try ...{
+    if (container != null)  {
+      try  {
         ObjectSet result = container.queryByExample(new SensorPanel(1));
         listResult(result);
         SensorPanel sensor = null;
-        if (result.size() &gt; 0) ...{
+        if (result.size() &gt; 0)  {
           System.out.println(&quot;After modification: &quot;);
           sensor = (SensorPanel) result.get(0);
           SensorPanel next = sensor.getNext();
-          while (next != null) ...{
+          while (next != null)  {
             System.out.println(next);
             next = next.getNext();
           }
         }
-      } finally ...{
+      } finally  {
         closeDatabase();
       }
     }

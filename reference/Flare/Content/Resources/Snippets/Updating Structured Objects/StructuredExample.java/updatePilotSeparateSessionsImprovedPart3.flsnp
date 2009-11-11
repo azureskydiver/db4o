@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.java: updatePilotSeparateSessionsImprovedPart3
-1private static void updatePilotSeparateSessionsImprovedPart3(
-2      ObjectContainer container) ...{
-3    ObjectSet result = container.query(new Predicate&lt;Car&gt;() ...{
-4      public boolean match(Car car) ...{
-5        return car.getModel().equals(&quot;Ferrari&quot;);
-6      }
-7    });
-8    listResult(result);
-9  }</pre>    </body></html>
+private static void updatePilotSeparateSessionsImprovedPart3(
+      ObjectContainer container)  {
+    ObjectSet result = container.query(new Predicate&lt;Car&gt;()  {
+      public boolean match(Car car)  {
+        return car.getModel().equals(&quot;Ferrari&quot;);
+      }
+    });
+    listResult(result);
+  }</pre>    </body></html>

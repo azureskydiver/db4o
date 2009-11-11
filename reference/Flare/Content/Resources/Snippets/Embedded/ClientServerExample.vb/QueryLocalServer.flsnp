@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: QueryLocalServer
-1Public Shared Sub QueryLocalServer()Sub QueryLocalServer(ByVal server As IObjectServer)
-2            Dim client As IObjectContainer = server.OpenClient()
-3            ListResult(client.Query(Of Car)())
-4            client.Close()
-5        End Sub</pre>    </body></html>
+Public Shared Sub QueryLocalServer()Sub QueryLocalServer(ByVal server As IObjectServer)
+            Dim client As IObjectContainer = server.OpenClient()
+            ListResult(client.Query(Of Car)())
+            client.Close()
+        End Sub</pre>    </body></html>

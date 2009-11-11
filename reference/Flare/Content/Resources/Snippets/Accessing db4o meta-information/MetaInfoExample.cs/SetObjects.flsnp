@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.cs: SetObjects
 private static void SetObjects()
-    ...{
+     {
       File.Delete(Db4oFileName);
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
       try 
-      ...{
+       {
         Car car = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
         container.Set(car);
         car = new Car(&quot;Ferrari&quot;, new Pilot(&quot;Michael Schumacher&quot;));
         container.Set(car);
       } 
       finally 
-      ...{
+       {
         container.Close();
       }
     }</pre>    </body></html>

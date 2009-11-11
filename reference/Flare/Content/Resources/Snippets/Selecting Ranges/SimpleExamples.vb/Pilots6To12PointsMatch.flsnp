@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: Pilots6To12PointsMatch
-1Private Shared Function Pilots6To12PointsMatch()Function Pilots6To12PointsMatch(ByVal p As Pilot) As Boolean
-2            ' all Pilots having 6 to 12 point are
-3            ' included in the result
-4            Return ((p.Points &gt;= 6) AndAlso (p.Points &lt;= 12))
-5        End Function</pre>    </body></html>
+Private Shared Function Pilots6To12PointsMatch()Function Pilots6To12PointsMatch(ByVal p As Pilot) As Boolean
+            ' all Pilots having 6 to 12 point are
+            ' included in the result
+            Return ((p.Points &gt;= 6) AndAlso (p.Points &lt;= 12))
+        End Function</pre>    </body></html>

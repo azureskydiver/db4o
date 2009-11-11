@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QBEExample.cs: test4
 private static void Test4()
-        ...{
+         {
             IObjectContainer container = Database();
             if (container != null)
-            ...{
+             {
                 try
-                ...{
+                 {
                     // Pilot2Derived is derived from class with initialization of points member using static value
                     Pilot2Derived pilot = new Pilot2Derived(&quot;Kimi Raikonnen&quot;, 100);
                     container.Set(pilot);
@@ -16,15 +16,15 @@ private static void Test4()
                     ListResult(result);
                 }
                 catch (Db4oException ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
                 }
                 catch (Exception ex)
-                ...{
+                 {
                     System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
                 }
                 finally
-                ...{
+                 {
                     CloseDatabase();
                 }
             }
