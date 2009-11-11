@@ -1081,7 +1081,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		_config.put(FILE_BASED_TRANSACTION_LOG_KEY, flag);
 	}
 
-	public boolean isTainted() {
+	private boolean isTainted() {
 		return _config.getAsBoolean(TAINTED_KEY);
     }
 
