@@ -1,13 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <UrlList>
-    <Url Source="Resources/Snippets/Identity/CheckUniquenessVb.flsnp" />
-    <Url Source="Resources/Snippets/Identity/test_copying_with_purge_cs.flsnp" />
-    <Url Source="Resources/Snippets/Identity/Identity_test_copying_with_purge.flsnp" />
-    <Url Source="Resources/Snippets/Identity/checkReferenceCacheWithPurgeCs.flsnp" />
-    <Url Source="Resources/Snippets/Identity/check_ref_cache_cs.flsnp" />
-    <Url Source="Resources/Snippets/Identity/Identity_check_reference_cache_with_purge.flsnp" />
-    <Url Source="Resources/Snippets/Identity/Identity_check_reference_cache.flsnp" />
-    <Url Source="Resources/Snippets/Identity/check_uniqueness_cs.flsnp" />
-    <Url Source="Resources/Snippets/Identity/Identity_check_uniqueness_java.flsnp" />
+    <Url Source="Resources/Snippets/.NET Reporting/Db4oManager.cs/Db4oManager.flsnp" />
+    <Url Source="Resources/Snippets/.NET Reporting/Db4oManager.vb/Db4oManager.flsnp" />
     <Url Source="Resources/Snippets/StoreCarCommit.flsnp" />
 </UrlList>
