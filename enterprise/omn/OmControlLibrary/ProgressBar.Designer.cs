@@ -53,7 +53,6 @@ namespace OMControlLibrary
 			this.Name = "ProgressBar";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Defragment";
 			this.ResumeLayout(false);
 
 		}

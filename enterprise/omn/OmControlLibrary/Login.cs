@@ -27,7 +27,6 @@ namespace OMControlLibrary
 		//Private static variables
 		private static CommandBarControl m_cmdBarCtrlCreateDemoDb;
 		internal static CommandBarControl m_cmdBarCtrlConnect;
-		internal static CommandBarControl m_cmdBarCtrlDefrag;
 		internal static CommandBarControl m_cmdBarCtrlBackup;
 		internal static CommandBarButton m_cmdBarBtnConnect;
 		private static Assembly m_AddIn_Assembly;
@@ -112,7 +111,7 @@ namespace OMControlLibrary
 		/// Creates the login tool window.
 		/// </summary>
 		public static void CreateLoginToolWindow(CommandBarControl cmdBarCtrl,
-			CommandBarButton cmdBarBtn, Assembly addIn_Assembly, CommandBarControl cmdBarCtrlDefrag,
+			CommandBarButton cmdBarBtn, Assembly addIn_Assembly,
 			CommandBarControl cmdBarCtrlBackup, CommandBarControl dbCreateDemoDbControl)
 		{
 			try
@@ -120,7 +119,6 @@ namespace OMControlLibrary
 				m_AddIn_Assembly = addIn_Assembly;
 				m_cmdBarCtrlConnect = cmdBarCtrl;
 				m_cmdBarBtnConnect = cmdBarBtn;
-				m_cmdBarCtrlDefrag = cmdBarCtrlDefrag;
 				m_cmdBarCtrlBackup = cmdBarCtrlBackup;
 				m_cmdBarCtrlCreateDemoDb = dbCreateDemoDbControl;
 
@@ -200,7 +198,6 @@ namespace OMControlLibrary
 
 				if (radioButtonLocal.Checked)
 				{
-					m_cmdBarCtrlDefrag.Enabled = true;
 					m_cmdBarCtrlBackup.Enabled = true;
 					m_cmdBarCtrlCreateDemoDb.Enabled = false;
 				}
@@ -212,18 +209,7 @@ namespace OMControlLibrary
 
 				((CommandBarButton)m_cmdBarBtnConnect.Control).Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imgageStream));
 				((CommandBarButton)m_cmdBarBtnConnect.Control).Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
-
-				//Stream imgStreamPic = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT);
-				//Stream imgStreamMask = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT_MASKED);
-				////Stream imgageStream = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT);
-				//stdole.IPictureDisp Pic = PictureHost.IPictureDisp(Image.FromStream(imgStreamPic)); ;
-				//stdole.IPictureDisp Mask=PictureHost.IPictureDisp(Image.FromStream(imgStreamMask));
-				//((CommandBarButton)m_cmdBarCtrlConnect.Control).Picture = (stdole.StdPicture)Pic;
-				//((CommandBarButton)m_cmdBarCtrlConnect.Control).Mask = (stdole.StdPicture)Mask;
-				//((CommandBarButton)m_cmdBarCtrlConnect.Control).Mask  = (stdole.StdPicture)Common.PictureHost.IPictureDisp(Image.FromStream(imgageStream));
-
-				// imgageStream = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT);
-				// m_cmdBarBtnConnect.Picture = (stdole.StdPicture)Common.PictureHost.IPictureDisp(Image.FromStream(imgageStream));
+                
 			}
 			catch (Exception oEx)
 			{
@@ -371,7 +357,6 @@ namespace OMControlLibrary
 						Helper.GetResourceString(Common.Constants.LOGIN_WINDOW_REMOTE_CAPTION);
 					PopulateRemoteRecentConnections();
 					m_cmdBarCtrlBackup.Enabled = false;
-					m_cmdBarCtrlDefrag.Enabled = false;
 					m_cmdBarCtrlCreateDemoDb.Enabled = true;
 				}
 				if (comboBoxFilePath.Items.Count > 1)

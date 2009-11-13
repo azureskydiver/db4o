@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{73E41A2F-EDD6-4547-BB46-0D33965994EC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -139,7 +139,6 @@
     <Compile Include="OMEClasses\ApplicationManager.cs" />
     <Compile Include="OMEClasses\BackUp.cs" />
     <Compile Include="OMEClasses\DemoDb.cs" />
-    <Compile Include="OMEClasses\Defragmentdb4oData.cs" />
     <Compile Include="OMEClasses\ListofModifiedObjects.cs" />
     <Compile Include="OMEClasses\PropertyPaneToolWin.cs" />
     <Compile Include="OMEClasses\SaveIndexClass.cs" />
@@ -173,7 +172,10 @@
     <Compile Include="QueryResult.Designer.cs">
       <DependentUpon>QueryResult.cs</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Resource.jp.Designer.cs" />
+    <Compile Include="Resources\Resource.jp.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="SearchPathDialog.cs">
       <SubType>Form</SubType>
     </Compile>

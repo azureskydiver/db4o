@@ -306,23 +306,7 @@ namespace OManager.BusinessLayer.UIHelper
 			new ModifyObjects(obj).CascadeonDelete(checkforCascade);
 			return false;
 		}
-
-		public static bool DefragDatabase(string ConnectionPath)
-		{
-			db4oDefrag defrag = new db4oDefrag(ConnectionPath);
-			bool check = false;
-			try
-			{
-				defrag.db4oDefragDatabase();
-			}
-			catch (Exception oEx)
-			{
-				check = true;
-				LoggingHelper.HandleException(oEx);
-			}
-
-			return check;
-		}
+        
 
 		public static bool BackUpDatabase(string LocationToBackUp)
 		{
