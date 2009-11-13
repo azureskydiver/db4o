@@ -150,12 +150,6 @@
   <data name="COMBOBOX_DEFAULT_TEXT" xml:space="preserve">
     <value>&lt;&lt; select &gt;&gt;</value>
   </data>
-  <data name="CONFIRMATION_MSG_DEFRAG1" xml:space="preserve">
-    <value>Are you sure you want to Defragment this database?</value>
-  </data>
-  <data name="CONFIRMATION_MSG_DEFRAG2" xml:space="preserve">
-    <value>This operation will shutdown the currently running database and reopen after the operation completes.</value>
-  </data>
   <data name="CONFIRMATION_MSG_LOGOUT" xml:space="preserve">
     <value>Do you want to logout?</value>
   </data>
@@ -185,10 +179,7 @@
   </data>
   <data name="ERROR_MSG_CONNECTION" xml:space="preserve">
     <value>Error in connection!</value>
-  </data>
-  <data name="ERROR_MSG_DEFRAGMENT" xml:space="preserve">
-    <value>Error in defragment!</value>
-  </data>
+  </data> 
   <data name="GUID_FORMATTER_STRING" xml:space="preserve">
     <value>B</value>
   </data>

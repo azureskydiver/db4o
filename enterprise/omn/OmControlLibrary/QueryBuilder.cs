@@ -418,7 +418,6 @@ namespace OMControlLibrary
 		private static void EnableDisableDatabaseConnection(bool enabled)
 		{
 			SafeSetEnabled(Login.m_cmdBarCtrlBackup, enabled);
-			SafeSetEnabled(Login.m_cmdBarCtrlDefrag, enabled);
 			SafeSetEnabled(Login.m_cmdBarCtrlConnect, enabled);
 			SafeSetEnabled(Login.m_cmdBarBtnConnect, enabled);
 		}

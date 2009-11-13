@@ -41,7 +41,6 @@ namespace OMAddin
 		private CommandBarEvents salesForceControlHandler;
 		private CommandBarEvents omHelpControlHandler;
 		private CommandBarEvents reqConsultationControlHandler;
-		private CommandBarEvents omDefragControlHandler;
 		private CommandBarEvents omProxyConfigHandler;
 		private CommandBarEvents omBackupControlHandler;
 		private CommandBarEvents omObjectBrowserControlHandler;
@@ -54,7 +53,6 @@ namespace OMAddin
 
 		private CommandBarControl dbCreateDemoDbControl;
 		private CommandBarControl connectDatabaseMenu;
-		private CommandBarControl omDefragControl;
 		private CommandBarControl omProxyConfigControl;
 		private CommandBarControl omBackupControl;
 
@@ -117,7 +115,7 @@ namespace OMAddin
 		private const string PROXYCONFIGURATIONS = "Proxy Configurations";
 		private const string ASSEMBLY_SEARCH_PATH_CONFIG = "Assembly search path...";
 
-		private const string DEFRAG = "Defrag";
+		
 		private const string BACKUP = "Backup";
 		private const string DB4O_DEVELOPER_COMMUNITY = "db4objects Developer Community";
 		private const string DB4O_DOWNLOADS = "db4objects Downloads";
@@ -599,19 +597,7 @@ namespace OMAddin
 			BackupDatabase();
 		}
 		#endregion
-
-		#region omDefragControlHandler_Click
-		/// <summary>
-		/// This event handler defrags currently connected db4o database.
-		/// </summary>
-		/// <param name="CommandBarControl"></param>
-		/// <param name="Handled"></param>
-		/// <param name="CancelDefault"></param>
-		void omDefragControlHandler_Click(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
-		{
-			DefragDatabase();
-		}
-		#endregion
+        
 
 		#region db4oControlHandler_Click
 		void db4oControlHandler_Click(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
@@ -803,15 +789,10 @@ namespace OMAddin
 												 position, true);
 				oPopupMaintainance.Caption = MAINTAINANCE;
 				#endregion
-
-				#region Creates submenu for Defrag under Maintainance
-				AddSubMenu(out omDefragControl, oPopupMaintainance, out omDefragControlHandler, 1, DEFRAG);
-				omDefragControlHandler.Click += omDefragControlHandler_Click;
-				omDefragControl.Enabled = false;
-				#endregion
+				
 
 				#region Creates submenu for Backup under Maintainance
-				AddSubMenu(out omBackupControl, oPopupMaintainance, out omBackupControlHandler, 2, BACKUP);
+				AddSubMenu(out omBackupControl, oPopupMaintainance, out omBackupControlHandler, 1, BACKUP);
 				omBackupControlHandler.Click += omBackupControlHandler_Click;
 				omBackupControl.Enabled = false;
 				#endregion
@@ -1048,7 +1029,7 @@ namespace OMAddin
                 SetPicture(ThisAssembly, connectDatabaseButton, IMAGE_DISCONNECT, IMAGE_DISCONNECT_MASKED);
 
 				omBackupControl.Enabled = true;
-				omDefragControl.Enabled = true;
+				
 			}
 			catch (Exception oEx)
 			{
@@ -1139,7 +1120,7 @@ namespace OMAddin
 					ViewBase.ApplicationObject = _applicationObject;
 					if (Helper.LoginToolWindow == null || Helper.LoginToolWindow.Visible == false)
 					{
-						Login.CreateLoginToolWindow(connectDatabaseMenu, connectDatabaseButton, assembly, omDefragControl, omBackupControl, dbCreateDemoDbControl);
+						Login.CreateLoginToolWindow(connectDatabaseMenu, connectDatabaseButton, assembly, omBackupControl, dbCreateDemoDbControl);
 					}
 				}
 				else
@@ -1161,7 +1142,6 @@ namespace OMAddin
 					connectDatabaseButton.State = ((CommandBarButton)connectDatabaseMenu).State = MsoButtonState.msoButtonUp;
 
 					dbCreateDemoDbControl.Enabled = true;
-					omDefragControl.Enabled = false;
 					omBackupControl.Enabled = false;
 
 					CloseAllToolWindows();
@@ -1282,12 +1262,12 @@ namespace OMAddin
 		{
 			try
 			{
-				omDefragControl.Enabled = false;
+				
 				omBackupControl.Enabled = false;
 				Backup backUp = new Backup();
 				backUp.BackUpDataBase();
 				omBackupControl.Enabled = true;
-				omDefragControl.Enabled = true;
+				
 			}
 			catch (Exception oEx)
 			{
@@ -1297,123 +1277,7 @@ namespace OMAddin
 
 		#endregion
 
-		#region Background process for Defrag
-		bool isrunningDefrag = true;
-
-		void bwForDefrag_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-		{
-			try
-			{
-				isrunningDefrag = false;
-				ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
-				ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;
-				Login.CreateQueryBuilderToolWindow();
-				PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
-				PropertyPaneToolWin.PropWindow.Visible = true;
-				MessageBox.Show("Defragment successful!", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION));
-				_applicationObject.StatusBar.Progress(false, "Defragment successful", 0, 0);
-				ObjectBrowser.Instance.Enabled = true;
-				PropertiesTab.Instance.Enabled = true;
-				QueryBuilder.Instance.Enabled = true;
-
-			}
-			catch (Exception ex)
-			{
-				LoggingHelper.HandleException(ex);
-			}
-		}
-
-
-		void bwForDefrag_DoWork(object sender, DoWorkEventArgs e)
-		{
-			try
-			{
-				connectDatabaseMenu.Enabled = false;
-				connectDatabaseButton.Enabled = false;
-				omDefragControl.Enabled = false;
-				omBackupControl.Enabled = false;
-				_applicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
-				ThreadForDefrag();
-				connectDatabaseMenu.Enabled = true;
-				connectDatabaseButton.Enabled = true;
-				omDefragControl.Enabled = true;
-				omBackupControl.Enabled = true;
-				_applicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
-			}
-			catch (Exception ex)
-			{
-				bwForDefrag.CancelAsync();
-				bwForDefrag = null;
-				ViewBase.ApplicationObject.StatusBar.Clear();
-				ViewBase.ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
-				LoggingHelper.HandleException(ex);
-			}
-
-		}
-
-		void bwForDefrag_ProgressChanged(object sender, ProgressChangedEventArgs e)
-		{
-			_applicationObject.StatusBar.Progress(true, "Defragmenting database.... ", e.ProgressPercentage * 10, 10000);
-		}
-
-		#endregion
-
-		#region DefragDatabase
-
-		BackgroundWorker bwForDefrag;
-		private void DefragDatabase()
-		{
-			try
-			{
-				string strShowMessage = Helper.GetResourceString(OMControlLibrary.Common.Constants.CONFIRMATION_MSG_DEFRAG1) + Environment.NewLine
-							  + Helper.GetResourceString(OMControlLibrary.Common.Constants.CONFIRMATION_MSG_DEFRAG2);
-
-				DialogResult dialogRes = MessageBox.Show(strShowMessage, Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-				if (dialogRes == DialogResult.Yes)
-				{
-					ObjectBrowser.Instance.Enabled = false;
-					PropertiesTab.Instance.Enabled = false;
-					QueryBuilder.Instance.Enabled = false;
-					bwForDefrag = new BackgroundWorker();
-					bwForDefrag.WorkerReportsProgress = true;
-					bwForDefrag.WorkerSupportsCancellation = true;
-					bwForDefrag.ProgressChanged += bwForDefrag_ProgressChanged;
-					bwForDefrag.DoWork += bwForDefrag_DoWork;
-					bwForDefrag.RunWorkerCompleted += bwForDefrag_RunWorkerCompleted;
-
-
-					isrunningDefrag = true;
-					bwForDefrag.RunWorkerAsync();
-					for (double i = 1; i < 10000; i++)
-					{
-						i++;
-						bwForDefrag.ReportProgress((int)i * 100 / 1000);
-						if (isrunningDefrag == false)
-							break;
-					}
-				}
-				else
-				{
-					return;
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.HandleException(oEx);
-				return;
-			}
-		}
-
-
-		void ThreadForDefrag()
-		{
-			RecentQueries recConn = dbInteraction.GetCurrentRecentConnection();
-			string strDatabaseLocation = recConn.ConnParam.Connection;
-			CloseAllToolWindows();
-			Defragmentdb4oData d = new Defragmentdb4oData(strDatabaseLocation);
-		}
-		#endregion
+		
 
 		#region OpenHelp
 
