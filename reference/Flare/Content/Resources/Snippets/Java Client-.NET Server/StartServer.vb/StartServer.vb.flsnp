@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1487" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StartServer.vb
 ' Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com 
 
 Imports System
@@ -54,7 +59,8 @@ Class StartServerClass StartServer
     ''' messaging callback
     ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
     ''' &lt;/summary&gt;
-    Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+    Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _ 
+Implements IMessageRecipient.ProcessMessage
         If TypeOf message Is StopServer Then
             Close()
         End If
@@ -72,4 +78,6 @@ Class StartServerClass StartServer
     End Sub
     ' end Close
 
-End Class</pre>    </body></html>
+End Class</pre>
+    </body>
+</html>

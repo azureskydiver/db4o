@@ -1,14 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SystemInfoExample.vb: TestSystemInfo
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="366" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SystemInfoExample.vb: TestSystemInfo
 Private Shared Sub TestSystemInfo()Sub TestSystemInfo()
             Dim dbSize As Long = _container.Ext().SystemInfo().TotalSize()
             Dim fsSize As Long = _container.Ext().SystemInfo().FreespaceSize()
             If dbSize &gt; MaxDbSize Then
-                System.Console.WriteLine(&quot;Attention! Database file size is over the limit. Maintenance required&quot;)
+                System.Console.WriteLine("Attention! Database file size is over the limit. _ 
+Maintenance required")
             End If
-            _logWriter.WriteLine(&quot;Total database size: &quot; + dbSize.ToString())
+            _logWriter.WriteLine("Total database size: " + dbSize.ToString())
             If fsSize &gt; MaxFsSize Then
-                System.Console.WriteLine(&quot;Attention! Freespace size is over the limit. Maintenance required&quot;)
+                System.Console.WriteLine("Attention! Freespace size is over the limit. _ 
+Maintenance required")
             End If
-            _logWriter.WriteLine(&quot;Database freespace size: &quot; + fsSize.ToString())
-            _logWriter.WriteLine(&quot;Database freespace entries: &quot; + _container.Ext().SystemInfo().FreespaceEntryCount().ToString())
-        End Sub</pre>    </body></html>
+            _logWriter.WriteLine("Database freespace size: " + fsSize.ToString())
+            _logWriter.WriteLine("Database freespace entries: " + _container.Ext().SystemInfo()._ 
+FreespaceEntryCount().ToString())
+        End Sub</pre>
+    </body>
+</html>

@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.vb: TestNonFlushingAdapter
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="708" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IOExample.vb: TestNonFlushingAdapter
 Private Shared Sub TestNonFlushingAdapter()Sub TestNonFlushingAdapter()
 
             File.Delete(Db4oFileName)
@@ -9,11 +14,12 @@ Private Shared Sub TestNonFlushingAdapter()Sub TestNonFlushingAdapter()
             configuration.Io(cachedIoAdapter)
             Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                Dim pilot As New Pilot(&quot;Rubens Barrichello&quot;)
+                Dim pilot As New Pilot("Rubens Barrichello")
                 container.Store(pilot)
                 Dim startTime As Long = DateTime.Now.Ticks
                 container.Commit()
-                System.Console.WriteLine(&quot;Commit time with NonFlushingIoAdapter: &quot; + (DateTime.Now.Ticks - startTime).ToString() + &quot; ticks&quot;)
+                System.Console.WriteLine("Commit time with NonFlushingIoAdapter: " + (DateTime.Now.Ticks - startTime).ToString() _ 
++ " ticks")
             Finally
                 container.Close()
             End Try
@@ -22,12 +28,15 @@ Private Shared Sub TestNonFlushingAdapter()Sub TestNonFlushingAdapter()
             File.Delete(Db4oFileName)
             container = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim pilot As New Pilot(&quot;Rubens Barrichello&quot;)
+                Dim pilot As New Pilot("Rubens Barrichello")
                 container.Store(pilot)
                 Dim startTime As Long = DateTime.Now.Ticks
                 container.Commit()
-                System.Console.WriteLine(&quot;Commit time with default IO Adapter: &quot; + (DateTime.Now.Ticks - startTime).ToString() + &quot; ticks&quot;)
+                System.Console.WriteLine("Commit time with default IO Adapter: " + (DateTime.Now.Ticks - startTime).ToString() _ 
++ " ticks")
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

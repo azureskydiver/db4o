@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: ModifyRollbackAndCheck
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="499" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: ModifyRollbackAndCheck
 Private Shared Sub ModifyRollbackAndCheck()Sub ModifyRollbackAndCheck()
             Dim container As IObjectContainer = Database(ConfigureTP())
             If container IsNot Nothing Then
@@ -6,16 +11,21 @@ Private Shared Sub ModifyRollbackAndCheck()Sub ModifyRollbackAndCheck()
                     ' create a car
                     Dim car As Car = DirectCast(container.QueryByExample(New Car(Nothing, Nothing))(0), Car)
                     Dim pilot As Pilot = car.Pilot
-                    System.Console.WriteLine(&quot;Initial car: &quot; + car.ToString() + &quot;(&quot; + container.Ext().GetID(car).ToString() + &quot;)&quot;)
-                    System.Console.WriteLine(&quot;Initial pilot: &quot; + pilot.ToString() + &quot;(&quot; + container.Ext().GetID(pilot).ToString() + &quot;)&quot;)
-                    car.Model = &quot;Ferrari&quot;
-                    car.ChangePilot(&quot;Michael Schumacher&quot;, 123)
+                    System.Console.WriteLine("Initial car: " + car.ToString() + "(" + container.Ext().GetID(car).ToString() + ")")
+                    System.Console.WriteLine("Initial pilot: " + pilot.ToString() + "(" + _ 
+container.Ext().GetID(pilot).ToString() + ")")
+                    car.Model = "Ferrari"
+                    car.ChangePilot("Michael Schumacher", 123)
                     container.Rollback()
                     container.Deactivate(car, Int32.MaxValue)
-                    System.Console.WriteLine(&quot;Car after rollback: &quot; + car.ToString() + &quot;(&quot; + container.Ext().GetID(car).ToString() + &quot;)&quot;)
-                    System.Console.WriteLine(&quot;Pilot after rollback: &quot; + pilot.ToString() + &quot;(&quot; + container.Ext().GetID(pilot).ToString() + &quot;)&quot;)
+                    System.Console.WriteLine("Car after rollback: " + car.ToString() + "(" + _ 
+container.Ext().GetID(car).ToString() + ")")
+                    System.Console.WriteLine("Pilot after rollback: " + pilot.ToString() + "(" + _ 
+container.Ext().GetID(pilot).ToString() + ")")
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

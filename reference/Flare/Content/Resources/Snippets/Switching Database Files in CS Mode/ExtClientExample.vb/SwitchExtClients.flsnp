@@ -1,26 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExtClientExample.vb: SwitchExtClients
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="556" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ExtClientExample.vb: SwitchExtClients
 Private Shared Sub SwitchExtClients()Sub SwitchExtClients()
             File.Delete(Db4oFileName)
             File.Delete(ExtFileName)
-            Dim server As IObjectServer = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0)
+            Dim server As IObjectServer = _ 
+Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0)
             Try
                 Dim client As IObjectContainer = server.OpenClient()
-                Dim car As Car = New Car(&quot;BMW&quot;)
+                Dim car As Car = New Car("BMW")
                 client.Set(car)
-                System.Console.WriteLine(&quot;Objects in the Main database file:&quot;)
+                System.Console.WriteLine("Objects in the Main database file:")
                 RetrieveAll(client)
 
-                System.Console.WriteLine(&quot;Switching to additional database:&quot;)
+                System.Console.WriteLine("Switching to additional database:")
                 Dim clientExt As IExtClient = CType(client, IExtClient)
                 clientExt.SwitchToFile(ExtFileName)
-                car = New Car(&quot;Ferrari&quot;)
+                car = New Car("Ferrari")
                 clientExt.Set(car)
                 RetrieveAll(clientExt)
-                System.Console.WriteLine(&quot;Main database file again: &quot;)
+                System.Console.WriteLine("Main database file again: ")
                 clientExt.SwitchToMainFile()
                 RetrieveAll(clientExt)
                 clientExt.Close()
             Finally
                 server.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

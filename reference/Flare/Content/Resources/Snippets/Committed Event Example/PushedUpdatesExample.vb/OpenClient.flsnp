@@ -1,7 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: OpenClient
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="366" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: OpenClient
 Private Function OpenClient()Function OpenClient() As IObjectContainer
             Try
-                Dim client As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, Port, User, Password)
+                Dim client As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+"localhost", Port, User, Password)
                 Dim committedEventHandler As CommittedEventHandler = New CommittedEventHandler(client)
                 Dim eventRegistry As IEventRegistry = EventRegistryFactory.ForObjectContainer(client)
                 AddHandler eventRegistry.Committed, AddressOf committedEventHandler.OnCommitted
@@ -13,4 +19,6 @@ Private Function OpenClient()Function OpenClient() As IObjectContainer
                 System.Console.WriteLine(ex.ToString)
             End Try
             Return Nothing
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

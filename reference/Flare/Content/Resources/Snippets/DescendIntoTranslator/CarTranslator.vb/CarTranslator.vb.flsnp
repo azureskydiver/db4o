@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CarTranslator.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1069" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CarTranslator.vb
 ' Copyright (C) 2009 Versant Inc. http://www.db4o.com
 
 Imports Db4objects.Db4o
@@ -9,7 +14,8 @@ Namespace Db4odocNamespace Db4odoc.Diagnostics
     Public Class CarTranslatorClass CarTranslator
         Implements IObjectConstructor
 
-        Public Function OnStore()Function OnStore(ByVal container As IObjectContainer, ByVal applicationObject As Object) As Object Implements IObjectConstructor.OnStore
+        Public Function OnStore()Function OnStore(ByVal container As IObjectContainer, ByVal applicationObject As Object) _ 
+As Object Implements IObjectConstructor.OnStore
             Dim car As Car = CType(applicationObject, Car)
 
             Dim fullModel As String
@@ -24,10 +30,10 @@ Namespace Db4odocNamespace Db4odoc.Diagnostics
 
 
         Private Function GetYear()Function GetYear(ByVal carModel As String) As String
-            If carModel.Equals(&quot;BMW&quot;) Then
-                Return &quot; 2002&quot;
+            If carModel.Equals("BMW") Then
+                Return " 2002"
             Else
-                Return &quot; 1999&quot;
+                Return " 1999"
             End If
         End Function
 
@@ -35,12 +41,14 @@ Namespace Db4odocNamespace Db4odoc.Diagnostics
             Return False
         End Function
 
-        Public Function OnInstantiate()Function OnInstantiate(ByVal container As IObjectContainer, ByVal storedObject As Object) As Object Implements IObjectConstructor.OnInstantiate
+        Public Function OnInstantiate()Function OnInstantiate(ByVal container As IObjectContainer, ByVal storedObject _ 
+As Object) As Object Implements IObjectConstructor.OnInstantiate
             Dim model As String = DirectCast(storedObject, String)
             Return New Car(model)
         End Function
 
-        Public Sub OnActivate()Sub OnActivate(ByVal container As IObjectContainer, ByVal applicationObject As Object, ByVal storedObject As Object) Implements IObjectConstructor.OnActivate
+        Public Sub OnActivate()Sub OnActivate(ByVal container As IObjectContainer, ByVal applicationObject As Object, _ 
+ByVal storedObject As Object) Implements IObjectConstructor.OnActivate
         End Sub
 
         Public Function StoredClass()Function StoredClass() As System.Type Implements IObjectConstructor.StoredClass
@@ -48,4 +56,6 @@ Namespace Db4odocNamespace Db4odoc.Diagnostics
         End Function
 
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

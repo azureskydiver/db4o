@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MessagingExample.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="822" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MessagingExample.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 Imports System
 Imports Db4objects.Db4o
@@ -9,7 +14,7 @@ Imports Db4objects.Db4o.Messaging
 Namespace Db4objectsNamespace Db4objects.Db4odoc.Messaging
 
     Public Class MessagingExampleClass MessagingExample
-        Private Const Db4oFileName As String = &quot;reference.db4o&quot;
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub ConfigureServer()Sub ConfigureServer()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
@@ -20,7 +25,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Messaging
                 Dim clientConfiguration As IConfiguration = Db4oFactory.NewConfiguration()
                 Dim sender As IMessageSender = clientConfiguration.ClientServer().GetMessageSender()
                 Dim clientObjectContainer As IObjectContainer = objectServer.OpenClient(clientConfiguration)
-                sender.Send(New MyClientServerMessage(&quot;Hello from client.&quot;))
+                sender.Send(New MyClientServerMessage("Hello from client."))
                 clientObjectContainer.Close()
             Finally
                 objectServer.Close()
@@ -31,10 +36,13 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Messaging
 
     Public Class SimpleMessageRecipientClass SimpleMessageRecipient
         Implements IMessageRecipient
-        Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+        Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _ 
+Implements IMessageRecipient.ProcessMessage
             ' message objects will arrive in this code block
             System.Console.WriteLine(message)
         End Sub
     End Class
 
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

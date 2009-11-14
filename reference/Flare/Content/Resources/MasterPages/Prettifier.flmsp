@@ -9,7 +9,6 @@
             </script>
         </p>
         <MadCap:bodyProxy />
-        <MadCap:miniTocProxy />
         <MadCap:topicToolbarProxy class="" style="mc-topic-toolbar-items: ;" />
     </body>
 </html>

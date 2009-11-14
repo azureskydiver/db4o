@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1720">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="252" MadCap:lastWidth="1365">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">EventsExample.vb: ConflictReplicationEventListener
 Public Class ConflictReplicationEventListenerClass ConflictReplicationEventListener
             Implements Db4objects.Drs.IReplicationEventListener
-            Public Overridable Sub OnReplicate()Sub OnReplicate(ByVal e As Db4objects.Drs.IReplicationEvent) Implements Db4objects.Drs.IReplicationEventListener.OnReplicate
+            Public Overridable Sub OnReplicate()Sub OnReplicate(ByVal e As Db4objects.Drs.IReplicationEvent) _ 
+Implements Db4objects.Drs.IReplicationEventListener.OnReplicate
                 If e.IsConflict() Then
                     Dim chosenObjectState As IObjectState = e.StateInProviderB()
                     e.OverrideWith(chosenObjectState)

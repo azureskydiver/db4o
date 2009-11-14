@@ -1,19 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UtilityExample.vb: CheckActive
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="423" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UtilityExample.vb: CheckActive
 Public Shared Sub CheckActive()Sub CheckActive()
             StoreSensorPanel()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ActivationDepth(2)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                System.Console.WriteLine(&quot;Object container activation depth = 2&quot;)
+                System.Console.WriteLine("Object container activation depth = 2")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
                 Dim sensor As SensorPanel = CType(result(0), SensorPanel)
                 Dim NextSensor As SensorPanel = sensor.NextSensor
                 While Not NextSensor Is Nothing
-                    System.Console.WriteLine(&quot;Object &quot; + NextSensor.ToString() + &quot; is active: &quot; + db.Ext().IsActive(NextSensor).ToString())
+                    System.Console.WriteLine("Object " + NextSensor.ToString() + " is active: " + _ 
+db.Ext().IsActive(NextSensor).ToString())
                     NextSensor = NextSensor.NextSensor
                 End While
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

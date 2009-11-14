@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: CreateDatabase
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="423" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: CreateDatabase
 Private Shared Sub CreateDatabase()Sub CreateDatabase(ByVal config As IEmbeddedConfiguration)
             File.Delete(Db4oFileName)
 
@@ -7,13 +12,16 @@ Private Shared Sub CreateDatabase()Sub CreateDatabase(ByVal config As IEmbeddedC
             Try
                 Dim itemStore As New ItemStore()
                 For i As Integer = 0 To ObjectCount - 1
-                    itemStore.AddItem(New Item(i, &quot;title&quot; &amp; i))
+                    itemStore.AddItem(New Item(i, "title" &amp; i))
                 Next
                 container.Store(itemStore)
-                Dim item As Item = DirectCast(container.QueryByExample(New Item(1, &quot;title1&quot;))(0), Item)
+                Dim item As Item = DirectCast(container.QueryByExample(New Item(1, "title1"))(0), Item)
                 System.Console.WriteLine(item)
             Finally
                 container.Close()
             End Try
-            System.Console.WriteLine([String].Format(&quot;Time to create a database: {0} ms&quot;, (DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
-        End Sub</pre>    </body></html>
+            System.Console.WriteLine([String].Format("Time to create a database: {0} ms", _ 
+(DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
+        End Sub</pre>
+    </body>
+</html>
