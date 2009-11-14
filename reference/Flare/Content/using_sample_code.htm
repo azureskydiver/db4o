@@ -1,40 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Using Sample Code	<link href="Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Using Sample Code</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Variables">Variables</a></li><li><a href ="#Embedded Code">Embedded Code</a></li></ul></div></div></div><p>Db4o reference documentation accompanies theoretical
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029" MadCap:conditions="Primary.TobeReviewed">
+    <head><title>Using Sample Code	<link href="Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Using Sample Code</h1>
+                <div id="TOC">
+                    <div id="TOCinner"><span class="TOCtitle">Contents</span>
+                        <div class="TOCcontents">
+                            <ul>
+                                <li><a href="#Variables">Variables</a>
+                                </li>
+                                <li><a href="#Embedded Code">Embedded Code</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p>Db4o reference documentation accompanies theoretical
 material with example code, which can be used for the material evaluation and
 better understanding.</p>
-
-<p>The examples are provided in java, c# and VB.NET. In the
+                <p>The examples are provided in java, c# and VB.NET. In the
 online version, you can use filters on the right pane to display the relevant
 content. Offline version provides the content depending on the downloaded
 version of db4o.</p>
-
-<p>Most of the examples are console applications except for
+                <p>Most of the examples are console applications except for
 those clearly mentioning the environment (web-applications, windows forms etc.).</p>
-
-<p MadCap:conditions="Primary.Print">
-
-<p>.Net examples are .NET2.0 compatible.</p>
-
-</p><p MadCap:conditions="Primary:net" />
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java examples are JDK5 compatible.</p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-
-
-<a name="Variables"></a><h2>Variables</h2>
-
-<p>The in-text code snippets are mainly used to show the syntax
+                <p MadCap:conditions="Primary.Print">
+                    <p>.Net examples are .NET2.0 compatible.</p>
+                </p>
+                <p MadCap:conditions="Primary:net" />
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java examples are JDK5 compatible.</p>
+                </p>
+                <p MadCap:conditions="Primary:java" /><a name="Variables"></a>
+                <h2>Variables</h2>
+                <p>The in-text code snippets are mainly used to show the syntax
 of a particular method. The following variables are used:</p>
-
-<p><code>objectContainer</code> - references and open
+                <p><code>objectContainer</code> - references and open
 ObjectContainer/IObjectContainer or ObjectClient/IobjectClient. For more
 information see <a href="object_lifecycle/object_container.htm" class="wikiLink">Object Container</a> and
 <a href="client-server/embedded.htm" class="wikiLink">Embedded</a>.</p><code>configuration</code> variable is used to reflect
@@ -42,80 +46,24 @@ Configuration object. See <a href="tuning/configuration.htm" class="wikiLink">Co
 
 
 
-<a name="Embedded Code"></a><h2>Embedded Code</h2>
-
-<p>The examples usually show only the method code demonstrating
+<a name="Embedded Code"></a><h2>Embedded Code</h2><p>The examples usually show only the method code demonstrating
 the functionality discussed. In this case, additional code (opening and closing
 database methods, listing results, global variable definitions) and persistent
 class definitions are not visible. In order to see them you can download the
 whole example as a *.zip file using the button in the top-right corner of the
 example code block. Note: usually the *.zip file contains all the examples for
-the current topic.</p>
-
-
-
-<p>In the majority of the examples, objectContainer is opened
+the current topic.</p><p>In the majority of the examples, objectContainer is opened
 and closed in each method. This is done to keep examples atomic. In the
 real-world application, the best technique would be to open an objectContainer
 on the first request and keep it open for the application lifetime.</p>The downloaded code can be easily used to run the examples.
 
-<p MadCap:conditions="Primary.Print">
-
-<p>In Visual Studio 2005/2008:</p>
-
-<ul><li>unzip the contents in the /Example folder;</li><li>select "New Project" from the "File" menu;</li><li>select "Console Application" template;</li><li>in the "Solution Explorer" right-click "ConsoleApplication1"
+<p MadCap:conditions="Primary.Print"><p>In Visual Studio 2005/2008:</p><ul><li>unzip the contents in the /Example folder;</li><li>select "New Project" from the "File" menu;</li><li>select "Console Application" template;</li><li>in the "Solution Explorer" right-click "ConsoleApplication1"
 and select "Add/Existing Item";</li><li>navigate to the /Example folder and select all the *.cs files;</li><li>now you can delete the automatically generated Program.cs;</li><li>select "References" in the "Solution Explorer" and add the
 required db4o libraries:</li><ul><li>Db4objects.Db4o.dll for embedded examples or Db4objects.Db4o.CS.dll for client-server examples</li><li>Db4objects.Db4o.Instrumentation.dll, Db4objects.Db4o.MSBuild.dll for TA and TP examples</li><li>Db4objects.Db4o.NativeQueries.dll for examples containing Native Queries</li><li>Db4objects.Db4o.Linq for example containing LINQ (VS 2008)</li><li>Db4objects.Db4o.Optional.dll for Reflector and IO examples </li></ul><li>if the example archive contains several examples you will need
 to go to the project properties and select one of the examples as a "Startup
-object";</li><li>build and run the example.</li></ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</p><p MadCap:conditions="Primary:net" />
-
-<p MadCap:conditions="Primary.Java">
-
-<p>In Eclipse (using JDK5):</p>
-
-<ul><li>unzip the contents in /Example/com/db4odoc/[example_name]
+object";</li><li>build and run the example.</li></ul></p><p MadCap:conditions="Primary:net" /><p MadCap:conditions="Primary.Java"><p>In Eclipse (using JDK5):</p><ul><li>unzip the contents in /Example/com/db4odoc/[example_name]
 folder (check the correct package name in the code files);</li><li>select File/New/Project/Java Project;</li><li>choose the project name as "ExampleProject";</li><li>select "Create project from existing source" and browse to the
-/Example folder;</li><li>press "Next";</li><li>in the "Libraries" tab add the full db4o jar: db4o-x.x-all-java5.jar;</li><li>press "Finish";</li><li>run the example.</li></ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</p><p MadCap:conditions="Primary:java" />
-
-
-
-
-
-</div>
-    </div>
-    
-  </body></html>
+/Example folder;</li><li>press "Next";</li><li>in the "Libraries" tab add the full db4o jar: db4o-x.x-all-java5.jar;</li><li>press "Finish";</li><li>run the example.</li></ul></p><p MadCap:conditions="Primary:java" /></div>
+        </div>
+    </body>
+</html>
