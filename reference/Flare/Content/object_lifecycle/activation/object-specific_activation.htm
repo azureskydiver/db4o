@@ -1,157 +1,123 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Object-Specific Activation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Object-Specific Activation</h1>
-
-
-<p>You can tune up activation settings for specific classes with the following methods:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: <code>configuration.common().objectClass("yourClass").minimumActivationDepth(minimumDepth)</code> <code>configuration.common().objectClass("yourClass").maximumActivationDepth(maximumDepth)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#: <code>configuration.Common.ObjectClass("yourClass").MinimumActivationDepth(minimumDepth)</code> <code>configuration.Common.ObjectClass("yourClass").MaximumActivationDepth(maximumDepth)</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB: <code>configuration.Common.ObjectClass("yourClass").MinimumActivationDepth(minimumDepth)</code> <code>configuration.Common.ObjectClass("yourClass").MaximumActivationDepth(maximumDepth)</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Cascading the activation depth to member fields, the depth value is reduced by one for the field. If the depth exceeds the maximumDepth specified for the class of the object, it is reduced to the maximumDepth. If the depth value is lower than the minimumDepth it is raised to the minimumDepth.</p>
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testMaxActivate.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestMaxActivate.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestMaxActivate.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testMinActivate.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestMinActivate.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestMinActivate.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>You can set up automatic activation for specific objects or fields: </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java:  <code>configuration.common().objectClass("yourClass").cascadeOnActivate (bool)</code> <code>configuration.common().objectClass("yourClass").objectField("field").cascadeOnActivate(bool)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:  <code>configuration.Common.ObjectClass("yourClass").CascadeOnActivate (bool)</code> <code>configuration.Common.ObjectClass("yourClass").ObjectField("field").CascadeOnActivate(bool)</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB: <code>configuration.Common.ObjectClass("yourClass").CascadeOnActivate (bool)</code> <code>configuration.Common.ObjectClass("yourClass").ObjectField("field").CascadeOnActivate(bool)</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Cascade activation will retrieve the whole object graph, starting from the specified object(field). This setting can lead to increased memory consumption. </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testCascadeActivate.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestCascadeActivate.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestCascadeActivate.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>An alternative to cascade activation can be manual activation of objects: </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: <code>ObjectContainer#activate(object, activationDepth);</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#: <code>IObjectContainer#Activate(object, activationDepth);</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB: <code>IObjectContainer#Activate(object, activationDepth);</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Manual deactivation may be used to save memory: </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java:<code>ObjectContainer#deactivate(object, activationDepth);</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:<code>IObjectContainer#Deactivate(object, activationDepth);</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB:<code>IObjectContainer#Deactivate(object, activationDepth);</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>These 2 methods give you an excellent control over object activation, but they obviously need more attention from the application side.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testActivateDeactivate.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestActivateDeactivate.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestActivateDeactivate.flsnp" />
-</p><p MadCap:conditions="Primary:vb" /></div>
-    </div>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="840" MadCap:lastWidth="820">
+    <head><title>Object-Specific Activation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Object-Specific Activation</h1>
+                <p>You can tune up activation settings for specific classes with the following methods:</p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java: <code>configuration.common().objectClass("yourClass").minimumActivationDepth(minimumDepth)</code></p>
+                    <p><code>configuration.common().objectClass("yourClass").maximumActivationDepth(maximumDepth)</code>
+                    </p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <p>c#: <code>configuration.Common.ObjectClass("yourClass").MinimumActivationDepth(minimumDepth)</code></p>
+					<p><code>configuration.Common.ObjectClass("yourClass").MaximumActivationDepth(maximumDepth)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+					<p>VB: <code>configuration.Common.ObjectClass("yourClass").MinimumActivationDepth(minimumDepth)</code></p>
+					<p><code>configuration.Common.ObjectClass("yourClass").MaximumActivationDepth(maximumDepth)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>Cascading the activation depth to member fields, the depth value is reduced by one for the field. If the depth exceeds the maximumDepth specified for the class of the object, it is reduced to the maximumDepth. If the depth value is lower than the minimumDepth it is raised to the minimumDepth.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testMaxActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestMaxActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestMaxActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testMinActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestMinActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestMinActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>You can set up automatic activation for specific objects or fields: </p>
+                <p MadCap:conditions="Primary.Java">
+					<p>Java:  <code>configuration.common().objectClass("yourClass").cascadeOnActivate (bool)</code></p>
+					<p><code>configuration.common().objectClass("yourClass").objectField("field").cascadeOnActivate(bool)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+					<p>c#:  <code>configuration.Common.ObjectClass("yourClass").CascadeOnActivate (bool)</code></p>
+					<p><code>configuration.Common.ObjectClass("yourClass").ObjectField("field").CascadeOnActivate(bool)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+					<p>VB: <code>configuration.Common.ObjectClass("yourClass").CascadeOnActivate (bool)</code></p>
+					<p><code>configuration.Common.ObjectClass("yourClass").ObjectField("field").CascadeOnActivate(bool)</code></p>
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>Cascade activation will retrieve the whole object graph, starting from the specified object(field). This setting can lead to increased memory consumption. </p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testCascadeActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestCascadeActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestCascadeActivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>An alternative to cascade activation can be manual activation of objects: </p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java: <code>ObjectContainer#activate(object, activationDepth);</code></p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <p>c#: <code>IObjectContainer#Activate(object, activationDepth);</code></p>
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <p>VB: <code>IObjectContainer#Activate(object, activationDepth);</code></p>
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>Manual deactivation may be used to save memory: </p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java:<code>ObjectContainer#deactivate(object, activationDepth);</code></p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <p>c#:<code>IObjectContainer#Deactivate(object, activationDepth);</code></p>
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <p>VB:<code>IObjectContainer#Deactivate(object, activationDepth);</code></p>
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+                <p>These 2 methods give you an excellent control over object activation, but they obviously need more attention from the application side.</p>
+                <p MadCap:conditions="Primary.Java">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.java/testActivateDeactivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.cs/TestActivateDeactivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Object-Specific Activation/ActivationExample.vb/TestActivateDeactivate.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="activatingvb.zip">VB.NET </a>
@@ -161,8 +127,5 @@
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="activatingjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-
-    
-</body></html>
+    </body>
+</html>
