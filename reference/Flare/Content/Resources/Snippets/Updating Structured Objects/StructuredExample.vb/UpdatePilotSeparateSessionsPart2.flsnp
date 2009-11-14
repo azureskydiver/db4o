@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: UpdatePilotSeparateSessionsPart2
-Private Shared Sub UpdatePilotSeparateSessionsPart2()Sub UpdatePilotSeparateSessionsPart2(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Car(&quot;Ferrari&quot;))
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: UpdatePilotSeparateSessionsPart2
+Private Shared Sub UpdatePilotSeparateSessionsPart2()(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
             ListResult(result)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

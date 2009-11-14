@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: TestGenerateUUID
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="784" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: TestGenerateUUID
 Public Shared Sub TestGenerateUUID()Sub TestGenerateUUID()
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
@@ -8,30 +13,34 @@ Public Shared Sub TestGenerateUUID()Sub TestGenerateUUID()
                 Dim car As Car = CType(result(0), Car)
                 Dim carInfo As IObjectInfo = container.Ext().GetObjectInfo(car)
                 Dim carUUID As Db4oUUID = carInfo.GetUUID()
-                Console.WriteLine(&quot;UUID for Car class are not generated:&quot;)
+                Console.WriteLine("UUID for Car class are not generated:")
                 If carUUID Is Nothing Then
-                    Console.WriteLine(&quot;Car UUID: null&quot;)
+                    Console.WriteLine("Car UUID: null")
                 Else
-                    Console.WriteLine(&quot;Car UUID: &quot; + carUUID.ToString())
+                    Console.WriteLine("Car UUID: " + carUUID.ToString())
                 End If
 
 
                 Dim pilot As Pilot = car.Pilot
                 Dim pilotInfo As IObjectInfo = container.Ext().GetObjectInfo(pilot)
                 Dim pilotUUID As Db4oUUID = pilotInfo.GetUUID()
-                Console.WriteLine(&quot;UUID for Car class are not generated:&quot;)
+                Console.WriteLine("UUID for Car class are not generated:")
                 If pilotUUID Is Nothing Then
-                    Console.WriteLine(&quot;Pilot UUID: null&quot;)
+                    Console.WriteLine("Pilot UUID: null")
                 Else
-                    Console.WriteLine(&quot;Pilot UUID: &quot; + pilotUUID.ToString())
+                    Console.WriteLine("Pilot UUID: " + pilotUUID.ToString())
                 End If
 
-                Console.WriteLine(&quot;long part: &quot; + pilotUUID.GetLongPart().ToString() + &quot;; signature: &quot; + PrintSignature(pilotUUID.GetSignaturePart()))
+                Console.WriteLine("long part: " + pilotUUID.GetLongPart().ToString() + "; signature: " + _ 
+PrintSignature(pilotUUID.GetSignaturePart()))
                 Dim ms As Long = TimeStampIdGenerator.IdToMilliseconds(pilotUUID.GetLongPart())
-                Console.WriteLine(&quot;Pilot object was created: &quot; + (New DateTime(1970, 1, 1)).AddMilliseconds(ms).ToString())
+                Console.WriteLine("Pilot object was created: " + _ 
+(New DateTime(1970, 1, 1)).AddMilliseconds(ms).ToString())
                 Dim pilotReturned As Pilot = CType(container.Ext().GetByUUID(pilotUUID), Pilot)
-                Console.WriteLine(&quot;Pilot from UUID: &quot; + pilotReturned.ToString())
+                Console.WriteLine("Pilot from UUID: " + pilotReturned.ToString())
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

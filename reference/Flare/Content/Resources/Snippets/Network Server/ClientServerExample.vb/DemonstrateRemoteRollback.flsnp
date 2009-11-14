@@ -1,10 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateRemoteRollback
-Public Shared Sub DemonstrateRemoteRollback()Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, ByVal password As String)
-            Dim client1 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, port, user, password)
-            Dim client2 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, port, user, password)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="423" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateRemoteRollback
+Public Shared Sub DemonstrateRemoteRollback()Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, _ 
+ByVal password As String)
+            Dim client1 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+"localhost", port, user, password)
+            Dim client2 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+"localhost", port, user, password)
             Dim result As IList(Of Car) = client1.Query(Of Car)()
             Dim car As Car = result(0)
-            car.Pilot = New Pilot(&quot;Someone else&quot;, 0)
+            car.Pilot = New Pilot("Someone else", 0)
             client1.Store(car)
             ListResult(client1.Query(Of Car)())
             ListResult(client2.Query(Of Car)())
@@ -14,4 +22,6 @@ Public Shared Sub DemonstrateRemoteRollback()Sub DemonstrateRemoteRollback(ByVal
             ListResult(client2.Query(Of Car)())
             client1.Close()
             client2.Close()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

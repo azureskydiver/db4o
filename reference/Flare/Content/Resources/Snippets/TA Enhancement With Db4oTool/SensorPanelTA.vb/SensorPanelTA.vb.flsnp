@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1240" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SensorPanelTA.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
@@ -36,7 +41,8 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TAExamples
             Return CreateList(length, 1)
         End Function
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer, ByVal first As Integer) As SensorPanelTA
+        Public Function CreateList()Function CreateList(ByVal length As Integer, ByVal first As Integer) _ 
+As SensorPanelTA
             Dim val As Integer = first
             Dim root As SensorPanelTA = NewElement(first)
             Dim list As SensorPanelTA = root
@@ -53,10 +59,12 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TAExamples
 
         Public Overloads Overrides Function ToString()Function ToString() As String
             If Sensor Is Nothing Then
-                Return &quot;&quot;
+                Return ""
             Else
-                Return &quot;Sensor #&quot; + Sensor.ToString()
+                Return "Sensor #" + Sensor.ToString()
             End If
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

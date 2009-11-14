@@ -1,8 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: ListRefreshedResult
-Public Shared Sub ListRefreshedResult()Sub ListRefreshedResult(ByVal container As IObjectContainer, ByVal items As IList(Of Car), ByVal depth As Integer)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: ListRefreshedResult
+Public Shared Sub ListRefreshedResult()Sub ListRefreshedResult(ByVal container As IObjectContainer, _ 
+ByVal items As IList(Of Car), ByVal depth As Integer)
             Console.WriteLine(items.Count)
             For Each item As Car In items
                 container.Ext().Refresh(item, depth)
                 Console.WriteLine(item)
             Next
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

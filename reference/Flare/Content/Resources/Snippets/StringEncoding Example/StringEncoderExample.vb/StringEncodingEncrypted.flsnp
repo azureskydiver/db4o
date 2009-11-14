@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringEncoderExample.vb: StringEncodingEncrypted
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="689" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringEncoderExample.vb: StringEncodingEncrypted
 Private Class StringEncodingEncryptedClass StringEncodingEncrypted
             Implements IStringEncoding
 
-            Public Function Encode()Function Encode(ByVal str As String) As Byte() Implements IStringEncoding.Encode
+            Public Function Encode()Function Encode(ByVal str As String) As Byte() Implements _ 
+IStringEncoding.Encode
                 str = Encryption.Encrypt(str)
                 Dim length As Integer = str.Length
                 Dim chars As Char() = New Char(length) {}
@@ -18,14 +24,18 @@ Private Class StringEncodingEncryptedClass StringEncodingEncrypted
                 Return bytes
             End Function
 
-            Public Function Decode()Function Decode(ByVal bytes As Byte(), ByVal start As Integer, ByVal length As Integer) As String Implements IStringEncoding.Decode
+            Public Function Decode()Function Decode(ByVal bytes As Byte(), ByVal start As Integer, _ 
+ByVal length As Integer) As String Implements IStringEncoding.Decode
                 Dim stringLength As Integer = length / 2
                 Dim chars As Char() = New Char(stringLength) {}
                 Dim j As Integer = start
                 For ii As Integer = 0 To stringLength - 1
-                    chars(ii) = Microsoft.VisualBasic.ChrW(((bytes(j) And &amp;HFF) Or ((bytes(j + 1) And &amp;HFF) &lt;&lt; 8)))
+                    chars(ii) = Microsoft.VisualBasic.ChrW(((bytes(j) And &amp;HFF) Or ((bytes(j + 1) _ 
+And &amp;HFF) &lt;&lt; 8)))
                     j = j + 2
                 Next
                 Return Encryption.Decrypt(New String(chars, 0, stringLength))
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

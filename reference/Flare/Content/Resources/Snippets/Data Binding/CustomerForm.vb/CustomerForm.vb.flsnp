@@ -1,4 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CustomerForm.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="2266" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CustomerForm.vb
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
@@ -18,7 +23,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
         End Sub
 
         Private Sub OpenDataFile()Sub OpenDataFile()
-            Dim dataFile As String = Path.Combine(Application.UserAppDataPath, &quot;data.yap&quot;)
+            Dim dataFile As String = Path.Combine(Application.UserAppDataPath, "data.yap")
             _container = Db4oFactory.OpenFile(dataFile)
         End Sub
 
@@ -26,17 +31,17 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
             Dim os As ObjectSet = _container.Get(GetType(Customer))
             If 0 = os.Size() Then
                 ' Generate some initial data
-                _customers.Add(New Customer(&quot;John Cleese&quot;, &quot;55-98763333&quot;))
-                _customers.Add(New Customer(&quot;Herman Hesse&quot;, &quot;32-33335555&quot;))
-                _customers.Add(New Customer(&quot;Douglas Adams&quot;, &quot;42-42424242&quot;))
+                _customers.Add(New Customer("John Cleese", "55-98763333"))
+                _customers.Add(New Customer("Herman Hesse", "32-33335555"))
+                _customers.Add(New Customer("Douglas Adams", "42-42424242"))
             Else
                 While os.HasNext()
                     _customers.Add(os.Next())
                 End While
             End If
-            _cmbCustomers.DisplayMember = &quot;Name&quot;
+            _cmbCustomers.DisplayMember = "Name"
             _cmbCustomers.DataSource = _customers
-            _txtPhoneNumber.DataBindings.Add(&quot;Text&quot;, _customers, &quot;PhoneNumber&quot;)
+            _txtPhoneNumber.DataBindings.Add("Text", _customers, "PhoneNumber")
         End Sub
 
         Private Sub PersistChanges()Sub PersistChanges()
@@ -62,32 +67,32 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
             '
             Me._labelName.AutoSize = True
             Me._labelName.Location = New System.Drawing.Point(12, 9)
-            Me._labelName.Name = &quot;_labelName&quot;
+            Me._labelName.Name = "_labelName"
             Me._labelName.Size = New System.Drawing.Size(51, 13)
             Me._labelName.TabIndex = 0
-            Me._labelName.Text = &quot;Customer&quot;
+            Me._labelName.Text = "Customer"
             '
             '_labelPhone
             '
             Me._labelPhone.AutoSize = True
             Me._labelPhone.Location = New System.Drawing.Point(12, 40)
-            Me._labelPhone.Name = &quot;_labelPhone&quot;
+            Me._labelPhone.Name = "_labelPhone"
             Me._labelPhone.Size = New System.Drawing.Size(45, 13)
             Me._labelPhone.TabIndex = 1
-            Me._labelPhone.Text = &quot;Phone#&quot;
+            Me._labelPhone.Text = "Phone#"
             '
             '_cmbCustomers
             '
             Me._cmbCustomers.FormattingEnabled = True
             Me._cmbCustomers.Location = New System.Drawing.Point(103, 6)
-            Me._cmbCustomers.Name = &quot;_cmbCustomers&quot;
+            Me._cmbCustomers.Name = "_cmbCustomers"
             Me._cmbCustomers.Size = New System.Drawing.Size(177, 21)
             Me._cmbCustomers.TabIndex = 2
             '
             '_txtPhoneNumber
             '
             Me._txtPhoneNumber.Location = New System.Drawing.Point(103, 37)
-            Me._txtPhoneNumber.Name = &quot;_txtPhoneNumber&quot;
+            Me._txtPhoneNumber.Name = "_txtPhoneNumber"
             Me._txtPhoneNumber.Size = New System.Drawing.Size(177, 20)
             Me._txtPhoneNumber.TabIndex = 3
             '
@@ -100,17 +105,20 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
             Me.Controls.Add(Me._cmbCustomers)
             Me.Controls.Add(Me._labelPhone)
             Me.Controls.Add(Me._labelName)
-            Me.Name = &quot;CustomerForm&quot;
-            Me.Text = &quot;Db4o Data Binding&quot;
+            Me.Name = "CustomerForm"
+            Me.Text = "Db4o Data Binding"
             Me.ResumeLayout(False)
             Me.PerformLayout()
 
         End Sub
 
-        Private Sub CustomerForm_FormClosing()Sub CustomerForm_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
+        Private Sub CustomerForm_FormClosing()Sub CustomerForm_FormClosing(ByVal sender As System.Object, _ 
+ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
             PersistChanges()
             _container.Close()
             MyBase.OnClosing(e)
         End Sub
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

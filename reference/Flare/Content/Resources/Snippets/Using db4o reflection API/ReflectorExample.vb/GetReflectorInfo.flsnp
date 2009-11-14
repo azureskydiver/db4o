@@ -1,17 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: GetReflectorInfo
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: GetReflectorInfo
 Public Shared Sub GetReflectorInfo()Sub GetReflectorInfo()
 
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim ref As IReflector
                 ref = db.Ext().Reflector()
-                Console.WriteLine(&quot;Reflector in use: &quot; + CType(ref, Object).ToString())
-                Console.WriteLine(&quot;Reflector delegate&quot; + CType(db.Ext().Reflector().GetDelegate(), Object).ToString())
+                Console.WriteLine("Reflector in use: " + CType(ref, Object).ToString())
+                Console.WriteLine("Reflector delegate" + _ 
+CType(db.Ext().Reflector().GetDelegate(), Object).ToString())
                 Dim knownClasses As IReflectClass()
                 knownClasses = db.Ext().Reflector().KnownClasses()
                 Dim count As Integer
                 count = knownClasses.Length
-                Console.WriteLine(&quot;Known classes: &quot; + count.ToString())
+                Console.WriteLine("Known classes: " + count.ToString())
                 Dim i As Integer
                 Dim knownClass As IReflectClass
                 For Each knownClass In knownClasses
@@ -21,4 +27,6 @@ Public Shared Sub GetReflectorInfo()Sub GetReflectorInfo()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

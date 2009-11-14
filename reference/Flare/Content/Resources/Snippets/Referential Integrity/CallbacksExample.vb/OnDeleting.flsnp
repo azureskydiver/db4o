@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: OnDeleting
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="366" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: OnDeleting
 Private Shared Sub OnDeleting()Sub OnDeleting(ByVal sender As Object, ByVal args As CancellableObjectEventArgs)
             Dim obj As Object = args.Object
             If TypeOf obj Is Pilot Then
@@ -6,11 +11,14 @@ Private Shared Sub OnDeleting()Sub OnDeleting(ByVal sender As Object, ByVal args
                 Dim container As IObjectContainer = OpenContainer()
                 Dim q As IQuery = container.Query
                 q.Constrain(GetType(Car))
-                q.Descend(&quot;_pilot&quot;).Constrain(obj)
+                q.Descend("_pilot").Constrain(obj)
                 Dim result As IList = q.Execute
                 If result.Count &gt; 0 Then
-                    Console.WriteLine(&quot;Object &quot; + CType(obj, Pilot).ToString() + &quot; can't be Deleted as object container has references to it&quot;)
+                    Console.WriteLine("Object " + CType(obj, Pilot).ToString() + _ 
+" can't be Deleted as object container has references to it")
                     args.Cancel()
                 End If
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: QueryDatabase
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="575" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: QueryDatabase
 Private Shared Sub QueryDatabase()Sub QueryDatabase(ByVal config As IEmbeddedConfiguration)
 
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(config, Db4oFileName)
@@ -7,20 +12,24 @@ Private Shared Sub QueryDatabase()Sub QueryDatabase(ByVal config As IEmbeddedCon
                 Dim startTime As Long = DateTime.Now.Ticks
                 Dim q As IQuery = container.Query()
                 q.Constrain(GetType(Item))
-                q.Descend(&quot;id&quot;).Constrain(1).Greater()
+                q.Descend("id").Constrain(1).Greater()
                 Dim result As IObjectSet = q.Execute()
                 For Each i As Item In result
                     temp.Add(i)
                 Next
-                System.Console.WriteLine([String].Format(&quot;Time to get an objects first time: {0} ms&quot;, (DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
+                System.Console.WriteLine([String].Format("Time to get an objects first time: {0} ms", _
+(DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
                 '
                 temp = New List(Of Item)()
                 startTime = DateTime.Now.Ticks
                 For Each i As Item In result
                     temp.Add(i)
                 Next
-                System.Console.WriteLine([String].Format(&quot;Time to get an objects second time: {0} ms&quot;, (DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
+                System.Console.WriteLine([String].Format("Time to get an objects second time: {0} ms", _ 
+(DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: ConfigureAlias
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="328" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: ConfigureAlias
 Private Shared Function ConfigureAlias()Function ConfigureAlias() As IEmbeddedConfiguration
-            Dim wAlias As WildcardAlias = New WildcardAlias (&quot;Db4odoc.Aliases.*&quot;, &quot;Db4odoc.Aliases.NewAlias.*&quot;)
+            Dim wAlias As WildcardAlias = New WildcardAlias ("Db4odoc.Aliases.*", _ 
+"Db4odoc.Aliases.NewAlias.*")
             ' Add the Alias to the configuration
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             configuration.Common.AddAlias (wAlias)
             Console.WriteLine ( _
-                               &quot;Stored name for Db4odoc.Aliases.NewAlias.Pilot: &quot; + _
-                               wAlias.ResolveRuntimeName (&quot;Db4odoc.Aliases.NewAlias.Pilot&quot;))
+                               "Stored name for Db4odoc.Aliases.NewAlias.Pilot: " + _
+                               wAlias.ResolveRuntimeName ("Db4odoc.Aliases.NewAlias.Pilot"))
             Console.WriteLine ( _
-                               &quot;Runtime name for Db4odoc.Aliases.Pilot: &quot; + _
-                               wAlias.ResolveStoredName (&quot;Db4odoc.Aliases.Pilot&quot;))
+                               "Runtime name for Db4odoc.Aliases.Pilot: " + _
+                               wAlias.ResolveStoredName ("Db4odoc.Aliases.Pilot"))
             Return configuration
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

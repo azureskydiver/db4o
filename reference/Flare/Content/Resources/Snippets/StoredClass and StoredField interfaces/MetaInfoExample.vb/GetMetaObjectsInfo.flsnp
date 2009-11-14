@@ -1,19 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.vb: GetMetaObjectsInfo
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="442" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.vb: GetMetaObjectsInfo
 Private Shared Sub GetMetaObjectsInfo()Sub GetMetaObjectsInfo()
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                System.Console.WriteLine(&quot;Retrieve meta information for field: &quot;)
+                System.Console.WriteLine("Retrieve meta information for field: ")
                 Dim sc As IStoredClass = container.Ext().StoredClass(GetType(Car))
-                Dim sf As IStoredField = sc.StoredField(&quot;_pilot&quot;, GetType(Pilot))
-                System.Console.WriteLine(&quot;Field info:  &quot; + sf.GetName() + &quot;/&quot; + sf.GetStoredType().GetName() + &quot;/IsArray=&quot; + sf.IsArray().ToString())
+                Dim sf As IStoredField = sc.StoredField("_pilot", GetType(Pilot))
+                System.Console.WriteLine("Field info:  " + sf.GetName() + "/" + _ 
+sf.GetStoredType().GetName() + "/IsArray=" + sf.IsArray().ToString())
 
-                System.Console.WriteLine(&quot;Retrieve all fields: &quot;)
+                System.Console.WriteLine("Retrieve all fields: ")
                 Dim sfields() As IStoredField = sc.GetStoredFields()
                 Dim sfield As IStoredField
                 For Each sfield In sfields
-                    System.Console.WriteLine(&quot;Stored field:  &quot; + sfield.GetName() + &quot;/&quot; + sfield.GetStoredType().GetName())
+                    System.Console.WriteLine("Stored field:  " + sfield.GetName() + _ 
+"/" + sfield.GetStoredType().GetName())
                 Next
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

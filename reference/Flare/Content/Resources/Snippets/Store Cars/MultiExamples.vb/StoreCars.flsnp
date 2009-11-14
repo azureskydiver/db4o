@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MultiExamples.vb: StoreCars
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="556" MadCap:lastWidth="1104">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MultiExamples.vb: StoreCars
 Private Shared Sub StoreCars()Sub StoreCars()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database()
@@ -7,20 +12,23 @@ Private Shared Sub StoreCars()Sub StoreCars()
                     Dim car As Car
                     Dim i As Integer
                     For i = 0 To ObjectCount - 1 Step i + 1
-                        car = New Car(&quot;BMW&quot;, New Pilot(&quot;Test Pilot #&quot; + i.ToString(), i))
+                        car = New Car("BMW", New Pilot("Test Pilot #" + i.ToString(), i))
                         container.Set(car)
                     Next
                     For i = 0 To ObjectCount - 1 Step i + 1
-                        car = New Car(&quot;Ferrari&quot;, New Pilot(&quot;Professional Pilot #&quot; + (i + 10).ToString(), (i + 10)))
+                        car = New Car("Ferrari", New Pilot("Professional Pilot #" + _ 
+(i + 10).ToString(), (i + 10)))
                         container.Set(car)
                     Next
                     container.Commit()
                 Catch ex As Db4oException
-                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

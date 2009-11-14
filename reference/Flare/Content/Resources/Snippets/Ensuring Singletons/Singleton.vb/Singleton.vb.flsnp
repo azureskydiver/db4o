@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Singleton.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1430" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Singleton.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 Imports System
 Imports Db4objects.Db4o
@@ -15,16 +20,17 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
         ' returns  a singleton object of one  class for an  IObjectContainer.
         ' Caution !!!  This  method contains a commit() call.
 
-        Public Shared Function GetSingleton()Function GetSingleton(ByVal objectContainer As IObjectContainer, ByVal clazz As System.Type) As Object
+        Public Shared Function GetSingleton()Function GetSingleton(ByVal objectContainer As IObjectContainer, _ 
+ByVal clazz As System.Type) As Object
             Dim obj As Object = queryForSingletonClass(objectContainer, clazz)
             If Not obj Is Nothing Then
                 Return obj
             End If
 
-            Dim semaphore As String = &quot;Singleton#getSingleton_&quot; + clazz.FullName
+            Dim semaphore As String = "Singleton#getSingleton_" + clazz.FullName
 
             If Not objectContainer.Ext().SetSemaphore(semaphore, 10000) Then
-                Throw New Exception(&quot;Blocked semaphore &quot; + semaphore)
+                Throw New Exception("Blocked semaphore " + semaphore)
             End If
 
             obj = queryForSingletonClass(objectContainer, clazz)
@@ -53,7 +59,8 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
             Return obj
         End Function
 
-        Private Shared Function queryForSingletonClass()Function queryForSingletonClass(ByVal objectContainer As IObjectContainer, ByVal clazz As System.Type) As Object
+        Private Shared Function queryForSingletonClass()Function queryForSingletonClass(ByVal objectContainer _ 
+As IObjectContainer, ByVal clazz As System.Type) As Object
             Dim q As IQuery = objectContainer.Query()
             q.Constrain(clazz)
             Dim objectSet As IObjectSet = q.Execute()
@@ -61,11 +68,13 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
                 Return objectSet.Next()
             End If
             If objectSet.Size() &gt; 1 Then
-                Throw New Exception(&quot;Singleton problem. Multiple  instances of: &quot; + clazz.FullName)
+                Throw New Exception("Singleton problem. Multiple  instances of: " + clazz.FullName)
             End If
             Return Nothing
         End Function
 
     End Class
 
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

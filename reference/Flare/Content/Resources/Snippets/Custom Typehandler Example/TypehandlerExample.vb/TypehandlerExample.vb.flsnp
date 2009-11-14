@@ -1,4 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="3596" MadCap:lastWidth="1365">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.vb
 ' Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com 
 
 Imports System.Text
@@ -18,7 +23,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
 
     Public Class TypehandlerExampleClass TypehandlerExample
 
-        Private Shared ReadOnly Db4oFileName As String = &quot;reference.db4o&quot;
+        Private Shared ReadOnly Db4oFileName As String = "reference.db4o"
         Private Shared _container As IObjectContainer = Nothing
 
 
@@ -32,7 +37,8 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
         Private Class TypeHandlerPredicateClass TypeHandlerPredicate
             Implements ITypeHandlerPredicate
 
-            Public Function Match()Function Match(ByVal classReflector As IReflectClass, ByVal version As Integer) As Boolean Implements ITypeHandlerPredicate.Match
+            Public Function Match()Function Match(ByVal classReflector As IReflectClass, ByVal version As Integer) _ 
+As Boolean Implements ITypeHandlerPredicate.Match
                 Dim reflector As IReflector = classReflector.Reflector()
                 Dim claxx As IReflectClass = reflector.ForClass(GetType(StringBuilder))
                 Dim res As Boolean = claxx Is classReflector
@@ -74,9 +80,9 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
                         car = DirectCast(result.[Next](), Car)
                     End If
                     If car Is Nothing Then
-                        System.Console.WriteLine(&quot;Retrieved: Nothing&quot;)
+                        System.Console.WriteLine("Retrieved: Nothing")
                     Else
-                        System.Console.WriteLine(&quot;Retrieved: &quot; + car.ToString())
+                        System.Console.WriteLine("Retrieved: " + car.ToString())
                     End If
 
                 Finally
@@ -96,7 +102,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
                         car = DirectCast(result.[Next](), Car)
                     End If
                     container.Delete(car)
-                    System.Console.WriteLine(&quot;Deleted: &quot; + car.ToString())
+                    System.Console.WriteLine("Deleted: " + car.ToString())
                 Finally
                     CloseDatabase()
                 End Try
@@ -109,11 +115,11 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
                 Try
-                    Dim car As New Car(&quot;BMW&quot;)
+                    Dim car As New Car("BMW")
                     container.Store(car)
                     car = DirectCast(container.Query(GetType(Car)).[Next](), Car)
 
-                    System.Console.WriteLine(&quot;Stored: &quot; + car.ToString())
+                    System.Console.WriteLine("Stored: " + car.ToString())
                 Finally
                     CloseDatabase()
                 End Try
@@ -126,15 +132,15 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
                 Try
-                    Dim car As New Car(&quot;BMW&quot;)
+                    Dim car As New Car("BMW")
                     container.Store(car)
-                    car = New Car(&quot;Ferrari&quot;)
+                    car = New Car("Ferrari")
                     container.Store(car)
-                    car = New Car(&quot;Mercedes&quot;)
+                    car = New Car("Mercedes")
                     container.Store(car)
                     Dim query As IQuery = container.Query()
                     query.Constrain(GetType(Car))
-                    query.Descend(&quot;model&quot;).OrderAscending()
+                    query.Descend("model").OrderAscending()
                     Dim result As IObjectSet = query.Execute()
 
                     ListResult(result)
@@ -146,7 +152,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
         ' end TestCompare
 
         Private Shared Sub TestDefrag()Sub TestDefrag()
-            File.Delete(Db4oFileName + &quot;.backup&quot;)
+            File.Delete(Db4oFileName + ".backup")
             StoreCar()
             Defragment.Defrag(Db4oFileName)
             RetrieveCar()
@@ -183,4 +189,6 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
         ' end ListResult
 
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>
