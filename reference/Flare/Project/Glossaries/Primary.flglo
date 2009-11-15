@@ -5,7 +5,6 @@
       <Term>ID</Term>
       <Term>Object ID</Term>
       <Term>Internal ID</Term>
-      <Term>UUID</Term>
     </Terms>
     <Definition
       Link="/Content/implementation_strategies/ids_and_uuids/internal_ids.htm"></Definition>

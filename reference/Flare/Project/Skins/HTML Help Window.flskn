@@ -2,7 +2,7 @@
 <CatapultSkin
   Version="1"
   Title="db4o Reference"
-  AutoSyncTOC="True"
+  AutoSyncTOC="false"
   Tabs="TOC,Index,Search,Glossary,Favorites"
   Top="118px"
   Left="164px"
