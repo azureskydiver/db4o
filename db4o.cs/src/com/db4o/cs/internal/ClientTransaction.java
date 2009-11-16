@@ -67,21 +67,6 @@ public final class ClientTransaction extends Transaction {
         return res == 1;
     }
     
-    public final HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
-        int messageLength = Const4.LONG_LENGTH + Const4.INT_LENGTH + a_signature.length;
-        MsgD message = Msg.OBJECT_BY_UUID.getWriterForLength(this, messageLength);
-        message.writeLong(a_uuid);
-        message.writeInt(a_signature.length);
-        message.writeBytes(a_signature);
-        _client.write(message);
-        message = (MsgD)_client.expectedResponse(Msg.OBJECT_BY_UUID);
-        int id = message.readInt();
-        if(id > 0){
-            return container().getHardObjectReferenceById(this, id);
-        }
-        return HardObjectReference.INVALID;
-    }
-    
     public void processDeletes() {
         Visitor4 deleteVisitor = new Visitor4() {
             public void visit(Object a_object) {

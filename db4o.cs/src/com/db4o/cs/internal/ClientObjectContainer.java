@@ -367,6 +367,21 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		write(msg);
 		return readQueryResult(trans);
 	}
+	
+    public final HardObjectReference getHardReferenceBySignature(Transaction trans, long uuid, byte[] signature) {
+        int messageLength = Const4.LONG_LENGTH + Const4.INT_LENGTH + signature.length;
+        MsgD message = Msg.OBJECT_BY_UUID.getWriterForLength(trans, messageLength);
+        message.writeLong(uuid);
+        message.writeInt(signature.length);
+        message.writeBytes(signature);
+        write(message);
+        message = (MsgD)expectedResponse(Msg.OBJECT_BY_UUID);
+        int id = message.readInt();
+        if(id > 0){
+            return getHardObjectReferenceById(trans, id);
+        }
+        return HardObjectReference.INVALID;
+    }
 
 	/**
 	 * may return null, if no message is returned. Error handling is weak and

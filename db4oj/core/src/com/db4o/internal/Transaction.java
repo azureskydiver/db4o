@@ -156,11 +156,6 @@ public abstract class Transaction {
         _delete = TreeInt.removeLike((TreeInt)_delete, a_id);
     }
     
-    public HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
-        checkSynchronization();  
-        return container().uUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
-    }
-    
 	public abstract void processDeletes();
 	
     public ReferenceSystem referenceSystem() {
@@ -170,7 +165,7 @@ public abstract class Transaction {
         return parentTransaction().referenceSystem();
     }
 	
-    public Reflector reflector(){
+    public final Reflector reflector(){
     	return container().reflector();
     }
     

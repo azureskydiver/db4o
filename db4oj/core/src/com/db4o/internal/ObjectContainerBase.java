@@ -900,12 +900,15 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             if(uuid == null){
                 return null;
             }
-            trans = checkTransaction(trans);
-            HardObjectReference hardRef = trans.getHardReferenceBySignature(
+            HardObjectReference hardRef = getHardReferenceBySignature(checkTransaction(trans), 
             					uuid.getLongPart(),
             					uuid.getSignaturePart());
             return hardRef._object; 
         }
+    }
+    
+    public HardObjectReference getHardReferenceBySignature(Transaction trans, long uuid, byte[] signature) {
+        return uUIDIndex().getHardObjectReferenceBySignature(trans, uuid, signature);
     }
 
     public final int getID(Transaction trans, Object obj) {
