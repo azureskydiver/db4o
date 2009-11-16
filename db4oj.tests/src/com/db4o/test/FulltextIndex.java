@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.messaging.*;
 import com.db4o.query.*;
 
@@ -97,9 +99,9 @@ public class FulltextIndex implements MessageRecipient{
     }
     
     public void processMessage(MessageContext context, Object message) {
-        final ObjectContainer container = context.container();
-		FulltextIndex fti = (FulltextIndex)container.ext().getByID(((IDMessage)message).id);
-        container.activate(fti, 1);
+        final ObjectContainerBase container = (ObjectContainerBase) context.container();
+		FulltextIndex fti = (FulltextIndex)container.getByID(context.transaction(), ((IDMessage)message).id);
+        container.activate(context.transaction(), fti, new FixedActivationDepth(1));
         fti.updateIndex(container);
     }
     

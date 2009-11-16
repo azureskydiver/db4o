@@ -29,6 +29,10 @@ public final class MUserMessage extends MsgObject implements ServerSideMessage, 
 		public ObjectContainer container() {
 			return transaction().objectContainer();
 		}
+
+		public Transaction transaction() {
+			return MUserMessage.this.transaction();
+		}
 	};
 	
 	private boolean processUserMessage() {

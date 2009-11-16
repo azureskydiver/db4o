@@ -3,6 +3,7 @@
 package com.db4o.messaging;
 
 import com.db4o.*;
+import com.db4o.internal.*;
 
 /**
  * Additional message-related information.
@@ -11,9 +12,6 @@ public interface MessageContext {
 	
 	/**
 	 * The container the message was dispatched to.
-	 * 
-	 * @return
-	 * 
 	 * @sharpen.property
 	 */
 	ObjectContainer container();
@@ -22,10 +20,14 @@ public interface MessageContext {
 	 * The sender of the current message.
 	 * 
 	 * The reference can be used to send a reply to it.
-	 * 
-	 * @return
-	 * 
 	 * @sharpen.property
 	 */
 	MessageSender sender();
+	
+	/**
+	 * The transaction the current message has been sent with.
+	 * @sharpen.property
+	 */
+	Transaction transaction();
+	
 }
