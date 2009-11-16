@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   Versant Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2009   Versant Inc.   http://www.db4o.com */
 
 package com.db4o.internal;
 
@@ -16,29 +16,27 @@ import com.db4o.internal.slots.*;
  */
 public final class StatefulBuffer extends ByteArrayBuffer {
 	
-    private int i_address;
+	Transaction _trans;
+	
+    private int _address;
+    
     private int _addressOffset;
 
-    private int i_cascadeDelete; 
+    private int _cascadeDelete; 
 
-    private int i_id;
+    private int _id;
 
-    private int i_length;
+    private int _length;
 
-    Transaction i_trans;
-
-    public int _payloadOffset;
-    
-
-    public StatefulBuffer(Transaction a_trans, int a_initialBufferSize) {
-        i_trans = a_trans;
-        i_length = a_initialBufferSize;
-        _buffer = new byte[i_length];
+    public StatefulBuffer(Transaction trans, int initialBufferSize) {
+        _trans = trans;
+        _length = initialBufferSize;
+        _buffer = new byte[_length];
     }
     
-    public StatefulBuffer(Transaction a_trans, int address, int length) {
-        this(a_trans, length);
-        i_address = address;
+    public StatefulBuffer(Transaction trans, int address, int length) {
+        this(trans, length);
+        _address = address;
     }
     
     public StatefulBuffer(Transaction trans, Slot slot){
@@ -47,13 +45,13 @@ public final class StatefulBuffer extends ByteArrayBuffer {
 
     public StatefulBuffer(Transaction trans, Pointer4 pointer){
         this(trans, pointer._slot);
-        i_id = pointer._id;
+        _id = pointer._id;
     }
 
 
     public void debugCheckBytes() {
         if (Debug4.xbytes) {
-            if (_offset != i_length) {
+            if (_offset != _length) {
                 // Db4o.log("!!! YapBytes.debugCheckBytes not all bytes used");
                 // This is normal for writing The FreeSlotArray, becauce one
                 // slot is possibly reserved by it's own pointer.
@@ -62,27 +60,27 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
 
     public int getAddress() {
-        return i_address;
+        return _address;
     }
     
     public int getID() {
-        return i_id;
+        return _id;
     }
 
     public int length() {
-        return i_length;
+        return _length;
     }
 
     public ObjectContainerBase container(){
-        return i_trans.container();
+        return _trans.container();
     }
     
     public LocalObjectContainer file(){
-        return ((LocalTransaction)i_trans).file();
+        return ((LocalTransaction)_trans).file();
     }
 
     public Transaction transaction() {
-        return i_trans;
+        return _trans;
     }
 
     public byte[] getWrittenBytes(){
@@ -92,7 +90,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
     
     public void read() throws Db4oIOException {
-        container().readBytes(_buffer, i_address,_addressOffset, i_length);
+        container().readBytes(_buffer, _address,_addressOffset, _length);
     }
 
     public final StatefulBuffer readStatefulBuffer() {
@@ -100,16 +98,16 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         if (length == 0) {
             return null;
         }
-        StatefulBuffer yb = new StatefulBuffer(i_trans, length);
+        StatefulBuffer yb = new StatefulBuffer(_trans, length);
         System.arraycopy(_buffer, _offset, yb._buffer, 0, length);
         _offset += length;
         return yb;
     }
 
     public void removeFirstBytes(int aLength) {
-        i_length -= aLength;
-        byte[] temp = new byte[i_length];
-        System.arraycopy(_buffer, aLength, temp, 0, i_length);
+        _length -= aLength;
+        byte[] temp = new byte[_length];
+        System.arraycopy(_buffer, aLength, temp, 0, _length);
         _buffer = temp;
         _offset -= aLength;
         if (_offset < 0) {
@@ -117,24 +115,24 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         }
     }
 
-    public void address(int a_address) {
-        i_address = a_address;
+    public void address(int address) {
+        _address = address;
     }
 
-    public void setID(int a_id) {
-        i_id = a_id;
+    public void setID(int id) {
+        _id = id;
     }
 
     public void setTransaction(Transaction aTrans) {
-        i_trans = aTrans;
+        _trans = aTrans;
     }
 
     public void slotDelete() {
-        i_trans.slotDelete(i_id, slot());
+        _trans.slotDelete(_id, slot());
     }
     
-    public void useSlot(int a_adress) {
-        i_address = a_adress;
+    public void useSlot(int adress) {
+        _address = adress;
         _offset = 0;
     }
 
@@ -144,36 +142,36 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
     
     public void useSlot(Slot slot) {
-        i_address = slot.address();
+        _address = slot.address();
         _offset = 0;
         if (slot.length() > _buffer.length) {
             _buffer = new byte[slot.length()];
         }
-        i_length = slot.length();
+        _length = slot.length();
     }
 
     // FIXME: FB remove
-    public void useSlot(int a_id, int a_adress, int a_length) {
-        i_id = a_id;
-        useSlot(a_adress, a_length);
+    public void useSlot(int id, int adress, int length) {
+        _id = id;
+        useSlot(adress, length);
     }
     
     public void write() {
         if (Debug4.xbytes) {
             debugCheckBytes();
         }
-        file().writeBytes(this, i_address, _addressOffset);
+        file().writeBytes(this, _address, _addressOffset);
     }
 
     public void writeEncrypt() {
         if (Deploy.debug) {
             debugCheckBytes();
         }
-        file().writeEncrypt(this, i_address, _addressOffset);
+        file().writeEncrypt(this, _address, _addressOffset);
     }
         
     public ByteArrayBuffer readPayloadWriter(int offset, int length){
-        StatefulBuffer payLoad = new StatefulBuffer(i_trans, 0, length);
+        StatefulBuffer payLoad = new StatefulBuffer(_trans, 0, length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
         transferPayLoadAddress(payLoad, offset);
         return payLoad;
@@ -181,8 +179,8 @@ public final class StatefulBuffer extends ByteArrayBuffer {
 
     private void transferPayLoadAddress(StatefulBuffer toWriter, int offset) {
         int blockedOffset = offset / container().blockSize();
-        toWriter.i_address = i_address + blockedOffset;
-        toWriter.i_id = toWriter.i_address;
+        toWriter._address = _address + blockedOffset;
+        toWriter._id = toWriter._address;
         toWriter._addressOffset = _addressOffset;
     }
 
@@ -191,7 +189,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
     
     public String toString(){
-        return "id " + i_id + " adr " + i_address + " len " + i_length;
+        return "id " + _id + " adr " + _address + " len " + _length;
     }
     
     public void noXByteCheck() {
@@ -201,19 +199,19 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
 	
 	public Slot slot(){
-		return new Slot(i_address, i_length);
+		return new Slot(_address, _length);
 	}
 	
 	public Pointer4 pointer(){
-	    return new Pointer4(i_id, slot());
+	    return new Pointer4(_id, slot());
 	}
 	
     public int cascadeDeletes() {
-        return i_cascadeDelete;
+        return _cascadeDelete;
     }
     
     public void setCascadeDeletes(int depth) {
-        i_cascadeDelete = depth;
+        _cascadeDelete = depth;
     }
 
 }
