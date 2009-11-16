@@ -1,9 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Lazy Queries	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Lazy Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Pros and Cons for Lazy Queries">Pros and Cons for Lazy Queries</a></li></ul></div></div></div> 
+        <h1>Lazy Queries</h1>
 
 <P>In Lazy Querying mode objects are not evaluated at all, instead of this an iterator is created against the best index found. Further query processing (including all index processing) will happen when the user application iterates through the resulting <CODE>ObjectSet</CODE>. This allows you to get the first query results almost immediately.</P>
 <p MadCap:conditions="Primary.Java">
@@ -33,7 +31,5 @@
 <LI>Objects themselves may have changed in the meanwhile. </LI>
 <LI>There even is a chance of creating an endless loop. If the caller iterates through the <CODE>ObjectSet</CODE> and changes each object in a way that it is placed at the end of the index, the same objects can be revisited over and over. </LI></UL><B>In lazy mode it can make sense to work in a way one would work with collections to avoid concurrent modification exceptions.</B> For instance one could iterate through the <CODE>ObjectSet</CODE> first and store all the objects to a temporary collection representation before changing objects and storing them back to db4o. 
 <LI>Some method calls against a lazy <CODE>ObjectSet</CODE> will require the query processor to create a snapshot or to evaluate the query fully. An example of such a call is <CODE>ObjectSet.size()</CODE>.</LI></UL>
-<P>Lazy mode can be an excellent choice for single transaction read use, to keep memory consumption as low as possible.</P></div>
-    </div>
-    
+<P>Lazy mode can be an excellent choice for single transaction read use, to keep memory consumption as low as possible.</P>    
   </body></html>

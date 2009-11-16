@@ -1,9 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Native Queries	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Native Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Concept">Concept</a></li><li><a href ="#Principle">Principle</a></li><li><a href ="#Simple Example">Simple Example</a></li><li><a href ="#Advanced Example">Advanced Example</a></li><li><a href ="#Arbitrary Code">Arbitrary Code</a></li><li><a href ="#Native Query Performance">Native Query Performance</a></li></ul></div></div></div> 
+        <h1>Native Queries</h1>
 
 <p>Wouldn't it be nice to pose queries in the programming language that you are using? Wouldn't it be nice if all your query code was 100% typesafe, 100% compile-time checked and 100% refactorable? Wouldn't it be nice if the full power of object-orientation could be used by calling methods from within queries? All mentioned above is achievable by using Native Queries or <a href="linq.htm" class="wikiLink">LINQ</a>(if you are developing in .NET3.5)</p>
 <p>Native queries are the main db4o query interface and they are the recommended way to query databases from your application for all platforms except .NET3.5 where LINQ is preferrable. Because native queries simply use the semantics of your programming language, they are perfectly standardized and a safe choice for the future.</p>
@@ -88,7 +86,5 @@
 <p>Note:</p>
 <UL>
 <LI>on Java Native Query optimization requires bloat.jar, db4o-nqopt.jar and db4o-instrumentation.jar to be present in the classpath;</LI>
-<LI>on .NET Native Query optimization requires a reference to Db4obects.Db4o.Instrumentation.dll and Db4objects.Db4o.NativeQueries.dll in your project. </LI></UL></div>
-    </div>
-    
+<LI>on .NET Native Query optimization requires a reference to Db4obects.Db4o.Instrumentation.dll and Db4objects.Db4o.NativeQueries.dll in your project. </LI></UL>    
   </body></html>

@@ -1,10 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="599" MadCap:lastWidth="624">
     <head><title>Including Db4oTool In The Build	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
                 <h1>Including Db4oTool In The Build</h1>
                 <p>The easiest way to use Db4oTools is to include it directly into the build process. This will enable you to get a processed assembly immediately after a successful build. If you are using Visual Studio Compact Framework emulator, you will get the processed assembly straight into the emulator.</p>
                 <p>Use the following steps to enable Db4oTool in VS2008 project:</p>
@@ -24,11 +22,9 @@
                     <li>Native Query optimization: <code>[path_to_Db4oTool_folder]/Db4oTools.exe -nq $(TargetPath)</code></li>
                     <li>Transparent Activation support for the whole assembly: <code>[path_to_Db4oTool_folder]/Db4oTools.exe -ta $(TargetPath)</code></li>
                     <li>Transparent Activation support for MyClass objects: 
-<code>[path_to_Db4oTool_folder]/Db4oTools.exe -ta <span id="ctl00_ctl00_bcr_topicView___TopicBody">-byname:MyClass </span>$(TargetPath)</code></li>
+<code>[path_to_Db4oTool_folder]/Db4oTools.exe -ta -byname:MyClass $(TargetPath)</code></li>
                     <li>Transparent Activation and Transparent Persistence support: 
 
-<code>[path_to_Db4oTool_folder]/Db4oTools.exe -tp<span id="ctl00_ctl00_bcr_topicView___TopicBody"></span>$(TargetPath)</code></li>
-                </ol>For more Db4oTool options please refer to <a href="db4otool_usage.htm" class="wikiLink">Db4oTool Usage</a>. </div>
-        </div>
-    </body>
+<code>[path_to_Db4oTool_folder]/Db4oTools.exe -tp $(TargetPath)</code></li>
+                </ol>For more Db4oTool options please refer to <a href="db4otool_usage.htm" class="wikiLink">Db4oTool Usage</a>.     </body>
 </html>

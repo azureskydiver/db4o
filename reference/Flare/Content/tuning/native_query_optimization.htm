@@ -1,15 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="2272" MadCap:lastWidth="1017">
     <head><title>Native Query Optimization	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
                 <h1>Native Query Optimization</h1>
-                <div id="TOC">
-                    <div id="TOCinner"><span class="TOCtitle"></span>
-                    </div>
-                </div>
                 <p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.htm" class="wikiLink">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_evaluations.htm" class="wikiLink">SODA Evaluations</a>. Naturally performance will not be as good in this case.</p><a name="Optimization Theory"></a>
                 <H2>Optimization Theory </H2>
                 <p>For Native Query Java bytecode and .NET IL code are analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</p>
@@ -97,30 +91,15 @@
                     <p>Native Query optimizer for .NET requires the following libraries to work:</p>
                     <UL>
                         <LI>
-                            <SPAN>
-                                <SPAN>Db4obects.Db4o.Instrumentation.dll</SPAN>
-                            </SPAN>
-                        </LI>
+                            <Db4obects.Db4o.Instrumentation.dll                        </LI>
                         <LI>
-                            <SPAN>
-                                <SPAN>Db4objects.Db4o.NativeQueries.dll</SPAN>
-                            </SPAN>
-                        </LI>
+                            Db4objects.Db4o.NativeQueries.dll                        </LI>
                         <LI>
-                            <SPAN>
-                                <SPAN>Mono.Cecil.dll</SPAN>
-                            </SPAN>
-                        </LI>
+                            Mono.Cecil.dll                        </LI>
                         <LI>
-                            <SPAN>
-                                <SPAN>Cecil.FlowAnalysis.dll</SPAN>
-                            </SPAN>
-                        </LI>
+                            Cecil.FlowAnalysis.dll                        </LI>
                     </UL>
-                    <SPAN>
-                        <SPAN> These assemblies must be available in your project for successful NQ optimization.</SPAN>
-                    </SPAN>
-                    <p>The Native Query optimizer is still under development to eventually "understand" all valid C# constructs. Current optimization supports the following constructs well:</p>
+                    These assemblies must be available in your project for successful NQ optimization.                    <p>The Native Query optimizer is still under development to eventually "understand" all valid C# constructs. Current optimization supports the following constructs well:</p>
                     <UL>
                         <LI>compile-time constants</LI>
                         <LI>simple member access</LI>
@@ -139,7 +118,5 @@
                 </p>
                 <p MadCap:conditions="Primary:net" />
                 <p>For more information on NQ optimization see <a href="native_query_optimization/monitoring_optimization.htm" class="wikiLink">Monitoring Optimization</a>.</p>
-            </div>
-        </div>
     </body>
 </html>

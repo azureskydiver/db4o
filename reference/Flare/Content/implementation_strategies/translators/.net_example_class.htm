@@ -1,23 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="3739" MadCap:lastWidth="1340" MadCap:conditions="Primary..NET">
     <head><title>.NET Example Class	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
                 <h1>.NET Example Class</h1>
-                <div id="TOC">
-                    <div id="TOCinner"><span class="TOCtitle">Contents</span>
-                        <div class="TOCcontents">
-                            <ul>
-                                <li><a href="#Using The Constructor ">Using The Constructor </a>
-                                </li>
-                                <li><a href="#Bypassing The Constructor ">Bypassing The Constructor </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
                 <p>For this example we'll be using a hypothetical <code>LocalizedItemList</code> class which binds together culture information with a list of items.</p>
                 <p><code>System.Globalization.CultureInfo</code> is particularly interesting because it internally holds a native pointer to a system structure which in turn cannot be cleanly stored by db4o.</p>
                 <p MadCap:conditions="Primary..NET,Primary.c#">
@@ -60,7 +46,5 @@
                 <p MadCap:conditions="Primary:vb" />
                 <p>This still does not work for our case because the native pointer will definitely be invalid. In fact this example crashes the Common Language Runtime.  </p>
                 <p>In order to solve the problem we will need to use <a href="the_translator_api.htm" class="wikiLink">db4o Translators</a>. </p>
-            </div>
-        </div>
     </body>
 </html>

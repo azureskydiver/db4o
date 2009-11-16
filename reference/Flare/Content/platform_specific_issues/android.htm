@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1189" MadCap:lastWidth="1104" MadCap:conditions="Primary.Java">
     <head><title>Android	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
@@ -32,7 +32,7 @@
                 <h4>Things to remember when using db4o under Andoid</h4>
                 <ol>
                     <li>Use the Java 5 version of the db4o library available on the lib folder of your db4o installation (<b><i>db4o-xxx-java5.jar</i></b>). The other db4o Java versions can be less performant. </li>
-                    <li>Open the database relative to your parent activity (context) data directory: <font face="Courier New">Db4o.<i>openFile</i>(dbConfig(), db4oDBFullPath(<span style="font-size:10pt;font-family:'Courier New';">context</span></font><span style="font-size:10pt;color:black;font-family:'Courier New';">));</span><p class="MsoNormal" style="margin:0in 0in 0pt;"><b><span style="font-size:10pt;font-family:'Courier New';">private</span></b><span style="font-size:10pt;color:black;font-family:'Courier New';"> String db4oDBFullPath(Context ctx) {</span><span style="font-size:10pt;font-family:'Courier New';"></span></p><p class="MsoNormal" style="margin:0in 0in 0pt;"><span style="font-size:10pt;color:black;font-family:'Courier New';"><span></span></span><b><span style="font-size:10pt;font-family:'Courier New';">return</span></b><span style="font-size:10pt;color:black;font-family:'Courier New';"> ctx.getDataDir() + </span><span style="font-size:10pt;font-family:'Courier New';">"/"</span><span style="font-size:10pt;color:black;font-family:'Courier New';"> + </span><span style="font-size:10pt;font-family:'Courier New';">"dbfile.yap"</span><span style="font-size:10pt;color:black;font-family:'Courier New';">;</span><span style="font-size:10pt;font-family:'Courier New';"></span></p><p class="MsoNormal" style="margin:0in 0in 0pt;"><span style="font-size:10pt;color:black;font-family:'Courier New';">}</span> Otherwise Android security will prevent the creation of the database file.</p></li>
+                    <li>Open the database relative to your parent activity (context) data directory: <font face="Courier New">Db4o.<i>openFile</i>(dbConfig(), db4oDBFullPath(context</font>));<p class="MsoNormal" style="margin:0in 0in 0pt;"><b>private</b> String db4oDBFullPath(Context ctx) {</p><p class="MsoNormal" style="margin:0in 0in 0pt;"><b>return</b> ctx.getDataDir() + "/" + "dbfile.yap";</p><p class="MsoNormal" style="margin:0in 0in 0pt;">} Otherwise Android security will prevent the creation of the database file.</p></li>
                 </ol>
             </div>
         </div>
