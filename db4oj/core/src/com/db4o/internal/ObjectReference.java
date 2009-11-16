@@ -259,8 +259,8 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return _virtualAttributes;
 	}
 	
-	final Object peekPersisted(Transaction trans, ActivationDepth depth) {
-        return read(trans, depth, Const4.TRANSIENT, false);
+	final void peekPersisted(Transaction trans, ActivationDepth depth) {
+        setObject(read(trans, depth, Const4.TRANSIENT, false));
 	}
 	
 	final Object read(Transaction trans, ActivationDepth instantiationDepth,int addToIDTree,boolean checkIDTree) {
@@ -371,7 +371,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 	
 	public VirtualAttributes virtualAttributes(Transaction trans){
-		return virtualAttributes(trans, true);
+		return virtualAttributes(trans, false);
 	}
     
     public void setVirtualAttributes(VirtualAttributes at){

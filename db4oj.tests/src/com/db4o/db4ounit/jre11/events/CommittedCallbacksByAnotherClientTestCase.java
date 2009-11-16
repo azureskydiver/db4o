@@ -10,16 +10,10 @@ import com.db4o.query.*;
 
 import db4ounit.extensions.*;
 
-/**
- * @exclude
- */
 public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerTestCase {
 	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksByAnotherClientTestCase().runEmbedded();
+		new CommittedCallbacksByAnotherClientTestCase().runAll();
 	}
 	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
@@ -101,14 +95,11 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		assertAddedDeletedUpdated(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
 	}
 	
-	/*
-	 * This test fails in embedded CS mode.
-	 */
-	public void _testCommittedForItemAddedAndImmediatelyDeleted() {
+	public void testCommittedForItemAddedAndImmediatelyDeleted() {
 		
 		Item item4 = new Item(4);
 		_anotherClient.store(item4);
-		// ObjectInfo info4 = getInfo(_anotherClient, 4);
+		
 		_anotherClient.delete(item4);
 		
 		assertNoEvents();
@@ -170,7 +161,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	private ObjectInfo getInfo(ExtObjectContainer oc, int itemId) {
 		Item item = getItem(oc, itemId);
 		Transaction trans = ((InternalObjectContainer)oc).transaction();
-		return new FrozenObjectInfo(trans, trans.referenceForObject(item));
+		return new FrozenObjectInfo(trans, trans.referenceForObject(item), false);
 	}
 
 	private void assertAddedDeletedUpdated(
