@@ -25,12 +25,16 @@ public class FrozenObjectInfo implements ObjectInfo {
             ref == null ? null : ref.getObject(), 
             ref == null ? -1 :ref.getID(), 
             virtualAttributes == null ? null : virtualAttributes.i_database, 
-            virtualAttributes == null ? -1 : virtualAttributes.i_uuid,  
-            ref == null ? 0 :ref.getVersion());      
+            virtualAttributes == null ? -1 : virtualAttributes.i_uuid,
+            virtualAttributes == null ? 0 : virtualAttributes.i_version);
     }
+    
+	public FrozenObjectInfo(Transaction trans, ObjectReference ref, boolean committed) {
+	    this(ref, isInstantiatedReference(ref) ? ref.virtualAttributes(trans, committed) : null);
+	}
 
-	public FrozenObjectInfo(Transaction trans, ObjectReference ref) {
-	    this(ref, ref == null ? null : ref.virtualAttributes(trans, true));
+	private static boolean isInstantiatedReference(ObjectReference ref){
+		return ref != null && ref.getObject() != null;
 	}
 	
 	public long getInternalID() {

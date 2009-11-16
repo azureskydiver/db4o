@@ -1292,14 +1292,20 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
                 return tio._object;
             }
         }
-        Object res = new ObjectReference(id).peekPersisted(trans, depth);
+        ObjectReference ref = peekReference(trans, id, depth, resetJustPeeked);
+        return ref.getObject(); 
+    }
+
+	public ObjectReference peekReference(Transaction trans, int id, ActivationDepth depth, boolean resetJustPeeked) {
+		ObjectReference ref = new ObjectReference(id);
+		ref.peekPersisted(trans, depth);
         if(resetJustPeeked){
             _justPeeked = null;
         }
-        return res; 
-    }
+		return ref;
+	}
 
-    void peeked(int id, Object obj) {
+	void peeked(int id, Object obj) {
         _justPeeked = Tree
             .add(_justPeeked, new TreeIntObject(id, obj));
     }

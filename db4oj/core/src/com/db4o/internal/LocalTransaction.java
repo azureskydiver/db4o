@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.caching.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.freespace.*;
@@ -622,7 +623,10 @@ public class LocalTransaction extends Transaction {
 		final Collection4 deleted = new Collection4();
 		collectSlotChanges(new SlotChangeCollector() {
 			public void deleted(int id) {
-				deleted.add(frozenReferenceFor(id));
+				ObjectInfo ref = frozenReferenceFor(id);
+				if(ref != null){
+					deleted.add(ref);
+				}
 			}
 
 			public void updated(int id) {
@@ -674,7 +678,10 @@ public class LocalTransaction extends Transaction {
 			}
 			
 			public void deleted(int id){
-				deleted.add(frozenReferenceFor(id));
+				ObjectInfo ref = frozenReferenceFor(id);
+				if(ref != null){
+					deleted.add(ref);
+				}
 			}
 		});
 		return newCallbackObjectInfoCollections(added, updated, deleted);
@@ -699,7 +706,9 @@ public class LocalTransaction extends Transaction {
 				final SlotChange slotChange = ((SlotChange)obj);
 				final int id = slotChange._key;
 				if (slotChange.isDeleted()) {
-					collector.deleted(id);
+					if(! slotChange.isNew()){
+						collector.deleted(id);
+					}
 				} else if (slotChange.isNew()) {
 					collector.added(id);
 				} else {
@@ -710,7 +719,15 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	private ObjectInfo frozenReferenceFor(final int id) {
-		return new FrozenObjectInfo(this, referenceForId(id));
+		ObjectReference ref = referenceForId(id);
+		if(ref != null){
+			return new FrozenObjectInfo(this, ref, true);
+		}
+		ref = container().peekReference(systemTransaction(), id, new FixedActivationDepth(0), true);
+		if(ref == null || ref.getObject() == null){
+			return null;
+		}
+		return new FrozenObjectInfo(systemTransaction(), ref, true);
 	}
 	
 	public static Transaction readInterruptedTransaction(LocalObjectContainer file, ByteArrayBuffer reader) {

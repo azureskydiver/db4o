@@ -29,7 +29,7 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
                 classMetadata.addFieldIndices(_payLoad,null);
             }
             container.writeNew(transaction(), _payLoad.pointer(), classMetadata, _payLoad);
-            serverTransaction().writePointer( id, slot);
+            transaction().setPointer(id, slot);
         }
     }
 }

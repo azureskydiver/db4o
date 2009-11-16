@@ -12,14 +12,8 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * @exclude
- */
 public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		new CommittedCallbacksTestCase().runAll();
 	}
@@ -159,6 +153,15 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		assertCommittedEvent(new ObjectInfo[] { info4 }, NONE, NONE);
 	}
 	
+	public void testDeleteUncommitted(){
+		final Item item4 = new Item(4);
+		db().store(item4);
+		assertNoEvents();
+		db().delete(item4);
+		db().commit();
+		assertCommittedEvent(NONE, NONE, NONE);
+	}
+	
 	private Item getItem(int id) {
 		final Query query = newQuery(Item.class);
 		query.descend("id").constrain(new Integer(id));
@@ -167,7 +170,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	private ObjectInfo getInfo(int itemId) {
 		Item item = getItem(itemId);
-		return new FrozenObjectInfo(trans(), trans().referenceForObject(item));
+		return new FrozenObjectInfo(trans(), trans().referenceForObject(item), false);
 	}
 
 	private void assertCommittedEvent(
