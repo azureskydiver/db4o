@@ -1,9 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Turning Off Weak References	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Turning Off Weak References</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></div></div></div>
+        <h1>Turning Off Weak References</h1>
 
 <p MadCap:conditions="Primary.Java">
 <p>Java: </p><p><code>Db4o.configure().weakReferences(false)</code></p>
@@ -34,7 +32,5 @@
 <p MadCap:conditions="Primary.Print">
 <p>.NET: </p><p><code>IExtObjectContainer.Purge(object)</code></p>
 </p><p MadCap:conditions="Primary:net" />
-<p>can also be called in normal weak reference operation mode to remove an object from the reference cache. This will help to keep the reference tree as small as possible. After calling #purge(object) an object will be unknown to the ObjectContainer so this feature is also suitable for batch inserts. </p></div>
-    </div>
-    
+<p>can also be called in normal weak reference operation mode to remove an object from the reference cache. This will help to keep the reference tree as small as possible. After calling #purge(object) an object will be unknown to the ObjectContainer so this feature is also suitable for batch inserts. </p>    
   </body></html>

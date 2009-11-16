@@ -1,25 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1284" MadCap:lastWidth="1017">
     <head><title>Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
                 <h1>Configuration</h1>
-                <div id="TOC">
-                    <div id="TOCinner"><span class="TOCtitle">Contents</span>
-                        <div class="TOCcontents">
-                            <ul>
-                                <li><a href="#hibernate.cfg.xml">hibernate.cfg.xml</a>
-                                </li>
-                                <li><a href="#Manual Creation of dRS Tables And Columns ">Manual Creation of dRS Tables And Columns </a>
-                                </li>
-                                <li><a href="#Hibernate Mapping Files ">Hibernate Mapping Files </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
                 <p><font color="#990000">&#160;</font>
                 </p><a name="hibernate.cfg.xml"></a>
                 <h2>hibernate.cfg.xml</h2>
@@ -52,9 +36,7 @@ identify a persisted object by invoking
 org.hibernate.Session#getIdentifier(Object object).</p><p>If you do not define getter/setter for property, make
 default-access="field". default-lazy="false" default-cascade="save-update" is required for replication to work
 properly. Note, you should not set the cascade style to "delete",
-otherwise deletion replication will not work. <a title="outline19" class="" name="outline19"></a></p></div>
-        </div>
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
+otherwise deletion replication will not work. <a title="outline19" class="" name="outline19"></a></p>        <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="hibernate.zip">Java</a>
             </MadCap:conditionalText>

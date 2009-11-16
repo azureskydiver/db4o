@@ -1,9 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>No test instances	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>No test instances</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></div></div></div><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>configuration.testConstructors(false)</code></p></p><p MadCap:conditions="Primary:java" />
+        <h1>No test instances</h1><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>configuration.testConstructors(false)</code></p></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary.Print"><p>.NET: </p><p><code>configuration.TestConstructors(false)</code></p></p><p MadCap:conditions="Primary:net" />
 <a name="Advantage"></a><h2>Advantage</h2><p>
 will prevent db4o from creating a test instance of persistent classes upon opening a database file. 
@@ -12,7 +10,5 @@ will prevent db4o from creating a test instance of persistent classes upon openi
 Upon system startup, db4o attempts to create a test instance of all persistent classes, to ensure that a public zero-parameter constructor is present. This process can take some time, if a large number of classes are present in the database file. For the best possible startup performance this feature can be turned off. 
  
 </p><a name="Alternate Strategies"></a><h2>Alternate Strategies</h2><p>
-In any case it's always good practice to create a zero-parameter constructor. If this is not possible because a class from a third party is used, it may be a good idea to write a <a href="../../implementation_strategies/translators.htm" class="wikiLink">translator</a> that translates the third party class to one's own class.  </p> </div>
-    </div>
-    
+In any case it's always good practice to create a zero-parameter constructor. If this is not possible because a class from a third party is used, it may be a good idea to write a <a href="../../implementation_strategies/translators.htm" class="wikiLink">translator</a> that translates the third party class to one's own class.  </p>     
   </body></html>

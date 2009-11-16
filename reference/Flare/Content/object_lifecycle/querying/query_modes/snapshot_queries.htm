@@ -1,9 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Snapshot Queries	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Snapshot Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Pros and Cons for Snapshot Queries">Pros and Cons for Snapshot Queries</a></li></ul></div></div></div> 
+        <h1>Snapshot Queries</h1>
 
 <P>Snapshot mode allows you to get the advantages of the Lazy queries avoiding their side effects. When query is executed, the query processor chooses the best indexes, does all index processing and creates a snapshot of the index at this point in time. Non-indexed constraints are evaluated lazily when the application iterates through the <CODE>ObjectSet</CODE> resultset of the query.</P>
 <p MadCap:conditions="Primary.Java">
@@ -28,7 +26,5 @@
 <P>Cons:</P>
 <UL>
 <LI>The entire candidate index will be loaded into memory. It will stay there until the query ObjectSet is garbage collected. In a C/S setup, the memory will be used on the server side</LI></UL>
-<P>Client/Server applications with the risk of concurrent modifications should prefer Snapshot mode to avoid side effects from other transactions.</P></div>
-    </div>
-    
+<P>Client/Server applications with the risk of concurrent modifications should prefer Snapshot mode to avoid side effects from other transactions.</P>    
   </body></html>

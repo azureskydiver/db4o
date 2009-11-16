@@ -9,4 +9,5 @@
   MasterPageLayout="/Content/Resources/PageLayouts/Default.flpgl"
   MasterStylesheet="/Content/Resources/Stylesheets/prettify.css"
   MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
-  UseCustomTopicFileExtension="false"></CatapultTarget>
+  UseCustomTopicFileExtension="false"
+  Skin="/Project/Skins/RedVersant.flskn"></CatapultTarget>

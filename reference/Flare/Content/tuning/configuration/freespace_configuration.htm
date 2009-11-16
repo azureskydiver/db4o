@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Freespace Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Freespace Configuration</h1><p><span id="ctl00_ctl00_bcr_topicView___TopicBody">When objects are
+        <h1>Freespace Configuration</h1><p>When objects are
 updated or deleted, the space previously occupied in the database file
 is marked as "free". Freespace management system takes care of this space by maintaining two lists in
-RAM, sorted by address and by size. The following configuration methods allow to tune the freespace management system to help you optimize your system:</span></p>
+RAM, sorted by address and by size. The following configuration methods allow to tune the freespace management system to help you optimize your system:</p>
 <p MadCap:conditions="Primary.Java">
 <p>Java:  </p>
 <p><code>public void discardSmallerThan(int byteCount);</code> </p>
@@ -16,8 +14,7 @@ RAM, sorted by address and by size. The following configuration methods allow to
 <p><code>public void DiscardSmallerThan(int byteCount);</code> 
 </p>
 </p><p MadCap:conditions="Primary:net" />
-<span id="ctl00_ctl00_bcr_topicView___TopicBody"></span>
-<p><span id="ctl00_ctl00_bcr_topicView___TopicBody">
+<p>
 <p>Configures the minimum size of free space slots in the database file that are to 
 be reused. </p>
 
@@ -30,7 +27,7 @@ startup time. The downside: database files will necessarily grow faster</li>
 - default setting, all freespace is reused. The downside: increased
 memory consumption and performance loss for maintenance of freespace
 lists in RAM </li>
-</ul></span></p>
+</ul></p>
 <p MadCap:conditions="Primary.Java">
 <p>Java:  </p>
 <p><code>public void freespaceFiller(FreespaceFiller freespaceFiller);</code> </p>
@@ -56,7 +53,6 @@ lists in RAM </li>
 <p><code>public void UseRamSystem();</code></p>
 <p></p><p MadCap:conditions="Primary:net" /></p>
 
-<p>When BTree system is used to keep freespace information, the performance is worse as the information is written to disk at each commit, but the memory consumption is lower. With the RAM system, all freespace information is kept in RAM, which allows the best performance, however this information is lost on abnormal system termination.  </p></div>
-    </div>
+<p>When BTree system is used to keep freespace information, the performance is worse as the information is written to disk at each commit, but the memory consumption is lower. With the RAM system, all freespace information is kept in RAM, which allows the best performance, however this information is lost on abnormal system termination.  </p>
     
   </body></html>

@@ -1,17 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Transaction	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
         <h1>Transaction</h1>
-		<div id="TOC">
-		<div id="TOCinner">
-		<span class="TOCtitle">Contents</span>
-			<div class="TOCcontents">
-			<ul>
-			<li><a href ="#Commit And Rollback">Commit And Rollback</a></li>
-			<li><a href ="#Refresh Live Objects">Refresh Live Objects</a></li>
-			</ul></div></div></div>
 
 <p>All work within db4o ObjectContainer is transactional. A transaction is implicitly started when you open a container, and the current transaction is implicitly committed when you close it again. db4o transaction is tied to  an open object container and only one transaction is allowed per object container instance. </p>
 <a name="Commit And Rollback"></a><h2>Commit And Rollback</h2>
@@ -88,9 +78,7 @@
 <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/CarSnapshotRollbackRefresh.flsnp" />
 </p><p MadCap:conditions="Primary:vb" />
 
-<p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done from different threads. See <a href="../client-server.htm" class="wikiLink">Client-Server</a> for more information.</p></div>
-    </div>
-    
+<p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done from different threads. See <a href="../client-server.htm" class="wikiLink">Client-Server</a> for more information.</p>    
 
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>
