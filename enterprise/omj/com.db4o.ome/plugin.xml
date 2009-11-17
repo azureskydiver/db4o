@@ -100,17 +100,6 @@
              	id="com.db4o.omplus.ui.actions.BackupDBAction">
          </action>
          
-         <!-- Defrag -->
-     	 <action
-               label="Defragment"
-               class="com.db4o.omplus.ui.actions.DefragDBAction"
-               tooltip="Defragment"
-               menubarPath="sampleMenu/MaintenanceMenuId/MaintenanceSep"
-               id="com.db4o.omplus.ui.actions.DefragDBAction">
-          </action>   
-          
-                  
-         
          <!--************************* Browser related menus and tool bars *************************-->
          
          <!-- HELP browser 

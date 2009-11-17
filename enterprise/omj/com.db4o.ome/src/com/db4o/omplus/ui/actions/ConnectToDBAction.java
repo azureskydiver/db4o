@@ -49,7 +49,6 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 	}
 	private void disableDBMaintenanceActions() {
 		BackupDBAction.enableAction(false);
-		DefragDBAction.enableAction(false);
 	}
 
 	private boolean showMessageForConnClose(String fileName) {

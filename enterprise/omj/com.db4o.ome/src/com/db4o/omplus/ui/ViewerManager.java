@@ -75,8 +75,7 @@ public abstract class ViewerManager
 	 * Whenever a new DB opened reset all views. 
 	 */
 	public static void resetAllViewsToInitialState()
-	{ // Sstrangely doesn't work for defrag
-		
+	{ 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		
 		IViewPart part =  ViewerManager.getView(page, OMPlusConstants.CLASS_VIEWER_ID);

@@ -1,14 +1,12 @@
 package com.db4o.omplus.datalayer;
 
-import com.db4o.*;
-import com.db4o.defragment.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.omplus.*;
+import com.db4o.ObjectContainer;
+import com.db4o.ext.DatabaseClosedException;
+import com.db4o.ext.Db4oIOException;
+import com.db4o.foundation.NotSupportedException;
+import com.db4o.omplus.Activator;
 
 public class DbMaintenance {
-	
-	private int DEFAULT_OBJECT_COMMIT_FREQUENCY = 500000;
 	
 	private ObjectContainer oc;
 	
@@ -16,24 +14,6 @@ public class DbMaintenance {
 		if(getObjectContainer() == null)
 			return false;
 		return true;
-	}
-	
-	public void defrag(String path) throws Exception {
-				
-		closeDB();
-			
-		DefragmentConfig defragConfig = new DefragmentConfig(path);
-		defragConfig.db4oConfig();
-		defragConfig.forceBackupDelete(true);
-		defragConfig.objectCommitFrequency(DEFAULT_OBJECT_COMMIT_FREQUENCY);
-		Defragment.defrag(defragConfig);
-		
-		ObjectContainer oc = Db4o.openFile(path);
-		Activator.getDefault().getDatabaseInterface().setDB(oc, path);
-	}
-		
-	private void closeDB() {
-		Activator.getDefault().getDatabaseInterface().close();
 	}
 	
 	public void backup(String path) throws Exception {
