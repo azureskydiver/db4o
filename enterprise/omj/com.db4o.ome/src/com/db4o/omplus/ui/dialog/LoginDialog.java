@@ -37,7 +37,6 @@ import com.db4o.omplus.ui.OMPlusPerspective;
 import com.db4o.omplus.ui.ViewerManager;
 import com.db4o.omplus.ui.actions.BackupDBAction;
 import com.db4o.omplus.ui.actions.ConnectToDBAction;
-import com.db4o.omplus.ui.actions.DefragDBAction;
 
 
 public class LoginDialog
@@ -766,7 +765,6 @@ public class LoginDialog
 	
 	private void enableDBMaintenanceActions(boolean enabled) {
 		BackupDBAction.enableAction(enabled);
-		DefragDBAction.enableAction(enabled);
 		if(enabled)
 			ConnectToDBAction.setStatus("Disconnect");
 	}
