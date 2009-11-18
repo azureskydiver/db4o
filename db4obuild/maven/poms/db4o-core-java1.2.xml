@@ -1,12 +1,12 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.db4o</groupId>
-  <artifactId>db4o-java1.5</artifactId>
+  <artifactId>db4o-core-java1.2</artifactId>
   <version>@VERSION@</version>
   <packaging>jar</packaging>
-  <name>db4o java1.5</name>
-  <description>db4o database engine core for JDK 5 and JDK 6</description>
-  <url>http://www.db4o.com</url>  
+  <name>db4o core java 1.2</name>
+  <description>db4o database engine core for JDK 1.2 - 1.4</description>
+  <url>http://www.db4o.com</url>
   <licenses>
     <license>
       <name>GNU General Public License</name>
@@ -14,7 +14,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
   <scm>
     <url>https://source.db4o.com/db4o/trunk</url>
   </scm>

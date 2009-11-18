@@ -1,11 +1,11 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.db4o</groupId>
-  <artifactId>db4o-optional-java1.5</artifactId>
+  <artifactId>db4o-optional-java5</artifactId>
   <version>@VERSION@</version>
   <packaging>jar</packaging>
   <name>db4o optional java 5</name>
-  <description>db4o optional features module for JDK 5</description>
+  <description>db4o optional features module for JDK 5 and JDK 6</description>
   <url>http://www.db4o.com</url>
   <licenses>
     <license>
@@ -21,7 +21,12 @@
   <dependencies>
 		<dependency>
 			<groupId>com.db4o</groupId>
-			<artifactId>db4o-java1.5</artifactId>
+			<artifactId>db4o-core-java5</artifactId>
+			<version>@VERSION@</version>
+		</dependency>
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-cs-java5</artifactId>
 			<version>@VERSION@</version>
 		</dependency>
    </dependencies>

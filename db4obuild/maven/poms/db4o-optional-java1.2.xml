@@ -5,7 +5,7 @@
   <version>@VERSION@</version>
   <packaging>jar</packaging>
   <name>db4o optional java 1.2</name>
-  <description>db4o optional features module for JDK 1.2</description>
+  <description>db4o optional features module for JDK 1.2 - 1.4</description>
   <url>http://www.db4o.com</url>
   <licenses>
     <license>
@@ -21,7 +21,12 @@
   <dependencies>
 		<dependency>
 			<groupId>com.db4o</groupId>
-			<artifactId>db4o-java1.2</artifactId>
+			<artifactId>db4o-core-java1.2</artifactId>
+			<version>@VERSION@</version>
+		</dependency>
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-cs-java1.2</artifactId>
 			<version>@VERSION@</version>
 		</dependency>
    </dependencies>

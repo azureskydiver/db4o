@@ -4,8 +4,8 @@
   <artifactId>db4o-full-java1.2</artifactId>
   <version>@VERSION@</version>
   <packaging>jar</packaging>
-  <name>db4o java 1.1</name>
-  <description>db4o all-in-one for JDK 1.2</description>
+  <name>db4o full java 1.2</name>
+  <description>db4o all-in-one for JDK 1.2 - 1.4</description>
   <url>http://www.db4o.com</url>
   <licenses>
     <license>
