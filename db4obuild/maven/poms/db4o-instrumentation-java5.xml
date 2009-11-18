@@ -1,11 +1,11 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.db4o</groupId>
-	<artifactId>db4o-instrumentation-java1.5</artifactId>
+	<artifactId>db4o-instrumentation-java5</artifactId>
 	<version>@VERSION@</version>
 	<packaging>jar</packaging>
-	<name>Instrumentation layer</name>
-	<description>Instrumentation layer on top of bloat</description>
+	<name>db4o bytecode instrumentation java 5</name>
+	<description>db4o bytecode instrumentation for TA, TP, NQ for JDK 5 and JDK 6</description>
 	<url>http://www.db4o.com</url>
 	<licenses>
 		<license>
@@ -22,7 +22,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.db4o</groupId>
-			<artifactId>db4o-java1.5</artifactId>
+			<artifactId>db4o-core-java5</artifactId>
 			<version>@VERSION@</version>
 		</dependency>		
 		<dependency>
