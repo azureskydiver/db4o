@@ -60,8 +60,8 @@ public class CachingStorage extends StorageDecorator {
 	 * override this method if you want to work with a different caching
 	 * strategy than the default LRU2Q cache. 
 	 */
-	protected Cache4<Object, Object> newCache() {
-	    return CacheFactory.new2QCache(_pageCount);
+	protected Cache4<Long, Object> newCache() {
+	    return CacheFactory.new2QLongCache(_pageCount);
     }
 
 	private static final class NonFlushingCachingBin extends CachingBin {
