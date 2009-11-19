@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Pluggable Typehandler Benefits	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>Pluggable Typehandler Benefits</h1>
 
 <p>As the name suggests Pluggable Typehandler allows anybody to
@@ -15,14 +15,14 @@ You know a more performant way to convert
 objects to byte array or to compare them.</li><li>
 You need to store only part of the object's
 information and want to skip unneeded fields to keep the database smaller. You
-can also do the same using <a href="../../tuning/selective_persistence.htm" class="wikiLink">Transient</a>
+can also do the same using <a href="../../tuning/selective_persistence.htm"  >Transient</a>
 marker, but this is only possible for classes with available code. Using custom
 typehandler you can configure partial storage for any third-party class.</li><li>
 You need to keep information that will allow you
 to restore fields that cannot be stored as is, for example: references to
 environmental variables (like time zone), proxy objects or variables of
 temporary state (like current memory usage). Previously, this job was done by
-<a href="../translators.htm" class="wikiLink">Translators</a>, but certainly custom Typehandler gives you more control
+<a href="../translators.htm"  >Translators</a>, but certainly custom Typehandler gives you more control
 and unifies the approach.</li><li>
 You want to customize the way Strings are stored
 (special encodings).</li><li>
@@ -68,13 +68,13 @@ refactoring and db4o version upgrades)</li></ul>
 
 <p>Of course, writing typehandlers
 is not totally simple, but once you understand how to do that - you will also
-gain a much deeper understanding of db4o itself. You can start with a <a href="custom_typehandler_example.htm" class="wikiLink">simple
+gain a much deeper understanding of db4o itself. You can start with a <a href="custom_typehandler_example.htm"  >simple
 example</a> provided in this documentation and continue by looking into existing
 db4o typehandler implementations: StringHandler, VariableLengthTypeHandler,
 IndexableTypeHandler etc.</p>
 
-</div>
-    </div>
+ 
+     
 
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>

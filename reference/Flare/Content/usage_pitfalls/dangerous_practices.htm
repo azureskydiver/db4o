@@ -3,8 +3,8 @@
     <head><title>Dangerous Practices	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>Dangerous Practices</h1>
                 <p>Db4o
 databases are well protected against corruption. However some specific
@@ -16,10 +16,10 @@ configurations can make your database file vulnerable.
 the same database file from different JVM sessions will corrupt the
 database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
-database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm" class="wikiLink">No lock file thread</a>.</p>
+database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm"  >No lock file thread</a>.</p>
                     </li>
-                    <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm" class="wikiLink">NonFlushingStorage</a></code>
-                        <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
+                    <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm"  >NonFlushingStorage</a></code>
+                        <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm"  >special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
 revert the order of writes to optimize file performance. db4o can
 enforce the correct order by flushing file buffers after every step of
@@ -78,7 +78,7 @@ commit.
 </li>
                     </ol>
                 </ol>If you apply such a refactoring, you will not be able to read existing objects correctly.
-<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm" class="wikiLink">Refactoring and Schema Evolution</a></p></div>
-        </div>
+<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm"  >Refactoring and Schema Evolution</a></p> 
+         
     </body>
 </html>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Optimizing Native Queries	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-        <h1>Optimizing Native Queries</h1><a name="Advantage"></a><h2>Advantage</h2><p>Optimized Native Queries allow to achieve considerable performance improvements. </p><a name="Effect"></a><h2>Effect</h2><p><a href="../../basic_concepts/native_query_concepts.htm" class="wikiLink">Native Queries</a> allow to express a database query in a native object-oriented language. This solution is elegant and straightforward as no mixture of concepts (object and relational) occurs. However, the challenge is to make this solution performant. </p><p>If the NQ code is run as is, it requires instantiation of
+        <h1>Optimizing Native Queries</h1><a name="Advantage"></a><h2>Advantage</h2><p>Optimized Native Queries allow to achieve considerable performance improvements. </p><a name="Effect"></a><h2>Effect</h2><p><a href="../../basic_concepts/native_query_concepts.htm"  >Native Queries</a> allow to express a database query in a native object-oriented language. This solution is elegant and straightforward as no mixture of concepts (object and relational) occurs. However, the challenge is to make this solution performant. </p><p>If the NQ code is run as is, it requires instantiation of
 all the members of a class. This is very slow in most cases. In order to
 improve the performance a special optimizer is used by db4o. The idea of the
 optimization is to analyze the code in a Native Query and provide an
 alternative in a database query language. This can be done in runtime or build
-time.</p><p>For detailed information about optimization strategies, please, see <a href="../native_query_optimization.htm" class="wikiLink">Native Query Optimization</a>. </p><a name="Alternate Strategies "></a><h2>Alternate Strategies </h2><p>Obviously, optimization is not possible in cases, when a
+time.</p><p>For detailed information about optimization strategies, please, see <a href="../native_query_optimization.htm"  >Native Query Optimization</a>. </p><a name="Alternate Strategies "></a><h2>Alternate Strategies </h2><p>Obviously, optimization is not possible in cases, when a
 native query does not have a database query alternative. To reveal those cases
 <a href="../diagnostics/nativequerynotoptimized.htm" >db4o Diagnostic</a> system
 should be used.</p>

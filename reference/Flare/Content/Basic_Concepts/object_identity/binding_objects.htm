@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Binding objects	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>Binding objects</h1>
 
 
@@ -32,7 +32,7 @@
 <p>Typical usecases could be:</p>
 
 <ul>
-<li><a href="../../implementation_strategies/type_handling/static_fields_and_enums.htm" class="wikiLink">enums and static fields</a></li>
+<li><a href="../../implementation_strategies/type_handling/static_fields_and_enums.htm"  >enums and static fields</a></li>
 
 <li>working on objects disconnected from the database</li>
 
@@ -75,8 +75,8 @@ following:</p>
 <p>a1 =&gt; b1 =&gt; c1 b2 =&gt; c1</p>
 <p>b2 will be the new in-memory copy of the persistent object formerly known as 
 b1. a1 will still point to b1 which is now a transient object. If you now 
-store a1, you will get a duplicate copy of b1 stored.</p><p>Please, remember this scenario and use ExtObjectContainer#bind(object,id) only for short-lived objects and in controlled situations where no other references exist.</p><p>For the scenarios, which merging disconnected transient object, please refer to <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/Incubator">Merge Module</a> project suggested design. </p></div>
-    </div>
+store a1, you will get a duplicate copy of b1 stored.</p><p>Please, remember this scenario and use ExtObjectContainer#bind(object,id) only for short-lived objects and in controlled situations where no other references exist.</p><p>For the scenarios, which merging disconnected transient object, please refer to <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/Incubator">Merge Module</a> project suggested design. </p> 
+     
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">

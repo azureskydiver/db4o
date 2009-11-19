@@ -3,8 +3,8 @@
     <head><title>Security Requirements On .NET Platform	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>Security Requirements On .NET Platform</h1>
                 <p>db4o requires certain security permissions to be granted for successfull execution. It is important to know these permission requirements if the environment where db4o will be used is not fully trusted. .NET security model is out of scope of this article, to find out more about it use internet search on ".NET security permissions". </p>
                 <p>Security permissions of an assembly can be calculated with the help of PermCalc tool, which can be found in VS2005 installation:</p>
@@ -106,8 +106,8 @@
                 </table>
                 <p>When you deploy an assembly, you must take into consideration all the assemblies that can be referenced from the original assembly. db4o can be deployed with the following additional assemblies:</p>
                 <ul>
-                    <li>Db4objects.Db4o.NativeQueries.dll : for runtime <a href="../basic_concepts/native_query_concepts.htm" class="wikiLink">NQ</a> optimization;</li>
-                    <li>Db4objects.Db4o.Instrumentation.dll : bytecode instrumentation library (required for <a href="../basic_concepts/native_query_concepts.htm" class="wikiLink">NQ</a> optimization).</li>
+                    <li>Db4objects.Db4o.NativeQueries.dll : for runtime <a href="../basic_concepts/native_query_concepts.htm"  >NQ</a> optimization;</li>
+                    <li>Db4objects.Db4o.Instrumentation.dll : bytecode instrumentation library (required for <a href="../basic_concepts/native_query_concepts.htm"  >NQ</a> optimization).</li>
                 </ul>
                 <p>The following table lists the permission requirements of these auxiliary assemblies:</p>
                 <table border="0" cellpadding="0" cellspacing="0">
@@ -143,7 +143,7 @@
                         </td>
                     </tr>
                 </table>
-            </div>
-        </div>
+             
+         
     </body>
 </html>

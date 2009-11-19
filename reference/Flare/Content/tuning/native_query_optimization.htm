@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="2272" MadCap:lastWidth="1017">
     <head><title>Native Query Optimization	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
                 <h1>Native Query Optimization</h1>
-                <p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.htm" class="wikiLink">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_evaluations.htm" class="wikiLink">SODA Evaluations</a>. Naturally performance will not be as good in this case.</p><a name="Optimization Theory"></a>
+                <p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.htm"  >SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_evaluations.htm"  >SODA Evaluations</a>. Naturally performance will not be as good in this case.</p><a name="Optimization Theory"></a>
                 <H2>Optimization Theory </H2>
                 <p>For Native Query Java bytecode and .NET IL code are analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</p>
                 <p>For example:</p>
@@ -77,11 +77,11 @@
                     <p>Note that the current implementation doesn't support polymorphism and multiline methods yet.</p>
                     <p>db4o for Java supplies three different possibilities to run optimized native queries, optimization at</p>
                     <OL>
-                        <LI><a href="native_query_optimization/optimization_at_query_execution_time.htm" class="wikiLink">query execution time</a>
+                        <LI><a href="native_query_optimization/optimization_at_query_execution_time.htm"  >query execution time</a>
                         </LI>
-                        <LI><a href="../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.htm" class="wikiLink">deployment time</a>
+                        <LI><a href="../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.htm"  >deployment time</a>
                         </LI>
-                        <LI><a href="../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.htm" class="wikiLink">class loading time</a>
+                        <LI><a href="../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.htm"  >class loading time</a>
                         </LI>
                     </OL>
                 </p>
@@ -89,9 +89,7 @@
                 <p MadCap:conditions="Primary.Print"><a name="NQ Optimization for .NET"></a>
                     <H2>NQ Optimization for .NET</H2>
                     <p>Native Query optimizer for .NET requires the following libraries to work:</p>
-                    <UL>
-                        <LI>
-                            <Db4obects.Db4o.Instrumentation.dll                        </LI>
+                    <UL><LI>Db4objects.Db4o.Instrumentation.dll</LI>
                         <LI>
                             Db4objects.Db4o.NativeQueries.dll                        </LI>
                         <LI>
@@ -113,10 +111,10 @@
                     </UL>
                     <p>This list will constantly grow with the latest versions of db4o.</p>
                     <p>Note that the current implementation doesn't support polymorphism yet.</p>
-                    <p>The specifics of Compact Framework platform are explained in <a href="native_query_optimization/nq_optimization_on_cf2.0.htm" class="wikiLink">NQ Optimization On CF2.0</a>. </p>
-                    <p>An alternative optimization practice can be found in <a href="native_query_optimization/build-time_optimization_for_.net.htm" class="wikiLink">Build-time Optimization For .NET</a> article.</p>
+                    <p>The specifics of Compact Framework platform are explained in <a href="native_query_optimization/nq_optimization_on_cf2.0.htm"  >NQ Optimization On CF2.0</a>. </p>
+                    <p>An alternative optimization practice can be found in <a href="native_query_optimization/build-time_optimization_for_.net.htm"  >Build-time Optimization For .NET</a> article.</p>
                 </p>
                 <p MadCap:conditions="Primary:net" />
-                <p>For more information on NQ optimization see <a href="native_query_optimization/monitoring_optimization.htm" class="wikiLink">Monitoring Optimization</a>.</p>
+                <p>For more information on NQ optimization see <a href="native_query_optimization/monitoring_optimization.htm"  >Monitoring Optimization</a>.</p>
     </body>
 </html>

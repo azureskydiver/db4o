@@ -1,22 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="838" MadCap:lastWidth="1017">
     <head><title>TA Enhanced Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>TA Enhanced Example</h1>
-                <div id="TOC">
-                    <div id="TOCinner">&#160;</div>
-                </div>As it was mentioned
-<a href="ta_implementation.htm" class="wikiLink">before</a> you can inject TA awareness in your persistent classes without modifying their original
+                 
+                 As it was mentioned
+<a href="ta_implementation.htm"  >before</a> you can inject TA awareness in your persistent classes without modifying their original
 code. In the current scenario this means: 
 
 <ul><li>generate
 the <code>Activatable</code> interface declaration;</li><li>add
 <code>bind(objectContainer)</code> method implementation;</li><li>generate
 a field to keep a reference to the corresponding <code>Activator</code>instance;</li><li>generate
-<code>activate()</code> call at the beginning of every method.</li></ul>These tasks can be fulfilled in the classes bytecode by using <a href="../../../implementation_strategies/enhancement_tools.htm" class="wikiLink">Enhancement Tools</a>. 
+<code>activate()</code> call at the beginning of every method.</li></ul>These tasks can be fulfilled in the classes bytecode by using <a href="../../../implementation_strategies/enhancement_tools.htm"  >Enhancement Tools</a>. 
 
 
 
@@ -25,7 +24,7 @@ a field to keep a reference to the corresponding <code>Activator</code>instance;
 loaded or built. (Currently persistent classes have to be "tagged" by providing
 an appropriate <code>ClassFilter</code> instance.) In addition to this db4o
 also explicitly needs to be configured to use the Transparent Activation instrumentation
-of the persistent classes (TransparentActivationSupport).</p><p>Transparent Activation functionality requires the following jars:</p><ul><li>bloat-1.0.jar</li><li>db4o-x.x-tools.jar </li><li>db4o-x.x-taj.jar  </li><li>db4o-x.x-instrumentation.jar</li></ul><p>The following topics explain how TA enhancement can be applied to built classes:</p><ul><li><a href="ta_enhanced_example/ta_enhancement_at_load_time.htm" class="wikiLink">TA Enhancement At Loading Time</a></li><li><a href="ta_enhanced_example/ta_enhancement_at_build_time.htm" class="wikiLink">TA Enhancement At Build Time</a></li></ul></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"><a name="TA Enhancement In .NET "></a><h2>TA Enhancement In .NET  </h2><p>TA enhancement for .NET can be done at build or post-build time. In both cases it requires Db4oTool project distribution. </p><p>When build-time option is used Db4oEnhanceMSBuildTask is added to the build file (*.csproj or *.vbproj in Visual Studio 2005), this requires Db4oTool.MSBuild.dll library. </p><p>In post-build enhancement case, Db4oTool.exe command line utility is used to enhanced built assemblies.</p><ul><li><a href="ta_enhanced_example/ta_enhancement_with_db4otool.htm" class="wikiLink">TA Enhancement With Db4oTool</a></li><li><a href="../../../implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.htm" class="wikiLink">Build Time Enhancement</a></li></ul></p><p MadCap:conditions="Primary:net" /></div>
-        </div>
+of the persistent classes (TransparentActivationSupport).</p><p>Transparent Activation functionality requires the following jars:</p><ul><li>bloat-1.0.jar</li><li>db4o-x.x-tools.jar </li><li>db4o-x.x-taj.jar  </li><li>db4o-x.x-instrumentation.jar</li></ul><p>The following topics explain how TA enhancement can be applied to built classes:</p><ul><li><a href="ta_enhanced_example/ta_enhancement_at_load_time.htm"  >TA Enhancement At Loading Time</a></li><li><a href="ta_enhanced_example/ta_enhancement_at_build_time.htm"  >TA Enhancement At Build Time</a></li></ul></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"><a name="TA Enhancement In .NET "></a><h2>TA Enhancement In .NET  </h2><p>TA enhancement for .NET can be done at build or post-build time. In both cases it requires Db4oTool project distribution. </p><p>When build-time option is used Db4oEnhanceMSBuildTask is added to the build file (*.csproj or *.vbproj in Visual Studio 2005), this requires Db4oTool.MSBuild.dll library. </p><p>In post-build enhancement case, Db4oTool.exe command line utility is used to enhanced built assemblies.</p><ul><li><a href="ta_enhanced_example/ta_enhancement_with_db4otool.htm"  >TA Enhancement With Db4oTool</a></li><li><a href="../../../implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.htm"  >Build Time Enhancement</a></li></ul></p><p MadCap:conditions="Primary:net" /> 
+         
     </body>
 </html>

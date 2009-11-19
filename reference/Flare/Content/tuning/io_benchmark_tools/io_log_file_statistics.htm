@@ -3,8 +3,8 @@
     <head><title>IO Log File Statistics	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>IO Log File Statistics</h1>
                 <p>To get statistically meaningful results from the benchmark it is
 necessary that the I/O log file contains enough operations of each
@@ -112,7 +112,7 @@ sync operations are much rarer than seek operations. If you look at the
 source of CrudApplication you'll see that extra commit calls when
 deleting objects. These were inserted to to get a higher sync count
 in the I/O log. It's possible that you also have to "tune" your
-application in a similar way to get good statistics. </div>
-        </div>
+application in a similar way to get good statistics.  
+         
     </body>
 </html>

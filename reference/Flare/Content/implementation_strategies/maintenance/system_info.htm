@@ -3,8 +3,8 @@
     <head><title>System Info	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>System Info</h1>
                 <p>SystemInfo is a utility class, providing system information
 about db4o database. </p>
@@ -28,11 +28,11 @@ about db4o database. </p>
                             <p>returns the freespace size in the database
   in bytes. When db4o stores modified objects, it allocates a new slot for it.
   During commit the old slot is freed. Free slots are collected in the
-  <a href="../freespace_management_system.htm" class="wikiLink">freespace manager</a>, so they can be reused for other objects.</p>
+  <a href="../freespace_management_system.htm"  >freespace manager</a>, so they can be reused for other objects.</p>
                             <p>This method returns a sum of the size of all
   free slots in the database file.</p>
                             <p>To reclaim
-  freespace run <a href="defragment.htm" class="wikiLink">Defragment</a>.</p>
+  freespace run <a href="defragment.htm"  >Defragment</a>.</p>
                         </td>
                     </tr>
                     <tr>
@@ -41,9 +41,9 @@ about db4o database. </p>
                         </td>
                         <td valign="top">
                             <p>returns the number
-  of entries in the <a href="../freespace_management_system.htm" class="wikiLink">Freespace Manager</a>.A high value for the number of
+  of entries in the <a href="../freespace_management_system.htm"  >Freespace Manager</a>.A high value for the number of
   freespace entries is an indication that the database is fragmented and that
-  <a href="defragment.htm" class="wikiLink">Defragment</a> should be run.  </p>
+  <a href="defragment.htm"  >Defragment</a> should be run.  </p>
                         </td>
                     </tr>
                     <tr>
@@ -93,8 +93,8 @@ automatically at certain intervals for a database check up. </p>
                     <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.vb/TestSystemInfo.flsnp" />
                 </p>
                 <p MadCap:conditions="Primary:vb" />
-            </div>
-        </div>
+             
+         
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="systeminfovb.zip">VB.NET </a>

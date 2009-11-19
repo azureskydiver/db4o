@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Simple Persistence	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>Simple Persistence</h1>
 
 
@@ -53,7 +53,7 @@ modification of any object that exists in your model.</p>
 </p><p MadCap:conditions="Primary:vb" />
 
 <p>The objects are identified by their references in an application cache. You do not need to implement any additional identification systems (like primary keys 
-in RDBMS). See <a href="../basic_concepts/object_identity.htm" class="wikiLink">Identity chapter</a> for 
+in RDBMS). See <a href="../basic_concepts/object_identity.htm"  >Identity chapter</a> for 
 details. The uniqueness of an object is defined only by its reference, if you 
 will create 2 objects of the same class with exactly the same fields and save 
 them to db4o - you will get 2 objects in your database. As you can see from the 
@@ -64,13 +64,13 @@ database and saving it, will create a new object in the database.</p>
 
 <p>Db4o does 
 all the "dirty" work of objects transition between your classes and 
-persistent state using <a href="../implementation_strategies/db4o_reflection_api.htm" class="wikiLink">Reflection</a> . No 
+persistent state using <a href="../implementation_strategies/db4o_reflection_api.htm"  >Reflection</a> . No 
 mappings or additional coding is needed from your side. If you will need to 
 change your application model for the next version you will also be surprised 
 with the simplicity: all the changes are done in one place - your code, and the 
-most common operations are done completely automatically (see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm" class="wikiLink">Refactoring 
-And Schema Evolution</a> chapter for details).</p><p>Please, remember that all db4o work is done within <a href="../basic_concepts/transaction.htm" class="wikiLink">Transaction</a>, which can be committed or rolled back depending on the result you want to achieve. </p></div>
-    </div>
+most common operations are done completely automatically (see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm"  >Refactoring 
+And Schema Evolution</a> chapter for details).</p><p>Please, remember that all db4o work is done within <a href="../basic_concepts/transaction.htm"  >Transaction</a>, which can be committed or rolled back depending on the result you want to achieve. </p> 
+     
     
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>

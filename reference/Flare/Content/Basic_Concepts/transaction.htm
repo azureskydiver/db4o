@@ -23,9 +23,9 @@
 <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/StoreCarCommit.flsnp" /><MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/ListAllCars.flsnp" />
 </p><p MadCap:conditions="Primary:vb" />
 
-<p>Before transaction is commited all the modifications to a database are written to a <a href="acid_model/acid_properties_for_db4o.htm" class="wikiLink">temporary memory storage</a>. Commit (explicit or implicit) writes the modifications to the disk.</p>
+<p>Before transaction is commited all the modifications to a database are written to a <a href="acid_model/acid_properties_for_db4o.htm"  >temporary memory storage</a>. Commit (explicit or implicit) writes the modifications to the disk.</p>
 
-<p>Please, remember to always commit or close your ObjectContainer when the work is done, to make sure that the data is saved to the permanent storage. <a href="../tuning/performance_hints/commit_strategies.htm" class="wikiLink">Commit Strategies</a> contains some important information on when and how commit should be used to achieve the best performance. </p>
+<p>Please, remember to always commit or close your ObjectContainer when the work is done, to make sure that the data is saved to the permanent storage. <a href="../tuning/performance_hints/commit_strategies.htm"  >Commit Strategies</a> contains some important information on when and how commit should be used to achieve the best performance. </p>
 
 <p>If you do not want to save changes to the database, you can call rollback, resetting the state of our database to the last commit point.</p>
 
@@ -78,7 +78,7 @@
 <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/CarSnapshotRollbackRefresh.flsnp" />
 </p><p MadCap:conditions="Primary:vb" />
 
-<p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done from different threads. See <a href="../client-server.htm" class="wikiLink">Client-Server</a> for more information.</p>    
+<p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done from different threads. See <a href="../client-server.htm"  >Client-Server</a> for more information.</p>    
 
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>

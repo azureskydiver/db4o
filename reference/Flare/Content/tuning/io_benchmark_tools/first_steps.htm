@@ -3,8 +3,8 @@
     <head><title>First Steps	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>First Steps</h1>
                 <p>The main class of the benchmark is com.db4o.bench.IoBenchmark. Let's have a look at its run method to see what it does.          <code>private void run(IoBenchmarkArgumentParser argumentParser) throws IOException {             runTargetApplication(argumentParser.objectCount());     prepareDbFile(argumentParser.objectCount());     runBenchmark(argumentParser.objectCount());     }</code>  As you can see from this code, the benchmark consists of 3 stages: </p>
                 <ol>
@@ -33,7 +33,7 @@ therefore infinity for operations per ms. This can occur if your
 machine is fast enough to execute all operations under 1ms. To overcome
 this you can run the run.benchmark.medium target which operates with
 more objects and takes longer to complete.
- </div>
-        </div>
+  
+         
     </body>
 </html>
