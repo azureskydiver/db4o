@@ -17,13 +17,15 @@ public class IoCachePerformanceTest {
 	
 	private static final int BENCHMARKS = 5;
 
-	private static final int PRE_EXISTING_ITEMS = 10000;
+	private static final int PRE_EXISTING_ITEMS = 20000;
 	
-	private static final int ITERATIONS = 20;
+	private static final int ITERATIONS = 40;
 
 	private static final int COMMIT_EVERY = 5;
 	
-	private static final int ITEMS_PER_ITERATION = 10;
+	private static final int ITEMS_PER_ITERATION = 20;
+	
+	private long _expectedFileSize = 0;
 	
 	
 	/**
@@ -139,6 +141,9 @@ public class IoCachePerformanceTest {
 
 	private void dispose() {
 	    _container.close();
+	    if(_expectedFileSize == 0){
+	    	_expectedFileSize = File4.size(_filename);
+	    }
 	    File4.delete(_filename);
     }
 
@@ -150,6 +155,9 @@ public class IoCachePerformanceTest {
 	private EmbeddedConfiguration configuration() {
 	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
+		if(_expectedFileSize > 0){
+			config.file().reserveStorageSpace(_expectedFileSize);
+		}
 		config.file().storage(_io);
 	    return config;
     }
@@ -183,6 +191,10 @@ public class IoCachePerformanceTest {
     }
 
 	private Iterator4 arbitraryIntegers() {
-	    return Generators.take(ITEMS_PER_ITERATION, Streams.randomIntegers()).iterator();
+		Integer[] ints = new Integer[ITEMS_PER_ITERATION];
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = i + 1;
+		}
+		return Iterators.iterate(ints);
     }
 }

@@ -20,7 +20,7 @@ public class ClientSlotCacheImpl implements ClientSlotCache {
 	private final TransactionLocal<PurgeableCache4<Integer, ByteArrayBuffer>> _cache = new TransactionLocal<PurgeableCache4<Integer, ByteArrayBuffer>>() {
 		public PurgeableCache4<Integer, ByteArrayBuffer> initialValueFor(Transaction transaction) {
 			Config4Impl config = transaction.container().config();
-			return CacheFactory.<Integer, ByteArrayBuffer>newLRUCache(config.prefetchSlotCacheSize());
+			return CacheFactory.<ByteArrayBuffer>newLRUIntCache(config.prefetchSlotCacheSize());
 		};
 	};
 	
