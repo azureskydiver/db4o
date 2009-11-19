@@ -1,41 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Optimization	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Optimization</h1><p>Those of you who are familiar with db4o query processor may
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="827" MadCap:lastWidth="800" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
+    <head><title>Optimization	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Optimization</h1>
+        <p>Those of you who are familiar with db4o query processor may
 already suspect that LINQ queries as well as NQ and QueryByExample queries are
-converted to <a href="../soda_query.htm"  >SODA Query</a> under the hood. And that is true. The downside of this is
+converted to <a href="../soda_query.htm">SODA Query</a> under the hood. And that is true. The downside of this is
 that some of the queries cannot be converted to SODA and will run against all
 instances of matching class objects. Some of the cases when conversion is not possible: </p>
-
-<ul><li>there is no SODA alternative available</li><li>constraints on aggregates (avg(List) = constant)</li><li>constraints to values that are not available before
-query executions (Pilot.Points = Pilot.Name.Length)</li></ul>
-
-
-
-
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Optimization/LinqExample.cs/SelectUnoptimized.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Optimization/LinqExample.vb/SelectUnoptimized.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-
-
-<p>In the cases when optimization is not possible db4o query processor
+        <ul>
+            <li>there is no SODA alternative available</li>
+            <li>constraints on aggregates (avg(List) = constant)</li>
+            <li>constraints to values that are not available before
+query executions (Pilot.Points = Pilot.Name.Length)</li>
+        </ul>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Optimization/LinqExample.cs/SelectUnoptimized.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Optimization/LinqExample.vb/SelectUnoptimized.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>In the cases when optimization is not possible db4o query processor
 will need the class definitions to be able to run the LINQ query. If
 these definitions are not available the query will throw an exception.
 For more information see
-<a href="../../../client-server/server_without_persistent_classes_deployed/linq.htm"  >Server
-Without Persistent Classes</a>.  </p> 
-     
-
+<a href="../../../client-server/server_without_persistent_classes_deployed/linq.htm">Server
+Without Persistent Classes</a>.  </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="linqvb.zip">VB.NET </a>
@@ -43,7 +36,5 @@ Without Persistent Classes</a>.  </p>
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="linqcs.zip">c# </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

@@ -1,100 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="823" MadCap:lastWidth="631">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="823" MadCap:lastWidth="631" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects">
     <head><title>System Info	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>System Info</h1>
-                <p>SystemInfo is a utility class, providing system information
+        <h1>System Info</h1>
+        <p>SystemInfo is a utility class, providing system information
 about db4o database. </p>
-                <p>Currently SystemInfo includes the following methods:</p>
-                <table border="1" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td valign="top">
-                            <p><b>Method </b>
-                            </p>
-                        </td>
-                        <td valign="top">
-                            <p><b>Functionality</b>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <p>freespaceSize</p>
-                        </td>
-                        <td valign="top">
-                            <p>returns the freespace size in the database
+        <p>Currently SystemInfo includes the following methods:</p>
+        <table border="1" cellpadding="0" cellspacing="0">
+            <tr>
+                <td valign="top">
+                    <p><b>Method </b>
+                    </p>
+                </td>
+                <td valign="top">
+                    <p><b>Functionality</b>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <p>freespaceSize</p>
+                </td>
+                <td valign="top">
+                    <p>returns the freespace size in the database
   in bytes. When db4o stores modified objects, it allocates a new slot for it.
   During commit the old slot is freed. Free slots are collected in the
-  <a href="../freespace_management_system.htm"  >freespace manager</a>, so they can be reused for other objects.</p>
-                            <p>This method returns a sum of the size of all
+  <a href="../freespace_management_system.htm">freespace manager</a>, so they can be reused for other objects.</p>
+                    <p>This method returns a sum of the size of all
   free slots in the database file.</p>
-                            <p>To reclaim
-  freespace run <a href="defragment.htm"  >Defragment</a>.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <p>freespaceEntryCount</p>
-                        </td>
-                        <td valign="top">
-                            <p>returns the number
-  of entries in the <a href="../freespace_management_system.htm"  >Freespace Manager</a>.A high value for the number of
+                    <p>To reclaim
+  freespace run <a href="defragment.htm">Defragment</a>.</p>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <p>freespaceEntryCount</p>
+                </td>
+                <td valign="top">
+                    <p>returns the number
+  of entries in the <a href="../freespace_management_system.htm">Freespace Manager</a>.A high value for the number of
   freespace entries is an indication that the database is fragmented and that
-  <a href="defragment.htm"  >Defragment</a> should be run.  </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <p>totalSize</p>
-                        </td>
-                        <td valign="top">
-                            <p>Returns the total
+  <a href="defragment.htm">Defragment</a> should be run.  </p>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <p>totalSize</p>
+                </td>
+                <td valign="top">
+                    <p>Returns the total
   size of the database on disk.</p>
-                        </td>
-                    </tr>
-                </table>
-                <p>In order to get SystemInfo instance you must issue the
+                </td>
+            </tr>
+        </table>
+        <p>In order to get SystemInfo instance you must issue the
 following call:</p>
-                <p MadCap:conditions="Primary.Java">
-                    <p>Java:</p>
-                    <p><code>SystemInfo info = container.ext().systemInfo();</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <p>c#:</p>
-                    <p><code>ISystemInfo info =
+        <p MadCap:conditions="Primary.Java">
+            <p>Java:</p>
+            <p><code>SystemInfo info = container.ext().systemInfo();</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#:</p>
+            <p><code>ISystemInfo info =
 container.Ext().SystemInfo();</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <p>VB:</p>
-                    <p><code>Dim info As ISystemInfo =
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p>VB:</p>
+            <p><code>Dim info As ISystemInfo =
 container.Ext().SystemInfo()</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>SystemInfo can be used for different maintenance services.
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>SystemInfo can be used for different maintenance services.
 The example below presents a simple program, which can be scheduled to run
 automatically at certain intervals for a database check up. </p>
-                <p MadCap:conditions="Primary.Java">
-                    <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.java/testSystemInfo.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.cs/TestSystemInfo.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.vb/TestSystemInfo.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-             
-         
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.java/testSystemInfo.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.cs/TestSystemInfo.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/System Info/SystemInfoExample.vb/TestSystemInfo.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="systeminfovb.zip">VB.NET </a>

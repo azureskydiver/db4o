@@ -1,63 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Two Freespace Systems	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="782" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan">
+    <head><title>Two Freespace Systems	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Two Freespace Systems</h1>
-
-<p>db4o comes with three freespace systems:</p><ul><li>RAM-based: the information about freespace is held in RAM;</li><li>b-Tree-based: the information about freespace is written to disk, b-Trees are used to manage this information; </li><li>index-based: similar to b-Trees, but existing index functionality to store freespace information. </li></ul><p>You can configure db4o to use either of these by calling</p>
-
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>configuration.freespace().useRamSystem()</code> </p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary.Print">
-<p>.NET: <code>configuration.Freespace().UseRamSystem() </code></p>
-</p><p MadCap:conditions="Primary:net" />
-
-<p>or</p>
-
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>configuration.freespace().useBTreeSystem() </code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary.Print">
-<p>.NET: <code>configuration.Freespace().UseBTreeSystem() </code></p>
-</p><p MadCap:conditions="Primary:net" />
-<p>or</p>
-
-<p MadCap:conditions="Primary.Java">
-<p>Java: <code>configuration.freespace().useIndexSystem() </code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary.Print">
-<p>.NET: <code>configuration.Freespace().UseIndexSystem() </code></p>
-</p><p MadCap:conditions="Primary:net" /><p>
-This call should be made before you open the database for the first time</p>
-<p>By default db4o uses <b>RAM freespace management system</b>. The information about free slots is loaded into memory on opening a database file and discarded on closing it. This system is quite fast, but it has its downside:</p>
-<ol>
-<li>Higher RAM usage during operation.</li>
-<li>Loss of freespace upon abnormal termination. That is done for security reasons and freespace can be reclaimed using defragmentation.</li>
-</ol>
-<p>
-RAM-based freespace management is a good performance solution, but it can be insufficient for the systems with limited RAM resources and high probability of abnormal system termination (power failure on mobile devices).</p>
-<p>In order to meet the requirements of such environments you can use new <b>b-Tree-based freespace management system</b>. It solves the problems of RAM-based system:</p>
-<ol>
-<li>
-RAM usage is kept at the minimum.</li>
-<li>No freespace is lost on abnormal system termination (database file won't grow unnecessarily).</li>
-</ol>
-<p>
-How it works?:
-</p><ul>
-<li>The system uses b-Trees to keep information about available freespace</li>
-<li>b-Trees operate against the file, and only uses memory for caching</li><li>For every new write to the database file the system tries to find a freed slot, which is at least the size needed or greater, traversing freespace index</li>
-<li>When an object is updated or deleted, its 'old' slot is added to the freespace b-Tree entry </li>
-<li>This b-Tree system is ACID (no information is lost upon abnormal system termination)</li>
-
-</ul>
-<p>b-Tree-based freespace system can show poorer performance compared to RAM-based system, as it needs to access the file to write updated freespace information.  </p>
-<p>However, b-Tree-based freespace system is fast enough, especially for mobile devices, where file access is not much slower than RAM-access, and ACID transactions together with low memory consumption are most valuable factors.</p><p>Index-based freespace system has similar to b-Tree characteristics, but poorer performance and is used for legacy reasons. </p> 
-     
-    
-  </body></html>
+        <p>db4o comes with three freespace systems:</p>
+        <ul>
+            <li>RAM-based: the information about freespace is held in RAM;</li>
+            <li>b-Tree-based: the information about freespace is written to disk, b-Trees are used to manage this information; </li>
+            <li>index-based: similar to b-Trees, but existing index functionality to store freespace information. </li>
+        </ul>
+        <p>You can configure db4o to use either of these by calling</p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: <code>configuration.freespace().useRamSystem()</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary.Print">
+            <p>.NET: <code>configuration.Freespace().UseRamSystem() </code></p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>or</p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: <code>configuration.freespace().useBTreeSystem() </code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary.Print">
+            <p>.NET: <code>configuration.Freespace().UseBTreeSystem() </code></p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>or</p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: <code>configuration.freespace().useIndexSystem() </code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary.Print">
+            <p>.NET: <code>configuration.Freespace().UseIndexSystem() </code></p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>This call should be made before you open the database for the first time</p>
+        <p>By default db4o uses <b>RAM freespace management system</b>. The information about free slots is loaded into memory on opening a database file and discarded on closing it. This system is quite fast, but it has its downside:</p>
+        <ol>
+            <li>Higher RAM usage during operation.</li>
+            <li>Loss of freespace upon abnormal termination. That is done for security reasons and freespace can be reclaimed using defragmentation.</li>
+        </ol>
+        <p>RAM-based freespace management is a good performance solution, but it can be insufficient for the systems with limited RAM resources and high probability of abnormal system termination (power failure on mobile devices).</p>
+        <p>In order to meet the requirements of such environments you can use new <b>b-Tree-based freespace management system</b>. It solves the problems of RAM-based system:</p>
+        <ol>
+            <li>RAM usage is kept at the minimum.</li>
+            <li>No freespace is lost on abnormal system termination (database file won't grow unnecessarily).</li>
+        </ol>
+        <p>How it works?:
+</p>
+        <ul>
+            <li>The system uses b-Trees to keep information about available freespace</li>
+            <li>b-Trees operate against the file, and only uses memory for caching</li>
+            <li>For every new write to the database file the system tries to find a freed slot, which is at least the size needed or greater, traversing freespace index</li>
+            <li>When an object is updated or deleted, its 'old' slot is added to the freespace b-Tree entry </li>
+            <li>This b-Tree system is ACID (no information is lost upon abnormal system termination)</li>
+        </ul>
+        <p>b-Tree-based freespace system can show poorer performance compared to RAM-based system, as it needs to access the file to write updated freespace information.  </p>
+        <p>However, b-Tree-based freespace system is fast enough, especially for mobile devices, where file access is not much slower than RAM-access, and ACID transactions together with low memory consumption are most valuable factors.</p>
+        <p>Index-based freespace system has similar to b-Tree characteristics, but poorer performance and is used for legacy reasons. </p>
+    </body>
+</html>

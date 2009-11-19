@@ -1,31 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1900" MadCap:lastWidth="1110">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="826" MadCap:lastWidth="1010" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue">
     <head><title>Load Time Enhancement	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>Load Time Enhancement</h1>
-                <p>The following code is used to store and retrieve
+        <h1>Load Time Enhancement</h1>
+        <p>The following code is used to store and retrieve
 MaintenanceQueue objects containing references to Car, Pilot and Id objects:</p>
-                <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/main.flsnp" />
-                <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/configuration.flsnp" />
-                <p>Please, run this method to see that in TA mode all the
+        <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/main.flsnp" />
+        <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerMain.java/configuration.flsnp" />
+        <p>Please, run this method to see that in TA mode all the
 objects are fully activated immediately. Also NQ info reports that the queries
 run dynamically optimized.</p>
-                <p>In order to use TA advantages (lazy activation), we launch the application through an instrumenting classloader. The following configuration options are available:</p>
-                <ul>
-                    <li>A <i>ClassFilter</i> specifies which classes should be instrumented. In the example, we are using a filter that will only accept classes whose fully qualified name starts with a given prefix. The instrumentation API already comes with a variety of other filter implementations, and it's easy to create custom filters.</li>
-                    <li>A sequence of <i>ClassEdits</i>. A ClassEdit is a single instrumentation step. In the example, we are applying two steps: First, we preoptimize all Native Query Predicates, then we instrument for Transparent Activation. Note that the order of steps is significant: Switching the order would leave the generated NQ optimization code unaware of TA. The db4otools package provides a convenience launcher with a hardwired sequence for combined NQ/TA instrumentation.</li>
-                    <li>The <i>classpath</i> for the instrumented classes, represented by a sequence of URLs. This must contain all classes "reachable" from the classes to be instrumented - the easiest way probably is to provide the full application class path here. The classes to be instrumented need not be listed here, they are implicitly added to this classpath, anyway.  </li>
-                </ul>
-                <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerStarter.java/main.flsnp" />
-                <p>Try this code now - if everything is correct you will see
+        <p>In order to use TA advantages (lazy activation), we launch the application through an instrumenting classloader. The following configuration options are available:</p>
+        <ul>
+            <li>A <i>ClassFilter</i> specifies which classes should be instrumented. In the example, we are using a filter that will only accept classes whose fully qualified name starts with a given prefix. The instrumentation API already comes with a variety of other filter implementations, and it's easy to create custom filters.</li>
+            <li>A sequence of <i>ClassEdits</i>. A ClassEdit is a single instrumentation step. In the example, we are applying two steps: First, we preoptimize all Native Query Predicates, then we instrument for Transparent Activation. Note that the order of steps is significant: Switching the order would leave the generated NQ optimization code unaware of TA. The db4otools package provides a convenience launcher with a hardwired sequence for combined NQ/TA instrumentation.</li>
+            <li>The <i>classpath</i> for the instrumented classes, represented by a sequence of URLs. This must contain all classes "reachable" from the classes to be instrumented - the easiest way probably is to provide the full application class path here. The classes to be instrumented need not be listed here, they are implicitly added to this classpath, anyway.  </li>
+        </ul>
+        <MadCap:snippetBlock src="../../../../Resources/Snippets/Load Time Enhancement/EnhancerStarter.java/main.flsnp" />
+        <p>Try this code now - if everything is correct you will see
 that the objects are getting activated as they are requested. NQ info also
 should say that the queries are preoptimized.</p>
-                <p>Note that for load time instrumentation to work, the application code has to make sure db4o operates on the appropriate classloader for the persistent model classes. </p>
-             
-         
+        <p>Note that for load time instrumentation to work, the application code has to make sure db4o operates on the appropriate classloader for the persistent model classes. </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="enhancementexamplejava.zip">Java </a>

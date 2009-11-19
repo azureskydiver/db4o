@@ -1,41 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Simple db4o Server	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Simple db4o Server</h1> 
-
-<P>Let's implement a simple standalone db4o server with a special client that can tell the server to shut itself down gracefully on demand.</P>
-<P>First, both the client and the server need some shared configuration information. We will provide this using an interface:</P>
-<p MadCap:conditions="Primary.Java">
-<P>[code=../../clientserverJava.zip#ServerConfiguration.java]</P>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<P>[code=../../clientserverCS.zip#ServerConfiguration.cs]</P>
-</p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<P>[code=../../clientserverVB.zip#ServerConfiguration.vb]</P>
-</p><p MadCap:conditions="Primary:vb" />
-<P>Now we'll create the server:</P>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StartServer.java/StartServer.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StartServer.cs/StartServer.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StartServer.vb/StartServer.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>And last but not least, the client that stops the server.</P>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StopServer.java/StopServer.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StopServer.cs/StopServer.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StopServer.vb/StopServer.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-
-<P>Keywords:</P>
-<P>start remote instance</P> 
-     
-
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="822" MadCap:lastWidth="810" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;a1;b1;c1;b2;uncomment;setMessageRecipient;processMessage">
+    <head><title>Simple db4o Server	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Simple db4o Server</h1>
+        <P>Let's implement a simple standalone db4o server with a special client that can tell the server to shut itself down gracefully on demand.</P>
+        <P>First, both the client and the server need some shared configuration information. We will provide this using an interface:</P>
+        <p MadCap:conditions="Primary.Java">
+            <P>[code=../../clientserverJava.zip#ServerConfiguration.java]</P>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <P>[code=../../clientserverCS.zip#ServerConfiguration.cs]</P>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <P>[code=../../clientserverVB.zip#ServerConfiguration.vb]</P>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <P>Now we'll create the server:</P>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StartServer.java/StartServer.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StartServer.cs/StartServer.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StartServer.vb/StartServer.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <P>And last but not least, the client that stops the server.</P>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StopServer.java/StopServer.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StopServer.cs/StopServer.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Simple db4o Server/StopServer.vb/StopServer.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <P>Keywords:</P>
+        <P>start remote instance</P>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="../clientservervb.zip">VB.NET </a>
@@ -45,6 +55,5 @@
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../clientserverjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-    
-</body></html>
+    </body>
+</html>

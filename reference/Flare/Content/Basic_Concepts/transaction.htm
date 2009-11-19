@@ -1,86 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Transaction	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="825" MadCap:lastWidth="640" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;a1;b1;c1;b2">
+    <head><title>Transaction	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Transaction</h1>
-
-<p>All work within db4o ObjectContainer is transactional. A transaction is implicitly started when you open a container, and the current transaction is implicitly committed when you close it again. db4o transaction is tied to  an open object container and only one transaction is allowed per object container instance. </p>
-<a name="Commit And Rollback"></a><h2>Commit And Rollback</h2>
-<p>You may choose to make a commit explicit or you may leave it for the <code>#close()</code> call:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/storeCarCommit.flsnp" /><MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/listAllCars.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/StoreCarCommit.flsnp" />
-					<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/ListAllCars.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/StoreCarCommit.flsnp" /><MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/ListAllCars.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Before transaction is commited all the modifications to a database are written to a <a href="acid_model/acid_properties_for_db4o.htm"  >temporary memory storage</a>. Commit (explicit or implicit) writes the modifications to the disk.</p>
-
-<p>Please, remember to always commit or close your ObjectContainer when the work is done, to make sure that the data is saved to the permanent storage. <a href="../tuning/performance_hints/commit_strategies.htm"  >Commit Strategies</a> contains some important information on when and how commit should be used to achieve the best performance. </p>
-
-<p>If you do not want to save changes to the database, you can call rollback, resetting the state of our database to the last commit point.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/storeCarRollback.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/StoreCarRollback.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/StoreCarRollback.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-<a name="Refresh Live Objects"></a><h2>Refresh Live Objects</h2>
-<p>There is one thing that you should remember when rolling back: the <code>#rollback()</code> method will cancel the modifications, but it won't change back the state of the objects in your reference cache.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/carSnapshotRollback.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/CarSnapshotRollback.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/CarSnapshotRollback.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>You have to explicitly refresh your live objects when their state might become different from the state in the database:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/carSnapshotRollbackRefresh.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/CarSnapshotRollbackRefresh.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/CarSnapshotRollbackRefresh.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done from different threads. See <a href="../client-server.htm"  >Client-Server</a> for more information.</p>    
-
-
+        <p>All work within db4o ObjectContainer is transactional. A transaction is implicitly started when you open a container, and the current transaction is implicitly committed when you close it again. db4o transaction is tied to  an open object container and only one transaction is allowed per object container instance. </p><a name="Commit And Rollback"></a>
+        <h2>Commit And Rollback</h2>
+        <p>You may choose to make a commit explicit or you may leave it for the <code>#close()</code> call:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/storeCarCommit.flsnp" />
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/listAllCars.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/StoreCarCommit.flsnp" />
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/ListAllCars.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/StoreCarCommit.flsnp" />
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/ListAllCars.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Before transaction is commited all the modifications to a database are written to a <a href="acid_model/acid_properties_for_db4o.htm">temporary memory storage</a>. Commit (explicit or implicit) writes the modifications to the disk.</p>
+        <p>Please, remember to always commit or close your ObjectContainer when the work is done, to make sure that the data is saved to the permanent storage. <a href="../tuning/performance_hints/commit_strategies.htm">Commit Strategies</a> contains some important information on when and how commit should be used to achieve the best performance. </p>
+        <p>If you do not want to save changes to the database, you can call rollback, resetting the state of our database to the last commit point.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/storeCarRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/StoreCarRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/StoreCarRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" /><a name="Refresh Live Objects"></a>
+        <h2>Refresh Live Objects</h2>
+        <p>There is one thing that you should remember when rolling back: the <code>#rollback()</code> method will cancel the modifications, but it won't change back the state of the objects in your reference cache.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/carSnapshotRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/CarSnapshotRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/CarSnapshotRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>You have to explicitly refresh your live objects when their state might become different from the state in the database:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.java/carSnapshotRollbackRefresh.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.cs/CarSnapshotRollbackRefresh.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/Transaction/TransactionExample.vb/CarSnapshotRollbackRefresh.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done from different threads. See <a href="../client-server.htm">Client-Server</a> for more information.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="transactionvb.zip">VB.NET </a>
@@ -90,6 +74,5 @@
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="transactionjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-</body></html>
+    </body>
+</html>

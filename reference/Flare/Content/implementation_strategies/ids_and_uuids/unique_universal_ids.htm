@@ -1,257 +1,57 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Unique Universal IDs	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="844" MadCap:lastWidth="630" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan">
+    <head><title>Unique Universal IDs	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Unique Universal IDs</h1>
-
-
-<p>For long-term external references and to identify an object even after it has been copied or moved to another ObjectContainer, db4o supplies Unique Universal IDs (UUIDs).</p>
-
-<p>
-Every newly created db4o database generates a signature object. It is stored as an instance of Db4oDatabase in your database file.</p>
-
-<p>This signature is linked to all newly created objects (if UUID generation is enabled) as the "signature part" of the UUID.</p>
-
-<p>Further to that db4o creates a timestamp for every new object and uses an internal counter to make sure that timestamps are unique. This is called the "long part" of the UUID.</p>
-
-<p>The long part is indexed to make the search fast. If two objects with an identical long parts are found, the signature parts are compared also.</p>
-
-<p>The long part of the UUID can also be used to find out when an object was created. You can use </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: </p>
-<p><code>com.db4o.foundation.TimeStampIdGenerator#idToMilliseconds()</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:</p>
-<p><code>Db4objects.Db4o.Foundation.TimeStampIdGenerator#IdToMilliseconds()</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB:</p>
-<p><code>Db4objects.Db4o.Foundation.TimeStampIdGenerator#IdToMilliseconds()</code></p>
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>to get object creation time in milliseconds.</p>
-
-<p>
-UUIDs are guaranteed to be unique, if the signature of your db4o database is unique.</p>
-
-<p>
-Normally any database has a unique signature unless its file is copied. The original and copied database files are identical, so they have the same signatures. If such files are used in replication, the process will end up with exceptions. What is the solution then?</p>
-
-<p>Signature of a database file can be changed using</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: </p>
-<p><code>LocalObjectContainer#generateNewIdentity</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:  </p>
-<p><code>LocalObjectContainer#GenerateNewIdentity</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB: <code>LocalObjectContainer#GenerateNewIdentity</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-method. 
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.java/testChangeIdentity.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.cs/TestChangeIdentity.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.vb/TestChangeIdentity.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>UUIDs are not generated by default, since they occupy extra space in the database file and produce performance overhead for maintaining their index. UUIDs can be turned on globally or for individual classes:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: <code>configuration.generateUUIDs(ConfigScope.GLOBALLY)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#: <code>configuration.GenerateUUIDs(ConfigScope.Globally)</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB: <code>configuration.GenerateUUIDs(ConfigScope.Globally)</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>- turns on UUID generation for all classes in a database. </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: <code>configuration.objectClass(Foo.class).generateUUIDs(true)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:<code>configuration.ObjectClass(typeof(Foo)).GenerateUUIDs(true)</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB:<code>configuration.ObjectClass(GetType(Foo)).GenerateUUIDs(true)</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>- turns on UUID generation for a specific class.</p>
-
-<p>You can get the UUID value for an object using the following methods:
-</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: </p>
-
-<p><code>ExtObjectContainer#getObjectInfo(Object) 
-ObjectInfo#getUUID() </code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:</p>
-
-<p><code>IEExtObjectContainer#GetObjectInfo(Object) 
-IObjectInfo#GetUUID()</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB:</p>
-
-<p><code>IExtObjectContainer#GetObjectInfo(Object) 
-IObjectInfo#GetUUID()</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>To get the object from the database, knowing its UUID, use: </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: </p>
-<p><code>ExtObjectContainer#getByUUID(Db4oUUID)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:</p>
-<p><code>IExtObjectContainer#GetByUUID(Db4oUUID)</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>vb: </p>
-<p><code>IExtObjectContainer#GetByUUID(Db4oUUID)</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>
-The following example shows the usage of UUID: </p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.java/setObjects.flsnp" />
-<p></p><p MadCap:conditions="Primary:java" /></p>
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.cs/SetObjects.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.vb/SetObjects.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.java/testGenerateUUID.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.cs/TestGenerateUUID.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.vb/TestGenerateUUID.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Sometimes you can find out that you need UUIDs only when the database is already created and has some data in it. What can you do in that case?</p>
-
-<p>Fortunately enabling replication for existing data files is a very simple process: </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: </p>
-<p><code>configuration.objectClass(Task.class).enableReplication(true)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:</p>
-<p><code>configuration.ObjectClass(typeof(Task)).EnableReplication(true)</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>vb:   </p>
-<p><code>configuration.ObjectClass(GetType(Task)).EnableReplication(true)</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>After that you will just need to use the old defragment tool from tools package supplied
-with the distribution before version 6.0 (source code only) to enable replication.</p>
-
-<p>You can use UUID for replication and as a reference to a specific object instance from an external application or data store.</p> 
-     
-    
-
-
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="uuidsvb.zip">VB.NET </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="uuidscs.zip">c# </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="uuidsjava.zip">Java </a>
-            </MadCap:conditionalText>
+        <p>For long-term external references and to identify an object even after it has been copied or moved to another ObjectContainer, db4o supplies Unique Universal IDs (UUIDs).</p>
+        <p>Every newly created db4o database generates a signature object. It is stored as an instance of Db4oDatabase in your database file.</p>
+        <p>This signature is linked to all newly created objects (if UUID generation is enabled) as the "signature part" of the UUID.</p>
+        <p>Further to that db4o creates a timestamp for every new object and uses an internal counter to make sure that timestamps are unique. This is called the "long part" of the UUID.</p>
+        <p>The long part is indexed to make the search fast. If two objects with an identical long parts are found, the signature parts are compared also.</p>
+        <p>The long part of the UUID can also be used to find out when an object was created. You can use </p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: </p>
+            <p><code>com.db4o.foundation.TimeStampIdGenerator#idToMilliseconds()</code>
+            </p>
         </p>
-
-
-</body></html>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#:</p>
+            <p><code>Db4objects.Db4o.Foundation.TimeStampIdGenerator#IdToMilliseconds()</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p>VB:</p>
+            <p><code>Db4objects.Db4o.Foundation.TimeStampIdGenerator#IdToMilliseconds()</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>to get object creation time in milliseconds.</p>
+        <p>UUIDs are guaranteed to be unique, if the signature of your db4o database is unique.</p>
+        <p>Normally any database has a unique signature unless its file is copied. The original and copied database files are identical, so they have the same signatures. If such files are used in replication, the process will end up with exceptions. What is the solution then?</p>
+        <p>Signature of a database file can be changed using</p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: </p>
+            <p><code>LocalObjectContainer#generateNewIdentity</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#:  </p>
+            <p><code>LocalObjectContainer#GenerateNewIdentity</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p>VB: <code>LocalObjectContainer#GenerateNewIdentity</code></p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />method. 
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.java/testChangeIdentity.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.cs/TestChangeIdentity.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.vb/TestChangeIdentity.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>UUIDs are not generated by default, since they occupy extra space in the database file and produce performance overhead for maintaining their index. UUIDs can be turned on globally or for individual classes:</p><p MadCap:conditions="Primary.Java"><p>Java: <code>configuration.generateUUIDs(ConfigScope.GLOBALLY)</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: <code>configuration.GenerateUUIDs(ConfigScope.Globally)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB: <code>configuration.GenerateUUIDs(ConfigScope.Globally)</code></p></p><p MadCap:conditions="Primary:vb" /><p>- turns on UUID generation for all classes in a database. </p><p MadCap:conditions="Primary.Java"><p>Java: <code>configuration.objectClass(Foo.class).generateUUIDs(true)</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#:<code>configuration.ObjectClass(typeof(Foo)).GenerateUUIDs(true)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB:<code>configuration.ObjectClass(GetType(Foo)).GenerateUUIDs(true)</code></p></p><p MadCap:conditions="Primary:vb" /><p>- turns on UUID generation for a specific class.</p><p>You can get the UUID value for an object using the following methods:
+</p><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>ExtObjectContainer#getObjectInfo(Object) 
+ObjectInfo#getUUID() </code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#:</p><p><code>IEExtObjectContainer#GetObjectInfo(Object) 
+IObjectInfo#GetUUID()</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB:</p><p><code>IExtObjectContainer#GetObjectInfo(Object) 
+IObjectInfo#GetUUID()</code></p></p><p MadCap:conditions="Primary:vb" /><p>To get the object from the database, knowing its UUID, use: </p><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>ExtObjectContainer#getByUUID(Db4oUUID)</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#:</p><p><code>IExtObjectContainer#GetByUUID(Db4oUUID)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>vb: </p><p><code>IExtObjectContainer#GetByUUID(Db4oUUID)</code></p></p><p MadCap:conditions="Primary:vb" /><p>The following example shows the usage of UUID: </p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.java/setObjects.flsnp" /><p></p><p MadCap:conditions="Primary:java" /></p><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.cs/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.vb/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.java/testGenerateUUID.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.cs/TestGenerateUUID.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../Resources/Snippets/Unique Universal IDs/UUIDExample.vb/TestGenerateUUID.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>Sometimes you can find out that you need UUIDs only when the database is already created and has some data in it. What can you do in that case?</p><p>Fortunately enabling replication for existing data files is a very simple process: </p><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>configuration.objectClass(Task.class).enableReplication(true)</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#:</p><p><code>configuration.ObjectClass(typeof(Task)).EnableReplication(true)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>vb:   </p><p><code>configuration.ObjectClass(GetType(Task)).EnableReplication(true)</code></p></p><p MadCap:conditions="Primary:vb" /><p>After that you will just need to use the old defragment tool from tools package supplied
+with the distribution before version 6.0 (source code only) to enable replication.</p><p>You can use UUID for replication and as a reference to a specific object instance from an external application or data store.</p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="uuidsvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="uuidscs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="uuidsjava.zip">Java </a></MadCap:conditionalText></p></body>
+</html>

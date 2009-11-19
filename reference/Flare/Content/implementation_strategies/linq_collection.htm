@@ -1,190 +1,190 @@
-<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="15834" MadCap:lastWidth="1190" MadCap:conditions="Primary..NET">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="811" MadCap:lastWidth="800" MadCap:conditions="Primary..NET" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects">
     <head><title>LINQ Collection	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-                <h1>LINQ Collection</h1>
-                <p><font color="#990000">&#160;</font>
-                </p>
-                <p>This chapter provides a collection of LINQ examples with
+        <h1>LINQ Collection</h1>
+        <p><font color="#990000">&#160;</font>
+        </p>
+        <p>This chapter provides a collection of LINQ examples with
 db4o, which you can use to find different ways to construct your queries. The
 information below covers most of the database querying operations and should be
 enough for the majority of cases. However, it is still advisable to study <a href="http://msdn2.microsoft.com/en-us/library/bb308959.aspx">MSDN</a>resources, which explain in detail how LINQ and Extension methods work. For the
-introduction to LINQ queries for db4o please refer to <a href="../object_lifecycle/querying/linq.htm"  >LINQ</a>chapter.</p><a name="Simple Select"></a>
-                <h2>Simple Select</h2>
-                <p>Let's fill up the database with some data:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/StoreObjects.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/StoreObjects.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>In order to select objects of only Pilot class we can issue
+introduction to LINQ queries for db4o please refer to <a href="../object_lifecycle/querying/linq.htm">LINQ</a>chapter.</p><a name="Simple Select"></a>
+        <h2>Simple Select</h2>
+        <p>Let's fill up the database with some data:</p>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/StoreObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/StoreObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>In order to select objects of only Pilot class we can issue
 the following query:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectPilotByNameAndPoints.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectPilotByNameAndPoints.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>Note, that where clause is optional: if it is not specified
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectPilotByNameAndPoints.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectPilotByNameAndPoints.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Note, that where clause is optional: if it is not specified
 all objects of Pilot class will be returned.</p>
-                <p>We can make querying even easier by using anonymous types:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectByNameAndPoints.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectByNameAndPoints.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" /><a name="Database Object Clone"></a>
-                <h2>Database Object Clone</h2>
-                <p>You can easily use LINQ to create database objects clones:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectClone.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectClone.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>Retrieved objects are not bound to the object container, but
+        <p>We can make querying even easier by using anonymous types:</p>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectByNameAndPoints.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectByNameAndPoints.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" /><a name="Database Object Clone"></a>
+        <h2>Database Object Clone</h2>
+        <p>You can easily use LINQ to create database objects clones:</p>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectClone.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectClone.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Retrieved objects are not bound to the object container, but
 they duplicate the values from the database. You can use them for an
 "object-readonly" mode.</p><a name="Select Any Type"></a>
-                <h2>Select Any Type</h2>
-                <p>With the selection we are not bound to only one type of
+        <h2>Select Any Type</h2>
+        <p>With the selection we are not bound to only one type of
 objects - actually we can select everything that is currently in the database:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectEverythingByName.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectEverythingByName.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>We can further use this broad selection too. As the query
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectEverythingByName.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectEverythingByName.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>We can further use this broad selection too. As the query
 result implements IQueryable interface, we can re-use it to retrieve more
 specific objects:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectFromSelection.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectFromSelection.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>In this example we use an all objects selection to find a
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectFromSelection.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectFromSelection.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>In this example we use an all objects selection to find a
 range of pilots and then cars with pilots within the range. Remember, however,
 that the objects in allObjects variable are not actually retrieved from the
 database until they are browsed or used. If you want to get them all into the
 memory for future use, utilize ToList or ToArray methods.</p><a name="Join Query"></a>
-                <h2>Join Query</h2>
-                <p>Above we've already discussed how to select objects of one
+        <h2>Join Query</h2>
+        <p>Above we've already discussed how to select objects of one
 type based on the selection of the other type. However, that way is rather
 cumbersome and most probably you won't need it: you can use join operator
 instead:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectJoin.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectJoin.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>This simple syntax allows you to join any amount of classes
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectJoin.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectJoin.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>This simple syntax allows you to join any amount of classes
 using any possible relationship between them. You can also make use of <a href="http://msdn2.microsoft.com/en-us/library/bb308959.aspx">Join</a>extension method syntax to get the same result.</p><a name="Sorting"></a>
-                <h2>Sorting</h2>
-                <p>Sorting is added with <code>orderby</code> operator and can
+        <h2>Sorting</h2>
+        <p>Sorting is added with <code>orderby</code> operator and can
 be ascending(default) or descending.</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectOrdered.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectOrdered.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>We can also use subsequent sorts. For example sort by name
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectOrdered.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectOrdered.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>We can also use subsequent sorts. For example sort by name
 descending and by points ascending:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/StoreForSorting.flsnp" />
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectComplexOrdered.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/StoreForSorting.flsnp" />
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectComplexOrdered.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>The same effect can be achieved by using
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/StoreForSorting.flsnp" />
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectComplexOrdered.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/StoreForSorting.flsnp" />
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectComplexOrdered.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The same effect can be achieved by using
 <code>OrderBy/OrderByDescending</code> and <code>ThenBy/ThenByDescending</code>extension methods.</p><a name="Grouping Results"></a>
-                <h2>Grouping Results</h2>
-                <p>Grouping results can be often useful in different reports.
+        <h2>Grouping Results</h2>
+        <p>Grouping results can be often useful in different reports.
 For example, we can group the data from the previous example by pilot's name:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectGroupByName.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectGroupByName.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>Here we use <code>GroupBy</code> extension method. The
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectGroupByName.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectGroupByName.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Here we use <code>GroupBy</code> extension method. The
 parameters specify the grouping property (Points) and the display property
 (Name).</p><a name="Modified Result"></a>
-                <h2>Modified Result</h2>
-                <p>Sometimes we need to apply some calculation on each result -
+        <h2>Modified Result</h2>
+        <p>Sometimes we need to apply some calculation on each result -
 with LINQ we can do that directly in the query:</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectWithModifiedResult.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectWithModifiedResult.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>In the example above the query will bring as the calculated
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectWithModifiedResult.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectWithModifiedResult.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>In the example above the query will bring as the calculated
 percentage of maximum for each pilot's points. </p><a name="Selecting A Result"></a>
-                <h2>Selecting A Result</h2>
-                <p>Though a query usually returns all the candidates matching
+        <h2>Selecting A Result</h2>
+        <p>Though a query usually returns all the candidates matching
 the selected criteria, we can specify which of the results we want:
 <code>First</code>, <code>ElementAt</code>, <code>Any</code>, <code>All</code>.</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAny.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAny.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>The query above will return <code>true</code> if there are
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAny.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAny.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The query above will return <code>true</code> if there are
 any objects in the result set and <code>false</code> otherwise.</p><a name="Aggregate Functions"></a>
-                <h2>Aggregate Functions</h2>
-                <p>Often we are not interested in each and every result, but
+        <h2>Aggregate Functions</h2>
+        <p>Often we are not interested in each and every result, but
 need some statistics about it: sum, aggregate, average, max etc. This can be
 achieved with extension methods.</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAverage.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAverage.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>This method returns only the average value of pilot points.</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAggregate.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAggregate.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>In this case we use <code>Aggregate</code> extension method
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAverage.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAverage.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>This method returns only the average value of pilot points.</p>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAggregate.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAggregate.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>In this case we use <code>Aggregate</code> extension method
 to return all the names and a semicolon-separated string. In
 <code>Aggregate</code> function first parameter specify the initial return
 value, second parameter is a function that appends each new value to the

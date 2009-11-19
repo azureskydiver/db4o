@@ -102,14 +102,14 @@
       <Term>Annotation</Term>
     </Terms>
     <Definition
-      Link="/Content/annotations.htm"></Definition>
+      Link="/Content/implementation_strategies/using_annotations.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
       <Term>Attribute</Term>
     </Terms>
     <Definition
-      Link="/Content/attributes.htm"></Definition>
+      Link="/Content/implementation_strategies/using_attributes.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>

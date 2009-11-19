@@ -1,110 +1,71 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Accessing db4o meta-information	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="819" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses">
+    <head><title>Accessing db4o meta-information	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Accessing db4o meta-information</h1>
-
-
-<p>Db4o provides an access to the database meta-information through its extended object container interface (ExtObjectContainer(Java)/IExtObjectContainer(.NET)).</p>
-
-<p>Within the object database meta-schema is represented by classes and their fields. To access their meta-information db4o provides special interfaces:</p>
-
-<ul>
-<li>StoredClass(Java)/IStoredClass(.NET)</li>
-
-<li>StoredField(Java)/IStoredField(.NET)</li>
-</ul>
-
-<p>
-The following ExtObjectContainer methods give you access to the StoredClass.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: <code>ExtObjectContainer#storedClass(Foo.class)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:   <code>IExtObjectContainer#StoredClass(typeof(Foo)) </code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB:   <code>IExtObjectContainer#StoredClass(GetType(Foo)) </code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>
-returns StoredClass for the specified clazz, which can be specified as:</p>
-
-<ul>
-<li>a fully qualified classname;</li>
-
-<li>a Class/Type object;</li>
-
-<li>
-any object to be used as a template.</li>
-</ul>
-
-
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: <code>ExtObjectContainer#storedClasses()</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:   <code>IExtObjectContainer#StoredClasses()</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB:   <code>IExtObjectContainer#StoredClasses()</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>
-returns an array of all StoredClass meta-information objects.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.java/setObjects.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.cs/SetObjects.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.vb/SetObjects.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.java/getMetaObjects.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.cs/GetMetaObjects.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.vb/GetMetaObjects.flsnp" />
-</p><p MadCap:conditions="Primary:vb" /> 
-     
-    
-
-
+        <p>Db4o provides an access to the database meta-information through its extended object container interface (ExtObjectContainer(Java)/IExtObjectContainer(.NET)).</p>
+        <p>Within the object database meta-schema is represented by classes and their fields. To access their meta-information db4o provides special interfaces:</p>
+        <ul>
+            <li>StoredClass(Java)/IStoredClass(.NET)</li>
+            <li>StoredField(Java)/IStoredField(.NET)</li>
+        </ul>
+        <p>The following ExtObjectContainer methods give you access to the StoredClass.</p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: <code>ExtObjectContainer#storedClass(Foo.class)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#:   <code>IExtObjectContainer#StoredClass(typeof(Foo)) </code></p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p>VB:   <code>IExtObjectContainer#StoredClass(GetType(Foo)) </code></p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>returns StoredClass for the specified clazz, which can be specified as:</p>
+        <ul>
+            <li>a fully qualified classname;</li>
+            <li>a Class/Type object;</li>
+            <li>any object to be used as a template.</li>
+        </ul>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: <code>ExtObjectContainer#storedClasses()</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#:   <code>IExtObjectContainer#StoredClasses()</code></p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p>VB:   <code>IExtObjectContainer#StoredClasses()</code></p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>returns an array of all StoredClass meta-information objects.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.java/setObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.cs/SetObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.vb/SetObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.java/getMetaObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.cs/GetMetaObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Accessing db4o meta-information/MetaInfoExample.vb/GetMetaObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="metainfovb.zip">VB.NET </a>
@@ -114,5 +75,7 @@ returns an array of all StoredClass meta-information objects.</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="metainfojava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-        <p></p></body></html>
+        <p>
+        </p>
+    </body>
+</html>

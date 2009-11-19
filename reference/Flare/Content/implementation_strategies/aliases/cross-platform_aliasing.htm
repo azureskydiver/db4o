@@ -1,23 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Cross-Platform Aliasing	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="820" MadCap:lastWidth="1160" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest">
+    <head><title>Cross-Platform Aliasing	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Cross-Platform Aliasing</h1>
-<p>One of the most valuable aliases usecases is working with persistent
+        <p>One of the most valuable aliases usecases is working with persistent
 Java classes from a .NET application and vice versa. You can use both TypeAlias
-and WildcardAlias depending on how many classes you need to access.</p><p>Below you will get an example of a system where classes were saved to the database from a Java application and read and modified later from a .NET application. A vice versa example is reviewed in <a href="cross-platform_aliasing_from_.net_to_java.htm" >Cross-Platform Aliasing From .NET To Java</a>. </p>
-
-<p>For example, Pilot objects are saved to a database from a Java
+and WildcardAlias depending on how many classes you need to access.</p>
+        <p>Below you will get an example of a system where classes were saved to the database from a Java application and read and modified later from a .NET application. A vice versa example is reviewed in <a href="cross-platform_aliasing_from_.net_to_java.htm">Cross-Platform Aliasing From .NET To Java</a>. </p>
+        <p>For example, Pilot objects are saved to a database from a Java
 application:</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.java/saveObjects.flsnp" />
-<p>In order to read the saved objects successfully from a .NET application
+        <MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.java/saveObjects.flsnp" />
+        <p>In order to read the saved objects successfully from a .NET application
 we will need to define an alias for persistent classes and add JavaSupport to configuration. JavaSupport is a special configuration item, which defines aliases for all necessary internal db4o classes that might be referenced in the database file. We will use a <a href="wildcardalias.htm">WildcardAlias</a> for all the persistent classes. This alias must reference the corresponding persistent class definitions on Java and .NET (remember that only matching field names will be accessible in aliased objects):</p>
-<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.cs/ConfigureAlias.flsnp" />
-				Now the objects are accessible from the .NET application:
-<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.cs/GetObjects.flsnp" />
-				<p>We can read the database from the initial Java application again. Note, that no alias is required as the class definitions were created from Java:</p>
-				<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.java/readObjects.flsnp" /> 
-     
-  </body></html>
+        <MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.cs/ConfigureAlias.flsnp" />Now the objects are accessible from the .NET application:
+<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.cs/GetObjects.flsnp" /><p>We can read the database from the initial Java application again. Note, that no alias is required as the class definitions were created from Java:</p><MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.java/readObjects.flsnp" /></body>
+</html>

@@ -1,62 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Simplest Enhancement Script	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="834" MadCap:lastWidth="1190" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue">
+    <head><title>Simplest Enhancement Script	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Simplest Enhancement Script</h1>
-<p>If you are
+        <p>If you are
 not interested in writing complicated ant build scripts for your project, but
 still need to use enhancement, we've created a simplest enhance script that can
 do the job for any java project with only minor changes or without any changes
 at all. Here is the script:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Simplest Enhancement Script/Build.Xml/Build.Xml.flsnp" />
-<p>In order to
+        <MadCap:snippetBlock src="../../../Resources/Snippets/Simplest Enhancement Script/Build.Xml/Build.Xml.flsnp" />
+        <p>In order to
 use it - just put it in your project's folder. You will also need to put
 db4o-x.x-all-java5.jar (it contains all the required jars) into your lib folder.
 If your project uses non-standard Java layout (web application, maven
 application etc), you will have to correct the paths to bin and lib folders in
 the build.xml.</p>
-
-<p>This
+        <p>This
 build.xml file includes TA/TP enhancement (normal and collections) and NQ
 optimization. These are the default options. For a more detailed description of
 Ant instrumentation the following options can be used:</p>
-
-<p><b>nq</b>: switch for
+        <p><b>nq</b>: switch for
 native query optimization enhancement</p>
-
-<p><b>ta</b>: switch for
+        <p><b>ta</b>: switch for
 transparent activation/persistence enhancement</p>
-
-<p><b>collections</b>: switch
+        <p><b>collections</b>: switch
 for enhancement of platform collections for transparent activation/persistence
 (only effective if ta is switched on)</p>
-
-<p>In order to
+        <p>In order to
 run the enhancement you can just type "ant" in the command line in your project's
 directory. </p>
-
-<p>You can
+        <p>You can
 also integrate this build in the build process in your IDE. If you are using
 Eclipse follow these steps:</p>
-
-<ul><li>Right-click the project in the Package Explorer
-and select "Properties"</li><li>Select "Builders" in the left pane</li><li>Add new builder after the default Java builder,
-call it "Enhancement"</li><li>Select the build.xml file on the "Main" tab of
-the new builder properties</li></ul>
-
-
-
-
-
-
-
-<p>Now enhancement will be run after the normal
+        <ul>
+            <li>Right-click the project in the Package Explorer
+and select "Properties"</li>
+            <li>Select "Builders" in the left pane</li>
+            <li>Add new builder after the default Java builder,
+call it "Enhancement"</li>
+            <li>Select the build.xml file on the "Main" tab of
+the new builder properties</li>
+        </ul>
+        <p>Now enhancement will be run after the normal
 compilation (you may need to clean and rebuild the project to see the effect).</p>
-
-
-  
-     
-    
-</body></html>
+    </body>
+</html>

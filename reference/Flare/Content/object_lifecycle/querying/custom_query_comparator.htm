@@ -1,121 +1,93 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Custom Query Comparator	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Custom Query Comparator</h1><p>Db4o allows using a custom comparator for query processing.
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="820" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
+    <head><title>Custom Query Comparator	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Custom Query Comparator</h1>
+        <p>Db4o allows using a custom comparator for query processing.
 This can be useful for replacing the standard way of selecting query results,
 for example, when a non-standard attribute type should be compared as string or
 integer</p>
-
-<p>The usage is best shown on an example. </p>
-
-<p>Let's create a custom class containing string information:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/MyString.java/MyString.java.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/MyString.cs/MyString.cs.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/MyString.vb/MyString.vb.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>MyString class will be used for an attribute in the
+        <p>The usage is best shown on an example. </p>
+        <p>Let's create a custom class containing string information:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/MyString.java/MyString.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/MyString.cs/MyString.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/MyString.vb/MyString.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>MyString class will be used for an attribute in the
 following class:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/Record.java/Record.java.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/Record.cs/Record.cs.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/Record.vb/Record.vb.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Let's save some Record objects to the database:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.java/storeRecords.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.cs/StoreRecords.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.vb/StoreRecords.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Selecting the query results, we need to compare string
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/Record.java/Record.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/Record.cs/Record.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/Record.vb/Record.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Let's save some Record objects to the database:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.java/storeRecords.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.cs/StoreRecords.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.vb/StoreRecords.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Selecting the query results, we need to compare string
 values contained in MyString objects. This can be configured with the following
 setting:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.java/configure.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.cs/Configure.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.vb/Configure.flsnp" />
-</p><p MadCap:conditions="Primary:vb" /><p>This piece of code registers an attribute provider for
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.java/configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.cs/Configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.vb/Configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>This piece of code registers an attribute provider for
 special query behavior. </p>
-
-<p>The query processor will compare the
+        <p>The query processor will compare the
 object returned by the attribute provider instead of the actual object, both
 for the constraint and the candidate persistent object.</p>
-
-<p>The querying code will look like this:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.java/checkRecords.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.cs/CheckRecords.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.vb/CheckRecords.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-
-
-<p>Using query comparator feature we can change the standard
+        <p>The querying code will look like this:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.java/checkRecords.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.cs/CheckRecords.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Custom Query Comparator/CompareExample.vb/CheckRecords.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Using query comparator feature we can change the standard
 way of selecting query results. This can be helpful for:</p>
-
-<ul><li>querying user types using simple string or numeric
-representation</li><li>encapsulating additional logic into querying algorithm.</li></ul>
-
-
-
-
-
- 
-     
-    
-  </body></html>
+        <ul>
+            <li>querying user types using simple string or numeric
+representation</li>
+            <li>encapsulating additional logic into querying algorithm.</li>
+        </ul>
+    </body>
+</html>
