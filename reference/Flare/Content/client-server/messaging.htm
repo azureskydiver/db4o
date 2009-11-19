@@ -3,8 +3,8 @@
     <head><title>Messaging	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>Messaging</h1>
                 <p>In client/server mode the TCP connection between the client and the server can also be used to send messages from the client to the server.</p>
                 <p>Possible usecases could be:</p>
@@ -27,7 +27,7 @@
                     <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.vb/MyClientServerMessage.vb.flsnp" />
                 </p>
                 <p MadCap:conditions="Primary:vb" />
-                <p>Now we have to add some code to the server to react to arriving messages. This can be done by configuring a MessageRecipient object on the server. Let's simply print out all objects that arrive as messages. For the following we assume that we already have an ObjectServer object, opened with <a href="embedded.htm" class="wikiLink">Db4o.openServer()</a>.</p>
+                <p>Now we have to add some code to the server to react to arriving messages. This can be done by configuring a MessageRecipient object on the server. Let's simply print out all objects that arrive as messages. For the following we assume that we already have an ObjectServer object, opened with <a href="embedded.htm"  >Db4o.openServer()</a>.</p>
                 <p MadCap:conditions="Primary.Java">
                     <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.java/MessagingExample.java.flsnp" />
                 </p>
@@ -41,8 +41,8 @@
                 </p>
                 <p MadCap:conditions="Primary:vb" />
                 <p>The MessageSender object on the client can be reused to send multiple messages.</p>
-            </div>
-        </div>
+             
+         
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="messagingjava.zip">Java</a>

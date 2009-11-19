@@ -32,7 +32,7 @@
                     <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.vb/TryStoreWithCallConstructors.flsnp" />
                 </p>
                 <p MadCap:conditions="Primary:vb" />
-                <p>At storage time, db4o tests the only available constructor with null arguments and runs into a NullPointerException, so it refuses to accept our object. (Note that this test only occurs when configured with <a href="../../object_lifecycle/object_construction/troubleshooting.htm" class="wikiLink">exceptionsOnNotStorable</a>(default setting is true) - otherwise db4o will silently fail when trying to reinstantiate the object.)  </p><a name="Bypassing The Constructor "></a>
+                <p>At storage time, db4o tests the only available constructor with null arguments and runs into a NullPointerException, so it refuses to accept our object. (Note that this test only occurs when configured with <a href="../../object_lifecycle/object_construction/troubleshooting.htm"  >exceptionsOnNotStorable</a>(default setting is true) - otherwise db4o will silently fail when trying to reinstantiate the object.)  </p><a name="Bypassing The Constructor "></a>
                 <h2>Bypassing The Constructor </h2>
                 <p>
                     <p MadCap:conditions="Primary..NET,Primary.c#">
@@ -45,6 +45,6 @@
                 </p>
                 <p MadCap:conditions="Primary:vb" />
                 <p>This still does not work for our case because the native pointer will definitely be invalid. In fact this example crashes the Common Language Runtime.  </p>
-                <p>In order to solve the problem we will need to use <a href="the_translator_api.htm" class="wikiLink">db4o Translators</a>. </p>
+                <p>In order to solve the problem we will need to use <a href="the_translator_api.htm"  >db4o Translators</a>. </p>
     </body>
 </html>

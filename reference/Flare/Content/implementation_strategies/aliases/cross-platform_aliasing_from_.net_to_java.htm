@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Cross-Platform Aliasing From .NET To Java	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>Cross-Platform Aliasing From .NET To Java</h1><p>The following example shows a cross-platform system where classes were saved to the
 db4o database from a .NET application and read and modified later from a
 .Java application. A vice versa example is reviewed in
-<a href="cross-platform_aliasing.htm" class="wikiLink">Cross-Platform Aliasing</a>. </p>
+<a href="cross-platform_aliasing.htm"  >Cross-Platform Aliasing</a>. </p>
 
 <p>Pilot objects are saved to a database from a .NET
 application:</p><MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing From .NET To Java/InterLanguageExample2.cs/SaveObjects.flsnp" />
 <p>In order to read the saved objects successfully from a java
 application
-we will need to define an alias for persistent classes and add DotnetSupport to configuration. DotnetSupport is a special configuration item, which includes aliases for all internal db4o classes, which might be referenced in the database file We will use a <a href="wildcardalias.htm" class="wikiLink">WildcardAlias</a> to match the definitions for Java and .NET
+we will need to define an alias for persistent classes and add DotnetSupport to configuration. DotnetSupport is a special configuration item, which includes aliases for all internal db4o classes, which might be referenced in the database file We will use a <a href="wildcardalias.htm"  >WildcardAlias</a> to match the definitions for Java and .NET
 persistent classes. It is important to remember that persistent classes in package/namespace specified in WildcardAlias must have the same names and same field names to be matched: </p><MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing From .NET To Java/InterLanguageExample2.java/configureAlias.flsnp" />w the objects are accessible from the Java application:<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing From .NET To Java/InterLanguageExample2.java/getObjects.flsnp" />
 				We
 can read the database from the initial .NET application again. Note,
-that no alias is required as the class definitions were created in this application :<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing From .NET To Java/InterLanguageExample2.cs/ReadObjects.flsnp" /> </div> </div>
+that no alias is required as the class definitions were created in this application :<MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing From .NET To Java/InterLanguageExample2.cs/ReadObjects.flsnp" />    
     </body></html>
     
   

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Rollback And Cache	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Rollback And Cache</h1><p> </p><p>Suppose we have <a href="car.htm" class="wikiLink">Car</a>, <a href="pilot.htm" class="wikiLink">Pilot</a> and <a href="id.htm" class="wikiLink">Id</a>
+     
+       
+        <h1>Rollback And Cache</h1><p> </p><p>Suppose we have <a href="car.htm"  >Car</a>, <a href="pilot.htm"  >Pilot</a> and <a href="id.htm"  >Id</a>
 classes stored in the database. Car class is activatable, others are not. We
 will modify the car and rollback the transaction:</p>
 
@@ -53,8 +53,8 @@ car fields to the maximum possible depth. Thus we can be sure that all the car
 fields will be re-read from the database again (no outdated values from the
 reference cache), but the trade-off is that all child objects will be
 deactivated and read from the database too. You can see it on Pilot object.
-This behaviour is preserved for both activatable and non-activatable objects.</p></div>
-    </div>
+This behaviour is preserved for both activatable and non-activatable objects.</p> 
+     
     
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>

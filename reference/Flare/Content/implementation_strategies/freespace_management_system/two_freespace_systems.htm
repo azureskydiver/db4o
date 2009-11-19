@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Two Freespace Systems	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>Two Freespace Systems</h1>
 
 <p>db4o comes with three freespace systems:</p><ul><li>RAM-based: the information about freespace is held in RAM;</li><li>b-Tree-based: the information about freespace is written to disk, b-Trees are used to manage this information; </li><li>index-based: similar to b-Trees, but existing index functionality to store freespace information. </li></ul><p>You can configure db4o to use either of these by calling</p>
@@ -57,7 +57,7 @@ How it works?:
 
 </ul>
 <p>b-Tree-based freespace system can show poorer performance compared to RAM-based system, as it needs to access the file to write updated freespace information.  </p>
-<p>However, b-Tree-based freespace system is fast enough, especially for mobile devices, where file access is not much slower than RAM-access, and ACID transactions together with low memory consumption are most valuable factors.</p><p>Index-based freespace system has similar to b-Tree characteristics, but poorer performance and is used for legacy reasons. </p></div>
-    </div>
+<p>However, b-Tree-based freespace system is fast enough, especially for mobile devices, where file access is not much slower than RAM-access, and ACID transactions together with low memory consumption are most valuable factors.</p><p>Index-based freespace system has similar to b-Tree characteristics, but poorer performance and is used for legacy reasons. </p> 
+     
     
   </body></html>

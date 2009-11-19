@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Automatic Deactivation	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>Automatic Deactivation</h1><p> </p><p>The use of depth parameter in <code>deactivate</code> call from
-the <a href="rollback_and_cache.htm" class="wikiLink">previous example</a> directly affects performance: the
+the <a href="rollback_and_cache.htm"  >previous example</a> directly affects performance: the
 less is the depth the less objects will need to be re-read from the database
 and the better the performance will be. Ideally we only want to deactivate the
 objects that were changed in the rolled-back transaction. This can be done by
@@ -53,8 +53,8 @@ possible. </p>
 
 <p>Note, that RollbackDeactivateStrategy <b>only works for activatable</b> objects. To see the different you can
 comment out Activatable implementation in Id class (id value will be preserved
-in the cache).</p></div>
-    </div>
+in the cache).</p> 
+     
     
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">

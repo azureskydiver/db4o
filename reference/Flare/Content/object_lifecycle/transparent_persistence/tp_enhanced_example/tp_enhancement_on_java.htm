@@ -3,8 +3,8 @@
     <head><title>TP Enhancement On Java	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>TP Enhancement On Java</h1>
                 <p>TP Enhancement on Java platform can be done by customizing the ant build script to include instrumentation for persistent classes. </p>
                 <p>For a simple example we will use <a href="tp_enhancement_on_java/sensorpanel.htm">SensorPanel</a> class, which represents a simple linked list. In our example application we will first store several objects of this class, then retrieve and modify them. Transparent Persistence mechanism should take care of modified objects and persist them to the database when the transaction is committed or the database is closed. As SensorPanel does not implement Activatable interface, we will need to use db4o enhancement tools to implement this interface after the class is built.</p>
@@ -19,8 +19,8 @@
                 <MadCap:snippetBlock src="../../../Resources/Snippets/TP Enhancement On Java/Build.Xml/Build.Xml.flsnp" />
 The build script relies on several jars:<ul><li>ant.jar - <a href="http://ant.apache.org/">Ant</a> library  </li><li>bloat-1.0.jar - bloat bytecode instrumentation library </li><li>db4o-x.x-instrumentation.jar - db4o instrumentation library on top of bloat </li><li>db4o-x.x-java5.jar - db4o jar </li><li>db4o-x.x-taj.jar - db4o transparent activation support </li><li>db4o-x.x-tools.jar - db4o tools</li></ul><p>All these jars should be added to /lib folder in the project directory.</p><p>After running the build script above you will get /bin and /enhanced-bin folders produced in your project folder. /bin folder contains compiled application classes, whereas /enhanced-bin contains compiled and enhanced classes. For testing the result of the enhancement you can use the following batch file (to be run from /enhanced-bin folder):</p><p><code>set
 CLASSPATH=.;{$PROJECT_ROOT}\lib\db4o-x.x-java5.jar</code></p><p><code>java
-com.db4odoc.tpbuildtime.TPExample</code></p></div>
-        </div>
+com.db4odoc.tpbuildtime.TPExample</code></p> 
+         
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="tpexamplesjava.zip">Java </a>

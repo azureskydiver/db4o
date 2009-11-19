@@ -18,5 +18,5 @@ can prevent the creation of a shutdown thread on some platforms.</p>
 On some platforms db4o uses a ShutDownHook to cleanly close all database files upon system termination. If a system is terminated without calling ObjectContainer#close() for all open ObjectContainers, these ObjectContainers will still be usable but they will not be able to write back their freespace management system back to the database file. Accordingly database files will be observed to grow.</p>
 <a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
 <p>
-Database files can be reduced to their minimal size with <a href="../../implementation_strategies/maintenance/defragment.htm" class="wikiLink">Defragment</a></p>    
+Database files can be reduced to their minimal size with <a href="../../implementation_strategies/maintenance/defragment.htm"  >Defragment</a></p>    
   </body></html>

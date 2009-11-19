@@ -28,9 +28,9 @@ starting replication. </p><p>If the required dRS tables do not exist, dRS will t
 For dRS to operate properly, for each persisted object, the user MUST
 declare the primary key column of the database table in the hbm.xml
 mapping file as follow:</p><p><code>&lt;id column="typed_id" type="long"&gt;</code><code>    &lt;generator class="native"/&gt;</code><code>&lt;/id&gt;</code></p><p> 
-    - column - The name of the primary key column. The value can be well-formed string . "typed_id" is recommended. 
-    - type - MUST be "long" 
-    - class - MUST be "native" 
+<ul><li>column - The name of the primary key column. The value can be well-formed string . "typed_id" is recommended.</li>
+<li>type - MUST be "long"</li>
+<li>class - MUST be "native"</li></ul>
 The "typed_id" column stores the id used by Hibernate. It allows dRS to
 identify a persisted object by invoking
 org.hibernate.Session#getIdentifier(Object object).</p><p>If you do not define getter/setter for property, make

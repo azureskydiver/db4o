@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>ExceptionsOnNotStorable	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
+     
+       
         <h1>ExceptionsOnNotStorable</h1>
 <p>There is another setting that can be of great value in debug process:</p>
 <p MadCap:conditions="Primary.Java">
@@ -38,7 +38,7 @@ identify the classes/libs db4o needs to know </li>
 <li>identify the classloader hierarchy of your application context </li>
 <li>use the most generic classloader that knows all needed classes, either directly or indirectly via delegation</li>
 </ul>
-<p>See also:<a href="../../platform_specific_issues/classloader_issues.htm" class="wikiLink">Classloader issues</a></p>
+<p>See also:<a href="../../platform_specific_issues/classloader_issues.htm"  >Classloader issues</a></p>
 <p>
 #exceptionsOnNotStorable(true) will also help you to identify classes that db4o cannot persist.</p>
 <p>db4o needs a constructor that it can use to create user objects. Ideally this is a zero-parameter constructor (declared public for Java JDK versions prior to JDK 1.2). If db4o does not find a zero-parameter constructor, it iterates through all other constructors and internally attempts to create an instance of an object by passing appropriate null parameters. If this is successful with any of the present constructors, this constructor is used. </p>
@@ -57,9 +57,9 @@ add a zero-parameter constructor specifically for db4o; </li>
 <p MadCap:conditions="Primary.Print">
 <p>.NET: </p><p><code>configuration.ObjectClass("java.net.URL").Translate(new TSerializable()); </code></p>
 </p><p MadCap:conditions="Primary:net" />
-<p>The above code needs to be executed every time before the db4o engine is started. See also:<a href="../../object_lifecycle/object_construction.htm" class="wikiLink">Constructors</a>, <a href="../../implementation_strategies/translators.htm" class="wikiLink">Translators</a>.</p>
+<p>The above code needs to be executed every time before the db4o engine is started. See also:<a href="../../object_lifecycle/object_construction.htm"  >Constructors</a>, <a href="../../implementation_strategies/translators.htm"  >Translators</a>.</p>
 
-<p>Another db4o system, which can give you a valuable feedback about db4o functioning in your application is <a href="../diagnostics.htm" class="wikiLink">Diagnostics</a>.</p></div>
-    </div>
+<p>Another db4o system, which can give you a valuable feedback about db4o functioning in your application is <a href="../diagnostics.htm"  >Diagnostics</a>.</p> 
+     
     
   </body></html>

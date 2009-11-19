@@ -3,8 +3,8 @@
     <head><title>Unique identity concept	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <div class="CommonContent">
-            <div class="CommonContentArea">
+         
+             
                 <h1>Unique identity concept</h1>
                 <p>Db4o uses the concept of uniqueness of each object in reference cache. If an object is accessed by multiple queries or through multiple navigation access paths, db4o will always return the one single object, helping you to put your object graph together exactly the same way as it was when it was stored, without having to use IDs. You can simply use '==' to check the identity of two database objects.</p>
                 <p MadCap:conditions="Primary.Java">
@@ -33,7 +33,7 @@
                 </p>
                 <p MadCap:conditions="Primary:vb" />
                 <p>In the example <i>pilot</i> object is retrieved from the database (placed into cache) and changed, but not saved. The following retrieval uses pilot's name to retrieve the object from the database, but that object was already instantiated, so its cached (and modified) instance is actually returned.</p>
-                <p>Such behavior can be sometimes undesirable - you may expect to get object as it saved in the database instead of its modified instance in cache. One of the ways to do that is to use <a href="../../tuning/utility_methods/peekpersisted.htm" class="wikiLink">ExtObjectContainer#peekPersisted(object)</a> method, which will give you a disconnected copy of a database object.</p>
+                <p>Such behavior can be sometimes undesirable - you may expect to get object as it saved in the database instead of its modified instance in cache. One of the ways to do that is to use <a href="../../tuning/utility_methods/peekpersisted.htm"  >ExtObjectContainer#peekPersisted(object)</a> method, which will give you a disconnected copy of a database object.</p>
                 <p>Another way is to purge objects from the cache before re-retrieving them.</p>
                 <p>You can use the following methods:</p>
                 <ul>
@@ -70,8 +70,8 @@
                 <p>Each reference in db4o works directly with the object. As only one instance of the object exists in cache there is no problem with object locks.</p>
                 <p>You can see an example of another concept used in <a href="http://java.sun.com/jdo/">JDO system</a>.  </p>
                 <p>Actually db4o reference is a pointer to the object in the database file. It means that the size of the database does not affect query time: the object is retrieved from the known position without any necessity to traverse values.</p>
-            </div>
-        </div>
+             
+         
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="Identityvb.zip">VB.NET</a>
