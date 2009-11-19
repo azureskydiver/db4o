@@ -1,55 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Java Client-.NET Server	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-    <h1>Java Client-.NET Server</h1>
-<p>In the <a href="java_server-.net_client.htm"  >previous example</a> we
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="830" MadCap:lastWidth="790" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest">
+    <head><title>Java Client-.NET Server	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Java Client-.NET Server</h1>
+        <p>In the <a href="java_server-.net_client.htm">previous example</a> we
 saw how to access Java server from .NET clients. The opposite is also possible.</p>
-
-<p>Let's start a typical .NET db4o server (c# or VB):</p>
-
-<p>c#: </p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/StartServer.cs/StartServer.cs.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/ServerInfo.cs/ServerInfo.cs.flsnp" />.NET:<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/StartServer.vb/StartServer.vb.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/ServerInfo.vb/ServerInfo.vb.flsnp" />
-
-
-<p>Remember, that persistent class definitions should be
+        <p>Let's start a typical .NET db4o server (c# or VB):</p>
+        <p>c#: </p>
+        <MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/StartServer.cs/StartServer.cs.flsnp" />
+        <MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/ServerInfo.cs/ServerInfo.cs.flsnp" />.NET:<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/StartServer.vb/StartServer.vb.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/ServerInfo.vb/ServerInfo.vb.flsnp" /><p>Remember, that persistent class definitions should be
 present both on the client and the server side. For simplicity we will use the
-classes from the <a href="java_server-.net_client.htm"  >previous example</a>.</p>
-
-<p>Java client testing code:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/Client.java/main.flsnp" />
-<p>And the most important part - configuration:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/Client.java/getConfig.flsnp" />
-<p>Note, that we use DotnetSupport constructor with a boolean parameter
+classes from the <a href="java_server-.net_client.htm">previous example</a>.</p><p>Java client testing code:</p><MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/Client.java/main.flsnp" /><p>And the most important part - configuration:</p><MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/Client.java/getConfig.flsnp" /><p>Note, that we use DotnetSupport constructor with a boolean parameter
 set to true. This parameter defines if Client/Server support should be
-included.</p>
-
-<p>Persistent class aliases are required for accessing object
+included.</p><p>Persistent class aliases are required for accessing object
 information on the server (both Wildcard and class-specific aliases can be
-used, as soon as they cover all the classes which you want to access).</p>
-
-
-
-  
-     
-
-
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="javadotnetclientservervb.zip">VB.NET </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="javadotnetclientservercs.zip">c# </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="javadotnetclientserverjava.zip">Java </a>
-            </MadCap:conditionalText>
-        </p>
-
-
-  
-  </body></html>
+used, as soon as they cover all the classes which you want to access).</p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="javadotnetclientservervb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="javadotnetclientservercs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="javadotnetclientserverjava.zip">Java </a></MadCap:conditionalText></p></body>
+</html>

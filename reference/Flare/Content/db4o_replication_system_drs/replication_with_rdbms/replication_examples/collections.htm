@@ -1,41 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Collections	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="822" MadCap:lastWidth="710" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;a1;b1;c1;b2;uncomment;antlr;asm;attrs;cglib;ehcache;jta;log4j">
+    <head><title>Collections	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Collections</h1>
-					
-					<p>This section covers examples on Collection, including array, Set, List and Map. </p>
-					<p>As an experienced db4o user, you may know that db4o treats Collection
+        <p>This section covers examples on Collection, including array, Set, List and Map. </p>
+        <p>As an experienced db4o user, you may know that db4o treats Collection
 as first class object, which means it assigns unique UUID to each
 Collection. Hence a Collection can be shared among many owners. This is
 different to Hibernate's approach, where Collection does not have a
 unique ID and they cannot be shared among objects.</p>
-					<p>To bridge this gap, dRS treats Collections as second class objects and
+        <p>To bridge this gap, dRS treats Collections as second class objects and
 does not assign UUIDs to them. When a shared Collection is replicated
 from db4o to Hibernate using dRS, it is automatically cloned. Each
 owner of the Collection receives a copy of the Collection. Further
 modifications to the db4o copy will not be replicated to cloned copies.
 Therefore, you cannot share Collections if you want to perform RDBMS
 replications with dRS.</p>
-	<p>In the following examples, we will use Car as the element in the following examples. </p>
-				<MadCap:snippetBlock src="../../../Resources/Snippets/Collections/Car.java/Car.java.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Collections/Car.hbm.xml/Car.hbm.xml.flsnp" />
- More Reading:<ul>
-<li><p><a href="collections/array.htm"  >Array</a></p></li>
-<li><p><a href="collections/list.htm"  >List</a></p></li>
-<li><p><a href="collections/set.htm"  >Set</a></p></li>
-<li><p><a href="collections/map.htm"  >Map</a></p></li>
-</ul> 
- 
-     
-
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../hibernate.zip">Java</a>
-            </MadCap:conditionalText>
-        </p>
-
-
-
-    
-</body></html>
+        <p>In the following examples, we will use Car as the element in the following examples. </p>
+        <MadCap:snippetBlock src="../../../Resources/Snippets/Collections/Car.java/Car.java.flsnp" />
+        <MadCap:snippetBlock src="../../../Resources/Snippets/Collections/Car.hbm.xml/Car.hbm.xml.flsnp" />More Reading:<ul><li><p><a href="collections/array.htm">Array</a></p></li><li><p><a href="collections/list.htm">List</a></p></li><li><p><a href="collections/set.htm">Set</a></p></li><li><p><a href="collections/map.htm">Map</a></p></li></ul><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../hibernate.zip">Java</a></MadCap:conditionalText></p></body>
+</html>

@@ -1,42 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Schema Evolution	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-        <h1>Schema Evolution</h1><p>When a new application development is considered it is
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="838" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
+    <head><title>Schema Evolution	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Schema Evolution</h1>
+        <p>When a new application development is considered it is
 important to think about its evolution. What happens if your initial model does
 not suffice and you need changes or additions? Let's look how db4o and SQLite
 applications can handle it.</p>
-
-<p>To keep the example simple, let's add a registration record
+        <p>To keep the example simple, let's add a registration record
 to our car:</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/RegistrationRecord.java/RegistrationRecord.java.flsnp" />
-<p>Now we will need to modify Car class to attach the record:</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/Car.java/Car.java.flsnp" />
-<p>Ok, the application is changed to cater for new class. What
-about our databases?</p>
-
-<a name="Schema Evolution in db4o"></a><h3>Schema Evolution in db4o</h3>
-
-<p>db4o supports such schema change on the fly: we can select
+        <MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/RegistrationRecord.java/RegistrationRecord.java.flsnp" />
+        <p>Now we will need to modify Car class to attach the record:</p>
+        <MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/Car.java/Car.java.flsnp" />
+        <p>Ok, the application is changed to cater for new class. What
+about our databases?</p><a name="Schema Evolution in db4o"></a>
+        <h3>Schema Evolution in db4o</h3>
+        <p>db4o supports such schema change on the fly: we can select
 values and update the new field too: </p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/Db4oExample.java/selectCarAndUpdate.flsnp" /> <a name="Schema Evolution in SQLite"></a><h3>Schema Evolution in SQLite</h3>
-
-<p>For SQLite database model should be synchronized with the
+        <MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/Db4oExample.java/selectCarAndUpdate.flsnp" /><a name="Schema Evolution in SQLite"></a>
+        <h3>Schema Evolution in SQLite</h3>
+        <p>For SQLite database model should be synchronized with the
 object model:</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/SqlExample.java/upgradeDatabase.flsnp" />
-<p>Now we can try to retrieve and update records:</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/SqlExample.java/selectCarAndUpdate.flsnp" /> <a name="Conclusion"></a><h3>Conclusion</h3>
-
-<p>You can see that schema evolution is much easier with db4o.
+        <MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/SqlExample.java/upgradeDatabase.flsnp" />
+        <p>Now we can try to retrieve and update records:</p>
+        <MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/SqlExample.java/selectCarAndUpdate.flsnp" /><a name="Conclusion"></a>
+        <h3>Conclusion</h3>
+        <p>You can see that schema evolution is much easier with db4o.
 But the main difficulty that is not visible from the example is that schema
 evolution with SQLite database can potentially introduce a lot of bugs that
 will be difficult to spot. For more information see
-<a href="../../implementation_strategies/refactoring_and_schema_evolution.htm"  >Refactoring and Schema Evolution</a>.</p>
-
-
-    
-</body></html>
+<a href="../../implementation_strategies/refactoring_and_schema_evolution.htm">Refactoring and Schema Evolution</a>.</p>
+    </body>
+</html>

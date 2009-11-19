@@ -1,30 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Concurrency Control	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="387" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;a1;b1;c1;b2;uncomment">
+    <head><title>Concurrency Control	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Concurrency Control</h1>
-<p>As soon as you will start using db4o with multiple client
+        <p>As soon as you will start using db4o with multiple client
 connections you will recognize the necessity of implementing a concurrency
 control system. Db4o itself works as an overly optimistic scheme, i.e. an
 object is locked for read and write, but no collision check is made. This
 approach makes db4o very flexible and gives you an opportunity to organize a
 concurrency control system, which will suit your needs the best. Your main
 tools to build your concurrency control system would be:</p>
-
-<ul>
-<li><a href="semaphores.htm"  >semaphores</a></li>
-<li><a href="../implementation_strategies/callbacks.htm"  >callbacks</a></li>
-</ul>
-<p>
-
-The articles in this topic set will show you how to implement locking and will give you an advice which strategy to use in different situations.</p>
-<p> More Reading:<ul>
-<li><p><a href="concurrency_control/optimistic_locking.htm"  >Optimistic Locking</a></p></li>
-<li><p><a href="concurrency_control/pessimistic_locking.htm"  >Pessimistic Locking</a></p></li>
-</ul> 
- </p>
- 
-     
-    
-  </body></html>
+        <ul>
+            <li><a href="semaphores.htm">semaphores</a>
+            </li>
+            <li><a href="../implementation_strategies/callbacks.htm">callbacks</a>
+            </li>
+        </ul>
+        <p>The articles in this topic set will show you how to implement locking and will give you an advice which strategy to use in different situations.</p>
+        <p> More Reading:<ul><li><p><a href="concurrency_control/optimistic_locking.htm">Optimistic Locking</a></p></li><li><p><a href="concurrency_control/pessimistic_locking.htm">Pessimistic Locking</a></p></li></ul></p>
+    </body>
+</html>

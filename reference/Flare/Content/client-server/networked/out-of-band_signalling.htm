@@ -1,54 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Out-of-band Signalling	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Out-of-band Signalling</h1>
-<p>Sometimes a client needs to send a special message
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="818" MadCap:lastWidth="770" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;a1;b1;c1;b2;uncomment;setMessageRecipient;processMessage">
+    <head><title>Out-of-band Signalling	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Out-of-band Signaling</h1>
+        <p>Sometimes a client needs to send a special message
 to a server in order to tell the server to do something. The server
-may need to be signalled to perform a defragment or it may need to be
-signalled to shut itself down gracefully.</p>
-<p>This is configured by calling setMessageRecipient(), passing the object that will process client-initiated messages.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.java/runServer.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.cs/RunServer.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.vb/RunServer.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-					
-<p>The message is received and processed by a processMessage() method:</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.java/processMessage.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-					
-<p MadCap:conditions="Primary..NET,Primary.c#">					
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.cs/ProcessMessage.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">						
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.vb/ProcessMessage.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-										
-<p>Db4o
+may need to be signaled to perform a defragment or it may need to be
+signaled to shut itself down gracefully.</p>
+        <p>This is configured by calling setMessageRecipient(), passing the object that will process client-initiated messages.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.java/runServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.cs/RunServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.vb/RunServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The message is received and processed by a processMessage() method:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.java/processMessage.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.cs/ProcessMessage.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StartServer.vb/ProcessMessage.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Db4o
 allows a client to send an arbitrary signal or message to a server by
 sending a plain user object to the server. The server will receive a
 callback message, including the object that came from the client. The
 server can interpret this message however it wants.</p>
-
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StopServer.java/main.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">	
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StopServer.cs/Main.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">	
-<MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StopServer.vb/Main.flsnp" /></p><p MadCap:conditions="Primary:vb" /> 
-     
-    
-
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StopServer.java/main.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StopServer.cs/Main.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Out-of-band Signalling/StopServer.vb/Main.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="../clientservervb.zip">VB.NET </a>
@@ -58,7 +60,5 @@ server can interpret this message however it wants.</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../clientserverjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-
-</body></html>
+    </body>
+</html>

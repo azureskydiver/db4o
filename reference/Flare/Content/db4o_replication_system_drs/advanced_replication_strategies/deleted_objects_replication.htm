@@ -1,55 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Deleted Objects Replication	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="644" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;a1;b1;c1;b2;uncomment">
+    <head><title>Deleted Objects Replication	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Deleted Objects Replication</h1>
-
-
-<p>In addition to replicating changed/new objects, dRS is able to
+        <p>In addition to replicating changed/new objects, dRS is able to
 replicate deletions of objects. When an object is deleted since last
 replication in one database and you would like to replicate these
 changes to another database you can use the following method to do this:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<p>Java: </p>
-
-<p><code>replication .replicateDeletions(Car.class);</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#:</p>
-
-<p><code>replication .ReplicateDeletions(typeof(Car));</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"></p>
-
-<p>VB:</p>
-
-<p><code>replication .ReplicateDeletions(GetType(Car))</code></p>
-
-<p></p><p MadCap:conditions="Primary:vb" />
-</p>
-
-<p>
-dRS traverses every Car object in both providers. For instance, if a
+        <p MadCap:conditions="Primary.Java">
+            <p>Java: </p>
+            <p><code>replication .replicateDeletions(Car.class);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#:</p>
+            <p><code>replication .ReplicateDeletions(typeof(Car));</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p>
+            <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            </p>
+            <p>VB:</p>
+            <p><code>replication .ReplicateDeletions(GetType(Car))</code>
+            </p>
+            <p>
+            </p>
+            <p MadCap:conditions="Primary:vb" />
+        </p>
+        <p>dRS traverses every Car object in both providers. For instance, if a
 deletion is found in one provider, the deletion will be replicated to
 the other provider. During the traversal replication events will be
 generated and can be used as usual. By default, in a case of a conflict the deletion
 will prevail. You can choose the counterpart of the deleted object to
 prevail using the event.</p>
-
-<p>Note, that the deletions of a Parent will not be cascaded to child
+        <p>Note, that the deletions of a Parent will not be cascaded to child
 objects. For example, if a Car contains a child object, e.g. Pilot,
 Pilot will not be traversed and the deletions of Pilot will not be
 replicated. </p>
-
- 
-     
-    
-  </body></html>
+    </body>
+</html>

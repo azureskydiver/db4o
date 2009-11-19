@@ -1,39 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="2103" MadCap:lastWidth="1120">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="816" MadCap:lastWidth="890" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;a1;b1;c1;b2;uncomment">
     <head><title>Pessimistic Locking	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>Pessimistic Locking</h1>
-                <p>Pessimistic locking is an approach when an entity is locked in the
+        <h1>Pessimistic Locking</h1>
+        <p>Pessimistic locking is an approach when an entity is locked in the
 database for the entire time that it is in application memory. This means that
 an object should be locked as soon as it is retrieved from the database and
 released after commit.</p>
-                <p MadCap:conditions="Primary.Java">
-                    <MadCap:snippetBlock src="../../Resources/Snippets/Pessimistic Locking/PessimisticThread.java/run.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../../Resources/Snippets/Pessimistic Locking/PessimisticThread.cs/run.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../../Resources/Snippets/Pessimistic Locking/PessimisticThread.vb/run.flsnp" />
-</p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>As you see this approach is considerably easier to implement.
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Pessimistic Locking/PessimisticThread.java/run.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Pessimistic Locking/PessimisticThread.cs/run.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Pessimistic Locking/PessimisticThread.vb/run.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>As you see this approach is considerably easier to implement.
 Another advantage is that it guarantees that your changes to the database are
 made consistently and safely.</p>
-                <p>The main disadvantage is the lack of scalability. Time
+        <p>The main disadvantage is the lack of scalability. Time
 waiting for the lock to be released can become unacceptable for a system with
 many users or long transactions. This limits the practical implementations of
 pessimistic locking.</p>
-                <p>You may want to select pessimistic locking
+        <p>You may want to select pessimistic locking
 in cases when the cost of loosing the transaction results due to a collision is
 too high.</p>
-             
-         
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="concurrency_controlconcurrencycs.zip">c#</a>

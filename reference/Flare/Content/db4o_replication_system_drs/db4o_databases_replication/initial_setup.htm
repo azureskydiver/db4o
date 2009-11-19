@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Initial Setup	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Initial Setup</h1><p>When replicating objects to and from a db4o database, we
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="818" MadCap:lastWidth="940" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;a1;b1;c1;b2;uncomment">
+    <head><title>Initial Setup	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Initial Setup</h1>
+        <p>When replicating objects to and from a db4o database, we
 need to enable UUIDs and VersionNumbers. </p>
-
-<p>UUIDs are object IDs that are unique across all databases
+        <p>UUIDs are object IDs that are unique across all databases
 created with db4o. That is achieved by having the database creation
 timestamp as part of its objects UUIDs. The db4o UUID contains two parts.
 The first part contains an object ID. The second part identifies
@@ -17,51 +17,33 @@ object was last replicated, and if any changes have been made to the
 object since it was last replicated. An object's version number indicates
 the last time an object was modified. It is the database version at the moment
 of the modification. </p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.java/configureReplication.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.cs/ConfigureReplication.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.vb/ConfigureReplication.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>The above settings can also be applied to a specific class
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.java/configureReplication.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.cs/ConfigureReplication.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.vb/ConfigureReplication.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The above settings can also be applied to a specific class
 object, which needs to be replicated. This can help to improve the performance
 if only selected classes need to be replicated:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.java/configureReplicationPilot.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.cs/ConfigureReplicationPilot.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.vb/ConfigureReplicationPilot.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-
-
-
-
-
-
- 
-     
-
-
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.java/configureReplicationPilot.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.cs/ConfigureReplicationPilot.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Initial Setup/ReplicationExample.vb/ConfigureReplicationPilot.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="../replicationvb.zip">VB.NET </a>
@@ -71,7 +53,5 @@ if only selected classes need to be replicated:</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../replicationjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

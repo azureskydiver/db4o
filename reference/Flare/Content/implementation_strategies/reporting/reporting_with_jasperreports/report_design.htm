@@ -1,87 +1,80 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Report Design	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="887" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
+    <head><title>Report Design	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Report Design</h1>
-
-<p>Let's create a report representing pilots in a table. The
+        <p>Let's create a report representing pilots in a table. The
 table will have 2 fields: "Name" and "Points". The fields should be defined
 like this:</p>
-
-<p><code>&lt;field name="Name"
-class="java.lang.String"/&gt;</code></p>
-
-<p><code>&lt;field name="Points"
-class="java.lang.Integer"/&gt;</code></p>
-
-<p>The field values - $F{Name} and $F{Points} -
+        <p><code>&lt;field name="Name"
+class="java.lang.String"/&gt;</code>
+        </p>
+        <p><code>&lt;field name="Points"
+class="java.lang.Integer"/&gt;</code>
+        </p>
+        <p>The field values - $F{Name} and $F{Points} -
 can be used in the table part of the report:</p>
-
-
-
-<p><code>&lt;detail&gt;</code></p>
-
-<p><code>  
-&lt;band height="15"&gt;</code></p>
-
-<p><code>   
-&lt;textField bookmarkLevel="2"&gt;</code></p>
-
-<p><code>     
+        <p><code>&lt;detail&gt;</code>
+        </p>
+        <p><code>  
+&lt;band height="15"&gt;</code>
+        </p>
+        <p><code>   
+&lt;textField bookmarkLevel="2"&gt;</code>
+        </p>
+        <p><code>     
 &lt;reportElement x="150" y="0"
-width="175" height="15"/&gt;</code></p>
-
-<p><code>     
+width="175" height="15"/&gt;</code>
+        </p>
+        <p><code>     
 &lt;box leftBorder="Thin" bottomBorder="Thin"
-leftPadding="10" rightPadding="10"/&gt;</code></p>
-
-<p><code>     
-&lt;textElement textAlignment="Left"/&gt;</code></p>
-
-<p><code>     
+leftPadding="10" rightPadding="10"/&gt;</code>
+        </p>
+        <p><code>     
+&lt;textElement textAlignment="Left"/&gt;</code>
+        </p>
+        <p><code>     
 &lt;textFieldExpression
-class="java.lang.String"&gt;$F{Name}&lt;/textFieldExpression&gt;</code></p>
-
-<p><code>     
+class="java.lang.String"&gt;$F{Name}&lt;/textFieldExpression&gt;</code>
+        </p>
+        <p><code>     
 &lt;anchorNameExpression&gt;$F{Name} + " (" + $F{Points} +
-")"&lt;/anchorNameExpression&gt;</code></p>
-
-<p><code>   
-&lt;/textField&gt;</code></p>
-
-
-
-<p><code>   
-&lt;textField isStretchWithOverflow="true"&gt;</code></p>
-
-<p><code>     
+")"&lt;/anchorNameExpression&gt;</code>
+        </p>
+        <p><code>   
+&lt;/textField&gt;</code>
+        </p>
+        <p><code>   
+&lt;textField isStretchWithOverflow="true"&gt;</code>
+        </p>
+        <p><code>     
 &lt;reportElement positionType="Float" x="325"
-y="0" width="50" height="15"/&gt;</code></p>
-
-<p><code>     
+y="0" width="50" height="15"/&gt;</code>
+        </p>
+        <p><code>     
 &lt;box leftBorder="Thin" bottomBorder="Thin"
 rightBorder="Thin" leftPadding="10"
-rightPadding="10"/&gt;</code></p>
-
-<p><code>     
-&lt;textElement textAlignment="Right"/&gt;</code></p>
-
-<p><code>     
+rightPadding="10"/&gt;</code>
+        </p>
+        <p><code>     
+&lt;textElement textAlignment="Right"/&gt;</code>
+        </p>
+        <p><code>     
 &lt;textFieldExpression
-class="java.lang.Integer"&gt;$F{Points}&lt;/textFieldExpression&gt;</code></p>
-
-<p><code>   
-&lt;/textField&gt;</code></p>
-
-<p><code> &lt;/band&gt;</code></p>
-
-<p><code>&lt;/detail&gt;</code></p>
-
-The full report design can be downloaded from
-<a href="the-pilot-report.jrxml"  >the-pilot-report.jrxml</a>.
+class="java.lang.Integer"&gt;$F{Points}&lt;/textFieldExpression&gt;</code>
+        </p>
+        <p><code>   
+&lt;/textField&gt;</code>
+        </p>
+        <p><code> &lt;/band&gt;</code>
+        </p>
+        <p><code>&lt;/detail&gt;</code>
+        </p>The full report design can be downloaded from
+<a href="the-pilot-report.jrxml">the-pilot-report.jrxml</a>.
 
  
      
     
-  </body></html>
+  </body>
+</html>

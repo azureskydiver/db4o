@@ -1,48 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="4302" MadCap:lastWidth="1560">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="822" MadCap:lastWidth="680" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;a1;b1;c1;b2;uncomment">
     <head><title>Messaging	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>Messaging</h1>
-                <p>In client/server mode the TCP connection between the client and the server can also be used to send messages from the client to the server.</p>
-                <p>Possible usecases could be:</p>
-                <ul>
-                    <li>shutting down and restarting the server</li>
-                    <li>triggering server backup</li>
-                    <li>using a customized login strategy to restrict the number of allowed client connections</li>
-                </ul>
-                <p>Here is some example code how this can be done.</p>
-                <p>First we need to decide on a class that we want to use as the message. Any object that is storable in db4o can be used as a message, but strings and other simple types will not be carried (as they are not storable in db4o on their own). Let's create a dedicated class:</p>
-                <p MadCap:conditions="Primary.Java">
-                    <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.java/MyClientServerMessage.java.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.cs/MyClientServerMessage.cs.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.vb/MyClientServerMessage.vb.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>Now we have to add some code to the server to react to arriving messages. This can be done by configuring a MessageRecipient object on the server. Let's simply print out all objects that arrive as messages. For the following we assume that we already have an ObjectServer object, opened with <a href="embedded.htm"  >Db4o.openServer()</a>.</p>
-                <p MadCap:conditions="Primary.Java">
-                    <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.java/MessagingExample.java.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET,Primary.c#">
-                    <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.cs/MessagingExample.cs.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:cs" />
-                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.vb/MessagingExample.vb.flsnp" />
-                </p>
-                <p MadCap:conditions="Primary:vb" />
-                <p>The MessageSender object on the client can be reused to send multiple messages.</p>
-             
-         
+        <h1>Messaging</h1>
+        <p>In client/server mode the TCP connection between the client and the server can also be used to send messages from the client to the server.</p>
+        <p>Possible usecases could be:</p>
+        <ul>
+            <li>shutting down and restarting the server</li>
+            <li>triggering server backup</li>
+            <li>using a customized login strategy to restrict the number of allowed client connections</li>
+        </ul>
+        <p>Here is some example code how this can be done.</p>
+        <p>First we need to decide on a class that we want to use as the message. Any object that is storable in db4o can be used as a message, but strings and other simple types will not be carried (as they are not storable in db4o on their own). Let's create a dedicated class:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.java/MyClientServerMessage.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.cs/MyClientServerMessage.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.vb/MyClientServerMessage.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Now we have to add some code to the server to react to arriving messages. This can be done by configuring a MessageRecipient object on the server. Let's simply print out all objects that arrive as messages. For the following we assume that we already have an ObjectServer object, opened with <a href="embedded.htm">Db4o.openServer()</a>.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.java/MessagingExample.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.cs/MessagingExample.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.vb/MessagingExample.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The MessageSender object on the client can be reused to send multiple messages.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="messagingjava.zip">Java</a>

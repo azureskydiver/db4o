@@ -1,65 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="834" MadCap:lastWidth="800" MadCap:conditions="Primary..NET">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="822" MadCap:lastWidth="800" MadCap:conditions="Primary..NET" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
     <head><title>.NET Syntax	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>.NET Syntax</h1>
-                 
-                <p>In .NET version of db4o we need to distinguish NQ syntax for
+        <h1>.NET Syntax</h1>
+        <p>In .NET version of db4o we need to distinguish NQ syntax for
 c# and Visual Basic.</p>
-                <p MadCap:conditions="Primary..NET,Primary.c#"><a name="c# Syntax"></a>
-                    <h2>c# Syntax</h2>
-                    <ol>
-                        <li>This example shows how to use NQ to select all the
+        <p MadCap:conditions="Primary..NET,Primary.c#"><a name="c# Syntax"></a>
+            <h2>c# Syntax</h2>
+            <ol>
+                <li>This example shows how to use NQ to select all the
 objects of the specified type:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax1.flsnp" /></li>
-                        <li>The same functionality as in the previous example:
+                <li>The same functionality as in the previous example:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax2.flsnp" /></li>
-                        <li>Selecting all the objects of the specified type in a
+                <li>Selecting all the objects of the specified type in a
 sorted order:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax3.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotComparer.flsnp" /></li>
-                        <li>General selection - the selection criteria should be
+                <li>General selection - the selection criteria should be
 specified in the delegate function:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax4.flsnp" /></li>
-                        <li>Both selection and sorting is used. Delegate functions
-are used to define the criterias:
+                <li>Both selection and sorting is used. Delegate functions
+are used to define the criteria:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax5.flsnp" /></li>
-                        <li>Similar to the previous example, but the comparator functionality
+                <li>Similar to the previous example, but the comparator functionality
 is moved to a separate class:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax6.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotComparer.flsnp" /></li>
-                        <li>The following example uses predicate and comparator in
-separate classes, which can be helpful for <a href="../../../../implementation_strategies/native_query_collection/parameterized_nq.htm"  >parameterized
+                <li>The following example uses predicate and comparator in
+separate classes, which can be helpful for <a href="../../../../implementation_strategies/native_query_collection/parameterized_nq.htm">parameterized
 queries</a>:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax7.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotPointsComparer.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotPredicate.flsnp" /></li>
-                    </ol>
-                    <p>
-                    </p>
-                    <p MadCap:conditions="Primary:cs" />
-                </p>
-                <p>
-                    <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-                    <a name="VB.NET Syntax"></a>
-                    <h2>VB.NET Syntax</h2>
-                    <ol>
-                        <li>This example shows how to select all the objects of the
+            </ol>
+            <p>
+            </p>
+            <p MadCap:conditions="Primary:cs" />
+        </p>
+        <p>
+            <p MadCap:conditions="Primary..NET,Primary.VB.NET"><a name="VB.NET Syntax"></a>
+                <h2>VB.NET Syntax</h2>
+                <ol>
+                    <li>This example shows how to select all the objects of the
 specified type. Can be used with and without generics:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax1.flsnp" /></li>
-                        <li>This is the most commonly used syntax, which allows to
+                    <li>This is the most commonly used syntax, which allows to
 specify any criteria in the function passed to the query:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax2.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotTestMatch.flsnp" /></li>
-                        <li>Similar to the previous example, but without generics.
+                    <li>Similar to the previous example, but without generics.
 Separate class is used to specify the query criteria, which can be useful when
 a parameter should be passed to the query condition. For more information see
-<a href="../../../../implementation_strategies/native_query_collection/parameterized_nq.htm"  >Parameterized_NQ</a>.
+<a href="../../../../implementation_strategies/native_query_collection/parameterized_nq.htm">Parameterized_NQ</a>.
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax3.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotPredicate.flsnp" /></li>
-                        <li>NQ example with sorted results:
+                    <li>NQ example with sorted results:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax4.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/ComparePilots.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotTestMatch.flsnp" /></li>
-                    </ol>
-                </p></p>
-                <p MadCap:conditions="Primary:vb" />
-             
-         
+                </ol>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
     </body>
 </html>

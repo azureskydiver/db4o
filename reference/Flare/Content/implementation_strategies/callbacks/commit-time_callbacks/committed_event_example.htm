@@ -1,133 +1,52 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Committed Event Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="802" MadCap:lastWidth="770" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion">
+    <head><title>Committed Event Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Committed Event Example</h1>
-
-<p>Committed callbacks can be used in various scenarios:</p>
-
-<ul>
-<li>backup on commit;</li>
-<li>database replication on commit;</li>
-<li>client database synchronization.</li>
-</ul>
-
-
-
-<p>In our example we will create an
+        <p>Committed callbacks can be used in various scenarios:</p>
+        <ul>
+            <li>backup on commit;</li>
+            <li>database replication on commit;</li>
+            <li>client database synchronization.</li>
+        </ul>
+        <p>In our example we will create an
 implementation for the last case. </p>
-
-<p>When several clients are working
+        <p>When several clients are working
 on the same objects it is very possible that the data will be outdated on some
 of the clients. Before the commit-callbacks feature was introduced the solution
 was to call <code>refresh</code> regularly to get object updates from the
 server. With the commit-callback this process can be easily automated:</p>
-
-<ul>
-<li>objects are modified when the commit is done;</li>
-<li>the successful commit triggers committed event on the clients;</li>
-<li>committed event handler updates modified objects on the
+        <ul>
+            <li>objects are modified when the commit is done;</li>
+            <li>the successful commit triggers committed event on the clients;</li>
+            <li>committed event handler updates modified objects on the
 clients.</li>
-</ul>
-
-
-<p>Let's open 2 clients, which will work with <a href="car.htm">Car</a> objects,
+        </ul>
+        <p>Let's open 2 clients, which will work with <a href="car.htm">Car</a> objects,
 and register committed event listeners for them.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/openClient.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/createCommittedEventListener.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/OpenClient.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/CommittedEventHandler.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.vb/OpenClient.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/New.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/CreateCommittedEventHandler.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/OnCommitted.flsnp" /></p>
-<p MadCap:conditions="Primary:vb" />
-				
-Run the following method to see how the 2 clients work
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/openClient.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/createCommittedEventListener.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/OpenClient.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/CommittedEventHandler.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.vb/OpenClient.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/New.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/CreateCommittedEventHandler.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/OnCommitted.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />Run the following method to see how the 2 clients work
 concurrently on the same object:
 
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/run.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/Run.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.vb/Run.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-<p>You should see that client2 picked up the changes committed
-from the client1 automatically due to the committed event handler.</p>
-
-<p>Working with the committed event you should remember that
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/run.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/Run.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.vb/Run.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>You should see that client2 picked up the changes committed
+from the client1 automatically due to the committed event handler.</p><p>Working with the committed event you should remember that
 the listener is called in a separate thread, which needs to be synchronized
-with the main application thread. This functionality is not implemented in the presented example, instead a simple thread Sleep(1000) method is used (WaitForCompletion method), which is not realiable at all. For a reliable execution use events and notifications from the committed callbacks. </p>
-
-<p>It is a good practice to remove the committed event handlers
-from the registry before shutting down the clients:</p>
- 
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/closeClient.flsnp" />
-
-</p><p MadCap:conditions="Primary:java" />
-
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/CloseClient.flsnp" />
-
-</p><p MadCap:conditions="Primary:cs" />
-
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.vb/CloseClient.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>The example presented above works very well for remote client-server mode when object identity recognition between clients and the server is managed by internal core logic. However, if you will try the same in embedded client-server you will find out that the committed event handler is actually useless. Why is it so? In embedded mode clients and server objects are kept in the same operating memory, but each client and the server own their own fragment of it where the objects are instantiated. This means that the same object (Car in our example) will be instantiated twice: for client1 and for client2. In order to recognize those instances as the same database object, we will need to add id comparison to the event handler:</p>
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/createCommittedEventListenerForEmbedded.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/CommittedEventHandlerForEmbedded.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/OnCommittedForEmbedded.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<p>The logic above will link the changed objects from one client to the objects in memory of another client and will update them if necessary. </p> 
-     
-
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="commitcallbacksvb.zip">VB.NET </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="commitcallbackscs.zip">c# </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="commitcallbacksjava.zip">Java </a>
-            </MadCap:conditionalText>
-        </p>
-
-    
-</body></html>
+with the main application thread. This functionality is not implemented in the presented example, instead a simple thread Sleep(1000) method is used (WaitForCompletion method), which is not reliable at all. For a reliable execution use events and notifications from the committed callbacks. </p><p>It is a good practice to remove the committed event handlers
+from the registry before shutting down the clients:</p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/closeClient.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/CloseClient.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.vb/CloseClient.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>The example presented above works very well for remote client-server mode when object identity recognition between clients and the server is managed by internal core logic. However, if you will try the same in embedded client-server you will find out that the committed event handler is actually useless. Why is it so? In embedded mode clients and server objects are kept in the same operating memory, but each client and the server own their own fragment of it where the objects are instantiated. This means that the same object (Car in our example) will be instantiated twice: for client1 and for client2. In order to recognize those instances as the same database object, we will need to add id comparison to the event handler:</p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.java/createCommittedEventListenerForEmbedded.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/PushedUpdatesExample.cs/CommittedEventHandlerForEmbedded.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../../Resources/Snippets/Committed Event Example/CommittedEventHandler.vb/OnCommittedForEmbedded.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>The logic above will link the changed objects from one client to the objects in memory of another client and will update them if necessary. </p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="commitcallbacksvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="commitcallbackscs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="commitcallbacksjava.zip">Java </a></MadCap:conditionalText></p></body>
+</html>

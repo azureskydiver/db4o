@@ -1,81 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Network Server	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="841" MadCap:lastWidth="1660" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;a1;b1;c1;b2;uncomment">
+    <head><title>Network Server	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Network Server</h1>
-
-
-<p>In order to make the <a href="../embedded.htm"  >embedded server</a> operate over a
+        <p>In order to make the <a href="../embedded.htm">embedded server</a> operate over a
 TCP/IP network, we just need to specify a port number greater than zero and set
 up one or more accounts for our client(s).</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/accessRemoteServer.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/AccessRemoteServer.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/AccessRemoteServer.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>The client connects providing host, port, user name and password.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/queryRemoteServer.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/QueryRemoteServer.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/QueryRemoteServer.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Everything else is absolutely identical to the <a href="../embedded.htm"  >local server examples</a>.</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/demonstrateRemoteReadCommitted.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/DemonstrateRemoteReadCommitted.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/DemonstrateRemoteReadCommitted.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/demonstrateRemoteRollback.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/DemonstrateRemoteRollback.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/DemonstrateRemoteRollback.flsnp" />
-</p><p MadCap:conditions="Primary:vb" /> 
-     
-
-
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/accessRemoteServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/AccessRemoteServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/AccessRemoteServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The client connects providing host, port, user name and password.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/queryRemoteServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/QueryRemoteServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/QueryRemoteServer.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>Everything else is absolutely identical to the <a href="../embedded.htm">local server examples</a>.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/demonstrateRemoteReadCommitted.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/DemonstrateRemoteReadCommitted.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/DemonstrateRemoteReadCommitted.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.java/demonstrateRemoteRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.cs/DemonstrateRemoteRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Network Server/ClientServerExample.vb/DemonstrateRemoteRollback.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="../clientservervb.zip">VB.NET </a>
@@ -85,6 +66,5 @@ up one or more accounts for our client(s).</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../clientserverjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-    
-</body></html>
+    </body>
+</html>
