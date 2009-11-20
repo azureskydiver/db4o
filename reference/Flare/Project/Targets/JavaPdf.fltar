@@ -9,7 +9,8 @@
   GetLatestBeforeCompile="true"
   ConditionTagExpression="include[Primary.Java or Primary.Pdf] "
   PatchHeadingLevels="true"
-  TargetLanguage="en">
+  TargetLanguage="en"
+  MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css">
   <DocumentProperties
     Subject="db4o"
     Title="Reference" />
