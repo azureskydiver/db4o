@@ -30,6 +30,7 @@ public class AllTests extends Db4oTestSuite {
             NoTestConstructorsQEStringCmpTestCase.class,
             ObjectServerTestCase.class,
             PrefetchConfigurationTestCase.class,
+            PrefetchObjectCountZeroTestCase.class,
             PrimitiveMessageTestCase.class,
             QueryConsistencyTestCase.class,
             ReferenceSystemIsolationTestCase.class,
