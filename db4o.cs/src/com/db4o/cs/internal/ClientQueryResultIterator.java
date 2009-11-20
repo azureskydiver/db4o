@@ -73,7 +73,7 @@ class ClientQueryResultIterator implements Iterator4 {
 	}
 
 	private int prefetchCount() {
-		return stream().config().prefetchObjectCount();
+		return Math.max(stream().config().prefetchObjectCount(), 1);
 	}
 
 	private ClientObjectContainer stream() {
