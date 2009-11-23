@@ -1,6 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarsByPilotNameNative
-Private Shared Sub RetrieveCarsByPilotNameNative()Sub RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
-            Dim pilotName As String = &quot;Rubens Barrichello&quot;
-            Dim results As IObjectSet = db.Query(New RetrieveCarsByPilotNamePredicate(pilotName))
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarsByPilotNameNative
+Private Shared Sub RetrieveCarsByPilotNameNative()Sub _ 
+RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
+            Dim pilotName As String = "Rubens Barrichello"
+            Dim results As IObjectSet = _ 
+db.Query(New RetrieveCarsByPilotNamePredicate(pilotName))
             ListResult(results)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

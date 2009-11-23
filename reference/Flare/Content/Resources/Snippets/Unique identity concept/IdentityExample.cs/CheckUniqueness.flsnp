@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.cs: CheckUniqueness
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="630">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IdentityExample.cs: CheckUniqueness
 private static void CheckUniqueness()
      {
       SetObjects();
@@ -10,10 +15,13 @@ private static void CheckUniqueness()
         String pilotName = car.Pilot.Name;
         IObjectSet pilots = db.Get(new Pilot(pilotName));
         Pilot pilot = (Pilot)pilots[0];
-        System.Console.WriteLine(&quot;Retrieved objects are identical: &quot; + (pilot == car.Pilot));
+        System.Console.WriteLine(
+"Retrieved objects are identical: " + (pilot == car.Pilot));
       } 
       finally 
        {
         db.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

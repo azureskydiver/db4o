@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: DeleteDeepPart1
-Private Shared Function DeleteDeepPart1()Function DeleteDeepPart1(ByVal db As IObjectContainer) As IConfiguration
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+Private Shared Function DeleteDeepPart1()Function _ 
+DeleteDeepPart1(ByVal db As IObjectContainer) As IConfiguration
+            Dim configuration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
             configuration.ObjectClass(GetType(Car)).CascadeOnDelete(True)
             Return configuration
         End Function</pre>

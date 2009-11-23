@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="830" MadCap:lastWidth="2050" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="820" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery">
     <head><title>ACID Properties For Db4o	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -17,9 +17,11 @@ executed, the following order of disc writes is ensured:</p>
             <li>the database file is switched
      to "not-in-commit" mode.</li>
         </ol>
-        <img src="ACID_Properties_For_Db4o/trnflow.jpg" /> 
+        <p>
+            <img src="ACID_Properties_For_Db4o/trnflow.jpg" style="width: 560px;height: 231px;" /> 
 
-As you
+</p>
+        <p>As you
 can see from the picture above if a fatal failure occurs after the stage 1, the
 database will be restored to its pre-transaction consistent state. If the
 failure occurs after any other stage, the transaction information will be
@@ -27,18 +29,56 @@ available from the transaction commit record and the commit will be restarted
 when the database will be open again.
 
 
-<p>The
+</p>
+        <p>The
 isolation in db4o database is at degree one, which means that a transaction
 does not overwrite "dirty data" of the other transactions and does not
 commit any writes until it completes all its writes (transaction commit
-record).</p><p>There are
-2 settings that can effect ACID behavior in db4o:</p><ol><li><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter(); </code></p><pre><code>NonFlushingIoAdapter nonFlushingIoAdapter =                                   new NonFlushingIoAdapter(randomAccessFileAdapter); </code><code>CachedIoAdapter cachedIoAdapter = new CachedIoAdapter(nonFlushingIoAdapter);</code></pre></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"><p>.NET </p><p><code>RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter(); 
-</code></p><pre></pre><pre><code>NonFlushingIoAdapter nonFlushingIoAdapter =                                   new NonFlushingIoAdapter(randomAccessFileAdapter); </code><code>CachedIoAdapter cachedIoAdapter = new CachedIoAdapter(nonFlushingIoAdapter);</code></pre></p><p MadCap:conditions="Primary:net" /><p>this setting can be potentially dangerous on systems
+record).</p>
+        <p>There are
+2 settings that can effect ACID behavior in db4o:</p>
+        <ol>
+            <li>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java: </p>
+                    <p><pre xml:space="preserve">RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter();
+                      NonFlushingIoAdapter nonFlushingIoAdapter =
+                    new NonFlushingIoAdapter(randomAccessFileAdapter); 
+                    CachedIoAdapter cachedIoAdapter =
+                    new CachedIoAdapter(nonFlushingIoAdapter);
+                    </pre>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary.Print">
+                    <p>.NET </p>
+                    <p><pre xml:space="preserve">RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter(); 
+NonFlushingIoAdapter nonFlushingIoAdapter = new NonFlushingIoAdapter(randomAccessFileAdapter); 
+CachedIoAdapter cachedIoAdapter = new CachedIoAdapter(nonFlushingIoAdapter);
+                    </pre>
+                </p>
+                <p MadCap:conditions="Primary:net" />
+                <p>this setting can be potentially dangerous on systems
 using in-memory file caching. Instead of carrying out all writes immediately,
 the kernel stores data temporally in the buffer cache, waiting to see if it is
 possible to group several writes together. Cached file changes can also be
-reversed, which can break the ACID model.</p></li><li><p MadCap:conditions="Primary.Java"><p>Java: </p><p><code>configuration.disableCommitRecovery()</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"><p>.NET: </p><p><code>configuration.DisableCommitRecovery()</code></p></p><p MadCap:conditions="Primary:net" />This setting disables commit recovery when the fatal
+reversed, which can break the ACID model.</p>
+            </li>
+            <li>
+                <p MadCap:conditions="Primary.Java">
+                    <p>Java: </p>
+                    <p><code>configuration.disableCommitRecovery()</code>
+                    </p>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p MadCap:conditions="Primary.Print">
+                    <p>.NET: </p>
+                    <p><code>configuration.DisableCommitRecovery()</code>
+                    </p>
+                </p>
+                <p MadCap:conditions="Primary:net" />This setting disables commit recovery when the fatal
 failure occurs on stage 2-3 of the commit process. This setting should only be
 used in emergency situations after consulting db4o support. The ACID flow of
-the commit can be re-enabled after restoring the original configuration.</li></ol></body>
+the commit can be re-enabled after restoring the original configuration.</li>
+        </ol>
+    </body>
 </html>

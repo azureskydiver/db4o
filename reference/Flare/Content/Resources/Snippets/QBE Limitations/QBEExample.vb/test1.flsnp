@@ -1,22 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test1
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test1
 Private Shared Sub Test1()Sub Test1()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
                     ' Pilot1 contains re-initialisation in the constructor
-                    Dim pilot As New Pilot1(&quot;Kimi Raikonnen&quot;, 100)
+                    Dim pilot As New Pilot1("Kimi Raikonnen", 100)
                     container.[Set](pilot)
                     container.Commit()
                     ' QBE returns result with wrong points
-                    Dim result As IObjectSet = container.[Get](New Pilot1(&quot;Kimi Raikonnen&quot;, 100))
-                    System.Console.WriteLine(&quot;Test QBE on class with member re-initialization in constructor&quot;)
+                    Dim result As IObjectSet = _ 
+container.QueryByExample(New Pilot1("Kimi Raikonnen", 100))
+                    System.Console.WriteLine(_ 
+"Test QBE on class with member re-initialization in constructor")
                     ListResult(result)
                 Catch ex As Db4oException
-                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    System.Console.WriteLine(_
+"Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine(_
+"System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,7 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.java: testSnapshotQueries
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryModesExample.java: testSnapshotQueries
 private static void testSnapshotQueries()  {
-    System.out
-        .println(&quot;Testing query performance on 10000 pilot objects in Snapshot mode&quot;);
+    System.out.println(
+"Testing query performance on 10000 pilot objects in Snapshot mode");
     fillUpDB(10000);
     Configuration configuration = Db4o.newConfiguration();
     configuration.queries().evaluationMode(QueryEvaluationMode.SNAPSHOT);
@@ -11,12 +16,14 @@ private static void testSnapshotQueries()  {
       stats.connect(container);
       Query query = container.query();
       query.constrain(Pilot.class);
-      query.descend(&quot;points&quot;).constrain(99).greater();
+      query.descend("points").constrain(99).greater();
       query.execute();
       long executionTime = stats.executionTime();
-      System.out.println(&quot;Query execution time: &quot;
+      System.out.println("Query execution time: "
           + executionTime);
     } finally  {
       container.close();
     }
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

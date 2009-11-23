@@ -1,22 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test4
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="880">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test4
 Private Shared Sub Test4()Sub Test4()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
-                    ' Pilot2Derived is derived from class with initialization of points member using static value
-                    Dim pilot As New Pilot2Derived(&quot;Kimi Raikonnen&quot;, 100)
+                    ' Pilot2Derived is derived from class 
+' with initialization of points member using static value
+                    Dim pilot As New Pilot2Derived("Kimi Raikonnen", 100)
                     container.[Set](pilot)
                     container.Commit()
                     ' QBE returns result with wrong points
-                    Dim result As IObjectSet = container.[Get](New Pilot2Derived(&quot;Kimi Raikonnen&quot;, 100))
-                    System.Console.WriteLine(&quot;Test QBE on class derived from a class with member initialization using static member&quot;)
+                    Dim result As IObjectSet = _
+container.QueryByExample(New Pilot2Derived("Kimi Raikonnen", 100))
+                    System.Console.WriteLine(_
+"Test QBE on class derived from a class with member initialization using static member")
                     ListResult(result)
                 Catch ex As Db4oException
-                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    System.Console.WriteLine(_
+"Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine(_
+"System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

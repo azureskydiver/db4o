@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.cs: GetObjectsNQ
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="718" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SortingExample.cs: GetObjectsNQ
 private static void GetObjectsNQ()
          {
             IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
@@ -24,11 +29,14 @@ private static void GetObjectsNQ()
                 }));
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine(&quot;Time to execute with NQ and comparator: &quot; + diff.TotalMilliseconds + &quot; ms.&quot;);
+                Console.WriteLine(
+"Time to execute with NQ and comparator: " + diff.TotalMilliseconds + " ms.");
                 ListResult(result);
             }
             finally
              {
                 db.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByDefaultFieldValue
-Public Shared Sub RetrieveByDefaultFieldValue()Sub RetrieveByDefaultFieldValue(ByVal db As IObjectContainer)
-            Dim somebody As Pilot = New Pilot(&quot;Somebody else&quot;, 0)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByDefaultFieldValue
+Public Shared Sub RetrieveByDefaultFieldValue()Sub _ 
+RetrieveByDefaultFieldValue(ByVal db As IObjectContainer)
+            Dim somebody As Pilot = New Pilot("Somebody else", 0)
             db.Set(somebody)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
-            query.Descend(&quot;_points&quot;).Constrain(0)
+            query.Descend("_points").Constrain(0)
             Dim result As IObjectSet = query.Execute()
             ListResult(result)
             db.Delete(somebody)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

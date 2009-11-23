@@ -1,4 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.cs
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SensorPanel.cs
 /** Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
@@ -6,7 +11,8 @@ using Db4objects.Db4o.TA;
 
 namespace Db4ojects.Db4odoc.TPExample
  {
-    public class SensorPanel /**//*must implement Activatable for TA and TP */: IActivatable
+    public class SensorPanel 
+/*must implement Activatable for TA and TP */: IActivatable
      {
         private object _sensor;
 
@@ -28,7 +34,7 @@ namespace Db4ojects.Db4odoc.TPExample
         }
         // end SensorPanel
 
-        /**//*Bind the class to the specified object container, create the activator*/
+        /*Bind the class to the specified object container, create the activator*/
         public void Bind(IActivator activator)
          {
             if (_activator == activator)
@@ -111,9 +117,11 @@ namespace Db4ojects.Db4odoc.TPExample
 
         public override string ToString()
          {
-            return &quot;Sensor #&quot; + Sensor;
+            return "Sensor #" + Sensor;
         }
         // end ToString
     }
 
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

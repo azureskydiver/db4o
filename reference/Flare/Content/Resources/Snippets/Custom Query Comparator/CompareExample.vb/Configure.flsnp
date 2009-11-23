@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="720">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CompareExample.vb: Configure
 Public Shared Function Configure()Function Configure() As IConfiguration
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-            configuration.ObjectClass(GetType(MyString)).Compare(New MyStringAttribute)
+            Dim configuration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(MyString))._ 
+Compare(New MyStringAttribute)
             Return configuration
         End Function</pre>
     </body>

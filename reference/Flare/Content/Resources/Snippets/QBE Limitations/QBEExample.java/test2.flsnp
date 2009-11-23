@@ -1,19 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QBEExample.java: test2
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="990">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QBEExample.java: test2
 private static void test2()  {
     ObjectContainer container = database();
     if (container != null)  {
       try  {
         // Pilot1Derived derives the constructor with initialisation
-        Pilot1Derived pilot = new Pilot1Derived(&quot;Kimi Raikkonen&quot;);
-        container.set(pilot);
+        Pilot1Derived pilot = new Pilot1Derived("Kimi Raikkonen");
+        container.store(pilot);
         // QBE does not return any results
-        ObjectSet result = container.get(new Pilot1Derived(&quot;Kimi Raikonnen&quot;));
-        System.out.println(&quot;Test QBE on class with member initialization in ancestor constructor&quot;);
+        ObjectSet result = container.queryByExample(new Pilot1Derived("Kimi Raikonnen"));
+        System.out.println("Test QBE on class with member initialization in ancestor constructor");
         listResult(result);
       } catch (Exception ex)  {
-        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+        System.out.println("System Exception: " + ex.getMessage());
       } finally  {
         closeDatabase();
       }
     }
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

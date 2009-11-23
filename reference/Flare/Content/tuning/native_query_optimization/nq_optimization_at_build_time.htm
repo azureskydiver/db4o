@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="2094" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java">
     <head><title>NQ Optimization At Build Time	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
@@ -45,10 +45,10 @@ order to test this script:</p>
      project root and copy the following jars from db4o distribution:</li>
                     <ul>
                         <li>bloat-1.0.jar</li>
-                        <li>db4o-x.x-classedit.jar</li>
-                        <li>db4o-x.x-java5.jar</li>
-                        <li>db4o-x.x-nqopt.jar</li>
-                        <li>db4o-x.x-tools.jar 
+                        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-classedit.jar</li>
+                        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-java5.jar</li>
+                        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-nqopt.jar</li>
+                        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-tools.jar 
       (Note, that the described functionality is only valid for db4o releases
       after 7.0)</li>
                     </ul>
@@ -63,7 +63,7 @@ executed build script will produce an instrumented copy of the project classes
 in enhanced-bin folder. You can check the results by running the following
 batch file from bin and enhanced-bin folders:</p>
                 <p><code>set
-CLASSPATH=.;{$PROJECT_ROOT}\lib\db4o-x.x-java5.jar</code>
+CLASSPATH=.;{$PROJECT_ROOT}\lib\db4o-<MadCap:variable name="Primary.CurrentVersion" />-java5.jar</code>
                 </p>
                 <p><code>java
 com.db4odoc.nqoptimize.NQExample</code>
