@@ -71,10 +71,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     	// do nothing
     }
 
-    protected void freeInternalResources() {
-    	// nothing to do here
-    }
-
     protected void shutdownDataStorage() {
 		if (!_closed) {
 			byte[] temp = new byte[_capacity];

@@ -235,10 +235,6 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		// do nothing
 	}
 
-	protected void freeInternalResources() {
-		// nothing to do here
-	}
-
 	protected void shutdownDataStorage() {
 		dropReferences();
 	}

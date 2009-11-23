@@ -2,20 +2,25 @@
 
 package com.db4o.cs.internal.messages;
 
+import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
 
 public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 
 	public final Msg replyFromServer() {
 		int prefetchIDCount = readInt();
-		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH
-			* prefetchIDCount);
+		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH * prefetchIDCount);
 
 		synchronized (streamLock()) {
 			for (int i = 0; i < prefetchIDCount; i++) {
-				reply.writeInt(((LocalObjectContainer) stream()).prefetchID());
+				reply.writeInt(prefetchID());
 			}
 		}
 		return reply;
+	}
+
+	private int prefetchID() {
+		ServerMessageDispatcherImpl serverMessageDispatcher = (ServerMessageDispatcherImpl) serverMessageDispatcher();
+		return serverMessageDispatcher.prefetchID();
 	}
 }

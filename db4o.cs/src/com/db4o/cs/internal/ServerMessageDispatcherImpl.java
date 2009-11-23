@@ -8,7 +8,7 @@ import com.db4o.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.events.Event4;
 import com.db4o.ext.*;
-import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.*;
 import com.db4o.foundation.network.Socket4;
 import com.db4o.internal.*;
 import com.db4o.internal.events.Event4Impl;
@@ -42,6 +42,8 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 	private final Object _mainLock;
 
 	private final Event4Impl<MessageEventArgs> _messageReceived = Event4Impl.newInstance();
+	
+    private Tree _prefetchedIDs;
 
 	private Thread _thread;
 	
@@ -122,6 +124,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 	private void removeFromServer() {
 		try {
             _server.removeThread(this);
+            freePrefetchedPointers();
         } catch (Exception e) {
             if (Debug4.atHome) {
                 e.printStackTrace();
@@ -386,4 +389,27 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 		}
 		return _thread;
     }
+
+	public int prefetchID() {
+		int id = ((LocalObjectContainer)_server.objectContainer()).getPointerSlot();
+	    _prefetchedIDs = Tree.add(_prefetchedIDs, new TreeInt(id));
+	    return id;
+	}
+
+	public void prefetchedIDConsumed(int id) {
+        _prefetchedIDs = _prefetchedIDs.removeLike(new TreeIntObject(id));
+	}
+	
+    final void freePrefetchedPointers() {
+        if (_prefetchedIDs != null) {
+        	final LocalObjectContainer container = ((LocalObjectContainer)_server.objectContainer());
+            _prefetchedIDs.traverse(new Visitor4() {
+                public void visit(Object node) {
+                	TreeInt intNode = (TreeInt) node;
+                	container.free(intNode._key, Const4.POINTER_LENGTH);
+                }
+            });
+        }
+        _prefetchedIDs = null;
+    }	
 }
