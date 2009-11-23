@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.cs: QuerySyntax6
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.cs: QuerySyntax6
 private static void QuerySyntax6()
          {
             IObjectContainer container = Database();
@@ -6,20 +11,23 @@ private static void QuerySyntax6()
              {
                 try
                  {
-                    IList&lt;Pilot&gt; result = container.Query&lt;Pilot&gt;(delegate(Pilot pilot)
+                    IList&lt;Pilot&gt; result = 
+container.Query&lt;Pilot&gt;(delegate(Pilot pilot)
                      {
-                        return pilot.Name.StartsWith(&quot;Test&quot;);
+                        return pilot.Name.StartsWith("Test");
                     },
                     new PilotComparer());
                     ListResult(result);
                 }
                 catch (Exception ex)
                  {
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                    System.Console.WriteLine("System Exception: " + ex.Message);
                 }
                 finally
                  {
                     CloseDatabase();
                 }
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

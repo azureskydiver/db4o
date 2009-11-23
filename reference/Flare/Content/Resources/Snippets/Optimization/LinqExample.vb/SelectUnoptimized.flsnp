@@ -1,10 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqExample.vb: SelectUnoptimized
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="730">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqExample.vb: SelectUnoptimized
 Private Shared Sub SelectUnoptimized()Sub SelectUnoptimized()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
                     Dim pilots = From item In container _
-                                 Where item.GetType Is GetType(Pilot) Select CType(item, Pilot)
+                                 Where item.GetType Is _ 
+GetType(Pilot) Select CType(item, Pilot)
                     Dim result As IEnumerable(Of Pilot) = From p _
                         In pilots Where p.Points = p.Name.Length Select p
                     ListResult(result)
@@ -12,4 +18,6 @@ Private Shared Sub SelectUnoptimized()Sub SelectUnoptimized()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

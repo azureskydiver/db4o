@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrievePilotByCarModelQuery
-Private Shared Sub RetrievePilotByCarModelQuery()Sub RetrievePilotByCarModelQuery(ByVal db As IObjectContainer)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrievePilotByCarModelQuery
+Private Shared Sub RetrievePilotByCarModelQuery()Sub _&#160;
+RetrievePilotByCarModelQuery(ByVal db As IObjectContainer)
             Dim carQuery As IQuery = db.Query()
             carQuery.Constrain(GetType(Car))
-            carQuery.Descend(&quot;_model&quot;).Constrain(&quot;Ferrari&quot;)
-            Dim pilotQuery As IQuery = carQuery.Descend(&quot;_pilot&quot;)
+            carQuery.Descend("_model").Constrain("Ferrari")
+            Dim pilotQuery As IQuery = carQuery.Descend("_pilot")
             Dim result As IObjectSet = pilotQuery.Execute()
             ListResult(result)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

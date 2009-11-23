@@ -1,8 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByNegation
-Public Shared Sub RetrieveByNegation()Sub RetrieveByNegation(ByVal db As IObjectContainer)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByNegation
+Public Shared Sub RetrieveByNegation()Sub _ 
+RetrieveByNegation(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
-            query.Descend(&quot;_name&quot;).Constrain(&quot;Michael Schumacher&quot;).[Not]()
+            query.Descend("_name").Constrain("Michael Schumacher").[Not]()
             Dim result As IObjectSet = query.Execute()
             ListResult(result)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,20 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestLazyQueries
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestLazyQueries
 Private Shared Sub TestLazyQueries()Sub TestLazyQueries()
-            Console.WriteLine(&quot;Testing query performance on 10000 pilot objects in Lazy mode&quot;)
+            Console.WriteLine( _ 
+"Testing query performance on 10000 pilot objects in Lazy mode")
             FillUpDB(10000)
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.Queries.EvaluationMode(QueryEvaluationMode.LAZY)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query
                 query.Constrain(GetType(Pilot))
-                query.Descend(&quot;_points&quot;).Constrain(99).Greater()
+                query.Descend("_points").Constrain(99).Greater()
                 Dim dt1 As DateTime = DateTime.UtcNow
                 query.Execute()
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine(&quot;Query execution time=&quot; + diff.TotalMilliseconds.ToString() + &quot; ms&quot;)
+                Console.WriteLine( _ 
+"Query execution time=" + diff.TotalMilliseconds.ToString() + " ms")
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -4,37 +4,37 @@
     </head>
     <body onload="prettyPrint()">
         <h1>Object Container</h1>
-        <P>Db4o gives you a simple and straightforward interface to object persistence - ObjectContainer. In .NET versions a conventional name IObjectContainer is used.</P><a name="Accessing A Database "></a>
+        <P>db4o gives you a simple and straightforward interface to object persistence - ObjectContainer. In .NET versions a conventional name IObjectContainer is used.</P><a name="Accessing A Database "></a>
         <H2>Accessing A Database </H2>
         <P>ObjectContainer is your db4o database.</P>
         <p MadCap:conditions="Primary.Java">
             <P>Java: </P>
-            <P><code>ObjectContainer container = Db4o.openFile(filename)</code>
+            <P><code>ObjectContainer container = Db4o.openFile(filename);</code>
             </P>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#">
             <P>c#: </P>
-            <P><code>IObjectContainer container = Db4oFactory.OpenFile(filename)</code>
+            <P><code>IObjectContainer container = Db4oFactory.OpenFile(filename);</code>
             </P>
         </p>
         <p MadCap:conditions="Primary:cs" />
         <p MadCap:conditions="Primary..NET,Primary.VB.NET">
             <P>VB: </P>
-            <P><code>Dim container As IObjectContainer = Db4oFactory.OpenFile(filename)</code>
+            <P><code>Dim container As IObjectContainer = <br />Db4oFactory.OpenFile(filename)</code>
             </P>
         </p>
         <p MadCap:conditions="Primary:vb" />
         <P>filename is the path to the file, in which you want to store your objects. Normally you should open an ObjectContainer when the application starts and close it, when the session is finished to persist the changes to a physical storage location:</P>
         <p MadCap:conditions="Primary.Java">
             <P>Java: </P>
-            <P><code>container.close()</code>
+            <P><code>container.close();</code>
             </P>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#">
             <P>c#: </P>
-            <P><code>container.Close()</code>
+            <P><code>container.Close();</code>
             </P>
         </p>
         <p MadCap:conditions="Primary:cs" />
@@ -68,7 +68,7 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <P>Through ObjectContainer#get and ObjectContainer#query you get access to objects retrieval functionality. </P>
-        <P>Object Container Features </P>
+        <H3>Object Container Features </H3>
         <P>The characteristic features of an ObjectContainer are: </P>
         <UL>
             <LI>An ObjectContainer can either be a database in a single-user mode or a client connection to a db4o server.</LI>

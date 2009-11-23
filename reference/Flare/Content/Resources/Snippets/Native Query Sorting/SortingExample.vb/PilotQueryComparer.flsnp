@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="404" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
@@ -7,7 +7,8 @@
 Private Class PilotQueryComparerClass PilotQueryComparer
             Implements IQueryComparator
 
-            Public Function Compare()Function Compare(ByVal p1 As Object, ByVal p2 As Object) _ 
+            Public Function Compare()Function _ 
+Compare(ByVal p1 As Object, ByVal p2 As Object) _ 
 As Integer Implements IQueryComparator.Compare
                 If TypeOf p1 Is Pilot AndAlso TypeOf p2 Is Pilot Then
                     Dim pilot1 As Pilot = CType(p1, Pilot)

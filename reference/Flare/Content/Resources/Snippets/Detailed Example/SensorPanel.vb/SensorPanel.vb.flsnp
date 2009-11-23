@@ -1,4 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="840">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SensorPanel.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
@@ -6,7 +11,7 @@ Imports Db4objects.Db4o.TA
 
 Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TPExample
 
-    Public Class SensorPanelClass SensorPanel ' must implement Activatable for TA and TP
+    Public Class SensorPanelClass SensorPanel ' must implement Activatable for TA/TP
         Implements IActivatable
 
         Private _sensor As Object
@@ -26,7 +31,8 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TPExample
         ' end New
 
         ' Bind the class to the specified object container, create the activator 
-        Public Sub Bind()Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
+        Public Sub Bind()Sub Bind(ByVal activator As IActivator) _ 
+Implements IActivatable.Bind
             If _activator Is activator Then
                 Return
             End If
@@ -40,7 +46,8 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TPExample
         'Call the registered activator to activate the next level,
         ' the activator remembers the objects that were already 
         ' activated and won't activate them twice. 
-        Public Sub Activate()Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
+        Public Sub Activate()Sub Activate(ByVal purpose As ActivationPurpose) _ 
+Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If
@@ -76,7 +83,8 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TPExample
         End Function
         ' end CreateList
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer, ByVal first As Integer) As SensorPanel
+        Public Function CreateList()Function CreateList(ByVal length As Integer, _ 
+ByVal first As Integer) As SensorPanel
             Dim val As Integer = first
             Dim root As SensorPanel = NewElement(first)
             Dim list As SensorPanel = root
@@ -88,14 +96,17 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TPExample
         End Function
         ' end CreateList
 
-        Protected Function NewElement()Function NewElement(ByVal value As Integer) As SensorPanel
+        Protected Function NewElement()Function _ 
+NewElement(ByVal value As Integer) As SensorPanel
             Return New SensorPanel(value)
         End Function
         ' end NewElement
 
         Public Overloads Overrides Function ToString()Function ToString() As String
-            Return &quot;Sensor #&quot; + Sensor.ToString()
+            Return "Sensor #" + Sensor.ToString()
         End Function
         ' end ToString
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

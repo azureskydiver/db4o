@@ -1,9 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByConjunction
-Public Shared Sub RetrieveByConjunction()Sub RetrieveByConjunction(ByVal db As IObjectContainer)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByConjunction
+Public Shared Sub RetrieveByConjunction()Sub _ 
+RetrieveByConjunction(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
-            Dim constr As IConstraint = query.Descend(&quot;_name&quot;).Constrain(&quot;Michael Schumacher&quot;)
-            query.Descend(&quot;_points&quot;).Constrain(99).Or(constr)
+            Dim constr As IConstraint = _ 
+query.Descend("_name").Constrain("Michael Schumacher")
+            query.Descend("_points").Constrain(99).Or(constr)
             Dim result As IObjectSet = query.Execute()
             ListResult(result)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

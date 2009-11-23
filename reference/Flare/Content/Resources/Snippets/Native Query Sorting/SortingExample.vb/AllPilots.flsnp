@@ -1,7 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: AllPilots
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: AllPilots
 Private Class AllPilotsClass AllPilots
             Inherits Predicate
-            Public Function Match()Function Match(ByVal pilot As Pilot) As Boolean
+            Public Function Match()Function _ 
+Match(ByVal pilot As Pilot) As Boolean
                 Return True
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

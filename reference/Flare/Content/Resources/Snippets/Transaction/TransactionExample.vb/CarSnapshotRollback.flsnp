@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: CarSnapshotRollback
-Public Shared Sub CarSnapshotRollback()Sub CarSnapshotRollback(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Car(&quot;BMW&quot;))
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: CarSnapshotRollback
+Public Shared Sub CarSnapshotRollback()Sub _ 
+CarSnapshotRollback(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("BMW"))
             Dim car As Car = DirectCast(result.Next(), Car)
             car.Snapshot()
             db.Set(car)
             db.Rollback()
             Console.WriteLine(car)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

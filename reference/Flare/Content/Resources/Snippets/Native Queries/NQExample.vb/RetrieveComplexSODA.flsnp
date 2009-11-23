@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="780">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">NQExample.vb: RetrieveComplexSODA
-Private Shared Sub RetrieveComplexSODA()Sub RetrieveComplexSODA(ByVal db As IObjectContainer)
+Private Shared Sub RetrieveComplexSODA()Sub _
+RetrieveComplexSODA(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
             Dim pointQuery As IQuery = query.Descend("_points")

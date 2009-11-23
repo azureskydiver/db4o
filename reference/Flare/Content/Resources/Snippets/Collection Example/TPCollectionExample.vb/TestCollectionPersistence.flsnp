@@ -1,16 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: TestCollectionPersistence
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="778" MadCap:lastWidth="830">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: TestCollectionPersistence
 Private Shared Sub TestCollectionPersistence()Sub TestCollectionPersistence()
             StoreCollection()
             Dim container As IObjectContainer = Database(ConfigureTP())
             If container IsNot Nothing Then
                 Try
-                    Dim team As Team = DirectCast(container.QueryByExample(New Team()).[Next](), Team)
+                    Dim team As Team = DirectCast(container._ 
+QueryByExample(New Team()).[Next](), Team)
                     ' this method will activate all the members in the collection
                     Dim pilots As IList(Of Pilot) = team.Pilots
                     For Each p As Pilot In pilots
-                        p.Name = &quot;Modified: &quot; + p.Name
+                        p.Name = "Modified: " + p.Name
                     Next
-                    team.AddPilot(New Pilot(&quot;New pilot&quot;))
+                    team.AddPilot(New Pilot("New pilot"))
                     ' explicitly commit to persist changes
                     container.Commit()
                 Catch ex As Exception
@@ -34,4 +40,6 @@ Private Shared Sub TestCollectionPersistence()Sub TestCollectionPersistence()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>
