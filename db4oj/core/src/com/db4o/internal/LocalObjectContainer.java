@@ -31,8 +31,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     private boolean             i_isServer = false;
 
-    private Tree                i_prefetchedIDs;
-
     private Lock4 				_semaphoresLock = new Lock4();
     private Hashtable4          _semaphores;
 
@@ -68,7 +66,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     final protected void close2() {
     	try {
 	    	if (!_config.isReadOnly()) {
-				freeInternalResources();
 				commitTransaction();
 				shutdown();
 			}
@@ -78,8 +75,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	}
     }
 
-    protected abstract void freeInternalResources();
-    
     public void commit1(Transaction trans) {
         trans.commit();
     }
@@ -202,17 +197,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public void free(int address, int a_length) {
         free(new Slot(address, a_length));
-    }
-
-    final void freePrefetchedPointers() {
-        if (i_prefetchedIDs != null) {
-            i_prefetchedIDs.traverse(new Visitor4<TreeInt>() {
-                public void visit(TreeInt node) {
-                    free(node._key, Const4.POINTER_LENGTH);
-                }
-            });
-        }
-        i_prefetchedIDs = null;
     }
     
     public void generateNewIdentity(){
@@ -380,16 +364,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return getPointerSlot();
     }
 
-    public void prefetchedIDConsumed(int a_id) {
-        i_prefetchedIDs = i_prefetchedIDs.removeLike(new TreeIntObject(a_id));
-    }
-
-    public int prefetchID() {
-        int id = getPointerSlot();
-        i_prefetchedIDs = Tree.add(i_prefetchedIDs, new TreeInt(id));
-        return id;
-    }
-    
     public ReferencedSlot produceFreeOnCommitEntry(int id){
         Tree node = TreeInt.find(_freeOnCommit, id);
         if (node != null) {

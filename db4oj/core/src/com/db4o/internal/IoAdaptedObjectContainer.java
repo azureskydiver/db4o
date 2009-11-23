@@ -116,10 +116,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
         return (byte) _file.blockSize();
     }
 
-    protected void freeInternalResources() {
-		freePrefetchedPointers();
-    }
-
     protected void shutdownDataStorage() {
 		synchronized (_fileLock) {
 			try{
