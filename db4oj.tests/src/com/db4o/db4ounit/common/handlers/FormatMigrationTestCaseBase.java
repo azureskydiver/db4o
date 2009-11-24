@@ -91,6 +91,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 			
 		    investigateFileHeaderVersion(testFileName);
 		    
+		    runDeletionTests(testFileName);
+		    
 			runDefrag(testFileName);
 
 		    checkDatabaseFile(testFileName);
@@ -116,8 +118,23 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		}
 	}
     
+	private void runDeletionTests(String testFileName) throws IOException {
+		withDatabase(testFileName, new Function4<ObjectContainer, Object>() { public Object apply(ObjectContainer db) {
+			assertObjectDeletion(db.ext());
+			return null;
+		}});
+			
+		checkDatabaseFile(testFileName);
+	}
+
 	/**
-	 * Can be overriden to disable the test for specific db4o versions.
+	 * Override to provide tests for deletion.
+	 */
+	protected void assertObjectDeletion(ExtObjectContainer objectContainer) {
+	}
+
+	/**
+	 * Can be overridden to disable the test for specific db4o versions.
 	 */
     protected boolean isApplicableForDb4oVersion() {
     	return true;
@@ -199,7 +216,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
                 update((ExtObjectContainer) objectContainer);
                 return null;
             }
-
         });
     }
     
@@ -211,8 +227,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         } finally {
             objectContainer.close();
         }
-    }
-    
+    }    
 
     
     protected abstract void assertObjectsAreReadable(ExtObjectContainer objectContainer);
