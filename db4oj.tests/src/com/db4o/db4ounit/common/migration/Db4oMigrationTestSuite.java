@@ -42,13 +42,13 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	protected Class[] testCases() {
-		
 	    final Class[] classes = new Class[] {
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
             CascadedDeleteFileFormatUpdateTestCase.class,
             CharHandlerUpdateTestCase.class,
             DateHandlerUpdateTestCase.class,
+            DeletionUponFormatMigrationTestCase.class,
             DoubleHandlerUpdateTestCase.class,
             EncryptedFileMigrationTestCase.class,
             FloatHandlerUpdateTestCase.class,
