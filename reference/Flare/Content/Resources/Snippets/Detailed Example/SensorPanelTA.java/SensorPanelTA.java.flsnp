@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1582" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="890">
     <head>
     </head>
     <body>
@@ -11,7 +11,7 @@ package com.db4odoc.taexamples;
 import com.db4o.activation.*;
 import com.db4o.ta.*;
 
-public class SensorPanelTA /**//*must implement Activatable for TA*/implements Activatable  {
+public class SensorPanelTA /*must implement Activatable for TA*/implements Activatable  {
 
   private Object _sensor;
 

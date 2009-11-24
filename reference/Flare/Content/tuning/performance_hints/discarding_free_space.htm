@@ -7,7 +7,7 @@
 <p>Java: <code>Db4o.configure().freespace().discardSmallerThan(byteCount)</code></p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: <code>Db4oFactory.Configure().Freespace().DiscardSmallerThan(byteCount)</code></p>
 </p><p MadCap:conditions="Primary:net" /><p>Configures the minimum size of free space slots in the database file that are to 
 be reused. </p>
@@ -27,7 +27,7 @@ Regular defragment will also keep the number of free space slots small. See:</p>
 <p MadCap:conditions="Primary.Java">
 <p>Java: <code>com.db4o.defragment.Defragment</code></p>
 </p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: <code>Db4objetcs.Db4o.Defragment.Defragment</code></p>
 </p><p MadCap:conditions="Primary:net" />
 <p>If defragment can be frequently run, it will also reclaim lost space and decrease the database file to the minimum size. Therefore #discardSmallerThan(maxValue) may be a good tuning mechanism for setups with frequent defragment runs.</p>    

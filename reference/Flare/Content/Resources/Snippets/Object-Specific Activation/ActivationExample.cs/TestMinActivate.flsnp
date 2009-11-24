@@ -1,16 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: TestMinActivate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="638" MadCap:lastWidth="860">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: TestMinActivate
 private static void TestMinActivate()
      {
       StoreSensorPanel();
       // note that the minimum applies for *all* instances in the hierarchy
       // the system ensures that every instantiated List object will have it's 
       // members set to a depth of 1
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.Common.ObjectClass(typeof(SensorPanel)).MinimumActivationDepth(1);
-            IObjectContainer db = Db4oEmbedded.OpenFile(configuration, Db4oFileName);
+      IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+      configuration.Common.ObjectClass(typeof(SensorPanel)).MinimumActivationDepth(1);
+      IObjectContainer db = Db4oEmbedded.OpenFile(configuration, Db4oFileName);
       try 
        {
-        Console.WriteLine(&quot;Minimum activation depth = 1&quot;);
+        Console.WriteLine("Minimum activation depth = 1");
         IObjectSet result = db.QueryByExample(new SensorPanel(1));
         ListResult(result);
         if (result.Count &gt;0) 
@@ -28,4 +33,6 @@ private static void TestMinActivate()
        {
         db.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

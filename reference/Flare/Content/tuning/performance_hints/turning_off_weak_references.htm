@@ -7,7 +7,7 @@
 <p>Java: </p><p><code>Db4o.configure().weakReferences(false)</code></p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>Db4oFactory.Configure().WeakReferences(false)</code></p>
 </p><p MadCap:conditions="Primary:net" /><a name="Advantage"></a><h2>Advantage</h2>
 <p>will configure db4o to use hard direct references instead of weak references to control instantiated and stored objects.</p>
@@ -19,7 +19,7 @@
 <p>Java: </p><p><code>ExtObjectContainer.purge(object)</code></p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: </p>
 <p><code>IExtObjectContainer.Purge(object)</code></p>
 </p><p MadCap:conditions="Primary:net" />
@@ -29,7 +29,7 @@
 <p>Java: </p><p><code>ExtObjectContainer.purge(object)</code></p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>IExtObjectContainer.Purge(object)</code></p>
 </p><p MadCap:conditions="Primary:net" />
 <p>can also be called in normal weak reference operation mode to remove an object from the reference cache. This will help to keep the reference tree as small as possible. After calling #purge(object) an object will be unknown to the ObjectContainer so this feature is also suitable for batch inserts. </p>    

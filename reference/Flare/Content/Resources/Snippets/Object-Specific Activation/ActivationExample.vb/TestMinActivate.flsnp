@@ -1,15 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestMinActivate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="830">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestMinActivate
 Private Shared Sub TestMinActivate()Sub TestMinActivate()
             StoreSensorPanel()
             ' note that the minimum applies for *all* instances in the hierarchy
             ' the system ensures that every instantiated List object will have it's 
             ' members set to a depth of 1
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim configuration As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
             configuration.Common.ObjectClass(GetType(SensorPanel)). _
                 MinimumActivationDepth(1)
-            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(configuration, Db4oFileName)
             Try
-                Console.WriteLine (&quot;Minimum activation depth = 1&quot;)
+                Console.WriteLine ("Minimum activation depth = 1")
                 Dim result As IObjectSet = db.QueryByExample(New SensorPanel(1))
                 ListResult (result)
                 If result.Count &gt; 0 Then
@@ -23,4 +30,6 @@ Private Shared Sub TestMinActivate()Sub TestMinActivate()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

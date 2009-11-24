@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="404" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
@@ -11,11 +11,13 @@ Private Shared Sub GetObjectsEval()Sub GetObjectsEval()
                 Dim query As IQuery = db.Query
                 query.Constrain(GetType(Pilot))
                 query.Constrain(New PilotEvaluation)
-                Dim result As ArrayList = New ArrayList(query.Execute)
+                Dim result As ArrayList = New _ 
+ArrayList(query.Execute)
                 result.Sort(New PilotComparer)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Time to execute with Evaluation query and collection sorting: " + _ 
+                Console.WriteLine(_ 
+"Time to execute with Evaluation query and collection sorting: " + _ 
 diff.TotalMilliseconds.ToString() + " ms.")
                 ListResult(result)
             Finally

@@ -14,7 +14,7 @@ following:</p>
             <li>persistent
      object should be initially explicitly stored to the database: 
      <p MadCap:conditions="Primary.Java"> Java: 
-     <code>objectContainer.store(myObject)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"> .NET: 
+     <code>objectContainer.store(myObject)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET: 
      <code>objectContainer.Store(myObject)</code></p><p MadCap:conditions="Primary:net" /> 
      myObject can be an object of any complexity including a linked list or a
      collection (currently you must use db4o-specific implementation for transparent collections: ArrayList4). For complex objects all field objects will be registered with
@@ -39,7 +39,7 @@ need:</p>
       Transparent Activation (required for binding object instances to the TP
       framework) on the database level: 
       <p MadCap:conditions="Primary.Java"> Java: 
-      <code>configuration.add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"> .NET: 
+      <code>configuration.add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET: 
       <code>configuration.Add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:net" /></li>
                 <li>Implement
       Activatable/IActivatable interface for the persistent classes, either
@@ -48,7 +48,7 @@ need:</p>
       activate method at the beginning of all class methods that modify class
       fields: 
       <p MadCap:conditions="Primary.Java"> Java: 
-      <code>activate(ActivationPurpose.WRITE)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"> .NET 
+      <code>activate(ActivationPurpose.WRITE)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET 
       <code>Activate(ActivationPurpose.Write)</code></p><p MadCap:conditions="Primary:net" /></li>
             </ol>
         </ul>

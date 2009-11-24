@@ -11,7 +11,7 @@
 <p>Java:</p>
 <p><code>EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();</code></p><p><code>ServerConfiguration serverConfiguration = Db4oClientServer.newServerConfiguration();</code> </p><p><code>ClientConfiguration clientConfiguration = Db4oClientServer.newClientConfiguration();</code> </p>
 </p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>IConfiguration configuration = Db4oEmbedded.NewConfiguration();</code></p><p><code>IServerConfiguration serverConfiguration = Db4oClientServer.NewServerConfiguration();</code></p><p><code>IClientConfiguration clientConfiguration = Db4oClientServer.NewClientConfiguration();</code>  </p>
 </p><p MadCap:conditions="Primary:net" />
@@ -22,7 +22,7 @@
 <p><code>Db4oClientServer.openServer(serverConfiguration, databaseFileName, port)</code></p>
 <p><code>Db4oClientServer.openClient(clientConfiguration, hostName, port, user, password)</code></p>
 </p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>Db4oEmbedded.OpenFile(configuration, databaseFileName)</code> </p>
 <p><code>Db4oClientServer.OpenServer(serverConfiguration, databaseFileName, port)</code></p>
@@ -31,7 +31,7 @@
 <p>Note, that the same configuration object can't be re-used in more than one object container. If you need to open several object containers with the same set of configuration settings, it is recommended to create a method, which will return a new configuration instance on request:</p><p MadCap:conditions="Primary.Java">
 <p>Java:</p>
 <p><code>private Configuration configure(){</code></p><p><code>    EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();</code></p><p><code>    config.callbacks(false);</code></p><p><code>    ...</code></p><p><code>    return config;</code> </p><p><code>}</code> </p></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET:</p><p><code>private IConfiguration Configure(){</code></p>
 <p><code>    IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();</code></p>
 <p><code>    config.Callbacks(false);</code></p>
@@ -51,7 +51,7 @@
 <p>Java:</p>
 <p><code>Db4o.configure()</code></p>
 </p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>Db4oFactory.Configure()</code></p>
 </p><p MadCap:conditions="Primary:net" />
@@ -60,7 +60,7 @@
 <p>Java:</p>
 <p><code>Configuration configuration = Db4o.cloneConfiguration()</code></p>
 </p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>IConfiguration configuration = Db4oFactory.CloneConfiguration()</code></p>
 </p><p MadCap:conditions="Primary:net" />
@@ -76,7 +76,7 @@
 <p>Java:</p>
 <p><code>objectContainer.ext().configure() </code> <code>objectServer.ext().configure()</code></p>
 </p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>objectContainer.Ext().Configure()</code> <code>objectServer.Ext().Configure()</code></p>
 </p><p MadCap:conditions="Primary:net" />

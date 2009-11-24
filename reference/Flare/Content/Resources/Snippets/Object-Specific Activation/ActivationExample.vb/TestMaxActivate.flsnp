@@ -1,16 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestMaxActivate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestMaxActivate
 Private Shared Sub TestMaxActivate()Sub TestMaxActivate()
             StoreSensorPanel()
-            ' note that the maximum is applied to the retrieved root object and limits activation
+            ' note that the maximum is applied to 
+            ' the retrieved root object and limits activation
             ' further down the hierarchy
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim configuration As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
             configuration.Common.ObjectClass(GetType(SensorPanel)). _
                 MaximumActivationDepth(2)
             
-            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(configuration, Db4oFileName)
             Try
-                Console.WriteLine (&quot;Maximum activation depth = 2 (default = 5)&quot;)
-                Dim result As IObjectSet = db.QueryByExample(New SensorPanel(1))
+                Console.WriteLine ("Maximum activation depth = 2 (default = 5)")
+                Dim result As IObjectSet = _ 
+db.QueryByExample(New SensorPanel(1))
                 ListResult (result)
                 If result.Count &gt; 0 Then
                     Dim sensor As SensorPanel = CType (result (0), SensorPanel)
@@ -23,4 +32,6 @@ Private Shared Sub TestMaxActivate()Sub TestMaxActivate()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>
