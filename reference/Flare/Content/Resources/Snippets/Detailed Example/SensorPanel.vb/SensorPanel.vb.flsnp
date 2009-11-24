@@ -55,7 +55,8 @@ Implements IActivatable.Activate
         End Sub
         ' end Activate
 
-        Public ReadOnly Property NextSensor()Property NextSensor() As SensorPanel
+        Public ReadOnly Property _ 
+NextSensor()Property NextSensor() As SensorPanel
             Get
                 ' activate direct members
                 Activate(ActivationPurpose.Read)
@@ -78,7 +79,8 @@ Implements IActivatable.Activate
         End Property
         ' end Sensor
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer) As SensorPanel
+        Public Function CreateList()Function _ 
+CreateList(ByVal length As Integer) As SensorPanel
             Return CreateList(length, 1)
         End Function
         ' end CreateList

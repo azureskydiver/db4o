@@ -9,7 +9,7 @@
 <p>Java: </p><p><code>configuration.exceptionsOnNotStorable (true|false)</code> </p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ExceptionsOnNotStorable (true|false) </code></p>
 </p><p MadCap:conditions="Primary:net" />
 <p>In some environments (especially those that provide plugin mechanics or perform some kind of class reloading) you may encounter strange problems due to classloader issues. These environments include servlet containers, Eclipse plugins, reloading JUnit test runners, etc. </p>
@@ -19,7 +19,7 @@
 <p>Java: </p><p><code>configuration.reflectWith(new JdkReflector(classLoader)) </code></p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ReflectWith(new JdkReflector(classLoader)) </code></p>
 </p><p MadCap:conditions="Primary:net" />
 <p>Basically you just have to find out the appropriate classloader and configure db4o accordingly. The right choice depends on the specific classloader hierarchy of your application context. Two examples:</p>
@@ -54,7 +54,7 @@ add a zero-parameter constructor specifically for db4o; </li>
 <p>Java: </p><p><code>configuration.objectClass("java.net.URL").translate(new TSerializable());</code> </p>
 </p><p MadCap:conditions="Primary:java" />
 
-<p MadCap:conditions="Primary.Print">
+<p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ObjectClass("java.net.URL").Translate(new TSerializable()); </code></p>
 </p><p MadCap:conditions="Primary:net" />
 <p>The above code needs to be executed every time before the db4o engine is started. See also:<a href="../../object_lifecycle/object_construction.htm"  >Constructors</a>, <a href="../../implementation_strategies/translators.htm"  >Translators</a>.</p>

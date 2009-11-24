@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAInstrumentationRunner.java
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="698" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TAInstrumentationRunner.java
 /**//* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 
 package com.db4odoc.taexamples.instrumented;
@@ -17,14 +22,20 @@ public class TAInstrumentationRunner  {
 
   public static void main(String[] args) throws Exception  {
     // list the classes that need to be instrumented
-    ClassFilter filter = new ByNameClassFilter(new String[]  { SensorPanel.class.getName() });
+    ClassFilter filter = new ByNameClassFilter(new String[]  
+{ SensorPanel.class.getName() });
     // inject TA awareness
-    BloatClassEdit edits[] = new BloatClassEdit[] {new InjectTransparentActivationEdit(filter)};
+    BloatClassEdit edits[] = new BloatClassEdit[] 
+{new InjectTransparentActivationEdit(filter)};
     // get URL for the classloader
-    URL[] urls =  { new File(&quot;e:\\sb4o\\trunk\\reference\\bin&quot;).toURI().toURL() };
-    Db4oInstrumentationLauncher.launch(edits, urls, TAInstrumentationExample.class.getName(), new String[] {});
+    URL[] urls =  { 
+new File("e:\\sb4o\\trunk\\reference\\bin").toURI().toURL() };
+    Db4oInstrumentationLauncher
+.launch(edits, urls, TAInstrumentationExample.class.getName(), new String[] {});
 
   }
   // end main
   
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

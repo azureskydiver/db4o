@@ -39,9 +39,11 @@ container.Get(GetType(Customer)).Next();</code>
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>At this point the following paths should be already activated (Customer is not Activatable):</p>
-        <p><code>c.name</code><code>c.addresses</code><code>c.addresses[N].firstLine</code>
+        <p><code>c.name</code><code>c.addresses</code><code>.addresses[N].firstLine</code>
         </p>
+        <p>&#160;</p>
         <p><code>c.addresses[N].country</code> - available but not activated (Activatable type).</p>
+        <p>&#160;</p>
         <p>Country.getState would cause the Country object to be activated</p>
         <p MadCap:conditions="Primary.Java">
             <p>Java: </p>
@@ -57,13 +59,19 @@ container.Get(GetType(Customer)).Next();</code>
         <p MadCap:conditions="Primary:cs" />
         <p MadCap:conditions="Primary..NET,Primary.VB.NET">
             <p>VB:</p>
-            <p><code>Dim state As State = c.Address(0).Country.GetState(someZipCode);</code>
+            <p><code>Dim state As State = <br />c.Address(0).Country.GetState(someZipCode);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>At this point the following paths become activated 
-<code>c.addresses[0].country.states</code><code>c.addresses[0].country.states[N].name</code><code>c.addresses[0].country.states[N].city</code><code>c.addresses[0].country.states[N].cities[N]</code>- available but not
-activated (Activatable type)</p>The following general rules apply: 
+</p>
+        <p><code>c.addresses[0].country.states</code><code>.addresses[0]<br />.country.states[N].name</code>
+        </p>
+        <p><code>c.addresses[0].country.states[N].city</code><code>.addresses[0]<br />.country.states[N].cities[N]</code>
+        </p>
+        <p>- available but not
+activated (Activatable type)</p>
+        <p>&#160;</p>The following general rules apply: 
 <ol><li>Arrays of Arrays of non Activatable types: non Activatable behavior</li><li>Arrays of Arrays of Activatable types: non Activatable behavior except for leaves</li><li>JDK collections: non Activatable behavior</li><li>Value types with references to non Activatable reference types and to Activatable
 reference types: the non Activatable path should be activated fully; Activatable
 path stops activation.</li></ol></body>

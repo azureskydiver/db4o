@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1240" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="760">
     <head>
     </head>
     <body>
@@ -17,31 +17,32 @@ Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TAExamples
         Private _next As SensorPanelTA
 
         
-        Public Sub New()Sub New()
+        Public Sub New()
         End Sub
 
-        Public Sub New()Sub New(ByVal value As Integer)
+        Public Sub New(ByVal value As Integer)
             _sensor = value
         End Sub
 
         
-        Public ReadOnly Property NextSensor()Property NextSensor() As SensorPanelTA
+        Public ReadOnly Property NextSensor() As SensorPanelTA
             Get
                 Return _next
             End Get
         End Property
 
-        Public ReadOnly Property Sensor()Property Sensor() As Object
+        Public ReadOnly Property Sensor() As Object
             Get
                 Return _sensor
             End Get
         End Property
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer) As SensorPanelTA
+        Public Function CreateList(ByVal length As Integer) As SensorPanelTA
             Return CreateList(length, 1)
         End Function
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer, ByVal first As Integer) _ 
+        Public Function _ 
+CreateList(ByVal length As Integer, ByVal first As Integer) _ 
 As SensorPanelTA
             Dim val As Integer = first
             Dim root As SensorPanelTA = NewElement(first)
@@ -53,11 +54,11 @@ As SensorPanelTA
             Return root
         End Function
 
-        Protected Function NewElement()Function NewElement(ByVal value As Integer) As SensorPanelTA
+        Protected Function NewElement(ByVal value As Integer) As SensorPanelTA
             Return New SensorPanelTA(value)
         End Function
 
-        Public Overloads Overrides Function ToString()Function ToString() As String
+        Public Overloads Overrides Function ToString() As String
             If Sensor Is Nothing Then
                 Return ""
             Else
