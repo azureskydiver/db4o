@@ -5,10 +5,15 @@ package com.db4o.db4ounit.common.cs;
 import com.db4o.config.*;
 import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
+import com.db4o.io.*;
 
 import db4ounit.*;
 
 public class SwitchingFilesFromMultipleClientsTestCase extends StandaloneCSTestCaseBase implements TestLifeCycle {
+	
+	public static void main(String[] args) throws Throwable {
+		new ConsoleTestRunner(SwitchingFilesFromMultipleClientsTestCase.class).run();
+	}
 
 	public static class Data {
 		public int _id;
@@ -24,9 +29,6 @@ public class SwitchingFilesFromMultipleClientsTestCase extends StandaloneCSTestC
 		config.reflectWith(Platform4.reflectorForType(Data.class));
 	}
 
-	/**
-	 * @deprecated using deprecated api
-	 */
 	protected void runTest() {
 		_counter = 0;
 		ClientObjectContainer clientA = openClient();
