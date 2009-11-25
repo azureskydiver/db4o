@@ -21,11 +21,6 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 	public static final class Item {
 	}
 	
-	/**
-	 * @deprecated using deprecated api
-	 * 
-	 * @throws Throwable
-	 */
 	public void test() throws Throwable {
 		String fileName = databaseFile();
 		File4.delete(fileName);

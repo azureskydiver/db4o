@@ -25,7 +25,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 
     private Socket4Adapter _socket;
 
-    private ClientTransactionHandle _transactionHandle;
+    private final ClientTransactionHandle _transactionHandle;
     
     private Hashtable4 _queryResults;
     
@@ -43,8 +43,6 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 
 	private final Event4Impl<MessageEventArgs> _messageReceived = Event4Impl.newInstance();
 	
-    private Tree _prefetchedIDs;
-
 	private Thread _thread;
 	
     ServerMessageDispatcherImpl(ObjectServerImpl server,
@@ -124,7 +122,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 	private void removeFromServer() {
 		try {
             _server.removeThread(this);
-            freePrefetchedPointers();
+            freePrefetchedIDs();
         } catch (Exception e) {
             if (Debug4.atHome) {
                 e.printStackTrace();
@@ -391,25 +389,14 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
     }
 
 	public int prefetchID() {
-		int id = ((LocalObjectContainer)_server.objectContainer()).getPointerSlot();
-	    _prefetchedIDs = Tree.add(_prefetchedIDs, new TreeInt(id));
-	    return id;
+		return _transactionHandle.prefetchID();
 	}
 
 	public void prefetchedIDConsumed(int id) {
-        _prefetchedIDs = _prefetchedIDs.removeLike(new TreeIntObject(id));
+		_transactionHandle.prefetchedIDConsumed(id);
 	}
 	
-    final void freePrefetchedPointers() {
-        if (_prefetchedIDs != null) {
-        	final LocalObjectContainer container = ((LocalObjectContainer)_server.objectContainer());
-            _prefetchedIDs.traverse(new Visitor4() {
-                public void visit(Object node) {
-                	TreeInt intNode = (TreeInt) node;
-                	container.free(intNode._key, Const4.POINTER_LENGTH);
-                }
-            });
-        }
-        _prefetchedIDs = null;
+    final void freePrefetchedIDs() {
+    	_transactionHandle.freePrefetchedIDs();
     }	
 }
