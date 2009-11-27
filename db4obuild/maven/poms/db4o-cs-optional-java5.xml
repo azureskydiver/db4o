@@ -1,11 +1,11 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.db4o</groupId>
-  <artifactId>db4o-optional-java1.2</artifactId>
+  <artifactId>db4o-cs-optional-java5</artifactId>
   <version>@VERSION@</version>
   <packaging>jar</packaging>
-  <name>db4o optional java 1.2</name>
-  <description>db4o optional features module for JDK 1.2 - 1.4</description>
+  <name>db4o optional client server java 5</name>
+  <description>optional db4o networking functionality for JDK 5</description>
   <url>http://www.db4o.com</url>
   <licenses>
     <license>
@@ -21,7 +21,19 @@
   <dependencies>
 		<dependency>
 			<groupId>com.db4o</groupId>
-			<artifactId>db4o-core-java1.2</artifactId>
+			<artifactId>db4o-core-java5</artifactId>
+			<version>@VERSION@</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-cs-java5</artifactId>
+			<version>@VERSION@</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-optional-java5</artifactId>
 			<version>@VERSION@</version>
 		</dependency>
    </dependencies>
