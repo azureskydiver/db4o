@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.ext.*;
-import com.db4o.monitoring.cs.*;
 
 import db4ounit.*;
 
@@ -21,7 +20,7 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 	@Override
 	protected ClientConfiguration clientConfiguration() {
 		ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
-		clientConfig.common().add(new NetworkingMonitoringSupport());
+		clientConfig.common().add(new com.db4o.cs.optional.monitoring.NetworkingMonitoringSupport());
 		
 		clientConfig.networking().batchMessages(false);
 		clientConfig.prefetchIDCount(1);

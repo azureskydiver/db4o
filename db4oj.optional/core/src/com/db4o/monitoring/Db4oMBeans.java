@@ -1,14 +1,11 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
-import java.io.*;
-
 import javax.management.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.monitoring.cs.*;
 
 /**
  * @exclude
@@ -48,22 +45,6 @@ public class Db4oMBeans {
 		}
 	}
 
-	public static Networking newClientNetworkingStatsMBean(ObjectContainer container) {
-		try {
-			return new Networking(container, NetworkingMBean.class);
-		} catch (JMException e) {
-			throw new Db4oException(e);
-		}
-	}
-	
-	public static Networking newServerNetworkingStatsMBean(ObjectContainer container) {
-		try {
-			return new SynchronizedNetworking(container, NetworkingMBean.class);
-		} catch (JMException e) {
-			throw new Db4oException(e);
-		}
-	}
-	
 	public static Queries newQueriesMBean(InternalObjectContainer container) {
 		try {
 			return new Queries(container, QueriesMBean.class);
@@ -96,14 +77,6 @@ public class Db4oMBeans {
 		}
 	}
 
-	public static ClientConnections newClientConnectionsMBean(ObjectServer server) {
-		try {
-			return new ClientConnections(mBeanNameFor(ClientConnectionsMBean.class, mBeanIDForContainer(server.ext().objectContainer())));
-		} catch (JMException e) {
-			throw new Db4oIllegalStateException(e);
-		}
-	}
-
 	public static ObjectLifecycle newObjectLifecycleMBean(ObjectContainer container) {
 		try {
 			return new ObjectLifecycle(container, ObjectLifecycleMBean.class);
@@ -111,5 +84,4 @@ public class Db4oMBeans {
 			throw new Db4oIllegalStateException(e);
 		}
 	}
-	
 }

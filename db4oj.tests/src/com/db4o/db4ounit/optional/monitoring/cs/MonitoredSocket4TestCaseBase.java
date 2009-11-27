@@ -14,7 +14,6 @@ import com.db4o.db4ounit.common.api.*;
 import com.db4o.db4ounit.optional.monitoring.*;
 import com.db4o.ext.*;
 import com.db4o.monitoring.*;
-import com.db4o.monitoring.cs.*;
 
 @decaf.Ignore
 public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
@@ -90,7 +89,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	}
 
 	protected void resetBeanCountersFor(ObjectContainer container) {
-		ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, Db4oMBeans.mBeanIDForContainer(container));
+		ObjectName objectName = Db4oMBeans.mBeanNameFor(com.db4o.cs.optional.monitoring.NetworkingMBean.class, Db4oMBeans.mBeanIDForContainer(container));
 		MBeanProxy bean = new MBeanProxy(objectName);
 		
 		bean.resetCounters();
@@ -141,7 +140,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 		}
 		
 		protected double getAttribute(ObjectContainer container, String attribute) {
-			ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, Db4oMBeans.mBeanIDForContainer(container));
+			ObjectName objectName = Db4oMBeans.mBeanNameFor(com.db4o.cs.optional.monitoring.NetworkingMBean.class, Db4oMBeans.mBeanIDForContainer(container));
 			MBeanProxy bean = new MBeanProxy(objectName);
 			return bean.<Double>getAttribute(attribute);		
 		}

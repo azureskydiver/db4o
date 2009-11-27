@@ -479,6 +479,26 @@
 	    <updateProjectFiles project="${dir.n.v6.cs}/Db4objects.Db4o.CS" sources="cs.net.files"  />
 	</target>
 	
+	<target name="prepare-csproject-csoptional" unless="skip.sharpen" >
+        <!--
+        
+        NO FILES SHARPENED FOR NOW
+        
+        <copy-sharpened-sources dir="${dir.n.v6.cs.optional}/Db4objects.Db4o.CS.Optional/">
+            <files>
+                <fileset dir="${dir.sharpened}/cs-optional/src/Db4objects/Db4o">
+                	<include name="**/*.cs" />
+                </fileset>
+            </files>
+        </copy-sharpened-sources>
+		-->
+		
+		<fileset id="cs-optional.net.files" dir="${dir.n.v6.cs.optional}">
+			<include name="**/*.cs" />
+		</fileset>
+	    <updateProjectFiles project="${dir.n.v6.cs.optional}/DB4objects.Db4o.CS.Optional" sources="cs-optional.net.files"  />
+	</target>
+	
 	<target name="prepare-csproject-instrumentation" unless="skip.sharpen">
         <copy-sharpened-sources dir="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation/">
             <files>
@@ -515,6 +535,7 @@
 		depends="sharpen-all,
 	    prepare-csproject-core, 
 		prepare-csproject-cs,
+		prepare-csproject-csoptional,
 		prepare-csproject-optional,
 	    prepare-csproject-instrumentation, 
 	    prepare-csproject-nq, 
@@ -597,6 +618,12 @@
 			</fileset>
 		</copy>
 		
+		<copy todir="${dir.sharpen}/db4oj/cs-optional/src">
+			<fileset dir="${dir.dist.decaf.jdk1.2.core.cs.optional.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+				
 		<copy todir="${dir.sharpen}/db4oj/cs/src" overwrite="true">
 			<fileset dir="${dir.j.cs.src}">
 				<include name="com/db4o/cs/internal/ServerMessageDispatcherImpl.java" />
@@ -986,6 +1013,7 @@
 			<arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.Optional.dll" />
+			<arg file="${dir.dist.dll}/Db4objects.Db4o.CS.Optional.dll" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.CS.dll" />
 			<arg value="/out:${dir.dist.ndoc}/sandcastle" />
 			<arg value="/internal-" />
@@ -1104,7 +1132,7 @@
 			<arg value="-SkipNamespacesWithoutSummaries=True" />
 			<arg value="-SdkLinksOnWeb=False" />
             <arg value="-AssemblyVersionInfo=AssemblyVersion" />
-			<arg value="-CopyrightText=Copyright (C) 2004 - 2008  Versant Corporation" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2009  Versant Corporation" />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />
 		</exec>

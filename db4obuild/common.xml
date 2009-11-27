@@ -316,7 +316,10 @@
 		<property name="filename.jdk1.5.jar" value="${db4o.file}core-java5.jar" />
 		<property name="filename.jdk1.1.optional.jar" value="${db4o.file}optional-java1.1.jar" />
 		<property name="filename.jdk1.2.optional.jar" value="${db4o.file}optional-java1.2.jar" />
-		<property name="filename.jdk1.5.optional.jar" value="${db4o.file}optional-java5.jar" />
+		<property name="filename.jdk1.5.optional.jar" value="${db4o.file}optional-java5.jar" />		
+		<property name="filename.jdk1.1.cs.optional.jar" value="${db4o.file}cs.optional-java1.1.jar" />
+		<property name="filename.jdk1.2.cs.optional.jar" value="${db4o.file}cs.optional-java1.2.jar" />
+		<property name="filename.jdk1.5.cs.optional.jar" value="${db4o.file}cs.optional-java5.jar" />		
 		<property name="filename.jdk1.1.cs.jar" value="${db4o.file}cs-java1.1.jar" />
 		<property name="filename.jdk1.2.cs.jar" value="${db4o.file}cs-java1.2.jar" />
 		<property name="filename.jdk1.5.cs.jar" value="${db4o.file}cs-java5.jar" />
@@ -347,9 +350,12 @@
 		<property name="file.jdk1.1.optional.jar" value="${dir.dist.jars}/${filename.jdk1.1.optional.jar}" />
 		<property name="file.jdk1.2.optional.jar" value="${dir.dist.jars}/${filename.jdk1.2.optional.jar}" />
 		<property name="file.jdk1.5.optional.jar" value="${dir.dist.jars}/${filename.jdk1.5.optional.jar}" />
+		<property name="file.jdk1.1.cs.optional.jar" value="${dir.dist.jars}/${filename.jdk1.1.cs.optional.jar}" />
+		<property name="file.jdk1.2.cs.optional.jar" value="${dir.dist.jars}/${filename.jdk1.2.cs.optional.jar}" />
+		<property name="file.jdk1.5.cs.optional.jar" value="${dir.dist.jars}/${filename.jdk1.5.cs.optional.jar}" />		
 		<property name="file.jdk1.1.cs.jar" value="${dir.dist.jars}/${filename.jdk1.1.cs.jar}" />
 		<property name="file.jdk1.2.cs.jar" value="${dir.dist.jars}/${filename.jdk1.2.cs.jar}" />
-		<property name="file.jdk1.5.cs.jar" value="${dir.dist.jars}/${filename.jdk1.5.cs.jar}" />
+		<property name="file.jdk1.5.cs.jar" value="${dir.dist.jars}/${filename.jdk1.5.cs.jar}" />		
 		<property name="file.jdk1.2.nqopt.jar" value="${dir.dist.jars}/${filename.jdk1.2.nqopt.jar}" />
 		<property name="file.jdk1.5.nqopt.jar" value="${dir.dist.jars}/${filename.jdk1.5.nqopt.jar}" />
 		<property name="file.jdk1.2.instrumentation.jar" value="${dir.dist.jars}/${filename.jdk1.2.instrumentation.jar}" />
@@ -375,7 +381,7 @@
 		
 		<property name="file.compiler.jdk1.3.args.line" value="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}" />
 
-		<for list="core,core.optional,core.cs,test,db4ounit,db4ounit.extensions,instrumentation,taj,taj.test,nqopt,nqopt.test,tools" param="project-id">
+		<for list="core,core.optional,core.cs,core.cs.optional,test,db4ounit,db4ounit.extensions,instrumentation,taj,taj.test,nqopt,nqopt.test,tools" param="project-id">
 			<sequential>
 				<for list="jdk1.1,jdk1.2,sharpen" param="platform-id">
 					<sequential>
