@@ -24,7 +24,7 @@ public class AllMonitoringSupport {
 		commonConfig.add(new NativeQueryMonitoringSupport());
 		commonConfig.add(new ReferenceSystemMonitoringSupport());
 		commonConfig.add(new FreespaceMonitoringSupport());
-		commonConfig.add(new com.db4o.monitoring.cs.NetworkingMonitoringSupport());
+		//commonConfig.add(new com.db4o.cs.optional.NetworkingMonitoringSupport());
 		commonConfig.add(new ObjectLifecycleMonitoringSupport());
 	}
 	

@@ -15,6 +15,7 @@
 	<path id="instrumentation.classpath">
 		<pathelement path="${dir.dist.classes.jdk1.5}" />
 		<pathelement path="${dir.dist.classes.jdk1.5.cs}" />
+		<pathelement path="${dir.dist.classes.jdk1.5.cs.optional}" />
 		<pathelement path="${dir.dist.classes.jdk1.5.optional}" />
 		<pathelement path="${dir.dist.classes.db4ounit.jdk1.5}" />
 		<pathelement path="${file.easymock.jar}" />
