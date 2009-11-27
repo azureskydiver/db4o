@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
 			ReferenceSystemRegistryTestCase.class,
 			HashcodeReferenceSystemTestCase.class,
 			TransactionalReferenceSystemTestCase.class,
+			WeakReferenceCollectionTestCase.class,
 		};
 	}
 

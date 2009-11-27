@@ -369,4 +369,8 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	protected Context context() {
 		return trans().context();
 	}
+	
+	protected void commit() {
+		db().commit();
+	}
 }
