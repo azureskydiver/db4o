@@ -1,14 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BlobExample.cs: storeCars
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="690">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BlobExample.cs: storeCars
 private static void StoreCars() 
      {
       File.Delete(Db4oFileName);
-            IObjectContainer db = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), Db4oFileName);
+            IObjectContainer db = 
+Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), Db4oFileName);
       try 
        {
-        Car car1=new Car(&quot;Ferrari&quot;);
+        Car car1=new Car("Ferrari");
         db.Store(car1);
         StoreImage(car1);
-        Car car2=new Car(&quot;BMW&quot;);
+        Car car2=new Car("BMW");
                 db.Store(car2);
         StoreImage(car2);
       }  
@@ -16,4 +22,6 @@ private static void StoreCars()
        {
         db.Close();
       } 
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

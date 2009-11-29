@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.cs: Configure
 private static void Configure()
          {
-            IEventRegistry registry = EventRegistryFactory.ForObjectContainer(Container());
-            // register an event handler, which will check object uniqueness on commit
+            IEventRegistry registry = EventRegistryFactory.
+ForObjectContainer(Container());
+            // register an event handler, which will check 
+            // object uniqueness on commit
             registry.Committing += OnCommitting;
         }</pre>
     </body>

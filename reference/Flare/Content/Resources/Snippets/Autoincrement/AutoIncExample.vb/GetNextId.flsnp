@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="740">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">AutoIncExample.vb: GetNextId
-Private Shared Function GetNextId()Function GetNextId(ByVal db As IObjectContainer) As Integer
+Private Shared Function GetNextId(ByVal db As IObjectContainer) As Integer
             ' this function retrieves the next available ID from 
             ' the IncrementedId object
             Dim r As IncrementedId = IncrementedId.GetIdObject(db)

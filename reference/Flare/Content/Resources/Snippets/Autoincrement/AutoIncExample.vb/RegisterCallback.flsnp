@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="850">
     <head>
     </head>
     <body>
@@ -8,7 +8,8 @@ Public Shared Sub RegisterCallback()Sub RegisterCallback()
             Dim db As IObjectContainer = OpenContainer()
             ' register an event handler, which will assign autoincremented IDs to any
             ' object extending CountedObject, when the object is created
-            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(db)
+            Dim registry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(db)
             AddHandler registry.Creating, AddressOf OnCreating
         End Sub</pre>
     </body>

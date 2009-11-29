@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.cs: CheckUniqueness
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="378" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.cs: CheckUniqueness
 private static void CheckUniqueness(IObjectInfoCollection collection)
          {
             foreach (IObjectInfo info in collection)
@@ -8,10 +13,13 @@ private static void CheckUniqueness(IObjectInfoCollection collection)
                 if (item == null) continue;
 
                 // search for objects with the same fields in the database
-                IList found = Container().QueryByExample(new Item(item.Number, item.Word));
+                IList found = Container().QueryByExample(
+new Item(item.Number, item.Word));
                 if (found.Count &gt; 1)
                  {
-                    throw new Db4oException(&quot;Object is not unique: &quot; + item);
+                    throw new Db4oException("Object is not unique: " + item);
                 }
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

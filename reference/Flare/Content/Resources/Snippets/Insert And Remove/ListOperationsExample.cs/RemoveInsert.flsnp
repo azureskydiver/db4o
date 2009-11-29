@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.cs: RemoveInsert
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="730">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.cs: RemoveInsert
 private static void RemoveInsert()
          {
             Stopwatch sw = new Stopwatch();
@@ -20,8 +25,12 @@ private static void RemoveInsert()
                     lo1.Data.Remove(dataObject);
                     lo2.Data.Add(dataObject);
 
-                    Console.WriteLine(&quot;Removed from the first list, count is {0}, setting data &quot;, lo1.Data.Count);
-                    Console.WriteLine(&quot;Added to the second list, count is {0}, setting data &quot;, lo2.Data.Count);
+                    Console
+.WriteLine("Removed from the first list, count is {0}, setting data ", 
+lo1.Data.Count);
+                    Console
+.WriteLine("Added to the second list, count is {0}, setting data ", 
+lo2.Data.Count);
                     sw.Start();
                     db.Set(lo1);
                     db.Set(lo2);
@@ -33,5 +42,7 @@ private static void RemoveInsert()
              {
                 db.Close();
             }
-            Console.WriteLine(&quot;Storing took {0}&quot;, sw.Elapsed.ToString());
-        }</pre>    </body></html>
+            Console.WriteLine("Storing took {0}", sw.Elapsed.ToString());
+        }</pre>
+    </body>
+</html>

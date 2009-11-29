@@ -1,7 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: run
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="680">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: run
 public void run() throws IOException, DatabaseFileLockedException  {
     new File(DB4O_FILE_NAME).delete();
-    ObjectServer server = Db4oClientServer.openServer(Db4oClientServer
+    ObjectServer server = 
+Db4oClientServer.openServer(Db4oClientServer
         .newServerConfiguration(), DB4O_FILE_NAME, PORT);
     try  {
       server.grantAccess(USER, PASSWORD);
@@ -15,8 +21,8 @@ public void run() throws IOException, DatabaseFileLockedException  {
           waitForCompletion();
 
           // save pilot with client1
-          Car client1Car = new Car(&quot;Ferrari&quot;, 2006, new Pilot(
-              &quot;Schumacher&quot;));
+          Car client1Car = new Car("Ferrari", 2006, new Pilot(
+              "Schumacher"));
           client1.store(client1Car);
           client1.commit();
 
@@ -28,7 +34,7 @@ public void run() throws IOException, DatabaseFileLockedException  {
 
           // modify the pilot with client1
           client1Car.setModel(2007);
-          client1Car.setPilot(new Pilot(&quot;Hakkinnen&quot;));
+          client1Car.setPilot(new Pilot("Hakkinnen"));
           client1.store(client1Car);
           client1.commit();
 
@@ -52,4 +58,6 @@ public void run() throws IOException, DatabaseFileLockedException  {
     } finally  {
       server.close();
     }
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

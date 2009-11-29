@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPExample.vb: TestTransparentPersistence
-Private Shared Sub TestTransparentPersistence()Sub TestTransparentPersistence()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="1010">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPExample.vb: TestTransparentPersistence
+Private Shared Sub  TestTransparentPersistence()
             StoreSensorPanel()
             Dim configuration As IConfiguration = ConfigureTP()
             Dim container As IObjectContainer = Database(configuration)
@@ -9,7 +14,7 @@ Private Shared Sub TestTransparentPersistence()Sub TestTransparentPersistence()
                     Dim sensor As SensorPanel = Nothing
                     ListResult(result)
                     If result.Size &gt; 0 Then
-                        System.Console.WriteLine(&quot;Before modification: &quot;)
+                        System.Console.WriteLine("Before modification: ")
                         sensor = CType(result(0), SensorPanel)
                         ' the object is a linked list, so each call to next()
                         ' will need to activate a new object
@@ -38,7 +43,7 @@ Private Shared Sub TestTransparentPersistence()Sub TestTransparentPersistence()
                     Dim sensor As SensorPanel = Nothing
                     ListResult(result)
                     If result.Size &gt; 0 Then
-                        System.Console.WriteLine(&quot;After modification: &quot;)
+                        System.Console.WriteLine("After modification: ")
                         sensor = CType(result(0), SensorPanel)
                         Dim nextSensor As SensorPanel = sensor.NextSensor
                         While Not (nextSensor Is Nothing)
@@ -50,4 +55,6 @@ Private Shared Sub TestTransparentPersistence()Sub TestTransparentPersistence()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

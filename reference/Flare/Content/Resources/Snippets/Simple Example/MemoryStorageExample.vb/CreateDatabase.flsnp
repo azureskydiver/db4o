@@ -1,22 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: CreateDatabase
-Private Shared Sub CreateDatabase()Sub CreateDatabase(ByVal config As IEmbeddedConfiguration)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: CreateDatabase
+Private Shared Sub  CreateDatabase(ByVal config As IEmbeddedConfiguration)
             ' the following line is only necessary for the database on disk
             File.Delete(Db4oUri)
 
             Dim startTime As Long = DateTime.Now.Ticks
             ' Db4oUri will be the name of the database file for the default
             ' configuration and the name of a MemoryBin for in-memory database
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(config, Db4oUri)
+            Dim container As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(config, Db4oUri)
             Try
                 Dim [lib] As New Library()
                 For i As Integer = 0 To ObjectCount - 1
-                    [lib].AddBook(New Book(&quot;title&quot; &amp; i, [lib]))
+                    [lib].AddBook(New Book("title" &amp; i, [lib]))
                 Next
                 container.Store([lib])
-                Dim book As Book = DirectCast(container.QueryByExample(New Book(&quot;title1&quot;, Nothing))(0), Book)
+                Dim book As Book = _ 
+DirectCast(container.QueryByExample(New Book("title1", Nothing))(0), Book)
                 System.Console.WriteLine(book)
             Finally
                 container.Close()
             End Try
-            System.Console.WriteLine([String].Format(&quot;Time to create a database: {0} ticks&quot;, DateTime.Now.Ticks - startTime))
-        End Sub</pre>    </body></html>
+            System.Console.WriteLine([String].Format( _ 
+"Time to create a database: {0} ticks", DateTime.Now.Ticks - startTime))
+        End Sub</pre>
+    </body>
+</html>

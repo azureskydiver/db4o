@@ -1,14 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestCreated
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestCreated
 Private Shared Sub TestCreated()Sub TestCreated()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = OpenContainer()
             Try
-                Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
-                ' register an event handler, which will print all the car objects, that have been Created
+                Dim registry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(container)
+                ' register an event handler, which will print 
+                ' all the car objects, that have been Created
                 AddHandler registry.Created, AddressOf OnCreated
-                Dim car As Car = New Car(&quot;BMW&quot;, New Pilot(&quot;Rubens Barrichello&quot;))
+                Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 container.Store(car)
             Finally
                 CloseContainer()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

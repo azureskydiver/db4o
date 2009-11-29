@@ -1,29 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="740">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: storeMemoryBin
-Public Shared Sub StoreMemoryBin()Sub StoreMemoryBin()
+Public Shared Sub StoreMemoryBin()
             Dim origStorage As New MemoryStorage()
-            Dim origConfig As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim origConfig As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
             origConfig.File.Storage = origStorage
-            Dim origDb As IObjectContainer = Db4oEmbedded.OpenFile(origConfig, Db4oUri)
+            Dim origDb As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(origConfig, Db4oUri)
             origDb.Store(New Book("Alice in Wonderland"))
             origDb.Close()
 
             Dim origBin As MemoryBin = origStorage.Bin(Db4oUri)
             Dim data As Byte() = origBin.Data()
-            Dim fs1 As New FileStream("memory.db4o", FileMode.OpenOrCreate, FileAccess.Write)
+            Dim fs1 As New FileStream("memory.db4o", _ 
+FileMode.OpenOrCreate, FileAccess.Write)
             Dim bw As New BinaryWriter(fs1)
             bw.Write(data)
             bw.Close()
             fs1.Close()
 
 
-            Dim newDb As IObjectContainer = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), _ 
+            Dim newDb As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), _ 
 "memory.db4o")
-            Dim book As Book = DirectCast(newDb.QueryByExample(New Book("Alice in Wonderland"))(0), Book)
+            Dim book As Book = _ 
+DirectCast(newDb.QueryByExample(New Book("Alice in Wonderland"))(0), Book)
             System.Console.WriteLine(book)
             newDb.Close()
         End Sub

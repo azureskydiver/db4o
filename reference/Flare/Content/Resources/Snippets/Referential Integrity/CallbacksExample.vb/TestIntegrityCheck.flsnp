@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestIntegrityCheck
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestIntegrityCheck
 Private Shared Sub TestIntegrityCheck()Sub TestIntegrityCheck()
             FillContainer()
             Dim container As IObjectContainer = OpenContainer()
             Try
-                Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
-                ' register an event handler, which will stop Deleting a pilot when it is referenced from a car 
+                Dim registry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(container)
+                ' register an event handler, which will stop 
+                ' Deleting a pilot when it is referenced from a car 
                 AddHandler registry.Deleting, AddressOf OnDeleting
                 ' check the contents of the database
                 Dim result As IList = container.QueryByExample(Nothing)
@@ -20,4 +27,6 @@ Private Shared Sub TestIntegrityCheck()Sub TestIntegrityCheck()
             Finally
                 CloseContainer()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

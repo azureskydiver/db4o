@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="630">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: CompareChars
-Private Shared Function CompareChars()Function CompareChars(ByVal compare As Char(), ByVal [with] As Char()) As Integer
-            Dim min As Integer = IIf(compare.Length &lt; [with].Length, compare.Length, [with].Length)
+Private Shared Function CompareChars(ByVal compare As Char(), _ 
+ByVal [with] As Char()) As Integer
+            Dim min As Integer = IIf(compare.Length &lt; _ 
+[with].Length, compare.Length, [with].Length)
             For i As Integer = 0 To min - 1
                 If compare(i) &lt;&gt; [with](i) Then
                     Return compare(i).CompareTo([with](i))

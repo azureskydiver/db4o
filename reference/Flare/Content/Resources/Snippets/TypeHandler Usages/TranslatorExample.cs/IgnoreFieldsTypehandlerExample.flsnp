@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: IgnoreFieldsTypehandlerExample
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="818" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: IgnoreFieldsTypehandlerExample
 private static void IgnoreFieldsTypehandlerExample()
          {
             File.Delete(Db4oFileName);
             IConfiguration configuration = IgnoreFieldsConfiguration();
-            IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            IObjectContainer container = 
+Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
              {
-                PersistentItem persistentItem = new PersistentItem(&quot;1&quot;, new TransientItem(11));
-                System.Console.WriteLine(&quot;ORIGINAL: &quot; + persistentItem);
+                PersistentItem persistentItem = 
+new PersistentItem("1", new TransientItem(11));
+                System.Console.WriteLine("ORIGINAL: " + persistentItem);
                 container.Store(persistentItem);
             }
             catch (Exception exc)
@@ -28,11 +35,13 @@ private static void IgnoreFieldsTypehandlerExample()
                 while (result.HasNext())
                  {
                     PersistentItem persistentItem = (PersistentItem)result.Next();
-                    System.Console.WriteLine(&quot;RETRIEVED: &quot; + persistentItem);
+                    System.Console.WriteLine("RETRIEVED: " + persistentItem);
                 }
             }
             finally
              {
                 container.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

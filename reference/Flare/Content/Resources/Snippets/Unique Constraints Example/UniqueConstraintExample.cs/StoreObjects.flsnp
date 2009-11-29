@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.cs: StoreObjects
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="818" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.cs: StoreObjects
 private static void StoreObjects() {
     File.Delete(FileName);
     IObjectServer server = Db4oFactory.OpenServer(Configure(), FileName, 0);
@@ -8,17 +13,18 @@ private static void StoreObjects() {
       IObjectContainer client1 = server.OpenClient();
       try  {
         // creating and storing pilot1 to the database
-        pilot1 = new Pilot(&quot;Rubens Barichello&quot;,99);
+        pilot1 = new Pilot("Rubens Barichello",99);
         client1.Set(pilot1);
         IObjectContainer client2 = server.OpenClient();
         try  {
           // creating and storing pilot2 to the database
-          pilot2 = new Pilot(&quot;Rubens Barichello&quot;,100);
+          pilot2 = new Pilot("Rubens Barichello",100);
           client2.Set(pilot2);
           // commit the changes
           client2.Commit();
         } catch (UniqueFieldValueConstraintViolationException ex) {
-          System.Console.WriteLine(&quot;Unique constraint violation in client2 saving: &quot; + pilot2);
+          System.Console.WriteLine(
+"Unique constraint violation in client2 saving: " + pilot2);
           client2.Rollback();
         } finally  {
           client2.Close();
@@ -27,7 +33,8 @@ private static void StoreObjects() {
         // commit will fail
         client1.Commit();
       } catch (UniqueFieldValueConstraintViolationException ex) {
-                System.Console.WriteLine(&quot;Unique constraint violation in client1 saving: &quot; + pilot1);
+                System.Console.WriteLine(
+"Unique constraint violation in client1 saving: " + pilot1);
         client1.Rollback();
       } finally  {
                 client1.Close();
@@ -35,4 +42,6 @@ private static void StoreObjects() {
     } finally  {
             server.Close();
     }
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

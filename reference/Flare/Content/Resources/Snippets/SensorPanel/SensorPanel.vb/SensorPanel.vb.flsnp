@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SensorPanel.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 
 
@@ -8,35 +13,37 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Activating
         Private _next As SensorPanel
 
         ' default constructor for instantiation
-        Public Sub New()Sub New()
+        Public Sub New()
         End Sub
 
-        Public Sub New()Sub New(ByVal value As Integer)
+        Public Sub  New(ByVal value As Integer)
             _sensor = value
         End Sub
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer) As SensorPanel
+        Public Function CreateList(ByVal length As Integer) As SensorPanel
             Return CreateList(length, 1)
         End Function
 
-        Public Function CreateList()Function CreateList(ByVal length As Integer, ByVal first As Integer) As SensorPanel
+        Public Function CreateList(ByVal length As Integer, _ 
+ByVal first As Integer) As SensorPanel
             Dim val As Integer = first
             Dim root As SensorPanel = NewElement(first)
             Dim list As SensorPanel = root
             While System.Threading.Interlocked.Decrement(length) &gt; 0
-                list._next = NewElement(System.Threading.Interlocked.Increment(val))
+                list._next = NewElement _ 
+(System.Threading.Interlocked.Increment(val))
                 list = list._next
             End While
             Return root
         End Function
 
-        Public ReadOnly Property Sensor()Property Sensor() As Object
+        Public ReadOnly Property  Sensor() As Object
             Get
                 Return _sensor
             End Get
         End Property
 
-        Public Property [()Property [Next]() As SensorPanel
+        Public Property [Next]() As SensorPanel
             Get
                 Return _next
             End Get
@@ -46,12 +53,14 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Activating
             End Set
         End Property
 
-        Protected Function NewElement()Function NewElement(ByVal value As Integer) As SensorPanel
+        Protected Function  NewElement(ByVal value As Integer) As SensorPanel
             Return New SensorPanel(value)
         End Function
 
-        Public Overloads Overrides Function ToString()Function ToString() As String
-            Return &quot;Sensor #&quot; + _sensor.ToString
+        Public Overloads Overrides Function ToString() As String
+            Return "Sensor #" + _sensor.ToString
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

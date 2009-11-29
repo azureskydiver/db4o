@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="118" MadCap:lastWidth="690">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CommittedEventHandler.vb: CreateCommittedEventHandler
-Private Function CreateCommittedEventHandler()Function CreateCommittedEventHandler(ByVal objectContainer As IObjectContainer) _ 
-As OnCommittedHandler
+Private Function CreateCommittedEventHandler(ByVal objectContainer _ 
+As IObjectContainer) As OnCommittedHandler
             Return AddressOf OnCommitted
         End Function</pre>
     </body>

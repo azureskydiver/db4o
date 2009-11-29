@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdateExample.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="830">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdateExample.vb
 ' Copyright (C) 2007 Versant Inc. http:'www.db4o.com 
 
 Imports Db4objects.Db4o
@@ -10,7 +15,10 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.VersionUpdate
             Db4oFactory.Configure().AllowVersionUpdates(True)
             Dim objectContainer As IObjectContainer = Db4oFactory.OpenFile(args(0))
             objectContainer.Close()
-            System.Console.WriteLine(&quot;The database is ready for the version &quot; + Db4o.Db4oVersion.NAME)
+            System.Console.WriteLine("The database is ready for the version " _ 
++ Db4o.Db4oVersion.NAME)
         End Sub
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

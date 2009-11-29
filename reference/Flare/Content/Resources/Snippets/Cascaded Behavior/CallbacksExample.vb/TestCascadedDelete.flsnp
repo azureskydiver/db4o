@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestCascadedDelete
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestCascadedDelete
 Private Shared Sub TestCascadedDelete()Sub TestCascadedDelete()
             FillContainer()
             Dim container As IObjectContainer = OpenContainer()
@@ -6,8 +11,10 @@ Private Shared Sub TestCascadedDelete()Sub TestCascadedDelete()
                 ' check the contents of the database
                 Dim result As IList = container.QueryByExample(Nothing)
                 ListResult(result)
-                Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
-                ' register an event handler, which will delete the pilot when his car is Deleted 
+                Dim registry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(container)
+                ' register an event handler, which will delete 
+                ' the pilot when his car is Deleted 
                 AddHandler registry.Deleted, AddressOf OnDeleted
                 ' delete all the cars
                 Dim cars As IList(Of Car) = container.Query(Of Car)()
@@ -20,4 +27,6 @@ Private Shared Sub TestCascadedDelete()Sub TestCascadedDelete()
             Finally
                 CloseContainer()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

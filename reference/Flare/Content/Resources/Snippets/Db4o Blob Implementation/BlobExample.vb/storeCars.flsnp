@@ -1,15 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BlobExample.vb: storeCars
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BlobExample.vb: storeCars
 Private Shared Sub StoreCars()Sub StoreCars()
             File.Delete(Db4oFileName)
-            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration, Db4oFileName)
+            Dim db As IObjectContainer = Db4oEmbedded.OpenFile _ 
+(Db4oEmbedded.NewConfiguration, Db4oFileName)
             Try
-                Dim car1 As Car = New Car(&quot;Ferrari&quot;)
+                Dim car1 As Car = New Car("Ferrari")
                 db.Store(car1)
                 StoreImage(car1)
-                Dim car2 As Car = New Car(&quot;BMW&quot;)
+                Dim car2 As Car = New Car("BMW")
                 db.Store(car2)
                 StoreImage(car2)
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

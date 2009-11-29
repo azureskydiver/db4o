@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: UpdateObject
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: UpdateObject
 Private Shared Sub UpdateObject()Sub UpdateObject()
             Dim sw As Stopwatch = New Stopwatch
             Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
@@ -10,9 +15,11 @@ Private Shared Sub UpdateObject()Sub UpdateObject()
                 If result.Count = 2 Then
                     Dim lo1 As ListObject = result(0)
                     Dim dataobject As DataObject = lo1.Data(0)
-                    dataobject.Name = &quot;Updated&quot;
-                    dataobject.Data = DateTime.Now.ToString + &quot; ---- Updated Object &quot;
-                    Console.WriteLine(&quot;Updated list {0} dataobject {1}&quot;, lo1.Name, lo1.Data(0))
+                    dataobject.Name = "Updated"
+                    dataobject.Data = DateTime.Now.ToString + _ 
+ " ---- Updated Object "
+                    Console.WriteLine("Updated list {0} dataobject {1}", _ 
+lo1.Name, lo1.Data(0))
                     sw.Start()
                     db.Set(dataobject)
                     db.Commit()
@@ -21,5 +28,7 @@ Private Shared Sub UpdateObject()Sub UpdateObject()
             Finally
                 db.Close()
             End Try
-            Console.WriteLine(&quot;Storing took {0}&quot;, sw.Elapsed.ToString)
-        End Sub</pre>    </body></html>
+            Console.WriteLine("Storing took {0}", sw.Elapsed.ToString)
+        End Sub</pre>
+    </body>
+</html>

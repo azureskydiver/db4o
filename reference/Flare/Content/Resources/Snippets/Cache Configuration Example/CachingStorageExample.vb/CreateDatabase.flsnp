@@ -1,21 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="423" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="910">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: CreateDatabase
-Private Shared Sub CreateDatabase()Sub CreateDatabase(ByVal config As IEmbeddedConfiguration)
+Private Shared Sub  CreateDatabase(ByVal config As IEmbeddedConfiguration)
             File.Delete(Db4oFileName)
 
             Dim startTime As Long = DateTime.Now.Ticks
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(config, Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(config, Db4oFileName)
             Try
                 Dim itemStore As New ItemStore()
                 For i As Integer = 0 To ObjectCount - 1
                     itemStore.AddItem(New Item(i, "title" &amp; i))
                 Next
                 container.Store(itemStore)
-                Dim item As Item = DirectCast(container.QueryByExample(New Item(1, "title1"))(0), Item)
+                Dim item As Item = _ 
+DirectCast(container.QueryByExample(New Item(1, "title1"))(0), Item)
                 System.Console.WriteLine(item)
             Finally
                 container.Close()

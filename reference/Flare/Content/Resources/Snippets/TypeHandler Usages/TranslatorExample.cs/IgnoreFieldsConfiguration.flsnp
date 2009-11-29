@@ -1,10 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: IgnoreFieldsConfiguration
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: IgnoreFieldsConfiguration
 private static IConfiguration IgnoreFieldsConfiguration()
          {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
             // add a custom typehandler support
             ITypeHandlerPredicate predicate = new TransientHandlerPredicate();
 
-            configuration.RegisterTypeHandler(predicate, new IgnoreFieldsTypeHandler());
+            configuration.RegisterTypeHandler(predicate, 
+new IgnoreFieldsTypeHandler());
             return configuration;
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

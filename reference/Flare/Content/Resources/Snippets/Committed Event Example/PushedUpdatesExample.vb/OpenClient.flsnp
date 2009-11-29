@@ -1,16 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="366" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="720">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: OpenClient
 Private Function OpenClient()Function OpenClient() As IObjectContainer
             Try
-                Dim client As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+                Dim client As IObjectContainer = _ 
+Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
 "localhost", Port, User, Password)
-                Dim committedEventHandler As CommittedEventHandler = New CommittedEventHandler(client)
-                Dim eventRegistry As IEventRegistry = EventRegistryFactory.ForObjectContainer(client)
-                AddHandler eventRegistry.Committed, AddressOf committedEventHandler.OnCommitted
+                Dim committedEventHandler As CommittedEventHandler = _ 
+New CommittedEventHandler(client)
+                Dim eventRegistry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(client)
+                AddHandler eventRegistry.Committed, _ 
+AddressOf committedEventHandler.OnCommitted
                 ' save the client-listener pair in a map, so that we can
                 ' remove the listener later
                 clientListeners.Add(client, committedEventHandler)

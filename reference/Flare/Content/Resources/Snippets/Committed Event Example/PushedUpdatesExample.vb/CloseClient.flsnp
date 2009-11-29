@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1300">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
@@ -7,8 +7,10 @@
 Private Sub CloseClient()Sub CloseClient(ByVal client As IObjectContainer)
             ' remove listeners before shutting down
             If Not (clientListeners(client) Is Nothing) Then
-                Dim eventRegistry As IEventRegistry = EventRegistryFactory.ForObjectContainer(client)
-                RemoveHandler eventRegistry.Committed, AddressOf CType(clientListeners(client), CommittedEventHandler).OnCommitted
+                Dim eventRegistry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(client)
+                RemoveHandler eventRegistry.Committed, _ 
+AddressOf CType(clientListeners(client), CommittedEventHandler).OnCommitted
                 clientListeners.Remove(client)
             End If
             client.Close()

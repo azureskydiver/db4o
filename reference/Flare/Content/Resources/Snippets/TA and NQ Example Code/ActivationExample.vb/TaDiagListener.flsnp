@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TaDiagListener
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="670">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TaDiagListener
 Public Class TaDiagListenerClass TaDiagListener
             Inherits DiagnosticToConsole
-            Public Overloads Overrides Sub OnDiagnostic()Sub OnDiagnostic(ByVal d As IDiagnostic)
+            Public Overloads Overrides Sub OnDiagnostic(ByVal d _ 
+As IDiagnostic)
                 If TypeOf d Is NotTransparentActivationEnabled Then
                     System.Console.WriteLine(d)
                 End If
             End Sub
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

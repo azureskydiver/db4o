@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: removeInsert
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: removeInsert
 private static void removeInsert()
          {
             ObjectContainer db = Db4o.openFile(DBFILE);
@@ -19,8 +24,10 @@ private static void removeInsert()
                     lo1.getData().remove(dataObject);
                     lo2.getData().add(dataObject);
 
-                    System.out.println(&quot;Removed from the first list, count is &quot; + lo1.getData().size());
-                    System.out.println(&quot;Added to the second list, count is &quot; + lo2.getData().size());
+                    System.out.println("Removed from the first list, count is " 
++ lo1.getData().size());
+                    System.out.println("Added to the second list, count is " 
++ lo2.getData().size());
                     long t1 = System.currentTimeMillis();
                     // save ListObjects. UpdateDepth = 1 will ensure that 
                     // the DataObject list is saved as well
@@ -35,5 +42,7 @@ private static void removeInsert()
              {
                 db.close();
             }
-            System.out.println(&quot;Storing took: &quot; + timeElapsed + &quot; ms.&quot;);
-        }</pre>    </body></html>
+            System.out.println("Storing took: " + timeElapsed + " ms.");
+        }</pre>
+    </body>
+</html>

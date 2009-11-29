@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: updateObject
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="778" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: updateObject
 private static void updateObject()
          {
             long timeElapsed = 0;
@@ -15,10 +20,12 @@ private static void updateObject()
                     ListObject lo1 = result.get(0);
                     // Select a DataObject for update
                     DataObject dataobject = lo1.getData().get(0);
-                    dataobject.setName(&quot;Updated&quot;);
-                    dataobject.setData(System.currentTimeMillis()+ &quot; ---- Updated Object &quot;);
+                    dataobject.setName("Updated");
+                    dataobject.setData(System.currentTimeMillis()+ 
+" ---- Updated Object ");
 
-                    System.out.println(&quot;Updated list &quot; + lo1.getName() + &quot; dataobject &quot; +  lo1.getData().get(0));
+                    System.out.println("Updated list " + 
+lo1.getName() + " dataobject " +  lo1.getData().get(0));
                     long t1 = System.currentTimeMillis();
                     // save only the DataObject. List of DataObjects will
                     // automatically include the new value
@@ -32,5 +39,7 @@ private static void updateObject()
              {
                 db.close();
             }
-            System.out.println(&quot;Storing took: &quot; + timeElapsed +&quot; ms.&quot;) ;
-        }</pre>    </body></html>
+            System.out.println("Storing took: " + timeElapsed +" ms.") ;
+        }</pre>
+    </body>
+</html>

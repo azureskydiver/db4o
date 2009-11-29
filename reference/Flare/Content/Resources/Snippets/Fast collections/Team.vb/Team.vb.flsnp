@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Team.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="818" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Team.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 Imports System.Collections
 
@@ -7,11 +12,11 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Lists
         Private _pilots As IList
         Private _name As String
 
-        Public Sub New()Sub New()
+        Public Sub New()
             _pilots = CollectionFactory.NewList()
         End Sub
 
-        Public Property Name()Property Name() As String
+        Public Property Name() As String
             Get
                 Return _name
             End Get
@@ -20,20 +25,23 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Lists
             End Set
         End Property
 
-        Public Sub AddPilot()Sub AddPilot(ByVal pilot As Pilot)
+        Public Sub AddPilot(ByVal pilot As Pilot)
             _pilots.Add(pilot)
         End Sub
 
-        Public Function GetPilot()Function GetPilot(ByVal index As Integer) As evaluations.Pilot
+        Public Function GetPilot(ByVal index As Integer) As evaluations.Pilot
             Return CType(_pilots(index), evaluations.Pilot)
         End Function
 
-        Public Sub RemovePilot()Sub RemovePilot(ByVal index As Integer)
+        Public Sub Sub RemovePilot(ByVal index As Integer)
             _pilots.Remove(index)
         End Sub
 
-        Public Sub UpdatePilot()Sub UpdatePilot(ByVal index As Integer, ByVal NewPilot As evaluations.Pilot)
+        Public Sub UpdatePilot(ByVal index As Integer, _ 
+ByVal NewPilot As evaluations.Pilot)
             _pilots(index) = NewPilot
         End Sub
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

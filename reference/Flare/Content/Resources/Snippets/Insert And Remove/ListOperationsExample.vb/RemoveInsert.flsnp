@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: RemoveInsert
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="658" MadCap:lastWidth="860">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: RemoveInsert
 Private Shared Sub RemoveInsert()Sub RemoveInsert()
             Dim sw As Stopwatch = New Stopwatch
             Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
@@ -15,10 +20,12 @@ Private Shared Sub RemoveInsert()Sub RemoveInsert()
                     ' ListObject to the second ListObject
                     lo1.Data.Remove(dataObject)
                     lo2.Data.Add(dataObject)
-                    Console.WriteLine(&quot;Removed from the first list, count is {0}, setting data &quot;, lo1.Data.Count)
-                    Console.WriteLine(&quot;Added to the second list, count is {0}, setting data &quot;, lo2.Data.Count)
+                    Console _ 
+.WriteLine("Removed from the first list, count is {0}, setting data ", lo1.Data.Count)
+                    Console _ 
+.WriteLine("Added to the second list, count is {0}, setting data ", lo2.Data.Count)
                     sw.Start()
-                    db.Set(lo1)
+                    db.Set(lo1)d
                     db.Set(lo2)
                     db.Commit()
                     sw.Stop()
@@ -26,5 +33,7 @@ Private Shared Sub RemoveInsert()Sub RemoveInsert()
             Finally
                 db.Close()
             End Try
-            Console.WriteLine(&quot;Storing took {0}&quot;, sw.Elapsed.ToString)
-        End Sub</pre>    </body></html>
+            Console.WriteLine("Storing took {0}", sw.Elapsed.ToString)
+        End Sub</pre>
+    </body>
+</html>

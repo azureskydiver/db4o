@@ -1,17 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SystemInfoExample.cs: TestSystemInfo
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="720">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SystemInfoExample.cs: TestSystemInfo
 private static void TestSystemInfo()
          {
             long dbSize = _container.Ext().SystemInfo().TotalSize();
             long fsSize = _container.Ext().SystemInfo().FreespaceSize();
             if (dbSize &gt; MaxDbSize)
              {
-                System.Console.WriteLine(&quot;Attention! Database file size is over the limit. Maintenance required&quot;);
+                System.Console.WriteLine(@"Attention! Database 
+file size is over the limit. Maintenance required");
             }
-            _logWriter.WriteLine(&quot;Total database size: &quot; + dbSize);
+            _logWriter.WriteLine("Total database size: " + dbSize);
             if (fsSize &gt; MaxFsSize)
              {
-                System.Console.WriteLine(&quot;Attention! Freespace size is over the limit. Maintenance required&quot;);
+                System.Console.WriteLine(@"Attention! Freespace 
+size is over the limit. Maintenance required");
             }
-            _logWriter.WriteLine(&quot;Database freespace size: &quot; + fsSize);
-            _logWriter.WriteLine(&quot;Database freespace entries: &quot; + _container.Ext().SystemInfo().FreespaceEntryCount());
-        }</pre>    </body></html>
+            _logWriter.WriteLine("Database freespace size: " + fsSize);
+            _logWriter.WriteLine("Database freespace entries: " 
++ _container.Ext().SystemInfo().FreespaceEntryCount());
+        }</pre>
+    </body>
+</html>
