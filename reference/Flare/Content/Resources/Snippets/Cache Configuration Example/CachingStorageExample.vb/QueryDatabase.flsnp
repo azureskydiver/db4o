@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="575" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="638" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: QueryDatabase
-Private Shared Sub QueryDatabase()Sub QueryDatabase(ByVal config As IEmbeddedConfiguration)
+Private Shared Sub  QueryDatabase(ByVal config As IEmbeddedConfiguration)
 
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(config, Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(config, Db4oFileName)
             Try
                 Dim temp As New List(Of Item)()
                 Dim startTime As Long = DateTime.Now.Ticks
@@ -17,7 +18,8 @@ Private Shared Sub QueryDatabase()Sub QueryDatabase(ByVal config As IEmbeddedCon
                 For Each i As Item In result
                     temp.Add(i)
                 Next
-                System.Console.WriteLine([String].Format("Time to get an objects first time: {0} ms", _
+                System.Console.WriteLine([String].Format( _ 
+"Time to get an objects first time: {0} ms", _
 (DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
                 '
                 temp = New List(Of Item)()
@@ -25,7 +27,8 @@ Private Shared Sub QueryDatabase()Sub QueryDatabase(ByVal config As IEmbeddedCon
                 For Each i As Item In result
                     temp.Add(i)
                 Next
-                System.Console.WriteLine([String].Format("Time to get an objects second time: {0} ms", _ 
+                System.Console.WriteLine([String].Format(_ 
+"Time to get an objects second time: {0} ms", _ 
 (DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond))
             Finally
                 container.Close()

@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="176" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="710">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Defragment
-Public Sub Defragment()Sub Defragment(ByVal context As IDefragmentContext) Implements ITypeHandler4.Defragment
+Public Sub Defragment(ByVal context As IDefragmentContext) _ 
+Implements ITypeHandler4.Defragment
             ' To stay compatible with the old marshaller family
             ' In the marshaller family 0 number 4 represented
             ' length reqiored to store ID and object length information

@@ -1,14 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SystemInfoExample.java: testSystemInfo
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="640">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SystemInfoExample.java: testSystemInfo
 private static void testSystemInfo()  {
     long dbSize = _container.ext().systemInfo().totalSize();
     long fsSize = _container.ext().systemInfo().freespaceSize();
     if (dbSize &gt; MAX_DB_SIZE)  {
-      System.out.println(&quot;Attention! Database file size is over the limit. Maintenance required&quot;);
+      System.out.println("Attention! Database file size is \
+over the limit. Maintenance required");
     }
-    _logPS.println(&quot;Total database size: &quot; + dbSize);
+    _logPS.println("Total database size: " + dbSize);
     if (fsSize &gt; MAX_FS_SIZE)  {
-      System.out.println(&quot;Attention! Freespace size is over the limit. Maintenance required&quot;);
+      System.out.println("Attention! Freespace size is \
+over the limit. Maintenance required");
     }
-    _logPS.println(&quot;Database freespace size: &quot; + fsSize);
-    _logPS.println(&quot;Database freespace entries: &quot; + _container.ext().systemInfo().freespaceEntryCount());
-  }</pre>    </body></html>
+    _logPS.println("Database freespace size: " + fsSize);
+    _logPS.println("Database freespace entries: " + 
+_container.ext().systemInfo().freespaceEntryCount());
+  }</pre>
+    </body>
+</html>

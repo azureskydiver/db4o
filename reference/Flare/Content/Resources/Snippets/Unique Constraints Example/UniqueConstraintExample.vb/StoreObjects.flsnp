@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="803" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="760">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.vb: StoreObjects
 Private Shared Sub StoreObjects()Sub StoreObjects()
             File.Delete(FILENAME)
-            Dim server As IObjectServer = Db4oFactory.OpenServer(Configure, FILENAME, 0)
+            Dim server As IObjectServer = _ 
+Db4oFactory.OpenServer(Configure, FILENAME, 0)
             Dim pilot1 As Pilot = Nothing
             Dim pilot2 As Pilot = Nothing
             Try
@@ -23,7 +24,8 @@ Private Shared Sub StoreObjects()Sub StoreObjects()
                         ' end commit the changes
                         client2.Commit()
                     Catch ex As UniqueFieldValueConstraintViolationException
-                        System.Console.WriteLine("Unique constraint violation in client2 saving: " + _ 
+                        System.Console.WriteLine( _ 
+"Unique constraint violation in client2 saving: " + _ 
 pilot2.ToString())
                         client2.Rollback()
                     Finally
@@ -33,7 +35,8 @@ pilot2.ToString())
                     ' commit will fail
                     client1.Commit()
                 Catch ex As UniqueFieldValueConstraintViolationException
-                    System.Console.WriteLine("Unique constraint violation in client1 saving: " + _ 
+                    System.Console.WriteLine(_ 
+"Unique constraint violation in client1 saving: " + _ 
 pilot1.ToString())
                     client1.Rollback()
                 Finally

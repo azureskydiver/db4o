@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="3596" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="870">
     <head>
     </head>
     <body>
@@ -27,9 +27,9 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
         Private Shared _container As IObjectContainer = Nothing
 
 
-        Public Shared Sub Main()Sub Main(ByVal args As String())
+        Public Shared Sub Main(ByVal args As String())
             TestReadWriteDelete()
-            'TestDefrag()
+            TestDefrag()
             TestCompare()
         End Sub
         ' end Main
@@ -37,7 +37,8 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Typehandler
         Private Class TypeHandlerPredicateClass TypeHandlerPredicate
             Implements ITypeHandlerPredicate
 
-            Public Function Match()Function Match(ByVal classReflector As IReflectClass, ByVal version As Integer) _ 
+            Public Function Match()(ByVal classReflector As IReflectClass, ByVal _ 
+version As Integer) _ 
 As Boolean Implements ITypeHandlerPredicate.Match
                 Dim reflector As IReflector = classReflector.Reflector()
                 Dim claxx As IReflectClass = reflector.ForClass(GetType(StringBuilder))
@@ -49,17 +50,19 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Class
         ' end TypeHandlerPredicate
 
-        Private Shared Function Configure()Function Configure() As IConfiguration
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+        Private Shared Function Configure() As IConfiguration
+            Dim configuration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
             ' add a custom typehandler support
 
-            configuration.RegisterTypeHandler(New TypeHandlerPredicate(), New StringBuilderHandler())
+            configuration.RegisterTypeHandler(New TypeHandlerPredicate(), _ 
+New StringBuilderHandler())
             Return configuration
         End Function
         ' end Configure
 
 
-        Private Shared Sub TestReadWriteDelete()Sub TestReadWriteDelete()
+        Private Shared Sub TestReadWriteDelete()
             StoreCar()
             ' Does it still work after close? 
             RetrieveCar()
@@ -82,7 +85,8 @@ As Boolean Implements ITypeHandlerPredicate.Match
                     If car Is Nothing Then
                         System.Console.WriteLine("Retrieved: Nothing")
                     Else
-                        System.Console.WriteLine("Retrieved: " + car.ToString())
+                        System.Console.WriteLine("Retrieved: " _ 
++ car.ToString())
                     End If
 
                 Finally
@@ -92,7 +96,7 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Sub
         ' end RetrieveCar
 
-        Private Shared Sub DeleteCar()Sub DeleteCar()
+        Private Shared Sub DeleteCar()
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
                 Try
@@ -110,14 +114,15 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Sub
         ' end DeleteCar
 
-        Private Shared Sub StoreCar()Sub StoreCar()
+        Private Shared Sub StoreCar()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
                 Try
                     Dim car As New Car("BMW")
                     container.Store(car)
-                    car = DirectCast(container.Query(GetType(Car)).[Next](), Car)
+                    car = _ 
+DirectCast(container.Query(GetType(Car)).[Next](), Car)
 
                     System.Console.WriteLine("Stored: " + car.ToString())
                 Finally
@@ -127,7 +132,7 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Sub
         ' end StoreCar
 
-        Private Shared Sub TestCompare()Sub TestCompare()
+        Private Shared Sub TestCompare()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
@@ -151,7 +156,7 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Sub
         ' end TestCompare
 
-        Private Shared Sub TestDefrag()Sub TestDefrag()
+        Private Shared TestDefrag()
             File.Delete(Db4oFileName + ".backup")
             StoreCar()
             Defragment.Defrag(Db4oFileName)
@@ -159,10 +164,12 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Sub
         ' end TestDefrag
 
-        Private Shared Function Database()Function Database(ByVal configuration As IConfiguration) As IObjectContainer
+        Private Shared Function Database(ByVal configuration As IConfiguration) _ 
+As IObjectContainer
             If _container Is Nothing Then
                 Try
-                    _container = Db4oFactory.OpenFile(configuration, Db4oFileName)
+                    _container = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
                 Catch ex As DatabaseFileLockedException
                     System.Console.WriteLine(ex.Message)
                 End Try
@@ -171,7 +178,7 @@ As Boolean Implements ITypeHandlerPredicate.Match
         End Function
         ' end Database
 
-        Private Shared Sub CloseDatabase()Sub CloseDatabase()
+        Private Shared Sub CloseDatabase()
             If _container IsNot Nothing Then
                 _container.Close()
                 _container = Nothing
@@ -180,7 +187,7 @@ As Boolean Implements ITypeHandlerPredicate.Match
         ' end CloseDatabase
 
 
-        Private Shared Sub ListResult()Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             System.Console.WriteLine(result.Size())
             While result.HasNext()
                 System.Console.WriteLine(result.[Next]())

@@ -1,75 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Diagnostic Messages Filter	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="820" MadCap:lastWidth="680">
+    <head><title>Diagnostic Messages Filter	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Diagnostic Messages Filter</h1>
-
-
-<p>The standard listeners can potentially produce quite a lot of messages. By writing your own DiagnosticListener you can filter that information.</p>
-
-<p>
-On the stage of application tuning you can be interested in optimizing perfor<span id="__firefox-findbar-search-id" style="padding:0pt;background-color:yellow;color:black;display:inline;font-size:inherit;"></span>mance through indexing. Diagnostics can help you with that giving information about queries that are running on un-indexed fields. Having this information you can decide which queries are frequent and heavy and should be indexed, and which have little performance impact and do not need an index. Field indexes dramatically improve query performance but they may considerably reduce storage and update performance. </p>
-
-<p>
-In order to get rid of all unnecessary diagnostic information and concentrate on indexes let's create special diagnostic listener:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.java/IndexDiagListener.java.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.cs/IndexDiagListener.cs.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.vb/IndexDiagListener.vb.flsnp" />
-<p>[/filter]  
-</p>
-
-<p>The following command will install the new listener:</p>
-
-<p>[filter=java]</p>
-
-<p>Java:</p><p><code>configuration.diagnostic().addListener(new IndexDiagListener())</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<p>c#: </p><p><code>configuration.Diagnostic().AddListener(new IndexDiagListener())</code></p>
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<p>VB: </p><p><code>configuration.Diagnostic().AddListener(new IndexDiagListener())</code></p>
-
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>We can check the efficacy of IndexDiagListener using queries from the previous paragraphs:</p>
-
-<p MadCap:conditions="Primary.Java">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.java/testIndexDiagnostics.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.cs/TestIndexDiagnostics.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.vb/TestIndexDiagnostics.flsnp" />
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>Potentially this piece of code triggers all the diagnostic objects, but we are getting only index warning messages due to IndexDiagListener.</p> 
-     
-
+        <p>The standard listeners can potentially produce quite a lot of messages. By writing your own DiagnosticListener you can filter that information.</p>
+        <p>On the stage of application tuning you can be interested in optimizing performance through indexing. Diagnostics can help you with that giving information about queries that are running on un-indexed fields. Having this information you can decide which queries are frequent and heavy and should be indexed, and which have little performance impact and do not need an index. Field indexes dramatically improve query performance but they may considerably reduce storage and update performance. </p>
+        <p>In order to get rid of all unnecessary diagnostic information and concentrate on indexes let's create special diagnostic listener:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.java/IndexDiagListener.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.cs/IndexDiagListener.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.vb/IndexDiagListener.vb.flsnp" />
+        </p>
+        <p>The following command will install the new listener:</p>
+        <p MadCap:conditions="Primary.Java">
+            <p>Java:</p><code>configuration.diagnostic().addListener(new IndexDiagListener())</code>
+        </p>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p>c#: </p>
+            <p><code>configuration.Diagnostic().AddListener(new IndexDiagListener())</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p>VB: </p>
+            <p><code>configuration.Diagnostic().AddListener(new IndexDiagListener())</code>
+            </p>
+        </p>
+        <p>We can check the efficacy of IndexDiagListener using queries from the previous paragraphs:</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.java/testIndexDiagnostics.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.cs/TestIndexDiagnostics.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.vb/TestIndexDiagnostics.flsnp" />
+        </p>
+        <p>Potentially this piece of code triggers all the diagnostic objects, but we are getting only index warning messages due to IndexDiagListener.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="diagnosticsvb.zip">VB.NET </a>
@@ -79,7 +53,5 @@ In order to get rid of all unnecessary diagnostic information and concentrate on
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="diagnosticsjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

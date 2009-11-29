@@ -14,23 +14,46 @@
         <p MadCap:conditions="Primary:cs" />
         <p MadCap:conditions="Primary..NET,Primary.VB.NET">
             <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C1.vb/C1.vb.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C2.java/C2.java.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C2.cs/C2.cs.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C2.vb/C2.vb.flsnp" />
-            <p>
-            </p>
-            <p>The above C2 class needs to have callConstructors set to true. Otherwise, since transient members are not stored and the constructor code is not executed, toString() will potentially run into a NullPointerException on x.length().</p>
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C3.java/C3.java.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C3.cs/C3.cs.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C3.vb/C3.vb.flsnp" />
-            <p>The above C3 class needs to have callConstructors set to false (the default), since the (only) constructor will throw a NullPointerException when called with a null value.</p>
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C4.java/C4.java.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C4.cs/C4.cs.flsnp" />
-            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C4.vb/C4.vb.flsnp" />
-            <p>
-            </p>
-            <p MadCap:conditions="Primary:vb" />
         </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C2.java/C2.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C2.cs/C2.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C2.vb/C2.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The above C2 class needs to have callConstructors set to true. Otherwise, since transient members are not stored and the constructor code is not executed, toString() will potentially run into a NullPointerException on x.length().</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C3.java/C3.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C3.cs/C3.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C3.vb/C3.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>The above C3 class needs to have callConstructors set to false (the default), since the (only) constructor will throw a NullPointerException when called with a null value.</p>
+        <p MadCap:conditions="Primary.Java">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C4.java/C4.java.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C4.cs/C4.cs.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Examples/C4.vb/C4.vb.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
         <p>This class cannot be cleanly reinstantiated by db4o: both approaches will fail, so one has to resort to configuring a translator.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">

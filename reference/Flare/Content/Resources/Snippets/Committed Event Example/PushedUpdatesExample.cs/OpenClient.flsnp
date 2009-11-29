@@ -1,12 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: OpenClient
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="950">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: OpenClient
 private IObjectContainer OpenClient()
          {
             try
              {
-                IObjectContainer client = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, Port, User,
+                IObjectContainer client = 
+Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), "localhost", Port, User,
                         Password);
-                EventHandler&lt;CommitEventArgs&gt; committedEventHandler = CommittedEventHandler;
-                IEventRegistry eventRegistry = EventRegistryFactory.ForObjectContainer(client);
+                EventHandler&lt;CommitEventArgs&gt; committedEventHandler = 
+CommittedEventHandler;
+                IEventRegistry eventRegistry = 
+EventRegistryFactory.ForObjectContainer(client);
                 eventRegistry.Committed += CommittedEventHandler;
                 // save the client-listener pair in a dictionary, so that we can
                 // remove the listener later
@@ -18,4 +26,6 @@ private IObjectContainer OpenClient()
                 System.Console.WriteLine(ex.ToString());
             }
             return null;
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

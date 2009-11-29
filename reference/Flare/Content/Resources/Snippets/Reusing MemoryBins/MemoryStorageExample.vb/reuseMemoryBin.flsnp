@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: reuseMemoryBin
-Public Shared Sub ReuseMemoryBin()Sub ReuseMemoryBin()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="738" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: reuseMemoryBin
+Public Shared Sub ReuseMemoryBin()
             ' Create original storage
             Dim origStorage As New MemoryStorage()
-            Dim origConfig As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim origConfig As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
             origConfig.File.Storage = origStorage
             ' A new MemoryBin identified by Db4oUri will be created
-            Dim origDb As IObjectContainer = Db4oEmbedded.OpenFile(origConfig, Db4oUri)
-            origDb.Store(New Book(&quot;Alice in Wonderland&quot;))
+            Dim origDb As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(origConfig, Db4oUri)
+            origDb.Store(New Book("Alice in Wonderland"))
             origDb.Close()
 
             ' Retrieve original bin by its URI
@@ -17,14 +24,20 @@ Public Shared Sub ReuseMemoryBin()Sub ReuseMemoryBin()
             ' Create a new bin, using the data from the original bin
             Dim newBin As New MemoryBin(data, New DoublingGrowthStrategy())
             Dim newStorage As New MemoryStorage()
-            ' Assign the new bin to a new MemoryStorage using the same Db4oUri
+            ' Assign the new bin to a new MemoryStorage 
+            ' using the same Db4oUri
             newStorage.Bin(Db4oUri, newBin)
-            Dim newConfig As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim newConfig As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
             newConfig.File.Storage = origStorage
             ' Open object container using the new bin with the original data
-            Dim newDb As IObjectContainer = Db4oEmbedded.OpenFile(newConfig, Db4oUri)
+            Dim newDb As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(newConfig, Db4oUri)
             ' test that the data is still there
-            Dim book As Book = DirectCast(newDb.QueryByExample(New Book(&quot;Alice in Wonderland&quot;))(0), Book)
+            Dim book As Book = DirectCast(newDb._ 
+QueryByExample(New Book("Alice in Wonderland"))(0), Book)
             System.Console.WriteLine(book)
             newDb.Close()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

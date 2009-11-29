@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.cs: TestCascadedDelete
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CallbacksExample.cs: TestCascadedDelete
 private static void TestCascadedDelete()
          {
         FillContainer();
@@ -8,8 +13,10 @@ private static void TestCascadedDelete()
                 IList result = container.QueryByExample(null);
           ListResult(result);
           
-          IEventRegistry registry =  EventRegistryFactory.ForObjectContainer(container);
-          // register an event handler, which will delete the pilot when his car is Deleted 
+          IEventRegistry registry =  
+EventRegistryFactory.ForObjectContainer(container);
+          // register an event handler, which will 
+          // delete the pilot when his car is Deleted 
                 registry.Deleted += OnDeleted;
           // delete all the cars
           IList&lt;Car&gt; cars = container.Query&lt;Car&gt;();
@@ -23,4 +30,6 @@ private static void TestCascadedDelete()
         } finally  {
                 CloseContainer();
         }
-      }</pre>    </body></html>
+      }</pre>
+    </body>
+</html>

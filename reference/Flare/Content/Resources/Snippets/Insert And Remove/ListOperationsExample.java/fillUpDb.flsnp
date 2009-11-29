@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: fillUpDb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="758" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: fillUpDb
 private static void fillUpDb()
          {
             int listCount = 2;
@@ -13,12 +18,13 @@ private static void fillUpDb()
                 for (int i = 0; i &lt; listCount; i++)
                  {
                     ListObject lo = new ListObject();
-                    lo.setName(&quot;list&quot; + String.format(&quot;%3d&quot;, i));
+                    lo.setName("list" + String.format("%3d", i));
                     for (int j = 0; j &lt; dataCount; j++)
                      {
                         DataObject dataObject = new DataObject();
-                        dataObject.setName( &quot;data&quot; + String.format(&quot;%5d&quot;, j));
-                        dataObject.setData( System.currentTimeMillis() + &quot; ---- Data Object &quot; + String.format(&quot;%5d&quot;, j));
+                        dataObject.setName( "data" + String.format("%5d", j));
+                        dataObject.setData( System.currentTimeMillis() 
++ " ---- Data Object " + String.format("%5d", j));
                         lo.getData().add(dataObject);
                     }
                     db.set(lo);
@@ -30,6 +36,9 @@ private static void fillUpDb()
              {
                 db.close();
             }
-            System.out.println(&quot;Completed &quot; + listCount + &quot; lists of &quot; + dataCount + &quot; objects each.&quot;);
-            System.out.println(&quot;Elapsed time: &quot; + elapsedTime + &quot; ms.&quot;);
-        }</pre>    </body></html>
+            System.out.println("Completed " + listCount + " lists of " 
++ dataCount + " objects each.");
+            System.out.println("Elapsed time: " + elapsedTime + " ms.");
+        }</pre>
+    </body>
+</html>

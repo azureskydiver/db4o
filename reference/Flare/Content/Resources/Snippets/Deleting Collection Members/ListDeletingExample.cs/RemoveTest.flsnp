@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.cs: RemoveTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.cs: RemoveTest
 private static void RemoveTest() {
             // set update depth to 1 as we only 
             // modify List field
             IConfiguration configuration = Db4oFactory.NewConfiguration();
             configuration.ObjectClass(typeof(ListObject)).UpdateDepth(1);
-            IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            IObjectContainer db = 
+Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
              {
-                IList&lt;ListObject&gt; result = db.Query&lt;ListObject&gt;(typeof(ListObject));
+                IList&lt;ListObject&gt; result = 
+db.Query&lt;ListObject&gt;(typeof(ListObject));
                 if (result.Count &gt; 0)
                  {
                   // retrieve a ListObject
@@ -23,14 +30,20 @@ private static void RemoveTest() {
             // and DataObjects in the database
             db = Db4oFactory.OpenFile(Db4oFileName);
             try  {
-              IList&lt;ListObject&gt; result = db.Query&lt;ListObject&gt;(typeof(ListObject));
+              IList&lt;ListObject&gt; result = 
+db.Query&lt;ListObject&gt;(typeof(ListObject));
                 if (result.Count &gt; 0)  {
                   ListObject lo1 = result[0];
-                  Console.WriteLine(&quot;DataObjects in the list:  &quot; + lo1.Data.Count);
+                  Console.WriteLine("DataObjects in the list:  " + 
+lo1.Data.Count);
                 }
-                IList&lt;DataObject&gt; removedObjects = db.Query&lt;DataObject&gt;(typeof(DataObject));
-                Console.WriteLine(&quot;DataObjects in the database: &quot; + removedObjects.Count);
+                IList&lt;DataObject&gt; removedObjects = 
+db.Query&lt;DataObject&gt;(typeof(DataObject));
+                Console.WriteLine("DataObjects in the database: " 
++ removedObjects.Count);
           } finally  {
                 db.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

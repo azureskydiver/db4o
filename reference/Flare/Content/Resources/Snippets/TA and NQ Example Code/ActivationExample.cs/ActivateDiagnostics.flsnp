@@ -1,7 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: ActivateDiagnostics
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="690">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: ActivateDiagnostics
 private static void ActivateDiagnostics(IConfiguration configuration) 
          {
-        // Add diagnostic listener that will show all the classes that are not
+        // Add diagnostic listener that will 
+        // show all the classes that are not
         // TA aware.
         configuration.Diagnostic().AddListener(new TaDiagListener());
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

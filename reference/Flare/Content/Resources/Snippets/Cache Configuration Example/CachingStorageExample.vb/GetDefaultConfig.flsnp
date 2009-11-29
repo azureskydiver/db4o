@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="690">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: GetDefaultConfig
-Private Shared Function GetDefaultConfig()Function GetDefaultConfig() As IEmbeddedConfiguration
-            Dim config As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+Private Shared Function  GetDefaultConfig() As IEmbeddedConfiguration
+            Dim config As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
             Return config
         End Function</pre>
     </body>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="537" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="598" MadCap:lastWidth="830">
     <head>
     </head>
     <body>
@@ -14,13 +14,16 @@ Private Shared Sub CheckResults()Sub CheckResults()
                     ' ListObject, DataObject and its list members
                     Dim activationDepth As Integer = 3
                     db.Ext.Configure.ActivationDepth(activationDepth)
-                    Console.WriteLine("Result count was {0}, looping with activation depth {1}", result.Count, activationDepth)
+                    Console.WriteLine("Result count was {0}, _ 
+looping with activation depth {1}", result.Count, activationDepth)
                     sw.Start()
                     For Each lo As ListObject In result
                         Console.WriteLine("ListObj {0} has {1} objects", lo.Name, _ 
-(Microsoft.VisualBasic.IIf((lo.Data Is Nothing), "&lt;null&gt;", lo.Data.Count.ToString)))
+(Microsoft.VisualBasic.IIf((lo.Data Is Nothing), "&lt;null&gt;", _ 
+lo.Data.Count.ToString)))
                         Console.WriteLine(" --- {0} at index 0", _ 
-(Microsoft.VisualBasic.IIf((Not (lo.Data Is Nothing) AndAlso lo.Data.Count &gt; 0), lo.Data(0).ToString, "&lt;null&gt;")))
+(Microsoft.VisualBasic.IIf((Not (lo.Data Is Nothing) AndAlso _ 
+lo.Data.Count &gt; 0), lo.Data(0).ToString, "&lt;null&gt;")))
                     Next
                     sw.Stop()
                 End If

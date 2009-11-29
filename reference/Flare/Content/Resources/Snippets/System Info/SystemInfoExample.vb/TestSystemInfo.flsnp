@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="366" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="810">
     <head>
     </head>
     <body>
@@ -8,17 +8,17 @@ Private Shared Sub TestSystemInfo()Sub TestSystemInfo()
             Dim dbSize As Long = _container.Ext().SystemInfo().TotalSize()
             Dim fsSize As Long = _container.Ext().SystemInfo().FreespaceSize()
             If dbSize &gt; MaxDbSize Then
-                System.Console.WriteLine("Attention! Database file size is over the limit. _ 
-Maintenance required")
+                System.Console.WriteLine("Attention! Database file size is _ 
+over the limit. Maintenance required")
             End If
             _logWriter.WriteLine("Total database size: " + dbSize.ToString())
             If fsSize &gt; MaxFsSize Then
-                System.Console.WriteLine("Attention! Freespace size is over the limit. _ 
-Maintenance required")
+                System.Console.WriteLine("Attention! Freespace size is over _ 
+the limit. Maintenance required")
             End If
             _logWriter.WriteLine("Database freespace size: " + fsSize.ToString())
-            _logWriter.WriteLine("Database freespace entries: " + _container.Ext().SystemInfo()._ 
-FreespaceEntryCount().ToString())
+            _logWriter.WriteLine("Database freespace entries: " + _ 
+_container.Ext().SystemInfo().FreespaceEntryCount().ToString())
         End Sub</pre>
     </body>
 </html>

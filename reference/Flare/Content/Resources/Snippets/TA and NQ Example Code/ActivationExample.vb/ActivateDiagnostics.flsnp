@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: ActivateDiagnostics
-Private Shared Sub ActivateDiagnostics()Sub ActivateDiagnostics(ByVal configuration As IConfiguration)
-            ' Add diagnostic listener that will show all the classes that are not
-            ' TA aware.
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: ActivateDiagnostics
+Private Shared Sub ActivateDiagnostics(ByVal configuration As IConfiguration)
+            ' Add diagnostic listener that will show all the 
+            ' classes that are not TA aware.
             configuration.Diagnostic().AddListener(New TaDiagListener())
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

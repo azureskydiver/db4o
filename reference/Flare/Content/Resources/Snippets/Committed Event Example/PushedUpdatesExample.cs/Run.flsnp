@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: Run
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: Run
 public void Run()
          {
             File.Delete(Db4oFileName);
-            IObjectServer server = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, Port);
+            IObjectServer server = Db4oClientServer.
+OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, Port);
             try
              {
                 server.GrantAccess(User, Password);
@@ -18,7 +24,8 @@ public void Run()
                         WaitForCompletion();
 
                         // save pilot with client1
-                        Car client1Car = new Car(&quot;Ferrari&quot;, 2006, new Pilot(&quot;Schumacher&quot;));
+                        Car client1Car = new Car("Ferrari", 
+2006, new Pilot("Schumacher"));
                         client1.Store(client1Car);
                         client1.Commit();
 
@@ -30,7 +37,7 @@ public void Run()
 
                         // modify the pilot with client1
                         client1Car.Model = 2007;
-                        client1Car.Pilot = new Pilot(&quot;Hakkinnen&quot;);
+                        client1Car.Pilot = new Pilot("Hakkinnen");
                         client1.Store(client1Car);
                         client1.Commit();
 
@@ -62,4 +69,6 @@ public void Run()
              {
                 server.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

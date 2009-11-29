@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="119" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="118" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Delete
-Public Sub Delete()Sub Delete(ByVal context As IDeleteContext) Implements ITypeHandler4.Delete
+Public Sub Delete()(ByVal context As IDeleteContext) _ 
+Implements ITypeHandler4.Delete
             context.ReadSlot()
         End Sub</pre>
     </body>

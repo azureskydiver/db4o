@@ -1,5 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Compare
-Private Shared Function Compare()Function Compare(ByVal a_compare As StringBuilder, ByVal a_with As StringBuilder) As Integer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Compare
+Private Shared Function Compare(ByVal a_compare As StringBuilder, _ 
+ByVal a_with As StringBuilder) As Integer
             If a_compare Is Nothing Then
                 If a_with Is Nothing Then
                     Return 0
@@ -15,4 +21,6 @@ Private Shared Function Compare()Function Compare(ByVal a_compare As StringBuild
             a_with.CopyTo(0, c_with, 0, a_with.Length)
 
             Return CompareChars(c_compare, c_with)
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

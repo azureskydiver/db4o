@@ -1,17 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.java: storeWithTypehandler
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.java: storeWithTypehandler
 private static void storeWithTypehandler()  {
     Configuration configuration = Db4o.newConfiguration();
     // add a custom typehandler support
         TypeHandlerPredicate predicate = new TypeHandlerPredicate()  {
             public boolean match(ReflectClass classReflector)  {
               GenericReflector reflector = new GenericReflector(
-                  null, new JdkReflector(Thread.currentThread().getContextClassLoader()));
+                  null, new JdkReflector(
+Thread.currentThread().getContextClassLoader()));
           ReflectClass claxx = reflector.forName(NotStorable.class.getName()); 
           boolean res = claxx.equals(classReflector);  
                 return res;
             }
         };
         
-        configuration.registerTypeHandler(predicate, new NotStorableTypehandler());
+        configuration.registerTypeHandler(
+predicate, new NotStorableTypehandler());
         tryStoreAndRetrieve(configuration);
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>
