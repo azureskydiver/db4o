@@ -1,13 +1,8 @@
+/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
 package com.db4o.typehandlers;
 
 public interface QueryableTypeHandler extends TypeHandler4 {
 	
-	/**
-	 * Returns true if the types handled by this type handler can not refer to other objects.
-	 */
-    public boolean isSimple();
-
-	public boolean descendsIntoMembers();
-
+    public boolean descendsIntoMembers();
 
 }

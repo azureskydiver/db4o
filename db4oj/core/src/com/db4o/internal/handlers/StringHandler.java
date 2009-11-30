@@ -32,11 +32,7 @@ public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, Bu
     
     byte getIdentifier() {
         return Const4.YAPSTRING;
-    }
-    
-    public boolean isSimple() {
-    	return true;
-    }
+    }   
     
     public boolean descendsIntoMembers() {
     	return false;

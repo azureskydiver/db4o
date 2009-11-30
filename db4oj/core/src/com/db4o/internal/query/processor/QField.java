@@ -92,8 +92,8 @@ public class QField implements Visitor4, Unversioned{
 		return _fieldMetadata == null ||  Handlers4.handlesClass(_fieldMetadata.getHandler());
 	}
 	
-	boolean isSimple(){
-		return _fieldMetadata != null &&  Handlers4.handlesSimple(_fieldMetadata.getHandler());
+	boolean isQueryLeaf(){
+		return _fieldMetadata != null &&  Handlers4.isQueryLeaf(_fieldMetadata.getHandler());
 	}
 	
 	PreparedComparison prepareComparison(Context context, Object obj){

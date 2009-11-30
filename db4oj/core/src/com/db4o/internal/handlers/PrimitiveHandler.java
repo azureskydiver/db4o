@@ -49,10 +49,6 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
         return Platform4.nullableTypeFor(primitiveJavaClass());
     }
     
-    public boolean isSimple() {
-    	return true;
-    }
-    
     public boolean descendsIntoMembers() {
     	return false;
     }

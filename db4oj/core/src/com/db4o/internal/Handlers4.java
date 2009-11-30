@@ -42,12 +42,17 @@ public class Handlers4 {
     
     public static final int ANY_ARRAY_N_ID = 13;
     
-    public static boolean handlesSimple(TypeHandler4 handler){
+    public static boolean isQueryLeaf(TypeHandler4 handler){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
         if (!(baseTypeHandler instanceof QueryableTypeHandler)) {
         	return false;
         }
-        return ((QueryableTypeHandler)baseTypeHandler).isSimple();
+        
+        if (baseTypeHandler instanceof ArrayHandler) {
+        	return false;
+        }
+        
+        return baseTypeHandler instanceof ValueTypeHandler;
     }
     
     public static boolean handlesArray(TypeHandler4 handler){

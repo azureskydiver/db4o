@@ -134,7 +134,7 @@ public class QConObject extends QCon {
 
     void evaluateEvaluationsExec(final QCandidates a_candidates,
         boolean rereadObject) {
-        if (i_field.isSimple()) {
+        if (i_field.isQueryLeaf()) {
             boolean hasEvaluation = false;
             Iterator4 i = iterateChildren();
             while (i.moveNext()) {
@@ -186,7 +186,7 @@ public class QConObject extends QCon {
     	// TODO: The following can be skipped if we used the index on
     	//       this field to load the objects, if hasOrdering() is false
     	
-    	if (i_field.isSimple() || isNullConstraint()) {
+    	if (i_field.isQueryLeaf() || isNullConstraint()) {
         	a_candidates.traverse(i_field);
             prepareComparison(i_field);
             a_candidates.filter(this);

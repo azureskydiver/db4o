@@ -327,8 +327,7 @@ public class LocalTransaction extends Transaction {
         SlotChange slot = new SlotChange(id);
         _slotChanges.add(slot);
         return (SlotChange)slot.addedOrExisting();
-    }
-    
+    }    
     
     public final SlotChange findSlotChange(int a_id) {
         checkSynchronization();
@@ -718,7 +717,7 @@ public class LocalTransaction extends Transaction {
 		});
 	}
 	
-	private ObjectInfo frozenReferenceFor(final int id) {
+	public ObjectInfo frozenReferenceFor(final int id) {
 		ObjectReference ref = referenceForId(id);
 		if(ref != null){
 			return new FrozenObjectInfo(this, ref, true);
@@ -767,7 +766,7 @@ public class LocalTransaction extends Transaction {
         freespaceManager().commit();
     }
 
-	private LazyObjectReference lazyReferenceFor(final int id) {
+	public LazyObjectReference lazyReferenceFor(final int id) {
 		return new LazyObjectReference(LocalTransaction.this, id);
 	}
 	
