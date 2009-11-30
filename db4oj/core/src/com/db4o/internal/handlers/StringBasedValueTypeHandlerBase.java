@@ -59,10 +59,6 @@ public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHan
 	    _classReflector = reflector.forClass(_clazz);
 	}
 
-	public boolean isSimple() {
-		return true;
-	}
-
 	public boolean descendsIntoMembers() {
 		return false;
 	}

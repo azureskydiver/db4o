@@ -23,10 +23,6 @@ public abstract class TreeSetTypeHandler
 		return true;
     }
 
-	public boolean isSimple() {
-	    return false;
-    }
-
 	public void writeInstantiation(WriteContext context, Object obj) {
 		final Comparator comparator = ((TreeSet)obj).comparator();
 		context.writeObject(comparator);

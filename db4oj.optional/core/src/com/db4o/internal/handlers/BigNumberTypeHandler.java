@@ -52,10 +52,6 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 		};
 	}
 
-	public boolean isSimple() {
-		return true;
-    }
-	
 	public boolean descendsIntoMembers() {
 		return false;
 	}

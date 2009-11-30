@@ -274,7 +274,7 @@ public class ArrayHandler implements CascadingTypeHandler, Comparable4, ValueTyp
 	}
 	
     public void defragment(DefragmentContext context) {
-        if(Handlers4.handlesSimple(_handler)){
+        if(Handlers4.isPrimitive(_handler)){
             context.incrementOffset(linkLength());
         }else{
             defragmentSlot(context);
@@ -521,8 +521,4 @@ public class ArrayHandler implements CascadingTypeHandler, Comparable4, ValueTyp
 	public boolean descendsIntoMembers() {
 		return true;
 	}
-
-	public boolean isSimple() {
-		return false;
-	}    
 }

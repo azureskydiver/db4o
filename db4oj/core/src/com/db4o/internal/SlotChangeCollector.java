@@ -2,7 +2,7 @@
 
 package com.db4o.internal;
 
-interface SlotChangeCollector {
+public interface SlotChangeCollector {
 
 	void added(int id);
 
