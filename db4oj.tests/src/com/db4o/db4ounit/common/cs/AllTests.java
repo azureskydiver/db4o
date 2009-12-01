@@ -45,6 +45,7 @@ public class AllTests extends Db4oTestSuite {
             ServerToClientTestCase.class,
             ServerTransactionCountTestCase.class,
             SetSemaphoreTestCase.class,
+            SSLSocketTestCase.class,
             SwitchingFilesFromClientTestCase.class,
             SwitchingFilesFromMultipleClientsTestCase.class,
             SwitchingToFileWithDifferentClassesTestCase.class,
