@@ -3,7 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
-
+import com.db4o.foundation.*;
 
 /**
  * @exclude
@@ -51,8 +51,12 @@ public class StoredClassImpl implements StoredClass {
         return _classMetadata.hasClassIndex();
     }
 
-    public void rename(String newName) {
-        _classMetadata.rename(newName);
+    public void rename(final String newName) {
+    	InternalObjectContainer container = (InternalObjectContainer) _transaction.objectContainer();
+    	container.syncExec(new Closure4() { public Object run() {
+    		_classMetadata.rename(newName);
+			return null;
+		}});
     }
 
     public StoredField storedField(String name, Object type) {
