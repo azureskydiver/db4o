@@ -51,7 +51,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
         try {
 			return fixture.openNewSession(this);
 		} catch (Exception e) {
-			throw new RuntimeException("", e);
+			throw new Db4oException(e);
 		}
 	}
 	
