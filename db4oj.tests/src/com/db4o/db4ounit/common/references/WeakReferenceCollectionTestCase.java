@@ -16,6 +16,9 @@ public class WeakReferenceCollectionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void test() throws InterruptedException{
+		if(! Platform4.hasWeakReferences()){
+			return;
+		}
 		Item item = new Item();
 		store(item);
 		commit();
