@@ -47,6 +47,9 @@ public class FileHeader1 extends FileHeader {
     private FileHeaderVariablePart1 _variablePart;
     
     public void close() throws Db4oIOException {
+    	if(_timerFileLock == null){
+    		return;
+    	}
         _timerFileLock.close();
     }
 
