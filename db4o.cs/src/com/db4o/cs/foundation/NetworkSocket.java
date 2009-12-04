@@ -7,20 +7,12 @@ import java.net.*;
 
 public class NetworkSocket extends NetworkSocketBase {
 
-	private Socket _socket;
-	
     public NetworkSocket(String hostName, int port) throws IOException {
-    	super(hostName);
-    	_socket = new Socket(hostName, port);
+    	super(new Socket(hostName, port), hostName);
     }
 
 	public NetworkSocket(Socket socket) throws IOException {
-    	_socket = socket;
-    }
-
-	@Override
-	protected Socket socket() {
-		return _socket;
+		super(socket);
 	}
 
 	@Override

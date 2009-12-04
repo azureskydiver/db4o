@@ -9,29 +9,35 @@ import com.db4o.internal.*;
 public abstract class NetworkSocketBase implements Socket4 {
 
 	private String _hostName;
+	private Socket _socket;
+	private InputStream _in;
+	private OutputStream _out;
 
-	public NetworkSocketBase() {
-		this(null);
+	public NetworkSocketBase(Socket socket) throws IOException {
+		this(socket, null);
     }
 
-    public NetworkSocketBase(String hostName) {
+    public NetworkSocketBase(Socket socket, String hostName) throws IOException {
+    	_socket = socket;
         _hostName=hostName;
+        _in = _socket.getInputStream();
+        _out = _socket.getOutputStream();
     }
 
 	public void close() throws IOException {
-		socket().close();
+		_socket.close();
 	}
 
 	public void flush() throws IOException {
-		socket().getOutputStream().flush();
+		_out.flush();
 	}
 
 	public boolean isConnected() {
-	    return Platform4.isConnected(socket());
+	    return Platform4.isConnected(_socket);
 	}
 
 	public int read(byte[] a_bytes, int a_offset, int a_length) throws IOException {
-				int ret = socket().getInputStream().read(a_bytes, a_offset, a_length);
+				int ret = _in.read(a_bytes, a_offset, a_length);
 				checkEOF(ret);
 				return ret;
 			}
@@ -44,7 +50,7 @@ public abstract class NetworkSocketBase implements Socket4 {
 
 	public void setSoTimeout(int timeout) {
 	    try {
-	        socket().setSoTimeout(timeout);
+	        _socket.setSoTimeout(timeout);
 	    } 
 	    catch (SocketException e) {
 	        e.printStackTrace();
@@ -52,22 +58,20 @@ public abstract class NetworkSocketBase implements Socket4 {
 	}
 
 	public void write(byte[] bytes, int off, int len) throws IOException {
-		socket().getOutputStream().write(bytes,off,len);
+		_out.write(bytes,off,len);
 	}
 
 	public Socket4 openParallelSocket() throws IOException {
 		if(_hostName==null) {
 			throw new IllegalStateException();
 		}
-		return createParallelSocket(_hostName, socket().getPort());
+		return createParallelSocket(_hostName, _socket.getPort());
 	}
 
 	protected abstract Socket4 createParallelSocket(String hostName, int port) throws IOException;
 
 	@Override
 	public String toString() {
-		return socket().toString();
+		return _socket.toString();
 	}
-	
-	protected abstract Socket socket();
 }
