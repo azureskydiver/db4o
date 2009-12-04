@@ -1,4 +1,4 @@
-package com.db4o.foundation.network;
+package com.db4o.cs.foundation;
 
 import java.io.*;
 

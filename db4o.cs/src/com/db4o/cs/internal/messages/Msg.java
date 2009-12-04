@@ -3,10 +3,10 @@
 package com.db4o.cs.internal.messages;
 
 import com.db4o.*;
+import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
 /**

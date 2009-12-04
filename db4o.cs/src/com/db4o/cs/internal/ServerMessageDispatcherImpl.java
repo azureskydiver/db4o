@@ -5,11 +5,11 @@ package com.db4o.cs.internal;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.events.Event4;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.Socket4;
 import com.db4o.internal.*;
 import com.db4o.internal.events.Event4Impl;
 

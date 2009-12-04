@@ -5,7 +5,7 @@ package com.db4o.cs.internal.config;
 import java.util.*;
 
 import com.db4o.cs.config.*;
-import com.db4o.foundation.network.*;
+import com.db4o.cs.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.messaging.*;
 

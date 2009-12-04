@@ -5,7 +5,7 @@ package com.db4o.cs.optional.monitoring;
 import static com.db4o.foundation.Environments.my;
 
 import com.db4o.*;
-import com.db4o.foundation.network.*;
+import com.db4o.cs.foundation.*;
 
 /**
  * @exclude
