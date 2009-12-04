@@ -10,6 +10,7 @@ import org.apache.tools.ant.*;
  */
 public class CompositeNamePropertyTask extends Task {
 
+	private final Pattern pattern = Pattern.compile("\\$\\{([^\\{\\}]+)\\}");
 	private String _name;
 	private String _value;
 	
@@ -26,11 +27,9 @@ public class CompositeNamePropertyTask extends Task {
 		String name = expand(_name);
 		String value = expand(_value);
 		getProject().setProperty(name, value);
-		System.err.println(name + " ::= " + value);
 	}
 	
 	private String expand(String orig) {
-		Pattern pattern = Pattern.compile("\\$\\{([^\\{\\}]+)\\}");
 		String str = orig;
 		boolean matchFound = false;
 		do {
