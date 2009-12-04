@@ -5,7 +5,7 @@ import java.io.*;
 
 import javax.net.ssl.*;
 
-import com.db4o.foundation.network.*;
+import com.db4o.cs.foundation.*;
 
 @decaf.Ignore
 public class SSLSocketFactory implements Socket4Factory {

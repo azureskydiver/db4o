@@ -9,8 +9,8 @@ import java.io.*;
 import javax.management.*;
 
 import com.db4o.*;
+import com.db4o.cs.foundation.*;
 import com.db4o.events.*;
-import com.db4o.foundation.network.*;
 
 /**
  * @exclude

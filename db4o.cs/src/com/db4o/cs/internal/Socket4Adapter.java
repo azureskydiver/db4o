@@ -3,8 +3,8 @@ package com.db4o.cs.internal;
 
 import java.io.*;
 
+import com.db4o.cs.foundation.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.network.*;
 
 public class Socket4Adapter {
 

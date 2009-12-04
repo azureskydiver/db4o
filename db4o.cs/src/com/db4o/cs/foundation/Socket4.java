@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.foundation.network;
+package com.db4o.cs.foundation;
 
 import java.io.*;
 

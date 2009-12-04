@@ -8,7 +8,7 @@ package com.db4o.db4ounit.optional.monitoring.cs;
 import java.io.*;
 import java.util.*;
 
-import com.db4o.foundation.network.*;
+import com.db4o.cs.foundation.*;
 
 public class CountingSocket4Factory implements Socket4Factory {
 

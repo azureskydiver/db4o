@@ -4,8 +4,8 @@ package com.db4o.cs.optional.monitoring;
 
 import com.db4o.config.*;
 import com.db4o.cs.config.*;
+import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.config.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
 /**
