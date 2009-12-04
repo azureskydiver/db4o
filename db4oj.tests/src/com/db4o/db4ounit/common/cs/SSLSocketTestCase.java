@@ -8,13 +8,16 @@ import javax.net.ssl.*;
 
 import com.db4o.config.*;
 import com.db4o.cs.internal.*;
-import com.db4o.cs.optional.ssl.*;
+import com.db4o.cs.ssl.*;
 import com.db4o.db4ounit.util.*;
 
 import db4ounit.*;
 
 @decaf.Remove
 public class SSLSocketTestCase extends StandaloneCSTestCaseBase {
+
+	private static final String KEYSTORE_PATH = "keystore/test_keystore";
+	private static final String KEYSTORE_PASSWORD = "keystore";
 
 	public static class Item {
 	}
@@ -33,8 +36,8 @@ public class SSLSocketTestCase extends StandaloneCSTestCaseBase {
 
 	private SSLContext createContext() throws Exception {
 		KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-		char[] password = "keystore".toCharArray();
-		InputStream in  = new FileInputStream(new File(WorkspaceLocations.TEST_FOLDER, "keystore/test_keystore").getAbsoluteFile());
+		char[] password = KEYSTORE_PASSWORD.toCharArray();
+		InputStream in  = new FileInputStream(new File(WorkspaceLocations.TEST_FOLDER, KEYSTORE_PATH).getAbsoluteFile());
 		ks.load(in, password);
 		in.close();
 		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509", "SunJSSE");
