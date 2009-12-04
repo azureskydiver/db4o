@@ -58,7 +58,7 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	}
 
 	private long connectedClientCount() {
-		MBeanProxy bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(com.db4o.cs.optional.monitoring.ClientConnectionsMBean.class, Db4oMBeans.mBeanIDForContainer(_server.objectContainer())));
+		MBeanProxy bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(com.db4o.cs.monitoring.ClientConnectionsMBean.class, Db4oMBeans.mBeanIDForContainer(_server.objectContainer())));
 		return bean.<Integer>getAttribute("ConnectedClientCount").longValue();
 	}
 
@@ -75,7 +75,7 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 		// We depend on the order of client connection/disconnection event firing.
 		// We want the bean to be notified before the _listener in the test.
 		serverConfiguration.addConfigurationItem(new ConnectionCloseEventSupport(_listener));
-		serverConfiguration.addConfigurationItem(new com.db4o.cs.optional.monitoring.ClientConnectionsMonitoringSupport());
+		serverConfiguration.addConfigurationItem(new com.db4o.cs.monitoring.ClientConnectionsMonitoringSupport());
 		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration, tempFile(), Db4oClientServer.ARBITRARY_PORT);
 		_server.grantAccess(USER, PASSWORD);
 	}

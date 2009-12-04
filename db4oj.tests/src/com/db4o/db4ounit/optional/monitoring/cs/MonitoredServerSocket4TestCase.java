@@ -38,7 +38,7 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 	@Override
 	protected ServerConfiguration serverConfiguration() {
 		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
-		serverConfig.common().add(new com.db4o.cs.optional.monitoring.NetworkingMonitoringSupport());
+		serverConfig.common().add(new com.db4o.cs.monitoring.NetworkingMonitoringSupport());
 		serverConfig.timeoutServerSocket(Integer.MAX_VALUE);
 		
 		setupCountingSocketFactory(serverConfig.networking());		

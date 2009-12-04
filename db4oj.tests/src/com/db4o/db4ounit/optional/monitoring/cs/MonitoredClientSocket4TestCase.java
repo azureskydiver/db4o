@@ -20,7 +20,7 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 	@Override
 	protected ClientConfiguration clientConfiguration() {
 		ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
-		clientConfig.common().add(new com.db4o.cs.optional.monitoring.NetworkingMonitoringSupport());
+		clientConfig.common().add(new com.db4o.cs.monitoring.NetworkingMonitoringSupport());
 		
 		clientConfig.networking().batchMessages(false);
 		clientConfig.prefetchIDCount(1);
