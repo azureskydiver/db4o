@@ -340,6 +340,8 @@
             encoding="UTF-8">
 			<classpath>
 				<pathelement location="${dir.dist.classes.jdk1.2}"/>
+				<pathelement location="${dir.dist.classes.jdk1.2.cs}"/>
+				<pathelement location="${dir.dist.classes.jdk1.2.optional}"/>
 			</classpath>
 		</javac>
 
