@@ -20,7 +20,6 @@ public class AllTests extends ComposibleTestSuite {
 			            CascadedDeleteReadTestCase.class,
 			            ChangeIdentity.class,
 			            CloseUnlocksFileTestCase.class,
-			            ConcurrentRenameTestCase.class,
 			            ComparatorSortTestCase.class,
 			            DatabaseGrowthSizeTestCase.class,
 			            DatabaseUnicityTest.class,
@@ -75,6 +74,9 @@ public class AllTests extends ComposibleTestSuite {
 	 */
 	@Override
 	protected Class[] composeWith() {
-		return new Class[] { PersistTypeTestCase.class, };
+		return new Class[] { 
+				PersistTypeTestCase.class, 
+				ConcurrentRenameTestCase.class, 
+			};
 	}
 }
