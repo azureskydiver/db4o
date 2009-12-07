@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="2266" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="810">
     <head>
     </head>
     <body>
@@ -9,25 +9,26 @@ Imports System.IO
 Imports Db4objects.Db4o
 
 ' Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
+Namespace Db4objects.Db4odoc.Binding
 
-    Public Class CustomerFormClass CustomerForm
+    Public Class CustomerForm
         Inherits System.Windows.Forms.Form
         Private _container As IObjectContainer = Nothing
         Private _customers As ArrayList = New ArrayList()
 
-        Public Sub New()Sub New()
+        Public Sub New()
             InitializeComponent()
             OpenDataFile()
             SetUpDataBindings()
         End Sub
 
-        Private Sub OpenDataFile()Sub OpenDataFile()
-            Dim dataFile As String = Path.Combine(Application.UserAppDataPath, "data.yap")
+        Private Sub OpenDataFile()
+            Dim dataFile As String = Path.Combine(Application.UserAppDataPath, _ 
+"data.yap")
             _container = Db4oFactory.OpenFile(dataFile)
         End Sub
 
-        Private Sub SetUpDataBindings()Sub SetUpDataBindings()
+        Private Sub SetUpDataBindings()
             Dim os As ObjectSet = _container.Get(GetType(Customer))
             If 0 = os.Size() Then
                 ' Generate some initial data
@@ -41,7 +42,8 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
             End If
             _cmbCustomers.DisplayMember = "Name"
             _cmbCustomers.DataSource = _customers
-            _txtPhoneNumber.DataBindings.Add("Text", _customers, "PhoneNumber")
+            _txtPhoneNumber.DataBindings.Add("Text", _customers, _ 
+"PhoneNumber")
         End Sub
 
         Private Sub PersistChanges()Sub PersistChanges()
@@ -112,7 +114,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Binding
 
         End Sub
 
-        Private Sub CustomerForm_FormClosing()Sub CustomerForm_FormClosing(ByVal sender As System.Object, _ 
+        Private SubCustomerForm_FormClosing(ByVal sender As System.Object, _ 
 ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
             PersistChanges()
             _container.Close()

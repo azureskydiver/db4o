@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarByPilotQBE
-Private Shared Sub RetrieveCarByPilotQBE()Sub _ 
+Private Shared Sub _ 
 RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
             Dim pilotproto As Pilot = New Pilot("Rubens Barrichello", 0)
             Dim carproto As Car = New Car(Nothing)

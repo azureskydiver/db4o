@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestImmediateQueries
-Private Shared Sub TestImmediateQueries()Sub TestImmediateQueries()
+Private Shared Sub TestImmediateQueries()
             Console.WriteLine( _ 
 "Testing query performance on 10000 pilot objects in Immediate mode")
             FillUpDB(10000)

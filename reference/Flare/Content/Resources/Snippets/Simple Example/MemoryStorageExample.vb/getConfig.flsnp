@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: getConfig
-Private Shared Function  GetConfig() As IEmbeddedConfiguration
+Private Shared Function GetConfig() As IEmbeddedConfiguration
             Dim config As IEmbeddedConfiguration = _ 
 Db4oEmbedded.NewConfiguration()
             Return config

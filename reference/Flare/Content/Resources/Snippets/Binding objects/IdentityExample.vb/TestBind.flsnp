@@ -1,15 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.vb: TestBind
-Private Shared Sub TestBind()Sub TestBind()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IdentityExample.vb: TestBind
+Private Shared Sub TestBind()
             SetObjects()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim q As IQuery = db.Query()
                 q.Constrain(GetType(Car))
-                q.Descend(&quot;_model&quot;).Constrain(&quot;Ferrari&quot;)
+                q.Descend("_model").Constrain("Ferrari")
                 Dim result As IObjectSet = q.Execute()
                 Dim car1 As Car = CType(result(0), Car)
                 Dim IdCar1 As Long = db.Ext().GetID(car1)
-                Dim car2 As Car = New Car(&quot;BMW&quot;, New Pilot(&quot;Rubens Barrichello&quot;))
+                Dim car2 As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 db.Ext().Bind(car2, IdCar1)
                 db.Set(car2)
 
@@ -18,4 +23,6 @@ Private Shared Sub TestBind()Sub TestBind()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

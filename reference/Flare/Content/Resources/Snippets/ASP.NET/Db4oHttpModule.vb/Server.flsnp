@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.vb: Server
-Private Shared ReadOnly Property Server()Property Server() As IObjectServer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="730">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.vb: Server
+Private Shared ReadOnly Property Server() As IObjectServer
             Get
                 Dim context As HttpContext = HttpContext.Current
                 If objectServer Is Nothing Then
-                    Dim yapFilePath As String = context.Server.MapPath(ConfigurationManager.AppSettings(KEY_DB4O_FILE_NAME))
+                    Dim yapFilePath As String = context.Server. _ 
+MapPath(ConfigurationManager.AppSettings(KEY_DB4O_FILE_NAME))
                     objectServer = Db4oFactory.OpenServer(yapFilePath, 0)
                 End If
                 Return objectServer
             End Get
-        End Property</pre>    </body></html>
+        End Property</pre>
+    </body>
+</html>

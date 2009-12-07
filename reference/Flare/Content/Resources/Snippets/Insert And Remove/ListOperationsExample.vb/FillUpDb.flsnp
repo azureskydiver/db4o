@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="678" MadCap:lastWidth="890">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="718" MadCap:lastWidth="840">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: FillUpDb
-Private Shared Sub FillUpDb()Sub FillUpDb()
+Private Shared Sub FillUpDb()
             Dim listCount As Integer = 2
             Dim dataCount As Integer = 50000
             Dim sw As Stopwatch = New Stopwatch
@@ -23,10 +23,12 @@ Private Shared Sub FillUpDb()Sub FillUpDb()
                         dataObject.Data = DateTime.Now.ToString + _ 
 " ---- Data Object " + j.ToString("00000")
                         lo.Data.Add(dataObject)
-                        System.Math.Min(System.Threading.Interlocked.Increment(j), j - 1)
+                        System.Math.Min(System.Threading.Interlocked.Increment(j), _ 
+j - 1)
                     End While
                     db.Set(lo)
-                    System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
+                    System.Math.Min(System.Threading.Interlocked.Increment(i), _ 
+i - 1)
                 End While
                 sw.Stop()
             Finally

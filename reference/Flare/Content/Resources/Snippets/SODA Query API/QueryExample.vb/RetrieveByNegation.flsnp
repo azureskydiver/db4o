@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByNegation
-Public Shared Sub RetrieveByNegation()Sub _ 
+Public Shared Sub _ 
 RetrieveByNegation(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))

@@ -1,13 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.vb: SetObjects
-Private Shared Sub SetObjects()Sub SetObjects()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="680">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">RefactoringExample.vb: SetObjects
+Private Shared Sub SetObjects()
             File.Delete(Db4oFileName)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;)
+                Dim pilot As Pilot = New Pilot("Rubens Barrichello")
                 container.Set(pilot)
-                pilot = New Pilot(&quot;Michael Schumacher&quot;)
+                pilot = New Pilot("Michael Schumacher")
                 container.Set(pilot)
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

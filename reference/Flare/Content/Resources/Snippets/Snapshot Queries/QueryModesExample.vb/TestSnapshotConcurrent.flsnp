@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="850">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="638" MadCap:lastWidth="850">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestSnapshotConcurrent
-Private Shared Sub TestSnapshotConcurrent()Sub TestSnapshotConcurrent()
+Private Shared Sub TestSnapshotConcurrent()
             Console.WriteLine("Testing snapshot mode with concurrent modifications")
             FillUpDB(10)
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            Dim configuration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
             configuration.Queries.EvaluationMode(QueryEvaluationMode.SNAPSHOT)
             Dim db As IObjectContainer = _ 
 Db4oFactory.OpenFile(configuration, Db4oFileName)

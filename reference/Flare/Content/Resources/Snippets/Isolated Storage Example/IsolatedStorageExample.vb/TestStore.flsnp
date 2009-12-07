@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IsolatedStorageExample.vb: TestStore
-Private Shared Sub TestStore()Sub TestStore()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(Configure(), Db4oFileName)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IsolatedStorageExample.vb: TestStore
+Private Shared Sub TestStore()
+            Dim db As IObjectContainer = _ 
+Db4oFactory.OpenFile(Configure(), Db4oFileName)
             Try
-                Dim pilot As New Pilot(&quot;Michael Schumacher&quot;)
+                Dim pilot As New Pilot("Michael Schumacher")
                 db.[Set](pilot)
-                System.Console.WriteLine(&quot;New pilot added&quot;)
+                System.Console.WriteLine("New pilot added")
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

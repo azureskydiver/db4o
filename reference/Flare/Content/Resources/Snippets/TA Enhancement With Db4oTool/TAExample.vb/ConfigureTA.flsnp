@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.vb: ConfigureTA
-Private Shared Function ConfigureTA()Function ConfigureTA() As IConfiguration
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TAExample.vb: ConfigureTA
+Private Shared Function  ConfigureTA() As IConfiguration
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
             ' set normal activation to 0
             configuration.ActivationDepth(0)
             ' add TA support
             configuration.Add(New TransparentActivationSupport)
             Return configuration
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

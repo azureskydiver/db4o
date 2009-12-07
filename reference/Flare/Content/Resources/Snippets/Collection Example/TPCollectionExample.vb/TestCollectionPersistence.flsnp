@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: TestCollectionPersistence
-Private Shared Sub TestCollectionPersistence()Sub TestCollectionPersistence()
+Private Shared Sub TestCollectionPersistence()
             StoreCollection()
             Dim container As IObjectContainer = Database(ConfigureTP())
             If container IsNot Nothing Then

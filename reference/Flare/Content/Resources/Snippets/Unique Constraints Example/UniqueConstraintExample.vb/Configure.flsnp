@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="880">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.vb: Configure
-Private Shared Function Configure()Function Configure() As IConfiguration
+Private Shared Function Configure() As IConfiguration
             Dim configuration As IConfiguration = _ 
 Db4oFactory.NewConfiguration
-            configuration.ObjectClass(GetType(Pilot)).ObjectField("_name").Indexed(True)
+            configuration.ObjectClass(GetType(Pilot)). _ 
+ObjectField("_name").Indexed(True)
             configuration.Add(New _ 
 UniqueFieldValueConstraint(GetType(Pilot), "_name"))
             Return configuration

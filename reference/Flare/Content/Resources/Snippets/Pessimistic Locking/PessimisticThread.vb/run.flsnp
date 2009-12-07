@@ -1,24 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PessimisticThread.vb: run
-Public Sub Run()Sub Run()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PessimisticThread.vb: run
+Public Sub Run()
             Try
                 Dim result As IList(Of Pilot) = _container.Query(Of Pilot)()
                 For Each pilot As Pilot In result
                     ' with pessimistic approach the object is locked as soon 
                     ' as we get it 
-                    If Not _container.Ext.SetSemaphore(&quot;LOCK_&quot; + _container.Ext.GetID(pilot).ToString(), 0) Then
-                        Console.WriteLine(&quot;Error. The object is locked&quot;)
+                    If Not _container.Ext.SetSemaphore("LOCK_" + _ 
+_container.Ext.GetID(pilot).ToString(), 0) Then
+                        Console.WriteLine("Error. The object is locked")
                     End If
-                    Console.WriteLine(Name + &quot;Updating pilot: &quot; + pilot.ToString())
+                    Console.WriteLine(Name + "Updating pilot: " + _ 
+pilot.ToString())
                     pilot.AddPoints(1)
                     _container.Store(pilot)
                     ' The changes should be committed to be 
                     ' visible to the other clients
                     _container.Commit()
-                    _container.Ext.ReleaseSemaphore(&quot;LOCK_&quot; + _container.Ext.GetID(pilot).ToString())
-                    Console.WriteLine(Name + &quot;Updated pilot: &quot; + pilot.ToString())
+                    _container.Ext.ReleaseSemaphore("LOCK_" + _ 
+_container.Ext.GetID(pilot).ToString())
+                    Console.WriteLine(Name + "Updated pilot: " _&#160;
++ pilot.ToString())
                     Console.WriteLine()
                 Next
             Finally
                 _container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

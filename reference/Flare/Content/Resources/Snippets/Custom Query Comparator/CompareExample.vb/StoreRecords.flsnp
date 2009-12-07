@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CompareExample.vb: StoreRecords
-Public Shared Sub StoreRecords()Sub _ 
+Public Shared Sub _ 
 StoreRecords(ByVal configuration As IConfiguration)
             File.Delete(FileName)
             Dim container As IObjectContainer = _ 

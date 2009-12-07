@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ParameterizedExamples.vb: PilotNamePredicate
-Private Class PilotNamePredicateClass PilotNamePredicate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ParameterizedExamples.vb: PilotNamePredicate
+Private Class PilotNamePredicate
             Inherits Query.Predicate
             Private startsWith As String
 
-            Public Sub New()Sub New(ByVal startsWith As String)
+            Public Sub New(ByVal startsWith As String)
                 Me.startsWith = startsWith
             End Sub
 
-            Public Function Match()Function Match(ByVal p As Pilot) As Boolean
+            Public Function Match(ByVal p As Pilot) As Boolean
                 Return p.Name.StartsWith(startsWith)
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

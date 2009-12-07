@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.vb: OnUpdating
-Private Sub OnUpdating()Sub OnUpdating(ByVal sender As Object, ByVal args As CancellableObjectEventArgs)
-            ' callback is called asynchronously, so we'll check first if the container is valid and object is saved
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">OptimisticThread.vb: OnUpdating
+Private Sub OnUpdating(ByVal sender As Object, _ 
+ByVal args As CancellableObjectEventArgs)
+            ' callback is called asynchronously, so we'll 
+            ' check first if the container is valid and object is saved
             If (_container.Ext().IsClosed()) Then
                 Return
             End If
@@ -9,17 +16,22 @@ Private Sub OnUpdating()Sub OnUpdating(ByVal sender As Object, ByVal args As Can
             End If
             Dim obj As Object = args.Object
             ' retrieve the object version from the database
-            Dim currentVersion As Long = _container.Ext.GetObjectInfo(obj).GetVersion
+            Dim currentVersion As Long = _ 
+_container.Ext.GetObjectInfo(obj).GetVersion
             Dim id As Long = _container.Ext.GetID(obj)
             ' get the version saved at the object retrieval
             Dim i As IEnumerator = _idVersions.GetEnumerator
             Dim initialVersion As Long = CType(_idVersions(id), Long)
             If Not (initialVersion = currentVersion) Then
-                Console.WriteLine(Name + &quot;Collision: &quot;)
-                Console.WriteLine(Name + &quot;Stored object: version: &quot; + currentVersion.ToString())
-                Console.WriteLine(Name + &quot;New object: &quot; + obj.ToString() + &quot; version: &quot; + initialVersion.ToString())
+                Console.WriteLine(Name + "Collision: ")
+                Console.WriteLine(Name + "Stored object: version: " _ 
++ currentVersion.ToString())
+                Console.WriteLine(Name + "New object: " + obj.ToString() _ 
++ " version: " + initialVersion.ToString())
                 args.Cancel()
             Else
                 _updateSuccess = True
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

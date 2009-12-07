@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="770">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: ListRefreshedResult
-Public Shared Sub ListRefreshedResult()Sub ListRefreshedResult(ByVal container As IObjectContainer, _ 
+Public Shared Sub ListRefreshedResult(ByVal container As IObjectContainer, _ 
 ByVal items As IList(Of Car), ByVal depth As Integer)
             Console.WriteLine(items.Count)
             For Each item As Car In items

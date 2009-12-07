@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: StoreCollection
-Private Shared Sub StoreCollection()Sub StoreCollection()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="720">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: StoreCollection
+Private Shared Sub StoreCollection()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database(ConfigureTP())
             If container IsNot Nothing Then
                 Try
                     Dim team As New Team()
                     For i As Integer = 0 To 9
-                        team.AddPilot(New Pilot(&quot;Pilot #&quot; + i.ToString))
+                        team.AddPilot(New Pilot("Pilot #" + i.ToString))
                     Next
                     container.Store(team)
                     container.Commit()
@@ -16,4 +21,6 @@ Private Shared Sub StoreCollection()Sub StoreCollection()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.vb
-1' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
-2Imports System.Drawing
-3
-4Namespace Db4objectsNamespace Db4objects.Db4odoc.StaticFields
-5    Public Class CarClass Car
-6        Public _color As Color
-7    End Class
-8End Namespace</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Car.vb
+' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
+Imports System.Drawing
+
+Namespace Db4objects.Db4odoc.StaticFields
+    Public Class Car
+        Public _color As Color
+    End Class
+End Namespace</pre>
+    </body>
+</html>

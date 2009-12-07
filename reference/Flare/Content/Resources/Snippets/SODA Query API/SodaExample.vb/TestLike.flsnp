@@ -1,34 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.vb: TestLike
-Public Shared Sub TestLike()Sub TestLike()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="698" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SodaExample.vb: TestLike
+Public Shared Sub TestLike()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
-                    Dim pilot As New Pilot(&quot;Test Pilot1&quot;, 100)
+                    Dim pilot As New Pilot("Test Pilot1", 100)
                     container.[Set](pilot)
-                    pilot = New Pilot(&quot;Test Pilot2&quot;, 102)
+                    pilot = New Pilot("Test Pilot2", 102)
                     container.[Set](pilot)
 
                     ' Simple.IQuery
                     Dim query1 As IQuery = container.Query()
                     query1.Constrain(GetType(Pilot))
-                    query1.Descend(&quot;_name&quot;).Constrain(&quot;est&quot;)
+                    query1.Descend("_name").Constrain("est")
                     Dim result As IObjectSet = query1.Execute()
                     ListResult(result)
 
                     ' Like.IQuery
                     Dim query2 As IQuery = container.Query()
                     query2.Constrain(GetType(Pilot))
-                    ' All pilots with the name containing &quot;est&quot; will be retrieved
-                    query2.Descend(&quot;_name&quot;).Constrain(&quot;est&quot;).[Like]()
+                    ' All pilots with the name containing "est" will be retrieved
+                    query2.Descend("_name").Constrain("est").[Like]()
                     result = query2.Execute()
                     ListResult(result)
                 Catch ex As Db4oException
-                    Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    Console.WriteLine("Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

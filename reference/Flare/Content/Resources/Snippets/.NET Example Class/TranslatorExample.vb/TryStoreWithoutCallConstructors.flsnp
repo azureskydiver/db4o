@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="233" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="820">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: TryStoreWithoutCallConstructors
-Private Shared Sub TryStoreWithoutCallConstructors()Sub TryStoreWithoutCallConstructors()
+Private Shared Sub TryStoreWithoutCallConstructors()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ObjectClass(GetType(CultureInfo)).CallConstructor(False)
             ' trying to store objects that hold onto

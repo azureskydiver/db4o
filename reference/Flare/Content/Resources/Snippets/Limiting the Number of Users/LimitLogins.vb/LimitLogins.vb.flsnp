@@ -1,24 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LimitLogins.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="950">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LimitLogins.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
+Namespace Db4objects.Db4odoc.Semaphores
     '   
     '    This class demonstrates the use of semaphores to limit the
     '    number of logins to a server.
     '   
-    Public Class LimitLoginsClass LimitLogins
+    Public Class LimitLogins
 
-        Shared ReadOnly Host As String = &quot;localhost&quot;
+        Shared ReadOnly Host As String = "localhost"
         Shared ReadOnly Port As Integer = 4455
-        Shared ReadOnly User As String = &quot;db4o&quot;
-        Shared ReadOnly Password As String = &quot;db4o&quot;
+        Shared ReadOnly User As String = "db4o"
+        Shared ReadOnly Password As String = "db4o"
 
         Shared ReadOnly MaximumUsers As Integer = 10
 
-        Public Shared Function Login()Function Login() As IObjectContainer
+        Public Shared Function Login() As IObjectContainer
 
             Dim objectContainer As IObjectContainer
             Try
@@ -31,7 +36,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
 
             Dim i As Integer
             For i = 0 To MaximumUsers - 1 Step i + 1
-                If objectContainer.Ext().SetSemaphore(&quot;max_user_check_&quot; + i.ToString(), 0) Then
+                If objectContainer.Ext().SetSemaphore("max_user_check_" + i.ToString(), 0) Then
                     allowedToLogin = True
                     Exit For
                 End If
@@ -45,4 +50,6 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
             Return objectContainer
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

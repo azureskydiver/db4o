@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrievePilotByCarModelQuery
-Private Shared Sub RetrievePilotByCarModelQuery()Sub _&#160;
+Private Shared Sub _&#160;
 RetrievePilotByCarModelQuery(ByVal db As IObjectContainer)
             Dim carQuery As IQuery = db.Query()
             carQuery.Constrain(GetType(Car))

@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: StoreCarRollback
-Public Shared Sub StoreCarRollback()Sub StoreCarRollback(ByVal db As IObjectContainer)
-            Dim pilot As Pilot = New Pilot(&quot;Michael Schumacher&quot;, 100)
-            Dim car As Car = New Car(&quot;Ferrari&quot;)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="690">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: StoreCarRollback
+Public Shared Sub StoreCarRollback(ByVal db As IObjectContainer)
+            Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)
+            Dim car As Car = New Car("Ferrari")
             car.Pilot = pilot
             db.Set(car)
             db.Rollback()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

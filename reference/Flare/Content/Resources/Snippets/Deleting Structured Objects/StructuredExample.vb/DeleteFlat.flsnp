@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: DeleteFlat
-Private Shared Sub DeleteFlat()Sub DeleteFlat(ByVal db As IObjectContainer)
+Private Shared Sub DeleteFlat(ByVal db As IObjectContainer)
             Dim result As IObjectSet = db.Get(New Car("Ferrari"))
             Dim found As Car = DirectCast(result.Next(), Car)
             db.Delete(found)

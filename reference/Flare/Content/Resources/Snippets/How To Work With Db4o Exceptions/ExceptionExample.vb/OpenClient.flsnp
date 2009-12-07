@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExceptionExample.vb: OpenClient
-Private Shared Function OpenClient()Function OpenClient() As IObjectContainer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ExceptionExample.vb: OpenClient
+Private Shared Function OpenClient() As IObjectContainer
             Dim db As IObjectContainer = Nothing
             Try
-                db = Db4oFactory.OpenClient(&quot;host&quot;, 40, &quot;user&quot;, &quot;password&quot;)
+                db = Db4oFactory.OpenClient("host", 40, "user", "password")
             Catch ex As Exception
                 ' System.Console.WriteLine(ex.Message)
                 ' ask the user for a new filename, print
@@ -12,4 +17,6 @@ Private Shared Function OpenClient()Function OpenClient() As IObjectContainer
                 ' and try again
             End Try
             Return db
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

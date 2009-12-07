@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SystemInfoExample.vb: TestSystemInfo
-Private Shared Sub TestSystemInfo()Sub TestSystemInfo()
+Private Shared Sub TestSystemInfo()
             Dim dbSize As Long = _container.Ext().SystemInfo().TotalSize()
             Dim fsSize As Long = _container.Ext().SystemInfo().FreespaceSize()
             If dbSize &gt; MaxDbSize Then

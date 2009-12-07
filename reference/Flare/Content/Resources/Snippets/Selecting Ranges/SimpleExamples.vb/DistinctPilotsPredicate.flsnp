@@ -1,12 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: DistinctPilotsPredicate
-Private Class DistinctPilotsPredicateClass DistinctPilotsPredicate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="670">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: DistinctPilotsPredicate
+Private Class DistinctPilotsPredicate
             Inherits Query.Predicate
 
-            Public uniqueResult As Dictionary(Of Pilot, Object) = New Dictionary(Of Pilot, Object)()
+            Public uniqueResult As Dictionary(Of Pilot, Object) = _ 
+New Dictionary(Of Pilot, Object)()
 
-            Public Function Match()Function Match(ByVal p As Pilot) As Boolean
+            Public Function Match(ByVal p As Pilot) _ As Boolean
                 ' each Pilot is included in the result
                 uniqueResult.Add(p, Nothing)
                 Return False
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

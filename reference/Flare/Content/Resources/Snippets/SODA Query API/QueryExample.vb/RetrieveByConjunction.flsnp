@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByConjunction
-Public Shared Sub RetrieveByConjunction()Sub _ 
+Public Shared Sub _ 
 RetrieveByConjunction(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))

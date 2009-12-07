@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1658" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="680">
     <head>
     </head>
     <body>
@@ -12,19 +12,23 @@ Imports System.IO.IsolatedStorage
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.IsolatedStorage
+Namespace Db4objects.Db4odoc.IsolatedStorage
 
-    Public Class Db4oIsolatedStorageFileClass Db4oIsolatedStorageFile
+    Public Class Db4oIsolatedStorageFile
         Private _stream As IsolatedStorageFileStream
 
-        &lt;System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError:=True)&gt; _
-        Private Shared Function FlushFileBuffers()Function FlushFileBuffers(ByVal fileHandle As IntPtr) As Integer
+        &lt;System.Runtime.InteropServices.DllImport("kernel32.dll", _ 
+SetLastError:=True)&gt; _
+        Private Shared Function FlushFileBuffers(ByVal fileHandle _ 
+As IntPtr) As Integer
         End Function
 
-        Public Sub New()Sub New(ByVal file As String, ByVal fMode As String)
+        Public Sub New(ByVal file As String, ByVal fMode As String)
             Try
-                Dim isf As IsolatedStorageFile = IsolatedStorageFile.GetUserStoreForAssembly()
-                _stream = New IsolatedStorageFileStream(file, FileMode.OpenOrCreate, IIf(fMode.Equals("rw"), _ 
+                Dim isf As IsolatedStorageFile = _ 
+IsolatedStorageFile.GetUserStoreForAssembly()
+                _stream = New IsolatedStorageFileStream(file, _ 
+FileMode.OpenOrCreate, IIf(fMode.Equals("rw"), _ 
 FileAccess.ReadWrite, FileAccess.Read), isf)
             Catch x As IOException
                 Throw New DatabaseFileLockedException(file, x)
@@ -32,39 +36,39 @@ FileAccess.ReadWrite, FileAccess.Read), isf)
         End Sub
         ' end Db4oIsolatedStorageFile
 
-        Public ReadOnly Property Stream()Property Stream() As FileStream
+        Public ReadOnly Property Stream() As FileStream
             Get
                 Return _stream
             End Get
         End Property
         ' end Stream
 
-        Public Sub Close()Sub Close()
+        Public Sub Close()
             _stream.Close()
         End Sub
         ' end Close
 
-        Public Function Length()Function Length() As Long
+        Public Function Length() As Long
             Return _stream.Length
         End Function
         ' end Length
 
-        Public Function Read()Function Read(ByVal bytes As Byte(), ByVal offset As Integer, ByVal length As Integer) As Integer
+        Public Function Read(ByVal bytes As Byte(), ByVal offset As Integer, ByVal length As Integer) As Integer
             Return _stream.Read(bytes, offset, length)
         End Function
         ' end Read
 
-        Public Sub Read()Sub Read(ByVal bytes As Byte())
+        Public Sub Read(ByVal bytes As Byte())
             _stream.Read(bytes, 0, bytes.Length)
         End Sub
         ' end Read
 
-        Public Sub Seek()Sub Seek(ByVal pos As Long)
+        Public Sub Seek(ByVal pos As Long)
             _stream.Seek(pos, SeekOrigin.Begin)
         End Sub
         ' end Seek
 
-        Public Sub Sync()Sub Sync()
+        Public Sub Sync()
             _stream.Flush()
 
             FlushFileBuffers(_stream.SafeFileHandle.DangerousGetHandle())
@@ -72,17 +76,17 @@ FileAccess.ReadWrite, FileAccess.Read), isf)
         End Sub
         ' end Sync
 
-        Public Function GetFD()Function GetFD() As Db4oIsolatedStorageFile
+        Public Function GetFD() As Db4oIsolatedStorageFile
             Return Me
         End Function
         ' end GetFD
 
-        Public Sub Write()Sub Write(ByVal bytes As Byte())
+        Public Sub Write(ByVal bytes As Byte())
             Me.Write(bytes, 0, bytes.Length)
         End Sub
         ' end Write
 
-        Public Sub Write()Sub Write(ByVal bytes As Byte(), ByVal offset As Integer, ByVal length As Integer)
+        Public Sub Write(ByVal bytes As Byte(), ByVal offset As Integer, ByVal length As Integer)
             _stream.Write(bytes, offset, length)
         End Sub
         ' end Write

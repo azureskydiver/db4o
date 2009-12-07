@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">C.vb
 ' Copyright (C) 2007  Versant Inc.  http://www.db4o.com 
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Refactoring.Initial
-    Class CClass C
+Namespace Db4objects.Db4odoc.Refactoring.Initial
+    Class C
         Inherits B
     End Class
 End Namespace</pre>

@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: Run
-Public Sub Run()Sub Run()
+Public Sub Run()
             File.Delete(Db4oFileName)
             Dim server As IObjectServer = _ 
 Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), _

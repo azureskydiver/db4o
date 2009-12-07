@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: replicateBiDirectional
-Public Shared Sub ReplicateBiDirectional()Sub ReplicateBiDirectional()
-            Dim desktop As IObjectContainer = Db4oFactory.OpenFile(ConfigureReplication(), DtFileName)
-            Dim handheld As IObjectContainer = Db4oFactory.OpenFile(ConfigureReplication(), HhFileName)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="860">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: replicateBiDirectional
+Public Shared Sub ReplicateBiDirectional()
+            Dim desktop As IObjectContainer = Db4oFactory. _ 
+OpenFile(ConfigureReplication(), DtFileName)
+            Dim handheld As IObjectContainer = Db4oFactory. _ 
+OpenFile(ConfigureReplication(), HhFileName)
             Dim replic As IReplicationSession = Replication.Begin(handheld, desktop) '
-            Dim changed As IObjectSet = replic.ProviderA().ObjectsChangedSinceLastReplication()
+            Dim changed As IObjectSet = replic.ProviderA(). _ 
+ObjectsChangedSinceLastReplication()
             'Iterate changed objects, replicate them
             While changed.HasNext()
                 replic.Replicate(changed.Next())
@@ -17,4 +25,6 @@ Public Shared Sub ReplicateBiDirectional()Sub ReplicateBiDirectional()
             replic.Commit()
             handheld.Close()
             desktop.Close()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

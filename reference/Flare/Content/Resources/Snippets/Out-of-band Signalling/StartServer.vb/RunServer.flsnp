@@ -1,15 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.vb: RunServer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StartServer.vb: RunServer
 /**/''' &lt;summary&gt;
         ''' opens the IObjectServer, and waits forever until Close() is called
         ''' or a StopServer message is being received.
         ''' &lt;/summary&gt;
-        Public Sub RunServer()Sub RunServer()
+        Public Sub RunServer()
             ' Using the messaging functionality to redirect all
             ' messages to this.processMessage
-            Dim configuration As IServerConfiguration = Db4oClientServer.NewServerConfiguration()
+            Dim configuration As IServerConfiguration = _ 
+Db4oClientServer.NewServerConfiguration()
             configuration.Networking.MessageRecipient = Me
             SyncLock Me
-                Dim db4oServer As IObjectServer = Db4oClientServer.OpenServer(configuration, File, Port)
+                Dim db4oServer As IObjectServer = Db4oClientServer. _ 
+OpenServer(configuration, File, Port)
                 db4oServer.GrantAccess(User, Password)
                 Try
                     If Not [stop] Then
@@ -21,4 +28,6 @@
                 End Try
                 db4oServer.Close()
             End SyncLock
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

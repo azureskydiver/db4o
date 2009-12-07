@@ -7,8 +7,8 @@
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Activating
-    Public Class SensorPanelClass SensorPanel
+Namespace Db4objects.Db4odoc.Activating
+    Public Class SensorPanel
         Private _sensor As Object
         Private _next As SensorPanel
 
@@ -16,7 +16,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Activating
         Public Sub New()
         End Sub
 
-        Public Sub  New(ByVal value As Integer)
+        Public Sub New(ByVal value As Integer)
             _sensor = value
         End Sub
 
@@ -53,7 +53,7 @@ ByVal first As Integer) As SensorPanel
             End Set
         End Property
 
-        Protected Function  NewElement(ByVal value As Integer) As SensorPanel
+        Protected Function NewElement(ByVal value As Integer) As SensorPanel
             Return New SensorPanel(value)
         End Function
 

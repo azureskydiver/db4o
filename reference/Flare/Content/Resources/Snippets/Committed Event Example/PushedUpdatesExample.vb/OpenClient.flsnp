@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="720">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: OpenClient
-Private Function OpenClient()Function OpenClient() As IObjectContainer
+Private Function OpenClient() As IObjectContainer
             Try
                 Dim client As IObjectContainer = _ 
 Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 

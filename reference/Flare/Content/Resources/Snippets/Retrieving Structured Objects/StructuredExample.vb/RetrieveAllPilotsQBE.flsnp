@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveAllPilotsQBE
-Private Shared Sub RetrieveAllPilotsQBE()Sub _ 
+Private Shared Sub _ 
 RetrieveAllPilotsQBE(ByVal db As IObjectContainer)
             Dim proto As Pilot = New Pilot(Nothing, 0)
             Dim result As IObjectSet = db.Get(proto)

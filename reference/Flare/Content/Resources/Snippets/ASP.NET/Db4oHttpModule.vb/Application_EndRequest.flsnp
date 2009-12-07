@@ -1,11 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.vb: Application_EndRequest
-Private Sub Application_EndRequest()Sub Application_EndRequest(ByVal sender As Object, ByVal e As EventArgs)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.vb: Application_EndRequest
+Private Sub  Application_EndRequest(ByVal sender As Object, _ 
+ByVal e As EventArgs)
             Dim application As HttpApplication = CType(sender, HttpApplication)
             Dim context As HttpContext = application.Context
-            Dim objectClient As IObjectContainer = TryCast(context.Items(KEY_DB4O_CLIENT), IObjectContainer)
+            Dim objectClient As IObjectContainer = _ 
+TryCast(context.Items(KEY_DB4O_CLIENT), IObjectContainer)
             If Not (objectClient Is Nothing) Then
                 objectClient.Close()
             End If
             objectClient = Nothing
             context.Items(KEY_DB4O_CLIENT) = Nothing
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,14 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: GetObjects
-Private Shared Sub GetObjects()Sub GetObjects(ByVal configuration As IConfiguration)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="900">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: GetObjects
+Private Shared Sub GetObjects(ByVal configuration As IConfiguration)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim result As IObjectSet = db.Get(Nothing)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                System.Console.WriteLine(&quot;Time elapsed for the query =&quot; + diff.TotalMilliseconds.ToString() + &quot; ms&quot;)
-                Console.WriteLine(&quot;Objects in the database: &quot; + result.Count.ToString())
+                System.Console.WriteLine("Time elapsed for the query =" + _ 
+diff.TotalMilliseconds.ToString() + " ms")
+                Console.WriteLine("Objects in the database: " + result.Count.ToString())
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="1010">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="840">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TPExample.vb: TestTransparentPersistence
-Private Shared Sub  TestTransparentPersistence()
+Private Shared Sub TestTransparentPersistence()
             StoreSensorPanel()
             Dim configuration As IConfiguration = ConfigureTP()
             Dim container As IObjectContainer = Database(configuration)
             If Not (container Is Nothing) Then
                 Try
-                    Dim result As IObjectSet = container.QueryByExample(New SensorPanel(1))
+                    Dim result As IObjectSet = _ 
+container.QueryByExample(New SensorPanel(1))
                     Dim sensor As SensorPanel = Nothing
                     ListResult(result)
                     If result.Size &gt; 0 Then
@@ -22,7 +23,8 @@ Private Shared Sub  TestTransparentPersistence()
                         While Not (nextSensor Is Nothing)
                             System.Console.WriteLine(nextSensor)
                             ' modify the next sensor
-                            nextSensor.Sensor = CType((10 + CType(nextSensor.Sensor, Int32)), Object)
+                            nextSensor.Sensor = CType((10 + _ 
+CType(nextSensor.Sensor, Int32)), Object)
                             nextSensor = nextSensor.NextSensor
                         End While
                         ' Explicit commit stores and commits the changes at any time
@@ -30,7 +32,7 @@ Private Shared Sub  TestTransparentPersistence()
                     End If
                 Finally
                     ' If there are unsaved changes to activatable objects, they 
-                    ' will be implicitely saved and committed when the database 
+                    ' will be implicitly saved and committed when the database 
                     ' is closed
                     CloseDatabase()
                 End Try
@@ -39,7 +41,8 @@ Private Shared Sub  TestTransparentPersistence()
             container = Database(configuration)
             If Not (container Is Nothing) Then
                 Try
-                    Dim result As IObjectSet = container.QueryByExample(New SensorPanel(1))
+                    Dim result As IObjectSet = _ 
+container.QueryByExample(New SensorPanel(1))
                     Dim sensor As SensorPanel = Nothing
                     ListResult(result)
                     If result.Size &gt; 0 Then

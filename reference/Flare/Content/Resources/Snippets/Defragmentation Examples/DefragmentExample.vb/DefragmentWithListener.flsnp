@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">DefragmentExample.vb: DefragmentWithListener
-Public Shared Sub DefragmentWithListener()Sub DefragmentWithListener()
-            Dim config As DefragmentConfig = New DefragmentConfig(DB_FILE, BACKUP_FILE)
+Public Shared Sub DefragmentWithListener()
+            Dim config As DefragmentConfig = _ 
+New DefragmentConfig(DB_FILE, BACKUP_FILE)
             Try
                 Defragment.Defrag(config, New DefragmentListener)
             Catch ex As Exception

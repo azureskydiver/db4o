@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TestFinal.java
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TestFinal.java
 /**//* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 package com.db4odoc.finalfields;
 import java.io.File;
@@ -9,7 +14,7 @@ import com.db4o.ObjectSet;
 
 public class TestFinal
  {
-  private static final String DB4O_FILE_NAME = &quot;reference.db4o&quot;;
+  private static final String DB4O_FILE_NAME = "reference.db4o";
   // non-final fields
   public int    _i;
   public String _s;
@@ -22,9 +27,9 @@ public class TestFinal
       new File(DB4O_FILE_NAME).delete();
       ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
       try  {
-        TestFinal test = new TestFinal(1,&quot;test&quot;);
+        TestFinal test = new TestFinal(1,"test");
         container.set(test);
-        System.out.println(&quot;Added: &quot; + test);
+        System.out.println("Added: " + test);
       } finally  {
         // Close does implicit commit and refreshes the reference cache
         container.close();
@@ -51,7 +56,8 @@ public class TestFinal
 
    public String toString()
     {
-      return &quot;Int - &quot; + _i + &quot;; String - &quot; + _s + &quot;; FINAL Int - &quot; + _final_i + &quot;; FINAL String - &quot; + _final_s;
+      return "Int - " + _i + "; String - " + _s + "; FINAL Int - " 
++ _final_i + "; FINAL String - " + _final_s;
    }
    // end toString
    
@@ -62,4 +68,6 @@ public class TestFinal
      }
    }
    // end listResult
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

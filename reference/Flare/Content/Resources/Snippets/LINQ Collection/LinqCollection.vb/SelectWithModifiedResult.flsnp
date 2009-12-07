@@ -1,18 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectWithModifiedResult
-Private Shared Sub SelectWithModifiedResult()Sub SelectWithModifiedResult()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectWithModifiedResult
+Private Shared Sub SelectWithModifiedResult()
             Dim container As IObjectContainer = Database()
             Dim maxPoints As Integer = 100
             If container IsNot Nothing Then
                 Try
                     ' Select percentage
                     Dim result = From p As Pilot In container _
-                    Where (p.Name.StartsWith(&quot;Test&quot;)) _
-                                 Select String.Format(&quot;{0}: {1}%&quot;, p.Name, (p.Points * 100 / maxPoints))
+                    Where (p.Name.StartsWith("Test")) _
+                                 Select String.Format("{0}: {1}%", _ 
+p.Name, (p.Points * 100 / maxPoints))
                     ListResult(result)
                 catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

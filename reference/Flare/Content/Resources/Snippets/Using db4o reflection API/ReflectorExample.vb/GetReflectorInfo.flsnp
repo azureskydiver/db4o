@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: GetReflectorInfo
-Public Shared Sub GetReflectorInfo()Sub GetReflectorInfo()
+Public Shared Sub GetReflectorInfo()
 
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim ref As IReflector
                 ref = db.Ext().Reflector()
-                Console.WriteLine("Reflector in use: " + CType(ref, Object).ToString())
+                Console.WriteLine("Reflector in use: " + _ 
+CType(ref, Object).ToString())
                 Console.WriteLine("Reflector delegate" + _ 
 CType(db.Ext().Reflector().GetDelegate(), Object).ToString())
                 Dim knownClasses As IReflectClass()

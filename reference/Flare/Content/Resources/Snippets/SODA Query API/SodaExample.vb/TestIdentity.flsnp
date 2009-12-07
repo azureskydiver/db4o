@@ -1,22 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.vb: TestIdentity
-Public Shared Sub TestIdentity()Sub TestIdentity()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="818" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SodaExample.vb: TestIdentity
+Public Shared Sub TestIdentity()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
-                    Dim pilot As New Pilot(&quot;Test Pilot1&quot;, 100)
-                    Dim car As New Car(&quot;BMW&quot;, pilot)
+                    Dim pilot As New Pilot("Test Pilot1", 100)
+                    Dim car As New Car("BMW", pilot)
                     container.[Set](car)
                     ' Change the name, the pilot instance stays the same
-                    pilot.Name = &quot;Test Pilot2&quot;
+                    pilot.Name = "Test Pilot2"
                     ' create a new car
-                    car = New Car(&quot;Ferrari&quot;, pilot)
+                    car = New Car("Ferrari", pilot)
                     container.[Set](car)
 
                     ' Simple query: 
                     Dim query1 As IQuery = container.Query()
                     query1.Constrain(GetType(Car))
-                    query1.Descend(&quot;_pilot&quot;).Constrain(pilot)
+                    query1.Descend("_pilot").Constrain(pilot)
                     Dim result As IObjectSet = query1.Execute()
                     ListResult(result)
 
@@ -26,15 +31,17 @@ Public Shared Sub TestIdentity()Sub TestIdentity()
                     ' All cars having pilot with the same Database identity
                     ' will be retrieved. As we only created Pilot object once
                     ' it should mean all car objects
-                    query2.Descend(&quot;_pilot&quot;).Constrain(pilot).Identity()
+                    query2.Descend("_pilot").Constrain(pilot).Identity()
                     result = query2.Execute()
                     ListResult(result)
                 Catch ex As Db4oException
-                    Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    Console.WriteLine("Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

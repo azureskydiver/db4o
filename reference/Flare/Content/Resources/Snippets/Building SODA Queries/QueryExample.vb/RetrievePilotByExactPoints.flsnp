@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="740">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrievePilotByExactPoints
-Public Shared Sub RetrievePilotByExactPoints()Sub RetrievePilotByExactPoints(ByVal db As IObjectContainer)
+Public Shared Sub RetrievePilotByExactPoints(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
             query.Descend("_points").Constrain(100)

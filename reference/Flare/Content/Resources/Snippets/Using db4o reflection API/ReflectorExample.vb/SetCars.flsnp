@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: SetCars
-Public Shared Sub SetCars()Sub SetCars()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: SetCars
+Public Shared Sub SetCars()
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim car1 As Car = New Car(&quot;BMW&quot;)
+                Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
-                Dim car2 As Car = New Car(&quot;Ferrari&quot;)
+                Dim car2 As Car = New Car("Ferrari")
                 db.Set(car2)
 
-                Console.WriteLine(&quot;Saved:&quot;)
+                Console.WriteLine("Saved:")
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
                 Dim results As IObjectSet = query.Execute()
@@ -16,4 +21,6 @@ Public Shared Sub SetCars()Sub SetCars()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

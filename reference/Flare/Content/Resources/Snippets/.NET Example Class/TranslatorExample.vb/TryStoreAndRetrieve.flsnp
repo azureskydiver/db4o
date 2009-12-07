@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: TryStoreAndRetrieve
-Private Shared Sub TryStoreAndRetrieve()Sub TryStoreAndRetrieve(ByVal configuration As IConfiguration)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="598" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: TryStoreAndRetrieve
+Private Shared Sub TryStoreAndRetrieve(ByVal configuration As IConfiguration)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim champs As String() = New String() {&quot;Ayrton Senna&quot;, &quot;Nelson Piquet&quot;}
-                Dim LocalizedItemList As LocalizedItemList = New LocalizedItemList(CultureInfo.CreateSpecificCulture(&quot;pt-BR&quot;), champs)
-                System.Console.WriteLine(&quot;ORIGINAL: {0}&quot;, LocalizedItemList)
+                Dim champs As String() = New String() {"Ayrton Senna", _ 
+"Nelson Piquet"}
+                Dim LocalizedItemList As LocalizedItemList = New _ 
+LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs)
+                System.Console.WriteLine("ORIGINAL: {0}", LocalizedItemList)
                 db.Set(LocalizedItemList)
             Catch x As Exception
                 System.Console.WriteLine(x)
@@ -16,11 +23,14 @@ Private Shared Sub TryStoreAndRetrieve()Sub TryStoreAndRetrieve(ByVal configurat
             Try
                 Dim result As IObjectSet = db.Get(GetType(LocalizedItemList))
                 While result.HasNext()
-                    Dim LocalizedItemList As LocalizedItemList = DirectCast(result.Next(), LocalizedItemList)
-                    System.Console.WriteLine(&quot;RETRIEVED: {0}&quot;, LocalizedItemList)
+                    Dim LocalizedItemList As LocalizedItemList = _ 
+DirectCast(result.Next(), LocalizedItemList)
+                    System.Console.WriteLine("RETRIEVED: {0}", LocalizedItemList)
                     db.Delete(LocalizedItemList)
                 End While
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

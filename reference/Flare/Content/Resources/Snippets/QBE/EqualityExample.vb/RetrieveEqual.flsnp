@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: RetrieveEqual
-Private Shared Sub RetrieveEqual()Sub RetrieveEqual()
+Private Shared Sub RetrieveEqual()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try

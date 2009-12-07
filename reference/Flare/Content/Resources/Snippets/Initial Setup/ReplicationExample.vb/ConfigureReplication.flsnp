@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: ConfigureReplication
-Public Shared Function ConfigureReplication()Function ConfigureReplication() As IConfiguration
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: ConfigureReplication
+Public Shared Function ConfigureReplication() As IConfiguration
             Dim db4oConfig As IConfiguration = Db4oFactory.NewConfiguration()
             db4oConfig.GenerateUUIDs(ConfigScope.Globally)
             db4oConfig.GenerateVersionNumbers(ConfigScope.Globally)
             Return db4oConfig
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

@@ -1,24 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="708" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="830">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">IOExample.vb: TestNonFlushingAdapter
-Private Shared Sub TestNonFlushingAdapter()Sub TestNonFlushingAdapter()
+Private Shared Sub TestNonFlushingAdapter()
 
             File.Delete(Db4oFileName)
             Dim randomAccessFileAdapter As New RandomAccessFileAdapter()
-            Dim nonFlushingIoAdapter As New NonFlushingIoAdapter(randomAccessFileAdapter)
-            Dim cachedIoAdapter As New CachedIoAdapter(nonFlushingIoAdapter)
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            Dim nonFlushingIoAdapter As New _ 
+NonFlushingIoAdapter(randomAccessFileAdapter)
+            Dim cachedIoAdapter As New _ 
+CachedIoAdapter(nonFlushingIoAdapter)
+            Dim configuration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
             configuration.Io(cachedIoAdapter)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim pilot As New Pilot("Rubens Barrichello")
                 container.Store(pilot)
                 Dim startTime As Long = DateTime.Now.Ticks
                 container.Commit()
-                System.Console.WriteLine("Commit time with NonFlushingIoAdapter: " + (DateTime.Now.Ticks - startTime).ToString() _ 
+                System.Console.WriteLine( _ 
+"Commit time with NonFlushingIoAdapter: " + _ 
+(DateTime.Now.Ticks - startTime).ToString() _ 
 + " ticks")
             Finally
                 container.Close()
@@ -32,7 +38,8 @@ Private Shared Sub TestNonFlushingAdapter()Sub TestNonFlushingAdapter()
                 container.Store(pilot)
                 Dim startTime As Long = DateTime.Now.Ticks
                 container.Commit()
-                System.Console.WriteLine("Commit time with default IO Adapter: " + (DateTime.Now.Ticks - startTime).ToString() _ 
+                System.Console.WriteLine("Commit time with default IO Adapter: " _ 
++ (DateTime.Now.Ticks - startTime).ToString() _ 
 + " ticks")
             Finally
                 container.Close()

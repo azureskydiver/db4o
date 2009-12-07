@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.vb: StoreObjects
-Private Shared Sub StoreObjects()Sub StoreObjects()
+Private Shared Sub StoreObjects()
             File.Delete(FILENAME)
             Dim server As IObjectServer = _ 
 Db4oFactory.OpenServer(Configure, FILENAME, 0)

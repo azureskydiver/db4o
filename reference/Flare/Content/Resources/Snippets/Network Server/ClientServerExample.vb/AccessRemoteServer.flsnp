@@ -1,15 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="690">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: AccessRemoteServer
-Public Shared Sub AccessRemoteServer()Sub AccessRemoteServer()
-            Dim server As IObjectServer = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), _ 
+Public Shared Sub AccessRemoteServer()
+            Dim server As IObjectServer = Db4oClientServer. _ 
+OpenServer(Db4oClientServer.NewServerConfiguration(), _ 
 Db4oFileName, ServerPort)
             server.GrantAccess(ServerUser, ServerPassword)
             Try
-                Dim client As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+                Dim client As IObjectContainer = Db4oClientServer. _ 
+OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
 "localhost", ServerPort, ServerUser, ServerPassword)
                 ' Do something with this client, or open more clients
                 client.Close()

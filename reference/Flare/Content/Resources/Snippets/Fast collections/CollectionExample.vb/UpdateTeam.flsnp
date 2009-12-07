@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CollectionExample.vb: UpdateTeam
-Public Shared Sub UpdateTeam()Sub UpdateTeam()
+Public Shared Sub UpdateTeam()
             Dim db As IObjectContainer = _ 
 Db4oFactory.OpenFile(Db4oFileName)
             Try

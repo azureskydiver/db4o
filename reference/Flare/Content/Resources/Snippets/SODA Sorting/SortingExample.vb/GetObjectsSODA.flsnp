@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SortingExample.vb: GetObjectsSODA
-Private Shared Sub GetObjectsSODA()Sub GetObjectsSODA()
+Private Shared Sub GetObjectsSODA()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query

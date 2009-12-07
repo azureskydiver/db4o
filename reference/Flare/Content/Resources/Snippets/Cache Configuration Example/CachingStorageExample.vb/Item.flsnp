@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: Item
-Private Class ItemClass Item
+Private Class Item
             Private id As Integer
             Private name As [String]
 

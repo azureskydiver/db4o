@@ -1,35 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Sharpen-Common.Xml
-&lt;project name=&quot;sharpen common&quot;&gt;
-  &lt;property file=&quot;sharpen.properties&quot; /&gt;
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Sharpen-Common.Xml
+&lt;project name="sharpen common"&gt;
+  &lt;property file="sharpen.properties" /&gt;
 
-  &lt;macrodef name=&quot;reset-dir&quot;&gt;
-    &lt;attribute name=&quot;dir&quot; /&gt;
+  &lt;macrodef name="reset-dir"&gt;
+    &lt;attribute name="dir" /&gt;
     &lt;sequential&gt;
-      &lt;delete dir=&quot;@{dir}&quot; /&gt;
-      &lt;mkdir dir=&quot;@{dir}&quot; /&gt;
+      &lt;delete dir="@{dir}" /&gt;
+      &lt;mkdir dir="@{dir}" /&gt;
     &lt;/sequential&gt;
   &lt;/macrodef&gt;
 
-  &lt;macrodef name=&quot;sharpen&quot;&gt;
-    &lt;attribute name=&quot;workspace&quot; /&gt;
-    &lt;attribute name=&quot;resource&quot; /&gt;
+  &lt;macrodef name="sharpen"&gt;
+    &lt;attribute name="workspace" /&gt;
+    &lt;attribute name="resource" /&gt;
 
-    &lt;element name=&quot;args&quot; optional=&quot;yes&quot; /&gt;
+    &lt;element name="args" optional="yes" /&gt;
 
     &lt;sequential&gt;
-      &lt;exec executable=&quot;${file.jvm.jdk1.5}&quot; failonerror=&quot;true&quot; timeout=&quot;1800000&quot;&gt;
-        &lt;arg value=&quot;-Xms256m&quot; /&gt;
-        &lt;arg value=&quot;-Xmx512m&quot; /&gt;
-        &lt;arg value=&quot;-cp&quot; /&gt;
-        &lt;arg value=&quot;${eclipse.startup.jar}&quot; /&gt;
-        &lt;arg value=&quot;org.eclipse.core.launcher.Main&quot; /&gt;
-        &lt;arg value=&quot;-data&quot; /&gt;
-        &lt;arg file=&quot;@{workspace}&quot; /&gt;
-        &lt;arg value=&quot;-application&quot; /&gt;
-        &lt;arg value=&quot;sharpen.core.application&quot; /&gt;
-        &lt;arg value=&quot;-header&quot; /&gt;
-        &lt;arg file=&quot;config/copyright_comment.txt&quot; /&gt;
-        &lt;arg value=&quot;@{resource}&quot; /&gt;
+      &lt;exec executable="${file.jvm.jdk1.5}" 
+failonerror="true" timeout="1800000"&gt;
+        &lt;arg value="-Xms256m" /&gt;
+        &lt;arg value="-Xmx512m" /&gt;
+        &lt;arg value="-cp" /&gt;
+        &lt;arg value="${eclipse.startup.jar}" /&gt;
+        &lt;arg value="org.eclipse.core.launcher.Main" /&gt;
+        &lt;arg value="-data" /&gt;
+        &lt;arg file="@{workspace}" /&gt;
+        &lt;arg value="-application" /&gt;
+        &lt;arg value="sharpen.core.application" /&gt;
+        &lt;arg value="-header" /&gt;
+        &lt;arg file="config/copyright_comment.txt" /&gt;
+        &lt;arg value="@{resource}" /&gt;
 
         &lt;args /&gt;
 
@@ -37,37 +43,40 @@
     &lt;/sequential&gt;
   &lt;/macrodef&gt;
 
-  &lt;target name=&quot;install-sharpen-plugin&quot;&gt;
+  &lt;target name="install-sharpen-plugin"&gt;
 
-    &lt;property name=&quot;sharpen.core.dir&quot; location=&quot;../sharpen.core&quot; /&gt;
-    &lt;reset-dir dir=&quot;${dir.dist.classes.sharp}&quot; /&gt;
+    &lt;property name="sharpen.core.dir" location="../sharpen.core" /&gt;
+    &lt;reset-dir dir="${dir.dist.classes.sharp}" /&gt;
 
     &lt;echo&gt;${eclipse.home}/plugins&lt;/echo&gt;
-    &lt;javac fork=&quot;true&quot; debug=&quot;true&quot; target=&quot;1.5&quot; source=&quot;1.5&quot; destdir=&quot;${dir.dist.classes.sharp}&quot; srcdir=&quot;${sharpen.core.dir}/src&quot; encoding=&quot;UTF-8&quot;&gt;
+    &lt;javac fork="true" debug="true" target="1.5" source="1.5" 
+destdir="${dir.dist.classes.sharp}" srcdir="${sharpen.core.dir}/src" encoding="UTF-8"&gt;
       &lt;classpath&gt;
-        &lt;fileset dir=&quot;${eclipse.home}/plugins&quot;&gt;
-          &lt;include name=&quot;org.eclipse.osgi_*/osgi.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.core.resources_*/resources.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.core.runtime_*/runtime.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.jdt.core_*/jdtcore.jar&quot; /&gt;
+        &lt;fileset dir="${eclipse.home}/plugins"&gt;
+          &lt;include name="org.eclipse.osgi_*/osgi.jar" /&gt;
+          &lt;include name="org.eclipse.core.resources_*/resources.jar" /&gt;
+          &lt;include name="org.eclipse.core.runtime_*/runtime.jar" /&gt;
+          &lt;include name="org.eclipse.jdt.core_*/jdtcore.jar" /&gt;
           &lt;!-- redundant entries: in newer eclipse installs those reside in jars --&gt;
-          &lt;include name=&quot;org.eclipse.osgi_*.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.core.resources_*.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.core.runtime_*.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.jdt.core_*.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.jdt.launching_*.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.equinox.*.jar&quot; /&gt;
-          &lt;include name=&quot;org.eclipse.core.jobs_*.jar&quot; /&gt;
+          &lt;include name="org.eclipse.osgi_*.jar" /&gt;
+          &lt;include name="org.eclipse.core.resources_*.jar" /&gt;
+          &lt;include name="org.eclipse.core.runtime_*.jar" /&gt;
+          &lt;include name="org.eclipse.jdt.core_*.jar" /&gt;
+          &lt;include name="org.eclipse.jdt.launching_*.jar" /&gt;
+          &lt;include name="org.eclipse.equinox.*.jar" /&gt;
+          &lt;include name="org.eclipse.core.jobs_*.jar" /&gt;
         &lt;/fileset&gt;
       &lt;/classpath&gt;
     &lt;/javac&gt;
 
-    &lt;property name=&quot;plugin.dir&quot; value=&quot;${plugins.home}/sharpen.core_1.0.0&quot; /&gt;
-    &lt;reset-dir dir=&quot;${plugin.dir}&quot; /&gt;
-    &lt;jar destfile=&quot;${plugin.dir}/sharpen.jar&quot; basedir=&quot;${dir.dist.classes.sharp}&quot; /&gt;
-    &lt;copy todir=&quot;${plugin.dir}&quot; file=&quot;${sharpen.core.dir}/plugin.xml&quot; /&gt;
+    &lt;property name="plugin.dir" value="${plugins.home}/sharpen.core_1.0.0" /&gt;
+    &lt;reset-dir dir="${plugin.dir}" /&gt;
+    &lt;jar destfile="${plugin.dir}/sharpen.jar" basedir="${dir.dist.classes.sharp}" /&gt;
+    &lt;copy todir="${plugin.dir}" file="${sharpen.core.dir}/plugin.xml" /&gt;
 
   &lt;/target&gt;
 
 
-&lt;/project&gt;</pre>    </body></html>
+&lt;/project&gt;</pre>
+    </body>
+</html>

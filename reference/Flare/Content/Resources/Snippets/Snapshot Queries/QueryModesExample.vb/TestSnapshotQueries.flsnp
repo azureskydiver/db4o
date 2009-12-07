@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestSnapshotQueries
-Private Shared Sub TestSnapshotQueries()Sub TestSnapshotQueries()
+Private Shared Sub TestSnapshotQueries()
             Console.WriteLine( _ 
 "Testing query performance on 10000 pilot objects in Snapshot mode")
             FillUpDB(10000)

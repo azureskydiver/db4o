@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SortingExample.vb: GetObjectsEval
-Private Shared Sub GetObjectsEval()Sub GetObjectsEval()
+Private Shared Sub GetObjectsEval()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow

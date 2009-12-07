@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: RemoveInsert
-Private Shared Sub RemoveInsert()Sub RemoveInsert()
+Private Shared Sub RemoveInsert()
             Dim sw As Stopwatch = New Stopwatch
             Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
             Try

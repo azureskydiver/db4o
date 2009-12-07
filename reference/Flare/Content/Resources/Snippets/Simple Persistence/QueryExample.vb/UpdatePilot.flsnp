@@ -1,16 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: UpdatePilot
-Public Shared Sub UpdatePilot()Sub UpdatePilot()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="860">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: UpdatePilot
+Public Shared Sub  UpdatePilot()
             StorePilot()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 'first retrieve the object from the database
-                Dim result As IObjectSet = db.Get(New Pilot(&quot;Michael Schumacher&quot;, 10))
+                Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 10))
                 Dim pilot As Pilot = CType(result(0), Pilot)
                 pilot.AddPoints(10)
                 db.Set(pilot)
-                Console.WriteLine(&quot;Added 10 points to {0}&quot;, pilot)
+                Console.WriteLine("Added 10 points to {0}", pilot)
             Finally
                 db.Close()
             End Try
             RetrieveAllPilots()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

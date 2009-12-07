@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">LinqExample.vb: SelectUnoptimized
-Private Shared Sub SelectUnoptimized()Sub SelectUnoptimized()
+Private Shared Sub SelectUnoptimized()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try

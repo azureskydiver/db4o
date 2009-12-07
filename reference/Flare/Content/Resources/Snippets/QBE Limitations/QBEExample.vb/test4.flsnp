@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="880">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test4
-Private Shared Sub Test4()Sub Test4()
+Private Shared Sub Test4()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
@@ -17,7 +17,8 @@ Private Shared Sub Test4()Sub Test4()
                     Dim result As IObjectSet = _
 container.QueryByExample(New Pilot2Derived("Kimi Raikonnen", 100))
                     System.Console.WriteLine(_
-"Test QBE on class derived from a class with member initialization using static member")
+"Test QBE on class derived from a class with _ 
+member initialization using static member")
                     ListResult(result)
                 Catch ex As Db4oException
                     System.Console.WriteLine(_

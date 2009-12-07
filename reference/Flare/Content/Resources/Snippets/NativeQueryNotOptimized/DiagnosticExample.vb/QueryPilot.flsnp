@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: QueryPilot
-Private Shared Sub QueryPilot()Sub QueryPilot(ByVal db As IObjectContainer)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: QueryPilot
+Private Shared Sub QueryPilot(ByVal db As IObjectContainer)
             Dim i() As Integer = New Integer() {19, 100}
 
             Dim result As IList = db.Query(New ArbitraryQuery(i))
             ListResult(result)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IndexedExample.vb: AddCar
-Private Shared Sub AddCar()Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
-            Dim car As Car = New Car(&quot;BMW&quot;)
-            Dim pilot As Pilot = New Pilot(&quot;Tester&quot;, points)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IndexedExample.vb: AddCar
+Private Shared Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
+            Dim car As Car = New Car("BMW")
+            Dim pilot As Pilot = New Pilot("Tester", points)
             car.Pilot = pilot
             db.Set(car)
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

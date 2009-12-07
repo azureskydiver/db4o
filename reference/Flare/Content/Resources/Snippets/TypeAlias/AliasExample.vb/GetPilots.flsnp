@@ -1,11 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: GetPilots
-Private Shared Sub GetPilots()Sub GetPilots()
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            Dim db As IObjectContainer = Db4oEmbedded.OpenFile (Configuration, Db4oFileName)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: GetPilots
+Private Shared Sub GetPilots()
+            Dim configuration As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
+            Dim db As IObjectContainer = Db4oEmbedded. _ 
+OpenFile (Configuration, Db4oFileName)
             Try
-                Dim result As IObjectSet = db.QueryByExample (GetType (Pilot))
+                Dim result As IObjectSet = db.QueryByExample(GetType (Pilot))
                 ListResult (result)
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

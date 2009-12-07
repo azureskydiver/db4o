@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ListDeletingExample.vb: RemoveAndDeleteTest
-Private Shared Sub RemoveAndDeleteTest()Sub RemoveAndDeleteTest()
+Private Shared Sub RemoveAndDeleteTest()
             ' set update depth to 1 as we only 
             ' modify List field
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            Dim configuration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
             configuration.ObjectClass(GetType(ListObject)).UpdateDepth(1)
             Dim db As IObjectContainer = _ 
 Db4oFactory.OpenFile(configuration, Db4oFileName)

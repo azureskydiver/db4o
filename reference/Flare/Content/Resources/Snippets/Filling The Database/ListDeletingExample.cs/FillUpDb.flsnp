@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.cs: FillUpDb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="698" MadCap:lastWidth="960">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.cs: FillUpDb
 private static void FillUpDb(int listCount)
          {
             int dataCount = 50;
@@ -12,12 +17,13 @@ private static void FillUpDb(int listCount)
                 for (int i = 0; i &lt; listCount; i++)
                  {
                     ListObject lo = new ListObject();
-                    lo.Name = &quot;list&quot; + i.ToString(&quot;00&quot;);
+                    lo.Name = "list" + i.ToString("00");
                     for (int j = 0; j &lt; dataCount; j++)
                      {
                         DataObject dataObject = new DataObject();
-                        dataObject.Name = &quot;data&quot; + j.ToString(&quot;00000&quot;);
-                        dataObject.Data = DateTime.Now.ToString() + &quot; ---- Data Object &quot; + j.ToString(&quot;00000&quot;);
+                        dataObject.Name = "data" + j.ToString("00000");
+                        dataObject.Data = DateTime.Now.ToString() + 
+" ---- Data Object " + j.ToString("00000");
                         lo.Data.Add(dataObject);
                     }
                     db.Set(lo);
@@ -28,6 +34,8 @@ private static void FillUpDb(int listCount)
              {
                 db.Close();
             }
-            Console.WriteLine(&quot;Completed {0} lists of {1} objects each.&quot;, listCount, dataCount);
-            Console.WriteLine(&quot;Elapsed time: {0}&quot;, sw.Elapsed.ToString());
-        }</pre>    </body></html>
+            Console.WriteLine("Completed {0} lists of {1} objects each.", listCount, dataCount);
+            Console.WriteLine("Elapsed time: {0}", sw.Elapsed.ToString());
+        }</pre>
+    </body>
+</html>

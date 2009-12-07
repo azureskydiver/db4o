@@ -1,14 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: TestArbitrary
-Public Shared Sub TestArbitrary()Sub TestArbitrary()
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.Common.Diagnostic().AddListener(New DiagnosticToConsole())
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="720">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: TestArbitrary
+Public Shared Sub TestArbitrary()
+            Dim configuration As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
+            configuration.Common.Diagnostic(). _ 
+AddListener(New DiagnosticToConsole())
             File.Delete(Db4oFileName)
-            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = Db4oEmbedded. _ 
+OpenFile(configuration, Db4oFileName)
             Try
-                Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 99)
+                Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
                 db.Store(pilot)
                 QueryPilot(db)
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

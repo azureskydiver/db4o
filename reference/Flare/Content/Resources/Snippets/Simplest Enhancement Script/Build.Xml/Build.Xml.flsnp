@@ -1,23 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Build.Xml
-&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;project name=&quot;db4o enhance project&quot; default=&quot;enhance&quot; basedir=&quot;.&quot;&gt;
-  &lt;path id=&quot;project.classpath&quot;&gt;
-    &lt;pathelement path=&quot;${basedir}/bin&quot; /&gt;
-    &lt;fileset dir=&quot;lib&quot;&gt;
-      &lt;include name=&quot;**/*.jar&quot; /&gt;
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="670">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Build.Xml
+&lt;?xml version="1.0"?&gt;
+&lt;project name="db4o enhance project" default="enhance" basedir="."&gt;
+  &lt;path id="project.classpath"&gt;
+    &lt;pathelement path="${basedir}/bin" /&gt;
+    &lt;fileset dir="lib"&gt;
+      &lt;include name="**/*.jar" /&gt;
     &lt;/fileset&gt;
   &lt;/path&gt;
-  &lt;taskdef name=&quot;db4o-enhance&quot; classname=&quot;com.db4o.enhance.Db4oEnhancerAntTask&quot; classpathref=&quot;project.classpath&quot; /&gt;
-  &lt;target name=&quot;enhance&quot;&gt;
-    &lt;db4o-enhance classtargetdir=&quot;${basedir}/bin&quot; jartargetdir=&quot;${basedir}/lib&quot; nq=&quot;true&quot; ta=&quot;true&quot; collections=&quot;true&quot;&gt;
-      &lt;classpath refid=&quot;project.classpath&quot; /&gt;
-      &lt;sources dir=&quot;${basedir}/bin&quot; /&gt;
-      &lt;jars dir=&quot;${basedir}/lib&quot;&gt;
-        &lt;include name=&quot;*.jar&quot; /&gt;
-        &lt;exclude name=&quot;db4o-*.jar&quot; /&gt;
-        &lt;exclude name=&quot;ant.jar&quot; /&gt;
-        &lt;exclude name=&quot;bloat-1.0.jar&quot; /&gt;
+  &lt;taskdef name="db4o-enhance" 
+classname="com.db4o.enhance.Db4oEnhancerAntTask" 
+classpathref="project.classpath" /&gt;
+  &lt;target name="enhance"&gt;
+    &lt;db4o-enhance classtargetdir="${basedir}/bin" 
+jartargetdir="${basedir}/lib" nq="true" ta="true" 
+collections="true"&gt;
+      &lt;classpath refid="project.classpath" /&gt;
+      &lt;sources dir="${basedir}/bin" /&gt;
+      &lt;jars dir="${basedir}/lib"&gt;
+        &lt;include name="*.jar" /&gt;
+        &lt;exclude name="db4o-*.jar" /&gt;
+        &lt;exclude name="ant.jar" /&gt;
+        &lt;exclude name="bloat-1.0.jar" /&gt;
       &lt;/jars&gt;
     &lt;/db4o-enhance&gt;
   &lt;/target&gt;
-&lt;/project&gt;</pre>    </body></html>
+&lt;/project&gt;</pre>
+    </body>
+</html>

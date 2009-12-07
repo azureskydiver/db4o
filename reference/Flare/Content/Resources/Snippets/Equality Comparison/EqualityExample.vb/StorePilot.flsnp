@@ -1,14 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: StorePilot
-Private Shared Sub StorePilot()Sub StorePilot()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: StorePilot
+Private Shared Sub StorePilot()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
-                    Dim pilot As New Pilot(&quot;Kimi Raikkonnen&quot;, 100)
+                    Dim pilot As New Pilot("Kimi Raikkonnen", 100)
                     container.[Set](pilot)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

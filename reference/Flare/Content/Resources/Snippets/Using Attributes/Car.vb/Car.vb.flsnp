@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.vb
-1' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
-2Imports Db4objects.Db4o
-3
-4Namespace Db4objectsNamespace Db4objects.Db4odoc.Attributes
-5    Public Class CarClass Car
-6        &lt;Config.Attributes.Indexed()&gt; Private _model As String
-7        Private _year As Integer
-8    End Class
-9End Namespace</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Car.vb
+' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
+Imports Db4objects.Db4o
+
+Namespace Db4objects.Db4odoc.Attributes
+    Public Class Car
+        &lt;Config.Attributes.Indexed()&gt; Private _model As String
+        Private _year As Integer
+    End Class
+End Namespace</pre>
+    </body>
+</html>

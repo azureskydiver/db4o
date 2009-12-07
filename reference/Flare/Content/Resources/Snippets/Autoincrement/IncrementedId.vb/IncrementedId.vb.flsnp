@@ -11,13 +11,13 @@
 
 Imports System
 Imports Db4objects.Db4o
-Namespace Db4odocNamespace Db4odoc.Autoincrement
+Namespace Db4odoc.Autoincrement
 
-    Class IncrementedIdClass IncrementedId
+    Class IncrementedId
         Private _no As Integer
         Private Shared _ref As IncrementedId
 
-        Private Sub New()Sub New()
+        Private Sub New()
             _no = 0
         End Sub
         ' end New

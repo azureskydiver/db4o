@@ -1,16 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectByNameAndPoints
-Private Shared Sub SelectByNameAndPoints()Sub SelectByNameAndPoints()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectByNameAndPoints
+Private Shared Sub SelectByNameAndPoints()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
                     Dim result = From p As Pilot In container _
-                                 Where p.Name.StartsWith(&quot;Test&quot;) And p.Points &gt; 12 _
-                                 Select p
+                           Where p.Name.StartsWith("Test") And p.Points &gt; 12 _
+                           Select p
                     ListResult(result)
                 catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,25 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="480" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="820">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TPRollback.vb: ModifyWithRollbackStrategy
-Private Shared Sub ModifyWithRollbackStrategy()Sub ModifyWithRollbackStrategy()
+Private Shared Sub ModifyWithRollbackStrategy()
             Dim container As IObjectContainer = Database(ConfigureTPForRollback())
             If container IsNot Nothing Then
                 Try
                     ' create a car
-                    Dim car As Car = DirectCast(container.QueryByExample(New Car(Nothing, Nothing))(0), Car)
+                    Dim car As Car = DirectCast(container. _ 
+QueryByExample(New Car(Nothing, Nothing))(0), Car)
                     Dim pilot As Pilot = car.Pilot
-                    System.Console.WriteLine("Initial car: " + car.ToString() + "(" + container.Ext().GetID(car).ToString() + ")")
-                    System.Console.WriteLine("Initial pilot: " + pilot.ToString() + "(" + _ 
+                    System.Console.WriteLine("Initial car: " + _ 
+car.ToString() + "(" + container.Ext().GetID(car).ToString() + ")")
+                    System.Console.WriteLine("Initial pilot: " + _ 
+pilot.ToString() + "(" + _ 
 container.Ext().GetID(pilot).ToString() + ")")
                     car.Model = "Ferrari"
                     car.ChangePilot("Michael Schumacher", 123)
                     container.Rollback()
-                    System.Console.WriteLine("Car after rollback: " + car.ToString() + "(" + _ 
+                    System.Console.WriteLine("Car after rollback: " + _ 
+car.ToString() + "(" + _ 
 container.Ext().GetID(car).ToString() + ")")
-                    System.Console.WriteLine("Pilot after rollback: " + pilot.ToString() + _ 
+                    System.Console.WriteLine("Pilot after rollback: " + _ 
+pilot.ToString() + _ 
 "(" + container.Ext().GetID(pilot).ToString() + ")")
                 Finally
                     CloseDatabase()

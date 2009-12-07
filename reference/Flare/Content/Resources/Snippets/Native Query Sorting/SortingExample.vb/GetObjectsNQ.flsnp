@@ -1,18 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="900">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SortingExample.vb: GetObjectsNQ
-Private Shared Sub GetObjectsNQ()Sub GetObjectsNQ()
+Private Shared Sub GetObjectsNQ()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
-                Dim result As IObjectSet = db.Query(New AllPilots, New PilotQueryComparer)
+                Dim result As IObjectSet = db.Query(New AllPilots, _ 
+New PilotQueryComparer)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
                 Console.WriteLine( _ 
-"Time to execute with NQ and comparator: " + diff.TotalMilliseconds.ToString() + " ms.")
+"Time to execute with NQ and comparator: " + _ 
+diff.TotalMilliseconds.ToString() + " ms.")
                 ListResult(result)
             Finally
                 db.Close()

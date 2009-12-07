@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CarImage.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CarImage.vb
 ' Copyright (C) 2009 Versant Inc. http://www.db4o.com
 Imports System.Threading
 Imports Sharpen.IO
@@ -6,19 +11,19 @@ Imports Db4objects.Db4o.Ext
 Imports Db4objects.Db4o.Types
 
 
-Namespace Db4odocNamespace Db4odoc.Blobs
+Namespace Db4odoc.Blobs
 
-    Public Class CarImageClass CarImage
+    Public Class CarImage
         Dim _blob As IBlob
         Private _file As String = Nothing
-        Private inFolder As String = &quot;blobs\in\&quot;
-        Private outFolder As String = &quot;blobs\out\&quot;
+        Private inFolder As String = "blobs\in\"
+        Private outFolder As String = "blobs\out\"
 
-        Public Sub New()Sub New()
+        Public Sub New()
 
         End Sub
 
-        Public Property FileName()Property FileName() As String
+        Public Property FileName() As String
             Get
                 Return _file
             End Get
@@ -27,7 +32,7 @@ Namespace Db4odocNamespace Db4odoc.Blobs
             End Set
         End Property
 
-        Public Function ReadFile()Function ReadFile() As Boolean
+        Public Function ReadFile() As Boolean
             _blob.ReadFrom(New File(inFolder + _file))
             Dim s As Double = _blob.GetStatus()
             While s &gt; Status.Completed
@@ -37,7 +42,7 @@ Namespace Db4odocNamespace Db4odoc.Blobs
             Return (s = Status.Completed)
         End Function
 
-        Public Function WriteFile()Function WriteFile() As Boolean
+        Public Function WriteFile() As Boolean
             _blob.WriteTo(New File(outFolder + _file))
             Dim s As Double = _blob.GetStatus()
             While s &gt; Status.Completed
@@ -47,4 +52,6 @@ Namespace Db4odocNamespace Db4odoc.Blobs
             Return (s = Status.Completed)
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqExample.vb: SelectEverythingByName
-Private Shared Sub SelectEverythingByName()Sub SelectEverythingByName()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqExample.vb: SelectEverythingByName
+Private Shared Sub SelectEverythingByName()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
 
-                    Dim result = From o In container Where (o.ToString().StartsWith(&quot;Test&quot;)) Select o
+                    Dim result = From o In container _ 
+Where (o.ToString().StartsWith("Test")) Select o
                     Dim objects As IList = result.ToList()
                     ListResult(objects)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>
