@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="784" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="830">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: TestGenerateUUID
-Public Shared Sub TestGenerateUUID()Sub TestGenerateUUID()
+Public Shared Sub TestGenerateUUID()
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = container.Query()
@@ -31,12 +31,15 @@ Public Shared Sub TestGenerateUUID()Sub TestGenerateUUID()
                     Console.WriteLine("Pilot UUID: " + pilotUUID.ToString())
                 End If
 
-                Console.WriteLine("long part: " + pilotUUID.GetLongPart().ToString() + "; signature: " + _ 
+                Console.WriteLine("long part: " + _ 
+pilotUUID.GetLongPart().ToString() + "; signature: " + _ 
 PrintSignature(pilotUUID.GetSignaturePart()))
-                Dim ms As Long = TimeStampIdGenerator.IdToMilliseconds(pilotUUID.GetLongPart())
+                Dim ms As Long = TimeStampIdGenerator.IdToMilliseconds( _ 
+pilotUUID.GetLongPart())
                 Console.WriteLine("Pilot object was created: " + _ 
 (New DateTime(1970, 1, 1)).AddMilliseconds(ms).ToString())
-                Dim pilotReturned As Pilot = CType(container.Ext().GetByUUID(pilotUUID), Pilot)
+                Dim pilotReturned As Pilot = CType(container.Ext(). _ 
+GetByUUID(pilotUUID), Pilot)
                 Console.WriteLine("Pilot from UUID: " + pilotReturned.ToString())
             Finally
                 container.Close()

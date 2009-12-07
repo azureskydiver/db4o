@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.vb: TestActivation
-Private Shared Sub TestActivation()Sub TestActivation()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="850">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TAExample.vb: TestActivation
+Private Shared Sub TestActivation()
             StoreSensorPanel()
             Dim configuration As IConfiguration = ConfigureTA()
             Dim container As IObjectContainer = Database(configuration)
             If Not (container Is Nothing) Then
                 Try
-                    System.Console.WriteLine(&quot;Zero activation depth&quot;)
+                    System.Console.WriteLine("Zero activation depth")
                     Dim result As IObjectSet = container.Get(New SensorPanelTA(1))
                     ListResult(result)
                     If result.Size &gt; 0 Then
@@ -22,4 +27,6 @@ Private Shared Sub TestActivation()Sub TestActivation()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

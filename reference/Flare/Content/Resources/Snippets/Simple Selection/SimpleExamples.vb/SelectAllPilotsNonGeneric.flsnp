@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: SelectAllPilotsNonGeneric
-Private Shared Sub SelectAllPilotsNonGeneric()Sub SelectAllPilotsNonGeneric()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: SelectAllPilotsNonGeneric
+Private Shared Sub SelectAllPilotsNonGeneric()
             Dim container As IObjectContainer = Database()
             If Not container Is Nothing Then
                 Try
-                    Dim result As IObjectSet = container.Query(New NonGenericPredicate())
+                    Dim result As IObjectSet = _ 
+container.Query(New NonGenericPredicate())
                     ListResult(result)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

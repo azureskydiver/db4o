@@ -5,13 +5,13 @@
     <body>
         <pre class="prettyprint" xml:space="preserve">TestObject.vb
 ' Copyright (C) 2009 Versant Inc. http://www.db4o.com 
-Namespace Db4odocNamespace Db4odoc.Autoincrement
+Namespace Db4odoc.Autoincrement
 
-    Class TestObjectClass TestObject
+    Class TestObject
         Inherits CountedObject
         Private _name As String
 
-        Public Sub New()Sub New(ByVal name As String)
+        Public Sub New(ByVal name As String)
             _name = name
         End Sub
 

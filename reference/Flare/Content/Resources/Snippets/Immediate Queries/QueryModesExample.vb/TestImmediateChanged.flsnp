@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestImmediateChanged
-Private Shared Sub TestImmediateChanged()Sub TestImmediateChanged()
+Private Shared Sub TestImmediateChanged()
             Console.WriteLine("Testing immediate mode with field changes")
             FillUpDB(10)
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()

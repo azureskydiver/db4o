@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">web.xml
-1&lt;context-param&gt;
-2  &lt;param-name&gt;db4oFileName&lt;/param-name&gt;
-3  &lt;param-value&gt;db4oweb.yap&lt;/param-value&gt;
-4&lt;/context-param&gt;
-5&lt;listener&gt;
-6  &lt;listener-class&gt;
-7    com.db4odoc.servlets.Db4oServletContextListener
-8  &lt;/listener-class&gt;
-9&lt;/listener&gt;</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">web.xml
+&lt;context-param&gt;
+  &lt;param-name&gt;db4oFileName&lt;/param-name&gt;
+  &lt;param-value&gt;db4oweb.yap&lt;/param-value&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+  &lt;listener-class&gt;
+    com.db4odoc.servlets.Db4oServletContextListener
+  &lt;/listener-class&gt;
+&lt;/listener&gt;</pre>
+    </body>
+</html>

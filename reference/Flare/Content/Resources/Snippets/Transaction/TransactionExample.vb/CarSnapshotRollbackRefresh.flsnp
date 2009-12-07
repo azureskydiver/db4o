@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: CarSnapshotRollbackRefresh
-Public Shared Sub CarSnapshotRollbackRefresh()Sub _ 
+Public Shared Sub _ 
 CarSnapshotRollbackRefresh(ByVal db As IObjectContainer)
             Dim result As IObjectSet = db.Get(New Car("BMW"))
             Dim car As Car = DirectCast(result.Next(), Car)

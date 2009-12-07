@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: CheckPilots
-Private Shared Sub CheckPilots()Sub CheckPilots()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="890">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: CheckPilots
+Private Shared Sub CheckPilots()
             Dim db As IObjectContainer = Database()
             If db IsNot Nothing Then
                 Try
@@ -8,15 +13,17 @@ Private Shared Sub CheckPilots()Sub CheckPilots()
                     For Each obj In result
                         Dim pilot As Pilot = DirectCast(obj, Pilot)
                         If pilot.Category Is PilotCategories.WINNER Then
-                            Console.WriteLine(&quot;Winner pilot: &quot; + pilot.ToString())
+                            Console.WriteLine("Winner pilot: " + pilot.ToString())
                         ElseIf pilot.Category Is PilotCategories.TALENTED Then
-                            Console.WriteLine(&quot;Talented pilot: &quot; + pilot.ToString())
+                            Console.WriteLine("Talented pilot: " + pilot.ToString())
                         Else
-                            Console.WriteLine(&quot;Uncategorized pilot: &quot; + pilot.ToString())
+                            Console.WriteLine("Uncategorized pilot: " + pilot.ToString())
                         End If
                     Next
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

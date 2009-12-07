@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: TestSerializable
-Public Shared Sub TestSerializable()Sub TestSerializable()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="840">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: TestSerializable
+Public Shared Sub TestSerializable()
             SaveSerializable()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             ' configure class as serializable to retrieve correctly
@@ -7,22 +12,24 @@ Public Shared Sub TestSerializable()Sub TestSerializable()
             Dim container As IObjectContainer = Database(configuration)
             If container IsNot Nothing Then
                 Try
-                    System.Console.WriteLine(&quot;Retrieving pilots by name:&quot;)
+                    System.Console.WriteLine("Retrieving pilots by name:")
                     Dim query As IQuery = container.Query()
                     query.Constrain(GetType(Pilot))
-                    query.Descend(&quot;_name&quot;).Constrain(&quot;Test Pilot 1&quot;)
+                    query.Descend("_name").Constrain("Test Pilot 1")
                     Dim resultByName As IObjectSet = query.Execute()
                     ListResult(resultByName)
 
-                    System.Console.WriteLine(&quot;Retrieve all pilot objects:&quot;)
+                    System.Console.WriteLine("Retrieve all pilot objects:")
                     Dim result As IList(Of Pilot) = container.Query(Of Pilot)()
                     ListResult(result)
                 Catch ex As Db4oException
-                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

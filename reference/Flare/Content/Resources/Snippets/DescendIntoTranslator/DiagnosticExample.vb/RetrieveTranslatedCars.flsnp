@@ -1,10 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: RetrieveTranslatedCars
-Public Shared Sub RetrieveTranslatedCars()Sub RetrieveTranslatedCars()
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.Common.Diagnostic().AddListener(New TranslatorDiagListener())
-            configuration.Common.ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            configuration.Common.ObjectClass(GetType(Car)).CallConstructor(True)
-            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(configuration, Db4oFileName)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: RetrieveTranslatedCars
+Public Shared Sub RetrieveTranslatedCars()
+            Dim configuration As IEmbeddedConfiguration = _ 
+Db4oEmbedded.NewConfiguration()
+            configuration.Common.Diagnostic().AddListener( _ 
+New TranslatorDiagListener())
+            configuration.Common.ObjectClass(GetType(Car)). _ 
+Translate(New CarTranslator())
+            configuration.Common.ObjectClass(GetType(Car)). _ 
+CallConstructor(True)
+            Dim db As IObjectContainer = Db4oEmbedded. _ 
+OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -13,4 +23,6 @@ Public Shared Sub RetrieveTranslatedCars()Sub RetrieveTranslatedCars()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

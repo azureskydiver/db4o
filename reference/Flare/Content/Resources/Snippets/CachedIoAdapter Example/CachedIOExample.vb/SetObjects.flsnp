@@ -1,25 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: SetObjects
-Private Shared Sub SetObjects()Sub SetObjects(ByVal configuration As IConfiguration)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="900">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: SetObjects
+Private Shared Sub SetObjects(ByVal configuration As IConfiguration)
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim i As Integer = 0
                 While i &lt; 50000
-                    Dim pilot As Pilot = New Pilot(&quot;Pilot #&quot; + i.ToString())
+                    Dim pilot As Pilot = New Pilot("Pilot #" + i.ToString())
                     db.Set(pilot)
                     System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
                 End While
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                System.Console.WriteLine(&quot;Time elapsed for setting objects =&quot; + diff.TotalMilliseconds.ToString() + &quot; ms&quot;)
+                System.Console.WriteLine("Time elapsed for setting objects =" + _ 
+diff.TotalMilliseconds.ToString() + " ms")
                 dt1 = DateTime.UtcNow
                 db.Commit()
 
                 dt2 = DateTime.UtcNow
                 diff = dt2 - dt1
-                System.Console.WriteLine(&quot;Time elapsed for commit =&quot; + diff.TotalMilliseconds.ToString() + &quot; ms&quot;)
+                System.Console.WriteLine("Time elapsed for commit =" + _ 
+diff.TotalMilliseconds.ToString() + " ms")
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

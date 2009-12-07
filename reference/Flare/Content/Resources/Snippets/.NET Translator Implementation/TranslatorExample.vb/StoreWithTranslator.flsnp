@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: StoreWithTranslator
-Private Shared Sub StoreWithTranslator()Sub StoreWithTranslator()
+Private Shared Sub StoreWithTranslator()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-            configuration.ObjectClass(GetType(CultureInfo)).Translate(New CultureInfoTranslator())
+            configuration.ObjectClass _ 
+(GetType(CultureInfo)).Translate(New CultureInfoTranslator())
             TryStoreAndRetrieve(configuration)
         End Sub</pre>
     </body>

@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestLazyConcurrent
-Private Shared Sub TestLazyConcurrent()Sub TestLazyConcurrent()
+Private Shared Sub TestLazyConcurrent()
             Console.WriteLine("Testing lazy mode with concurrent modifications")
             FillUpDB(10)
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()

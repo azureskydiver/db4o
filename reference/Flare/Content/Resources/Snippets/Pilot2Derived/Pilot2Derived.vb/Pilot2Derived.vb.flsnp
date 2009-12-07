@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot2Derived.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="690">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Pilot2Derived.vb
 ' Copyright (C) 2007 Versant Inc. http://www.db4o.com
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.QBE
-    Class Pilot2DerivedClass Pilot2Derived
+Namespace Db4objects.Db4odoc.QBE
+    Class Pilot2Derived
         Inherits Pilot2
-        Public Sub New()Sub New(ByVal name As String, ByVal points As Integer)
+        Public Sub New(ByVal name As String, ByVal points As Integer)
 
             MyBase.New(name, points)
         End Sub
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

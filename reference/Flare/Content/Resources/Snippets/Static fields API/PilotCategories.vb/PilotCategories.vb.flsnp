@@ -1,28 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PilotCategories.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="658" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PilotCategories.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.StaticFields
-    Public Class PilotCategoriesClass PilotCategories
+Namespace Db4objects.Db4odoc.StaticFields
+    Public Class PilotCategories
         Private _qualification As String = Nothing
-        Public Shared WINNER As PilotCategories = New PilotCategories(&quot;WINNER&quot;)
-        Public Shared TALENTED As PilotCategories = New PilotCategories(&quot;TALENTED&quot;)
-        Public Shared AVERAGE As PilotCategories = New PilotCategories(&quot;AVERAGE&quot;)
-        Public Shared DISQUALIFIED As PilotCategories = New PilotCategories(&quot;DISQUALIFIED&quot;)
+        Public Shared WINNER As PilotCategories = _ 
+New PilotCategories("WINNER")
+        Public Shared TALENTED As PilotCategories = _ 
+New PilotCategories("TALENTED")
+        Public Shared AVERAGE As PilotCategories = _ 
+New PilotCategories("AVERAGE")
+        Public Shared DISQUALIFIED As PilotCategories = _ 
+New PilotCategories("DISQUALIFIED")
 
-        Private Sub New()Sub New(ByVal qualification As String)
+        Private Sub New(ByVal qualification As String)
             Me._qualification = qualification
         End Sub
 
-        Public Sub New()Sub New()
+        Public Sub New()
 
         End Sub
 
-        Public Sub TestChange()Sub TestChange(ByVal qualification As String)
+        Public Sub TestChange(ByVal qualification As String)
             Me._qualification = qualification
         End Sub
 
-        Public Overrides Function ToString()Function ToString() As String
+        Public Overrides Function ToString() As String
             Return _qualification
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

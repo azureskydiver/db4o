@@ -1,6 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: AccessLocalServer
-Public Shared Sub AccessLocalServer()Sub AccessLocalServer()
-            Dim server As IObjectServer = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="700">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: AccessLocalServer
+Public Shared Sub AccessLocalServer()
+            Dim server As IObjectServer = Db4oClientServer. _ 
+OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0)
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 ' Do something with this client, or open more clients
@@ -8,4 +14,6 @@ Public Shared Sub AccessLocalServer()Sub AccessLocalServer()
             Finally
                 server.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

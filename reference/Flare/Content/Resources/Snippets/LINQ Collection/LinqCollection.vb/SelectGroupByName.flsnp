@@ -1,18 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectGroupByName
-Private Shared Sub SelectGroupByName()Sub SelectGroupByName()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="700">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectGroupByName
+Private Shared Sub SelectGroupByName()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
                     Dim result = From p As Pilot In container _
-                                  Order By p.Points Descending _
-                                  Select p Group By p.Points, p.Name Into Group Select Name, Points
+                       Order By p.Points Descending _
+                       Select p Group By p.Points, p.Name _ 
+Into Group Select Name, Points
                     For Each value In result
-                        Console.WriteLine(&quot;  {0}&quot;, value)
+                        Console.WriteLine("  {0}", value)
                     Next
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + _ 
+ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,13 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: SetObjects
-Public Shared Sub SetObjects()Sub SetObjects()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: SetObjects
+Public Shared Sub SetObjects()
             File.Delete(Db4oFileName)
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
             configuration.ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                Dim car As Car = New Car(&quot;BMW&quot;, New Pilot(&quot;Rubens Barrichello&quot;))
+                Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 container.Set(car)
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

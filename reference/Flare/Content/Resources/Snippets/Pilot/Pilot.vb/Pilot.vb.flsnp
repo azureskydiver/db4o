@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="960">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Pilot.vb
 ' Copyright (C) 2004 - 2008 Versant Inc. http://www.db4o.com 
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
 Imports Db4objects.Db4o.TA
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
-    Public Class PilotClass Pilot
+Namespace Db4objects.Db4odoc.TP.Rollback
+    Public Class Pilot
         Implements IActivatable
         Private _name As String
         Private _id As Id
@@ -14,13 +19,13 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
         &lt;Transient()&gt; _
         Private _activator As IActivator
 
-        Public Sub New()Sub New(ByVal name As String, ByVal id As Integer)
+        Public Sub New(ByVal name As String, ByVal id As Integer)
             _name = name
             _id = New Id(id)
         End Sub
 
         ' Bind the class to an object container
-        Public Sub Bind()Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
+        Public Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
             If _activator Is activator Then
                 Return
             End If
@@ -31,14 +36,14 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
         End Sub
 
         ' activate the object fields
-        Public Sub Activate()Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
+        Public Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If
             _activator.Activate(purpose)
         End Sub
 
-        Public Property Id()Property Id() As Id
+        Public Property Id() As Id
             Get
                 Activate(ActivationPurpose.Read)
                 Return _id
@@ -61,9 +66,11 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
             End Set
         End Property
 
-        Public Overloads Overrides Function ToString()Function ToString() As String
-            Return String.Format(&quot;{0}[{1}]&quot;, Name, Id)
+        Public Overloads Overrides Function ToString() As String
+            Return String.Format("{0}[{1}]", Name, Id)
         End Function
     End Class
 
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

@@ -1,17 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: testEquality
-Private Shared Sub TestEquality()Sub TestEquality()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: testEquality
+Private Shared Sub TestEquality()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
-                    Dim result As IList(Of Pilot) = container.Query(Of Pilot)(AddressOf PilotTestMatch)
+                    Dim result As IList(Of Pilot) = _ 
+container.Query(Of Pilot)(AddressOf PilotTestMatch)
                     Dim obj As Pilot = result(0)
-                    Dim pilot As New Pilot(&quot;Kimi Raikkonnen&quot;, 100)
-                    Dim equality As String = IIf(obj.Equals(pilot), &quot;equal&quot;, &quot;not equal&quot;).ToString
-                    System.Console.WriteLine(&quot;Pilots are &quot; + equality)
+                    Dim pilot As New Pilot("Kimi Raikkonnen", 100)
+                    Dim equality As String = IIf(obj.Equals(pilot), _ 
+"equal", "not equal").ToString
+                    System.Console.WriteLine("Pilots are " + equality)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

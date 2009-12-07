@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByJoinedConstraints
-Private Shared Sub RetrieveByJoinedConstraints()Sub _ 
+Private Shared Sub _ 
 RetrieveByJoinedConstraints(ByVal container As IObjectContainer)
 
             Dim query As IQuery = container.Query()

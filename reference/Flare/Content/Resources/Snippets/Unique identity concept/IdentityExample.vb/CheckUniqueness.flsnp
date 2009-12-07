@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="347" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="810">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">IdentityExample.vb: CheckUniqueness
-Private Shared Sub CheckUniqueness()Sub CheckUniqueness()
+Private Shared Sub CheckUniqueness()
             SetObjects()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try

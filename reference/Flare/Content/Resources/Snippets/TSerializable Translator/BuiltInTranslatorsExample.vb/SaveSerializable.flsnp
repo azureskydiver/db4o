@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: SaveSerializable
-Public Shared Sub SaveSerializable()Sub SaveSerializable()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="840">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: SaveSerializable
+Public Shared Sub SaveSerializable()
             File.Delete(Db4oFileName)
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             ' configure class as serializable
@@ -7,17 +12,19 @@ Public Shared Sub SaveSerializable()Sub SaveSerializable()
             Dim container As IObjectContainer = Database(configuration)
             If container IsNot Nothing Then
                 Try
-                    Dim pilot As New Pilot(&quot;Test Pilot 1&quot;, 99)
+                    Dim pilot As New Pilot("Test Pilot 1", 99)
                     container.[Set](pilot)
-                    pilot = New Pilot(&quot;Test Pilot 2&quot;, 100)
+                    pilot = New Pilot("Test Pilot 2", 100)
                     container.[Set](pilot)
                 Catch ex As Db4oException
-                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
 
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

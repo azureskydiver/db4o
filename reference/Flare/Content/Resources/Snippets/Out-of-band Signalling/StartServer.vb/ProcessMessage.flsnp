@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="252" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="700">
     <head>
     </head>
     <body>
@@ -8,7 +8,8 @@
         ''' messaging callback
         ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
         ''' &lt;/summary&gt;
-        Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _ 
+        Public Sub ProcessMessage(ByVal context As IMessageContext, _ 
+ByVal message As Object) _ 
 Implements IMessageRecipient.ProcessMessage
             If TypeOf message Is StopServer Then
                 Close()

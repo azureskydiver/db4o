@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="119" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="98" MadCap:lastWidth="680">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MultiExamples.vb: TestPilotsMatch
-Private Shared Function TestPilotsMatch()Function TestPilotsMatch(ByVal p As Pilot) As Boolean
+Private Shared Function TestPilotsMatch(ByVal p As Pilot) As Boolean
                 Return p.Name.StartsWith("Test")
             End Function</pre>
     </body>

@@ -4,10 +4,10 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SortingExample.vb: PilotEvaluation
-Private Class PilotEvaluationClass PilotEvaluation
+Private Class PilotEvaluation
             Implements IEvaluation
 
-            Public Sub Evaluate()Sub Evaluate(ByVal _ 
+            Public Sub Evaluate(ByVal _ 
 candidate As ICandidate) Implements IEvaluation.Evaluate
                 Dim pilot As Pilot = CType(candidate.GetObject, Pilot)
                 candidate.Include(pilot.Points Mod 2 = 0)

@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SerializeExample.vb: SetObjects
-Private Shared Sub SetObjects()Sub SetObjects()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SerializeExample.vb: SetObjects
+Private Shared Sub SetObjects()
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim car As Car = New Car(&quot;BMW&quot;, New Pilot(&quot;Rubens Barrichello&quot;))
+                Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 db.Set(car)
-                car = New Car(&quot;Ferrari&quot;, New Pilot(&quot;Michael Schumacher&quot;))
+                car = New Car("Ferrari", New Pilot("Michael Schumacher"))
                 db.Set(car)
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

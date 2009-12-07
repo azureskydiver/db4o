@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="556" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="870">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ExtClientExample.vb: SwitchExtClients
-Private Shared Sub SwitchExtClients()Sub SwitchExtClients()
+Private Shared Sub SwitchExtClients()
             File.Delete(Db4oFileName)
             File.Delete(ExtFileName)
             Dim server As IObjectServer = _ 

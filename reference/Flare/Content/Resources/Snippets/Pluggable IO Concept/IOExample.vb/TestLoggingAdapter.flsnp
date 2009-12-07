@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.vb: TestLoggingAdapter
-Private Shared Sub TestLoggingAdapter()Sub TestLoggingAdapter()
-            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="680">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IOExample.vb: TestLoggingAdapter
+Private Shared Sub TestLoggingAdapter()
+            Dim configuration As IConfiguration = _&#160;
+Db4oFactory.NewConfiguration()
             configuration.Io(New LoggingAdapter())
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                Dim pilot As Pilot = New Pilot(&quot;Michael Schumacher&quot;)
+                Dim pilot As Pilot = New Pilot("Michael Schumacher")
                 db.Set(pilot)
-                System.Console.WriteLine(&quot;New pilot added&quot;)
+                System.Console.WriteLine("New pilot added")
             Finally
                 db.Close()
             End Try
@@ -18,4 +25,6 @@ Private Shared Sub TestLoggingAdapter()Sub TestLoggingAdapter()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

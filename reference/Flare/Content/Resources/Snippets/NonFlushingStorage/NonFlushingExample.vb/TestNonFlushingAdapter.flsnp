@@ -1,33 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NonFlushingExample.vb: TestNonFlushingAdapter
-Private Shared Sub TestNonFlushingAdapter()Sub TestNonFlushingAdapter()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="798" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">NonFlushingExample.vb: TestNonFlushingAdapter
+Private Shared Sub TestNonFlushingAdapter()
 
             File.Delete(Db4oFileName)
 
             Dim config As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             config.File.Storage = New NonFlushingStorage(New FileStorage())
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(config, Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(config, Db4oFileName)
             Try
-                Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 99)
+                Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
                 container.Store(pilot)
                 Dim startTime As Long = DateTime.Now.Ticks
                 container.Commit()
-                System.Console.WriteLine(String.Format(&quot;Commit time with NonFlushingStorage: {0} ms&quot;, _
-                    ((DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond).ToString()))
+                System.Console.WriteLine(String.Format _ 
+("Commit time with NonFlushingStorage: {0} ms", _
+                    ((DateTime.Now.Ticks - startTime) / _ 
+TimeSpan.TicksPerMillisecond).ToString()))
             Finally
                 container.Close()
             End Try
 
             '
             File.Delete(Db4oFileName)
-            container = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), Db4oFileName)
+            container = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), _ 
+Db4oFileName)
             Try
-                Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 99)
+                Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
                 container.Store(pilot)
                 Dim startTime As Long = DateTime.Now.Ticks
                 container.Commit()
-                System.Console.WriteLine(String.Format(&quot;Commit time with default Storage: {0} ms&quot;, _
-                    ((DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond).ToString()))
+                System.Console.WriteLine(String.Format( _ 
+"Commit time with default Storage: {0} ms", _
+                    ((DateTime.Now.Ticks - startTime) / _ 
+TimeSpan.TicksPerMillisecond).ToString()))
             Finally
                 container.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

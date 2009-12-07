@@ -1,13 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.vb: TestSwitchDatabases
-Private Shared Sub TestSwitchDatabases()Sub TestSwitchDatabases()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TAExample.vb: TestSwitchDatabases
+Private Shared Sub TestSwitchDatabases()
             StoreSensorPanel()
 
-            Dim firstDb As IObjectContainer = Db4oFactory.OpenFile(ConfigureTA(), FirstDbName)
-            Dim secondDb As IObjectContainer = Db4oFactory.OpenFile(ConfigureTA(), SecondDbName)
+            Dim firstDb As IObjectContainer = _ 
+Db4oFactory.OpenFile(ConfigureTA(), FirstDbName)
+            Dim secondDb As IObjectContainer = _ 
+Db4oFactory.OpenFile(ConfigureTA(), SecondDbName)
             Try
-                Dim result As IObjectSet = firstDb.QueryByExample(New SensorPanelTA(1))
+                Dim result As IObjectSet = _ 
+firstDb.QueryByExample(New SensorPanelTA(1))
                 If result.Count &gt; 0 Then
-                    Dim sensor As SensorPanelTA = DirectCast(result(0), SensorPanelTA)
+                    Dim sensor As SensorPanelTA = _ 
+DirectCast(result(0), SensorPanelTA)
                     firstDb.Close()
                     ' Migrating an object from the first database
                     ' into a second database
@@ -17,4 +26,6 @@ Private Shared Sub TestSwitchDatabases()Sub TestSwitchDatabases()
                 firstDb.Close()
                 secondDb.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="271" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">  FreespaceFillerExample.vb: DeleteObjects
-Private Shared Sub DeleteObjects()Sub DeleteObjects(ByVal config As IEmbeddedConfiguration)
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(config, Db4oFileName)
+Private Shared Sub  DeleteObjects(ByVal config As IEmbeddedConfiguration)
+            Dim container As IObjectContainer = _ 
+Db4oEmbedded.OpenFile(config, Db4oFileName)
             Try
                 Dim result As IList(Of Item) = container.Query(Of Item)()
                 For Each item As Item In result

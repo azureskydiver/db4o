@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1734" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="780">
     <head>
     </head>
     <body>
@@ -14,7 +14,7 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Messaging
 
-Namespace Db4odocNamespace Db4odoc.ClientServer
+Namespace Db4odoc.ClientServer
     /**/''' &lt;summary&gt;
     ''' starts a db4o server with the settings from ServerSetup. 
     ''' This is a typical setup for a long running server.
@@ -25,7 +25,7 @@ Namespace Db4odocNamespace Db4odoc.ClientServer
     ''' and that all possible calls to alter the db4o
     ''' configuration need to be executed on the client and on the server.
     ''' &lt;/summary&gt;
-    Public Class StartServerClass StartServer
+    Public Class StartServer
         Inherits ServerSetup
         Implements IMessageRecipient
         /**/''' &lt;summary&gt;
@@ -37,7 +37,7 @@ Namespace Db4odocNamespace Db4odoc.ClientServer
         ''' starts a db4o server using the configuration from
         ''' ServerSetup.
         ''' &lt;/summary&gt;
-        Public Shared Sub Main()Sub Main(ByVal arguments As String())
+        Public Shared Sub Main(ByVal arguments As String())
             Dim server As New StartServer
             server.RunServer()
         End Sub
@@ -47,13 +47,15 @@ Namespace Db4odocNamespace Db4odoc.ClientServer
         ''' opens the IObjectServer, and waits forever until Close() is called
         ''' or a StopServer message is being received.
         ''' &lt;/summary&gt;
-        Public Sub RunServer()Sub RunServer()
+        Public Sub RunServer()
             ' Using the messaging functionality to redirect all
             ' messages to this.processMessage
-            Dim configuration As IServerConfiguration = Db4oClientServer.NewServerConfiguration()
+            Dim configuration As IServerConfiguration = _ 
+Db4oClientServer.NewServerConfiguration()
             configuration.Networking.MessageRecipient = Me
             SyncLock Me
-                Dim db4oServer As IObjectServer = Db4oClientServer.OpenServer(configuration, File, Port)
+                Dim db4oServer As IObjectServer = _ 
+Db4oClientServer.OpenServer(configuration, File, Port)
                 db4oServer.GrantAccess(User, Password)
                 Try
                     If Not [stop] Then
@@ -72,7 +74,8 @@ Namespace Db4odocNamespace Db4odoc.ClientServer
         ''' messaging callback
         ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
         ''' &lt;/summary&gt;
-        Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _ 
+        Public Sub ProcessMessage(ByVal context As IMessageContext, _ 
+ByVal message As Object) _ 
 Implements IMessageRecipient.ProcessMessage
             If TypeOf message Is StopServer Then
                 Close()

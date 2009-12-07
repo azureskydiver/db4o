@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="290" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: GetPilotsSortByNameAndPoints
-Public Shared Sub GetPilotsSortByNameAndPoints()Sub GetPilotsSortByNameAndPoints()
+Public Shared Sub GetPilotsSortByNameAndPoints()
             Dim container As IObjectContainer = Database()
             Try
-                Dim result As IList(Of Pilot) = container.Query(Of Pilot)(AddressOf AllPilotsMatch, _ 
+                Dim result As IList(Of Pilot) = _ 
+container.Query(Of Pilot)(AddressOf AllPilotsMatch, _ 
 AddressOf PilotPointsAndNameCompare)
                 ListResult(result)
             Catch ex As Exception

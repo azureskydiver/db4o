@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsEvenMatch
-Private Shared Function PilotsEvenMatch()Function PilotsEvenMatch(ByVal p As Pilot) As Boolean
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="118" MadCap:lastWidth="680">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsEvenMatch
+Private Shared Function PilotsEvenMatch(ByVal p As Pilot) As Boolean
             ' all Pilots having even points
             Return p.Points Mod 2 = 0
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

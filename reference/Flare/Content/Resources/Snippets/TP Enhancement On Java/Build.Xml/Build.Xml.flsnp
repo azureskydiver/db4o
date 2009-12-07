@@ -1,42 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Build.Xml
-&lt;?xml version=&quot;1.0&quot;?&gt;
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="670">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Build.Xml
+&lt;?xml version="1.0"?&gt;
 
 &lt;!-- 
   TP build time enhancement sample.
 --&gt;
 
-&lt;project name=&quot;tpexamples&quot; default=&quot;buildall&quot;&gt;
+&lt;project name="tpexamples" default="buildall"&gt;
 
   &lt;!-- 
   Set up the required class path for the enhancement task.
 --&gt;
-  &lt;path id=&quot;db4o.enhance.path&quot;&gt;
-    &lt;pathelement path=&quot;${basedir}&quot; /&gt;
-    &lt;fileset dir=&quot;lib&quot;&gt;
-      &lt;include name=&quot;**/*.jar&quot; /&gt;
+  &lt;path id="db4o.enhance.path"&gt;
+    &lt;pathelement path="${basedir}" /&gt;
+    &lt;fileset dir="lib"&gt;
+      &lt;include name="**/*.jar" /&gt;
     &lt;/fileset&gt;
   &lt;/path&gt;
 
   &lt;!-- Define enhancement task. --&gt;
-  &lt;taskdef name=&quot;db4o-enhance&quot; classname=&quot;com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask&quot; classpathref=&quot;db4o.enhance.path&quot; loaderref=&quot;db4o.enhance.loader&quot; /&gt;
+  &lt;taskdef name="db4o-enhance" 
+classname="com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask" 
+classpathref="db4o.enhance.path" loaderref="db4o.enhance.loader" /&gt;
 
-  &lt;typedef name=&quot;transparent-persistence&quot; classname=&quot;com.db4o.ta.instrumentation.ant.TAAntClassEditFactory&quot; classpathref=&quot;db4o.enhance.path&quot; loaderref=&quot;db4o.enhance.loader&quot; /&gt;
+  &lt;typedef name="transparent-persistence" 
+classname="com.db4o.ta.instrumentation.ant.TAAntClassEditFactory" 
+classpathref="db4o.enhance.path" loaderref="db4o.enhance.loader" /&gt;
 
 
 
-  &lt;target name=&quot;buildall&quot; depends=&quot;compile&quot;&gt;
+  &lt;target name="buildall" depends="compile"&gt;
 
     &lt;!-- Create enhanced output directory--&gt;
-    &lt;mkdir dir=&quot;${basedir}/enhanced-bin&quot; /&gt;
-    &lt;delete dir=&quot;${basedir}/enhanced-bin&quot; quiet=&quot;true&quot;&gt;
-      &lt;include name=&quot;**/*&quot; /&gt;
+    &lt;mkdir dir="${basedir}/enhanced-bin" /&gt;
+    &lt;delete dir="${basedir}/enhanced-bin" quiet="true"&gt;
+      &lt;include name="**/*" /&gt;
     &lt;/delete&gt;
 
-    &lt;db4o-enhance classtargetdir=&quot;${basedir}/enhanced-bin&quot;&gt;
+    &lt;db4o-enhance classtargetdir="${basedir}/enhanced-bin"&gt;
 
-      &lt;classpath refid=&quot;db4o.enhance.path&quot; /&gt;
+      &lt;classpath refid="db4o.enhance.path" /&gt;
       &lt;!-- Use compiled classes as an input --&gt;
-      &lt;sources dir=&quot;${basedir}/bin&quot; /&gt;
+      &lt;sources dir="${basedir}/bin" /&gt;
 
       &lt;!-- Call transparent persistence enhancement --&gt;
       &lt;transparent-persistence /&gt;
@@ -49,14 +58,16 @@
   should be adjusted to correspond to the version 
   you are using
   --&gt;
-  &lt;target name=&quot;compile&quot;&gt;
-    &lt;javac fork=&quot;true&quot; destdir=&quot;${basedir}/bin&quot;&gt;
+  &lt;target name="compile"&gt;
+    &lt;javac fork="true" destdir="${basedir}/bin"&gt;
       &lt;classpath&gt;
-        &lt;pathelement location=&quot;${basedir}/lib/db4o-7.1.26.8872-java5.jar&quot; /&gt;
+        &lt;pathelement location="${basedir}/lib/db4o-7.1.26.8872-java5.jar" /&gt;
       &lt;/classpath&gt;
-      &lt;src path=&quot;${basedir}/src&quot; /&gt;
-      &lt;include name=&quot;**/*.java&quot; /&gt;
+      &lt;src path="${basedir}/src" /&gt;
+      &lt;include name="**/*.java" /&gt;
     &lt;/javac&gt;
   &lt;/target&gt;
 
-&lt;/project&gt;</pre>    </body></html>
+&lt;/project&gt;</pre>
+    </body>
+</html>

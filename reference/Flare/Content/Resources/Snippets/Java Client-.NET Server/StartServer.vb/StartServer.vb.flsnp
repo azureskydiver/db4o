@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1487" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
@@ -39,7 +39,8 @@ Class StartServerClass StartServer
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ClientServer().SetMessageRecipient(Me)
 
-            Dim db4oServer As IObjectServer = Db4oFactory.OpenServer(configuration, FileName, Port)
+            Dim db4oServer As IObjectServer = Db4oFactory. _ 
+OpenServer(configuration, FileName, Port)
             db4oServer.GrantAccess(User, Password)
 
             Try
@@ -59,7 +60,8 @@ Class StartServerClass StartServer
     ''' messaging callback
     ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
     ''' &lt;/summary&gt;
-    Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _ 
+    Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As _ 
+IMessageContext, ByVal message As Object) _ 
 Implements IMessageRecipient.ProcessMessage
         If TypeOf message Is StopServer Then
             Close()

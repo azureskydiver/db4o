@@ -1,13 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: SetPilots
-Private Shared Sub SetPilots()Sub SetPilots()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="630">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: SetPilots
+Private Shared Sub SetPilots()
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Database()
             If db IsNot Nothing Then
                 Try
-                    db.[Set](New Pilot(&quot;Michael Schumacher&quot;, PilotCategories.Winner))
-                    db.[Set](New Pilot(&quot;Rubens Barrichello&quot;, PilotCategories.Talented))
+                    db.[Set](New Pilot("Michael Schumacher", _ 
+PilotCategories.Winner))
+                    db.[Set](New Pilot("Rubens Barrichello", _ 
+PilotCategories.Talented))
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

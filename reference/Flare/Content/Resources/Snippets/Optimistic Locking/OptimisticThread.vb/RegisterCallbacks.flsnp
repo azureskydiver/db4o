@@ -1,6 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.vb: RegisterCallbacks
-Private Sub RegisterCallbacks()Sub RegisterCallbacks()
-            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(_container)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="690">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">OptimisticThread.vb: RegisterCallbacks
+Private Sub RegisterCallbacks()
+            Dim registry As IEventRegistry = _ 
+EventRegistryFactory.ForObjectContainer(_container)
             ' register an event handler to check collisions on update
             AddHandler registry.Updating, AddressOf OnUpdating
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

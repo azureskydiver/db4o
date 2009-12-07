@@ -1,11 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.vb: GetMultiArray
-Private Shared Sub GetMultiArray()Sub GetMultiArray()
-            Console.WriteLine(&quot;Testing retrieving an object with multidimentional array field&quot;)
-            Dim oc As IObjectContainer = Db4oFactory.OpenClient(&quot;localhost&quot;, &amp;HDB40, &quot;db4o&quot;, &quot;db4o&quot;)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Client.vb: GetMultiArray
+Private Shared Sub GetMultiArray()
+            Console.WriteLine("Testing retrieving an object _ 
+with multidimentional array field")
+            Dim oc As IObjectContainer = Db4oFactory. _ 
+OpenClient("localhost", &amp;HDB40, "db4o", "db4o")
             Try
                 Dim result As IObjectSet = oc.Get(New RecordBook)
                 ListResult(result)
             Finally
                 oc.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

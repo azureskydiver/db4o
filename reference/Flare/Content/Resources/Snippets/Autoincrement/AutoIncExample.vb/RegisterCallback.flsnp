@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">AutoIncExample.vb: RegisterCallback
-Public Shared Sub RegisterCallback()Sub RegisterCallback()
+Public Shared Sub RegisterCallback()
             Dim db As IObjectContainer = OpenContainer()
             ' register an event handler, which will assign autoincremented IDs to any
             ' object extending CountedObject, when the object is created

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="830">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="378" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
@@ -8,12 +8,13 @@
 
 Imports Db4objects.Db4o
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.VersionUpdate
-    Public Class UpdateExampleClass UpdateExample
+Namespace Db4objects.Db4odoc.VersionUpdate
+    Public Class UpdateExample
 
-        Public Shared Sub Main()Sub Main(ByVal args As String())
+        Public Shared Sub Main(ByVal args As String())
             Db4oFactory.Configure().AllowVersionUpdates(True)
-            Dim objectContainer As IObjectContainer = Db4oFactory.OpenFile(args(0))
+            Dim objectContainer As IObjectContainer = _ 
+Db4oFactory.OpenFile(args(0))
             objectContainer.Close()
             System.Console.WriteLine("The database is ready for the version " _ 
 + Db4o.Db4oVersion.NAME)

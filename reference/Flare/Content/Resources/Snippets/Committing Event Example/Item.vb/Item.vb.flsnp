@@ -5,7 +5,7 @@
     <body>
         <pre class="prettyprint" xml:space="preserve">Item.vb
 ' Copyright (C) 2009 Versant Inc. http://www.db4o.com
-Namespace CommitCallbacksNamespace CommitCallbacks
+Namespace CommitCallbacks
 
     Public Class ItemClass Item
         Private _number As Integer

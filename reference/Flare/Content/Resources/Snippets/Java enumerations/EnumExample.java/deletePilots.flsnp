@@ -1,9 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnumExample.java: deletePilots
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">EnumExample.java: deletePilots
 private static void deletePilots() {
-    System.out.println(&quot;Qualification enum before delete Pilots&quot;);
+    System.out.println("Qualification enum before delete Pilots");
     printQualification();
     Configuration configuration = Db4o.newConfiguration();
-    configuration .objectClass(Pilot.class).objectField(&quot;qualification&quot;).cascadeOnDelete(true);
+    configuration .objectClass(Pilot.class)
+.objectField("qualification").cascadeOnDelete(true);
     ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
 
     try  {
@@ -15,6 +21,8 @@ private static void deletePilots() {
     } finally  {
       container.close();
     }
-    System.out.println(&quot;Qualification enum after delete Pilots&quot;);
+    System.out.println("Qualification enum after delete Pilots");
     printQualification();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="830">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="840">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestMinActivate
-Private Shared Sub TestMinActivate()Sub TestMinActivate()
+Private Shared Sub TestMinActivate()
             StoreSensorPanel()
             ' note that the minimum applies for *all* instances in the hierarchy
             ' the system ensures that every instantiated List object will have it's 

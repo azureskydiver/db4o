@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SerializeExample.vb: ImportFromXml
-Private Shared Sub ImportFromXml()Sub ImportFromXml()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="650">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SerializeExample.vb: ImportFromXml
+Private Shared Sub ImportFromXml()
             File.Delete(Db4oFileName)
-            Dim carSerializer As XmlSerializer = New XmlSerializer(GetType(Car()))
-            Dim xmlFileStream As FileStream = New FileStream(XmlFileName, FileMode.Open)
-            Dim cars() As Car = CType(carSerializer.Deserialize(xmlFileStream), Car())
+            Dim carSerializer As XmlSerializer = New _ 
+XmlSerializer(GetType(Car()))
+            Dim xmlFileStream As FileStream = New _ 
+FileStream(XmlFileName, FileMode.Open)
+            Dim cars() As Car = CType(carSerializer. _ 
+Deserialize(xmlFileStream), Car())
             Dim db As IObjectContainer
             Dim car As Car
             For Each car In cars
@@ -24,4 +32,6 @@ Private Shared Sub ImportFromXml()Sub ImportFromXml()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

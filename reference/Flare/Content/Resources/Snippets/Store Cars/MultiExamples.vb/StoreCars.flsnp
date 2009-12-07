@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="556" MadCap:lastWidth="1104">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="850">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MultiExamples.vb: StoreCars
-Private Shared Sub StoreCars()Sub StoreCars()
+Private Shared Sub StoreCars()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database()
             If Not container Is Nothing Then
@@ -12,7 +12,8 @@ Private Shared Sub StoreCars()Sub StoreCars()
                     Dim car As Car
                     Dim i As Integer
                     For i = 0 To ObjectCount - 1 Step i + 1
-                        car = New Car("BMW", New Pilot("Test Pilot #" + i.ToString(), i))
+                        car = New Car("BMW", New Pilot("Test Pilot #" _ 
++ i.ToString(), i))
                         container.Set(car)
                     Next
                     For i = 0 To ObjectCount - 1 Step i + 1

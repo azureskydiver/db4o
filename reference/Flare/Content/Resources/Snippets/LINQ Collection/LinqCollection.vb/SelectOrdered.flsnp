@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectOrdered
-Private Shared Sub SelectOrdered()Sub SelectOrdered()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectOrdered
+Private Shared Sub SelectOrdered()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
@@ -7,9 +12,11 @@ Private Shared Sub SelectOrdered()Sub SelectOrdered()
                     Where (p.Points &lt; 15) Order By p.Name Descending Select p
                     ListResult(result)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

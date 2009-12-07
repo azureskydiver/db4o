@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IndexedExample.vb: FillUpDB
-Private Shared Sub FillUpDB()Sub FillUpDB()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">IndexedExample.vb: FillUpDB
+Private Shared Sub FillUpDB()
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
@@ -9,4 +14,6 @@ Private Shared Sub FillUpDB()Sub FillUpDB()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

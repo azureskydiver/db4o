@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarsByPilotNameNative
-Private Shared Sub RetrieveCarsByPilotNameNative()Sub _ 
+Private Shared Sub_ 
 RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
             Dim pilotName As String = "Rubens Barrichello"
             Dim results As IObjectSet = _ 

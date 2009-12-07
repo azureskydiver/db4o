@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test2
-Private Shared Sub Test2()Sub Test2()
+Private Shared Sub Test2()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try

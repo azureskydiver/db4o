@@ -1,8 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.vb: ChangeClass
-Private Shared Sub ChangeClass()Sub ChangeClass()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">RefactoringExample.vb: ChangeClass
+Private Shared Sub ChangeClass()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-            configuration.ObjectClass(GetType(Pilot)).Rename(&quot;Db4objects.Db4odoc.Refactoring.PilotNew, Db4objects.Db4odoc&quot;)
-            configuration.ObjectClass(GetType(PilotNew)).ObjectField(&quot;_name&quot;).Rename(&quot;_identity&quot;)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            configuration.ObjectClass(GetType(Pilot)). _ 
+Rename("Db4objects.Db4odoc.Refactoring.PilotNew, Db4objects.Db4odoc")
+            configuration.ObjectClass(GetType(PilotNew)). _ 
+ObjectField("_name").Rename("_identity")
+            Dim container As IObjectContainer = Db4oFactory. _ 
+OpenFile(configuration, Db4oFileName)
             container.Close()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

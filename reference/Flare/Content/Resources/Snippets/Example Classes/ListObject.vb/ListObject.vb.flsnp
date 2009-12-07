@@ -1,17 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListObject.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="658" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ListObject.vb
 ' Copyright (C) 2007 Versant Inc. http://www.db4o.com
 Imports System.Collections.Generic
-Namespace Db4objectsNamespace Db4objects.Db4odoc.ListDeleting
+Namespace Db4objects.Db4odoc.ListDeleting
 
-    Class ListObjectClass ListObject
+    Class ListObject
         Private _name As String
         Private _data As List(Of DataObject)
 
-        Public Sub New()Sub New()
+        Public Sub New()
             _data = New List(Of DataObject)
         End Sub
 
-        Public Property Name()Property Name() As String
+        Public Property Name() As String
             Get
                 Return _name
             End Get
@@ -20,7 +25,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.ListDeleting
             End Set
         End Property
 
-        Public Property Data()Property Data() As List(Of DataObject)
+        Public Property Data() As List(Of DataObject)
             Get
                 Return _data
             End Get
@@ -29,4 +34,6 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.ListDeleting
             End Set
         End Property
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

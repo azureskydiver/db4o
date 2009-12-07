@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="678" MadCap:lastWidth="900">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="698" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ListDeletingExample.vb: DeleteTest
-Private Shared Sub DeleteTest()Sub DeleteTest()
+Private Shared Sub DeleteTest()
             ' set cascadeOnDelete in order to delete member objects
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ObjectClass(GetType(ListObject)).CascadeOnDelete(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim result As IList(Of ListObject) = _ 
 db.Query(Of ListObject)(GetType(ListObject))

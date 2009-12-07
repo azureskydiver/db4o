@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestIntegrityCheck
-Private Shared Sub TestIntegrityCheck()Sub TestIntegrityCheck()
+Private Shared Sub TestIntegrityCheck()
             FillContainer()
             Dim container As IObjectContainer = OpenContainer()
             Try

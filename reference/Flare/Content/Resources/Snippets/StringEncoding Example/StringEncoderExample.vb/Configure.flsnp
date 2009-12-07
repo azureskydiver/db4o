@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringEncoderExample.vb: Configure
-Protected Shared Function Configure()Function Configure() As IConfiguration
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="730">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StringEncoderExample.vb: Configure
+Protected Shared Function Configure() As IConfiguration
             Dim config As IConfiguration = Db4oFactory.NewConfiguration()
             config.StringEncoding(New StringEncodingEncrypted())
             Return config
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

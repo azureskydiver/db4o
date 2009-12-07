@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="195" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">DefragmentExample.vb: SimplestDefragment
-Public Shared Sub SimplestDefragment()Sub SimplestDefragment()
+Public Shared Sub SimplestDefragment()
             Try
                 Defragment.Defrag(DB_FILE)
             Catch ex As Exception

@@ -1,16 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">D.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">D.vb
 ' Copyright (C) 2007  Versant Inc.  http://www.db4o.com 
 'Imports Db4objects.Db4odoc.Refactoring.Initial
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Refactoring.Refactored
-    Class DClass D
+Namespace Db4objects.Db4odoc.Refactoring.Refactored
+    Class D
         Inherits Initial.B
 
         Public storedDate As System.DateTime
 
-        Public Overloads Overrides Function ToString()Function ToString() As String
-            Return name + &quot;/&quot; + number.ToString() + &quot;: &quot; + storedDate.ToString()
+        Public Overloads Overrides Function ToString() As String
+            Return name + "/" + number.ToString() + ": " + storedDate.ToString()
         End Function
 
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

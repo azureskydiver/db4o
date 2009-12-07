@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.vb: ComparePilots
-Private Shared Function ComparePilots()Function _ 
+Private Shared Function _ 
 ComparePilots(ByVal pilot1 As Pilot, ByVal pilot2 As Pilot) As Integer
             Return pilot1.Points - pilot2.Points
         End Function</pre>

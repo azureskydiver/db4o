@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: TestChangeIdentity
-Public Shared Sub TestChangeIdentity()Sub TestChangeIdentity()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: TestChangeIdentity
+Public Shared Sub TestChangeIdentity()
 
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
@@ -9,8 +14,10 @@ Public Shared Sub TestChangeIdentity()Sub TestChangeIdentity()
             Try
                 db = container.Ext().Identity()
                 oldSignature = db.GetSignature()
-                Console.WriteLine(&quot;oldSignature: &quot; + PrintSignature(oldSignature))
-                Dim yf As LocalObjectContainer = DirectCast(container, LocalObjectContainer)
+                Console.WriteLine("oldSignature: " + _ 
+PrintSignature(oldSignature))
+                Dim yf As LocalObjectContainer = _ 
+DirectCast(container, LocalObjectContainer)
                 yf.GenerateNewIdentity()
             Finally
                 container.Close()
@@ -19,7 +26,8 @@ Public Shared Sub TestChangeIdentity()Sub TestChangeIdentity()
             Try
                 db = container.Ext().Identity()
                 NewSignature = db.GetSignature()
-                Console.WriteLine(&quot;newSignature: &quot; + PrintSignature(NewSignature))
+                Console.WriteLine("newSignature: " + _ 
+PrintSignature(NewSignature))
             Finally
                 container.Close()
             End Try
@@ -35,8 +43,10 @@ Public Shared Sub TestChangeIdentity()Sub TestChangeIdentity()
             Next
 
             If (same) Then
-                Console.WriteLine(&quot;Database signatures are identical&quot;)
+                Console.WriteLine("Database signatures are identical")
             Else
-                Console.WriteLine(&quot;Database signatures are different&quot;)
+                Console.WriteLine("Database signatures are different")
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

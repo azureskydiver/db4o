@@ -1,42 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">build.xml
-&lt;project name=&quot;db4o.TP.sample&quot; basedir=&quot;.&quot; default=&quot;run&quot;&gt;
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">build.xml
+&lt;project name="db4o.TP.sample" basedir="." default="run"&gt;
 
-  &lt;property name=&quot;dir.src&quot; value=&quot;${basedir}/src&quot; /&gt;
-  &lt;property name=&quot;dir.bin&quot; value=&quot;${basedir}/bin&quot; /&gt;
+  &lt;property name="dir.src" value="${basedir}/src" /&gt;
+  &lt;property name="dir.bin" value="${basedir}/bin" /&gt;
   
-  &lt;path id=&quot;project.classpath&quot;&gt;
-      &lt;fileset dir=&quot;lib&quot;&gt;
-        &lt;include name=&quot;**/*.jar&quot;/&gt;
+  &lt;path id="project.classpath"&gt;
+      &lt;fileset dir="lib"&gt;
+        &lt;include name="**/*.jar"/&gt;
       &lt;/fileset&gt;
   &lt;/path&gt;
   
-  &lt;taskdef name=&quot;db4o-enhance&quot; 
-    classname=&quot;com.db4o.enhance.Db4oEnhancerAntTask&quot; 
-    classpathref=&quot;project.classpath&quot; /&gt;
+  &lt;taskdef name="db4o-enhance" 
+    classname="com.db4o.enhance.Db4oEnhancerAntTask" 
+    classpathref="project.classpath" /&gt;
   
-  &lt;target name=&quot;compile&quot;&gt;
-    &lt;mkdir dir=&quot;${dir.bin}&quot; /&gt;
-    &lt;javac srcdir=&quot;${dir.src}&quot; destdir=&quot;${dir.bin}&quot; failonerror=&quot;true&quot;&gt;
-      &lt;classpath refid=&quot;project.classpath&quot; /&gt;
+  &lt;target name="compile"&gt;
+    &lt;mkdir dir="${dir.bin}" /&gt;
+    &lt;javac srcdir="${dir.src}" destdir="${dir.bin}" failonerror="true"&gt;
+      &lt;classpath refid="project.classpath" /&gt;
     &lt;/javac&gt;
   &lt;/target&gt;
   
-  &lt;target name=&quot;enhance&quot; depends=&quot;compile&quot;&gt;
-    &lt;db4o-enhance classtargetdir=&quot;${dir.bin}&quot; ta=&quot;true&quot; nq=&quot;true&quot; collections=&quot;true&quot;&gt;
-      &lt;classpath refid=&quot;project.classpath&quot; /&gt;
-      &lt;sources dir=&quot;${dir.bin}&quot;&gt;
-        &lt;include name=&quot;**/*.class&quot; /&gt;
+  &lt;target name="enhance" depends="compile"&gt;
+    &lt;db4o-enhance classtargetdir="${dir.bin}" ta="true" 
+nq="true" collections="true"&gt;
+      &lt;classpath refid="project.classpath" /&gt;
+      &lt;sources dir="${dir.bin}"&gt;
+        &lt;include name="**/*.class" /&gt;
       &lt;/sources&gt;
     &lt;/db4o-enhance&gt;
   &lt;/target&gt;
 
-  &lt;target name=&quot;run&quot; depends=&quot;enhance&quot;&gt;
-    &lt;java classname=&quot;do4odoc.tacollections.TACollectionsExample&quot; failonerror=&quot;true&quot;&gt;
+  &lt;target name="run" depends="enhance"&gt;
+    &lt;java classname="do4odoc.tacollections.TACollectionsExample" 
+failonerror="true"&gt;
       &lt;classpath&gt;
-        &lt;pathelement path=&quot;${dir.bin}&quot; /&gt;
-        &lt;path refid=&quot;project.classpath&quot; /&gt;
+        &lt;pathelement path="${dir.bin}" /&gt;
+        &lt;path refid="project.classpath" /&gt;
       &lt;/classpath&gt;
     &lt;/java&gt;
   &lt;/target&gt;
 
-&lt;/project&gt;</pre>    </body></html>
+&lt;/project&gt;</pre>
+    </body>
+</html>

@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="423" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateRemoteReadCommitted
-Public Shared Sub DemonstrateRemoteReadCommitted()Sub DemonstrateRemoteReadCommitted(ByVal port As Integer, _ 
+Public Shared Sub DemonstrateRemoteReadCommitted(ByVal port As Integer, _ 
 ByVal user As String, ByVal password As String)
-            Dim client1 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+            Dim client1 As IObjectContainer = Db4oClientServer. _ 
+OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
 "localhost", port, user, password)
-            Dim client2 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+            Dim client2 As IObjectContainer = Db4oClientServer. _ 
+OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
 "localhost", port, user, password)
             Dim pilot As Pilot = New Pilot("Jenson Button", 97)
             Dim result As IList(Of Car) = client1.Query(Of Car)()

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1430" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
@@ -9,18 +9,19 @@ Imports System
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Semaphores
+Namespace Db4objects.Db4odoc.Semaphores
     ' This class  demonstrates the use  of a  semaphore to ensure that only
     ' one instance of a  certain  class is stored to an IObjectContainer.
     ' 
     ' Caution  !!! The getSingleton method contains a commit()  call.  
 
-    Public Class SingletonClass Singleton
+    Public Class Singleton
 
-        ' returns  a singleton object of one  class for an  IObjectContainer.
+        ' returns  a singleton object of one  class for an IObjectContainer.
         ' Caution !!!  This  method contains a commit() call.
 
-        Public Shared Function GetSingleton()Function GetSingleton(ByVal objectContainer As IObjectContainer, _ 
+        Public Shared Function GetSingleton(ByVal objectContainer As _ 
+IObjectContainer, _ 
 ByVal clazz As System.Type) As Object
             Dim obj As Object = queryForSingletonClass(objectContainer, clazz)
             If Not obj Is Nothing Then
@@ -59,7 +60,7 @@ ByVal clazz As System.Type) As Object
             Return obj
         End Function
 
-        Private Shared Function queryForSingletonClass()Function queryForSingletonClass(ByVal objectContainer _ 
+        Private Shared Function queryForSingletonClass(ByVal objectContainer _ 
 As IObjectContainer, ByVal clazz As System.Type) As Object
             Dim q As IQuery = objectContainer.Query()
             q.Constrain(clazz)

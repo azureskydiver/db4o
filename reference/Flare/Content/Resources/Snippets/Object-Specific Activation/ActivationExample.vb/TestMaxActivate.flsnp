@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestMaxActivate
-Private Shared Sub TestMaxActivate()Sub TestMaxActivate()
+Private Shared Sub TestMaxActivate()
             StoreSensorPanel()
             ' note that the maximum is applied to 
             ' the retrieved root object and limits activation

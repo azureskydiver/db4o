@@ -1,7 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: PilotComparer
-Private Class PilotComparerClass PilotComparer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: PilotComparer
+Private Class PilotComparer
             Implements IComparer
-            Public Function Compare()Function Compare(ByVal p1 As Object, ByVal p2 As Object) As Integer Implements IComparer.Compare
+            Public Function Compare(ByVal p1 As Object, ByVal p2 As Object) _ 
+As Integer Implements IComparer.Compare
                 If TypeOf p1 Is Pilot AndAlso TypeOf p2 Is Pilot Then
                     Dim pilot1 As Pilot = CType(p1, Pilot)
                     Dim pilot2 As Pilot = CType(p2, Pilot)
@@ -9,4 +15,6 @@ Private Class PilotComparerClass PilotComparer
                 End If
                 Return 0
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

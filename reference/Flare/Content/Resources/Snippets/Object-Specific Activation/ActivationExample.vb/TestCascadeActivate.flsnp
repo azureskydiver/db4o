@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestCascadeActivate
-Private Shared Sub TestCascadeActivate()Sub TestCascadeActivate()
+Private Shared Sub TestCascadeActivate()
             StoreSensorPanel()
             Dim configuration As IEmbeddedConfiguration = _ 
 Db4oEmbedded.NewConfiguration()

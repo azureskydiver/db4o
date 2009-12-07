@@ -1,6 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: UpdatePilots
-Private Shared Sub UpdatePilots()Sub UpdatePilots()
-            Console.WriteLine(&quot;Updating PilotCategory in pilot reference:&quot;)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: UpdatePilots
+Private Shared Sub UpdatePilots()
+            Console.WriteLine("Updating PilotCategory in pilot reference:")
             Dim db As IObjectContainer = Database()
             If db IsNot Nothing Then
                 Try
@@ -9,9 +14,9 @@ Private Shared Sub UpdatePilots()Sub UpdatePilots()
                     For Each obj In result
                         Dim pilot As Pilot = DirectCast(obj, Pilot)
                         If pilot.Category Is PilotCategories.WINNER Then
-                            Console.WriteLine(&quot;Winner pilot: &quot; + pilot.ToString())
+                            Console.WriteLine("Winner pilot: " + pilot.ToString())
                             Dim pc As PilotCategories = pilot.Category
-                            pc.TestChange(&quot;WINNER2006&quot;)
+                            pc.TestChange("WINNER2006")
                             db.[Set](pilot)
                         End If
                     Next
@@ -20,4 +25,6 @@ Private Shared Sub UpdatePilots()Sub UpdatePilots()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

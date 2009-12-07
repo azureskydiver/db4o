@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">BlobExample.vb: storeImage
-Private Shared Sub StoreImage()Sub StoreImage(ByVal car As Car)
+Private Shared Sub StoreImage(ByVal car As Car)
             Dim img As CarImage = car.CarImage
             Try
                 img.ReadFile()

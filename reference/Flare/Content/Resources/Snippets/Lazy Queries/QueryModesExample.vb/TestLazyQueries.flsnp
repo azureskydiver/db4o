@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryModesExample.vb: TestLazyQueries
-Private Shared Sub TestLazyQueries()Sub TestLazyQueries()
+Private Shared Sub TestLazyQueries()
             Console.WriteLine( _ 
 "Testing query performance on 10000 pilot objects in Lazy mode")
             FillUpDB(10000)

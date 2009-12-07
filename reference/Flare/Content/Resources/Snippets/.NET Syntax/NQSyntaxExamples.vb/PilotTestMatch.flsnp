@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.vb: PilotTestMatch
-Private Shared Function PilotTestMatch()Function _ 
+Private Shared Function _ 
 PilotTestMatch(ByVal p As Pilot) As Boolean
             ' test pilots 
             Return p.Name.StartsWith("Test")

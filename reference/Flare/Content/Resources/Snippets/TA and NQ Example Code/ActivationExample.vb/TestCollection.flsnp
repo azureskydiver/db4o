@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestCollection
-Private Shared Sub TestCollection()Sub TestCollection()
+Private Shared Sub TestCollection()
             StoreCollection()
             Dim db As IObjectContainer = Database(ConfigureTA())
             If db IsNot Nothing Then

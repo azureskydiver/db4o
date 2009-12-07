@@ -1,65 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">build-simple.xml
-&lt;?xml version=&quot;1.0&quot;?&gt;
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="670">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">build-simple.xml
+&lt;?xml version="1.0"?&gt;
 
 &lt;!-- 
   Simple TA and NQ build time instrumentation sample.
 
-  This version uses db4o-enhance instead of db4o-instrument. db4o-enhance provides a default
-  configuration for NQ/TA instrumentation, while db4o-instrument requires to configure
-  (and optionally fine-tune) the single instrumentation steps. Other than that, the
+  This version uses db4o-enhance instead of db4o-instrument. 
+db4o-enhance provides a default
+  configuration for NQ/TA instrumentation, 
+while db4o-instrument requires to configure
+  (and optionally fine-tune) the single instrumentation 
+steps. Other than that, the
   configuration options for the two are identical.
 --&gt;
 
-&lt;project name=&quot;enhance_db4o&quot; default=&quot;run-enhanced&quot;&gt;
+&lt;project name="enhance_db4o" default="run-enhanced"&gt;
 
-&lt;!-- The classpath needed for the enhancement process, including the application classpath --&gt;
-&lt;path id=&quot;db4o.enhance.path&quot;&gt;
-  &lt;pathelement path=&quot;${basedir}&quot; /&gt;
-  &lt;fileset dir=&quot;lib&quot;&gt;
-    &lt;include name=&quot;**/*.jar&quot;/&gt;
+&lt;!-- The classpath needed for the enhancement process, 
+including the application classpath --&gt;
+&lt;path id="db4o.enhance.path"&gt;
+  &lt;pathelement path="${basedir}" /&gt;
+  &lt;fileset dir="lib"&gt;
+    &lt;include name="**/*.jar"/&gt;
   &lt;/fileset&gt;
 &lt;/path&gt;
 
 &lt;!-- Define enhancement tasks (from resource in db4otools.jar). --&gt;
 &lt;typedef
-  resource=&quot;instrumentation-def.properties&quot;
-  classpathref=&quot;db4o.enhance.path&quot; /&gt;
+  resource="instrumentation-def.properties"
+  classpathref="db4o.enhance.path" /&gt;
 
 
-&lt;target name=&quot;compile&quot;&gt;
+&lt;target name="compile"&gt;
   
-  &lt;mkdir dir=&quot;${basedir}/bin&quot; /&gt;
-  &lt;delete dir=&quot;${basedir}/bin&quot; quiet = &quot;true&quot;&gt;
-    &lt;include name=&quot;**/*&quot;/&gt;
+  &lt;mkdir dir="${basedir}/bin" /&gt;
+  &lt;delete dir="${basedir}/bin" quiet = "true"&gt;
+    &lt;include name="**/*"/&gt;
   &lt;/delete&gt;
   
-  &lt;javac srcdir=&quot;${basedir}/src&quot; destdir=&quot;${basedir}/bin&quot;&gt;
-    &lt;classpath refid=&quot;db4o.enhance.path&quot; /&gt;
+  &lt;javac srcdir="${basedir}/src" destdir="${basedir}/bin"&gt;
+    &lt;classpath refid="db4o.enhance.path" /&gt;
   &lt;/javac&gt;
   
 &lt;/target&gt;
 
 
-&lt;target name=&quot;enhance&quot; depends=&quot;compile&quot;&gt;
+&lt;target name="enhance" depends="compile"&gt;
 
   &lt;!-- Prepare the target folders --&gt;
-  &lt;mkdir dir=&quot;${basedir}/enhanced-bin&quot; /&gt;
-  &lt;delete dir=&quot;${basedir}/enhanced-bin&quot; quiet = &quot;true&quot;&gt;
-    &lt;include name=&quot;**/*&quot;/&gt;
+  &lt;mkdir dir="${basedir}/enhanced-bin" /&gt;
+  &lt;delete dir="${basedir}/enhanced-bin" quiet = "true"&gt;
+    &lt;include name="**/*"/&gt;
   &lt;/delete&gt;
-  &lt;mkdir dir=&quot;${basedir}/enhanced-lib&quot; /&gt;
-  &lt;delete dir=&quot;${basedir}/enhanced-lib&quot; quiet = &quot;true&quot;&gt;
-    &lt;include name=&quot;**/*&quot;/&gt;
+  &lt;mkdir dir="${basedir}/enhanced-lib" /&gt;
+  &lt;delete dir="${basedir}/enhanced-lib" quiet = "true"&gt;
+    &lt;include name="**/*"/&gt;
   &lt;/delete&gt;           
 
-  &lt;db4o-enhance classTargetDir=&quot;${basedir}/enhanced-bin&quot; jarTargetDir=&quot;${basedir}/enhanced-lib&quot;&gt;
+  &lt;db4o-enhance classTargetDir="${basedir}/enhanced-bin" 
+jarTargetDir="${basedir}/enhanced-lib"&gt;
 
-    &lt;classpath refid=&quot;db4o.enhance.path&quot; /&gt;    
+    &lt;classpath refid="db4o.enhance.path" /&gt;    
     &lt;!-- Fileset for original class files to be instrumented --&gt;
-    &lt;sources dir=&quot;${basedir}/bin&quot; /&gt;
+    &lt;sources dir="${basedir}/bin" /&gt;
     &lt;!-- Fileset for original jars to be instrumented --&gt;
-    &lt;jars dir=&quot;${basedir}/lib&quot;&gt;
-      &lt;include name=&quot;pilot.jar&quot; /&gt;
+    &lt;jars dir="${basedir}/lib"&gt;
+      &lt;include name="pilot.jar" /&gt;
     &lt;/jars&gt;
     
   &lt;/db4o-enhance&gt;
@@ -67,30 +77,32 @@
 &lt;/target&gt;
   
 
-&lt;target name=&quot;run-unenhanced&quot; depends=&quot;compile&quot;&gt;
+&lt;target name="run-unenhanced" depends="compile"&gt;
   
-  &lt;java classname=&quot;enhancement.EnhancerMain&quot; failonerror=&quot;true&quot;&gt;
+  &lt;java classname="enhancement.EnhancerMain" failonerror="true"&gt;
     &lt;classpath&gt;
-      &lt;pathelement location=&quot;${basedir}/bin&quot; /&gt;
-      &lt;pathelement location=&quot;${basedir}/lib/pilot.jar&quot; /&gt;
-      &lt;path refid=&quot;db4o.enhance.path&quot; /&gt;
+      &lt;pathelement location="${basedir}/bin" /&gt;
+      &lt;pathelement location="${basedir}/lib/pilot.jar" /&gt;
+      &lt;path refid="db4o.enhance.path" /&gt;
     &lt;/classpath&gt;
   &lt;/java&gt;
   
 &lt;/target&gt;
 
 
-&lt;target name=&quot;run-enhanced&quot; depends=&quot;enhance&quot;&gt;
+&lt;target name="run-enhanced" depends="enhance"&gt;
   
-  &lt;java classname=&quot;enhancement.EnhancerMain&quot; failonerror=&quot;true&quot;&gt;
+  &lt;java classname="enhancement.EnhancerMain" failonerror="true"&gt;
     &lt;classpath&gt;
-      &lt;pathelement location=&quot;${basedir}/enhanced-bin&quot; /&gt;
-      &lt;pathelement location=&quot;${basedir}/enhanced-lib/pilot.jar&quot; /&gt;
-      &lt;path refid=&quot;db4o.enhance.path&quot; /&gt;
+      &lt;pathelement location="${basedir}/enhanced-bin" /&gt;
+      &lt;pathelement location="${basedir}/enhanced-lib/pilot.jar" /&gt;
+      &lt;path refid="db4o.enhance.path" /&gt;
     &lt;/classpath&gt;
   &lt;/java&gt;
   
 &lt;/target&gt;
 
 
-&lt;/project&gt;</pre>    </body></html>
+&lt;/project&gt;</pre>
+    </body>
+</html>

@@ -4,10 +4,10 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">SortingExample.vb: PilotQueryComparer
-Private Class PilotQueryComparerClass PilotQueryComparer
+Private Class PilotQueryComparer
             Implements IQueryComparator
 
-            Public Function Compare()Function _ 
+            Public Function _ 
 Compare(ByVal p1 As Object, ByVal p2 As Object) _ 
 As Integer Implements IQueryComparator.Compare
                 If TypeOf p1 Is Pilot AndAlso TypeOf p2 Is Pilot Then

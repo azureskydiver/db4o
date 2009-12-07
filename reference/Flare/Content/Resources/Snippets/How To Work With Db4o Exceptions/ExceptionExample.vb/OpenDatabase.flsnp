@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExceptionExample.vb: OpenDatabase
-Private Shared Function OpenDatabase()Function OpenDatabase() As IObjectContainer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ExceptionExample.vb: OpenDatabase
+Private Shared Function OpenDatabase() As IObjectContainer
             Dim db As IObjectContainer = Nothing
             Try
                 db = Db4oFactory.OpenFile(Db4oFileName)
@@ -12,4 +17,6 @@ Private Shared Function OpenDatabase()Function OpenDatabase() As IObjectContaine
                 ' and try again
             End Try
             Return db
-        End Function</pre>    </body></html>
+        End Function</pre>
+    </body>
+</html>

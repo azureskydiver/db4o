@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateLocalReadCommitted
-Public Shared Sub DemonstrateLocalReadCommitted()Sub DemonstrateLocalReadCommitted(ByVal server As IObjectServer)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateLocalReadCommitted
+Public Shared Sub DemonstrateLocalReadCommitted(ByVal server As IObjectServer)
             Dim client1 As IObjectContainer = server.OpenClient()
             Dim client2 As IObjectContainer = server.OpenClient()
-            Dim pilot As Pilot = New Pilot(&quot;David Coulthard&quot;, 98)
-            Dim result As IList = client1.QueryByExample(New Car(&quot;BMW&quot;))
+            Dim pilot As Pilot = New Pilot("David Coulthard", 98)
+            Dim result As IList = client1.QueryByExample(New Car("BMW"))
             Dim car As Car = DirectCast(result(0), Car)
             car.Pilot = pilot
             client1.Store(car)
@@ -14,4 +19,6 @@ Public Shared Sub DemonstrateLocalReadCommitted()Sub DemonstrateLocalReadCommitt
             ListRefreshedResult(client2, client2.Query(Of Car)(), 2)
             client1.Close()
             client2.Close()
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

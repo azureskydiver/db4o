@@ -7,8 +7,8 @@
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 Imports System.Collections
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Lists
-    Public Class TeamClass Team
+Namespace Db4objects.Db4odoc.Lists
+    Public Class Team
         Private _pilots As IList
         Private _name As String
 
@@ -33,7 +33,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Lists
             Return CType(_pilots(index), evaluations.Pilot)
         End Function
 
-        Public Sub Sub RemovePilot(ByVal index As Integer)
+        Public Sub RemovePilot(ByVal index As Integer)
             _pilots.Remove(index)
         End Sub
 

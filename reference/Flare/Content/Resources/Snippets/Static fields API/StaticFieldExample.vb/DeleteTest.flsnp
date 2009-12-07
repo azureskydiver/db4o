@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: DeleteTest
-Private Shared Sub DeleteTest()Sub DeleteTest()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: DeleteTest
+Private Shared Sub DeleteTest()
             Dim db As IObjectContainer = Database()
             If db IsNot Nothing Then
                 Try
-                    Console.WriteLine(&quot;Deleting Pilots :&quot;)
+                    Console.WriteLine("Deleting Pilots :")
                     Dim result As IObjectSet = db.[Get](GetType(Pilot))
                     Dim obj As Object
                     For Each obj In result
@@ -11,7 +16,7 @@ Private Shared Sub DeleteTest()Sub DeleteTest()
                         db.Delete(pilot)
                     Next
                     PrintCategories(db)
-                    Console.WriteLine(&quot;Deleting PilotCategories :&quot;)
+                    Console.WriteLine("Deleting PilotCategories :")
                     result = db.[Get](GetType(PilotCategories))
                     For Each obj In result
                         db.Delete(obj)
@@ -21,4 +26,6 @@ Private Shared Sub DeleteTest()Sub DeleteTest()
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

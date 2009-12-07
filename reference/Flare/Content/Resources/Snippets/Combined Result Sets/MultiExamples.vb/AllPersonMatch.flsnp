@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="118" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MultiExamples.vb: AllPersonMatch
-Private Shared Function AllPersonMatch()Function AllPersonMatch(Of Person)(ByVal p As Person) As Boolean
+Private Shared Function AllPersonMatch(Of Person)(ByVal p As Person) As Boolean
             ' all persons
             Return True
         End Function</pre>

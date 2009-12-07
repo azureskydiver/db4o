@@ -1,22 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: SaveNotStorable
-Public Shared Sub SaveNotStorable()Sub SaveNotStorable()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: SaveNotStorable
+Public Shared Sub SaveNotStorable()
             File.Delete(Db4oFileName)
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-            ' Configure NotStorable class with TNull translator to prevent its storage
+            ' Configure NotStorable class with TNull translator 
+            ' to prevent its storage
             configuration.ObjectClass(GetType(NotStorable)).Translate(New TNull())
             Dim container As IObjectContainer = Database(configuration)
             If container IsNot Nothing Then
                 Try
-                    Dim ns As New NotStorable(&quot;test1&quot;)
+                    Dim ns As New NotStorable("test1")
                     container.[Set](ns)
-                    ns = New NotStorable(&quot;test2&quot;)
+                    ns = New NotStorable("test2")
                     container.[Set](ns)
                 Catch ex As Db4oException
-                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("Db4o Exception: " + ex.Message)
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

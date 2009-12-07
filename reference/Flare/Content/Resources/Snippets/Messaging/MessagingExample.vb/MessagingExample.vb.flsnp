@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="822" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
@@ -11,20 +11,25 @@ Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Messaging
 
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Messaging
+Namespace Db4objects.Db4odoc.Messaging
 
-    Public Class MessagingExampleClass MessagingExample
+    Public Class MessagingExample
         Private Const Db4oFileName As String = "reference.db4o"
 
-        Public Shared Sub ConfigureServer()Sub ConfigureServer()
+        Public Shared Sub ConfigureServer()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
-            configuration.ClientServer.SetMessageRecipient(New SimpleMessageRecipient())
-            Dim objectServer As IObjectServer = Db4oFactory.OpenServer(configuration, Db4oFileName, 0)
+            configuration.ClientServer.SetMessageRecipient _ 
+(New SimpleMessageRecipient())
+            Dim objectServer As IObjectServer = _&#160;
+Db4oFactory.OpenServer(configuration, Db4oFileName, 0)
             Try
                 ' Here is what we would do on the client to send the message
-                Dim clientConfiguration As IConfiguration = Db4oFactory.NewConfiguration()
-                Dim sender As IMessageSender = clientConfiguration.ClientServer().GetMessageSender()
-                Dim clientObjectContainer As IObjectContainer = objectServer.OpenClient(clientConfiguration)
+                Dim clientConfiguration As IConfiguration = _ 
+Db4oFactory.NewConfiguration()
+                Dim sender As IMessageSender = _ 
+clientConfiguration.ClientServer().GetMessageSender()
+                Dim clientObjectContainer As IObjectContainer = _ 
+objectServer.OpenClient(clientConfiguration)
                 sender.Send(New MyClientServerMessage("Hello from client."))
                 clientObjectContainer.Close()
             Finally
@@ -34,9 +39,10 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.Messaging
         ' end ConfigureServer
     End Class
 
-    Public Class SimpleMessageRecipientClass SimpleMessageRecipient
+    Public Class SimpleMessageRecipient
         Implements IMessageRecipient
-        Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _ 
+        Public Sub ProcessMessage(ByVal context As IMessageContext, _ 
+ByVal message As Object) _ 
 Implements IMessageRecipient.ProcessMessage
             ' message objects will arrive in this code block
             System.Console.WriteLine(message)

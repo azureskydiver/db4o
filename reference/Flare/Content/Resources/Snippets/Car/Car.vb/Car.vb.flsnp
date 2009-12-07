@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="830">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Car.vb
 ' Copyright (C) 2004 - 2008 Versant Inc. http://www.db4o.com 
 
 Imports System
@@ -6,8 +11,8 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.TA
 Imports Db4objects.Db4o.Activation
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
-    Public Class CarClass Car
+Namespace Db4objects.Db4odoc.TP.Rollback
+    Public Class Car
         Implements IActivatable
         Private _model As String
         Private _pilot As Pilot
@@ -17,7 +22,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
         Public _activator As IActivator
 
 
-        Public Sub New()Sub New(ByVal model As String, ByVal pilot As Pilot)
+        Public Sub New(ByVal model As String, ByVal pilot As Pilot)
             _model = model
             _pilot = pilot
         End Sub
@@ -25,7 +30,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
 
         'Bind the class to the specified object container, create the activator
 
-        Public Sub Bind()Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
+        Public Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
             If _activator Is activator Then
                 Return
             End If
@@ -36,7 +41,8 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
         End Sub
         ' end Bind
 
-        Public Sub Activate()Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
+        Public Sub Activate(ByVal purpose As ActivationPurpose) _ 
+Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If
@@ -44,7 +50,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
         End Sub
         ' end Activate
 
-        Public Property Model()Property Model() As String
+        Public Property Model() As String
             Get
                 Activate(ActivationPurpose.Read)
                 Return _model
@@ -55,7 +61,7 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
             End Set
         End Property
 
-        Public Property Pilot()Property Pilot() As Pilot
+        Public Property Pilot() As Pilot
             Get
                 Activate(ActivationPurpose.Read)
                 Return _pilot
@@ -66,15 +72,17 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.TP.Rollback
             End Set
         End Property
 
-        Public Sub ChangePilot()Sub ChangePilot(ByVal name As String, ByVal id As Integer)
+        Public Sub ChangePilot(ByVal name As String, ByVal id As Integer)
             _pilot.Name = name
             _pilot.Id.Change(id)
         End Sub
 
-        Public Overloads Overrides Function ToString()Function ToString() As String
+        Public Overloads Overrides Function ToString() As String
             Activate(ActivationPurpose.Read)
-            Return String.Format(&quot;{0}[{1}]&quot;, _model, _pilot)
+            Return String.Format("{0}[{1}]", _model, _pilot)
         End Function
         ' end ToString
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

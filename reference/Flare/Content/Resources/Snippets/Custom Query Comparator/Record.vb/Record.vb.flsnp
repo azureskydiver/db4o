@@ -1,16 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Record.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="640">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Record.vb
 ' Copyright (C) 2007 Versant Inc. http://www.db4o.com
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Comparing
+Namespace Db4objects.Db4odoc.Comparing
 
-    Class RecordClass Record
+    Class Record
         Private _record As MyString
 
-        Public Sub New()Sub New(ByVal record As String)
+        Public Sub New(ByVal record As String)
             _record = New MyString(record)
         End Sub
 
-        Public Overloads Overrides Function ToString()Function ToString() As String
+        Public Overloads Overrides Function ToString() As String
             Return _record.ToString
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

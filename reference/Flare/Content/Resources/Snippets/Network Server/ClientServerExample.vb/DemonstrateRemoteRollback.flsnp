@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="423" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="900">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateRemoteRollback
-Public Shared Sub DemonstrateRemoteRollback()Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, _ 
+Public Shared Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, _ 
 ByVal password As String)
-            Dim client1 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+            Dim client1 As IObjectContainer = Db4oClientServer. _ 
+OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
 "localhost", port, user, password)
-            Dim client2 As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
+            Dim client2 As IObjectContainer = Db4oClientServer. _ 
+OpenClient(Db4oClientServer.NewClientConfiguration(), _ 
 "localhost", port, user, password)
             Dim result As IList(Of Car) = client1.Query(Of Car)()
             Dim car As Car = result(0)

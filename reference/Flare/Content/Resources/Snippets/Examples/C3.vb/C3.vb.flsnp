@@ -1,17 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">C3.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">C3.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.Constructors
-    Class C3Class C3
+Namespace Db4objects.Db4odoc.Constructors
+    Class C3
         Private s As String
         Private i As Integer
 
-        Private Sub New()Sub New(ByVal s As String)
+        Private Sub New(ByVal s As String)
             Me.s = s
             Me.i = s.Length
         End Sub
 
-        Public Overrides Function ToString()Function ToString() As String
+        Public Overrides Function ToString() As String
             Return s + i.ToString()
         End Function
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

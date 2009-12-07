@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="214" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="218" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CachedIOExample.vb: ConfigureCache
-Private Shared Function ConfigureCache()Function ConfigureCache() As IConfiguration
+Private Shared Function ConfigureCache() As IConfiguration
             System.Console.WriteLine("Setting up cached io adapter")
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             ' new cached IO adapter with 256 pages 1024 bytes each
-            Dim adapter As CachedIoAdapter = New CachedIoAdapter(New RandomAccessFileAdapter, 1024, 256)
+            Dim adapter As CachedIoAdapter = New CachedIoAdapter _ 
+(New RandomAccessFileAdapter, 1024, 256)
             configuration.Io(adapter)
             Return configuration
         End Function</pre>

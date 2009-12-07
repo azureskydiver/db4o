@@ -1,23 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingAdapter.vb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LoggingAdapter.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 
 Imports System.IO
 Imports Db4objects.Db4o.IO
 
-Namespace Db4objectsNamespace Db4objects.Db4odoc.IOs
-    Public Class LoggingAdapterClass LoggingAdapter
+Namespace Db4objects.Db4odoc.IOs
+    Public Class LoggingAdapter
         Inherits IoAdapter
         Private _delegate As Sharpen.IO.RandomAccessFile
 
-        Public Sub New()Sub New()
+        Public Sub New()
         End Sub
 
-        Protected Friend Sub New()Sub New(ByVal path As String, ByVal lockFile As Boolean, ByVal initialLength As Long, ByVal rOnly As Boolean)
+        Protected Friend Sub New(ByVal path As String, _ 
+ByVal lockFile As Boolean, ByVal initialLength As Long, ByVal rOnly As Boolean)
             Dim mode As String
             If rOnly = True Then
-                mode = &quot;r&quot;
+                mode = "r"
             Else
-                mode = &quot;rw&quot;
+                mode = "rw"
             End If
             _delegate = New Sharpen.IO.RandomAccessFile(path, mode)
             If initialLength &gt; 0 Then
@@ -28,53 +34,60 @@ Namespace Db4objectsNamespace Db4objects.Db4odoc.IOs
         End Sub
 
 
-        Public Sub SetOut()Sub SetOut(ByVal outs As TextWriter)
+        Public Sub SetOut(ByVal outs As TextWriter)
             System.Console.SetOut(outs)
         End Sub
 
-        Public Overrides Sub Close()Sub Close()
-            System.Console.WriteLine(&quot;Closing file&quot;)
+        Public Overrides Sub Close()
+            System.Console.WriteLine("Closing file")
             _delegate.Close()
         End Sub
 
-        Public Overrides Sub Delete()Sub Delete(ByVal path As String)
-            System.Console.WriteLine(&quot;Deleting file &quot; + path)
+        Public Overrides Sub Delete(ByVal path As String)
+            System.Console.WriteLine("Deleting file " + path)
             File.Delete(path)
         End Sub
 
-        Public Overrides Function Exists()Function Exists(ByVal path As String) As Boolean
+        Public Overrides Function Exists(ByVal path As String) As Boolean
             Dim existingFile As Sharpen.IO.File = New Sharpen.IO.File(path)
             Return existingFile.Exists() And existingFile.Length() &gt; 0
         End Function
 
-        Public Overrides Function GetLength()Function GetLength() As Long
-            System.Console.WriteLine(&quot;File length:&quot; + _delegate.Length().ToString())
+        Public Overrides Function GetLength() As Long
+            System.Console.WriteLine("File length:" + _delegate.Length().ToString())
             Return _delegate.Length()
         End Function
 
-        Public Overrides Function Open()Function Open(ByVal path As String, ByVal lockFile As Boolean, ByVal initialLength As Long, ByVal rOnly As Boolean) As IoAdapter
-            System.Console.WriteLine(&quot;Opening file &quot; + path)
+        Public Overrides Function Open(ByVal path As String, _ 
+ByVal lockFile As Boolean, ByVal initialLength As Long, _ 
+ByVal rOnly As Boolean) As IoAdapter
+            System.Console.WriteLine("Opening file " + path)
             Return New LoggingAdapter(path, lockFile, initialLength, rOnly)
         End Function
 
-        Public Overrides Function Read()Function Read(ByVal bytes() As Byte, ByVal length As Integer) As Integer
-            System.Console.WriteLine(&quot;Reading &quot; + length.ToString() + &quot; bytes&quot;)
+        Public Overrides Function Read(ByVal bytes() As Byte, _ 
+ByVal length As Integer) As Integer
+            System.Console.WriteLine("Reading " + length.ToString() + " bytes")
             Return _delegate.Read(bytes, 0, length)
         End Function
 
-        Public Overrides Sub Seek()Sub Seek(ByVal pos As Long)
-            System.Console.WriteLine(&quot;Setting pointer position to  &quot; + pos.ToString())
+        Public Overrides Sub Seek(ByVal pos As Long)
+            System.Console.WriteLine("Setting pointer position to  " _ 
++ pos.ToString())
             _delegate.Seek(pos)
         End Sub
 
-        Public Overrides Sub Sync()Sub Sync()
-            System.Console.WriteLine(&quot;Synchronizing&quot;)
+        Public Overrides Sub Sync()
+            System.Console.WriteLine("Synchronizing")
             _delegate.GetFD().Sync()
         End Sub
 
-        Public Overrides Sub Write()Sub Write(ByVal buffer() As Byte, ByVal length As Integer)
-            System.Console.WriteLine(&quot;Writing &quot; + length.ToString() + &quot; bytes&quot;)
+        Public Overrides Sub Write(ByVal buffer() As Byte, _ 
+ByVal length As Integer)
+            System.Console.WriteLine("Writing " + length.ToString() + " bytes")
             _delegate.Write(buffer, 0, length)
         End Sub
     End Class
-End Namespace</pre>    </body></html>
+End Namespace</pre>
+    </body>
+</html>

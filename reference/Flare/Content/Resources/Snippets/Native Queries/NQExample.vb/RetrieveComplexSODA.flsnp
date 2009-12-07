@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">NQExample.vb: RetrieveComplexSODA
-Private Shared Sub RetrieveComplexSODA()Sub _
+Private Shared Sub _
 RetrieveComplexSODA(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))

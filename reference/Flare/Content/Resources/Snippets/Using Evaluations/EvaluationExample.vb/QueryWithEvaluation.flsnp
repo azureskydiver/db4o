@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">EvaluationExample.vb: QueryWithEvaluation
-Private Shared Sub QueryWithEvaluation()Sub _ 
+Private Shared Sub _ 
 QueryWithEvaluation(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Car))

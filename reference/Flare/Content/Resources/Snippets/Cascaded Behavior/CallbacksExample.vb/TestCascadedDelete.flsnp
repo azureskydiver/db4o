@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: TestCascadedDelete
-Private Shared Sub TestCascadedDelete()Sub TestCascadedDelete()
+Private Shared Sub TestCascadedDelete()
             FillContainer()
             Dim container As IObjectContainer = OpenContainer()
             Try

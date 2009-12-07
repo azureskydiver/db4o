@@ -1,16 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectAny
-Private Shared Sub SelectAny()Sub SelectAny()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectAny
+Private Shared Sub SelectAny()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then
                 Try
                     'Checks if query returns any results
                     Dim result = Aggregate p As Pilot In container _
-                    Where p.Name.EndsWith(&quot;Test&quot;) Into Any()
-                    System.Console.WriteLine(&quot;The query returns any results: &quot; + result.ToString())
+                    Where p.Name.EndsWith("Test") Into Any()
+                    System.Console.WriteLine("The query returns any results: " _ 
++ result.ToString())
                 Catch ex As Exception
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                    System.Console.WriteLine("System Exception: " + ex.Message)
                 Finally
                     CloseDatabase()
                 End Try
             End If
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

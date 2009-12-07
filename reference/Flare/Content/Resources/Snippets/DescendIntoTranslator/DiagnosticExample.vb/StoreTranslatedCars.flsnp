@@ -1,16 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: StoreTranslatedCars
-Public Shared Sub StoreTranslatedCars()Sub StoreTranslatedCars()
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.Common.ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            configuration.Common.ObjectClass(GetType(Car)).CallConstructor(True)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="910">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: StoreTranslatedCars
+Public Shared Sub StoreTranslatedCars()
+            Dim configuration As IEmbeddedConfiguration = - 
+Db4oEmbedded.NewConfiguration()
+            configuration.Common.ObjectClass(GetType(Car)). _ 
+Translate(New CarTranslator())
+            configuration.Common.ObjectClass(GetType(Car)). _ 
+CallConstructor(True)
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Db4oEmbedded.OpenFile(configuration, Db4oFileName)
             Try
-                Dim car1 As Car = New Car(&quot;BMW&quot;)
-                System.Diagnostics.Trace.WriteLine(&quot;ORIGINAL: &quot; + car1.ToString())
+                Dim car1 As Car = New Car("BMW")
+                System.Diagnostics.Trace.WriteLine("ORIGINAL: " + car1.ToString())
                 db.Store(car1)
-                Dim car2 As Car = New Car(&quot;Ferrari&quot;)
-                System.Diagnostics.Trace.WriteLine(&quot;ORIGINAL: &quot; + car2.ToString())
+                Dim car2 As Car = New Car("Ferrari")
+                System.Diagnostics.Trace.WriteLine("ORIGINAL: " + car2.ToString())
                 db.Store(car2)
             Catch exc As Exception
                 System.Diagnostics.Trace.WriteLine(exc.Message)
@@ -18,4 +26,6 @@ Public Shared Sub StoreTranslatedCars()Sub StoreTranslatedCars()
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

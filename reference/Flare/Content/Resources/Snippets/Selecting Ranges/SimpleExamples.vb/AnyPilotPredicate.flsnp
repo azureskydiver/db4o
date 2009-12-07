@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: AnyPilotPredicate
-Private Class AnyPilotPredicateClass AnyPilotPredicate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: AnyPilotPredicate
+Private Class AnyPilotPredicate
             Inherits Query.Predicate
             Dim selected As Boolean = False
 
-            Public Function Match()Function Match(ByVal p As Pilot) As Boolean
+            Public Function Match(ByVal p As Pilot) As Boolean
                 ' return only first result (first result can
                 ' be any value from the resultset)
                 If Not selected Then
@@ -13,4 +18,6 @@ Private Class AnyPilotPredicateClass AnyPilotPredicate
                     Return selected = Not selected
                 End If
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

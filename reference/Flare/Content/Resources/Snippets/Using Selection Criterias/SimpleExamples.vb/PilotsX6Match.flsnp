@@ -1,6 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsX6Match
-Private Shared Function PilotsX6Match()Function PilotsX6Match(ByVal p As Pilot) As Boolean
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="660">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsX6Match
+Private Shared Function PilotsX6Match(ByVal p As Pilot) As Boolean
             ' all Pilots with the name ending with 6 will
             ' be included
-            Return p.Name.EndsWith(&quot;6&quot;)
-        End Function</pre>    </body></html>
+            Return p.Name.EndsWith("6")
+        End Function</pre>
+    </body>
+</html>

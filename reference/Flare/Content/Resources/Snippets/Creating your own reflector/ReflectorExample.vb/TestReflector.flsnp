@@ -1,15 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: TestReflector
-Public Shared Sub TestReflector()Sub TestReflector()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: TestReflector
+Public Shared Sub TestReflector()
             Dim logger As LoggingReflector = New LoggingReflector()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ReflectWith(logger)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = _ 
+Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                Dim car As Car = New Car(&quot;BMW&quot;)
+                Dim car As Car = New Car("BMW")
                 Dim rc As IReflectClass
                 rc = db.Ext().Reflector().ForObject(car)
-                Console.WriteLine(&quot;Reflected class: &quot; + rc.GetName())
+                Console.WriteLine("Reflected class: " + rc.GetName())
             Finally
                 db.Close()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>

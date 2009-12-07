@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: RandomPredicate
-Private Class RandomPredicateClass RandomPredicate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: RandomPredicate
+Private Class RandomPredicate
             Inherits Query.Predicate
             Private randomArray As IList = Nothing
 
-            Private Function GetRandomArray()Function GetRandomArray() As IList
+            Private Function GetRandomArray() As IList
                 If randomArray Is Nothing Then
                     Dim rand As Random = New Random()
                     randomArray = New ArrayList()
@@ -16,9 +21,11 @@ Private Class RandomPredicateClass RandomPredicate
                 Return randomArray
             End Function
 
-            Public Function Match()Function Match(ByVal p As Pilot) As Boolean
+            Public Function Match(ByVal p As Pilot) As Boolean
                 ' all Pilots having points in the values of
                 ' the randomArray
                 Return GetRandomArray().Contains(p.Points)
             End Function
-        End Class</pre>    </body></html>
+        End Class</pre>
+    </body>
+</html>

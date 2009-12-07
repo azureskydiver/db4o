@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByDefaultFieldValue
-Public Shared Sub RetrieveByDefaultFieldValue()Sub _ 
+Public Shared Sub _ 
 RetrieveByDefaultFieldValue(ByVal db As IObjectContainer)
             Dim somebody As Pilot = New Pilot("Somebody else", 0)
             db.Set(somebody)

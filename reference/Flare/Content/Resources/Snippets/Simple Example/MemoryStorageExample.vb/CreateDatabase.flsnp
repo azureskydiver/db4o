@@ -4,7 +4,7 @@
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MemoryStorageExample.vb: CreateDatabase
-Private Shared Sub  CreateDatabase(ByVal config As IEmbeddedConfiguration)
+Private Shared Sub CreateDatabase(ByVal config As IEmbeddedConfiguration)
             ' the following line is only necessary for the database on disk
             File.Delete(Db4oUri)
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1069" MadCap:lastWidth="1365">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="770">
     <head>
     </head>
     <body>
@@ -9,12 +9,13 @@
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 
-Namespace Db4odocNamespace Db4odoc.Diagnostics
+Namespace Db4odoc.Diagnostics
 
-    Public Class CarTranslatorClass CarTranslator
+    Public Class CarTranslator
         Implements IObjectConstructor
 
-        Public Function OnStore()Function OnStore(ByVal container As IObjectContainer, ByVal applicationObject As Object) _ 
+        Public Function OnStore(ByVal container As IObjectContainer, _ 
+ByVal applicationObject As Object) _ 
 As Object Implements IObjectConstructor.OnStore
             Dim car As Car = CType(applicationObject, Car)
 
@@ -29,7 +30,7 @@ As Object Implements IObjectConstructor.OnStore
         End Function
 
 
-        Private Function GetYear()Function GetYear(ByVal carModel As String) As String
+        Private Function GetYear(ByVal carModel As String) As String
             If carModel.Equals("BMW") Then
                 Return " 2002"
             Else
@@ -37,21 +38,24 @@ As Object Implements IObjectConstructor.OnStore
             End If
         End Function
 
-        Private Function HasYear()Function HasYear(ByVal carModel As String) As Boolean
+        Private Function HasYear(ByVal carModel As String) As Boolean
             Return False
         End Function
 
-        Public Function OnInstantiate()Function OnInstantiate(ByVal container As IObjectContainer, ByVal storedObject _ 
+        Public Function OnInstantiate(ByVal container As IObjectContainer, _ 
+ByVal storedObject _ 
 As Object) As Object Implements IObjectConstructor.OnInstantiate
             Dim model As String = DirectCast(storedObject, String)
             Return New Car(model)
         End Function
 
-        Public Sub OnActivate()Sub OnActivate(ByVal container As IObjectContainer, ByVal applicationObject As Object, _ 
+        Public Sub OnActivate(ByVal container As IObjectContainer, _ 
+ByVal applicationObject As Object, _ 
 ByVal storedObject As Object) Implements IObjectConstructor.OnActivate
         End Sub
 
-        Public Function StoredClass()Function StoredClass() As System.Type Implements IObjectConstructor.StoredClass
+        Public Function StoredClass() As System.Type _ 
+Implements IObjectConstructor.StoredClass
             Return GetType(String)
         End Function
 

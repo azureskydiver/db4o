@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClassNameExample2.vb: CheckDatabase
-Private Shared Sub CheckDatabase()Sub CheckDatabase()
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="840">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClassNameExample2.vb: CheckDatabase
+Private Shared Sub CheckDatabase()
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' Read db4o contents from another application
@@ -9,9 +14,11 @@ Private Shared Sub CheckDatabase()Sub CheckDatabase()
                 Dim storedClasses As IStoredClass() = container.Ext.StoredClasses
                 Dim storedClass As IStoredClass
                 For Each storedClass In storedClasses
-                    System.Console.WriteLine(&quot;Stored class: &quot; + storedClass.GetName)
+                    System.Console.WriteLine("Stored class: " + storedClass.GetName)
                 Next
             Finally
                 container.Commit()
             End Try
-        End Sub</pre>    </body></html>
+        End Sub</pre>
+    </body>
+</html>
