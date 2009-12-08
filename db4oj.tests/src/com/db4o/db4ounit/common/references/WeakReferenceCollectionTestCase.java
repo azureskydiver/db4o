@@ -14,7 +14,11 @@ public class WeakReferenceCollectionTestCase extends AbstractDb4oTestCase {
 	public static class Item {
 		
 	}
-	
+
+    //COR-1839
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
 	public void test() throws InterruptedException{
 		if(! Platform4.hasWeakReferences()){
 			return;
