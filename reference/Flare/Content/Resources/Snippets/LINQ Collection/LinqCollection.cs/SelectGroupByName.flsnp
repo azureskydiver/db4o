@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.cs: SelectGroupByName
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.cs: SelectGroupByName
 private static void SelectGroupByName()
          {
             IObjectContainer container = Database();
@@ -8,22 +13,25 @@ private static void SelectGroupByName()
                  {
                     var result = (from Pilot p in container
                                   orderby p.Points descending
-                                  select p).GroupBy(value =&gt; value.Points, value =&gt; new  {value.Name, value.Points});
+                                  select p).GroupBy(value =&gt; value.Points, 
+value =&gt; new  {value.Name, value.Points});
                     foreach (var group in result)
                      {
-                        Console.WriteLine(&quot;Pilots with {0} points:&quot;, group.Key);
+                        Console.WriteLine("Pilots with {0} points:", group.Key);
 
                         foreach (var tuple in group)
-                            Console.WriteLine(&quot;  {0}&quot;, tuple);
+                            Console.WriteLine("  {0}", tuple);
                     }
                 }
                 catch (Exception ex)
                  {
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                    System.Console.WriteLine("System Exception: " + ex.Message);
                 }
                 finally
                  {
                     CloseDatabase();
                 }
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,14 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.cs: GetMetaObjects
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.cs: GetMetaObjects
 private static void GetMetaObjects()
      {
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        System.Console.WriteLine(&quot;Retrieve meta information for class: &quot;);
+        System.Console.WriteLine("Retrieve meta information for class: ");
         IStoredClass sc = container.Ext().StoredClass(typeof(Car));
-        System.Console.WriteLine(&quot;Stored class:  &quot;+ sc.ToString());
+        System.Console.WriteLine("Stored class:  "+ sc.ToString());
         
-        System.Console.WriteLine(&quot;Retrieve meta information for all classes in database: &quot;);
+        System.Console.WriteLine(
+"Retrieve meta information for all classes in database: ");
         IStoredClass[] sclasses = container.Ext().StoredClasses();
         foreach (IStoredClass sclass in sclasses)
          {
@@ -19,4 +25,6 @@ private static void GetMetaObjects()
        {
         container.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

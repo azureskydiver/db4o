@@ -1,12 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runRamDiskTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runRamDiskTest
 private void runRamDiskTest() {
-    System.out.println(&quot;Update test: RAM disk&quot;);
+    System.out.println("Update test: RAM disk");
     int objectsToUpdate = 90;
       initForRamDriveTest();
       clean();
       open(configureDriveTest());
       store();
-      System.out.println(&quot;Updating  &quot; + objectsToUpdate + &quot; objects on a RAM drive:&quot;);
+      System.out.println("Updating  " + objectsToUpdate + 
+" objects on a RAM drive:");
       updateItems(objectsToUpdate);
       close();
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

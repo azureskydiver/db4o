@@ -1,13 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: storeWithStringBuffer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: storeWithStringBuffer
 private void storeWithStringBuffer() {
         startTimer();
         for (int i = 0; i &lt; _count ;i++)  {
-            ItemWithStringBuffer item = new ItemWithStringBuffer(new StringBuffer(&quot;load&quot;), null);
+            ItemWithStringBuffer item = new ItemWithStringBuffer(
+new StringBuffer("load"), null);
             for (int j = 1; j &lt; _depth; j++)  {
-                item = new ItemWithStringBuffer(new StringBuffer(&quot;load&quot;), item);
+                item = new ItemWithStringBuffer(new StringBuffer("load"), item);
             }
             objectContainer.set(item);
         }
         objectContainer.commit();
-        stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);
-    }</pre>    </body></html>
+        stopTimer("Store "+ totalObjects() + " objects");
+    }</pre>
+    </body>
+</html>

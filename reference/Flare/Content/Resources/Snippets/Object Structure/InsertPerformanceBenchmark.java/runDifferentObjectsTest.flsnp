@@ -1,37 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: runDifferentObjectsTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="778" MadCap:lastWidth="730">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: runDifferentObjectsTest
 private void runDifferentObjectsTest() {
       
       configure();
       init();
-      System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+      System.out.println("Storing " + _count + " objects with " + _depth 
++ " levels of embedded objects:");
       
       clean();
-      System.out.println(&quot; - primitive object with int field&quot;);
+      System.out.println(" - primitive object with int field");
       open();
       storeSimplest();
       close();
       
       open();
-      System.out.println(&quot; - object with String field&quot;);
+      System.out.println(" - object with String field");
       store();
       close();
       
       clean();
       open();
-      System.out.println(&quot; - object with StringBuffer field&quot;);
+      System.out.println(" - object with StringBuffer field");
       storeWithStringBuffer();
       close();
       
       clean();
       open();
-      System.out.println(&quot; - object with int array field&quot;);
+      System.out.println(" - object with int array field");
       storeWithArray();
       close();
       
       clean();
       open();
-      System.out.println(&quot; - object with ArrayList field&quot;);
+      System.out.println(" - object with ArrayList field");
       storeWithArrayList();
       close();
       
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

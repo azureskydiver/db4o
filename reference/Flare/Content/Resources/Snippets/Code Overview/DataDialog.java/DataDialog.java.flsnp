@@ -1,4 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DataDialog.java
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DataDialog.java
 package memoplugin.ui;
 
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ public class DataDialog extends Dialog  {
     /** 
      * The input value; the empty string by default.
      */
-    private String value = &quot;&quot;;//$NON-NLS-1$
+    private String value = "";//$NON-NLS-1$
 
     
     /** 
@@ -67,7 +72,7 @@ public class DataDialog extends Dialog  {
         this.title = dialogTitle;
         message = dialogMessage;
         if (initialValue == null)  {
-      value = &quot;&quot;;//$NON-NLS-1$
+      value = "";//$NON-NLS-1$
     } else  {
       value = initialValue;
     }
@@ -76,7 +81,8 @@ public class DataDialog extends Dialog  {
     /**
      * 
      * 
-     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     * @see org.eclipse.jface.window.
+     * Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     protected void configureShell(Shell shell)  {
         super.configureShell(shell);
@@ -123,9 +129,9 @@ public class DataDialog extends Dialog  {
         } else if (buttonId == ID_DELETE) {
           int selectedId = list.getSelectionIndex();
           if (selectedId == -1) {
-            new MessageDialog(_shell, &quot;Error&quot;,
-                      null, &quot;No item selected&quot;, MessageDialog.ERROR,
-                      new String[] {&quot;Ok&quot;}, 0).open(); 
+            new MessageDialog(_shell, "Error",
+                      null, "No item selected", MessageDialog.ERROR,
+                      new String[] {"Ok"}, 0).open(); 
           } else  {
             list.remove(selectedId);
           }
@@ -143,9 +149,9 @@ public class DataDialog extends Dialog  {
     protected void createButtonsForButtonBar(Composite parent)  {
         // create Add and Delete buttons by default
         addButton = createButton(parent, ID_ADD,
-                &quot;Add&quot;, true);
+                "Add", true);
         createButton(parent, ID_DELETE,
-                &quot;Delete&quot;, false);
+                "Delete", false);
         //do this here because setting the text will set enablement on the ok
         // button
         text.setFocus();
@@ -205,4 +211,6 @@ public class DataDialog extends Dialog  {
         return value;
     }
 
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

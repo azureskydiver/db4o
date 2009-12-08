@@ -1,13 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AliasExample.cs: ConfigureClassAlias
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">AliasExample.cs: ConfigureClassAlias
 private static IEmbeddedConfiguration ConfigureClassAlias()
          {
             // create a new alias
-            tAlias = new TypeAlias(&quot;Db4odoc.Aliases.Pilot, Db4odoc&quot;, &quot;Db4odoc.Aliases.Driver, Db4odoc&quot;);
+            tAlias = new TypeAlias("Db4odoc.Aliases.Pilot, Db4odoc", 
+"Db4odoc.Aliases.Driver, Db4odoc");
             // add the alias to the db4o configuration 
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            IEmbeddedConfiguration configuration = 
+Db4oEmbedded.NewConfiguration();
             configuration.Common.AddAlias(tAlias);
             // check how does the alias resolve
-            Console.WriteLine(&quot;Stored name for Db4odoc.Aliases.Driver: &quot; + tAlias.ResolveRuntimeName(&quot;Db4odoc.Aliases.Driver, Db4odoc&quot;));
-            Console.WriteLine(&quot;Runtime name for Db4odoc.Aliases.Pilot: &quot; + tAlias.ResolveStoredName(&quot;Db4odoc.Aliases.Pilot, Db4odoc&quot;));
+            Console.WriteLine("Stored name for Db4odoc.Aliases.Driver: " + 
+tAlias.ResolveRuntimeName("Db4odoc.Aliases.Driver, Db4odoc"));
+            Console.WriteLine("Runtime name for Db4odoc.Aliases.Pilot: " + 
+tAlias.ResolveStoredName("Db4odoc.Aliases.Pilot, Db4odoc"));
             return configuration;
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

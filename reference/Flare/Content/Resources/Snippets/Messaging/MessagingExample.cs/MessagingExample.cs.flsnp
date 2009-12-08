@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MessagingExample.cs
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="770">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">MessagingExample.cs
 using System;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
@@ -9,7 +14,7 @@ namespace Db4objects.Db4odoc.Messaging
 
   public class MessagingExample 
    {
-    private const string Db4oFileName = &quot;reference.db4o&quot;;
+    private const string Db4oFileName = "reference.db4o";
 
         public static void Main(string[] Args)
          {
@@ -20,16 +25,21 @@ namespace Db4objects.Db4odoc.Messaging
     public static void ConfigureServer() 
      {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.ClientServer().SetMessageRecipient(new SimpleMessageRecipient());
-      IObjectServer objectServer = Db4oFactory.OpenServer(configuration, Db4oFileName, 0);
+            configuration.ClientServer().SetMessageRecipient
+(new SimpleMessageRecipient());
+      IObjectServer objectServer = Db4oFactory.OpenServer
+(configuration, Db4oFileName, 0);
             try 
        {
-                IConfiguration clientConfiguration = Db4oFactory.NewConfiguration();
+                IConfiguration clientConfiguration = 
+Db4oFactory.NewConfiguration();
                 // Here is what we would do on the client to send the message
-                IMessageSender sender = clientConfiguration.ClientServer().GetMessageSender();
-        IObjectContainer clientObjectContainer = objectServer.OpenClient(clientConfiguration);
+                IMessageSender sender = clientConfiguration.
+ClientServer().GetMessageSender();
+        IObjectContainer clientObjectContainer = objectServer.
+OpenClient(clientConfiguration);
         
-        sender.Send(new MyClientServerMessage(&quot;Hello from client.&quot;));
+        sender.Send(new MyClientServerMessage("Hello from client."));
         clientObjectContainer.Close();
       } 
       finally 
@@ -48,4 +58,6 @@ namespace Db4objects.Db4odoc.Messaging
       System.Console.WriteLine(message);
     }
   }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

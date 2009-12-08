@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.cs: RunServer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="698" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StartServer.cs: RunServer
 /**//// &lt;summary&gt;
         /// opens the IObjectServer, and waits forever until Close() is called
         /// or a StopServer message is being received.
@@ -9,10 +14,12 @@
              {
                 // Using the messaging functionality to redirect all
                 // messages to this.processMessage
-                IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
+                IServerConfiguration configuration = 
+Db4oClientServer.NewServerConfiguration();
                 configuration.Networking.MessageRecipient = this;
 
-                IObjectServer db4oServer = Db4oClientServer.OpenServer(configuration, FileName, Port);
+                IObjectServer db4oServer = Db4oClientServer.
+OpenServer(configuration, FileName, Port);
                 db4oServer.GrantAccess(User, Password);
                 
                 try
@@ -29,4 +36,6 @@
                 }
                 db4oServer.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

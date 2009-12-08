@@ -48,7 +48,8 @@ ByVal clazz As System.Type) As Object
                 '          Not Not Not  CAUTION Not Not Not 
                 '          * There is a  commit  call here.
                 '          * 
-                '          * The commit call  is  necessary, so  other transactions
+                '          * The commit call  is  necessary, 
+                '          * so  other transactions
                 '          * can see the New inserted Object.
                 '          */
                 objectContainer.Commit()
@@ -69,7 +70,8 @@ As IObjectContainer, ByVal clazz As System.Type) As Object
                 Return objectSet.Next()
             End If
             If objectSet.Size() &gt; 1 Then
-                Throw New Exception("Singleton problem. Multiple  instances of: " + clazz.FullName)
+                Throw New Exception("Singleton problem. Multiple  instances of: " _ 
+ + clazz.FullName)
             End If
             Return Nothing
         End Function

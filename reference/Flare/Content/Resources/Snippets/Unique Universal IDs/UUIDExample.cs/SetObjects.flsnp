@@ -1,17 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.cs: SetObjects
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="378" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UUIDExample.cs: SetObjects
 private static void SetObjects()
      {
             File.Delete(Db4oFileName);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
             configuration.ObjectClass(typeof(Pilot)).GenerateUUIDs(true);
-            IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            IObjectContainer container = Db4oFactory.
+OpenFile(configuration, Db4oFileName);
       try 
        {
-        Car car = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
+        Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
         container.Set(car);
       } 
       finally 
        {
         container.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

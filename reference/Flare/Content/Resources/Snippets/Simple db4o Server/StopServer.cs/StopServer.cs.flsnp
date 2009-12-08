@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StopServer.cs
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="720">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StopServer.cs
 /**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 using System;
 using Db4objects.Db4o;
@@ -20,14 +25,15 @@ namespace Db4odoc.ClientServer
         /**//// &lt;summary&gt;
         /// stops a db4o Server started with StartServer.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;Exception&quot; /&gt;
+        /// &lt;exception cref="Exception" /&gt;
         public static void Main(string[] args)
          {
             IObjectContainer objectContainer = null;
             try
              {
                 // connect to the server
-                objectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), Host, Port, User, Password);
+                objectContainer = Db4oClientServer.OpenClient
+(Db4oClientServer.NewClientConfiguration(), Host, Port, User, Password);
             }
             catch (Exception e)
              {
@@ -49,4 +55,6 @@ namespace Db4odoc.ClientServer
         }
         // end Main
     }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

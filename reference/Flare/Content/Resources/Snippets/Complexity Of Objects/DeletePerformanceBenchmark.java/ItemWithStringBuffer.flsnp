@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: ItemWithStringBuffer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: ItemWithStringBuffer
 public static class ItemWithStringBuffer  {
         
         public StringBuffer _name;
@@ -7,8 +12,11 @@ public static class ItemWithStringBuffer  {
         public ItemWithStringBuffer() {
         }
         
-        public ItemWithStringBuffer(StringBuffer name, ItemWithStringBuffer child) {
+        public ItemWithStringBuffer(StringBuffer name, 
+ItemWithStringBuffer child) {
             _name = name;
             _child = child;
         }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

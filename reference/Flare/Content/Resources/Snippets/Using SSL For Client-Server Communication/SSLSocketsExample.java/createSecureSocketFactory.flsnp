@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SSLSocketsExample.java: createSecureSocketFactory
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="378" MadCap:lastWidth="850">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SSLSocketsExample.java: createSecureSocketFactory
 private static SecureSocketFactory createSecureSocketFactory() throws Exception {
     SSLContext sc;
     
@@ -6,12 +11,15 @@ private static SecureSocketFactory createSecureSocketFactory() throws Exception 
       TrustManager[] trustAllCerts = createTrustManager();
       
       // Install the all-trusting trust manager
-    sc = SSLContext.getInstance(&quot;SSLv3&quot;);
+    sc = SSLContext.getInstance("SSLv3");
     KeyStore ks = KeyStore.getInstance(KEYSTORE_ID);
       ks.load(new FileInputStream(KEYSTORE_PATH), null);
-      KeyManagerFactory kmf = KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
+      KeyManagerFactory kmf = KeyManagerFactory.getInstance( 
+KeyManagerFactory.getDefaultAlgorithm() );
       kmf.init( ks, KEYSTORE_PASSWORD.toCharArray());
       
       sc.init(kmf.getKeyManagers(), trustAllCerts, new java.security.SecureRandom());
       return new SecureSocketFactory(sc);
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

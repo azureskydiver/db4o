@@ -1,11 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.cs: Client
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="660">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.cs: Client
 public static IObjectContainer Client
          {
             get
              {
                 HttpContext context = HttpContext.Current;
 
-                IObjectContainer objectClient = context.Items[KEY_DB4O_CLIENT] as IObjectContainer;
+                IObjectContainer objectClient = context.
+Items[KEY_DB4O_CLIENT] as IObjectContainer;
 
                 if (objectClient == null)
                  {
@@ -15,4 +21,6 @@ public static IObjectContainer Client
 
                 return objectClient;
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,6 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runClientServerTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runClientServerTest
 private void runClientServerTest() {
-      System.out.println(&quot;Delete test: Client/Server environment&quot;);
+      System.out.println("Delete test: Client/Server environment");
       int objectsToDelete = 10;
       
       configureClientServer();
@@ -9,7 +14,8 @@ private void runClientServerTest() {
       clean();
       open();
       store();
-      System.out.println(&quot;Delete &quot; + objectsToDelete + &quot; of &quot; + _count + &quot; objects [depth &quot; + _depth + &quot;] locally:&quot;);
+      System.out.println("Delete " + objectsToDelete + " of " + _count 
++ " objects [depth " + _depth + "] locally:");
       deleteAny(objectsToDelete);
       close();
       
@@ -17,7 +23,10 @@ private void runClientServerTest() {
       clean();
       open();
       store();
-      System.out.println(&quot;Delete &quot; + objectsToDelete + &quot; of &quot; + _count + &quot; objects [depth &quot; + _depth + &quot;] remotely:&quot;);
+      System.out.println("Delete " + objectsToDelete + " of " + _count 
++ " objects [depth " + _depth + "] remotely:");
       deleteAny(objectsToDelete);
       close();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

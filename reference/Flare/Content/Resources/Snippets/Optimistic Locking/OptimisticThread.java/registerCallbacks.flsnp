@@ -1,6 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.java: registerCallbacks
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="850">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">OptimisticThread.java: registerCallbacks
 public  void registerCallbacks() {
-      EventRegistry registry =  EventRegistryFactory.forObjectContainer(_container);
+      EventRegistry registry =  EventRegistryFactory.
+forObjectContainer(_container);
       // register an event handler to check collisions on update
       registry.updating().addListener(new EventListener4()  {
         public void onEvent(Event4 e, EventArgs args)  {
@@ -12,13 +18,17 @@ public  void registerCallbacks() {
           // get the version saved at the object retrieval
           long initialVersion = _idVersions.get(id); 
           if (initialVersion != currentVersion) {
-            System.out.println(getName() +&quot;Collision: &quot;);
-            System.out.println(getName() +&quot;Stored object: version: &quot;+ currentVersion);
-            System.out.println(getName() +&quot;New object: &quot; + obj+ &quot; version: &quot;+ initialVersion);
+            System.out.println(getName() +"Collision: ");
+            System.out.println(getName() +"Stored object: version: "
++ currentVersion);
+            System.out.println(getName() +"New object: " + obj+ 
+" version: "+ initialVersion);
             queryArgs.cancel();
           } else  {
             _updateSuccess = true;
           }
         }
       });
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

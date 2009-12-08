@@ -1,14 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.cs: GetReflectorInfo
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ReflectorExample.cs: GetReflectorInfo
 private static void GetReflectorInfo()
      {
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        Console.WriteLine(&quot;Reflector in use: &quot; + db.Ext().Reflector());
-        Console.WriteLine(&quot;Reflector delegate&quot; +db.Ext().Reflector().GetDelegate());
+        Console.WriteLine("Reflector in use: " + db.Ext().Reflector());
+        Console.WriteLine("Reflector delegate" +
+db.Ext().Reflector().GetDelegate());
         IReflectClass[] knownClasses = db.Ext().Reflector().KnownClasses();
         int count = knownClasses.Length;
-        Console.WriteLine(&quot;Known classes: &quot; + count);
+        Console.WriteLine("Known classes: " + count);
         foreach (IReflectClass knownClass in knownClasses)
          {
           Console.WriteLine(knownClass);
@@ -18,4 +24,6 @@ private static void GetReflectorInfo()
        {
         db.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

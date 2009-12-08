@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UtilityExample.cs: CheckActive
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UtilityExample.cs: CheckActive
 public static void CheckActive()
      {
       StoreSensorPanel();
@@ -7,13 +12,14 @@ public static void CheckActive()
       IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
       try 
        {
-        System.Console.WriteLine(&quot;Object container activation depth = 2&quot;);
+        System.Console.WriteLine("Object container activation depth = 2");
         IObjectSet result = db.Get(new SensorPanel(1));
         SensorPanel sensor = (SensorPanel)result[0]; 
         SensorPanel next = sensor.Next;
         while (next != null)
          {
-          System.Console.WriteLine(&quot;Object &quot; + next +&quot; is active: &quot; + db.Ext().IsActive(next));
+          System.Console.WriteLine("Object " + next +" is active: " 
++ db.Ext().IsActive(next));
           next = next.Next;
         }
       } 
@@ -21,4 +27,6 @@ public static void CheckActive()
        {
         db.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

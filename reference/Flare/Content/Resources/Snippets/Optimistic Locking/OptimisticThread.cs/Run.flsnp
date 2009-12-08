@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.cs: Run
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">OptimisticThread.cs: Run
 public void Run()
          {
             try  {
@@ -13,14 +18,16 @@ public void Run()
            * at the time between object retrieval and version
            * retrieval )
            */
-                if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot; + _container.Ext().GetID(pilot), 3000))
+                if (!_container.Ext().SetSemaphore("LOCK_" + 
+_container.Ext().GetID(pilot), 3000))
                  {
-                    Console.WriteLine(&quot;Error. The object is locked&quot;);
+                    Console.WriteLine("Error. The object is locked");
                     continue;
                 }
                 _container.Ext().Refresh(pilot, Int32.MaxValue);
           long objVersion = _container.Ext().GetObjectInfo(pilot).GetVersion();
-                _container.Ext().ReleaseSemaphore(&quot;LOCK_&quot; + _container.Ext().GetID(pilot));
+                _container.Ext().ReleaseSemaphore("LOCK_" + 
+_container.Ext().GetID(pilot));
           /**//* save object version into _idVersions collection
            * This will be needed to make sure that the version
            * originally retrieved is the same in the database 
@@ -29,12 +36,14 @@ public void Run()
           long id = _container.Ext().GetID(pilot);
           _idVersions.Add(id, objVersion);
           
-              Console.WriteLine(Name + &quot;Updating pilot: &quot; + pilot+ &quot; version: &quot;+objVersion);
+              Console.WriteLine(Name + "Updating pilot: " + 
+pilot+ " version: "+objVersion);
               pilot.AddPoints(1);
               _updateSuccess = false;
               RandomWait();
-              if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot;+_container.Ext().GetID(pilot), 3000)) {
-                Console.WriteLine(&quot;Error. The object is locked&quot;);
+              if (!_container.Ext().SetSemaphore("LOCK_"+
+_container.Ext().GetID(pilot), 3000)) {
+                Console.WriteLine("Error. The object is locked");
                 continue;
               }
                 _container.Store(pilot);
@@ -42,9 +51,10 @@ public void Run()
                * visible to the other clients
                */
               _container.Commit();
-              _container.Ext().ReleaseSemaphore(&quot;LOCK_&quot;+_container.Ext().GetID(pilot));
+              _container.Ext().ReleaseSemaphore("LOCK_"+
+_container.Ext().GetID(pilot));
               if (_updateSuccess) {
-                Console.WriteLine(Name + &quot;Updated pilot: &quot; + pilot);
+                Console.WriteLine(Name + "Updated pilot: " + pilot);
               }
                 Console.WriteLine();
               /**//* The object version is not valid after commit
@@ -56,4 +66,6 @@ public void Run()
       } finally  {
         _container.Close();
       }
-       }</pre>    </body></html>
+       }</pre>
+    </body>
+</html>

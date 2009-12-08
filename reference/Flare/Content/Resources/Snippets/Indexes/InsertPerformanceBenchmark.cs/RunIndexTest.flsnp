@@ -1,19 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunIndexTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunIndexTest
 private void RunIndexTest()
          {
             Init();
-            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+            System.Console.WriteLine("Storing " + _count + " objects with " 
++ _depth + " levels of embedded objects:");
 
             Clean();
             Configure();
-            System.Console.WriteLine(&quot; - no index&quot;);
+            System.Console.WriteLine(" - no index");
             Open();
             Store();
             Close();
 
             ConfigureIndex();
-            System.Console.WriteLine(&quot; - index on String field&quot;);
+            System.Console.WriteLine(" - index on String field");
             Open();
             Store();
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

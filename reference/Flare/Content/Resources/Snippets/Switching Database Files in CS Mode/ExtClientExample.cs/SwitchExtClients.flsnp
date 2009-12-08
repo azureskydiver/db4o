@@ -1,24 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExtClientExample.cs: SwitchExtClients
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="638" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ExtClientExample.cs: SwitchExtClients
 public static void SwitchExtClients() 
      {
       File.Delete(Db4oFileName);
       File.Delete(ExtFileName);
-            IObjectServer server = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0);
+            IObjectServer server = Db4oClientServer.OpenServer(
+Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0);
       try 
        {
         IObjectContainer client=server.OpenClient();
-        Car car = new Car(&quot;BMW&quot;);
+        Car car = new Car("BMW");
         client.Store(car);
-        System.Console.WriteLine(&quot;Objects in the Main database file:&quot;);
+        System.Console.WriteLine("Objects in the Main database file:");
         RetrieveAll(client);
       
-        System.Console.WriteLine(&quot;Switching to additional database:&quot;);
+        System.Console.WriteLine("Switching to additional database:");
         IExtClient clientExt = (IExtClient)client;
         clientExt.SwitchToFile(ExtFileName);
-        car = new Car(&quot;Ferrari&quot;);
+        car = new Car("Ferrari");
         clientExt.Store(car);
         RetrieveAll(clientExt);
-        System.Console.WriteLine(&quot;Main database file again: &quot;);
+        System.Console.WriteLine("Main database file again: ");
         clientExt.SwitchToMainFile();
         RetrieveAll(clientExt);
         clientExt.Close();
@@ -27,4 +33,6 @@ public static void SwitchExtClients()
        {
         server.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

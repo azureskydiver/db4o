@@ -1,7 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunClientServerTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunClientServerTest
 private void RunClientServerTest()
          {
-            System.Console.WriteLine(&quot;Update test: Client/Server environment&quot;);
+            System.Console.WriteLine("Update test: Client/Server environment");
             int objectsToUpdate = 30;
 
 
@@ -9,7 +14,8 @@ private void RunClientServerTest()
             Clean();
             Open(ConfigureClientServer());
             Store();
-            System.Console.WriteLine(&quot;Update &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects locally:&quot;);
+            System.Console.WriteLine("Update " + objectsToUpdate + " of " + 
+_count + " objects locally:");
             UpdateItems(objectsToUpdate);
             Close();
 
@@ -17,7 +23,10 @@ private void RunClientServerTest()
             Clean();
             Open(ConfigureClientServer());
             Store();
-            System.Console.WriteLine(&quot;Update &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects remotely:&quot;);
+            System.Console.WriteLine("Update " + objectsToUpdate + " of " + 
+_count + " objects remotely:");
             UpdateItems(objectsToUpdate);
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

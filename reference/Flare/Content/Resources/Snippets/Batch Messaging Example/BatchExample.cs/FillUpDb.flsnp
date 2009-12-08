@@ -1,28 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BatchExample.cs: FillUpDb
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="658" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">BatchExample.cs: FillUpDb
 private static void FillUpDb()
          {
-            IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
+            IClientConfiguration configuration = 
+Db4oClientServer.NewClientConfiguration();
             // Uncomment the following line to test CS mode without batching
             // configuration.Networking.BatchMessages = false;
-            // Uncomment the following line to test maximum batch queue size (batch mode should be enabled)
+            // Uncomment the following line to test maximum batch 
+            // queue size (batch mode should be enabled)
             // configuration.Networking.MaxBatchQueueSize = 1024;
-            IObjectContainer container = Db4oClientServer.OpenClient(configuration, Host, Port, User,
+            IObjectContainer container = Db4oClientServer.
+OpenClient(configuration, Host, Port, User,
                         Password);
             try
              {
-                Console.WriteLine(&quot;Testing inserts&quot;);
+                Console.WriteLine("Testing inserts");
                 DateTime dt1 = DateTime.UtcNow;
                 for (int i = 0; i &lt; NoOfObjects; i++)
                  {
-                    Pilot pilot = new Pilot(&quot;pilot #&quot; + i, i);
+                    Pilot pilot = new Pilot("pilot #" + i, i);
                     container.Store(pilot);
                 }
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine(&quot;Operation time: &quot; + diff.TotalMilliseconds + &quot; ms.&quot;);
+                Console.WriteLine("Operation time: " + 
+diff.TotalMilliseconds + " ms.");
             }
             finally
              {
                 container.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

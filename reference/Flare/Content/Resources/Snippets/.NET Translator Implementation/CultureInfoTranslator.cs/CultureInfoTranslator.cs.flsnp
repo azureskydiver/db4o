@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="803" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="760">
     <head>
     </head>
     <body>
@@ -14,22 +14,26 @@ namespace Db4objects.Db4odoc.Translators
  {
   public class CultureInfoTranslator : IObjectConstructor
      {
-        public object OnStore(IObjectContainer container, object applicationObject)
+        public object OnStore(IObjectContainer container, 
+object applicationObject)
          {
             System.Console.WriteLine("onStore for {0}", applicationObject);
             return ((CultureInfo)applicationObject).Name;
         }
         
-        public object OnInstantiate(IObjectContainer container, object storedObject)
+        public object OnInstantiate(IObjectContainer container, 
+object storedObject)
          {
             System.Console.WriteLine("onInstantiate for {0}", storedObject);
             string name = (string)storedObject;
             return CultureInfo.CreateSpecificCulture(name);
         }
         
-        public void OnActivate(IObjectContainer container, object applicationObject, object storedObject)
+        public void OnActivate(IObjectContainer container, 
+object applicationObject, object storedObject)
          {
-            System.Console.WriteLine("onActivate for {0}/{1}", applicationObject, storedObject);
+            System.Console.WriteLine("onActivate for {0}/{1}", 
+applicationObject, storedObject);
         }
         
         IObjectTranslator Members#region IObjectTranslator Members

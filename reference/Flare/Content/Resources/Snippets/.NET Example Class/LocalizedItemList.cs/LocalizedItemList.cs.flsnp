@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="480" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="690">
     <head>
     </head>
     <body>
@@ -22,7 +22,8 @@ namespace Db4objects.Db4odoc.Translators
 
         override public string ToString()
          {
-            return string.Join(string.Concat(_culture.TextInfo.ListSeparator,  " "), _items);
+            return string.Join(string.Concat(
+_culture.TextInfo.ListSeparator,  " "), _items);
         }
     }
 }</pre>

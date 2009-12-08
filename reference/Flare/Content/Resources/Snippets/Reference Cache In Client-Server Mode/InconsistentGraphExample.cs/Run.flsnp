@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InconsistentGraphExample.cs: Run
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InconsistentGraphExample.cs: Run
 public void Run()
          {
             File.Delete(Db4oFileName);
@@ -18,38 +23,44 @@ public void Run()
                         WaitForCompletion();
 
                         // save pilot with client1
-                        Car client1Car = new Car(&quot;Ferrari&quot;, 2006, new Pilot(&quot;Schumacher&quot;));
+                        Car client1Car = new Car("Ferrari", 2006, 
+new Pilot("Schumacher"));
                         client1.Set(client1Car);
                         client1.Commit();
-                        System.Console.WriteLine(&quot;Client1 version initially: &quot; + client1Car);
+                        System.Console.WriteLine("Client1 version initially: " 
++ client1Car);
 
                         WaitForCompletion();
 
                         // retrieve the same pilot with client2
                         Car client2Car = (Car)client2.Query(typeof(Car)).Next();
-                        System.Console.WriteLine(&quot;Client2 version initially: &quot; + client2Car);
+                        System.Console.WriteLine("Client2 version initially: " 
++ client2Car);
 
                         // delete the pilot with client1
               Pilot client1Pilot = (Pilot)client1.Query(typeof(Pilot)).Next();
               client1.Delete(client1Pilot);
               // modify the car, add and link a new pilot with client1
                         client1Car.Model = 2007;
-                        client1Car.Pilot = new Pilot(&quot;Hakkinnen&quot;);
+                        client1Car.Pilot = new Pilot("Hakkinnen");
                         client1.Set(client1Car);
                         client1.Commit();
 
                         WaitForCompletion();
 
                         client1Car = (Car) client1.Query(typeof(Car)).Next();
-              System.Console.WriteLine(&quot;Client1 version after update: &quot; + client1Car);
+              System.Console.WriteLine("Client1 version after update: " 
++ client1Car);
 
 
               System.Console.WriteLine();
-                        System.Console.WriteLine(&quot;client2Car still holds the old object graph in its reference cache&quot;); 
+                        System.Console.WriteLine(
+"client2Car still holds the old object graph in its reference cache"); 
               client2Car = (Car) client2.Query(typeof(Car)).Next();
-              System.Console.WriteLine(&quot;Client2 version after update: &quot; + client2Car);
+              System.Console.WriteLine("Client2 version after update: " + client2Car);
               IObjectSet result = client2.Query(typeof(Pilot));
-              System.Console.WriteLine(&quot;Though the new Pilot is retrieved by a new query: &quot;);
+              System.Console.WriteLine(
+"Though the new Pilot is retrieved by a new query: ");
               ListResult(result);
 
 
@@ -74,4 +85,6 @@ public void Run()
              {
                 server.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,7 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.vb: GetConfig
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="920">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Client.vb: GetConfig
 Private Shared Function GetConfig()Function GetConfig() As IClientConfiguration
-        Dim config As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
-        config.Common.AddAlias(New WildcardAlias(&quot;com.db4odoc.JavaDotNetClientServer.*&quot;, &quot;JavaDotnetClientServer.*, JavaDotnetClientServer&quot;))
+        Dim config As IClientConfiguration = _ 
+Db4oClientServer.NewClientConfiguration()
+        config.Common.AddAlias(New WildcardAlias( _ 
+"com.db4odoc.JavaDotNetClientServer.*", "JavaDotnetClientServer.*, JavaDotnetClientServer"))
         config.Common.Add(New JavaSupport())
         Return config
-    End Function</pre>    </body></html>
+    End Function</pre>
+    </body>
+</html>

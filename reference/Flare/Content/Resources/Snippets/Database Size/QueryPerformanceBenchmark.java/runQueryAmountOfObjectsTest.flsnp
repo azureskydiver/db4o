@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: runQueryAmountOfObjectsTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: runQueryAmountOfObjectsTest
 private void runQueryAmountOfObjectsTest()  {
     init();
     clean();
-    System.out.println(&quot;Storing &quot; + _count + &quot; of  objects of depth &quot; + _depth);
+    System.out.println("Storing " + _count + " of  objects of depth " + _depth);
     open(configure());
     store();
     close();
@@ -12,11 +17,12 @@ private void runQueryAmountOfObjectsTest()  {
     startTimer();
     Query query = objectContainer.query();
     query.constrain(Item.class);
-    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    query.descend("_name").constrain("level1/1");
     Item item = (Item) query.execute().next();
-    stopTimer(&quot;Select 1 object SODA: &quot; + item._name);
+    stopTimer("Select 1 object SODA: " + item._name);
     
-    System.out.println(&quot;Add some objects of another type and check the query time again:&quot;);
+    System.out.println(
+"Add some objects of another type and check the query time again:");
     storeWithArray();
     close();
     //
@@ -24,16 +30,16 @@ private void runQueryAmountOfObjectsTest()  {
     startTimer();
     query = objectContainer.query();
     query.constrain(Item.class);
-    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    query.descend("_name").constrain("level1/1");
     item = (Item) query.execute().next();
-    stopTimer(&quot;Select 1 object SODA: &quot; + item._name);
+    stopTimer("Select 1 object SODA: " + item._name);
     close();
     
     
     // Add many objects of the same type
     initLargeDb();
     clean();
-    System.out.println(&quot;Storing &quot; + _count + &quot; of  objects of depth &quot; + _depth);
+    System.out.println("Storing " + _count + " of  objects of depth " + _depth);
     open(configure());
     store();
     close();
@@ -43,8 +49,10 @@ private void runQueryAmountOfObjectsTest()  {
     startTimer();
     query = objectContainer.query();
     query.constrain(Item.class);
-    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    query.descend("_name").constrain("level1/1");
     item = (Item) query.execute().next();
-    stopTimer(&quot;Select 1 object SODA: &quot; + item._name);
+    stopTimer("Select 1 object SODA: " + item._name);
     close();
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

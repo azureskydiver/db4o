@@ -1,26 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runDeleteDepthTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="730">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runDeleteDepthTest
 private void runDeleteDepthTest() {
-      System.out.println(&quot;Delete test with objects of different depth&quot;);
+      System.out.println("Delete test with objects of different depth");
           
       configureDepthTest();
       initShallowObject();
-      System.out.println(&quot;Deleting 1000 of &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+      System.out.println("Deleting 1000 of " + _count + " objects with " 
++ _depth + " levels of embedded objects:");
       clean();
       open();
       store();
-      System.out.println(&quot;Amount of objects left: &quot; + countObjects());
+      System.out.println("Amount of objects left: " + countObjects());
       deleteAny(1000);
-      System.out.println(&quot;Amount of objects left: &quot; + countObjects());
+      System.out.println("Amount of objects left: " + countObjects());
       close();
       
       clean();
       init();
-      System.out.println(&quot;Deleting 1000 of &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+      System.out.println("Deleting 1000 of " + _count + " objects with " 
++ _depth + " levels of embedded objects:");
       open();
       store();
-      System.out.println(&quot;Amount of objects left: &quot; + countObjects());
+      System.out.println("Amount of objects left: " + countObjects());
       deleteAny(1000);
-      System.out.println(&quot;Amount of objects left: &quot; + countObjects());
+      System.out.println("Amount of objects left: " + countObjects());
       close();
       
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

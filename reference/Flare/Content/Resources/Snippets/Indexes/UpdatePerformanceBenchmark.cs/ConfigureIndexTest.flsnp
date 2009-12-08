@@ -1,8 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureIndexTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="670">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ConfigureIndexTest
 private IConfiguration ConfigureIndexTest()
          {
             IConfiguration config = Db4oFactory.NewConfiguration();
             config.Io(new MemoryIoAdapter());
-            config.ObjectClass(typeof(Item)).ObjectField(&quot;_name&quot;).Indexed(true);
+            config.ObjectClass(typeof(Item)).
+ObjectField("_name").Indexed(true);
             return config;
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

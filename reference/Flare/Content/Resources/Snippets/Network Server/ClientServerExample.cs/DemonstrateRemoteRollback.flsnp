@@ -1,11 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: DemonstrateRemoteRollback
-private static void DemonstrateRemoteRollback(int port, string user, string password)
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: DemonstrateRemoteRollback
+private static void DemonstrateRemoteRollback(int port, 
+string user, string password)
      {
-            IObjectContainer client1 = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, port, user, password);
-            IObjectContainer client2 = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, port, user, password);
+            IObjectContainer client1 = Db4oClientServer.
+OpenClient(Db4oClientServer.NewClientConfiguration(), 
+"localhost", port, user, password);
+            IObjectContainer client2 = Db4oClientServer.
+OpenClient(Db4oClientServer.NewClientConfiguration(), 
+"localhost", port, user, password);
       IList&lt;Car&gt; result = client1.Query&lt;Car&gt;();
       Car car = result[0];
-      car.Pilot = new Pilot(&quot;Someone else&quot;, 0);
+      car.Pilot = new Pilot("Someone else", 0);
       client1.Store(car);
       ListResult(client1.Query&lt;Car&gt;());
             ListResult(client2.Query&lt;Car&gt;());
@@ -15,4 +25,6 @@ private static void DemonstrateRemoteRollback(int port, string user, string pass
             ListResult(client2.Query&lt;Car&gt;());
       client1.Close();
       client2.Close();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

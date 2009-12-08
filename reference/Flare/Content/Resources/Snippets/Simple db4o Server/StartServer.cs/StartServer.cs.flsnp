@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.cs
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">StartServer.cs
 /**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 using System;
 using System.Threading;
@@ -39,7 +44,8 @@ namespace Db4odoc.ClientServer
     // end Main
 
         /**//// &lt;summary&gt;
-        /// opens the IObjectServer, and waits forever until Close() is called
+        /// opens the IObjectServer, and waits forever until 
+        /// Close() is called
         /// or a StopServer message is being received.
         /// &lt;/summary&gt;
         public void RunServer()
@@ -48,10 +54,12 @@ namespace Db4odoc.ClientServer
              {
                 // Using the messaging functionality to redirect all
                 // messages to this.processMessage
-                IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
+                IServerConfiguration configuration = 
+Db4oClientServer.NewServerConfiguration();
                 configuration.Networking.MessageRecipient = this;
 
-                IObjectServer db4oServer = Db4oClientServer.OpenServer(configuration, FileName, Port);
+                IObjectServer db4oServer = Db4oClientServer.
+OpenServer(configuration, FileName, Port);
                 db4oServer.GrantAccess(User, Password);
                 
                 try
@@ -97,4 +105,6 @@ namespace Db4odoc.ClientServer
         }
     // end Close
     }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>

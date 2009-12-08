@@ -1,18 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="378" MadCap:lastWidth="990">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="820">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">MetaInfoExample.vb: GetMetaObjects
 Private Shared Sub GetMetaObjects()
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Dim container As IObjectContainer = _ 
+Db4oFactory.OpenFile(Db4oFileName)
             Try
                 System.Console.WriteLine("Retrieve meta information for class: ")
                 Dim sc As IStoredClass = container.Ext().StoredClass(GetType(Car))
                 System.Console.WriteLine("Stored class:  " + sc.GetName())
 
-                System.Console.WriteLine("Retrieve meta information for all classes in database: ")
-                Dim sclasses() As IStoredClass = container.Ext().StoredClasses()
+                System.Console.WriteLine( _ 
+"Retrieve meta information for all classes in database: ")
+                Dim sclasses() As IStoredClass = _ 
+container.Ext().StoredClasses()
                 Dim sclass As IStoredClass
                 For Each sclass In sclasses
                     System.Console.WriteLine(sclass.GetName())

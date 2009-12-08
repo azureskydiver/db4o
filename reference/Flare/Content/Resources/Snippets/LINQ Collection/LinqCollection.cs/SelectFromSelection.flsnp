@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.cs: SelectFromSelection
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="678" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">LinqCollection.cs: SelectFromSelection
 private static void SelectFromSelection()
          {
             IObjectContainer container = Database();
@@ -9,23 +14,27 @@ private static void SelectFromSelection()
                     var allObjects = from object o in container select o;
                     var listObjects = allObjects.ToList();
                     var pilots = from object p in listObjects 
-                                 where p.GetType().FullName.Equals(&quot;Db4objects.Db4odoc.LinqCollection.Pilot&quot;) 
+                                 where p.GetType().FullName.
+Equals("Db4objects.Db4odoc.LinqCollection.Pilot") 
                                  &amp;&amp; ((Pilot)p).Points &gt; 25
                                  select (Pilot)p;
                     ListResult(pilots);
                     var cars = from object car in allObjects
-                               where car.GetType().FullName.Equals(&quot;Db4objects.Db4odoc.LinqCollection.Car&quot;)
+                               where car.GetType().FullName.
+Equals("Db4objects.Db4odoc.LinqCollection.Car")
                                &amp;&amp; pilots.Contains(((Car)car).Pilot) 
                                select (Car)car;
                     ListResult(cars);
                 }
                 catch (Exception ex)
                  {
-                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                    System.Console.WriteLine("System Exception: " + ex.Message);
                 }
                 finally
                  {
                     CloseDatabase();
                 }
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

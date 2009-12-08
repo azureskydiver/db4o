@@ -1,11 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.cs: RunRamDiskTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="778" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.cs: RunRamDiskTest
 private void RunRamDiskTest()
          {
 
             InitForHardDriveTest();
             Clean();
-            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
-                    + &quot; on a hard drive:&quot;);
+            System.Console.WriteLine("Storing " + _count + 
+" objects of depth " + _depth
+                    + " on a hard drive:");
             Open(ConfigureRamDrive());
             Store();
             Close();
@@ -13,15 +19,16 @@ private void RunRamDiskTest()
             StartTimer();
             IQuery query = objectContainer.Query();
             query.Constrain(typeof(Item));
-            query.Descend(&quot;_name&quot;).Constrain(&quot;level1/1&quot;);
+            query.Descend("_name").Constrain("level1/1");
             Item item = (Item)query.Execute().Next();
-            StopTimer(&quot;Select 1 object: &quot; + item._name);
+            StopTimer("Select 1 object: " + item._name);
             Close();
 
             InitForRamDriveTest();
             Clean();
-            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
-                    + &quot; on a RAM disk:&quot;);
+            System.Console.WriteLine("Storing " + _count + 
+" objects of depth " + _depth
+                    + " on a RAM disk:");
             Open(ConfigureRamDrive());
             Store();
             Close();
@@ -29,8 +36,10 @@ private void RunRamDiskTest()
             StartTimer();
             query = objectContainer.Query();
             query.Constrain(typeof(Item));
-            query.Descend(&quot;_name&quot;).Constrain(&quot;level1/1&quot;);
+            query.Descend("_name").Constrain("level1/1");
             item = (Item)query.Execute().Next();
-            StopTimer(&quot;Select 1 object: &quot; + item._name);
+            StopTimer("Select 1 object: " + item._name);
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

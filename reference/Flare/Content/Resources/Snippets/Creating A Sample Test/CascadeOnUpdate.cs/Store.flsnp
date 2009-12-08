@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">CascadeOnUpdate.cs: Store
 protected override void Store()
          {
-            Atom atom = new Atom(new Atom(new Atom("StoredGrandChildChild"), "StoredChild"), "Parent");
+            Atom atom = new Atom(new Atom(
+new Atom("StoredGrandChildChild"), "StoredChild"), "Parent");
             Db().Set(atom);
         }</pre>
     </body>

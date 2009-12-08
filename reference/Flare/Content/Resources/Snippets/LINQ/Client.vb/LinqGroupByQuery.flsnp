@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="378" MadCap:lastWidth="990">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="680">
     <head>
     </head>
     <body>
@@ -10,12 +10,14 @@ Private Shared Sub LinqGroupByQuery()
                 Try
                     Dim result = From p As Pilot In container _
                                   Order By p.Points Descending _
-                                  Select p Group By p.Points, p.Name Into Group Select Name, Points
+                                  Select p Group By p.Points, _ 
+p.Name Into Group Select Name, Points
                     For Each value In result
                         Console.WriteLine("  {0}", value)
                     Next
                 Catch ex As Exception
-                    System.Console.WriteLine("System Exception: " + ex.Message)
+                    System.Console.WriteLine("System Exception: " _ 
++ ex.Message)
                 Finally
                     CloseDatabase()
                 End Try

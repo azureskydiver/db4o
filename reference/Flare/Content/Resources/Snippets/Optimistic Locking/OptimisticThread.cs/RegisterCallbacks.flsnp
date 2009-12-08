@@ -1,7 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.cs: RegisterCallbacks
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="700">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">OptimisticThread.cs: RegisterCallbacks
 public void RegisterCallbacks()
          {
-            IEventRegistry registry = EventRegistryFactory.ForObjectContainer(_container);
+            IEventRegistry registry = EventRegistryFactory.
+ForObjectContainer(_container);
             // register an event handler to check collisions on update
             registry.Updating += OnUpdating;
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

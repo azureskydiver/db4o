@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="800">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
@@ -12,14 +12,16 @@ private static void SelectPilotByNameAndPoints()
                 try
                  {
                     IEnumerable&lt;Pilot&gt; result = from Pilot p in container
-                            where p.Name.StartsWith("Test") &amp;&amp; p.Points &gt; 2
+                            where p.Name.StartsWith("Test") 
+&amp;&amp; p.Points &gt; 2
                             select p;
 
                     ListResult(result);
                 }
                 catch (Exception ex)
                  {
-                    System.Console.WriteLine("System Exception: " + ex.Message);
+                    System.Console.WriteLine("System Exception: " 
++ ex.Message);
                 }
                 finally
                  {

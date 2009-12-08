@@ -1,23 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oExample.java: selectCarAndUpdate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Db4oExample.java: selectCarAndUpdate
 public static void selectCarAndUpdate()  {
       ObjectContainer container = database();
       if (container != null) {
       Query query = container.query();
       query.constrain(Car.class);
-      query.descend(&quot;pilot&quot;).descend(&quot;points&quot;).constrain(new Integer(15));
+      query.descend("pilot").descend("points").constrain(new Integer(15));
 
       long startTime = System.currentTimeMillis();
       ObjectSet  result = query.execute();
       result.reset();
       if (!result.hasNext()) {
-        logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
+        logToConsole(0, "Car not found, refill the database to continue.", false);
       } else  {
         Car car = (Car)result.next();
-        logToConsole(startTime, &quot;Selected Car (&quot; + car + &quot;): &quot;, false);
+        logToConsole(startTime, "Selected Car (" + car + "): ", false);
         startTime = System.currentTimeMillis();
-        car.setRegistration(new RegistrationRecord(&quot;A1&quot;, new Date(System.currentTimeMillis())));
-        logToConsole(startTime, &quot;Updated Car (&quot; + car + &quot;): &quot;, true);
+        car.setRegistration(new RegistrationRecord("A1", 
+new Date(System.currentTimeMillis())));
+        logToConsole(startTime, "Updated Car (" + car + "): ", true);
       }
       
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>
