@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: updateCar
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="860">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SqlExample.java: updateCar
 public static void updateCar() {
         SQLiteDatabase db = database();
         if (db != null) {
@@ -6,20 +11,23 @@ public static void updateCar() {
           // insert a new pilot
           ContentValues updateValues = new ContentValues();
           
-        updateValues.put(&quot;id&quot;, 101);
-        updateValues.put(&quot;name&quot;, &quot;Tester1&quot;);
-          updateValues.put(&quot;points&quot;, 25);
+        updateValues.put("id", 101);
+        updateValues.put("name", "Tester1");
+          updateValues.put("points", 25);
           db.insert(DB_TABLE_PILOT, null, updateValues);
           
           updateValues = new ContentValues();
           
           // update pilot in the car
-          updateValues.put(&quot;pilot&quot;, 101);
-          int count = db.update(DB_TABLE_CAR, updateValues, &quot;pilot in (select id from pilot where points = 15)&quot;, null);
+          updateValues.put("pilot", 101);
+          int count = db.update(DB_TABLE_CAR, updateValues, 
+"pilot in (select id from pilot where points = 15)", null);
           if (count == 0) {
-            logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
+            logToConsole(0, "Car not found, refill the database to continue.", false);
           } else  {  
-            logToConsole(startTime, &quot;Updated selected object: &quot;, false);
+            logToConsole(startTime, "Updated selected object: ", false);
           }
         }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

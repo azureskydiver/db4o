@@ -1,12 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runHardDriveTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="278" MadCap:lastWidth="640">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runHardDriveTest
 private void runHardDriveTest() {
-    System.out.println(&quot;Delete test: hard drive&quot;);
+    System.out.println("Delete test: hard drive");
     
       initForHardDriveTest();
       clean();
       open();
       store();
-      System.out.println(&quot;Deleting 1 object of depth &quot; + _depth + &quot; on a hard drive:&quot;);
+      System.out.println("Deleting 1 object of depth " + _depth 
++ " on a hard drive:");
       deleteAll();
       close();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

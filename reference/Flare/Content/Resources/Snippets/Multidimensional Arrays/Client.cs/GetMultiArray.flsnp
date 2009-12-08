@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.cs: GetMultiArray
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="660">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Client.cs: GetMultiArray
 private static void GetMultiArray()
          {
-            Console.WriteLine(&quot;Testing retrieving an object with multidimentional array field&quot;);
-            IObjectContainer oc = Db4oFactory.OpenClient(&quot;localhost&quot;, 0xdb40, &quot;db4o&quot;, &quot;db4o&quot;);
+            Console.WriteLine(
+"Testing retrieving an object with multidimentional array field");
+            IObjectContainer oc = Db4oFactory.OpenClient(
+"localhost", 0xdb40, "db4o", "db4o");
             try
              {
                 IObjectSet result = oc.Get(new RecordBook());
@@ -12,4 +19,6 @@ private static void GetMultiArray()
              {
                 oc.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,36 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunDifferentObjectsTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="758" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunDifferentObjectsTest
 private void RunDifferentObjectsTest()
          {
             Configure();
             Init();
-            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+            System.Console.WriteLine("Storing " + _count + " objects with " 
++ _depth + " levels of embedded objects:");
 
             Clean();
-            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
+            System.Console.WriteLine(" - primitive object with int field");
             Open();
             StoreSimplest();
             Close();
 
             Open();
-            System.Console.WriteLine(&quot; - object with String field&quot;);
+            System.Console.WriteLine(" - object with String field");
             Store();
             Close();
 
             Clean();
             Open();
-            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
+            System.Console.WriteLine(" - object with StringBuilder field");
             StoreWithStringBuilder();
             Close();
 
             Clean();
             Open();
-            System.Console.WriteLine(&quot; - object with int array field&quot;);
+            System.Console.WriteLine(" - object with int array field");
             StoreWithArray();
             Close();
 
             Clean();
             Open();
-            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
+            System.Console.WriteLine(" - object with ArrayList field");
             StoreWithArrayList();
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

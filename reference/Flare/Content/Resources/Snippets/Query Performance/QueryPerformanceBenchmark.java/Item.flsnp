@@ -1,538 +1,537 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: Item
-1//
-2    System.out.println(&quot;Native Query:&quot;);
-3    startTimer();
-4    List&lt;Item&gt; result = objectContainer.query(new Predicate&lt;Item&gt;()  {
-5      public boolean match(Item item)  {
-6        return item._name.equals(&quot;level1/1&quot;);
-7      }
-8    });
-9    item = result.get(0);
-0    stopTimer(&quot;Select 1 object NQ: &quot; + item._name);
-1    close();
-2    
-3    //
-4    open(configureUnoptimizedNQ());
-5    System.out.println(&quot;Native Query Unoptimized:&quot;);
-6    startTimer();
-7    result = objectContainer.query(new Predicate&lt;Item&gt;()  {
-8      public boolean match(Item item)  {
-9        return item._name.equals(&quot;level1/1&quot;);
-0      }
-1    });
-2    item = result.get(0);
-3    stopTimer(&quot;Select 1 object NQ: &quot; + item._name);
-4
-5    close();
-6  }
-7
-8  // end runDifferentQueriesTest
-9
-0  
-1  private void runRamDiskTest()  {
-2
-3    initForHardDriveTest();
-4    clean();
-5    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
-6        + &quot; on a hard drive:&quot;);
-7    open(configureRamDrive());
-8    store();
-9    close();
-0    open(configureRamDrive());
-1    startTimer();
-2    Query query = objectContainer.query();
-3    query.constrain(Item.class);
-4    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
-5    Item item = (Item) query.execute().next();
-6    stopTimer(&quot;Select 1 object: &quot; + item._name);
-7    close();
-8
-9    initForRamDriveTest();
-0    clean();
-1    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
-2        + &quot; on a RAM disk:&quot;);
-3    open(configureRamDrive());
-4    store();
-5    close();
-6    open(configureRamDrive());
-7    startTimer();
-8    query = objectContainer.query();
-9    query.constrain(Item.class);
-0    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
-1    item = (Item) query.execute().next();
-2    stopTimer(&quot;Select 1 object: &quot; + item._name);
-3    close();
-4  }
-5
-6  // end runRamDiskTest
-7
-8  private void runClientServerTest()  {
-9
-0    initForClientServer();
-1    clean();
-2    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
-3        + &quot; remotely:&quot;);
-4    open(configureClientServer());
-5    store();
-6    close();
-7    open(configureClientServer());
-8    startTimer();
-9    Query query = objectContainer.query();
-0    query.constrain(Item.class);
-1    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
-2    Item item = (Item) query.execute().next();
-3    stopTimer(&quot;Select 1 object: &quot; + item._name);
-4    close();
-5    
-6    init();
-7    clean();
-8    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
-9        + &quot; locally:&quot;);
-0    open(configureClientServer());
-1    store();
-2    close();
-3    open(configureClientServer());
-4    startTimer();
-5    query = objectContainer.query();
-6    query.constrain(Item.class);
-7    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
-8    item = (Item) query.execute().next();
-9    stopTimer(&quot;Select 1 object: &quot; + item._name);
-0    close();
-1  }
-2
-3  // end runClientServerTest
-4
-5  private void runInheritanceTest()  {
-6    init();
-7    clean();
-8    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth);
-9    open(configure());
-0    store();
-1    close();
-2    open(configure());
-3    startTimer();
-4    Query query = objectContainer.query();
-5    query.constrain(Item.class);
-6    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
-7    Item item = (Item) query.execute().next();
-8    stopTimer(&quot;Select 1 object: &quot; + item._name);
-9    close();
-0
-1    clean();
-2    System.out.println(&quot;Storing &quot; + _count + &quot; inherited objects of depth &quot;
-3        + _depth);
-4    open(configure());
-5    storeInherited();
-6    close();
-7    open(configure());
-8    startTimer();
-9    // Query for item, inheriting objects should be included in the result
-0    query = objectContainer.query();
-1    query.constrain(Item.class);
-2    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
-3    item = (Item) query.execute().next();
-4    stopTimer(&quot;Select 1 object: &quot; + item._name);
-5    close();
-6  }
-7
-8  // end runInheritanceTest
-9
-0  private void runDifferentObjectsTest()  {
-1
-2    init();
-3    System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
-4        + &quot; levels of embedded objects:&quot;);
-5
-6    clean();
-7    System.out.println();
-8    System.out.println(&quot; - primitive object with int field&quot;);
-9    open(configure());
-0    storeSimplest();
-1    close();
-2    open(configure());
-3    startTimer();
-4    Query query = objectContainer.query();
-5    query.constrain(SimplestItem.class);
-6    query.descend(&quot;_id&quot;).constrain(1);
-7    List result = query.execute();
-8    SimplestItem simplestItem = (SimplestItem) result.get(0);
-9    stopTimer(&quot;Querying SimplestItem: &quot; + simplestItem._id);
-0    close();
-1
-2    open(configure());
-3    System.out.println();
-4    System.out.println(&quot; - object with String field&quot;);
-5    store();
-6    close();
-7    open(configure());
-8    startTimer();
-9    query = objectContainer.query();
-0    query.constrain(Item.class);
-1    query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
-2    result = query.execute();
-3    Item item = (Item) result.get(0);
-4    stopTimer(&quot;Querying object with String field: &quot; + item._name);
-5    close();
-6
-7    clean();
-8    open(configure());
-9    System.out.println();
-0    System.out.println(&quot; - object with StringBuffer field&quot;);
-1    storeWithStringBuffer();
-2    close();
-3    open(configure());
-4    startTimer();
-5    query = objectContainer.query();
-6    query.constrain(ItemWithStringBuffer.class);
-7    query.descend(&quot;_name&quot;).constrain(new StringBuffer(&quot;level1/2&quot;));
-8    result = query.execute();
-9    ItemWithStringBuffer itemWithSB = (ItemWithStringBuffer) result.get(0);
-0    stopTimer(&quot;Querying object with StringBuffer field: &quot;
-1        + itemWithSB._name);
-2    close();
-3
-4    clean();
-5    open(configure());
-6    System.out.println();
-7    System.out.println(&quot; - object with int array field&quot;);
-8    storeWithArray();
-9    close();
-0    open(configure());
-1    startTimer();
-2    query = objectContainer.query();
-3    query.constrain(ItemWithArray.class);
-4    Query idQuery = query.descend(&quot;_id&quot;);
-5    idQuery.constrain(new Integer(1));
-6    idQuery.constrain(new Integer(2));
-7    idQuery.constrain(new Integer(3));
-8    idQuery.constrain(new Integer(4));
-9    result = query.execute();
-0
-1    ItemWithArray itemWithArray = (ItemWithArray) result.get(0);
-2    stopTimer(&quot;Querying object with Array field: [&quot; + itemWithArray._id[0]
-3        + &quot;, &quot; + +itemWithArray._id[1] + &quot;, &quot; + +itemWithArray._id[2]
-4        + &quot;, &quot; + +itemWithArray._id[0] + &quot;]&quot;);
-5    close();
-6
-7    clean();
-8    open(configure());
-9    System.out.println();
-0    System.out.println(&quot; - object with ArrayList field&quot;);
-1    storeWithArrayList();
-2    close();
-3    open(configure());
-4    startTimer();
-5    query = objectContainer.query();
-6    query.constrain(ItemWithArrayList.class);
-7    query.descend(&quot;_ids&quot;).constrain(1).contains();
-8    result = query.execute();
-9    ItemWithArrayList itemWithArrayList = (ItemWithArrayList) result.get(0);
-0    stopTimer(&quot;Querying object with ArrayList field: &quot;
-1        + itemWithArrayList._ids.toString());
-2    close();
-3
-4  }
-5
-6  // end runDifferentObjectsTest
-7
-8  private void runIndexTest()  {
-9
-0    init();
-1    System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
-2        + &quot; levels of embedded objects:&quot;);
-3
-4    clean();
-5    System.out.println(&quot; - no index&quot;);
-6    open(configure());
-7    store();
-8    close();
-9    open(configure());
-0    startTimer();
-1    Query query = objectContainer.query();
-2    query.constrain(Item.class);
-3    query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
-4    List result = query.execute();
-5    Item item = (Item) result.get(0);
-6    stopTimer(&quot;Querying object with String field: &quot; + item._name);
-7    close();
-8
-9
-0    System.out.println(&quot; - index on String field&quot;);
-1    // open to create index
-2    open(configureIndex());
-3    close();
-4    open(configure());
-5    startTimer();
-6    query = objectContainer.query();
-7    query.constrain(Item.class);
-8    query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
-9    result = query.execute();
-0    item = (Item) result.get(0);
-1    stopTimer(&quot;Querying object with String field: &quot; + item._name);
-2    close();
-3  }
-4
-5  // end runIndexTest
-6
-7  private void init()  {
-8    _filePath = &quot;performance.db4o&quot;;
-9    // amount of objects
-0    _count = 10000;
-1    // depth of objects
-2    _depth = 3;
-3    _isClientServer = false;
-4
-5  }
-6
-7  // end init
-8
-9  private void initLargeDb()  {
-0    _filePath = &quot;performance.db4o&quot;;
-1    _count = 100000;
-2    _depth = 3;
-3    _isClientServer = false;
-4
-5  }
-6
-7  // end initLargeDb
-8
-9  
-0  private void initForClientServer()  {
-1    _filePath = &quot;performance.db4o&quot;;
-2    _isClientServer = true;
-3    _host = &quot;localhost&quot;;
-4  }
-5
-6  // end initForClientServer
-7
-8  private void initForRamDriveTest()  {
-9    _count = 30000;
-0    _depth = 3;
-1    _filePath = &quot;r:\\performance.db4o&quot;;
-2    _isClientServer = false;
-3
-4  }
-5
-6  // end initForRamDriveTest
-7
-8  private void initForHardDriveTest()  {
-9    _count = 30000;
-0    _depth = 3;
-1    _filePath = &quot;performance.db4o&quot;;
-2    _isClientServer = false;
-3
-4  }
-5
-6  // end initForHardDriveTest
-7
-8
-9  private void clean()  {
-0    new File(_filePath).delete();
-1  }
-2
-3  // end clean
-4
-5  private Configuration configure()  {
-6    Configuration config = Db4o.newConfiguration();
-7    return config;
-8  }
-9
-0  // end configure
-1
-2  private Configuration configureUnoptimizedNQ()  {
-3    Configuration config = Db4o.newConfiguration();
-4    config.optimizeNativeQueries(false);
-5    return config;
-6  }
-7  // end configureUnoptimizedNQ
-8
-9  private Configuration configureIndex()  {
-0    Configuration config = Db4o.newConfiguration();
-1    config.objectClass(Item.class).objectField(&quot;_name&quot;).indexed(true);
-2    return config;
-3  }
-4
-5  // end configureIndex
-6
-7  private Configuration configureClientServer()  {
-8    Configuration config = Db4o.newConfiguration();
-9    config.queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
-0    config.clientServer().singleThreadedClient(true);
-1    return config;
-2  }
-3
-4  // end configureClientServer
-5
-6  private Configuration configureRamDrive()  {
-7    Configuration config = Db4o.newConfiguration();
-8    config.flushFileBuffers(true);
-9    return config;
-0  }
-1
-2  // end configureRamDrive
-3
-4  private void store()  {
-5    startTimer();
-6    for (int i = 0; i &lt; _count; i++)  {
-7      Item item = new Item(&quot;level&quot; + i, null);
-8      for (int j = 1; j &lt; _depth; j++)  {
-9        item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
-0      }
-1      objectContainer.store(item);
-2    }
-3    objectContainer.commit();
-4    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
-5  }
-6
-7  // end store
-8
-9  private void storeInherited()  {
-0    startTimer();
-1    for (int i = 0; i &lt; _count; i++)  {
-2      ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
-3      for (int j = 1; j &lt; _depth; j++)  {
-4        item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
-5      }
-6      objectContainer.store(item);
-7    }
-8    objectContainer.commit();
-9    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
-0  }
-1
-2  // end storeInherited
-3
-4  private void storeWithStringBuffer()  {
-5    startTimer();
-6    for (int i = 0; i &lt; _count; i++)  {
-7      ItemWithStringBuffer item = new ItemWithStringBuffer(
-8          new StringBuffer(&quot;level&quot; + i), null);
-9      for (int j = 1; j &lt; _depth; j++)  {
-0        item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i
-1            + &quot;/&quot; + j), item);
-2      }
-3      objectContainer.store(item);
-4    }
-5    objectContainer.commit();
-6    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
-7  }
-8
-9  // end storeWithStringBuffer
-0
-1  private void storeSimplest()  {
-2    startTimer();
-3    for (int i = 0; i &lt; _count; i++)  {
-4      SimplestItem item = new SimplestItem(i, null);
-5      for (int j = 1; j &lt; _depth; j++)  {
-6        item = new SimplestItem(i, item);
-7      }
-8      objectContainer.store(item);
-9    }
-0    objectContainer.commit();
-1    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
-2  }
-3
-4  // end storeSimplest
-5
-6  private void storeWithArray()  {
-7    startTimer();
-8    int[] array = new int[]  { 1, 2, 3, 4 };
-9    for (int i = 0; i &lt; _count; i++)  {
-0      int[] id = new int[]  { 1, 2, 3, 4 };
-1      ItemWithArray item = new ItemWithArray(id, null);
-2      for (int j = 1; j &lt; _depth; j++)  {
-3        int[] id1 = new int[]  { 1, 2, 3, 4 };
-4        item = new ItemWithArray(id1, item);
-5      }
-6      objectContainer.store(item);
-7    }
-8    objectContainer.commit();
-9    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
-0  }
-1
-2  // end storeWithArray
-3
-4  private void storeWithArrayList()  {
-5    startTimer();
-6    ArrayList idList = new ArrayList();
-7    idList.add(1);
-8    idList.add(2);
-9    idList.add(3);
-0    idList.add(4);
-1    for (int i = 0; i &lt; _count; i++)  {
-2      ArrayList ids = new ArrayList();
-3      ids.addAll(idList);
-4      ItemWithArrayList item = new ItemWithArrayList(ids, null);
-5      for (int j = 1; j &lt; _depth; j++)  {
-6        ArrayList ids1 = new ArrayList();
-7        ids1.addAll(idList);
-8        item = new ItemWithArrayList(ids1, item);
-9      }
-0      objectContainer.store(item);
-1    }
-2    objectContainer.commit();
-3    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
-4  }
-5
-6  // end storeWithArrayList
-7
-8  private int totalObjects()  {
-9    return _count * _depth;
-0  }
-1
-2  // end totalObjects
-3
-4  private void open(Configuration configure)  {
-5    if (_isClientServer)  {
-6      int port = TCP ? PORT : 0;
-7      String user = &quot;db4o&quot;;
-8      String password = user;
-9      objectServer = Db4o.openServer(configure, _filePath, port);
-0      objectServer.grantAccess(user, password);
-1      objectContainer = TCP ? Db4o
-2          .openClient(configure, _host, port, user, password) : objectServer
-3          .openClient(configure);
-4    } else  {
-5      objectContainer = Db4o.openFile(configure, _filePath);
-6    }
-7  }
-8
-9  // end open
-0
-1  private void close()  {
-2    objectContainer.close();
-3    if (_isClientServer)  {
-4      objectServer.close();
-5    }
-6  }
-7
-8  // end close
-9
-0  private void startTimer()  {
-1    startTime = System.currentTimeMillis();
-2  }
-3
-4  // end startTimer
-5
-6  private void stopTimer(String message)  {
-7    long stop = System.currentTimeMillis();
-8    long duration = stop - startTime;
-9    System.out.println(message + &quot;: &quot; + duration + &quot;ms&quot;);
-0  }
-1
-2  // end stopTimer
-3
-4  public static class Item  {
-5
-6    public String _name;
-7    public Item _child;
-8
-9    public Item()  {
-0
-1    }
-2
-3    public Item(String name, Item child)  {
-4      _name = name;
-5      _child = child;
-6    }
-7  }</pre>    </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: Item
+//
+    System.out.println(&quot;Native Query:&quot;);
+    startTimer();
+    List&lt;Item&gt; result = objectContainer.query(new Predicate&lt;Item&gt;()  {
+      public boolean match(Item item)  {
+        return item._name.equals(&quot;level1/1&quot;);
+      }
+    });
+    item = result.get(0);
+    stopTimer(&quot;Select 1 object NQ: &quot; + item._name);
+    close();
+    
+    //
+    open(configureUnoptimizedNQ());
+    System.out.println(&quot;Native Query Unoptimized:&quot;);
+    startTimer();
+    result = objectContainer.query(new Predicate&lt;Item&gt;()  {
+      public boolean match(Item item)  {
+       return item._name.equals(&quot;level1/1&quot;);
+      }
+    });
+    item = result.get(0);
+    stopTimer(&quot;Select 1 object NQ: &quot; + item._name);
+
+    close();
+  }
+
+  // end runDifferentQueriesTest
+
+  
+  private void runRamDiskTest()  {
+
+    initForHardDriveTest();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
+        + &quot; on a hard drive:&quot;);
+    open(configureRamDrive());
+    store();
+    close();
+    open(configureRamDrive());
+    startTimer();
+    Query query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    Item item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+
+    initForRamDriveTest();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
+        + &quot; on a RAM disk:&quot;);
+    open(configureRamDrive());
+    store();
+    close();
+    open(configureRamDrive());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+  }
+
+  // end runRamDiskTest
+
+  private void runClientServerTest()  {
+
+    initForClientServer();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
+        + &quot; remotely:&quot;);
+    open(configureClientServer());
+    store();
+    close();
+    open(configureClientServer());
+    startTimer();
+    Query query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    Item item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+    
+    init();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
+        + &quot; locally:&quot;);
+    open(configureClientServer());
+    store();
+    close();
+    open(configureClientServer());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+  }
+
+  // end runClientServerTest
+
+  private void runInheritanceTest()  {
+    init();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth);
+    open(configure());
+    store();
+    close();
+    open(configure());
+    startTimer();
+    Query query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    Item item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; inherited objects of depth &quot;
+        + _depth);
+    open(configure());
+    storeInherited();
+    close();
+    open(configure());
+    startTimer();
+    // Query for item, inheriting objects should be included in the result
+    query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+  }
+
+  // end runInheritanceTest
+
+  private void runDifferentObjectsTest()  {
+
+    init();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
+        + &quot; levels of embedded objects:&quot;);
+
+    clean();
+    System.out.println();
+    System.out.println(&quot; - primitive object with int field&quot;);
+    open(configure());
+    storeSimplest();
+    close();
+    open(configure());
+    startTimer();
+    Query query = objectContainer.query();
+    query.constrain(SimplestItem.class);
+    query.descend(&quot;_id&quot;).constrain(1);
+    List result = query.execute();
+    SimplestItem simplestItem = (SimplestItem) result.get(0);
+    stopTimer(&quot;Querying SimplestItem: &quot; + simplestItem._id);
+    close();
+
+    open(configure());
+    System.out.println();
+    System.out.println(&quot; - object with String field&quot;);
+    store();
+    close();
+    open(configure());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
+    result = query.execute();
+    Item item = (Item) result.get(0);
+    stopTimer(&quot;Querying object with String field: &quot; + item._name);
+    close();
+
+    clean();
+    open(configure());
+    System.out.println();
+    System.out.println(&quot; - object with StringBuffer field&quot;);
+    storeWithStringBuffer();
+    close();
+    open(configure());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(ItemWithStringBuffer.class);
+    query.descend(&quot;_name&quot;).constrain(new StringBuffer(&quot;level1/2&quot;));
+    result = query.execute();
+    ItemWithStringBuffer itemWithSB = (ItemWithStringBuffer) result.get(0);
+    stopTimer(&quot;Querying object with StringBuffer field: &quot;
+        + itemWithSB._name);
+    close();
+
+    clean();
+    open(configure());
+    System.out.println();
+    System.out.println(&quot; - object with int array field&quot;);
+    storeWithArray();
+    close();
+    open(configure());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(ItemWithArray.class);
+    Query idQuery = query.descend(&quot;_id&quot;);
+    idQuery.constrain(new Integer(1));
+    idQuery.constrain(new Integer(2));
+    idQuery.constrain(new Integer(3));
+   idQuery.constrain(new Integer(4));
+    result = query.execute();
+
+    ItemWithArray itemWithArray = (ItemWithArray) result.get(0);
+    stopTimer(&quot;Querying object with Array field: [&quot; + itemWithArray._id[0]
+        + &quot;, &quot; + +itemWithArray._id[1] + &quot;, &quot; + +itemWithArray._id[2]
+        + &quot;, &quot; + +itemWithArray._id[0] + &quot;]&quot;);
+    close();
+
+    clean();
+    open(configure());
+    System.out.println();
+    System.out.println(&quot; - object with ArrayList field&quot;);
+    storeWithArrayList();
+    close();
+    open(configure());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(ItemWithArrayList.class);
+    query.descend(&quot;_ids&quot;).constrain(1).contains();
+    result = query.execute();
+    ItemWithArrayList itemWithArrayList = (ItemWithArrayList) result.get(0);
+    stopTimer(&quot;Querying object with ArrayList field: &quot;
+        + itemWithArrayList._ids.toString());
+    close();
+
+  }
+
+  // end runDifferentObjectsTest
+
+  private void runIndexTest()  {
+
+    init();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
+        + &quot; levels of embedded objects:&quot;);
+
+    clean();
+    System.out.println(&quot; - no index&quot;);
+    open(configure());
+    store();
+    close();
+    open(configure());
+    startTimer();
+    Query query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
+    List result = query.execute();
+    Item item = (Item) result.get(0);
+    stopTimer(&quot;Querying object with String field: &quot; + item._name);
+    close();
+
+
+    System.out.println(&quot; - index on String field&quot;);
+    // open to create index
+    open(configureIndex());
+    close();
+    open(configure());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
+    result = query.execute();
+    item = (Item) result.get(0);
+    stopTimer(&quot;Querying object with String field: &quot; + item._name);
+   close();
+  }
+
+  // end runIndexTest
+
+  private void init()  {
+    _filePath = &quot;performance.db4o&quot;;
+    // amount of objects
+    _count = 10000;
+    // depth of objects
+    _depth = 3;
+    _isClientServer = false;
+
+  }
+
+  // end init
+
+  private void initLargeDb()  {
+    _filePath = &quot;performance.db4o&quot;;
+    _count = 100000;
+    _depth = 3;
+    _isClientServer = false;
+
+  }
+
+  // end initLargeDb
+
+  
+  private void initForClientServer()  {
+    _filePath = &quot;performance.db4o&quot;;
+    _isClientServer = true;
+    _host = &quot;localhost&quot;;
+  }
+
+  // end initForClientServer
+
+  private void initForRamDriveTest()  {
+    _count = 30000;
+    _depth = 3;
+    _filePath = &quot;r:\\performance.db4o&quot;;
+    _isClientServer = false;
+
+  }
+
+  // end initForRamDriveTest
+
+  private void initForHardDriveTest()  {
+    _count = 30000;
+    _depth = 3;
+    _filePath = &quot;performance.db4o&quot;;
+    _isClientServer = false;
+
+  }
+
+  // end initForHardDriveTest
+
+
+  private void clean()  {
+    new File(_filePath).delete();
+  }
+
+  // end clean
+
+  private Configuration configure()  {
+    Configuration config = Db4o.newConfiguration();
+    return config;
+  }
+
+  // end configure
+
+  private Configuration configureUnoptimizedNQ()  {
+    Configuration config = Db4o.newConfiguration();
+    config.optimizeNativeQueries(false);
+    return config;
+  }
+  // end configureUnoptimizedNQ
+
+  private Configuration configureIndex()  {
+    Configuration config = Db4o.newConfiguration();
+    config.objectClass(Item.class).objectField(&quot;_name&quot;).indexed(true);
+    return config;
+  }
+
+  // end configureIndex
+
+  private Configuration configureClientServer()  {
+    Configuration config = Db4o.newConfiguration();
+    config.queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
+    config.clientServer().singleThreadedClient(true);
+    return config;
+  }
+
+  // end configureClientServer
+
+  private Configuration configureRamDrive()  {
+    Configuration config = Db4o.newConfiguration();
+    config.flushFileBuffers(true);
+    return config;
+  }
+
+  // end configureRamDrive
+
+  private void store()  {
+    startTimer();
+    for (int i = 0; i &lt; _count; i++)  {
+     Item item = new Item(&quot;level&quot; + i, null);
+      for (int j = 1; j &lt; _depth; j++)  {
+        item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
+      }
+      objectContainer.store(item);
+    }
+    objectContainer.commit();
+    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
+  }
+  // end store
+
+  private void storeInherited()  {
+    startTimer();
+    for (int i = 0; i &lt; _count; i++)  {
+      ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
+      for (int j = 1; j &lt; _depth; j++)  {
+        item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
+      }
+      objectContainer.store(item);
+    }
+   objectContainer.commit();
+    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
+  }
+
+  // end storeInherited
+
+  private void storeWithStringBuffer()  {
+    startTimer();
+    for (int i = 0; i &lt; _count; i++)  {
+      ItemWithStringBuffer item = new ItemWithStringBuffer(
+          new StringBuffer(&quot;level&quot; + i), null);
+      for (int j = 1; j &lt; _depth; j++)  {
+        item = new ItemWithStringBuffer(new StringBuffer(&quot;level&quot; + i
+            + &quot;/&quot; + j), item);
+      }
+      objectContainer.store(item);
+    }
+    objectContainer.commit();
+    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
+  }
+
+  // end storeWithStringBuffer
+
+  private void storeSimplest()  {
+    startTimer();
+    for (int i = 0; i &lt; _count; i++)  {
+      SimplestItem item = new SimplestItem(i, null);
+      for (int j = 1; j &lt; _depth; j++)  {
+        item = new SimplestItem(i, item);
+      }
+      objectContainer.store(item);
+    }
+    objectContainer.commit();
+    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
+  }
+
+  // end storeSimplest
+
+  private void storeWithArray()  {
+    startTimer();
+    int[] array = new int[]  { 1, 2, 3, 4 };
+    for (int i = 0; i &lt; _count; i++)  {
+      int[] id = new int[]  { 1, 2, 3, 4 };
+      ItemWithArray item = new ItemWithArray(id, null);
+      for (int j = 1; j &lt; _depth; j++)  {
+        int[] id1 = new int[]  { 1, 2, 3, 4 };
+        item = new ItemWithArray(id1, item);
+      }
+      objectContainer.store(item);
+    }
+    objectContainer.commit();
+    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
+  }
+
+  // end storeWithArray
+
+  private void storeWithArrayList()  {
+    startTimer();
+    ArrayList idList = new ArrayList();
+    idList.add(1);
+    idList.add(2);
+    idList.add(3);
+    idList.add(4);
+    for (int i = 0; i &lt; _count; i++)  {
+      ArrayList ids = new ArrayList();
+      ids.addAll(idList);
+      ItemWithArrayList item = new ItemWithArrayList(ids, null);
+      for (int j = 1; j &lt; _depth; j++)  {
+        ArrayList ids1 = new ArrayList();
+        ids1.addAll(idList);
+        item = new ItemWithArrayList(ids1, item);
+      }
+      objectContainer.store(item);
+    }
+    objectContainer.commit();
+    stopTimer(&quot;Store &quot; + totalObjects() + &quot; objects&quot;);
+  }
+
+  // end storeWithArrayList
+
+  private int totalObjects()  {
+    return _count * _depth;
+  }
+
+  // end totalObjects
+
+  private void open(Configuration configure)  {
+    if (_isClientServer)  {
+      int port = TCP ? PORT : 0;
+      String user = &quot;db4o&quot;;
+      String password = user;
+      objectServer = Db4o.openServer(configure, _filePath, port);
+      objectServer.grantAccess(user, password);
+      objectContainer = TCP ? Db4o
+          .openClient(configure, _host, port, user, password) : objectServer
+          .openClient(configure);
+    } else  {
+      objectContainer = Db4o.openFile(configure, _filePath);
+    }
+  }
+
+  // end open
+
+  private void close()  {
+    objectContainer.close();
+    if (_isClientServer)  {
+      objectServer.close();
+    }
+  }
+
+  // end close
+
+  private void startTimer()  {
+    startTime = System.currentTimeMillis();
+  }
+
+  // end startTimer
+
+  private void stopTimer(String message)  {
+    long stop = System.currentTimeMillis();
+    long duration = stop - startTime;
+    System.out.println(message + &quot;: &quot; + duration + &quot;ms&quot;);
+  }
+
+  // end stopTimer
+
+  public static class Item  {
+
+    public String _name;
+    public Item _child;
+
+    public Item()  {
+
+    }
+
+    public Item(String name, Item child)  {
+      _name = name;
+      _child = child;
+    }
+  }</pre>    </body></html>

@@ -1,12 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: TryStoreAndRetrieve
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="798" MadCap:lastWidth="840">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: TryStoreAndRetrieve
 public static void TryStoreAndRetrieve(IConfiguration configuration)
          {
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
              {
-                string[] champs = new string[]  { &quot;Ayrton Senna&quot;, &quot;Nelson Piquet&quot; };
-                LocalizedItemList LocalizedItemList = new LocalizedItemList(CultureInfo.CreateSpecificCulture(&quot;pt-BR&quot;), champs);
-                System.Console.WriteLine(&quot;ORIGINAL: {0}&quot;, LocalizedItemList);
+                string[] champs = new string[]  { "Ayrton Senna", "Nelson Piquet" };
+                LocalizedItemList LocalizedItemList = new 
+LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs);
+                System.Console.WriteLine("ORIGINAL: {0}", LocalizedItemList);
                 db.Set(LocalizedItemList);
             }
             catch (Exception x)
@@ -24,8 +30,10 @@ public static void TryStoreAndRetrieve(IConfiguration configuration)
                 IObjectSet result = db.Get(typeof(LocalizedItemList));
                 while (result.HasNext())
                  {
-                    LocalizedItemList LocalizedItemList = (LocalizedItemList)result.Next();
-                    System.Console.WriteLine(&quot;RETRIEVED: {0}&quot;, LocalizedItemList);
+                    LocalizedItemList LocalizedItemList = 
+(LocalizedItemList)result.Next();
+                    System.Console.WriteLine("RETRIEVED: {0}", 
+LocalizedItemList);
                     db.Delete(LocalizedItemList);
                 }
             }
@@ -33,4 +41,6 @@ public static void TryStoreAndRetrieve(IConfiguration configuration)
              {
                 db.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

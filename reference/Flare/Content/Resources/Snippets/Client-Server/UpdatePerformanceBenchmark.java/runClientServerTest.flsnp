@@ -1,6 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runClientServerTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="710">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runClientServerTest
 private void runClientServerTest() {
-      System.out.println(&quot;Update test: Client/Server environment&quot;);
+      System.out.println("Update test: Client/Server environment");
       int objectsToUpdate = 30;
       
       
@@ -8,7 +13,8 @@ private void runClientServerTest() {
       clean();
       open(configureClientServer());
       store();
-      System.out.println(&quot;Update &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects locally:&quot;);
+      System.out.println("Update " + objectsToUpdate + " of " + _count 
++ " objects locally:");
       updateItems(objectsToUpdate);
       close();
       
@@ -16,7 +22,10 @@ private void runClientServerTest() {
       clean();
       open(configureClientServer());
       store();
-      System.out.println(&quot;Update &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects remotely:&quot;);
+      System.out.println("Update " + objectsToUpdate + " of " + _count 
++ " objects remotely:");
       updateItems(objectsToUpdate);
       close();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

@@ -1,8 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AllTests.cs: TestCascadeOnUpdate
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">AllTests.cs: TestCascadeOnUpdate
 public virtual void TestCascadeOnUpdate()
          {
             IDb4oFixture fixture = new Tests.AllTests.ExcludingInMemoryFixture
                         (this, new Fixtures.IndependentConfigurationSource());
-            TestSuite suite = new Db4oTestSuiteBuilder(fixture, new System.Type[]  { typeof(Tests.CascadeOnUpdate) }).Build();
+            TestSuite suite = new Db4oTestSuiteBuilder
+(fixture, new System.Type[]  { typeof(Tests.CascadeOnUpdate) }).Build();
             FrameworkTestCase.RunTestAndExpect(suite, 0);
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

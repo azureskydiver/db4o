@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="960">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
@@ -40,7 +40,8 @@ ByVal text As String)
         End Sub
         ' end SaveMessage
 
-        Public Sub ButtonGet_Click()Sub ButtonGet_Click(ByVal s As Object, ByVal e As EventArgs)
+        Public Sub ButtonGet_Click()Sub ButtonGet_Click(ByVal s As Object, _ 
+ByVal e As EventArgs)
             entries.InnerHtml = ""
             Dim list As IList = RetrieveAll()
             For Each msg As Message In list

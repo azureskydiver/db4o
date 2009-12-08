@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="950">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
@@ -9,7 +9,8 @@ private IObjectContainer OpenClient()
             try
              {
                 IObjectContainer client = 
-Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), "localhost", Port, User,
+Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), 
+"localhost", Port, User,
                         Password);
                 EventHandler&lt;CommitEventArgs&gt; committedEventHandler = 
 CommittedEventHandler;

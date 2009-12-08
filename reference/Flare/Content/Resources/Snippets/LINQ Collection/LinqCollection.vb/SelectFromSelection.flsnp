@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="1040">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
@@ -11,11 +11,13 @@ Private Shared Sub SelectFromSelection()
                     Dim allObjects = From o As Object In container Select o
                     Dim listOfObjects = allObjects.ToList()
                     Dim pilots = From p As Object In allObjects _
-                    Where (p.GetType().FullName.Equals("Linq.Db4objects.Db4odoc.Linq.Pilot")) _
+                    Where (p.GetType().FullName. _ 
+Equals("Linq.Db4objects.Db4odoc.Linq.Pilot")) _
                     Select pilot1 = CType(p, Pilot) Where pilot1.Points &gt; 25
                     ListResult(pilots)
                     Dim cars = From car As Object In allObjects _
-                               Where car.GetType().FullName.Equals("Linq.Db4objects.Db4odoc.Linq.Car") _
+                               Where car.GetType(). _ 
+FullName.Equals("Linq.Db4objects.Db4odoc.Linq.Car") _
                                Select car1 = CType(car, Car) _
                                Where pilots.Contains(CType(car1, Car).Pilot)
                     ListResult(cars)

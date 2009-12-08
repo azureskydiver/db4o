@@ -1,19 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NonFlushingExample.cs: TestNonFlushingAdapter
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="820">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">NonFlushingExample.cs: TestNonFlushingAdapter
 private static void TestNonFlushingAdapter()
          {
             File.Delete(Db4oFileName);
             
             IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
             config.File.Storage = new NonFlushingStorage(new FileStorage());
-            IObjectContainer container = Db4oEmbedded.OpenFile(config, Db4oFileName);
+            IObjectContainer container = Db4oEmbedded.OpenFile
+(config, Db4oFileName);
             try
              {
-                Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+                Pilot pilot = new Pilot("Rubens Barrichello", 99);
                 container.Store(pilot);
                 long startTime = DateTime.Now.Ticks;
                 container.Commit();
-                System.Console.WriteLine(&quot;Commit time with NonFlushingStorage: &quot; +
-                        (DateTime.Now.Ticks - startTime)/TimeSpan.TicksPerMillisecond + &quot; ms&quot;);
+                System.Console.WriteLine("Commit time with NonFlushingStorage: " +
+                        (DateTime.Now.Ticks - startTime)/
+TimeSpan.TicksPerMillisecond + " ms");
             }
             finally
              {
@@ -22,18 +29,22 @@ private static void TestNonFlushingAdapter()
 
             //
             File.Delete(Db4oFileName);
-            container = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), Db4oFileName);
+            container = Db4oEmbedded.OpenFile(
+Db4oEmbedded.NewConfiguration(), Db4oFileName);
             try
              {
-                Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+                Pilot pilot = new Pilot("Rubens Barrichello", 99);
                 container.Store(pilot);
                 long startTime = DateTime.Now.Ticks;
                 container.Commit();
-                System.Console.WriteLine(&quot;Commit time with default Storage: &quot; +
-                        (DateTime.Now.Ticks - startTime)/ TimeSpan.TicksPerMillisecond + &quot; ms&quot;);
+                System.Console.WriteLine("Commit time with default Storage: " +
+                        (DateTime.Now.Ticks - startTime)/ 
+TimeSpan.TicksPerMillisecond + " ms");
             }
             finally
              {
                 container.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

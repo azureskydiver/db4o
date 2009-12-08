@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="950">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="760">
     <head>
     </head>
     <body>
@@ -27,7 +27,8 @@ Namespace Db4objects.Db4odoc.Semaphores
 
             Dim objectContainer As IObjectContainer
             Try
-                objectContainer = Db4oFactory.OpenClient(Host, Port, User, Password)
+                objectContainer = Db4oFactory.OpenClient(Host, _ 
+Port, User, Password)
             Catch e As IOException
                 Return Nothing
             End Try
@@ -36,7 +37,8 @@ Namespace Db4objects.Db4odoc.Semaphores
 
             Dim i As Integer
             For i = 0 To MaximumUsers - 1 Step i + 1
-                If objectContainer.Ext().SetSemaphore("max_user_check_" + i.ToString(), 0) Then
+                If objectContainer.Ext().SetSemaphore("max_user_check_" + _ 
+i.ToString(), 0) Then
                     allowedToLogin = True
                     Exit For
                 End If

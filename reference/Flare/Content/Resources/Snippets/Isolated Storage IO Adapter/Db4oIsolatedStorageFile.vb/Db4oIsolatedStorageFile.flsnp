@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="940">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="880">
     <head>
     </head>
     <body>
@@ -14,7 +14,8 @@ As Integer
 
         Public Sub New(ByVal file As String, ByVal fMode As String)
             Try
-                Dim isf As IsolatedStorageFile = IsolatedStorageFile.GetUserStoreForAssembly()
+                Dim isf As IsolatedStorageFile = _ 
+IsolatedStorageFile.GetUserStoreForAssembly()
                 _stream = New IsolatedStorageFileStream(file, _
 FileMode.OpenOrCreate, IIf(fMode.Equals("rw"), _ 
 FileAccess.ReadWrite, FileAccess.Read), isf)

@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: AccessRemoteServer
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: AccessRemoteServer
 private static void AccessRemoteServer()
      {
-            IObjectServer server = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, ServerPort);
+            IObjectServer server = Db4oClientServer.
+OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, ServerPort);
       server.GrantAccess(ServerUser, ServerPassword);
       try
        {
-                IObjectContainer client = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, ServerPort, ServerUser, ServerPassword);
+                IObjectContainer client = Db4oClientServer.
+OpenClient(Db4oClientServer.NewClientConfiguration(), "localhost", 
+ServerPort, ServerUser, ServerPassword);
         // Do something with this client, or open more clients
         client.Close();
       }
@@ -13,4 +21,6 @@ private static void AccessRemoteServer()
        {
         server.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

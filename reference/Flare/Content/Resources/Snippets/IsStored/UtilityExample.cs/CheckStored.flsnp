@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UtilityExample.cs: CheckStored
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UtilityExample.cs: CheckStored
 public static void CheckStored()
      {
       // create a linked list with length 10
@@ -11,14 +16,20 @@ public static void CheckStored()
         db.Set(list);
         Object sensor = (Object)list.Sensor;
         SensorPanel sp5 = list.Next.Next.Next.Next;
-        System.Console.WriteLine(&quot;Root element &quot;+list+&quot; isStored: &quot; + db.Ext().IsStored(list));
-        System.Console.WriteLine(&quot;Simple type  &quot;+sensor+&quot; isStored: &quot; + db.Ext().IsStored(sensor));
-        System.Console.WriteLine(&quot;Descend element  &quot;+sp5+&quot; isStored: &quot; + db.Ext().IsStored(sp5));
+        System.Console.WriteLine("Root element "+list+" isStored: " 
++ db.Ext().IsStored(list));
+        System.Console.WriteLine("Simple type  "+sensor+" isStored: " 
++ db.Ext().IsStored(sensor));
+        System.Console.WriteLine("Descend element  "+sp5+" isStored: " 
++ db.Ext().IsStored(sp5));
         db.Delete(list);
-        System.Console.WriteLine(&quot;Root element &quot;+list+&quot; isStored: &quot; + db.Ext().IsStored(list));
+        System.Console.WriteLine("Root element "+list+" isStored: " 
++ db.Ext().IsStored(list));
       } 
       finally 
        {
         db.Close();
       }
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

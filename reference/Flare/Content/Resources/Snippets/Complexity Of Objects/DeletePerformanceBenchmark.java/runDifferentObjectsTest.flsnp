@@ -1,13 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runDifferentObjectsTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="700">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runDifferentObjectsTest
 private void runDifferentObjectsTest() {
-      System.out.println(&quot;Delete test with different objects&quot;);
+      System.out.println("Delete test with different objects");
           
       configure();
       init();
-      System.out.println(&quot;Deleting 1 of &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+      System.out.println("Deleting 1 of " + _count + " objects with " 
++ _depth + " levels of embedded objects:");
       
       clean();
-      System.out.println(&quot; - primitive object with int field&quot;);
+      System.out.println(" - primitive object with int field");
       open();
       storeSimplest();
       deleteAny(10);
@@ -15,30 +21,32 @@ private void runDifferentObjectsTest() {
       
       clean();
       open();
-      System.out.println(&quot; - object with String field&quot;);
+      System.out.println(" - object with String field");
       store();
       deleteAny(10);
       close();
       
       clean();
       open();
-      System.out.println(&quot; - object with StringBuffer field&quot;);
+      System.out.println(" - object with StringBuffer field");
       storeWithStringBuffer();
       deleteAny(10);
       close();
       
       clean();
       open();
-      System.out.println(&quot; - object with int array field&quot;);
+      System.out.println(" - object with int array field");
       storeWithArray();
       deleteAny(10);
       close();
       
       clean();
       open();
-      System.out.println(&quot; - object with ArrayList field&quot;);
+      System.out.println(" - object with ArrayList field");
       storeWithArrayList();
       deleteAny(10);
       close();
       
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

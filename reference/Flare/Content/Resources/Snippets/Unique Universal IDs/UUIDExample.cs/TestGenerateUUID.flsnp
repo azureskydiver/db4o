@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.cs: TestGenerateUUID
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="678" MadCap:lastWidth="810">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UUIDExample.cs: TestGenerateUUID
 private static void TestGenerateUUID()
      {
       IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
@@ -10,22 +15,26 @@ private static void TestGenerateUUID()
         Car car = (Car)result[0];
         IObjectInfo carInfo = container.Ext().GetObjectInfo(car);
         Db4oUUID carUUID = carInfo.GetUUID();
-        Console.WriteLine(&quot;UUID for Car class are not generated:&quot;);
-        Console.WriteLine(&quot;Car UUID: &quot; + carUUID);
+        Console.WriteLine("UUID for Car class are not generated:");
+        Console.WriteLine("Car UUID: " + carUUID);
       
         Pilot pilot = car.Pilot;
         IObjectInfo pilotInfo = container.Ext().GetObjectInfo(pilot);
         Db4oUUID pilotUUID = pilotInfo.GetUUID();
-        Console.WriteLine(&quot;UUID for Car class are not generated:&quot;);
-        Console.WriteLine(&quot;Pilot UUID: &quot; + pilotUUID);
-        Console.WriteLine(&quot;long part: &quot; + pilotUUID.GetLongPart() +&quot;; signature: &quot; + PrintSignature(pilotUUID.GetSignaturePart()));
+        Console.WriteLine("UUID for Car class are not generated:");
+        Console.WriteLine("Pilot UUID: " + pilotUUID);
+        Console.WriteLine("long part: " + pilotUUID.GetLongPart() +
+"; signature: " + PrintSignature(pilotUUID.GetSignaturePart()));
         long ms = TimeStampIdGenerator.IdToMilliseconds(pilotUUID.GetLongPart());
-        Console.WriteLine(&quot;Pilot object was created: &quot; + (new DateTime(1970,1,1)).AddMilliseconds(ms).ToString());
+        Console.WriteLine("Pilot object was created: " + 
+(new DateTime(1970,1,1)).AddMilliseconds(ms).ToString());
         Pilot pilotReturned = (Pilot)container.Ext().GetByUUID(pilotUUID);
-        Console.WriteLine(&quot;Pilot from UUID: &quot; + pilotReturned);  
+        Console.WriteLine("Pilot from UUID: " + pilotReturned);  
       } 
       finally 
        {
         container.Close();
       }        
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

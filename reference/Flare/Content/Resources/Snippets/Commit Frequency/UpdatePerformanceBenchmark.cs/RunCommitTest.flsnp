@@ -1,12 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunCommitTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="558" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunCommitTest
 private void RunCommitTest()
          {
-            System.Console.WriteLine(&quot;Update test with different Commit frequency&quot;);
+            System.Console.WriteLine(
+"Update test with different Commit frequency");
 
             InitForCommitTest();
 
             Clean();
-            System.Console.WriteLine(&quot;Test Update all:&quot;);
+            System.Console.WriteLine("Test Update all:");
             Open(ConfigureForCommitTest());
             Store();
             UpdateItems(_count);
@@ -15,11 +21,14 @@ private void RunCommitTest()
 
 
             Clean();
-            System.Console.WriteLine(&quot;Test Update all with Commit after each &quot; + _commitInterval + &quot; objects:&quot;);
+            System.Console.WriteLine(
+"Test Update all with Commit after each " + _commitInterval + " objects:");
             Open(ConfigureForCommitTest());
             Store();
             UpdateWithCommit(_count);
             Close();
 
 
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

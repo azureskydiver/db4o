@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runCommitTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="518" MadCap:lastWidth="720">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runCommitTest
 private void runCommitTest() {
-      System.out.println(&quot;Update test with different commit frequency&quot;);
+      System.out.println("Update test with different commit frequency");
       
       initForCommitTest();
       
       clean();
-      System.out.println(&quot;Test update all:&quot;);
+      System.out.println("Test update all:");
       open(configureForCommitTest());
       store();
       updateItems(_count);
@@ -14,11 +19,14 @@ private void runCommitTest() {
       
       
       clean();
-      System.out.println(&quot;Test update all with commit after each &quot; + _commitInterval + &quot; objects:&quot;);
+      System.out.println("Test update all with commit after each " + 
+_commitInterval + " objects:");
       open(configureForCommitTest());
       store();
       updateWithCommit(_count);
       close();
       
       
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunRamDiskTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="800">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunRamDiskTest
 private void RunRamDiskTest()
          {
 
@@ -6,15 +11,19 @@ private void RunRamDiskTest()
 
             InitForHardDriveTest();
             Clean();
-            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth + &quot; on a hard drive:&quot;);
+            System.Console.WriteLine("Storing " + _count + " objects of depth " 
++ _depth + " on a hard drive:");
             Open();
             Store();
             Close();
 
             InitForRamDriveTest();
             Clean();
-            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth + &quot; on a RAM disk:&quot;);
+            System.Console.WriteLine("Storing " + _count + " objects of depth " 
++ _depth + " on a RAM disk:");
             Open();
             Store();
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

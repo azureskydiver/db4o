@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunCommitTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="790">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunCommitTest
 private void RunCommitTest()
          {
 
@@ -6,14 +11,17 @@ private void RunCommitTest()
             InitForCommitTest();
 
             Clean();
-            System.Console.WriteLine(&quot;Storing objects as a bulk:&quot;);
+            System.Console.WriteLine("Storing objects as a bulk:");
             Open();
             Store();
             Close();
 
             Clean();
-            System.Console.WriteLine(&quot;Storing objects with commit after each &quot; + _commitInterval + &quot; objects:&quot;);
+            System.Console.WriteLine("Storing objects with commit after each " 
++ _commitInterval + " objects:");
             Open();
             StoreWithCommit();
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

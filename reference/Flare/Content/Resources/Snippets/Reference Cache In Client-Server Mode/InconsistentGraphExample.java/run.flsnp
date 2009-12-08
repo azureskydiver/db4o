@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InconsistentGraphExample.java: run
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="760">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">InconsistentGraphExample.java: run
 public void run() throws IOException, DatabaseFileLockedException  {
     new File(DB4O_FILE_NAME).delete();
     ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, PORT);
@@ -14,37 +19,39 @@ public void run() throws IOException, DatabaseFileLockedException  {
           waitForCompletion();
 
           // save pilot with client1
-          Car client1Car = new Car(&quot;Ferrari&quot;, 2006, new Pilot(
-              &quot;Schumacher&quot;));
+          Car client1Car = new Car("Ferrari", 2006, new Pilot(
+              "Schumacher"));
           client1.set(client1Car);
           client1.commit();
-          System.out.println(&quot;Client1 version initially: &quot; + client1Car);
+          System.out.println("Client1 version initially: " + client1Car);
           waitForCompletion();
 
           // retrieve the same pilot with client2
           Car client2Car = (Car) client2.query(Car.class).next();
-          System.out.println(&quot;Client2 version initially: &quot; + client2Car);
+          System.out.println("Client2 version initially: " + client2Car);
 
           // delete the pilot with client1
           Pilot client1Pilot = (Pilot)client1.query(Pilot.class).next();
           client1.delete(client1Pilot);
           // modify the car, add and link a new pilot with client1
           client1Car.setModel(2007);
-          client1Car.setPilot(new Pilot(&quot;Hakkinnen&quot;));
+          client1Car.setPilot(new Pilot("Hakkinnen"));
           client1.set(client1Car);
           client1.commit();
 
           waitForCompletion();
           client1Car = (Car) client1.query(Car.class).next();
-          System.out.println(&quot;Client1 version after update: &quot; + client1Car);
+          System.out.println("Client1 version after update: " + client1Car);
 
 
           System.out.println();
-          System.out.println(&quot;client2Car still holds the old object graph in its reference cache&quot;); 
+          System.out.println(
+"client2Car still holds the old object graph in its reference cache"); 
           client2Car = (Car) client2.query(Car.class).next();
-          System.out.println(&quot;Client2 version after update: &quot; + client2Car);
+          System.out.println("Client2 version after update: " + client2Car);
           ObjectSet result = client2.query(Pilot.class);
-          System.out.println(&quot;Though the new Pilot is retrieved by a new query: &quot;);
+          System.out.println(
+"Though the new Pilot is retrieved by a new query: ");
           listResult(result);
 
           waitForCompletion();
@@ -60,4 +67,6 @@ public void run() throws IOException, DatabaseFileLockedException  {
     } finally  {
       server.close();
     }
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>

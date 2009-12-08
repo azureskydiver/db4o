@@ -1,25 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="508" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="831" MadCap:lastWidth="624">
     <head><title>Dangerous Practices	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>Dangerous Practices</h1>
-                <p>Db4o
+        <h1>Dangerous Practices</h1>
+        <p>Db4o
 databases are well protected against corruption. However some specific
 configurations can make your database file vulnerable.
 </p>
-                <ol>
-                    <li><code>Configuration#lockDatabaseFile(false)</code>
-                        <p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
+        <ol>
+            <li><code>Configuration#lockDatabaseFile(false)</code>
+                <p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
 the same database file from different JVM sessions will corrupt the
 database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
-database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm"  >No lock file thread</a>.</p>
-                    </li>
-                    <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm"  >NonFlushingStorage</a></code>
-                        <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm"  >special strategy</a>, which relies on the order of writes to the storage medium.
+database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm">No lock file thread</a>.</p>
+            </li>
+            <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm">NonFlushingStorage</a></code>
+                <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm">special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
 revert the order of writes to optimize file performance. db4o can
 enforce the correct order by flushing file buffers after every step of
@@ -27,58 +25,56 @@ transaction commit. Turning this setting off puts you in potential
 danger of data corruption if a system or hardware failure occurs during
 commit.
 </p>
-                    </li>
-                    <li>The following refactorings are incompatible with db4o:</li>
-                    <ol>
-                        <li>Adding classes within a class hierarchy or above a class hierarchy. Example:
+            </li>
+            <li>The following refactorings are incompatible with db4o:</li>
+            <ol>
+                <li>Adding classes within a class hierarchy or above a class hierarchy. Example:
 
 <p>Original
  --------------
- class A
- class B extends A
+<br /> class A
+ <br />class B extends A
  
- Refactored
+ <br />Refactored
  ------------------
- class A
- class C extends A
- class B extends C
- 
+ <br />class A
+<br /> class C extends A
+ <br />class B extends C
+<br /> 
  
 
 </p></li>
-                        <li>Removing a class from the top or within a class hierarchy. Example:
+                <li>Removing a class from the top or within a class hierarchy. Example:
  
- Original
+ <br />Original
  --------------
- class A
- class B extends A
- class C extends B
+<br /> class A
+ <br />class B extends A
+ <br />class C extends B
  
- Refactored
+ <br />Refactored
  ------------------
- class A
- class C extends A
- 
+ <br />class A
+ <br />class C extends A
+<br /> 
  
 </li>
-                        <li>Changing the type of a field to be an array or back. Example:
+                <li>Changing the type of a field to be an array or back. Example:
  
- Original
+ <br />Original
  --------------
- class Foo {
+<br /> class Foo {
    String bar;
  }
  
- Refactored
+ <br />Refactored
  ------------------
- class Foo {
+<br /> class Foo {
    String [] bar;
  }
- 
+<br /> 
 </li>
-                    </ol>
-                </ol>If you apply such a refactoring, you will not be able to read existing objects correctly.
-<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm"  >Refactoring and Schema Evolution</a></p> 
-         
-    </body>
+            </ol>
+        </ol>If you apply such a refactoring, you will not be able to read existing objects correctly.
+<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm">Refactoring and Schema Evolution</a></p></body>
 </html>

@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="252" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="680">
     <head>
     </head>
     <body>
         <pre class="prettyprint" xml:space="preserve">Activator.java: stop
 /**
    * (non-Javadoc)
-   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(BundleContext)
    * Unregisters the db4o_osgi service from Db4oProvider
    */
   public void stop(BundleContext context) throws Exception  {

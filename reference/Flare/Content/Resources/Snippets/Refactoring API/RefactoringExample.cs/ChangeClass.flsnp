@@ -1,9 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: ChangeClass
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="740">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: ChangeClass
 private static void ChangeClass()
      {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.ObjectClass(typeof(Pilot)).Rename(&quot;Db4objects.Db4odoc.Refactoring.PilotNew, Db4objects.Db4odoc&quot;);
-            configuration.ObjectClass(typeof(PilotNew)).ObjectField(&quot;_name&quot;).Rename(&quot;_identity&quot;);
-            IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            configuration.ObjectClass(typeof(Pilot)).
+Rename("Db4objects.Db4odoc.Refactoring.PilotNew, Db4objects.Db4odoc");
+            configuration.ObjectClass(typeof(PilotNew)).
+ObjectField("_name").Rename("_identity");
+            IObjectContainer container = 
+Db4oFactory.OpenFile(configuration, Db4oFileName);
             container.Close();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

@@ -1,13 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runHardDriveTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runHardDriveTest
 private void runHardDriveTest() {
-    System.out.println(&quot;Update test: hard drive&quot;);
+    System.out.println("Update test: hard drive");
     int objectsToUpdate = 90;
     
       initForHardDriveTest();
       clean();
       open(configureDriveTest());
       store();
-      System.out.println(&quot;Updating  &quot; + objectsToUpdate + &quot; objects on a hard drive:&quot;);
+      System.out.println("Updating  " + objectsToUpdate + " 
+objects on a hard drive:");
       updateItems(objectsToUpdate);
       close();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

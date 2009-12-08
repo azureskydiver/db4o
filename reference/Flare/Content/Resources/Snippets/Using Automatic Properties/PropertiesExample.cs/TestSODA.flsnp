@@ -1,23 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PropertiesExample.cs: TestSODA
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="780">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PropertiesExample.cs: TestSODA
 private static void TestSODA()
          {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.ObjectClass(typeof(Car)).ObjectField(&quot;Pilot&quot;).Indexed(true);
-            configuration.ObjectClass(typeof(Pilot)).ObjectField(&quot;Points&quot;).Indexed(true);
+            configuration.ObjectClass(typeof(Car)).
+ObjectField("Pilot").Indexed(true);
+            configuration.ObjectClass(typeof(Pilot)).
+ObjectField("Points").Indexed(true);
             configuration.Diagnostic().AddListener(new DiagnosticToConsole());
-            IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            IObjectContainer db = Db4oFactory.OpenFile(
+configuration, Db4oFileName);
             try
               {
                 IQuery query = db.Query();
                 query.Constrain(typeof(Car));
-                query.Descend(&quot;Pilot&quot;).Descend(&quot;Points&quot;).Constrain(&quot;99&quot;);
+                query.Descend("Pilot").Descend("Points").Constrain("99");
 
                 IObjectSet  result = query.Execute();
-                Console.WriteLine(&quot;Test SODA&quot;);
+                Console.WriteLine("Test SODA");
                 ListResult(result);
             }
             finally
              {
                 db.Close();
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PeekPersistedExample.cs: MeasureCarTemperature
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="778" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">PeekPersistedExample.cs: MeasureCarTemperature
 private static void MeasureCarTemperature()
      {
       SetObjects();
@@ -17,12 +22,14 @@ private static void MeasureCarTemperature()
           ch2.Init(car2);
           Thread.Sleep(300);
           // We can work on the database object at the same time
-          car.Model = &quot;BMW M3Coupe&quot;;
+          car.Model = "BMW M3Coupe";
           db.Set(car);
           ch1.Stop();
           ch2.Stop();
-          System.Console.WriteLine(&quot;car1 saved to the database: &quot; + db.Ext().IsStored(car1));
-          System.Console.WriteLine(&quot;car2 saved to the database: &quot; + db.Ext().IsStored(car1));
+          System.Console.WriteLine("car1 saved to the database: " 
++ db.Ext().IsStored(car1));
+          System.Console.WriteLine("car2 saved to the database: " 
++ db.Ext().IsStored(car1));
           int temperature = (int)((car1.Temperature + car2.Temperature)/2);
           car.Temperature = temperature;
           db.Set(car);
@@ -33,4 +40,6 @@ private static void MeasureCarTemperature()
         db.Close();
       }
       �heckCar();
-    }</pre>    </body></html>
+    }</pre>
+    </body>
+</html>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="900">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="810">
     <head>
     </head>
     <body>
@@ -8,7 +8,8 @@ Public Shared Sub CheckActive()
             StoreSensorPanel()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ActivationDepth(2)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile _ 
+(configuration, Db4oFileName)
             Try
                 System.Console.WriteLine("Object container activation depth = 2")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))

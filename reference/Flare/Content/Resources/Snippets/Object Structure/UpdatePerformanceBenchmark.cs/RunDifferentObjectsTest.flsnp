@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunDifferentObjectsTest
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="750">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunDifferentObjectsTest
 private void RunDifferentObjectsTest()
          {
-            System.Console.WriteLine(&quot;Update test with different objects&quot;);
+            System.Console.WriteLine("Update test with different objects");
             int objectsToUpdate = 90;
             int updated = objectsToUpdate;
 
             InitDifferentObjectsTest();
 
             Clean();
-            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
+            System.Console.WriteLine(" - primitive object with int field");
             Open(Configure());
             StoreSimplest();
 
@@ -28,12 +33,12 @@ private void RunDifferentObjectsTest()
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with string field&quot;);
+            System.Console.WriteLine(" - object with string field");
             Store();
             updated = objectsToUpdate;
             result = objectContainer.QueryByExample(null);
@@ -43,7 +48,7 @@ private void RunDifferentObjectsTest()
                 if (result.HasNext())
                  {
                     Item item = (Item)result.Next();
-                    item._name = &quot;Updated&quot;;
+                    item._name = "Updated";
                     Update(item);
                 }
                 else
@@ -52,12 +57,12 @@ private void RunDifferentObjectsTest()
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
+            System.Console.WriteLine(" - object with StringBuilder field");
             StoreWithStringBuilder();
 
             updated = objectsToUpdate;
@@ -67,8 +72,9 @@ private void RunDifferentObjectsTest()
              {
                 if (result.HasNext())
                  {
-                    ItemWithStringBuilder item = (ItemWithStringBuilder)result.Next();
-                    item._name = new StringBuilder(&quot;Updated&quot;);
+                    ItemWithStringBuilder item = 
+(ItemWithStringBuilder)result.Next();
+                    item._name = new StringBuilder("Updated");
                     Update(item);
                 }
                 else
@@ -77,12 +83,12 @@ private void RunDifferentObjectsTest()
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with int array field&quot;);
+            System.Console.WriteLine(" - object with int array field");
             StoreWithArray();
             updated = objectsToUpdate;
             result = objectContainer.QueryByExample(null);
@@ -101,12 +107,12 @@ private void RunDifferentObjectsTest()
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
+            System.Console.WriteLine(" - object with ArrayList field");
             StoreWithArrayList();
             updated = objectsToUpdate;
             result = objectContainer.QueryByExample(null);
@@ -125,6 +131,8 @@ private void RunDifferentObjectsTest()
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

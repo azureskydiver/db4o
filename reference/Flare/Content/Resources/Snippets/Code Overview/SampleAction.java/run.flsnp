@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="660">
     <head>
     </head>
     <body>
@@ -14,7 +14,8 @@
     /**
      * Call DataDialog to view and edit memo notes 
      */
-    DataDialog d = new DataDialog(window.getShell(), "db4o-osgi", "Enter an item to add to the list:",null);
+    DataDialog d = new DataDialog(window.getShell(), "db4o-osgi", 
+"Enter an item to add to the list:",null);
     d.open();
   }</pre>
     </body>
