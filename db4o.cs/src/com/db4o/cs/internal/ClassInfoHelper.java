@@ -3,6 +3,7 @@
 package com.db4o.cs.internal;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -14,12 +15,11 @@ public class ClassInfoHelper {
 
 	public ClassInfo getClassMeta(ReflectClass claxx) {
 
-		String className = claxx.getName();
-		if (isSystemClass(className)) {
-			return ClassInfo.newSystemClass(className);
+		if (isObjectClass(claxx)) {
+			return ClassInfo.newSystemClass(claxx.getName());
 		}
 
-		ClassInfo existing = lookupClassMeta(className);
+		ClassInfo existing = lookupClassMeta(claxx.getName());
 		if (existing != null) {
 			return existing;
 		}
@@ -59,13 +59,14 @@ public class ClassInfoHelper {
 		return fieldsMeta;
 	}
 
-	private static boolean isSystemClass(String className) {
+	private static boolean isObjectClass(ReflectClass claxx) {
 		// TODO: We should send the whole class meta if we'd like to support
 		// java and .net communication (We have this request in our user forum
 		// http://developer.db4o.com/forums/thread/31504.aspx). If we only want
 		// to support java & .net platform separately, then this method should
 		// be moved to Platform4.
-		return className.startsWith("java");
+		//return className.startsWith("java.lang.Object") || className.startsWith("System.Object");
+		return claxx.reflector().forClass(Const4.CLASS_OBJECT) == claxx;
 	}
 
 	private ClassInfo lookupClassMeta(String className) {
