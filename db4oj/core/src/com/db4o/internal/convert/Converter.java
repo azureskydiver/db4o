@@ -11,7 +11,7 @@ import com.db4o.internal.convert.conversions.*;
  */
 public class Converter {
     
-    public static final int VERSION = DropGuidClassIndexes_7_12.VERSION;
+    public static final int VERSION = DropDateTimeOffsetClassIndexes_7_12.VERSION;
     
     public static boolean convert(ConversionStage stage) {
     	if(!needsConversion(stage.converterVersion())) {
