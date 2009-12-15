@@ -16,5 +16,6 @@ public class CommonConversions {
         converter.register(ReindexNetDateTime_7_8.VERSION, new ReindexNetDateTime_7_8());
         converter.register(DropEnumClassIndexes_7_10.VERSION, new DropEnumClassIndexes_7_10());
         converter.register(DropGuidClassIndexes_7_12.VERSION, new DropGuidClassIndexes_7_12());
+        converter.register(DropDateTimeOffsetClassIndexes_7_12.VERSION, new DropDateTimeOffsetClassIndexes_7_12());
     }   
 }

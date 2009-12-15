@@ -21,15 +21,15 @@ import com.db4o.typehandlers.*;
  * TODO: This class was written to make ObjectContainerBase 
  * leaner, so TransportObjectContainer has less members.
  * 
- * All funcionality of this class should become part of 
+ * All functionality of this class should become part of 
  * ObjectContainerBase and the functionality in 
- * ObjectContainerBase should delegate to independant
+ * ObjectContainerBase should delegate to independent
  * modules without circular references.
  * 
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = (byte)9;
+    public static final byte HANDLER_VERSION = (byte) 10;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
