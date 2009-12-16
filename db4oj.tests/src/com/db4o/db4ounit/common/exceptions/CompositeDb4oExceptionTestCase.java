@@ -24,7 +24,6 @@ public class CompositeDb4oExceptionTestCase implements TestCase{
 			StringAssert.contains("throwCompositeException", stackTrace);
 			StringAssert.contains("method1", stackTrace);
 			StringAssert.contains("method2", stackTrace);
-			ex.printStackTrace();
 		}
 	}
 
