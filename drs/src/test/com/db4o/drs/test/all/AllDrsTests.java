@@ -23,11 +23,6 @@ package com.db4o.drs.test.all;
 import com.db4o.drs.test.*;
 import com.db4o.drs.test.hibernate.*;
 
-/**
- * 
- * @author albert wan
- *
- */
 public class AllDrsTests {
 	public static void main(String[] args) {
 		int failureCount = Db4oTests.main(args);
@@ -36,6 +31,6 @@ public class AllDrsTests {
 		}
 		
 		//TODO: Return failure count in RdbmsTests.main
-//		RdbmsTests.main(args);
+		RdbmsTests.main(args);
 	}
 }
