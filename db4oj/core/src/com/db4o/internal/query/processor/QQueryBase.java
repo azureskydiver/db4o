@@ -504,7 +504,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		if (clazzconstr == null) {
 			return null;
 		}
-		ClassMetadata clazz=clazzconstr.i_classMetadata;
+		ClassMetadata clazz=clazzconstr._classMetadata;
 		if(clazz==null) {
 			return null;
 		}
