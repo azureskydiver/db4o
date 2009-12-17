@@ -110,7 +110,9 @@ public final class QCandidates implements Visitor4 {
                 context.seek(offset);
                 Object obj = context.read(handler);
                 if(obj != null){
-                    return new QCandidate(this, obj, context.container().getID(context.transaction(), obj));
+                	QCandidate candidate = new QCandidate(this, obj, context.container().getID(context.transaction(), obj));
+                	candidate.classMetadata(context.container().classMetadataForObject(obj));
+                    return candidate;
                 }
             }
             

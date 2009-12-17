@@ -30,7 +30,7 @@ public class QCandidate extends TreeInt implements Candidate {
 
 	final QCandidates _candidates;
 
-	// Dependant candidates
+	// Dependent candidates
 	private List4 _dependants;
 
 	// whether to include in the result set
@@ -40,16 +40,16 @@ public class QCandidate extends TreeInt implements Candidate {
 	private Object _member;
 
 	// Possible pending joins on children
-	Tree _pendingJoins;
+	private Tree _pendingJoins;
 
 	// The evaluation root to compare all ORs
 	private QCandidate _root;
 
-	// the YapClass of this object
-	ClassMetadata _classMetadata;
+	// the ClassMetadata of this object
+	private ClassMetadata _classMetadata;
 
 	// temporary field and member for one field during evaluation
-	FieldMetadata _fieldMetadata; // null denotes null object
+	private FieldMetadata _fieldMetadata; // null denotes null object
     
     private int _handlerVersion;
 
@@ -58,13 +58,13 @@ public class QCandidate extends TreeInt implements Candidate {
 		_candidates = qcandidates;
 	}
 
-	public QCandidate(QCandidates candidates, Object obj, int id) {
+	public QCandidate(QCandidates candidates, Object member, int id) {
 		super(id);
 		if (DTrace.enabled) {
 			DTrace.CREATE_CANDIDATE.log(id);
 		}
         _candidates = candidates;
-		_member = obj;
+		_member = member;
 		_include = true;
         
         if(id == 0){
@@ -691,5 +691,8 @@ public class QCandidate extends TreeInt implements Candidate {
     public boolean duplicates() {
     	return _root != null;
     }
-    
+
+	public void classMetadata(ClassMetadata classMetadata) {
+		_classMetadata = classMetadata;
+	}    
 }

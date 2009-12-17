@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -27,7 +28,7 @@ public class QConObject extends QCon {
     private int                           i_objectID;
 
     // the YapClass
-    transient ClassMetadata            i_classMetadata;
+    transient ClassMetadata            _classMetadata;
 
     // needed for marshalling the request
     @decaf.Public
@@ -41,7 +42,7 @@ public class QConObject extends QCon {
     @decaf.Public
     private ObjectAttribute               i_attributeProvider;
 
-    private transient boolean     i_selfComparison = false;
+    private transient boolean     _checkClassMetadataOnly = false;
 
     public QConObject() {
         // C/S only
@@ -75,16 +76,16 @@ public class QConObject extends QCon {
 //            }
             
         } else {
-            i_classMetadata = a_trans.container()
+            _classMetadata = a_trans.container()
                 .produceClassMetadata(a_trans.reflector().forObject(a_object));
-            if (i_classMetadata != null) {
-                i_object = i_classMetadata.getComparableObject(a_object);
+            if (_classMetadata != null) {
+                i_object = _classMetadata.getComparableObject(a_object);
                 if (a_object != i_object) {
-                    i_attributeProvider = i_classMetadata.config().queryAttributeProvider();
-                    i_classMetadata = a_trans.container().produceClassMetadata(a_trans.reflector().forObject(i_object));
+                    i_attributeProvider = _classMetadata.config().queryAttributeProvider();
+                    _classMetadata = a_trans.container().produceClassMetadata(a_trans.reflector().forObject(i_object));
                 }
-                if (i_classMetadata != null) {
-                    i_classMetadata.collectConstraints(a_trans, this, i_object,
+                if (_classMetadata != null) {
+                    _classMetadata.collectConstraints(a_trans, this, i_object,
                         new Visitor4() {
 
                             public void visit(Object obj) {
@@ -101,7 +102,7 @@ public class QConObject extends QCon {
     }
     
     public boolean canBeIndexLeaf(){
-        return i_object == null || ((i_classMetadata != null && i_classMetadata.isValueType()) || evaluator().identity());
+        return i_object == null || ((_classMetadata != null && _classMetadata.isValueType()) || evaluator().identity());
     }
     
     public boolean canLoadByIndex(){
@@ -157,17 +158,17 @@ public class QConObject extends QCon {
         if(DTrace.enabled){
             DTrace.EVALUATE_SELF.log(id());
         }
-        if (i_classMetadata != null) {
-            if (!(i_classMetadata instanceof PrimitiveTypeMetadata)) {
-            	if (!i_evaluator.identity()) {
-            		i_selfComparison = true;
+        if (_classMetadata != null) {
+            if (!(_classMetadata instanceof PrimitiveTypeMetadata)) {
+            	if (!i_evaluator.identity() && (_classMetadata.typeHandler() instanceof StandardReferenceTypeHandler) ) {
+            		_checkClassMetadataOnly = true;
             	}
-            	Object transactionalObject = i_classMetadata.wrapWithTransactionContext(transaction(), i_object);
-                _preparedComparison = i_classMetadata.prepareComparison(context(), transactionalObject);
+            	Object transactionalObject = _classMetadata.wrapWithTransactionContext(transaction(), i_object);
+                _preparedComparison = _classMetadata.prepareComparison(context(), transactionalObject);
             }
         }
         super.evaluateSelf();
-        i_selfComparison = false;
+        _checkClassMetadataOnly = false;
     }
 
     private Context context() {
@@ -201,7 +202,7 @@ public class QConObject extends QCon {
     }
 
     ClassMetadata getYapClass() {
-        return i_classMetadata;
+        return _classMetadata;
     }
 
     public QField getField() {
@@ -260,8 +261,8 @@ public class QConObject extends QCon {
     void marshall() {
         super.marshall();
         getObjectID();
-        if (i_classMetadata != null) {
-            i_classMetadataID = i_classMetadata.getID();
+        if (_classMetadata != null) {
+            i_classMetadataID = _classMetadata.getID();
         }
     }
     
@@ -325,7 +326,7 @@ public class QConObject extends QCon {
             _preparedComparison = Null.INSTANCE;
         }
         if (i_classMetadataID != 0) {
-            i_classMetadata = trans.container().classMetadataForID(i_classMetadataID);
+            _classMetadata = trans.container().classMetadataForID(i_classMetadataID);
         }
         if (i_field != null) {
             i_field.unmarshall(trans);
@@ -343,11 +344,10 @@ public class QConObject extends QCon {
         QCandidate qc = (QCandidate) obj;
         boolean res = true;
         boolean processed = false;
-        if (i_selfComparison) {
+        if (_checkClassMetadataOnly) {
             ClassMetadata yc = qc.readClassMetadata();
             if (yc != null) {
-                res = i_evaluator
-                    .not(i_classMetadata.getHigherHierarchy(yc) == i_classMetadata);
+                res = i_evaluator.not(_classMetadata.getHigherHierarchy(yc) == _classMetadata);
                 processed = true;
             }
         }
@@ -419,14 +419,14 @@ public class QConObject extends QCon {
         if (id < 0) {
             byExample();
         } else {
-            i_classMetadata = i_trans.container().produceClassMetadata(
+            _classMetadata = i_trans.container().produceClassMetadata(
                     i_trans.reflector().forObject(i_object));
             identity();
         }
     }
     
     boolean evaluationModeAlreadySet(){
-        return i_classMetadata != null;
+        return _classMetadata != null;
     }
     
     public Constraint like() {
