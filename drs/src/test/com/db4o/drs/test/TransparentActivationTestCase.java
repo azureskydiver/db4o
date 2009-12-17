@@ -32,6 +32,7 @@ public class TransparentActivationTestCase extends DrsTestCase{
 		}
 
 		public Object name() {
+			activate(ActivationPurpose.READ);
 			return _name;		
 		}
 		
@@ -48,13 +49,10 @@ public class TransparentActivationTestCase extends DrsTestCase{
 		a().provider().storeNew(item);
 		reopen();
 		replicateAll(a().provider(), b().provider());
+		System.gc(); // Improve chances TA is really required
 		ObjectSet items = b().provider().getStoredObjects(Item.class);
 		Assert.isTrue(items.hasNext());
 		Item replicatedItem = (Item) items.next();
-		Assert.areEqual(item.name(), replicatedItem.name());
-	
-		
-		
+		Assert.areEqual(item.name(), replicatedItem.name());		
 	}
-
 }
