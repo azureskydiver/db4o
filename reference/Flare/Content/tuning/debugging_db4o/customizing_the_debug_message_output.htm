@@ -11,16 +11,16 @@ redirect debug output to another stream:</p>
 <p MadCap:conditions="Primary.Java"><p>Java: </p>
 
 <p><code>Configuration.setOut(java.io.PrintStream)</code></p>
-</p><p MadCap:conditions="Primary:java" />
+</p><p MadCap:conditions="Primary:java,Primary.All languages" />
 					
 					
-<p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: </p>
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>c#: </p>
 
 <p><code>IConfiguration.SetOut(System.IO.TextWriter)</code></p>
 </p><p MadCap:conditions="Primary:cs" />
 						
 						
-<p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB: </p>
+<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><p>VB: </p>
 
 <p><code>IConfiguration.SetOut(System.IO.TextWriter)</code></p>
 </p><p MadCap:conditions="Primary:vb" />
@@ -28,11 +28,11 @@ redirect debug output to another stream:</p>
 <p>An example below
 shows how to create and use a log file for debug messages:</p>
 					
-<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.java/setCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.java/setCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" />
 						
-<p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.cs/SetCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.cs/SetCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 						
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
 <MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.vb/SetCarsWithFileOutput.flsnp" /></p>
 <p MadCap:conditions="Primary:vb" />
 <p>Using a log file
@@ -50,17 +50,17 @@ from the clients can be available on the server.</li></ul>
 <p>You can always
 switch back to the default setting using:</p><p MadCap:conditions="Primary.Java"><p>Java: </p>
 
-<p><code>Configuration.setOut(System.out)</code></p></p><p MadCap:conditions="Primary:java" />
+<p><code>Configuration.setOut(System.out)</code></p></p><p MadCap:conditions="Primary:java,Primary.All languages" />
 				
-<p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: </p><p><code>IConfiguration.SetOut(System.Console.Out)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB: </p><p><code>IConfiguration.SetOut(System.Console.Out)</code></p></p><p MadCap:conditions="Primary:vb" /> 
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>c#: </p><p><code>IConfiguration.SetOut(System.Console.Out)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><p>VB: </p><p><code>IConfiguration.SetOut(System.Console.Out)</code></p></p><p MadCap:conditions="Primary:vb" /> 
      
 
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="debuggingvb.zip">VB.NET </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="debuggingvb.zip">VB.NET </a>
             </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="debuggingcs.zip">c# </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="debuggingcs.zip">c# </a>
             </MadCap:conditionalText>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="debuggingjava.zip">Java </a>
             </MadCap:conditionalText>

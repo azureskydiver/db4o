@@ -18,8 +18,8 @@ names to the classes in different applications).</p>
 <br />Db4objects.Db4o","com.db4o.ext.Db4oDatabase"));<br /></code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: <br /></p>
             <p><code>IConfiguration configuration =
 Db4oFactory.NewConfiguration();<br /></code>
@@ -28,7 +28,7 @@ Db4oFactory.NewConfiguration();<br /></code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: <br /></p>
             <p><code>Dim configuration As IConfiguration =
 _ <br />Db4oFactory.NewConfiguration()<br /></code>
@@ -47,15 +47,15 @@ which allows to alias all the classes in a package/namespace at once:</p>
 <br />Db4objects.Db4odoc","com.db4odoc.aliases.*"));<br /></code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: <br /></p>
             <p><code>configuration.AddAlias(<br />new WildcardAlias(" com.db4odoc.aliases.*","
 <br />Db4objects.Db4odoc.Aliases.*, Db4objects.Db4odoc "));<br /></code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: <br /></p>
             <p><code>configuration.AddAlias( _ <br />new WildcardAlias(" com.db4odoc.aliases.*", _ <br />"
 Db4objects.Db4odoc.Aliases.*, Db4objects.Db4odoc "))<br /></code>
@@ -70,14 +70,14 @@ Db4objects.Db4odoc.Aliases.*, Db4objects.Db4odoc "))<br /></code>
 <br />Db4objects.Db4odoc","com.db4odoc.aliases.Pilot"));<br /></code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: <br /></p>
             <p><code>configuration.AddAlias(<br />new TypeAlias("com.db4odoc.aliases.Pilot",<br />"Db4objects.Db4odoc.Aliases.Pilot, Db4objects.Db4odoc "));<br /></code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: <br /></p>
             <p><code>configuration.AddAlias( _ <br />new TypeAlias("com.db4odoc.aliases.Pilot", _ <br />"
 Db4objects.Db4odoc.Aliases.Pilot, Db4objects.Db4odoc "));<br /></code>

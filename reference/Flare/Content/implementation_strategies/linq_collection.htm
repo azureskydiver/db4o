@@ -11,42 +11,42 @@ enough for the majority of cases. However, it is still advisable to study <a hre
 introduction to LINQ queries for db4o please refer to <a href="../object_lifecycle/querying/linq.htm">LINQ</a>chapter.</p><a name="Simple Select"></a>
         <h2>Simple Select</h2>
         <p>Let's fill up the database with some data:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/StoreObjects.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/StoreObjects.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>In order to select objects of only Pilot class we can issue
 the following query:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectPilotByNameAndPoints.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectPilotByNameAndPoints.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>Note, that where clause is optional: if it is not specified
 all objects of Pilot class will be returned.</p>
         <p>We can make querying even easier by using anonymous types:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectByNameAndPoints.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectByNameAndPoints.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" /><a name="Database Object Clone"></a>
         <h2>Database Object Clone</h2>
         <p>You can easily use LINQ to create database objects clones:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectClone.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectClone.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -56,22 +56,22 @@ they duplicate the values from the database. You can use them for an
         <h2>Select Any Type</h2>
         <p>With the selection we are not bound to only one type of
 objects - actually we can select everything that is currently in the database:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectEverythingByName.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectEverythingByName.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>We can further use this broad selection too. As the query
 result implements IQueryable interface, we can re-use it to retrieve more
 specific objects:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectFromSelection.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectFromSelection.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -85,11 +85,11 @@ memory for future use, utilize ToList or ToArray methods.</p><a name="Join Query
 type based on the selection of the other type. However, that way is rather
 cumbersome and most probably you won't need it: you can use join operator
 instead:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectJoin.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectJoin.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -98,22 +98,22 @@ using any possible relationship between them. You can also make use of <a href="
         <h2>Sorting</h2>
         <p>Sorting is added with <code>orderby</code> operator and can
 be ascending(default) or descending.</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectOrdered.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectOrdered.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>We can also use subsequent sorts. For example sort by name
 descending and by points ascending:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/StoreForSorting.flsnp" />
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectComplexOrdered.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/StoreForSorting.flsnp" />
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectComplexOrdered.flsnp" />
         </p>
@@ -123,11 +123,11 @@ descending and by points ascending:</p>
         <h2>Grouping Results</h2>
         <p>Grouping results can be often useful in different reports.
 For example, we can group the data from the previous example by pilot's name:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectGroupByName.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectGroupByName.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -137,11 +137,11 @@ parameters specify the grouping property (Points) and the display property
         <h2>Modified Result</h2>
         <p>Sometimes we need to apply some calculation on each result -
 with LINQ we can do that directly in the query:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectWithModifiedResult.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectWithModifiedResult.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -151,11 +151,11 @@ percentage of maximum for each pilot's points. </p><a name="Selecting A Result">
         <p>Though a query usually returns all the candidates matching
 the selected criteria, we can specify which of the results we want:
 <code>First</code>, <code>ElementAt</code>, <code>Any</code>, <code>All</code>.</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAny.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAny.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -165,20 +165,20 @@ any objects in the result set and <code>false</code> otherwise.</p><a name="Aggr
         <p>Often we are not interested in each and every result, but
 need some statistics about it: sum, aggregate, average, max etc. This can be
 achieved with extension methods.</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAverage.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAverage.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>This method returns only the average value of pilot points.</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.cs/SelectAggregate.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/LINQ Collection/LinqCollection.vb/SelectAggregate.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />

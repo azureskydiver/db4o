@@ -18,14 +18,14 @@ Database upgrading can be turned on with the following configuration switch: </p
             <p><code>Db4o.configure().allowVersionUpdates(true) </code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: </p>
             <p><code>Db4oFactory.Configure().AllowVersionUpdates(true)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: </p>
             <p><code>Db4oFactory.Configure().AllowVersionUpdates(True)</code>
             </p>
@@ -41,17 +41,17 @@ following:  </p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/Updating Db4o File Format/UpdateExample.java/UpdateExample.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Updating Db4o File Format/UpdateExample.cs/UpdateExample.cs.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Updating Db4o File Format/UpdateExample.vb/UpdateExample.vb.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />Recommendations for upgrading:  <ul><li>backup your database file to be able to switch back. </li><li>check the content of database files before and after upgrading, using
 com.db4o.tools.Statistics. </li><li><a href="defragment.htm">Defragmenting</a> a database file with the new db4o version
 after upgrading can make the database more efficient.
 
-</li></ul><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="versionupdatesvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="versionupdatescs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="versionupdatesjava.zip">Java </a></MadCap:conditionalText></p></body>
+</li></ul><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="versionupdatesvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="versionupdatescs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="versionupdatesjava.zip">Java </a></MadCap:conditionalText></p></body>
 </html>

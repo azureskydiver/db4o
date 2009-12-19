@@ -10,12 +10,12 @@
         <p MadCap:conditions="Primary.Java">
             <p>Java: <code>MessageSender#send(message) </code></p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#:   <code>IMessageSender#Send(message) </code></p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB:   <code>IMessageSender#Send(message) </code></p>
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -23,14 +23,14 @@
         <p MadCap:conditions="Primary.Java">
             <p>Java: <code>Configuration#setMessageRecipient(MessageRecipient)</code></p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: <code>Configuration#SetMessageRecipient(IMessageRecipient)</code></p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: <code>Configuration#SetMessageRecipient(IMessageRecipient)</code></p>
         </p>
         <p MadCap:conditions="Primary:vb" />Message recipient should define a response to the different messages received in
-<p MadCap:conditions="Primary.Java"><p>Java: <code>processMessage(ObjectContainer objectContainer, Object message) </code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#:   <code>ProcessMessage(IObjectContainer objectContainer, object message) </code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><p><code>vb:   ProcessMessage(ByVal objectContainer As IObjectContainer, ByVal message As Object) </code></p></p><p MadCap:conditions="Primary:vb" /><p>method. ObjectContainer parameter gives full control over the database.</p><p>Let's reset our database and try updating using special UpdateServer message.</p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.java/setObjects.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.cs/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.vb/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>You can also put some information in the message being sent (UpdateServer class).</p><p>The advantage of this method is that having predefined message types you can make any changes to the handling code only on the server side. In the situations with many distributed clients it can really save you lots of time on support.</p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="remote_code_executionremotevb.zip">VB.NET</a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="remote_code_executionremotejava.zip">Java</a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="remote_code_executionremotecs.zip">c#</a></MadCap:conditionalText></p></body>
+<p MadCap:conditions="Primary.Java"><p>Java: <code>processMessage(ObjectContainer objectContainer, Object message) </code></p></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>c#:   <code>ProcessMessage(IObjectContainer objectContainer, object message) </code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><p><code>vb:   ProcessMessage(ByVal objectContainer As IObjectContainer, ByVal message As Object) </code></p></p><p MadCap:conditions="Primary:vb" /><p>method. ObjectContainer parameter gives full control over the database.</p><p>Let's reset our database and try updating using special UpdateServer message.</p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.java/setObjects.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.cs/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../../Resources/Snippets/Using Messaging API For Remote Code Execution/RemoteExample.vb/SetObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>You can also put some information in the message being sent (UpdateServer class).</p><p>The advantage of this method is that having predefined message types you can make any changes to the handling code only on the server side. In the situations with many distributed clients it can really save you lots of time on support.</p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="remote_code_executionremotevb.zip">VB.NET</a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="remote_code_executionremotejava.zip">Java</a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="remote_code_executionremotecs.zip">c#</a></MadCap:conditionalText></p></body>
 </html>

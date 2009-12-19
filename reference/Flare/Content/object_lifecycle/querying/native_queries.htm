@@ -21,7 +21,7 @@
         <p>Native Queries provide the ability to run one or more lines of code against all instances of a class. Native query expressions should return true to mark specific instances as part of the result set. db4o will attempt to <a href="../../tuning/native_query_optimization.htm">optimize native query</a> expressions and use <a href="soda_query/soda_query_engine.htm">internal query processor</a> to run them against indexes and without instantiating actual objects, where this is possible. </p><a name="Simple Example"></a>
         <H2>Simple Example</H2>
         <p>Let's look at how a simple native query will look like in some of the programming languages and dialects that db4o supports:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>.NET2.0: </p>
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/PrimitiveQuery.flsnp" />
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/PrimitiveQuery.flsnp" />
@@ -35,8 +35,8 @@
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PrimitiveExample.java/primitiveQuery1.flsnp" />
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PilotHundredPoints.java/PilotHundredPoints.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB.NET:</p>
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/primitiveQuery.flsnp" />
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PilotHundredPoints.vb/PilotHundredPoints.vb.flsnp" />
@@ -49,14 +49,14 @@
             <p><code>boolean match(Pilot candidate);</code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: </p>
             <p><code>bool Match(Pilot candidate);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: </p>
             <p><code>Function Match(ByVal candidate As Pilot) As Boolean;</code>
             </p>
@@ -72,7 +72,7 @@
             <p>Now you can create a native query with three keys: n + q + Control-Space.</p>
             <p>Similar features are available in most modern IDEs.</p>
         </p>
-        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
         <p>For more information see <a href="native_queries/native_query_syntax.htm">Native Query Syntax</a>.</p><a name="Advanced Example"></a>
         <H2>Advanced Example</H2>
         <p>For complex queries, the native syntax is very precise and quick to write. Let's compare to a SODA query that finds all pilots with a given name or a score within a given range:</p>
@@ -80,13 +80,13 @@
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/storePilots.flsnp" />
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/retrieveComplexSODA.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/StorePilots.flsnp" />
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/RetrieveComplexSODA.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/StorePilots.flsnp" />
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/RetrieveComplexSODA.flsnp" />
         </p>
@@ -95,8 +95,8 @@
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/advancedQuery.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/AdvancedQuery.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" /><a name="Arbitrary Code"></a>
@@ -106,12 +106,12 @@
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/retrieveArbitraryCodeNQ.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/RetrieveArbitraryCodeNQ.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/RetrieveArbitraryCodeNQ.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" /><a name="Native Query Performance"></a>

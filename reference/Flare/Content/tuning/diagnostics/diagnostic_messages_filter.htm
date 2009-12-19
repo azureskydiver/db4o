@@ -10,25 +10,25 @@
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.java/IndexDiagListener.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.cs/IndexDiagListener.cs.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/IndexDiagListener.vb/IndexDiagListener.vb.flsnp" />
         </p>
         <p>The following command will install the new listener:</p>
         <p MadCap:conditions="Primary.Java">
             <p>Java:</p><code>configuration.diagnostic().addListener(new IndexDiagListener())</code>
         </p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: </p>
             <p><code>configuration.Diagnostic().AddListener(new IndexDiagListener())</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: </p>
             <p><code>configuration.Diagnostic().AddListener(new IndexDiagListener())</code>
             </p>
@@ -37,18 +37,18 @@
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.java/testIndexDiagnostics.flsnp" />
         </p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.cs/TestIndexDiagnostics.flsnp" />
         </p>
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Diagnostic Messages Filter/DiagnosticExample.vb/TestIndexDiagnostics.flsnp" />
         </p>
         <p>Potentially this piece of code triggers all the diagnostic objects, but we are getting only index warning messages due to IndexDiagListener.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="diagnosticsvb.zip">VB.NET </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="diagnosticsvb.zip">VB.NET </a>
             </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="diagnosticscs.zip">c# </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="diagnosticscs.zip">c# </a>
             </MadCap:conditionalText>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="diagnosticsjava.zip">Java </a>
             </MadCap:conditionalText>

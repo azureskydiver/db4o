@@ -11,28 +11,28 @@ usage is very generic and can be applied to any objects and conditions. The
 following 5 steps can be used (all steps are optional and can be repeated
 logically):</p>
         <ul class="unIndentedList">
-            <li>create a root of a query object <p MadCap:conditions="Primary.Java"> Java: <code>Query queryRootNode = db.query();</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"> 
-c#: <code>IQuery queryRootNode = db.Query();</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+            <li>create a root of a query object <p MadCap:conditions="Primary.Java"> Java: <code>Query queryRootNode = db.query();</code></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"> 
+c#: <code>IQuery queryRootNode = db.Query();</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"> 
 
 VB: 
 
 <code>IQuery queryRootNode = db.Query()</code></p><p MadCap:conditions="Primary:vb" /></li>
-            <li>add constraints to any node anywhere <p MadCap:conditions="Primary.Java"> Java: <code>queryRootNode.constrain(Foo.class);</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"> 
-c#: <code>queryRootNode.Constrain(typeof(Foo));</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+            <li>add constraints to any node anywhere <p MadCap:conditions="Primary.Java"> Java: <code>queryRootNode.constrain(Foo.class);</code></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"> 
+c#: <code>queryRootNode.Constrain(typeof(Foo));</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"> 
 
 VB: 
 <code>queryRootNode.Constrain(GetType(Foo))</code></p><p MadCap:conditions="Primary:vb" /></li>
             <li>navigate from any query node to any subordinate
-node <p MadCap:conditions="Primary.Java"> Java: <code>Query barNode = queryRootNode.descend("bar");</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"> c#: <code>IQuery barNode = queryRootNode.Descend("bar");</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+node <p MadCap:conditions="Primary.Java"> Java: <code>Query barNode = queryRootNode.descend("bar");</code></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"> c#: <code>IQuery barNode = queryRootNode.Descend("bar");</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"> 
 VB: 
 <code>IQuery barNode = queryRootNode.Descend("bar")</code></p><p MadCap:conditions="Primary:vb" /></li>
-            <li>add further constraints to any node <p MadCap:conditions="Primary.Java"> Java: <code>Constraint barConstraint = barNode.constrain(5);</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"> 
-c#: <code>IConstraint barConstraint = barNode.Constrain(5);</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+            <li>add further constraints to any node <p MadCap:conditions="Primary.Java"> Java: <code>Constraint barConstraint = barNode.constrain(5);</code></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"> 
+c#: <code>IConstraint barConstraint = barNode.Constrain(5);</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"> 
 
 VB: 
 <code>IConstraint barConstraint = barNode.Constrain(5)</code></p><p MadCap:conditions="Primary:vb" /></li>
-            <li>set the evaluation mode of a node <p MadCap:conditions="Primary.Java"> Java: <code>barConstraint().greater();</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"> 
-c#: <code>barConstraint().Greater();</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+            <li>set the evaluation mode of a node <p MadCap:conditions="Primary.Java"> Java: <code>barConstraint().greater();</code></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"> 
+c#: <code>barConstraint().Greater();</code></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"> 
 
 VB: 
 <code>barConstraint().Greater()</code></p><p MadCap:conditions="Primary:vb" /></li>

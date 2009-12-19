@@ -7,7 +7,7 @@
 <p>There is another setting that can be of great value in debug process:</p>
 <p MadCap:conditions="Primary.Java">
 <p>Java: </p><p><code>configuration.exceptionsOnNotStorable (true|false)</code> </p>
-</p><p MadCap:conditions="Primary:java" />
+</p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ExceptionsOnNotStorable (true|false) </code></p>
@@ -17,7 +17,7 @@
 <p>Db4o uses the context classloader by default. This is an appropriate choice in most situations, but it's not really reliable, since the concrete context classloader depends on the environment you're running in. Therefore you can explicitly specify the classloader to be used for db4o operation by calling</p>
 <p MadCap:conditions="Primary.Java">
 <p>Java: </p><p><code>configuration.reflectWith(new JdkReflector(classLoader)) </code></p>
-</p><p MadCap:conditions="Primary:java" />
+</p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ReflectWith(new JdkReflector(classLoader)) </code></p>
@@ -52,7 +52,7 @@ add a zero-parameter constructor specifically for db4o; </li>
 <p>If you need to quickly implement a solution for one of the JDK classes, and querying members is not an issue, you may choose to use the built-in serializable translator. Here is an example, how this is done for java.net.URL:</p>
 <p MadCap:conditions="Primary.Java">
 <p>Java: </p><p><code>configuration.objectClass("java.net.URL").translate(new TSerializable());</code> </p>
-</p><p MadCap:conditions="Primary:java" />
+</p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ObjectClass("java.net.URL").Translate(new TSerializable()); </code></p>
