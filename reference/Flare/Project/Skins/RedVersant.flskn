@@ -15,8 +15,8 @@
   UseDefaultBrowserSetup="false"
   Title="db4o Reference Documentation"
   AutoSyncTOC="false"
-  NavigationLinkTop="false"
-  NavigationLinkBottom="true"
+  NavigationLinkTop="true"
+  NavigationLinkBottom="false"
   BrowserSetup="">
   <!-- saved from url=(0014)about:internet -->
   <Index
@@ -518,7 +518,7 @@
         Name="Formats">
         <Properties>
           <Property
-            Name="BreadcrumbsYouAreHereText"> </Property>
+            Name="BreadcrumbsYouAreHereText"></Property>
         </Properties>
       </Style>
     </Styles>

@@ -2,7 +2,7 @@
 <CatapultVariableSet>
   <Variable
     Comment=""
-    Name="CompanyName">MadCap Software</Variable>
+    Name="CompanyName">Versant Inc</Variable>
   <Variable
     Comment=""
     Name="PhoneNumber">858 123 4567</Variable>
@@ -10,4 +10,8 @@
     Name="CurrentVersion"
     Comment=""
     Definition="Some text">7.12</Variable>
+  <Variable
+    Name="ObjectContainer"
+    Comment=""
+    Definition="Some text">objectContainer</Variable>
 </CatapultVariableSet>

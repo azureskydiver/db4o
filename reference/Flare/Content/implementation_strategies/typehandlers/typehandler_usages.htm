@@ -12,12 +12,12 @@ to save only certain fields of a class. Suppose we have the following class:</p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/NotStorable.java/NotStorable.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/LocalizedItemList.cs/LocalizedItemList.cs.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>In this case we obviously do not want to store transient
@@ -29,41 +29,41 @@ means any persistent object that has its identity in the database.</p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/NotStorableTypehandler.java/NotStorableTypehandler.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/CultureInfoTypehandler.CS/CultureInfoTypehandler.CS.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>You can see that in this case, we are just replacing
 NotStorable class with a duplicate class Storable and save it instead. </p>
         <p>Let's test how it works. First we should create
 configuration to include the typehandler:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.java/storeWithTypehandler.flsnp" />
             <p>
             </p>
             <p MadCap:conditions="Primary:cs" />
         </p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.cs/StoreWithTypehandler.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>And now test store and retrieve:</p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.java/tryStoreAndRetrieve.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.cs/TryStoreAndRetrieve.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>This works. However, this example has certain
@@ -78,12 +78,12 @@ is not required for future retrieval. Let's use the following classes:</p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/PersistentItem.java/PersistentItem.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/PersistentItem.cs/PersistentItem.cs.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>Let's assume that TransientItem field information is not
@@ -92,31 +92,31 @@ by using IgnoreFieldsTypeHandler. The configuration will look like this:</p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.java/ignoreFieldsConfiguration.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.cs/IgnoreFieldsConfiguration.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>We can check the result with the following code:</p>
         <p MadCap:conditions="Primary.Java">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.java/ignoreFieldsTypehandlerExample.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/TypeHandler Usages/TranslatorExample.cs/IgnoreFieldsTypehandlerExample.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="typehandlervb.zip">VB.NET </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="typehandlervb.zip">VB.NET </a>
             </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="typehandlercs.zip">c# </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="typehandlercs.zip">c# </a>
             </MadCap:conditionalText>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="typehandlerjava.zip">Java </a>
             </MadCap:conditionalText>

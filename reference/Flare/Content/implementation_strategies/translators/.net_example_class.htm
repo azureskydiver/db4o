@@ -6,40 +6,40 @@
         <h1>.NET Example Class</h1>
         <p>For this example we'll be using a hypothetical <code>LocalizedItemList</code> class which binds together culture information with a list of items.</p>
         <p><code>System.Globalization.CultureInfo</code> is particularly interesting because it internally holds a native pointer to a system structure which in turn cannot be cleanly stored by db4o.</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/LocalizedItemList.cs/LocalizedItemList.cs.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/LocalizedItemList.vb/LocalizedItemList.vb.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>We'll be using this code to store and retrieve and instance of this class with different configuration settings:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.cs/TryStoreAndRetrieve.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.vb/TryStoreAndRetrieve.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" /><a name="Using The Constructor "></a>
         <h2>Using The Constructor </h2>
-        <p MadCap:conditions="Primary..NET,Primary.c#">
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.cs/TryStoreWithCallConstructors.flsnp" />
         </p>
         <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.vb/TryStoreWithCallConstructors.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>At storage time, db4o tests the only available constructor with null arguments and runs into a NullPointerException, so it refuses to accept our object. (Note that this test only occurs when configured with <a href="../../object_lifecycle/object_construction/troubleshooting.htm">exceptionsOnNotStorable</a>(default setting is true) - otherwise db4o will silently fail when trying to reinstantiate the object.)  </p><a name="Bypassing The Constructor "></a>
         <h2>Bypassing The Constructor </h2>
         <p>
-            <p MadCap:conditions="Primary..NET,Primary.c#">
+            <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
                 <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.cs/TryStoreWithoutCallConstructors.flsnp" />
             </p>
             <p MadCap:conditions="Primary:cs" />
-            <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+            <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             </p>
             <MadCap:snippetBlock src="../../Resources/Snippets/.NET Example Class/TranslatorExample.vb/TryStoreWithoutCallConstructors.flsnp" />
         </p>

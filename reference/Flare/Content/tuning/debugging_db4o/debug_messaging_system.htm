@@ -15,13 +15,13 @@ in debugging session - to find out where the problem can reside;</li>
 
 <p MadCap:conditions="Primary.Java">
 <p>Java: </p><p><code>configuration.messageLevel(level)</code></p>
-</p><p MadCap:conditions="Primary:java" />
+</p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
-<p MadCap:conditions="Primary..NET,Primary.c#">
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#: </p><p>configuration.MessageLevel(level)</p>
 </p><p MadCap:conditions="Primary:cs" />
 
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
 <p>VB: </p>configuration.MessageLevel(level)
 </p><p MadCap:conditions="Primary:vb" />
 
@@ -33,12 +33,12 @@ in debugging session - to find out where the problem can reside;</li>
 <p>In order to set up a convenient output stream for the messages, call:</p>
 
 <p MadCap:conditions="Primary.Java">
-<p>Java: </p>configuration.setOut(outStream)<p>By default the output is sent to System.out.  </p></p><p MadCap:conditions="Primary:java" />
+<p>Java: </p>configuration.setOut(outStream)<p>By default the output is sent to System.out.  </p></p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
-<p MadCap:conditions="Primary..NET,Primary.c#">
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#: </p>configuration.SetOut(outStream)<p>By default the output is sent to System.Console.Out. </p></p><p MadCap:conditions="Primary:cs" />
 
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
 <p>VB: </p>configuration.SetOut(outStream) <p>By default the output is sent to System.Console.Out. </p></p><p MadCap:conditions="Primary:vb" /><p>For more information on #setOut call see <a href="customizing_the_debug_message_output.htm"  >Customizing The Debug Message Output</a>. </p>
 
 
@@ -46,24 +46,24 @@ in debugging session - to find out where the problem can reside;</li>
 
 <p MadCap:conditions="Primary.Java">
 <p>Java: <code>ObjectContainer#ext().configure().messageLevel(level) </code></p>
-</p><p MadCap:conditions="Primary:java" />
+</p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
-<p MadCap:conditions="Primary..NET,Primary.c#">
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#: <code>IObjectContainer.Ext().Configure().MessageLevel(level) </code></p>
 </p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
 <p>VB: <code>IObjectContainer.Ext().Configure().MessageLevel(level) </code></p>
 </p><p MadCap:conditions="Primary:vb" />
 <p>The same applies for #setOut().</p>
 <p>Let's use the simplest example to see all types of debug messages:</p>
 
 <p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.java/setCars.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.java/setCars.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" />
 
-<p MadCap:conditions="Primary..NET,Primary.c#">
+<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.cs/SetCars.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
 <MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.vb/SetCars.flsnp" /></p><p MadCap:conditions="Primary:vb" />
 
 <p>Output looks quite messy, but allows you to follow the whole process. For debugging purposes messaging system provides a timestamp and internal ID information for each object (first number in state and activate messages).</p> 
@@ -72,9 +72,9 @@ in debugging session - to find out where the problem can reside;</li>
 
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="debuggingvb.zip">VB.NET </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="debuggingvb.zip">VB.NET </a>
             </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="debuggingcs.zip">c# </a>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="debuggingcs.zip">c# </a>
             </MadCap:conditionalText>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="debuggingjava.zip">Java </a>
             </MadCap:conditionalText>

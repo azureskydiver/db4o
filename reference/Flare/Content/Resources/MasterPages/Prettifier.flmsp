@@ -1,12 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="169" MadCap:lastWidth="1134">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="120" MadCap:lastWidth="624">
     <head>
+		<script src="../Code/prettify.js">
+		</script>
+    
     </head>
     <body onload="prettyPrint()">
         <MadCap:breadcrumbsProxy />
-        <p>
-            <script src="../Code/prettify.js">
-            </script>
+		<p>
+			<script type="text/javascript">/*<![CDATA[*/document.write('<a href="' + location.href +'">');
+				document.write("Direct Link");
+			document.write('</a>');/*]]>*/</script>
+		</p>
+		<p>
         </p>
         <MadCap:bodyProxy />
         <MadCap:topicToolbarProxy class="" style="mc-topic-toolbar-items: ;" />
