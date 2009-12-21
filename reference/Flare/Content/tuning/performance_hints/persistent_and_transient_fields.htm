@@ -7,9 +7,9 @@
 <p>Storing only needed information will help to keep your database footprint as small as possible.</p>
 <a name="Effect"></a><h2>Effect</h2>
 <p>If your persistent class contains fields that do not need to be stored you should mark them as transient to prevent them from being stored:</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:  <code>public class NotStorable {   private transient int length; . . .  }</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET: <code>public class NotStorable {   [Transient] private int length; . . .  }</code></p>
 </p><p MadCap:conditions="Primary:net" />

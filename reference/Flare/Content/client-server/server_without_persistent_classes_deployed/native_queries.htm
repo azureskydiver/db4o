@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="796" MadCap:lastWidth="940" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;a1;b1;c1;b2;uncomment">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="796" MadCap:lastWidth="940" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;a1;b1;c1;b2;uncomment">
     <head><title>Native Queries	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -9,10 +9,10 @@ can work with a server without application classes deployed. So we can expect
 optimized Native Queries (converted to SODA under the hood) to work as well: 
 </p>
         <p>
-            <p MadCap:conditions="Primary.Java">
+            <p MadCap:conditions="Primary.Java,Primary.All languages">
                 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/Client.java/getPilotsNative.flsnp" />
             </p>
-            <p MadCap:conditions="Primary:java,Primary.All languages" />
+            <p MadCap:conditions="Primary:java" />
             <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
                 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/Client.cs/GetPilotsNative.flsnp" />
             </p>
@@ -27,10 +27,10 @@ the query cannot be optimized to SODA, the server needs to instantiate the
 classes to run the query. This is not possible if the class is not available</p>
         <p>This
 query won't work:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/Client.java/getPilotsNativeUnoptimized.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/Client.cs/GetPilotsNativeUnoptimized.flsnp" />
         </p>

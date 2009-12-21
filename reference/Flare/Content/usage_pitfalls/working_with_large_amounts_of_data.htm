@@ -9,10 +9,10 @@ important for using db4o with large data.</p>
 the maximum database file size is 2GB.   You can increase this
 value by <a href="../tuning/performance_hints/increasing_the_maximum_database_file_size.htm"  >configuring the internal db4o block size</a>:
 </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 <p><code>configuration.blockSize(blockSize)</code> </p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>configuration.BlockSize(blockSize)</code> </p>
@@ -22,15 +22,15 @@ any value between 1 and 127. The resulting maximum database file size
 will be a multiple of 2GB. A recommended setting for large database
 files is 8, since internal pointers have this length.   Using <code>blockSize</code> the maximum database file size will be
 16GB.   The above method has to be called before an
-ObjectContainer is opened the first time. During the lifetime of an
-ObjectContainer the setting will have to stay the same. Since
-Defragment copies all objects to a new ObjectContainer, it can be
+Object Container is opened the first time. During the lifetime of an
+Object Container the setting will have to stay the same. Since
+Defragment copies all objects to a new Object Container, it can be
 used to change the blockSize of an existing database:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 <p><code>Defragment.defrag("filename.db4o")</code> </p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -46,11 +46,11 @@ constant, no matter how large database files are.   Query
 performance on unindexed objects drops linearly with an increasing
 number of objects per class.   Query performance on a large
 number of objects can be dramatically improved by <a href="../tuning/performance_hints/enable_field_indexes.htm"  >using indexes</a>:
-</p><p MadCap:conditions="Primary.Java">
+</p><p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 
 <p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(true);
-</code></p></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p><p MadCap:conditions="Primary..NET">
+</code></p></p><p MadCap:conditions="Primary:java" /><p><p MadCap:conditions="Primary..NET">
 </p>
 <p>.NET:</p>
 

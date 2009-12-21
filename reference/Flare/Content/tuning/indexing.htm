@@ -12,12 +12,12 @@
 
 <p><code>class Foo{      String bar; }</code></p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p>
 <p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(true); </code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -32,12 +32,12 @@
 
 <p>To drop an index you would also issue a configuration call in your db4o configuration method:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p>
 <p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(false);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -48,12 +48,12 @@
 
 <p>Actually dropping the index will take place the next time the respective class is used.db4o will tell you when it creates and drops indexes, if you choose a message level of 1 or higher:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p>
 <p><code>configuration.messageLevel(1);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 

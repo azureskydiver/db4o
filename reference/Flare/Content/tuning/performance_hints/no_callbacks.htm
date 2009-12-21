@@ -4,9 +4,9 @@
         <h1>No callbacks</h1>
 
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>Db4o.configure().callbacks(false)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>Db4oFactory.Configure().Callbacks(false)</code></p>
 </p><p MadCap:conditions="Primary:net" />
@@ -24,9 +24,9 @@ application, callbacks can be turned off safely.</p>
 <a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
 <p>
 Class configuration features are a good alternative to callbacks. The most recommended mechanism to cascade updates is:</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>Db4o.configure().objectClass("yourPackage.yourClass").cascadeOnUpdate(true)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>Db4oFactory.Configure().ObjectClass("yourNamespace.yourClass").CascadeOnUpdate(true)</code></p>
 </p><p MadCap:conditions="Primary:net" />    

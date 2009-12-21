@@ -11,7 +11,7 @@
 package/Db4object.Db4o.Config namespace. </p>
 
 <p>Below is a short description of all common configuration
-methods residing in CommonConfiguration/ICommonConfiguration interface.
+methods residing in <MadCap:snippetText src="../../Resources/Snippets/CommonConfiguration.flsnp" /> interface.
 For embedded configuration specific methods see <a href="embedded_configuration.htm"  >Embedded Configuration</a>, for client/server specific settings see <a href="client_configuration.htm"  >Client Configuration</a>
 and <a href="server_configuration.htm"  >Server Configuration</a> interfaces. For class and field
 specific configuration see <a href="objectclass_configuration.htm"  >ObjectClass Configuration</a> and
@@ -19,14 +19,14 @@ specific configuration see <a href="objectclass_configuration.htm"  >ObjectClass
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void activationDepth(int depth);</code></p>
 <p><code>public int activationDepth();</code>  </p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -38,12 +38,12 @@ specific configuration see <a href="objectclass_configuration.htm"  >ObjectClass
 
 <p>sets global activation depth to the specified value or gets its current value.
 </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 
 <p><code>public void add(ConfigurationItem item);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -55,7 +55,7 @@ specific configuration see <a href="objectclass_configuration.htm"  >ObjectClass
 <p>adds a configuration item to be applied when an
 object container is opened. Examples of configuration items:
 TransparentActivationSupport, BigMathSupport etc.</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 
 <p>Java: </p>
@@ -64,7 +64,7 @@ TransparentActivationSupport, BigMathSupport etc.</p>
 
 <p><code>public void removeAlias(Alias alias);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -83,13 +83,13 @@ server. For more information on aliases please check
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:  </p>
 
 <p><code>public void allowVersionUpdates(boolean flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -104,12 +104,12 @@ more information see <a href="../../implementation_strategies/maintenance/updati
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void automaticShutDown(boolean flag);</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 
 <p>.NET:</p>
@@ -119,10 +119,10 @@ more information see <a href="../../implementation_strategies/maintenance/updati
 
 
 <p>turns automatic shutdown of the engine on and off.</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Depending on the JDK, db4o uses one of the following two
-methods to shut down, if no more references to the ObjectContainer are being
+methods to shut down, if no more references to the <MadCap:snippetText src="../../Resources/Snippets/ObjectContainer.flsnp" /> are being
 held or the JVM terminates:</p>
 
 <ul>
@@ -139,16 +139,16 @@ rare cases the autoShutDown feature may be turned off.</p>
 
 <p>The default and recommended setting is <code>true</code>.</p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p> </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void bTreeNodeSize(int size);</code></p>
 
-<p></p><p MadCap:conditions="Primary:java,Primary.All languages" /></p>
+<p></p><p MadCap:conditions="Primary:java" /></p>
 
 <p MadCap:conditions="Primary..NET">
 
@@ -162,13 +162,13 @@ rare cases the autoShutDown feature may be turned off.</p>
 
 <p> </p>
  
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void callbacks(boolean flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -184,13 +184,13 @@ how this setting can be useful for tuning.</p>
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void callConstructors(boolean flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -223,13 +223,13 @@ your current environment.</p>
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void detectSchemaChanges(boolean flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -245,13 +245,13 @@ information see <a href="../performance_hints/no_schema_changes.htm"  >No schema
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public DiagnosticConfiguration diagnostic();</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -263,14 +263,14 @@ information see <a href="../performance_hints/no_schema_changes.htm"  >No schema
 
 <p>returns the configuration interface for diagnostics. See
 <a href="../diagnostics.htm"  >Diagnostics</a> for more information.</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void exceptionsOnNotStorable(boolean
 flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -292,13 +292,13 @@ written, which will make sure that only relevant information is
 persisted. </p>
 
 <p> </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void internStrings(boolean doIntern);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -327,13 +327,13 @@ For more information see</p>
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void messageLevel(int level);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -345,13 +345,13 @@ For more information see</p>
 
 <p>Sets the detail level of db4o messages (from1 to 3). For
 more information see <a href="../debugging_db4o.htm"  >Debugging db4o</a></p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public ObjectClass objectClass(Object clazz);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -375,7 +375,7 @@ configure the specified class.</p>
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
@@ -383,7 +383,7 @@ configure the specified class.</p>
 optimizeNQ);</code></p>
 <p><code>public boolean optimizeNativeQueries();</code>  </p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -397,13 +397,13 @@ optimizeNQ);</code></p>
 dynamically at query execution time, otherwise it will run native queries in
 unoptimized mode as SODA evaluations. For more information see
 <a href="../native_query_optimization.htm"  >Native Query Optimization</a>.</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public boolean outStream(PrintStream outStream);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -414,13 +414,13 @@ unoptimized mode as SODA evaluations. For more information see
 </p><p MadCap:conditions="Primary:net" />
 <p>assigns a stream, where db4o is to print its debug messages. For more information see
 <a href="../debugging_db4o/customizing_the_debug_message_output.htm"  >Customizing The Debug Message Output</a>    </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public QueryConfiguration queries();</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -434,13 +434,13 @@ unoptimized mode as SODA evaluations. For more information see
 information see <a href="../../object_lifecycle/querying/query_modes.htm"  >Query Modes</a>.</p>
 
 <p> </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void reflectWith(Reflector reflector);</code></p>
 
-<p></p><p MadCap:conditions="Primary:java,Primary.All languages" /></p>
+<p></p><p MadCap:conditions="Primary:java" /></p>
 
 <p MadCap:conditions="Primary..NET">
 
@@ -459,13 +459,13 @@ see <a href="../../implementation_strategies/db4o_reflection_api.htm"  >Db4o Ref
 
 
 <p> </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typehandler);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -477,14 +477,14 @@ see <a href="../../implementation_strategies/db4o_reflection_api.htm"  >Db4o Ref
 Registers a special typehandler for custom marshalling
 and comparison. Predicate parameter is used to filter out classes, to
 which the typehandler is applicable.
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 
 
 <p><code>public void stringEncoding(StringEncoding encoding);</code></p>
 
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 
 <p MadCap:conditions="Primary..NET">
@@ -503,13 +503,13 @@ existing database. Encodings provided by db4o (utf8 and Unicode) will
 be remembered when the database is opened next time. Custom encodings
 (implemented by user) should be supplied into the configuration each
 time the database is opened.  
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void testConstructors(boolean flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -525,13 +525,13 @@ information see <a href="../performance_hints/no_test_instances.htm"  >No test i
 
 
 <p> </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void updateDepth(int depth);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -546,13 +546,13 @@ information see <a href="../performance_hints/no_test_instances.htm"  >No test i
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void weakReferences(boolean flag);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -567,14 +567,14 @@ information see <a href="../performance_hints/turning_off_weak_references.htm"  
 
 <p> </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void weakReferenceCollectionInterval(int
 milliseconds);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 

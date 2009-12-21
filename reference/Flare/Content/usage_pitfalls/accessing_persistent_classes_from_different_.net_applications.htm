@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1060" MadCap:lastWidth="1017" MadCap:conditions="Primary..NET">
     <head><title>Accessing Persistent Classes From Different .NET Applications	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
@@ -49,7 +49,7 @@ Db4oFactory.OpenFile(configuration, "reference.db4o");</code>
                     </p>
                     <p><code>// now you query as usual</code>
                     </p>
-                    <p><code>IObjectSet result = container.Get(new
+                    <p><code>IObjectSet result = container.QueryByExample(new
 Test());</code>
                     </p>
                 </p>
@@ -69,7 +69,7 @@ Db4oFactory.OpenFile(configuration, "reference.db4o")</code>
                     </p>
                     <p><code>// now you query as usual</code>
                     </p>
-                    <p><code>Dim result As IObjectSet  = container.Get(New
+                    <p><code>Dim result As IObjectSet  = container.QueryByExample(New
 Test())</code>
                     </p>
                 </p>

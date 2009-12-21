@@ -4,9 +4,9 @@
         <h1>No lock file thread</h1>
 
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>configuration.lockDatabaseFile(false)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.LockDatabaseFile(false)</code></p>
@@ -21,9 +21,9 @@ If file locking is not available on the system, db4o will regularily write a tim
 <a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
 <p>
 Database files can safely be opened from multiple sessions in readonly mode. Use:</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>configuration.readOnly(true)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ReadOnly(true)</code></p>

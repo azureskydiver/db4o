@@ -35,12 +35,12 @@ package in Java and Db4objects.Db4o.Collections in .NET</p><a name="Migrating Be
         <p>Thansparent Activation is implemented through <code>Activatable/IActivatable</code> interface, which binds an object to the current object container. In a case when an object is stored to more than one object container, this logic won't work, as only one binding (activator) is allowed per object. </p><a name="Solution"></a>
         <h3>Solution</h3>
         <p>To allow correct behavior of the object between databases, the object should be unbinded before being stored to the next database. This can be done with the following code:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
             <p><code>myObject.bind(null);</code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
             <p><code>myObject.Bind(null);</code>
@@ -48,7 +48,7 @@ package in Java and Db4objects.Db4o.Collections in .NET</p><a name="Migrating Be
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>For more information see an <a href="transparent_activation/migrating_between_databases.htm">example</a>. </p>
-        <p MadCap:conditions="Primary.Java"><a name="Instrumentation Limitations"></a>
+        <p MadCap:conditions="Primary.Java,Primary.All languages"><a name="Instrumentation Limitations"></a>
             <h2>Instrumentation Limitations</h2><a name="Problem"></a>
             <h3>Problem</h3>
             <p>For Java instrumentation instrumenting classloader must know
@@ -58,7 +58,7 @@ classpath. </p><a name="Solution"></a>
             <p>Make sure that all classes to be instrumented are available
 through the classpath</p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" /><a name="Debugging Instrumented Classes"></a>
+        <p MadCap:conditions="Primary:java" /><a name="Debugging Instrumented Classes"></a>
         <h2>Debugging Instrumented Classes</h2><a name="Problem"></a>
         <h3>Problem</h3>
         <p>Debugging instrumented classes may not work 100% correct

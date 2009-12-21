@@ -7,14 +7,14 @@
 of one object causes cascaded delete on several others, you may expect slower
 execution:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/runDeleteDepthTest.flsnp" />
 <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/configureDepthTest.flsnp" />
 <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/initShallowObject.flsnp" />
 <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/init.flsnp" />
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p>Note that in the first part of the test each object
 deletion only includes a single object. Therefore, when we delete a 1000

@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="816" MadCap:lastWidth="980" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;a1;b1;c1;b2;uncomment">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="816" MadCap:lastWidth="980" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;a1;b1;c1;b2;uncomment">
     <head><title>Simple Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Simple Example</h1>
         <p>The following example does a simple replication from a
 handheld database to the desktop database:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Simple Example/ReplicationExample.java/replicate.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Simple Example/ReplicationExample.cs/Replicate.flsnp" />
         </p>
@@ -21,14 +21,14 @@ handheld database to the desktop database:</p>
 creates the ReplicationSession. This object contains all of the
 replication-related logic.
 
-<p>After creating the session, there is an interesting line:</p><p MadCap:conditions="Primary.Java"><p>Java:</p><p><code>ObjectSet changed =
+<p>After creating the session, there is an interesting line:</p><p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java:</p><p><code>ObjectSet changed =
 replication.providerA().objectsChangedSinceLastReplication();
-</code></p></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>C#:</p><p><code>IObjectSet changed =
+</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>C#:</p><p><code>IObjectSet changed =
 replication.ProviderA().ObjectsChangedSinceLastReplication();
 </code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><p>VB:</p><p><code>Dim changed As IObjectSet =
 replication.ProviderA().ObjectsChangedSinceLastReplication()
 </code></p></p><p MadCap:conditions="Primary:vb" />This line of code will get the provider associated with the
-first of our sources (the handheld ObjectContainer in this case). Then it
+first of our sources (the handheld <MadCap:snippetText src="../Resources/Snippets/ObjectContainer.flsnp" /> in this case). Then it
 finds all of the objects that have been updated or created. The
 new/modified objects will be returned in an enumerable ObjectSet. 
 <p>After that comes a simple loop where the resulting objects are replicated one

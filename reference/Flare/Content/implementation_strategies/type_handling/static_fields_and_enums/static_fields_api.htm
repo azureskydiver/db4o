@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="822" MadCap:lastWidth="680">
     <head><title>Static fields API	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Static fields API</h1>
         <p>By default db4o does not persist static fields. Normally this is not necessary as static values are set for a class, not for an object. However you can set up db4o to store static fields if you need to implement constant or enumeration:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
             <p><code>Db4o.configure().objectClass(Foo.class).persistStaticFieldValues() </code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#:   </p>
             <p><code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).PersistStaticFieldValues() </code>
@@ -27,10 +27,10 @@
         <p>This option does not have any effect on primitive types (int, boolean, etc). Use their object alternatives instead (Integer, Boolean, etc).</p>
         <p>When this setting is on for a specific class, all non-primitive-typed static field values of this class are stored the first time an object of the class is stored, and restored, every time a database file is opened afterwards, after class meta information is loaded for this class (when the class objects are retrieved with a query, for example).</p>
         <p>A good example of non-primitive constant type is type-safe enumeration implementation:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/PilotCategories.java/PilotCategories.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/PilotCategories.cs/PilotCategories.cs.flsnp" />
         </p>
@@ -40,10 +40,10 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>Let's use it with </p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/Pilot.java/Pilot.java.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/Pilot.cs/Pilot.cs.flsnp" />
         </p>
@@ -52,10 +52,10 @@
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/Pilot.vb/Pilot.vb.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/setPilots.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/SetPilots.flsnp" />
         </p>
@@ -65,10 +65,10 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>We can try to save pilots with the default db4o settings:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/checkPilots.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/CheckPilots.flsnp" />
         </p>
@@ -78,10 +78,10 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>That does not work however. We will have to explicitly point out, which class's static fields we want to save:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/configure.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/Configure.flsnp" />
         </p>
@@ -92,10 +92,10 @@
         <p MadCap:conditions="Primary:vb" />
         <p>Try to save and check pilots again - you should see that with this configuration enumeration values are actually correctly bound to their runtime values. </p>
         <p>As it was mentioned before, it is important to keep static values in one place and do not allow different objects to modify them. If we try to change static value from the referencing object:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/updatePilots.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/UpdatePilots.flsnp" />
         </p>
@@ -106,6 +106,6 @@
         <p MadCap:conditions="Primary:vb" />
         <p>the value just does not change. You can check it with the <code>checkPilots</code> method above. </p>In order to update static field we will have to do that explicitly:
 
-<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/updatePilotCategories.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/UpdatePilotCategories.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.vb/UpdatePilotCategories.flsnp" /></p><p MadCap:conditions="Primary:vb" />Please, check the result with the <code>checkPilots</code> method. You will see that the reference has changed correctly. 
-<p>What about deletion? Similar to update we cannot delete static fields from the referenced object, but we can delete them directly from the database:</p><p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/addDeleteConfiguration.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/deleteTest.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/AddDeleteConfiguration.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/DeleteTest.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.vb/AddDeleteConfiguration.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.vb/DeleteTest.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="staticfieldsvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="staticfieldscs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="staticfieldsjava.zip">Java </a></MadCap:conditionalText></p></body>
+<p MadCap:conditions="Primary.Java,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/updatePilotCategories.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/UpdatePilotCategories.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.vb/UpdatePilotCategories.flsnp" /></p><p MadCap:conditions="Primary:vb" />Please, check the result with the <code>checkPilots</code> method. You will see that the reference has changed correctly. 
+<p>What about deletion? Similar to update we cannot delete static fields from the referenced object, but we can delete them directly from the database:</p><p MadCap:conditions="Primary.Java,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/addDeleteConfiguration.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.java/deleteTest.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/AddDeleteConfiguration.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.cs/DeleteTest.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.vb/AddDeleteConfiguration.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Static fields API/StaticFieldExample.vb/DeleteTest.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="staticfieldsvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="staticfieldscs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="staticfieldsjava.zip">Java </a></MadCap:conditionalText></p></body>
 </html>

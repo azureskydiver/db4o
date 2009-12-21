@@ -7,10 +7,10 @@
 classes stored in the database. Car class is activatable, others are not. We
 will modify the car and rollback the transaction:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.java/modifyAndRollback.flsnp" />
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 
@@ -29,10 +29,10 @@ should be done to the database. The result that is printed to the screen is
 taken from the reference cache, so it will show modified objects. That is
 confusing and should be fixed:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.java/modifyRollbackAndCheck.flsnp" />
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 
@@ -48,7 +48,7 @@ confusing and should be fixed:</p>
 object. This call is used to clear the reference cache and its action is
 reversed to <code>activate</code>. </p>
 
-<p>We've used Integer.MAX_VALUE/Int32.MaxValue to deactivate
+<p>We've used <MadCap:snippetText src="../../../Resources/Snippets/IntMaxValue.flsnp" /> to deactivate
 car fields to the maximum possible depth. Thus we can be sure that all the car
 fields will be re-read from the database again (no outdated values from the
 reference cache), but the trade-off is that all child objects will be

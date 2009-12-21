@@ -8,10 +8,10 @@ application. However the default console output has very limited possibilities
 and can only be used effectively in console applications. To use debug
 messaging system in any environment db4o gives you an API to
 redirect debug output to another stream:</p>
-<p MadCap:conditions="Primary.Java"><p>Java: </p>
+<p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java: </p>
 
 <p><code>Configuration.setOut(java.io.PrintStream)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 					
 					
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>c#: </p>
@@ -28,7 +28,7 @@ redirect debug output to another stream:</p>
 <p>An example below
 shows how to create and use a log file for debug messages:</p>
 					
-<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.java/setCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" />
+<p MadCap:conditions="Primary.Java,Primary.All languages"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.java/setCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:java" />
 						
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../../Resources/Snippets/Customizing The Debug Message Output/DebugExample.cs/SetCarsWithFileOutput.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 						
@@ -48,9 +48,9 @@ from the clients can be available on the server.</li></ul>
 
 
 <p>You can always
-switch back to the default setting using:</p><p MadCap:conditions="Primary.Java"><p>Java: </p>
+switch back to the default setting using:</p><p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java: </p>
 
-<p><code>Configuration.setOut(System.out)</code></p></p><p MadCap:conditions="Primary:java,Primary.All languages" />
+<p><code>Configuration.setOut(System.out)</code></p></p><p MadCap:conditions="Primary:java" />
 				
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>c#: </p><p><code>IConfiguration.SetOut(System.Console.Out)</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><p>VB: </p><p><code>IConfiguration.SetOut(System.Console.Out)</code></p></p><p MadCap:conditions="Primary:vb" /> 
      

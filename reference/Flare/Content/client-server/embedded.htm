@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="827" MadCap:lastWidth="1230" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;a1;b1;c1;b2;uncomment">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="827" MadCap:lastWidth="1230" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;a1;b1;c1;b2;uncomment">
     <head><title>Embedded	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Embedded</h1>
         <p>From the API side, there's no real difference between transactions executing concurrently within the same VM and transactions executed against a remote server. To use concurrent transactions within a single VM, we just open a db4o server on our database file, directing it to run on port 0, thereby declaring that no networking will take place.</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/accessLocalServer.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/AccessLocalServer.flsnp" />
         </p>
@@ -18,10 +18,10 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>Again, we will delegate opening and closing the server to our environment to focus on client interactions.</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/queryLocalServer.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/QueryLocalServer.flsnp" />
         </p>
@@ -31,10 +31,10 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>The transaction level in db4o is <i>read committed</i>. However, each client container maintains its own weak reference cache of already known objects. To make all changes committed by other clients immediately, we have to explicitly refresh known objects from the server. We will delegate this task to a specialized version of our listResult() method.</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/listRefreshedResult.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/ListRefreshedResult.flsnp" />
         </p>
@@ -43,10 +43,10 @@
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.vb/ListRefreshedResult.flsnp" />
         </p>
         <p MadCap:conditions="Primary:vb" />
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/demonstrateLocalReadCommitted.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/DemonstrateLocalReadCommitted.flsnp" />
         </p>
@@ -56,10 +56,10 @@
         </p>
         <p MadCap:conditions="Primary:vb" />
         <p>Simple rollbacks just work as you might expect now.</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.java/demonstrateLocalRollback.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Embedded/ClientServerExample.cs/DemonstrateLocalRollback.flsnp" />
         </p>

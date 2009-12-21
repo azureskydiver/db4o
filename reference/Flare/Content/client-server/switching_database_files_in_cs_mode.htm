@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="848" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;objectContainer;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;a1;b1;c1;b2;uncomment">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="848" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;a1;b1;c1;b2;uncomment">
     <head><title>Switching Database Files in CS Mode	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Switching Database Files in CS Mode</h1>
         <p>This functionality is deprecated!
         </p>
-        <p>ExtClient is an extended interface, which can be used to access database from the client side. ExtClient object can be simply cast from the ObjectContainer, returned by openClient method:</p>
+        <p>ExtClient is an extended interface, which can be used to access database from the client side. ExtClient/IExtClient object can be simply cast from the <MadCap:snippetText src="../Resources/Snippets/ObjectContainer.flsnp" />, returned by openClient method:</p>
         <ol>
-            <p MadCap:conditions="Primary.Java">
+            <p MadCap:conditions="Primary.Java,Primary.All languages">
                 <p>Java: <code>ExtClient clientExt = (ExtClient) server.openClient()</code></p>
             </p>
-            <p MadCap:conditions="Primary:java,Primary.All languages" />
+            <p MadCap:conditions="Primary:java" />
             <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
                 <p>c#: <code>IExtClient clientExt = (IExtClient) server.OpenClient()</code></p>
             </p>
@@ -38,10 +38,10 @@
             <li>special debugging database files can be used</li>
         </ul>
         <p>To make database switch handling easier you should consider using the ExtClient#switchToFile(fileName) and ExtClient#switchToMainFile() methods. This allows you to use single connection to the server for all database files, thus avoiding overhead of opening and managing new connections (a server starts a new thread for each connection). All you have to do is just point out which database file to use.</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.java/switchExtClients.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../Resources/Snippets/Switching Database Files in CS Mode/ExtClientExample.cs/SwitchExtClients.flsnp" />
         </p>

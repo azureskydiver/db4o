@@ -3,9 +3,9 @@
 <body onload="prettyPrint()">
         <h1>Calling constructors</h1>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>Db4o.configure().callConstructors(true)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>Db4oFactory.Configure().CallConstructors(true)</code></p>
@@ -21,9 +21,9 @@ On VMs where this is supported (Sun Java VM &gt; 1.4, .NET, Mono) db4o tries to 
 <p>
 Constructors can also be turned on for individual classes only with</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: <code>Db4o.configure().objectClass(Foo.class).callConstructor(true)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: <code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).CallConstructor(true)</code></p>

@@ -13,9 +13,9 @@ in debugging session - to find out where the problem can reside;</li>
 </ul>
 <p>In order to activate messaging before opening a database file use:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>configuration.messageLevel(level)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#: </p><p>configuration.MessageLevel(level)</p>
@@ -32,8 +32,8 @@ in debugging session - to find out where the problem can reside;</li>
 <p>level &gt; 2: activation messages (object activated, deactivated).</p>
 <p>In order to set up a convenient output stream for the messages, call:</p>
 
-<p MadCap:conditions="Primary.Java">
-<p>Java: </p>configuration.setOut(outStream)<p>By default the output is sent to System.out.  </p></p><p MadCap:conditions="Primary:java,Primary.All languages" />
+<p MadCap:conditions="Primary.Java,Primary.All languages">
+<p>Java: </p>configuration.setOut(outStream)<p>By default the output is sent to System.out.  </p></p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#: </p>configuration.SetOut(outStream)<p>By default the output is sent to System.Console.Out. </p></p><p MadCap:conditions="Primary:cs" />
@@ -44,9 +44,9 @@ in debugging session - to find out where the problem can reside;</li>
 
 <p>#messageLevel(level) also can be set after a database has been opened:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: <code>ObjectContainer#ext().configure().messageLevel(level) </code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#: <code>IObjectContainer.Ext().Configure().MessageLevel(level) </code></p>
@@ -57,8 +57,8 @@ in debugging session - to find out where the problem can reside;</li>
 <p>The same applies for #setOut().</p>
 <p>Let's use the simplest example to see all types of debug messages:</p>
 
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.java/setCars.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" />
+<p MadCap:conditions="Primary.Java,Primary.All languages">
+<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.java/setCars.flsnp" /></p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.cs/SetCars.flsnp" /></p><p MadCap:conditions="Primary:cs" />
