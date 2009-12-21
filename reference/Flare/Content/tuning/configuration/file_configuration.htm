@@ -3,13 +3,13 @@
 <body onload="prettyPrint()">
      
        
-        <h1>File Configuration</h1><p>FileConfiguration/IFileConfiguration interface contains file-related configuration methods. These methods should be called for Embedded db4o object container or db4o object server.  </p><p MadCap:conditions="Primary.Java">
+        <h1>File Configuration</h1><p><MadCap:snippetText src="../../Resources/Snippets/FileConfiguration.flsnp" /> interface contains file-related configuration methods. These methods should be called for Embedded db4o object container or db4o object server.  </p><p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void blobPath(String path) throws IOException;</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -21,13 +21,13 @@
 
 <p>configures the path to be used to store and read Blob data. For more information see <a href="../../implementation_strategies/type_handling/blobs.htm"  >Blobs</a></p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void blockSize(int bytes)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -39,12 +39,12 @@
 
 <p>sets the storage data blocksize for new object containers. The standard setting is 1 allowing for a maximum database file size of 2GB. This value can be increased to allow larger database files, although some space will be lost to padding because the size of some stored objects will not be an exact multiple of the block size. A  recommended setting for large database files is 8, since internal pointers have this length. This setting is only effective when the database is first created. The size can be any integer in range from 1 to 127.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 
 <p><code>public void databaseGrowthSize(int bytes)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -56,13 +56,13 @@
 
 <p>configures the size database files should grow in bytes, when no free slot is found within. Tuning setting. Whenever no free slot of sufficient length can be found within the current database file, the database file's length is extended. This configuration setting configures by how much it should be extended, in bytes. This configuration setting is intended to reduce fragmentation. Higher values will produce bigger database files and less fragmentation. To extend the database file, a single byte array is created and written to the end of the file in one write operation. Be aware that a high setting will require allocating memory for this byte array.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void disableCommitRecovery();</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -74,13 +74,13 @@
 
 <p>turns commit recovery off. db4o uses a two-phase commit algorithm. In a first step all intended changes are written to a free place in the database file, the "transaction commit record". In a second step the actual changes are performed. If the system breaks down during commit, the commit process is restarted when the database file is opened the next time. On very rare occasions (possibilities: hardware failure or editing the database file with an external tool) the transaction commit record may be broken. In this case, this method can be used to try to open the database file without commit recovery. The method should only be used in emergency situations after consulting db4o support.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public FreespaceConfiguration freespace;</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -92,13 +92,13 @@
 
 <p>Returns freespace configuration for this file configuration.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void generateUUIDs(ConfigScope)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -110,12 +110,12 @@
 
 <p>configures db4o to generate UUIDs for stored objects. For more information see <a href="../../implementation_strategies/ids_and_uuids/unique_universal_ids.htm"  >Unique Universal IDs</a>.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 
 <p><code>public void generateVersionNumbers(ConfigScope)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -129,13 +129,13 @@
 information see
 <a href="../../implementation_strategies/ids_and_uuids/unique_universal_ids.htm"  >Unique Universal IDs</a>.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void lockDatabaseFile(boolean flag)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -147,13 +147,13 @@ information see
 
 <p>can be used to turn the database file locking thread off. </p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void readOnly(boolean flag)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -167,13 +167,13 @@ information see
 
 In client-server environment this setting should be used on client side.
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void recoveryMode(boolean flag)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -185,13 +185,13 @@ In client-server environment this setting should be used on client side.
 
 <p>turns recovery mode on and off. Recovery mode can be used to try to retrieve as much as possible out of an already corrupted database. In recovery mode internal  checks are more relaxed. Null or invalid objects may be returned  instead of throwing exceptions. Use this method with care as a last resort to get data out of a corrupted database.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>public void reserveStorageSpace(long byteCount)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -203,7 +203,7 @@ In client-server environment this setting should be used on client side.
 
 <p>tuning feature only: reserves a number of bytes in database files. The global setting is used for the creation of new database files. Without this setting storage space will be allocated continuously as necessary. The allocation of a fixed number of bytes at one time makes it more likely that the database will be stored in one chunk on the mass storage. Less read/write head movement can result in improved performance. Note: Allocated space will be lost on abnormal termination of the database engine (hardware crash, VM crash). A Defragment run will recover the lost space. For the best possible performance, this method should be called before the Defragment run to configure the allocation of storage space to be slightly greater than the anticipated database file size.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
@@ -211,7 +211,7 @@ In client-server environment this setting should be used on client side.
 
 <p><code>public Storage storage();</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 

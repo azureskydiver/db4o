@@ -8,11 +8,11 @@
 
 <p>UpdateDepth configuration setting allows you to specify the level of objects' enclosure where update command will still be valid:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p><p><code>configuration.updateDepth(depth)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -22,11 +22,11 @@
 
 <p>This setting has a considerable impact on performance and can make the application very slow. It is recommended to keep the default configuration setting (UpdateDepth(0)) and specify UpdateDepth for selected classes, where cascaded update will be really useful:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p><p><code>configuration.objectClass(Car.class).updateDepth(3)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 

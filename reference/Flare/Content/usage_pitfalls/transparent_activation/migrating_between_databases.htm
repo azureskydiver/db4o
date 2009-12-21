@@ -31,10 +31,10 @@ contains an <code>activator</code> field. When transparent activation
 functionality is used for the first time an object container activator will be
 bound to the object:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <MadCap:snippetBlock src="../../Resources/Snippets/Migrating Between Databases/SensorPanelTA.java/bind.flsnp" />
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 
@@ -55,10 +55,10 @@ object container is already closed, as activator object still exists in the
 memory.) This behaviour is illustrated with the following example
 (<a href="../../object_lifecycle/activation/transparent_activation_framework/detailed_example.htm"  >SensorPanelTA</a> class from Transparent Activation chapter is used):</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <MadCap:snippetBlock src="../../Resources/Snippets/Migrating Between Databases/TAExample.java/testSwitchDatabases.flsnp" />
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 
@@ -73,13 +73,13 @@ memory.) This behaviour is illustrated with the following example
 <p>The solution to this problem is
 simple: activator should be unbound from the object:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java:</p>
 
 <p><code>sensor.bind(null);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 
@@ -101,10 +101,10 @@ simple: activator should be unbound from the object:</p>
 being activatable for the first object container. The following example shows
 the described behaviour:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <MadCap:snippetBlock src="../../Resources/Snippets/Migrating Between Databases/TAExample.java/testSwitchDatabasesFixed.flsnp" />
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 

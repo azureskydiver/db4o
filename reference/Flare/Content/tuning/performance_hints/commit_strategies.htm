@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Commit Strategies	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
-        <h1>Commit Strategies</h1><p MadCap:conditions="Primary.Java">
+        <h1>Commit Strategies</h1><p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p>
 
 <p><code>objectContainer.commit();</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -22,15 +22,15 @@ are written to a temporary transaction area in the database file and are only
 durable after the transaction is committed.</p>
 
 <p>Transactions are committed implicitly when the
-ObjectContainer is closed.</p>
+<MadCap:snippetText src="../../Resources/Snippets/ObjectContainer.flsnp" /> is closed.</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: </p>
 
 <p><code>objectContainer.close();</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 
@@ -76,7 +76,7 @@ chance of running out of memory and slowing down the operations due to memory
 flushes to disk. The exact amount of inserts that can be done safely and
 effectively within one transaction should be calculated for the concrete system
 and will depend on available system resources and size and complexity of
-objects.</li><li>Don't forget to close db4o ObjectContainer before the
+objects.</li><li>Don't forget to close db4o <MadCap:snippetText src="../../Resources/Snippets/ObjectContainer.flsnp" /> before the
 application exits to make sure that all the changes will be saved to disk
 during implicit commit.</li></ul>    
   </body></html>

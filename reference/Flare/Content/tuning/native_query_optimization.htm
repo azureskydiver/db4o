@@ -8,7 +8,7 @@
                 <H2>Optimization Theory </H2>
                 <p>For Native Query Java bytecode and .NET IL code are analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</p>
                 <p>For example:</p>
-                <p MadCap:conditions="Primary.Java">
+                <p MadCap:conditions="Primary.Java,Primary.All languages">
                     <p>Java: </p>
                     <p><code>List&lt;Pilot&gt; pilots = container.query(new Predicate&lt;Pilot&gt;() {</code>
                     </p>
@@ -23,7 +23,7 @@
                     <p><code>                                    });</code>
                     </p>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET">
                     <p>.NET: </p>
                     <p><code>IList&lt;Pilot&gt; pilots = container.Query&lt;Pilot&gt;(delegate(Pilot pilot) {</code>
@@ -39,12 +39,12 @@
                 <p>First of all the following code will be extracted:</p>
                 <p>query#constrain(Pilot)</p>
                 <p>Then a more complex analysis will be run to convert the contents of the #match method into a SODA-understandable syntax. On a simple example it is easy to see what will happen:</p>
-                <p MadCap:conditions="Primary.Java">
+                <p MadCap:conditions="Primary.Java,Primary.All languages">
                     <p>Java: </p>
                     <p><code>return pilot.getName().equals("Michael Schumacher") &amp;&amp; pilot.getPoints() == 100;</code>
                     </p>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET">
                     <p>.NET:</p>
                     <p><code>return pilot.Name.equals("Michael Schumacher") &amp;&amp; pilot.Points == 100;</code>
@@ -56,7 +56,7 @@
                 </p>
                 <p><code>CANDIDATE.points == 100</code>
                 </p>
-                <p MadCap:conditions="Primary.Java"><a name="NQ Optimization For Java"></a>
+                <p MadCap:conditions="Primary.Java,Primary.All languages"><a name="NQ Optimization For Java"></a>
                     <H2>NQ Optimization For Java</H2>
                     <p>NQ optimisation on Java requires db4onqopt.jar and bloat.jar to be present in the CLASSPATH.The Native Query optimizer is still under development to eventually "understand" all Java constructs. Current optimization supports the following constructs well:</p>
                     <UL>
@@ -85,7 +85,7 @@
                         </LI>
                     </OL>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET"><a name="NQ Optimization for .NET"></a>
                     <H2>NQ Optimization for .NET</H2>
                     <p>Native Query optimizer for .NET requires the following libraries to work:</p>

@@ -22,10 +22,10 @@ know which object should be activated for write.</p>
         <p>Let's look how it will affect db4o in practice. We will use a usual
 <a href="car.htm">Car</a> class and make it cloneable. Use the following code to store a
 car object and it's clone: </p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/TPCloneExample.java/storeCar.flsnp" />
 </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/TPCloneExample.cs/StoreCar.flsnp" />
 </p>
@@ -35,10 +35,10 @@ car object and it's clone: </p>
 </p>
         <p MadCap:conditions="Primary:vb" />
         <p>So it works for the first store, but what if we will clone an object retrieved from the database?</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/TPCloneExample.java/testClone.flsnp" />
 </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/TPCloneExample.cs/TestClone.flsnp" />
         </p>
@@ -51,11 +51,11 @@ car object and it's clone: </p>
         <p>The code above throws an exception when the cloned object is being
 bound to the object container. Luckily we can easily fix it by
 overriding #clone method and setting activator to null: </p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/Car.java/Clone.flsnp" />
 
 </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/Car.cs/Clone.flsnp" />
         </p>

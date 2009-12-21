@@ -5,21 +5,21 @@
        
         <h1>Embedded Configuration</h1>
 <p>  </p>
-<p>EmbeddedConfiguration interface contains configuration methods specific to db4o used in Embedded (standalone) mode. EmbeddedConfiguration implementation provides access to all common configuration methods through common() method (Java) or Common property (.NET).</p>
-<p MadCap:conditions="Primary.Java">
+<p> <MadCap:snippetText src="../../Resources/Snippets/EmbeddedConfiguration.flsnp" /> interface contains configuration methods specific to db4o used in Embedded (standalone) mode. EmbeddedConfiguration implementation provides access to all common configuration methods through common() method (Java) or Common property (.NET).</p>
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:  </p>
 <p><code>public CacheConfiguration cache();</code>  </p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET:  </p>
 <p><code>public ICacheConfiguration Cache {get;}</code>  
 </p>
 </p><p MadCap:conditions="Primary:net" />
 <p>Returns cache configuration. </p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:  </p>
 <p><code>public FileConfiguration file();</code>;  </p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET:  </p>
 <p><code>IFileConfiguration File {get;}</code>;  

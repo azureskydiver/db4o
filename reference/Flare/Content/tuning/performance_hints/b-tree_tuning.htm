@@ -11,9 +11,9 @@
 B-trees are optimized for scenarios when part or all of a data set is on secondary storage such as a hard disk, since disk accesses are extremely expensive operations. B-trees minimize the number of disk accesses required to find data by traversing a sorted tree structure and only need a single disk access per level of the tree. </p>
 <p>In order to use B-tree capabilities for field indexes you will simply need to define indexed fields in your classes:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>configuration.objectClass(Foo.class).objectField("field").indexed(true)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("field").Indexed(true)</code></p>
@@ -21,17 +21,17 @@ B-trees are optimized for scenarios when part or all of a data set is on seconda
 
 <a name="Effect"></a><h2>Effect</h2>
 <p>The caching behaviour of the B-trees can be configured with the following two switches:
-</p><p MadCap:conditions="Primary.Java">
+</p><p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>configuration.bTreeCacheHeight(height)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.BTreeCacheHeight(height)</code></p>
 </p><p MadCap:conditions="Primary:net" />
 configures the size of BTree nodes in indexes.
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java: </p><p><code>configuration.bTreeNodeSize(size)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET">
 <p>.NET: </p><p><code>configuration.BTreeNodeSize(size)</code></p>

@@ -18,11 +18,11 @@ modifying an object in several threads independently, writing the changes to the
 </ul>
 <p>Db4o helps you with these tasks providing the following method:</p>
 
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 
 <p>Java: <code>ExtObjectContainer.peekPersisted(object, depth, committed)</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#:   <code>IExtObjectContainer.PeekPersisted(object, depth, committed)</code></p>
 </p><p MadCap:conditions="Primary:cs" />
@@ -34,8 +34,8 @@ modifying an object in several threads independently, writing the changes to the
 <p>Committed parameter defines whether committed or set values are to be returned. 
 Let's see how you can use it.</p>
 <p>We will use 2 threads measuring temperature independently in different parts of the car: somewhere in the cabin (getCabinTemperature) and on the conditioner unit (getConditionerTemperature).After some period of time the average measured value will be written to the database.</p>
-<p MadCap:conditions="Primary.Java">
-<MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.java/measureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:java,Primary.All languages" />
+<p MadCap:conditions="Primary.Java,Primary.All languages">
+<MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.java/measureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.cs/MeasureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:cs" />
@@ -43,9 +43,9 @@ Let's see how you can use it.</p>
 <MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.vb/MeasureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:vb" />
 
 <p>peekPersisted method gives you an easy way to work with database objects' clones. Remember that these clones are totally disconnected from the database. If you will try to save such object:</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:<code> ObjectContainer.set(peekPersistedObject)</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
 <p>c#:   <code>IObjectContainer.Set(peekPersistedObject)</code></p>
 </p><p MadCap:conditions="Primary:cs" />

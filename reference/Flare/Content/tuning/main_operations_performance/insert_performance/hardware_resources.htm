@@ -13,11 +13,11 @@ drive the better performance you will get. </p>
         <p>An alternative to a hard drive database storage can be a
 database file stored in RAM. This can be done by placing the database file in a
 designated RAM-drive or by using db4o memory io-adapter:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
             <p>configuration.io(new MemoryIoAdapter());</p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
             <p>configuration.Io(new MemoryIoAdapter());</p>
@@ -25,14 +25,14 @@ designated RAM-drive or by using db4o memory io-adapter:</p>
         <p MadCap:conditions="Primary:net" />
         <p>The following test can be performed to compare performance
 of a hard drive and a RAM drive:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.java/runRamDiskTest.flsnp" />
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.java/configureRamDrive.flsnp" />
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.java/initForHardDriveTest.flsnp" />
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.java/initForRamDriveTest.flsnp" />
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.java/store.flsnp" />
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.cs/RunRamDiskTest.flsnp" />
             <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/InsertPerformanceBenchmark.cs/ConfigureRamDrive.flsnp" />
@@ -44,14 +44,14 @@ of a hard drive and a RAM drive:</p>
         <p>The RAM driver was downloaded <a href="http://www.mydigitallife.info/2007/05/27/free-ramdisk-for-windows-vista-xp-2000-and-2003-server/">here</a> and installed on R:\ drive.</p>
         <p>The following results were achieved for the
 <a href="../insert_performance.htm">testing configuration</a>:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
             <p>Storing 100000 objects of depth 3 on a hard drive:</p>
             <p>Store 300000 objects: 11912ms</p>
             <p>Storing 100000 objects of depth 3 on a RAM disk:</p>
             <p>Store 300000 objects: 9351ms</p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
             <p>Storing 100000 objects of depth 3 on a hard drive:</p>

@@ -4,12 +4,12 @@
     </head>
     <body onload="prettyPrint()">
         <h1>Activation strategies</h1>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: <br /></p>
             <p><code>configuration.activationDepth(activationDepth);<br /></code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: <br /></p>
             <p><code>configuration.ActivationDepth(activationDepth);<br /></code>
@@ -26,21 +26,21 @@
         </ul><a name="Alternate strategies"></a>
         <h2>Alternate strategies</h2>
         <p>If your object is not fully activated due to the default configuration settings you can activate it manually:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: <code>ObjectContainer#activate(object,depth)</code></p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: <code>IObjectContainer#Activate(object,depth)</code></p>
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>or use specific object settings:</p>
-        <p MadCap:conditions="Primary.Java">
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java:<br /></p>
             <p><code>configuration.<br />objectClass("yourClass").minimumActivationDepth(minimumDepth);</code><code>configuration.objectClass("yourClass").<br />maximumActivationDepth(maximumDepth)</code><code>;<br />configuration.objectClass("yourClass").<br />cascadeOnActivate;<br />(bool)</code><code>configuration.objectClass("yourClass").<br />objectField("field").cascadeOnActivate(bool);<br /></code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:java,Primary.All languages" />
+        <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET:<br /></p>
             <p><code>configuration.ObjectClass("yourClass").<br />MinimumActivationDepth(minimumDepth)</code><code>;<br />configuration.ObjectClass("yourClass").<br />MaximumActivationDepth(maximumDepth);<br /></code><code>configuration.ObjectClass("yourClass").<br />CascadeOnActivate (bool)</code><code>;<br />configuration.ObjectClass("yourClass").<br />ObjectField("field").CascadeOnActivate(bool);<br /></code>

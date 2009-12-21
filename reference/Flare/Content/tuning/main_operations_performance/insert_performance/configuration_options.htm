@@ -9,13 +9,13 @@
                 <p>Configuration options can also affect the insert
 performance. Some of them we've already came across in the previous topics:</p>
                 <p><i><a href="../../../implementation_strategies/storage/memory_storage.htm"  >MemoryStorage</a></i>- improves the insert performance, by replacing disk access with memory access:</p>
-                <p MadCap:conditions="Primary.Java">
+                <p MadCap:conditions="Primary.Java,Primary.All languages">
                     <p>Java:</p>
                     <p><code><code></code><code>embeddedConfiguration.file().storage(new
 MemoryStorage())</code>;</code>
                     </p>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET">
                     <p>.NET:</p>
                     <p><code><code>embeddedConfiguration.File.Storage = new
@@ -23,14 +23,15 @@ MemoryStorage();</code></code>
                     </p>
                 </p>
                 <p MadCap:conditions="Primary:net" />
+<p MadCap:conditions="Primary.Java,Primary.All languages">
                 <p><i><a href="../../performance_hints/no_lock_file_thread.htm"  >lockDatabaseFile</a></i>- reduces the resources consumption by removing database lock thread. Should
 only be used for JVM versions &lt; 1.4</p>
-                <p MadCap:conditions="Primary.Java">
+                
                     <p>Java:</p>
                     <p><code>configuration.lockDatabaseFile(false);</code>
                     </p>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET">
                     <p>.NET:</p>
                     <p><code>configuration.LockDatabaseFile(false);</code>
@@ -39,12 +40,12 @@ only be used for JVM versions &lt; 1.4</p>
                 <p MadCap:conditions="Primary:net" />
                 <p><i><a href="../../performance_hints/turning_off_weak_references.htm"  >weakReferences</a></i>- switching weak references off during insert operation releases extra resources
 and removed the cleanup thread.</p>
-                <p MadCap:conditions="Primary.Java">
+                <p MadCap:conditions="Primary.Java,Primary.All languages">
                     <p>Java:</p>
                     <p><code>configuration.weakReferences(false);</code>
                     </p>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET">
                     <p>.NET:</p>
                     <p><code>configuration.WeakReferences(false);</code>
@@ -54,12 +55,12 @@ and removed the cleanup thread.</p>
                 <p><i><a href="../../../implementation_strategies/storage/nonflushingstorage.htm"  >NonFlushingStorage</a></i>- switching off flushFileBuffers can improve commit performance as the commit
 information will be cached by the operating system. However this setting is
 potentially dangerous and can lead to database corruption.</p>
-                <p MadCap:conditions="Primary.Java">
+                <p MadCap:conditions="Primary.Java,Primary.All languages">
                     <p>Java:</p>
                     <p><code>config.file().storage(new NonFlushingStorage(new FileStorage()));</code>
                     </p>
                 </p>
-                <p MadCap:conditions="Primary:java,Primary.All languages" />
+                <p MadCap:conditions="Primary:java" />
                 <p MadCap:conditions="Primary..NET">
                     <p>.NET:</p>
                     <p><code>config.File.Storage = new NonFlushingStorage(new FileStorage());</code>

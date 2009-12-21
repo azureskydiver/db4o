@@ -4,8 +4,7 @@
      
        
         <h1>Freespace Filler</h1>
-<p>FreespaceFiller/IFreespaceFiller
-can be used to rewrite deleted objects information in the database file. When
+<p><MadCap:snippetText src="../../Resources/Snippets/FreespaceFiller.flsnp" /> can be used to rewrite deleted objects information in the database file. When
 an object gets deleted, normally it is just marked as deleted, until the next
 <a href="../../implementation_strategies/maintenance/defragment.htm"  >defragment</a>, i.e. the full object information can still be read. In some cases
 this behaviour can be not desirable. One of the options to permanently remove the
@@ -13,11 +12,11 @@ object's information from the database file is obviously <a href="../../implemen
 it is not possible to run defragment after each object's deletion. Another option
 is to implement FreespaceFiller/IFreespaceFiller interface and enable it in the configuration:</p>
 
-<p MadCap:conditions="Primary.Java"><p>Java:  </p>
+<p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java:  </p>
 
 <p><code>config.file().freespace().freespaceFiller(CustomFreespaceFiller);</code></p>
 
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 
 <p MadCap:conditions="Primary..NET"><p>.NET:  </p>
 

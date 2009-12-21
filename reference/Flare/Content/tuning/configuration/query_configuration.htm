@@ -4,20 +4,20 @@
      
        
         <h1>Query Configuration</h1>
-<p>QueryConfiguration/IQueryConfiguration interface allows to configure query settings to be used by query processor. Query configuration can be accessed by all implementations of CommonComfiguration/ICommonConfiguration inteface:</p>
-<p MadCap:conditions="Primary.Java">
+<p><MadCap:snippetText src="../../Resources/Snippets/QueryConfiguration.flsnp" /> interface allows to configure query settings to be used by query processor. Query configuration can be accessed by all implementations of CommonComfiguration/ICommonConfiguration inteface:</p>
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 <p><code>QueryConfiguration qc = configuration.queries();</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 <p>.NET:</p>
 <p><code>IQueryConfiguration qc = configuration.Queries</code></p>
 </p><p MadCap:conditions="Primary:net" />
 <p>Currently query configuration provide one method:</p>
-<p MadCap:conditions="Primary.Java">
+<p MadCap:conditions="Primary.Java,Primary.All languages">
 <p>Java:</p>
 <p><code>public void evaluationMode(QueryEvaluationMode mode);</code></p>
-</p><p MadCap:conditions="Primary:java,Primary.All languages" />
+</p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET">
 
 <p>.NET:</p>

@@ -9,6 +9,7 @@ databases are well protected against corruption. However some specific
 configurations can make your database file vulnerable.
 </p>
         <ol>
+<p MadCap:conditions="Primary.Java,Primary.All languages">
             <li><code>Configuration#lockDatabaseFile(false)</code>
                 <p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
 the same database file from different JVM sessions will corrupt the
@@ -16,6 +17,8 @@ database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
 database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm">No lock file thread</a>.</p>
             </li>
+</p>
+                <p MadCap:conditions="Primary:java" />
             <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm">NonFlushingStorage</a></code>
                 <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm">special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
