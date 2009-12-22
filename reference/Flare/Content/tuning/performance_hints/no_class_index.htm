@@ -1,52 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>No Class Index	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-        <h1>No Class Index</h1><p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java: </p>
-
-<p><code>configuration.objectClass("package.classname").indexed(false);</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET"><p>.NET: </p>
-
-<p><code>configuration.ObjectClass("namespace.classname,
-assembly").Indexed(false);</code></p>
-
-</p><p MadCap:conditions="Primary:net" />
-
-
-
-<p>Turns class index off.</p><a name="Advantage"></a><h2>Advantage</h2>
-
-<p>Allows to improve the performance to delete
-and create objects of a class. </p>
-
-
-
-<a name="Effect"></a><h2>Effect</h2>
-
-<p>db4o maintains an index for each class to be
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="582" MadCap:lastWidth="624">
+    <head><title>No Class Index	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>No Class Index</h1>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>configuration.objectClass("package.classname").indexed(false);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: </p>
+            <p><code>configuration.ObjectClass("namespace.classname,
+assembly").Indexed(false);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Turns class index off.</p><a name="Advantage"></a>
+        <h2>Advantage</h2>
+        <p>Allows to improve the performance to delete
+and create objects of a class. </p><a name="Effect"></a>
+        <h2>Effect</h2>
+        <p>db4o maintains an index for each class to be
 able to deliver all instances of a class in a query. In some cases class index
 is not necessary:</p>
-
-<ul><li>the application always works with subclasses or superclasses;</li><li>there are convenient field indexes that will always find instances
-     of a class;</li><li>the application always works with IDs.</li></ul>
-
-<p><code>Indexed(false)</code> setting will save
+        <ul>
+            <li>the application always works with subclasses or superclasses;</li>
+            <li>there are convenient field indexes that will always find instances
+     of a class;</li>
+            <li>the application always works with IDs.</li>
+        </ul>
+        <p><code>Indexed(false)</code> setting will save
 resources on maintaining the class index on create and delete of the class
-objects.</p>
-
-
-
-
-
-<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
-
-<p>Object creation performance can be improved using
-<a href="calling_constructors.htm"  >configuration.callConstructors(true)</a> setting.</p>
-
-<p>General read/write performance can be improved with the
-<a href="reserving_storage_space.htm"  >configuration.reserveStorageSpace(byteCount)</a>
-setting.</p>
-
-  </body></html>
+objects.</p><a name="Alternate Strategies"></a>
+        <h2>Alternate Strategies</h2>
+        <p>Object creation performance can be improved using
+<a href="calling_constructors.htm">configuration.callConstructors(true)</a> setting.</p>
+        <p>
+            <MadCap:conditionalText MadCap:conditions="Primary.TobeReviewed">General read/write performance can be improved with the
+<a href="reserving_storage_space.htm">configuration.reserveStorageSpace(byteCount)</a>setting.</MadCap:conditionalText>
+        </p>
+    </body>
+</html>
