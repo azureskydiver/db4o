@@ -1,27 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="991" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="991" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java,Primary.All languages">
     <head><title>Storing BigDecimal	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>Storing BigDecimal</h1>
-                <p MadCap:conditions="Primary.Java,Primary.All languages"><a name="Problem"></a>
-                    <H2>Problem</H2>
-                    <P>BigDecimal objects can't be stored by db4o with the default configuration:</P>
-                    <P><code>Configuration configuration = Db4o.newConfiguration();</code>
-                    </P>
-                    <MadCap:snippetBlock src="../Resources/Snippets/Storing BigDecimal/BigDecimalExample.java/storeBigDecimal.flsnp" />
-                    <MadCap:snippetBlock src="../Resources/Snippets/Storing BigDecimal/BigDecimalExample.java/retrieveBigDecimal.flsnp" /><a name="Reason"></a>
-                    <H2>Reason</H2>
-                    <P><code>java.math.BigDecimal</code> class contains some transient fields, which prevents it from being stored correctly.</P><a name="Solution"></a>
-                    <H2>Solution</H2>
-                    <P>The problem can be solved by applying the following configuration to the object container:</P>
-                    <MadCap:snippetBlock src="../Resources/Snippets/Storing BigDecimal/BigDecimalExample.java/configure.flsnp" />
-                    <P>Try to run <code>storeBigDecimal</code> and <code>retrieveBigDecimal</code> methods using the new configuration.</P>
-                </p>
-                <p MadCap:conditions="Primary:java" />
-             
-         
+        <h1>Storing BigDecimal</h1>
+        <p MadCap:conditions="Primary.Java,Primary.All languages"><a name="Problem"></a>
+            <H2>Problem</H2>
+            <P>BigDecimal objects can't be stored by db4o with the default configuration:</P>
+            <P><code>Configuration configuration = Db4o.newConfiguration();</code>
+            </P>
+            <MadCap:snippetBlock src="../Resources/Snippets/Storing BigDecimal/BigDecimalExample.java/storeBigDecimal.flsnp" />
+            <MadCap:snippetBlock src="../Resources/Snippets/Storing BigDecimal/BigDecimalExample.java/retrieveBigDecimal.flsnp" /><a name="Reason"></a>
+            <H2>Reason</H2>
+            <P><code>java.math.BigDecimal</code> class contains some transient fields, which prevents it from being stored correctly.</P><a name="Solution"></a>
+            <H2>Solution</H2>
+            <P>The problem can be solved by applying the following configuration to the object container:</P>
+            <MadCap:snippetBlock src="../Resources/Snippets/Storing BigDecimal/BigDecimalExample.java/configure.flsnp" />
+            <P>Try to run <code>storeBigDecimal</code> and <code>retrieveBigDecimal</code> methods using the new configuration.</P>
+        </p>
+        <p MadCap:conditions="Primary:java" />
     </body>
 </html>
