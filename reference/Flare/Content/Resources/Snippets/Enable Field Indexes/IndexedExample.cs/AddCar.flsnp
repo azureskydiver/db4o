@@ -3,5 +3,5 @@ private static void AddCar(IObjectContainer db, int points)
      {
       Car car = new Car(&quot;BMW&quot;);
       car.Pilot= new Pilot(&quot;Tester&quot;, points);
-      db.Set(car);
+      db.Store(car);
     }</pre>    </body></html>

@@ -3,7 +3,7 @@ private static void getPilotsQBE() throws IOException  {
     System.out.println(&quot;Retrieving Pilot objects: QBE&quot;);
     ObjectContainer oc = Db4o.openClient(&quot;localhost&quot;, 0xdb40, &quot;db4o&quot;,&quot;db4o&quot;);
     try  {
-      ObjectSet result = oc.get(new Pilot(null,0));
+      ObjectSet result = oc.queryByExample(new Pilot(null,0));
       listResult(result);
     } finally  {
       oc.close();

@@ -7,10 +7,10 @@ private static void SaveObjects()
              {
                 // Save Test1 object with a NotStorable class field
                 Test1 test1 = new Test1(&quot;Test1&quot;, new NotStorable());
-                container.Set(test1);
+                container.Store(test1);
                 // Save Test2 object with a NotStorable class field
                 Test2 test2 = new Test2(&quot;Test2&quot;, new NotStorable(), test1);
-                container.Set(test2);
+                container.Store(test2);
             }
             finally
              {

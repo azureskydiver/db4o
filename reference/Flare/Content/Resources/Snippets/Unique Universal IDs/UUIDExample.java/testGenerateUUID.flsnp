@@ -5,7 +5,7 @@ private static void testGenerateUUID()  {
       Query query = container.query();
       query.constrain(Car.class);
       ObjectSet result = query.execute();
-      Car car = (Car) result.get(0);
+      Car car = (Car) result.queryByExample(0);
       ObjectInfo carInfo = container.ext().getObjectInfo(car);
       Db4oUUID carUUID = carInfo.getUUID();
       System.out

@@ -6,7 +6,7 @@ public static void DeletePilot()
       try 
        {
         // first retrieve the object from the database
-        IObjectSet result=db.Get(new Pilot(&quot;Michael Schumacher&quot;,10));
+        IObjectSet result=db.QueryByExample(new Pilot(&quot;Michael Schumacher&quot;,10));
         Pilot found=(Pilot)result.Next();
         db.Delete(found);
         System.Console.WriteLine(&quot;Deleted &quot;+found);

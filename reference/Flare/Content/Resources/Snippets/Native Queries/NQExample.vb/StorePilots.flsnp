@@ -5,8 +5,8 @@
     <body>
         <pre class="prettyprint" xml:space="preserve">NQExample.vb: StorePilots
 Private Shared Sub StorePilots(ByVal db As IObjectContainer)
-            db.Set(New Pilot("Michael Schumacher", 100))
-            db.Set(New Pilot("Rubens Barrichello", 99))
+            db.Store(New Pilot("Michael Schumacher", 100))
+            db.Store(New Pilot("Rubens Barrichello", 99))
         End Sub</pre>
     </body>
 </html>

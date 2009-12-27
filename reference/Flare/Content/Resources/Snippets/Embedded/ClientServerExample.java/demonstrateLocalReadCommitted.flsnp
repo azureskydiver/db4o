@@ -4,7 +4,7 @@ private static void demonstrateLocalReadCommitted(ObjectServer server)  {
     ObjectContainer client2 = server.openClient();
     Pilot pilot = new Pilot(&quot;David Coulthard&quot;, 98);
     List&lt;Car&gt; result = client1.queryByExample(new Car(&quot;BMW&quot;));
-    Car car = result.get(0);
+    Car car = result.queryByExample(0);
     car.setPilot(pilot);
     client1.store(car);
     listResult(client1.queryByExample(new Car(null)));

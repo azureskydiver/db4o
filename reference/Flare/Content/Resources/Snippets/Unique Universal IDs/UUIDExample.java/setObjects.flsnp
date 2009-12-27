@@ -6,7 +6,7 @@ private static void setObjects()  {
     ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
     try  {
       Car car = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
-      container.set(car);
+      container.store(car);
     } finally  {
       container.close();
     }

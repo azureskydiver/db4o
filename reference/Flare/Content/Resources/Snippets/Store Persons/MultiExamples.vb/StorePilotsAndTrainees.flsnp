@@ -15,7 +15,7 @@ Private Shared Sub StorePilotsAndTrainees()
                     For i = 0 To ObjectCount - 1 Step i + 1
                         pilot = New Pilot("Professional Pilot #" + i.ToString(), i)
                         trainee = New Trainee("Trainee #" + i.ToString(), pilot)
-                        container.Set(trainee)
+                        container.Store(trainee)
                     Next
                     container.Commit()
                 Catch ex As Db4oException

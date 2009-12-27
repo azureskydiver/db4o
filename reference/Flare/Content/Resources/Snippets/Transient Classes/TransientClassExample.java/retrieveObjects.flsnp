@@ -4,7 +4,7 @@ private static void retrieveObjects()  {
     try  {
       // retrieve the results and check if the NotStorable
       // instances were saved
-      ObjectSet result = container.get(null);
+      ObjectSet result = container.queryByExample(null);
       listResult(result);
     } finally  {
       container.close();

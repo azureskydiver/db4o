@@ -20,7 +20,7 @@ private static void TestImmediateChanged()
                 IObjectSet result2 = query2.Execute();
                 Pilot pilot2 = (Pilot)result2[0];
                 pilot2.AddPoints(22);
-                db.Set(pilot2);
+                db.Store(pilot2);
                 ListResult(result1);
             }
             finally

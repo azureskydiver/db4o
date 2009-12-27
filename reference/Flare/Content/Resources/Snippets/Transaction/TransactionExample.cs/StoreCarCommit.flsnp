@@ -4,6 +4,6 @@ private static void StoreCarCommit(IObjectContainer db)
             Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
             Car car = new Car(&quot;BMW&quot;);
             car.Pilot = pilot;
-            db.Set(car);
+            db.Store(car);
             db.Commit();
         }</pre>    </body></html>

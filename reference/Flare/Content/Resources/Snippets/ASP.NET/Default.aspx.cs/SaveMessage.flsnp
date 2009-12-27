@@ -7,7 +7,7 @@
 public static void SaveMessage(string username, string text)
          {
             Message msg = new Message(username, text);
-            Db4oHttpModule.Client.Set(msg);
+            Db4oHttpModule.Client.Store(msg);
         }</pre>
     </body>
 </html>

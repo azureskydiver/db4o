@@ -13,7 +13,7 @@ private static void StorePilotsAndTrainees()
                      {
                         pilot = new Pilot(&quot;Professional Pilot #&quot; + i, i);
                         trainee = new Trainee(&quot;Trainee #&quot; + i, pilot);
-                        container.Set(trainee);
+                        container.Store(trainee);
                     }
                     container.Commit();
                 }

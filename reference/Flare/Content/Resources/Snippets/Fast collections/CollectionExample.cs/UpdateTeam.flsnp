@@ -15,10 +15,10 @@ private static void UpdateTeam()
           Pilot pilot = new Pilot(&quot;David Schumacher&quot;, 100);
           ferrariTeam.UpdatePilot(1,pilot);
 
-          db.Set(ferrariTeam);
+          db.Store(ferrariTeam);
         }
         IList protoList = CollectionFactory.newList();
-        result = db.Get(protoList);
+        result = db.QueryByExample(protoList);
         ListResult(result);
       }  
       finally 

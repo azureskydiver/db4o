@@ -7,7 +7,7 @@ private static void TestCollectionActivation()
              {
                 try
                  {
-                    Team team = (Team)container.Get(new Team()).Next();
+                    Team team = (Team)container.QueryByExample(new Team()).Next();
                     for (int j = 0; j &lt; team.Size(); j++)
                      {
                         System.Console.WriteLine(team.Pilots[j]);

@@ -3,6 +3,6 @@ private static void storeCarRollback(ObjectContainer container)  {
         Pilot pilot=new Pilot(&quot;Michael Schumacher&quot;,100);
         Car car=new Car(&quot;Ferrari&quot;);
         car.setPilot(pilot);
-        container.set(car);
+        container.store(car);
         container.rollback();
     }</pre>    </body></html>

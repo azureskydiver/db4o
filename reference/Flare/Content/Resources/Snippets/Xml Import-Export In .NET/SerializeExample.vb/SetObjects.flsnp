@@ -9,9 +9,9 @@ Private Shared Sub SetObjects()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
-                db.Set(car)
+                db.Store(car)
                 car = New Car("Ferrari", New Pilot("Michael Schumacher"))
-                db.Set(car)
+                db.Store(car)
             Finally
                 db.Close()
             End Try

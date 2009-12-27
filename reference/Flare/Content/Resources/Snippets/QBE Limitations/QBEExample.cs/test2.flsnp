@@ -15,10 +15,10 @@ private static void Test2()
 // with re-initialisation
                     Pilot1Derived pilot = new 
 Pilot1Derived("Kimi Raikonnen", 100);
-                    container.Set(pilot);
+                    container.Store(pilot);
                     container.Commit();
                     // QBE returns result with wrong points
-                    IObjectSet result = container.Get(
+                    IObjectSet result = container.QueryByExample(
 new Pilot1Derived("Kimi Raikonnen", 100));
                     System.Console.WriteLine(
 "Test QBE on class with member re-initialization in ancestor constructor");

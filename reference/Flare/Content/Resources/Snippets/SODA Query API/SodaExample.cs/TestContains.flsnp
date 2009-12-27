@@ -13,7 +13,7 @@ public static void TestContains()
                     Pilot pilot2 = new Pilot(&quot;Test 2&quot;, 2);
                     list.Add(pilot2);
                     Team team = new Team(&quot;Ferrari&quot;, list);
-                    container.Set(team);
+                    container.Store(team);
 
                     IQuery query = container.Query();
                     query.Constrain(typeof(Team));

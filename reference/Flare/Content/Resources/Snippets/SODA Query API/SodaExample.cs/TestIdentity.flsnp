@@ -9,12 +9,12 @@ public static void TestIdentity()
                  {
                     Pilot pilot = new Pilot(&quot;Test Pilot1&quot;, 100);
                     Car car = new Car(&quot;BMW&quot;, pilot);
-                    container.Set(car);
+                    container.Store(car);
                     // Change the name, the pilot instance stays the same
                     pilot.Name = &quot;Test Pilot2&quot;;
                     // create a new car
                     car = new Car(&quot;Ferrari&quot;, pilot);
-                    container.Set(car);
+                    container.Store(car);
 
                     // Simple query: 
                     IQuery query1 = container.Query();

@@ -16,7 +16,7 @@ private static void selectMinPointsPilot()  {
         });
         if (result.size() &gt; 0)  {
           System.out.println(&quot;The min points result is: &quot;
-              + result.get(0));
+              + result.queryByExample(0));
         }
       } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());

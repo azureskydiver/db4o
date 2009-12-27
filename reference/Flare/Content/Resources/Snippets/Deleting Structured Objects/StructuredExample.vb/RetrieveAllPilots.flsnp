@@ -6,7 +6,7 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveAllPilots
 Private Shared Sub _ 
 RetrieveAllPilots(ByVal db As IObjectContainer)
-            Dim results As IObjectSet = db.Get(GetType(Pilot))
+            Dim results As IObjectSet = db.QueryByExample(GetType(Pilot))
             ListResult(results)
         End Sub</pre>
     </body>

@@ -7,12 +7,12 @@ private static void storeCars()  {
         Car car;
         for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           car = new Car(&quot;BMW&quot;, new Pilot(&quot;Test Pilot #&quot; + i, i));
-          container.set(car);
+          container.store(car);
         }
         for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           car = new Car(&quot;Ferrari&quot;, new Pilot(&quot;Professional Pilot #&quot;
               + (i + 10), (i + 10)));
-          container.set(car);
+          container.store(car);
         }
         container.commit();
       } catch (Db4oException ex)  {

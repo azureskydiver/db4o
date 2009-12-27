@@ -12,10 +12,10 @@ private static void updateTeam() {
          Pilot pilot = new Pilot(&quot;David Schumacher&quot;, 100);
          ferrariTeam.updatePilot(1,pilot);
           
-         container.set(ferrariTeam);
+         container.store(ferrariTeam);
        }
        List protoList = CollectionFactory.newList();
-       result = container.get(protoList);
+       result = container.queryByExample(protoList);
        listResult(result);
     }  finally  {
       container.close();

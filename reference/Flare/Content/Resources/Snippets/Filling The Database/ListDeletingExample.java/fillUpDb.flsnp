@@ -17,7 +17,7 @@ private static void fillUpDb(int listCount)  {
               + &quot; ---- Data Object &quot; + String.format(&quot;%5d&quot;, j));
           lo.getData().add(dataObject);
         }
-        container.set(lo);
+        container.store(lo);
       }
       long t2 = System.currentTimeMillis();
       elapsedTime = t2 - t1;

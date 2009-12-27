@@ -9,11 +9,11 @@ Public Shared Sub StorePilot()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Michael Schumacher", 0)
-                db.Set(pilot)
+                db.Store(pilot)
                 Console.WriteLine("Stored {0}", pilot)
                 ' change pilot and resave updated
                 pilot.AddPoints(10)
-                db.Set(pilot)
+                db.Store(pilot)
                 Console.WriteLine("Stored {0}", pilot)
             Finally
                 db.Close()

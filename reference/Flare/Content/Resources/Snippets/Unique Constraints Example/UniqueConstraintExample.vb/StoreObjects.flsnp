@@ -15,12 +15,12 @@ Db4oFactory.OpenServer(Configure, FILENAME, 0)
                 Try
                     ' creating and storing pilot1 to the database
                     pilot1 = New Pilot("Rubens Barichello", 99)
-                    client1.Set(pilot1)
+                    client1.Store(pilot1)
                     Dim client2 As IObjectContainer = server.OpenClient
                     Try
                         ' creating and storing pilot2 to the database
                         pilot2 = New Pilot("Rubens Barichello", 100)
-                        client2.Set(pilot2)
+                        client2.Store(pilot2)
                         ' end commit the changes
                         client2.Commit()
                     Catch ex As UniqueFieldValueConstraintViolationException

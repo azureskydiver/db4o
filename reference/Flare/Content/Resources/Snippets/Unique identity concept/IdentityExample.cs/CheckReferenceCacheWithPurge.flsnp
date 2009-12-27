@@ -5,7 +5,7 @@ private static void CheckReferenceCacheWithPurge()
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet pilots = db.Get(typeof(Pilot));
+        IObjectSet pilots = db.QueryByExample(typeof(Pilot));
         Pilot pilot = (Pilot)pilots[0];
         String pilotName = pilot.Name;
         pilot.Name = &quot;new name&quot;;
@@ -15,7 +15,7 @@ private static void CheckReferenceCacheWithPurge()
          {
           db.Ext().Purge(pilot);
         }
-        IObjectSet pilots1 = db.Get(new Pilot(pilotName));
+        IObjectSet pilots1 = db.QueryByExample(new Pilot(pilotName));
         ListResult(pilots1);
       } 
       finally 

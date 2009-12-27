@@ -6,10 +6,10 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: DeleteDeepPart2
 private static void DeleteDeepPart2(IObjectContainer db)
      {
-      IObjectSet result = db.Get(new Car("BMW"));
+      IObjectSet result = db.QueryByExample(new Car("BMW"));
       Car found = (Car)result.Next();
       db.Delete(found);
-      result = db.Get(new Car(null));
+      result = db.QueryByExample(new Car(null));
       ListResult(result);
     }</pre>
     </body>

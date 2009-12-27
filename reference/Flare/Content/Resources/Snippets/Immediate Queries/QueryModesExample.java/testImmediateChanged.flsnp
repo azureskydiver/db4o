@@ -17,9 +17,9 @@ private static void testImmediateChanged()  {
       query2.constrain(Pilot.class);
       query2.descend(&quot;points&quot;).constrain(2);
       ObjectSet result2 = query2.execute();
-      Pilot pilot2 = (Pilot) result2.get(0);
+      Pilot pilot2 = (Pilot) result2.queryByExample(0);
       pilot2.addPoints(22);
-      container.set(pilot2);
+      container.store(pilot2);
       listResult(result1);
     } finally  {
       container.close();

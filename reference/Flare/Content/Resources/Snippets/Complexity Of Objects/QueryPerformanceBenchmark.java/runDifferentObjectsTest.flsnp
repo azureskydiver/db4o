@@ -17,7 +17,7 @@ private void runDifferentObjectsTest()  {
     query.constrain(SimplestItem.class);
     query.descend(&quot;_id&quot;).constrain(1);
     List result = query.execute();
-    SimplestItem simplestItem = (SimplestItem) result.get(0);
+    SimplestItem simplestItem = (SimplestItem) result.queryByExample(0);
     stopTimer(&quot;Querying SimplestItem: &quot; + simplestItem._id);
     close();
 
@@ -32,7 +32,7 @@ private void runDifferentObjectsTest()  {
     query.constrain(Item.class);
     query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
     result = query.execute();
-    Item item = (Item) result.get(0);
+    Item item = (Item) result.queryByExample(0);
     stopTimer(&quot;Querying object with String field: &quot; + item._name);
     close();
 
@@ -48,7 +48,7 @@ private void runDifferentObjectsTest()  {
     query.constrain(ItemWithStringBuffer.class);
     query.descend(&quot;_name&quot;).constrain(new StringBuffer(&quot;level1/2&quot;));
     result = query.execute();
-    ItemWithStringBuffer itemWithSB = (ItemWithStringBuffer) result.get(0);
+    ItemWithStringBuffer itemWithSB = (ItemWithStringBuffer) result.queryByExample(0);
     stopTimer(&quot;Querying object with StringBuffer field: &quot;
         + itemWithSB._name);
     close();
@@ -70,7 +70,7 @@ private void runDifferentObjectsTest()  {
     idQuery.constrain(new Integer(4));
     result = query.execute();
 
-    ItemWithArray itemWithArray = (ItemWithArray) result.get(0);
+    ItemWithArray itemWithArray = (ItemWithArray) result.queryByExample(0);
     stopTimer(&quot;Querying object with Array field: [&quot; + itemWithArray._id[0]
         + &quot;, &quot; + +itemWithArray._id[1] + &quot;, &quot; + +itemWithArray._id[2]
         + &quot;, &quot; + +itemWithArray._id[0] + &quot;]&quot;);
@@ -88,7 +88,7 @@ private void runDifferentObjectsTest()  {
     query.constrain(ItemWithArrayList.class);
     query.descend(&quot;_ids&quot;).constrain(1).contains();
     result = query.execute();
-    ItemWithArrayList itemWithArrayList = (ItemWithArrayList) result.get(0);
+    ItemWithArrayList itemWithArrayList = (ItemWithArrayList) result.queryByExample(0);
     stopTimer(&quot;Querying object with ArrayList field: &quot;
         + itemWithArrayList._ids.toString());
     close();

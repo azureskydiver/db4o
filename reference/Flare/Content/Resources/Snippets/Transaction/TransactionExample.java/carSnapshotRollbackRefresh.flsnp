@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.java: carSnapshotRollbackRefresh
 private static void carSnapshotRollbackRefresh(ObjectContainer container)  {
-        ObjectSet result=container.get(new Car(&quot;BMW&quot;));
+        ObjectSet result=container.queryByExample(new Car(&quot;BMW&quot;));
         Car car=(Car)result.next();
         car.snapshot();
-        container.set(car);
+        container.store(car);
         container.rollback();
         container.ext().refresh(car,Integer.MAX_VALUE);
         System.out.println(car);

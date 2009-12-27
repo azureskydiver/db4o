@@ -5,7 +5,7 @@ private static void setCar()  {
     try  {
       Car car = new Car();
       car.color = Color.GREEN;
-      container.set(car);
+      container.store(car);
     } finally  {
       container.close();
     }

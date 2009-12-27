@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: UpdatePilotSeparateSessionsImprovedPart2
 private static void UpdatePilotSeparateSessionsImprovedPart2(IObjectContainer db)
      {
-      IObjectSet result = db.Get(new Car(&quot;Ferrari&quot;));
+      IObjectSet result = db.QueryByExample(new Car(&quot;Ferrari&quot;));
       Car found = (Car)result.Next();
       found.Pilot.AddPoints(1);
-      db.Set(found);
+      db.Store(found);
     }</pre>    </body></html>

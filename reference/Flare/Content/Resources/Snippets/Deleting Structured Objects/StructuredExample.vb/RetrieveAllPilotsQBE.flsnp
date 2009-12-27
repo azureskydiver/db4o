@@ -7,7 +7,7 @@
 Private Shared Sub _ 
 RetrieveAllPilotsQBE(ByVal db As IObjectContainer)
             Dim proto As Pilot = New Pilot(Nothing, 0)
-            Dim result As IObjectSet = db.Get(proto)
+            Dim result As IObjectSet = db.QueryByExample(proto)
             ListResult(result)
         End Sub</pre>
     </body>

@@ -5,7 +5,7 @@ public static void MoveValues()
             try
              {
                 // querying for B will bring back B and C values
-                IObjectSet result = container.Get(new B());
+                IObjectSet result = container.QueryByExample(new B());
                 for (int i = 0; i &lt; result.Count; i++)
                  {
                     B b = (B)result[i];
@@ -13,7 +13,7 @@ public static void MoveValues()
                     d.name = b.name;
                     d.number = b.number;
                     container.Delete(b);
-                    container.Set(d);
+                    container.Store(d);
                 }
 
             }

@@ -7,11 +7,11 @@ private static void storeDuplicates()  {
         Pilot pilot;
         for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
-          container.set(pilot);
+          container.store(pilot);
         }
         for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
-          container.set(pilot);
+          container.store(pilot);
         }
         container.commit();
       } catch (Db4oException ex)  {

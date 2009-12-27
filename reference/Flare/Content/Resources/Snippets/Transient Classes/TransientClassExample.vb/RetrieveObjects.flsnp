@@ -9,7 +9,7 @@ Public Shared Sub RetrieveObjects()
             Try
                 ' retrieve the results and check if the 
                 ' NotStorable instances were saved
-                Dim result As IList = container.Get(Nothing)
+                Dim result As IList = container.QueryByExample(Nothing)
                 ListResult(result)
             Finally
                 container.Close()

@@ -17,7 +17,7 @@ private static void SaveMultiArray()
 "Michael Schumacher", "last race");
                 recordBook.AddRecord("September 2006", 
 "Kimi Raikkonen", "no notes");
-                oc.Set(recordBook);
+                oc.Store(recordBook);
             }
             finally
              {

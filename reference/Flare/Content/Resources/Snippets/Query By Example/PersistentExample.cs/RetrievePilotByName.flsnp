@@ -2,6 +2,6 @@
 public static void RetrievePilotByName(IObjectContainer db)
      {
       Pilot proto = new Pilot(&quot;Michael Schumacher&quot;, 0);
-      IObjectSet result = db.Get(proto);
+      IObjectSet result = db.QueryByExample(proto);
       ListResult(result);
     }</pre>    </body></html>

@@ -20,7 +20,7 @@ namespace Db4objects.Db4odoc.MonoTest
             try
              {
                 Pilot pilot1 = new Pilot(&quot;Michael Schumacher&quot;, 100);
-                db.Set(pilot1);
+                db.Store(pilot1);
                 Console.WriteLine(&quot;Stored {0}&quot;, pilot1);
             }
             finally
@@ -30,7 +30,7 @@ namespace Db4objects.Db4odoc.MonoTest
             db = Db4oFactory.OpenFile(Db4oFileName);
             try
              {
-                IObjectSet result = db.Get(typeof(Pilot));
+                IObjectSet result = db.QueryByExample(typeof(Pilot));
                 ListResult(result);
             }
             finally

@@ -14,7 +14,7 @@ configuration, Db4oFileName);
       try 
        {
         System.Console.WriteLine("Object container activation depth = 1");
-        IObjectSet result = db.Get(new SensorPanel(1));
+        IObjectSet result = db.QueryByExample(new SensorPanel(1));
         SensorPanel spParent = (SensorPanel)result[0];
         SensorPanel spDescend = (SensorPanel)db.Ext().
 Descend((Object)spParent, new String[] {"_next","_next",

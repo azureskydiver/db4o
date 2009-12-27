@@ -11,9 +11,9 @@ public static void SaveNotStorable()
                 try
                  {
                     NotStorable ns =  new NotStorable(&quot;test1&quot;);
-                    container.Set(ns);
+                    container.Store(ns);
                     ns = new NotStorable(&quot;test2&quot;);
-                    container.Set(ns);
+                    container.Store(ns);
                 }
                 catch (Db4oException ex)
                  {

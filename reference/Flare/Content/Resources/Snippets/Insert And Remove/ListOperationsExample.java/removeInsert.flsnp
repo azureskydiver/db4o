@@ -16,9 +16,9 @@ private static void removeInsert()
                 if (result.size() == 2)
                  {
                   // retrieve 2 ListObjects
-                    ListObject lo1 = result.get(0);
-                    ListObject lo2 = result.get(1);
-                    DataObject dataObject = lo1.getData().get(0);
+                    ListObject lo1 = result.queryByExample(0);
+                    ListObject lo2 = result.queryByExample(1);
+                    DataObject dataObject = lo1.getData().queryByExample(0);
                     // move the first object from the first
                     // ListObject to the second ListObject
                     lo1.getData().remove(dataObject);
@@ -31,8 +31,8 @@ private static void removeInsert()
                     long t1 = System.currentTimeMillis();
                     // save ListObjects. UpdateDepth = 1 will ensure that 
                     // the DataObject list is saved as well
-                    db.set(lo1);
-                    db.set(lo2);
+                    db.store(lo1);
+                    db.store(lo2);
                     db.commit();
                     long t2 = System.currentTimeMillis();
                     timeElapsed = t2 - t1;

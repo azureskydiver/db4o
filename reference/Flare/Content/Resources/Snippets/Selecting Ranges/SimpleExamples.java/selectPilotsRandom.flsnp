@@ -11,7 +11,7 @@ private static void selectPilotsRandom()  {
               randomArray = new ArrayList();
               for (int i = 0; i &lt; 10; i++)  {
                 randomArray.add((int) (Math.random() * 10));
-                System.out.println(randomArray.get(i));
+                System.out.println(randomArray.queryByExample(i));
               }
             }
             return randomArray;

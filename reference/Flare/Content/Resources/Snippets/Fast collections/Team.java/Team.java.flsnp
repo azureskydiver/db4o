@@ -27,7 +27,7 @@ public class Team  {
   }
   
   public Pilot getPilot(int index) {
-    return (Pilot)pilots.get(index); 
+    return (Pilot)pilots.queryByExample(index); 
   }
   
   public void removePilot(int index) {
@@ -35,6 +35,6 @@ public class Team  {
   }
   
   public void updatePilot(int index, Pilot newPilot) {
-    pilots.set(index, newPilot);
+    pilots.store(index, newPilot);
   }
 }</pre>    </body></html>

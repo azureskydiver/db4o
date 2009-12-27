@@ -11,9 +11,9 @@ Private Shared Sub SetObjects()
                 Dim i As Integer
                 For i = 0 To 5 - 1 Step i + 1
                     Dim car As Car = New Car("car" + i.ToString())
-                    db.Set(car)
+                    db.Store(car)
                 Next
-                db.Set(New RemoteExample())
+                db.Store(New RemoteExample())
             Finally
                 db.Close()
             End Try

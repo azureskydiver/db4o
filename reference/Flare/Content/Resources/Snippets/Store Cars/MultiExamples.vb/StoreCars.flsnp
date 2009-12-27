@@ -14,12 +14,12 @@ Private Shared Sub StoreCars()
                     For i = 0 To ObjectCount - 1 Step i + 1
                         car = New Car("BMW", New Pilot("Test Pilot #" _ 
 + i.ToString(), i))
-                        container.Set(car)
+                        container.Store(car)
                     Next
                     For i = 0 To ObjectCount - 1 Step i + 1
                         car = New Car("Ferrari", New Pilot("Professional Pilot #" + _ 
 (i + 10).ToString(), (i + 10)))
-                        container.Set(car)
+                        container.Store(car)
                     Next
                     container.Commit()
                 Catch ex As Db4oException

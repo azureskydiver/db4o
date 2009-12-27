@@ -59,7 +59,7 @@ namespace Db4objects.Db4odoc.Semaphores
       q.Descend(&quot;ipAddress&quot;).Constrain(ipAddress);
       if(q.Execute().Size() == 0)
        {
-        client.Set(new ConnectedUser(userName, ipAddress));
+        client.Store(new ConnectedUser(userName, ipAddress));
         client.Commit();
       }
             String connectedSemaphoreName = SemaphoreConnected + userName + ipAddress;

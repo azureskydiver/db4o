@@ -12,7 +12,7 @@ Private Shared Sub TryStoreAndRetrieve(ByVal configuration As IConfiguration)
                 Dim LocalizedItemList As LocalizedItemList = New _ 
 LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs)
                 System.Console.WriteLine("ORIGINAL: {0}", LocalizedItemList)
-                db.Set(LocalizedItemList)
+                db.Store(LocalizedItemList)
             Catch x As Exception
                 System.Console.WriteLine(x)
                 Return
@@ -21,7 +21,7 @@ LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs)
             End Try
             db = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(GetType(LocalizedItemList))
+                Dim result As IObjectSet = db.QueryByExample(GetType(LocalizedItemList))
                 While result.HasNext()
                     Dim LocalizedItemList As LocalizedItemList = _ 
 DirectCast(result.Next(), LocalizedItemList)

@@ -33,7 +33,7 @@ private void runDifferentQueriesTest()  {
         return item._name.equals(&quot;level1/1&quot;);
       }
     });
-    item = result.get(0);
+    item = result.queryByExample(0);
     stopTimer(&quot;Select 1 object NQ: &quot; + item._name);
     close();
     
@@ -46,7 +46,7 @@ private void runDifferentQueriesTest()  {
         return item._name.equals(&quot;level1/1&quot;);
       }
     });
-    item = result.get(0);
+    item = result.queryByExample(0);
     stopTimer(&quot;Select 1 object NQ: &quot; + item._name);
 
     close();

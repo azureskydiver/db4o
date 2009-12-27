@@ -11,12 +11,12 @@ private static void StoreDuplicates()
                     for (int i = 0; i &lt; ObjectCount; i++)
                      {
                         pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
-                        container.Set(pilot);
+                        container.Store(pilot);
                     }
                     for (int i = 0; i &lt; ObjectCount; i++)
                      {
                         pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
-                        container.Set(pilot);
+                        container.Store(pilot);
                     }
                     container.Commit();
                 }

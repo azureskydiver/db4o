@@ -12,7 +12,7 @@ public virtual void Test()
                 ((Atom)atom.child).name = &quot;Updated&quot;;
                 ((Atom)atom.child).child.name = &quot;NotUpdated&quot;;
                 // store the parent object
-                Db().Set(atom);
+                Db().Store(atom);
             }
 
             // commit and refresh to make sure that the changes are saved

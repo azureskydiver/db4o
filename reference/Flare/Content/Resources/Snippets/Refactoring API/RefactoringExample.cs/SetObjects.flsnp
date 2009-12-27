@@ -6,9 +6,9 @@ private static void SetObjects()
       try 
        {
         Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;);
-        container.Set(pilot);
+        container.Store(pilot);
         pilot = new Pilot(&quot;Michael Schumacher&quot;);
-        container.Set(pilot);
+        container.Store(pilot);
       } 
       finally 
        {

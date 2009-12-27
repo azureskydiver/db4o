@@ -9,7 +9,7 @@ RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
             Dim pilotproto As Pilot = New Pilot("Rubens Barrichello", 0)
             Dim carproto As Car = New Car(Nothing)
             carproto.Pilot = pilotproto
-            Dim result As IObjectSet = db.Get(carproto)
+            Dim result As IObjectSet = db.QueryByExample(carproto)
             ListResult(result)
         End Sub</pre>
     </body>

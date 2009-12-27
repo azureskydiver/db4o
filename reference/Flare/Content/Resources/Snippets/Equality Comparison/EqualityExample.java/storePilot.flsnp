@@ -4,7 +4,7 @@ private static void storePilot()  {
     if (container != null)  {
       try  {
         Pilot pilot = new Pilot(&quot;Kimi Raikkonnen&quot;, 100);
-        container.set(pilot);
+        container.store(pilot);
       } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());
       } finally  {

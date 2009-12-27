@@ -4,11 +4,11 @@ private static void storeRecords(Configuration configuration) {
     ObjectContainer container = Db4o.openFile(configuration, FILENAME);
     try  {
       Record record = new Record(&quot;Michael Schumacher, points: 100&quot;);
-      container.set(record);
+      container.store(record);
       record = new Record(&quot;Rubens Barrichello, points: 98&quot;);
-      container.set(record);
+      container.store(record);
       record = new Record(&quot;Kimi Raikonnen, points: 55&quot;);
-      container.set(record);
+      container.store(record);
     } finally  {
       container.close();
     }

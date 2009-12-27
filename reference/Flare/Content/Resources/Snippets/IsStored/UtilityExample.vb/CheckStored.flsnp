@@ -12,7 +12,7 @@ Public Shared Sub CheckStored()
             Try
                 ' store all elements with one statement, 
                 ' since all elements are new    
-                db.Set(list)
+                db.Store(list)
                 Dim sensor As Object = CType(list.Sensor, Object)
                 Dim sp5 As SensorPanel = list.NextSensor.NextSensor. _ 
 NextSensor.NextSensor

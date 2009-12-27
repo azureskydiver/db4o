@@ -8,7 +8,7 @@ private static void SetObjects(IConfiguration configuration)
                 DateTime dt1 = DateTime.UtcNow;
           for (int i = 0; i&lt; 50000; i++) {
             Pilot pilot = new Pilot(&quot;Pilot #&quot;+i);
-            db.Set(pilot);
+            db.Store(pilot);
           }
           DateTime dt2 = DateTime.UtcNow;
           TimeSpan  diff = dt2 - dt1;

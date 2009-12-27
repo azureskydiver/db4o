@@ -18,16 +18,16 @@ Deserialize(xmlFileStream), Car())
                 db = Db4oFactory.OpenFile(Db4oFileName)
                 Try
                     Dim newCar As Car = CType(car, Car)
-                    db.Set(newCar)
+                    db.Store(newCar)
                 Finally
                     db.Close()
                 End Try
             Next
             db = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(GetType(Pilot))
+                Dim result As IObjectSet = db.QueryByExample(GetType(Pilot))
                 ListResult(result)
-                result = db.Get(GetType(Car))
+                result = db.QueryByExample(GetType(Car))
                 ListResult(result)
             Finally
                 db.Close()

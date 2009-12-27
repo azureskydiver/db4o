@@ -6,7 +6,7 @@ public static void setObjects()  {
       for (int i = 0; i &lt; 10; i++)  {
         for (int j = 0; j &lt; 5; j++)  {
           Pilot pilot = new Pilot(&quot;Pilot #&quot; + i, j + 1);
-          container.set(pilot);
+          container.store(pilot);
         }
       }
     } finally  {

@@ -13,10 +13,10 @@ private static void Test3()
                  {
                     // Pilot2 uses static value to initializ points 
                     Pilot2 pilot = new Pilot2("Kimi Raikonnen", 100);
-                    container.Set(pilot);
+                    container.Store(pilot);
                     container.Commit();
                     // QBE returns result with wrong points
-                    IObjectSet result = container.Get(
+                    IObjectSet result = container.QueryByExample(
 new Pilot2("Kimi Raikonnen", 100));
                     System.Console.WriteLine(
 "Test QBE on class with member initialization using static value");

@@ -4,7 +4,7 @@ public static void ReadData()
             IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
             try
              {
-                IObjectSet result = container.Get(new D());
+                IObjectSet result = container.QueryByExample(new D());
                 System.Console.WriteLine();
                 System.Console.WriteLine(&quot;D class: &quot;);
                 ListResult(result);

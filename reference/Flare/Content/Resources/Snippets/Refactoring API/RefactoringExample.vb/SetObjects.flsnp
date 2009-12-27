@@ -10,9 +10,9 @@ Private Shared Sub SetObjects()
 Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Rubens Barrichello")
-                container.Set(pilot)
+                container.Store(pilot)
                 pilot = New Pilot("Michael Schumacher")
-                container.Set(pilot)
+                container.Store(pilot)
             Finally
                 container.Close()
             End Try

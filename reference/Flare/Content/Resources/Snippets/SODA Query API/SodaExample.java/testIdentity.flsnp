@@ -6,12 +6,12 @@ public static void testIdentity()  {
       try  {
         Pilot pilot = new Pilot(&quot;Test Pilot1&quot;, 100);
         Car car = new Car(&quot;BMW&quot;, pilot);
-        container.set(car);
+        container.store(car);
         // Change the name, the pilot instance stays the same
         pilot.setName(&quot;Test Pilot2&quot;);
         // create a new car
         car = new Car(&quot;Ferrari&quot;, pilot);
-        container.set(car);
+        container.store(car);
         
         // Simple Query: 
         Query query1 = container.query();

@@ -11,9 +11,9 @@ public static void saveSerializable()
             try
              {
                 Pilot pilot = new Pilot(&quot;Test Pilot 1&quot;, 99);
-                container.set(pilot);
+                container.store(pilot);
                 pilot = new Pilot(&quot;Test Pilot 2&quot;, 100);
-                container.set(pilot);
+                container.store(pilot);
             }
             catch (Db4oException ex)
              {

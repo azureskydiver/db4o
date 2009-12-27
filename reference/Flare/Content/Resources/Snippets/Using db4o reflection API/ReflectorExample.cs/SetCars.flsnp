@@ -6,9 +6,9 @@ private static void SetCars()
       try 
        {
         Car car1 = new Car(&quot;BMW&quot;);
-        db.Set(car1);
+        db.Store(car1);
         Car car2 = new Car(&quot;Ferrari&quot;);
-        db.Set(car2);
+        db.Store(car2);
         
         Console.WriteLine(&quot;Saved:&quot;);
         IQuery query = db.Query();

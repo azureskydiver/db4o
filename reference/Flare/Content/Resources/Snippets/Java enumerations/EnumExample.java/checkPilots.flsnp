@@ -5,7 +5,7 @@ private static void checkPilots() {
           ObjectSet result = container.query(Pilot.class);
           System.out.println(&quot;Saved pilots: &quot; + result.size());
           for(int x = 0; x &lt; result.size(); x++) {
-            Pilot pilot = (Pilot )result.get(x);
+            Pilot pilot = (Pilot )result.queryByExample(x);
             if (pilot.getQualification() == Qualification.WINNER) {
               System.out.println(&quot;Winner pilot: &quot; + pilot);
             } else if (pilot.getQualification() == Qualification.PROFESSIONAL) {

@@ -29,7 +29,7 @@ Namespace Db4objects.Db4odoc.Binding
         End Sub
 
         Private Sub SetUpDataBindings()
-            Dim os As ObjectSet = _container.Get(GetType(Customer))
+            Dim os As ObjectSet = _container.QueryByExample(GetType(Customer))
             If 0 = os.Size() Then
                 ' Generate some initial data
                 _customers.Add(New Customer("John Cleese", "55-98763333"))
@@ -49,7 +49,7 @@ Namespace Db4objects.Db4odoc.Binding
         Private Sub PersistChanges()Sub PersistChanges()
             Dim customer As Customer
             For Each customer In _customers
-                _container.Set(customer)
+                _container.Store(customer)
             Next
         End Sub
 

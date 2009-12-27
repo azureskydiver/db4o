@@ -16,7 +16,7 @@ private void runIndexTest()  {
     query.constrain(Item.class);
     query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
     List result = query.execute();
-    Item item = (Item) result.get(0);
+    Item item = (Item) result.queryByExample(0);
     stopTimer(&quot;Querying object with String field: &quot; + item._name);
     close();
 
@@ -31,7 +31,7 @@ private void runIndexTest()  {
     query.constrain(Item.class);
     query.descend(&quot;_name&quot;).constrain(&quot;level1/2&quot;);
     result = query.execute();
-    item = (Item) result.get(0);
+    item = (Item) result.queryByExample(0);
     stopTimer(&quot;Querying object with String field: &quot; + item._name);
     close();
   }</pre>    </body></html>

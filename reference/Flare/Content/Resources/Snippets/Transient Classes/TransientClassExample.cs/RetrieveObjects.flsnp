@@ -5,7 +5,7 @@ private static void RetrieveObjects()
             try
              {
                 // retrieve the results and check if the NotStorable instances were saved
-                IList result = container.Get(null);
+                IList result = container.QueryByExample(null);
                 ListResult(result);
             }
             finally

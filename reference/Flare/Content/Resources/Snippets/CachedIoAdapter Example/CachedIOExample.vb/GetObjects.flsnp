@@ -8,7 +8,7 @@ Private Shared Sub GetObjects(ByVal configuration As IConfiguration)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
-                Dim result As IObjectSet = db.Get(Nothing)
+                Dim result As IObjectSet = db.QueryByExample(Nothing)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
                 System.Console.WriteLine("Time elapsed for the query =" + _ 

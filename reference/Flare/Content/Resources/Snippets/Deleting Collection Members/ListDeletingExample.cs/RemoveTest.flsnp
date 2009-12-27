@@ -21,7 +21,7 @@ db.Query&lt;ListObject&gt;(typeof(ListObject));
                     ListObject lo1 = result[0];
                     // remove all the objects from the list
                     lo1.Data.RemoveRange(0, lo1.Data.Count);
-                    db.Set(lo1);
+                    db.Store(lo1);
                 }
             } finally  {
               db.Close();

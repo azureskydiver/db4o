@@ -10,7 +10,7 @@ private static void MeasureCarTemperature()
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet result = db.Get(typeof(Car));
+        IObjectSet result = db.QueryByExample(typeof(Car));
         if (result.Size() &gt; 0)
          {
           Car car = (Car)result[0];
@@ -23,7 +23,7 @@ private static void MeasureCarTemperature()
           Thread.Sleep(300);
           // We can work on the database object at the same time
           car.Model = "BMW M3Coupe";
-          db.Set(car);
+          db.Store(car);
           ch1.Stop();
           ch2.Stop();
           System.Console.WriteLine("car1 saved to the database: " 
@@ -32,7 +32,7 @@ private static void MeasureCarTemperature()
 + db.Ext().IsStored(car1));
           int temperature = (int)((car1.Temperature + car2.Temperature)/2);
           car.Temperature = temperature;
-          db.Set(car);
+          db.Store(car);
         }
       } 
       finally 

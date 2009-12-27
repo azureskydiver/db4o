@@ -11,7 +11,7 @@ private static void GetPilotsQBE()
 "localhost", 0xdb40, "db4o", "db4o");
             try
              {
-                IObjectSet result = oc.Get(new Pilot(null, 0));
+                IObjectSet result = oc.QueryByExample(new Pilot(null, 0));
                 ListResult(result);
             }
             finally

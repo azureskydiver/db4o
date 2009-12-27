@@ -16,7 +16,7 @@ forObjectContainer(_container);
           long currentVersion = _container.ext().getObjectInfo(obj).getVersion();
           long id = _container.ext().getID(obj);
           // get the version saved at the object retrieval
-          long initialVersion = _idVersions.get(id); 
+          long initialVersion = _idVersions.queryByExample(id); 
           if (initialVersion != currentVersion) {
             System.out.println(getName() +"Collision: ");
             System.out.println(getName() +"Stored object: version: "

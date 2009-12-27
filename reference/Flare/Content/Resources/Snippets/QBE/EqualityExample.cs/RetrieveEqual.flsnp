@@ -8,7 +8,7 @@ private static void RetrieveEqual()  {
     IObjectContainer container = Database();
     if (container != null)  {
       try  {
-        IObjectSet result = container.Get(
+        IObjectSet result = container.QueryByExample(
 new Pilot("Kimi Raikkonnen", 100));
         if (result.Count &gt; 0) {
           System.Console.WriteLine("Found equal object: " + 

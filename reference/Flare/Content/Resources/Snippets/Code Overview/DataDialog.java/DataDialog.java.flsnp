@@ -96,7 +96,7 @@ public class DataDialog extends Dialog  {
      * Clears the database before adding new data
      */
     private void clearDb() {
-      ObjectSet result = Db4oProvider.database().get(ArrayList.class);
+      ObjectSet result = Db4oProvider.database().queryByExample(ArrayList.class);
     while (result.hasNext()) {
       Db4oProvider.database().delete(result.next());
     }
@@ -113,7 +113,7 @@ public class DataDialog extends Dialog  {
       for (int i=0; i &lt; list.getItemCount(); i++) {
         data.add(list.getItem(i));
       }
-      Db4oProvider.database().set(data);
+      Db4oProvider.database().store(data);
       Db4oProvider.database().commit();
       Db4oProvider.database().ext().purge(ArrayList.class);
       super.handleShellCloseEvent();
@@ -191,7 +191,7 @@ public class DataDialog extends Dialog  {
           ArrayList data = (ArrayList)result.next();
           String[] items = new String[data.size()];
           for (int i=0; i &lt; data.size(); i++) {
-            items[i] = (String)data.get(i);
+            items[i] = (String)data.queryByExample(i);
           }
           list.setItems(items);
         }

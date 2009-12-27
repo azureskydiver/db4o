@@ -23,11 +23,11 @@ private static void GetObjectsInMem()
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
              {
-                IObjectSet result = db.Get(typeof(Pilot));
+                IObjectSet result = db.QueryByExample(typeof(Pilot));
                 System.Console.WriteLine(&quot;Read stored results through memory file&quot;);
                 ListResult(result);
                 Pilot pilotNew = new Pilot(&quot;Michael Schumacher&quot;);
-                db.Set(pilotNew);
+                db.Store(pilotNew);
                 System.Console.WriteLine(&quot;New pilot added&quot;);
             }
             finally
@@ -35,7 +35,7 @@ private static void GetObjectsInMem()
                 db.Close();
             }
             System.Console.WriteLine(&quot;Writing the database back to disc&quot;);
-            byte[] dbstream = adapter.Get(Db4oFileName);
+            byte[] dbstream = adapter.QueryByExample(Db4oFileName);
             try
              {
                 Sharpen.IO.RandomAccessFile file = new Sharpen.IO.RandomAccessFile(Db4oFileName, &quot;rw&quot;);

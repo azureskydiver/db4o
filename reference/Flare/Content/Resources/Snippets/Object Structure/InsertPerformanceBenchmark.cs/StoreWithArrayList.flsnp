@@ -18,7 +18,7 @@ private void StoreWithArrayList()
                     ids1.AddRange(idList);
                     item = new ItemWithArrayList(ids1, item);
                 }
-                objectContainer.Set(item);
+                objectContainer.Store(item);
             }
             objectContainer.Commit();
             StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);

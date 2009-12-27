@@ -4,11 +4,11 @@ private static void checkReferenceCache() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
     try  {
       ObjectSet pilots = container.query(Pilot.class);
-      Pilot pilot = (Pilot)pilots.get(0);
+      Pilot pilot = (Pilot)pilots.queryByExample(0);
       String pilotName = pilot.getName();
       pilot.setName(&quot;new name&quot;);
       System.out.println(&quot;Retrieving pilot by name: &quot; + pilotName);
-      ObjectSet pilots1 = container.get(new Pilot(pilotName));
+      ObjectSet pilots1 = container.queryByExample(new Pilot(pilotName));
       listResult(pilots1);
     } finally  {
       container.close();

@@ -4,6 +4,6 @@ private static void RetrieveCarByPilotQBE(IObjectContainer db)
       Pilot pilotproto = new Pilot(&quot;Rubens Barrichello&quot;,0);
       Car carproto = new Car(null);
       carproto.Pilot = pilotproto;
-      IObjectSet result = db.Get(carproto);
+      IObjectSet result = db.QueryByExample(carproto);
       ListResult(result);
     }</pre>    </body></html>

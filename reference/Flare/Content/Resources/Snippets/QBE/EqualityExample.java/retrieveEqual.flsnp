@@ -8,7 +8,7 @@ private static void retrieveEqual()  {
     ObjectContainer container = database();
     if (container != null)  {
       try  {
-        ObjectSet result = container.get(
+        ObjectSet result = container.queryByExample(
 new Pilot("Kimi Raikkonnen", 100));
         if (result.size() &gt; 0) {
           System.out.println("Found equal object: " + 

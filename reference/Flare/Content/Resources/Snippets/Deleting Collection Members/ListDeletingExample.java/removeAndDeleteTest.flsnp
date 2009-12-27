@@ -8,7 +8,7 @@ private static void removeAndDeleteTest()  {
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
       if (result.size() &gt; 0)  {
         // retrieve a ListObject
-        ListObject lo1 = result.get(0);
+        ListObject lo1 = result.queryByExample(0);
         // create a copy of the objects list
         // to memorize the objects to be deleted
         List tempList = new ArrayList(lo1.getData());
@@ -20,7 +20,7 @@ private static void removeAndDeleteTest()  {
           container.delete(it.next());
         }
 
-        container.set(lo1);
+        container.store(lo1);
       }
     } finally  {
       container.close();
@@ -31,7 +31,7 @@ private static void removeAndDeleteTest()  {
     try  {
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
       if (result.size() &gt; 0)  {
-        ListObject lo1 = result.get(0);
+        ListObject lo1 = result.queryByExample(0);
         System.out.println(&quot;DataObjects in the list:  &quot;
             + lo1.getData().size());
       }

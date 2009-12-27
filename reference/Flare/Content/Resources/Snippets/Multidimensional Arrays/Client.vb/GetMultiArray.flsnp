@@ -10,7 +10,7 @@ with multidimentional array field")
             Dim oc As IObjectContainer = Db4oFactory. _ 
 OpenClient("localhost", &amp;HDB40, "db4o", "db4o")
             Try
-                Dim result As IObjectSet = oc.Get(New RecordBook)
+                Dim result As IObjectSet = oc.QueryByExample(New RecordBook)
                 ListResult(result)
             Finally
                 oc.Close()

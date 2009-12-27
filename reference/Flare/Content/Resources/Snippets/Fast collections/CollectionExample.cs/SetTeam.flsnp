@@ -13,9 +13,9 @@ private static void SetTeam()
         Pilot pilot2 = new Pilot(&quot;David Schumacher&quot;, 98);
         ferrariTeam.AddPilot(pilot2);
         
-        db.Set(ferrariTeam);
+        db.Store(ferrariTeam);
         IList protoList = CollectionFactory.newList();
-        IObjectSet result = db.Get(protoList);
+        IObjectSet result = db.QueryByExample(protoList);
         ListResult(result);
       }  
       finally 

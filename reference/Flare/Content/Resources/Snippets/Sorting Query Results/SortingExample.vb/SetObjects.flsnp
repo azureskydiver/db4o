@@ -14,7 +14,7 @@ Private Shared Sub SetObjects()
                     While j &lt; 5
                         Dim pilot As Pilot = New _ 
 Pilot("Pilot #" + i.ToString(), j + 1)
-                        db.Set(pilot)
+                        db.Store(pilot)
                         System.Math.Min(System.Threading. _&#160;
 Interlocked.Increment(j), j - 1)
                     End While

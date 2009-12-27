@@ -10,7 +10,7 @@ private static void countSubGroups()  {
         while (keyIterator.hasNext())  {
           String key = keyIterator.next().toString();
           System.out
-              .println(key + &quot;: &quot; + predicate.countMap.get(key));
+              .println(key + &quot;: &quot; + predicate.countMap.queryByExample(key));
         }
       } catch (Exception ex)  {
         System.out.println(&quot;System Exception: &quot; + ex.getMessage());

@@ -2,7 +2,7 @@
 private static void checkDB() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
     try  {
-      ObjectSet result=container.get(new Object());
+      ObjectSet result=container.queryByExample(new Object());
           listResult(result);
     } finally  {
       container.close();

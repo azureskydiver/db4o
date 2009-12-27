@@ -12,11 +12,11 @@ Db4oFactory.OpenFile(configuration, FileName);
             try
              {
                 Record record = new Record("Michael Schumacher, points: 100");
-                container.Set(record);
+                container.Store(record);
                 record = new Record("Rubens Barrichello, points: 98");
-                container.Set(record);
+                container.Store(record);
                 record = new Record("Kimi Raikonnen, points: 55");
-                container.Set(record);
+                container.Store(record);
             }
             finally
              {

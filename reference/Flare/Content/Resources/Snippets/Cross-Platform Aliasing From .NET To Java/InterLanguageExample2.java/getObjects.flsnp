@@ -8,7 +8,7 @@ private static void getObjects(EmbeddedConfiguration configuration)  {
         }
       });
       for (int i = 0; i &lt; result.size(); i++)  {
-        Pilot pilot = result.get(i);
+        Pilot pilot = result.queryByExample(i);
         pilot.setName(&quot;Modified &quot; + pilot.getName());
         db.store(pilot);
       }

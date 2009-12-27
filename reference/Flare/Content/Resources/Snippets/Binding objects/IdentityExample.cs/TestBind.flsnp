@@ -13,9 +13,9 @@ private static void TestBind()
         long IdCar1 = db.Ext().GetID(car1);
         Car car2 = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
         db.Ext().Bind(car2,IdCar1);
-        db.Set(car2);
+        db.Store(car2);
 
-        result = db.Get(typeof(Car));
+        result = db.QueryByExample(typeof(Car));
         ListResult(result);
       } 
       finally 

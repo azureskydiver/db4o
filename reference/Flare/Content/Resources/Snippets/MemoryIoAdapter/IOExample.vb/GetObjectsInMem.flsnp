@@ -27,18 +27,18 @@ Db4oFactory.NewConfiguration()
             Dim db As IObjectContainer = _ 
 Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(GetType(Pilot))
+                Dim result As IObjectSet = db.QueryByExample(GetType(Pilot))
                 System.Console.WriteLine( _ 
 "Read stored results through memory file")
                 ListResult(result)
                 Dim pilotNew As Pilot = New Pilot("Michael Schumacher")
-                db.Set(pilotNew)
+                db.Store(pilotNew)
                 System.Console.WriteLine("New pilot added")
             Finally
                 db.Close()
             End Try
             System.Console.WriteLine("Writing the database back to disc")
-            Dim dbstream() As Byte = adapter.Get(Db4oFileName)
+            Dim dbstream() As Byte = adapter.QueryByExample(Db4oFileName)
             Try
                 Dim file As Sharpen.IO.RandomAccessFile = _ 
 New Sharpen.IO.RandomAccessFile(Db4oFileName, "rw")

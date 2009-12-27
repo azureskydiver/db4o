@@ -11,7 +11,7 @@ Private Shared Sub TestActivation()
             If Not (container Is Nothing) Then
                 Try
                     System.Console.WriteLine("Zero activation depth")
-                    Dim result As IObjectSet = container.Get(New SensorPanelTA(1))
+                    Dim result As IObjectSet = container.QueryByExample(New SensorPanelTA(1))
                     ListResult(result)
                     If result.Size &gt; 0 Then
                         Dim sensor As SensorPanelTA = CType(result(0), SensorPanelTA)

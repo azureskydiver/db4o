@@ -4,7 +4,7 @@ private static void TestRetrieve()
             IObjectContainer db = Db4oFactory.OpenFile(Configure(), Db4oFileName);
             try
              {
-                IObjectSet result = db.Get(typeof(Pilot));
+                IObjectSet result = db.QueryByExample(typeof(Pilot));
                 ListResult(result);
             }
             finally

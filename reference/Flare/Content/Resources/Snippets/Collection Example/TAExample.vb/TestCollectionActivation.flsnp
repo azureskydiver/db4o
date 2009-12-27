@@ -9,7 +9,7 @@ Private Shared Sub TestCollectionActivation()
             Dim container As IObjectContainer = Database(ConfigureTA)
             If Not (container Is Nothing) Then
                 Try
-                    Dim team As Team = CType(container.Get(New Team).Next, Team)
+                    Dim team As Team = CType(container.QueryByExample(New Team).Next, Team)
                     Dim j As Integer
                     For j = 0 To team.Size - 1
                         System.Console.WriteLine(team.Pilots(j))

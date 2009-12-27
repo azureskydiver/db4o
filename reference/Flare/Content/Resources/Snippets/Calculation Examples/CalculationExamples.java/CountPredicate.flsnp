@@ -11,7 +11,7 @@ private static class CountPredicate extends Predicate&lt;Pilot&gt;  {
         if (pilot.getName().startsWith(keywords[i]))  {
           if (countMap.containsKey(keywords[i]))  {
             countMap.put(keywords[i], ((Integer) countMap
-                .get(keywords[i])) + 1);
+                .queryByExample(keywords[i])) + 1);
           } else  {
             countMap.put(keywords[i], 1);
           }

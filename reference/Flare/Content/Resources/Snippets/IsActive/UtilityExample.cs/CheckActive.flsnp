@@ -13,7 +13,7 @@ public static void CheckActive()
       try 
        {
         System.Console.WriteLine("Object container activation depth = 2");
-        IObjectSet result = db.Get(new SensorPanel(1));
+        IObjectSet result = db.QueryByExample(new SensorPanel(1));
         SensorPanel sensor = (SensorPanel)result[0]; 
         SensorPanel next = sensor.Next;
         while (next != null)

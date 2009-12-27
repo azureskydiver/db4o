@@ -4,6 +4,6 @@ private static void StoreCarRollback(IObjectContainer db)
             Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;, 100);
             Car car = new Car(&quot;Ferrari&quot;);
             car.Pilot = pilot;
-            db.Set(car);
+            db.Store(car);
             db.Rollback();
         }</pre>    </body></html>

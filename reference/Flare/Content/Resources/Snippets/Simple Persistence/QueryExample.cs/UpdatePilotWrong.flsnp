@@ -9,7 +9,7 @@ public static void UpdatePilotWrong()
         // won't work for update of the saved pilot
         Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;,0);
         pilot.AddPoints(11);
-        db.Set(pilot);
+        db.Store(pilot);
         Console.WriteLine(&quot;Added 11 points to {0}&quot;, pilot);
       }
       finally 

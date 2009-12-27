@@ -8,11 +8,11 @@ Public Shared Sub StoreObjects()
             Dim db As IObjectContainer = OpenContainer()
             Dim test As TestObject
             test = New TestObject("FirstObject")
-            db.Set(test)
+            db.Store(test)
             test = New TestObject("SecondObject")
-            db.Set(test)
+            db.Store(test)
             test = New TestObject("ThirdObject")
-            db.Set(test)
+            db.Store(test)
         End Sub</pre>
     </body>
 </html>

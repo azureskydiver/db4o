@@ -27,7 +27,7 @@ private static void fillUpDb()
 + " ---- Data Object " + String.format("%5d", j));
                         lo.getData().add(dataObject);
                     }
-                    db.set(lo);
+                    db.store(lo);
                 }
                 long t2 = System.currentTimeMillis();
                 elapsedTime = t2 - t1;

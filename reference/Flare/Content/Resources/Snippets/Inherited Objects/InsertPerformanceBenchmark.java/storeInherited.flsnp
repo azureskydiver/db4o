@@ -6,7 +6,7 @@ private void storeInherited() {
             for (int j = 1; j &lt; _depth; j++)  {
                 item = new ItemDerived(&quot;load&quot;, item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);

@@ -5,7 +5,7 @@
     <body>
         <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: ListAllCars
 Public Shared Sub ListAllCars(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(GetType(Car))
+            Dim result As IObjectSet = db.QueryByExample(GetType(Car))
             ListResult(result)
         End Sub</pre>
     </body>

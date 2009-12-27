@@ -3,8 +3,8 @@ private static void setPilots() {
     new File(DB4O_FILE_NAME).delete();
     ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
     try  {
-      container.set(new Pilot(&quot;Michael Schumacher&quot;,Qualification.WINNER));
-      container.set(new Pilot(&quot;Rubens Barrichello&quot;,Qualification.PROFESSIONAL));
+      container.store(new Pilot(&quot;Michael Schumacher&quot;,Qualification.WINNER));
+      container.store(new Pilot(&quot;Rubens Barrichello&quot;,Qualification.PROFESSIONAL));
     } finally  {
       container.close();
     }

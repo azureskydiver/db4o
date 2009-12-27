@@ -10,7 +10,7 @@ Private Shared Sub GetObjects()
             Dim db As IObjectContainer = Db4oFactory.OpenFile( _ 
 configuration, Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(GetType(Pilot))
+                Dim result As IObjectSet = db.QueryByExample(GetType(Pilot))
                 System.Console.WriteLine( _ 
 "Read stored results through disc file")
                 ListResult(result)

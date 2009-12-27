@@ -18,13 +18,13 @@ System.EventArgs) Handles Me.Load
         End Sub
 
         Public Shared Function RetrieveAll() As IList
-            Return Db4oHttpModule.Client.Get(GetType(Message))
+            Return Db4oHttpModule.Client.QueryByExample(GetType(Message))
         End Function
         ' end RetrieveAll
 
         Public Shared Sub DeleteAll()
 
-            Dim messages As IList = Db4oHttpModule.Client.Get(GetType(Message))
+            Dim messages As IList = Db4oHttpModule.Client.QueryByExample(GetType(Message))
             For Each msg As Message In messages
                 Db4oHttpModule.Client.Delete(msg)
             Next
@@ -36,7 +36,7 @@ System.EventArgs) Handles Me.Load
 ByVal text As String)
 
             Dim msg As Message = New Message(username, text)
-            Db4oHttpModule.Client.Set(msg)
+            Db4oHttpModule.Client.Store(msg)
         End Sub
         ' end SaveMessage
 

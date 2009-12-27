@@ -44,7 +44,7 @@ ByVal clazz As System.Type) As Object
                     System.Console.WriteLine(e.Message)
                 End Try
 
-                objectContainer.Set(obj)
+                objectContainer.Store(obj)
                 '          Not Not Not  CAUTION Not Not Not 
                 '          * There is a  commit  call here.
                 '          * 

@@ -9,9 +9,9 @@ Public Shared Sub SetCars()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
-                db.Set(car1)
+                db.Store(car1)
                 Dim car2 As Car = New Car("Ferrari")
-                db.Set(car2)
+                db.Store(car2)
 
                 Console.WriteLine("Saved:")
                 Dim query As IQuery = db.Query()

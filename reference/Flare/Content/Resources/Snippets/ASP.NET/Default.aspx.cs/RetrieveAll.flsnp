@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Default.aspx.cs: RetrieveAll
 public static IList RetrieveAll()
          {
-            return Db4oHttpModule.Client.Get(typeof(Message));
+            return Db4oHttpModule.Client.QueryByExample(typeof(Message));
         }</pre>    </body></html>

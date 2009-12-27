@@ -5,7 +5,7 @@
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: UpdatePilotSeparateSessionsPart2
 Private Shared Sub UpdatePilotSeparateSessionsPart2(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim result As IObjectSet = db.QueryByExample(New Car("Ferrari"))
             ListResult(result)
         End Sub</pre>
     </body>

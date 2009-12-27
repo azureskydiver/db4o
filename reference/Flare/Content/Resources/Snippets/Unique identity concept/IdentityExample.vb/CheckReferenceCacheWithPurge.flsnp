@@ -8,7 +8,7 @@ Private Shared Sub CheckReferenceCacheWithPurge()
             SetObjects()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim pilots As IObjectSet = db.Get(GetType(Pilot))
+                Dim pilots As IObjectSet = db.QueryByExample(GetType(Pilot))
                 Dim pilot As Pilot = CType(pilots(0), Pilot)
                 Dim pilotName As String = pilot.Name
                 pilot.Name = "new name"
@@ -17,7 +17,7 @@ Private Shared Sub CheckReferenceCacheWithPurge()
                 If db.Ext().IsCached(pilotID) Then
                     db.Ext().Purge(pilot)
                 End If
-                Dim pilots1 As IObjectSet = db.Get(New Pilot(pilotName))
+                Dim pilots1 As IObjectSet = db.QueryByExample(New Pilot(pilotName))
                 ListResult(pilots1)
             Finally
                 db.Close()

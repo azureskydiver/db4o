@@ -8,7 +8,7 @@ Private Shared Sub CheckDatabase()
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' Read db4o contents from another application
-                Dim result As IObjectSet = container.Get(GetType(Test))
+                Dim result As IObjectSet = container.QueryByExample(GetType(Test))
                 ListResult(result)
                 ' Check what classes are actualy stored in the database
                 Dim storedClasses As IStoredClass() = container.Ext.StoredClasses

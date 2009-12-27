@@ -7,14 +7,14 @@ private static void UpdatePilotCategories()
              {
                 try
                  {
-                    IObjectSet result = db.Get(typeof(PilotCategories));
+                    IObjectSet result = db.QueryByExample(typeof(PilotCategories));
                     foreach (object obj in result)
                      {
                         PilotCategories pc = (PilotCategories)obj;
                         if (pc == PilotCategories.Winner)
                          {
                             pc.TestChange(&quot;WINNER2006&quot;);
-                            db.Set(pc);
+                            db.Store(pc);
                         }
                     }
                     PrintCategories(db);

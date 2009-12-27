@@ -7,7 +7,7 @@ private static void DeleteTest()
                 try
                  {
                     Console.WriteLine(&quot;Deleting Pilots :&quot;);
-                    IObjectSet result = db.Get(typeof(Pilot));
+                    IObjectSet result = db.QueryByExample(typeof(Pilot));
                     foreach (object obj in result)
                      {
                         Pilot pilot = (Pilot)obj;
@@ -15,7 +15,7 @@ private static void DeleteTest()
                     }
                     PrintCategories(db);
                     Console.WriteLine(&quot;Deleting PilotCategories :&quot;);
-                    result = db.Get(typeof(PilotCategories));
+                    result = db.QueryByExample(typeof(PilotCategories));
                     foreach (object obj in result)
                      {
                         db.Delete(obj);

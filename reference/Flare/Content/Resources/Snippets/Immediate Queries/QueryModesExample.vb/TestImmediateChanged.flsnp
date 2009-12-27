@@ -22,7 +22,7 @@ Db4oFactory.OpenFile(configuration, Db4oFileName)
                 Dim result2 As IObjectSet = query2.Execute
                 Dim pilot2 As Pilot = CType(result2(0), Pilot)
                 pilot2.AddPoints(22)
-                db.Set(pilot2)
+                db.Store(pilot2)
                 ListResult(result1)
             Finally
                 db.Close()

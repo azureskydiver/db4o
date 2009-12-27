@@ -9,7 +9,7 @@
 		Pilot pilot=new Pilot("Rubens Barrichello",99);
 		Car car=new Car("BMW");
 		car.setPilot(pilot);
-		container.set(car);
+		container.store(car);
 		container.commit();
 	}</pre>
     </body>

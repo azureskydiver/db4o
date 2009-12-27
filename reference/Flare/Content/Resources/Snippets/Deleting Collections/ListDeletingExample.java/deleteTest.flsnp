@@ -8,7 +8,7 @@ private static void deleteTest()  {
       List&lt;ListObject&gt; result = container.&lt;ListObject&gt; query(ListObject.class);
       if (result.size() &gt; 0)  {
         // retrieve a ListObject
-        ListObject lo1 = result.get(0);
+        ListObject lo1 = result.queryByExample(0);
         // delete the ListObject with all the field objects
         container.delete(lo1);
       }

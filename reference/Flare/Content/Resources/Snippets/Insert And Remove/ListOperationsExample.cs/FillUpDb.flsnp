@@ -27,7 +27,7 @@ private static void FillUpDb()
 + " ---- Data Object " + j.ToString("00000");
                         lo.Data.Add(dataObject);
                     }
-                    db.Set(lo);
+                    db.Store(lo);
                 }
                 sw.Stop();
             }

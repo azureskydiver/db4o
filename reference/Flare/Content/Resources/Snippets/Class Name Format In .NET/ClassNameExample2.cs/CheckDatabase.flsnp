@@ -5,7 +5,7 @@ public static void CheckDatabase()
             try
              {
                 // Read db4o contents from another application
-                IObjectSet result = container.Get(typeof(Test));
+                IObjectSet result = container.QueryByExample(typeof(Test));
                 ListResult(result);
                 // Check what classes are actualy stored in the database
                 IStoredClass[] storedClasses = container.Ext().StoredClasses();

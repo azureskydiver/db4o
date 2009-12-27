@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: DeleteDeepRevisited
 private static void DeleteDeepRevisited(IObjectContainer db)
      {
-      IObjectSet result = db.Get(new Pilot(&quot;Michael Schumacher&quot;, 0));
+      IObjectSet result = db.QueryByExample(new Pilot(&quot;Michael Schumacher&quot;, 0));
       Pilot pilot = (Pilot)result.Next();
       Car car1 = new Car(&quot;Ferrari&quot;);
       Car car2 = new Car(&quot;BMW&quot;);
       car1.Pilot = pilot;
       car2.Pilot = pilot;
-      db.Set(car1);
-      db.Set(car2);
+      db.Store(car1);
+      db.Store(car2);
       db.Delete(car2);
-      result = db.Get(new Car(null));
+      result = db.QueryByExample(new Car(null));
       ListResult(result);
     }</pre>    </body></html>

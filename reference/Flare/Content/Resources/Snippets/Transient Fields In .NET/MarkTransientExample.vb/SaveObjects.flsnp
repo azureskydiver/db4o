@@ -11,10 +11,10 @@ Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim test As Test = New Test("Transient string", _ 
 "Persistent string")
-                container.Set(test)
+                container.Store(test)
                 Dim testc As TestCusomized = New _ 
 TestCusomized("Transient string", "Persistent string")
-                container.Set(testc)
+                container.Store(testc)
             Finally
                 container.Close()
             End Try

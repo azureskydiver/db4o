@@ -6,10 +6,10 @@ private static void updatePilotCategories()  {
       try  {
         ObjectSet result = container.query(PilotCategories.class);
         for (int x = 0; x &lt; result.size(); x++)  {
-          PilotCategories pc = (PilotCategories) result.get(x);
+          PilotCategories pc = (PilotCategories) result.queryByExample(x);
           if (pc == PilotCategories.WINNER)  {
             pc.testChange(&quot;WINNER2006&quot;);
-            container.set(pc);
+            container.store(pc);
           }
         }
         printCategories(container);
@@ -23,10 +23,10 @@ private static void updatePilotCategories()  {
       try  {
         ObjectSet result = container.query(PilotCategories.class);
         for (int x = 0; x &lt; result.size(); x++)  {
-          PilotCategories pc = (PilotCategories) result.get(x);
+          PilotCategories pc = (PilotCategories) result.queryByExample(x);
           if (pc == PilotCategories.WINNER)  {
             pc.testChange(&quot;WINNER&quot;);
-            container.set(pc);
+            container.store(pc);
           }
         }
         printCategories(container);

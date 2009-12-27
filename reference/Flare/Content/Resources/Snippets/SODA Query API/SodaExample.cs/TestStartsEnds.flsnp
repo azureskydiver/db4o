@@ -8,11 +8,11 @@ public static void TestStartsEnds()
                 try
                  {
                     Pilot pilot = new Pilot(&quot;Test Pilot0&quot;, 100);
-                    container.Set(pilot);
+                    container.Store(pilot);
                     pilot = new Pilot(&quot;Test Pilot1&quot;, 101);
-                    container.Set(pilot);
+                    container.Store(pilot);
                     pilot = new Pilot(&quot;Test Pilot2&quot;, 102);
-                    container.Set(pilot);
+                    container.Store(pilot);
 
                     IQuery query = container.Query();
                     query.Constrain(typeof(Pilot));

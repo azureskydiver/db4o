@@ -12,7 +12,7 @@ new StringBuffer("load"), null);
             for (int j = 1; j &lt; _depth; j++)  {
                 item = new ItemWithStringBuffer(new StringBuffer("load"), item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");

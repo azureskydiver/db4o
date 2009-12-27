@@ -19,11 +19,11 @@ private static void checkResults()
                     System.out.println("Result count was " + 
 result.size()+ " looping with activation depth" +  activationDepth);
                     for (int i = 0; i &lt; result.size(); i++) {
-                      ListObject lo = (ListObject)result.get(i);
+                      ListObject lo = (ListObject)result.queryByExample(i);
                         System.out.println("ListObj " + lo.getName() + 
 " has " + ((lo.getData() == null) ? "&lt;null&gt;" : lo.getData().size()) +" objects");
                         System.out.println((lo.getData() != null &amp;&amp; 
-lo.getData().size() &gt; 0) ? lo.getData().get(0).toString() : "&lt;null&gt;" + "  at index 0");
+lo.getData().size() &gt; 0) ? lo.getData().queryByExample(0).toString() : "&lt;null&gt;" + "  at index 0");
                         System.out.println();
                     }
                 }

@@ -5,7 +5,7 @@ private static void GetObjects(IConfiguration configuration)
             try
              {
                 DateTime dt1 = DateTime.UtcNow;
-                IObjectSet result = db.Get(null);
+                IObjectSet result = db.QueryByExample(null);
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
                 System.Console.WriteLine(&quot;Time elapsed for the query =&quot; + diff.TotalMilliseconds + &quot; ms&quot;);

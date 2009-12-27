@@ -9,7 +9,7 @@ private void storeWithArray() {
               int[] id1 = new int[] {1,2,3,4};
                 item = new ItemWithArray(id1, item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);

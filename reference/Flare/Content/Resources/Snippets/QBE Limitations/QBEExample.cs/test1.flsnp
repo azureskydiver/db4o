@@ -13,10 +13,10 @@ private static void Test1()
                  {
                     // Pilot1 contains re-initialisation in the constructor
                     Pilot1 pilot = new Pilot1("Kimi Raikonnen", 100);
-                    container.Set(pilot);
+                    container.Store(pilot);
                     container.Commit();
                     // QBE returns result with wrong points
-                    IObjectSet result = container.Get(
+                    IObjectSet result = container.QueryByExample(
 new Pilot1("Kimi Raikonnen", 100));
                     System.Console.WriteLine(
 "Test QBE on class with member re-initialization in constructor");

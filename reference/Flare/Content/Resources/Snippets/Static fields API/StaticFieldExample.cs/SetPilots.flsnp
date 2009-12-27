@@ -7,8 +7,8 @@ private static void SetPilots()
              {
                 try
                  {
-                    db.Set(new Pilot(&quot;Michael Schumacher&quot;, PilotCategories.Winner));
-                    db.Set(new Pilot(&quot;Rubens Barrichello&quot;, PilotCategories.Talented));
+                    db.Store(new Pilot(&quot;Michael Schumacher&quot;, PilotCategories.Winner));
+                    db.Store(new Pilot(&quot;Rubens Barrichello&quot;, PilotCategories.Talented));
                 }
                 finally
                  {

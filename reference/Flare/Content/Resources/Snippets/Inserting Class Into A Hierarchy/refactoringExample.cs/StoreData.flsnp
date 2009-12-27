@@ -7,17 +7,17 @@ public static void StoreData()
              {
                 A a = new A();
                 a.name = &quot;A class&quot;;
-                container.Set(a);
+                container.Store(a);
 
                 B b = new B();
                 b.name = &quot;B class&quot;;
                 b.number = 1;
-                container.Set(b);
+                container.Store(b);
 
                 C c = new C();
                 c.name = &quot;C class&quot;;
                 c.number = 2;
-                container.Set(c);
+                container.Store(c);
             }
             finally
              {

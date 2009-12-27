@@ -18,9 +18,9 @@ sfOld.GetName() + ";" + sfOld.GetStoredType().GetName())
                 Dim obj As Object
                 For Each obj In result
                     Dim pilot As Pilot = CType(obj, Pilot)
-                    pilot.Name = New Identity(sfOld.Get(pilot).ToString(), "")
+                    pilot.Name = New Identity(sfOld.QueryByExample(pilot).ToString(), "")
                     System.Console.WriteLine("Pilot=" + pilot.ToString())
-                    container.Set(pilot)
+                    container.Store(pilot)
                 Next
             Finally
                 container.Close()

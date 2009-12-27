@@ -29,7 +29,7 @@ private static void getObjectsInMem() {
       container.close();
     }
     System.out.println(&quot;Writing the database back to disc&quot;);
-    byte[] dbstream = adapter.get(DB4O_FILE_NAME);
+    byte[] dbstream = adapter.queryByExample(DB4O_FILE_NAME);
     try  {
       RandomAccessFile file = new RandomAccessFile(DB4O_FILE_NAME,&quot;rw&quot;);
       file.write(dbstream);

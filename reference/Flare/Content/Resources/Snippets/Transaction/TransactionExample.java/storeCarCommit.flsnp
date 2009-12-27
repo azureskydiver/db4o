@@ -3,6 +3,6 @@ private static void storeCarCommit(ObjectContainer container)  {
         Pilot pilot=new Pilot(&quot;Rubens Barrichello&quot;,99);
         Car car=new Car(&quot;BMW&quot;);
         car.setPilot(pilot);
-        container.set(car);
+        container.store(car);
         container.commit();
     }</pre>    </body></html>

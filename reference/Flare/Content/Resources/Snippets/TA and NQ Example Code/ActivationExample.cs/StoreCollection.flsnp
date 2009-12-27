@@ -16,7 +16,7 @@ private static void StoreCollection()
                     SensorPanel sensorPanel = new SensorPanel().CreateList(10);
                     // store all elements with one statement, 
                     // since all elements are new    
-                    db.Set(sensorPanel);
+                    db.Store(sensorPanel);
                 }
                 finally
                  {

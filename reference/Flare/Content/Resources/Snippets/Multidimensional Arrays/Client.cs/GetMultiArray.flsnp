@@ -12,7 +12,7 @@ private static void GetMultiArray()
 "localhost", 0xdb40, "db4o", "db4o");
             try
              {
-                IObjectSet result = oc.Get(new RecordBook());
+                IObjectSet result = oc.QueryByExample(new RecordBook());
                 ListResult(result);
             }
             finally

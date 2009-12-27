@@ -11,7 +11,7 @@ private static void testTransparentPersistence()  {
         SensorPanel sensor = null;
         if (result.size() &gt; 0)  {
           System.out.println(&quot;Before modification: &quot;);
-          sensor = (SensorPanel) result.get(0);
+          sensor = (SensorPanel) result.queryByExample(0);
           // the object is a linked list, so each call to next()
           // will need to activate a new object
           SensorPanel next = sensor.getNext();
@@ -40,7 +40,7 @@ private static void testTransparentPersistence()  {
         SensorPanel sensor = null;
         if (result.size() &gt; 0)  {
           System.out.println(&quot;After modification: &quot;);
-          sensor = (SensorPanel) result.get(0);
+          sensor = (SensorPanel) result.queryByExample(0);
           SensorPanel next = sensor.getNext();
           while (next != null)  {
             System.out.println(next);

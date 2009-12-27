@@ -54,7 +54,7 @@ namespace Db4objects.Db4odoc.Binding
 
     void SetUpDataBindings()
      {
-      ObjectSet os = _container.Get(typeof(Customer));
+      ObjectSet os = _container.QueryByExample(typeof(Customer));
       if (0 == os.Size())
        {
         // Generate some initial data
@@ -78,7 +78,7 @@ namespace Db4objects.Db4odoc.Binding
      {
       foreach (Customer customer in _customers)
        {
-        _container.Set(customer);
+        _container.Store(customer);
       }
     }
 

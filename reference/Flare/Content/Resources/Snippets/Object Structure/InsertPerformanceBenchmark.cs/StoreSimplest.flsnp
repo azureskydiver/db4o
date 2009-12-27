@@ -9,7 +9,7 @@ private void StoreSimplest()
                  {
                     item = new SimplestItem(i, item);
                 }
-                objectContainer.Set(item);
+                objectContainer.Store(item);
             }
             objectContainer.Commit();
             StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);

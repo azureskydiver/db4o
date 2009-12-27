@@ -2,6 +2,6 @@
 private static void RetrieveAllCarsQBE(IObjectContainer db)
      {
       Car proto = new Car(null);
-      IObjectSet result = db.Get(proto);
+      IObjectSet result = db.QueryByExample(proto);
       ListResult(result);
     }</pre>    </body></html>
