@@ -56,7 +56,7 @@ public class MaintenanceQueue&lt;Item&gt;  {
     if(idx == 0)  {
       return value();
     }
-    return _next.get(idx - 1);
+    return _next.queryByExample(idx - 1);
   }
 
   public Item value()  {

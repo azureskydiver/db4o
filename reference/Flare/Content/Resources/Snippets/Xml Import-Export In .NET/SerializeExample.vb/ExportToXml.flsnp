@@ -11,7 +11,7 @@ New XmlSerializer(GetType(Car()))
             Dim db As IObjectContainer = Db4oFactory. _ 
 OpenFile(Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(GetType(Car))
+                Dim result As IObjectSet = db.QueryByExample(GetType(Car))
                 Dim cars() As Car = New Car(result.Size()) {}
                 Dim i As Integer
                 For i = 0 To result.Size() - 1 Step i + 1

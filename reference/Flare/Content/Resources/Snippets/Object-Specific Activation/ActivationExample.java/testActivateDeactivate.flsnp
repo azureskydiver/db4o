@@ -11,7 +11,7 @@ private static void testActivateDeactivate()  {
           .queryByExample(new SensorPanel(1));
       System.out.println(&quot;Sensor1:&quot;);
       listResult(result);
-      SensorPanel sensor1 = (SensorPanel) result.get(0);
+      SensorPanel sensor1 = (SensorPanel) result.queryByExample(0);
       testActivated(sensor1);
 
       System.out.println(&quot;Sensor1 activated:&quot;);
@@ -20,7 +20,7 @@ private static void testActivateDeactivate()  {
 
       System.out.println(&quot;Sensor5 activated:&quot;);
       result = container.queryByExample(new SensorPanel(5));
-      SensorPanel sensor5 = (SensorPanel) result.get(0);
+      SensorPanel sensor5 = (SensorPanel) result.queryByExample(0);
       container.activate(sensor5, 4);
       listResult(result);
       testActivated(sensor5);

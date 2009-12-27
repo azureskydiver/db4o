@@ -5,7 +5,7 @@ private static void TestStore()
             try
              {
                 Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;);
-                db.Set(pilot);
+                db.Store(pilot);
                 System.Console.WriteLine(&quot;New pilot added&quot;);
             }
             finally

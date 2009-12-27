@@ -9,7 +9,7 @@ private static void testActivation()  {
       ObjectSet result = container.queryByExample(new SensorPanelTA(1));
       listResult(result);
       if (result.size() &gt; 0)  {
-        SensorPanelTA sensor = (SensorPanelTA) result.get(0);
+        SensorPanelTA sensor = (SensorPanelTA) result.queryByExample(0);
         // the object is a linked list, so each call to next()
         // will need to activate a new object
         SensorPanelTA next = sensor.getNext();

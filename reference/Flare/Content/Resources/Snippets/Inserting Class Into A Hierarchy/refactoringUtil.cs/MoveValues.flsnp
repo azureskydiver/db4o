@@ -4,7 +4,7 @@ public static void MoveValues()
             IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
             try
              {
-                IObjectSet result = container.Get(new C());
+                IObjectSet result = container.QueryByExample(new C());
                 for (int i = 0; i &lt; result.Count; i++)
                  {
                     C c = (C)result[i];
@@ -12,7 +12,7 @@ public static void MoveValues()
                     e.name = c.name;
                     e.number = c.number;
                     container.Delete(c);
-                    container.Set(e);
+                    container.Store(e);
                 }
 
             }

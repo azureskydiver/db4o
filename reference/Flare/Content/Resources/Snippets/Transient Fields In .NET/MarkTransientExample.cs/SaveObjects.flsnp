@@ -6,9 +6,9 @@ private static void SaveObjects(IConfiguration configuration)
       try 
        {
         Test test = new Test(&quot;Transient string&quot;,&quot;Persistent string&quot;);
-        container.Set(test);
+        container.Store(test);
         TestCustomized testc = new TestCustomized(&quot;Transient string&quot;,&quot;Persistent string&quot;);
-        container.Set(testc);
+        container.Store(testc);
       } 
       finally 
        {

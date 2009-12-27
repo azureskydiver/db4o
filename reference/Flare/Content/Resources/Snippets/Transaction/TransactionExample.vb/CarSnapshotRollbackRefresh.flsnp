@@ -6,10 +6,10 @@
         <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: CarSnapshotRollbackRefresh
 Public Shared Sub _ 
 CarSnapshotRollbackRefresh(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Car("BMW"))
+            Dim result As IObjectSet = db.QueryByExample(New Car("BMW"))
             Dim car As Car = DirectCast(result.Next(), Car)
             car.Snapshot()
-            db.Set(car)
+            db.Store(car)
             db.Rollback()
             db.Ext().Refresh(car, Integer.MaxValue)
             Console.WriteLine(car)

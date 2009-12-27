@@ -13,13 +13,13 @@ Private Shared Sub StorePilots()
                     Dim i As Integer
                     For i = 0 To ObjectCount - 1 Step i + 1
                         pilot = New Pilot("Test Pilot #" + i.ToString(), i)
-                        container.Set(pilot)
+                        container.Store(pilot)
                     Next
                     i = 0
                     For i = 0 To ObjectCount - 1 Step i + 1
                         pilot = New Pilot("Professional Pilot #" _ 
 + (i + 10).ToString(), i + 10)
-                        container.Set(pilot)
+                        container.Store(pilot)
                     Next
                     container.Commit()
                 Catch ex As Db4oException

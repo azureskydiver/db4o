@@ -10,7 +10,7 @@ private static void TestActivation()
                 try
                  {
                     System.Console.WriteLine(&quot;Zero activation depth&quot;);
-                    IObjectSet result = container.Get(new SensorPanelTA(1));
+                    IObjectSet result = container.QueryByExample(new SensorPanelTA(1));
                     ListResult(result);
                     if (result.Size() &gt; 0)
                      {

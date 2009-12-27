@@ -10,8 +10,8 @@ private static void deleteDeepRevisited(ObjectContainer container)  {
     Car car2 = new Car(&quot;BMW&quot;);
     car1.setPilot(pilot);
     car2.setPilot(pilot);
-    container.set(car1);
-    container.set(car2);
+    container.store(car1);
+    container.store(car2);
     container.delete(car2);
     result = container.query(new Predicate&lt;Car&gt;()  {
       public boolean match(Car car)  {

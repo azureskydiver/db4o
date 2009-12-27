@@ -6,7 +6,7 @@ private static void saveMultiArray() throws IOException  {
       RecordBook recordBook = new RecordBook();
       recordBook.addRecord(&quot;September 2006&quot;, &quot;Michael Schumacher&quot;, &quot;last race&quot;);
       recordBook.addRecord(&quot;September 2006&quot;, &quot;Kimi Raikkonen&quot;, &quot;no notes&quot;);
-      oc.set(recordBook);
+      oc.store(recordBook);
     } finally  {
       oc.close();
     }

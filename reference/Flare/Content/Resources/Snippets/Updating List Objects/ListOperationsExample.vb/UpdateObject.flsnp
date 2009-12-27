@@ -21,7 +21,7 @@ Private Shared Sub UpdateObject()
                     Console.WriteLine("Updated list {0} dataobject {1}", _ 
 lo1.Name, lo1.Data(0))
                     sw.Start()
-                    db.Set(dataobject)
+                    db.Store(dataobject)
                     db.Commit()
                     sw.Stop()
                 End If

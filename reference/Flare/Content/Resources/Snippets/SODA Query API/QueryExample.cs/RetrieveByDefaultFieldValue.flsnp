@@ -2,7 +2,7 @@
 public static void RetrieveByDefaultFieldValue(IObjectContainer db)
          {
             Pilot somebody = new Pilot(&quot;Somebody else&quot;, 0);
-            db.Set(somebody);
+            db.Store(somebody);
             IQuery query = db.Query();
             query.Constrain(typeof(Pilot));
             query.Descend(&quot;_points&quot;).Constrain(0);

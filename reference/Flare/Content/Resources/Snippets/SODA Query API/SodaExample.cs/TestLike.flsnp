@@ -8,9 +8,9 @@ public static void TestLike()
                 try
                  {
                     Pilot pilot = new Pilot(&quot;Test Pilot1&quot;, 100);
-                    container.Set(pilot);
+                    container.Store(pilot);
                     pilot = new Pilot(&quot;Test Pilot2&quot;, 102);
-                    container.Set(pilot);
+                    container.Store(pilot);
 
                     // Simple.IQuery
                     IQuery query1 = container.Query();

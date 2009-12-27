@@ -11,7 +11,7 @@ Private Shared Sub StoreSensorPanel()
                 Try
                     ' create a linked list with length 10
                     Dim list As SensorPanelTA = (New SensorPanelTA).CreateList(10)
-                    container.Set(list)
+                    container.Store(list)
                 Finally
                     CloseDatabase()
                 End Try

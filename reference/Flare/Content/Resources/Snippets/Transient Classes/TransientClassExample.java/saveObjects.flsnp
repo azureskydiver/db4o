@@ -5,10 +5,10 @@ private static void saveObjects()  {
     try  {
       // Save Test1 object with a NotStorable class field
       Test1 test1 = new Test1(&quot;Test1&quot;, new NotStorable());
-      container.set(test1);
+      container.store(test1);
       // Save Test2 object with a NotStorable class field
       Test2 test2 = new Test2(&quot;Test2&quot;, new NotStorable(), test1);
-      container.set(test2);
+      container.store(test2);
     } finally  {
       container.close();
     }

@@ -54,7 +54,7 @@ IObjectContainer objectContainer, Type  clazz)
           System.Console.WriteLine(e.Message);
         } 
 
-        objectContainer.Set(obj);
+        objectContainer.Store(obj);
 
         /**//* !!! CAUTION !!!
          * There is a  commit  call here.

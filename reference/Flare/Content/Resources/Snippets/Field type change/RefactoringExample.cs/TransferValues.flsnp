@@ -20,9 +20,9 @@ private static void TransferValues()
         foreach (object obj in result)
          {
           Pilot pilot = (Pilot)obj;
-          pilot.Name = new Identity(sfOld.Get(pilot).ToString(),"");
+          pilot.Name = new Identity(sfOld.QueryByExample(pilot).ToString(),"");
           System.Console.WriteLine("Pilot="+ pilot);
-          container.Set(pilot);
+          container.Store(pilot);
         }
       } 
       finally 

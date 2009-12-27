@@ -6,7 +6,7 @@ private static void SetObjects()
             try
              {
                 Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;);
-                db.Set(pilot);
+                db.Store(pilot);
             }
             finally
              {

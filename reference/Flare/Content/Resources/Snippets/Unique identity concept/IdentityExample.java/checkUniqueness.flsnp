@@ -4,10 +4,10 @@ private static void checkUniqueness() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
     try  {
       ObjectSet cars = container.query(Car.class);
-      Car car = (Car)cars.get(0);
+      Car car = (Car)cars.queryByExample(0);
       String pilotName = car.getPilot().getName();
-      ObjectSet pilots = container.get(new Pilot(pilotName));
-      Pilot pilot = (Pilot)pilots.get(0);
+      ObjectSet pilots = container.queryByExample(new Pilot(pilotName));
+      Pilot pilot = (Pilot)pilots.queryByExample(0);
       System.out.println(&quot;Retrieved objects are identical: &quot; + (pilot == car.getPilot()));
     } finally  {
       container.close();

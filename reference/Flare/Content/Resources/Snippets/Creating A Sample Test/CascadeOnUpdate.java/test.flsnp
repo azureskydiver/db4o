@@ -10,7 +10,7 @@ public void test() throws Exception  {
       ((Atom)atom.child).name = &quot;updated&quot;;
       ((Atom)atom.child).child.name = &quot;notUpdated&quot;;
       // store the parent object
-      db().set(atom);
+      db().store(atom);
     }
     
     // commit and refresh to make sure that the changes are saved

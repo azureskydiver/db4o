@@ -25,7 +25,7 @@ public static void reuseMemoryBin()  {
     ObjectContainer newDb = Db4oEmbedded.openFile(newConfig, DB4O_URI);
     // test that the data is still there
     Book book = (Book) newDb
-        .queryByExample(new Book(&quot;Alice in Wonderland&quot;)).get(0);
+        .queryByExample(new Book(&quot;Alice in Wonderland&quot;)).queryByExample(0);
     System.out.println(book);
     newDb.close();
   }</pre>    </body></html>

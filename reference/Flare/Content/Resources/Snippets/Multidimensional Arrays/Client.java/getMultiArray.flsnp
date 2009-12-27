@@ -3,7 +3,7 @@ private static void getMultiArray() throws IOException  {
     System.out.println(&quot;Testing retrieving an object with multidimentional array field&quot;);
     ObjectContainer oc = Db4o.openClient(&quot;localhost&quot;, 0xdb40, &quot;db4o&quot;,&quot;db4o&quot;);
     try  {
-      ObjectSet result = oc.get(new RecordBook());
+      ObjectSet result = oc.queryByExample(new RecordBook());
       listResult(result);
     } finally  {
       oc.close();

@@ -7,7 +7,7 @@ public static void main(String[] args)  {
       queue = MaintenanceQueue.add(queue, new Car(&quot;Car&quot; + number, 
           new Pilot(&quot;Pilot #&quot; + number, new Id(&quot;110021&quot; + number))));
     }
-    db.set(queue);
+    db.store(queue);
     db.close();
 
     db = Db4o.openFile(configuration(), DB4O_FILE_NAME);
@@ -32,7 +32,7 @@ public static void main(String[] args)  {
     });
     System.out.println(result.size());
     //for (Iterator&lt;MaintenanceQueue&lt;Car&gt;&gt; i = result.iterator(); i.hasNext();){
-      MaintenanceQueue&lt;Car&gt; carQueue = result.get(0);
+      MaintenanceQueue&lt;Car&gt; carQueue = result.queryByExample(0);
       Car car = carQueue.value();
       System.out.println(car);
       

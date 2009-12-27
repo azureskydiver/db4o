@@ -9,7 +9,7 @@ private static void StoreSensorPanel()
                  {
                     // create a linked list with length 10
                     SensorPanelTA list = new SensorPanelTA().CreateList(10);
-                    container.Set(list);
+                    container.Store(list);
                 }
                 finally
                  {

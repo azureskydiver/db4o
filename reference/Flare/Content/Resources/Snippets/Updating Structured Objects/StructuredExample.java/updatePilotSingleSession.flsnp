@@ -8,7 +8,7 @@ private static void updatePilotSingleSession(
     });
     Car found = (Car) result.next();
     found.getPilot().addPoints(1);
-    container.set(found);
+    container.store(found);
     result = container.query(new Predicate&lt;Car&gt;()  {
       public boolean match(Car car)  {
         return car.getModel().equals(&quot;Ferrari&quot;);

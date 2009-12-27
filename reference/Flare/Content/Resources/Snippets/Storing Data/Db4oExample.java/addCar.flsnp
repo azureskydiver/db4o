@@ -3,5 +3,5 @@ private static void addCar(ObjectContainer container, int points)
    {
     Car car = new Car(&quot;BMW&quot;);
     car.setPilot(new Pilot(&quot;Tester&quot;, points));
-    container.set(car);
+    container.store(car);
   }</pre>    </body></html>

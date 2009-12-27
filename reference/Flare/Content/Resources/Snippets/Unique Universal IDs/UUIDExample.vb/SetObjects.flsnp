@@ -12,7 +12,7 @@ Public Shared Sub SetObjects()
 Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
-                container.Set(car)
+                container.Store(car)
             Finally
                 container.Close()
             End Try

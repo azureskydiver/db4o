@@ -12,7 +12,7 @@ private static void StoreCollection()
                      {
                         team.AddPilot(new Pilot(&quot;Pilot #&quot; + i));
                     }
-                    container.Set(team);
+                    container.Store(team);
                     container.Commit();
                 }
                 catch (Exception ex)

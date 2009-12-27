@@ -8,9 +8,9 @@ private static void updateQualification() {
       query.descend(&quot;qualification&quot;).constrain(&quot;WINNER&quot;);
           ObjectSet result = query.execute();
           for(int x = 0; x &lt; result.size(); x++) {
-            Qualification qualification = (Qualification)result.get(x);
+            Qualification qualification = (Qualification)result.queryByExample(x);
             qualification.testChange(&quot;WINNER2006&quot;);
-            container.set(qualification);
+            container.store(qualification);
           }
     } finally  {
       container.close();

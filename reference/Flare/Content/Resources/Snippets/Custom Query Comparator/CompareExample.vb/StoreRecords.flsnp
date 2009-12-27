@@ -12,11 +12,11 @@ Db4oFactory.OpenFile(configuration, FileName)
             Try
                 Dim record As Record = _ 
 New Record("Michael Schumacher, points: 100")
-                container.Set(record)
+                container.Store(record)
                 record = New Record("Rubens Barrichello, points: 98")
-                container.Set(record)
+                container.Store(record)
                 record = New Record("Kimi Raikonnen, points: 55")
-                container.Set(record)
+                container.Store(record)
             Finally
                 container.Close()
             End Try

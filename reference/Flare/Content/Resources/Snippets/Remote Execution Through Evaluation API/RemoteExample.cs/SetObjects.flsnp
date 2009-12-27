@@ -8,9 +8,9 @@ private static void SetObjects()
         for (int i = 0; i &lt; 5; i++) 
          {
           Car car = new Car(&quot;car&quot;+i);
-          db.Set(car);
+          db.Store(car);
         }
-        db.Set(new RemoteExample());
+        db.Store(new RemoteExample());
       } 
       finally 
        {

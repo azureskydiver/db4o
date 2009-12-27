@@ -19,10 +19,10 @@ Db4oFactory.OpenFile(Db4oFileName)
 Evaluations.Pilot("David Schumacher", 100)
                     ferrariTeam.UpdatePilot(1, pilot)
 
-                    db.Set(ferrariTeam)
+                    db.Store(ferrariTeam)
                 End If
                 Dim protoList As IList = CollectionFactory.NewList()
-                result = db.Get(protoList)
+                result = db.QueryByExample(protoList)
                 ListResult(result)
             Finally
                 db.Close()

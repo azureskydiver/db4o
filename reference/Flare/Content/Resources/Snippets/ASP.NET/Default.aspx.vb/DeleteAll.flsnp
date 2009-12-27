@@ -6,7 +6,7 @@
         <pre class="prettyprint" xml:space="preserve">Default.aspx.vb: DeleteAll
 Public Shared Sub DeleteAll()
 
-            Dim messages As IList = Db4oHttpModule.Client.Get(GetType(Message))
+            Dim messages As IList = Db4oHttpModule.Client.QueryByExample(GetType(Message))
             For Each msg As Message In messages
                 Db4oHttpModule.Client.Delete(msg)
             Next

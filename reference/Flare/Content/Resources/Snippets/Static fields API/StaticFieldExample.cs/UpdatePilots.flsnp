@@ -7,7 +7,7 @@ private static void UpdatePilots()
              {
                 try
                  {
-                    IObjectSet result = db.Get(typeof(Pilot));
+                    IObjectSet result = db.QueryByExample(typeof(Pilot));
                     foreach (object obj in result)
                      {
                         Pilot pilot = (Pilot)obj;
@@ -16,7 +16,7 @@ private static void UpdatePilots()
                             Console.WriteLine(&quot;Winner pilot: &quot; + pilot);
                             PilotCategories pc = pilot.Category;
                             pc.TestChange(&quot;WINNER2006&quot;);
-                            db.Set(pilot);
+                            db.Store(pilot);
                         }
                     }
                     PrintCategories(db);

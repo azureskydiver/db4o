@@ -25,8 +25,8 @@ Private Shared Sub RemoveInsert()
                     Console _ 
 .WriteLine("Added to the second list, count is {0}, setting data ", lo2.Data.Count)
                     sw.Start()
-                    db.Set(lo1)d
-                    db.Set(lo2)
+                    db.Store(lo1)d
+                    db.Store(lo2)
                     db.Commit()
                     sw.Stop()
                 End If

@@ -12,7 +12,7 @@ Public Shared Sub CheckActive()
 (configuration, Db4oFileName)
             Try
                 System.Console.WriteLine("Object container activation depth = 2")
-                Dim result As IObjectSet = db.Get(New SensorPanel(1))
+                Dim result As IObjectSet = db.QueryByExample(New SensorPanel(1))
                 Dim sensor As SensorPanel = CType(result(0), SensorPanel)
                 Dim NextSensor As SensorPanel = sensor.NextSensor
                 While Not NextSensor Is Nothing

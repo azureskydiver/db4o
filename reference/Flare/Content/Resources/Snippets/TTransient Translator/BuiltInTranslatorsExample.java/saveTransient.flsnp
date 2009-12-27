@@ -11,9 +11,9 @@ public static void saveTransient()
             try
              {
                 Item item =  new Item(&quot;Test1&quot;, new NotStorable(&quot;test1&quot;));
-                container.set(item);
+                container.store(item);
                 item =  new Item(&quot;Test2&quot;, new NotStorable(&quot;test2&quot;));
-                container.set(item);
+                container.store(item);
             }
             catch (Db4oException ex)
              {

@@ -7,14 +7,14 @@ private static void deleteTest()  {
         System.out.println(&quot;Deleting Pilots :&quot;);
         ObjectSet result = container.query(Pilot.class);
         for (int x = 0; x &lt; result.size(); x++)  {
-          Pilot pilot = (Pilot) result.get(x);
+          Pilot pilot = (Pilot) result.queryByExample(x);
           container.delete(pilot);
         }
         printCategories(container);
         System.out.println(&quot;Deleting PilotCategories :&quot;);
         result = container.query(PilotCategories.class);
         for (int x = 0; x &lt; result.size(); x++)  {
-          container.delete(result.get(x));
+          container.delete(result.queryByExample(x));
         }
         printCategories(container);
       } finally  {

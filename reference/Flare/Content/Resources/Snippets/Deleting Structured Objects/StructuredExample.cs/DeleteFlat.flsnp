@@ -6,10 +6,10 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: DeleteFlat
 private static void DeleteFlat(IObjectContainer db)
      {
-      IObjectSet result = db.Get(new Car("Ferrari"));
+      IObjectSet result = db.QueryByExample(new Car("Ferrari"));
       Car found = (Car)result.Next();
       db.Delete(found);
-      result = db.Get(new Car(null));
+      result = db.QueryByExample(new Car(null));
       ListResult(result);
     }</pre>
     </body>

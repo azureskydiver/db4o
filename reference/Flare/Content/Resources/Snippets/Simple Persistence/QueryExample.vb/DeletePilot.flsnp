@@ -9,7 +9,7 @@ Public Shared Sub DeletePilot()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 'first retrieve the object from the database
-                Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 10))
+                Dim result As IObjectSet = db.QueryByExample(New Pilot("Michael Schumacher", 10))
                 Dim pilot As Pilot = CType(result(0), Pilot)
                 db.Delete(pilot)
                 Console.WriteLine("Deleted {0}", pilot)

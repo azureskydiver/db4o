@@ -15,7 +15,7 @@ new StringBuilder("load"), null);
                  {
                     item = new ItemWithStringBuilder(new StringBuilder("load"), item);
                 }
-                objectContainer.Set(item);
+                objectContainer.Store(item);
             }
             objectContainer.Commit();
             StopTimer("Store " + TotalObjects() + " objects");

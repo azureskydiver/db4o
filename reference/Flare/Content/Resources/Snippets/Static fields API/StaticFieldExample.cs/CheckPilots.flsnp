@@ -6,7 +6,7 @@ private static void CheckPilots()
              {
                 try
                  {
-                    IObjectSet result = db.Get(typeof(Pilot));
+                    IObjectSet result = db.QueryByExample(typeof(Pilot));
                     foreach (object obj in result)
                      {
                         Pilot pilot = (Pilot)obj;

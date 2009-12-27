@@ -5,17 +5,17 @@ public static void storeData() {
     try  {
       A a = new A();
       a.name = &quot;A class&quot;;
-      container.set(a);
+      container.store(a);
       
       B b = new B();
       b.name = &quot;B class&quot;;
       b.number = 1;
-      container.set(b);
+      container.store(b);
       
       C c = new C();
       c.name = &quot;C class&quot;;
       c.number = 2;
-      container.set(c);
+      container.store(c);
     } finally  {
       container.close();
     }

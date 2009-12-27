@@ -17,11 +17,11 @@ sfOld.getStoredType());
       q.constrain(Pilot.class);
       ObjectSet result = q.execute();
       for (int i = 0; i&lt; result.size(); i++) {
-        Pilot pilot = (Pilot)result.get(i);
+        Pilot pilot = (Pilot)result.queryByExample(i);
         System.out.println("Pilot="+ pilot);
-        pilot.setName(new Identity(sfOld.get(pilot).toString(),""));
+        pilot.setName(new Identity(sfOld.queryByExample(pilot).toString(),""));
         System.out.println("Pilot="+ pilot);
-        container.set(pilot);
+        container.store(pilot);
       }
       
     } finally  {

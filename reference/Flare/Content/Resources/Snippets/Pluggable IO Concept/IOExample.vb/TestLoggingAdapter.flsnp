@@ -12,7 +12,7 @@ Db4oFactory.NewConfiguration()
 Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Michael Schumacher")
-                db.Set(pilot)
+                db.Store(pilot)
                 System.Console.WriteLine("New pilot added")
             Finally
                 db.Close()
@@ -20,7 +20,7 @@ Db4oFactory.OpenFile(configuration, Db4oFileName)
 
             db = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(GetType(Pilot))
+                Dim result As IObjectSet = db.QueryByExample(GetType(Pilot))
                 ListResult(result)
             Finally
                 db.Close()

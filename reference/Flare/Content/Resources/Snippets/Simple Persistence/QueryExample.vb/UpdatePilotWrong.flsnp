@@ -12,7 +12,7 @@ Public Shared Sub UpdatePilotWrong()
                 ' won't work for update of the saved pilot
                 Dim pilot As Pilot = New Pilot("Michael Schumacher", 10)
                 pilot.AddPoints(10)
-                db.Set(pilot)
+                db.Store(pilot)
                 Console.WriteLine("Stored {0}", pilot)
             Finally
                 db.Close()

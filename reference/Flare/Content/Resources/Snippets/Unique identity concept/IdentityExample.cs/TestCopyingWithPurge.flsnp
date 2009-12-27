@@ -5,11 +5,11 @@ private static void TestCopyingWithPurge()
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet pilots = db.Get(typeof(Pilot));
+        IObjectSet pilots = db.QueryByExample(typeof(Pilot));
         Pilot pilot = (Pilot)pilots[0];
         db.Ext().Purge(pilot);
-        db.Set(pilot);
-        pilots = db.Get(typeof(Pilot));
+        db.Store(pilot);
+        pilots = db.QueryByExample(typeof(Pilot));
         ListResult(pilots);
       } 
       finally 

@@ -15,13 +15,13 @@ namespace Db4objects.Db4odoc.Web
 
         public static IList RetrieveAll()
          {
-            return Db4oHttpModule.Client.Get(typeof(Message));
+            return Db4oHttpModule.Client.QueryByExample(typeof(Message));
         }
         // end RetrieveAll
 
         public static void DeleteAll()
          {
-            IList messages = Db4oHttpModule.Client.Get(typeof(Message));
+            IList messages = Db4oHttpModule.Client.QueryByExample(typeof(Message));
             foreach (Message msg in messages)
              {
                 Db4oHttpModule.Client.Delete(msg);
@@ -32,7 +32,7 @@ namespace Db4objects.Db4odoc.Web
         public static void SaveMessage(string username, string text)
          {
             Message msg = new Message(username, text);
-            Db4oHttpModule.Client.Set(msg);
+            Db4oHttpModule.Client.Store(msg);
         }
         // end SaveMessage
 

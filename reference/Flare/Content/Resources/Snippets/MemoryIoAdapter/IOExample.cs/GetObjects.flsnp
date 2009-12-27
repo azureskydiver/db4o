@@ -6,7 +6,7 @@ private static void GetObjects()
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
              {
-                IObjectSet result = db.Get(typeof(Pilot));
+                IObjectSet result = db.QueryByExample(typeof(Pilot));
                 System.Console.WriteLine(&quot;Read stored results through disc file&quot;);
                 ListResult(result);
             }

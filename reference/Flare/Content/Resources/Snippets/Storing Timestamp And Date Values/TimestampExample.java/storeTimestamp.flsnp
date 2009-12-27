@@ -8,7 +8,7 @@ private static void storeTimestamp(Configuration configuration)  {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); 
         System.out.println(&quot;timestamp: &quot; + timestamp);
 
-        container.set(timestamp); 
+        container.store(timestamp); 
         
         container.commit();
     } catch (Exception ex)  {

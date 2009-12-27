@@ -6,10 +6,10 @@ public static void UpdatePilot()
       try
        {
         // first retrieve the object from the database
-        IObjectSet result = db.Get(new Pilot(&quot;Michael Schumacher&quot;,10));
+        IObjectSet result = db.QueryByExample(new Pilot(&quot;Michael Schumacher&quot;,10));
         Pilot found=(Pilot)result.Next();
         found.AddPoints(11);
-        db.Set(found);
+        db.Store(found);
         Console.WriteLine(&quot;Added 11 points to {0}&quot;, found);
       }
       finally 

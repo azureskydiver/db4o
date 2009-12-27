@@ -9,12 +9,12 @@ private static void storePersons()  {
         for (int i = 0; i &lt; OBJECT_COUNT; i++)  {
           trainee = new Trainee(&quot;Trainee #&quot; + i, new Pilot(
               &quot;Professional Pilot #&quot; + i, i));
-          container.set(trainee);
+          container.store(trainee);
         }
         // store a new trainee with a &quot;Training&quot; pilot
         trainee = new Trainee(&quot;Trainee #1&quot;, new Pilot(
             &quot;Training Pilot #1&quot;, 20));
-        container.set(trainee);
+        container.store(trainee);
         container.commit();
       } catch (Db4oException ex)  {
         System.out.println(&quot;Db4o Exception: &quot; + ex.getMessage());

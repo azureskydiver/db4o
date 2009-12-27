@@ -4,9 +4,9 @@ private static void setPilots()  {
     ObjectContainer container = database();
     if (container != null)  {
       try  {
-        container.set(new Pilot(&quot;Michael Schumacher&quot;,
+        container.store(new Pilot(&quot;Michael Schumacher&quot;,
             PilotCategories.WINNER));
-        container.set(new Pilot(&quot;Rubens Barrichello&quot;,
+        container.store(new Pilot(&quot;Rubens Barrichello&quot;,
             PilotCategories.TALENTED));
       } finally  {
         closeDatabase();

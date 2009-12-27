@@ -12,7 +12,7 @@ private static void ImportFromXml()
         try 
          {
           Car newCar = (Car)car;
-          db.Set(newCar);
+          db.Store(newCar);
         } 
         finally 
          {
@@ -22,9 +22,9 @@ private static void ImportFromXml()
       db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet result = db.Get(typeof(Pilot));
+        IObjectSet result = db.QueryByExample(typeof(Pilot));
         ListResult(result);
-        result = db.Get(typeof(Car));
+        result = db.QueryByExample(typeof(Car));
         ListResult(result);
       } 
       finally 

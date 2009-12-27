@@ -10,7 +10,7 @@ private static void SetObjects()
                     for (int j = 0; j &lt; 5; j++)
                      {
                         Pilot pilot = new Pilot(&quot;Pilot #&quot; + i, j + 1);
-                        db.Set(pilot);
+                        db.Store(pilot);
                     }
                 }
             }

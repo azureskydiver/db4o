@@ -6,7 +6,7 @@ private static void ExportToXml()
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet result = db.Get(typeof(Car));
+        IObjectSet result = db.QueryByExample(typeof(Car));
         Car[] cars = new Car[result.Size()];
         for (int i = 0; i &lt; result.Size(); i++)
          {

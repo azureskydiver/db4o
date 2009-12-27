@@ -16,7 +16,7 @@ public static void storeMemoryBin() throws IOException  {
     ObjectContainer newDb = Db4oEmbedded.openFile(Db4oEmbedded
         .newConfiguration(), &quot;memory.db4o&quot;);
     Book book = (Book) newDb
-        .queryByExample(new Book(&quot;Alice in Wonderland&quot;)).get(0);
+        .queryByExample(new Book(&quot;Alice in Wonderland&quot;)).queryByExample(0);
     System.out.println(book);
     newDb.close();
   }</pre>    </body></html>

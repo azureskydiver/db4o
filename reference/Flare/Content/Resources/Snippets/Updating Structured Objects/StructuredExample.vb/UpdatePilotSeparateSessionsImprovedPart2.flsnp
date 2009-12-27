@@ -6,10 +6,10 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: UpdatePilotSeparateSessionsImprovedPart2
 Private Shared Sub _ 
 UpdatePilotSeparateSessionsImprovedPart2(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim result As IObjectSet = db.QueryByExample(New Car("Ferrari"))
             Dim found As Car = DirectCast(result.Next(), Car)
             found.Pilot.AddPoints(1)
-            db.Set(found)
+            db.Store(found)
         End Sub</pre>
     </body>
 </html>

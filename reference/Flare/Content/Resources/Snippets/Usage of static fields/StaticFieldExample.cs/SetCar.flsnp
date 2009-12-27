@@ -6,7 +6,7 @@ public static void SetCar()
        {
         Car car = new Car();
         car._color = Color.Green;
-        db.Set(car);
+        db.Store(car);
       } 
       finally 
        {

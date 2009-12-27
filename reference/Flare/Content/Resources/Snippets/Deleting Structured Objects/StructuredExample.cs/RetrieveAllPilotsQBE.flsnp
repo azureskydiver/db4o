@@ -7,7 +7,7 @@
 private static void RetrieveAllPilotsQBE(IObjectContainer db)
      {
       Pilot proto = new Pilot(null, 0);
-      IObjectSet result = db.Get(proto);
+      IObjectSet result = db.QueryByExample(proto);
       ListResult(result);
     }</pre>
     </body>

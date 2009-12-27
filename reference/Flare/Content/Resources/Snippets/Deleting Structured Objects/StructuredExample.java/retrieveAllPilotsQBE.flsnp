@@ -6,7 +6,7 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.java: retrieveAllPilotsQBE
 private static void retrieveAllPilotsQBE(ObjectContainer container)  {
     Pilot proto = new Pilot(null, 0);
-    ObjectSet result = container.get(proto);
+    ObjectSet result = container.queryByExample(proto);
     listResult(result);
   }</pre>
     </body>

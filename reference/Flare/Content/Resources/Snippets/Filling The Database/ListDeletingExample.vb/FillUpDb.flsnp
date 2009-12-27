@@ -24,7 +24,7 @@ Private Shared Sub FillUpDb(ByVal listCount As Integer)
                         lo.Data.Add(dataObject)
                         System.Math.Min(System.Threading.Interlocked.Increment(j), j - 1)
                     End While
-                    db.Set(lo)
+                    db.Store(lo)
                     System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
                 End While
                 sw.Stop()

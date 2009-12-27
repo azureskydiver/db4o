@@ -6,8 +6,8 @@ private static void checkActive()  {
       container.ext().configure().activationDepth(2);
       System.out
           .println(&quot;Object container activation depth = 2&quot;);
-      ObjectSet result = container.get(new SensorPanel(1));
-      SensorPanel sensor = (SensorPanel) result.get(0);
+      ObjectSet result = container.queryByExample(new SensorPanel(1));
+      SensorPanel sensor = (SensorPanel) result.queryByExample(0);
       SensorPanel next = sensor.next;
       while (next != null)  {
         System.out.println(&quot;Object &quot; + next + &quot; is active: &quot;

@@ -6,16 +6,16 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: DeleteDeepRevisited
 Private Shared Sub _ 
 DeleteDeepRevisited(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 0))
+            Dim result As IObjectSet = db.QueryByExample(New Pilot("Michael Schumacher", 0))
             Dim pilot As Pilot = DirectCast(result.Next(), Pilot)
             Dim car1 As Car = New Car("Ferrari")
             Dim car2 As Car = New Car("BMW")
             car1.Pilot = pilot
             car2.Pilot = pilot
-            db.Set(car1)
-            db.Set(car2)
+            db.Store(car1)
+            db.Store(car2)
             db.Delete(car2)
-            result = db.Get(New Car(Nothing))
+            result = db.QueryByExample(New Car(Nothing))
             ListResult(result)
         End Sub</pre>
     </body>

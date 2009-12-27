@@ -12,7 +12,7 @@ private void StoreWithArray()
                     int[] id1 = new int[]  { 1, 2, 3, 4 };
                     item = new ItemWithArray(id1, item);
                 }
-                objectContainer.Set(item);
+                objectContainer.Store(item);
             }
             objectContainer.Commit();
             StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);

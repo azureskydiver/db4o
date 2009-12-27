@@ -7,7 +7,7 @@ public static void updatePilotWrong()  {
       // won't work for update of the saved pilot
         Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;,10);
         pilot.addPoints(10);
-        db.set(pilot);
+        db.store(pilot);
         System.out.println(&quot;Added 10 points for &quot;+pilot);
         } finally  {
         db.close();

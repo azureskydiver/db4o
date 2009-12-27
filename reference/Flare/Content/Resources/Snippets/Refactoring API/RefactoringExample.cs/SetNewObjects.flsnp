@@ -5,9 +5,9 @@ private static void SetNewObjects()
       try 
        {
         PilotNew pilot = new PilotNew(&quot;Rubens Barrichello&quot;,99);
-        container.Set(pilot);
+        container.Store(pilot);
         pilot = new PilotNew(&quot;Michael Schumacher&quot;,100);
-        container.Set(pilot);
+        container.Store(pilot);
       } 
       finally 
        {

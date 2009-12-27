@@ -12,7 +12,7 @@ Database(Db4oFactory.NewConfiguration)
                 Try
                     ' create a linked list with length 10
                     Dim list As SensorPanel = (New SensorPanel).CreateList(10)
-                    container.Set(list)
+                    container.Store(list)
                 Finally
                     CloseDatabase()
                 End Try

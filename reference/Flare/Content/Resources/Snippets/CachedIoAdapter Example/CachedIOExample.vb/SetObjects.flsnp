@@ -12,7 +12,7 @@ Private Shared Sub SetObjects(ByVal configuration As IConfiguration)
                 Dim i As Integer = 0
                 While i &lt; 50000
                     Dim pilot As Pilot = New Pilot("Pilot #" + i.ToString())
-                    db.Set(pilot)
+                    db.Store(pilot)
                     System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
                 End While
                 Dim dt2 As DateTime = DateTime.UtcNow

@@ -7,7 +7,7 @@
 Public Shared Sub _ 
 RetrieveByDefaultFieldValue(ByVal db As IObjectContainer)
             Dim somebody As Pilot = New Pilot("Somebody else", 0)
-            db.Set(somebody)
+            db.Store(somebody)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
             query.Descend("_points").Constrain(0)

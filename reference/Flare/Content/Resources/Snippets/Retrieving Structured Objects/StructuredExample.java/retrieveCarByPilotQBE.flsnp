@@ -3,6 +3,6 @@ private static void retrieveCarByPilotQBE(ObjectContainer container)  {
     Pilot pilotproto = new Pilot(&quot;Rubens Barrichello&quot;, 0);
     Car carproto = new Car(null);
     carproto.setPilot(pilotproto);
-    ObjectSet result = container.get(carproto);
+    ObjectSet result = container.queryByExample(carproto);
     listResult(result);
   }</pre>    </body></html>

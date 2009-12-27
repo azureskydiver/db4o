@@ -13,7 +13,7 @@ private void StoreWithCommit()
                      {
                         item = new Item(&quot;load&quot;, item);
                     }
-                    objectContainer.Set(item);
+                    objectContainer.Store(item);
                 }
                 objectContainer.Commit();
             }

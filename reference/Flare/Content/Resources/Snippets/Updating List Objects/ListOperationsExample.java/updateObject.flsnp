@@ -17,19 +17,19 @@ private static void updateObject()
                 List&lt;ListObject&gt; result = db.&lt;ListObject&gt;query(ListObject.class);
                 if (result.size() == 2)
                  {
-                    ListObject lo1 = result.get(0);
+                    ListObject lo1 = result.queryByExample(0);
                     // Select a DataObject for update
-                    DataObject dataobject = lo1.getData().get(0);
+                    DataObject dataobject = lo1.getData().queryByExample(0);
                     dataobject.setName("Updated");
                     dataobject.setData(System.currentTimeMillis()+ 
 " ---- Updated Object ");
 
                     System.out.println("Updated list " + 
-lo1.getName() + " dataobject " +  lo1.getData().get(0));
+lo1.getName() + " dataobject " +  lo1.getData().queryByExample(0));
                     long t1 = System.currentTimeMillis();
                     // save only the DataObject. List of DataObjects will
                     // automatically include the new value
-                    db.set(dataobject);
+                    db.store(dataobject);
                     db.commit();
                     long t2 = System.currentTimeMillis();
                     timeElapsed = t2 -t1;

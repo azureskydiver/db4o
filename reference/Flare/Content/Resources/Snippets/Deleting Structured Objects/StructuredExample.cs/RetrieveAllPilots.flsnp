@@ -6,7 +6,7 @@
         <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveAllPilots
 private static void RetrieveAllPilots(IObjectContainer db) 
      {
-      IObjectSet results = db.Get(typeof(Pilot));
+      IObjectSet results = db.QueryByExample(typeof(Pilot));
       ListResult(results);
     }</pre>
     </body>

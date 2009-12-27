@@ -11,7 +11,7 @@ private static void createDatabase(EmbeddedConfiguration config)  {
       }
       container.store(itemStore);
       Item item  = (Item) container.queryByExample(
-          new Item(1, &quot;title1&quot;)).get(0);
+          new Item(1, &quot;title1&quot;)).queryByExample(0);
       System.out.println(item);
     } finally  {
       container.close();

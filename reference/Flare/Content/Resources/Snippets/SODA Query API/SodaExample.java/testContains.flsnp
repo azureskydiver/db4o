@@ -10,7 +10,7 @@ public static void testContains()  {
         Pilot pilot2 = new Pilot(&quot;Test 2&quot;, 2);
         list.add(pilot2);
         Team team = new Team(&quot;Ferrari&quot;, list);
-        container.set(team);
+        container.store(team);
         
         Query query = container.query();
         query.constrain(Team.class);

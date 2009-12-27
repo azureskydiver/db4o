@@ -8,7 +8,7 @@ Public Shared Sub SaveMessage(ByVal username As String, _
 ByVal text As String)
 
             Dim msg As Message = New Message(username, text)
-            Db4oHttpModule.Client.Set(msg)
+            Db4oHttpModule.Client.Store(msg)
         End Sub</pre>
     </body>
 </html>

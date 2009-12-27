@@ -8,7 +8,7 @@ Private Shared Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
             Dim car As Car = New Car("BMW")
             Dim pilot As Pilot = New Pilot("Tester", points)
             car.Pilot = pilot
-            db.Set(car)
+            db.Store(car)
         End Sub</pre>
     </body>
 </html>

@@ -15,7 +15,7 @@ private static void deletePilots() {
     try  {
           ObjectSet result = container.query(Pilot.class);
           for(int x = 0; x &lt; result.size(); x++) {
-            Pilot pilot = (Pilot )result.get(x);
+            Pilot pilot = (Pilot )result.queryByExample(x);
             container.delete(pilot);
           }
     } finally  {

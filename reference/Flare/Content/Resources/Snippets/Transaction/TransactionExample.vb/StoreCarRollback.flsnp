@@ -8,7 +8,7 @@ Public Shared Sub StoreCarRollback(ByVal db As IObjectContainer)
             Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)
             Dim car As Car = New Car("Ferrari")
             car.Pilot = pilot
-            db.Set(car)
+            db.Store(car)
             db.Rollback()
         End Sub</pre>
     </body>

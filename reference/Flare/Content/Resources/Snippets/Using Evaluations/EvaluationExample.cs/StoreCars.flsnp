@@ -5,11 +5,11 @@ private static void StoreCars(IObjectContainer db)
       Car car1 = new Car(&quot;Ferrari&quot;);
       car1.Pilot = pilot1;
       car1.Snapshot();
-      db.Set(car1);
+      db.Store(car1);
       Pilot pilot2 = new Pilot(&quot;Rubens Barrichello&quot;, 99);
       Car car2 = new Car(&quot;BMW&quot;);
       car2.Pilot = pilot2;
       car2.Snapshot();
       car2.Snapshot();
-      db.Set(car2);
+      db.Store(car2);
     }</pre>    </body></html>

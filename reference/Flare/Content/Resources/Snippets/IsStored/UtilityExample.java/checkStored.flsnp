@@ -7,7 +7,7 @@ private static void checkStored()  {
     try  {
       // store all elements with one statement, since all
       // elements are new
-      container.set(list);
+      container.store(list);
       Object sensor = (Object) list.sensor;
       SensorPanel sp5 = list.next.next.next.next;
       System.out.println(&quot;Root element &quot; + list + &quot; isStored: &quot;

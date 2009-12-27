@@ -3,9 +3,9 @@ private static void setNewObjects() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
     try  {
       PilotNew pilot = new PilotNew(&quot;Rubens Barrichello&quot;,99);
-      container.set(pilot);
+      container.store(pilot);
       pilot = new PilotNew(&quot;Michael Schumacher&quot;,100);
-      container.set(pilot);
+      container.store(pilot);
     } finally  {
       container.close();
     }

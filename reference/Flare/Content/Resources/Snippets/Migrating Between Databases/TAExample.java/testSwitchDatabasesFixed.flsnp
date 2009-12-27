@@ -7,7 +7,7 @@ private static void testSwitchDatabasesFixed()  {
     try  {
       ObjectSet result = firstDb.queryByExample(new SensorPanelTA(1));
       if (result.size() &gt; 0)  {
-        SensorPanelTA sensor = (SensorPanelTA) result.get(0);
+        SensorPanelTA sensor = (SensorPanelTA) result.queryByExample(0);
         // Unbind the object from the first database
         sensor.bind(null);
         // Migrating the object into the second database

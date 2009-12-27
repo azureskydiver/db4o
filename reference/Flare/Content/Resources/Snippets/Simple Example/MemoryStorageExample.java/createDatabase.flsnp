@@ -14,7 +14,7 @@ private static void createDatabase(EmbeddedConfiguration config)  {
       }
       container.store(lib);
       Book book = (Book) container.queryByExample(
-          new Book(&quot;title1&quot;, null)).get(0);
+          new Book(&quot;title1&quot;, null)).queryByExample(0);
       System.out.println(book);
     } finally  {
       container.close();

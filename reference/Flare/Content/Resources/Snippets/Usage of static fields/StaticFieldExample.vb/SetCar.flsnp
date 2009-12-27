@@ -9,7 +9,7 @@ Private Shared Sub SetCar()
             Try
                 Dim car As Car = New Car()
                 car._color = Color.Green
-                db.Set(car)
+                db.Store(car)
             Finally
                 db.Close()
             End Try

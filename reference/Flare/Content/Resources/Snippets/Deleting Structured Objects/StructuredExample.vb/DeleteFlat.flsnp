@@ -5,10 +5,10 @@
     <body>
         <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: DeleteFlat
 Private Shared Sub DeleteFlat(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim result As IObjectSet = db.QueryByExample(New Car("Ferrari"))
             Dim found As Car = DirectCast(result.Next(), Car)
             db.Delete(found)
-            result = db.Get(New Car(Nothing))
+            result = db.QueryByExample(New Car(Nothing))
             ListResult(result)
         End Sub</pre>
     </body>

@@ -7,7 +7,7 @@
 Public Shared Sub GetCarInfo()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim result As IObjectSet = db.Get(New Car("BMW"))
+                Dim result As IObjectSet = db.QueryByExample(New Car("BMW"))
                 If result.Size() &lt; 1 Then
                     Return
                 End If

@@ -15,7 +15,7 @@ Db4oFactory.OpenClient("localhost", &amp;HDB40, "db4o", "db4o")
 ("September 2006", "Michael Schumacher", "last race")
                 recordBook.AddRecord _ 
 ("September 2006", "Kimi Raikkonen", "no notes")
-                oc.Set(recordBook)
+                oc.Store(recordBook)
             Finally
                 oc.Close()
             End Try

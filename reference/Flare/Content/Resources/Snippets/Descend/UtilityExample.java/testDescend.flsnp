@@ -7,8 +7,8 @@ private static void testDescend()  {
     try  {
       System.out
           .println(&quot;Object container activation depth = 1&quot;);
-      ObjectSet result = container.get(new SensorPanel(1));
-      SensorPanel spParent = (SensorPanel) result.get(0);
+      ObjectSet result = container.queryByExample(new SensorPanel(1));
+      SensorPanel spParent = (SensorPanel) result.queryByExample(0);
       SensorPanel spDescend = (SensorPanel) container.ext()
           .descend(
               (Object) spParent,

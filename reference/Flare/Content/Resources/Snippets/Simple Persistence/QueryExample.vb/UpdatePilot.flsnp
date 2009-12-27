@@ -9,10 +9,10 @@ Public Shared Sub  UpdatePilot()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
                 'first retrieve the object from the database
-                Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 10))
+                Dim result As IObjectSet = db.QueryByExample(New Pilot("Michael Schumacher", 10))
                 Dim pilot As Pilot = CType(result(0), Pilot)
                 pilot.AddPoints(10)
-                db.Set(pilot)
+                db.Store(pilot)
                 Console.WriteLine("Added 10 points to {0}", pilot)
             Finally
                 db.Close()

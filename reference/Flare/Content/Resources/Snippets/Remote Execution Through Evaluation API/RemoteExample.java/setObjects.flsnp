@@ -5,9 +5,9 @@ private static void setObjects()  {
     try  {
       for (int i = 0; i &lt; 5; i++)  {
         Car car = new Car(&quot;car&quot; + i);
-        container.set(car);
+        container.store(car);
       }
-      container.set(new RemoteExample());
+      container.store(new RemoteExample());
     } finally  {
       container.close();
     }

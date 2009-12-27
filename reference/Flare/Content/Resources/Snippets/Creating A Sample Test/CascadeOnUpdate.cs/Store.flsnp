@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="158" MadCap:lastWidth="624">
     <head>
     </head>
@@ -8,7 +8,7 @@ protected override void Store()
          {
             Atom atom = new Atom(new Atom(
 new Atom("StoredGrandChildChild"), "StoredChild"), "Parent");
-            Db().Set(atom);
+            Db().Store(atom);
         }</pre>
     </body>
 </html>

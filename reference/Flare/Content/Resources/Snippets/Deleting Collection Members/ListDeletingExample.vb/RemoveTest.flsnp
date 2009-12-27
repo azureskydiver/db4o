@@ -19,7 +19,7 @@ db.Query(Of ListObject)(GetType(ListObject))
                     Dim lo1 As ListObject = result(0)
                     ' remove all the objects from the list
                     lo1.Data.RemoveRange(0, lo1.Data.Count)
-                    db.Set(lo1)
+                    db.Store(lo1)
                 End If
             Finally
                 db.Close()

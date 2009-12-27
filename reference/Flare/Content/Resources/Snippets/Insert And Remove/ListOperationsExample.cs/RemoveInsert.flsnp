@@ -32,8 +32,8 @@ lo1.Data.Count);
 .WriteLine("Added to the second list, count is {0}, setting data ", 
 lo2.Data.Count);
                     sw.Start();
-                    db.Set(lo1);
-                    db.Set(lo2);
+                    db.Store(lo1);
+                    db.Store(lo2);
                     db.Commit();
                     sw.Stop();
                 }

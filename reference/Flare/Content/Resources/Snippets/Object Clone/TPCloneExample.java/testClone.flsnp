@@ -12,7 +12,7 @@ private static void testClone() throws CloneNotSupportedException {
                 Car car1 = null;
                 if (result.size() &gt; 0)
                  {
-                    car = (Car)result.get(0);
+                    car = (Car)result.queryByExample(0);
                     System.out.println(&quot;Retrieved car: &quot; + car);
                     car1 = (Car)car.clone();
                     System.out.println(&quot;Storing cloned car: &quot; + car1);

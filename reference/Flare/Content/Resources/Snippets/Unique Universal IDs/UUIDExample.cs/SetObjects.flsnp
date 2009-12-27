@@ -14,7 +14,7 @@ OpenFile(configuration, Db4oFileName);
       try 
        {
         Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
-        container.Set(car);
+        container.Store(car);
       } 
       finally 
        {

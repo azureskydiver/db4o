@@ -28,7 +28,7 @@ private static void TestLazyConcurrent()
                 db.Delete(pilotToDelete);
                 Pilot pilot = new Pilot("Tester", 2);
                 Console.WriteLine("Pilot to be added: " + pilot);
-                db.Set(pilot);
+                db.Store(pilot);
 
                 Console.WriteLine(
 "Query result after changing from the same transaction");

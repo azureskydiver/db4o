@@ -4,9 +4,9 @@ private static void testCopyingWithPurge() {
     ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
     try  {
       ObjectSet pilots = container.query(Pilot.class);
-      Pilot pilot = (Pilot)pilots.get(0);
+      Pilot pilot = (Pilot)pilots.queryByExample(0);
       container.ext().purge(pilot);
-      container.set(pilot);
+      container.store(pilot);
       pilots = container.query(Pilot.class);
       listResult(pilots);
     } finally  {

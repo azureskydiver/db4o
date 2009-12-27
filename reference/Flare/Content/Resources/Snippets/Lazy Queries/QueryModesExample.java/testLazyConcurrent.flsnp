@@ -16,13 +16,13 @@ private static void testLazyConcurrent()  {
       query2.constrain(Pilot.class);
       query2.descend(&quot;points&quot;).constrain(1);
       ObjectSet result2 = query2.execute();
-      Pilot pilotToDelete = (Pilot) result2.get(0);
+      Pilot pilotToDelete = (Pilot) result2.queryByExample(0);
       System.out.println(&quot;Pilot to be deleted: &quot;
           + pilotToDelete);
       container.delete(pilotToDelete);
       Pilot pilot = new Pilot(&quot;Tester&quot;, 2);
       System.out.println(&quot;Pilot to be added: &quot; + pilot);
-      container.set(pilot);
+      container.store(pilot);
 
       System.out
           .println(&quot;Query result after changing from the same transaction&quot;);

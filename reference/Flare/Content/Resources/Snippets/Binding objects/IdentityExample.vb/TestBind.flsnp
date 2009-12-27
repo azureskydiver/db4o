@@ -16,9 +16,9 @@ Private Shared Sub TestBind()
                 Dim IdCar1 As Long = db.Ext().GetID(car1)
                 Dim car2 As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 db.Ext().Bind(car2, IdCar1)
-                db.Set(car2)
+                db.Store(car2)
 
-                result = db.Get(GetType(Car))
+                result = db.QueryByExample(GetType(Car))
                 ListResult(result)
             Finally
                 db.Close()

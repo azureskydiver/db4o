@@ -8,7 +8,7 @@ Public Shared Sub StoreCarCommit(ByVal db As IObjectContainer)
             Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
             Dim car As Car = New Car("BMW")
             car.Pilot = pilot
-            db.Set(car)
+            db.Store(car)
             db.Commit()
         End Sub</pre>
     </body>

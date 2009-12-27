@@ -21,7 +21,7 @@ private static void updateCars()  {
           while (objectSet.hasNext())  {
             Car car = (Car) objectSet.next();
             car.setModel(&quot;Update1-&quot; + car.getModel());
-            objectContainer.set(car);
+            objectContainer.store(car);
           }
           objectContainer.commit();
         }

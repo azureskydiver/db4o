@@ -13,7 +13,7 @@ public static void CheckStored()
       try 
        {
         // store all elements with one statement, since all elements are new    
-        db.Set(list);
+        db.Store(list);
         Object sensor = (Object)list.Sensor;
         SensorPanel sp5 = list.Next.Next.Next.Next;
         System.Console.WriteLine("Root element "+list+" isStored: " 

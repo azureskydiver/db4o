@@ -10,10 +10,10 @@ private static void CheckUniqueness()
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet cars = db.Get(typeof(Car));
+        IObjectSet cars = db.QueryByExample(typeof(Car));
         Car car = (Car)cars[0];
         String pilotName = car.Pilot.Name;
-        IObjectSet pilots = db.Get(new Pilot(pilotName));
+        IObjectSet pilots = db.QueryByExample(new Pilot(pilotName));
         Pilot pilot = (Pilot)pilots[0];
         System.Console.WriteLine(
 "Retrieved objects are identical: " + (pilot == car.Pilot));

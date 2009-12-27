@@ -6,9 +6,9 @@ private static void SetObjects()
       try 
        {
         Car car = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
-        container.Set(car);
+        container.Store(car);
         car = new Car(&quot;Ferrari&quot;, new Pilot(&quot;Michael Schumacher&quot;));
-        container.Set(car);
+        container.Store(car);
       } 
       finally 
        {

@@ -25,7 +25,7 @@ public void Run()
                         // save pilot with client1
                         Car client1Car = new Car("Ferrari", 2006, 
 new Pilot("Schumacher"));
-                        client1.Set(client1Car);
+                        client1.Store(client1Car);
                         client1.Commit();
                         System.Console.WriteLine("Client1 version initially: " 
 + client1Car);
@@ -43,7 +43,7 @@ new Pilot("Schumacher"));
               // modify the car, add and link a new pilot with client1
                         client1Car.Model = 2007;
                         client1Car.Pilot = new Pilot("Hakkinnen");
-                        client1.Set(client1Car);
+                        client1.Store(client1Car);
                         client1.Commit();
 
                         WaitForCompletion();

@@ -26,7 +26,7 @@ Private Shared Sub FillUpDb()
                         System.Math.Min(System.Threading.Interlocked.Increment(j), _ 
 j - 1)
                     End While
-                    db.Set(lo)
+                    db.Store(lo)
                     System.Math.Min(System.Threading.Interlocked.Increment(i), _ 
 i - 1)
                 End While

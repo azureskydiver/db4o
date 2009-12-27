@@ -26,7 +26,7 @@ Db4oFactory.OpenFile(configuration, Db4oFileName)
                 db.Delete(pilotToDelete)
                 Dim pilot As Pilot = New Pilot("Tester", 2)
                 Console.WriteLine("Pilot to be added: " + pilot.ToString())
-                db.Set(pilot)
+                db.Store(pilot)
                 Console.WriteLine( _ 
 "Query result after changing from the same transaction")
                 ListResult(result1)

@@ -15,7 +15,7 @@ Private Shared Sub StoreCollection()
                         team.AddPilot(New Pilot("Pilot #" + i.ToString()))
                         i = i + 1
                     End While
-                    container.Set(team)
+                    container.Store(team)
                     container.Commit()
                 Catch ex As Exception
                     System.Console.WriteLine(ex.StackTrace)

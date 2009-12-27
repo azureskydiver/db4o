@@ -10,7 +10,7 @@ private static void importFromXml()  {
         container = Db4o.openFile(DB4O_FILE_NAME);
         try  {
           Car car = (Car) cars[i];
-          container.set(car);
+          container.store(car);
         } finally  {
           container.close();
         }

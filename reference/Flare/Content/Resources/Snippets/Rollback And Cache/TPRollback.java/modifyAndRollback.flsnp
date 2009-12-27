@@ -5,7 +5,7 @@ private static void modifyAndRollback()  {
       try  {
         // create a car
         Car car = (Car) container.queryByExample(new Car(null, null))
-            .get(0);
+            .queryByExample(0);
         System.out.println(&quot;Initial car: &quot; + car + &quot;(&quot;
             + container.ext().getID(car) + &quot;)&quot;);
         car.setModel(&quot;Ferrari&quot;);

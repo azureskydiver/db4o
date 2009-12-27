@@ -63,7 +63,7 @@ ByVal userName As String, ByVal ipAddress As String)
             q.Descend("userName").Constrain(userName)
             q.Descend("ipAddress").Constrain(ipAddress)
             If q.Execute().Size() = 0 Then
-                client.Set(New ConnectedUser(userName, ipAddress))
+                client.Store(New ConnectedUser(userName, ipAddress))
                 client.Commit()
             End If
             Dim connectedSemaphoreName As String = SemaphoreConnected + _ 

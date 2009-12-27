@@ -5,7 +5,7 @@ private static void saveObjects(Configuration configuration) {
     try 
      {
       Test test = new Test(&quot;Transient string&quot;,&quot;Persistent string&quot;);
-      container.set(test);
+      container.store(test);
     } 
     finally 
      {

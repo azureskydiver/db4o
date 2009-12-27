@@ -7,7 +7,7 @@ public static void storeBigDecimal(Configuration configuration)  {
         BigDecimal d = new BigDecimal(&quot;-918.099995e-15&quot;); 
         System.out.println(&quot;BigDecimal value: &quot; + d);
 
-        container.set(d); 
+        container.store(d); 
         
         container.commit();
     } catch (Exception ex)  {

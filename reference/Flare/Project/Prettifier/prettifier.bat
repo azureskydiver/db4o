@@ -1,1 +1,1 @@
-prettifier.vbs "C:\Users\tetyana\Documents\My Projects\Reference\Copy\Reference\Reference\Output\tetyana\NetWeb\Content"
+prettifier.vbs "C:\Users\tetyana\Documents\My Projects\Reference\Copy\Reference\Reference\Output\tetyana\AllWeb\Content"

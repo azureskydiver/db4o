@@ -12,7 +12,7 @@ Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileN
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 Dim car As Car = New Car("BMW")
-                client.Set(car)
+                client.Store(car)
                 System.Console.WriteLine("Objects in the Main database file:")
                 RetrieveAll(client)
 
@@ -20,7 +20,7 @@ Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileN
                 Dim clientExt As IExtClient = CType(client, IExtClient)
                 clientExt.SwitchToFile(ExtFileName)
                 car = New Car("Ferrari")
-                clientExt.Set(car)
+                clientExt.Store(car)
                 RetrieveAll(clientExt)
                 System.Console.WriteLine("Main database file again: ")
                 clientExt.SwitchToMainFile()

@@ -6,9 +6,9 @@ private static void SetObjects()
       try 
        {
         Car car = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
-        db.Set(car);
+        db.Store(car);
         car = new Car(&quot;Ferrari&quot;, new Pilot(&quot;Michael Schumacher&quot;));
-        db.Set(car);
+        db.Store(car);
       } 
       finally 
        {

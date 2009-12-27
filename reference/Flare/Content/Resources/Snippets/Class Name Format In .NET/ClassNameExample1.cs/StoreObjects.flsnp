@@ -7,7 +7,7 @@ private static void StoreObjects()
              {
                 // Store a simple class to the database
                 Test test = new Test();
-                container.Set(test);
+                container.Store(test);
             }
             finally
              {

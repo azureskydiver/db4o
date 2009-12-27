@@ -5,11 +5,11 @@ public static void testStartsEnds()  {
     if (container != null)  {
       try  {
         Pilot pilot = new Pilot(&quot;Test Pilot0&quot;, 100);
-        container.set(pilot);
+        container.store(pilot);
         pilot = new Pilot(&quot;Test Pilot1&quot;, 101);
-        container.set(pilot);
+        container.store(pilot);
         pilot = new Pilot(&quot;Test Pilot2&quot;, 102);
-        container.set(pilot);
+        container.store(pilot);
         
         Query query = container.query();
         query.constrain(Pilot.class);

@@ -26,7 +26,7 @@ db.Query&lt;ListObject&gt;(typeof(ListObject));
 new List&lt;DataObject&gt;(lo1.Data);
                     // remove all the objects from the list
                     lo1.Data.RemoveRange(0, lo1.Data.Count);
-                    db.Set(lo1);
+                    db.Store(lo1);
                     // and delete them from the database
                     foreach (DataObject obj in tempList)
                      {

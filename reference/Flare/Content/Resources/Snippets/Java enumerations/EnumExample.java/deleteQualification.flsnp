@@ -7,7 +7,7 @@ private static void deleteQualification() {
     try  {
       ObjectSet  result = container.query(Qualification.class);
           for(int x = 0; x &lt; result.size(); x++) {
-            Qualification pq = (Qualification)result.get(x);
+            Qualification pq = (Qualification)result.queryByExample(x);
             container.delete(pq);
           }
     } finally  {

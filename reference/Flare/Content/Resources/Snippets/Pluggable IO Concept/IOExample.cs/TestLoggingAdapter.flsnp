@@ -7,7 +7,7 @@ private static void TestLoggingAdapter()
             try
              {
                 Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;);
-                db.Set(pilot);
+                db.Store(pilot);
                 System.Console.WriteLine(&quot;New pilot added&quot;);
             }
             finally
@@ -18,7 +18,7 @@ private static void TestLoggingAdapter()
             db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
              {
-                IObjectSet result = db.Get(typeof(Pilot));
+                IObjectSet result = db.QueryByExample(typeof(Pilot));
                 ListResult(result);
             }
             finally

@@ -24,7 +24,7 @@ db.Query(Of ListObject)(GetType(ListObject))
 New List(Of DataObject)(lo1.Data)
                     ' remove all the objects from the list
                     lo1.Data.RemoveRange(0, lo1.Data.Count)
-                    db.Set(lo1)
+                    db.Store(lo1)
                     ' and delete them from the database
                     Dim obj As DataObject
                     For Each obj In tempList
@@ -32,7 +32,7 @@ New List(Of DataObject)(lo1.Data)
                     Next
                     ' remove all the objects from the list
                     lo1.Data.RemoveRange(0, lo1.Data.Count)
-                    db.Set(lo1)
+                    db.Store(lo1)
                 End If
             Finally
                 db.Close()

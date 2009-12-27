@@ -4,7 +4,7 @@ public static void deletePilot()  {
       ObjectContainer db=Db4o.openFile(YAPFILENAME);
       try  {
 //       first retrieve the object from the database
-        ObjectSet result=db.get(new Pilot(&quot;Michael Schumacher&quot;,10));
+        ObjectSet result=db.queryByExample(new Pilot(&quot;Michael Schumacher&quot;,10));
         Pilot found=(Pilot)result.next();
         db.delete(found);
         System.out.println(&quot;Deleted &quot;+found);

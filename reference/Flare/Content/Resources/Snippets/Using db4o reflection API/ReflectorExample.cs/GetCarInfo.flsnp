@@ -9,7 +9,7 @@ private static void GetCarInfo()
       IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
       try 
        {
-        IObjectSet result = db.Get(new Car("BMW"));
+        IObjectSet result = db.QueryByExample(new Car("BMW"));
         if (result.Size() &lt; 1) 
          {
           return;

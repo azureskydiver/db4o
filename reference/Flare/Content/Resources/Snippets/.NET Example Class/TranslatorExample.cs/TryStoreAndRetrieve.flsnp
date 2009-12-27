@@ -13,7 +13,7 @@ public static void TryStoreAndRetrieve(IConfiguration configuration)
                 LocalizedItemList LocalizedItemList = new 
 LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs);
                 System.Console.WriteLine("ORIGINAL: {0}", LocalizedItemList);
-                db.Set(LocalizedItemList);
+                db.Store(LocalizedItemList);
             }
             catch (Exception x)
              {
@@ -27,7 +27,7 @@ LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs);
             db = Db4oFactory.OpenFile(Db4oFileName);
             try
              {
-                IObjectSet result = db.Get(typeof(LocalizedItemList));
+                IObjectSet result = db.QueryByExample(typeof(LocalizedItemList));
                 while (result.HasNext())
                  {
                     LocalizedItemList LocalizedItemList = 

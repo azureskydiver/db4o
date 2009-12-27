@@ -4,7 +4,7 @@ public static void getObjects() {
     ObjectContainer db = Db4o.openFile(YAPFILENAME);
     try  {
       long t1 = System.currentTimeMillis();
-      ObjectSet result=db.get(null);
+      ObjectSet result=db.queryByExample(null);
       long t2 = System.currentTimeMillis();
       long  timeElapsed = t2 - t1;
       System.out.println(&quot;Time elapsed for the query =&quot;+ timeElapsed + &quot; ms&quot;);

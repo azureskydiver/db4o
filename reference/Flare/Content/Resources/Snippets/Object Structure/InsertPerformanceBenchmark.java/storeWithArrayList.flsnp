@@ -15,7 +15,7 @@ private void storeWithArrayList() {
               ids1.addAll(idList);
               item = new ItemWithArrayList(ids1, item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer(&quot;Store &quot;+ totalObjects() + &quot; objects&quot;);

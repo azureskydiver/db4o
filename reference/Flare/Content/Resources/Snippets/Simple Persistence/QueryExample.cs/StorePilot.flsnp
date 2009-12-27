@@ -6,10 +6,10 @@ public static void StorePilot()
       try
        {
         Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;, 0);
-        db.Set(pilot);
+        db.Store(pilot);
         // change pilot and resave updated
         pilot.AddPoints(10);
-        db.Set(pilot);
+        db.Store(pilot);
         Console.WriteLine(&quot;Stored {0}&quot;, pilot);
       }
       finally 

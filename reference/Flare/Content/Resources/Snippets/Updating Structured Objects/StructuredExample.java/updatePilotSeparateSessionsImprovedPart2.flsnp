@@ -8,5 +8,5 @@ private static void updatePilotSeparateSessionsImprovedPart2(
     });
     Car found = (Car) result.next();
     found.getPilot().addPoints(1);
-    container.set(found);
+    container.store(found);
   }</pre>    </body></html>

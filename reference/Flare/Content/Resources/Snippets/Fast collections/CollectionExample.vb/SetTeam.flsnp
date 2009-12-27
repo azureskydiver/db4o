@@ -16,9 +16,9 @@ Public Shared Sub SetTeam()
                 Dim pilot2 As Pilot = New Pilot("David Schumacher", 98)
                 ferrariTeam.AddPilot(pilot2)
 
-                db.Set(ferrariTeam)
+                db.Store(ferrariTeam)
                 Dim protoList As IList = CollectionFactory.NewList()
-                Dim result As IObjectSet = db.Get(protoList)
+                Dim result As IObjectSet = db.QueryByExample(protoList)
                 ListResult(result)
             Finally
                 db.Close()

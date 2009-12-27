@@ -11,9 +11,9 @@ public static void saveNotStorable()
             try
              {
                 NotStorable ns =  new NotStorable(&quot;test1&quot;);
-                container.set(ns);
+                container.store(ns);
                 ns = new NotStorable(&quot;test2&quot;);
-                container.set(ns);
+                container.store(ns);
             }
             catch (Db4oException ex)
              {
