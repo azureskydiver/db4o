@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="793" MadCap:lastWidth="624" MadCap:conditions="Primary.Java,Primary.All languages">
+    <head>
+    </head>
+    <body>
+        <h1>Statistics Example</h1>
+        <p>On the Java platform, statistics are published through Java Management Extensions (JMX). A variety of JMX clients is available. Many of them are linked from here.</p>
+        <p>In this tutorial we will use a standard tool from JDK 1.6 – jconsole. For general information on using jconsole, please , refer to .<a href="http://java.sun.com/javase/6/docs/technotes/guides/management/jconsole.html">Java documentation.</a></p>
+        <p>All that you need to do to enable statistics collection in your application is to add a respective statistic to the Common Configuration provider, i.e:</p><code> Common Configuration#add(new IOMonitoringSupport()); </code><code> Common Configuration#add(new QueryMonitoringSupport()); </code><code> Common Configuration#add(new NativeQueryMonitoringSupport()); </code><code> Common Configuration#add(new ReferenceSystemMonitoringSupport()); </code><code> Common Configuration#add(new FreespaceMonitoringSupport()); </code><code> Common Configuration#add(new com.db4o.monitoring.cs.NetworkingMonitoringSupport()); </code>
+        <p>Statistic classes are located in db4o-optional jar, and networking specific statistics are located in db4o-cs jar.</p>
+        <p>Note that since gathering these statistics does introduce some performance overhead (for most of the statistics this overhead is so small that it is immeasurable) each set of runtime statistics (Queries, FreeSpaceManager, ReferenceSystem, etc.) must be configured independently (so you can decide which ones you want to track and pay the performance hit only for those ones).</p>
+        <p>Statistics can be collected for both networked and standalone mode and are enabled per object container (database file) so you can monitor as many open databases as you want.</p>
+        <p>We will look at the example of networking mode to cover both.</p>
+        <p>The following code will be used to configure the client and the server:</p>
+        <MadCap:snippetBlock src="../../Resources/Snippets/Monitoring Example/Monitoring Example.java/Configure.java.flsnp" />
+        <p>The client will store some objects to the database and perform some queries:</p>
+        <MadCap:snippetBlock src="../../Resources/Snippets/Monitoring Example/Monitoring Example.java/ExecuteSodaQuery.java.flsnp" />
+        <MadCap:snippetBlock src="../../Resources/Snippets/Monitoring Example/Monitoring Example.java/ExecuteOptimizedNativeQuery.java.flsnp" />
+        <MadCap:snippetBlock src="../../Resources/Snippets/Monitoring Example/Monitoring Example.java/ExecuteUnOptimizedNativeQuery.java.flsnp" />
+        <p>Now start jconsole (it is location in the /bin folder of your java home). First you need to connect to the MonitoringDemo process. Then you will find the db4o related readings on the "MBeans" tab. In the treeview on the left, you will see "com.db4o.monitoring".</p>
+        <p>Below this tree node you will find all open ObjectContainers that have JMX monitoring enabled. For each of them the respective runtime statistics categories will be listed. If you select the "Attributes" node for any of them, the corresponding set of attribute values will be shown along with their most recent reading.</p>
+        <p>By doubleclicking on the number value a graph will be displayed. Here is a screenshot how results for Native Queries could look like:</p>
+        <p>
+            <img src="jconsole-queries.jpg" />
+        </p>
+        <p>For some "exceptional" events, we also provide the option to subscribe to notifications.</p>
+        <p>In the categories where the "Notifications" node is visible, you can select it and click "Subscribe" on the bottom right. For example we provide notifications about unoptimized native queries and about class index scans.</p>
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="MonitoringDemoJava.zip">Java </a>
+            </MadCap:conditionalText>
+        </p>
+    </body>
+</html>
