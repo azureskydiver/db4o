@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<CatapultTarget Version="1" OutputFile="ApplicationHelp.htm" Skin="/Project/Skins/HTML Help Window.flskn" Type="WebHelp" MasterToc="/Project/TOCs/Primary TOC.fltoc" GlossaryTermConversion="marked" AliasFile="/Project/Advanced/applicationhelp.flali" Comment="Application Help Sample" MasterPage="/Content/Resources/MasterPages/NewPage.flmsp" BrowseSequence="/Project/Advanced/applicationhelp.flbrs">
-    <Variables />
-    <ConditionTags />
-    <Glossaries>
-        <Glossary Link="/Project/Glossaries/Primary.flglo" />
-    </Glossaries>
-    <PrintedOutput ExpandingTextConversion="expand" />
-</CatapultTarget>
