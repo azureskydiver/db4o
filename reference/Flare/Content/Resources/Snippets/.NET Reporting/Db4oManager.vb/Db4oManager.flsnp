@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="1469" MadCap:lastWidth="1027">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Db4oManager.vb: </pre>
+        <pre class="prettyprint" xml:space="preserve">&#160;</pre>
+        <pre class="prettyprint" xml:space="preserve">Imports System</pre>
+        <pre>Imports System.Collections.Generic</pre>
+        <pre>Imports System.IO</pre>
+        <pre>Imports Db4objects.Db4o</pre>
+        <pre>Imports Db4objects.Db4odoc.ReportsExample.Persistent</pre>
+        <pre>Namespace Modules</pre>
+        <pre>Class Db4oManager</pre>
+        <pre>Public Const DbFileName As String = "..//..//Data//formula1.db"</pre>
+        <pre>Public Shared _db As IObjectContainer</pre>
+        <pre>Private Sub New()</pre>
+        <pre>End Sub</pre>
+        <pre>Public Shared Sub FillUpDB()</pre>
+        <pre>Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)</pre>
+        <pre>Db.Store(pilot)</pre>
+        <pre>pilot = New Pilot("David Barichello", 95)</pre>
+        <pre>Db.Store(pilot)</pre>
+        <pre>pilot = New Pilot("Kimi Raikkonen", 100)</pre>
+        <pre>Db.Store(pilot)</pre>
+        <pre>End Sub</pre>
+        <pre>' end FillUpDB</pre>
+        <pre>Public Shared Function GetAllPilots() As IList</pre>
+        <pre>Dim result As IList = Db.Query(GetType(Pilot))</pre>
+        <pre>Return result</pre>
+        <pre>End Function</pre>
+        <pre>' end GetAllPilots</pre>
+        <pre>Public Shared Sub StoreObject(ByVal obj As Object)</pre>
+        <pre>Db.Store(obj)</pre>
+        <pre>End Sub</pre>
+        <pre>' end StoreObject</pre>
+        <pre>Public Shared Function Db() As IObjectContainer</pre>
+        <pre>If _db Is Nothing Then</pre>
+        <pre>_db = Db4oFactory.OpenFile(DbFileName)</pre>
+        <pre>End If</pre>
+        <pre>Return _db</pre>
+        <pre>End Function</pre>
+        <pre>' end Db</pre>
+        <pre>Public Shared Sub CloseDb()</pre>
+        <pre>If Not (_db Is Nothing) Then</pre>
+        <pre>_db.Close()</pre>
+        <pre>End If</pre>
+        <pre>End Sub</pre>
+        <pre>' end CloseDb</pre>
+        <pre>End Class</pre>
+        <pre>End Namespace</pre>
+    </body>
+</html>

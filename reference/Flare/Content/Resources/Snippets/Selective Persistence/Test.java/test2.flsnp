@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+		<pre class="prettyprint" xml:space="preserve">Test2.java
+public class Test2 {
+	private Test1 test1;
+	private String name;
+	private NotStorable transientClass;
+	public Test2(String name, NotStorable transientClass, 
+		Test1 test1) {
+		this.name = name;
+		this.transientClass = transientClass;
+		this.test1 = test1;
+	}
+	public String toString() {
+	return name + "/" + transientClass + "; test1: " + test1;
+	}
+}</pre>
+    </body>
+</html>

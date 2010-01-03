@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+<head>
+</head>
+<body>
+		<pre  class="prettyprint" xml:space="preserve">
+MonitoringDemo.vb: Configure
+Private Function Configure(ByVal config As ICommonConfigurationProvider) As ICommonConfigurationProvider
+	config.Common.ObjectClass(GetType(MonitoringDemo.Item)).ObjectField("name").Indexed(True)
+	config.Common.Add(New IOMonitoringSupport())
+	config.Common.Add(New QueryMonitoringSupport())
+	config.Common.Add(New NativeQueryMonitoringSupport())
+	config.Common.Add(New ReferenceSystemMonitoringSupport())
+	config.Common.Add(New FreespaceMonitoringSupport())
+	config.Common.Add(New Global.Db4objects.Db4o.Monitoring.CS.NetworkingMonitoringSupport())
+	config.Common.Add(New ObjectMonitoringSupport())
+
+	Return config
+End Function
+		</pre>
+</body>
+</html>

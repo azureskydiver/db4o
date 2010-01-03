@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+<head>
+</head>
+<body>
+		<pre  class="prettyprint" xml:space="preserve">
+MonitoringDemo.vb: ExecuteOptimizedNativeQuery
+
+Private Sub ExecuteOptimizedNativeQuery(ByVal objectContainer As IObjectContainer)
+	objectContainer.Query(New NamePredicate())
+End Sub
+
+Private Class NamePredicate
+	Inherits Predicate
+	Public Function Match(ByVal candidate As MonitoringDemo.Item) As Boolean
+		Return candidate.name.Equals("name1")
+	End Function
+End Class
+		</pre>
+</body>
+</html>

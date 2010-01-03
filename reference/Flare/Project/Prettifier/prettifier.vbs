@@ -15,8 +15,10 @@ Set objFolder = objFSO.GetFolder(objStartFolder)
 'objLogFile.Writeline
 Set colFiles = objFolder.Files
 For Each objFile in colFiles
-    ReplaceBodyTags(objFile)
-            On Error Resume Next
+    If objFile.Name <> "welcome.htm" then
+        ReplaceBodyTags(objFile)
+    end if
+    On Error Resume Next
 Next
 
 
@@ -29,8 +31,9 @@ Sub ShowSubFolders(Folder)
         Set objFolder = objFSO.GetFolder(Subfolder.Path)
         Set colFiles = objFolder.Files
         For Each objFile in colFiles
-            ReplaceBodyTags(objFile)
+                ReplaceBodyTags(objFile)
             On Error Resume Next
+
         Next
         ShowSubFolders Subfolder
     Next
