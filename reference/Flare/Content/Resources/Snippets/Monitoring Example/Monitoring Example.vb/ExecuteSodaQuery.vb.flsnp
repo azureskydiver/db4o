@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+<head>
+</head>
+<body>
+		<pre  class="prettyprint" xml:space="preserve">
+MonitoringDemo.vb: ExecuteSodaQuery
+Private Sub ExecuteSodaQuery(ByVal objectContainer As IObjectContainer)
+
+	Dim Query As IQuery = objectContainer.Query()
+	Query.Constrain(GetType(MonitoringDemo.Item))
+	Query.Descend("name").Constrain("1")
+	Query.Execute()
+End Sub
+		</pre>
+</body>
+</html>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="630">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">Test1.cs
+class Test1
+{
+	private string name;
+	private NotStorable transientClass;
+
+	public Test1(string name, NotStorable transientClass)
+	{
+		this.name = name;
+		this.transientClass = transientClass;
+	}
+
+	public override string ToString()
+	{
+		if (transientClass == null)
+		{
+			return string.Format("{0}/{1}", name, "null");
+		}
+		else
+		{
+			return string.Format("{0}/{1}", name, transientClass);
+		}
+	}
+}
+		</pre>
+    </body>
+</html>

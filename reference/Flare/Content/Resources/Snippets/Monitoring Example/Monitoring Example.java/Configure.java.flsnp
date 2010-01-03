@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="237" MadCap:lastWidth="624">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">
+MonitoringDemo.java: configure
+private &lt;T extends CommonConfigurationProvider T&gt; configure(T config) {
+	config.common().objectClass(Item.class).objectField("name").indexed(
+	true);
+	config.common().add(new IOMonitoringSupport());
+	config.common().add(new QueryMonitoringSupport());
+	config.common().add(new NativeQueryMonitoringSupport());
+	config.common().add(new ReferenceSystemMonitoringSupport());
+	config.common().add(new FreespaceMonitoringSupport());
+	config.common().add(new NetworkingMonitoringSupport());
+	config.common().add(new ObjectLifecycleMonitoringSupport());
+	return config;
+}</pre>
+    </body>
+</html>
