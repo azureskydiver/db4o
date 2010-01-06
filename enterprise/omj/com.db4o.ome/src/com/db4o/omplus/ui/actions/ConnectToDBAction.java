@@ -1,19 +1,16 @@
 package com.db4o.omplus.ui.actions;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.ui.*;
 
-import com.db4o.omplus.connection.ConnectionStatus;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.ui.ViewerManager;
-import com.db4o.omplus.ui.dialog.LoginDialog;
+import com.db4o.omplus.*;
+import com.db4o.omplus.connection.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
+import com.db4o.omplus.ui.dialog.login.*;
+import com.db4o.omplus.ui.dialog.login.model.*;
 
 
 public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
@@ -22,12 +19,6 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 	
 	private static IAction action;
 	
-	/**
-	 * The constructor.
-	 */
-	public ConnectToDBAction() {
-	}
-
 	public void run(IAction action) {
 		ConnectionStatus connStatus = new ConnectionStatus();
 		boolean connectionClosed = true;
@@ -41,9 +32,12 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 				showOMEPerspective(); 
 			}
 		}
-		else
-		{ // FIX for OMJ-61
-			LoginDialog myWindow = new LoginDialog(window.getShell());
+		else {
+			LoginDialog myWindow = new LoginDialog(window.getShell(), Activator.getDefault().getOMEDataStore(), new Connector() {
+				public boolean connect(ConnectionParams params) throws DBConnectException {
+					return DbConnectUtil.connect(params, window.getShell());
+				}
+			});
 			myWindow.open();
 		}
 	}
@@ -90,4 +84,5 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
+
 }

@@ -1,7 +1,6 @@
 package com.db4o.omplus.connection;
 
 import com.db4o.omplus.*;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
 
 public class ConnectionStatus {
 	

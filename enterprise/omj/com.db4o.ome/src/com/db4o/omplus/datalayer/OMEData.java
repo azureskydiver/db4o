@@ -5,19 +5,17 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class OMEData {
 	
-	HashMap<String, ArrayList> data;
-	boolean isLastConnRemote;
+	HashMap<String, List> data;
 	
 	OMEData(){
-		data = new HashMap<String, ArrayList>();
-		isLastConnRemote = true;
+		data = new HashMap<String, List>();
 	}
 	
-	public HashMap<String, ArrayList> getData() {
+	public HashMap<String, List> getData() {
 		return data;
 	}
 
-	public void setData(HashMap<String, ArrayList> data) {
+	public void setData(HashMap<String, List> data) {
 		this.data = data;
 	}
 	

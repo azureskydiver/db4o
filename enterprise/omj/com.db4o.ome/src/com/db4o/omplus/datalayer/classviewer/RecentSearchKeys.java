@@ -11,9 +11,9 @@ public class RecentSearchKeys {
 	
 //	private OMEData data = Activator.getDefault().getOMEDataStore();
 	
-	public ArrayList<String> getSearchKeysForDB() {
+	public List<String> getSearchKeysForDB() {
 		OMEDataStore data = Activator.getDefault().getOMEDataStore();
-		ArrayList<String> queryList = data.getContextLocalEntry(SEARCH_KEY);
+		List<String> queryList = data.getContextLocalEntry(SEARCH_KEY);
 	    if (queryList == null){
 	    	queryList = new ArrayList<String>(11);
 	    }
@@ -24,7 +24,7 @@ public class RecentSearchKeys {
 		// make sure it's not already here
 		 boolean modify = true;
 		 if(query != null){
-			 ArrayList<String> queryList = getSearchKeysForDB();
+			 List<String> queryList = getSearchKeysForDB();
 			 modify = canAddQuery(query, queryList);
 			 if(modify)
 				 queryList.add(query);
@@ -34,7 +34,7 @@ public class RecentSearchKeys {
 		 }
 	}
 	 
-	private boolean canAddQuery(String query, ArrayList<String> queryList){
+	private boolean canAddQuery(String query, List<String> queryList){
 		boolean canAddQuery = true;
 		int size = queryList.size();
 		 if(size > 0){
@@ -55,7 +55,7 @@ public class RecentSearchKeys {
 		return canAddQuery;
 	}
 
-	private void saveSearchKeys(ArrayList<String> queryList) {
+	private void saveSearchKeys(List<String> queryList) {
 		OMEDataStore data = Activator.getDefault().getOMEDataStore();
 		data.setContextLocalEntry(SEARCH_KEY, queryList);
 	}
