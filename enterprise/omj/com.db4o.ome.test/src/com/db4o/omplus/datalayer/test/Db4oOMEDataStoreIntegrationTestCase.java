@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 
-public class IntegrationTestCase {
+public class Db4oOMEDataStoreIntegrationTestCase {
 
 	private static final String KEY = "key";
 

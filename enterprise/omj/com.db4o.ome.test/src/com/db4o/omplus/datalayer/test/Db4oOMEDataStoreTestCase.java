@@ -9,19 +9,19 @@ import static org.junit.Assert.*;
 
 import com.db4o.omplus.datalayer.*;
 
-public class OMEDataStoreTestCase {
+public class Db4oOMEDataStoreTestCase {
 
 	private static final String KEY = "key";
 	private final static String DB_PATH = "omedata.test.db4o";
 
-	private OMEDataStore dataStore;
+	private Db4oOMEDataStore dataStore;
 	private MockPrefixProvider prefixProvider;
 	
 	@Before
 	public void setUp() {
 		deleteDBFile();
 		prefixProvider = new MockPrefixProvider();
-		dataStore = new OMEDataStore(DB_PATH, prefixProvider);
+		dataStore = new Db4oOMEDataStore(DB_PATH, prefixProvider);
 	}
 
 	@After
@@ -56,7 +56,7 @@ public class OMEDataStoreTestCase {
 		return entry;
 	}
 	
-	private void assertEntry(String expected, ArrayList<String> entry) {
+	private void assertEntry(String expected, List<String> entry) {
 		assertEquals(1, entry.size());
 		assertEquals(expected, entry.get(0));
 	}
