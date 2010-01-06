@@ -171,7 +171,7 @@ public class Activator extends AbstractUIPlugin {
 		if(dataStore != null) {
 			return dataStore;
 		}
-		dataStore = new OMEDataStore(settingsFile, new DatabasePathPrefixProvider());
+		dataStore = new Db4oOMEDataStore(settingsFile, new DatabasePathPrefixProvider());
 		return dataStore;
 	}
 	

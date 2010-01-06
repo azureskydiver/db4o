@@ -2,6 +2,7 @@ package com.db4o.omplus.ui;
 
 
 import java.util.*;
+import java.util.List;
 
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.*;
@@ -21,7 +22,6 @@ import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.propertyViewer.*;
 import com.db4o.omplus.datalayer.propertyViewer.classProperties.*;
 import com.db4o.omplus.datalayer.queryBuilder.*;
-import com.db4o.omplus.datalayer.queryBuilder.RecentQueries;
 import com.db4o.omplus.datalayer.queryresult.*;
 import com.db4o.omplus.ui.customisedcontrols.queryBuilder.*;
 import com.db4o.omplus.ui.interfaces.*;
@@ -171,7 +171,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 	}
 	
 	private String[] getRecentQueriesFromDB() {
-		ArrayList<OMQuery> list = recentQueries.getRecentQueriesForDB();
+		List<OMQuery> list = recentQueries.getRecentQueriesForDB();
 		int size = list.size();  
 		String [] queryStrings = new String[size];
 		if(size > 0){
@@ -208,7 +208,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 //		getQuery
 		int queryIdx = recentQueriesCombo.getSelectionIndex();
 		if(queryIdx > -1){
-			ArrayList<OMQuery> list = recentQueries.getRecentQueriesForDB();
+			List<OMQuery> list = recentQueries.getRecentQueriesForDB();
 			int size = list.size();
 			OMQuery query = null;
 			for(int i= size -1, j=0;  (j <= queryIdx )&& (i >= 0);i--, j++){

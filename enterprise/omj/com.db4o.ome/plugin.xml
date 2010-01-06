@@ -159,7 +159,8 @@
                tooltip="Connect"
                menubarPath="sampleMenu/loginSep"
                toolbarPath="sampleGroup"
-               id="com.db4o.omplus.ui.actions.SampleAction">
+               definitionId="com.db4o.omplus.ui.commands.connectCommand"
+               id="com.db4o.omplus.ui.actions.connectAction">
          </action>
          
          <!-- ************************* Web Services login/logout ************************* -->
@@ -264,6 +265,19 @@
   				tooltip="Open db4o file" />
   		 </objectContribution>
   </extension>
-      
+     
+  <extension point="org.eclipse.ui.commands">
+	<category
+		name="OME commands"
+	    description="OME commands"
+    	id="com.db4o.omplus.ui.commands">
+    </category>
+	<command
+		name="Connect/Disconnect DB"
+		description="Connect/Disconnect DB"
+		categoryId="com.db4o.omplus.ui.commands"
+		id="com.db4o.omplus.ui.commands.connectCommand">
+	</command>
+  </extension>
 
 </plugin>

@@ -1,23 +1,16 @@
 package com.db4o.omplus.ui.actions;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.ui.*;
 
-import com.db4o.omplus.connection.ConnectionStatus;
-import com.db4o.omplus.connection.DbConnect;
-import com.db4o.omplus.connection.FileConnectionParams;
-import com.db4o.omplus.connection.RecentConnectionList;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.ui.OMPlusPerspective;
-import com.db4o.omplus.ui.ViewerManager;
+import com.db4o.omplus.*;
+import com.db4o.omplus.connection.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 
 public class OpenDb4oAction implements IObjectActionDelegate {
 	
@@ -52,10 +45,11 @@ public class OpenDb4oAction implements IObjectActionDelegate {
 					return;
 				status.closeExistingDB();
 			}
-			DbConnect connect = new DbConnect();
-			if(params instanceof FileConnectionParams)
-				connect.connectToFile((FileConnectionParams)params);
-			RecentConnectionList list = new RecentConnectionList();
+			if(!(params instanceof FileConnectionParams)) {
+				return;
+			}
+			DbConnectUtil.connect(params, getTargetPart().getSite().getShell());
+			RecentConnectionList list = new DataStoreRecentConnectionList(Activator.getDefault().getOMEDataStore());
 			list.addNewConnection(params);
 			showPerspective();
 		}/*catch(ClassCastException ex){

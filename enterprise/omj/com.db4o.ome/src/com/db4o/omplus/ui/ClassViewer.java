@@ -1,6 +1,7 @@
 package com.db4o.omplus.ui;
 
 import java.util.*;
+import java.util.List;
 
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.*;
@@ -35,7 +36,7 @@ public class ClassViewer extends ViewPart
 //	private final int WIDTH = 6;
 
 	private StringPattern strPattern;
-	private RecentSearchKeys recentSrchKeys;
+	private RecentSearchKeys recentSearchKeys;
 
 	// ALL Jface And SWT Widgets
 	private TreeViewer	classTree;
@@ -63,7 +64,7 @@ public class ClassViewer extends ViewPart
 		classTree = new TreeViewer(parentComp,SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		
 		strPattern = new StringPattern();
-		recentSrchKeys = new RecentSearchKeys();
+		recentSearchKeys = new RecentSearchKeys();
 
 		// For the search function
 		filterlabel = new Label(searchComp, SWT.NONE);
@@ -129,7 +130,7 @@ public class ClassViewer extends ViewPart
 	}
 	
 	private String[] getSearchKeywords() {
-		ArrayList<String> list = recentSrchKeys.getSearchKeysForDB();
+		List<String> list = recentSearchKeys.getSearchKeysForDB();
 		int size = list.size();  
 		String [] queryStrings = new String[size];
 		if(size > 0){
@@ -513,7 +514,7 @@ public class ClassViewer extends ViewPart
 		int length = str.length();
 		if(length > 0)
 		{
-			recentSrchKeys.addNewSearchKey(str);
+			recentSearchKeys.addNewSearchKey(str);
 			int size = setItemsForCombo();
 			searchCombo.select(0);
 			enableSrchBtns(size);

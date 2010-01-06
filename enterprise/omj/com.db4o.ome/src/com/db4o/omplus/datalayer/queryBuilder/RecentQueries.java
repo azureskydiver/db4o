@@ -9,9 +9,9 @@ public class RecentQueries {
 	
 	private final String KEY_GQ = "GLOBAL_QUERIES";
 
-	public ArrayList<OMQuery> getRecentQueriesForDB() {
+	public List<OMQuery> getRecentQueriesForDB() {
 		OMEDataStore data = Activator.getDefault().getOMEDataStore();
-		ArrayList<OMQuery> queryList = data.getContextLocalEntry(KEY_GQ);
+		List<OMQuery> queryList = data.getContextLocalEntry(KEY_GQ);
 	    if (queryList == null){
 	    	queryList = new ArrayList<OMQuery>();
 	    }
@@ -22,7 +22,7 @@ public class RecentQueries {
 		// make sure it's not already here
 		 boolean modify = true;
 		 if(query != null){
-			 ArrayList<OMQuery> queryList = getRecentQueriesForDB();
+			 List<OMQuery> queryList = getRecentQueriesForDB();
 			 modify = canAddQuery(query, queryList);
 			 if(modify)
 				 queryList.add(query);
@@ -32,7 +32,7 @@ public class RecentQueries {
 		 }
 	}
 	 
-	private boolean canAddQuery(OMQuery query, ArrayList<OMQuery> queryList){
+	private boolean canAddQuery(OMQuery query, List<OMQuery> queryList){
 		boolean canAddQuery = true;
 		int size = queryList.size();
 		 if(size > 0){
@@ -53,7 +53,7 @@ public class RecentQueries {
 		return canAddQuery;
 	}
 
-	private void saveRecentQueryList(ArrayList<OMQuery> queryList) {
+	private void saveRecentQueryList(List<OMQuery> queryList) {
 		OMEDataStore data = Activator.getDefault().getOMEDataStore();
 		data.setContextLocalEntry(KEY_GQ, queryList);
 	}
