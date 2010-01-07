@@ -15,20 +15,20 @@ import db4ounit.*;
 
 public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCycle {
 
-	protected String srcDir;
+	protected File srcDir;
 
 	protected abstract Class[] inputClasses();
 	protected abstract Class[] instrumentedClasses();
 
-	protected String targetDir;
+	protected File targetDir;
 
 	public TAFileEnhancerTestCaseBase() {
 		super();
 	}
 
 	public void setUp() throws Exception {
-		srcDir = IO.mkTempDir("tafileinstr/source");
-		targetDir = IO.mkTempDir("tafileinstr/target");
+		srcDir = new File(IO.mkTempDir("tafileinstr/source"));
+		targetDir = new File(IO.mkTempDir("tafileinstr/target"));
 		copyClassFilesTo(
 			inputClasses(),
 			srcDir);
@@ -43,7 +43,7 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 	}
 
 	protected AssertingClassLoader newAssertingClassLoader(Class[] delegatedClasses) throws MalformedURLException {
-		return new AssertingClassLoader(new File(targetDir), inputClasses(), delegatedClasses);
+		return new AssertingClassLoader(targetDir, inputClasses(), delegatedClasses);
 	}
 
 	protected void enhance() throws Exception {
@@ -70,8 +70,8 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 	}
 
 	private void deleteFiles() {
-		deleteDirectory(srcDir);
-		deleteDirectory(targetDir);
+		deleteDirectory(srcDir.getAbsolutePath());
+		deleteDirectory(targetDir.getAbsolutePath());
 	}
 
 	private void deleteDirectory(String dirPath) {
@@ -81,16 +81,16 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 		Directory4.delete(dirPath, true);
 	}
 
-	private void copyClassFilesTo(final Class[] classes, final String toDir)
+	private void copyClassFilesTo(final Class[] classes, final File toDir)
 			throws IOException {
 				for (int i = 0; i < classes.length; i++) {
 					copyClassFile(classes[i], toDir);
 				}
 			}
 
-	private void copyClassFile(Class clazz, String toDir) throws IOException {
+	private void copyClassFile(Class clazz, File toDir) throws IOException {
 		File file = ClassFiles.fileForClass(clazz);
-		String targetPath = Path4.combine(toDir, ClassFiles.classNameAsPath(clazz));
+		String targetPath = Path4.combine(toDir.getAbsolutePath(), ClassFiles.classNameAsPath(clazz));
 		File4.delete(targetPath);
 		File4.copy(file.getCanonicalPath(), targetPath);
 	}
