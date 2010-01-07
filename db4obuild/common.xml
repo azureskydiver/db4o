@@ -381,7 +381,7 @@
 		
 		<property name="file.compiler.jdk1.3.args.line" value="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}" />
 
-		<for list="core,core.optional,core.cs,core.cs.optional,test,db4ounit,db4ounit.extensions,instrumentation,taj,taj.test,nqopt,nqopt.test,tools" param="project-id">
+		<for list="core,core.optional,core.cs,core.cs.optional,test,db4ounit,db4ounit.extensions,instrumentation,instrumentation.test,taj,taj.test,nqopt,nqopt.test,tools,tools.test" param="project-id">
 			<sequential>
 				<for list="jdk1.1,jdk1.2,sharpen" param="platform-id">
 					<sequential>
