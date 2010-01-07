@@ -29,7 +29,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
 	public void testFileEnhancer() throws Exception {		
 		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new TranslateNQToSODAEdit());
-		enhancer.enhance(SRC_DIR, TARGET_DIR, new String[]{});		
+		enhancer.enhance(new File(SRC_DIR), new File(TARGET_DIR), new String[]{});		
 		assertInstrumented();
 	}
 
@@ -41,7 +41,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		fileSet.setProject(project);
 		fileSet.setDir(new File(SRC_DIR));
 		antTask.addSources(fileSet);
-		antTask.setClassTargetDir(TARGET_DIR);
+		antTask.setClassTargetDir(new File(TARGET_DIR));
 		antTask.add(new NQAntClassEditFactory());
 		antTask.execute();
 		assertInstrumented();
