@@ -21,7 +21,7 @@ public class Db4oJarEnhancer {
 	}
 
 	public void enhance(File inputJar, File outputJar, String[] classPath) throws Exception {
-		final String workingDir = tempDir(inputJar.getName());
+		final File workingDir = tempDir(inputJar.getName());
 		try {
 			extractJarTo(inputJar, workingDir);
 			enhance(workingDir, classPath);
@@ -31,23 +31,23 @@ public class Db4oJarEnhancer {
 		}
 	}
 
-	private void deleteDirectory(String workingDir) {
-		Directory4.delete(workingDir, true);
+	private void deleteDirectory(File workingDir) {
+		Directory4.delete(workingDir.getAbsolutePath(), true);
 	}
 
-	private void enhance(String workingDir, String[] classPath) throws Exception  {
+	private void enhance(File workingDir, String[] classPath) throws Exception  {
 		_fileEnhancer.enhance(workingDir, workingDir, classPath);
 	}
 
-	private String tempDir(String name) {
-		return Path4.combine(Path4.getTempPath(), name + "-working");
+	private File tempDir(String name) {
+		return new File(Path4.combine(Path4.getTempPath(), name + "-working"));
 	}
 
-	private void extractJarTo(File inputJar, String workingDir) throws IOException {
+	private void extractJarTo(File inputJar, File workingDir) throws IOException {
 		new ZipFileExtraction(inputJar, workingDir);
 	}
 	
-	private void makeJarFromDirectory(String workingDir, File outputJar) throws IOException {
+	private void makeJarFromDirectory(File workingDir, File outputJar) throws IOException {
 		new ZipFileCreation(workingDir, outputJar);
 	}
 }

@@ -12,6 +12,7 @@ import org.apache.tools.ant.types.resources.*;
 
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.file.*;
 import com.db4o.instrumentation.main.*;
 
 /**
@@ -20,12 +21,13 @@ import com.db4o.instrumentation.main.*;
  * @see BloatClassEdit
  */
 public class Db4oFileEnhancerAntTask extends Task {
-	private final List _sources = new ArrayList();
-	private String _targetDir;
-	private final List _classPath = new ArrayList();
-	private final List _editFactories = new ArrayList();
-	private final List _jars = new ArrayList();
-	private String _jarTargetDir;
+	private final List<FileSet> _sources = new ArrayList<FileSet>();
+	private File _targetDir;
+	private final List<Path> _classPath = new ArrayList<Path>();
+	private final List<AntClassEditFactory> _editFactories = new ArrayList<AntClassEditFactory>();
+	private final List<FileSet> _jars = new ArrayList<FileSet>();
+	private File _jarTargetDir;
+	private boolean _verbose = false;
 
 	public void add(AntClassEditFactory editFactory) {
 		_editFactories.add(editFactory);
@@ -39,21 +41,25 @@ public class Db4oFileEnhancerAntTask extends Task {
 		_jars.add(fileSet);
 	}
 
-	public void setClassTargetDir(String targetDir) {
-		_targetDir=targetDir;
+	public void setClassTargetDir(File targetDir) {
+		_targetDir = targetDir;
 	}
 
-	public void setJarTargetdir(String targetDir) {
+	public void setJarTargetdir(File targetDir) {
 		_jarTargetDir=targetDir;
 	}
 
+	public void setVerbose(boolean verbose) {
+		_verbose = verbose;
+	}
+	
 	public void addClasspath(Path path) {
 		_classPath.add(path);
 	}
 
 	public void execute() {
 		try {
-			FileSet[] sourceArr = (FileSet[]) _sources.toArray(new FileSet[_sources.size()]);
+			FileSet[] sourceArr = _sources.toArray(new FileSet[_sources.size()]);
 			AntFileSetPathRoot root = new AntFileSetPathRoot(sourceArr);
 			ClassFilter filter = collectClassFilters(root);
 			BloatClassEdit clazzEdit = collectClassEdits(filter);
@@ -71,12 +77,11 @@ public class Db4oFileEnhancerAntTask extends Task {
 	}
 	
 	private String[] collectClassPath() throws Exception {
-		final List paths=new ArrayList();
-		for (Iterator pathIter = _classPath.iterator(); pathIter.hasNext();) {
-			Path path = (Path) pathIter.next();
+		final List<String> paths=new ArrayList<String>();
+		for (Path path : _classPath) {
 			String[] curPaths=path.list();
-			for (int curPathIdx = 0; curPathIdx < curPaths.length; curPathIdx++) {
-				paths.add(curPaths[curPathIdx]);
+			for (String curPath : curPaths) {
+				paths.add(curPath);
 			}
 		}
 		forEachResource(_jars, new FileResourceBlock() {
@@ -84,16 +89,16 @@ public class Db4oFileEnhancerAntTask extends Task {
 				paths.add(resource.getFile().getCanonicalPath());
 			}
 		});
-		for (Iterator fileSetIter = _sources.iterator(); fileSetIter.hasNext();) {
-			FileSet fileSet = (FileSet) fileSetIter.next();
+		for (FileSet fileSet : _sources) {
 			paths.add(fileSet.getDir().getCanonicalPath());
 		}
-		return (String[]) paths.toArray(new String[paths.size()]);
+		return paths.toArray(new String[paths.size()]);
 	}
 
 	private void enhanceClassFiles(AntFileSetPathRoot root,
 			BloatClassEdit clazzEdit, final String[] classPath)
 			throws Exception {
+		logClassFiles(root);
 		new Db4oFileInstrumentor(clazzEdit).enhance(root, _targetDir, classPath);
 	}
 
@@ -103,13 +108,14 @@ public class Db4oFileEnhancerAntTask extends Task {
 		forEachResource(_jars, new FileResourceBlock() {
 			public void process(FileResource resource) throws Exception {
 				File targetJarFile = new File(_jarTargetDir, resource.getFile().getName());
+				verboseLog("Enhancing jar: " + targetJarFile.getAbsolutePath());
 				jarEnhancer.enhance(resource.getFile(), targetJarFile, classPath);
 			}
 		});
 	}
 
 	private ClassFilter collectClassFilters(AntFileSetPathRoot root) throws Exception {
-		final List filters = new ArrayList();
+		final List<ClassFilter> filters = new ArrayList<ClassFilter>();
 		filters.add(root);
 		forEachResource(_jars, new FileResourceBlock() {
 			public void process(FileResource resource) throws IOException {
@@ -119,15 +125,15 @@ public class Db4oFileEnhancerAntTask extends Task {
 			
 		});
 
-		ClassFilter filter = new CompositeOrClassFilter((ClassFilter[]) filters.toArray(new ClassFilter[filters.size()]));
+		ClassFilter filter = new CompositeOrClassFilter(filters.toArray(new ClassFilter[filters.size()]));
 		return filter;
 	}
 
-	private void forEachResource(List fileSets, FileResourceBlock collectFiltersBlock) throws Exception {
-		for (Iterator fileSetIter = fileSets.iterator(); fileSetIter.hasNext();) {
-			FileSet fileSet = (FileSet) fileSetIter.next();
-			for (Iterator resourceIter = fileSet.iterator(); resourceIter.hasNext();) {
-				FileResource fileResource = (FileResource) resourceIter.next();
+	@SuppressWarnings("unchecked")
+	private void forEachResource(List<FileSet> fileSets, FileResourceBlock collectFiltersBlock) throws Exception {
+		for (FileSet fileSet : fileSets) {
+			for (Iterator<FileResource> resourceIter = fileSet.iterator(); resourceIter.hasNext();) {
+				FileResource fileResource = resourceIter.next();
 				collectFiltersBlock.process(fileResource);
 			}
 		}
@@ -140,17 +146,37 @@ public class Db4oFileEnhancerAntTask extends Task {
 				clazzEdit = new NullClassEdit();
 				break;
 			case 1:
-				clazzEdit = ((AntClassEditFactory)_editFactories.get(0)).createEdit(classFilter);
+				clazzEdit = _editFactories.get(0).createEdit(classFilter);
 				break;
 			default:
-				List classEdits = new ArrayList(_editFactories.size());
-				for (Iterator factoryIter = _editFactories.iterator(); factoryIter.hasNext(); ) {
-					AntClassEditFactory curFactory = (AntClassEditFactory) factoryIter.next();
+				List<BloatClassEdit> classEdits = new ArrayList<BloatClassEdit>(_editFactories.size());
+				for (AntClassEditFactory curFactory : _editFactories) {
 					classEdits.add(curFactory.createEdit(classFilter));
 				}
-				clazzEdit = new CompositeBloatClassEdit((BloatClassEdit[])classEdits.toArray(new BloatClassEdit[classEdits.size()]), true);
+				clazzEdit = new CompositeBloatClassEdit(classEdits.toArray(new BloatClassEdit[classEdits.size()]), true);
 				
 		}
 		return clazzEdit;
 	}
+	
+	private void verboseLog(String msg) {
+		if(_verbose) {
+			log(msg, Project.MSG_INFO);
+		}
+	}
+
+	private void logClassFiles(AntFileSetPathRoot root) throws IOException {
+		verboseLog("Enhancing class files.");
+		verboseLog("Target folder: " + _targetDir.getAbsolutePath());
+		verboseLog("Root folders:");
+		for (String rootStr : root.rootDirs()) {
+			verboseLog(new File(rootStr).getAbsolutePath());
+		}
+		verboseLog("Files:");
+		for (Iterator<InstrumentationClassSource> fileSetIter = root.iterator(); fileSetIter.hasNext();) {
+			verboseLog(fileSetIter.next().toString());
+		}
+	}
+
+
 }

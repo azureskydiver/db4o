@@ -29,7 +29,7 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 		}
 	}
 	
-	public Iterator iterator() {
+	public Iterator<InstrumentationClassSource> iterator() {
 		return new FileSetIterator(_fileSets);
 	}
 
@@ -50,11 +50,11 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 		return rootDirs;
 	}
 
-	private static class FileSetIterator implements Iterator {
+	private static class FileSetIterator implements Iterator<InstrumentationClassSource> {
 
 		private final FileSet[] _fileSets;
 		private int _fileSetIdx;
-		private Iterator _fileSetIter;
+		private Iterator<Resource> _fileSetIter;
 		
 		public FileSetIterator(FileSet[] fileSets) {
 			_fileSets = fileSets;
@@ -65,8 +65,8 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 			return _fileSetIter.hasNext();
 		}
 
-		public Object next() {
-			Resource resource = (Resource)_fileSetIter.next();
+		public InstrumentationClassSource next() {
+			Resource resource = _fileSetIter.next();
 			advanceFileSet();
 			if(resource instanceof FileResource) {
 				FileResource fileRes = (FileResource)resource;
@@ -79,6 +79,7 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 			throw new UnsupportedOperationException();
 		}
 		
+		@SuppressWarnings("unchecked")
 		private void advanceFileSet() {
 			while((_fileSetIter == null || !_fileSetIter.hasNext()) && _fileSetIdx < _fileSets.length) {
 				_fileSetIter = _fileSets[_fileSetIdx].iterator();
@@ -87,7 +88,7 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 		}
 	}
 
-	public boolean accept(Class clazz) {
+	public boolean accept(Class<?> clazz) {
 // // Ultra slow, but works with current Jar approach
 //		try {
 //			for (Iterator fileSetIter = files(); fileSetIter.hasNext();) {
@@ -113,5 +114,21 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		boolean first = true;
+		for (FileSet fileSet : _fileSets) {
+			if(!first) {
+				str.append(", ");
+			}
+			else {
+				first = false;
+			}
+			str.append(fileSet);
+		}
+		return str.toString();
 	}
 }

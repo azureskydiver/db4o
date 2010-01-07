@@ -6,8 +6,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-import com.db4o.foundation.io.*;
-
 /**
  * Extracts the contents of a zip file to a directory.
  * 
@@ -17,9 +15,9 @@ import com.db4o.foundation.io.*;
 public class ZipFileExtraction {
 
 	private final ZipFile _zipFile;
-	private final String _targetDir;
+	private final File _targetDir;
 
-	public ZipFileExtraction(File file, String targetDir) throws IOException {
+	public ZipFileExtraction(File file, File targetDir) throws IOException {
 		_targetDir = targetDir;
 		_zipFile = new ZipFile(file);
 		try {
@@ -39,7 +37,7 @@ public class ZipFileExtraction {
 
 	private void extractEntry(ZipEntry entry) throws IOException {
 		if (entry.isDirectory()) {
-			File4.mkdirs(targetPathFor(entry));
+			targetPathFor(entry).mkdirs();
 			return;
 		}
 		extractFileEntry(entry);
@@ -68,9 +66,9 @@ public class ZipFileExtraction {
 		}
 	}
 
-	private String targetPathFor(ZipEntry entry) {
-		final String targetPath = Path4.combine(_targetDir, entry.getName());
-		File4.mkdirs(Path4.getDirectoryName(targetPath));
+	private File targetPathFor(ZipEntry entry) {
+		final File targetPath = new File(_targetDir, entry.getName());
+		targetPath.getParentFile().mkdirs();
 		return targetPath;
 	}
 }
