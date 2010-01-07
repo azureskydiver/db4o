@@ -17,8 +17,8 @@ public class ZipFileCreation {
 	private final ZipFileWriter _zipFile;
 	private final File _baseDir;
 
-	public ZipFileCreation(String sourceDir, File outputFile) throws IOException {
-		_baseDir = new File(sourceDir).getCanonicalFile();
+	public ZipFileCreation(File sourceDir, File outputFile) throws IOException {
+		_baseDir = sourceDir.getCanonicalFile();
 		_zipFile = new ZipFileWriter(outputFile);
 		try {
 			writeEntries(_baseDir.listFiles());

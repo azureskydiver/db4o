@@ -5,5 +5,5 @@ package com.db4o.instrumentation.core;
  * Filter for Class instances.
  */
 public interface ClassFilter {
-	boolean accept(Class clazz);
+	boolean accept(Class<?> clazz);
 }

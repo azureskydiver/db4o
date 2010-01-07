@@ -35,29 +35,27 @@ public class Db4oFileInstrumentor {
 		_listeners.remove(listener);
 	}
 
-	public void enhance(String sourceDir, String targetDir, String[] classpath) throws Exception {
-		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath);
+	public void enhance(File sourceDir, File targetDir, String[] classpath) throws Exception {
+		enhance(new DefaultFilePathRoot(new String[]{ sourceDir.getAbsolutePath() }, ".class"), targetDir, classpath);
 	}
 
-	public void enhance(FilePathRoot sources, String targetDir, String[] classpath) throws Exception {
+	public void enhance(FilePathRoot sources, File targetDir, String[] classpath) throws Exception {
 		enhance(new DefaultClassSource(), sources, targetDir, classpath);
 	}
 
-	public void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath) throws Exception {
+	public void enhance(ClassSource classSource, FilePathRoot sources,File targetDir,String[] classpath) throws Exception {
 		enhance(classSource, sources, targetDir, classpath, ClassLoader.getSystemClassLoader());
 	}
 
-	public void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath, ClassLoader parentClassLoader) throws Exception {
-		File fTargetDir = new File(targetDir);
-		
+	public void enhance(ClassSource classSource, FilePathRoot sources,File targetDir,String[] classpath, ClassLoader parentClassLoader) throws Exception {
 		ClassFileLoader fileLoader=new ClassFileLoader(classSource);
 		String[] fullClasspath = fullClasspath(sources, classpath);
-		setOutputDir(fileLoader, fTargetDir);
+		setOutputDir(fileLoader, targetDir);
 		setClasspath(fileLoader, fullClasspath);
 		
 		URL[] urls = classpathToURLs(fullClasspath);	
 		URLClassLoader classLoader=new URLClassLoader(urls,parentClassLoader);
-		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader));
+		enhance(sources,targetDir,classLoader,new BloatLoaderContext(fileLoader));
 		
 		fileLoader.done();
 	}
