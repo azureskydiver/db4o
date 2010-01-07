@@ -4,6 +4,7 @@ package com.db4o.internal.slots;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 
 /**
  * @exclude
@@ -35,7 +36,7 @@ public class SlotChange extends TreeInt {
 	public Object shallowClone() {
 		SlotChange sc = new SlotChange(0);
 		sc._action = _action;
-		sc._newSlot = _newSlot;
+		sc.newSlot(_newSlot);
 		sc._shared = _shared;
 		return super.shallowCloneInternal(sc);
 	}
@@ -91,7 +92,7 @@ public class SlotChange extends TreeInt {
 	
 	public void freeOnRollback(Slot slot) {
 		doFreeOnRollback();
-		_newSlot = slot;
+		newSlot(slot);
 	}
 
 	public void freeOnRollbackSetPointer(Slot slot) {
@@ -160,7 +161,7 @@ public class SlotChange extends TreeInt {
 
 	public Object read(ByteArrayBuffer reader) {
 		SlotChange change = new SlotChange(reader.readInt());
-		change._newSlot = new Slot(reader.readInt(), reader.readInt());
+		change.newSlot(new Slot(reader.readInt(), reader.readInt()));
 		change.doSetPointer();
 		return change;
 	}
@@ -186,7 +187,7 @@ public class SlotChange extends TreeInt {
 
 	public void setPointer(Slot slot) {
 		doSetPointer();
-		_newSlot = slot;
+		newSlot(slot);
 	}
 
 	public void write(ByteArrayBuffer writer) {
@@ -197,9 +198,9 @@ public class SlotChange extends TreeInt {
 		}
 	}
 
-	public final void writePointer(LocalTransaction trans) {
+	public final void writePointer(IdSystem idSystem) {
 		if (isSetPointer()) {
-			trans.writePointer(_key, _newSlot);
+			idSystem.writePointer(_key, _newSlot);
 		}
 	}
 
@@ -208,4 +209,9 @@ public class SlotChange extends TreeInt {
             setBit(FREESPACE_BIT);
         }
     }
+    
+    private void newSlot(Slot slot){
+    	_newSlot = slot;
+    }
+    
 }

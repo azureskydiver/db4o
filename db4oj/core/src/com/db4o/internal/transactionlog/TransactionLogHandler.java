@@ -4,6 +4,7 @@ package com.db4o.internal.transactionlog;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 
@@ -12,32 +13,37 @@ import com.db4o.internal.slots.*;
  */
 public abstract class TransactionLogHandler {
 	
+	protected final StandardIdSystem _idSystem;
 	
-	protected LocalObjectContainer file(LocalTransaction trans) {
-		return trans.file();
+	protected TransactionLogHandler(StandardIdSystem idSystem){
+		_idSystem = idSystem;
 	}
 	
-    protected void flushDatabaseFile(LocalTransaction trans) {
-		trans.flushFile();
+	protected LocalObjectContainer localContainer() {
+		return _idSystem.localContainer();
+	}
+	
+    protected final void flushDatabaseFile() {
+		_idSystem.flushFile();
 	}
     
-	protected void appendSlotChanges(LocalTransaction trans, final ByteArrayBuffer writer){
-		trans.traverseSlotChanges(new Visitor4() {
+	protected final void appendSlotChanges(LocalTransaction transaction, final ByteArrayBuffer writer){
+		_idSystem.traverseSlotChanges(transaction, new Visitor4() {
 			public void visit(Object obj) {
 				((SlotChange)obj).write(writer);
 			}
 		});
     }
     
-    protected int transactionLogSlotLength(LocalTransaction trans){
+    protected final int transactionLogSlotLength(LocalTransaction transaction){
     	// slotchanges * 3 for ID, address, length
     	// 2 ints for slotlength and count
-    	return ((countSlotChanges(trans) * 3) + 2) * Const4.INT_LENGTH;
+    	return ((countSlotChanges(transaction) * 3) + 2) * Const4.INT_LENGTH;
     }
 
-	protected int countSlotChanges(LocalTransaction trans){
+	protected final int countSlotChanges(LocalTransaction transaction){
         final IntByRef count = new IntByRef();
-        trans.traverseSlotChanges(new Visitor4() {
+        _idSystem.traverseSlotChanges(transaction, new Visitor4() {
 			public void visit(Object obj) {
                 SlotChange slot = (SlotChange)obj;
                 if(slot.isSetPointer()){
@@ -48,13 +54,11 @@ public abstract class TransactionLogHandler {
         return count.value;
 	}
 
-	public abstract Slot allocateSlot(LocalTransaction trans, boolean append);
+	public abstract Slot allocateSlot(LocalTransaction transaction, boolean append);
 
-	public abstract void applySlotChanges(LocalTransaction trans, Slot reservedSlot);
+	public abstract void applySlotChanges(LocalTransaction transaction, Slot reservedSlot);
 
-	public abstract boolean checkForInterruptedTransaction(LocalTransaction trans, ByteArrayBuffer reader);
-
-	public abstract void completeInterruptedTransaction(LocalTransaction trans);
+	public abstract InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader);
 
 	public abstract void close();
 	

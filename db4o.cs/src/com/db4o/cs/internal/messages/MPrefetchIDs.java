@@ -11,7 +11,7 @@ public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 		int prefetchIDCount = readInt();
 		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH * prefetchIDCount);
 
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 			for (int i = 0; i < prefetchIDCount; i++) {
 				reply.writeInt(prefetchID());
 			}

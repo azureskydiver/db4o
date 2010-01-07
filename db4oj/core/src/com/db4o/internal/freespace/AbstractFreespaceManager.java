@@ -5,6 +5,7 @@ package com.db4o.internal.freespace;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 public abstract class AbstractFreespaceManager implements FreespaceManager {
@@ -130,6 +131,9 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
 	public static boolean migrationRequired(byte systemType) {
 		return systemType == FM_LEGACY_RAM  || systemType == FM_IX ;
 	}
-
+	
+	protected IdSystem idSystem(){
+		return _file.idSystem(); 
+	}
     
 }

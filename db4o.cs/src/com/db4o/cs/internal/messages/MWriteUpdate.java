@@ -12,15 +12,14 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	    int classMetadataID = _payLoad.readInt();
 	    int arrayTypeValue = _payLoad.readInt();
 	    ArrayType arrayType = ArrayType.forValue(arrayTypeValue);
-	    LocalObjectContainer container = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
-	    synchronized(streamLock()){
-	        ClassMetadata classMetadata = container.classMetadataForID(classMetadataID);
+	    synchronized(containerLock()){
+	        ClassMetadata classMetadata = localContainer().classMetadataForID(classMetadataID);
 			int id = _payLoad.getID();
 			transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
 			transaction().dontDelete(id);
-            Slot oldSlot = ((LocalTransaction)transaction()).getCommittedSlotOfID(id);
-            container.getSlotForUpdate(_payLoad);
+			Slot oldSlot = localContainer().idSystem().getCommittedSlotOfID(serverTransaction(), id);
+            localContainer().getSlotForUpdate(_payLoad);
 			classMetadata.addFieldIndices(_payLoad, oldSlot);
             _payLoad.writeEncrypt();
             deactivateCacheFor(id);            
@@ -28,6 +27,10 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	}
 
 	private void deactivateCacheFor(int id) {
-		transaction().deactivate(id, new FixedActivationDepth(1));
+		ObjectReference reference = transaction().referenceForId(id);
+		if (null == reference) {
+			return;
+		}
+		reference.deactivate(transaction(), new FixedActivationDepth(1));
 	}
 }

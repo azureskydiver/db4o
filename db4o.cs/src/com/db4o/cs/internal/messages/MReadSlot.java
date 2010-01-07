@@ -26,11 +26,11 @@ public final class MReadSlot extends MsgD implements MessageWithResponse {
 	public final Msg replyFromServer() {
 		int address = readInt();
 		int length = readInt();
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 			StatefulBuffer bytes =
 				new StatefulBuffer(this.transaction(), address, length);
 			try {
-				stream().readBytes(bytes._buffer, address, length);
+				container().readBytes(bytes._buffer, address, length);
 				return getWriter(bytes);
 			} catch (Exception e) {
 				// TODO: not nicely handled on the client side yet

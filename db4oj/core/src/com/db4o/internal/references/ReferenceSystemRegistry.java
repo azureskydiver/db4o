@@ -52,9 +52,10 @@ public class ReferenceSystemRegistry {
         _referenceSystems.add(referenceSystem);
     }
 
-    public void removeReferenceSystem(ReferenceSystem referenceSystem) {
-        _referenceSystems.remove(referenceSystem);
+    public boolean removeReferenceSystem(ReferenceSystem referenceSystem) {
+        boolean res = _referenceSystems.remove(referenceSystem);
         referenceSystem.discarded();
+        return res;
     }
 
     private static interface ReferenceSource {

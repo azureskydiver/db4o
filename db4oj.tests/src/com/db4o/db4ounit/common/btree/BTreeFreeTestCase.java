@@ -20,7 +20,7 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         add(VALUES);
         BTreeAssert.assertAllSlotsFreed(fileTransaction(), _btree, new CodeBlock() {
 			public void run() throws Throwable {
-		        _btree.free(systemTrans());
+		        _btree.free((LocalTransaction)systemTrans());
 		        systemTrans().commit();
 			}
 		});

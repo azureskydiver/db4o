@@ -50,8 +50,8 @@ public class BigSetTypeHandler implements ReferenceTypeHandler, CascadingTypeHan
 		bTree = null;
     }
 
-	private static Transaction systemTransaction(Context context) {
-		return context.transaction().systemTransaction();
+	private static LocalTransaction systemTransaction(Context context) {
+		return (LocalTransaction)context.transaction().systemTransaction();
 	}
 
 	private BTree newBTree(Context context, int id) {

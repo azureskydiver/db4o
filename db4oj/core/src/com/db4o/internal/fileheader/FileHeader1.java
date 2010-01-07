@@ -4,6 +4,7 @@ package com.db4o.internal.fileheader;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -42,7 +43,7 @@ public class FileHeader1 extends FileHeader {
     
     private TimerFileLock _timerFileLock;
 
-    private Transaction _interruptedTransaction;
+    private InterruptedTransactionHandler _interruptedTransactionHandler;
 
     private FileHeaderVariablePart1 _variablePart;
     
@@ -71,8 +72,9 @@ public class FileHeader1 extends FileHeader {
         _timerFileLock.setAddresses(0, OPEN_TIME_OFFSET, ACCESS_TIME_OFFSET);
     }
 
-    public Transaction interruptedTransaction() {
-        return _interruptedTransaction;
+    @Override
+    public InterruptedTransactionHandler interruptedTransactionHandler() {
+        return _interruptedTransactionHandler;
     }
 
     public int length() {
@@ -83,7 +85,7 @@ public class FileHeader1 extends FileHeader {
         commonTasksForNewAndRead(file);
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
-        _interruptedTransaction = LocalTransaction.readInterruptedTransaction(file, reader);
+        _interruptedTransactionHandler = file.idSystem().interruptedTransactionHandler(reader); 
         reader.seek(BLOCKSIZE_OFFSET);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);

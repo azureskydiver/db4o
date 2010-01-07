@@ -111,15 +111,15 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	return super.getIndex(transaction);
     }
     
-    protected void rebuildIndexForObject(LocalObjectContainer stream,
+    protected void rebuildIndexForObject(LocalObjectContainer container,
 			ClassMetadata classMetadata, int objectId) throws FieldIndexException {
-		DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream,
-				classMetadata, ((LocalTransaction) stream.systemTransaction())
-						.getCurrentSlotOfID(objectId), true);
+		Slot slot = container.idSystem().getCurrentSlotOfID((LocalTransaction) container.systemTransaction(), objectId);
+		DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(container,
+				classMetadata, slot, true);
 		if (null == data) {
 			return;
 		}
-		addIndexEntry(stream.getLocalSystemTransaction(), objectId, new Long(
+		addIndexEntry(container.getLocalSystemTransaction(), objectId, new Long(
 				data.uuid));
 	}
     

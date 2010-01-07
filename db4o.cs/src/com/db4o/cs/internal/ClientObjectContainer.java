@@ -26,6 +26,7 @@ import com.db4o.internal.references.*;
 import com.db4o.internal.slots.Pointer4;
 import com.db4o.io.Storage;
 import com.db4o.reflect.ReflectClass;
+
 /**
  * @exclude
  */
@@ -168,14 +169,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		throw new NotSupportedException();
 	}
 	
-	@Override
-	protected void closeTransaction() {
-		_transaction.close(false);
-	}
-
-	@Override
-	protected void closeSystemTransaction() {
-		// do nothing for clients
+	public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
+		if(isSystemTransaction){
+			return;
+		}
+		_transaction.close(rollbackOnClose);
 	}
 	
 	public void reserve(int byteCount) {
@@ -268,7 +266,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		throw new IllegalStateException();
 	}
 
-	final public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem) {
+	final public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
 		return new ClientTransaction(this, parentTransaction, referenceSystem);
 	}
 
@@ -528,7 +526,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return false;
 	}
 
-	public final int newUserObject() {
+	public final int newUserObject(Transaction trans) {
 		int prefetchIDCount = config().prefetchIDCount();
 		ensureIDCacheAllocated(prefetchIDCount);
 		ByteArrayBuffer reader = null;
@@ -559,7 +557,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	public void raiseVersion(long a_minimumVersion) {
-		write(Msg.RAISE_VERSION.getWriterForLong(_transaction, a_minimumVersion));
+		synchronized(lock()){
+			write(Msg.RAISE_VERSION.getWriterForLong(_transaction, a_minimumVersion));
+		}
 	}
 
 	public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
@@ -1141,5 +1141,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public String userName() {
 		return _userName;
 	}
+	
+	@Override
+	public boolean isDeleted(Transaction trans, int id){
+        // This one really is a hack.
+        // It only helps to get information about the current
+        // transaction.
+
+        // We need a better strategy for C/S concurrency behaviour.
+        MsgD msg = Msg.TA_IS_DELETED.getWriterForInt(trans, id);
+		write(msg);
+        int res = expectedByteResponse(Msg.TA_IS_DELETED).readInt();
+        return res == 1;
+	}
+
 	
 }

@@ -68,7 +68,7 @@ public class StatefulListTestCase extends AbstractDb4oTestCase implements OptOut
 	private int slotAddress(List list) {
 		int id = (int) db().getID(list);
 		LocalTransaction localTransaction = (LocalTransaction) trans();
-		Slot slot = localTransaction.getCurrentSlotOfID(id);
+		Slot slot = localTransaction.localContainer().idSystem().getCurrentSlotOfID(localTransaction, id);
 		return slot.address();
 	}
 	

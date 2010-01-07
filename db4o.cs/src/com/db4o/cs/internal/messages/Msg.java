@@ -3,7 +3,6 @@
 package com.db4o.cs.internal.messages;
 
 import com.db4o.*;
-import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -151,20 +150,20 @@ public abstract class Msg implements Cloneable, Message {
 		return _trans;
 	}
 	
-	protected LocalObjectContainer file(){
-		return (LocalObjectContainer)stream();
+	protected LocalObjectContainer localContainer(){
+		return (LocalObjectContainer)container();
 	}
 	
-	protected ObjectContainerBase stream(){
+	protected ObjectContainerBase container(){
 	    return transaction().container();
 	}
 	
-	protected Object streamLock(){
-		return stream().lock();
+	protected Object containerLock(){
+		return container().lock();
 	}
 	
 	protected Config4Impl config(){
-		return stream().config();
+		return container().config();
 	}
 	
     protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4Adapter socket) throws Db4oIOException {
@@ -284,12 +283,17 @@ public abstract class Msg implements Cloneable, Message {
 	}
 	
 	public void logMsg(int msgCode, String msg) {
-		stream().logMsg(msgCode, msg);
+		container().logMsg(msgCode, msg);
 	}
 
 	/** to be overridden by implementors of MessageWithResponse */
 	public void postProcessAtServer() {
 		// do nothing by default
 	}
+	
+	protected Transaction systemTransaction() {
+		return container().systemTransaction();
+	}
+
 
 }

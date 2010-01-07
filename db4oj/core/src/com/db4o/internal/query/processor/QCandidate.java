@@ -432,7 +432,7 @@ public class QCandidate extends TreeInt implements Candidate {
 	}
 
 	final LocalObjectContainer container() {
-		return transaction().file();
+		return transaction().localContainer();
 	}
 
 	final LocalTransaction transaction() {

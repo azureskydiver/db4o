@@ -27,7 +27,7 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 
 	private ByteArrayBuffer marshallIDsFor(final int classMetadataID,
 			final int prefetchDepth, final int prefetchCount, boolean triggerQueryEvents) {
-		synchronized(streamLock()){
+		synchronized(containerLock()){
 			final long[] ids = getIDs(classMetadataID, triggerQueryEvents);
 			
 			return ObjectExchangeStrategyFactory.forConfig(
@@ -37,8 +37,8 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 	}
 
 	private long[] getIDs(final int classMetadataID, boolean triggerQueryEvents) {
-		synchronized (streamLock()) {
-			final ClassMetadata classMetadata = stream().classMetadataForID(classMetadataID);
+		synchronized (containerLock()) {
+			final ClassMetadata classMetadata = container().classMetadataForID(classMetadataID);
 			if (!triggerQueryEvents) {
 				return classMetadata.getIDs(transaction());
 			}
@@ -50,7 +50,7 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
     }
 
 	private QQuery newQuery(final ClassMetadata classMetadata) {
-		final QQuery query = (QQuery)file().query();
+		final QQuery query = (QQuery)localContainer().query();
 		query.constrain(classMetadata);
 		return query;
 	}

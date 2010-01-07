@@ -139,7 +139,7 @@ public class MsgD extends Msg{
 	}
 	
 	public Object readObjectFromPayLoad(){
-		return Serializer.unmarshall(stream(),_payLoad);
+		return Serializer.unmarshall(container(),_payLoad);
 	}
 
 	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4Adapter sock, ByteArrayBuffer reader){
@@ -158,7 +158,7 @@ public class MsgD extends Msg{
 	}
 	
 	public Object readSingleObject() {
-		return Serializer.unmarshall(stream(), SerializedGraph.read(_payLoad));
+		return Serializer.unmarshall(container(), SerializedGraph.read(_payLoad));
 	}
 	
 	public final void writeBytes(byte[] aBytes){

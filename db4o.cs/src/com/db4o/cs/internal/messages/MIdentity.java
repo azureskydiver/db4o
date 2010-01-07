@@ -2,14 +2,12 @@
 
 package com.db4o.cs.internal.messages;
 
-import com.db4o.internal.*;
 
 /**
  * @exclude
  */
 public class MIdentity extends Msg implements MessageWithResponse {
 	public Msg replyFromServer() {
-		ObjectContainerBase stream = stream();
-		return respondInt(stream.getID(transaction(), ((InternalObjectContainer)stream).identity()));
+		return respondInt(container().getID(transaction(), container().identity()));
 	}
 }

@@ -59,7 +59,7 @@ public class EagerObjectWriter {
 				continue;
 			}
 			
-			final ByteArrayBuffer slotBuffer = _transaction.file().readSlotBuffer(slot);
+			final ByteArrayBuffer slotBuffer = _transaction.localContainer().readSlotBuffer(slot);
 			buffer.writeInt(id);
 			buffer.writeInt(slot.length());
 			buffer.writeBytes(slotBuffer._buffer);

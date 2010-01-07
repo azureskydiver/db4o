@@ -586,7 +586,7 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
 
 	private SystemData systemData() {
-		return localSystemTransaction().file().systemData();
+		return localSystemTransaction().localContainer().systemData();
 	}
 
 	private LocalTransaction localSystemTransaction() {

@@ -10,8 +10,8 @@ public class MReadReaderById extends MsgD implements MessageWithResponse {
 		// readWriterByID may fail in certain cases, for instance if
 		// and object was deleted by another client
 		try {
-			synchronized (streamLock()) {
-				bytes = stream().readReaderByID(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
+			synchronized (containerLock()) {
+				bytes = container().readReaderByID(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
 			}
 			if (bytes == null) {
 				bytes = new ByteArrayBuffer(0);

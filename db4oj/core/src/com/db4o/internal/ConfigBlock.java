@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -36,7 +37,9 @@ public final class ConfigBlock {
     private final TimerFileLock _timerFileLock;
     
 	private int					_address;
-	private Transaction			_transactionToCommit;
+	
+	private InterruptedTransactionHandler _interruptedTransactionHandler;
+	
 	public int                 	_bootRecordID;
 	
 	private static final int	MINIMUM_LENGTH = 
@@ -92,8 +95,8 @@ public final class ConfigBlock {
         return timerFileLock().openTime();
     }
 	
-	public Transaction getTransactionToCommit(){
-		return _transactionToCommit;
+	public InterruptedTransactionHandler interruptedTransactionHandler(){
+		return _interruptedTransactionHandler;
 	}
     
 	private byte[] passwordToken() {
@@ -150,7 +153,7 @@ public final class ConfigBlock {
         
 		if(oldLength > TRANSACTION_OFFSET){
 			int savedOffset = reader.offset();
-            _transactionToCommit = LocalTransaction.readInterruptedTransaction(_container, reader);
+			_interruptedTransactionHandler = _container.idSystem().interruptedTransactionHandler(reader);
             reader.seek(savedOffset + Const4.INT_LENGTH * 2);
 		}
 		

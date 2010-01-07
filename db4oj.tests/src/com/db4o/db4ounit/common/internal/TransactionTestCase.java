@@ -17,7 +17,7 @@ public class TransactionTestCase extends AbstractDb4oTestCase implements OptOutM
     public void testRemoveReferenceSystemOnClose(){
         LocalObjectContainer container = (LocalObjectContainer) db();
         ReferenceSystem referenceSystem = container.createReferenceSystem();
-        Transaction transaction = container.newTransaction(container.systemTransaction(), referenceSystem);
+        Transaction transaction = container.newTransaction(container.systemTransaction(), referenceSystem, false);
         
         referenceSystem.addNewReference(new ObjectReference(TEST_ID));
         referenceSystem.addNewReference(new ObjectReference(TEST_ID + 1));

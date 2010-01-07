@@ -6,9 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.references.*;
-import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -89,6 +87,7 @@ public abstract class Transaction {
 			checkSynchronization();
 			container().releaseSemaphores(this);
 			discardReferenceSystem();
+			
 		}
 		if (rollbackOnClose) {
 			rollback();
@@ -113,8 +112,6 @@ public abstract class Transaction {
             _transactionListeners = null;
         }
     }   
-    
-    public abstract boolean isDeleted(int id);
     
 	protected boolean isSystemTransaction() {
 		return _systemTransaction == null;
@@ -183,68 +180,6 @@ public abstract class Transaction {
         }
     }
     
-    public final void setPointer(Pointer4 pointer){
-        setPointer(pointer._id, pointer._slot);
-    }
-
-    /**
-     * @param id
-     * @param slot
-     */
-    public void setPointer(int id, Slot slot){
-    }
-    
-    /**
-     * @param id
-     * @param slot
-     */
-    public void slotDelete(int id, Slot slot) {
-    }
-
-    /**
-     * @param id
-     * @param slot
-     */
-    public void slotFreeOnCommit(int id, Slot slot) {
-    }
-
-    /**
-     * @param id
-     * @param slot
-     */
-    public void slotFreeOnRollback(int id, Slot slot) {
-    }
-
-    /**
-     * @param id
-     * @param slot
-     * @param forFreespace
-     */
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean forFreespace) {
-    }
-
-    /**
-     * @param id
-     * @param slot
-     */
-    void produceUpdateSlotChange(int id, Slot slot) {
-    }
-    
-    /** @param id */
-    public void slotFreePointerOnCommit(int id) {
-    }
-    
-    /**
-     * @param id
-     * @param slot
-     */
-    void slotFreePointerOnCommit(int id, Slot slot) {
-    }
-    
-    /** @param id */
-    public void slotFreePointerOnRollback(int id) {
-    }
-
     boolean supportsVirtualFields(){
         return true;
     }
@@ -360,15 +295,6 @@ public abstract class Transaction {
         };
     }
 
-	public void deactivate(int id, ActivationDepth activationDepth) {
-		//FIXME: JavaServerCrossplatformTestCase crashes with we remove
-		//		  null test.
-		final ObjectReference reference = referenceForId(id);
-		if (null != reference) {
-			reference.deactivate(this, activationDepth);
-		}
-	}
-	
 	protected void traverseDelete(Visitor4 deleteVisitor) {
 		if (_delete == null) {
 			return;

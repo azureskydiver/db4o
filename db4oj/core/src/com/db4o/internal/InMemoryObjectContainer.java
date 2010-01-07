@@ -62,15 +62,10 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     }
     
     @Override
-    protected void closeTransaction() {
-    	// do nothing
+    public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
+    	// do nothing	
     }
     
-    @Override
-    protected void closeSystemTransaction() {
-    	// do nothing
-    }
-
     protected void shutdownDataStorage() {
 		if (!_closed) {
 			byte[] temp = new byte[_capacity];

@@ -1021,7 +1021,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	    	: null;
     }
 
-    public void dropIndex(Transaction systemTrans) {
+    public final void dropIndex(LocalTransaction systemTrans) {
         if(_index == null){
             return;
         }
@@ -1079,7 +1079,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	}
 
 	public void dropIndex() {
-		dropIndex(container().systemTransaction());
+		dropIndex((LocalTransaction)container().systemTransaction());
 	}
 
 }

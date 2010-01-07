@@ -40,7 +40,7 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
     }
     
     public ObjectContainerSession(LocalObjectContainer server) {
-        this(server, server.newTransaction(server.systemTransaction(), server.createReferenceSystem()));
+        this(server, server.newUserTransaction());
     }
 
     /** @param path */
@@ -290,7 +290,7 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
                 }
             }
             _server.callbacks().closeOnStarted(this);
-            _transaction.close(false);
+            _server.closeTransaction(_transaction, false, false);
             _closed = true;
             return true;
         }

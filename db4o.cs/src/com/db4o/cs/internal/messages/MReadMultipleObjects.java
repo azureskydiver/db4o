@@ -23,7 +23,7 @@ public class MReadMultipleObjects extends MsgD implements MessageWithResponse {
 	}
 
 	private ByteArrayBuffer marshallObjects(int prefetchDepth, int prefetchCount, IntIterator4 ids) {
-		synchronized(streamLock()){
+		synchronized(containerLock()){
 			final ObjectExchangeStrategy strategy = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
 			return strategy.marshall((LocalTransaction) transaction(), ids, prefetchCount);
 		}

@@ -5,7 +5,6 @@ package com.db4o.cs.internal.messages;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
@@ -29,10 +28,9 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
     BlobImpl serverGetBlobImpl() {
         BlobImpl blobImpl = null;
         int id = _payLoad.readInt();
-        ObjectContainerBase stream = stream();
-        synchronized (stream.lock()) {
-            blobImpl = (BlobImpl) stream.getByID(transaction(), id);
-            stream.activate(transaction(), blobImpl, new FixedActivationDepth(3));
+        synchronized (containerLock()) {
+            blobImpl = (BlobImpl) container().getByID(transaction(), id);
+            container().activate(transaction(), blobImpl, new FixedActivationDepth(3));
         }
         return blobImpl;
     }

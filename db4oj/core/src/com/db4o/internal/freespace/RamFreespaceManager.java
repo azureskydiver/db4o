@@ -270,8 +270,8 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         StatefulBuffer buffer = new StatefulBuffer(transaction(), pointer);
         TreeInt.write(buffer, (TreeInt)_freeBySize);
         buffer.writeEncrypt();
-        transaction().flushFile();
-        transaction().writePointer(pointer);
+        idSystem().flushFile();
+        idSystem().writePointer(pointer);
     }
 
     final static class ToStringVisitor implements Visitor4 {

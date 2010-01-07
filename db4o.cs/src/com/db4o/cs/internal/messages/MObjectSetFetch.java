@@ -17,7 +17,7 @@ public class MObjectSetFetch extends MObjectSet implements MessageWithResponse {
 		int fetchSize = readInt();
 		int fetchDepth = readInt();
 		MsgD message = null;
-		synchronized(streamLock()) {
+		synchronized(containerLock()) {
 			IntIterator4 idIterator = stub(queryResultID).idIterator();
 			ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(fetchDepth, fetchSize)).marshall((LocalTransaction) transaction(), idIterator, fetchSize);
 			message = ID_LIST.getWriterForBuffer(transaction(), payload);

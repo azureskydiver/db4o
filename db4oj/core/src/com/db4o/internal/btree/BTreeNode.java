@@ -365,7 +365,7 @@ public final class BTreeNode extends CacheablePersistentBase{
         if(isRoot()){
             return false;
         }
-        free(trans);
+        free((LocalTransaction)trans);
         return true;
     }
 
@@ -388,7 +388,7 @@ public final class BTreeNode extends CacheablePersistentBase{
     	return getID();
     }
     
-    public void free(Transaction trans){
+    public void free(LocalTransaction trans){
         _dead = true;
         if(! isRoot()){
             BTreeNode parent = _btree.produceNode(_parentID);
@@ -396,7 +396,7 @@ public final class BTreeNode extends CacheablePersistentBase{
         }
         pointPreviousTo(trans, _nextID);
         pointNextTo(trans, _previousID);
-        super.free(trans);
+        super.free((LocalTransaction)trans);
         _btree.removeNode(this);
         _btree.notifyDeleted(trans, this);
     }

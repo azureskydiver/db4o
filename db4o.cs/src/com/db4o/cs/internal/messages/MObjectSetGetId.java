@@ -13,7 +13,7 @@ public class MObjectSetGetId extends MObjectSet implements MessageWithResponse {
 	public Msg replyFromServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());		
 		int id = 0;
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 			id = queryResult.getId(readInt());
 		}
 		return Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id);

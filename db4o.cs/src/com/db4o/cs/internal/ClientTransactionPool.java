@@ -45,9 +45,9 @@ public class ClientTransactionPool {
 	}
 	
 	public void release(ShutdownMode mode, Transaction transaction, boolean rollbackOnClose) {
-		transaction.close(mode.isFatal() ? false : rollbackOnClose);
 		synchronized(_mainContainer.lock()) {
 			ContainerCount entry = (ContainerCount) _transaction2Container.get(transaction);
+			entry._container.closeTransaction(transaction, false, mode.isFatal() ? false : rollbackOnClose);
 			_transaction2Container.remove(transaction);
 			entry.release();
 			if(entry.isEmpty()) {
@@ -100,7 +100,7 @@ public class ClientTransactionPool {
 	}
 
 	private static class ContainerCount {
-		private LocalObjectContainer _container;
+		public LocalObjectContainer _container;
 		private int _count;
 
 		public ContainerCount(LocalObjectContainer container) {

@@ -62,7 +62,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     }
     
     private void readIdentity(LocalTransaction trans, int identityID) {
-        LocalObjectContainer file = trans.file();
+        LocalObjectContainer file = trans.localContainer();
         Db4oDatabase identity = Debug4.staticIdentity ? Db4oDatabase.STATIC_IDENTITY : (Db4oDatabase) file.getByID(trans, identityID);
         if (null != identity) {
         	// TODO: what?
