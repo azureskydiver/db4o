@@ -15,9 +15,9 @@ public class MObjectByUuid extends MsgD implements MessageWithResponse {
 		byte[] signature = readBytes();
 		int id = 0;
 		Transaction trans = transaction();
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 			try {
-				HardObjectReference hardRef = stream().getHardReferenceBySignature(trans, uuid, signature);
+				HardObjectReference hardRef = container().getHardReferenceBySignature(trans, uuid, signature);
 			    if(hardRef._reference != null){
 			        id = hardRef._reference.getID();
 			    }

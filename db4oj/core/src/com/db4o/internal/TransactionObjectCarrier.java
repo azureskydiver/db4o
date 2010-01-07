@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.internal.references.*;
-import com.db4o.internal.slots.*;
 
 
 /**
@@ -19,39 +18,8 @@ class TransactionObjectCarrier extends LocalTransaction{
 		// do nothing
 	}
 	
-    public void slotFreeOnCommit(int id, Slot slot) {
-//      do nothing
-    }
-    
-    public void slotFreeOnRollback(int id, Slot slot) {
-//      do nothing
-    }
-    
-    void produceUpdateSlotChange(int id, Slot slot) {
-        setPointer(id, slot);
-    }
-    
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean forFreespace) {
-        setPointer(id, slot);
-    }
-    
-    void slotFreePointerOnCommit(int a_id, Slot slot) {
-//      do nothing
-    }
-    
-    public void slotFreePointerOnCommit(int a_id) {
-    	// do nothing
-    }
-	
-	public void setPointer(int a_id, Slot slot) {
-		writePointer(a_id, slot);
-	}
-    
     boolean supportsVirtualFields(){
         return false;
     }
-    
-    
-    
 
 }

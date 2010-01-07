@@ -11,7 +11,7 @@ import com.db4o.cs.internal.*;
 public class MLogin extends MsgD implements MessageWithResponse {
 
 	public Msg replyFromServer() {
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 		    String userName = readString();
 		    String password = readString();
 		    ObjectServerImpl server = serverMessageDispatcher().server();
@@ -20,8 +20,8 @@ public class MLogin extends MsgD implements MessageWithResponse {
     			if (found.password.equals(password)) {
     				serverMessageDispatcher().setDispatcherName(userName);
     				logMsg(32, userName);
-    				int blockSize = stream().blockSize();
-    				int encrypt = stream()._handlers.i_encrypt ? 1 : 0;
+    				int blockSize = container().blockSize();
+    				int encrypt = container()._handlers.i_encrypt ? 1 : 0;
     				serverMessageDispatcher().login();
     				return Msg.LOGIN_OK.getWriterForInts(transaction(), new int[] { blockSize, encrypt});
     			}

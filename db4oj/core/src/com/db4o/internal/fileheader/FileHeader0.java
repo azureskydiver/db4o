@@ -5,6 +5,7 @@ package com.db4o.internal.fileheader;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -119,8 +120,8 @@ public class FileHeader0 extends FileHeader {
         }
     }
 
-    public Transaction interruptedTransaction() {
-        return _configBlock.getTransactionToCommit();
+    public InterruptedTransactionHandler interruptedTransactionHandler() {
+        return _configBlock.interruptedTransactionHandler();
     }
 
     public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {

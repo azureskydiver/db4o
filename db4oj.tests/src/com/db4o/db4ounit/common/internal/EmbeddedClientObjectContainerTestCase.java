@@ -101,24 +101,18 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
     }
     
     public void testClose() {
-        final BooleanByRef closed = new BooleanByRef();
-        
-        // FIXME: Sharpen doesn't understand the null parameter (the third one), we had to add a cast
-        //        to get sharpen to run through.
-        
-        Transaction trans = new LocalTransaction(_server, _server.systemTransaction(), (ReferenceSystem)null) {
-            public void close(boolean rollbackOnClose) {
-                super.close(rollbackOnClose);
-                closed.value = true;
-            }
-        };
+        Transaction trans = _server.newUserTransaction();
+        ReferenceSystem referenceSystem = trans.referenceSystem();
         ObjectContainerSession client = new ObjectContainerSession(_server, trans);
         
         // FIXME: close needs to unregister reference system
         //        also for crashed clients 
         client.close();
         
-        Assert.isTrue(closed.value);
+        // should have been removed on close.
+        boolean wasNotRemovedYet = _server.referenceSystemRegistry().removeReferenceSystem(referenceSystem);
+        
+        Assert.isFalse(wasNotRemovedYet);
     }
     
     public void testCommitOnClose(){

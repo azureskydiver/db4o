@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.marshall.*;
 
 /**
@@ -436,15 +437,16 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 		return trans.container().configImpl();
 	}
 
-    public void free(Transaction systemTrans) {
+    public void free(LocalTransaction systemTrans) {
         freeAllNodeIds(systemTrans, allNodeIds(systemTrans));
-        super.free(systemTrans);
+        super.free((LocalTransaction)systemTrans);
     }
 
-	private void freeAllNodeIds(Transaction systemTrans, final Iterator4 allNodeIDs) {
+	private void freeAllNodeIds(LocalTransaction systemTrans, final Iterator4 allNodeIDs) {
+		IdSystem idSystem = systemTrans.localContainer().idSystem();
         while(allNodeIDs.moveNext()){
             int id = ((Integer)allNodeIDs.current()).intValue();
-            systemTrans.slotFreePointerOnCommit(id);
+            idSystem.slotFreePointerOnCommit(systemTrans, id);
         }
 	}
 

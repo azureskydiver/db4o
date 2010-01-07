@@ -377,16 +377,22 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		}
 		logMsg(3, toString());
 		synchronized (_lock) {
-			closeTransaction();
+			closeUserTransaction();
 			closeSystemTransaction();
 			stopSession();
 			shutdownDataStorage();
 		}
 	}
 	
-	protected abstract void closeTransaction();
+	protected final void closeUserTransaction(){
+		closeTransaction(_transaction, false,false);
+	}
 
-	protected abstract void closeSystemTransaction();
+	protected final void closeSystemTransaction(){
+		closeTransaction(_systemTransaction, true,false);
+	}
+	
+	public abstract void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose);
 
 	protected abstract void shutdownDataStorage();
     
@@ -469,14 +475,18 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     final protected void initializeTransactions() {
-        _systemTransaction = newTransaction(null, createReferenceSystem());
+        _systemTransaction = newSystemTransaction();
         _transaction = newUserTransaction();
     }
 
-	public abstract Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem);
+	public abstract Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction);
 	
 	public Transaction newUserTransaction(){
-	    return newTransaction(systemTransaction(), createReferenceSystem());
+	    return newTransaction(systemTransaction(), createReferenceSystem(), false);
+	}
+	
+	public Transaction newSystemTransaction(){
+	    return newTransaction(null, createReferenceSystem(), true);
 	}
 	
     public abstract long currentVersion();
@@ -1204,7 +1214,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             if (ref == null) {
                 return false;
             }
-            return !trans.isDeleted(ref.getID());
+            return ! isDeleted(trans, ref.getID());
         }
     }
     
@@ -1261,7 +1271,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return _timeStampIdGenerator.next();
     }
 
-    public abstract int newUserObject();
+    public abstract int newUserObject(Transaction trans);
     
     public Object peekPersisted(Transaction trans, final Object obj, final ActivationDepth depth, final boolean committed) throws DatabaseClosedException {
     	
@@ -2105,4 +2115,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	}
 
 	protected abstract String defaultToString();
+	
+	public abstract boolean isDeleted(Transaction trans, int id);
 }

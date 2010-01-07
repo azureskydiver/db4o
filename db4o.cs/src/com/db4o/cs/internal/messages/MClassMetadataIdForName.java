@@ -3,8 +3,6 @@
 package com.db4o.cs.internal.messages;
 
 import com.db4o.ext.*;
-import com.db4o.internal.*;
-
 
 /**
  * @exclude
@@ -13,12 +11,10 @@ public class MClassMetadataIdForName extends MsgD implements MessageWithResponse
     
     public final Msg replyFromServer() {
         String name = readString();
-        ObjectContainerBase stream = stream();
-        Transaction trans = stream.systemTransaction();
         try {
-            synchronized (streamLock()) {
-                int id = stream.classMetadataIdForName(name);
-                return Msg.CLASS_ID.getWriterForInt(trans, id);
+            synchronized (containerLock()) {
+                int id = container().classMetadataIdForName(name);
+                return Msg.CLASS_ID.getWriterForInt(systemTransaction(), id);
             }
         } 
         catch (Db4oException e) {
@@ -26,6 +22,7 @@ public class MClassMetadataIdForName extends MsgD implements MessageWithResponse
         } 
         return Msg.FAILED;
     }
+
 
 
 }

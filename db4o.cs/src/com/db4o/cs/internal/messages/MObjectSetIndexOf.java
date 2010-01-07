@@ -12,7 +12,7 @@ public class MObjectSetIndexOf extends MObjectSet implements MessageWithResponse
 	
 	public Msg replyFromServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());
-		synchronized(streamLock()) {
+		synchronized(containerLock()) {
 			int id = queryResult.indexOf(readInt()); 
 			return Msg.OBJECTSET_INDEXOF.getWriterForInt(transaction(), id);
 		}

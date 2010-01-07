@@ -55,7 +55,7 @@ public abstract class MsgQuery extends MsgObject {
 	}
 	
 	protected AbstractQueryResult newQueryResult(QueryEvaluationMode mode){
-		return stream().newQueryResult(transaction(), mode);
+		return container().newQueryResult(transaction(), mode);
 	}
 
 }

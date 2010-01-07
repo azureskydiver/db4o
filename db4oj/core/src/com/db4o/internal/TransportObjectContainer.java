@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.convert.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 import com.db4o.internal.weakref.*;
@@ -86,11 +87,13 @@ public class TransportObjectContainer extends LocalObjectContainer {
     	// do nothing here
     }
 
-	public final Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem) {
+	public final Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
-		return new TransactionObjectCarrier(this, null, referenceSystem);
+		TransactionObjectCarrier newTransaction = new TransactionObjectCarrier(this, null, referenceSystem);
+		idSystem().systemTransaction(newTransaction);
+		return newTransaction;
 	}
 	
 	public long currentVersion(){
@@ -225,15 +228,10 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	    // do nothing, blocksize is always 1
 	}
 	
-	@Override
-	protected void closeTransaction() {
-		// do nothing
-	}
-
-	@Override
-	protected void closeSystemTransaction() {
-		// do nothing
-	}
+    @Override
+    public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
+    	// do nothing	
+    }
 
 	protected void shutdownDataStorage() {
 		dropReferences();
@@ -294,5 +292,10 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	public ReferenceSystem createReferenceSystem() {
 		return new HashcodeReferenceSystem();
 	}
+	
+    protected IdSystem newIdSystem() {
+    	return new TransportStandardIdSystem(this);
+    }
+
 
 }

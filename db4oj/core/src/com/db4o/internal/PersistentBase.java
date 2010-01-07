@@ -52,8 +52,8 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
         bitFalse(Const4.PROCESSING);
     }
     
-    public void free(Transaction trans){
-        trans.systemTransaction().slotFreePointerOnCommit(getID());
+    public void free(LocalTransaction trans){
+    	trans.localContainer().idSystem().slotFreePointerOnCommit((LocalTransaction) trans.systemTransaction(), getID());
     }
 
     public int getID() {
@@ -145,28 +145,25 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
         }
         try {
 	            
-	        LocalObjectContainer stream = (LocalObjectContainer)trans.container();
+	        LocalObjectContainer container = (LocalObjectContainer)trans.container();
 	        
 	        if(DTrace.enabled){
 	            DTrace.PERSISTENT_OWN_LENGTH.log(getID());
 	        }
 	        
 	        int length = ownLength();
-	        length = stream.blockAlignedBytes(length);
+	        length = container.blockAlignedBytes(length);
 	        
 	        Slot slot;
 	        
 	        if(isNew()){
-	            Pointer4 pointer = stream.newSlot(length);
+	            Pointer4 pointer = container.newSlot(length);
 	            setID(pointer._id);
 	            slot = pointer._slot;
-                
-                trans.setPointer(pointer);
-	            // FIXME: Free everything on rollback here too?
-                
+                container.idSystem().setPointer(trans, pointer._id, slot);
 	        }else{
-	            slot = stream.getSlot(length);
-	            trans.slotFreeOnRollbackCommitSetPointer(_id, slot, isFreespaceComponent());
+	            slot = container.getSlot(length);
+	            container.idSystem().slotFreeOnRollbackCommitSetPointer((LocalTransaction) trans, _id, slot, isFreespaceComponent());
 	        }
 	        
 	        ByteArrayBuffer writer = produceWriteBuffer(trans, length);

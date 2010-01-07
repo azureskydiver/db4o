@@ -4,6 +4,7 @@ package com.db4o.internal.transactionlog;
 
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -11,97 +12,99 @@ import com.db4o.internal.slots.*;
  */
 public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 	
-	private int _addressOfIncompleteCommit; 
-	
-	public boolean checkForInterruptedTransaction(LocalTransaction trans, ByteArrayBuffer reader) {
-	    int transactionID1 = reader.readInt();
+	public EmbeddedTransactionLogHandler(StandardIdSystem idSystem) {
+		super(idSystem);
+	}
+
+	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
+	    final int transactionID1 = reader.readInt();
 	    int transactionID2 = reader.readInt();
 	    if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-	        _addressOfIncompleteCommit = transactionID1; 
-	        return true;
+	        return new InterruptedTransactionHandler() {
+	        	
+	        	private int _addressOfIncompleteCommit = transactionID1;  
+
+				public void completeInterruptedTransaction() {
+					StatefulBuffer bytes = new StatefulBuffer(_idSystem.systemTransaction(), _addressOfIncompleteCommit, Const4.INT_LENGTH);
+					bytes.read();
+			        int length = bytes.readInt();
+			        if (length > 0) {
+			            bytes = new StatefulBuffer(_idSystem.systemTransaction(), _addressOfIncompleteCommit, length);
+			            bytes.read();
+			            bytes.incrementOffset(Const4.INT_LENGTH);
+			            _idSystem.readWriteSlotChanges(bytes);
+			            localContainer().writeTransactionPointer(0);
+			            flushDatabaseFile();
+			            _idSystem.freeAndClearSystemSlotChanges();
+			        } else {
+			            localContainer().writeTransactionPointer(0);
+			            flushDatabaseFile();
+			        }
+
+				}
+			};
 	    }
-		return false;
-	}
-	
-	public void completeInterruptedTransaction(LocalTransaction trans) {
-		StatefulBuffer bytes = new StatefulBuffer(trans, _addressOfIncompleteCommit, Const4.INT_LENGTH);
-		bytes.read();
-        int length = bytes.readInt();
-        if (length > 0) {
-            bytes = new StatefulBuffer(trans, _addressOfIncompleteCommit, length);
-            bytes.read();
-            bytes.incrementOffset(Const4.INT_LENGTH);
-            trans.readSlotChanges(bytes);
-            if(trans.writeSlots()){
-                flushDatabaseFile(trans);
-            }
-            file(trans).writeTransactionPointer(0);
-            flushDatabaseFile(trans);
-            trans.freeSlotChanges(false);
-        } else {
-            file(trans).writeTransactionPointer(0);
-            flushDatabaseFile(trans);
-        }
+		return null;
 	}
 
-	public Slot allocateSlot(LocalTransaction trans, boolean appendToFile) {
-		int transactionLogByteCount = transactionLogSlotLength(trans);
-    	FreespaceManager freespaceManager = trans.freespaceManager();
+	public Slot allocateSlot(LocalTransaction transaction, boolean appendToFile) {
+		int transactionLogByteCount = transactionLogSlotLength(transaction);
+    	FreespaceManager freespaceManager = transaction.freespaceManager();
 		if(! appendToFile && freespaceManager != null){
-    		int blockedLength = file(trans).bytesToBlocks(transactionLogByteCount);
+    		int blockedLength = transaction.localContainer().bytesToBlocks(transactionLogByteCount);
     		Slot slot = freespaceManager.allocateTransactionLogSlot(blockedLength);
     		if(slot != null){
-    			return file(trans).toNonBlockedLength(slot);
+    			return transaction.localContainer().toNonBlockedLength(slot);
     		}
     	}
-    	return file(trans).appendBytes(transactionLogByteCount);
+    	return transaction.localContainer().appendBytes(transactionLogByteCount);
 	}
 
-	private void freeSlot(LocalTransaction trans, Slot slot){
+	private void freeSlot(Slot slot){
     	if(slot == null){
     		return;
     	}
-    	if(trans.freespaceManager() == null){
+    	if(_idSystem.freespaceManager() == null){
     	    return;
     	}
-    	trans.freespaceManager().freeTransactionLogSlot(file(trans).toBlockedLength(slot));
+    	_idSystem.freespaceManager().freeTransactionLogSlot(localContainer().toBlockedLength(slot));
 	}
 
-	public void applySlotChanges(LocalTransaction trans, Slot reservedSlot) {
-		int slotChangeCount = countSlotChanges(trans);
+	public void applySlotChanges(LocalTransaction transaction, Slot reservedSlot) {
+		int slotChangeCount = countSlotChanges(transaction);
 		if(slotChangeCount > 0){
 				
-		    Slot transactionLogSlot = slotLongEnoughForLog(trans, reservedSlot) ? reservedSlot
-			    	: allocateSlot(trans, true);
+		    Slot transactionLogSlot = slotLongEnoughForLog(transaction, reservedSlot) ? reservedSlot
+			    	: allocateSlot(transaction, true);
 	
-			    final StatefulBuffer buffer = new StatefulBuffer(trans, transactionLogSlot);
+			    final StatefulBuffer buffer = new StatefulBuffer(transaction.systemTransaction(), transactionLogSlot);
 			    buffer.writeInt(transactionLogSlot.length());
 			    buffer.writeInt(slotChangeCount);
 	
-			    appendSlotChanges(trans, buffer);
+			    appendSlotChanges(transaction, buffer);
 	
 			    buffer.write();
-			    flushDatabaseFile(trans);
+			    flushDatabaseFile();
 	
-			    file(trans).writeTransactionPointer(transactionLogSlot.address());
-			    flushDatabaseFile(trans);
+			    localContainer().writeTransactionPointer(transactionLogSlot.address());
+			    flushDatabaseFile();
 	
-			    if (trans.writeSlots()) {
-			    	flushDatabaseFile(trans);
+			    if (_idSystem.writeSlots(transaction)) {
+			    	flushDatabaseFile();
 			    }
 	
-			    file(trans).writeTransactionPointer(0);
-			    flushDatabaseFile(trans);
+			    localContainer().writeTransactionPointer(0);
+			    flushDatabaseFile();
 			    
 			    if (transactionLogSlot != reservedSlot) {
-			    	freeSlot(trans, transactionLogSlot);
+			    	freeSlot(transactionLogSlot);
 			    }
 		}
-		freeSlot(trans, reservedSlot);
+		freeSlot(reservedSlot);
 	}
 	
-	private boolean slotLongEnoughForLog(LocalTransaction trans, Slot slot){
-    	return slot != null  &&  slot.length() >= transactionLogSlotLength(trans);
+	private boolean slotLongEnoughForLog(LocalTransaction transaction, Slot slot){
+    	return slot != null  &&  slot.length() >= transactionLogSlotLength(transaction);
     }
     
 

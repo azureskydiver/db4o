@@ -4,6 +4,7 @@ package com.db4o.internal.transactionlog;
 
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 
@@ -21,7 +22,8 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	private final String _fileName;
 	
 	
-	public FileBasedTransactionLogHandler(LocalTransaction trans, String fileName) {
+	public FileBasedTransactionLogHandler(StandardIdSystem idSystem, String fileName) {
+		super(idSystem);
 		_fileName = fileName;
 	}
 
@@ -33,21 +35,43 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 		return fileName + ".lock";
 	}
 
-	private Bin openBin(LocalTransaction trans, String fileName) {
-		
-		return new FileStorage().open(new BinConfiguration(fileName, trans.config().lockFile(), 0, false));
+	private Bin openBin(String fileName) {
+		return new FileStorage().open(new BinConfiguration(fileName, _idSystem.config().lockFile(), 0, false));
 	}
 	
-	public boolean checkForInterruptedTransaction(LocalTransaction trans, ByteArrayBuffer reader) {
+	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
 		reader.incrementOffset(Const4.INT_LENGTH * 2);
 		if(!File4.exists(lockFileName(_fileName))){
-			return false;
+			return null;
 		}
-		return lockFileSignalsInterruptedTransaction(trans);
+		if( ! lockFileSignalsInterruptedTransaction()){
+			return null;
+		}
+		return new InterruptedTransactionHandler() {
+			
+			public void completeInterruptedTransaction() {
+				ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.INT_LENGTH);
+				openLogFile();
+				read(_logFile, buffer);
+				int length = buffer.readInt();
+				if(length > 0){
+					buffer = new ByteArrayBuffer(length);
+					read(_logFile, buffer);
+					buffer.incrementOffset(Const4.INT_LENGTH);
+					_idSystem.readWriteSlotChanges(buffer);
+		            deleteLockFile();
+		            _idSystem.freeAndClearSystemSlotChanges();
+				}else{
+					deleteLockFile();
+				}
+				closeLogFile();
+				deleteLogFile();
+			}
+		};
 	}
 
-	private boolean lockFileSignalsInterruptedTransaction(LocalTransaction trans) {
-		openLockFile(trans);
+	private boolean lockFileSignalsInterruptedTransaction() {
+		openLockFile();
 		ByteArrayBuffer buffer = newLockFileBuffer();
 		read(_lockFile, buffer);
 		for (int i = 0; i < 2; i++) {
@@ -73,6 +97,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 
 	private void closeLockFile() {
 		syncAndClose(_lockFile);
+		_lockFile = null;
 	}
 
 	private void syncAndClose(Bin bin) {
@@ -86,6 +111,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 
 	private void closeLogFile() {
 		syncAndClose(_logFile);
+		_logFile = null;
 	}
 
 	private void deleteLockFile() {
@@ -97,34 +123,34 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	}
 
 	@Override
-	public Slot allocateSlot(LocalTransaction trans, boolean append) {
+	public Slot allocateSlot(LocalTransaction transaction, boolean append) {
 		// do nothing
 		return null;
 	}
 
 	@Override
-	public void applySlotChanges(LocalTransaction trans, Slot reservedSlot) {
-		int slotChangeCount = countSlotChanges(trans);
+	public void applySlotChanges(LocalTransaction transaction, Slot reservedSlot) {
+		int slotChangeCount = countSlotChanges(transaction);
 		if(slotChangeCount < 1){
 			return;
 		}
 		
-		flushDatabaseFile(trans);
+		flushDatabaseFile();
 		
-		ensureLogAndLock(trans);
-		int length = transactionLogSlotLength(trans);
+		ensureLogAndLock();
+		int length = transactionLogSlotLength(transaction);
 		ByteArrayBuffer logBuffer = new ByteArrayBuffer(length);
 		logBuffer.writeInt(length);
 		logBuffer.writeInt(slotChangeCount);
 	
-	    appendSlotChanges(trans, logBuffer);
+	    appendSlotChanges(transaction, logBuffer);
 	    write(_logFile, logBuffer);
 	    _logFile.sync();
 	    
 	    writeToLockFile(LOCK_INT);
 
-	    if (trans.writeSlots()) {
-	    	flushDatabaseFile(trans);
+	    if (_idSystem.writeSlots(transaction)) {
+	    	flushDatabaseFile();
 	    }
 	    writeToLockFile(0);
 	}
@@ -145,50 +171,27 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 		return Const4.LONG_LENGTH * 2;
 	}
 
-	private void ensureLogAndLock(LocalTransaction trans) {
-		if(trans.config().isReadOnly()){
+	private void ensureLogAndLock() {
+		if(_idSystem.isReadOnly()){
 			return;
 		}
 		if(logsOpened()){
 			return;
 		}
-		openLockFile(trans);
-		openLogFile(trans);
+		openLockFile();
+		openLogFile();
 	}
 
-	private void openLogFile(LocalTransaction trans) {
-		_logFile = openBin(trans, logFileName(_fileName));
+	private void openLogFile() {
+		_logFile = openBin(logFileName(_fileName));
 	}
 
-	private void openLockFile(LocalTransaction trans) {
-		_lockFile = openBin(trans, lockFileName(_fileName));
+	private void openLockFile() {
+		_lockFile = openBin(lockFileName(_fileName));
 	}
 
 	private boolean logsOpened() {
 		return _lockFile != null;
-	}
-
-	@Override
-	public void completeInterruptedTransaction(LocalTransaction trans) {
-		ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.INT_LENGTH);
-		openLogFile(trans);
-		read(_logFile, buffer);
-		int length = buffer.readInt();
-		if(length > 0){
-			buffer = new ByteArrayBuffer(length);
-			read(_logFile, buffer);
-			buffer.incrementOffset(Const4.INT_LENGTH);
-			trans.readSlotChanges(buffer);
-            if(trans.writeSlots()){
-                flushDatabaseFile(trans);
-            }
-            deleteLockFile();
-            trans.freeSlotChanges(false);
-		}else{
-			deleteLockFile();
-		}
-		closeLogFile();
-		deleteLogFile();
 	}
 
 	private void read(Bin storage, ByteArrayBuffer buffer) {

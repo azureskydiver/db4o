@@ -61,7 +61,7 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
         
         TernaryBool indexedFlag=_config.getAsTernaryBool(INDEXED_KEY);        
         if (indexedFlag.definiteNo()) {
-            fieldMetadata.dropIndex(systemTrans);
+            fieldMetadata.dropIndex((LocalTransaction)systemTrans);
             return;
         }
         

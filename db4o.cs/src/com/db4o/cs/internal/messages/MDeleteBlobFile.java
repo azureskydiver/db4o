@@ -4,7 +4,6 @@ package com.db4o.cs.internal.messages;
 
 import java.io.*;
 
-import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.*;
 import com.db4o.types.*;
 

@@ -15,7 +15,7 @@ public final class MGetAll extends MsgQuery implements MessageWithResponse {
 		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
 		int prefetchDepth = readInt();
 		int prefetchCount = readInt();
-		synchronized(streamLock()) {
+		synchronized(containerLock()) {
 			return writeQueryResult(getAll(evaluationMode), evaluationMode, new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
 		}
 	}
@@ -23,7 +23,7 @@ public final class MGetAll extends MsgQuery implements MessageWithResponse {
 	private AbstractQueryResult getAll(final QueryEvaluationMode mode) {
 		return newQuery(mode).triggeringQueryEvents(new Closure4<AbstractQueryResult>() { public AbstractQueryResult run() {
 			try {
-				return file().getAll(transaction(), mode);
+				return localContainer().getAll(transaction(), mode);
 			} catch (Exception e) {
 				if(Debug4.atHome){
 					e.printStackTrace();
@@ -34,7 +34,7 @@ public final class MGetAll extends MsgQuery implements MessageWithResponse {
 	}
 
 	private QQuery newQuery(final QueryEvaluationMode mode) {
-		QQuery query = (QQuery)file().query();
+		QQuery query = (QQuery)localContainer().query();
 		query.evaluationMode(mode);
 		return query;
 	}

@@ -76,10 +76,6 @@ public class PrimitiveTypeMetadata extends ClassMetadata {
         }
     }
     
-	final void free(StatefulBuffer a_bytes, int a_id) {
-          a_bytes.transaction().slotFreePointerOnCommit(a_id, a_bytes.slot());
-	}
-    
 	@Override
 	public boolean hasClassIndex() {
 	    return false;

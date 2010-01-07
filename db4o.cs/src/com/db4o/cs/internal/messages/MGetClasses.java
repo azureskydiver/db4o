@@ -7,14 +7,13 @@ import com.db4o.internal.*;
 
 public final class MGetClasses extends MsgD implements MessageWithResponse {
 	public final Msg replyFromServer() {
-	    ObjectContainerBase stream = stream();
-		synchronized (streamLock()) {
+	    synchronized (containerLock()) {
 			try {
 
 				// Since every new Client reads the class
 				// collection from the file, we have to 
 				// make sure, it has been written.
-				stream.classCollection().write(transaction());
+				container().classCollection().write(transaction());
 
 			} catch (Exception e) {
 				if (Deploy.debug) {
@@ -24,8 +23,8 @@ public final class MGetClasses extends MsgD implements MessageWithResponse {
 		}
 		MsgD message = Msg.GET_CLASSES.getWriterForLength(transaction(), Const4.INT_LENGTH + 1);
 		ByteArrayBuffer writer = message.payLoad();
-		writer.writeInt(stream.classCollection().getID());
-		writer.writeByte(stream.stringIO().encodingByte());
+		writer.writeInt(container().classCollection().getID());
+		writer.writeByte(container().stringIO().encodingByte());
 		return message;
 	}
 }

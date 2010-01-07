@@ -54,19 +54,6 @@ public final class ClientTransaction extends Transaction {
         return true;
     }
 
-    public boolean isDeleted(int a_id) {
-
-        // This one really is a hack.
-        // It only helps to get information about the current
-        // transaction.
-
-        // We need a better strategy for C/S concurrency behaviour.
-        MsgD msg = Msg.TA_IS_DELETED.getWriterForInt(this, a_id);
-		_client.write(msg);
-        int res = _client.expectedByteResponse(Msg.TA_IS_DELETED).readInt();
-        return res == 1;
-    }
-    
     public void processDeletes() {
         Visitor4 deleteVisitor = new Visitor4() {
             public void visit(Object a_object) {

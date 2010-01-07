@@ -5,6 +5,7 @@ package com.db4o.internal.marshall;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
@@ -79,19 +80,23 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         return _transaction;
     }
     
+    /**
+     * TODO: This should go completely into the IdSystem
+     */
     private Slot createNewSlot(int length){
         Slot slot = new Slot(-1, length);
         if(_transaction instanceof LocalTransaction){
-            slot = ((LocalTransaction)_transaction).file().getSlot(length);
-            _transaction.slotFreeOnRollback(objectID(), slot);
+            slot = ((LocalTransaction)_transaction).localContainer().getSlot(length);
+            IdSystem idSystem = ((LocalObjectContainer)container()).idSystem();
+			idSystem.slotFreeOnRollback(_transaction, objectID(), slot);
+			idSystem.setPointer(_transaction, objectID(), slot);
         }
-        _transaction.setPointer(objectID(), slot);
         return slot;
     }
     
     private Slot createUpdateSlot(int length){
         if(transaction() instanceof LocalTransaction){
-            return ((LocalTransaction)transaction()).file().getSlotForUpdate(transaction(), objectID(), length);
+            return ((LocalTransaction)transaction()).localContainer().getSlotForUpdate(transaction(), objectID(), length);
         }
         return new Slot(0, length);
     }

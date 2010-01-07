@@ -48,7 +48,7 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 			long sourceDatabaseId = readLong(is);
 			Db4oDatabase sourceDatabase = null;
 			if (sourceDatabaseId > 0 ){
-			    sourceDatabase  = (Db4oDatabase) stream().getByID(transaction(), sourceDatabaseId);
+			    sourceDatabase  = (Db4oDatabase) container().getByID(transaction(), sourceDatabaseId);
 			}
 			long uuidLongPart = readLong(is);
 			long version = readLong(is);
@@ -122,12 +122,12 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 
 	public boolean processAtClient() {
 		final CallbackObjectInfoCollections callbackInfos = decode();
-		stream().threadPool().start(new Runnable() {
+		container().threadPool().start(new Runnable() {
 			public void run() {
-				if(stream().isClosed()){
+				if(container().isClosed()){
 					return;
 				}
-				stream().callbacks().commitOnCompleted(transaction(), callbackInfos);
+				container().callbacks().commitOnCompleted(transaction(), callbackInfos);
 			}
 		});
 		return true;

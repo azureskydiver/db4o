@@ -12,7 +12,7 @@ public final class MQueryExecute extends MsgQuery implements MessageWithResponse
 	public Msg replyFromServer() {
 		unmarshall(_payLoad._offset);
 		final ObjectByRef<Msg> result = new ObjectByRef();
-		stream().withTransaction(transaction(), new Runnable() { public void run() {
+		container().withTransaction(transaction(), new Runnable() { public void run() {
 			
 			final QQuery query = unmarshallQuery();
 			result.value = writeQueryResult(executeFully(query), query.evaluationMode(), new ObjectExchangeConfiguration(query.prefetchDepth(), query.prefetchCount()));

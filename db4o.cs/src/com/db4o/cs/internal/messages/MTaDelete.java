@@ -10,7 +10,7 @@ public class MTaDelete extends MsgD implements ServerSideMessage {
 	    int id = _payLoad.readInt();
 	    int cascade = _payLoad.readInt();
 	    Transaction trans = transaction();
-	    synchronized (streamLock()) {
+	    synchronized (containerLock()) {
 	        trans.delete(null, id, cascade);
 	    }
 	}

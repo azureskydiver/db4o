@@ -5,6 +5,7 @@ package com.db4o.internal.fileheader;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -57,7 +58,7 @@ public abstract class FileHeader {
 
     public abstract void initNew(LocalObjectContainer file) throws Db4oIOException;
 
-    public abstract Transaction interruptedTransaction();
+    public abstract InterruptedTransactionHandler interruptedTransactionHandler();
 
     public abstract int length();
     

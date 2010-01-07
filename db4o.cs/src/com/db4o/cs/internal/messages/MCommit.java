@@ -11,7 +11,7 @@ public final class MCommit extends Msg implements MessageWithResponse {
 
 	public final Msg replyFromServer() {
 		ServerMessageDispatcher dispatcher = serverMessageDispatcher();
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 			serverTransaction().commit(dispatcher);
 			committedInfo = dispatcher.committedInfo();
 		}
@@ -31,7 +31,7 @@ public final class MCommit extends Msg implements MessageWithResponse {
 	}
 	
 	private void addCommittedInfoMsg(CallbackObjectInfoCollections committedInfo, LocalTransaction serverTransaction) {
-		synchronized (streamLock()) {
+		synchronized (containerLock()) {
 			Msg.COMMITTED_INFO.setTransaction(serverTransaction);
 			MCommittedInfo message = Msg.COMMITTED_INFO.encode(committedInfo);
 			message.setMessageDispatcher(serverMessageDispatcher());

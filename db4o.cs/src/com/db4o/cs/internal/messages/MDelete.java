@@ -8,13 +8,12 @@ import com.db4o.internal.*;
 public final class MDelete extends MsgD implements ServerSideMessage {
 	public final void processAtServer() {
 		ByteArrayBuffer bytes = this.getByteLoad();
-		ObjectContainerBase stream = stream();
-		synchronized (streamLock()) {
-			Object obj = stream.tryGetByID(transaction(), bytes.readInt());
+		synchronized (containerLock()) {
+			Object obj = container().tryGetByID(transaction(), bytes.readInt());
             boolean userCall = bytes.readInt() == 1;
 			if (obj != null) {
 				try {
-				    stream.delete1(transaction(), obj, userCall);
+				    container().delete1(transaction(), obj, userCall);
 				} catch (Exception e) {
 					if (Debug4.atHome) {
 						e.printStackTrace();

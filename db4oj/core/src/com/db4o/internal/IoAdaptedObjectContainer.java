@@ -155,15 +155,15 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 		}
 	}
 	
-	@Override
-	protected void closeTransaction() {
-		_transaction.close(false);
-	}
-	
-	@Override
-	protected void closeSystemTransaction() {
-    	((LocalTransaction)systemTransaction()).close();
-	}
+    @Override
+    public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
+    	transaction.close(rollbackOnClose);
+    	if(! isSystemTransaction){
+    		idSystem().removeTransaction(transaction);
+    	}else{
+    		idSystem().close();
+    	}
+    }
     
     public void commit1(Transaction trans) {
         ensureLastSlotWritten();

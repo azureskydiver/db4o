@@ -4,7 +4,6 @@ package com.db4o.cs.internal.messages;
 
 import java.io.*;
 
-import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
@@ -24,14 +23,13 @@ public class MWriteBlob extends MsgBlob implements ServerSideMessage {
                 FileInputStream inBlob = this._blob.getClientInputStream();
                 copy(inBlob,sock,true);
                 sock.flush();
-                ObjectContainerBase stream = stream();
                 message = Msg.readMessage(messageDispatcher(), transaction(), sock);
                 if (message.equals(Msg.OK)) {
 
                     // make sure to load the filename to i_blob
                     // to allow client databasefile switching
-                    stream.deactivate(transaction(), _blob, Integer.MAX_VALUE);
-                    stream.activate(transaction(), _blob, new FullActivationDepth());
+                    container().deactivate(transaction(), _blob, Integer.MAX_VALUE);
+                    container().activate(transaction(), _blob, new FullActivationDepth());
 
                     this._blob.setStatus(Status.COMPLETED);
                 } else {

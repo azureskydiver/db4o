@@ -76,7 +76,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
     
     public LocalObjectContainer file(){
-        return ((LocalTransaction)_trans).file();
+        return ((LocalTransaction)_trans).localContainer();
     }
 
     public Transaction transaction() {
@@ -127,10 +127,6 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         _trans = aTrans;
     }
 
-    public void slotDelete() {
-        _trans.slotDelete(_id, slot());
-    }
-    
     public void useSlot(int adress) {
         _address = adress;
         _offset = 0;

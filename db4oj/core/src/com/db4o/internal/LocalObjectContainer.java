@@ -10,10 +10,12 @@ import com.db4o.internal.btree.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
+import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -39,15 +41,28 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     private Tree                _freeOnCommit;
     
     private SystemData          _systemData;
-        
+    
+    private final IdSystem _idSystem;
+
     LocalObjectContainer(Configuration config) {
         super(config);
+        _idSystem = newIdSystem();
     }
     
-    public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem) {
-		return new LocalTransaction(this, parentTransaction, referenceSystem);
+    public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
+		LocalTransaction transaction = new LocalTransaction(this, parentTransaction, referenceSystem);
+		if(isSystemTransaction){
+			idSystem().systemTransaction(transaction);
+		}else {
+			idSystem().addTransaction(transaction);
+		}
+		return transaction;
 	}
 
+    protected IdSystem newIdSystem() {
+    	return new StandardIdSystem(this);
+    }
+    
     public FreespaceManager freespaceManager() {
 		return _freespaceManager;
 	}
@@ -151,7 +166,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
                 }
             }
             reader.setCascadeDeletes(a_cascade);
-            reader.slotDelete();
+            idSystem().slotDelete(ta, id, reader.slot());
             ClassMetadata yc = yo.classMetadata();
             yc.delete(reader, obj);
 
@@ -240,10 +255,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 
 	private void writeZeroPointer(int id) {
-		((LocalTransaction)systemTransaction()).writeZeroPointer(id);
+		_idSystem.writeZeroPointer(id);
 	}
     
-    public Slot getSlot(int length){
+     // TODO: This should go into the IdSystem
+	public Slot getSlot(int length){
     	int blocks = bytesToBlocks(length);
     	Slot slot = getBlockedSlot(blocks);
         if(DTrace.enabled){
@@ -360,8 +376,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return new Pointer4(getPointerSlot(), getSlot(length));
     }
 
-    public final int newUserObject() {
-        return getPointerSlot();
+    public final int newUserObject(Transaction trans) {
+        int id = getPointerSlot();
+        idSystem().slotFreePointerOnRollback(trans, id);
+		return id;
     }
 
     public ReferencedSlot produceFreeOnCommitEntry(int id){
@@ -390,8 +408,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }
     }
 
-    public StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted) {
-        return (StatefulBuffer)readReaderOrWriterByID(a_ta, a_id, false, lastCommitted);    
+    public StatefulBuffer readWriterByID(Transaction transaction, int id, boolean lastCommitted) {
+        return (StatefulBuffer)readReaderOrWriterByID((LocalTransaction)transaction, id, false, lastCommitted);    
     }
     
     public StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
@@ -399,45 +417,45 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     @Override
-    public ByteArrayBuffer[] readSlotBuffers(Transaction a_ta, int ids[]) {
+    public ByteArrayBuffer[] readSlotBuffers(Transaction transaction, int ids[]) {
     	ByteArrayBuffer[] buffers = new ByteArrayBuffer[ids.length];
 		for (int i = 0; i < ids.length; ++i) {
 			if (ids[i] == 0) {
 				buffers[i] = null;
 			} else {
-				buffers[i] = readReaderOrWriterByID(a_ta, ids[i], true);
+				buffers[i] = readReaderOrWriterByID((LocalTransaction)transaction, ids[i], true);
 			}
 		}
 		return buffers;
 	}
     
-    public ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {
-        return readReaderOrWriterByID(a_ta, a_id, true, lastCommitted);
+    public ByteArrayBuffer readReaderByID(Transaction transaction, int id, boolean lastCommitted) {
+        return readReaderOrWriterByID((LocalTransaction)transaction, id, true, lastCommitted);
     }
 
     public ByteArrayBuffer readReaderByID(Transaction trans, int id) {
         return readReaderByID(trans, id, false);
     }
     
-    private final ByteArrayBuffer readReaderOrWriterByID(Transaction a_ta, int a_id,
+    private final ByteArrayBuffer readReaderOrWriterByID(LocalTransaction transaction, int id,
 			boolean useReader) {
-    	return readReaderOrWriterByID(a_ta, a_id, useReader, false);
+    	return readReaderOrWriterByID(transaction, id, useReader, false);
     }
     
-    private final ByteArrayBuffer readReaderOrWriterByID(Transaction a_ta, int a_id,
+    private final ByteArrayBuffer readReaderOrWriterByID(LocalTransaction trans, int id,
 			boolean useReader, boolean lastCommitted) {
-		if (a_id <= 0) {
+		if (id <= 0) {
 			throw new IllegalArgumentException();
 		}
 
 		if (DTrace.enabled) {
-			DTrace.READ_ID.log(a_id);
+			DTrace.READ_ID.log(id);
 		}
 
-		Slot slot = lastCommitted ? ((LocalTransaction) a_ta).getCommittedSlotOfID(a_id) :  
-			((LocalTransaction) a_ta).getCurrentSlotOfID(a_id);
+		Slot slot = lastCommitted ? idSystem().getCommittedSlotOfID(trans, id) :  
+			idSystem().getCurrentSlotOfID(trans, id);
 		
-		return readReaderOrWriterBySlot(a_ta, a_id, useReader, slot);
+		return readReaderOrWriterBySlot(trans, id, useReader, slot);
 	}
     
     public ByteArrayBuffer readSlotBuffer(Slot slot) {
@@ -507,11 +525,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         writeHeader(true, false);
         
-        LocalTransaction trans = (LocalTransaction) _fileHeader.interruptedTransaction();
+        InterruptedTransactionHandler interruptedTransactionHandler =  _fileHeader.interruptedTransactionHandler();
         
-        if (trans != null) {
+        if (interruptedTransactionHandler != null) {
             if (!configImpl().commitRecoveryDisabled()) {
-                trans.completeInterruptedTransaction();
+            	interruptedTransactionHandler.completeInterruptedTransaction();
             }
         }
 
@@ -592,7 +610,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }});
     }
 
-    public void releaseSemaphores(final Transaction ta) {
+    public void releaseSemaphores(final Transaction trans) {
         if (_semaphores != null) {
             final Hashtable4 semaphores = _semaphores;
             _semaphoresLock.run(new Closure4() { public Object run() {
@@ -600,7 +618,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
                     public void visit(Object a_object) {
                         semaphores.remove(a_object);
                     }
-                }, ta);
+                }, trans);
                 
                 _semaphoresLock.awake();
                 return null;
@@ -774,7 +792,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public final Slot getSlotForUpdate(Transaction trans, int id, int length){
         Slot slot = getSlot(length);
-        trans.produceUpdateSlotChange(id, slot);
+        idSystem().produceUpdateSlotChange(trans, id, slot);
         return slot;
     }
 
@@ -849,6 +867,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	
 	public ObjectContainer openSession(){
 		return new ObjectContainerSession(this);
+	}
+	
+	public IdSystem idSystem(){
+		return _idSystem;
+	}
+	
+	@Override
+	public boolean isDeleted(Transaction trans, int id){
+		return idSystem().isDeleted(trans, id);
 	}
 	
 }

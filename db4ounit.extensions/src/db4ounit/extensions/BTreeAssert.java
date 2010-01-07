@@ -5,6 +5,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 import db4ounit.*;
@@ -73,21 +74,22 @@ public class BTreeAssert {
 	}
 	
 	public static void assertAllSlotsFreed(LocalTransaction trans, BTree bTree, CodeBlock block) throws Throwable {
+		
+		final LocalObjectContainer container = (LocalObjectContainer)trans.container();
+		IdSystem idSystem = container.idSystem();
+		
 		Iterator4 allSlotIDs = bTree.allNodeIds(trans.systemTransaction());
         
         Collection4 allSlots = new Collection4();
         
         while(allSlotIDs.moveNext()){
             int slotID = ((Integer)allSlotIDs.current()).intValue();
-            Slot slot = trans.getCurrentSlotOfID(slotID);
+			Slot slot = idSystem.getCurrentSlotOfID(trans, slotID);
             allSlots.add(slot);
         }
         
-        Slot bTreeSlot = trans.getCurrentSlotOfID(bTree.getID());
+        Slot bTreeSlot = idSystem.getCurrentSlotOfID(trans, bTree.getID());
         allSlots.add(bTreeSlot);
-        
-        final LocalObjectContainer container = (LocalObjectContainer)trans.container();
-        
         
         final Collection4 freedSlots = new Collection4();
         

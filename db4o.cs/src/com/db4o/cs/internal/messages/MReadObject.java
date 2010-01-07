@@ -12,8 +12,8 @@ public final class MReadObject extends MsgD implements MessageWithResponse {
 		// and object was deleted by another client
 		int id = _payLoad.readInt();
 		int lastCommitted = _payLoad.readInt();
-		synchronized (streamLock()) {
-			bytes = stream().readWriterByID(transaction(), id, lastCommitted==1);
+		synchronized (containerLock()) {
+			bytes = container().readWriterByID(transaction(), id, lastCommitted==1);
 		}
 		if (bytes == null) {
 			bytes = new StatefulBuffer(transaction(), 0, 0);

@@ -9,7 +9,7 @@ public class MProcessDeletes extends Msg implements ServerSideMessage {
 	
 	public final void processAtServer() {
 		
-		stream().withTransaction(transaction(), new Runnable() { public void run() {
+		container().withTransaction(transaction(), new Runnable() { public void run() {
 			try {
 				transaction().processDeletes();
 			} catch (Db4oException e) {

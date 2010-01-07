@@ -13,7 +13,7 @@ import com.db4o.internal.slots.*;
  */
 class WriteUpdateProcessor {
 	
-	private final LocalTransaction _localTransaction;
+	private final LocalTransaction _transaction;
 
 	private final int _id;
 	
@@ -23,12 +23,12 @@ class WriteUpdateProcessor {
 	
 	private int _cascade;
 
-	public WriteUpdateProcessor(LocalTransaction localTransaction, 
+	public WriteUpdateProcessor(LocalTransaction transaction, 
 			int id, 
 			ClassMetadata clazz, 
 			ArrayType typeInfo,
 			int cascade) {
-		_localTransaction = localTransaction;
+		_transaction = transaction;
 		_id = id;
 		_clazz = clazz;
 		_typeInfo = typeInfo;
@@ -36,7 +36,7 @@ class WriteUpdateProcessor {
 	}
 
 	public void run(){
-    	_localTransaction.checkSynchronization();
+    	_transaction.checkSynchronization();
     	
         if(DTrace.enabled){
             DTrace.WRITE_UPDATE_ADJUST_INDEXES.log(_id);
@@ -46,7 +46,7 @@ class WriteUpdateProcessor {
         	return;
         }
         
-        Slot slot = _localTransaction.getCurrentSlotOfID(_id);
+        Slot slot = container().idSystem().getCurrentSlotOfID(_transaction, _id);
         if(handledAsReAdd(slot)){
         	return;
         }
@@ -55,7 +55,7 @@ class WriteUpdateProcessor {
         	return;
         }
         
-        StatefulBuffer objectBytes = (StatefulBuffer)container().readReaderOrWriterBySlot(localTransaction(), _id, false, slot);
+        StatefulBuffer objectBytes = (StatefulBuffer)container().readReaderOrWriterBySlot(_transaction, _id, false, slot);
         
         updateChildIndexes(objectBytes);
         
@@ -63,17 +63,17 @@ class WriteUpdateProcessor {
 	}
 
 	private LocalObjectContainer container() {
-		return _localTransaction.file();
+		return _transaction.localContainer();
 	}
 
 	private void freeSlotOnCommit(StatefulBuffer objectBytes) {
-		_localTransaction.slotFreeOnCommit(_id, new Slot(objectBytes.getAddress(), objectBytes.length()));
+		container().idSystem().slotFreeOnCommit(_transaction, _id, objectBytes.slot());
 	}
 
 	private void updateChildIndexes(StatefulBuffer objectBytes) {
 		ObjectHeader oh = new ObjectHeader(container(), _clazz, objectBytes);
         
-        DeleteInfo info = (DeleteInfo)TreeInt.find(_localTransaction._delete, _id);
+        DeleteInfo info = (DeleteInfo)TreeInt.find(_transaction._delete, _id);
         if(info != null){
             if(info._cascade > _cascade){
                 _cascade = info._cascade;
@@ -90,13 +90,13 @@ class WriteUpdateProcessor {
 		if(slot != null  && !slot.isNull()){
 			return false;
 		}
-        _clazz.addToIndex(localTransaction(), _id);
+        _clazz.addToIndex(_transaction, _id);
         return true;
 	}
 	
 	private boolean alreadyHandled() {
 		TreeInt newNode = new TreeInt(_id);
-        _localTransaction._writtenUpdateAdjustedIndexes = Tree.add(_localTransaction._writtenUpdateAdjustedIndexes, newNode);
+        _transaction._writtenUpdateAdjustedIndexes = Tree.add(_transaction._writtenUpdateAdjustedIndexes, newNode);
         return ! newNode.wasAddedToTree();
 	}
 	
@@ -104,12 +104,8 @@ class WriteUpdateProcessor {
 		if(! _clazz.canUpdateFast()){
 			return false;
 		}
-    	_localTransaction.slotFreeOnCommit(_id, slot);
+		container().idSystem().slotFreeOnCommit(_transaction, _id, slot);
     	return true;
-	}
-
-	private LocalTransaction localTransaction() {
-		return _localTransaction;
 	}
 
 }
