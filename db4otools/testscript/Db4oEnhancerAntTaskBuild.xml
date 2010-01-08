@@ -7,14 +7,18 @@
 <project name="Db4oEnhancerAntTaskTestCase" default="run" basedir=".">
 
 	<property name="instrumented.bin" value="../instrumented.bin" />
+	<property name="user.classpath" value="" />
+	<property name="source.classpath" value="../bin" />
+	<property name="source.path" value="../test" />
 	
 	<path id="project.classpath">
+		<pathelement path="${user.classpath}" />
+		<pathelement path="${source.classpath}" />
 		<pathelement path="../../db4oj/bin" />
 		<pathelement path="../../db4ounit/bin" />
 		<pathelement path="../../db4ounit.extensions/bin" />
 		<pathelement path="../../bloat/bin" />
 		<pathelement path="../../db4o.instrumentation/bin" />
-		<pathelement path="../../db4otools/bin" />
 		<pathelement path="../../db4otaj/bin" />
 		<pathelement path="../../db4onqopt/bin" />
 	</path>
@@ -27,7 +31,6 @@
 				<pathelement path="${instrumented.bin}"/>
 				<path refid="project.classpath" />
 			</classpath>
-			<jvmarg value="-verbose:class"/>
 		</java>
 		<delete dir="${instrumented.bin}" failonerror="false" />
 	</target>
@@ -43,7 +46,7 @@
 		<reset-folders />
 		<db4o-enhance classtargetdir="${instrumented.bin}" verbose="true">
 			<classpath refid="project.classpath" />		
-			<sources dir="../bin" >
+			<sources dir="${source.classpath}" >
 				<include name="**/ToBeInstrumented*.class" />
 				<exclude name="**/NotToBeInstrumented*.class" />
 			</sources>
@@ -52,7 +55,7 @@
 	
 	<target name="compile">
 		<javac fork="true" destdir="../bin" debug="${javac.debug.mode}" target="1.1" source="1.3" encoding="UTF-8">
-			<src path="../test" />
+			<src path="${source.path}" />
 			<include name="**/ToBeInstrumented*.java" />
 			<exclude name="**/NotToBeInstrumented*.java" />
 		</javac>		
