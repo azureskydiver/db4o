@@ -1611,6 +1611,33 @@
 		</java>
 	</target>
 
+	<target name="run.tests.ant.instrumentation" depends="build.db4otools.tests, build.nodep1.5">
+		<reset-dir dir="${dir.db4otools.ant.instrumentation.test}" />
+		<mkdir dir="${dir.db4otools.ant.instrumentation.test}/testscript" />
+		<copy todir="${dir.db4otools.ant.instrumentation.test}/testscript">
+			<fileset dir="${dir.j.db4otools}/testscript">
+				<include name="*.xml"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${dir.db4otools.ant.instrumentation.test}/bin" />
+		<java 
+			classname="com.db4o.enhance.test.Db4oEnhancerAntTaskTestCaseLauncher"
+			fork="true"
+			failonerror="true"
+			dir="${dir.db4otools.ant.instrumentation.test}">
+			<classpath>
+				<pathelement path="${dir.dist.classes.jdk1.5.test.db4otools}" />
+				<pathelement path="${file.ant.jar}" />
+				<pathelement path="${file.ant.launcher.jar}" />
+				<pathelement path="${file.jdk1.5.nodep.jar}" />
+				<pathelement path="${dir.dist.classes.db4ounit.jdk1.5}" />
+			</classpath>
+			<arg path="${file.jdk1.5.nodep.jar}" />
+			<arg path="${dir.dist.classes.jdk1.5.test.db4otools}" />
+			<arg path="${dir.j.db4otools.test.src}" />
+		</java>
+	</target>
+	
 	<target name="run.tests.instrumentation" depends="build.instrumentation.tests">
 		<java taskname="instr/j13" classname="com.db4o.instrumentation.test.AllTests"
 			jvmargs="${java.vmargs}"
@@ -1995,6 +2022,7 @@
 				run.tests.instrumentation,
 				run.tests.nqopt,
 				run.tests.taj,
+				run.tests.ant.instrumentation,
 				run.tests.concurrency, 
 				run.tests.osgi,
 				run.tests.jdk1.5.instrumented,
