@@ -63,20 +63,11 @@ public class StandardIdSlotChanges {
 	public void clear() {
 		_slotChanges.clear();
 	}	
-	
-    public void rollback() {
-        synchronized (localContainer().lock()) {
-            
-            rollbackSlotChanges();            
-            
-            clear();
-        }
-    }
     
-	public void rollbackSlotChanges() {
+	public void rollback() {
 		_slotChanges.traverseLocked(new Visitor4() {
-            public void visit(Object a_object) {
-                ((SlotChange) a_object).rollback(localContainer());
+            public void visit(Object slotChange) {
+                ((SlotChange) slotChange).rollback(localContainer());
             }
         });
 	}
@@ -85,13 +76,6 @@ public class StandardIdSlotChanges {
     	return slotChangeIsFlaggedDeleted(id);
     }
 	
-    public void flushFile(){
-        if(DTrace.enabled){
-            DTrace.TRANS_FLUSH.log();
-        }
-        localContainer().syncFiles();
-    }
-    
     public SlotChange produceSlotChange(int id){
     	if(DTrace.enabled){
     		DTrace.PRODUCE_SLOT_CHANGE.log(id);

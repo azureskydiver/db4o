@@ -193,7 +193,7 @@ public class LocalTransaction extends Transaction {
             
             rollbackParticipants();
             
-            idSystem().rollbackSlotChanges(this);
+            idSystem().rollback(this);
             
             rollBackTransactionListeners();
             

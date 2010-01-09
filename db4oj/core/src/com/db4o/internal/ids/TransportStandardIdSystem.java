@@ -26,7 +26,7 @@ public class TransportStandardIdSystem extends StandardIdSystem {
     
 	@Override
 	public void setPointer(Transaction transaction, int id, Slot slot) {
-		writePointer(id, slot);
+		localContainer().writePointer(id, slot);
 	}
 	
 	@Override

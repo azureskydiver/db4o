@@ -131,9 +131,5 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
 	public static boolean migrationRequired(byte systemType) {
 		return systemType == FM_LEGACY_RAM  || systemType == FM_IX ;
 	}
-	
-	protected IdSystem idSystem(){
-		return _file.idSystem(); 
-	}
     
 }

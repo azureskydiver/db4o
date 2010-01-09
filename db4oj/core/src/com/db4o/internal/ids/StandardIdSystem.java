@@ -5,7 +5,6 @@ package com.db4o.internal.ids;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
@@ -22,10 +21,6 @@ public class StandardIdSystem implements IdSystem {
 	private StandardIdSlotChanges _systemSlotChanges;
 	
 	private final TransactionLogHandler _transactionLogHandler;
-	
-	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
-
-	protected StatefulBuffer _pointerIo;    
 	
 	public StandardIdSystem(LocalObjectContainer localContainer){
 		_transactionLogHandler = newTransactionLogHandler(localContainer);
@@ -113,7 +108,7 @@ public class StandardIdSystem implements IdSystem {
                 return parentSlot;
             }
         }
-		return readPointer(id)._slot;
+		return localContainer().readPointer(id)._slot;
 	}
 
 	public LocalTransaction systemTransaction() {
@@ -137,7 +132,7 @@ public class StandardIdSystem implements IdSystem {
                 return parentSlot;
             }
         }
-        return readPointer(id)._slot;
+        return localContainer().readPointer(id)._slot;
 	}
 	
     public void slotFreeOnRollbackCommitSetPointer(LocalTransaction transaction, int id, Slot newSlot, boolean forFreespace) {
@@ -179,8 +174,8 @@ public class StandardIdSystem implements IdSystem {
 		slotChanges(transaction).slotFreeOnRollback(id, slot);
 	}
 
-	public void rollbackSlotChanges(Transaction transaction) {
-		slotChanges(transaction).rollbackSlotChanges();
+	public void rollback(Transaction transaction) {
+		slotChanges(transaction).rollback();
 	}
 
 	public void clear(Transaction transaction) {
@@ -198,7 +193,6 @@ public class StandardIdSystem implements IdSystem {
 	public void systemTransaction(LocalTransaction transaction) {
 		_systemSlotChanges = new StandardIdSlotChanges(transaction, null);
 		_slotChanges.put(transaction, _systemSlotChanges);
-        _pointerIo = new StatefulBuffer(transaction, Const4.POINTER_LENGTH);        
 	}
 	
 	public void close(){
@@ -259,95 +253,17 @@ public class StandardIdSystem implements IdSystem {
     }
     
     public boolean writeSlots(LocalTransaction transaction) {
+    	final LocalObjectContainer container = transaction.localContainer();
         final BooleanByRef ret = new BooleanByRef();
         traverseSlotChanges(transaction, new Visitor4() {
 			public void visit(Object obj) {
-				((SlotChange)obj).writePointer(StandardIdSystem.this);
+				((SlotChange)obj).writePointer(container);
 				ret.value = true;
 			}
 		});
         return ret.value;
     }
     
-	public void writePointer(int id, Slot slot) {
-        if(DTrace.enabled){
-            DTrace.WRITE_POINTER.log(id);
-            DTrace.WRITE_POINTER.logLength(slot);
-        }
-        _pointerIo.useSlot(id);
-        if (Deploy.debug) {
-            _pointerIo.writeBegin(Const4.YAPPOINTER);
-        }
-        _pointerIo.writeInt(slot.address());
-    	_pointerIo.writeInt(slot.length());
-        if (Deploy.debug) {
-            _pointerIo.writeEnd();
-        }
-        if (Debug4.xbytes && Deploy.overwrite) {
-            _pointerIo.setID(Const4.IGNORE_ID);
-        }
-        _pointerIo.write();
-    }
-	
-	private Pointer4 debugReadPointer(int id) {
-        if (Deploy.debug) {
-    		_pointerIo.useSlot(id);
-    		_pointerIo.read();
-    		_pointerIo.readBegin(Const4.YAPPOINTER);
-    		int debugAddress = _pointerIo.readInt();
-    		int debugLength = _pointerIo.readInt();
-    		_pointerIo.readEnd();
-    		return new Pointer4(id, new Slot(debugAddress, debugLength));
-        }
-        return null;
-	}
-    
-    public Pointer4 readPointer(int id) {
-        if (Deploy.debug) {
-            return debugReadPointer(id);
-        }
-        if(!isValidId(id)){
-        	throw new InvalidIDException(id);
-        }
-        
-       	localContainer().readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
-        int address = (_pointerBuffer[3] & 255)
-            | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
-            | _pointerBuffer[0] << 24;
-        int length = (_pointerBuffer[7] & 255)
-            | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer[5] & 255) << 16
-            | _pointerBuffer[4] << 24;
-        
-        if(!isValidSlot(address, length)){
-        	throw new InvalidSlotException(address, length, id);
-        }
-        
-        return new Pointer4(id, new Slot(address, length));
-    }
-
-    public void writeZeroPointer(int id){
-        writePointer(id, Slot.ZERO);   
-    }
-    
-    public void writePointer(Pointer4 pointer) {
-        writePointer(pointer._id, pointer._slot);
-    }
-
-	private boolean isValidId(int id) {
-		return localContainer().fileLength() >= id;
-	}
-
-	private boolean isValidSlot(int address, int length) {
-		// just in case overflow 
-		long fileLength = localContainer().fileLength();
-		
-		boolean validAddress = fileLength >= address;
-        boolean validLength = fileLength >= length ;
-        boolean validSlot = fileLength >= (address+length);
-        
-        return validAddress && validLength && validSlot;
-	}
-
 	public boolean isReadOnly() {
 		return config().isReadOnly();
 	}
@@ -362,6 +278,5 @@ public class StandardIdSystem implements IdSystem {
            flushFile();
        }
 	}
-
 
 }
