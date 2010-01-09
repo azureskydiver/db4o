@@ -198,9 +198,9 @@ public class SlotChange extends TreeInt {
 		}
 	}
 
-	public final void writePointer(IdSystem idSystem) {
+	public final void writePointer(LocalObjectContainer container) {
 		if (isSetPointer()) {
-			idSystem.writePointer(_key, _newSlot);
+			container.writePointer(_key, _newSlot);
 		}
 	}
 

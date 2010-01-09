@@ -43,6 +43,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     private SystemData          _systemData;
     
     private final IdSystem _idSystem;
+    
+	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
+
+	protected final ByteArrayBuffer _pointerIo = new ByteArrayBuffer(Const4.POINTER_LENGTH);    
 
     LocalObjectContainer(Configuration config) {
         super(config);
@@ -236,10 +240,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         if(!isValidPointer(id)){
         	return getPointerSlot();
         }
-
+        
         // write a zero pointer first
         // to prevent delete interaction trouble
-        writeZeroPointer(id);
+        writePointer(id, Slot.ZERO);
         
         if(DTrace.enabled){
             DTrace.GET_POINTER_SLOT.log(id);
@@ -254,10 +258,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return ! _handlers.isSystemHandler(id);
 	}
 
-	private void writeZeroPointer(int id) {
-		_idSystem.writeZeroPointer(id);
-	}
-    
      // TODO: This should go into the IdSystem
 	public Slot getSlot(int length){
     	int blocks = bytesToBlocks(length);
@@ -877,5 +877,75 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	public boolean isDeleted(Transaction trans, int id){
 		return idSystem().isDeleted(trans, id);
 	}
+	
+	public void writePointer(int id, Slot slot) {
+        if(DTrace.enabled){
+            DTrace.WRITE_POINTER.log(id);
+            DTrace.WRITE_POINTER.logLength(slot);
+        }
+        _pointerIo.seek(0);
+        if (Deploy.debug) {
+            _pointerIo.writeBegin(Const4.YAPPOINTER);
+        }
+        _pointerIo.writeInt(slot.address());
+    	_pointerIo.writeInt(slot.length());
+        if (Deploy.debug) {
+            _pointerIo.writeEnd();
+        }
+        writeBytes(_pointerIo, id, 0);
+    }
+	
+	public Pointer4 debugReadPointer(int id) {
+        if (Deploy.debug) {
+    		readBytes(_pointerIo._buffer, id, Const4.POINTER_LENGTH);
+    		_pointerIo.seek(0);
+    		_pointerIo.readBegin(Const4.YAPPOINTER);
+    		int debugAddress = _pointerIo.readInt();
+    		int debugLength = _pointerIo.readInt();
+    		_pointerIo.readEnd();
+    		return new Pointer4(id, new Slot(debugAddress, debugLength));
+        }
+        return null;
+	}
+    
+    public Pointer4 readPointer(int id) {
+        if (Deploy.debug) {
+            return debugReadPointer(id);
+        }
+        if(!isValidId(id)){
+        	throw new InvalidIDException(id);
+        }
+        
+       	readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
+        int address = (_pointerBuffer[3] & 255)
+            | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
+            | _pointerBuffer[0] << 24;
+        int length = (_pointerBuffer[7] & 255)
+            | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer[5] & 255) << 16
+            | _pointerBuffer[4] << 24;
+        
+        if(!isValidSlot(address, length)){
+        	throw new InvalidSlotException(address, length, id);
+        }
+        
+        return new Pointer4(id, new Slot(address, length));
+    }
+    
+	private boolean isValidId(int id) {
+		return fileLength() >= id;
+	}
+	
+	private boolean isValidSlot(int address, int length) {
+		// just in case overflow 
+		long fileLength = fileLength();
+		
+		boolean validAddress = fileLength >= address;
+        boolean validLength = fileLength >= length ;
+        boolean validSlot = fileLength >= (address+length);
+        
+        return validAddress && validLength && validSlot;
+	}
+
+
 	
 }

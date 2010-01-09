@@ -45,7 +45,7 @@ public interface IdSystem {
 
 	public void slotFreeOnRollback(Transaction transaction, int id, Slot slot);
 
-	public void rollbackSlotChanges(Transaction transaction);
+	public void rollback(Transaction transaction);
 
 	public void clear(Transaction transaction);
 
@@ -57,15 +57,5 @@ public interface IdSystem {
 	public void systemTransaction(LocalTransaction transaction);
 
 	public void close();
-
-	public void flushFile();
-
-	public void writePointer(int id, Slot slot);
-
-	public Pointer4 readPointer(int id);
-
-	public void writeZeroPointer(int id);
-
-	public void writePointer(Pointer4 pointer);
 
 }

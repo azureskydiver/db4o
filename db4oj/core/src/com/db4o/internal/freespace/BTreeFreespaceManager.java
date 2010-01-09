@@ -160,10 +160,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         createBTrees(addressId, lengthID);
         _slotsByAddress.read(transaction());
         _slotsByLength.read(transaction());
-        Pointer4 delegatePointer = idSystem().readPointer(_delegateIndirectionID);
-        idSystem().writeZeroPointer(_delegateIndirectionID);
-        idSystem().flushFile();
-        _delegate.read(delegatePointer._slot);
+        Pointer4 pointer = _file.readPointer(_delegateIndirectionID);
+		_file.writePointer(_delegateIndirectionID, Slot.ZERO);
+		_file.syncFiles();
+        _delegate.read(pointer._slot);
     }
 	
 	private void initializeNew() {
