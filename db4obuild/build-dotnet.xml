@@ -17,15 +17,20 @@
 	
 	<macrodef name="copy-bin">
 		<attribute name="srcdir" />
-		<attribute name="name" />
+		<attribute name="name" />		
+		<element name="additional-files" optional="true" />
+		
 		<sequential>
 			<copy todir="${dir.dist.net.build}/bin/@{name}">
 				<fileset dir="@{srcdir}">
 					<include name="*.dll" />
 					<include name="*.exe" />
 					<include name="*.xml" />
+					
 					<exclude name="*Tests*" />
-					<exclude name="*Db4oUnit*" />
+					<exclude name="*Db4oUnit*" />					
+	
+					<additional-files />
 				</fileset>
 			</copy>
 		</sequential>
@@ -37,8 +42,26 @@
 		<sequential>
 			<copy-bin srcdir="@{srcdir}" name="net-${target.framework.version}@{suffix}" />
 			<copy-bin srcdir="@{srcdir}/compact" name="compact-${target.framework.version}@{suffix}" />
+			
+			<antcall target="copy-bin-set-silverlight" >
+				<param name="silverlight.source.dir" value="@{srcdir}/silverlight" />
+			</antcall>
 		</sequential>
 	</macrodef>
+	
+	<target name="copy-bin-set-silverlight" if = "silverlight.version">
+			<copy-bin srcdir="${silverlight.source.dir}" name="silverlight-${silverlight.version}">
+					<additional-files>
+						<exclude name="*Test*.*" />
+					</additional-files>
+			</copy-bin>
+		
+			<copy todir="${dir.dist.net.build}/bin/silverlight-${silverlight.version}">			
+				<fileset dir="${dir.config}/net">
+					<include name="readme.silverlight.txt" />
+				</fileset>
+			</copy>		
+	</target>
 	        
 	<target name="check-dependencies">
 	    <condition property="skip.sharpen" >
@@ -141,7 +164,7 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="build, meta-package" description="Builds the complete set of .net 2 distros">
+	<target name="package-net20" depends="build, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
 	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 2 distros">
@@ -178,7 +201,8 @@
 						<include name="moq.license.html" />
 						<include name="System.Linq.Expressions.license.html" />
 					</fileset>
-				</copy>
+				</copy>				
+						
 				<!-- readme's in distribution folders-->
 				<copy file="${dir.config}/net/readme.html" tofile="${dir.dist.net.build}/readme.html" >
 			        <filterchain>	
@@ -398,17 +422,9 @@
 		<antcall target="build-silverlight" />
 	</target>
 	
-	<target name="build-silverlight">
-		<if>
-			<equals arg1="${target.framework.version}" arg2="2.0" />
-			<then>
-				<echo message="Silverlight builds only on .Net Framework 3.5 or greater." />
-			</then>
-			<else>
-				<reset-dir dir="${dir.dist.dll.silverlight}" />
-				<msb solution="${dir.n.v6}/Db4o-Silverlight" outputPath="${dir.dist.dll.silverlight}" />
-			</else>
-		</if>
+	<target name="build-silverlight" if = "silverlight.version">
+		<reset-dir dir="${dir.dist.dll.silverlight}" />
+		<msb solution="${dir.n.v6}/Db4o-Silverlight" outputPath="${dir.dist.dll.silverlight}" />
 	</target>	
 	
 	<target name="run-tests-silverlight" depends="configure-net35, build-core">
@@ -824,7 +840,7 @@
 		<updateProjectFiles project="${dir.n.db4obench}/Db4oBench" sources="db4obench.files" />
 	</target>
 	
-	<target name="prepare-csproject-linq" depends="init, configure">
+	<target name="prepare-csproject-linq">
 		<property name="dir.n.linq" value="${dir.n.v6}/Db4objects.Db4o.Linq" />
 		<property name="dir.n.linq.tests" value="${dir.n.v6}/Db4objects.Db4o.Linq.Tests" />
 			
@@ -852,7 +868,6 @@
 			</sources>
 		</updatecsharpproject>
 	</target>
-
 	
 	<target name="prepare-csproject-tools">
 		<property name="dir.n.tools" location="${dir.n.v6}/Db4oTool" />
