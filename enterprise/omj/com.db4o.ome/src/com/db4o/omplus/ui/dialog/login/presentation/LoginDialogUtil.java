@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.foundation.*;
-import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 
 public class LoginDialogUtil {
@@ -17,7 +17,8 @@ public class LoginDialogUtil {
 	// TODO: non-editable
 	public static Combo recentConnectionCombo(Composite parent, final LoginPresentationModel model, final LoginPresentationModel.LoginMode mode) {
 		final Combo combo = new Combo(parent, SWT.NONE);
-		combo.setData(OMPlusConstants.WIDGET_NAME_KEY, RECENT_CONNECTION_COMBO_ID);
+		// FIXME not a unique id, obviously
+		OMESWTUtil.assignWidgetId(combo, RECENT_CONNECTION_COMBO_ID);
 		String[] items = model.recentConnections(mode);
 		combo.setItems(items);
 		combo.addSelectionListener(new SelectionListener(){
@@ -29,10 +30,10 @@ public class LoginDialogUtil {
 				combo.setToolTipText(combo.getItem(combo.getSelectionIndex()));
 			}
 		});
-		if(items.length > 0) {
-			model.select(mode, 0);
-			combo.setToolTipText(items[0]);
-		}
+//		if(items.length > 0) {
+//			model.select(mode, 0);
+//			combo.setToolTipText(items[0]);
+//		}
 		return combo;
 	}
 	

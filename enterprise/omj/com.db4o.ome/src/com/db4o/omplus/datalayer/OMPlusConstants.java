@@ -172,9 +172,6 @@ public class OMPlusConstants
 	public static final int DIALOG_OK_CLICKED = 0;
 	public static final int DIALOG_CANCEL_CLICKED = 1;
 	
-	// FIXME localize usage in separate class
-	public static final String WIDGET_NAME_KEY = "ome_widget_name";
-	
 	public static final String OME_COMMAND_CATEGORY_ID = "com.db4o.omplus.ui.commands";
 	public static final String OME_CONNECT_COMMAND_ID = "com.db4o.omplus.ui.commands.connectCommand";
 	

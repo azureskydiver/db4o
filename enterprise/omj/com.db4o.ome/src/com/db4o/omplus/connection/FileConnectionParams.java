@@ -16,15 +16,25 @@ public class FileConnectionParams extends ConnectionParams {
 
 
 	private String filePath;
+	private boolean readOnly;
+
+	public FileConnectionParams(String path, boolean readOnly) {
+		this.filePath = path;
+		this.readOnly = readOnly;
+	}
 
 	public FileConnectionParams(String path) {
-		this.filePath = path;
+		this(path, false);
 	}
 	
 	public String getPath() {
 		return filePath;
 	}
 
+	public boolean readOnly() {
+		return readOnly;
+	}
+	
 	public boolean isRemote() {
 		return false;
 	}
@@ -32,6 +42,7 @@ public class FileConnectionParams extends ConnectionParams {
 	public EmbeddedConfiguration configure(){
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		configureCommon(config.common());
+		config.file().readOnly(readOnly);
 		return config;
 	}
 
@@ -80,4 +91,16 @@ public class FileConnectionParams extends ConnectionParams {
 		}
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(!super.equals(other)) {
+			return false;
+		}
+		return readOnly == ((FileConnectionParams) other).readOnly;
+	}
+	
+	@Override
+	public int hashCode() {
+		return readOnly ? ~super.hashCode() : super.hashCode();
+	}
 }

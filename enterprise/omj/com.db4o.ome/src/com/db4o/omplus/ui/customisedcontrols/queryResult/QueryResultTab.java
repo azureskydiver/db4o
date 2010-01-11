@@ -118,6 +118,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		resultObjectTableSaveButton = new Button(tableButtonsComposite,SWT.PUSH);
 		resultObjectTableSaveButton.setEnabled(false);
 		resultObjectTableDeleteButton = new Button(tableButtonsComposite,SWT.PUSH);
+		resultObjectTableDeleteButton.setEnabled(!Activator.getDefault().getDatabaseInterface().readOnly());
 		tableRefreshButton = new Button(tableButtonsComposite, SWT.PUSH);
 		tableRefreshButton.setText("Refresh");
 		
@@ -497,7 +498,6 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		table.setLayoutData(gridData);*/	
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		
 				
 		CellEditor[] editors = new CellEditor[uiColumnList.length];
 		
@@ -519,7 +519,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 			
 			//TODO: ideally add custom editing because tomorrow you may need. As a quick fix just add ComboCellEditor
 			//for boolean
-			if(i!=0)
+			if(i!=0 && !Activator.getDefault().getDatabaseInterface().readOnly())
 			{
 				int type = queryResultList.getDataType(columnList[i-1]);
 				if(type == QueryBuilderConstants.DATATYPE_BOOLEAN)//0th is row id
@@ -803,6 +803,9 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 	}
 
 	private void addListenerForDelete() {
+		if(Activator.getDefault().getDatabaseInterface().readOnly()) {
+			return;
+		}
 		resultObjectTableDeleteButton.addListener(SWT.MouseUp, new Listener() {
 		// Right now handling single row delete. no multiple selection.
 			public void handleEvent(Event event)
