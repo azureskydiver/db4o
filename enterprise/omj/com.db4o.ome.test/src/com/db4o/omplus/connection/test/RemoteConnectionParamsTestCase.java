@@ -9,7 +9,6 @@ import java.io.*;
 import org.junit.*;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.omplus.connection.*;
@@ -66,8 +65,6 @@ public class RemoteConnectionParamsTestCase {
 
 	private ObjectServer openServer(File dbFile) {
 		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
-		// FIXME: getting ObjectNotStorableException for ClassInfo if DotNetSupport is not added on server, too?!?
-		serverConfig.common().add(new DotnetSupport(true));
 		ObjectServer server = Db4oClientServer.openServer(serverConfig, dbFile.getAbsolutePath(), -1);
 		server.grantAccess(USER, PASSWORD);
 		return server;
