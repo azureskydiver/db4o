@@ -7,25 +7,12 @@ import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
-/**
- * Singleton class
- */
 public class DbInterfaceImpl implements IDbInterface {
 	
 	private ObjectContainer objContainer;
 	
 	private String dbPath;
 	
-	private static DbInterfaceImpl instance;
-	
-	public static DbInterfaceImpl getInstance(){
-		if(instance != null){
-			return instance;
-		}
-		instance = new DbInterfaceImpl();
-		return instance;
-	}
-
 	public String getVersion(){
 		return Db4o.version();
 	}
@@ -147,6 +134,13 @@ public class DbInterfaceImpl implements IDbInterface {
 	public void refreshObj(Object obj) {
 		if(obj != null)
 			objContainer.ext().refresh(obj, 1);
+	}
+
+	public boolean readOnly() {
+		if(!(objContainer instanceof LocalObjectContainer)) {
+			return false;
+		}
+		return ((LocalObjectContainer)objContainer).config().isReadOnly();
 	}
 
 }

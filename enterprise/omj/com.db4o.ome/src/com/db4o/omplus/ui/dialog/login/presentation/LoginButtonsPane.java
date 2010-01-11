@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.foundation.*;
-import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 
 public class LoginButtonsPane extends Composite {
 	public static final String OK_BUTTON_ID = LoginButtonsPane.class.getName() + "$okButton";
@@ -27,7 +27,7 @@ public class LoginButtonsPane extends Composite {
 		setLayout(new FormLayout());
 		
 		openBtn = new Button(this, SWT.PUSH);
-		openBtn.setData(OMPlusConstants.WIDGET_NAME_KEY, OK_BUTTON_ID);
+		OMESWTUtil.assignWidgetId(openBtn, OK_BUTTON_ID);
 		openBtn.setText(openText);
 		openBtn.addSelectionListener(new SelectionListener()
 		{
@@ -42,7 +42,7 @@ public class LoginButtonsPane extends Composite {
 		});
 		
 		cancelBtn = new Button(this, SWT.PUSH);
-		cancelBtn.setData(OMPlusConstants.WIDGET_NAME_KEY, CANCEL_BUTTON_ID);
+		OMESWTUtil.assignWidgetId(cancelBtn, CANCEL_BUTTON_ID);
 		cancelBtn.setText(CANCEL_TEXT);
 		cancelBtn.addSelectionListener(new SelectionListener()
 		{

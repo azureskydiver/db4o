@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.model.LoginPresentationModel.*;
 import com.db4o.omplus.ui.dialog.login.presentation.*;
@@ -29,7 +30,7 @@ public class LoginDialog {
 
 	public LoginDialog(Shell parentShell, OMEDataStore dataStore, final Connector connector) {
 		mainCompositeShell = new Shell(parentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
-		mainCompositeShell.setData(OMPlusConstants.WIDGET_NAME_KEY, SHELL_ID);
+		OMESWTUtil.assignWidgetId(mainCompositeShell, SHELL_ID);
 		mainCompositeShell.setText("Connection Info");
 		// FIXME should be shared
 		final ErrorMessageSink err = new ErrorMessageSink() {
@@ -70,7 +71,7 @@ public class LoginDialog {
 
 	protected Control createContents() {
 		TabFolder folder = new TabFolder(mainCompositeShell, SWT.BORDER);
-		folder.setData(OMPlusConstants.WIDGET_NAME_KEY, TAB_FOLDER_ID);
+		OMESWTUtil.assignWidgetId(folder, TAB_FOLDER_ID);
 		Composite localPane = new LocalLoginPane(mainCompositeShell, folder, model);
 		Composite remotePane = new RemoteLoginPane(mainCompositeShell, folder, model);
 		addTab(folder, "Local", LOCAL_DIALOG_TITLE, localPane, LOCAL_TAB_ID);
@@ -85,7 +86,7 @@ public class LoginDialog {
 		item.setToolTipText(toolTip);
 		item.setText(name);
 		item.setControl(content);
-		item.setData(OMPlusConstants.WIDGET_NAME_KEY, id);
+		OMESWTUtil.assignWidgetId(item, id);
 	}
 
 }

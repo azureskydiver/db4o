@@ -65,4 +65,5 @@ public interface IDbInterface {
 
 	String getVersion();
 
+	boolean readOnly();
 }

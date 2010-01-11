@@ -30,13 +30,13 @@ public class LoginPresentationModel {
 		return recentConnections(mode.connections(recentConnections));
 	}
 
-	public boolean connect(String path) {
+	public boolean connect(String path, boolean readOnly) {
 		path = trim(path);
 		if(path.length() == 0) {
 			err.error("Path is empty.");
 			return false;
 		}
-		return connect(new FileConnectionParams(path));
+		return connect(new FileConnectionParams(path, readOnly));
 	}
 
 	public boolean connect(String host, String port, String user, String pwd) {
@@ -123,7 +123,7 @@ public class LoginPresentationModel {
 			public void notifySelected(LoginPresentationModel model, int idx) {
 				FileConnectionParams localParams = (FileConnectionParams) connections(model.recentConnections).get(idx);
 				for (LocalSelectionListener listener : model.localListeners) {
-					listener.localSelection(localParams.getPath());
+					listener.localSelection(localParams.getPath(), localParams.readOnly());
 				}
 			}
 		},
@@ -147,7 +147,7 @@ public class LoginPresentationModel {
 	}
 
 	public static interface LocalSelectionListener {
-		void localSelection(String path);
+		void localSelection(String path, boolean readOnly);
 	}
 
 	public static interface RemoteSelectionListener {

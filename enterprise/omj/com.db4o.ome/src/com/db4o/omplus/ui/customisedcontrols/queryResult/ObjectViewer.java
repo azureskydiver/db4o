@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.OMPlusConstants;
 import com.db4o.omplus.datalayer.queryresult.ObjectTreeBuilder;
 import com.db4o.omplus.datalayer.queryresult.ObjectTreeNode;
@@ -182,7 +183,7 @@ public class ObjectViewer extends CTabFolder
 	    	column1.getColumn().setText(str);
 	    	column1.getColumn().setWidth(200);
 	    	
-	    	if(i==1)//Allow editions only for value
+	    	if(i==1 && !Activator.getDefault().getDatabaseInterface().readOnly())//Allow editions only for value
 	    	{
 	    		column1.setEditingSupport(new ObjectTreeEditor(this,tabItem,treeViewer,
 	    									textCellEditor, queryResultList.getClassName(),
@@ -212,6 +213,9 @@ public class ObjectViewer extends CTabFolder
 	
 	private void addSetToNullAction(final TreeViewer objTree) 
 	{
+		if(Activator.getDefault().getDatabaseInterface().readOnly()) {
+			return;
+		}
 		final Tree tree = objTree.getTree();
 		setToNullAction = new Action() 
 		{
