@@ -1,11 +1,12 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.connection.test;
 
+import static com.db4o.omplus.test.util.Db4oTestUtil.*;
+import static org.junit.Assert.*;
+
 import java.io.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-import static com.db4o.omplus.test.util.Db4oTestUtil.*;
 
 import com.db4o.*;
 import com.db4o.config.*;

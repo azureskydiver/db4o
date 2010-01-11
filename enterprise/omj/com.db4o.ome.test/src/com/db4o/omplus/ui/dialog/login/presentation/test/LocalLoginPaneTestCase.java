@@ -33,17 +33,19 @@ public class LocalLoginPaneTestCase {
 		shell.dispose();
 	}
 	
-	public void testInitialStateOk() {
+	@Test
+	public void testInitialStateCancel() {
 		Combo recentConnectionCombo = recentConnectionCombo();
 		assertEquals(presetParams().size(), recentConnectionCombo.getItemCount());
 		String[] items = recentConnectionCombo.getItems();
 		for (int idx = 0; idx < items.length; idx++) {
 			assertEquals(presetParams().get(idx).getPath(), items[idx]);
 		}
-		assertEquals(0, recentConnectionCombo.getSelectionIndex());
-		assertEquals(presetParams().get(0), newConnectionText().getText());
-		pressButton(okButton());
-		fixture.assertConnected(presetParams().get(0));
+		assertEquals(-1, recentConnectionCombo.getSelectionIndex());
+		assertEquals("", newConnectionText().getText());
+		assertFalse(readOnlyButton().getSelection());
+		pressButton(cancelButton());
+		fixture.assertNotConnected();
 	}
 	
 	@Test
@@ -52,6 +54,15 @@ public class LocalLoginPaneTestCase {
 		newConnectionText().setText(path);
 		pressButton(okButton());
 		fixture.assertConnected(new FileConnectionParams(path));
+	}
+
+	@Test
+	public void testSetPathReadOnlyOk() {
+		final String path = "baz";
+		newConnectionText().setText(path);
+		readOnlyButton().setSelection(true);
+		pressButton(okButton());
+		fixture.assertConnected(new FileConnectionParams(path, true));
 	}
 
 	@Test
@@ -65,7 +76,7 @@ public class LocalLoginPaneTestCase {
 	public void testSetPathException() {
 		fixture.interceptor(new ConnectInterceptor() {
 			@Override
-			public void connect() throws DBConnectException {
+			public void connect(ConnectionParams params) throws DBConnectException {
 				throw new IllegalStateException();
 			}
 		});
@@ -81,6 +92,10 @@ public class LocalLoginPaneTestCase {
 		assertEquals(presetParams().get(1).getPath(), newConnectionText().getText());
 		pressButton(okButton());
 		fixture.assertConnected(presetParams().get(1));
+	}
+
+	private Button readOnlyButton() {
+		return findChild(loginPane, LocalLoginPane.READ_ONLY_BUTTON_ID);
 	}
 
 	private Button okButton() {

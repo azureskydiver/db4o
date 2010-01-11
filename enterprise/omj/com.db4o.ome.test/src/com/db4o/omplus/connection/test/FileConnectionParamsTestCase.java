@@ -53,6 +53,25 @@ public class FileConnectionParamsTestCase {
 			LocalObjectContainer opened = (LocalObjectContainer) new FileConnectionParams(file.getAbsolutePath()).connect();
 			try {
 				assertEquals(file.getPath(), opened.fileName());
+				assertFalse(opened.config().isReadOnly());
+			}
+			finally {
+				opened.close();
+			}
+		}
+		finally {
+			file.delete();
+		}
+	}
+
+	@Test
+	public void testOpenReadOnly() throws Exception {
+		File file = createEmptyDatabase();
+		try {
+			LocalObjectContainer opened = (LocalObjectContainer) new FileConnectionParams(file.getAbsolutePath(), true).connect();
+			try {
+				assertEquals(file.getPath(), opened.fileName());
+				assertTrue(opened.config().isReadOnly());
 			}
 			finally {
 				opened.close();

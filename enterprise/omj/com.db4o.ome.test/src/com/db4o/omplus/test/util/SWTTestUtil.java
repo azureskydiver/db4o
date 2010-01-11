@@ -3,8 +3,9 @@ package com.db4o.omplus.test.util;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 
-import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 
 public class SWTTestUtil {
 
@@ -14,7 +15,7 @@ public class SWTTestUtil {
 	@SuppressWarnings("unchecked")
 	public static <T extends Widget>  T findChild(Widget root, String name) {
 		//System.err.println("SEARCHING " + root + " (" + root.getData(OMPlusConstants.WIDGET_NAME_KEY) + ") FOR " + name);
-		if(name.equals(root.getData(OMPlusConstants.WIDGET_NAME_KEY))) {
+		if(name.equals(root.getData(OMESWTUtil.WIDGET_NAME_KEY))) {
 			return (T) root;
 		}
 		if(!(root instanceof Composite)) {
@@ -33,7 +34,7 @@ public class SWTTestUtil {
 	public static TabItem  findTabItem(Widget root, String tabFolderName, String tabName) {
 		TabFolder tabFolder = findChild(root, tabFolderName);
 		for(TabItem tabItem : tabFolder.getItems()) {
-			if(tabName.equals(tabItem.getData(OMPlusConstants.WIDGET_NAME_KEY))) {
+			if(tabName.equals(tabItem.getData(OMESWTUtil.WIDGET_NAME_KEY))) {
 				return tabItem;
 			}
 		}
@@ -47,6 +48,16 @@ public class SWTTestUtil {
 	public static void selectCombo(Combo combo, int idx) {
 		combo.select(idx);
 		combo.notifyListeners(SWT.Selection, new Event());
+	}
+
+	public static Shell findShell(String id) {
+		Shell[] shells = PlatformUI.getWorkbench().getDisplay().getShells();
+		for (Shell shell : shells) {
+			if(id.equals(shell.getData(OMESWTUtil.WIDGET_NAME_KEY))) {
+				return shell;
+			}
+		}
+		return null;
 	}
 	
 }
