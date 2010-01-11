@@ -4,6 +4,7 @@ package com.db4o.omplus.test.util;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 
 public class Db4oTestUtil {
 
@@ -12,7 +13,7 @@ public class Db4oTestUtil {
 
 	public static File createEmptyDatabase() throws IOException {
 		File file = nonExistentFile();
-		EmbeddedObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), file.getAbsolutePath());
+		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config(), file.getAbsolutePath());
 		db.close();
 		return file;
 	}
@@ -23,6 +24,12 @@ public class Db4oTestUtil {
 		return file;
 	}
 
+	private static EmbeddedConfiguration config() {
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.common().add(new DotnetSupport(true));
+		return config;
+	}
+	
 	private Db4oTestUtil() {
 	}
 	

@@ -17,6 +17,7 @@ import org.junit.*;
 import com.db4o.internal.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.test.util.*;
 import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.*;
 import com.db4o.omplus.ui.dialog.login.presentation.*;
@@ -86,13 +87,7 @@ public class LoginDialogIntegrationTestCase {
 	}
 
 	private Shell findDialogShell() throws Exception {
-		Shell[] shells = PlatformUI.getWorkbench().getDisplay().getShells();
-		for (Shell shell : shells) {
-			if(LoginDialog.SHELL_ID.equals(shell.getData(OMPlusConstants.WIDGET_NAME_KEY))) {
-				return shell;
-			}
-		}
-		return null;
+		return SWTTestUtil.findShell(LoginDialog.SHELL_ID);
 	}
 
 }

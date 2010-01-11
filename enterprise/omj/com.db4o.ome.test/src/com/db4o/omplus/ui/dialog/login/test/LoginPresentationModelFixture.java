@@ -22,7 +22,7 @@ public class LoginPresentationModelFixture {
 	private ConnectInterceptor interceptor;
 
 	public LoginPresentationModelFixture() {
-		presetFileParams = Collections.unmodifiableList(Arrays.asList(new FileConnectionParams("foo"), new FileConnectionParams("bar")));
+		presetFileParams = Collections.unmodifiableList(Arrays.asList(new FileConnectionParams("foo", false), new FileConnectionParams("bar", true)));
 		OMEDataStore dataStore = new InMemoryOMEDataStore();
 		recentConnections = new DataStoreRecentConnectionList(dataStore);
 		for(int idx = presetFileParams.size() - 1; idx >= 0; idx--) {
@@ -42,7 +42,7 @@ public class LoginPresentationModelFixture {
 		Connector connector = new Connector() {
 			@Override
 			public boolean connect(ConnectionParams params) throws DBConnectException {
-				interceptor.connect();
+				interceptor.connect(params);
 				paramsReceived = params;
 				return true;
 			}
@@ -93,12 +93,12 @@ public class LoginPresentationModelFixture {
 	}
 	
 	public static interface ConnectInterceptor {
-		void connect() throws DBConnectException;
+		void connect(ConnectionParams params) throws DBConnectException;
 	}
 	
 	private static class NullConnectInterceptor implements ConnectInterceptor {
 		@Override
-		public void connect() throws DBConnectException {
+		public void connect(ConnectionParams params) throws DBConnectException {
 		}
 	}
 }
