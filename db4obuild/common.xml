@@ -172,7 +172,7 @@
 				<jvmarg value="-Declipse.consoleLog=true"/>
 				<arg value="-debug" />
 				-->
-				<arg value="-clean" />
+				<arg line="-clean ${decaf.arg.optional}" />
 				<arg value="-data" />
 				<arg file="@{workspace}" />
 				<arg value="-application" />
