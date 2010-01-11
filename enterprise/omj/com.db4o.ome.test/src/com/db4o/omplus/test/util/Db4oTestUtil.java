@@ -25,9 +25,7 @@ public class Db4oTestUtil {
 	}
 
 	private static EmbeddedConfiguration config() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.common().add(new DotnetSupport(true));
-		return config;
+		return Db4oEmbedded.newConfiguration();
 	}
 	
 	private Db4oTestUtil() {
