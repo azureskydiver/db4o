@@ -69,7 +69,7 @@
 		<ant antfile="build-java.xml" target="package.java" />
 	</target>
 	
-	<target name="buildall-old-school" depends="clean, init, buildjava-old-school, buildnet">
+	<target name="buildall-old-school" depends="clean, init, buildjava-old-school, buildnet20">
 	</target>
 
 	<target name="init" depends="properties" description="Basic initialization">
@@ -275,9 +275,9 @@
 		<ant antfile="build-maven.xml" target="deploy-maven-snapshot" />
 	</target>		
 	
-	<target name="buildnet" depends="init">
+	<target name="buildnet20" depends="init">
 		<ant antfile="build-java.xml" target="doctor"/>
-		<ant antfile="build-dotnet.xml" target="package" >
+		<ant antfile="build-dotnet.xml" target="package-net20" >
 		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
 		</ant>
 	</target>
@@ -302,7 +302,7 @@
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>
 
-	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build (.net 2 runtime)" />
+	<target name="buildall" depends="clean, buildjava, buildnet20" description="Full clean build (.net 2 runtime)" />
 
     <target name="build-java-before-checkin" depends="clean, runtestsjava5" />
 

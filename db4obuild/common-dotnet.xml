@@ -62,6 +62,8 @@
 		<property name="installer.package.suffix" value="net35" />
 		<property name="installer.package.guid" value="${installer.package.guid.net35}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net35}" />
+		
+		<property name="silverlight.version" value="3.0" />
 	</target>
 	
 	<target name="configure-debug">
