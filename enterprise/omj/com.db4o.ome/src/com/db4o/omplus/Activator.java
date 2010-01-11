@@ -16,14 +16,12 @@ public class Activator extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = OMPlusConstants.PLUGIN_ID;
 
+	private final static String CONFIG_DB_PATH_PROPERTY = "com.db4o.ome.configdb.path";
+	private final static String CLEAN_CONFIG_DB_PROPERTY = "com.db4o.ome.clean.configdb";
+	
 	private final static String USR_HOME_DIR_PROPERTY = "user.home";
 	private final static String OME_DATA_DB = "OMEDATA.db4o";
 	
-	private final static String settingsFile = new File(new File(System
-				.getProperty(USR_HOME_DIR_PROPERTY)), OME_DATA_DB)
-				.getAbsolutePath();
-
-
 	private static Activator plugin;
 
 	public static Activator getDefault() {
@@ -40,6 +38,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception 
 	{
 		super.start(context);
+		
 		plugin = this;
 		
 		//OMEDebugItem.createDebugDatabase();
@@ -171,10 +170,22 @@ public class Activator extends AbstractUIPlugin {
 		if(dataStore != null) {
 			return dataStore;
 		}
-		dataStore = new Db4oOMEDataStore(settingsFile, new DatabasePathPrefixProvider());
+		dataStore = new Db4oOMEDataStore(settingsFile(), new DatabasePathPrefixProvider());
 		return dataStore;
 	}
 	
+	private String settingsFile() {
+		String path = System.getProperty(CONFIG_DB_PATH_PROPERTY);
+		if(path == null || path.length() == 0) {
+			path = new File(new File(System.getProperty(USR_HOME_DIR_PROPERTY)), OME_DATA_DB).getAbsolutePath();
+		}
+		boolean doClean = Boolean.valueOf(System.getProperty(CLEAN_CONFIG_DB_PROPERTY, "false"));
+		if(doClean) {
+			new File(path).delete();
+		}
+		return path;
+	}
+
 	public IDbInterface getDatabaseInterface() {
 		if(db != null) {
 			return db;
