@@ -25,7 +25,8 @@ public abstract class ConnectionParams {
 	protected void configureCommon(CommonConfiguration config){
 		config.allowVersionUpdates(allowUpdates);
 		config.activationDepth(0);
-		config.add(new DotnetSupport(true));
+// see OMJ-154
+//		config.add(new DotnetSupport(true));
 	}
 	
 	public void configureUpdates() {
