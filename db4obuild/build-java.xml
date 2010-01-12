@@ -753,7 +753,7 @@
 	<target name="build.android" depends="build.db4ojdk1.5" if="android.enabled">
 		<delete dir="${dir.dist.android}"/>
 		<mkdir dir="${dir.dist.android}"/>
-		<exec executable="dx" dir="${dir.dist.android}" failonerror="true">
+		<exec executable="${android.executable.dex}" dir="${dir.dist.android}" failonerror="true">
 			<arg line="--dex --output=${file.android.core} ${file.jdk1.5.jar}"/>
 		</exec>
 		<exec executable="dx" dir="${dir.dist.android}" failonerror="true">
