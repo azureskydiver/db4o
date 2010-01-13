@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="Android build definitions">
+	<import file="common.xml" />
+	<macrodef name="dex">
+		<attribute name="inputfile" />
+		<attribute name="outputfile" />
+		<sequential>
+			<echo>Producing Android .dex artifacts</echo>
+			<echo>  Input: @{inputfile}</echo>
+			<echo>  Output: @{outputfile}</echo>
+			<exec executable="${android.executable.dex}" failonerror="true">
+				<arg line="--dex --output=${dir.dist.android}/@{outputfile} @{inputfile}"/>
+			</exec>
+		</sequential>
+	</macrodef>
+</project>

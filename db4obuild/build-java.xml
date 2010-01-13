@@ -2,6 +2,7 @@
 <project name="build db4o java">
 	
 	<import file="common.xml" />
+	<import file="build-android.xml" />
 	
 	<target name="db4oj.properties" depends="properties">
 		<property name="java.src.core" value="${dir.dist.java}/src/core"/>
@@ -749,19 +750,12 @@
 
 	</target>
 	
-	
 	<target name="build.android" depends="build.db4ojdk1.5" if="android.enabled">
 		<delete dir="${dir.dist.android}"/>
 		<mkdir dir="${dir.dist.android}"/>
-		<exec executable="${android.executable.dex}" dir="${dir.dist.android}" failonerror="true">
-			<arg line="--dex --output=${file.android.core} ${file.jdk1.5.jar}"/>
-		</exec>
-		<exec executable="dx" dir="${dir.dist.android}" failonerror="true">
-			<arg line="--dex --output=${file.android.cs} ${file.jdk1.5.cs.jar}"/>
-		</exec>
-		<exec executable="dx" dir="${dir.dist.android}" failonerror="true">
-			<arg line="--dex --output=${file.android.optional} ${file.jdk1.5.optional.jar}"/>
-		</exec>
+		<dex inputfile="${file.jdk1.5.jar}" outputfile="${file.android.core}" />
+		<dex inputfile="${file.jdk1.5.cs.jar}" outputfile="${file.android.cs}" />
+		<dex inputfile="${file.jdk1.5.optional.jar}" outputfile="${file.android.optional}" />
 	</target>
 	
 	<target name="unjar.bloat" depends="init">
