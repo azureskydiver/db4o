@@ -13,7 +13,7 @@ public interface IdSystem {
 
 	public void addTransaction(LocalTransaction transaction);
 
-	public void removeTransaction(Transaction trans);
+	public void removeTransaction(LocalTransaction trans);
 
 	public void collectSlotChanges(Transaction transaction,
 			SlotChangeCollector collector);
@@ -41,16 +41,15 @@ public interface IdSystem {
 
 	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot);
 
-	public void slotFreeOnRollback(Transaction transaction, int id, Slot slot);
-
 	public void rollback(Transaction transaction);
 
 	public void clear(Transaction transaction);
 
 	public boolean isDeleted(Transaction transaction, int id);
 
-	public void produceUpdateSlotChange(Transaction transaction, int id,
-			Slot slot);
+	public void notifySlotChanged(Transaction transaction, int id, Slot slot);
+	
+	public void notifyNewSlotCreated(Transaction transaction, int id, Slot slot);
 
 	public void systemTransaction(LocalTransaction transaction);
 

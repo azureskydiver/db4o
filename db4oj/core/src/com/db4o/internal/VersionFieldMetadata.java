@@ -19,7 +19,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         setName(VirtualField.VERSION);
     }
     
-    public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException{
+    public void addFieldIndex(ObjectIdContextImpl context)  throws FieldIndexException{
         StatefulBuffer buffer = (StatefulBuffer) context.buffer();
         buffer.writeLong(context.transaction().container().generateTimeStampId());
     }

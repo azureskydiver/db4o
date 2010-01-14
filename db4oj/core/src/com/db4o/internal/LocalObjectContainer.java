@@ -258,7 +258,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return ! _handlers.isSystemHandler(id);
 	}
 
-     // TODO: This should go into the IdSystem
 	public Slot allocateSlot(int length){
     	int blocks = bytesToBlocks(length);
     	Slot slot = allocateBlockedSlot(blocks);
@@ -783,21 +782,22 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _fileHeader.writeTransactionPointer(systemTransaction(), address);
     }
     
-    public final void getSlotForUpdate(StatefulBuffer buffer){
-        Slot slot = getSlotForUpdate(buffer.transaction(), buffer.getID(), buffer.length());
-        buffer.address(slot.address());
+    public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){
+        Slot slot = allocateSlot(length);
+        idSystem().notifySlotChanged(trans, id, slot);
+        return slot;
     }
     
-    public final Slot getSlotForUpdate(Transaction trans, int id, int length){
+    public final Slot allocateSlotForNewUserObject(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
-        idSystem().produceUpdateSlotChange(trans, id, slot);
+        idSystem().notifyNewSlotCreated(trans, id, slot);
         return slot;
     }
 
     public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ArrayType arrayType, ByteArrayBuffer buffer) {
         int address = pointer.address();
         if(address == 0){
-            address = getSlotForUpdate(trans, pointer.id(), pointer.length()).address();
+            address = allocateSlotForUserObjectUpdate(trans, pointer.id(), pointer.length()).address();
         }
         writeEncrypt(buffer, address, 0);
     }
@@ -868,7 +868,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			return new ObjectContainerSession(this);
 		}
 	}
-	 
+	
 	public IdSystem idSystem(){
 		return _idSystem;
 	}

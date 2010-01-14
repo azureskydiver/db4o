@@ -178,14 +178,14 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		});
     }
 
-    public final void addFieldIndices(StatefulBuffer buffer, Slot slot) {
+    public final void addFieldIndices(StatefulBuffer buffer) {
         if(! standardReferenceTypeHandlerIsUsed()){
             return;
         }
         if(hasClassIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(_container, this, buffer);
             ObjectIdContextImpl context = new ObjectIdContextImpl(buffer.transaction(), buffer, oh, buffer.getID());
-            Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).addFieldIndices(context, slot);
+            Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).addFieldIndices(context);
         }
     }
     

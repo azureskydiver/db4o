@@ -37,7 +37,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     	return _handler;
     }
     
-    public abstract void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException ;
+    public abstract void addFieldIndex(ObjectIdContextImpl context)  throws FieldIndexException ;
     
     public boolean alive() {
         return true;
