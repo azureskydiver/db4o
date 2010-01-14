@@ -31,11 +31,12 @@ public class StandardIdSystem implements IdSystem {
 		_slotChanges.put(transaction, slotChanges);
 	}
 	
-	public void removeTransaction(Transaction trans){
-		_slotChanges.remove(trans);
+	public void removeTransaction(Transaction transaction){
+		slotChanges(transaction).freePrefetchedIDs();
+		_slotChanges.remove(transaction);
 	}
 
-	public void slotFreePointerOnRollback(Transaction transaction, int id) {
+	protected void slotFreePointerOnRollback(Transaction transaction, int id) {
 		slotChanges(transaction).slotFreePointerOnRollback(id);
 	}
 
@@ -277,6 +278,24 @@ public class StandardIdSystem implements IdSystem {
        if(writeSlots(systemTransaction())){
            flushFile();
        }
+	}
+
+	public int newId(Transaction transaction) {
+		int id = localContainer().allocatePointerSlot();
+        slotFreePointerOnRollback(transaction, id);
+		return id;
+	}
+
+	public int prefetchID(Transaction transaction) {
+		int id = localContainer().allocatePointerSlot();
+		slotChanges(transaction).addPrefetchedID(id);
+		return id;
+	}
+
+	public void prefetchedIDConsumed(Transaction transaction, int id) {
+		StandardIdSlotChanges slotChanges = slotChanges(transaction);
+		slotChanges.prefetchedIDConsumed(id);
+		slotChanges.slotFreePointerOnRollback(id);
 	}
 
 }

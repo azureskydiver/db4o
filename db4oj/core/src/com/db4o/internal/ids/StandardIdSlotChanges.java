@@ -15,6 +15,8 @@ public class StandardIdSlotChanges {
 	private StandardIdSlotChanges _systemIdSystem;
 	
 	private final LocalTransaction _transaction;
+	
+	private Tree _prefetchedIDs;
 
 	public StandardIdSlotChanges(LocalTransaction transaction, StandardIdSlotChanges systemIdSystem) {
 		_transaction = transaction;
@@ -217,5 +219,29 @@ public class StandardIdSlotChanges {
 	public LocalTransaction systemTransaction() {
 		return (LocalTransaction) localContainer().systemTransaction();
 	}
+
+
+	public void addPrefetchedID(int id) {
+		_prefetchedIDs = Tree.add(_prefetchedIDs, new TreeInt(id));		
+	}
+	
+	public void prefetchedIDConsumed(int id) {
+        _prefetchedIDs = _prefetchedIDs.removeLike(new TreeInt(id));
+	}
+	
+    final void freePrefetchedIDs() {
+        if (_prefetchedIDs == null) {
+        	return;
+        }
+    	final LocalObjectContainer container = localContainer();
+        _prefetchedIDs.traverse(new Visitor4() {
+            public void visit(Object node) {
+            	TreeInt intNode = (TreeInt) node;
+            	container.free(intNode._key, Const4.POINTER_LENGTH);
+            }
+        });
+        _prefetchedIDs = null;
+    }
+
 
 }

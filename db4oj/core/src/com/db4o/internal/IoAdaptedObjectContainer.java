@@ -220,7 +220,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
     public void reserve(int byteCount) throws DatabaseReadOnlyException {
     	checkReadOnly();
         synchronized (_lock) {
-        	Slot slot = getSlot(byteCount);
+        	Slot slot = allocateSlot(byteCount);
             zeroReservedSlot(slot);
             free(slot);
         }

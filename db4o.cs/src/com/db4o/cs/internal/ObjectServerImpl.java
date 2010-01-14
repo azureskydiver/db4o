@@ -251,7 +251,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	Transaction findTransaction(int threadID) {
 		ServerMessageDispatcherImpl dispatcher = findThread(threadID);
-		return (dispatcher == null ? null : dispatcher.getTransaction());
+		return (dispatcher == null ? null : dispatcher.transaction());
 	}
 
 	public synchronized void grantAccess(String userName, String password) {

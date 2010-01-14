@@ -122,7 +122,6 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 	private void removeFromServer() {
 		try {
             _server.removeThread(this);
-            freePrefetchedIDs();
         } catch (Exception e) {
             if (Debug4.atHome) {
                 e.printStackTrace();
@@ -142,7 +141,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
         }
 	}
 
-	public Transaction getTransaction() {
+	public Transaction transaction() {
     	return _transactionHandle.transaction();
     }
 
@@ -175,7 +174,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
     }
     
     private boolean messageProcessor() throws Db4oIOException{
-        Msg message = Msg.readMessage(this, getTransaction(), _socket);
+        Msg message = Msg.readMessage(this, transaction(), _socket);
         if(message == null){
             return true;
         }
@@ -387,16 +386,5 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 		}
 		return _thread;
     }
-
-	public int prefetchID() {
-		return _transactionHandle.prefetchID();
-	}
-
-	public void prefetchedIDConsumed(int id) {
-		_transactionHandle.prefetchedIDConsumed(id);
-	}
 	
-    final void freePrefetchedIDs() {
-    	_transactionHandle.freePrefetchedIDs();
-    }	
 }

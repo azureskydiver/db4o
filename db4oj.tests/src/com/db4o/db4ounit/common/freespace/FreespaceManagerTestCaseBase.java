@@ -29,7 +29,7 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
 	protected void clear(FreespaceManager freespaceManager){
 		Slot slot = null;
 		do{
-			slot = freespaceManager.getSlot(1);
+			slot = freespaceManager.allocateSlot(1);
 		}while(slot != null);
 		Assert.areEqual(0, freespaceManager.slotCount());
 		Assert.areEqual(0, freespaceManager.totalFreespace());
@@ -47,7 +47,7 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
     protected void produceSomeFreeSpace() {
         FreespaceManager fm = currentFreespaceManager();
         int length = 300;
-        Slot slot = localContainer().getSlot(length);
+        Slot slot = localContainer().allocateSlot(length);
         ByteArrayBuffer buffer = new ByteArrayBuffer(length);
         localContainer().writeBytes(buffer, slot.address(), 0);
         fm.free(slot);

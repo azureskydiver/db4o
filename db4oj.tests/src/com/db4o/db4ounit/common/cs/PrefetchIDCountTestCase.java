@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.cs;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.cs.config.*;
@@ -9,7 +11,10 @@ import com.db4o.cs.internal.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.events.*;
 import com.db4o.foundation.*;
-import com.db4o.reflect.*;
+import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
+import com.db4o.internal.ids.*;
+import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
@@ -40,21 +45,22 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 		
 		server.grantAccess(USER, PASSWORD);
 		final ObjectContainer client = openClient(server.port());
-		client.store(new Item());		
 		
 		final ServerMessageDispatcherImpl msgDispatcher = firstMessageDispatcherFor(server);
+		Transaction transaction = msgDispatcher.transaction();
+		LocalObjectContainer container = (LocalObjectContainer) server.objectContainer();
+		StandardIdSystem standardIdSystem = (StandardIdSystem) container.idSystem();
+		final int prefetchedID = standardIdSystem.prefetchID(transaction);
+		
+		Assert.isGreater(0, prefetchedID);
+		
+		final DebugFreespaceManager freespaceManager = new DebugFreespaceManager(container);
+		container.installDebugFreespaceManager(freespaceManager);
 		
 		lock.run(new Closure4() { public Object run() {
 			client.close();
-			try {
-				lock.snooze(100000);
-				
-				ReflectClass reflector = server.objectContainer().ext().reflector().forClass(ServerMessageDispatcherImpl.class);
-				ReflectField prefetchedIdsField = reflector.getDeclaredField("_prefetchedIDs");
-				Assert.isNull(prefetchedIdsField.get(msgDispatcher));
-			} catch (Exception e) {
-			}
-			
+			lock.snooze(100000);
+			Assert.isTrue(freespaceManager.wasFreed(prefetchedID));
 			return null;
 		}});		
 		
@@ -74,5 +80,101 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.prefetchIDCount(PREFETCH_ID_COUNT);
 		return Db4oClientServer.openClient(config, "localhost", port, USER, PASSWORD);
-	}	
+	}
+	
+	public static class DebugFreespaceManager extends AbstractFreespaceManager {
+		
+		public DebugFreespaceManager(LocalObjectContainer file) {
+			super(file);
+		}
+
+		private final List<Integer> _freedSlots = new ArrayList<Integer>();
+		
+		public boolean wasFreed(int id){
+			return _freedSlots.contains(id);
+		}
+
+		public Slot allocateSlot(int length) {
+			return null;
+		}
+
+		public Slot allocateTransactionLogSlot(int length) {
+			return null;
+		}
+
+		public void beginCommit() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void commit() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void endCommit() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void free(Slot slot) {
+			_freedSlots.add(slot.address());
+		}
+
+		public void freeSelf() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void freeTransactionLogSlot(Slot slot) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void listener(FreespaceListener listener) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void migrateTo(FreespaceManager fm) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void read(int freeSpaceID) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public int slotCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		public void start(int slotAddress) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public byte systemType() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		public int totalFreespace() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		public void traverse(Visitor4 visitor) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public int write() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		
+	}
 }

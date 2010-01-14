@@ -162,7 +162,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	            slot = pointer._slot;
                 container.idSystem().setPointer(trans, pointer._id, slot);
 	        }else{
-	            slot = container.getSlot(length);
+	            slot = container.allocateSlot(length);
 	            container.idSystem().slotFreeOnRollbackCommitSetPointer((LocalTransaction) trans, _id, slot, isFreespaceComponent());
 	        }
 	        

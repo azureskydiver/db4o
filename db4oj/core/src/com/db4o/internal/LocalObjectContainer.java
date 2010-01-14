@@ -234,11 +234,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return queryResult;
     }
 
-    public int getPointerSlot() {
+    public int allocatePointerSlot() {
     	
-        int id = getSlot(Const4.POINTER_LENGTH).address();
+        int id = allocateSlot(Const4.POINTER_LENGTH).address();
         if(!isValidPointer(id)){
-        	return getPointerSlot();
+        	return allocatePointerSlot();
         }
         
         // write a zero pointer first
@@ -259,26 +259,26 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 
      // TODO: This should go into the IdSystem
-	public Slot getSlot(int length){
+	public Slot allocateSlot(int length){
     	int blocks = bytesToBlocks(length);
-    	Slot slot = getBlockedSlot(blocks);
+    	Slot slot = allocateBlockedSlot(blocks);
         if(DTrace.enabled){
             DTrace.GET_SLOT.logLength(slot.address(), slot.length());
         }
         return toNonBlockedLength(slot);
     }
 
-    private final Slot getBlockedSlot(int blocks) {
+    private final Slot allocateBlockedSlot(int blocks) {
         if(blocks <= 0){
         	throw new IllegalArgumentException();
         }
         if(_freespaceManager != null){
-        	Slot slot = _freespaceManager.getSlot(blocks);
+        	Slot slot = _freespaceManager.allocateSlot(blocks);
             if(slot != null){
                 return slot;
             }
             while(growDatabaseByConfiguredSize()){
-            	slot = _freespaceManager.getSlot(blocks);
+            	slot = _freespaceManager.allocateSlot(blocks);
                 if(slot != null){
                     return slot;
                 }
@@ -373,13 +373,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     public final Pointer4 newSlot(int length) {
-        return new Pointer4(getPointerSlot(), getSlot(length));
+        return new Pointer4(allocatePointerSlot(), allocateSlot(length));
     }
 
-    public final int newUserObject(Transaction trans) {
-        int id = getPointerSlot();
-        idSystem().slotFreePointerOnRollback(trans, id);
-		return id;
+    public final int idForNewUserObject(Transaction trans) {
+    	return idSystem().newId(trans);
     }
 
     public ReferencedSlot produceFreeOnCommitEntry(int id){
@@ -791,7 +789,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public final Slot getSlotForUpdate(Transaction trans, int id, int length){
-        Slot slot = getSlot(length);
+        Slot slot = allocateSlot(length);
         idSystem().produceUpdateSlotChange(trans, id, slot);
         return slot;
     }

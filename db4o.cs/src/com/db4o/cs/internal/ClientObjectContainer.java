@@ -526,7 +526,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return false;
 	}
 
-	public final int newUserObject(Transaction trans) {
+	public final int idForNewUserObject(Transaction trans) {
 		int prefetchIDCount = config().prefetchIDCount();
 		ensureIDCacheAllocated(prefetchIDCount);
 		ByteArrayBuffer reader = null;

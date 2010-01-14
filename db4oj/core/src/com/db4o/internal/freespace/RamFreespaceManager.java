@@ -44,7 +44,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         // really big contigous slot that keeps growing. Let's limit.
         int limit = length + 100; 
         if(sizeNode._key > limit){
-            return getSlot(limit);
+            return allocateSlot(limit);
         }
         
 		removeFromBothTrees(sizeNode);
@@ -130,7 +130,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         }
     }
     
-    public Slot getSlot(int length) {
+    public Slot allocateSlot(int length) {
     	
         _finder._key = length;
         _finder._object = null;

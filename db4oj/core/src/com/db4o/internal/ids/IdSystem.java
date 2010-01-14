@@ -15,8 +15,6 @@ public interface IdSystem {
 
 	public void removeTransaction(Transaction trans);
 
-	public void slotFreePointerOnRollback(Transaction transaction, int id);
-
 	public void collectSlotChanges(Transaction transaction,
 			SlotChangeCollector collector);
 
@@ -57,5 +55,11 @@ public interface IdSystem {
 	public void systemTransaction(LocalTransaction transaction);
 
 	public void close();
+
+	public int newId(Transaction trans);
+
+	public int prefetchID(Transaction transaction);
+
+	public void prefetchedIDConsumed(Transaction transaction, int id);
 
 }

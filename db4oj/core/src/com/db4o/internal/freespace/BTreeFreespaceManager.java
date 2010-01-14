@@ -121,12 +121,12 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		_delegate.freeTransactionLogSlot(slot);
 	}
 
-	public Slot getSlot (int length) {
+	public Slot allocateSlot (int length) {
 		if(! started()){
 			return null;
 		}
 		if(isDelegating()){
-			return _delegate.getSlot(length);
+			return _delegate.allocateSlot(length);
 		}
 		try{
             beginDelegation();
@@ -170,7 +170,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         createBTrees(0 , 0);
         _slotsByAddress.write(transaction());
         _slotsByLength.write(transaction());
-        _delegateIndirectionID = _file.getPointerSlot();
+        _delegateIndirectionID = _file.allocatePointerSlot();
         int[] ids = new int[] { _slotsByAddress.getID(), _slotsByLength.getID(), _delegateIndirectionID};
         _idArray = new PersistentIntegerArray(ids);
         _idArray.write(transaction());
@@ -236,7 +236,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     public int write() {
         try{
             beginDelegation();
-            Slot slot = _file.getSlot(_delegate.marshalledLength());
+            Slot slot = _file.allocateSlot(_delegate.marshalledLength());
             Pointer4 pointer = new Pointer4(_delegateIndirectionID, slot);
             _delegate.write(pointer);
     		return _idArray.getID();

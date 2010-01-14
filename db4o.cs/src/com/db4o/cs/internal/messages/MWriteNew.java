@@ -2,7 +2,6 @@
 
 package com.db4o.cs.internal.messages;
 
-import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
@@ -18,11 +17,10 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             					: localContainer().classMetadataForID(classMetadataId);
             
             int id = _payLoad.getID();
-            prefetchedIDConsumed(id);            
             IdSystem idSystem = localContainer().idSystem();
-			idSystem.slotFreePointerOnRollback(transaction(), id);
+            idSystem.prefetchedIDConsumed(transaction(), id);            
             
-            Slot slot = localContainer().getSlot(_payLoad.length());
+            Slot slot = localContainer().allocateSlot(_payLoad.length());
             _payLoad.address(slot.address());
             
             idSystem.slotFreeOnRollback(transaction(), id, slot);
@@ -34,9 +32,4 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             idSystem.setPointer(transaction(), id, slot);
         }
     }
-
-	private void prefetchedIDConsumed(int id) {
-		ServerMessageDispatcherImpl serverMessageDispatcher = (ServerMessageDispatcherImpl) serverMessageDispatcher();
-		serverMessageDispatcher.prefetchedIDConsumed(id);
-	}
 }
