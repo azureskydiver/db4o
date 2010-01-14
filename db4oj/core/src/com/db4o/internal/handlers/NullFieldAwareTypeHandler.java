@@ -18,7 +18,7 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 
 	public static final FieldAwareTypeHandler INSTANCE = new NullFieldAwareTypeHandler();
 
-	public void addFieldIndices(ObjectIdContextImpl context, Slot oldSlot) {
+	public void addFieldIndices(ObjectIdContextImpl context) {
 	}
 
 	public void classMetadata(ClassMetadata classMetadata) {

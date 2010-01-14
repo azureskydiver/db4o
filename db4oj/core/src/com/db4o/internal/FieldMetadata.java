@@ -14,7 +14,6 @@ import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.reflect.*;
-import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -101,7 +100,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		init(name);
 	}
 
-	public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException {
+	public void addFieldIndex(ObjectIdContextImpl context)  throws FieldIndexException {
         if (! hasIndex()) {
             incrementOffset(context);
             return;

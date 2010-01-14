@@ -6,7 +6,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.slots.*;
 import com.db4o.typehandlers.*;
 
 
@@ -15,7 +14,7 @@ import com.db4o.typehandlers.*;
  */
 public interface FieldAwareTypeHandler extends ReferenceTypeHandler, VersionedTypeHandler, CascadingTypeHandler, VirtualAttributeHandler{
     
-    public void addFieldIndices(ObjectIdContextImpl context, Slot oldSlot);
+    public void addFieldIndices(ObjectIdContextImpl context);
 
     public void collectIDs(CollectIdContext context, Predicate4<ClassAspect> predicate);
     

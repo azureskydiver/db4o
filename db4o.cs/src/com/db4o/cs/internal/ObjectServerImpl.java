@@ -352,8 +352,14 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 			withEnvironment(new Runnable() { public void run() {
 				try {
 					Socket4 socket = _serverSocket.accept();
-					ServerMessageDispatcherImpl messageDispatcher = new ServerMessageDispatcherImpl(ObjectServerImpl.this, new ClientTransactionHandle(_transactionPool),
-							socket, newThreadId(), false, _container.lock());
+					ServerMessageDispatcherImpl messageDispatcher = 
+						new ServerMessageDispatcherImpl(
+								ObjectServerImpl.this, 
+								new ClientTransactionHandle(_transactionPool),
+								socket,
+								newThreadId(),
+								false,
+								_container.lock());
 					
 					addServerMessageDispatcher(messageDispatcher);
 						

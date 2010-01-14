@@ -80,34 +80,29 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         return _transaction;
     }
     
-    /**
-     * TODO: This should go completely into the IdSystem
-     */
-    private Slot createNewSlot(int length){
-        Slot slot = new Slot(-1, length);
+    private Slot allocateNewSlot(int length){
         if(_transaction instanceof LocalTransaction){
-            slot = ((LocalTransaction)_transaction).localContainer().allocateSlot(length);
-            IdSystem idSystem = ((LocalObjectContainer)container()).idSystem();
-			idSystem.slotFreeOnRollback(_transaction, objectID(), slot);
-			idSystem.setPointer(_transaction, objectID(), slot);
+        	return localContainer().allocateSlotForNewUserObject(_transaction, objectID(), length);
         }
-        return slot;
+        return new Slot(-1, length);
     }
     
-    private Slot createUpdateSlot(int length){
-        if(transaction() instanceof LocalTransaction){
-            return ((LocalTransaction)transaction()).localContainer().getSlotForUpdate(transaction(), objectID(), length);
+    private Slot allocateUpdateSlot(int length){
+        if(_transaction instanceof LocalTransaction){
+            return localContainer().allocateSlotForUserObjectUpdate(transaction(), objectID(), length);
         }
         return new Slot(0, length);
     }
-    
+
+	private LocalObjectContainer localContainer() {
+		return ((LocalTransaction)transaction()).localContainer();
+	}
     
     public Pointer4 allocateSlot(){
         int length = container().blockAlignedBytes(marshalledLength());
-        Slot slot = isNew() ? createNewSlot(length) : createUpdateSlot(length);
+        Slot slot = isNew() ? allocateNewSlot(length) : allocateUpdateSlot(length);
         return new Pointer4(objectID(), slot);
     }
-    
 
     public ByteArrayBuffer toWriteBuffer(Pointer4 pointer) {
         

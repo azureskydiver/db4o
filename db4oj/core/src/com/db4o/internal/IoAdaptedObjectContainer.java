@@ -159,7 +159,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
     public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
     	transaction.close(rollbackOnClose);
     	if(! isSystemTransaction){
-    		idSystem().removeTransaction(transaction);
+    		idSystem().removeTransaction((LocalTransaction)transaction);
     	}else{
     		idSystem().close();
     	}

@@ -17,19 +17,18 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             					: localContainer().classMetadataForID(classMetadataId);
             
             int id = _payLoad.getID();
-            IdSystem idSystem = localContainer().idSystem();
-            idSystem.prefetchedIDConsumed(transaction(), id);            
             
-            Slot slot = localContainer().allocateSlot(_payLoad.length());
+            localContainer().idSystem().prefetchedIDConsumed(transaction(), id);            
+            
+            Slot slot = localContainer().allocateSlotForNewUserObject(transaction(), id, _payLoad.length());
+            
             _payLoad.address(slot.address());
             
-            idSystem.slotFreeOnRollback(transaction(), id, slot);
-            
             if(classMetadata != null){
-                classMetadata.addFieldIndices(_payLoad,null);
+                classMetadata.addFieldIndices(_payLoad);
             }
             localContainer().writeNew(transaction(), _payLoad.pointer(), classMetadata, _payLoad);
-            idSystem.setPointer(transaction(), id, slot);
+            
         }
     }
 }

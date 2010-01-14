@@ -18,9 +18,9 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 			int id = _payLoad.getID();
 			transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
 			transaction().dontDelete(id);
-			Slot oldSlot = localContainer().idSystem().getCommittedSlotOfID(serverTransaction(), id);
-            localContainer().getSlotForUpdate(_payLoad);
-			classMetadata.addFieldIndices(_payLoad, oldSlot);
+            Slot newSlot = localContainer().allocateSlotForUserObjectUpdate(_payLoad.transaction(), _payLoad.getID(), _payLoad.length());
+			_payLoad.address(newSlot.address());
+			classMetadata.addFieldIndices(_payLoad);
             _payLoad.writeEncrypt();
             deactivateCacheFor(id);            
 		}

@@ -24,30 +24,33 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
     }
     
-    public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException{
-        boolean isnew = (oldSlot == null);
-
-        int offset = context.offset();
+    public void addFieldIndex(ObjectIdContextImpl context)  throws FieldIndexException{
+    	
+    	LocalTransaction transaction = (LocalTransaction) context.transaction();
+		LocalObjectContainer localContainer = (LocalObjectContainer)transaction.container();
+    	Slot oldSlot = localContainer.idSystem().getCommittedSlotOfID(transaction, context.id());
+    	
+        int savedOffset = context.offset();
         int db4oDatabaseIdentityID = context.readInt();
         long uuid = context.readLong();
-        context.seek(offset);
+        context.seek(savedOffset);
         
-        LocalObjectContainer yf = (LocalObjectContainer)context.transaction().container();
+        boolean isnew = (oldSlot.isNull());
         
         if ((uuid == 0 || db4oDatabaseIdentityID == 0) && context.id() > 0
                 && !isnew) {
             DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(
-                    yf, context.classMetadata(), oldSlot, false);
+                    localContainer, context.classMetadata(), oldSlot, false);
             db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
             uuid = identityAndUUID.uuid;
         }
         
         if(db4oDatabaseIdentityID == 0){
-            db4oDatabaseIdentityID = yf.identity().getID(context.transaction());
+            db4oDatabaseIdentityID = localContainer.identity().getID(transaction);
         }
         
         if(uuid == 0){
-            uuid = yf.generateTimeStampId();
+            uuid = localContainer.generateTimeStampId();
         }
         
         StatefulBuffer writer = (StatefulBuffer) context.buffer();

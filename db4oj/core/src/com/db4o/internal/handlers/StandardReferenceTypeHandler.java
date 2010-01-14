@@ -10,7 +10,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.metadata.*;
-import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
@@ -412,7 +411,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         traverseAllAspects(context, command);
     }
 
-    public void addFieldIndices(final ObjectIdContextImpl context, final Slot oldSlot) {
+    public void addFieldIndices(final ObjectIdContextImpl context) {
         TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
         	
         	@Override
@@ -422,7 +421,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 	                if (isNull) {
 	                    field.addIndexEntry(context.transaction(), context.id(), null);
 	                } else {
-	                    field.addFieldIndex(context, oldSlot);
+	                    field.addFieldIndex(context);
 	                }
             	}else{
             		aspect.incrementOffset(context.buffer());
