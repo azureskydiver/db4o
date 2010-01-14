@@ -241,7 +241,7 @@ public final class ConfigBlock {
 	public void write() {
         
         timerFileLock().checkHeaderLock();
-        addressChanged(_container.getSlot(LENGTH).address());
+        addressChanged(_container.allocateSlot(LENGTH).address());
         
 		StatefulBuffer writer = _container.getWriter(_container.transaction(), _address,LENGTH);
 		IntHandler.writeInt(LENGTH, writer);

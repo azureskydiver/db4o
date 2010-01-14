@@ -1271,7 +1271,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return _timeStampIdGenerator.next();
     }
 
-    public abstract int newUserObject(Transaction trans);
+    public abstract int idForNewUserObject(Transaction trans);
     
     public Object peekPersisted(Transaction trans, final Object obj, final ActivationDepth depth, final boolean committed) throws DatabaseClosedException {
     	

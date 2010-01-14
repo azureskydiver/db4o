@@ -46,7 +46,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     	// do nothing, freespace is dropped.
     }
     
-    public Slot getSlot(int length) {
+    public Slot allocateSlot(int length) {
         // implementation is no longer present, no freespace returned.
     	return null;
 	}

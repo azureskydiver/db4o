@@ -86,7 +86,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
     private Slot createNewSlot(int length){
         Slot slot = new Slot(-1, length);
         if(_transaction instanceof LocalTransaction){
-            slot = ((LocalTransaction)_transaction).localContainer().getSlot(length);
+            slot = ((LocalTransaction)_transaction).localContainer().allocateSlot(length);
             IdSystem idSystem = ((LocalObjectContainer)container()).idSystem();
 			idSystem.slotFreeOnRollback(_transaction, objectID(), slot);
 			idSystem.setPointer(_transaction, objectID(), slot);

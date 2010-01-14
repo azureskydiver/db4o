@@ -155,7 +155,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public Slot allocateTargetSlot(int length) {
-		return _targetDb.getSlot(length);
+		return _targetDb.allocateSlot(length);
 	}
 
 	public void targetWriteBytes(DefragmentContextImpl context,int address) {

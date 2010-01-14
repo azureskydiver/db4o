@@ -311,7 +311,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		writeObjectBegin();
 		
-		int id = trans.container().newUserObject(trans);
+		int id = trans.container().idForNewUserObject(trans);
 
         setID(id);
 

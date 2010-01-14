@@ -49,7 +49,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     }
     
     public static int initSlot(LocalObjectContainer file){
-        int address = file.getSlot(slotLength()).address();
+        int address = file.allocateSlot(slotLength()).address();
         slotEntryToZeroes(file, address);
         return address;
     }

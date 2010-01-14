@@ -22,7 +22,7 @@ public interface FreespaceManager {
 
 	public int totalFreespace();
 
-	public Slot getSlot(int length);
+	public Slot allocateSlot(int length);
 
 	public void migrateTo(FreespaceManager fm);
 

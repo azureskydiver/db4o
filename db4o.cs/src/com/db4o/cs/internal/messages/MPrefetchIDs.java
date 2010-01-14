@@ -2,8 +2,8 @@
 
 package com.db4o.cs.internal.messages;
 
-import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.IdSystem;
 
 public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 
@@ -12,15 +12,11 @@ public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH * prefetchIDCount);
 
 		synchronized (containerLock()) {
+			IdSystem idSystem = localContainer().idSystem();
 			for (int i = 0; i < prefetchIDCount; i++) {
-				reply.writeInt(prefetchID());
+				reply.writeInt(idSystem.prefetchID(transaction()));
 			}
 		}
 		return reply;
-	}
-
-	private int prefetchID() {
-		ServerMessageDispatcherImpl serverMessageDispatcher = (ServerMessageDispatcherImpl) serverMessageDispatcher();
-		return serverMessageDispatcher.prefetchID();
 	}
 }

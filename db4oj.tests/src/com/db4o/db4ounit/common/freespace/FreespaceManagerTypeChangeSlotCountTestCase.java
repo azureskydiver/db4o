@@ -69,7 +69,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase extends TestWithTempFil
     }
 
     private void createFreeSpace() {
-        Slot slot = _container.getSlot(SIZE);
+        Slot slot = _container.allocateSlot(SIZE);
         _container.free(slot);
     }
 

@@ -49,7 +49,7 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
     }
 
-	public Slot getSlot(int length) {
+	public Slot allocateSlot(int length) {
 		return null;
 	}
 

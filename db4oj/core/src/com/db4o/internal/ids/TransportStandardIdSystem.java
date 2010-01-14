@@ -15,7 +15,7 @@ public class TransportStandardIdSystem extends StandardIdSystem {
 	}
 
 	@Override
-	public void slotFreePointerOnRollback(Transaction transaction, int id) {
+	protected void slotFreePointerOnRollback(Transaction transaction, int id) {
 		// do nothing
 	}
 	

@@ -121,7 +121,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		// do nothing
 	}
 	
-	public Slot getSlot(int length){
+	public Slot allocateSlot(int length){
         return appendBlocks(length);
 	}
 	
