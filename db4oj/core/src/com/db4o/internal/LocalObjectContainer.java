@@ -864,9 +864,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 	
 	public ObjectContainer openSession(){
-		return new ObjectContainerSession(this);
+		synchronized(lock()) {
+			return new ObjectContainerSession(this);
+		}
 	}
-	
+	 
 	public IdSystem idSystem(){
 		return _idSystem;
 	}
