@@ -5,6 +5,7 @@ import static junit.framework.Assert.*;
 
 import java.util.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.debug.*;
