@@ -231,16 +231,24 @@
    			<menu id="com.db4o.eclipse.menu.db4o" 
    				label="Db4o" 
    				path="additions">
-   				<separator name="group" />
+   				<separator name="com.db4o.eclipse.menu.db4o.group" />
    		 	</menu> 
    		 	
-   			<action class="com.db4o.omplus.ui.actions.OpenDb4oAction" 
+   			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadWriteAction" 
 				 enablesFor="1"
    				 icon="icons/DBconnect.gif"
-   				 id="com.db4o.omplus.ui.actions.OpenDb4oAction" 
-   				 label="Open db4o file" 
-   				 menubarPath="com.db4o.eclipse.menu.db4o" 
-   				 tooltip="Open db4o file" /> 
+   				 id="com.db4o.omplus.ui.actions.OpenDb4oReadWriteAction" 
+   				 label="Open db4o file (r/w)" 
+   				 menubarPath="com.db4o.eclipse.menu.db4o/com.db4o.eclipse.menu.db4o.group" 
+   				 tooltip="Open db4o file (read/write mode)" /> 
+   				 
+   			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadOnlyAction" 
+				 enablesFor="1"
+   				 icon="icons/DBconnect.gif"
+   				 id="com.db4o.omplus.ui.actions.OpenDb4oReadOnlyAction" 
+   				 label="Open db4o file (r/o)" 
+   				 menubarPath="com.db4o.eclipse.menu.db4o/com.db4o.eclipse.menu.db4o.group" 
+   				 tooltip="Open db4o file (readonly mode)" /> 
    				 
  		 </objectContribution>
  		 
@@ -250,19 +258,27 @@
 					nameFilter="*.yap" 
 					objectClass="org.eclipse.core.resources.IFile">
 					
-			<menu id="com.db4o.eclipse.menu.db4o" 
+			<menu id="com.db4o.eclipse.menu.yap" 
 					label="Db4o" 
 					path="additions">
-  				<separator name="group" /> 
+  				<separator name="com.db4o.eclipse.menu.yap.group" /> 
  			 </menu>
  			 
-  			<action class="com.db4o.omplus.ui.actions.OpenDb4oAction" 
+  			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadWriteAction" 
   				enablesFor="1"
   				icon="icons/DBconnect.gif" 
-  				id="com.db4o.omplus.ui.actions.OpenDb4oAction" 
-  				label="Open db4o file"
-  				menubarPath="com.db4o.eclipse.menu.db4o"
-  				tooltip="Open db4o file" />
+  				id="com.db4o.omplus.ui.actions.OpenYapReadWriteAction" 
+  				label="Open db4o file (r/w)"
+  				menubarPath="com.db4o.eclipse.menu.yap/com.db4o.eclipse.menu.yap.group"
+  				tooltip="Open db4o file (read/write mode)" />
+
+  			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadOnlyAction" 
+  				enablesFor="1"
+  				icon="icons/DBconnect.gif" 
+  				id="com.db4o.omplus.ui.actions.OpenYapReadOnlyAction" 
+  				label="Open db4o file (r/o)"
+  				menubarPath="com.db4o.eclipse.menu.yap/com.db4o.eclipse.menu.yap.group"
+  				tooltip="Open db4o file (read only mode)" />
   		 </objectContribution>
   </extension>
      

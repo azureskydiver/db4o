@@ -3,6 +3,7 @@ package com.db4o.omplus.ui.dialog.login.model;
 
 import java.util.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 
 public class LoginPresentationModel {
@@ -152,10 +153,5 @@ public class LoginPresentationModel {
 
 	public static interface RemoteSelectionListener {
 		void remoteSelection(String host, int port, String user, String pwd);
-	}
-
-	public static interface ErrorMessageSink {
-		void error(String msg);
-		void exc(Throwable exc);
 	}
 }

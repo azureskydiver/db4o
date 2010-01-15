@@ -1,7 +1,5 @@
 package com.db4o.omplus.ui.dialog.login;
 
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.dialogs.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
@@ -11,7 +9,6 @@ import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.LoginPresentationModel.*;
 import com.db4o.omplus.ui.dialog.login.presentation.*;
 
 public class LoginDialog {
@@ -28,21 +25,10 @@ public class LoginDialog {
 
 	private LoginPresentationModel model;
 
-	public LoginDialog(Shell parentShell, OMEDataStore dataStore, final Connector connector) {
+	public LoginDialog(Shell parentShell, OMEDataStore dataStore, final Connector connector, ErrorMessageSink err) {
 		mainCompositeShell = new Shell(parentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		OMESWTUtil.assignWidgetId(mainCompositeShell, SHELL_ID);
 		mainCompositeShell.setText("Connection Info");
-		// FIXME should be shared
-		final ErrorMessageSink err = new ErrorMessageSink() {
-			public void error(String msg) {
-				MessageDialog.openError(mainCompositeShell, OMPlusConstants.DIALOG_BOX_TITLE, msg);
-			}
-			
-			public void exc(Throwable exc) {
-				IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, exc.getMessage(), exc);
-				Activator.getDefault().getLog().log(status);
-			}
-		};
 		model = new LoginPresentationModel(new DataStoreRecentConnectionList(dataStore), err, connector);
 
 		createContents();

@@ -3,12 +3,10 @@ package com.db4o.omplus.debug;
 
 import org.eclipse.swt.widgets.*;
 
-import com.db4o.*;
-import com.db4o.foundation.*;
+import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.LoginPresentationModel.*;
 
 public class RunShell {
 	public static void main(String[] args) {
@@ -32,7 +30,7 @@ public class RunShell {
 	    //LoginPresentationModel model = new LoginPresentationModel(new PresetRecentConnectionList(), err, connector);
 	    //LoginPaneBase pane = new RemoteLoginPane(shell, shell, model);
 
-	    LoginDialog dialog = new LoginDialog(shell, new InMemoryOMEDataStore(), connector);
+	    LoginDialog dialog = new LoginDialog(shell, new InMemoryOMEDataStore(), connector, err);
 	    dialog.open();
 	    //shell.setSize(430, 230);
 	    //pane.setSize(430, 230);

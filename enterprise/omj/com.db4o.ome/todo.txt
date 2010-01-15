@@ -1,2 +1,1 @@
 - shouldn't export core db4o
-- tests get live user's recent connections

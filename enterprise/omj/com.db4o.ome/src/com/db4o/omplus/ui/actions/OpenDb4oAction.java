@@ -12,13 +12,14 @@ import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 
-public class OpenDb4oAction implements IObjectActionDelegate {
+public abstract class OpenDb4oAction implements IObjectActionDelegate {
 	
 	IWorkbenchPart targetPart;
 	String filePath;
+	private final boolean readOnly;
 
-	public OpenDb4oAction() {
-		// TODO Auto-generated constructor stub
+	protected OpenDb4oAction(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart)
@@ -33,9 +34,9 @@ public class OpenDb4oAction implements IObjectActionDelegate {
 
 	public void run(IAction action) {
 //		Need to add in recent Connections.
-		StringBuilder str = new StringBuilder(Platform.getLocation().toString());
-		System.out.print(str.append(filePath).toString());
-		FileConnectionParams params = new FileConnectionParams(str.toString());
+		StringBuilder fullPath = new StringBuilder(Platform.getLocation().toString());
+		fullPath.append(filePath).toString();
+		FileConnectionParams params = new FileConnectionParams(fullPath.toString(), readOnly);
 		try{
 			ConnectionStatus status = new ConnectionStatus();
 			if(status.isConnected()){
@@ -44,9 +45,6 @@ public class OpenDb4oAction implements IObjectActionDelegate {
 				if(!open)
 					return;
 				status.closeExistingDB();
-			}
-			if(!(params instanceof FileConnectionParams)) {
-				return;
 			}
 			DbConnectUtil.connect(params, getTargetPart().getSite().getShell());
 			RecentConnectionList list = new DataStoreRecentConnectionList(Activator.getDefault().getOMEDataStore());
@@ -58,7 +56,9 @@ public class OpenDb4oAction implements IObjectActionDelegate {
 				msg = "Couldn't open .NET database in OME eclipse plugin";
 			MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, msg);
 		}*/catch(Exception ex){
-			MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, ex.getMessage());
+			ShellErrorMessageSink err = new ShellErrorMessageSink(getTargetPart().getSite().getShell());
+			err.error("Could not open " + fullPath + ": " + ex.getMessage());
+			err.exc(ex);
 		}
 	}
 	
