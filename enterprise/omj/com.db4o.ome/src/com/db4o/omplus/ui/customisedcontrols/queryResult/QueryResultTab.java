@@ -121,6 +121,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		resultObjectTableDeleteButton.setEnabled(!Activator.getDefault().getDatabaseInterface().readOnly());
 		tableRefreshButton = new Button(tableButtonsComposite, SWT.PUSH);
 		tableRefreshButton.setText("Refresh");
+		tableRefreshButton.setEnabled(!Activator.getDefault().getDatabaseInterface().readOnly());
 		
 		
 		//tree section

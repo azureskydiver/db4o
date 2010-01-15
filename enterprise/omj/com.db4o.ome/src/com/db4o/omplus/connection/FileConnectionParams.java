@@ -91,16 +91,4 @@ public class FileConnectionParams extends ConnectionParams {
 		}
 	}
 
-	@Override
-	public boolean equals(Object other) {
-		if(!super.equals(other)) {
-			return false;
-		}
-		return readOnly == ((FileConnectionParams) other).readOnly;
-	}
-	
-	@Override
-	public int hashCode() {
-		return readOnly ? ~super.hashCode() : super.hashCode();
-	}
 }

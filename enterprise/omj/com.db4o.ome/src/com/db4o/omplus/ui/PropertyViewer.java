@@ -32,6 +32,7 @@ import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.part.ViewPart;
 
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.OMPlusConstants;
 import com.db4o.omplus.datalayer.propertyViewer.ConfigureIndex;
 import com.db4o.omplus.datalayer.propertyViewer.PropertiesManager;
@@ -310,7 +311,9 @@ public class PropertyViewer extends ViewPart
 		column = new TableViewerColumn(tableViewer, SWT.NONE);
 		column.getColumn().setWidth(PropertyViewerConstants.CLASS_PROPERTY_COLUMN_WIDTHS[2]);
 		column.getColumn().setText(PropertyViewerConstants.CLASS_PROPERTY_COLUMN_ARRAY[2]);
-		column.setEditingSupport(new ClassPropertiesEditor(tableViewer));
+		if(!Activator.getDefault().getDatabaseInterface().readOnly()) {
+			column.setEditingSupport(new ClassPropertiesEditor(tableViewer));
+		}
 		
 		//Access Modifier
 		column = new TableViewerColumn(tableViewer, SWT.NONE);
