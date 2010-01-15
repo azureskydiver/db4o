@@ -74,7 +74,6 @@ public class ObjectTreeBuilder {
 					{
 						ObjectTreeNode newNode = createObjectNode(rField, resultObj, parent);
 						//newNode.setParent(parent);
-						System.out.println();
 						nodes[index++] = newNode;
 					}
 				}
