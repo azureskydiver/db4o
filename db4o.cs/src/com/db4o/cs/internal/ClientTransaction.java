@@ -68,9 +68,11 @@ public final class ClientTransaction extends Transaction {
     }
 
     public void rollback() {
-        _objectRefrencesToGC = null;
-        rollBackTransactionListeners();
-        clearAll();
+    	synchronized (container().lock()) {
+	        _objectRefrencesToGC = null;
+	        rollBackTransactionListeners();
+	        clearAll();
+    	}
     }
 
     public void writeUpdateAdjustIndexes(int id, ClassMetadata classMetadata, ArrayType arrayType,

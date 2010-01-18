@@ -265,7 +265,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
 
 	protected Transaction newTransaction() {
-		return container().newUserTransaction();
+		synchronized(container().lock()){
+			return container().newUserTransaction();
+		}
 	}
 	
 	public <T> T retrieveOnlyInstance(Class<T> clazz) {

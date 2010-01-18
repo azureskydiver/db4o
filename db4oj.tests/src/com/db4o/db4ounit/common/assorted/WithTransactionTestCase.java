@@ -11,10 +11,14 @@ public class WithTransactionTestCase extends AbstractDb4oTestCase {
 	
 	public void test(){
 		final Transaction originalTransaction = container().transaction();
-		final Transaction transaction = container().newUserTransaction();
+		Transaction transaction = null;
+		synchronized(container().lock()){
+			transaction = container().newUserTransaction();
+		}
+		final Transaction finalTransaction = transaction; 
 		container().withTransaction(transaction, new Runnable() {
 			public void run() {
-				Assert.areSame(transaction, container().transaction());
+				Assert.areSame(finalTransaction, container().transaction());
 			}
 		});
 		Assert.areSame(originalTransaction, container().transaction());
