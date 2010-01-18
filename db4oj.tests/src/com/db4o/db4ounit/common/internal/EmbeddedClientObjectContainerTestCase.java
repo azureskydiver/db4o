@@ -101,7 +101,10 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
     }
     
     public void testClose() {
-        Transaction trans = _server.newUserTransaction();
+        Transaction trans = null;
+        synchronized(_server.lock()){
+        	trans = _server.newUserTransaction();
+        }
         ReferenceSystem referenceSystem = trans.referenceSystem();
         ObjectContainerSession client = new ObjectContainerSession(_server, trans);
         
@@ -380,8 +383,8 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
         config.common().objectClass(Item.class).generateUUIDs(true);
         
         _server = (LocalObjectContainer) Db4oEmbedded.openFile(config, tempFile());
-        _client1 = new ObjectContainerSession(_server);
-        _client2 = new ObjectContainerSession(_server);
+        _client1 = _server.openSession().ext();
+        _client2 = _server.openSession().ext();
     }
 
     public void tearDown() throws Exception {

@@ -38,8 +38,9 @@ public class ClientSlotCacheTestCase extends AbstractDb4oTestCase implements Opt
 				Assert.areSame(slot, cache.get(t1, 42));
 				
 				Assert.isNull(cache.get(t2, 42));
-				
-				t1.commit();
+				synchronized(t1.container().lock()){
+					t1.commit();
+				}
 				Assert.isNull(cache.get(t1, 42));
 			}
 		});
