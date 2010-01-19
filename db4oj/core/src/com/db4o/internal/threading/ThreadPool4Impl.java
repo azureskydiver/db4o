@@ -60,8 +60,8 @@ public class ThreadPool4Impl implements ThreadPool4 {
     }
 
 	private void activateThread(final Thread thread) {
+		addActiveThread(thread);
 	    thread.start();
-	    addActiveThread(thread);
     }
 
 	private Thread[] activeThreads() {
@@ -89,5 +89,4 @@ public class ThreadPool4Impl implements ThreadPool4 {
 	public Event4<UncaughtExceptionEventArgs> uncaughtException() {
 	    return _uncaughtException;
     }
-
 }
