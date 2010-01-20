@@ -27,7 +27,7 @@ public class StandardIdSystem implements IdSystem {
 	}
 	
 	public void addTransaction(LocalTransaction transaction){
-		addSlotChanges(transaction, new StandardIdSlotChanges(transaction, _systemSlotChanges));
+		addSlotChanges(transaction, new StandardIdSlotChanges(transaction.localContainer()));
 	}
 	
 	public void removeTransaction(LocalTransaction transaction){
@@ -48,7 +48,7 @@ public class StandardIdSystem implements IdSystem {
 		return _slotChanges.get(transaction);
 	}
 
-	public void collectSlotChanges(Transaction transaction, SlotChangeCollector collector) {
+	public void collectCallBackInfo(Transaction transaction, CallbackInfoCollector collector) {
 		slotChanges(transaction).collectSlotChanges(collector);
 	}
 
@@ -57,8 +57,6 @@ public class StandardIdSystem implements IdSystem {
 	}
 
 	public void commit(LocalTransaction transaction) {
-		StandardIdSlotChanges slotChanges = slotChanges(transaction);
-		slotChanges.commit(_transactionLogHandler, slotChanges == _systemSlotChanges);
 		
         Slot reservedSlot = _transactionLogHandler.allocateSlot(transaction, false);
         
@@ -196,7 +194,7 @@ public class StandardIdSystem implements IdSystem {
 	}
 
 	public void systemTransaction(LocalTransaction transaction) {
-		_systemSlotChanges = new StandardIdSlotChanges(transaction, null);
+		_systemSlotChanges = new StandardIdSlotChanges(transaction.localContainer());
 		addSlotChanges(transaction, _systemSlotChanges);
 	}
 
@@ -219,11 +217,11 @@ public class StandardIdSystem implements IdSystem {
 	}
 	
 	public void traverseSlotChanges(LocalTransaction transaction, Visitor4 visitor){
-		StandardIdSlotChanges slotChanges = slotChanges(transaction);
-        if(slotChanges != _systemSlotChanges){
-        	_systemSlotChanges.traverseSlotChanges(visitor);
-        }
-        slotChanges.traverseSlotChanges(visitor);
+		_systemSlotChanges.traverseSlotChanges(visitor);
+		if(transaction == systemTransaction()){
+			return;
+		}
+		slotChanges(transaction).traverseSlotChanges(visitor);
 	}
 
     public void flushFile(){

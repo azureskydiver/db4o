@@ -276,7 +276,7 @@ public class LocalTransaction extends Transaction {
 	
 	private Collection4 collectCommittedCallbackDeletedInfo() {
 		final Collection4 deleted = new Collection4();
-		collectSlotChanges(new SlotChangeCollector() {
+		collectCallBackInfo(new CallbackInfoCollector() {
 			public void deleted(int id) {
 				ObjectInfo ref = frozenReferenceFor(id);
 				if(ref != null){
@@ -299,7 +299,7 @@ public class LocalTransaction extends Transaction {
 		}
 		final Collection4 added = new Collection4();
 		final Collection4 updated = new Collection4();		
-		collectSlotChanges(new SlotChangeCollector() {
+		collectCallBackInfo(new CallbackInfoCollector() {
 			public void added(int id) {
 				added.add(lazyReferenceFor(id));
 			}
@@ -322,7 +322,7 @@ public class LocalTransaction extends Transaction {
 		final Collection4 added = new Collection4();
 		final Collection4 deleted = new Collection4();
 		final Collection4 updated = new Collection4();		
-		collectSlotChanges(new SlotChangeCollector() {
+		collectCallBackInfo(new CallbackInfoCollector() {
 			public void added(int id) {
 				added.add(lazyReferenceFor(id));
 			}
@@ -351,8 +351,8 @@ public class LocalTransaction extends Transaction {
 				new ObjectInfoCollectionImpl(deleted));
 	}
 
-	private void collectSlotChanges(final SlotChangeCollector collector) {
-		idSystem().collectSlotChanges(this, collector);
+	private void collectCallBackInfo(final CallbackInfoCollector collector) {
+		idSystem().collectCallBackInfo(this, collector);
 	}
 	
 	private IdSystem idSystem() {

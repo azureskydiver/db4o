@@ -15,8 +15,8 @@ public interface IdSystem {
 
 	public void removeTransaction(LocalTransaction trans);
 
-	public void collectSlotChanges(Transaction transaction,
-			SlotChangeCollector collector);
+	public void collectCallBackInfo(Transaction transaction,
+			CallbackInfoCollector collector);
 
 	public boolean isDirty(Transaction transaction);
 
