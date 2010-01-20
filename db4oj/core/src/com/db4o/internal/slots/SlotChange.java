@@ -4,7 +4,6 @@ package com.db4o.internal.slots;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.ids.*;
 
 /**
  * @exclude

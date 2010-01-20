@@ -6,48 +6,26 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 public class StandardIdSlotChanges {
 	
     private final LockedTree _slotChanges = new LockedTree();
 	
-	private StandardIdSlotChanges _systemIdSystem;
-	
-	private final LocalTransaction _transaction;
+	private final LocalObjectContainer _container;
 	
 	private Tree _prefetchedIDs;
 
-	public StandardIdSlotChanges(LocalTransaction transaction, StandardIdSlotChanges systemIdSystem) {
-		_transaction = transaction;
-		_systemIdSystem = systemIdSystem;
+	public StandardIdSlotChanges(LocalObjectContainer container) {
+		_container = container;
 	}
-
 
 	public Config4Impl config() {
 		return localContainer().config();
 	}
 
-	public LocalObjectContainer localContainer() {
-		return _transaction.localContainer();
+	private LocalObjectContainer localContainer() {
+		return _container;
 	}
-
-    public final void commit(TransactionLogHandler transactionLogHandler, boolean traverseMutable){
-        
-//        Slot reservedSlot = transactionLogHandler.allocateSlot(this, false);
-//        
-//        freeSlotChanges(false, traverseMutable);
-//                
-//        freespaceBeginCommit();
-//        
-//        commitFreespace();
-//        
-//        freeSlotChanges(true, traverseMutable);
-//        
-//        transactionLogHandler.applySlotChanges(this, reservedSlot);
-//        
-//        freespaceEndCommit();
-    }
 	
 	public final void freeSlotChanges(final boolean forFreespace, boolean traverseMutable) {
         Visitor4 visitor = new Visitor4() {
@@ -104,16 +82,10 @@ public class StandardIdSlotChanges {
         if (slot != null) {
             return slot.isDeleted();
         }
-        if (_systemIdSystem != null) {
-            return _systemIdSystem.slotChangeIsFlaggedDeleted(id);
-        }
         return false;
     }
 	
 	public void traverseSlotChanges(Visitor4 visitor){
-        if(_systemIdSystem != null){
-        	_systemIdSystem.traverseSlotChanges(visitor);
-        }
         _slotChanges.traverseLocked(visitor);
 	}
 	
@@ -173,16 +145,6 @@ public class StandardIdSlotChanges {
         slotChange.freeOnRollbackSetPointer(slot);
     }
     
-    void slotFreePointerOnCommit(int a_id, Slot slot) {
-        slotFreeOnCommit(slot.address(), slot);
-        
-        // FIXME: This does not look nice
-        slotFreeOnCommit(a_id, slot);
-        
-        // FIXME: It should rather work like this:
-        // produceSlotChange(a_id).freePointerOnCommit();
-    }
-    
     public void slotFreePointerOnRollback(int id) {
     	produceSlotChange(id).freePointerOnRollback();
     }
@@ -191,7 +153,7 @@ public class StandardIdSlotChanges {
 		return _slotChanges != null;
 	}
 
-	public void collectSlotChanges(final SlotChangeCollector collector) {
+	public void collectSlotChanges(final CallbackInfoCollector collector) {
 		if (! isDirty()) {
 			return;
 		}
