@@ -56,7 +56,7 @@ public class LoginPresentationModel {
 			portNum = Integer.parseInt(port);
 		}
 		catch(NumberFormatException exc) {
-			err.error("Illegal port: " + exc.getMessage());
+			err.error("Illegal port: " + port, exc);
 			return false;
 		}
 		if(portNum < 0 || portNum > MAX_PORT) {
@@ -84,6 +84,10 @@ public class LoginPresentationModel {
 		remoteListeners.add(listener);
 	}
 
+	public ErrorMessageSink err() {
+		return err;
+	}
+	
 	private boolean connect(ConnectionParams params) {
 		try {
 			connector.connect(params);
@@ -91,7 +95,7 @@ public class LoginPresentationModel {
 			return true;
 		}
 		catch(Exception exc) {
-			error("Could not connect to " + params.getPath() + ": " + exc.getMessage(), exc);
+			err.error(("Could not connect to " + params.getPath() + ": " + exc.getMessage()), exc);
 			return false;
 		}
 	}
@@ -108,11 +112,6 @@ public class LoginPresentationModel {
 		return str == null ? "" : str.trim();
 	}
 	
-	private void error(String msg, Throwable exc) {
-		err.error(msg);
-		err.exc(exc);
-	}
-
 	public static enum LoginMode {
 		LOCAL  {
 			@Override

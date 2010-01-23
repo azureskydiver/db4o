@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.List;
 
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
@@ -17,6 +16,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.propertyViewer.*;
@@ -25,6 +25,7 @@ import com.db4o.omplus.datalayer.queryBuilder.*;
 import com.db4o.omplus.datalayer.queryresult.*;
 import com.db4o.omplus.ui.customisedcontrols.queryBuilder.*;
 import com.db4o.omplus.ui.interfaces.*;
+import com.db4o.omplus.ui.model.*;
 
 public class QueryBuilder extends ViewPart implements IChildObserver,IDropValidator
 {
@@ -60,7 +61,6 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 	private Composite buttonCompositeForAttributeViewer = null;	
 	private Button addGroupBtn = null;	
 	private Button clearAllGroupsBtn = null;	
-	
 	
 	@Override
 	public void createPartControl(final Composite parent) 
@@ -115,7 +115,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		} // commented above
 		for(int i = 0; i < constraintsSize ;i++)
 		{
-			QueryGroupComposite groupComposite = new QueryGroupComposite(childComposite,compositeStyle,
+			QueryGroupComposite groupComposite = new QueryGroupComposite(queryModel(), childComposite,compositeStyle,
 															nextQueryGroupIndex(),
 															constraintList.getQueryGroup(nextQueryGroupIndex()),
 															this,//Observer
@@ -866,7 +866,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 	
 	private void showMessage(String message)
 	{
-		MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, message);
+		new ShellErrorMessageSink(parentComposite.getShell()).error(message);
 	}
 
 	/**
@@ -875,7 +875,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 	private void addNewGroup()
 	{
 		constraintList.initQueryGroup(nextQueryGroupIndex());
-		QueryGroupComposite queryGroupComposite = new QueryGroupComposite(childComposite,compositeStyle,
+		QueryGroupComposite queryGroupComposite = new QueryGroupComposite(queryModel(), childComposite,compositeStyle,
 				nextQueryGroupIndex(),constraintList.getQueryGroup(nextQueryGroupIndex()),
 				this, this);
 
@@ -953,7 +953,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		try
 		{
 			constraintList.initQueryGroup(nextQueryGroupIndex());
-			QueryGroupComposite groupComposite = new QueryGroupComposite(childComposite,compositeStyle,
+			QueryGroupComposite groupComposite = new QueryGroupComposite(queryModel(), childComposite,compositeStyle,
 															nextQueryGroupIndex(),
 															constraintList.getQueryGroup(nextQueryGroupIndex()),
 															this,this);
@@ -1087,5 +1087,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		resetAttributeViewer();
 	}
 
-	
+	private QueryPresentationModel queryModel() {
+		return Activator.getDefault().queryModel();
+	}
 }

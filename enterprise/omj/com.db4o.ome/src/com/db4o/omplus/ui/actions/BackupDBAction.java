@@ -14,6 +14,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.db4o.omplus.datalayer.DbMaintenance;
 import com.db4o.omplus.datalayer.OMPlusConstants;
+import com.db4o.omplus.ui.*;
 
 public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 
@@ -95,10 +96,8 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 				BACKUP_SUCCESS_MESSAGE);
 	}
 
-	private void showErrorMessageDialog(Exception e) {
-		MessageDialog.openError(window.getShell(), OMPlusConstants.DIALOG_BOX_TITLE
-								, e.getMessage());
-		
+	private void showErrorMessageDialog(Exception exc) {
+		new ShellErrorMessageSink(window.getShell()).error(exc);
 	}
 	
 	public static void enableAction(boolean enabled){

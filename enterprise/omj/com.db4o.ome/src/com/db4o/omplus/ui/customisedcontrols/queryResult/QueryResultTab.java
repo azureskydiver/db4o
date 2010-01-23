@@ -15,17 +15,19 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 
-import com.db4o.foundation.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.queryBuilder.*;
 import com.db4o.omplus.datalayer.queryresult.*;
 import com.db4o.omplus.ui.interfaces.*;
 import com.db4o.omplus.ui.listeners.queryResult.*;
+import com.db4o.omplus.ui.model.*;
 import com.db4o.omplus.ui.model.queryResults.*;
 
 public class QueryResultTab extends CTabItem implements IChildModifier
 {
+	private QueryPresentationModel queryModel;
+	
 	private final String DELETE_MESSAGE = "Perform Cascade on Delete";
 	private final String SAVE_MESSAGE = "Do you want to save the changes made in this page. Selecting 'No' "+
 	"will discard the changes made?";
@@ -81,10 +83,11 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 	private QueryResultTableModifiedList modifiedObjList;
 	
 
-	public QueryResultTab(CTabFolder parent, int style, QueryResultList qList, 
+	public QueryResultTab(QueryPresentationModel model, CTabFolder parent, int style, QueryResultList qList, 
 							IViewUpdatorForQueryResults viewUpdatorForQueryResults)
 	{
 		super(parent, style);
+		this.queryModel = model;
 		parentTab = parent;
 		this.viewUpdatorForQueryResults = viewUpdatorForQueryResults;
 		
@@ -126,7 +129,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		
 		//tree section
 		treeSashForm = new SashForm(queryResultTabComposite, SWT.SMOOTH|SWT.VERTICAL);
-		objectViewer = new ObjectViewer(treeSashForm,SWT.TOP,queryResultList, this);
+		objectViewer = new ObjectViewer(queryModel, treeSashForm,SWT.TOP,queryResultList, this);
 		treeButtonsComposite = new Composite(treeSashForm, SWT.NONE);
 		resultObjectTreeSaveButton = new Button(treeButtonsComposite,SWT.PUSH);
 		resultObjectTreeSaveButton.setEnabled(false);
@@ -581,7 +584,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		tableViewer.setCellEditors(editors);		
 		modifiedObjList = new QueryResultTableModifiedList();
 		
-		ResultTableCellModifier modifier = new ResultTableCellModifier(tableViewer, 
+		ResultTableCellModifier modifier = new ResultTableCellModifier(queryModel, tableViewer, 
 											   queryResultList, modifiedObjList,this,columnNameMap);
 		tableViewer.setCellModifier(modifier);
 		
@@ -590,10 +593,9 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		tableViewer.setLabelProvider(new QueryResultsLabelProvider());
 		try {
 			tableViewer.setInput(queryResultList);
-		}catch(NotImplementedException ex){
-			showErrorMessage(ex.getClass().getName());
-		}catch(Exception ex){
-			showErrorMessage("Cannot display results due to an internal exception.");
+		}
+		catch(Exception ex){
+			err().error("Cannot display results.", ex);
 		}
 		
 		
@@ -617,10 +619,6 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		}
 		pageNumberText.setText(""+resultPage.getCurrentPage());
 		pageLabel.setText(" of "+resultPage.getNumOfPages());
-	}
-	
-	private void showErrorMessage(String message) {
-		MessageDialog.openError(queryResultTabComposite.getShell(), OMPlusConstants.DIALOG_BOX_TITLE, message);
 	}
 	
 	/**
@@ -976,6 +974,10 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 				}
 			}
 		}
+	}
+	
+	private ErrorMessageSink err() {
+		return queryModel.err();
 	}
 
 }

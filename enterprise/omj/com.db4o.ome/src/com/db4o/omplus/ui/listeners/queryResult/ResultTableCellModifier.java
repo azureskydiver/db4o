@@ -1,20 +1,16 @@
 package com.db4o.omplus.ui.listeners.queryResult;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.widgets.*;
 
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.omplus.datalayer.queryresult.QueryResultList;
-import com.db4o.omplus.datalayer.queryresult.QueryResultRow;
-import com.db4o.omplus.datalayer.queryresult.QueryResultTableModifiedList;
-import com.db4o.omplus.ui.interfaces.IChildModifier;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.omplus.datalayer.queryresult.*;
+import com.db4o.omplus.ui.interfaces.*;
+import com.db4o.omplus.ui.model.*;
 
 public class ResultTableCellModifier implements ICellModifier 
 {
@@ -27,12 +23,13 @@ public class ResultTableCellModifier implements ICellModifier
 	private IChildModifier childModifier;
 	private HashMap<String, String> columnMap;
 	
+	private QueryPresentationModel queryModel;	
 
-	public ResultTableCellModifier(TableViewer tableViewer, QueryResultList queryResultList,
+	public ResultTableCellModifier(QueryPresentationModel queryModel, TableViewer tableViewer, QueryResultList queryResultList,
 									QueryResultTableModifiedList modifiedObjList, 
 									IChildModifier childModifier, 
-									HashMap<String, String> columnNameMap)
-	{
+									HashMap<String, String> columnNameMap) {
+		this.queryModel = queryModel;
 		this.tableViewer = tableViewer;
 		this.queryResultList = queryResultList;
 		this.modifiedObjList = modifiedObjList;
@@ -138,6 +135,7 @@ public class ResultTableCellModifier implements ICellModifier
 	 * @return
 	 */
 	@SuppressWarnings("unused")
+	// FIXME validation code seems to be duplicated in QueryBuilderValueEditor and ObjectTreeEditor
 	private boolean validateNumber(String property, Object value) 
 	{
 		
@@ -152,7 +150,7 @@ public class ResultTableCellModifier implements ICellModifier
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid byte value");
+					err().error("Invalid byte value: " + value, e);
 					return false;
 				}
 				break;
@@ -164,7 +162,7 @@ public class ResultTableCellModifier implements ICellModifier
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid short value");
+					err().error("Invalid short value: " + value, e);
 					return false;
 				}
 				break;
@@ -175,7 +173,7 @@ public class ResultTableCellModifier implements ICellModifier
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid integer value");
+					err().error("Invalid integer value: " + value, e);
 					return false;
 				}
 				break;
@@ -186,7 +184,7 @@ public class ResultTableCellModifier implements ICellModifier
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid long value");
+					err().error("Invalid long value: " + value, e);
 					return false;
 				}
 				break;
@@ -197,7 +195,7 @@ public class ResultTableCellModifier implements ICellModifier
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid double value");
+					err().error("Invalid double value: " + value, e);
 					return false;
 				}
 			case QueryBuilderConstants.DATATYPE_FLOAT:	
@@ -207,20 +205,16 @@ public class ResultTableCellModifier implements ICellModifier
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid float value");
+					err().error("Invalid float value: " + value, e);
 					return false;
 				}						
 		}	
 		return true;
 	}
 	
-	/**
-	 * Displays error message on screen
-	 * @param msg
-	 */
-	private void showMessage(String msg)
+	private ErrorMessageSink err()
 	{
-		MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, msg);
+		return queryModel.err();
 	}
 
 	/**
@@ -239,7 +233,7 @@ public class ResultTableCellModifier implements ICellModifier
 		}
 		else
 		{
-			showMessage("Invalid boolean string");
+			err().error("Invalid boolean string: " + value);
 			return false;
 		}
 			
@@ -259,7 +253,7 @@ public class ResultTableCellModifier implements ICellModifier
 		}
 		else
 		{
-			showMessage("Invalid character value");
+			err().error("Invalid character value: " + value);
 			return false;
 		}			
 	}

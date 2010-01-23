@@ -1,26 +1,18 @@
 package com.db4o.omplus.ui.model.queryResults;
 
-import java.util.Date;
+import java.util.*;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.nebula.widgets.cdatetime.CDT;
-import org.eclipse.nebula.widgets.cdatetime.CDateTimeCellEditor;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.nebula.widgets.cdatetime.*;
+import org.eclipse.swt.*;
 
-import com.db4o.omplus.datalayer.Converter;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.omplus.datalayer.queryresult.ObjectTreeNode;
-import com.db4o.omplus.datalayer.queryresult.QueryResultRow;
-import com.db4o.omplus.ui.customisedcontrols.queryResult.ObjectViewer;
-import com.db4o.omplus.ui.customisedcontrols.queryResult.ObjectViewerTab;
-import com.db4o.omplus.ui.interfaces.IChildModifier;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.omplus.datalayer.queryresult.*;
+import com.db4o.omplus.ui.customisedcontrols.queryResult.*;
+import com.db4o.omplus.ui.interfaces.*;
+import com.db4o.omplus.ui.model.*;
 
 
 public class ObjectTreeEditor extends  EditingSupport
@@ -39,15 +31,18 @@ public class ObjectTreeEditor extends  EditingSupport
 	private String[] fieldNames;
 	private QueryResultRow row;
 	
+	private QueryPresentationModel queryModel;
+	
 	//TODO: check if this can be obtained from some other place rather than being passed in constructor
 	@SuppressWarnings("unused")
 	private String classname;
 
-	public ObjectTreeEditor(ObjectViewer folder,ObjectViewerTab tab, TreeViewer tv, 
+	public ObjectTreeEditor(QueryPresentationModel queryModel, ObjectViewer folder,ObjectViewerTab tab, TreeViewer tv, 
 							TextCellEditor tc, String classname, String[] fieldNames, 
 							QueryResultRow row, IChildModifier childModifier)
 	{
 		super(tv);
+		this.queryModel = queryModel;
 		treeViewer = tv;
 		textCellEditor = tc;
 		objectViewer = folder;
@@ -228,6 +223,7 @@ public class ObjectTreeEditor extends  EditingSupport
 	 * @return
 	 */
 	@SuppressWarnings("unused")
+	// FIXME validation code seems to be duplicated in QueryBuilderValueEditor and ResultTableCellModifier
 	private boolean validateNumber(Object element, Object value)
 	{
 		ObjectTreeNode node = (ObjectTreeNode)element;
@@ -242,7 +238,7 @@ public class ObjectTreeEditor extends  EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid byte value");
+					err().error("Invalid byte value: " + e);
 					return false;
 				}
 				break;
@@ -254,7 +250,7 @@ public class ObjectTreeEditor extends  EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid short value");
+					err().error("Invalid short value: " + e);
 					return false;
 				}
 				break;
@@ -265,7 +261,7 @@ public class ObjectTreeEditor extends  EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid integer value");
+					err().error("Invalid integer value: " + value, e);
 					return false;
 				}
 				break;
@@ -276,7 +272,7 @@ public class ObjectTreeEditor extends  EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid long value");
+					err().error("Invalid long value: " + e);
 					return false;
 				}
 				break;
@@ -287,7 +283,7 @@ public class ObjectTreeEditor extends  EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid double value");
+					err().error("Invalid double value: " + value, e);
 					return false;
 				}
 			case QueryBuilderConstants.DATATYPE_FLOAT:	
@@ -297,20 +293,16 @@ public class ObjectTreeEditor extends  EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid float value");
+					err().error("Invalid float value: " + value, e);
 					return false;
 				}						
 		}	
 		return true;
 	}
 	
-	/**
-	 * Displays error message on screen
-	 * @param msg
-	 */
-	private void showMessage(String msg)
+	private ErrorMessageSink err()
 	{
-		MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, msg);
+		return queryModel.err();
 	}
 
 	/**
@@ -328,7 +320,7 @@ public class ObjectTreeEditor extends  EditingSupport
 		}
 		else
 		{
-			showMessage("Invalid boolean string");
+			err().error("Invalid boolean string: " + value);
 			return false;
 		}
 			
@@ -347,7 +339,7 @@ public class ObjectTreeEditor extends  EditingSupport
 		}
 		else
 		{
-			showMessage("Not a character");
+			err().error("Not a character: " + value);
 			return false;
 		}
 			
