@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.List;
 
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.resource.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
@@ -148,7 +147,7 @@ public class ClassViewer extends ViewPart
 			classTree.setInput(currentView);
 			return true;
 		}catch(Exception ex){
-			showErrorMessage(ex.getMessage());
+			Activator.getDefault().queryModel().err().error(ex);
 			return false;
 		}
 	}
@@ -523,10 +522,6 @@ public class ClassViewer extends ViewPart
 		classTree.refresh();
 	}
 	
-
-	private void showErrorMessage(String message) {
-		MessageDialog.openError(parentComp.getShell(), OMPlusConstants.DIALOG_BOX_TITLE, message);
-	}
 
 	@Override
 	public void setFocus() 

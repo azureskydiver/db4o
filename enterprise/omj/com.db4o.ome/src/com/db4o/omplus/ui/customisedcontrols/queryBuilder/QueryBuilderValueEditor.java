@@ -1,25 +1,21 @@
 package com.db4o.omplus.ui.customisedcontrols.queryBuilder;
 
-import java.util.Date;
+import java.util.*;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.nebula.widgets.cdatetime.CDT;
-import org.eclipse.nebula.widgets.cdatetime.CDateTimeCellEditor;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.nebula.widgets.cdatetime.*;
+import org.eclipse.swt.*;
 
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.omplus.datalayer.queryBuilder.QueryClause;
-import com.db4o.omplus.datalayer.queryBuilder.QueryGroup;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.omplus.ui.model.*;
 
 public class QueryBuilderValueEditor extends EditingSupport 
 {
+	
+	private QueryPresentationModel model;
+	
 	/**
 	 * Text editor
 	 */	
@@ -41,11 +37,12 @@ public class QueryBuilderValueEditor extends EditingSupport
 	private TableViewer tableViewer;
 	
 	
-	public QueryBuilderValueEditor(TableViewer viewer, QueryGroup group) 
+	public QueryBuilderValueEditor(QueryPresentationModel model, TableViewer viewer, QueryGroup group) 
 	{
 		super(viewer);
 		this.queryGroup = group;
 		this.tableViewer = viewer;
+		this.model = model;
 		
 		
 		booleanComboBoxCellEditor = new ComboBoxCellEditor(viewer.getTable(), booleanArrayItems,SWT.READ_ONLY);		
@@ -227,7 +224,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid byte value");
+					err().error("Invalid byte value: " + value, e);
 					return false;
 				}
 				break;
@@ -239,7 +236,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid short value");
+					err().error("Invalid short value: " + value, e);
 					return false;
 				}
 				break;
@@ -250,7 +247,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid integer value");
+					err().error("Invalid integer value: " + value, e);
 					return false;
 				}
 				break;
@@ -261,7 +258,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid long value");
+					err().error("Invalid long value: " + value, e);
 					return false;
 				}
 				break;
@@ -272,7 +269,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid double value");
+					err().error("Invalid double value: " + value, e);
 					return false;
 				}
 			case QueryBuilderConstants.DATATYPE_FLOAT:	
@@ -282,7 +279,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 				}
 				catch(NumberFormatException e)
 				{
-					showMessage("Invalid float value");
+					err().error("Invalid float value: " + value, e);
 					return false;
 				}						
 		}	
@@ -304,7 +301,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 		else
 		{
 			//Bug:21870 fix
-			showMessage("Invalid character value");
+			err().error("Invalid character value: " + value);
 			return false;
 		}			
 	}
@@ -313,9 +310,9 @@ public class QueryBuilderValueEditor extends EditingSupport
 	 * Displays error message on screen
 	 * @param msg
 	 */
-	private void showMessage(String msg)
+	private ErrorMessageSink err()
 	{
-		MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, msg);
+		return model.err();
 	}
 	
 }

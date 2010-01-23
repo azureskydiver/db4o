@@ -13,11 +13,13 @@ public class RunShell {
 	    Display display = new Display();
 	    final Shell shell = new Shell(display);
 	    ErrorMessageSink err = new ErrorMessageSink() {
-			public void error(String msg) {
+	    	@Override
+			protected void showError(String msg) {
 				System.err.println(msg);
 			}
 
-			public void exc(Throwable exc) {
+			@Override
+			protected void logExc(Throwable exc) {
 				exc.printStackTrace();
 			}
 		};

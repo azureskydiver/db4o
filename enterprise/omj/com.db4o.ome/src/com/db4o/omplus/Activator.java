@@ -11,6 +11,7 @@ import org.osgi.framework.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
+import com.db4o.omplus.ui.model.*;
 
 public class Activator extends AbstractUIPlugin {
 
@@ -34,6 +35,7 @@ public class Activator extends AbstractUIPlugin {
 
 	private OMEDataStore dataStore = null;
 	private IDbInterface db = null;
+	private QueryPresentationModel queryModel = null;
 	
 	public void start(BundleContext context) throws Exception 
 	{
@@ -145,6 +147,7 @@ public class Activator extends AbstractUIPlugin {
 								}
 		    					
 		    				});
+		    	queryModel = new QueryPresentationModel(new ShellErrorMessageSink(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()));
 		    }
 		
 		});
@@ -192,6 +195,10 @@ public class Activator extends AbstractUIPlugin {
 		}
 		db = new DbInterfaceImpl();
 		return db;
+	}
+	
+	public QueryPresentationModel queryModel() {
+		return queryModel;
 	}
 	
 	private static class DatabasePathPrefixProvider implements ContextPrefixProvider {

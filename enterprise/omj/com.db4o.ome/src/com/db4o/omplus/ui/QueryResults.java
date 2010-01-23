@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.part.ViewPart;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.OMPlusConstants;
 import com.db4o.omplus.datalayer.queryresult.QueryResultList;
 import com.db4o.omplus.ui.customisedcontrols.queryResult.QueryResultTab;
@@ -34,7 +35,6 @@ public class QueryResults extends ViewPart implements IViewUpdatorForQueryResult
 	private Hashtable<String, Integer> classIdentifierMap = new Hashtable<String, Integer>(10);
 	
 	private Composite parentComposite = null;
-	
 	
 	@Override
 	public void createPartControl(Composite parent) 
@@ -97,7 +97,7 @@ public class QueryResults extends ViewPart implements IViewUpdatorForQueryResult
 			return;
 		}
 		
-		QueryResultTab queryResultTab = new QueryResultTab(queryResultParentTab,
+		QueryResultTab queryResultTab = new QueryResultTab(Activator.getDefault().queryModel(), queryResultParentTab,
 		   											       SWT.BORDER|SWT.CLOSE, 
 		   											       queryResultList,
 		   											       this);

@@ -1,7 +1,10 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.ui.dialog.login.test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.*;
 
@@ -10,7 +13,6 @@ import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.debug.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.LoginPresentationModel.*;
 
 public class LoginPresentationModelFixture {
 
@@ -31,12 +33,12 @@ public class LoginPresentationModelFixture {
 		}
 		ErrorMessageSink err = new ErrorMessageSink() {
 			@Override
-			public void error(String msg) {
+			protected void showError(String msg) {
 				errorMsgReceived = msg;
 			}
 
 			@Override
-			public void exc(Throwable exc) {
+			protected void logExc(Throwable exc) {
 				exceptionReceived = exc;
 			}
 		};

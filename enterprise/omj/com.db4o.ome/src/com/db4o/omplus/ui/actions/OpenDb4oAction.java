@@ -50,15 +50,18 @@ public abstract class OpenDb4oAction implements IObjectActionDelegate {
 			RecentConnectionList list = new DataStoreRecentConnectionList(Activator.getDefault().getOMEDataStore());
 			list.addNewConnection(params);
 			showPerspective();
-		}/*catch(ClassCastException ex){
+		}
+		/*
+		catch(ClassCastException ex){
 			String msg = ex.getMessage();
 			if(msg.equals(GENERIC_OBJ))
 				msg = "Couldn't open .NET database in OME eclipse plugin";
-			MessageDialog.openError(null, OMPlusConstants.DIALOG_BOX_TITLE, msg);
-		}*/catch(Exception ex){
+			err.error(msg, ex);
+		}
+		*/
+		catch(Exception ex){
 			ShellErrorMessageSink err = new ShellErrorMessageSink(getTargetPart().getSite().getShell());
-			err.error("Could not open " + fullPath + ": " + ex.getMessage());
-			err.exc(ex);
+			err.error("Could not open " + fullPath + ": " + ex.getMessage(), ex);
 		}
 	}
 	

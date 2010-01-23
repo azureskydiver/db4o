@@ -1,13 +1,11 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.ui.dialog.login.presentation;
 
-import org.eclipse.jface.dialogs.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.foundation.*;
-import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 
 public abstract class LoginPaneBase extends Composite {
@@ -45,7 +43,7 @@ public abstract class LoginPaneBase extends Composite {
 	}
 
 	protected void showErrorMsg(String msg){
-		MessageDialog.openError((Shell)getParent(), OMPlusConstants.DIALOG_BOX_TITLE, msg);
+		model.err().error(msg);
 	}
 
 	protected abstract void populateInnerComposite(Composite innerComposite, Composite parent, LoginPresentationModel model);

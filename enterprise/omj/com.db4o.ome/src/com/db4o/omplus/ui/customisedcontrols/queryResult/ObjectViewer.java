@@ -1,48 +1,22 @@
 package com.db4o.omplus.ui.customisedcontrols.queryResult;
 
-import java.util.Date;
-import java.util.Hashtable;
+import java.util.*;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.TreeViewerEditor;
-import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabFolder2Adapter;
-import org.eclipse.swt.custom.CTabFolderEvent;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 
 import com.db4o.omplus.*;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.queryresult.ObjectTreeBuilder;
-import com.db4o.omplus.datalayer.queryresult.ObjectTreeNode;
-import com.db4o.omplus.datalayer.queryresult.QueryResultList;
-import com.db4o.omplus.datalayer.queryresult.QueryResultRow;
-import com.db4o.omplus.ui.interfaces.IChildModifier;
-import com.db4o.omplus.ui.model.queryResults.ObjectTreeContentProvider;
-import com.db4o.omplus.ui.model.queryResults.ObjectTreeEditor;
-import com.db4o.omplus.ui.model.queryResults.ObjectTreeLabelProvider;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryresult.*;
+import com.db4o.omplus.ui.interfaces.*;
+import com.db4o.omplus.ui.model.*;
+import com.db4o.omplus.ui.model.queryResults.*;
 
 @SuppressWarnings("unused")
 public class ObjectViewer extends CTabFolder
@@ -59,6 +33,8 @@ public class ObjectViewer extends CTabFolder
 	private Action setToNullAction;
 	
 	private Composite parent;
+	
+	private QueryPresentationModel queryModel;
 
 	public static final String TAB_NAME_BEGINS_WITH = "Object ";
 	
@@ -71,9 +47,10 @@ public class ObjectViewer extends CTabFolder
 	 */
 	private IChildModifier childModifier;
 	
-	public ObjectViewer(Composite parent, int style,QueryResultList qList, IChildModifier childModifier) 
+	public ObjectViewer(QueryPresentationModel queryModel, Composite parent, int style,QueryResultList qList, IChildModifier childModifier) 
 	{
 		super(parent, style);
+		this.queryModel = queryModel;
 		this.parent = parent;
 		this.addCTabFolder2Listener(new ObjectViewerTabCloseAdapter());
 		queryResultList = qList;
@@ -185,7 +162,7 @@ public class ObjectViewer extends CTabFolder
 	    	
 	    	if(i==1 && !Activator.getDefault().getDatabaseInterface().readOnly())//Allow editions only for value
 	    	{
-	    		column1.setEditingSupport(new ObjectTreeEditor(this,tabItem,treeViewer,
+	    		column1.setEditingSupport(new ObjectTreeEditor(queryModel, this,tabItem,treeViewer,
 	    									textCellEditor, queryResultList.getClassName(),
 	    									queryResultList.getFieldNames(), row,
 	    									childModifier));

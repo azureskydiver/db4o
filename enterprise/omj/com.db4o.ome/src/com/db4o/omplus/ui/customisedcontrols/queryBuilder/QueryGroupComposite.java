@@ -1,49 +1,26 @@
 package com.db4o.omplus.ui.customisedcontrols.queryBuilder;
 
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 
-import com.db4o.omplus.datalayer.ImageUtility;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.omplus.datalayer.queryBuilder.QueryGroup;
-import com.db4o.omplus.ui.interfaces.IChildObserver;
-import com.db4o.omplus.ui.interfaces.IDropValidator;
-import com.db4o.omplus.ui.interfaces.IObservable;
-import com.db4o.omplus.ui.listeners.queryBuilder.TableComboSelectionListener;
-import com.db4o.omplus.ui.listeners.queryBuilder.TableDropAdapter;
-import com.db4o.omplus.ui.model.queryBuilder.TableContentProvider;
-import com.db4o.omplus.ui.model.queryBuilder.TableLabelProvider;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.omplus.ui.interfaces.*;
+import com.db4o.omplus.ui.listeners.queryBuilder.*;
+import com.db4o.omplus.ui.model.*;
+import com.db4o.omplus.ui.model.queryBuilder.*;
 
 public class QueryGroupComposite extends Composite implements IObservable
 {
+	private QueryPresentationModel model;
+	
 	//Index should only be used while notifying parent about this object removal...nowhere else
 	private int index;
 	
@@ -95,11 +72,12 @@ public class QueryGroupComposite extends Composite implements IObservable
 	
 
 
-	public QueryGroupComposite(Composite queryBuilderComnposite, int style,
+	public QueryGroupComposite(QueryPresentationModel model, Composite queryBuilderComnposite, int style,
 								int idx, QueryGroup queryGroup, 
 								IChildObserver observer, IDropValidator dropValidator) 
 	{
 		super(queryBuilderComnposite, style|SWT.SHADOW_ETCHED_IN);	
+		this.model = model;
 		index = idx;
 		this.queryGroup = queryGroup;
 		this.observer = observer;
@@ -235,7 +213,7 @@ public class QueryGroupComposite extends Composite implements IObservable
 		column.getColumn().setText(QueryBuilderConstants.columnNames[2]);
 //		column.setEditingSupport(new QueryBuilderTextEditor(tableViewer, queryGroup, 
 //															QueryBuilderConstants.VALUE));
-		column.setEditingSupport(new QueryBuilderValueEditor(tableViewer, queryGroup));
+		column.setEditingSupport(new QueryBuilderValueEditor(model, tableViewer, queryGroup));
 		
 		
 		column = new TableViewerColumn(tableViewer, SWT.NONE);
