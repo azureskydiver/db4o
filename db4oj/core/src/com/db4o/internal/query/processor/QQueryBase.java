@@ -693,6 +693,9 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
     }
 
     public Query orderAscending() {
+    	if(i_parent == null) {
+    		throw new IllegalStateException("Cannot apply ordering at top level.");
+    	}
         synchronized (streamLock()) {
             addOrdering(SodaQueryComparator.Direction.ASCENDING);
             return _this;
@@ -700,6 +703,9 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
     }
 
     public Query orderDescending() {
+    	if(i_parent == null) {
+    		throw new IllegalStateException("Cannot apply ordering at top level.");
+    	}
         synchronized (streamLock()) {
         	addOrdering(SodaQueryComparator.Direction.DESCENDING);
             return _this;
