@@ -57,7 +57,7 @@ class WriteUpdateProcessor {
         
         StatefulBuffer objectBytes = (StatefulBuffer)container().readReaderOrWriterBySlot(_transaction, _id, false, slot);
         
-        updateChildIndexes(objectBytes);
+        deleteMembers(objectBytes);
         
         freeSlotOnCommit(objectBytes);
 	}
@@ -67,10 +67,10 @@ class WriteUpdateProcessor {
 	}
 
 	private void freeSlotOnCommit(StatefulBuffer objectBytes) {
-		container().idSystem().slotFreeOnCommit(_transaction, _id, objectBytes.slot());
+		container().idSystem().slotFreeOnCommit(_transaction, _id, objectBytes.slot(), SlotChangeFactory.USER_OBJECTS);
 	}
 
-	private void updateChildIndexes(StatefulBuffer objectBytes) {
+	private void deleteMembers(StatefulBuffer objectBytes) {
 		ObjectHeader oh = new ObjectHeader(container(), _clazz, objectBytes);
         
         DeleteInfo info = (DeleteInfo)TreeInt.find(_transaction._delete, _id);
@@ -104,7 +104,7 @@ class WriteUpdateProcessor {
 		if(! _clazz.canUpdateFast()){
 			return false;
 		}
-		container().idSystem().slotFreeOnCommit(_transaction, _id, slot);
+		container().idSystem().slotFreeOnCommit(_transaction, _id, slot, SlotChangeFactory.USER_OBJECTS);
     	return true;
 	}
 

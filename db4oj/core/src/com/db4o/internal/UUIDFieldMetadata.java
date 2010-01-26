@@ -28,7 +28,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	
     	LocalTransaction transaction = (LocalTransaction) context.transaction();
 		LocalObjectContainer localContainer = (LocalObjectContainer)transaction.container();
-    	Slot oldSlot = localContainer.idSystem().getCommittedSlotOfID(transaction, context.id());
+    	Slot oldSlot = localContainer.idSystem().getCommittedSlotOfID(context.id());
     	
         int savedOffset = context.offset();
         int db4oDatabaseIdentityID = context.readInt();

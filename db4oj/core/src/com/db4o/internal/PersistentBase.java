@@ -53,7 +53,8 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     }
     
     public void free(LocalTransaction trans){
-    	trans.localContainer().idSystem().slotFreePointerOnCommit((LocalTransaction) trans.systemTransaction(), getID());
+    	trans.localContainer().idSystem().slotFreePointerOnCommit((LocalTransaction) trans.systemTransaction(), getID(), slotChangeFactory(), isFreespaceComponent());
+    	trans.localContainer().idSystem().notifySlotDeleted(trans.systemTransaction(), getID(), slotChangeFactory());
     }
 
     public int getID() {
@@ -161,10 +162,11 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	            Pointer4 pointer = container.newSlot(length);
 	            setID(pointer._id);
 	            slot = pointer._slot;
-                container.idSystem().notifyNewSlotCreated(trans, pointer._id, slot);
+                container.idSystem().notifySlotCreated(trans, pointer._id, slot, slotChangeFactory());
 	        }else{
 	            slot = container.allocateSlot(length);
-	            container.idSystem().slotFreeOnRollbackCommitSetPointer((LocalTransaction) trans, _id, slot, isFreespaceComponent());
+	            container.idSystem().slotFreeOnRollbackCommitSetPointer((LocalTransaction) trans, _id, slot, isFreespaceComponent(), slotChangeFactory());
+	            container.idSystem().notifySlotChanged(trans, _id, slot, slotChangeFactory());
 	        }
 	        
 	        ByteArrayBuffer writer = produceWriteBuffer(trans, length);
@@ -231,6 +233,10 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     		throw new IllegalStateException();
     	}
     	return getID();
+    }
+    
+    public SlotChangeFactory slotChangeFactory(){
+    	return SlotChangeFactory.SYSTEM_OBJECTS;
     }
     
 }

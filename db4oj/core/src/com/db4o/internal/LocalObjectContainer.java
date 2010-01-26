@@ -159,9 +159,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	return new HybridQueryResult(trans, mode);
     }
 
-    public final boolean delete4(Transaction ta, ObjectReference yo, Object obj, int a_cascade, boolean userCall) {
-        int id = yo.getID();
-        StatefulBuffer reader = readWriterByID(ta, id);
+    public final boolean delete4(Transaction transaction, ObjectReference ref, Object obj, int cascade, boolean userCall) {
+        int id = ref.getID();
+        StatefulBuffer reader = readWriterByID(transaction, id);
         if (reader != null) {
             if (obj != null) {
                 if ((!showInternalClasses())
@@ -169,10 +169,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
                     return false;
                 }
             }
-            reader.setCascadeDeletes(a_cascade);
-            idSystem().slotDelete(ta, id, reader.slot());
-            ClassMetadata yc = yo.classMetadata();
-            yc.delete(reader, obj);
+            reader.setCascadeDeletes(cascade);
+            idSystem().notifySlotDeleted(transaction, id, SlotChangeFactory.USER_OBJECTS);
+            idSystem().slotDelete(transaction, id, reader.slot());
+            ClassMetadata classMetadata = ref.classMetadata();
+            classMetadata.delete(reader, obj);
 
             return true;
         }
@@ -376,7 +377,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     public final int idForNewUserObject(Transaction trans) {
-    	return idSystem().newId(trans);
+    	return idSystem().newId(trans, SlotChangeFactory.USER_OBJECTS);
     }
 
     public ReferencedSlot produceFreeOnCommitEntry(int id){
@@ -449,7 +450,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_ID.log(id);
 		}
 
-		Slot slot = lastCommitted ? idSystem().getCommittedSlotOfID(trans, id) :  
+		Slot slot = lastCommitted ? idSystem().getCommittedSlotOfID(id) :  
 			idSystem().getCurrentSlotOfID(trans, id);
 		
 		return readReaderOrWriterBySlot(trans, id, useReader, slot);
@@ -784,13 +785,14 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
-        idSystem().notifySlotChanged(trans, id, slot);
+        idSystem().notifySlotChanged(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
+        idSystem().oldNotifySlotChanged(trans, id, slot, false);
         return slot;
     }
     
     public final Slot allocateSlotForNewUserObject(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
-        idSystem().notifyNewSlotCreated(trans, id, slot);
+        idSystem().notifySlotCreated(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
         return slot;
     }
 

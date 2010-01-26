@@ -80,7 +80,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         return _transaction;
     }
     
-    private Slot allocateNewSlot(int length){
+    public Slot allocateNewSlot(int length){
         if(_transaction instanceof LocalTransaction){
         	return localContainer().allocateSlotForNewUserObject(_transaction, objectID(), length);
         }
@@ -131,7 +131,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         return HEADER_LENGTH + _nullBitMap.marshalledLength();
     }
 
-    private int marshalledLength() {
+    public int marshalledLength() {
         int length = writeBufferOffset();
         _writeBuffer.checkBlockAlignment(this, null, new IntByRef(length));
         return length + _writeBuffer.marshalledLength() + Const4.BRACKETS_BYTES;
