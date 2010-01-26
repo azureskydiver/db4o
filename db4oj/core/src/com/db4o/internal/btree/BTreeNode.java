@@ -5,6 +5,7 @@ package com.db4o.internal.btree;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
 /**
@@ -1214,5 +1215,10 @@ public final class BTreeNode extends CacheablePersistentBase{
 		}
 		return size;
 	}
+	
+    @Override
+    public SlotChangeFactory slotChangeFactory() {
+    	return _btree.slotChangeFactory();
+    }
     
 }

@@ -88,8 +88,11 @@ public class OpenTypeHandler7 extends OpenTypeHandler {
 
 				MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
 				Handlers4.write(classMetadata().typeHandler(), context, getObject());
-
-				Pointer4 pointer = context.allocateSlot();
+				
+				int length = container().blockAlignedBytes(context.marshalledLength());
+		        Slot slot = context.allocateNewSlot(length);
+		        
+				Pointer4 pointer = new Pointer4(getID(), slot);
 				ByteArrayBuffer buffer = context.toWriteBuffer(pointer);
 
 				container.writeUpdate(transaction, pointer, classMetadata(), ArrayType.NONE, buffer);

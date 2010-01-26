@@ -43,7 +43,7 @@ public class DTrace {
             
             // breakOnEvent(395);
             
-            breakOnEvent(57);
+            addRangeWithLength(49, 1);
             
             // addRange(4874);
             
@@ -52,7 +52,7 @@ public class DTrace {
             // breakOnEvent(5);
             
             
-            addRangeWithLength(1068, 1);
+            // addRangeWithLength(1068, 1);
             
             // addRangeWithLength(1722, 1);
             
@@ -121,6 +121,9 @@ public class DTrace {
 			IO_COPY = new DTrace(true, true, "io copy", true);
 			JUST_SET = new DTrace(true, true, "just set", true);
 			NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
+			NOTIFY_SLOT_CREATED = new DTrace(true, true, "notifySlotCreated", true);
+			NOTIFY_SLOT_CHANGED = new DTrace(true, true, "notifySlotChanged", true);
+			NOTIFY_SLOT_DELETED = new DTrace(true, true, "notifySlotDeleted", true);
 			OBJECT_REFERENCE_CREATED  = new DTrace(true, true, "new ObjectReference", true);
 			PERSISTENT_OWN_LENGTH = new DTrace(true, true, "Persistent own length",
                 true);
@@ -232,6 +235,9 @@ public class DTrace {
     public static DTrace IO_COPY;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
+    public static DTrace NOTIFY_SLOT_CREATED;
+    public static DTrace NOTIFY_SLOT_CHANGED;
+    public static DTrace NOTIFY_SLOT_DELETED;
     public static DTrace OBJECT_REFERENCE_CREATED;
     public static DTrace PERSISTENT_OWN_LENGTH;
     public static DTrace PERSISTENTBASE_SET_ID;

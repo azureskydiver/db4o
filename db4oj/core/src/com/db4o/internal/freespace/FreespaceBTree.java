@@ -4,6 +4,7 @@ package com.db4o.internal.freespace;
 
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.slots.*;
 
 
 /**
@@ -21,6 +22,11 @@ public class FreespaceBTree extends BTree{
     
     public boolean isFreespaceComponent() {
         return true;
+    }
+    
+    @Override
+    public SlotChangeFactory slotChangeFactory() {
+    	return SlotChangeFactory.FREE_SPACE;
     }
 
 }

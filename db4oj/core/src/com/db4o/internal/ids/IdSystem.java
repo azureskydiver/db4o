@@ -25,21 +25,21 @@ public interface IdSystem {
 	public InterruptedTransactionHandler interruptedTransactionHandler(
 			ByteArrayBuffer reader);
 
-	public Slot getCommittedSlotOfID(LocalTransaction transaction, int id);
+	public Slot getCommittedSlotOfID(int id);
 
 	public Slot getCurrentSlotOfID(LocalTransaction transaction, int id);
 
 	public void slotFreeOnRollbackCommitSetPointer(
 			LocalTransaction transaction, int id, Slot newSlot,
-			boolean forFreespace);
+			boolean forFreespace, SlotChangeFactory slotChangeFactory);
 
 	public void setPointer(Transaction transaction, int id, Slot slot);
 
-	public void slotFreePointerOnCommit(LocalTransaction transaction, int id);
+	public void slotFreePointerOnCommit(LocalTransaction transaction, int id, SlotChangeFactory slotChangeFactory, boolean isFreespace);
 
 	public void slotDelete(Transaction transaction, int id, Slot slot);
 
-	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot);
+	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
 
 	public void rollback(Transaction transaction);
 
@@ -47,15 +47,19 @@ public interface IdSystem {
 
 	public boolean isDeleted(Transaction transaction, int id);
 
-	public void notifySlotChanged(Transaction transaction, int id, Slot slot);
+	public void oldNotifySlotChanged(Transaction transaction, int id, Slot slot, boolean forFreespace);
 	
-	public void notifyNewSlotCreated(Transaction transaction, int id, Slot slot);
+	public void notifySlotChanged(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
+	
+	public void notifySlotCreated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
+	
+	public void notifySlotDeleted(Transaction transaction, int id, SlotChangeFactory slotChangeFactory);
 
 	public void systemTransaction(LocalTransaction transaction);
 
 	public void close();
 
-	public int newId(Transaction trans);
+	public int newId(Transaction trans, SlotChangeFactory slotChangeFactory);
 
 	public int prefetchID(Transaction transaction);
 

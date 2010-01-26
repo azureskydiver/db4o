@@ -3,7 +3,6 @@
 package com.db4o.cs.internal.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 public final class MWriteNew extends MsgObject implements ServerSideMessage {

@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.cs;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 
@@ -42,6 +43,8 @@ public class CsDeleteReaddTestCase extends Db4oClientServerTestCase {
         Item item1 = (Item) retrieveOnlyInstance(client1, Item.class);
         Item item2 = (Item) retrieveOnlyInstance(client2, Item.class);
         
+        long idBeforeDelete = client1.getID(item1);
+        
         client1.delete(item1);
         
         client1.commit();
@@ -52,6 +55,8 @@ public class CsDeleteReaddTestCase extends Db4oClientServerTestCase {
         
         Item item3 = retrieveOnlyInstance(client1, Item.class);
         final long idAfterUpdate = client1.getID(item3);
+        
+        Assert.areEqual(idBeforeDelete, idAfterUpdate);
         
         new FieldIndexAssert(Item.class, "name").assertSingleEntry(fileSession(), idAfterUpdate);
     }

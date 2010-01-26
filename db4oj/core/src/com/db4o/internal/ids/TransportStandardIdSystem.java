@@ -15,12 +15,12 @@ public class TransportStandardIdSystem extends StandardIdSystem {
 	}
 
 	@Override
-	protected void slotFreePointerOnRollback(Transaction transaction, int id) {
+	protected void slotFreePointerOnRollback(Transaction transaction, int id, SlotChangeFactory slotChangeFactory) {
 		// do nothing
 	}
 	
 	@Override
-	public void slotFreeOnRollbackCommitSetPointer(LocalTransaction transaction, int id, Slot slot, boolean forFreespace) {
+	public void slotFreeOnRollbackCommitSetPointer(LocalTransaction transaction, int id, Slot slot, boolean forFreespace, SlotChangeFactory slotChangeFactory) {
         setPointer(transaction, id, slot);
     }
     
@@ -30,12 +30,12 @@ public class TransportStandardIdSystem extends StandardIdSystem {
 	}
 	
 	@Override
-	public void slotFreePointerOnCommit(LocalTransaction transaction, int id) {
+	public void slotFreePointerOnCommit(LocalTransaction transaction, int id, SlotChangeFactory slotChangeFactory, boolean isFreespace) {
 		// do nothing
 	}
 	
 	@Override
-	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot) {
+	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory) {
 		// do nothing
 	}
 	
@@ -45,7 +45,7 @@ public class TransportStandardIdSystem extends StandardIdSystem {
 	}
 	
 	@Override
-	public void notifySlotChanged(Transaction transaction, int id, Slot slot) {
+	public void oldNotifySlotChanged(Transaction transaction, int id, Slot slot, boolean forFreespace) {
 		setPointer(transaction, id, slot);
 	}
 
