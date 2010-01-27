@@ -16,9 +16,23 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	    synchronized(containerLock()){
 	        ClassMetadata classMetadata = localContainer().classMetadataForID(classMetadataID);
 			int id = _payLoad.getID();
-			transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
 			transaction().dontDelete(id);
-            Slot newSlot = localContainer().allocateSlotForUserObjectUpdate(_payLoad.transaction(), _payLoad.getID(), _payLoad.length());
+			
+			Slot clientSlot = _payLoad.slot();
+			Slot newSlot = null;
+			
+			if(clientSlot.isUpdate()){
+				transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
+	            newSlot = localContainer().allocateSlotForUserObjectUpdate(_payLoad.transaction(), _payLoad.getID(), _payLoad.length());
+			} else if(clientSlot.isNew()){
+				// Just one known usecase for this one: For updating plain objects from old versions, since
+				// they didnt't have own slots that could be freed.
+				// Logic that got us here in OpenTypeHandler7#addReference()#writeUpdate()
+				newSlot = localContainer().allocateSlotForNewUserObject(_payLoad.transaction(), _payLoad.getID(), _payLoad.length());
+			} else {
+				throw new IllegalStateException();
+			}
+            
 			_payLoad.address(newSlot.address());
 			classMetadata.addFieldIndices(_payLoad);
             _payLoad.writeEncrypt();

@@ -14,6 +14,10 @@ public class Slot {
     private final int _length;
     
     public static final Slot ZERO = new Slot(0, 0);
+    
+    public static final int NEW = -1;
+    
+    public static final int UPDATE = -2;
 
     public Slot(int address, int length){
         _address = address;
@@ -93,5 +97,13 @@ public class Slot {
 		return address() == 0
 			|| length() == 0;
     }
+	
+	public boolean isNew(){
+		return _address == NEW;
+	}
+	
+	public boolean isUpdate() {
+		return _address == UPDATE;
+	}
 	
 }
