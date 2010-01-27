@@ -20,6 +20,13 @@ import db4ounit.extensions.fixtures.*;
  * @sharpen.partial
  */
 public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData, OptOutMultiSession {
+	
+    private static final String HOST = "127.0.0.1";
+
+    private static final String USERNAME = "db4o";
+
+    private static final String PASSWORD = USERNAME;
+
     
     private String _db4oVersion;
     
@@ -86,15 +93,29 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 			return;
 		}
 		String testFileName = fileName(versionName); 
-		if(File4.exists(testFileName)){
-//		    System.out.println("Check database: " + testFileName);
-			
-		    investigateFileHeaderVersion(testFileName);
+		if(! File4.exists(testFileName)){
+		    System.out.println("Version upgrade check failed. File not found:" + testFileName);
 		    
+		    
+		    // FIXME: The following fails the CC build since not all files are there on .NET.
+		    //        Change back when we have all files.
+		    // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
+		    
+		    return;
+		}
+		
+//      System.out.println("Checking database file: " + testFileName);
+		
+	    investigateFileHeaderVersion(testFileName);
+	    
+	    prepareClientServerTest(testFileName);
+	    
+	    try{
+	    
 		    runDeletionTests(testFileName);
 		    
-			runDefrag(testFileName);
-
+			defragmentSoloAndCS(testFileName);
+	
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
 		    checkDatabaseFile(testFileName);
@@ -102,22 +123,34 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		    updateDatabaseFile(testFileName);
 		    
 		    checkUpdatedDatabaseFile(testFileName);
-
-			runDefrag(testFileName);
-
+	
+			defragmentSoloAndCS(testFileName);
+	
 		    checkUpdatedDatabaseFile(testFileName);
+	    } finally {
+	    	tearDownClientServer(testFileName);
+	    }
 		    
-		}else{
-		    
-		    System.out.println("Version upgrade check failed. File not found:" + testFileName);
-		    
-		    
-		    // FIXME: The following fails the CC build since not all files are there on .NET.
-		    //        Change back when we have all files.
-		    // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
-		}
+	}
+
+	private void defragmentSoloAndCS(String fileName) throws IOException {
+		runDefrag(fileName);
+		runDefrag(clientServerFileName(fileName));
+	}
+
+	private void tearDownClientServer(String testFileName) {
+		File4.delete(clientServerFileName(testFileName));
+	}
+
+	private void prepareClientServerTest(String fileName)
+			throws IOException {
+		File4.copy(fileName, clientServerFileName(fileName));
 	}
     
+	private String clientServerFileName(String fileName) {
+		return fileName + ".CS";
+	}
+
 	private void runDeletionTests(String testFileName) throws IOException {
 		withDatabase(testFileName, new Function4<ObjectContainer, Object>() { public Object apply(ObjectContainer db) {
 			assertObjectDeletion(db.ext());
@@ -227,6 +260,16 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         } finally {
             objectContainer.close();
         }
+        ObjectServer server = Db4o.openServer(clientServerFileName(file), -1);
+        server.grantAccess(USERNAME, PASSWORD);
+        objectContainer = Db4o.openClient("localhost", server.ext().port(), USERNAME, PASSWORD).ext();
+        
+        try {
+        	function.apply(objectContainer);
+        } finally {
+        	objectContainer.close();
+        	server.close();
+        }
     }    
 
     
@@ -295,7 +338,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     protected abstract void store(ExtObjectContainer objectContainer);
     
     protected void storeObject(ExtObjectContainer objectContainer, Object obj){
-    	// code MUST use the deprecated API here
+    	// code MUST use the deprecated ObjectContainer#set() API here
+    	// instead of ObjectContainer#store()
     	// because it will be run against old db4o versions
     	objectContainer.set(obj);
     }

@@ -84,14 +84,14 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         if(_transaction instanceof LocalTransaction){
         	return localContainer().allocateSlotForNewUserObject(_transaction, objectID(), length);
         }
-        return new Slot(-1, length);
+        return new Slot(Slot.NEW, length);
     }
     
     private Slot allocateUpdateSlot(int length){
         if(_transaction instanceof LocalTransaction){
             return localContainer().allocateSlotForUserObjectUpdate(transaction(), objectID(), length);
         }
-        return new Slot(0, length);
+        return new Slot(Slot.UPDATE, length);
     }
 
 	private LocalObjectContainer localContainer() {
