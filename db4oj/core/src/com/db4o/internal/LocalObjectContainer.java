@@ -38,8 +38,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     private int _blockEndAddress;
     
-    private Tree                _freeOnCommit;
-    
     private SystemData          _systemData;
     
     private final IdSystem _idSystem;
@@ -171,7 +169,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             }
             reader.setCascadeDeletes(cascade);
             idSystem().notifySlotDeleted(transaction, id, SlotChangeFactory.USER_OBJECTS);
-            idSystem().slotDelete(transaction, id, reader.slot());
             ClassMetadata classMetadata = ref.classMetadata();
             classMetadata.delete(reader, obj);
 
@@ -378,26 +375,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public final int idForNewUserObject(Transaction trans) {
     	return idSystem().newId(trans, SlotChangeFactory.USER_OBJECTS);
-    }
-
-    public ReferencedSlot produceFreeOnCommitEntry(int id){
-        Tree node = TreeInt.find(_freeOnCommit, id);
-        if (node != null) {
-            return (ReferencedSlot) node;
-        }
-        ReferencedSlot slot = new ReferencedSlot(id);
-        _freeOnCommit = Tree.add(_freeOnCommit, slot);
-        return slot;
-    }
-    
-    public void reduceFreeOnCommitReferences(ReferencedSlot slot){
-        if(slot.removeReferenceIsLast()){
-            _freeOnCommit = _freeOnCommit.removeNode(slot);
-        }
-    }
-    
-    public void freeDuringCommit(ReferencedSlot referencedSlot, Slot slot){
-        _freeOnCommit = referencedSlot.free(this, _freeOnCommit, slot);
     }
 
     public void raiseVersion(long a_minimumVersion) {
@@ -786,7 +763,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
         idSystem().notifySlotChanged(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
-        idSystem().oldNotifySlotChanged(trans, id, slot, false);
         return slot;
     }
     

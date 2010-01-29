@@ -91,9 +91,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
-		TransactionObjectCarrier newTransaction = new TransactionObjectCarrier(this, null, referenceSystem);
-		idSystem().systemTransaction(newTransaction);
-		return newTransaction;
+		return new TransactionObjectCarrier(this, null, referenceSystem);
 	}
 	
 	public long currentVersion(){

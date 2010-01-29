@@ -53,7 +53,6 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     }
     
     public void free(LocalTransaction trans){
-    	trans.localContainer().idSystem().slotFreePointerOnCommit((LocalTransaction) trans.systemTransaction(), getID(), slotChangeFactory(), isFreespaceComponent());
     	trans.localContainer().idSystem().notifySlotDeleted(trans.systemTransaction(), getID(), slotChangeFactory());
     }
 
@@ -165,7 +164,6 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
                 container.idSystem().notifySlotCreated(trans, pointer._id, slot, slotChangeFactory());
 	        }else{
 	            slot = container.allocateSlot(length);
-	            container.idSystem().slotFreeOnRollbackCommitSetPointer((LocalTransaction) trans, _id, slot, isFreespaceComponent(), slotChangeFactory());
 	            container.idSystem().notifySlotChanged(trans, _id, slot, slotChangeFactory());
 	        }
 	        

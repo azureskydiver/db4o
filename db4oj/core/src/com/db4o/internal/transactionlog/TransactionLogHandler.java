@@ -46,7 +46,7 @@ public abstract class TransactionLogHandler {
         _idSystem.traverseSlotChanges(transaction, new Visitor4() {
 			public void visit(Object obj) {
                 SlotChange slot = (SlotChange)obj;
-                if(slot.isSetPointer()){
+                if(slot.slotModified()){
                     count.value++;
                 }
 			}

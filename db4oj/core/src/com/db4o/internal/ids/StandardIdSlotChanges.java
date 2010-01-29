@@ -65,32 +65,10 @@ public class StandardIdSlotChanges {
         return (SlotChange)slot.addedOrExisting();
     }    
 
-	
-    public SlotChange produceSlotChange(int id){
-    	if(DTrace.enabled){
-    		DTrace.PRODUCE_SLOT_CHANGE.log(id);
-    	}
-        SlotChange slot = new SlotChange(id);
-        _slotChanges.add(slot);
-        SlotChange prevailing = (SlotChange)slot.addedOrExisting();
-        if(prevailing == slot){
-        	throw new IllegalStateException();
-        }
-		return prevailing;
-    }    
-    
-    public final SlotChange findSlotChange(int a_id) {
-        return (SlotChange)_slotChanges.find(a_id);
+    public final SlotChange findSlotChange(int id) {
+        return (SlotChange)_slotChanges.find(id);
     }    
 
-    public void setPointer(int id, Slot slot) {
-        if(DTrace.enabled){
-            DTrace.SLOT_SET_POINTER.log(id);
-            DTrace.SLOT_SET_POINTER.logLength(slot);
-        }
-        produceSlotChange(id).setPointer(slot);
-    }
-    
     private boolean slotChangeIsFlaggedDeleted(int id){
         SlotChange slot = findSlotChange(id);
         if (slot != null) {
@@ -103,56 +81,6 @@ public class StandardIdSlotChanges {
         _slotChanges.traverseLocked(visitor);
 	}
 	
-	public void slotDelete(int id, Slot slot) {
-        if(DTrace.enabled){
-            DTrace.SLOT_DELETE.log(id);
-            DTrace.SLOT_DELETE.logLength(slot);
-        }
-        if (id == 0) {
-            return;
-        }
-        SlotChange slotChange = produceSlotChange(id);
-        slotChange.freeOnCommit(localContainer(), slot);
-        slotChange.setPointer(Slot.ZERO);
-    }
-	
-    public void slotFreeOnCommit(int id, Slot slot, SlotChangeFactory slotChangeFactory) {
-        if(DTrace.enabled){
-            DTrace.SLOT_FREE_ON_COMMIT.log(id);
-            DTrace.SLOT_FREE_ON_COMMIT.logLength(slot);
-        }
-        if (id == 0) {
-            return;
-        }
-        produceSlotChange(id, slotChangeFactory).freeOnCommit(localContainer(), slot);
-    }
-
-    public void slotFreeOnRollback(int id, Slot slot) {
-        if(DTrace.enabled){
-            DTrace.SLOT_FREE_ON_ROLLBACK_ID.log(id);
-            DTrace.SLOT_FREE_ON_ROLLBACK_ADDRESS.logLength(slot);
-        }
-        produceSlotChange(id).freeOnRollback(slot);
-    }
-
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot oldSlot, Slot newSlot, boolean forFreespace, SlotChangeFactory slotChangeFactory) {
-        if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(id);
-            DTrace.FREE_ON_ROLLBACK.logLength(newSlot);
-            DTrace.FREE_ON_COMMIT.log(id);
-            DTrace.FREE_ON_COMMIT.logLength(oldSlot);
-        }
-        
-        SlotChange change = produceSlotChange(id, slotChangeFactory);
-        change.forFreespace(forFreespace);
-        change.freeOnRollbackSetPointer(newSlot);
-        change.freeOnCommit(localContainer(), oldSlot);
-    }
-
-    public void slotFreePointerOnRollback(int id, SlotChangeFactory slotChangeFactory) {
-    	produceSlotChange(id, slotChangeFactory).freePointerOnRollback();
-    }
-
 	public boolean isDirty() {
 		return _slotChanges != null;
 	}
@@ -210,25 +138,13 @@ public class StandardIdSlotChanges {
     }
 
 	public void notifySlotCreated(int id, Slot slot, SlotChangeFactory slotChangeFactory) {
-		SlotChange slotChange = produceSlotChange(id, slotChangeFactory);
-		slotChange.notifySlotCreated(slot);
+		produceSlotChange(id, slotChangeFactory).notifySlotCreated(slot);
 	}
 	
 	void notifySlotChanged(int id, Slot slot,  SlotChangeFactory slotChangeFactory) {
         produceSlotChange(id, slotChangeFactory).notifySlotChanged(localContainer(), slot);
 	}
 	
-    void oldNotifySlotChanged(int id, Slot slot, boolean forFreespace) {
-        if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(id);
-            DTrace.FREE_ON_ROLLBACK.logLength(slot);
-        }
-        
-        final SlotChange slotChange = produceSlotChange(id);
-        slotChange.forFreespace(forFreespace);
-        slotChange.freeOnRollbackSetPointer(slot);
-    }
-
 	public void notifySlotDeleted(int id, SlotChangeFactory slotChangeFactory) {
 		produceSlotChange(id, slotChangeFactory).notifyDeleted(localContainer());
 	}

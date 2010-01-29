@@ -40,11 +40,7 @@ public class StandardIdSystem implements IdSystem {
 		_slotChanges.remove(transaction);
 	}
 
-	protected void slotFreePointerOnRollback(Transaction transaction, int id, SlotChangeFactory slotChangeFactory) {
-		slotChanges(transaction).slotFreePointerOnRollback(id, slotChangeFactory);
-	}
-
-	private StandardIdSlotChanges slotChanges(Transaction transaction) {
+	protected StandardIdSlotChanges slotChanges(Transaction transaction) {
 		return _slotChanges.get(transaction);
 	}
 
@@ -59,8 +55,6 @@ public class StandardIdSystem implements IdSystem {
 	public void commit(LocalTransaction transaction) {
 		
         Slot reservedSlot = _transactionLogHandler.allocateSlot(transaction, false);
-        
-        
         
         freeSlotChanges(transaction, false);
                 
@@ -113,7 +107,7 @@ public class StandardIdSystem implements IdSystem {
         }
         SlotChange change = slotChanges(transaction).findSlotChange(id);
         if (change != null) {
-            if(change.isSetPointer()){
+            if(change.slotModified()){
                 return change.newSlot();
             }
         }
@@ -125,51 +119,6 @@ public class StandardIdSystem implements IdSystem {
             }
         }
         return localContainer().readPointer(id)._slot;
-	}
-	
-    public void slotFreeOnRollbackCommitSetPointer(LocalTransaction transaction, int id, Slot newSlot, boolean forFreespace, SlotChangeFactory slotChangeFactory) {
-        Slot oldSlot = getCurrentSlotOfID(transaction, id);
-        if(oldSlot==null) {
-        	return;
-        }
-        slotChanges(transaction).slotFreeOnRollbackCommitSetPointer(id, oldSlot, newSlot, forFreespace, slotChangeFactory);
-    }
-    
-    public void setPointer(Transaction transaction, int id, Slot slot) {
-    	slotChanges(transaction).setPointer(id, slot);
-    }
-    
-	public void slotFreePointerOnCommit(LocalTransaction transaction, int id, SlotChangeFactory slotChangeFactory, boolean isFreespace) {
-        Slot slot = getCurrentSlotOfID(transaction, id);
-        if(slot == null){
-            return;
-        }
-        
-        // FIXME: From looking at this it should call slotFreePointerOnCommit
-        //        Write a test case and check.
-        
-        //        Looking at references, this method is only called from freed
-        //        BTree nodes. Indeed it should be checked what happens here.
-        
-        SlotChange slotChange = slotChanges(transaction).produceSlotChange(id, slotChangeFactory);
-        slotChange.forFreespace(isFreespace);
-        
-        slotFreeOnCommit(transaction, id, slot, slotChangeFactory);
-        
-        
-        setPointer(transaction, id, Slot.ZERO);
-	}
-
-	public void slotDelete(Transaction transaction, int id, Slot slot) {
-		slotChanges(transaction).slotDelete(id, slot);
-	}
-
-	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory) {
-		slotChanges(transaction).slotFreeOnCommit(id, slot, slotChangeFactory);
-	}
-
-	protected void slotFreeOnRollback(Transaction transaction, int id, Slot slot) {
-		slotChanges(transaction).slotFreeOnRollback(id, slot);
 	}
 
 	public void rollback(Transaction transaction) {
@@ -184,10 +133,6 @@ public class StandardIdSystem implements IdSystem {
 		return slotChanges(transaction).isDeleted(id);
 	}
 
-	public void oldNotifySlotChanged(Transaction transaction, int id, Slot slot, boolean forFreespace) {
-		slotChanges(transaction).oldNotifySlotChanged(id, slot, forFreespace);
-	}
-	
 	public void notifySlotChanged(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory) {
 		slotChanges(transaction).notifySlotChanged(id, slot, slotChangeFactory);
 	}
@@ -288,7 +233,6 @@ public class StandardIdSystem implements IdSystem {
 
 	public int newId(Transaction transaction, SlotChangeFactory slotChangeFactory) {
 		int id = localContainer().allocatePointerSlot();
-        slotFreePointerOnRollback(transaction, id, slotChangeFactory);
         slotChanges(transaction).produceSlotChange(id, slotChangeFactory).notifySlotCreated(null);
 		return id;
 	}
@@ -302,13 +246,10 @@ public class StandardIdSystem implements IdSystem {
 	public void prefetchedIDConsumed(Transaction transaction, int id) {
 		StandardIdSlotChanges slotChanges = slotChanges(transaction);
 		slotChanges.prefetchedIDConsumed(id);
-		slotChanges.slotFreePointerOnRollback(id, SlotChangeFactory.USER_OBJECTS);
 	}
 
 	public void notifySlotCreated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory) {
 		slotChanges(transaction).notifySlotCreated(id, slot, slotChangeFactory);
-		slotFreeOnRollback(transaction, id, slot);
-		setPointer(transaction, id, slot);
 	}
 	
 	public final void checkSynchronization(LocalTransaction transaction) {

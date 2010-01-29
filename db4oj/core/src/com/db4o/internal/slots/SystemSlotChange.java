@@ -13,21 +13,19 @@ public class SystemSlotChange extends SlotChange {
 		super(id);
 	}
 	
-	public SystemSlotChange(int id, boolean forNewLogic){
-		super(id, forNewLogic);
-	}
-	
-	@Override
-	protected void createNewLogic(int id) {
-		_newLogic = new SystemSlotChange(id, true);
-	}
-	
 	@Override
 	public void freeDuringCommit(LocalObjectContainer file, boolean forFreespace) {
 		super.freeDuringCommit(file, forFreespace);
 		
 		// FIXME: If we are doing a delete, we should also free our pointer here.
 		
+	}
+	
+	@Override
+	protected Slot findCurrentSlotInSystemTransaction(LocalObjectContainer file) {
+		// Doesn't make sense for SystemSlotChanges:
+		// We would find ourselves: this
+		return null;
 	}
 
 }

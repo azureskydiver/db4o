@@ -1668,13 +1668,15 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             return;
         }
         
-        if(claxx != null){
-            throw new ObjectNotStorableException(claxx);
+        if(claxx == null){
+        	throw new ObjectNotStorableException(obj.toString());
         }
         
-        throw new ObjectNotStorableException(obj.toString());
+        if(_handlers.isTransient(claxx)){
+        	return;
+        }
+        throw new ObjectNotStorableException(claxx);
     }
-    
 
     public final int store3(Transaction trans, Object obj, int updateDepth, boolean checkJustSet) {
         if (obj == null || (obj instanceof TransientClass)) {
