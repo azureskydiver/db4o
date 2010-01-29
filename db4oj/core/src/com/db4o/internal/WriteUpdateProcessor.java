@@ -46,28 +46,26 @@ class WriteUpdateProcessor {
         	return;
         }
         
+        // TODO: Try to get rid of getting the slot here because it 
+        //       will invoke reading a pointer from the file system.
+        //       It may be possible to figure out the readd case
+        //       by asking the IdSystem in a smarter way.
         Slot slot = container().idSystem().getCurrentSlotOfID(_transaction, _id);
         if(handledAsReAdd(slot)){
         	return;
         }
         
-        if(handledWithNoChildIndexModification(slot)){
+        if(_clazz.canUpdateFast()){
         	return;
         }
         
         StatefulBuffer objectBytes = (StatefulBuffer)container().readReaderOrWriterBySlot(_transaction, _id, false, slot);
         
         deleteMembers(objectBytes);
-        
-        freeSlotOnCommit(objectBytes);
 	}
 
 	private LocalObjectContainer container() {
 		return _transaction.localContainer();
-	}
-
-	private void freeSlotOnCommit(StatefulBuffer objectBytes) {
-		container().idSystem().slotFreeOnCommit(_transaction, _id, objectBytes.slot(), SlotChangeFactory.USER_OBJECTS);
 	}
 
 	private void deleteMembers(StatefulBuffer objectBytes) {
@@ -98,14 +96,6 @@ class WriteUpdateProcessor {
 		TreeInt newNode = new TreeInt(_id);
         _transaction._writtenUpdateAdjustedIndexes = Tree.add(_transaction._writtenUpdateAdjustedIndexes, newNode);
         return ! newNode.wasAddedToTree();
-	}
-	
-	private boolean handledWithNoChildIndexModification(Slot slot) {
-		if(! _clazz.canUpdateFast()){
-			return false;
-		}
-		container().idSystem().slotFreeOnCommit(_transaction, _id, slot, SlotChangeFactory.USER_OBJECTS);
-    	return true;
 	}
 
 }

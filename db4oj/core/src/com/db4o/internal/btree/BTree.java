@@ -446,7 +446,6 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 		IdSystem idSystem = systemTrans.localContainer().idSystem();
         while(allNodeIDs.moveNext()){
             int id = ((Integer)allNodeIDs.current()).intValue();
-            idSystem.slotFreePointerOnCommit(systemTrans, id, slotChangeFactory(), isFreespaceComponent());
             idSystem.notifySlotDeleted(systemTrans, id, slotChangeFactory());
         }
 	}

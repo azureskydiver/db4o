@@ -2034,8 +2034,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	public boolean isStorable() {
-		return !stateDead() || isTransient();
-    }
+		return !stateDead() &&  !isTransient();
+	}
 
 	private Object instantiateWithCustomTypeHandlerIfEnabled(final UnmarshallingContext context) {
 		if (!_customTypeHandlerAspect.isEnabledOn(context)) {

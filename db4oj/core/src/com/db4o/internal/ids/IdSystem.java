@@ -29,26 +29,12 @@ public interface IdSystem {
 
 	public Slot getCurrentSlotOfID(LocalTransaction transaction, int id);
 
-	public void slotFreeOnRollbackCommitSetPointer(
-			LocalTransaction transaction, int id, Slot newSlot,
-			boolean forFreespace, SlotChangeFactory slotChangeFactory);
-
-	public void setPointer(Transaction transaction, int id, Slot slot);
-
-	public void slotFreePointerOnCommit(LocalTransaction transaction, int id, SlotChangeFactory slotChangeFactory, boolean isFreespace);
-
-	public void slotDelete(Transaction transaction, int id, Slot slot);
-
-	public void slotFreeOnCommit(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
-
 	public void rollback(Transaction transaction);
 
 	public void clear(Transaction transaction);
 
 	public boolean isDeleted(Transaction transaction, int id);
 
-	public void oldNotifySlotChanged(Transaction transaction, int id, Slot slot, boolean forFreespace);
-	
 	public void notifySlotChanged(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
 	
 	public void notifySlotCreated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
