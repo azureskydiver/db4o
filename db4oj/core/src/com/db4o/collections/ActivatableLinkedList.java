@@ -171,6 +171,12 @@ public class ActivatableLinkedList<E> extends LinkedList<E> implements Activatab
 	}
 	
 	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		activate(ActivationPurpose.READ);
+		return super.subList(fromIndex, toIndex);
+	}
+	
+	@Override
 	public Object[] toArray() {
 		activate(ActivationPurpose.READ);
 		return super.toArray();

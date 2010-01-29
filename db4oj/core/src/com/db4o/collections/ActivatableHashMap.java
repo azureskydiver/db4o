@@ -83,15 +83,10 @@ public class ActivatableHashMap<K,V> extends HashMap<K,V> implements Activatable
 		return super.isEmpty();
 	}
 	
-	/**
-	 * This method directly returns the set as provided by the super class.
-	 * It relies on all modifications going through the public interface of the HashMap
-	 * itself. If this is not the case, updates will get lost.
-	 */
 	@Override
 	public Set<K> keySet() {
-		activate(ActivationPurpose.READ);
-		return super.keySet();
+		activate(ActivationPurpose.READ);		
+		return new DelegatingActivatableSet<K>(ActivatableHashMap.this, super.keySet());		
 	}
 	
 	@Override
@@ -118,15 +113,10 @@ public class ActivatableHashMap<K,V> extends HashMap<K,V> implements Activatable
 		return super.size();
 	}
 	
-	/**
-	 * This method directly returns the collection as provided by the super class.
-	 * It relies on all modfications going through the public interface of the HashMap
-	 * itself. If this is not the case, updates will get lost.
-	 */
 	@Override
 	public Collection<V> values() {
-		activate(ActivationPurpose.READ);
-		return super.values();
+		activate(ActivationPurpose.READ);		
+		return new DelegatingActivatableCollection<V>(super.values(), this);		
 	}
 	
 	@Override

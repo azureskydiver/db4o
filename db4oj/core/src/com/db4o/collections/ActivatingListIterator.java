@@ -24,18 +24,22 @@ public class ActivatingListIterator<E> extends ActivatingIterator<E> implements 
 	}
 
 	public boolean hasPrevious() {
+		activate(ActivationPurpose.READ);
 		return listIterator().hasPrevious();
 	}
 
 	public int nextIndex() {
+		activate(ActivationPurpose.READ);
 		return listIterator().nextIndex();
 	}
 
 	public E previous() {
+		activate(ActivationPurpose.READ);
 		return listIterator().previous();
 	}
 
 	public int previousIndex() {
+		activate(ActivationPurpose.READ);
 		return listIterator().previousIndex();
 	}
 

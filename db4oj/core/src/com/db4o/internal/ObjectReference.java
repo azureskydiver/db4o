@@ -23,7 +23,6 @@ import com.db4o.typehandlers.*;
  * @exclude
  */
 public class ObjectReference extends PersistentBase implements ObjectInfo, Activator {
-    
 	
 	private ClassMetadata _class;
 	private Object _object;
@@ -60,24 +59,48 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	public void activateOn(final Transaction transaction, ActivationPurpose purpose) {
-		final ObjectContainerBase container = transaction.container(); 
-		if (!(container.activationDepthProvider() instanceof TransparentActivationDepthProvider)) {
+		if (activating()) {
 			return;
 		}
 		
-		final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
-    	if (ActivationPurpose.WRITE == purpose) {
-    		synchronized(container.lock()){
-    			provider.addModified(getObject(), transaction);
-    		}
-    	}
-    	
-		if (isActive()) {    			
-			return;
+		try {
+			activating(true);
+			
+			final ObjectContainerBase container = transaction.container();		
+			
+			if (!(container.activationDepthProvider() instanceof TransparentActivationDepthProvider)) {
+				return;
+			}
+			
+			final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
+	    	if (ActivationPurpose.WRITE == purpose) {
+	    		synchronized(container.lock()){
+	    			provider.addModified(getObject(), transaction);
+	    		}
+	    	}
+	    	
+			if (isActive()) {    			
+				return;
+			}
+			
+			synchronized(container.lock()){
+				activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
+			} 
 		}
-		
-		synchronized(container.lock()){
-			activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
+		finally {
+			activating(false);
+		}
+	}
+
+	private boolean activating() {
+		return bitIsTrue(Const4.ACTIVATING);
+	}
+
+	private void activating(boolean isActivating) {
+		if (isActivating) {
+			bitTrue(Const4.ACTIVATING);
+		} else {
+			bitFalse(Const4.ACTIVATING);
 		}
 	}
 

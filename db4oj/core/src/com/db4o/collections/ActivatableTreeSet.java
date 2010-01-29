@@ -87,8 +87,8 @@ public class ActivatableTreeSet<E> extends TreeSet<E> implements ActivatableSet<
 	
 	@Override
 	public Iterator<E> iterator() {
-		activate(ActivationPurpose.READ);
-		return super.iterator();
+		activate(ActivationPurpose.READ);		
+		return new ActivatingIterator<E>(this, super.iterator());
 	}
 	
 	@Override
