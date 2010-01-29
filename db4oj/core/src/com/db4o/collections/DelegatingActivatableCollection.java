@@ -11,13 +11,13 @@ import com.db4o.ta.*;
  * @sharpen.ignore
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableCollectionDecorator<E> implements Collection<E>{
+public class DelegatingActivatableCollection<E> implements Collection<E>{
 	
 	private final Collection<E> _delegate;
 	
 	private final Activatable _activatable;
 	
-	ActivatableCollectionDecorator(Collection<E> delegate, Activatable activatable){
+	DelegatingActivatableCollection(Collection<E> delegate, Activatable activatable){
 		_delegate = delegate;
 		_activatable = activatable;
 	}
@@ -31,6 +31,10 @@ public class ActivatableCollectionDecorator<E> implements Collection<E>{
 		_activatable.activate(ActivationPurpose.WRITE);
 	}
 
+	private void activateForRead() {
+		_activatable.activate(ActivationPurpose.READ);
+	}
+
 	public boolean addAll(Collection<? extends E> c) {
 		activateForWrite();
 		return _delegate.addAll(c);
@@ -42,18 +46,22 @@ public class ActivatableCollectionDecorator<E> implements Collection<E>{
 	}
 
 	public boolean contains(Object o) {
+		activateForRead();
 		return _delegate.contains(o);
 	}
 
 	public boolean containsAll(Collection<?> c) {
+		activateForRead();
 		return _delegate.containsAll(c);
 	}
 
 	public boolean isEmpty() {
+		activateForRead();
 		return _delegate.isEmpty();
 	}
 
 	public Iterator<E> iterator() {
+		activateForRead();
 		return new ActivatingIterator<E>(_activatable, _delegate.iterator());
 	}
 
@@ -73,14 +81,17 @@ public class ActivatableCollectionDecorator<E> implements Collection<E>{
 	}
 
 	public int size() {
+		activateForRead();
 		return _delegate.size();
 	}
 
 	public Object[] toArray() {
+		activateForRead();
 		return _delegate.toArray();
 	}
 
 	public <T> T[] toArray(T[] a) {
+		activateForRead();
 		return _delegate.toArray(a);
 	}
 

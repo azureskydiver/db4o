@@ -23,10 +23,12 @@ public class ActivatingIterator<E> implements Iterator<E> {
 	}
 	
 	public boolean hasNext() {
+		activate(ActivationPurpose.READ);
 		return _iterator.hasNext();
 	}
 
 	public E next() {
+		activate(ActivationPurpose.READ);
 		return _iterator.next();
 	}
 

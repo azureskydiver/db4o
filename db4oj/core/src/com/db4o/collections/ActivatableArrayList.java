@@ -164,6 +164,12 @@ public class ActivatableArrayList<E> extends ArrayList<E> implements Activatable
 	}
 	
 	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		activate(ActivationPurpose.READ);
+		return super.subList(fromIndex, toIndex);
+	}	
+	
+	@Override
 	public Object[] toArray() {
 		activate(ActivationPurpose.READ);
 		return super.toArray();
@@ -181,6 +187,11 @@ public class ActivatableArrayList<E> extends ArrayList<E> implements Activatable
 		return super.removeAll(c);
 	}
 
+	@Override
+	protected void removeRange(int fromIndex, int toIndex) {
+		activate(ActivationPurpose.WRITE);
+		super.removeRange(fromIndex, toIndex);
+	}
 
 	@Override
 	public void ensureCapacity(int minCapacity) {

@@ -129,7 +129,7 @@ public final class Const4
     
 	public static final String EMBEDDED_CLIENT_USER = "embedded client";
 	
-	// bits in YapMeta.i_state
+	// bits in PersistentBase.i_state
 	// and reuse in other classes 
 	public static final int CLEAN = 0;
 	public static final int ACTIVE = 1;
@@ -140,6 +140,7 @@ public final class Const4
 	public static final int CHECKED_CHANGES = 6;
 	public static final int DEAD = 7;
 	public static final int READING = 8;
+	public static final int ACTIVATING = 9;
     
 	public static final int OLD = -1;
     public static final int NEW = 1;

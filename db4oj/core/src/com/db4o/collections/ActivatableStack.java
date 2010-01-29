@@ -142,6 +142,12 @@ public class ActivatableStack<E> extends Stack<E> implements ActivatableList<E> 
 	}
 	
 	@Override
+	protected synchronized void removeRange(int fromIndex, int toIndex) {
+		activate(ActivationPurpose.WRITE);
+		super.removeRange(fromIndex, toIndex);
+	}
+	
+	@Override
 	public E set(int index, E element) {
 		activate(ActivationPurpose.WRITE);
 		return super.set(index, element);
@@ -151,6 +157,12 @@ public class ActivatableStack<E> extends Stack<E> implements ActivatableList<E> 
 	public int size() {
 		activate(ActivationPurpose.READ);
 		return super.size();
+	}
+	
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		activate(ActivationPurpose.READ);
+		return super.subList(fromIndex, toIndex);
 	}
 	
 	@Override
