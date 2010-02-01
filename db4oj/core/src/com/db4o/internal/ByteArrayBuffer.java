@@ -14,19 +14,26 @@ import com.db4o.internal.handlers.*;
  */
 public class ByteArrayBuffer implements ReadWriteBuffer {
 	
+	private static final ThreadLocal<Boolean> _checkXBytes = Debug4.xbytes ? new ThreadLocal<Boolean>() : null;
+	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;
 	public int _offset;
 
 	
 	ByteArrayBuffer(){
+		if(Debug4.xbytes){
+			checkXBytes(true);
+		}
 	}
 	
 	public ByteArrayBuffer(int length){
+		this();
 		_buffer = new byte[length];
 	}
 	
 	public ByteArrayBuffer(byte[] buffer){
+		this();
 		_buffer = buffer;
 	}
 	
@@ -265,5 +272,18 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 	public void skip(int length) {
 		seek(_offset + length);
     }
+	
+	public void checkXBytes(boolean flag){
+		if(Debug4.xbytes){
+			_checkXBytes.set(flag);
+		}
+	}
+
+	public boolean checkXBytes() {
+		if(Debug4.xbytes){
+			return _checkXBytes.get();
+		}
+		throw new IllegalStateException();
+	}
 
 }

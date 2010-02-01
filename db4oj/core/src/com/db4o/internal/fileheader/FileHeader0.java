@@ -143,8 +143,8 @@ public class FileHeader0 extends FileHeader {
         writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
-        if (Debug4.xbytes && Deploy.overwrite) {
-            writer.setID(Const4.IGNORE_ID);
+        if (Debug4.xbytes) {
+            writer.checkXBytes(false);
         }
         writer.write();
         file.syncFiles();

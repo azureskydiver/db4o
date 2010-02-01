@@ -2,6 +2,7 @@
 
 package com.db4o.internal.fileheader;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.transactionlog.*;
@@ -122,7 +123,9 @@ public class FileHeader1 extends FileHeader {
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
         writer.writeInt(_variablePart.getID());
-        writer.noXByteCheck();
+        if (Debug4.xbytes) {
+        	writer.checkXBytes(false);
+        }
         writer.write();
         file.syncFiles();
         if(startFileLockingThread){

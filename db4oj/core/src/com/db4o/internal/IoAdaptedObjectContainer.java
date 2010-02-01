@@ -256,18 +256,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 		if (Deploy.debug && !Deploy.flush) {
 			return;
 		}
-
 		if (Debug4.xbytes && Deploy.overwrite) {
-
-			boolean doCheck = true;
-			if (buffer instanceof StatefulBuffer) {
-				StatefulBuffer writer = (StatefulBuffer) buffer;
-				if (writer.getID() == Const4.IGNORE_ID) {
-					doCheck = false;
-				}
-			}
-			if (doCheck) {
+			if (buffer.checkXBytes()) {
 				checkXBytes(blockedAddress, addressOffset, buffer.length());
+			} else {
+				buffer.checkXBytes(true);
 			}
 		}
 

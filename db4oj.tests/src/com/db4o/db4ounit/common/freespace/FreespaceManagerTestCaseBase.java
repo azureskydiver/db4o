@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.freespace;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
@@ -49,6 +50,9 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
         int length = 300;
         Slot slot = localContainer().allocateSlot(length);
         ByteArrayBuffer buffer = new ByteArrayBuffer(length);
+        if (Debug4.xbytes) {
+        	buffer.checkXBytes(false);
+        }
         localContainer().writeBytes(buffer, slot.address(), 0);
         fm.free(slot);
     }

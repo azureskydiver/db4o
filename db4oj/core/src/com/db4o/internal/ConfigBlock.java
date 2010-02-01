@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
@@ -274,7 +275,9 @@ public final class ConfigBlock {
 		StatefulBuffer writer = _container.getWriter(_container.transaction(), 0, Const4.ID_LENGTH);
 		writer.moveForward(2);
 		IntHandler.writeInt(_address, writer);
-        writer.noXByteCheck();
+		if (Debug4.xbytes) {
+			writer.checkXBytes(false);
+		}
 		writer.write();
 		timerFileLock().writeHeaderLock();
 	}
