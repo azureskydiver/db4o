@@ -188,12 +188,6 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         return "id " + _id + " adr " + _address + " len " + _length;
     }
     
-    public void noXByteCheck() {
-        if(Debug4.xbytes && Deploy.overwrite){
-            setID(Const4.IGNORE_ID);
-        }
-    }
-	
 	public Slot slot(){
 		return new Slot(_address, _length);
 	}

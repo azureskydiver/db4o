@@ -870,6 +870,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         if (Deploy.debug) {
             _pointerIo.writeEnd();
         }
+        if(Debug4.xbytes){
+        	_pointerIo.checkXBytes(false);
+        }
         writeBytes(_pointerIo, id, 0);
     }
 	
