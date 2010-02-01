@@ -85,7 +85,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	public void testSelectByFields() {
 		
 		PersistentEntry existing = CAT_ENTRIES[0];
-		PersistentEntry newEntry = new PersistentEntry(CAT_CLASS, existing.uid, new Object[] { existing.fieldValues[0], new Integer(10) });
+		PersistentEntry newEntry = new PersistentEntry(CAT_CLASS, 3, new Object[] { existing.fieldValues[0], new Integer(10) });
 		insert(newEntry);
 		
 		Iterator4 found = selectByField(existing.className, CAT_FIELD_NAMES[0], existing.fieldValues[0]);
