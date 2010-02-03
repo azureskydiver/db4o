@@ -146,7 +146,7 @@ public class SlotChange extends TreeInt {
     	_newSlot = slot;
     }
 
-	public void notifySlotChanged(LocalObjectContainer file, Slot slot) {
+	public void notifySlotUpdated(LocalObjectContainer file, Slot slot) {
 		if(DTrace.enabled){
 			DTrace.NOTIFY_SLOT_CHANGED.log(_key);
 			DTrace.NOTIFY_SLOT_CHANGED.logLength(slot);

@@ -4,7 +4,6 @@ package com.db4o.internal.transactionlog;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 
@@ -13,54 +12,64 @@ import com.db4o.internal.slots.*;
  */
 public abstract class TransactionLogHandler {
 	
-	protected final StandardIdSystem _idSystem;
+	protected final LocalObjectContainer _container;
 	
-	protected TransactionLogHandler(StandardIdSystem idSystem){
-		_idSystem = idSystem;
+	protected TransactionLogHandler(LocalObjectContainer container){
+		_container = container;
 	}
 	
 	protected LocalObjectContainer localContainer() {
-		return _idSystem.localContainer();
+		return _container;
 	}
 	
     protected final void flushDatabaseFile() {
-		_idSystem.flushFile();
+		_container.syncFiles();
 	}
     
-	protected final void appendSlotChanges(LocalTransaction transaction, final ByteArrayBuffer writer){
-		_idSystem.traverseSlotChanges(transaction, new Visitor4() {
+	protected final void appendSlotChanges(final ByteArrayBuffer writer, Visitable slotChangeVisitable){
+		slotChangeVisitable.accept(new Visitor4() {
 			public void visit(Object obj) {
 				((SlotChange)obj).write(writer);
 			}
 		});
     }
-    
-    protected final int transactionLogSlotLength(LocalTransaction transaction){
-    	// slotchanges * 3 for ID, address, length
-    	// 2 ints for slotlength and count
-    	return ((countSlotChanges(transaction) * 3) + 2) * Const4.INT_LENGTH;
-    }
-
-	protected final int countSlotChanges(LocalTransaction transaction){
-        final IntByRef count = new IntByRef();
-        _idSystem.traverseSlotChanges(transaction, new Visitor4() {
+	
+    protected boolean writeSlots(Visitable<SlotChange> slotChangeTree) {
+        final BooleanByRef ret = new BooleanByRef();
+        slotChangeTree.accept(new Visitor4() {
 			public void visit(Object obj) {
-                SlotChange slot = (SlotChange)obj;
-                if(slot.slotModified()){
-                    count.value++;
-                }
+				((SlotChange)obj).writePointer(_container);
+				ret.value = true;
 			}
 		});
-        return count.value;
-	}
+        return ret.value;
+    }
+    
+	protected final int transactionLogSlotLength(int slotChangeCount){
+    	// slotchanges * 3 for ID, address, length
+    	// 2 ints for slotlength and count
+    	return ((slotChangeCount * 3) + 2) * Const4.INT_LENGTH;
+    }
 
-	public abstract Slot allocateSlot(LocalTransaction transaction, boolean append);
+	public abstract Slot allocateSlot(boolean append, int slotChangeCount);
 
-	public abstract void applySlotChanges(LocalTransaction transaction, Slot reservedSlot);
+	public abstract void applySlotChanges(Visitable<SlotChange> slotChangeTree, int slotChangeCount, Slot reservedSlot);
 
 	public abstract InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader);
 
 	public abstract void close();
+	
+	protected void readWriteSlotChanges(ByteArrayBuffer buffer) {
+		final LockedTree slotChanges = new LockedTree();
+		slotChanges.read(buffer, new SlotChange(0));
+		if(writeSlots(new Visitable<SlotChange>() {
+			public void accept(Visitor4<SlotChange> visitor) {
+				slotChanges.traverseMutable(visitor);
+			}
+		})){
+			flushDatabaseFile();
+		}
+	}
 	
 
 }

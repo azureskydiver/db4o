@@ -2,9 +2,9 @@
 
 package com.db4o.internal.transactionlog;
 
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
-import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 
@@ -22,8 +22,8 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	private final String _fileName;
 	
 	
-	public FileBasedTransactionLogHandler(StandardIdSystem idSystem, String fileName) {
-		super(idSystem);
+	public FileBasedTransactionLogHandler(LocalObjectContainer container, String fileName) {
+		super(container);
 		_fileName = fileName;
 	}
 
@@ -36,7 +36,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	}
 
 	private Bin openBin(String fileName) {
-		return new FileStorage().open(new BinConfiguration(fileName, _idSystem.config().lockFile(), 0, false));
+		return new FileStorage().open(new BinConfiguration(fileName, _container.config().lockFile(), 0, false));
 	}
 	
 	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
@@ -58,12 +58,9 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 					buffer = new ByteArrayBuffer(length);
 					read(_logFile, buffer);
 					buffer.incrementOffset(Const4.INT_LENGTH);
-					_idSystem.readWriteSlotChanges(buffer);
-		            deleteLockFile();
-		            _idSystem.freeAndClearSystemSlotChanges();
-				}else{
-					deleteLockFile();
+					readWriteSlotChanges(buffer);
 				}
+				deleteLockFile();
 				closeLogFile();
 				deleteLogFile();
 			}
@@ -123,14 +120,13 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	}
 
 	@Override
-	public Slot allocateSlot(LocalTransaction transaction, boolean append) {
+	public Slot allocateSlot(boolean append, int slotChangeCount) {
 		// do nothing
 		return null;
 	}
 
 	@Override
-	public void applySlotChanges(LocalTransaction transaction, Slot reservedSlot) {
-		int slotChangeCount = countSlotChanges(transaction);
+	public void applySlotChanges(Visitable<SlotChange> slotChangeTree, int slotChangeCount, Slot reservedSlot) {
 		if(slotChangeCount < 1){
 			return;
 		}
@@ -138,18 +134,18 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 		flushDatabaseFile();
 		
 		ensureLogAndLock();
-		int length = transactionLogSlotLength(transaction);
+		int length = transactionLogSlotLength(slotChangeCount);
 		ByteArrayBuffer logBuffer = new ByteArrayBuffer(length);
 		logBuffer.writeInt(length);
 		logBuffer.writeInt(slotChangeCount);
 	
-	    appendSlotChanges(transaction, logBuffer);
+	    appendSlotChanges(logBuffer, slotChangeTree);
 	    write(_logFile, logBuffer);
 	    _logFile.sync();
 	    
 	    writeToLockFile(LOCK_INT);
 
-	    if (_idSystem.writeSlots(transaction)) {
+	    if (writeSlots(slotChangeTree)) {
 	    	flushDatabaseFile();
 	    }
 	    writeToLockFile(0);
@@ -172,7 +168,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	}
 
 	private void ensureLogAndLock() {
-		if(_idSystem.isReadOnly()){
+		if(_container.config().isReadOnly()){
 			return;
 		}
 		if(logsOpened()){
