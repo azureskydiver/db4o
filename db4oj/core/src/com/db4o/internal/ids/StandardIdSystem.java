@@ -20,10 +20,10 @@ public class StandardIdSystem implements IdSystem {
 
 	private StandardIdSlotChanges _systemSlotChanges;
 	
-	private final TransactionLogHandler _transactionLogHandler;
+	private final PointerBasedIdSystem _globalIdSystem;
 	
 	public StandardIdSystem(LocalObjectContainer localContainer){
-		_transactionLogHandler = newTransactionLogHandler(localContainer);
+		_globalIdSystem = new PointerBasedIdSystem(localContainer);
 	}
 	
 	public void addTransaction(LocalTransaction transaction){
@@ -52,10 +52,10 @@ public class StandardIdSystem implements IdSystem {
 		return slotChanges(transaction).isDirty();
 	}
 
-	public void commit(LocalTransaction transaction) {
+	public void commit(final LocalTransaction transaction) {
 		
-        Slot reservedSlot = _transactionLogHandler.allocateSlot(transaction, false);
-        
+		IdSystemCommitContext commitContext = _globalIdSystem.prepareCommit(countSlotChanges(transaction));
+		
         freeSlotChanges(transaction, false);
                 
         freespaceBeginCommit();
@@ -64,7 +64,13 @@ public class StandardIdSystem implements IdSystem {
         
         freeSlotChanges(transaction, true);
         
-        _transactionLogHandler.applySlotChanges(transaction, reservedSlot);
+        Visitable<SlotChange> slotChangeVisitable = new Visitable<SlotChange>() {
+        	public void accept(Visitor4<SlotChange> visitor) {
+        		traverseSlotChanges(transaction, visitor);
+        	}
+        };
+        
+        commitContext.commit(slotChangeVisitable, countSlotChanges(transaction));
         
         freespaceEndCommit();
 
@@ -77,17 +83,12 @@ public class StandardIdSystem implements IdSystem {
 		_systemSlotChanges.freeSlotChanges(forFreespace, true);
 	}
 	
-	public void freeAndClearSystemSlotChanges(){
-		_systemSlotChanges.freeSlotChanges(false, true);
-		_systemSlotChanges.clear();
-	}
-
 	private boolean isSystemTransaction(LocalTransaction transaction) {
 		return slotChanges(transaction) == _systemSlotChanges;
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
-		return _transactionLogHandler.interruptedTransactionHandler(reader);
+		return _globalIdSystem.interruptedTransactionHandler(reader);
 	}
 
 	public Slot getCommittedSlotOfID(int id) {
@@ -133,8 +134,8 @@ public class StandardIdSystem implements IdSystem {
 		return slotChanges(transaction).isDeleted(id);
 	}
 
-	public void notifySlotChanged(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory) {
-		slotChanges(transaction).notifySlotChanged(id, slot, slotChangeFactory);
+	public void notifySlotUpdated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory) {
+		slotChanges(transaction).notifySlotUpdated(id, slot, slotChangeFactory);
 	}
 
 	public void systemTransaction(LocalTransaction transaction) {
@@ -148,19 +149,10 @@ public class StandardIdSystem implements IdSystem {
 	}
 	
 	public void close(){
-		_transactionLogHandler.close();
+		_globalIdSystem.close();
 	}
 
-	private TransactionLogHandler newTransactionLogHandler(LocalObjectContainer container) {
-		boolean fileBased = container.config().fileBasedTransactionLog() && container instanceof IoAdaptedObjectContainer;
-		if(! fileBased){
-			return new EmbeddedTransactionLogHandler(this);
-		}
-		String fileName = ((IoAdaptedObjectContainer)container).fileName();
-		return new FileBasedTransactionLogHandler(this, fileName); 
-	}
-	
-	public void traverseSlotChanges(LocalTransaction transaction, Visitor4 visitor){
+	private void traverseSlotChanges(LocalTransaction transaction, Visitor4 visitor){
 		_systemSlotChanges.traverseSlotChanges(visitor);
 		if(transaction == systemTransaction()){
 			return;
@@ -168,13 +160,6 @@ public class StandardIdSystem implements IdSystem {
 		slotChanges(transaction).traverseSlotChanges(visitor);
 	}
 
-    public void flushFile(){
-        if(DTrace.enabled){
-            DTrace.TRANS_FLUSH.log();
-        }
-        localContainer().syncFiles();
-    }
-    
 	public LocalObjectContainer localContainer() {
 		return _systemSlotChanges.systemTransaction().localContainer();
 	}
@@ -204,33 +189,6 @@ public class StandardIdSystem implements IdSystem {
         freespaceManager().commit();
     }
     
-    public boolean writeSlots(LocalTransaction transaction) {
-    	final LocalObjectContainer container = transaction.localContainer();
-        final BooleanByRef ret = new BooleanByRef();
-        traverseSlotChanges(transaction, new Visitor4() {
-			public void visit(Object obj) {
-				((SlotChange)obj).writePointer(container);
-				ret.value = true;
-			}
-		});
-        return ret.value;
-    }
-    
-	public boolean isReadOnly() {
-		return config().isReadOnly();
-	}
-
-	public Config4Impl config() {
-		return localContainer().config();
-	}
-	
-	public void readWriteSlotChanges(ByteArrayBuffer buffer) {
-		_systemSlotChanges.readSlotChanges(buffer);
-       if(writeSlots(systemTransaction())){
-           flushFile();
-       }
-	}
-
 	public int newId(Transaction transaction, SlotChangeFactory slotChangeFactory) {
 		int id = localContainer().allocatePointerSlot();
         slotChanges(transaction).produceSlotChange(id, slotChangeFactory).notifySlotCreated(null);
@@ -260,6 +218,19 @@ public class StandardIdSystem implements IdSystem {
 
 	public void notifySlotDeleted(Transaction transaction, int id, SlotChangeFactory slotChangeFactory) {
 		slotChanges(transaction).notifySlotDeleted(id, slotChangeFactory);
+	}
+	
+	protected final int countSlotChanges(LocalTransaction transaction){
+        final IntByRef count = new IntByRef();
+        traverseSlotChanges(transaction, new Visitor4() {
+			public void visit(Object obj) {
+                SlotChange slot = (SlotChange)obj;
+                if(slot.slotModified()){
+                    count.value++;
+                }
+			}
+		});
+        return count.value;
 	}
 
 }

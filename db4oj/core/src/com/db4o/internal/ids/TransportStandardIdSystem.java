@@ -31,7 +31,7 @@ public final class TransportStandardIdSystem implements IdSystem {
 		localContainer().writePointer(id, slot);
 	}
 	
-	public void notifySlotChanged(Transaction transaction, int id, Slot slot,
+	public void notifySlotUpdated(Transaction transaction, int id, Slot slot,
 			SlotChangeFactory slotChangeFactory) {
 		writePointer(id, slot);
 	}

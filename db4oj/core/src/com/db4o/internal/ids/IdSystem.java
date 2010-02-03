@@ -35,7 +35,7 @@ public interface IdSystem {
 
 	public boolean isDeleted(Transaction transaction, int id);
 
-	public void notifySlotChanged(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
+	public void notifySlotUpdated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
 	
 	public void notifySlotCreated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
 	

@@ -82,7 +82,7 @@ public class StandardIdSlotChanges {
 	}
 	
 	public boolean isDirty() {
-		return _slotChanges != null;
+		return ! _slotChanges.isEmpty();
 	}
 
 	public void collectSlotChanges(final CallbackInfoCollector collector) {
@@ -141,8 +141,8 @@ public class StandardIdSlotChanges {
 		produceSlotChange(id, slotChangeFactory).notifySlotCreated(slot);
 	}
 	
-	void notifySlotChanged(int id, Slot slot,  SlotChangeFactory slotChangeFactory) {
-        produceSlotChange(id, slotChangeFactory).notifySlotChanged(localContainer(), slot);
+	void notifySlotUpdated(int id, Slot slot,  SlotChangeFactory slotChangeFactory) {
+        produceSlotChange(id, slotChangeFactory).notifySlotUpdated(localContainer(), slot);
 	}
 	
 	public void notifySlotDeleted(int id, SlotChangeFactory slotChangeFactory) {

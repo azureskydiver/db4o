@@ -58,5 +58,9 @@ public class LockedTree {
             visitor.visit(i.current());
         }
     }
+    
+    public boolean isEmpty(){
+    	return _tree == null;
+    }
 
 }

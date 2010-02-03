@@ -2,9 +2,9 @@
 
 package com.db4o.internal.transactionlog;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
-import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -12,8 +12,8 @@ import com.db4o.internal.slots.*;
  */
 public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 	
-	public EmbeddedTransactionLogHandler(StandardIdSystem idSystem) {
-		super(idSystem);
+	public EmbeddedTransactionLogHandler(LocalObjectContainer container) {
+		super(container);
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
@@ -25,21 +25,17 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 	        	private int _addressOfIncompleteCommit = transactionID1;  
 
 				public void completeInterruptedTransaction() {
-					StatefulBuffer bytes = new StatefulBuffer(_idSystem.systemTransaction(), _addressOfIncompleteCommit, Const4.INT_LENGTH);
+					StatefulBuffer bytes = new StatefulBuffer(_container.systemTransaction(), _addressOfIncompleteCommit, Const4.INT_LENGTH);
 					bytes.read();
 			        int length = bytes.readInt();
 			        if (length > 0) {
-			            bytes = new StatefulBuffer(_idSystem.systemTransaction(), _addressOfIncompleteCommit, length);
+			            bytes = new StatefulBuffer(_container.systemTransaction(), _addressOfIncompleteCommit, length);
 			            bytes.read();
 			            bytes.incrementOffset(Const4.INT_LENGTH);
-			            _idSystem.readWriteSlotChanges(bytes);
-			            localContainer().writeTransactionPointer(0);
-			            flushDatabaseFile();
-			            _idSystem.freeAndClearSystemSlotChanges();
-			        } else {
-			            localContainer().writeTransactionPointer(0);
-			            flushDatabaseFile();
+			            readWriteSlotChanges(bytes);
 			        }
+			        _container.writeTransactionPointer(0);
+			        flushDatabaseFile();
 
 				}
 			};
@@ -47,53 +43,52 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 		return null;
 	}
 
-	public Slot allocateSlot(LocalTransaction transaction, boolean appendToFile) {
-		int transactionLogByteCount = transactionLogSlotLength(transaction);
-    	FreespaceManager freespaceManager = transaction.freespaceManager();
+	public Slot allocateSlot(boolean appendToFile, int slotChangeCount) {
+		int transactionLogByteCount = transactionLogSlotLength(slotChangeCount);
+    	FreespaceManager freespaceManager = _container.freespaceManager();
 		if(! appendToFile && freespaceManager != null){
-    		int blockedLength = transaction.localContainer().bytesToBlocks(transactionLogByteCount);
+    		int blockedLength = _container.bytesToBlocks(transactionLogByteCount);
     		Slot slot = freespaceManager.allocateTransactionLogSlot(blockedLength);
     		if(slot != null){
-    			return transaction.localContainer().toNonBlockedLength(slot);
+    			return _container.toNonBlockedLength(slot);
     		}
     	}
-    	return transaction.localContainer().appendBytes(transactionLogByteCount);
+    	return _container.appendBytes(transactionLogByteCount);
 	}
 
 	private void freeSlot(Slot slot){
     	if(slot == null){
     		return;
     	}
-    	if(_idSystem.freespaceManager() == null){
+    	if(_container.freespaceManager() == null){
     	    return;
     	}
-    	_idSystem.freespaceManager().freeTransactionLogSlot(localContainer().toBlockedLength(slot));
+    	_container.freespaceManager().freeTransactionLogSlot(_container.toBlockedLength(slot));
 	}
 
-	public void applySlotChanges(LocalTransaction transaction, Slot reservedSlot) {
-		int slotChangeCount = countSlotChanges(transaction);
+	public void applySlotChanges(Visitable<SlotChange> slotChangeTree, int slotChangeCount, Slot reservedSlot) {
 		if(slotChangeCount > 0){
 				
-		    Slot transactionLogSlot = slotLongEnoughForLog(transaction, reservedSlot) ? reservedSlot
-			    	: allocateSlot(transaction, true);
+		    Slot transactionLogSlot = slotLongEnoughForLog(slotChangeCount, reservedSlot) ? reservedSlot
+			    	: allocateSlot(true, slotChangeCount);
 	
-			    final StatefulBuffer buffer = new StatefulBuffer(transaction.systemTransaction(), transactionLogSlot);
+			    final StatefulBuffer buffer = new StatefulBuffer(_container.systemTransaction(), transactionLogSlot);
 			    buffer.writeInt(transactionLogSlot.length());
 			    buffer.writeInt(slotChangeCount);
 	
-			    appendSlotChanges(transaction, buffer);
+			    appendSlotChanges(buffer, slotChangeTree);
 	
 			    buffer.write();
 			    flushDatabaseFile();
 	
-			    localContainer().writeTransactionPointer(transactionLogSlot.address());
+			    _container.writeTransactionPointer(transactionLogSlot.address());
 			    flushDatabaseFile();
 	
-			    if (_idSystem.writeSlots(transaction)) {
+			    if (writeSlots(slotChangeTree)) {
 			    	flushDatabaseFile();
 			    }
 	
-			    localContainer().writeTransactionPointer(0);
+			    _container.writeTransactionPointer(0);
 			    flushDatabaseFile();
 			    
 			    if (transactionLogSlot != reservedSlot) {
@@ -103,8 +98,8 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 		freeSlot(reservedSlot);
 	}
 	
-	private boolean slotLongEnoughForLog(LocalTransaction transaction, Slot slot){
-    	return slot != null  &&  slot.length() >= transactionLogSlotLength(transaction);
+	private boolean slotLongEnoughForLog(int slotChangeCount, Slot slot){
+    	return slot != null  &&  slot.length() >= transactionLogSlotLength(slotChangeCount);
     }
     
 

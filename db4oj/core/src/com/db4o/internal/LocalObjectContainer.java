@@ -762,7 +762,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
-        idSystem().notifySlotChanged(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
+        idSystem().notifySlotUpdated(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
         return slot;
     }
     

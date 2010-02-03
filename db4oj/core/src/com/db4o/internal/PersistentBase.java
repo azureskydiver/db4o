@@ -164,7 +164,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
                 container.idSystem().notifySlotCreated(trans, pointer._id, slot, slotChangeFactory());
 	        }else{
 	            slot = container.allocateSlot(length);
-	            container.idSystem().notifySlotChanged(trans, _id, slot, slotChangeFactory());
+	            container.idSystem().notifySlotUpdated(trans, _id, slot, slotChangeFactory());
 	        }
 	        
 	        ByteArrayBuffer writer = produceWriteBuffer(trans, length);
