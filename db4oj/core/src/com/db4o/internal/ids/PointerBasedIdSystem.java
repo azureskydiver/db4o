@@ -10,9 +10,9 @@ import com.db4o.internal.transactionlog.*;
 /**
  * @exclude
  */
-public class PointerBasedIdSystem {
+public final class PointerBasedIdSystem implements GlobalIdSystem {
 	
-	private final TransactionLogHandler _transactionLogHandler;
+	final TransactionLogHandler _transactionLogHandler;
 	
 	private final LocalObjectContainer _container;
 
@@ -25,11 +25,11 @@ public class PointerBasedIdSystem {
 		return _container.allocatePointerSlot();
 	}
 
-	public Slot slot(int id) {
-		return null;
+	public final Slot slot(int id) {
+		return _container.readPointerSlot(id);
 	}
 
-	IdSystemCommitContext prepareCommit(final int slotChangeCount) {
+	public IdSystemCommitContext prepareCommit(final int slotChangeCount) {
 		return new IdSystemCommitContext() {
 			private final Slot reservedSlot = _transactionLogHandler.allocateSlot(false, slotChangeCount);
 			public void commit(Visitable<SlotChange> slotChanges,
@@ -61,8 +61,8 @@ public class PointerBasedIdSystem {
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
-			ByteArrayBuffer reader) {
-		return _transactionLogHandler.interruptedTransactionHandler(reader);
+			ByteArrayBuffer buffer) {
+		return _transactionLogHandler.interruptedTransactionHandler(buffer);
 	}
 
 }

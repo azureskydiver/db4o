@@ -20,7 +20,7 @@ public class StandardIdSystem implements IdSystem {
 
 	private StandardIdSlotChanges _systemSlotChanges;
 	
-	private final PointerBasedIdSystem _globalIdSystem;
+	private final GlobalIdSystem _globalIdSystem;
 	
 	public StandardIdSystem(LocalObjectContainer localContainer){
 		_globalIdSystem = new PointerBasedIdSystem(localContainer);
@@ -95,7 +95,7 @@ public class StandardIdSystem implements IdSystem {
         if (id == 0) {
             return null;
         }
-		return localContainer().readPointer(id)._slot;
+		return _globalIdSystem.slot(id);
 	}
 
 	public LocalTransaction systemTransaction() {
@@ -119,7 +119,7 @@ public class StandardIdSystem implements IdSystem {
                 return parentSlot;
             }
         }
-        return localContainer().readPointer(id)._slot;
+        return getCommittedSlotOfID(id);
 	}
 
 	public void rollback(Transaction transaction) {

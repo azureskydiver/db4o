@@ -123,7 +123,7 @@ public class StandardIdSlotChanges {
         _prefetchedIDs = _prefetchedIDs.removeLike(new TreeInt(id));
 	}
 	
-    final void freePrefetchedIDs(PointerBasedIdSystem idSystem) {
+    final void freePrefetchedIDs(GlobalIdSystem idSystem) {
         if (_prefetchedIDs == null) {
         	return;
         }
