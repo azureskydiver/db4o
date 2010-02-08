@@ -2,7 +2,6 @@
 package com.db4o.cs.ssl;
 
 import java.io.*;
-import java.net.*;
 
 import javax.net.ssl.SSLSocketFactory;
 
