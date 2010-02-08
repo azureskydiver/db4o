@@ -31,7 +31,7 @@ public class StandardIdSystem implements IdSystem {
 	}
 	
 	public void removeTransaction(LocalTransaction transaction){
-		slotChanges(transaction).freePrefetchedIDs();
+		slotChanges(transaction).freePrefetchedIDs(_globalIdSystem);
 		removeSlotChanges(transaction);
 	}
 
@@ -190,13 +190,17 @@ public class StandardIdSystem implements IdSystem {
     }
     
 	public int newId(Transaction transaction, SlotChangeFactory slotChangeFactory) {
-		int id = localContainer().allocatePointerSlot();
+		int id = acquireId();
         slotChanges(transaction).produceSlotChange(id, slotChangeFactory).notifySlotCreated(null);
 		return id;
 	}
 
+	private int acquireId() {
+		return _globalIdSystem.acquireId();
+	}
+
 	public int prefetchID(Transaction transaction) {
-		int id = localContainer().allocatePointerSlot();
+		int id = acquireId();
 		slotChanges(transaction).addPrefetchedID(id);
 		return id;
 	}

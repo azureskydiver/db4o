@@ -6,21 +6,21 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public abstract class Tree<T> implements ShallowClone , DeepClone{
+public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T> {
     
 	public Tree<T> _preceding;
 	public int _size = 1;
 	public Tree<T> _subsequent;
 	
-	public static final Tree add(Tree a_old, Tree a_new){
-		if(a_old == null){
-			return a_new;
+	 public static final <T,V extends Tree<T>> V add(V  oldTree, V newTree){
+		if(oldTree == null){
+			return newTree;
 		}
-		return a_old.add(a_new);
-	}
+		return (V)oldTree.add(newTree);
+	 }
 	
-	public Tree<T> add(final Tree<T> a_new){
-	    return add(a_new, compare(a_new));
+	public final <V extends Tree<T>> V add(final V newNode){
+	    return add(newNode, compare(newNode));
 	}
 	
     /**
@@ -30,33 +30,33 @@ public abstract class Tree<T> implements ShallowClone , DeepClone{
      * prevails in the tree using #duplicateOrThis(). This mechanism
      * allows doing find() and add() in one run.
      */
-	public Tree<T> add(final Tree<T> a_new, final int a_cmp){
-	    if(a_cmp < 0){
+	public <V extends Tree<T>> V add(final V newNode, final int cmp){
+	    if(cmp < 0){
 	        if(_subsequent == null){
-	            _subsequent = a_new;
+	            _subsequent = newNode;
 	            _size ++;
 	        }else{
-	            _subsequent = _subsequent.add(a_new);
+	            _subsequent = _subsequent.add(newNode);
 	            if(_preceding == null){
-	                return rotateLeft();
+	                return (V)rotateLeft();
 	            }
-	            return balance();
+	            return (V)balance();
 	        }
-	    }else if(a_cmp > 0 || a_new.duplicates()){
+	    }else if(cmp > 0 || newNode.duplicates()){
 	        if(_preceding == null){
-	            _preceding = a_new;
+	            _preceding = newNode;
 	            _size ++;
 	        }else{
-	            _preceding = _preceding.add(a_new);
+	            _preceding = _preceding.add(newNode);
 	            if(_subsequent == null){
-	                return rotateRight();
+	                return (V)rotateRight();
 	            }
-	            return balance();
+	            return (V)balance();
 	        }
 	    }else{
-	        a_new.onAttemptToAddDuplicate(this);
+	        newNode.onAttemptToAddDuplicate(this);
 	    }
-	    return this;
+	    return (V)this;
 	}
     
     
@@ -294,10 +294,10 @@ public abstract class Tree<T> implements ShallowClone , DeepClone{
 		return from.removeLike(a_find);
 	}
 	
-	public final Tree removeLike(final Tree a_find){
+	public final <V extends Tree<T>> V removeLike(final V a_find){
 		int cmp = compare(a_find);
 		if(cmp == 0){
-			return remove();
+			return (V)remove();
 		}
 		if (cmp > 0){
 			if(_preceding != null){
@@ -309,7 +309,7 @@ public abstract class Tree<T> implements ShallowClone , DeepClone{
 			}
 		}
 		calculateSize();
-		return this;
+		return (V)this;
 	}
 	
 	public final Tree removeNode(final Tree a_tree){
@@ -410,13 +410,13 @@ public abstract class Tree<T> implements ShallowClone , DeepClone{
         tree.traverse(visitor);
     }
     
-	public final <V extends Tree<T>> void traverse(final Visitor4<V> a_visitor){
+	public final <V extends Tree<T>> void traverse(final Visitor4<V> visitor){
 		if(_preceding != null){
-			_preceding.traverse(a_visitor);
+			_preceding.traverse(visitor);
 		}
-		a_visitor.visit((V)this);
+		visitor.visit((V)this);
 		if(_subsequent != null){
-			_subsequent.traverse(a_visitor);
+			_subsequent.traverse(visitor);
 		}
 	}
 	
@@ -465,5 +465,15 @@ public abstract class Tree<T> implements ShallowClone , DeepClone{
 	
 	public Object root() {
 		return this;
+	}
+	
+	public void accept(final Visitor4<T> visitor){
+		traverse(new Visitor4() {
+				public void visit(Object obj) {
+					Tree<T> tree = (Tree)obj;
+					visitor.visit(tree.key());
+				}
+			}
+		);
 	}
 }

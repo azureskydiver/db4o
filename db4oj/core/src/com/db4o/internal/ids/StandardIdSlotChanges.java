@@ -13,7 +13,7 @@ public class StandardIdSlotChanges {
 	
 	private final LocalObjectContainer _container;
 	
-	private Tree _prefetchedIDs;
+	private TreeInt _prefetchedIDs;
 
 	public StandardIdSlotChanges(LocalObjectContainer container) {
 		_container = container;
@@ -123,17 +123,11 @@ public class StandardIdSlotChanges {
         _prefetchedIDs = _prefetchedIDs.removeLike(new TreeInt(id));
 	}
 	
-    final void freePrefetchedIDs() {
+    final void freePrefetchedIDs(PointerBasedIdSystem idSystem) {
         if (_prefetchedIDs == null) {
         	return;
         }
-    	final LocalObjectContainer container = localContainer();
-        _prefetchedIDs.traverse(new Visitor4() {
-            public void visit(Object node) {
-            	TreeInt intNode = (TreeInt) node;
-            	container.free(intNode._key, Const4.POINTER_LENGTH);
-            }
-        });
+        idSystem.returnUnusedIds(_prefetchedIDs);
         _prefetchedIDs = null;
     }
 
