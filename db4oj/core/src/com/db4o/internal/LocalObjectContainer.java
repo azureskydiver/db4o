@@ -369,10 +369,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return i_isServer;
     }
 
-    public final Pointer4 newSlot(int length) {
-        return new Pointer4(allocatePointerSlot(), allocateSlot(length));
-    }
-
     public final int idForNewUserObject(Transaction trans) {
     	return idSystem().newId(trans, SlotChangeFactory.USER_OBJECTS);
     }

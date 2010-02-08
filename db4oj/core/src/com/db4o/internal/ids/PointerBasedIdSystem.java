@@ -2,8 +2,6 @@
 
 package com.db4o.internal.ids;
 
-import java.util.*;
-
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
@@ -15,13 +13,16 @@ import com.db4o.internal.transactionlog.*;
 public class PointerBasedIdSystem {
 	
 	private final TransactionLogHandler _transactionLogHandler;
+	
+	private final LocalObjectContainer _container;
 
 	public PointerBasedIdSystem(LocalObjectContainer container) {
+		_container = container;
 		_transactionLogHandler = newTransactionLogHandler(container);
 	}
 
 	public int acquireId() {
-		return 0;
+		return _container.allocatePointerSlot();
 	}
 
 	public Slot slot(int id) {
@@ -35,12 +36,15 @@ public class PointerBasedIdSystem {
 					int slotChangeCount) {
 				_transactionLogHandler.applySlotChanges(slotChanges, slotChangeCount, reservedSlot);
 			}
-			
 		};
 	}
 
-	public void returnUnusedIds(Iterator<Integer> ids) {
-
+	public void returnUnusedIds(Visitable<Integer> visitable) {
+		visitable.accept(new Visitor4<Integer>() {
+			public void visit(Integer id) {
+				_container.free(id, Const4.POINTER_LENGTH);
+			}
+		});
 	}
 	
 	private TransactionLogHandler newTransactionLogHandler(LocalObjectContainer container) {
@@ -54,7 +58,6 @@ public class PointerBasedIdSystem {
 
 	public void close() {
 		_transactionLogHandler.close();
-		
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(

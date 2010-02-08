@@ -261,7 +261,9 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     }
 
     public int write(){
-        Pointer4 pointer = _file.newSlot(marshalledLength()); 
+        int pointerSlot = _file.allocatePointerSlot();
+		Slot slot = _file.allocateSlot(marshalledLength());
+		Pointer4 pointer = new Pointer4(pointerSlot, slot); 
         write(pointer);
         return pointer._id;
     }

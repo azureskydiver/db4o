@@ -155,15 +155,12 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	        int length = ownLength();
 	        length = container.blockAlignedBytes(length);
 	        
-	        Slot slot;
+	        Slot slot = container.allocateSlot(length);
 	        
 	        if(isNew()){
-	            Pointer4 pointer = container.newSlot(length);
-	            setID(pointer._id);
-	            slot = pointer._slot;
-                container.idSystem().notifySlotCreated(trans, pointer._id, slot, slotChangeFactory());
+	            setID(container.idSystem().newId(trans, SlotChangeFactory.SYSTEM_OBJECTS));
+                container.idSystem().notifySlotCreated(trans, _id, slot, slotChangeFactory());
 	        }else{
-	            slot = container.allocateSlot(length);
 	            container.idSystem().notifySlotUpdated(trans, _id, slot, slotChangeFactory());
 	        }
 	        
