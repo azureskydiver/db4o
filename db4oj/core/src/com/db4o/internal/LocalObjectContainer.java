@@ -872,7 +872,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         writeBytes(_pointerIo, id, 0);
     }
 	
-	public Pointer4 debugReadPointer(int id) {
+	public Slot debugReadPointerSlot(int id) {
         if (Deploy.debug) {
     		readBytes(_pointerIo._buffer, id, Const4.POINTER_LENGTH);
     		_pointerIo.seek(0);
@@ -880,14 +880,14 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     		int debugAddress = _pointerIo.readInt();
     		int debugLength = _pointerIo.readInt();
     		_pointerIo.readEnd();
-    		return new Pointer4(id, new Slot(debugAddress, debugLength));
+    		return new Slot(debugAddress, debugLength);
         }
         return null;
 	}
     
-    public Pointer4 readPointer(int id) {
+    public final Slot readPointerSlot(int id) {
         if (Deploy.debug) {
-            return debugReadPointer(id);
+            return debugReadPointerSlot(id);
         }
         if(!isValidId(id)){
         	throw new InvalidIDException(id);
@@ -905,7 +905,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         	throw new InvalidSlotException(address, length, id);
         }
         
-        return new Pointer4(id, new Slot(address, length));
+        return new Slot(address, length);
     }
     
 	private boolean isValidId(int id) {

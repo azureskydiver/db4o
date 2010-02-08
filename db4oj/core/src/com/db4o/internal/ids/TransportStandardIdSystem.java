@@ -84,7 +84,7 @@ public final class TransportStandardIdSystem implements IdSystem {
 	}
 
 	public Slot getCommittedSlotOfID(int id) {
-		return localContainer().readPointer(id)._slot;
+		return localContainer().readPointerSlot(id);
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
