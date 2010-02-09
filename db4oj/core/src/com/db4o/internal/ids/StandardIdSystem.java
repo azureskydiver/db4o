@@ -91,18 +91,18 @@ public class StandardIdSystem implements IdSystem {
 		return _globalIdSystem.interruptedTransactionHandler(reader);
 	}
 
-	public Slot getCommittedSlotOfID(int id) {
+	public Slot committedSlot(int id) {
         if (id == 0) {
             return null;
         }
-		return _globalIdSystem.slot(id);
+		return _globalIdSystem.committedSlot(id);
 	}
 
 	public LocalTransaction systemTransaction() {
 		return (LocalTransaction) localContainer().systemTransaction();
 	}
 
-	public Slot getCurrentSlotOfID(LocalTransaction transaction, int id) {
+	public Slot currentSlot(LocalTransaction transaction, int id) {
         if (id == 0) {
             return null;
         }
@@ -114,12 +114,12 @@ public class StandardIdSystem implements IdSystem {
         }
         
         if(! isSystemTransaction(transaction)){
-            Slot parentSlot = getCurrentSlotOfID(systemTransaction(), id); 
+            Slot parentSlot = currentSlot(systemTransaction(), id); 
             if (parentSlot != null) {
                 return parentSlot;
             }
         }
-        return getCommittedSlotOfID(id);
+        return committedSlot(id);
 	}
 
 	public void rollback(Transaction transaction) {
@@ -196,7 +196,7 @@ public class StandardIdSystem implements IdSystem {
 	}
 
 	private int acquireId() {
-		return _globalIdSystem.acquireId();
+		return _globalIdSystem.newId();
 	}
 
 	public int prefetchID(Transaction transaction) {

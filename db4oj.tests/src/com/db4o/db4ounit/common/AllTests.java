@@ -43,6 +43,7 @@ public class AllTests extends ComposibleTestSuite {
 						com.db4o.db4ounit.common.header.AllTests.class,
 						com.db4o.db4ounit.common.interfaces.AllTests.class,
 						com.db4o.db4ounit.common.internal.AllTests.class,
+						com.db4o.db4ounit.common.ids.AllTests.class,
 						com.db4o.db4ounit.common.io.AllTests.class,
 						com.db4o.db4ounit.common.refactor.AllTests.class,
 						com.db4o.db4ounit.common.references.AllTests.class,

@@ -21,11 +21,11 @@ public final class PointerBasedIdSystem implements GlobalIdSystem {
 		_transactionLogHandler = newTransactionLogHandler(container);
 	}
 
-	public int acquireId() {
+	public int newId() {
 		return _container.allocatePointerSlot();
 	}
 
-	public final Slot slot(int id) {
+	public final Slot committedSlot(int id) {
 		return _container.readPointerSlot(id);
 	}
 

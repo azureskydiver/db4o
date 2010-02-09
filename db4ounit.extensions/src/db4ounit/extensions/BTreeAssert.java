@@ -84,11 +84,11 @@ public class BTreeAssert {
         
         while(allSlotIDs.moveNext()){
             int slotID = ((Integer)allSlotIDs.current()).intValue();
-			Slot slot = idSystem.getCurrentSlotOfID(trans, slotID);
+			Slot slot = idSystem.currentSlot(trans, slotID);
             allSlots.add(slot);
         }
         
-        Slot bTreeSlot = idSystem.getCurrentSlotOfID(trans, bTree.getID());
+        Slot bTreeSlot = idSystem.currentSlot(trans, bTree.getID());
         allSlots.add(bTreeSlot);
         
         final Collection4 freedSlots = new Collection4();

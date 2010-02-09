@@ -423,8 +423,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_ID.log(id);
 		}
 
-		Slot slot = lastCommitted ? idSystem().getCommittedSlotOfID(id) :  
-			idSystem().getCurrentSlotOfID(trans, id);
+		Slot slot = lastCommitted ? idSystem().committedSlot(id) :  
+			idSystem().currentSlot(trans, id);
 		
 		return readReaderOrWriterBySlot(trans, id, useReader, slot);
 	}

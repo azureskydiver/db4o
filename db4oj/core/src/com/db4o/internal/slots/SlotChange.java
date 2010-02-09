@@ -56,7 +56,7 @@ public class SlotChange extends TreeInt {
     		return;
     	}
 		if(_currentOperation == SlotChangeOperation.update || _currentOperation == SlotChangeOperation.delete){
-			Slot slot = file.idSystem().getCommittedSlotOfID(_key);
+			Slot slot = file.idSystem().committedSlot(_key);
 			
 			// If we don't get a valid slot, the object may have just 
 			// been stored by the SystemTransaction and not committed yet.
@@ -74,7 +74,7 @@ public class SlotChange extends TreeInt {
 	}
 
 	protected Slot findCurrentSlotInSystemTransaction(LocalObjectContainer file) {
-		return file.idSystem().getCurrentSlotOfID((LocalTransaction)file.systemTransaction(), _key);
+		return file.idSystem().currentSlot((LocalTransaction)file.systemTransaction(), _key);
 	}
 	
 	public boolean isDeleted() {
