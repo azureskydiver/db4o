@@ -50,7 +50,7 @@ class WriteUpdateProcessor {
         //       will invoke reading a pointer from the file system.
         //       It may be possible to figure out the readd case
         //       by asking the IdSystem in a smarter way.
-        Slot slot = container().idSystem().getCurrentSlotOfID(_transaction, _id);
+        Slot slot = container().idSystem().currentSlot(_transaction, _id);
         if(handledAsReAdd(slot)){
         	return;
         }

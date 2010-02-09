@@ -25,9 +25,9 @@ public interface IdSystem {
 	public InterruptedTransactionHandler interruptedTransactionHandler(
 			ByteArrayBuffer reader);
 
-	public Slot getCommittedSlotOfID(int id);
+	public Slot committedSlot(int id);
 
-	public Slot getCurrentSlotOfID(LocalTransaction transaction, int id);
+	public Slot currentSlot(LocalTransaction transaction, int id);
 
 	public void rollback(Transaction transaction);
 

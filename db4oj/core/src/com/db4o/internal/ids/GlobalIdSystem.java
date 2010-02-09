@@ -12,9 +12,9 @@ import com.db4o.internal.transactionlog.*;
  */
 public interface GlobalIdSystem {
 
-	public int acquireId();
+	public int newId();
 
-	public Slot slot(int id);
+	public Slot committedSlot(int id);
 
 	public void returnUnusedIds(Visitable<Integer> visitable);
 

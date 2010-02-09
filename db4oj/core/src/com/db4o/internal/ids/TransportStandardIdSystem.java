@@ -49,8 +49,8 @@ public final class TransportStandardIdSystem implements IdSystem {
 		// don't do anything
 	}
 	
-	public Slot getCurrentSlotOfID(LocalTransaction transaction, int id) {
-		return getCommittedSlotOfID(id); 
+	public Slot currentSlot(LocalTransaction transaction, int id) {
+		return committedSlot(id); 
 	}
 	
 	public void addTransaction(LocalTransaction transaction) {
@@ -83,7 +83,7 @@ public final class TransportStandardIdSystem implements IdSystem {
 		
 	}
 
-	public Slot getCommittedSlotOfID(int id) {
+	public Slot committedSlot(int id) {
 		return localContainer().readPointerSlot(id);
 	}
 
