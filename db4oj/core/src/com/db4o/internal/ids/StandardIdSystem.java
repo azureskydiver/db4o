@@ -23,7 +23,7 @@ public class StandardIdSystem implements IdSystem {
 	private final GlobalIdSystem _globalIdSystem;
 	
 	public StandardIdSystem(LocalObjectContainer localContainer){
-		_globalIdSystem = new PointerBasedIdSystem(localContainer);
+		_globalIdSystem = GlobalIdSystemFactory.createNew(localContainer);
 	}
 	
 	public void addTransaction(LocalTransaction transaction){

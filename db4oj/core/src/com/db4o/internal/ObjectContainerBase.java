@@ -129,7 +129,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 				try {
 			        _name = configImpl().nameProvider().name(ObjectContainerBase.this);
 					initializeReferenceSystemFactory(_config);
-		        	initializeTransactions();
+					initializeTransactions();
 		        	initialize1(_config);
 		        	openImpl();
 					initializePostOpen();
@@ -1105,7 +1105,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             Platform4.addShutDownHook(this);
         }
         _handlers.initEncryption(configImpl());
-        initialize2();
         _stillToSet = null;
     }
 
@@ -1118,26 +1117,19 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		return impl;
 	}
 
-    /**
-     * before file is open
-     */
-    void initialize2() {
-        initialize2NObjectCarrier();
-    }
-
     public ReferenceSystem createReferenceSystem() {
         ReferenceSystem referenceSystem = _referenceSystemFactory.newReferenceSystem(this);
         _referenceSystemRegistry.addReferenceSystem(referenceSystem);
         return referenceSystem;
     }
 
-    /**
-     * overridden in YapObjectCarrier
-     */
-    void initialize2NObjectCarrier() {
-        _classCollection = new ClassMetadataRepository(_systemTransaction);
-        _references.start();
-    }
+	protected void initalizeWeakReferenceSupport() {
+		_references.start();
+	}
+
+	protected void initializeClassMetadataRepository() {
+		_classCollection = new ClassMetadataRepository(_systemTransaction);
+	}
 
     private void initializePostOpen() {
         _showInternalClasses = 100000;

@@ -27,7 +27,31 @@ public class SystemData {
 
     private int _uuidIndexId;
     
-    public int classCollectionID() {
+    private byte _idSystemType;
+    
+    private int _idSystemID;
+    
+    public SystemData(){
+    	
+    }
+    
+    public void idSystemType(byte idSystem) {
+		_idSystemType = idSystem;
+	}
+
+	public byte idSystemType() {
+		return _idSystemType;
+	}
+
+	public void idSystemID(int idSystemID) {
+		_idSystemID = idSystemID;
+	}
+
+	public int idSystemID() {
+		return _idSystemID;
+	}
+
+	public int classCollectionID() {
         return _classCollectionID;
     }
     

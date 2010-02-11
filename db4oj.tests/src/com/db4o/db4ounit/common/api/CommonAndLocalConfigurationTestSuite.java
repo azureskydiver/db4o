@@ -14,6 +14,7 @@ import com.db4o.diagnostic.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
+import com.db4o.internal.ids.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -209,6 +210,16 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			
 			cache.slotCacheSize(30);
 			Assert.areEqual(30, legacyConfig.slotCacheSize());
+			
+			IdSystemConfigurationProvider idSystemConfigurationProvider = subject();
+			IdSystemConfiguration idSystemConfiguration = idSystemConfigurationProvider.idSystem();
+			Assert.areEqual(GlobalIdSystemFactory.DEFAULT, legacyConfig.idSystemType());
+			idSystemConfiguration.useBTreeSystem();
+			Assert.areEqual(GlobalIdSystemFactory.BTREE, legacyConfig.idSystemType());
+			idSystemConfiguration.usePointerBasedSystem();
+			Assert.areEqual(GlobalIdSystemFactory.POINTER_BASED, legacyConfig.idSystemType());
+			
+			
 		}
 		
 	}

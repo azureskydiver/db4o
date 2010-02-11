@@ -21,8 +21,15 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     // (int) identity ID
     // (long) versionGenerator
 	// (int) uuid index ID
+	
+	
+	// Planned:
+	
+	// (byte) idSystem
+	// (int) idSystem ID
+	
     
-    private static final int LENGTH = 1 + (Const4.INT_LENGTH * 4) + Const4.LONG_LENGTH + Const4.ADDED_LENGTH; 
+    private static final int LENGTH = 2 + (Const4.INT_LENGTH * 5) + Const4.LONG_LENGTH + Const4.ADDED_LENGTH; 
     
     private final SystemData _systemData;
     
@@ -31,10 +38,6 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         _systemData = systemData;
     }
     
-    SystemData systemData() {
-    	return _systemData;
-    }
-
     public byte getIdentifier() {
         return Const4.HEADER;
     }
@@ -50,6 +53,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         readIdentity((LocalTransaction) trans, reader.readInt());
         _systemData.lastTimeStampID(reader.readLong());
         _systemData.uuidIndexId(reader.readInt());
+        
     }
 
     public void writeThis(Transaction trans, ByteArrayBuffer writer) {
