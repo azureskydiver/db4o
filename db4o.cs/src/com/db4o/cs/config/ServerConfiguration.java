@@ -8,7 +8,7 @@ import com.db4o.config.*;
  * Configuration interface for db4o servers.
  * @since 7.5
  */
-public interface ServerConfiguration extends FileConfigurationProvider, NetworkingConfigurationProvider, CommonConfigurationProvider , CacheConfigurationProvider{
+public interface ServerConfiguration extends FileConfigurationProvider, NetworkingConfigurationProvider, CommonConfigurationProvider , CacheConfigurationProvider, IdSystemConfigurationProvider{
 
 	/**
      * adds ConfigurationItems to be applied when

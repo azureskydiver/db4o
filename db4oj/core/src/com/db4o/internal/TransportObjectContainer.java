@@ -44,11 +44,16 @@ public class TransportObjectContainer extends LocalObjectContainer {
         _classCollection = _parent.classCollection();
 		_config = _parent.configImpl();
 		_references = WeakReferenceSupportFactory.disabledWeakReferenceSupport();
-		initialize2();
 	}
 	
-	void initialize2NObjectCarrier(){
-		// do nothing
+	@Override
+	protected void initializeClassMetadataRepository() {
+		// do nothing, it's passed from the parent ObjectContainer
+	}
+	
+	@Override
+	protected void initalizeWeakReferenceSupport() {
+		// do nothing, no Weak references
 	}
 	
 	void initializeEssentialClasses(){
@@ -208,6 +213,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	}
 
 	protected final void openImpl() throws OldFormatException {
+        createIdSystem();
 		if (_memoryBin.length() == 0) {
 			configureNewFile();
 			commitTransaction();
@@ -291,6 +297,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		return new HashcodeReferenceSystem();
 	}
 	
+	@Override
     protected IdSystem newIdSystem() {
     	return new TransportStandardIdSystem(this);
     }

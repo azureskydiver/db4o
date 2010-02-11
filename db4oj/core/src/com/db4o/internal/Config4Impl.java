@@ -19,6 +19,7 @@ import com.db4o.internal.encoding.*;
 import com.db4o.internal.events.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
@@ -115,6 +116,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
+	
+	private final static KeySpec ID_SYSTEM_KEY=new KeySpec(GlobalIdSystemFactory.DEFAULT);
 	
 	private final static KeySpec QUERY_EVALUATION_MODE_KEY=new KeySpec(QueryEvaluationMode.IMMEDIATE);
 	
@@ -1156,5 +1159,18 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public NameProvider nameProvider() {
 		return (NameProvider) _config.get(NAME_PROVIDER_KEY);
 	}
+
+	public void usePointerBasedIdSystem() {
+		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.POINTER_BASED);		
+	}
+
+	public void useBTreeIdSystem() {
+		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.BTREE);
+	}
+	
+	public byte idSystemType() {
+		return _config.getAsByte(ID_SYSTEM_KEY);
+	}
+	
 
 }

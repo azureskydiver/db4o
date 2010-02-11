@@ -51,4 +51,8 @@ public class EmbeddedConfigurationImpl implements EmbeddedConfiguration, LegacyC
 		}
 	}
 
+	public IdSystemConfiguration idSystem() {
+		return new IdSystemConfigurationImpl(_legacy);
+	}
+
 }

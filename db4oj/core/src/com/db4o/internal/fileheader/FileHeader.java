@@ -100,7 +100,7 @@ public abstract class FileHeader {
     
     public abstract void writeVariablePart(LocalObjectContainer file, int part);
 
-    protected void readClassCollectionAndFreeSpace(LocalObjectContainer file, ByteArrayBuffer reader) {
+    protected final void readClassCollectionAndFreeSpace(LocalObjectContainer file, ByteArrayBuffer reader) {
         SystemData systemData = file.systemData();
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());

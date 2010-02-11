@@ -115,6 +115,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 	
 	protected final void openImpl() {
+        initializeClassMetadataRepository();
+        initalizeWeakReferenceSupport();
 		initalizeClientSlotCache();
 		_singleThreaded = configImpl().singleThreadedClient();
 		// TODO: Experiment with packet size and noDelay
@@ -718,6 +720,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		remainingIDs = 0;
 		initialize1(config);
 		initializeTransactions();
+        initializeClassMetadataRepository();
+        initalizeWeakReferenceSupport();
 		readThis();
 		// FIXME: remove this comments after the build is green
 //		classCollection().refreshClasses();

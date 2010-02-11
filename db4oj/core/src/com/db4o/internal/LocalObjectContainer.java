@@ -27,7 +27,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
 	protected FileHeader       _fileHeader;
     
-    private Collection4         i_dirty;
+    private final Collection4         _dirty = new Collection4();
     
     private FreespaceManager _freespaceManager;
     
@@ -40,7 +40,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     private SystemData          _systemData;
     
-    private final IdSystem _idSystem;
+    private IdSystem _idSystem;
     
 	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
@@ -48,23 +48,17 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     LocalObjectContainer(Configuration config) {
         super(config);
-        _idSystem = newIdSystem();
     }
     
     public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
 		LocalTransaction transaction = new LocalTransaction(this, parentTransaction, referenceSystem);
-		if(isSystemTransaction){
-			idSystem().systemTransaction(transaction);
-		}else {
+		if(idSystem() != null){
+			// IdSystem is still null here during startup.
 			idSystem().addTransaction(transaction);
 		}
 		return transaction;
 	}
 
-    protected IdSystem newIdSystem() {
-    	return new StandardIdSystem(this);
-    }
-    
     public FreespaceManager freespaceManager() {
 		return _freespaceManager;
 	}
@@ -101,6 +95,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         newSystemData(configImpl().freespaceSystem());
         systemData().converterVersion(Converter.VERSION);
         createStringIO(_systemData.stringEncoding());
+        createIdSystem();
+        
+        initializeClassMetadataRepository();
+        initalizeWeakReferenceSupport();
         
         generateNewIdentity();
         
@@ -360,11 +358,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _timeStampIdGenerator.next();
     }
 
-    void initialize2() {
-        i_dirty = new Collection4();
-        super.initialize2();
-    }
-    
     boolean isServer() {
         return i_isServer;
     }
@@ -466,20 +459,28 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     void readThis() throws OldFormatException {
-        
         newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM);
         blockSizeReadFromFile(1);
+        
+        // TODO: This has to be done later, after the SystemData is read as the variable part.
+        createIdSystem();
         
         _fileHeader = FileHeader.readFixedPart(this);
         
         createStringIO(_systemData.stringEncoding());
+        
+        initializeClassMetadataRepository();
+        initalizeWeakReferenceSupport();
+
         
         classCollection().setID(_systemData.classCollectionID());
         classCollection().read(systemTransaction());
         
         Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this));
         
-        readHeaderVariablePart();
+        _fileHeader.readVariablePart(this);
+        
+		setNextTimeStampId(systemData().lastTimeStampID());
         
         if(_config.isReadOnly()) {
         	return;
@@ -512,7 +513,18 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
     }
     
-    private boolean freespaceMigrationRequired() {
+    protected void createIdSystem() {
+        _idSystem = newIdSystem();
+	}
+
+	protected IdSystem newIdSystem() {
+		StandardIdSystem idSystem = new StandardIdSystem(this);
+		idSystem.systemTransaction((LocalTransaction) systemTransaction());
+		idSystem.addTransaction((LocalTransaction) transaction());
+		return idSystem;
+	}
+
+	private boolean freespaceMigrationRequired() {
 		if(_freespaceManager == null){
 			return false;
 		}
@@ -541,12 +553,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		_fileHeader.writeVariablePart(this, 1);
 	}
 
-	private void readHeaderVariablePart() {
-		_fileHeader.readVariablePart(this);
-        setNextTimeStampId(systemData().lastTimeStampID());
-	}
-    
-    public final int createFreespaceSlot(byte freespaceSystem){
+	public final int createFreespaceSlot(byte freespaceSystem){
         _systemData.freespaceAddress(AbstractFreespaceManager.initSlot(this));
         _systemData.freespaceSystem(freespaceSystem);
         return _systemData.freespaceAddress();
@@ -603,7 +610,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public final void setDirtyInSystemTransaction(PersistentBase a_object) {
         a_object.setStateDirty();
-        a_object.cacheDirty(i_dirty);
+        a_object.cacheDirty(_dirty);
     }
 
     public final boolean setSemaphore(String name, int timeout) {
@@ -693,13 +700,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
 	private void writeCachedDirty() {
-		Iterator4 i = i_dirty.iterator();
+		Iterator4 i = _dirty.iterator();
         while (i.moveNext()) {
         	PersistentBase dirty = (PersistentBase) i.current();
             dirty.write(systemTransaction());
             dirty.notCachedDirty();
         }
-        i_dirty.clear();
+        _dirty.clear();
 	}
 	
     public final void writeEncrypt(ByteArrayBuffer buffer, int address, int addressOffset) {

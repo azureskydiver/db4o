@@ -60,4 +60,8 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 			configItem.apply(server);
 		}
 	}
+
+	public IdSystemConfiguration idSystem() {
+		return new IdSystemConfigurationImpl(legacy());
+	}
 }
