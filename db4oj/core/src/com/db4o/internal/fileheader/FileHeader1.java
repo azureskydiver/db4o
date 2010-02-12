@@ -44,9 +44,11 @@ public class FileHeader1 extends FileHeader {
     
     private TimerFileLock _timerFileLock;
 
-    private InterruptedTransactionHandler _interruptedTransactionHandler;
-
     private FileHeaderVariablePart1 _variablePart;
+
+	private int _transactionId1;
+
+	private int _transactionId2;
     
     public void close() throws Db4oIOException {
     	if(_timerFileLock == null){
@@ -74,23 +76,25 @@ public class FileHeader1 extends FileHeader {
     }
 
     @Override
-    public InterruptedTransactionHandler interruptedTransactionHandler() {
-        return _interruptedTransactionHandler;
+    public InterruptedTransactionHandler interruptedTransactionHandler(LocalObjectContainer container) {
+    	return container.idSystem().interruptedTransactionHandler(_transactionId1, _transactionId2);
     }
 
     public int length() {
         return HEADER_LENGTH;
     }
 
-    protected void readFixedPart(LocalObjectContainer file, ByteArrayBuffer reader) {
+    protected void read(LocalObjectContainer file, ByteArrayBuffer reader) {
         commonTasksForNewAndRead(file);
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
-        _interruptedTransactionHandler = file.idSystem().interruptedTransactionHandler(reader); 
+        _transactionId1 = reader.readInt();
+        _transactionId2 = reader.readInt();
         reader.seek(BLOCKSIZE_OFFSET);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
+        _variablePart.read(file.systemTransaction());
     }
     
     private void checkThreadFileLock(LocalObjectContainer container, ByteArrayBuffer reader) {
@@ -104,10 +108,6 @@ public class FileHeader1 extends FileHeader {
 	private void commonTasksForNewAndRead(LocalObjectContainer file){
         newTimerFileLock(file);
         file._handlers.oldEncryptionOff();
-    }
-    
-    public void readVariablePart(LocalObjectContainer file) {
-        _variablePart.read(file.systemTransaction());
     }
     
     public void writeFixedPart(
@@ -141,5 +141,10 @@ public class FileHeader1 extends FileHeader {
     	_variablePart.setStateDirty();
         _variablePart.write(file.systemTransaction());
     }
+
+	@Override
+	public void readIdentity(LocalObjectContainer container) {
+		_variablePart.readIdentity((LocalTransaction) container.systemTransaction());
+	}
 
 }

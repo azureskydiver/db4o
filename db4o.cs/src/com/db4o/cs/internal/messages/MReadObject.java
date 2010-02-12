@@ -13,7 +13,7 @@ public final class MReadObject extends MsgD implements MessageWithResponse {
 		int id = _payLoad.readInt();
 		int lastCommitted = _payLoad.readInt();
 		synchronized (containerLock()) {
-			bytes = container().readWriterByID(transaction(), id, lastCommitted==1);
+			bytes = container().readStatefulBufferById(transaction(), id, lastCommitted==1);
 		}
 		if (bytes == null) {
 			bytes = new StatefulBuffer(transaction(), 0, 0);

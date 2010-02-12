@@ -61,8 +61,8 @@ public final class PointerBasedIdSystem implements GlobalIdSystem {
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
-			ByteArrayBuffer buffer) {
-		return _transactionLogHandler.interruptedTransactionHandler(buffer);
+			int transactionId1, int transactionId2) {
+		return _transactionLogHandler.interruptedTransactionHandler(transactionId1, transactionId2);
 	}
 
 }

@@ -63,7 +63,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     
-    protected void readFixedPart(LocalObjectContainer file, ByteArrayBuffer reader) throws OldFormatException {
+    protected void read(LocalObjectContainer file, ByteArrayBuffer reader) throws OldFormatException {
         _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
@@ -71,25 +71,6 @@ public class FileHeader0 extends FileHeader {
 
     private void skipConfigurationLockTime(ByteArrayBuffer reader) {
         reader.incrementOffset(Const4.ID_LENGTH);
-    }
-
-    public void readVariablePart(LocalObjectContainer file){
-        if (_configBlock._bootRecordID <= 0) {
-            return;
-        }
-        Object bootRecord = Debug4.readBootRecord ? getBootRecord(file) : null;
-        
-        if (! (bootRecord instanceof PBootRecord)) {
-            initBootRecord(file);
-            file.generateNewIdentity();
-            return;
-        }
-        
-        _bootRecord = (PBootRecord) bootRecord;
-        file.activate(bootRecord, Integer.MAX_VALUE);
-        file.setNextTimeStampId(_bootRecord.i_versionGenerator);
-        
-        file.systemData().identity(_bootRecord.i_db);
     }
 
 	private Object getBootRecord(LocalObjectContainer file) {
@@ -120,7 +101,7 @@ public class FileHeader0 extends FileHeader {
         }
     }
 
-    public InterruptedTransactionHandler interruptedTransactionHandler() {
+    public InterruptedTransactionHandler interruptedTransactionHandler(LocalObjectContainer container) {
         return _configBlock.interruptedTransactionHandler();
     }
 
@@ -157,5 +138,25 @@ public class FileHeader0 extends FileHeader {
             _bootRecord.write(file);
         }
     }
+
+	@Override
+	public void readIdentity(LocalObjectContainer container) {
+        if (_configBlock._bootRecordID <= 0) {
+            return;
+        }
+        Object bootRecord = Debug4.readBootRecord ? getBootRecord(container) : null;
+        
+        if (! (bootRecord instanceof PBootRecord)) {
+            initBootRecord(container);
+            container.generateNewIdentity();
+            return;
+        }
+        
+        _bootRecord = (PBootRecord) bootRecord;
+        container.activate(bootRecord, Integer.MAX_VALUE);
+        container.setNextTimeStampId(_bootRecord.i_versionGenerator);
+        
+        container.systemData().identity(_bootRecord.i_db);
+	}
 
 }

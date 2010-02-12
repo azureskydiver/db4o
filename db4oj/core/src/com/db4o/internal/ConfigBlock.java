@@ -39,9 +39,11 @@ public final class ConfigBlock {
     
 	private int					_address;
 	
-	private InterruptedTransactionHandler _interruptedTransactionHandler;
-	
 	public int                 	_bootRecordID;
+	
+	private int _transactionId1;
+	
+	private int _transactionId2;
 	
 	private static final int	MINIMUM_LENGTH = 
 		Const4.INT_LENGTH    			// own length
@@ -97,7 +99,7 @@ public final class ConfigBlock {
     }
 	
 	public InterruptedTransactionHandler interruptedTransactionHandler(){
-		return _interruptedTransactionHandler;
+		return _container.idSystem().interruptedTransactionHandler(_transactionId1, _transactionId2);
 	}
     
 	private byte[] passwordToken() {
@@ -129,7 +131,7 @@ public final class ConfigBlock {
 	private void read(int address) throws Db4oIOException, OldFormatException {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
-		StatefulBuffer reader = _container.getWriter(_container.systemTransaction(), _address, LENGTH);
+		StatefulBuffer reader = _container.createStatefulBuffer(_container.systemTransaction(), _address, LENGTH);
 		_container.readBytes(reader._buffer, _address, LENGTH);
 		int oldLength = reader.readInt();
 		if(oldLength > LENGTH  || oldLength < MINIMUM_LENGTH){
@@ -153,9 +155,8 @@ public final class ConfigBlock {
 		
         
 		if(oldLength > TRANSACTION_OFFSET){
-			int savedOffset = reader.offset();
-			_interruptedTransactionHandler = _container.idSystem().interruptedTransactionHandler(reader);
-            reader.seek(savedOffset + Const4.INT_LENGTH * 2);
+			_transactionId1 = reader.readInt();
+			_transactionId2 = reader.readInt();
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {
@@ -244,7 +245,7 @@ public final class ConfigBlock {
         timerFileLock().checkHeaderLock();
         addressChanged(_container.allocateSlot(LENGTH).address());
         
-		StatefulBuffer writer = _container.getWriter(_container.transaction(), _address,LENGTH);
+		StatefulBuffer writer = _container.createStatefulBuffer(_container.transaction(), _address,LENGTH);
 		IntHandler.writeInt(LENGTH, writer);
         for (int i = 0; i < 2; i++) {
             writer.writeLong(timerFileLock().openTime());
@@ -272,7 +273,7 @@ public final class ConfigBlock {
 	
 	private void writePointer() {
         timerFileLock().checkHeaderLock();
-		StatefulBuffer writer = _container.getWriter(_container.transaction(), 0, Const4.ID_LENGTH);
+		StatefulBuffer writer = _container.createStatefulBuffer(_container.transaction(), 0, Const4.ID_LENGTH);
 		writer.moveForward(2);
 		IntHandler.writeInt(_address, writer);
 		if (Debug4.xbytes) {

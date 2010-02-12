@@ -39,8 +39,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 		return new FileStorage().open(new BinConfiguration(fileName, _container.config().lockFile(), 0, false));
 	}
 	
-	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
-		reader.incrementOffset(Const4.INT_LENGTH * 2);
+	public InterruptedTransactionHandler interruptedTransactionHandler(int transactionId1, int transactionId2) {
 		if(!File4.exists(lockFileName(_fileName))){
 			return null;
 		}

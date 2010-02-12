@@ -88,7 +88,7 @@ public final class TransportStandardIdSystem implements IdSystem {
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
-			ByteArrayBuffer reader) {
+			int transactionId1, int transactionId2) {
 		return null;
 	}
 

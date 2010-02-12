@@ -59,7 +59,7 @@ class WriteUpdateProcessor {
         	return;
         }
         
-        StatefulBuffer objectBytes = (StatefulBuffer)container().readReaderOrWriterBySlot(_transaction, _id, false, slot);
+        StatefulBuffer objectBytes = container().readStatefulBufferBySlot(_transaction, _id, slot);
         
         deleteMembers(objectBytes);
 	}

@@ -581,11 +581,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return false;
 	}
 	
-	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
-		return readWriterByID(a_ta, a_id, false);
+	public final StatefulBuffer readStatefulBufferById(Transaction a_ta, int a_id) {
+		return readStatefulBufferById(a_ta, a_id, false);
 	}
 	
-	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted) {
+	public final StatefulBuffer readStatefulBufferById(Transaction a_ta, int a_id, boolean lastCommitted) {
 		MsgD msg = Msg.READ_OBJECT.getWriterForInts(a_ta, new int[]{a_id, lastCommitted?1:0});
 		write(msg);
 		StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT)).unmarshall();
@@ -636,7 +636,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         return packSlotBuffers(ids, buffers);
     }
 
-	public final ByteArrayBuffer readReaderByID(final Transaction transaction, final int id, final boolean lastCommitted) {
+	public final ByteArrayBuffer readBufferById(final Transaction transaction, final int id, final boolean lastCommitted) {
 		
 		if (lastCommitted || _bypassSlotCache) {
 			return fetchSlotBuffer(transaction, id, lastCommitted);
@@ -652,8 +652,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return slot;
 	}
 
-	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
-		return readReaderByID(a_ta, a_id, false); 
+	public final ByteArrayBuffer readBufferById(Transaction a_ta, int a_id) {
+		return readBufferById(a_ta, a_id, false); 
 	}
 
 	private AbstractQueryResult readQueryResult(final Transaction trans) {

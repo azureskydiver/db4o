@@ -978,11 +978,11 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return new HardObjectReference(ref, readObject);
     }
 
-    public final StatefulBuffer getWriter(Transaction a_trans, int a_address, int a_length) {
-        if (Debug4.exceedsMaximumBlockSize(a_length)) {
+    public final StatefulBuffer createStatefulBuffer(Transaction trans, int address, int length) {
+        if (Debug4.exceedsMaximumBlockSize(length)) {
             return null;
         }
-        return new StatefulBuffer(a_trans, a_address, a_length);
+        return new StatefulBuffer(trans, address, length);
     }
 
     public final Transaction systemTransaction() {
@@ -1402,20 +1402,20 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public final StatefulBuffer readWriterByAddress(Transaction a_trans,
         int address, int length) throws Db4oIOException {
     	checkAddress(address);
-        StatefulBuffer reader = getWriter(a_trans, address, length);
+        StatefulBuffer reader = createStatefulBuffer(a_trans, address, length);
         reader.readEncrypt(this, address);
         return reader;
     }
 
-    public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id);
+    public abstract StatefulBuffer readStatefulBufferById(Transaction trans, int id);
     
-    public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted);
+    public abstract StatefulBuffer readStatefulBufferById(Transaction trans, int id, boolean lastCommitted);
 
-    public abstract ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id);
+    public abstract ByteArrayBuffer readBufferById(Transaction trans, int id);
     
-    public abstract ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted);
+    public abstract ByteArrayBuffer readBufferById(Transaction trans, int id, boolean lastCommitted);
     
-    public abstract ByteArrayBuffer[] readSlotBuffers(Transaction a_ta, int[] ids);
+    public abstract ByteArrayBuffer[] readSlotBuffers(Transaction trans, int[] ids);
 
     private void reboot() {
         commit(null);

@@ -203,7 +203,7 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 		if (null != cachedBuffer)
 			return cachedBuffer;
 		
-		ByteArrayBuffer buffer = _container.readReaderByID(_transaction, id);
+		ByteArrayBuffer buffer = _container.readBufferById(_transaction, id);
 		_bufferCache.put(id, buffer);
 		return buffer;
 	}

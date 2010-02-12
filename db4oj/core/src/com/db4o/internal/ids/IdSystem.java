@@ -23,7 +23,7 @@ public interface IdSystem {
 	public void commit(LocalTransaction transaction);
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
-			ByteArrayBuffer reader);
+			int transactionId1, int transactionId2);
 
 	public Slot committedSlot(int id);
 

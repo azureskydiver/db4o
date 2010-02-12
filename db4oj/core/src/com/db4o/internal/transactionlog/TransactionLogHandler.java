@@ -55,7 +55,7 @@ public abstract class TransactionLogHandler {
 
 	public abstract void applySlotChanges(Visitable<SlotChange> slotChangeTree, int slotChangeCount, Slot reservedSlot);
 
-	public abstract InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader);
+	public abstract InterruptedTransactionHandler interruptedTransactionHandler(int transactionId1, int transactionId2);
 
 	public abstract void close();
 	

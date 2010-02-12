@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.slots.*;
 
 
 /**
@@ -33,6 +34,8 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     
     private final SystemData _systemData;
     
+    private int _identityId;
+    
     public FileHeaderVariablePart1(int id, SystemData systemData) {
         setID(id);
         _systemData = systemData;
@@ -50,9 +53,15 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         _systemData.converterVersion(reader.readInt());
         _systemData.freespaceSystem(reader.readByte());
         _systemData.freespaceAddress(reader.readInt());
-        readIdentity((LocalTransaction) trans, reader.readInt());
+        _identityId = reader.readInt();
         _systemData.lastTimeStampID(reader.readLong());
         _systemData.uuidIndexId(reader.readInt());
+        
+//        if(reader.eof()){
+//        	return;
+//        }
+        
+        // read ID system
         
     }
 
@@ -65,15 +74,22 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         writer.writeInt(_systemData.uuidIndexId());
     }
     
-    private void readIdentity(LocalTransaction trans, int identityID) {
+    public void readIdentity(LocalTransaction trans) {
         LocalObjectContainer file = trans.localContainer();
-        Db4oDatabase identity = Debug4.staticIdentity ? Db4oDatabase.STATIC_IDENTITY : (Db4oDatabase) file.getByID(trans, identityID);
+        Db4oDatabase identity = Debug4.staticIdentity ? Db4oDatabase.STATIC_IDENTITY : (Db4oDatabase) file.getByID(trans, _identityId);
         if (null != identity) {
         	// TODO: what?
         	file.activate(trans, identity, new FixedActivationDepth(2));
         	_systemData.identity(identity);
         }
        
+    }
+    
+    @Override
+    protected ByteArrayBuffer readBufferById(Transaction trans) {
+    	LocalObjectContainer container = (LocalObjectContainer) trans.container();
+    	Slot slot = container.readPointerSlot(_id);
+    	return container.readBufferBySlot(slot);
     }
 
 }

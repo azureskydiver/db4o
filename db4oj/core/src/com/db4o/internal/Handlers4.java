@@ -256,7 +256,7 @@ public class Handlers4 {
         if(handleAsObject(handler)){
             // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
             int collectionID = context.readInt();
-            ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
+            ByteArrayBuffer collectionBuffer = container.readBufferById(context.transaction(), collectionID);
             ObjectHeader objectHeader = new ObjectHeader(container, collectionBuffer);
             QueryingReadContext subContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, collectionID, context.collector());
             objectHeader.classMetadata().collectIDs(subContext);

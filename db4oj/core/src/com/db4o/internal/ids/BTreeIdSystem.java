@@ -23,7 +23,7 @@ public class BTreeIdSystem implements GlobalIdSystem {
 	}
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
-			ByteArrayBuffer buffer) {
+			int transactionId1, int transactionId2) {
 		// TODO Auto-generated method stub
 		return null;
 	}

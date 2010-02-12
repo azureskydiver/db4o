@@ -1450,7 +1450,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 	
     byte[] readName(Transaction a_trans) {
-        i_reader = a_trans.container().readReaderByID(a_trans, getID());
+        i_reader = a_trans.container().readBufferById(a_trans, getID());
         return readName1(a_trans, i_reader);
     }
 
@@ -1483,7 +1483,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	public void readVirtualAttributes(Transaction trans, ObjectReference ref, boolean lastCommitted) {
         int id = ref.getID();
         ObjectContainerBase stream = trans.container();
-        ByteArrayBuffer buffer = stream.readReaderByID(trans, id, lastCommitted);
+        ByteArrayBuffer buffer = stream.readBufferById(trans, id, lastCommitted);
         ObjectHeader oh = new ObjectHeader(stream, this, buffer);
         ObjectReferenceContext context = new ObjectReferenceContext(trans,buffer, oh, ref);
         Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).readVirtualAttributes(context);

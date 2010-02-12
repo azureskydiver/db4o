@@ -981,7 +981,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	}
 
 	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata classMetadata, final int objectId) throws FieldIndexException {
-		StatefulBuffer writer = stream.readWriterByID(stream.systemTransaction(), objectId);
+		StatefulBuffer writer = stream.readStatefulBufferById(stream.systemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);
 		} else {
