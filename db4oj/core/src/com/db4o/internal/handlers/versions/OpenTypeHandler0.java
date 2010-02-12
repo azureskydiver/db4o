@@ -40,7 +40,7 @@ public class OpenTypeHandler0 extends OpenTypeHandler2 {
 
         if (id != 0) {
             StatefulBuffer reader =
-                context.container().readWriterByID(context.transaction(), id);
+                context.container().readStatefulBufferById(context.transaction(), id);
             if (reader != null) {
                 ObjectHeader oh = new ObjectHeader(context.container(), reader);
                 try {

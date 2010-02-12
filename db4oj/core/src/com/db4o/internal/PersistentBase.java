@@ -102,7 +102,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     }
     
     protected ByteArrayBuffer readBufferById(Transaction trans){
-    	return trans.container().readReaderByID(trans, getID());
+    	return trans.container().readBufferById(trans, getID());
     }
 
     

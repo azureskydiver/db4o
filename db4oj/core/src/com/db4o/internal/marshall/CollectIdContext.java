@@ -27,7 +27,7 @@ public class CollectIdContext extends ObjectHeaderContext {
     }
     
     public static CollectIdContext forID(Transaction transaction, IdObjectCollector collector, int id){
-        StatefulBuffer reader = transaction.container().readWriterByID(transaction, id);
+        StatefulBuffer reader = transaction.container().readStatefulBufferById(transaction, id);
         if (reader == null) {
         	return null;
         }

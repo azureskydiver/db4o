@@ -394,7 +394,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		                                    public void visit(Object treeInt) {
 		                                        int id = ((TreeInt)treeInt)._key;
 		                                        StatefulBuffer reader =
-		                                            stream.readWriterByID(_trans, id);
+		                                            stream.readStatefulBufferById(_trans, id);
 		                                        if (reader != null) {
 		                                            ObjectHeader oh = new ObjectHeader(stream, reader);
 		                                            CollectIdContext context = new CollectIdContext(_trans, oh, reader);

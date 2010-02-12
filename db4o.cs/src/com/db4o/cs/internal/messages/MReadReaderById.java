@@ -11,7 +11,7 @@ public class MReadReaderById extends MsgD implements MessageWithResponse {
 		// and object was deleted by another client
 		try {
 			synchronized (containerLock()) {
-				bytes = container().readReaderByID(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
+				bytes = container().readBufferById(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
 			}
 			if (bytes == null) {
 				bytes = new ByteArrayBuffer(0);

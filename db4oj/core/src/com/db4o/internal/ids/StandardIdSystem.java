@@ -87,8 +87,8 @@ public class StandardIdSystem implements IdSystem {
 		return slotChanges(transaction) == _systemSlotChanges;
 	}
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(ByteArrayBuffer reader) {
-		return _globalIdSystem.interruptedTransactionHandler(reader);
+	public InterruptedTransactionHandler interruptedTransactionHandler(int transactionId1, int transactionId2) {
+		return _globalIdSystem.interruptedTransactionHandler(transactionId1, transactionId2);
 	}
 
 	public Slot committedSlot(int id) {

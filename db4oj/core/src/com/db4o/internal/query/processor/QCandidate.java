@@ -102,7 +102,7 @@ public class QCandidate extends TreeInt implements Candidate {
 			if (_key == 0) {
 				setBytes(null);
 			} else {
-				setBytes(stream.readReaderByID(transaction(), _key));
+				setBytes(stream.readBufferById(transaction(), _key));
 			}
 		}
 	}
@@ -323,7 +323,7 @@ public class QCandidate extends TreeInt implements Candidate {
                 if(Handlers4.handleAsObject(arrayElementHandler)){
                     // TODO: Code is similar to FieldMetadata.collectIDs. Try to refactor to one place.
                     int collectionID = buffer.readInt();
-                    ByteArrayBuffer arrayElementBuffer = container().readReaderByID(transaction(), collectionID);
+                    ByteArrayBuffer arrayElementBuffer = container().readBufferById(transaction(), collectionID);
                     ObjectHeader objectHeader = ObjectHeader.scrollBufferToContent(container(), arrayElementBuffer);
                     context = new QueryingReadContext(transaction(), candidates, _handlerVersion, arrayElementBuffer, collectionID);
                     objectHeader.classMetadata().collectIDs(context);
@@ -509,7 +509,7 @@ public class QCandidate extends TreeInt implements Candidate {
 					if (DTrace.enabled) {
 						DTrace.CANDIDATE_READ.log(_key);
 					}
-                    setBytes(container().readReaderByID(transaction(), _key));
+                    setBytes(container().readBufferById(transaction(), _key));
 					if (_bytes == null) {
 						include(false);
 					}

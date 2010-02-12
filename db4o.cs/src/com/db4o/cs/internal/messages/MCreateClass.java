@@ -16,7 +16,7 @@ public final class MCreateClass extends MsgD implements MessageWithResponse {
 					ClassMetadata classMetadata = container().produceClassMetadata(claxx);
 					if (classMetadata != null) {
 						container().checkStillToSet();
-						StatefulBuffer returnBytes = container().readWriterByID(systemTransaction(), classMetadata.getID());
+						StatefulBuffer returnBytes = container().readStatefulBufferById(systemTransaction(), classMetadata.getID());
 						MsgD createdClass = Msg.OBJECT_TO_CLIENT.getWriter(returnBytes);
 						return createdClass;
 					}

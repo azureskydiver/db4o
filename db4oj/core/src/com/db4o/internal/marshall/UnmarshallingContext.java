@@ -124,7 +124,7 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
 
     private void readBuffer(int id) {
         if (buffer() == null && id > 0) {
-            buffer(container().readReaderByID(transaction(), id)); 
+            buffer(container().readBufferById(transaction(), id)); 
         }
     }
     

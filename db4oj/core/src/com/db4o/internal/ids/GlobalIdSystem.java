@@ -21,7 +21,7 @@ public interface GlobalIdSystem {
 	public void close();
 
 	public InterruptedTransactionHandler interruptedTransactionHandler(
-			ByteArrayBuffer buffer);
+			int transactionId1, int transactionId2);
 
 	public IdSystemCommitContext prepareCommit(int slotChangeCount);
 

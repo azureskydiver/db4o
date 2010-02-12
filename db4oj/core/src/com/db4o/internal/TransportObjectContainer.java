@@ -56,30 +56,37 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		// do nothing, no Weak references
 	}
 	
+	@Override
 	void initializeEssentialClasses(){
 	    // do nothing
 	}
 	
+	@Override
 	protected void initializePostOpenExcludingTransportObjectContainer(){
 		// do nothing
 	}
 	
+	@Override
 	void initNewClassCollection(){
 	    // do nothing
 	}
 	
+	@Override
     boolean canUpdate(){
         return false;
     }
     
+	@Override
     public ClassMetadata classMetadataForID(int id) {
     	return _parent.classMetadataForID(id);
     }
     
+	@Override
 	void configureNewFile() {
 	    // do nothing
 	}
     
+	@Override
     public int converterVersion() {
         return Converter.VERSION;
     }
@@ -88,43 +95,51 @@ public class TransportObjectContainer extends LocalObjectContainer {
         _config = null;
     }
     
+    @Override
     protected void handleExceptionOnClose(Exception exc) {
     	// do nothing here
     }
 
-	public final Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
+    @Override
+    public final Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
 		return new TransactionObjectCarrier(this, null, referenceSystem);
 	}
 	
-	public long currentVersion(){
+    @Override
+    public long currentVersion(){
 	    return 0;
 	}
     
+    @Override
     public Db4oType db4oTypeStored(Transaction a_trans, Object a_object) {
         return null;
     }
 	
+    @Override
     public boolean dispatchsEvents() {
         return false;
     }
 	
+    @Override
     protected void finalize() {
         // do nothing
     }
 	
-	
+    @Override
 	public final void free(int a_address, int a_length){
 		// do nothing
 	}
 	
-	public final void free(Slot slot){
+    @Override
+    public final void free(Slot slot){
 		// do nothing
 	}
 	
-	public Slot allocateSlot(int length){
+    @Override
+    public Slot allocateSlot(int length){
         return appendBlocks(length);
 	}
 	
@@ -133,10 +148,12 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		return id != 0 && super.isValidPointer(id);
 	}
 	
+	@Override
 	public Db4oDatabase identity() {
 	    return ((ExternalObjectContainer) _parent).identity();
 	}
 	
+	@Override
 	public boolean maintainsIndices(){
 		return false;
 	}
@@ -146,37 +163,45 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		return _parent.generateTimeStampId();
 	}
 	
+	@Override
 	void message(String msg){
 		// do nothing
 	}
 	
+	@Override
 	public ClassMetadata produceClassMetadata(ReflectClass claxx) {
 		return _parent.produceClassMetadata(claxx);
 	}
 	
+	@Override
 	public void raiseVersion(long a_minimumVersion){
 	    // do nothing
 	}
 	
+	@Override
 	void readThis(){
 		// do nothing
 	}
 	
+	@Override
 	boolean stateMessages(){
 		return false; // overridden to do nothing in YapObjectCarrier
 	}
     
+	@Override
 	public void shutdown() {
 		processPendingClassUpdates();
 		writeDirty();
 		transaction().commit();
 	}
 	
+	@Override
 	final void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
 	    // do nothing
 	}
     
-    protected void writeVariableHeader(){
+	@Override
+	protected void writeVariableHeader(){
         
     }
     
@@ -187,6 +212,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		}
     }
     
+    @Override
     public int storeInternal(Transaction trans, Object obj, int depth,
 			boolean checkJustSet)
     		throws DatabaseClosedException, DatabaseReadOnlyException {
@@ -197,6 +223,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
     	return super.storeInternal(trans, obj, depth, checkJustSet);
     }
     
+    @Override
     public Object getByID2(Transaction ta, int id) {
     	Object obj = super.getByID2(ta, id);
     	if(obj instanceof KnownObjectIdentity){
@@ -212,6 +239,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		open();
 	}
 
+	@Override
 	protected final void openImpl() throws OldFormatException {
         createIdSystem();
 		if (_memoryBin.length() == 0) {
@@ -223,11 +251,13 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		}
 	}
 
+	@Override
 	public void backup(Storage targetStorage, String path)
 			throws NotSupportedException {
 			    throw new NotSupportedException();
 			}
 
+	@Override
 	public void blockSize(int size) {
 	    // do nothing, blocksize is always 1
 	}
@@ -237,27 +267,33 @@ public class TransportObjectContainer extends LocalObjectContainer {
     	// do nothing	
     }
 
-	protected void shutdownDataStorage() {
+    @Override
+    protected void shutdownDataStorage() {
 		dropReferences();
 	}
 
-	public long fileLength() {
+    @Override
+    public long fileLength() {
 	    return _memoryBin.length();
 	}
 
-	public String fileName() {
+    @Override
+    public String fileName() {
 	    return "Memory File";
 	}
 
-	protected boolean hasShutDownHook() {
+    @Override
+    protected boolean hasShutDownHook() {
 	    return false;
 	}
 
-	public final boolean needsLockFileThread() {
+    @Override
+    public final boolean needsLockFileThread() {
 	    return false;
 	}
 
-	public void readBytes(byte[] bytes, int address, int length) {
+    @Override
+    public void readBytes(byte[] bytes, int address, int length) {
 		try {
 			_memoryBin.read(address, bytes, length);
 		} catch (Exception e) {
@@ -265,25 +301,31 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		}
 	}
 
-	public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
+    @Override
+    public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
 		readBytes(bytes, address + addressOffset, length);
 	}
 
-	public void syncFiles() {
+    @Override
+    public void syncFiles() {
 	}
 
-	public void writeBytes(ByteArrayBuffer buffer, int address, int addressOffset) {
+    @Override
+    public void writeBytes(ByteArrayBuffer buffer, int address, int addressOffset) {
 		_memoryBin.write(address + addressOffset, buffer._buffer, buffer.length());
 	}
 
-	public void overwriteDeletedBytes(int a_address, int a_length) {
+    @Override
+    public void overwriteDeletedBytes(int a_address, int a_length) {
 	}
 
-	public void reserve(int byteCount) {
+    @Override
+    public void reserve(int byteCount) {
 		throw new NotSupportedException();
 	}
 
-	public byte blockSize() {
+    @Override
+    public byte blockSize() {
 		return 1;
 	}
 

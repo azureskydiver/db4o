@@ -157,7 +157,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public final boolean delete4(Transaction transaction, ObjectReference ref, Object obj, int cascade, boolean userCall) {
         int id = ref.getID();
-        StatefulBuffer reader = readWriterByID(transaction, id);
+        StatefulBuffer reader = readStatefulBufferById(transaction, id);
         if (reader != null) {
             if (obj != null) {
                 if ((!showInternalClasses())
@@ -338,7 +338,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         if (!Debug4.xbytes){
             if(Deploy.overwrite){
                 if(_blockEndAddress > bytesToBlocks(fileLength())){
-                    StatefulBuffer writer = getWriter(systemTransaction(), _blockEndAddress - 1, blockSize());
+                    StatefulBuffer writer = createStatefulBuffer(systemTransaction(), _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
             }
@@ -372,12 +372,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }
     }
 
-    public StatefulBuffer readWriterByID(Transaction transaction, int id, boolean lastCommitted) {
-        return (StatefulBuffer)readReaderOrWriterByID((LocalTransaction)transaction, id, false, lastCommitted);    
-    }
-    
-    public StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
-        return readWriterByID(a_ta, a_id, false);
+    public StatefulBuffer readStatefulBufferById(Transaction a_ta, int a_id) {
+        return readStatefulBufferById(a_ta, a_id, false);
     }
     
     @Override
@@ -387,27 +383,17 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			if (ids[i] == 0) {
 				buffers[i] = null;
 			} else {
-				buffers[i] = readReaderOrWriterByID((LocalTransaction)transaction, ids[i], true);
+				buffers[i] = readBufferById(transaction, ids[i]);
 			}
 		}
 		return buffers;
 	}
     
-    public ByteArrayBuffer readReaderByID(Transaction transaction, int id, boolean lastCommitted) {
-        return readReaderOrWriterByID((LocalTransaction)transaction, id, true, lastCommitted);
-    }
-
-    public ByteArrayBuffer readReaderByID(Transaction trans, int id) {
-        return readReaderByID(trans, id, false);
+    public ByteArrayBuffer readBufferById(Transaction trans, int id) {
+        return readBufferById(trans, id, false);
     }
     
-    private final ByteArrayBuffer readReaderOrWriterByID(LocalTransaction transaction, int id,
-			boolean useReader) {
-    	return readReaderOrWriterByID(transaction, id, useReader, false);
-    }
-    
-    private final ByteArrayBuffer readReaderOrWriterByID(LocalTransaction trans, int id,
-			boolean useReader, boolean lastCommitted) {
+    public final ByteArrayBuffer readBufferById(Transaction trans, int id, boolean lastCommitted) {
 		if (id <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -417,41 +403,54 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		}
 
 		Slot slot = lastCommitted ? idSystem().committedSlot(id) :  
-			idSystem().currentSlot(trans, id);
+			idSystem().currentSlot((LocalTransaction)trans, id);
 		
-		return readReaderOrWriterBySlot(trans, id, useReader, slot);
-	}
-    
-    public ByteArrayBuffer readSlotBuffer(Slot slot) {
-    	ByteArrayBuffer reader = new ByteArrayBuffer(slot.length());
-		reader.readEncrypt(this, slot.address());
-		reader.skip(0);
-		return reader;
+		return readBufferBySlot(slot);
     }
-
-	ByteArrayBuffer readReaderOrWriterBySlot(Transaction a_ta, int a_id, boolean useReader, Slot slot) {
-		if (slot == null) {
-			return null;
+    
+    public StatefulBuffer readStatefulBufferById(Transaction trans, int id, boolean lastCommitted) {
+		if (id <= 0) {
+			throw new IllegalArgumentException();
 		}
 
-		if (slot.isNull()) {
-			return null;
+		if (DTrace.enabled) {
+			DTrace.READ_ID.log(id);
 		}
 
+		Slot slot = lastCommitted ? idSystem().committedSlot(id) :  
+			idSystem().currentSlot((LocalTransaction)trans, id);
+		
+		return readStatefulBufferBySlot(trans, id, slot);
+    }
+    
+	public ByteArrayBuffer readBufferBySlot(Slot slot) {
+		if (slot == null || slot.isNull()) {
+			return null;
+		}
+		
 		if (DTrace.enabled) {
 			DTrace.READ_SLOT.logLength(slot.address(), slot.length());
 		}
 
-		ByteArrayBuffer reader = null;
-		if (useReader) {
-			reader = new ByteArrayBuffer(slot.length());
-		} else {
-			reader = getWriter(a_ta, slot.address(), slot.length());
-			((StatefulBuffer) reader).setID(a_id);
+		ByteArrayBuffer buffer = new ByteArrayBuffer(slot.length());
+
+		buffer.readEncrypt(this, slot.address());
+		return buffer;
+	}
+	
+	public StatefulBuffer readStatefulBufferBySlot(Transaction trans, int id, Slot slot) {
+		if (slot == null || slot.isNull()) {
+			return null;
+		}
+		
+		if (DTrace.enabled) {
+			DTrace.READ_SLOT.logLength(slot.address(), slot.length());
 		}
 
-		reader.readEncrypt(this, slot.address());
-		return reader;
+		StatefulBuffer buffer = createStatefulBuffer(trans, slot.address(), slot.length());
+		buffer.setID(id);
+		buffer.readEncrypt(this, slot.address());
+		return buffer;
 	}
     
     protected boolean doFinalize() {
@@ -462,25 +461,23 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM);
         blockSizeReadFromFile(1);
         
-        // TODO: This has to be done later, after the SystemData is read as the variable part.
-        createIdSystem();
-        
-        _fileHeader = FileHeader.readFixedPart(this);
+        _fileHeader = FileHeader.read(this);
         
         createStringIO(_systemData.stringEncoding());
         
         initializeClassMetadataRepository();
         initalizeWeakReferenceSupport();
 
+        setNextTimeStampId(systemData().lastTimeStampID());
+        
+        createIdSystem();
         
         classCollection().setID(_systemData.classCollectionID());
         classCollection().read(systemTransaction());
         
         Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this));
         
-        _fileHeader.readVariablePart(this);
-        
-		setNextTimeStampId(systemData().lastTimeStampID());
+        _fileHeader.readIdentity(this);
         
         if(_config.isReadOnly()) {
         	return;
@@ -497,7 +494,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         writeHeader(true, false);
         
-        InterruptedTransactionHandler interruptedTransactionHandler =  _fileHeader.interruptedTransactionHandler();
+        InterruptedTransactionHandler interruptedTransactionHandler =  _fileHeader.interruptedTransactionHandler(this);
         
         if (interruptedTransactionHandler != null) {
             if (!configImpl().commitRecoveryDisabled()) {
@@ -732,7 +729,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             _freespaceManager = null;
         }
         
-        StatefulBuffer writer = getWriter(systemTransaction(), 0, _fileHeader.length());
+        StatefulBuffer writer = createStatefulBuffer(systemTransaction(), 0, _fileHeader.length());
         
         _fileHeader.writeFixedPart(this, startFileLockingThread, shuttingDown, writer, blockSize(), freespaceID);
         

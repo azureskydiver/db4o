@@ -26,13 +26,13 @@ public abstract class FileHeader {
         return length;
     }
 
-    public static FileHeader readFixedPart(LocalObjectContainer file) throws OldFormatException {
+    public static FileHeader read(LocalObjectContainer file) throws OldFormatException {
         ByteArrayBuffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
             Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
         } else {
-        	header.readFixedPart(file, reader);
+        	header.read(file, reader);
         }
         return header;
     }
@@ -58,7 +58,7 @@ public abstract class FileHeader {
 
     public abstract void initNew(LocalObjectContainer file) throws Db4oIOException;
 
-    public abstract InterruptedTransactionHandler interruptedTransactionHandler();
+    public abstract InterruptedTransactionHandler interruptedTransactionHandler(LocalObjectContainer container);
 
     public abstract int length();
     
@@ -68,10 +68,8 @@ public abstract class FileHeader {
     	return shuttingDown ? 0 : time;
     }
 
-    protected abstract void readFixedPart(LocalObjectContainer file, ByteArrayBuffer reader);
+    protected abstract void read(LocalObjectContainer file, ByteArrayBuffer reader);
 
-    public abstract void readVariablePart(LocalObjectContainer file);
-    
     protected boolean signatureMatches(ByteArrayBuffer reader, byte[] signature, byte version){
         for (int i = 0; i < signature.length; i++) {
             if(reader.readByte() != signature[i]){
@@ -109,6 +107,8 @@ public abstract class FileHeader {
 	public static boolean lockedByOtherSession(LocalObjectContainer container, long lastAccessTime) {
 		return container.needsLockFileThread() && ( lastAccessTime != 0);
 	}
+
+	public abstract void readIdentity(LocalObjectContainer container);
 
 
 }

@@ -26,7 +26,7 @@ public class MClassMeta extends MsgObject implements MessageWithResponse {
     					classMetadata.write(trans);
     					trans.commit();
     					StatefulBuffer returnBytes = container()
-    							.readWriterByID(trans, classMetadata.getID());
+    							.readStatefulBufferById(trans, classMetadata.getID());
     					return Msg.OBJECT_TO_CLIENT.getWriter(returnBytes);
     				}
     			}

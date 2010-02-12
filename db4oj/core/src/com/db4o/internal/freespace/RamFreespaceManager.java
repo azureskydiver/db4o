@@ -201,7 +201,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         if(discardLimit() == Integer.MAX_VALUE){
             return;
         }
-        StatefulBuffer reader = _file.readWriterByID(transaction(), freeSlotsID);
+        StatefulBuffer reader = _file.readStatefulBufferById(transaction(), freeSlotsID);
         if (reader == null) {
             return;
         }
