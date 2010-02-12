@@ -13,8 +13,8 @@ public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 	public static void main(String[] args) {
 //		System.exit(new AllTestsDb4oUnitJdk5().runSolo());
 //		System.exit(new AllTestsDb4oUnitJdk5().runSoloAndEmbeddedClientServer());
-//		System.exit(new AllTestsDb4oUnitJdk5().runAll());
-		System.exit(new AllTestsDb4oUnitJdk5().runNetworking());
+		System.exit(new AllTestsDb4oUnitJdk5().runAll());
+//		System.exit(new AllTestsDb4oUnitJdk5().runNetworking());
 	}
 
 	@Override
