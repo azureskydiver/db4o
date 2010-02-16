@@ -7,7 +7,7 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
 
 	public static void main(String[] args) {
-		new AllTests().runSoloAndClientServer();
+		new AllTests().runAll(); //runSoloAndClientServer();
     }
 
 	protected Class[] testCases() {
@@ -32,6 +32,7 @@ public class AllTests extends Db4oTestSuite {
             InvalidFieldNameConstraintTestCase.class,
             LazyQueryResultTestCase.class,
             MultiFieldIndexQueryTestCase.class,
+            NoClassIndexQueryTestSuite.class,
             NullConstraintQueryTestCase.class,
             ObjectSetTestCase.class,
             OrderedQueryTestCase.class,
