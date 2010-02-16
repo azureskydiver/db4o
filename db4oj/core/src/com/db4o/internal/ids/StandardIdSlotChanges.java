@@ -19,10 +19,6 @@ public class StandardIdSlotChanges {
 		_container = container;
 	}
 
-	public Config4Impl config() {
-		return localContainer().config();
-	}
-
 	private LocalObjectContainer localContainer() {
 		return _container;
 	}
@@ -53,7 +49,11 @@ public class StandardIdSlotChanges {
 	}
 
 	public boolean isDeleted(int id) {
-    	return slotChangeIsFlaggedDeleted(id);
+    	SlotChange slot = findSlotChange(id);
+		if (slot == null) {
+			return false;
+		}
+		return slot.isDeleted();
     }
 	
     public SlotChange produceSlotChange(int id, SlotChangeFactory slotChangeFactory){
@@ -69,51 +69,17 @@ public class StandardIdSlotChanges {
         return (SlotChange)_slotChanges.find(id);
     }    
 
-    private boolean slotChangeIsFlaggedDeleted(int id){
-        SlotChange slot = findSlotChange(id);
-        if (slot != null) {
-            return slot.isDeleted();
-        }
-        return false;
-    }
-	
-	public void traverseSlotChanges(Visitor4 visitor){
+    public void traverseSlotChanges(Visitor4<SlotChange> visitor){
         _slotChanges.traverseLocked(visitor);
 	}
 	
 	public boolean isDirty() {
 		return ! _slotChanges.isEmpty();
 	}
-
-	public void collectSlotChanges(final CallbackInfoCollector collector) {
-		if (! isDirty()) {
-			return;
-		}
-		_slotChanges.traverseLocked(new Visitor4() {
-			public void visit(Object obj) {
-				final SlotChange slotChange = ((SlotChange)obj);
-				final int id = slotChange._key;
-				if (slotChange.isDeleted()) {
-					if(! slotChange.isNew()){
-						collector.deleted(id);
-					}
-				} else if (slotChange.isNew()) {
-					collector.added(id);
-				} else {
-					collector.updated(id);
-				}
-			}
-		});
-	}
 	
 	public void readSlotChanges(ByteArrayBuffer buffer) {
 		_slotChanges.read(buffer, new SlotChange(0));
 	}
-
-	public LocalTransaction systemTransaction() {
-		return (LocalTransaction) localContainer().systemTransaction();
-	}
-
 
 	public void addPrefetchedID(int id) {
 		_prefetchedIDs = Tree.add(_prefetchedIDs, new TreeInt(id));		

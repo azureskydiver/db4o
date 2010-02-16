@@ -21,7 +21,10 @@ public class StandardIdSystem implements IdSystem {
 	
 	private final GlobalIdSystem _globalIdSystem;
 	
+	private final LocalObjectContainer _localContainer;
+	
 	public StandardIdSystem(LocalObjectContainer localContainer){
+		_localContainer = localContainer;
 		_globalIdSystem = GlobalIdSystemFactory.createNew(localContainer);
 	}
 	
@@ -43,8 +46,25 @@ public class StandardIdSystem implements IdSystem {
 		return _slotChanges.get(transaction);
 	}
 
-	public void collectCallBackInfo(Transaction transaction, CallbackInfoCollector collector) {
-		slotChanges(transaction).collectSlotChanges(collector);
+	public void collectCallBackInfo(Transaction transaction, final CallbackInfoCollector collector) {
+		StandardIdSlotChanges slotChanges = slotChanges(transaction);
+		if(! slotChanges.isDirty()){
+			return;
+		}
+		slotChanges.traverseSlotChanges(new Visitor4<SlotChange>() {
+			public void visit(SlotChange slotChange) {
+				int id = slotChange._key;
+				if (slotChange.isDeleted()) {
+					if(! slotChange.isNew()){
+						collector.deleted(id);
+					}
+				} else if (slotChange.isNew()) {
+					collector.added(id);
+				} else {
+					collector.updated(id);
+				}
+			}
+		});
 	}
 
 	public boolean isDirty(Transaction transaction) {
@@ -144,7 +164,7 @@ public class StandardIdSystem implements IdSystem {
 		_globalIdSystem.close();
 	}
 
-	private void traverseSlotChanges(LocalTransaction transaction, Visitor4 visitor){
+	private void traverseSlotChanges(LocalTransaction transaction, Visitor4<SlotChange> visitor){
 		_systemSlotChanges.traverseSlotChanges(visitor);
 		if(transaction == systemTransaction()){
 			return;
@@ -153,7 +173,7 @@ public class StandardIdSystem implements IdSystem {
 	}
 
 	public LocalObjectContainer localContainer() {
-		return _systemSlotChanges.systemTransaction().localContainer();
+		return _localContainer;
 	}
 
 	public FreespaceManager freespaceManager() {

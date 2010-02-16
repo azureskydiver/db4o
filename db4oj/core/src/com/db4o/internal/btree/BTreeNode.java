@@ -1179,10 +1179,6 @@ public final class BTreeNode extends CacheablePersistentBase{
         }
 	}
 
-    public boolean isFreespaceComponent() {
-        return _btree.isFreespaceComponent();
-    }
-    
     public boolean isLeaf() {
         return _isLeaf;
     }
