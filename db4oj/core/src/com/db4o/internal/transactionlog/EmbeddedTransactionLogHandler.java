@@ -16,29 +16,21 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 		super(container);
 	}
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(final int transactionId1, final int transactionId2) {
-	    if( (transactionId1 > 0)  &&  (transactionId1 == transactionId2)){
-	        return new InterruptedTransactionHandler() {
-	        	
-	        	private int _addressOfIncompleteCommit = transactionId1;  
-
-				public void completeInterruptedTransaction() {
-					StatefulBuffer bytes = new StatefulBuffer(_container.systemTransaction(), _addressOfIncompleteCommit, Const4.INT_LENGTH);
-					bytes.read();
-			        int length = bytes.readInt();
-			        if (length > 0) {
-			            bytes = new StatefulBuffer(_container.systemTransaction(), _addressOfIncompleteCommit, length);
-			            bytes.read();
-			            bytes.incrementOffset(Const4.INT_LENGTH);
-			            readWriteSlotChanges(bytes);
-			        }
-			        _container.writeTransactionPointer(0);
-			        flushDatabaseFile();
-
-				}
-			};
-	    }
-		return null;
+	public void completeInterruptedTransaction(final int transactionId1, final int transactionId2) {
+		if(transactionId1 <= 0 || transactionId1 != transactionId2){
+			return;
+		}
+		StatefulBuffer bytes = new StatefulBuffer(_container.systemTransaction(), transactionId1, Const4.INT_LENGTH);
+		bytes.read();
+        int length = bytes.readInt();
+        if (length > 0) {
+            bytes = new StatefulBuffer(_container.systemTransaction(), transactionId1, length);
+            bytes.read();
+            bytes.incrementOffset(Const4.INT_LENGTH);
+            readWriteSlotChanges(bytes);
+        }
+        _container.writeTransactionPointer(0);
+        flushDatabaseFile();
 	}
 
 	public Slot allocateSlot(boolean appendToFile, int slotChangeCount) {

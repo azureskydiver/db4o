@@ -58,7 +58,7 @@ public abstract class FileHeader {
 
     public abstract void initNew(LocalObjectContainer file) throws Db4oIOException;
 
-    public abstract InterruptedTransactionHandler interruptedTransactionHandler(LocalObjectContainer container);
+    public abstract void completeInterruptedTransaction(LocalObjectContainer container);
 
     public abstract int length();
     

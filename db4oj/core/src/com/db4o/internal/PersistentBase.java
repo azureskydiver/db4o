@@ -158,7 +158,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	        Slot slot = container.allocateSlot(length);
 	        
 	        if(isNew()){
-	            setID(container.idSystem().newId(trans, SlotChangeFactory.SYSTEM_OBJECTS));
+	            setID(container.idSystem().newId(trans, slotChangeFactory()));
                 container.idSystem().notifySlotCreated(trans, _id, slot, slotChangeFactory());
 	        }else{
 	            container.idSystem().notifySlotUpdated(trans, _id, slot, slotChangeFactory());

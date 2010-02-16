@@ -3,14 +3,18 @@
 package com.db4o.internal.ids;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
  */
 public class BTreeIdSystem implements GlobalIdSystem {
+	
+	
+
+	public BTreeIdSystem(int idSystemId) {
+		// TODO Auto-generated constructor stub
+	}
 
 	public void close() {
 		// TODO Auto-generated method stub
@@ -22,20 +26,21 @@ public class BTreeIdSystem implements GlobalIdSystem {
 		return null;
 	}
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(
+	public void completeInterruptedTransaction(
 			int transactionId1, int transactionId2) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public int newId() {
+		
+		
+		
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	public IdSystemCommitContext prepareCommit(int slotChangeCount) {
-		// TODO Auto-generated method stub
-		return null;
+	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
+		// TODO implement
 	}
 
 	public void returnUnusedIds(Visitable<Integer> visitable) {

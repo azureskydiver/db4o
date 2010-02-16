@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.ids;
 
-import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.ids.*;
@@ -12,9 +11,6 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-/**
- * @exclude
- */
 public class GlobalIdSystemTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 	
 	private static final int SLOT_LENGTH = 10;
@@ -74,14 +70,17 @@ public class GlobalIdSystemTestCase extends AbstractDb4oTestCase implements OptO
 	}
 
 	private void commit(final SlotChange ...slotChanges ) {
-		IdSystemCommitContext commitContext = _idSystem.prepareCommit(slotChanges.length);
-		commitContext.commit(new Visitable<SlotChange>() {
+		_idSystem.commit(new Visitable<SlotChange>() {
 			public void accept(Visitor4<SlotChange> visitor) {
 				for(SlotChange slotChange : slotChanges){
 					visitor.visit(slotChange);	
 				}
 			}
-		}, 1);
+		}, new Runnable() {
+			public void run() {
+				// do nothing
+			}
+		});
 	}
 
 	private LocalObjectContainer localContainer() {

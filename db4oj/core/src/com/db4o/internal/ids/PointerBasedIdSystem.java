@@ -29,14 +29,22 @@ public final class PointerBasedIdSystem implements GlobalIdSystem {
 		return _container.readPointerSlot(id);
 	}
 
-	public IdSystemCommitContext prepareCommit(final int slotChangeCount) {
-		return new IdSystemCommitContext() {
-			private final Slot reservedSlot = _transactionLogHandler.allocateSlot(false, slotChangeCount);
-			public void commit(Visitable<SlotChange> slotChanges,
-					int slotChangeCount) {
-				_transactionLogHandler.applySlotChanges(slotChanges, slotChangeCount, reservedSlot);
+	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
+		Slot reservedSlot = _transactionLogHandler.allocateSlot(false, countSlotChanges(slotChanges));
+		commitBlock.run();
+		_transactionLogHandler.applySlotChanges(slotChanges, countSlotChanges(slotChanges), reservedSlot);
+	}
+
+	private int countSlotChanges(Visitable<SlotChange> slotChanges) {
+		final IntByRef slotChangeCount = new IntByRef();
+		slotChanges.accept(new Visitor4<SlotChange>() {
+			public void visit(SlotChange slotChange) {
+                if(slotChange.slotModified()){
+                	slotChangeCount.value++;
+                }
 			}
-		};
+		});
+		return slotChangeCount.value;
 	}
 
 	public void returnUnusedIds(Visitable<Integer> visitable) {
@@ -60,9 +68,9 @@ public final class PointerBasedIdSystem implements GlobalIdSystem {
 		_transactionLogHandler.close();
 	}
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(
+	public void completeInterruptedTransaction(
 			int transactionId1, int transactionId2) {
-		return _transactionLogHandler.interruptedTransactionHandler(transactionId1, transactionId2);
+		_transactionLogHandler.completeInterruptedTransaction(transactionId1, transactionId2);
 	}
 
 }

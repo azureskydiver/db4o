@@ -3,9 +3,7 @@
 package com.db4o.internal.ids;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -20,9 +18,8 @@ public interface GlobalIdSystem {
 
 	public void close();
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(
-			int transactionId1, int transactionId2);
+	public void completeInterruptedTransaction(int transactionId1, int transactionId2);
 
-	public IdSystemCommitContext prepareCommit(int slotChangeCount);
+	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock);
 
 }

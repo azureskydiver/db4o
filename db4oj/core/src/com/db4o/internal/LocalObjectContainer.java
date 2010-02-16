@@ -15,7 +15,6 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -92,7 +91,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     void configureNewFile() {
         
-        newSystemData(configImpl().freespaceSystem());
+        newSystemData(configImpl().freespaceSystem(), configImpl().idSystemType());
         systemData().converterVersion(Converter.VERSION);
         createStringIO(_systemData.stringEncoding());
         createIdSystem();
@@ -118,10 +117,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _freespaceManager.start(_systemData.freespaceAddress());
     }
     
-    private void newSystemData(byte freespaceSystem){
+    private void newSystemData(byte freespaceSystemType, byte idSystemType){
         _systemData = new SystemData();
         _systemData.stringEncoding(configImpl().encoding());
-        _systemData.freespaceSystem(freespaceSystem);
+        _systemData.freespaceSystem(freespaceSystemType);
+        _systemData.idSystemType(idSystemType);
     }
     
     public int converterVersion() {
@@ -458,7 +458,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     void readThis() throws OldFormatException {
-        newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM);
+        newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM, GlobalIdSystemFactory.LEGACY);
         blockSizeReadFromFile(1);
         
         _fileHeader = FileHeader.read(this);
@@ -494,12 +494,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         writeHeader(true, false);
         
-        InterruptedTransactionHandler interruptedTransactionHandler =  _fileHeader.interruptedTransactionHandler(this);
-        
-        if (interruptedTransactionHandler != null) {
-            if (!configImpl().commitRecoveryDisabled()) {
-            	interruptedTransactionHandler.completeInterruptedTransaction();
-            }
+        if (!configImpl().commitRecoveryDisabled()) {
+        	_fileHeader.completeInterruptedTransaction(this);
         }
 
         if(Converter.convert(new ConversionStage.SystemUpStage(this))){

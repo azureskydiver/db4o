@@ -4,7 +4,6 @@ package com.db4o.internal.ids;
 
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -87,9 +86,9 @@ public final class TransportStandardIdSystem implements IdSystem {
 		return localContainer().readPointerSlot(id);
 	}
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(
+	public void completeInterruptedTransaction(
 			int transactionId1, int transactionId2) {
-		return null;
+		// do nothing
 	}
 
 	public boolean isDeleted(Transaction transaction, int id) {

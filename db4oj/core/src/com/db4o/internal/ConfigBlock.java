@@ -8,7 +8,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -98,8 +97,8 @@ public final class ConfigBlock {
         return timerFileLock().openTime();
     }
 	
-	public InterruptedTransactionHandler interruptedTransactionHandler(){
-		return _container.idSystem().interruptedTransactionHandler(_transactionId1, _transactionId2);
+	public void completeInterruptedTransaction(){
+		_container.idSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
 	}
     
 	private byte[] passwordToken() {
