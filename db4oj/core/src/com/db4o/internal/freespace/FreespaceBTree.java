@@ -20,10 +20,6 @@ public class FreespaceBTree extends BTree{
     	return false;
     }
     
-    public boolean isFreespaceComponent() {
-        return true;
-    }
-    
     @Override
     public SlotChangeFactory slotChangeFactory() {
     	return SlotChangeFactory.FREE_SPACE;

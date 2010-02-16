@@ -139,8 +139,6 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     }
 
     public final void write(Transaction trans) {
-    	
-        
         if (! writeObjectBegin()) {
             return;
         }
@@ -181,10 +179,6 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 		return new ByteArrayBuffer(length);
 	}
 	
-    
-    public boolean isFreespaceComponent(){
-        return false;
-    }
     
 	private final void writeToFile(Transaction trans, ByteArrayBuffer writer, Slot slot) {
 		
