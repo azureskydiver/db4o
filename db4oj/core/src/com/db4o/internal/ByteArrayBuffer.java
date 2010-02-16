@@ -286,4 +286,11 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 		throw new IllegalStateException();
 	}
 
+	public boolean eof() {
+		if(Deploy.debug){
+			return _offset >= _buffer.length - Const4.ADDED_LENGTH; 
+		}
+		return _offset == _buffer.length;
+	}
+
 }

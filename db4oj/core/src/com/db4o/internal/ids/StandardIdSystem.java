@@ -9,7 +9,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -53,27 +52,20 @@ public class StandardIdSystem implements IdSystem {
 	}
 
 	public void commit(final LocalTransaction transaction) {
-		
-		IdSystemCommitContext commitContext = _globalIdSystem.prepareCommit(countSlotChanges(transaction));
-		
-        freeSlotChanges(transaction, false);
-                
-        freespaceBeginCommit();
-        
-        commitFreespace();
-        
-        freeSlotChanges(transaction, true);
-        
-        Visitable<SlotChange> slotChangeVisitable = new Visitable<SlotChange>() {
-        	public void accept(Visitor4<SlotChange> visitor) {
-        		traverseSlotChanges(transaction, visitor);
-        	}
-        };
-        
-        commitContext.commit(slotChangeVisitable, countSlotChanges(transaction));
-        
+		Visitable<SlotChange> slotChangeVisitable = new Visitable<SlotChange>() {
+			public void accept(Visitor4<SlotChange> visitor) {
+				traverseSlotChanges(transaction, visitor);
+			}
+		};
+		_globalIdSystem.commit(slotChangeVisitable, new Runnable() {
+			public void run() {
+				freeSlotChanges(transaction, false);
+				freespaceBeginCommit();
+				commitFreespace();
+				freeSlotChanges(transaction, true);
+			}
+		});
         freespaceEndCommit();
-
 	}
 
 	private void freeSlotChanges(LocalTransaction transaction, boolean forFreespace) {
@@ -87,8 +79,8 @@ public class StandardIdSystem implements IdSystem {
 		return slotChanges(transaction) == _systemSlotChanges;
 	}
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(int transactionId1, int transactionId2) {
-		return _globalIdSystem.interruptedTransactionHandler(transactionId1, transactionId2);
+	public void completeInterruptedTransaction(int transactionId1, int transactionId2) {
+		_globalIdSystem.completeInterruptedTransaction(transactionId1, transactionId2);
 	}
 
 	public Slot committedSlot(int id) {

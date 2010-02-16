@@ -5,7 +5,7 @@ package com.db4o.internal.fileheader;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.internal.transactionlog.*;
+
 
 
 /**
@@ -76,8 +76,8 @@ public class FileHeader1 extends FileHeader {
     }
 
     @Override
-    public InterruptedTransactionHandler interruptedTransactionHandler(LocalObjectContainer container) {
-    	return container.idSystem().interruptedTransactionHandler(_transactionId1, _transactionId2);
+    public void completeInterruptedTransaction(LocalObjectContainer container) {
+    	container.idSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
     }
 
     public int length() {

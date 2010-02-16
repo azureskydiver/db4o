@@ -27,7 +27,7 @@ public class GlobalIdSystemFactory {
 	    	case POINTER_BASED:
 	    		return new PointerBasedIdSystem(localContainer);
 	    	case BTREE:
-	    		
+	    		return new BTreeIdSystem(idSystemId);
 	        default:
 	        	return new PointerBasedIdSystem(localContainer);
         }

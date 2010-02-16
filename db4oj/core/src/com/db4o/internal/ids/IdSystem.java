@@ -4,7 +4,6 @@ package com.db4o.internal.ids;
 
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
-import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -22,7 +21,7 @@ public interface IdSystem {
 
 	public void commit(LocalTransaction transaction);
 
-	public InterruptedTransactionHandler interruptedTransactionHandler(
+	public void completeInterruptedTransaction(
 			int transactionId1, int transactionId2);
 
 	public Slot committedSlot(int id);

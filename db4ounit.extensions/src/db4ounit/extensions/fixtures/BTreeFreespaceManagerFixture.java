@@ -6,10 +6,6 @@ package db4ounit.extensions.fixtures;
 import com.db4o.*;
 import com.db4o.config.*;
 
-
-/**
- * @exclude
- */
 public class BTreeFreespaceManagerFixture extends Db4oSolo {
 	
     protected ObjectContainer createDatabase(Configuration config) {

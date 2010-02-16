@@ -101,8 +101,8 @@ public class FileHeader0 extends FileHeader {
         }
     }
 
-    public InterruptedTransactionHandler interruptedTransactionHandler(LocalObjectContainer container) {
-        return _configBlock.interruptedTransactionHandler();
+    public void completeInterruptedTransaction(LocalObjectContainer container) {
+        _configBlock.completeInterruptedTransaction();
     }
 
     public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {

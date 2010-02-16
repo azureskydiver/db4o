@@ -22,10 +22,6 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     // (int) identity ID
     // (long) versionGenerator
 	// (int) uuid index ID
-	
-	
-	// Planned:
-	
 	// (byte) idSystem
 	// (int) idSystem ID
 	
@@ -57,12 +53,12 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         _systemData.lastTimeStampID(reader.readLong());
         _systemData.uuidIndexId(reader.readInt());
         
-//        if(reader.eof()){
-//        	return;
-//        }
-        
-        // read ID system
-        
+        if(reader.eof()){
+        	// older versions of the file header don't have IdSystem information.
+        	return;
+        }
+        _systemData.idSystemType(reader.readByte());
+        _systemData.idSystemID(reader.readInt());
     }
 
     public void writeThis(Transaction trans, ByteArrayBuffer writer) {
@@ -72,6 +68,8 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         writer.writeInt(_systemData.identity().getID(trans));
         writer.writeLong(_systemData.lastTimeStampID());
         writer.writeInt(_systemData.uuidIndexId());
+        writer.writeByte(_systemData.idSystemType());
+        writer.writeInt(_systemData.idSystemID());
     }
     
     public void readIdentity(LocalTransaction trans) {

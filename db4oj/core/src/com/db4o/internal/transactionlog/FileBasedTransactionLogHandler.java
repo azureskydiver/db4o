@@ -39,31 +39,26 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 		return new FileStorage().open(new BinConfiguration(fileName, _container.config().lockFile(), 0, false));
 	}
 	
-	public InterruptedTransactionHandler interruptedTransactionHandler(int transactionId1, int transactionId2) {
+	public void completeInterruptedTransaction(int transactionId1, int transactionId2) {
 		if(!File4.exists(lockFileName(_fileName))){
-			return null;
+			return;
 		}
 		if( ! lockFileSignalsInterruptedTransaction()){
-			return null;
+			return;
 		}
-		return new InterruptedTransactionHandler() {
-			
-			public void completeInterruptedTransaction() {
-				ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.INT_LENGTH);
-				openLogFile();
-				read(_logFile, buffer);
-				int length = buffer.readInt();
-				if(length > 0){
-					buffer = new ByteArrayBuffer(length);
-					read(_logFile, buffer);
-					buffer.incrementOffset(Const4.INT_LENGTH);
-					readWriteSlotChanges(buffer);
-				}
-				deleteLockFile();
-				closeLogFile();
-				deleteLogFile();
-			}
-		};
+		ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.INT_LENGTH);
+		openLogFile();
+		read(_logFile, buffer);
+		int length = buffer.readInt();
+		if(length > 0){
+			buffer = new ByteArrayBuffer(length);
+			read(_logFile, buffer);
+			buffer.incrementOffset(Const4.INT_LENGTH);
+			readWriteSlotChanges(buffer);
+		}
+		deleteLockFile();
+		closeLogFile();
+		deleteLogFile();
 	}
 
 	private boolean lockFileSignalsInterruptedTransaction() {
