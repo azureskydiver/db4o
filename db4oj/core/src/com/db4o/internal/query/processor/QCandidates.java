@@ -186,6 +186,9 @@ public final class QCandidates implements Visitor4 {
     	if(i_classMetadata.isPrimitive()){
     		return Iterators.EMPTY_ITERATOR;
     	}
+    	if(!i_classMetadata.hasClassIndex()) {
+    		return Iterators.EMPTY_ITERATOR;
+    	}
     	return BTreeClassIndexStrategy.iterate(i_classMetadata, i_trans);
     }
 
