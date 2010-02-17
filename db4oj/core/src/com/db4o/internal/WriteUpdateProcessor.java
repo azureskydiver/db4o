@@ -69,7 +69,7 @@ class WriteUpdateProcessor {
 	}
 
 	private void deleteMembers(StatefulBuffer objectBytes) {
-		ObjectHeader oh = new ObjectHeader(container(), _clazz, objectBytes);
+		ObjectHeader oh = new ObjectHeader(_clazz, objectBytes);
         
         DeleteInfo info = (DeleteInfo)TreeInt.find(_transaction._delete, _id);
         if(info != null){

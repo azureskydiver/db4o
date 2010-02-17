@@ -182,7 +182,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             return;
         }
         if(hasClassIndex() || hasVirtualAttributes()){
-            ObjectHeader oh = new ObjectHeader(_container, this, buffer);
+            ObjectHeader oh = new ObjectHeader(this, buffer);
             ObjectIdContextImpl context = new ObjectIdContextImpl(buffer.transaction(), buffer, oh, buffer.getID());
             Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).addFieldIndices(context);
         }
@@ -738,7 +738,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 
 	private void cascadeDeletion(StatefulBuffer buffer, Object obj) {
-	    ObjectHeader oh = new ObjectHeader(_container, this, buffer);
+	    ObjectHeader oh = new ObjectHeader(this, buffer);
         DeleteContextImpl context = new DeleteContextImpl(buffer, oh, classReflector(), null);
         deleteMembers(context, arrayTypeFor(buffer, obj), false);
     }
@@ -850,8 +850,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             return HandlerVersion.INVALID;
         }
         buffer.seek(0);
-        ObjectHeader oh = new ObjectHeader(_container, this, buffer);
-        boolean res = seekToField(new ObjectHeaderContext(trans, buffer, oh), field);
+        ObjectHeader oh = new ObjectHeader(_container, buffer);
+        boolean res = oh.classMetadata().seekToField(new ObjectHeaderContext(trans, buffer, oh), field);
         if(! res){
             return HandlerVersion.INVALID;
         }
@@ -1482,9 +1482,9 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     
 	public void readVirtualAttributes(Transaction trans, ObjectReference ref, boolean lastCommitted) {
         int id = ref.getID();
-        ObjectContainerBase stream = trans.container();
-        ByteArrayBuffer buffer = stream.readBufferById(trans, id, lastCommitted);
-        ObjectHeader oh = new ObjectHeader(stream, this, buffer);
+        ObjectContainerBase container = trans.container();
+        ByteArrayBuffer buffer = container.readBufferById(trans, id, lastCommitted);
+        ObjectHeader oh = new ObjectHeader(this, buffer);
         ObjectReferenceContext context = new ObjectReferenceContext(trans,buffer, oh, ref);
         Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).readVirtualAttributes(context);
 	}

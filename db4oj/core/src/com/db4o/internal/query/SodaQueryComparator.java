@@ -188,7 +188,7 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 	}
 
 	private Object readFieldValue(int id, FieldMetadata field) {
-		ByteArrayBuffer buffer = BufferFor(id);
+		ByteArrayBuffer buffer = bufferFor(id);
 		HandlerVersion handlerVersion = field.containingClass().seekToField(_transaction, buffer, field);
 		if (handlerVersion == HandlerVersion.INVALID) {
 			return null;
@@ -198,7 +198,7 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 		return field.read(context);
 	}
 
-	private ByteArrayBuffer BufferFor(int id) {
+	private ByteArrayBuffer bufferFor(int id) {
 		ByteArrayBuffer cachedBuffer = _bufferCache.get(id);
 		if (null != cachedBuffer)
 			return cachedBuffer;
