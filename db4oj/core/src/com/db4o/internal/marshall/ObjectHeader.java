@@ -27,7 +27,7 @@ public final class ObjectHeader {
     	this(null,classMetadata,reader);
     }
     
-    public ObjectHeader(ObjectContainerBase stream, ClassMetadata classMetadata, ReadWriteBuffer reader){
+    private ObjectHeader(ObjectContainerBase container, ClassMetadata classMetadata, ReadWriteBuffer reader){
         if (Deploy.debug) {
             reader.readBegin(Const4.YAPOBJECT);
         }
@@ -36,7 +36,7 @@ public final class ObjectHeader {
         
         classID=normalizeID(classID);
         
-        _classMetadata=(classMetadata!=null ? classMetadata : stream.classMetadataForID(classID));
+        _classMetadata=(classMetadata!=null ? classMetadata : container.classMetadataForID(classID));
 
         if (Deploy.debug) {
         	// This check has been added to cope with defragment in debug mode: SlotDefragment#setIdentity()
