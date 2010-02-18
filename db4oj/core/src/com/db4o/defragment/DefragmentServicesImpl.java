@@ -69,6 +69,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		sourceConfig.readOnly(defragConfig.readOnly());
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_sourceDb.showInternalClasses(true);
+		defragConfig.db4oConfig().blockSize(_sourceDb.blockSize());
 		_targetDb = freshTargetFile(defragConfig);
 		_mapping=defragConfig.mapping();
 		_mapping.open();
@@ -333,7 +334,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 
 	public int blockSize() {
-		return _sourceDb.config().blockSize();
+		return _sourceDb.blockSize();
 	}
 
 	public int sourceAddressByID(int sourceID) {
