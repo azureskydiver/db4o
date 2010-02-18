@@ -1927,9 +1927,6 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     	ObjectHeader header = ObjectHeader.defrag(context);
     	DefragmentContextImpl childContext = new DefragmentContextImpl(context, header);
     	header.classMetadata().defragment(childContext);
-        if (Deploy.debug) {
-            context.readEnd();
-        }
     }	
 
 	public void defragment(DefragmentContext context) {
