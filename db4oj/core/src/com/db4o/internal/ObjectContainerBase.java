@@ -368,11 +368,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		synchronized (_lock) {
 			closeUserTransaction();
 			closeSystemTransaction();
+			closeIdSystem();
 			stopSession();
 			shutdownDataStorage();
 		}
 	}
 	
+	protected abstract void closeIdSystem();
+
 	protected final void closeUserTransaction(){
 		closeTransaction(_transaction, false,false);
 	}

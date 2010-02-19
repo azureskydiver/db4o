@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
 
 
@@ -10,8 +11,11 @@ import com.db4o.internal.references.*;
  */
 class TransactionObjectCarrier extends LocalTransaction{
 	
-	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, ReferenceSystem referenceSystem) {
-		super(container, parentTransaction, referenceSystem);
+	private final IdSystem _idSystem;
+	
+	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, IdSystem idSystem, ReferenceSystem referenceSystem) {
+		super(container, parentTransaction, idSystem, referenceSystem);
+		_idSystem = idSystem;
 	}
 	
 	public void commit() {
@@ -21,5 +25,6 @@ class TransactionObjectCarrier extends LocalTransaction{
     boolean supportsVirtualFields(){
         return false;
     }
+    
 
 }

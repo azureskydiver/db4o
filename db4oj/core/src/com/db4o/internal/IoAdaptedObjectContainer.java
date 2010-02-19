@@ -159,15 +159,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
     @Override
     public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
     	transaction.close(rollbackOnClose);
-    	if(idSystem() == null){
-    		// Can happen if open failed. We don't want to override the current exception.
-    		return;
-    	}
-    	if(! isSystemTransaction){
-    		idSystem().removeTransaction((LocalTransaction)transaction);
-    	}else{
-    		idSystem().close();
-    	}
     }
     
     public void commit1(Transaction trans) {

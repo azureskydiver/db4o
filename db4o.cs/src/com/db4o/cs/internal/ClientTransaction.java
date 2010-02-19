@@ -5,6 +5,7 @@ package com.db4o.cs.internal;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
 
 public final class ClientTransaction extends Transaction {
@@ -79,5 +80,10 @@ public final class ClientTransaction extends Transaction {
         int cascade) {
     	// do nothing
     }
+
+	@Override
+	public IdSystem idSystem() {
+		return null;
+	}
 
 }

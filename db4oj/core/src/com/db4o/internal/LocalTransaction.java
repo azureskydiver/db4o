@@ -26,8 +26,10 @@ public class LocalTransaction extends Transaction {
 	private final CommittedCallbackDispatcher _committedCallbackDispatcher;
 	
 	private final Cache4<Integer, ByteArrayBuffer> _slotCache;
+
+	private final IdSystem _idSystem;
 	
-	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, ReferenceSystem referenceSystem) {
+	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, IdSystem idSystem, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
         _committedCallbackDispatcher = new CommittedCallbackDispatcher() {
@@ -39,6 +41,7 @@ public class LocalTransaction extends Transaction {
     		}
     	};
     	_slotCache = createSlotCache();
+    	_idSystem = idSystem;
 	}
 
 	private Cache4<Integer, ByteArrayBuffer> createSlotCache() {
@@ -131,7 +134,7 @@ public class LocalTransaction extends Transaction {
         
         container().writeDirty();
         
-        idSystem().commit(this);
+        idSystem().commit();
         
     }
 	
@@ -176,7 +179,7 @@ public class LocalTransaction extends Transaction {
 
 	
 	protected void clear() {
-		idSystem().clear(this);
+		idSystem().clear();
 		disposeParticipants();
         _participants.clear();
 	}
@@ -193,7 +196,7 @@ public class LocalTransaction extends Transaction {
             
             rollbackParticipants();
             
-            idSystem().rollback(this);
+            idSystem().rollback();
             
             rollBackTransactionListeners();
             
@@ -294,7 +297,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	private CallbackObjectInfoCollections collectCommittedCallbackInfo(Collection4 deleted) {
-		if (! idSystem().isDirty(this)) {
+		if (! idSystem().isDirty()) {
 			return CallbackObjectInfoCollections.EMTPY;
 		}
 		final Collection4 added = new Collection4();
@@ -315,7 +318,7 @@ public class LocalTransaction extends Transaction {
 	}
 
 	private CallbackObjectInfoCollections collectCommittingCallbackInfo() {
-		if (! idSystem().isDirty(this)) {
+		if (! idSystem().isDirty()) {
 			return CallbackObjectInfoCollections.EMTPY;
 		}
 		
@@ -352,11 +355,11 @@ public class LocalTransaction extends Transaction {
 	}
 
 	private void collectCallBackInfo(final CallbackInfoCollector collector) {
-		idSystem().collectCallBackInfo(this, collector);
+		idSystem().collectCallBackInfo(collector);
 	}
 	
-	private IdSystem idSystem() {
-		return localContainer().idSystem();
+	public IdSystem idSystem() {
+		return _idSystem;
 	}
 
 	public ObjectInfo frozenReferenceFor(final int id) {

@@ -59,7 +59,7 @@ public class FileHeader1 extends FileHeader {
 
     public void initNew(LocalObjectContainer file) throws Db4oIOException {
         commonTasksForNewAndRead(file);
-        _variablePart = new FileHeaderVariablePart1(0, file.systemData());
+        _variablePart = new FileHeaderVariablePart1(file, 0, file.systemData());
         writeVariablePart(file, 0);
     }
     
@@ -77,7 +77,7 @@ public class FileHeader1 extends FileHeader {
 
     @Override
     public void completeInterruptedTransaction(LocalObjectContainer container) {
-    	container.idSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
+    	container.globalIdSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
     }
 
     public int length() {
@@ -93,7 +93,7 @@ public class FileHeader1 extends FileHeader {
         reader.seek(BLOCKSIZE_OFFSET);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
-        _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
+        _variablePart = new FileHeaderVariablePart1(file, reader.readInt(), file.systemData());
         _variablePart.read(file.systemTransaction());
     }
     

@@ -17,7 +17,7 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             
             int id = _payLoad.getID();
             
-            localContainer().idSystem().prefetchedIDConsumed(transaction(), id);            
+            transaction().idSystem().prefetchedIDConsumed(id);            
             
             Slot slot = localContainer().allocateSlotForNewUserObject(transaction(), id, _payLoad.length());
             

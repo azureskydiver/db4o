@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.ids;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
@@ -44,7 +45,7 @@ public class GlobalIdSystemTestCase extends AbstractDb4oTestCase implements OptO
 		
 		SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(id);
 		Slot updatedSlot = localContainer().allocateSlot(SLOT_LENGTH);
-		slotChange.notifySlotUpdated(localContainer(), updatedSlot);
+		slotChange.notifySlotUpdated(freespaceManager(), updatedSlot);
 		commit(slotChange);
 		
 		Assert.areEqual(updatedSlot, _idSystem.committedSlot(id));
@@ -55,7 +56,7 @@ public class GlobalIdSystemTestCase extends AbstractDb4oTestCase implements OptO
 		allocateNewSlot(id);
 		
 		SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(id);
-		slotChange.notifyDeleted(localContainer());
+		slotChange.notifyDeleted(freespaceManager());
 		commit(slotChange);
 		
 		Assert.isFalse(isValid( _idSystem.committedSlot(id)));
@@ -89,6 +90,10 @@ public class GlobalIdSystemTestCase extends AbstractDb4oTestCase implements OptO
 	
 	private boolean isValid(Slot slot) {
 		return slot != null && ! slot.isNull();
+	}
+	
+	private FreespaceManager freespaceManager(){
+		return localContainer().freespaceManager();
 	}
 
 }

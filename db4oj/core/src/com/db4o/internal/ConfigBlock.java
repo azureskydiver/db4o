@@ -34,6 +34,7 @@ public final class ConfigBlock {
     // int    converter versions
     
 	private final LocalObjectContainer		_container;
+	
     private final TimerFileLock _timerFileLock;
     
 	private int					_address;
@@ -98,7 +99,7 @@ public final class ConfigBlock {
     }
 	
 	public void completeInterruptedTransaction(){
-		_container.idSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
+		_container.globalIdSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
 	}
     
 	private byte[] passwordToken() {

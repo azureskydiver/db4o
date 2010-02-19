@@ -28,7 +28,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	
     	LocalTransaction transaction = (LocalTransaction) context.transaction();
 		LocalObjectContainer localContainer = (LocalObjectContainer)transaction.container();
-    	Slot oldSlot = localContainer.idSystem().committedSlot(context.id());
+    	Slot oldSlot = transaction.idSystem().committedSlot(context.id());
     	
         int savedOffset = context.offset();
         int db4oDatabaseIdentityID = context.readInt();
@@ -116,7 +116,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
     protected void rebuildIndexForObject(LocalObjectContainer container,
 			ClassMetadata classMetadata, int objectId) throws FieldIndexException {
-		Slot slot = container.idSystem().currentSlot((LocalTransaction) container.systemTransaction(), objectId);
+		Slot slot = container.systemTransaction().idSystem().currentSlot(objectId);
 		DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(container,
 				classMetadata, slot, true);
 		if (null == data) {

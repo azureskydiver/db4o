@@ -5,28 +5,28 @@ package com.db4o.internal.ids;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 public class StandardIdSlotChanges {
 	
     private final LockedTree _slotChanges = new LockedTree();
+    
+    private final TransactionalIdSystem _idSystem;
 	
-	private final LocalObjectContainer _container;
+	private final Closure4<FreespaceManager> _freespaceManager;
 	
 	private TreeInt _prefetchedIDs;
 
-	public StandardIdSlotChanges(LocalObjectContainer container) {
-		_container = container;
+	public StandardIdSlotChanges(TransactionalIdSystem idSystem, Closure4<FreespaceManager> freespaceManager) {
+		_idSystem = idSystem;
+		_freespaceManager = freespaceManager;
 	}
 
-	private LocalObjectContainer localContainer() {
-		return _container;
-	}
-	
 	public final void freeSlotChanges(final boolean forFreespace, boolean traverseMutable) {
         Visitor4 visitor = new Visitor4() {
             public void visit(Object obj) {
-                ((SlotChange)obj).freeDuringCommit(localContainer(), forFreespace);
+                ((SlotChange)obj).freeDuringCommit(_idSystem, freespaceManager(), forFreespace);
             }
         };
         if(traverseMutable){
@@ -43,7 +43,7 @@ public class StandardIdSlotChanges {
 	public void rollback() {
 		_slotChanges.traverseLocked(new Visitor4() {
             public void visit(Object slotChange) {
-                ((SlotChange) slotChange).rollback(localContainer());
+                ((SlotChange) slotChange).rollback(freespaceManager());
             }
         });
 	}
@@ -102,11 +102,16 @@ public class StandardIdSlotChanges {
 	}
 	
 	void notifySlotUpdated(int id, Slot slot,  SlotChangeFactory slotChangeFactory) {
-        produceSlotChange(id, slotChangeFactory).notifySlotUpdated(localContainer(), slot);
+        produceSlotChange(id, slotChangeFactory).notifySlotUpdated(freespaceManager(), slot);
 	}
 	
 	public void notifySlotDeleted(int id, SlotChangeFactory slotChangeFactory) {
-		produceSlotChange(id, slotChangeFactory).notifyDeleted(localContainer());
+		produceSlotChange(id, slotChangeFactory).notifyDeleted(freespaceManager());
 	}
+	
+	private FreespaceManager freespaceManager() {
+		return _freespaceManager.run();
+	}
+
 
 }
