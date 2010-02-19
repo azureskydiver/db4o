@@ -98,7 +98,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
 	}
     
     public Pointer4 allocateSlot(){
-        int length = container().blockAlignedBytes(marshalledLength());
+        int length = container().blockConverter().blockAlignedBytes(marshalledLength());
         Slot slot = isNew() ? allocateNewSlot(length) : allocateUpdateSlot(length);
         return new Pointer4(objectID(), slot);
     }
@@ -140,7 +140,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         if(! align){
             return buffer.length();
         }
-        return container().blockAlignedBytes(buffer.length());
+        return container().blockConverter().blockAlignedBytes(buffer.length());
     }
     
     private void writeObjectClassID(ByteArrayBuffer reader, int id) {

@@ -12,6 +12,8 @@ import com.db4o.internal.slots.*;
  */
 public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
+    private final LocalObjectContainer     _file;
+	
 	private RamFreespaceManager _delegate;
 	
 	private FreespaceBTree _slotsByAddress;
@@ -26,9 +28,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 
 	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
 	
-	public BTreeFreespaceManager(LocalObjectContainer file) {
-		super(file);
-		_delegate = new RamFreespaceManager(file);
+	public BTreeFreespaceManager(LocalObjectContainer file, Procedure4<Slot> slotFreedCallback,  int discardLimit) {
+		super(slotFreedCallback, discardLimit);
+		_file = file;
+		_delegate = new RamFreespaceManager(slotFreedCallback, discardLimit);
 	}
 	
 	private void addSlot(Slot slot) {
@@ -106,7 +109,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 			if(! canDiscard(newFreeSlot.length())){
 				addSlot(newFreeSlot);
 			}
-			_file.overwriteDeletedBlockedSlot(slot);
+			slotFreed(slot);
 		} finally{
             endDelegation();
 		}
@@ -160,10 +163,12 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         createBTrees(addressId, lengthID);
         _slotsByAddress.read(transaction());
         _slotsByLength.read(transaction());
+        
         Slot slot = _file.readPointerSlot(_delegateIndirectionID);
 		_file.writePointer(_delegateIndirectionID, Slot.ZERO);
 		_file.syncFiles();
-        _delegate.read(slot);
+        _delegate.read(_file, slot);
+        
     }
 	
 	private void initializeNew() {
@@ -181,7 +186,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		return _delegationRequests > 0;
 	}
 
-    public void read(int freeSpaceID) {
+    public void read(LocalObjectContainer container, int freeSpaceID) {
         // do nothing
 	}
 
@@ -233,12 +238,12 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		_slotsByAddress.traverseKeys(transaction(), visitor);
 	}
     
-    public int write() {
+    public int write(LocalObjectContainer container) {
         try{
             beginDelegation();
             Slot slot = _file.allocateSlot(_delegate.marshalledLength());
             Pointer4 pointer = new Pointer4(_delegateIndirectionID, slot);
-            _delegate.write(pointer);
+            _delegate.write(_file, pointer);
     		return _idArray.getID();
         }finally{
             endDelegation();
@@ -248,5 +253,11 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	public void listener(FreespaceListener listener) {
 		_listener = listener;
 	}
+	
+    private final LocalTransaction transaction(){
+        return (LocalTransaction)_file.systemTransaction();
+    }
+
+
 
 }

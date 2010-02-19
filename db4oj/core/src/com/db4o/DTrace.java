@@ -313,6 +313,9 @@ public class DTrace {
     
     public void logLength(Slot slot){
     	if(enabled){
+    		if(slot == null){
+    			return;
+    		}
     		logLength(slot.address(), slot.length());
     	}
     }

@@ -12,7 +12,7 @@ import db4ounit.extensions.*;
 public class IndexedBlockSizeQueryTestCase extends AbstractDb4oTestCase{
 
     public static void main(String[] args) {
-        new IndexedBlockSizeQueryTestCase().runSolo();
+        new IndexedBlockSizeQueryTestCase().runNetworking();
     }
     
     protected void configure(Configuration config) throws Exception {
@@ -22,12 +22,12 @@ public class IndexedBlockSizeQueryTestCase extends AbstractDb4oTestCase{
     
     public static class Item {
         
-        public Object _untypedMember;
+        // public Object _untypedMember;
         
         public String _name;
         
         public Item(String name){
-            _untypedMember = name;
+            // _untypedMember = name;
             _name = name;
         }
     }

@@ -506,7 +506,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		message.write(iSocket);
 		Msg msg = readLoginMessage(iSocket);
 		ByteArrayBuffer payLoad = msg.payLoad();
-		_blockSize = payLoad.readInt();
+		blockSize(payLoad.readInt());
 		int doEncrypt = payLoad.readInt();
 		if (doEncrypt == 0) {
 			_handlers.oldEncryptionOff();
@@ -1158,6 +1158,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         int res = expectedByteResponse(Msg.TA_IS_DELETED).readInt();
         return res == 1;
 	}
-
+	
+    public void blockSize(int size){
+    	createBlockConverter(size);
+    	_blockSize = size;
+    }
 	
 }

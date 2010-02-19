@@ -14,10 +14,10 @@ import com.db4o.internal.slots.*;
 public class FreespaceManagerIx extends AbstractFreespaceManager{
     
     
-    public FreespaceManagerIx(LocalObjectContainer file){
-        super(file);
-    }
-    
+	public FreespaceManagerIx(int discardLimit) {
+		super(null, discardLimit);
+	}
+
 	public Slot allocateTransactionLogSlot(int length) {
 		throw new IllegalStateException();
 	}
@@ -59,7 +59,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     	throw new IllegalStateException();
 	}
     
-    public void read(int freespaceID) {
+    public void read(LocalObjectContainer container, int freespaceID) {
     	
     }
     
@@ -71,7 +71,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return FM_IX;
     }
 
-    public int write() {
+    public int write(LocalObjectContainer container) {
         return 0;  
     }
 

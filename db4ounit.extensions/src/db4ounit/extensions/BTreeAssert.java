@@ -94,9 +94,9 @@ public class BTreeAssert {
         final Collection4 freedSlots = new Collection4();
         
         container.installDebugFreespaceManager(
-            new FreespaceManagerForDebug(container, new SlotListener() {
+            new FreespaceManagerForDebug(new SlotListener() {
                 public void onFree(Slot slot) {
-                    freedSlots.add(container.toNonBlockedLength(slot));
+                    freedSlots.add(slot);
                 }
         }));
         

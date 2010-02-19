@@ -37,10 +37,9 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 		int transactionLogByteCount = transactionLogSlotLength(slotChangeCount);
     	FreespaceManager freespaceManager = _container.freespaceManager();
 		if(! appendToFile && freespaceManager != null){
-    		int blockedLength = _container.bytesToBlocks(transactionLogByteCount);
-    		Slot slot = freespaceManager.allocateTransactionLogSlot(blockedLength);
+    		Slot slot = freespaceManager.allocateTransactionLogSlot(transactionLogByteCount);
     		if(slot != null){
-    			return _container.toNonBlockedLength(slot);
+    			return slot;
     		}
     	}
     	return _container.appendBytes(transactionLogByteCount);
@@ -53,7 +52,7 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
     	if(_container.freespaceManager() == null){
     	    return;
     	}
-    	_container.freespaceManager().freeTransactionLogSlot(_container.toBlockedLength(slot));
+    	_container.freespaceManager().freeTransactionLogSlot(slot);
 	}
 
 	public void applySlotChanges(Visitable<SlotChange> slotChangeTree, int slotChangeCount, Slot reservedSlot) {

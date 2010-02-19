@@ -151,7 +151,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	        }
 	        
 	        int length = ownLength();
-	        length = container.blockAlignedBytes(length);
+	        length = container.blockConverter().blockAlignedBytes(length);
 	        
 	        Slot slot = container.allocateSlot(length);
 	        

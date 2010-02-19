@@ -140,7 +140,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	
     @Override
     public Slot allocateSlot(int length){
-        return appendBlocks(length);
+        return appendBytes(length);
 	}
 	
 	@Override
