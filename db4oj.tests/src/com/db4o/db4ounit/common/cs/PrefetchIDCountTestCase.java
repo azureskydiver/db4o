@@ -49,8 +49,8 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 		final ServerMessageDispatcherImpl msgDispatcher = firstMessageDispatcherFor(server);
 		Transaction transaction = msgDispatcher.transaction();
 		LocalObjectContainer container = (LocalObjectContainer) server.objectContainer();
-		StandardIdSystem standardIdSystem = (StandardIdSystem) container.idSystem();
-		final int prefetchedID = standardIdSystem.prefetchID(transaction);
+		IdSystem idSystem = transaction.idSystem();
+		final int prefetchedID = idSystem.prefetchID();
 		
 		Assert.isGreater(0, prefetchedID);
 		

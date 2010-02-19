@@ -76,7 +76,7 @@ public class BTreeAssert {
 	public static void assertAllSlotsFreed(LocalTransaction trans, BTree bTree, CodeBlock block) throws Throwable {
 		
 		final LocalObjectContainer container = (LocalObjectContainer)trans.container();
-		IdSystem idSystem = container.idSystem();
+		IdSystem idSystem = trans.idSystem();
 		
 		Iterator4 allSlotIDs = bTree.allNodeIds(trans.systemTransaction());
         
@@ -84,11 +84,11 @@ public class BTreeAssert {
         
         while(allSlotIDs.moveNext()){
             int slotID = ((Integer)allSlotIDs.current()).intValue();
-			Slot slot = idSystem.currentSlot(trans, slotID);
+			Slot slot = idSystem.currentSlot(slotID);
             allSlots.add(slot);
         }
         
-        Slot bTreeSlot = idSystem.currentSlot(trans, bTree.getID());
+        Slot bTreeSlot = idSystem.currentSlot(bTree.getID());
         allSlots.add(bTreeSlot);
         
         final Collection4 freedSlots = new Collection4();

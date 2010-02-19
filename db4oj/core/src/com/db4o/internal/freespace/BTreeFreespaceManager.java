@@ -175,7 +175,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         createBTrees(0 , 0);
         _slotsByAddress.write(transaction());
         _slotsByLength.write(transaction());
-        _delegateIndirectionID = _file.idSystem().newId(transaction(), SlotChangeFactory.FREE_SPACE);
+        _delegateIndirectionID = transaction().idSystem().newId(SlotChangeFactory.FREE_SPACE);
         int[] ids = new int[] { _slotsByAddress.getID(), _slotsByLength.getID(), _delegateIndirectionID};
         _idArray = new PersistentIntegerArray(ids);
         _idArray.write(transaction());

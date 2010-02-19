@@ -4,6 +4,8 @@ package com.db4o.internal.slots;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
+import com.db4o.internal.ids.*;
 
 
 /**
@@ -47,8 +49,8 @@ public class SlotChange extends TreeInt {
 		sc.newSlot(_newSlot);
 		return super.shallowCloneInternal(sc);
 	}
-
-	public void freeDuringCommit(LocalObjectContainer file, boolean forFreespace) {
+	
+	public void freeDuringCommit(TransactionalIdSystem idSystem, FreespaceManager freespaceManager, boolean forFreespace) {
         if( isForFreespace() != forFreespace){
         	return;
         }
@@ -56,25 +58,26 @@ public class SlotChange extends TreeInt {
     		return;
     	}
 		if(_currentOperation == SlotChangeOperation.update || _currentOperation == SlotChangeOperation.delete){
-			Slot slot = file.idSystem().committedSlot(_key);
+			Slot slot = idSystem.committedSlot(_key);
+			
+			
 			
 			// If we don't get a valid slot, the object may have just 
 			// been stored by the SystemTransaction and not committed yet.
 			if(slot == null || slot.isNull()){
-				slot = findCurrentSlotInSystemTransaction(file); 
+				slot = modifiedSlotInUnderlyingIdSystem(idSystem); 
 			}
 			
 			// No old slot at all can be the case if the object
 			// has been deleted by another transaction and we add it again.
 			if(slot != null && ! slot.isNull()){
-				file.free(slot);
+				freespaceManager.free(slot);
 			}
 		}
-    	
 	}
-
-	protected Slot findCurrentSlotInSystemTransaction(LocalObjectContainer file) {
-		return file.idSystem().currentSlot((LocalTransaction)file.systemTransaction(), _key);
+	
+	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystem idSystem) {
+		return idSystem.modifiedSlotInUnderlyingIdSystem(_key);
 	}
 	
 	public boolean isDeleted() {
@@ -116,15 +119,15 @@ public class SlotChange extends TreeInt {
 		return change;
 	}
 
-	public void rollback(LocalObjectContainer container) {
+	public void rollback(FreespaceManager freespaceManager) {
 		if (isFreeOnRollback()) {
-			container.free(_newSlot);
+			freespaceManager.free(_newSlot);
 		}
 		if(isFreePointerOnRollback()){
 		    if(DTrace.enabled){
 		        DTrace.FREE_POINTER_ON_ROLLBACK.logLength(_key, Const4.POINTER_LENGTH);
 		    }
-			container.free(_key, Const4.POINTER_LENGTH);
+			freespaceManager.free(new Slot(_key, Const4.POINTER_LENGTH));
 		}
 	}
 
@@ -146,32 +149,35 @@ public class SlotChange extends TreeInt {
     	_newSlot = slot;
     }
 
-	public void notifySlotUpdated(LocalObjectContainer file, Slot slot) {
+	public void notifySlotUpdated(FreespaceManager freespaceManager, Slot slot) {
 		if(DTrace.enabled){
 			DTrace.NOTIFY_SLOT_CHANGED.log(_key);
 			DTrace.NOTIFY_SLOT_CHANGED.logLength(slot);
 		}
-		freePreviouslyModifiedSlot(file);
+		freePreviouslyModifiedSlot(freespaceManager);
 		_newSlot = slot;
 		operation(SlotChangeOperation.update);
 	}
 
-	protected void freePreviouslyModifiedSlot(LocalObjectContainer file) {
+	protected void freePreviouslyModifiedSlot(FreespaceManager freespaceManager) {
 		if(_newSlot == null ){
 			return;
 		}
 		if(_newSlot.isNull()){
 			return;
 		}
-		free(file, _newSlot);
+		free(freespaceManager, _newSlot);
 		_newSlot = null;
 	}
 
-	protected void free(LocalObjectContainer file, Slot slot) {
+	protected void free(FreespaceManager freespaceManager, Slot slot) {
 		if(slot.isNull()){
 			return;
 		}
-		file.free(slot);
+		if(freespaceManager == null){
+			return;
+		}
+		freespaceManager.free(slot);
 	}
 
 	private void operation(SlotChangeOperation operation) {
@@ -190,12 +196,12 @@ public class SlotChange extends TreeInt {
 		_newSlot = slot;
 	}
 
-	public void notifyDeleted(LocalObjectContainer file) {
+	public void notifyDeleted(FreespaceManager freespaceManager) {
 		if(DTrace.enabled){
 			DTrace.NOTIFY_SLOT_DELETED.log(_key);
 		}
 		operation(SlotChangeOperation.delete);
-		freePreviouslyModifiedSlot(file);
+		freePreviouslyModifiedSlot(freespaceManager);
 		_newSlot = Slot.ZERO;
 	}
 	

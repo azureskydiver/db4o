@@ -2,7 +2,8 @@
 
 package com.db4o.internal.slots;
 
-import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
+import com.db4o.internal.ids.*;
 
 /**
  * @exclude
@@ -14,17 +15,16 @@ public class SystemSlotChange extends SlotChange {
 	}
 	
 	@Override
-	public void freeDuringCommit(LocalObjectContainer file, boolean forFreespace) {
-		super.freeDuringCommit(file, forFreespace);
+	public void freeDuringCommit(TransactionalIdSystem idSystem,
+			FreespaceManager freespaceManager, boolean forFreespace) {
+		super.freeDuringCommit(idSystem, freespaceManager, forFreespace);
 		
 		// FIXME: If we are doing a delete, we should also free our pointer here.
 		
 	}
 	
 	@Override
-	protected Slot findCurrentSlotInSystemTransaction(LocalObjectContainer file) {
-		// Doesn't make sense for SystemSlotChanges:
-		// We would find ourselves: this
+	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystem idSystem) {
 		return null;
 	}
 

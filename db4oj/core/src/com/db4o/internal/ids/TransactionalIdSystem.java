@@ -10,20 +10,20 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class TransactionalIdSystem {
+public class TransactionalIdSystem implements IdSystem {
 	
 	private StandardIdSlotChanges _slotChanges;
 
 	private TransactionalIdSystem _systemIdSystem;
 	
-	private final GlobalIdSystem _globalIdSystem;
+	private final Closure4<GlobalIdSystem> _globalIdSystem;
 	
-	private final FreespaceManager _freespaceManager;
+	private final Closure4<FreespaceManager> _freespaceManager;
 	
-	public TransactionalIdSystem(FreespaceManager freespaceManager, GlobalIdSystem globalIdSystem, TransactionalIdSystem systemIdSystem){
+	public TransactionalIdSystem(Closure4<FreespaceManager> freespaceManager, Closure4<GlobalIdSystem> globalIdSystem, TransactionalIdSystem systemIdSystem){
 		_freespaceManager = freespaceManager;
 		_globalIdSystem = globalIdSystem;
-		// _slotChanges = new StandardIdSlotChanges(localContainer);
+		_slotChanges = new StandardIdSlotChanges(this, freespaceManager);
 		_systemIdSystem = systemIdSystem;
 	}
 	
@@ -57,7 +57,7 @@ public class TransactionalIdSystem {
 				traverseSlotChanges(visitor);
 			}
 		};
-		_globalIdSystem.commit(slotChangeVisitable, new Runnable() {
+		globalIdSystem().commit(slotChangeVisitable, new Runnable() {
 			public void run() {
 				freeSlotChanges(false);
 				freespaceBeginCommit();
@@ -69,29 +69,37 @@ public class TransactionalIdSystem {
 	}
 
 	private void freeSlotChanges(boolean forFreespace) {
-		_slotChanges.freeSlotChanges(forFreespace, isSystemTransaction());
-		if(! isSystemTransaction()){
+		_slotChanges.freeSlotChanges(forFreespace, isSystemIdSystem());
+		if(! isSystemIdSystem()){
 			_systemIdSystem.freeSlotChanges(forFreespace);	
 		}
 	}
 	
-	private boolean isSystemTransaction() {
+	private boolean isSystemIdSystem() {
 		return _systemIdSystem == null;
 	}
 
 	public void completeInterruptedTransaction(int transactionId1, int transactionId2) {
-		_globalIdSystem.completeInterruptedTransaction(transactionId1, transactionId2);
+		globalIdSystem().completeInterruptedTransaction(transactionId1, transactionId2);
 	}
 
 	public Slot committedSlot(int id) {
         if (id == 0) {
             return null;
         }
-		return _globalIdSystem.committedSlot(id);
+		return globalIdSystem().committedSlot(id);
 	}
 
 	public Slot currentSlot(int id) {
-        if (id == 0) {
+        Slot slot = modifiedSlot(id);
+        if(slot != null){
+        	return slot;
+        }
+        return committedSlot(id);
+	}
+
+	public Slot modifiedSlot(int id) {
+		if (id == 0) {
             return null;
         }
         SlotChange change = _slotChanges.findSlotChange(id);
@@ -100,14 +108,14 @@ public class TransactionalIdSystem {
                 return change.newSlot();
             }
         }
-        
-        if(! isSystemTransaction()){
-            Slot parentSlot = _systemIdSystem.currentSlot(id); 
-            if (parentSlot != null) {
-                return parentSlot;
-            }
+        return modifiedSlotInUnderlyingIdSystem(id); 
+	}
+
+	public Slot modifiedSlotInUnderlyingIdSystem(int id) {
+		if(isSystemIdSystem()){
+        	return null;
         }
-        return committedSlot(id);
+        return _systemIdSystem.modifiedSlot(id);
 	}
 
 	public void rollback() {
@@ -126,39 +134,32 @@ public class TransactionalIdSystem {
 		_slotChanges.notifySlotUpdated(id, slot, slotChangeFactory);
 	}
 
-	public void close(){
-		if(! isSystemTransaction()){
-			return;
-		}
-		_globalIdSystem.close();
-	}
-
 	private void traverseSlotChanges(Visitor4<SlotChange> visitor){
-		if(! isSystemTransaction()){
+		if(! isSystemIdSystem()){
 			_systemIdSystem.traverseSlotChanges(visitor);
 		}
 		_slotChanges.traverseSlotChanges(visitor);
 	}
 
 	private void freespaceBeginCommit(){
-        if(_freespaceManager == null){
+        if(freespaceManager() == null){
             return;
         }
-        _freespaceManager.beginCommit();
+        freespaceManager().beginCommit();
     }
     
     private void freespaceEndCommit(){
-        if(_freespaceManager == null){
+        if(freespaceManager() == null){
             return;
         }
-        _freespaceManager.endCommit();
+        freespaceManager().endCommit();
     }
     
     private void commitFreespace(){
-        if(_freespaceManager == null){
+        if(freespaceManager() == null){
             return;
         }
-        _freespaceManager.commit();
+        freespaceManager().commit();
     }
     
 	public int newId(SlotChangeFactory slotChangeFactory) {
@@ -168,7 +169,7 @@ public class TransactionalIdSystem {
 	}
 
 	private int acquireId() {
-		return _globalIdSystem.newId();
+		return globalIdSystem().newId();
 	}
 
 	public int prefetchID() {
@@ -187,6 +188,18 @@ public class TransactionalIdSystem {
 	
 	public void notifySlotDeleted(int id, SlotChangeFactory slotChangeFactory) {
 		_slotChanges.notifySlotDeleted(id, slotChangeFactory);
+	}
+
+	private FreespaceManager freespaceManager() {
+		return _freespaceManager.run();
+	}
+
+	private GlobalIdSystem globalIdSystem() {
+		return _globalIdSystem.run();
+	}
+
+	public void close() {
+		_slotChanges.freePrefetchedIDs(globalIdSystem());
 	}
 
 }

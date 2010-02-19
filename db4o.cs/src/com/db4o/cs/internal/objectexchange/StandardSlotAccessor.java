@@ -12,7 +12,7 @@ public class StandardSlotAccessor implements SlotAccessor {
 	}
 
 	public Slot currentSlotOfID(int id) {
-		return _transaction.localContainer().idSystem().currentSlot(_transaction, id);
+		return _transaction.idSystem().currentSlot(id);
     }
 
 }

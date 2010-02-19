@@ -26,14 +26,17 @@ public class FileHeaderVariablePart1 extends PersistentBase{
 	// (int) idSystem ID
 	
     
-    private static final int LENGTH = 2 + (Const4.INT_LENGTH * 5) + Const4.LONG_LENGTH + Const4.ADDED_LENGTH; 
+    private static final int LENGTH = 2 + (Const4.INT_LENGTH * 5) + Const4.LONG_LENGTH + Const4.ADDED_LENGTH;
+    
+    private final LocalObjectContainer _container;
     
     private final SystemData _systemData;
     
     private int _identityId;
     
-    public FileHeaderVariablePart1(int id, SystemData systemData) {
+    public FileHeaderVariablePart1(LocalObjectContainer container, int id, SystemData systemData) {
         setID(id);
+        _container = container;
         _systemData = systemData;
     }
     
@@ -85,9 +88,8 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     
     @Override
     protected ByteArrayBuffer readBufferById(Transaction trans) {
-    	LocalObjectContainer container = (LocalObjectContainer) trans.container();
-    	Slot slot = container.readPointerSlot(_id);
-    	return container.readBufferBySlot(slot);
+    	Slot slot = _container.readPointerSlot(_id);
+    	return _container.readBufferBySlot(slot);
     }
 
 }

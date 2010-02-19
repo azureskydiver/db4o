@@ -1163,5 +1163,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     	createBlockConverter(size);
     	_blockSize = size;
     }
+    
+    @Override
+    protected void closeIdSystem() {
+    	// do nothing
+    }
 	
 }

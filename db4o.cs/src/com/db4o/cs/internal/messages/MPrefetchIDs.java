@@ -12,9 +12,9 @@ public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH * prefetchIDCount);
 
 		synchronized (containerLock()) {
-			IdSystem idSystem = localContainer().idSystem();
+			IdSystem idSystem = transaction().idSystem();
 			for (int i = 0; i < prefetchIDCount; i++) {
-				reply.writeInt(idSystem.prefetchID(transaction()));
+				reply.writeInt(idSystem.prefetchID());
 			}
 		}
 		return reply;

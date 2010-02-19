@@ -53,7 +53,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     }
     
     public void free(LocalTransaction trans){
-    	trans.localContainer().idSystem().notifySlotDeleted(trans.systemTransaction(), getID(), slotChangeFactory());
+    	trans.systemTransaction().idSystem().notifySlotDeleted(getID(), slotChangeFactory());
     }
 
     public int getID() {
@@ -138,7 +138,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
         }
     }
 
-    public final void write(Transaction trans) {
+    public void write(Transaction trans) {
         if (! writeObjectBegin()) {
             return;
         }
@@ -156,10 +156,10 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	        Slot slot = container.allocateSlot(length);
 	        
 	        if(isNew()){
-	            setID(container.idSystem().newId(trans, slotChangeFactory()));
-                container.idSystem().notifySlotCreated(trans, _id, slot, slotChangeFactory());
+	            setID(trans.idSystem().newId(slotChangeFactory()));
+                trans.idSystem().notifySlotCreated(_id, slot, slotChangeFactory());
 	        }else{
-	            container.idSystem().notifySlotUpdated(trans, _id, slot, slotChangeFactory());
+	            trans.idSystem().notifySlotUpdated(_id, slot, slotChangeFactory());
 	        }
 	        
 	        ByteArrayBuffer writer = produceWriteBuffer(trans, length);

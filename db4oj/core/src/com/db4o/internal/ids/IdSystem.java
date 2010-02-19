@@ -10,44 +10,34 @@ import com.db4o.internal.slots.*;
  */
 public interface IdSystem {
 
-	public void addTransaction(LocalTransaction transaction);
+	public void collectCallBackInfo(CallbackInfoCollector collector);
 
-	public void removeTransaction(LocalTransaction trans);
+	public boolean isDirty();
 
-	public void collectCallBackInfo(Transaction transaction,
-			CallbackInfoCollector collector);
-
-	public boolean isDirty(Transaction transaction);
-
-	public void commit(LocalTransaction transaction);
-
-	public void completeInterruptedTransaction(
-			int transactionId1, int transactionId2);
+	public void commit();
 
 	public Slot committedSlot(int id);
 
-	public Slot currentSlot(LocalTransaction transaction, int id);
+	public Slot currentSlot(int id);
 
-	public void rollback(Transaction transaction);
+	public void rollback();
 
-	public void clear(Transaction transaction);
+	public void clear();
 
-	public boolean isDeleted(Transaction transaction, int id);
+	public boolean isDeleted(int id);
 
-	public void notifySlotUpdated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
+	public void notifySlotUpdated(int id, Slot slot, SlotChangeFactory slotChangeFactory);
 	
-	public void notifySlotCreated(Transaction transaction, int id, Slot slot, SlotChangeFactory slotChangeFactory);
+	public void notifySlotCreated(int id, Slot slot, SlotChangeFactory slotChangeFactory);
 	
-	public void notifySlotDeleted(Transaction transaction, int id, SlotChangeFactory slotChangeFactory);
+	public void notifySlotDeleted(int id, SlotChangeFactory slotChangeFactory);
 
-	public void systemTransaction(LocalTransaction transaction);
+	public int newId(SlotChangeFactory slotChangeFactory);
+
+	public int prefetchID();
+
+	public void prefetchedIDConsumed(int id);
 
 	public void close();
-
-	public int newId(Transaction trans, SlotChangeFactory slotChangeFactory);
-
-	public int prefetchID(Transaction transaction);
-
-	public void prefetchedIDConsumed(Transaction transaction, int id);
 
 }

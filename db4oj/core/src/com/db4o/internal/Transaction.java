@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -91,6 +92,10 @@ public abstract class Transaction {
 		}
 		if (rollbackOnClose) {
 			rollback();
+		}
+		IdSystem idSystem = idSystem();
+		if(idSystem != null){
+			idSystem.close();
 		}
 	}
 
@@ -309,4 +314,6 @@ public abstract class Transaction {
 		}
 		return new TransactionContext(this, value);
 	}
+	
+	public abstract IdSystem idSystem();
 }

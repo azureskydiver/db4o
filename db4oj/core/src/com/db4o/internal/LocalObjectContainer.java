@@ -39,7 +39,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     private SystemData          _systemData;
     
-    private IdSystem _idSystem;
+    private GlobalIdSystem _globalIdSystem;
     
 	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
@@ -50,12 +50,24 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
-		LocalTransaction transaction = new LocalTransaction(this, parentTransaction, referenceSystem);
-		if(idSystem() != null){
-			// IdSystem is still null here during startup.
-			idSystem().addTransaction(transaction);
-		}
-		return transaction;
+    	IdSystem systemIdSystem = null; 
+    	if(! isSystemTransaction){
+    		systemIdSystem = systemTransaction().idSystem();
+    	}
+    	IdSystem idSystem = new TransactionalIdSystem(
+    			new Closure4<FreespaceManager>() {
+					public FreespaceManager run() {
+						return freespaceManager();
+					}
+				}, 
+				new Closure4<GlobalIdSystem>() {
+					public GlobalIdSystem run() {
+						return globalIdSystem();
+					}
+				}, 
+				(TransactionalIdSystem)systemIdSystem);
+    	
+		return new LocalTransaction(this, parentTransaction, idSystem, referenceSystem);
 	}
 
     public FreespaceManager freespaceManager() {
@@ -165,7 +177,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
                 }
             }
             reader.setCascadeDeletes(cascade);
-            idSystem().notifySlotDeleted(transaction, id, SlotChangeFactory.USER_OBJECTS);
+            transaction.idSystem().notifySlotDeleted(id, SlotChangeFactory.USER_OBJECTS);
             ClassMetadata classMetadata = ref.classMetadata();
             classMetadata.delete(reader, obj);
 
@@ -351,7 +363,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     public final int idForNewUserObject(Transaction trans) {
-    	return idSystem().newId(trans, SlotChangeFactory.USER_OBJECTS);
+    	return trans.idSystem().newId(SlotChangeFactory.USER_OBJECTS);
     }
 
     public void raiseVersion(long a_minimumVersion) {
@@ -390,8 +402,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_ID.log(id);
 		}
 
-		Slot slot = lastCommitted ? idSystem().committedSlot(id) :  
-			idSystem().currentSlot((LocalTransaction)trans, id);
+		Slot slot = lastCommitted ? trans.idSystem().committedSlot(id) :  trans.idSystem().currentSlot(id);
 		
 		return readBufferBySlot(slot);
     }
@@ -405,8 +416,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_ID.log(id);
 		}
 
-		Slot slot = lastCommitted ? idSystem().committedSlot(id) :  
-			idSystem().currentSlot((LocalTransaction)trans, id);
+		Slot slot = lastCommitted ? trans.idSystem().committedSlot(id) :  trans.idSystem().currentSlot(id);
 		
 		return readStatefulBufferBySlot(trans, id, slot);
     }
@@ -453,12 +463,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         createStringIO(_systemData.stringEncoding());
         
+        createIdSystem();
+        
         initializeClassMetadataRepository();
         initalizeWeakReferenceSupport();
 
         setNextTimeStampId(systemData().lastTimeStampID());
         
-        createIdSystem();
         
         classCollection().setID(_systemData.classCollectionID());
         classCollection().read(systemTransaction());
@@ -505,14 +516,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
     
     protected void createIdSystem() {
-        _idSystem = newIdSystem();
-	}
-
-	protected IdSystem newIdSystem() {
-		StandardIdSystem idSystem = new StandardIdSystem(this);
-		idSystem.systemTransaction((LocalTransaction) systemTransaction());
-		idSystem.addTransaction((LocalTransaction) transaction());
-		return idSystem;
+        _globalIdSystem = GlobalIdSystemFactory.createNew(this);
 	}
 
 	private boolean freespaceMigrationRequired(FreespaceManager freespaceManager) {
@@ -755,13 +759,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
-        idSystem().notifySlotUpdated(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
+        trans.idSystem().notifySlotUpdated(id, slot, SlotChangeFactory.USER_OBJECTS);
         return slot;
     }
     
     public final Slot allocateSlotForNewUserObject(Transaction trans, int id, int length){
         Slot slot = allocateSlot(length);
-        idSystem().notifySlotCreated(trans, id, slot, SlotChangeFactory.USER_OBJECTS);
+        trans.idSystem().notifySlotCreated(id, slot, SlotChangeFactory.USER_OBJECTS);
         return slot;
     }
 
@@ -840,13 +844,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		}
 	}
 	
-	public IdSystem idSystem(){
-		return _idSystem;
-	}
-	
 	@Override
 	public boolean isDeleted(Transaction trans, int id){
-		return idSystem().isDeleted(trans, id);
+		return trans.idSystem().isDeleted(id);
 	}
 	
 	public void writePointer(int id, Slot slot) {
@@ -920,7 +920,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return validAddress && validLength && validSlot;
 	}
 	
-
+	protected void closeIdSystem(){
+		if(_globalIdSystem != null){
+			_globalIdSystem.close();
+		}
+	}
+	
+	public GlobalIdSystem globalIdSystem(){
+		return _globalIdSystem;
+	}
 
 	
 }

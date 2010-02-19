@@ -105,7 +105,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
-		return new TransactionObjectCarrier(this, null, referenceSystem);
+		return new TransactionObjectCarrier(this, null, new TransportIdSystem(this), referenceSystem);
 	}
 	
     @Override
@@ -241,7 +241,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 
 	@Override
 	protected final void openImpl() throws OldFormatException {
-        createIdSystem();
+		createIdSystem();
 		if (_memoryBin.length() == 0) {
 			configureNewFile();
 			commitTransaction();
@@ -340,9 +340,9 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	}
 	
 	@Override
-    protected IdSystem newIdSystem() {
-    	return new TransportStandardIdSystem(this);
-    }
+	protected void createIdSystem() {
+		// do nothing
+	}
 
 
 }

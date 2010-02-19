@@ -3,7 +3,8 @@
 package com.db4o.internal.slots;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
+import com.db4o.internal.ids.*;
 
 /**
  * @exclude
@@ -17,7 +18,7 @@ public class FreespaceSlotChange extends SystemSlotChange {
 	}
 	
 	@Override
-	protected void free(LocalObjectContainer file, Slot slot) {
+	protected void free(FreespaceManager freespaceManager, Slot slot) {
 		if(slot.isNull()){
 			return;
 		}
@@ -33,8 +34,9 @@ public class FreespaceSlotChange extends SystemSlotChange {
 	}
 	
 	@Override
-	public void freeDuringCommit(LocalObjectContainer file, boolean forFreespace) {
-		super.freeDuringCommit(file, forFreespace);
+	public void freeDuringCommit(TransactionalIdSystem idSystem,
+			FreespaceManager freespaceManager, boolean forFreespace) {
+		super.freeDuringCommit(idSystem, freespaceManager, forFreespace);
 		if(_freed == null){
 			return;
 		}
@@ -44,8 +46,7 @@ public class FreespaceSlotChange extends SystemSlotChange {
 		Iterator4 iterator = _freed.iterator();
 		while(iterator.moveNext()){
 			Slot slot = (Slot) iterator.current();
-			file.free(slot);
+			freespaceManager.free(slot);
 		}
 	}
-
 }
