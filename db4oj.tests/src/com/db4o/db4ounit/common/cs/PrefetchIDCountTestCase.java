@@ -85,7 +85,7 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 	public static class DebugFreespaceManager extends AbstractFreespaceManager {
 		
 		public DebugFreespaceManager(LocalObjectContainer file) {
-			super(file);
+			super(null, 0);
 		}
 
 		private final List<Integer> _freedSlots = new ArrayList<Integer>();
@@ -141,7 +141,7 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			
 		}
 
-		public void read(int freeSpaceID) {
+		public void read(LocalObjectContainer container, int freeSpaceID) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -171,7 +171,7 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			
 		}
 
-		public int write() {
+		public int write(LocalObjectContainer container) {
 			// TODO Auto-generated method stub
 			return 0;
 		}

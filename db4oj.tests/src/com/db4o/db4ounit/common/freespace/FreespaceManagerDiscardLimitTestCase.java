@@ -8,9 +8,10 @@ import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class FreespaceManagerDiscardLimitTestCase extends FreespaceManagerTestCaseBase{
+public class FreespaceManagerDiscardLimitTestCase extends FreespaceManagerTestCaseBase implements OptOutNonStandardBlockSize{
 	
 	public static void main(String[] args) {
 		new FreespaceManagerDiscardLimitTestCase().runSolo();

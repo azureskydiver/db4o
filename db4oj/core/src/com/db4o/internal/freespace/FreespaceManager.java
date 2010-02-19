@@ -3,6 +3,7 @@
 package com.db4o.internal.freespace;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -26,7 +27,7 @@ public interface FreespaceManager {
 
 	public void migrateTo(FreespaceManager fm);
 
-	public void read(int freeSpaceID);
+	public void read(LocalObjectContainer container, int freeSpaceID);
 
 	public void start(int slotAddress);
 
@@ -34,7 +35,7 @@ public interface FreespaceManager {
 	
 	public void traverse(Visitor4 visitor);
 
-	public int write();
+	public int write(LocalObjectContainer container);
 
 	public void commit();
 

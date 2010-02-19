@@ -103,6 +103,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	
 	private String _name;
 	
+	protected BlockConverter _blockConverter = new DisabledBlockConverter();
+	
 	protected ObjectContainerBase(Configuration config) {
     	_lock = new Object();
     	_config = (Config4Impl)config;
@@ -275,19 +277,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public abstract byte blockSize();
      
-    public final int bytesToBlocks(long bytes) {
-    	int blockLen = blockSize();
-    	return (int) ((bytes + blockLen -1 )/ blockLen);
-    }
-    
-    public final int blockAlignedBytes(int bytes) {
-    	return bytesToBlocks(bytes) * blockSize();
-    }
-    
-    public final int blocksToBytes(int blocks){
-    	return blocks * blockSize();
-    }
-    
     private final boolean breakDeleteForEnum(ObjectReference reference, boolean userCall){
         if(Deploy.csharp){
             return false;
@@ -2111,4 +2100,21 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	protected abstract String defaultToString();
 	
 	public abstract boolean isDeleted(Transaction trans, int id);
+	
+    public abstract void blockSize(int size);
+	
+	public BlockConverter blockConverter(){
+		return _blockConverter;
+	}
+	
+	protected void createBlockConverter(int blockSize) {
+		if(blockSize == 1){
+    		_blockConverter = new DisabledBlockConverter(); 	
+    	} else {
+    		_blockConverter = new BlockSizeBlockConverter(blockSize);	
+    	}
+	}
+
+
+
 }

@@ -236,17 +236,5 @@ public class StandardIdSystem implements IdSystem {
 		slotChanges(transaction).notifySlotDeleted(id, slotChangeFactory);
 	}
 	
-	protected final int countSlotChanges(LocalTransaction transaction){
-        final IntByRef count = new IntByRef();
-        traverseSlotChanges(transaction, new Visitor4() {
-			public void visit(Object obj) {
-                SlotChange slot = (SlotChange)obj;
-                if(slot.slotModified()){
-                    count.value++;
-                }
-			}
-		});
-        return count.value;
-	}
 
 }

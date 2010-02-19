@@ -30,6 +30,14 @@ public class IteratorAssert {
         areEqual(v.iterator(), iterator);
     }
     
+    public static void sameContent(Object[] expected, Iterable actual){
+    	List expectedList = new ArrayList();
+    	for (Object expectedObject : expected) {
+			expectedList.add(expectedObject);
+		}
+    	sameContent(expectedList, actual);
+    }
+    
     public static void sameContent(Iterable expected, Iterable actual) {
     	sameContent(expected.iterator(), actual.iterator());
     }	

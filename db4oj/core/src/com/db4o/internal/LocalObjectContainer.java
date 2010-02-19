@@ -62,15 +62,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return _freespaceManager;
 	}
     
-    public abstract void blockSize(int size);
-    
     public void blockSizeReadFromFile(int size){
         blockSize(size);
         setRegularEndAddress(fileLength());
     }
     
     public void setRegularEndAddress(long address){
-        _blockEndAddress = bytesToBlocks(address);
+        _blockEndAddress = _blockConverter.bytesToBlocks(address);
     }
     
     final protected void close2() {
@@ -101,9 +99,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         generateNewIdentity();
         
-        _freespaceManager = AbstractFreespaceManager.createNew(this);
-        
         blockSize(configImpl().blockSize());
+        
+        AbstractFreespaceManager blockedFreespaceManager = AbstractFreespaceManager.createNew(this);
+		installFreespaceManager(blockedFreespaceManager);
         
         _fileHeader = new FileHeader1();
         
@@ -114,7 +113,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         _fileHeader.initNew(this);
         
-        _freespaceManager.start(_systemData.freespaceAddress());
+        blockedFreespaceManager.start(_systemData.freespaceAddress());
     }
     
     private void newSystemData(byte freespaceSystemType, byte idSystemType){
@@ -192,24 +191,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             // is up, during conversion.
            return;
         }
-        Slot blockedSlot = toBlockedLength(slot);
+        
         
         if(DTrace.enabled){
-            DTrace.FILE_FREE.logLength(blockedSlot.address(), blockedSlot.length());
+            DTrace.FILE_FREE.logLength(slot.address(), slot.length());
         }
         
-        _freespaceManager.free(blockedSlot);
+        _freespaceManager.free(slot);
 
     }
     
-    public Slot toBlockedLength(Slot slot){
-    	return new Slot(slot.address(), bytesToBlocks(slot.length()));
-    }
-    
-    public Slot toNonBlockedLength(Slot slot){
-    	return new Slot(slot.address(), blocksToBytes(slot.length()));
-    }
-
     public void free(int address, int a_length) {
         free(new Slot(address, a_length));
     }
@@ -255,31 +246,32 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 
 	public Slot allocateSlot(int length){
-    	int blocks = bytesToBlocks(length);
-    	Slot slot = allocateBlockedSlot(blocks);
-        if(DTrace.enabled){
-            DTrace.GET_SLOT.logLength(slot.address(), slot.length());
-        }
-        return toNonBlockedLength(slot);
-    }
-
-    private final Slot allocateBlockedSlot(int blocks) {
-        if(blocks <= 0){
+        if(length <= 0){
         	throw new IllegalArgumentException();
         }
         if(_freespaceManager != null){
-        	Slot slot = _freespaceManager.allocateSlot(blocks);
+        	Slot slot = _freespaceManager.allocateSlot(length);
             if(slot != null){
+                if(DTrace.enabled){
+                    DTrace.GET_SLOT.logLength(slot.address(), slot.length());
+                }
                 return slot;
             }
             while(growDatabaseByConfiguredSize()){
-            	slot = _freespaceManager.allocateSlot(blocks);
+            	slot = _freespaceManager.allocateSlot(length);
                 if(slot != null){
+                    if(DTrace.enabled){
+                        DTrace.GET_SLOT.logLength(slot.address(), slot.length());
+                    }
                     return slot;
                 }
             }
         }
-		return appendBlocks(blocks);
+        Slot appendedSlot = appendBytes(length);
+        if(DTrace.enabled){
+            DTrace.GET_SLOT.logLength(appendedSlot.address(), appendedSlot.length());
+        }
+		return appendedSlot;
     }
 
 	private boolean growDatabaseByConfiguredSize() {
@@ -287,34 +279,30 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		if(reservedStorageSpace <= 0){
 			return false;
 		}
-		int reservedBlocks = bytesToBlocks(reservedStorageSpace);
-		int reservedBytes = blocksToBytes(reservedBlocks);
+		int reservedBlocks = _blockConverter.bytesToBlocks(reservedStorageSpace);
+		int reservedBytes = _blockConverter.blocksToBytes(reservedBlocks);
 		Slot slot = new Slot(_blockEndAddress, reservedBlocks);
         if (Debug4.xbytes && Deploy.overwrite) {
             overwriteDeletedBlockedSlot(slot);
         }else{
 			writeBytes(new ByteArrayBuffer(reservedBytes), _blockEndAddress, 0);
         }
-		_freespaceManager.free(slot);
+		_freespaceManager.free(_blockConverter.toNonBlockedLength(slot));
 		_blockEndAddress += reservedBlocks;
 		return true;
 	}
     
-    protected final Slot appendBlocks(int blockCount){
-    	int blockedStartAddress = _blockEndAddress;
-        int blockedEndAddress = _blockEndAddress + blockCount;
-        checkBlockedAddress(blockedEndAddress);
-        _blockEndAddress = blockedEndAddress;
-        Slot slot = new Slot(blockedStartAddress, blockCount);
-        if (Debug4.xbytes && Deploy.overwrite) {
-            overwriteDeletedBlockedSlot(slot);
-        }
-        return slot; 
-    }
-    
     public final Slot appendBytes(long bytes){
-    	Slot slot = appendBlocks(bytesToBlocks(bytes));
-    	return toNonBlockedLength(slot);
+    	int blockCount = _blockConverter.bytesToBlocks(bytes);
+		int blockedStartAddress = _blockEndAddress;
+		int blockedEndAddress = _blockEndAddress + blockCount;
+		checkBlockedAddress(blockedEndAddress);
+		_blockEndAddress = blockedEndAddress;
+		Slot slot = new Slot(blockedStartAddress, blockCount);
+		if (Debug4.xbytes && Deploy.overwrite) {
+		    overwriteDeletedBlockedSlot(slot);
+		}
+    	return _blockConverter.toNonBlockedLength(slot);
     }
     
     private void checkBlockedAddress(int blockedAddress) {
@@ -337,7 +325,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     void ensureLastSlotWritten(){
         if (!Debug4.xbytes){
             if(Deploy.overwrite){
-                if(_blockEndAddress > bytesToBlocks(fileLength())){
+                if(_blockEndAddress > _blockConverter.bytesToBlocks(fileLength())){
                     StatefulBuffer writer = createStatefulBuffer(systemTransaction(), _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
@@ -483,13 +471,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         	return;
         }
         
-		_freespaceManager = AbstractFreespaceManager.createNew(this,
+        FreespaceManager blockedFreespaceManager = AbstractFreespaceManager.createNew(this,
 				_systemData.freespaceSystem());
-		_freespaceManager.read(_systemData.freespaceID());
-		_freespaceManager.start(_systemData.freespaceAddress());
         
-        if(freespaceMigrationRequired()){
-        	migrateFreespace();
+        installFreespaceManager(blockedFreespaceManager);
+		
+        blockedFreespaceManager.read(this, _systemData.freespaceID());
+        blockedFreespaceManager.start(_systemData.freespaceAddress());
+        
+        if(freespaceMigrationRequired(blockedFreespaceManager)){
+        	migrateFreespace(blockedFreespaceManager);
         }
         
         writeHeader(true, false);
@@ -505,6 +496,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }
         
     }
+
+	private void installFreespaceManager(
+			FreespaceManager blockedFreespaceManager) {
+		_freespaceManager = blockSize() == 1 ?
+        		blockedFreespaceManager :
+        		new BlockAwareFreespaceManager(blockedFreespaceManager, _blockConverter);
+	}
     
     protected void createIdSystem() {
         _idSystem = newIdSystem();
@@ -517,13 +515,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return idSystem;
 	}
 
-	private boolean freespaceMigrationRequired() {
-		if(_freespaceManager == null){
+	private boolean freespaceMigrationRequired(FreespaceManager freespaceManager) {
+		if(freespaceManager == null){
 			return false;
 		}
 		byte readSystem = _systemData.freespaceSystem();
 		byte configuredSystem = configImpl().freespaceSystem();
-		if(_freespaceManager.systemType() == configuredSystem){
+		if(freespaceManager.systemType() == configuredSystem){
 			return false;
 		}
 		if (configuredSystem != 0){
@@ -532,17 +530,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return AbstractFreespaceManager.migrationRequired(readSystem);
 	}
 
-	private void migrateFreespace() {
-		FreespaceManager oldFreespaceManager = _freespaceManager;
+	private void migrateFreespace(FreespaceManager oldFreespaceManager) {
 		
 		FreespaceManager newFreespaceManager = AbstractFreespaceManager.createNew(this, configImpl().freespaceSystem());
 		newFreespaceManager.start(0);
 		
 		systemData().freespaceSystem(configImpl().freespaceSystem());
         
-        _freespaceManager = newFreespaceManager;
+        installFreespaceManager(newFreespaceManager);
 		
-		AbstractFreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
+		AbstractFreespaceManager.migrate(oldFreespaceManager, newFreespaceManager);
 		_fileHeader.writeVariablePart(this, 1);
 	}
 
@@ -721,7 +718,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         int freespaceID=DEFAULT_FREESPACE_ID;
         if(shuttingDown){
-            freespaceID = _freespaceManager.write();
+            freespaceID = _freespaceManager.write(this);
             _freespaceManager = null;
         }
         
@@ -749,7 +746,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     public abstract void overwriteDeletedBytes(int address, int length);
     
     public void overwriteDeletedBlockedSlot(Slot slot) {
-    	overwriteDeletedBytes(slot.address(), blocksToBytes(slot.length()));	
+    	overwriteDeletedBytes(slot.address(), _blockConverter.blocksToBytes(slot.length()));	
     }
 
     public final void writeTransactionPointer(int address) {
@@ -789,7 +786,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return _fileHeader;
 	}
 
-    public void installDebugFreespaceManager(AbstractFreespaceManager manager) {
+    public void installDebugFreespaceManager(FreespaceManager manager) {
         _freespaceManager = manager;
     }
 
@@ -922,6 +919,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         return validAddress && validLength && validSlot;
 	}
+	
 
 
 	

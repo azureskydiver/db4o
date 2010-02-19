@@ -371,10 +371,6 @@ public class LocalTransaction extends Transaction {
 		return new FrozenObjectInfo(systemTransaction(), ref, true);
 	}
 	
-	public FreespaceManager freespaceManager(){
-		return _file.freespaceManager();
-	}
-
 	public LazyObjectReference lazyReferenceFor(final int id) {
 		return new LazyObjectReference(LocalTransaction.this, id);
 	}

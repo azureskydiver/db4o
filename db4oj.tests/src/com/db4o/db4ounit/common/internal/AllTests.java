@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			com.db4o.db4ounit.common.internal.metadata.AllTests.class,
 			com.db4o.db4ounit.common.internal.query.AllTests.class,
 			
+			BlockConverterTestCase.class,
             ClassMetadataTestCase.class,
 			ClassMetadataTypeHandlerIntegrationTestCase.class,
 			Comparable4TestCase.class,
@@ -28,7 +29,6 @@ public class AllTests extends Db4oTestSuite {
 		    MarshallerFamilyTestCase.class,
 		    MarshallingBufferTestCase.class,
 		    MarshallingContextTestCase.class,
-		    PartialObjectContainerTestCase.class,
 		    Platform4TestCase.class,
 			SerializerTestCase.class,
 			TransactionLocalTestCase.class,

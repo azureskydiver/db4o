@@ -18,10 +18,10 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     
 	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
     
-    public RamFreespaceManager(LocalObjectContainer file){
-        super(file);
-    }
-    
+	public RamFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit) {
+		super(slotFreedCallback, discardLimit);
+	}
+	
     private void addFreeSlotNodes(int address, int length) {
         FreeSlotNode addressNode = new FreeSlotNode(address);
         addressNode.createPeer(length);
@@ -116,18 +116,12 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
                 addFreeSlotNodes(address, length);
             }
         }
-        _file.overwriteDeletedBlockedSlot(slot);
+        slotFreed(slot);
     }
     
-    public void freeSelf() {
+	public void freeSelf() {
         // Do nothing.
         // The RAM manager frees itself on reading.
-    }
-    
-    private void freeReader(StatefulBuffer reader) {
-        if(! Debug4.freespace){
-            _file.free(reader.getAddress(), reader.length());
-        }
     }
     
     public Slot allocateSlot(int length) {
@@ -163,12 +157,12 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         return TreeInt.marshalledLength((TreeInt)_freeBySize);
     }
 
-    public void read(int freeSlotsID) {
-        readById(freeSlotsID);
+    public void read(LocalObjectContainer container, int freeSlotsID) {
+        readById(container, freeSlotsID);
     }
 
-    private void read(StatefulBuffer reader) {
-        FreeSlotNode.sizeLimit = blockedDiscardLimit();
+    private void read(ByteArrayBuffer reader) {
+        FreeSlotNode.sizeLimit = discardLimit();
         _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
         final ByRef<Tree> addressTree = ByRef.newInstance();
         if (_freeBySize != null) {
@@ -182,35 +176,30 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         _freeByAddress = addressTree.value;
     }
     
-    void read(Slot slot){
+    void read(LocalObjectContainer container, Slot slot){
         if(slot.isNull()){
             return;
         }
-        StatefulBuffer reader = _file.readWriterByAddress(transaction(), slot.address(), slot.length());
-        if (reader == null) {
+        ByteArrayBuffer buffer = container.readBufferBySlot(slot);
+        if (buffer == null) {
             return;
         }
-        read(reader);
-        freeReader(reader);
+        read(buffer);
+        if(! Debug4.freespace){
+		    container.free(slot);
+		}
     }
     
-    private void readById(int freeSlotsID){
+    private void readById(LocalObjectContainer container, int freeSlotsID){
         if (freeSlotsID <= 0){
             return;
         }
         if(discardLimit() == Integer.MAX_VALUE){
             return;
         }
-        StatefulBuffer reader = _file.readStatefulBufferById(transaction(), freeSlotsID);
-        if (reader == null) {
-            return;
-        }
-        
-        read(reader);
-        
+        read(container, container.readPointerSlot(freeSlotsID));
         if(! Debug4.freespace){
-          _file.free(freeSlotsID, Const4.POINTER_LENGTH);
-          freeReader(reader);
+          container.free(freeSlotsID, Const4.POINTER_LENGTH);
         }
     }
 
@@ -260,20 +249,20 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         });
     }
 
-    public int write(){
-        int pointerSlot = _file.allocatePointerSlot();
-		Slot slot = _file.allocateSlot(marshalledLength());
+    public int write(LocalObjectContainer container){
+        int pointerSlot = container.allocatePointerSlot();
+		Slot slot = container.allocateSlot(marshalledLength());
 		Pointer4 pointer = new Pointer4(pointerSlot, slot); 
-        write(pointer);
+        write(container, pointer);
         return pointer._id;
     }
 
-    void write(Pointer4 pointer) {
-        StatefulBuffer buffer = new StatefulBuffer(transaction(), pointer);
+    void write(LocalObjectContainer container, Pointer4 pointer) {
+    	ByteArrayBuffer buffer = new ByteArrayBuffer(pointer.length());
         TreeInt.write(buffer, (TreeInt)_freeBySize);
-        buffer.writeEncrypt();
-        _file.syncFiles();
-        _file.writePointer(pointer.id(), pointer._slot);
+        container.writeEncrypt(buffer, pointer.address(), 0);
+        container.syncFiles();
+        container.writePointer(pointer.id(), pointer._slot);
     }
 
     final static class ToStringVisitor implements Visitor4 {

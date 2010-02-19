@@ -205,7 +205,7 @@ public class MarshallingBuffer implements WriteBuffer{
             
             StatefulBuffer buffer = new StatefulBuffer(context.transaction(), unblockedLength());
             
-            int blockedPosition = context.container().bytesToBlocks(position);
+            int blockedPosition = context.container().blockConverter().bytesToBlocks(position);
             
             int indexID = masterAddress + blockedPosition;
             
@@ -265,7 +265,7 @@ public class MarshallingBuffer implements WriteBuffer{
     }
 
     private void blockAlign(MarshallingContext context, int precedingLength) {
-        int totalLength = context.container().blockAlignedBytes(precedingLength + length());
+        int totalLength = context.container().blockConverter().blockAlignedBytes(precedingLength + length());
         int newLength = totalLength - precedingLength;
         blockAlign(newLength);
     }

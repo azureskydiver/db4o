@@ -8,12 +8,11 @@ import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 
-public class FreespaceManagerForDebug extends AbstractFreespaceManager {
+public class FreespaceManagerForDebug implements FreespaceManager {
 
     private final SlotListener _listener;
 
-    public FreespaceManagerForDebug(LocalObjectContainer file, SlotListener listener) {
-        super(file);
+    public FreespaceManagerForDebug(SlotListener listener) {
         _listener = listener;
     }
     
@@ -53,7 +52,7 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 		return null;
 	}
 
-    public void read(int freeSlotsID) {
+    public void read(LocalObjectContainer container, int freeSlotsID) {
 
     }
 
@@ -62,19 +61,29 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
     }
 
     public byte systemType() {
-        return FM_DEBUG;
+        return AbstractFreespaceManager.FM_DEBUG;
     }
 
 	public void traverse(Visitor4 visitor) {
 		
 	}
 	
-    public int write() {
+    public int write(LocalObjectContainer container) {
         return 0;
     }
 
 	public void listener(FreespaceListener listener) {
 		
+	}
+
+	public void migrateTo(FreespaceManager fm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int totalFreespace() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

@@ -89,7 +89,7 @@ public class OpenTypeHandler7 extends OpenTypeHandler {
 				MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
 				Handlers4.write(classMetadata().typeHandler(), context, getObject());
 				
-				int length = container().blockAlignedBytes(context.marshalledLength());
+				int length = container().blockConverter().blockAlignedBytes(context.marshalledLength());
 		        Slot slot = context.allocateNewSlot(length);
 		        
 				Pointer4 pointer = new Pointer4(getID(), slot);

@@ -9,8 +9,6 @@ import com.db4o.internal.slots.*;
 
 public abstract class AbstractFreespaceManager implements FreespaceManager {
     
-    final LocalObjectContainer     _file;
-
     public static final byte FM_DEBUG = 127;
     public static final byte FM_DEFAULT = 0;
     public static final byte FM_LEGACY_RAM = 1;
@@ -20,10 +18,6 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     private static final int INTS_IN_SLOT = 12;
     
-    public AbstractFreespaceManager(LocalObjectContainer file){
-        _file = file;
-    }
-
     public static byte checkType(byte systemType){
         if(systemType == FM_DEFAULT){
             return FM_RAM;    
@@ -31,19 +25,37 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return systemType;
     }
     
+    private final Procedure4<Slot> _slotFreedCallback;
+    
+    private final int _discardLimit;
+    
+    public AbstractFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit){
+    	_slotFreedCallback = slotFreedCallback;
+    	_discardLimit = discardLimit;
+    }
+    
     public static AbstractFreespaceManager createNew(LocalObjectContainer file){
         return createNew(file, file.systemData().freespaceSystem());
     }
     
-    public static AbstractFreespaceManager createNew(LocalObjectContainer file, byte systemType){
+    public static AbstractFreespaceManager createNew(final LocalObjectContainer file, byte systemType){
         systemType = checkType(systemType);
+        int unblockedDiscardLimit = file.configImpl().discardFreeSpace();
+        int blockedDiscardLimit = unblockedDiscardLimit == Integer.MAX_VALUE ? 
+        		unblockedDiscardLimit :
+        		file.blockConverter().bytesToBlocks(unblockedDiscardLimit);
+        Procedure4<Slot> slotFreedCallback = new Procedure4<Slot>() {
+			public void apply(Slot slot) {
+				file.overwriteDeletedBlockedSlot(slot);	
+			}
+		}; 
         switch(systemType){
         	case FM_IX:
-        		return new FreespaceManagerIx(file);
+        		return new FreespaceManagerIx(blockedDiscardLimit);
         	case FM_BTREE:
-        		return new BTreeFreespaceManager(file);
+        		return new BTreeFreespaceManager(file, slotFreedCallback, blockedDiscardLimit);
             default:
-                return new RamFreespaceManager(file);
+                return new RamFreespaceManager(slotFreedCallback, blockedDiscardLimit);
         }
     }
     
@@ -88,18 +100,12 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return mint.value;
     }
     
-    public abstract void beginCommit();
-    
-    protected final int blockedDiscardLimit(){
-        return _file.blocksToBytes(discardLimit());
-    }
-
 	protected int discardLimit() {
-		return _file.configImpl().discardFreeSpace();
+		return _discardLimit;
 	}
     
     final boolean canDiscard(int blocks) {
-		return blocks == 0 || blocks < blockedDiscardLimit();
+		return blocks == 0 || blocks < discardLimit();
 	}
     
     public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
@@ -123,12 +129,17 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         
     }
     
-    protected final LocalTransaction transaction(){
-        return (LocalTransaction)_file.systemTransaction();
-    }
-
 	public static boolean migrationRequired(byte systemType) {
 		return systemType == FM_LEGACY_RAM  || systemType == FM_IX ;
 	}
+	
+    protected void slotFreed(Slot slot) {
+    	if(_slotFreedCallback == null){
+    		return;
+    	}
+    	_slotFreedCallback.apply(slot);
+	}
+
+
     
 }

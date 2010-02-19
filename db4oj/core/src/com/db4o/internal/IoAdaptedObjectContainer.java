@@ -109,6 +109,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
     }
     
     public void blockSize(int size){
+    	createBlockConverter(size);
     	_file.blockSize(size);
     }
 
