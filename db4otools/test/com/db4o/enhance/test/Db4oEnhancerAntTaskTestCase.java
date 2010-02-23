@@ -6,9 +6,9 @@ import db4ounit.*;
 
 public class Db4oEnhancerAntTaskTestCase implements TestCase {
 
-	private final static Class INSTRUMENTED_CLAZZ = ToBeInstrumented.class;
+	private final static Class<ToBeInstrumented> INSTRUMENTED_CLAZZ = ToBeInstrumented.class;
 
-	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
+	private final static Class<NotToBeInstrumented> NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(Db4oEnhancerAntTaskTestCase.class).run();
