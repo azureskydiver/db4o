@@ -235,8 +235,8 @@ public class Defragment {
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB
 					.getByID(targetDB.systemTransaction(), targetIdentityID);
-			targetDB.setIdentity(identity);
 			targetDB.systemData().uuidIndexId(targetUuidIndexID);
+			targetDB.setIdentity(identity);
 		} finally {
 			targetDB.close();
 		}
