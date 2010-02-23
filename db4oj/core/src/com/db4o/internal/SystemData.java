@@ -21,6 +21,8 @@ public class SystemData {
     
     private Db4oDatabase _identity;
     
+    private int _identityId;
+    
     private long _lastTimeStampID;
     
     private byte _stringEncoding;
@@ -122,5 +124,13 @@ public class SystemData {
     public void uuidIndexId(int id){
         _uuidIndexId = id;
     }
+
+	public void identityId(int id) {
+		_identityId = id;
+	}
+	
+	public int identityId(){
+		return _identityId;
+	}
     
 }

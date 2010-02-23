@@ -12,7 +12,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class FileHeaderVariablePart1 extends PersistentBase{
+public class FileHeaderVariablePart1 {
     
     // The variable part format is:
 
@@ -22,20 +22,18 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     // (int) identity ID
     // (long) versionGenerator
 	// (int) uuid index ID
-	// (byte) idSystem
-	// (int) idSystem ID
 	
     
-    private static final int LENGTH = 2 + (Const4.INT_LENGTH * 5) + Const4.LONG_LENGTH + Const4.ADDED_LENGTH;
+    private static final int LENGTH = 1 + (Const4.INT_LENGTH * 4) + Const4.LONG_LENGTH + Const4.ADDED_LENGTH;
     
-    private final LocalObjectContainer _container;
+    protected final LocalObjectContainer _container;
     
-    private final SystemData _systemData;
+    protected final SystemData _systemData;
     
-    private int _identityId;
+    private int _id;
     
     public FileHeaderVariablePart1(LocalObjectContainer container, int id, SystemData systemData) {
-        setID(id);
+        _id = id;
         _container = container;
         _systemData = systemData;
     }
@@ -48,48 +46,73 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         return LENGTH;
     }
 
-    public void readThis(Transaction trans, ByteArrayBuffer reader) {
+    public void readThis(ByteArrayBuffer reader) {
         _systemData.converterVersion(reader.readInt());
         _systemData.freespaceSystem(reader.readByte());
         _systemData.freespaceAddress(reader.readInt());
-        _identityId = reader.readInt();
+        _systemData.identityId(reader.readInt());
         _systemData.lastTimeStampID(reader.readLong());
         _systemData.uuidIndexId(reader.readInt());
-        
-        if(reader.eof()){
-        	// older versions of the file header don't have IdSystem information.
-        	return;
-        }
-        _systemData.idSystemType(reader.readByte());
-        _systemData.idSystemID(reader.readInt());
     }
 
-    public void writeThis(Transaction trans, ByteArrayBuffer writer) {
+    public void writeThis(ByteArrayBuffer writer) {
         writer.writeInt(_systemData.converterVersion());
         writer.writeByte(_systemData.freespaceSystem());
         writer.writeInt(_systemData.freespaceAddress());
-        writer.writeInt(_systemData.identity().getID(trans));
+        Db4oDatabase identity = _systemData.identity();
+        writer.writeInt(identity == null ? 0 : identity.getID(systemTransaction()));
         writer.writeLong(_systemData.lastTimeStampID());
         writer.writeInt(_systemData.uuidIndexId());
-        writer.writeByte(_systemData.idSystemType());
-        writer.writeInt(_systemData.idSystemID());
     }
+
+	private Transaction systemTransaction() {
+		return _container.systemTransaction();
+	}
     
     public void readIdentity(LocalTransaction trans) {
         LocalObjectContainer file = trans.localContainer();
-        Db4oDatabase identity = Debug4.staticIdentity ? Db4oDatabase.STATIC_IDENTITY : (Db4oDatabase) file.getByID(trans, _identityId);
+        Db4oDatabase identity = Debug4.staticIdentity ? 
+        		Db4oDatabase.STATIC_IDENTITY : 
+        		(Db4oDatabase) file.getByID(trans, _systemData.identityId());
         if (null != identity) {
         	// TODO: what?
         	file.activate(trans, identity, new FixedActivationDepth(2));
         	_systemData.identity(identity);
         }
-       
     }
-    
-    @Override
-    protected ByteArrayBuffer readBufferById(Transaction trans) {
+
+	public Runnable commit() {
+		int length = _container.blockConverter().blockAlignedBytes(ownLength());
+		if(_id == 0){
+			_id = _container.allocatePointerSlot();
+		}
+		final Slot committedSlot = _container.readPointerSlot(_id);
+		final Slot newSlot = _container.allocateSlot(length);
+		ByteArrayBuffer buffer = new ByteArrayBuffer(length);
+		if (Deploy.debug) {
+		    buffer.writeBegin(getIdentifier());
+		}
+		writeThis(buffer);
+		if (Deploy.debug) {
+		    buffer.writeEnd();
+		}
+		_container.writeEncrypt(buffer, newSlot.address(), 0);
+		return new Runnable(){
+			public void run() {
+				_container.writePointer(_id, newSlot);
+				_container.free(committedSlot);
+			}
+		};
+	}
+
+	public int id() {
+		return _id;
+	}
+
+	public void read() {
     	Slot slot = _container.readPointerSlot(_id);
-    	return _container.readBufferBySlot(slot);
-    }
+    	ByteArrayBuffer buffer = _container.readBufferBySlot(slot);
+    	readThis(buffer);
+	}
 
 }

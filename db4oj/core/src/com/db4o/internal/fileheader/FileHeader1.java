@@ -32,8 +32,6 @@ public class FileHeader1 extends FileHeader {
     
     private static final byte[] SIGNATURE = {(byte)'d', (byte)'b', (byte)'4', (byte)'o'};
     
-    private static byte VERSION = 1;
-    
     private static final int HEADER_LOCK_OFFSET = SIGNATURE.length + 1;
     private static final int OPEN_TIME_OFFSET = HEADER_LOCK_OFFSET + Const4.INT_LENGTH;
     private static final int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + Const4.LONG_LENGTH;
@@ -59,18 +57,22 @@ public class FileHeader1 extends FileHeader {
 
     public void initNew(LocalObjectContainer file) throws Db4oIOException {
         commonTasksForNewAndRead(file);
-        _variablePart = new FileHeaderVariablePart1(file, 0, file.systemData());
+        _variablePart = createVariablePart(file, 0);
         writeVariablePart(file, 0);
     }
+
+	protected FileHeaderVariablePart1 createVariablePart(LocalObjectContainer file, int id) {
+		return new FileHeaderVariablePart1(file, id, file.systemData());
+	}
     
     protected FileHeader newOnSignatureMatch(LocalObjectContainer file, ByteArrayBuffer reader) {
-        if(signatureMatches(reader, SIGNATURE, VERSION)){
-            return new FileHeader1();
+        if(signatureMatches(reader, SIGNATURE, version())){
+            return createNew();
         }
         return null;
     }
 
-    private void newTimerFileLock(LocalObjectContainer file) {
+	private void newTimerFileLock(LocalObjectContainer file) {
         _timerFileLock = TimerFileLock.forFile(file);
         _timerFileLock.setAddresses(0, OPEN_TIME_OFFSET, ACCESS_TIME_OFFSET);
     }
@@ -93,8 +95,8 @@ public class FileHeader1 extends FileHeader {
         reader.seek(BLOCKSIZE_OFFSET);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
-        _variablePart = new FileHeaderVariablePart1(file, reader.readInt(), file.systemData());
-        _variablePart.read(file.systemTransaction());
+        _variablePart =  createVariablePart(file, reader.readInt());
+        _variablePart.read();
     }
     
     private void checkThreadFileLock(LocalObjectContainer container, ByteArrayBuffer reader) {
@@ -113,7 +115,7 @@ public class FileHeader1 extends FileHeader {
     public void writeFixedPart(
         LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
         writer.append(SIGNATURE);
-        writer.writeByte(VERSION);
+        writer.writeByte(version());
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(System.currentTimeMillis(), shuttingDown));
@@ -122,7 +124,7 @@ public class FileHeader1 extends FileHeader {
         writer.writeInt(blockSize);
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
-        writer.writeInt(_variablePart.getID());
+        writer.writeInt(_variablePart.id());
         if (Debug4.xbytes) {
         	writer.checkXBytes(false);
         }
@@ -138,13 +140,35 @@ public class FileHeader1 extends FileHeader {
     }
 
     public void writeVariablePart(LocalObjectContainer file, int part) {
-    	_variablePart.setStateDirty();
-        _variablePart.write(file.systemTransaction());
+    	Runnable commitHook = commit();
+    	file.syncFiles();
+    	commitHook.run();
+    	file.syncFiles();
     }
 
 	@Override
 	public void readIdentity(LocalObjectContainer container) {
 		_variablePart.readIdentity((LocalTransaction) container.systemTransaction());
+	}
+
+	@Override
+	public Runnable commit() {
+		return _variablePart.commit();
+	}
+	
+	protected FileHeader1 createNew(){
+		return new FileHeader1();
+	}
+	
+    protected byte version() {
+		return (byte) 1;
+	}
+
+	@Override
+	public FileHeader convert(LocalObjectContainer file) {
+		FileHeader2 fileHeader = new FileHeader2();
+		fileHeader.initNew(file);
+		return fileHeader;
 	}
 
 }

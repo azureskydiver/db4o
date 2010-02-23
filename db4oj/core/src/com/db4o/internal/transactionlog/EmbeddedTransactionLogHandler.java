@@ -68,6 +68,9 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 			    appendSlotChanges(buffer, slotChangeTree);
 	
 			    buffer.write();
+			    
+			    Runnable commitHook = _container.commitHook();
+			    
 			    flushDatabaseFile();
 	
 			    _container.writeTransactionPointer(transactionLogSlot.address());
@@ -78,6 +81,9 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 			    }
 	
 			    _container.writeTransactionPointer(0);
+			    
+			    
+			    commitHook.run();
 			    flushDatabaseFile();
 			    
 			    if (transactionLogSlot != reservedSlot) {

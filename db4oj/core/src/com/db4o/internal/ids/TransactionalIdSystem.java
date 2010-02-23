@@ -12,7 +12,7 @@ import com.db4o.internal.slots.*;
  */
 public class TransactionalIdSystem implements IdSystem {
 	
-	private StandardIdSlotChanges _slotChanges;
+	private IdSlotChanges _slotChanges;
 
 	private TransactionalIdSystem _systemIdSystem;
 	
@@ -23,7 +23,7 @@ public class TransactionalIdSystem implements IdSystem {
 	public TransactionalIdSystem(Closure4<FreespaceManager> freespaceManager, Closure4<GlobalIdSystem> globalIdSystem, TransactionalIdSystem systemIdSystem){
 		_freespaceManager = freespaceManager;
 		_globalIdSystem = globalIdSystem;
-		_slotChanges = new StandardIdSlotChanges(this, freespaceManager);
+		_slotChanges = new IdSlotChanges(this, freespaceManager);
 		_systemIdSystem = systemIdSystem;
 	}
 	

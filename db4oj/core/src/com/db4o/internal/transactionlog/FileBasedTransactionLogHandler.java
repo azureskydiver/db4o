@@ -125,6 +125,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 			return;
 		}
 		
+		Runnable commitHook = _container.commitHook();
 		flushDatabaseFile();
 		
 		ensureLogAndLock();
@@ -139,9 +140,9 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	    
 	    writeToLockFile(LOCK_INT);
 
-	    if (writeSlots(slotChangeTree)) {
-	    	flushDatabaseFile();
-	    }
+	    writeSlots(slotChangeTree);
+	    commitHook.run();
+	    flushDatabaseFile();
 	    writeToLockFile(0);
 	}
 	
