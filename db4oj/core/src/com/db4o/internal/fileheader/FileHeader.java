@@ -5,7 +5,6 @@ package com.db4o.internal.fileheader;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.internal.transactionlog.*;
 
 
 /**
@@ -14,8 +13,9 @@ import com.db4o.internal.transactionlog.*;
 public abstract class FileHeader {
     
     private static final FileHeader[] AVAILABLE_FILE_HEADERS = new FileHeader[]{
-        new FileHeader0(),
-        new FileHeader1()
+        new FileHeader0(null),
+        new FileHeader1(),
+        new FileHeader2(),
     };
     
     private static int readerLength(){
@@ -36,6 +36,8 @@ public abstract class FileHeader {
         }
         return header;
     }
+
+	public abstract FileHeader convert(LocalObjectContainer file);
 
 	private static ByteArrayBuffer prepareFileHeaderReader(LocalObjectContainer file) {
 		ByteArrayBuffer reader = new ByteArrayBuffer(readerLength()); 
@@ -109,6 +111,8 @@ public abstract class FileHeader {
 	}
 
 	public abstract void readIdentity(LocalObjectContainer container);
-
+	
+	public abstract Runnable commit();
+    
 
 }

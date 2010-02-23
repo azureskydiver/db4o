@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
-public class StandardIdSlotChanges {
+public class IdSlotChanges {
 	
     private final LockedTree _slotChanges = new LockedTree();
     
@@ -18,7 +18,7 @@ public class StandardIdSlotChanges {
 	
 	private TreeInt _prefetchedIDs;
 
-	public StandardIdSlotChanges(TransactionalIdSystem idSystem, Closure4<FreespaceManager> freespaceManager) {
+	public IdSlotChanges(TransactionalIdSystem idSystem, Closure4<FreespaceManager> freespaceManager) {
 		_idSystem = idSystem;
 		_freespaceManager = freespaceManager;
 	}

@@ -200,11 +200,6 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	    // do nothing
 	}
     
-	@Override
-	protected void writeVariableHeader(){
-        
-    }
-    
     public static class KnownObjectIdentity {
     	public int _id;
     	public KnownObjectIdentity(int id) {
@@ -342,6 +337,11 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	@Override
 	protected void createIdSystem() {
 		// do nothing
+	}
+	
+	@Override
+	public Runnable commitHook() {
+		return Runnable4.DO_NOTHING;
 	}
 
 

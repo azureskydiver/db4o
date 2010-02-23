@@ -116,7 +116,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         AbstractFreespaceManager blockedFreespaceManager = AbstractFreespaceManager.createNew(this);
 		installFreespaceManager(blockedFreespaceManager);
         
-        _fileHeader = new FileHeader1();
+        _fileHeader = new FileHeader2();
         
         setRegularEndAddress(_fileHeader.length());
         
@@ -350,12 +350,21 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public void setIdentity(Db4oDatabase identity){
-        _systemData.identity(identity);
-        
-        // The dirty TimeStampIdGenerator triggers writing of
-        // the variable part of the systemdata. We need to
-        // make it dirty here, so the new identity is persisted:
-        _timeStampIdGenerator.next();
+    	synchronized(lock()){
+	        _systemData.identity(identity);
+	        
+	        // The dirty TimeStampIdGenerator triggers writing of
+	        // the variable part of the systemdata. We need to
+	        // make it dirty here, so the new identity is persisted:
+	        _timeStampIdGenerator.next();
+	        
+	        // _fileHeader is still null on startup.
+	        // Only later calls to setIdentity need to 
+	        // write the FileHeader variable part
+	        if(_fileHeader != null){
+	        	_fileHeader.writeVariablePart(this, 2);
+	        }
+    	}
     }
 
     boolean isServer() {
@@ -505,6 +514,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             _fileHeader.writeVariablePart(this, 1);
             transaction().commit();
         }
+        
+        _fileHeader = _fileHeader.convert(this);
         
     }
 
@@ -690,7 +701,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public final void writeDirty() {        
         writeCachedDirty();
-        writeVariableHeader();
     }
 
 	private void writeCachedDirty() {
@@ -707,15 +717,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _handlers.encrypt(buffer);
         writeBytes(buffer, address, addressOffset);
         _handlers.decrypt(buffer);
-    }
-    
-    protected void writeVariableHeader(){
-        if(! _timeStampIdGenerator.isDirty()){
-        	return;
-        }
-        _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
-        _fileHeader.writeVariablePart(this, 2);
-        _timeStampIdGenerator.setClean();
     }
     
     void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
@@ -928,6 +929,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	
 	public GlobalIdSystem globalIdSystem(){
 		return _globalIdSystem;
+	}
+
+	public Runnable commitHook() {
+        if(! _timeStampIdGenerator.isDirty()){
+        	return Runnable4.DO_NOTHING;
+        }
+        _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
+        _timeStampIdGenerator.setClean();
+        return _fileHeader.commit();
 	}
 
 	

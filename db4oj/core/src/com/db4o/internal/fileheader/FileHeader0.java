@@ -4,8 +4,8 @@ package com.db4o.internal.fileheader;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -42,6 +42,12 @@ public class FileHeader0 extends FileHeader {
     
     private PBootRecord _bootRecord;
     
+    private final LocalObjectContainer _container;
+    
+    public FileHeader0(LocalObjectContainer container){
+    	_container = container;
+    }
+    
 
     public void close() throws Db4oIOException {
         _configBlock.close();
@@ -59,7 +65,7 @@ public class FileHeader0 extends FileHeader {
                 return null;
             }
         }
-        return new FileHeader0();
+        return new FileHeader0(file);
     }
 
     
@@ -158,5 +164,19 @@ public class FileHeader0 extends FileHeader {
         
         container.systemData().identity(_bootRecord.i_db);
 	}
+
+	@Override
+	public Runnable commit() {
+		writeVariablePart(_container, 2);
+		return Runnable4.DO_NOTHING;
+		
+	}
+
+
+	@Override
+	public FileHeader convert(LocalObjectContainer file) {
+		return this;
+	}
+	
 
 }
