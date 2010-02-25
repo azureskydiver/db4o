@@ -16,7 +16,7 @@ public class Db4oDefragSolo extends Db4oSolo {
         if (origFile.exists()) {
             try {
                 String backupFile = getAbsolutePath() + ".defrag.backup";
-                ContextIDMapping mapping = new TreeIDMapping();
+                IdMapping mapping = new InMemoryIdMapping();
                 // new
                 // BTreeIDMapping(getAbsolutePath()+".defrag.mapping",4096,1,1000);
                 DefragmentConfig defragConfig = new DefragmentConfig(

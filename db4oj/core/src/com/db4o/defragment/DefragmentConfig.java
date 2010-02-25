@@ -23,7 +23,7 @@ public class DefragmentConfig {
 	private String _origPath;
 	private String _backupPath;
 	private String _tempPath;
-	private ContextIDMapping _mapping;
+	private IdMapping _mapping;
 	private Configuration _config;
 	
 	private StoredClassFilter _storedClassFilter=null;
@@ -61,7 +61,7 @@ public class DefragmentConfig {
 	 *         is set to true!
 	 */
 	public DefragmentConfig(String origPath, String backupPath) {
-		this(origPath,backupPath,new TreeIDMapping());
+		this(origPath,backupPath, new InMemoryIdMapping());
 	}
 
 	/**
@@ -73,9 +73,11 @@ public class DefragmentConfig {
 	 * @param backupPath The path to the backup of the original file. No file should
 	 *         exist at this position, otherwise it will be OVERWRITTEN if forceBackupDelete()
 	 *         is set to true!
-	 * @param mapping The intermediate mapping used internally.
+	 * @param mapping The Id mapping to be used internally. Pass either a 
+	 * {@link InMemoryIdMapping} for fastest defragment or a {@link DatabaseIdMapping}
+	 * for low memory consumption.  
 	 */
-	public DefragmentConfig(String origPath, String backupPath,ContextIDMapping mapping) {
+	public DefragmentConfig(String origPath, String backupPath, IdMapping mapping) {
 		_origPath = origPath;
 		_backupPath = backupPath;
 		_mapping = mapping;
@@ -96,9 +98,9 @@ public class DefragmentConfig {
 	}
 	
 	/**
-	 * @return The intermediate mapping used internally. For internal use only.
+	 * @return The temporary ID mapping used internally. For internal use only.
 	 */
-	public ContextIDMapping mapping() {
+	public IdMapping mapping() {
 		return _mapping;
 	}
 	

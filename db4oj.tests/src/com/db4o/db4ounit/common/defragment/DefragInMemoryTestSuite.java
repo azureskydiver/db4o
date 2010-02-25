@@ -95,7 +95,7 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 		}
 	
 		private DefragmentConfig defragmentConfig(MemoryStorage storage) {
-			DefragmentConfig defragConfig = new DefragmentConfig(URI, tempFile(), new TreeIDMapping());
+			DefragmentConfig defragConfig = new DefragmentConfig(URI, tempFile(), new InMemoryIdMapping());
 			defragConfig.db4oConfig(config(storage));
 			defragConfig.backupStorage(backupStorage());
 			return defragConfig;

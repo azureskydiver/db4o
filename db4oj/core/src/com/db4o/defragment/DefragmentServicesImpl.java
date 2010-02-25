@@ -48,7 +48,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 
 	public final LocalObjectContainer _sourceDb;
 	final LocalObjectContainer _targetDb;
-	private final ContextIDMapping _mapping;
+	private final IdMapping _mapping;
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new NonblockingQueue();
 	private final Hashtable4 _hasFieldIndexCache = new Hashtable4();
@@ -121,11 +121,11 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		if(_sourceDb.handlers().isSystemHandler(oldID)) {
 			return oldID;
 		}
-		return _mapping.mappedID(oldID,lenient);
+		return _mapping.mappedId(oldID,lenient);
 	}
 
 	public void mapIDs(int oldID,int newID, boolean isClassID) {
-		_mapping.mapIDs(oldID,newID, isClassID);
+		_mapping.mapId(oldID,newID, isClassID);
 	}
 
 	public void close() {
@@ -338,6 +338,14 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	
 	public int targetNewId() {
 		return _targetDb.globalIdSystem().newId();
+	}
+	
+	public IdMapping mapping(){
+		return _mapping;
+	}
+	
+	public void commitIds(){
+		_targetDb.globalIdSystem().commit(mapping().slotChanges(), Runnable4.DO_NOTHING);
 	}
 	
 }

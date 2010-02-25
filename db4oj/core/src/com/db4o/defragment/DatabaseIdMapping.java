@@ -4,17 +4,21 @@ package com.db4o.defragment;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.mapping.*;
+import com.db4o.internal.slots.*;
 
 /**
- * BTree mapping for IDs during a defragmentation run.
+ * Database based mapping for IDs during a defragmentation run.
+ * Use this mapping to keep memory consumption lower than when
+ * using the {@link InMemoryIdMapping}.
  * 
  * @see Defragment
  */
-public class BTreeIDMapping extends AbstractContextIDMapping {
+public class DatabaseIdMapping extends AbstractIdMapping {
 
 	private String _fileName;
 
@@ -38,7 +42,7 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	 * 
 	 * @param fileName The location where the BTree file should be created.
 	 */
-	public BTreeIDMapping(String fileName) {
+	public DatabaseIdMapping(String fileName) {
 		this(fileName,null,0);
 	}
 
@@ -50,17 +54,17 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	 * @param nodeSize The size of a BTree node
 	 * @param commitFrequency The number of inserts after which a commit should be issued (<=0: never commit)
 	 */
-	public BTreeIDMapping(String fileName,int nodeSize,int commitFrequency) {
+	public DatabaseIdMapping(String fileName,int nodeSize,int commitFrequency) {
 		this(fileName,new BTreeSpec(nodeSize),commitFrequency);
 	}
 
-	private BTreeIDMapping(String fileName,BTreeSpec treeSpec,int commitFrequency) {
+	private DatabaseIdMapping(String fileName,BTreeSpec treeSpec,int commitFrequency) {
 		_fileName = fileName;
 		_treeSpec=treeSpec;
 		_commitFrequency=commitFrequency;
 	}
 
-	public int mappedID(int oldID, boolean lenient) {
+	public int mappedId(int oldID, boolean lenient) {
 		if (_cache.orig() == oldID) {
 			return _cache.mapped();
 		}
@@ -128,4 +132,44 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 			return _nodeSize;
 		}
 	}
+
+	public void mapId(int id, Slot slot) {
+		_mappingDb.store(new IdSlotMapping(id, slot.address(), slot.length()));
+	}
+
+	public Visitable<SlotChange> slotChanges() {
+		return new Visitable<SlotChange>() {
+			public void accept(final Visitor4<SlotChange> outSideVisitor) {
+				ObjectSet<IdSlotMapping> objectSet = _mappingDb.query(IdSlotMapping.class);
+				for (IdSlotMapping idSlotMapping : objectSet) {
+					SlotChange slotChange = new SlotChange(idSlotMapping._id);
+					slotChange.notifySlotCreated(idSlotMapping.slot());
+					outSideVisitor.visit(slotChange);
+				}
+			}
+		};
+	}
+	
+	public static class IdSlotMapping {
+		
+		public IdSlotMapping(int id, int address, int length) {
+			_id = id;
+			_address = address;
+			_length = length;
+		}
+
+		public int _id;
+		
+		public int _address;
+		
+		public int _length;
+		
+		public Slot slot(){
+			return new Slot(_address, _length);
+		}
+		
+	}
+	
+	
+	
 }
