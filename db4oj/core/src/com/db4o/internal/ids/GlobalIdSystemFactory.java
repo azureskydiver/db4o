@@ -16,6 +16,8 @@ public class GlobalIdSystemFactory {
 	public static final byte DEFAULT = POINTER_BASED;
 	
 	public static final byte BTREE = 2;
+	
+	public static final byte IN_MEMORY = 3;
 
 	public static GlobalIdSystem createNew(LocalObjectContainer localContainer) {
 		byte idSystemType = localContainer.systemData().idSystemType();
@@ -28,6 +30,8 @@ public class GlobalIdSystemFactory {
 	    		return new PointerBasedIdSystem(localContainer);
 	    	case BTREE:
 	    		return new BTreeIdSystem(idSystemId);
+	    	case IN_MEMORY:
+	    		return new InMemoryIdSystem(localContainer);
 	        default:
 	        	return new PointerBasedIdSystem(localContainer);
         }

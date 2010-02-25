@@ -16,7 +16,7 @@ public class IdSystemFixture extends Db4oSolo {
 	 }
 	
 	public IdSystemFixture() {		
-		_idSystemType = GlobalIdSystemFactory.BTREE;
+		_idSystemType = GlobalIdSystemFactory.IN_MEMORY;
 	}
 	
     protected ObjectContainer createDatabase(Configuration config) {
@@ -28,6 +28,9 @@ public class IdSystemFixture extends Db4oSolo {
 	    		break;
 	    	case GlobalIdSystemFactory.BTREE:
 	    		embeddedConfiguration.idSystem().useBTreeSystem();
+	    		break;
+	    	case GlobalIdSystemFactory.IN_MEMORY:
+	    		embeddedConfiguration.idSystem().useInMemorySystem();
 	    		break;
 	    	default:
 	    		throw new IllegalStateException();
@@ -44,6 +47,9 @@ public class IdSystemFixture extends Db4oSolo {
 	    		break;
 	    	case GlobalIdSystemFactory.BTREE:
 	    		idSystemType = "BTree";
+	    		break;
+	    	case GlobalIdSystemFactory.IN_MEMORY:
+	    		idSystemType = "InMemory";
 	    		break;
 	    	default:
 	    		throw new IllegalStateException();

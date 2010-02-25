@@ -8,6 +8,9 @@ package com.db4o.internal;
  * @exclude
  */
 public interface Readable {
-	Object read(ByteArrayBuffer a_reader);
+	
+	Object read(ByteArrayBuffer buffer);
+	
 	int marshalledLength();
+	
 }

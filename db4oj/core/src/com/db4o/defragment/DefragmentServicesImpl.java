@@ -135,8 +135,12 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public ByteArrayBuffer bufferByID(DbSelector selector,int id) {
-		Slot slot=readPointer(selector, id);
+		Slot slot=committedSlot(selector, id);
 		return bufferByAddress(selector,slot.address(),slot.length());
+	}
+
+	private Slot committedSlot(DbSelector selector, int id) {
+		return selector.db(this).globalIdSystem().committedSlot(id);
 	}
 
 	public ByteArrayBuffer sourceBufferByAddress(int address,int length) throws IOException {
@@ -296,19 +300,6 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		return new ObjectHeader(_sourceDb, buffer);
 	}
 	
-	private Slot readPointer(DbSelector selector,int id) {
-		ByteArrayBuffer reader=selector.db(this).rawBufferByAddress(id,Const4.POINTER_LENGTH);
-        if(Deploy.debug){
-            reader.readBegin(Const4.YAPPOINTER);    
-        }
-		int address=reader.readInt();
-		int length=reader.readInt();
-        if(Deploy.debug){
-            reader.readEnd();
-        }
-		return new Slot(address,length);
-	}
-	
 	public boolean hasFieldIndex(ClassMetadata clazz) {
 		// actually only two states are used here, the third is implicit in null
 		TernaryBool cachedHasFieldIndex = ((TernaryBool) _hasFieldIndexCache.get(clazz));
@@ -338,11 +329,15 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 
 	public int sourceAddressByID(int sourceID) {
-		return readPointer(SOURCEDB, sourceID).address();
+		return committedSlot(SOURCEDB, sourceID).address();
 	}
 
 	public boolean accept(StoredClass klass) {
 		return this._defragConfig.storedClassFilter().accept(klass);
+	}
+	
+	public int targetNewId() {
+		return _targetDb.globalIdSystem().newId();
 	}
 	
 }

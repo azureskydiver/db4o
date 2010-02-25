@@ -44,10 +44,6 @@ public class FileHeader1 extends FileHeader {
 
     private FileHeaderVariablePart1 _variablePart;
 
-	private int _transactionId1;
-
-	private int _transactionId2;
-    
     public void close() throws Db4oIOException {
     	if(_timerFileLock == null){
     		return;
@@ -79,7 +75,8 @@ public class FileHeader1 extends FileHeader {
 
     @Override
     public void completeInterruptedTransaction(LocalObjectContainer container) {
-    	container.globalIdSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
+    	SystemData systemData = container.systemData();
+    	container.globalIdSystem().completeInterruptedTransaction(systemData.transactionPointer1(), systemData.transactionPointer2());
     }
 
     public int length() {
@@ -90,8 +87,8 @@ public class FileHeader1 extends FileHeader {
         commonTasksForNewAndRead(file);
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
-        _transactionId1 = reader.readInt();
-        _transactionId2 = reader.readInt();
+        file.systemData().transactionPointer1(reader.readInt());
+        file.systemData().transactionPointer2(reader.readInt());
         reader.seek(BLOCKSIZE_OFFSET);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
@@ -114,15 +111,16 @@ public class FileHeader1 extends FileHeader {
     
     public void writeFixedPart(
         LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
+    	SystemData systemData = file.systemData();
         writer.append(SIGNATURE);
         writer.writeByte(version());
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(System.currentTimeMillis(), shuttingDown));
-        writer.writeInt(0);  // transaction pointer 1 for "in-commit-mode"
-        writer.writeInt(0);  // transaction pointer 2
+        writer.writeInt(systemData.transactionPointer1());
+        writer.writeInt(systemData.transactionPointer2());
         writer.writeInt(blockSize);
-        writer.writeInt(file.systemData().classCollectionID());
+		writer.writeInt(systemData.classCollectionID());
         writer.writeInt(freespaceID);
         writer.writeInt(_variablePart.id());
         if (Debug4.xbytes) {
@@ -135,8 +133,8 @@ public class FileHeader1 extends FileHeader {
         }
     }
 
-    public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {
-        writeTransactionPointer(systemTransaction, transactionAddress, 0, TRANSACTION_POINTER_OFFSET);
+    public void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2) {
+        writeTransactionPointer(systemTransaction, transactionPointer1, transactionPointer2, 0, TRANSACTION_POINTER_OFFSET);
     }
 
     public void writeVariablePart(LocalObjectContainer file, int part) {

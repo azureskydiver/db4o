@@ -847,7 +847,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		writeBatchedMessage(msg);
 	}
     
-	public final void writeTransactionPointer(int a_address) {
+	public final void writeTransactionPointer(int a_address, int pointer2) {
 		// do nothing
 	}
 

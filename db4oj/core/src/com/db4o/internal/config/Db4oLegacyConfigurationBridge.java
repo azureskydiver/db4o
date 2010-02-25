@@ -18,8 +18,12 @@ public class Db4oLegacyConfigurationBridge {
 		return ((LegacyConfigurationProvider)config).legacy();
 	}
 
-	public static FileConfiguration asFileConfiguration(Config4Impl legacy) {
-		return new FileConfigurationImpl(legacy);
+	public static FileConfiguration asFileConfiguration(Configuration config) {
+		return new FileConfigurationImpl((Config4Impl)config);
+	}
+	
+	public static IdSystemConfiguration asIdSystemConfiguration(Configuration config){
+		return new IdSystemConfigurationImpl((Config4Impl) config);
 	}
 
 }

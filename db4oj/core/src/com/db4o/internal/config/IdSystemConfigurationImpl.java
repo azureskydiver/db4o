@@ -24,4 +24,9 @@ public class IdSystemConfigurationImpl implements IdSystemConfiguration {
 		_config.useBTreeIdSystem();
 	}
 
+	public void useInMemorySystem() {
+		_config.useInMemoryIdSystem();
+		
+	}
+
 }

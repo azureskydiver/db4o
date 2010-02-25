@@ -1133,8 +1133,11 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         initializeEssentialClasses();
 		rename(configImpl());
 		_classCollection.initOnUp(_systemTransaction);
+		
         if (configImpl().detectSchemaChanges()) {
-            _systemTransaction.commit();
+        	if(! configImpl().isReadOnly()){
+        		_systemTransaction.commit();
+        	}
         }
         configImpl().applyConfigurationItems(this);
     }
@@ -1971,7 +1974,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public abstract void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer);
 
-    public abstract void writeTransactionPointer(int address);
+    public abstract void writeTransactionPointer(int pointer1, int pointer2);
 
     public abstract void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ArrayType arrayType, ByteArrayBuffer buffer);
 

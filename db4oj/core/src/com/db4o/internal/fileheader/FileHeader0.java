@@ -111,8 +111,8 @@ public class FileHeader0 extends FileHeader {
         _configBlock.completeInterruptedTransaction();
     }
 
-    public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {
-        writeTransactionPointer(systemTransaction, transactionAddress, _configBlock.address(), ConfigBlock.TRANSACTION_OFFSET);
+    public void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2) {
+        writeTransactionPointer(systemTransaction, transactionPointer1, transactionPointer2, _configBlock.address(), ConfigBlock.TRANSACTION_OFFSET);
     }
 
     public MetaIndex getUUIDMetaIndex() {

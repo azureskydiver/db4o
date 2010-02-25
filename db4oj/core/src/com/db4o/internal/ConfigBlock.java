@@ -41,10 +41,6 @@ public final class ConfigBlock {
 	
 	public int                 	_bootRecordID;
 	
-	private int _transactionId1;
-	
-	private int _transactionId2;
-	
 	private static final int	MINIMUM_LENGTH = 
 		Const4.INT_LENGTH    			// own length
 		+ (Const4.LONG_LENGTH * 2)	 	// candidate ID and last access time
@@ -99,7 +95,8 @@ public final class ConfigBlock {
     }
 	
 	public void completeInterruptedTransaction(){
-		_container.globalIdSystem().completeInterruptedTransaction(_transactionId1, _transactionId2);
+    	SystemData systemData = _container.systemData();
+		_container.globalIdSystem().completeInterruptedTransaction(systemData.transactionPointer1(), systemData.transactionPointer2());
 	}
     
 	private byte[] passwordToken() {
@@ -155,8 +152,8 @@ public final class ConfigBlock {
 		
         
 		if(oldLength > TRANSACTION_OFFSET){
-			_transactionId1 = reader.readInt();
-			_transactionId2 = reader.readInt();
+			systemData().transactionPointer1(reader.readInt());
+			systemData().transactionPointer2(reader.readInt());
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {
@@ -251,8 +248,8 @@ public final class ConfigBlock {
             writer.writeLong(timerFileLock().openTime());
         }
 		writer.writeByte(systemData().stringEncoding());
-		IntHandler.writeInt(0, writer);
-		IntHandler.writeInt(0, writer);
+		IntHandler.writeInt(systemData().transactionPointer1(), writer);
+		IntHandler.writeInt(systemData().transactionPointer2(), writer);
 		IntHandler.writeInt(_bootRecordID, writer);
 		IntHandler.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());

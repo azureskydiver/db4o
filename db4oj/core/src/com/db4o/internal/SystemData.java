@@ -33,6 +33,10 @@ public class SystemData {
     
     private int _idSystemID;
     
+    private int _transactionPointer1;
+    
+    private int _transactionPointer2;
+    
     public SystemData(){
     	
     }
@@ -132,5 +136,21 @@ public class SystemData {
 	public int identityId(){
 		return _identityId;
 	}
-    
+	
+	public void transactionPointer1(int pointer){
+		_transactionPointer1 = pointer;
+	}
+	
+	public void transactionPointer2(int pointer){
+		_transactionPointer2 = pointer;
+	}
+	
+	public int transactionPointer1(){
+		return _transactionPointer1;
+	}
+	
+	public int transactionPointer2(){
+		return _transactionPointer2;
+	}
+	
 }

@@ -76,27 +76,27 @@ public class TreeInt extends Tree<Integer> implements ReadWriteable {
 		return null;
 	}
 
-	public Object read(ByteArrayBuffer a_bytes) {
-		return new TreeInt(a_bytes.readInt());
+	public Object read(ByteArrayBuffer buffer) {
+		return new TreeInt(buffer.readInt());
 	}
 
-	public void write(ByteArrayBuffer a_writer) {
-		a_writer.writeInt(_key);
+	public void write(ByteArrayBuffer buffer) {
+		buffer.writeInt(_key);
 	}
 	
-	public static void write(final ByteArrayBuffer a_writer, TreeInt a_tree){
-        write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
+	public static void write(final ByteArrayBuffer buffer, TreeInt tree){
+        write(buffer, tree, tree == null ? 0 : tree.size());
 	}
     
-    public static void write(final ByteArrayBuffer a_writer, TreeInt a_tree, int size){
-        if(a_tree == null){
-            a_writer.writeInt(0);
+    public static void write(final ByteArrayBuffer buffer, TreeInt tree, int size){
+        if(tree == null){
+            buffer.writeInt(0);
             return;
         }
-        a_writer.writeInt(size);
-        a_tree.traverse(new Visitor4() {
+        buffer.writeInt(size);
+        tree.traverse(new Visitor4() {
             public void visit(Object a_object) {
-                ((TreeInt)a_object).write(a_writer);
+                ((TreeInt)a_object).write(buffer);
             }
         });
     }
@@ -148,13 +148,13 @@ public class TreeInt extends Tree<Integer> implements ReadWriteable {
 	
 	public final int marshalledLength(){
 		if(variableLength()){
-			final IntByRef mint = new IntByRef(Const4.INT_LENGTH);
+			final IntByRef length = new IntByRef(Const4.INT_LENGTH);
 			traverse(new Visitor4(){
 				public void visit(Object obj){
-					mint.value += ((TreeInt)obj).ownLength();
+					length.value += ((TreeInt)obj).ownLength();
 				}
 			});
-			return mint.value;
+			return length.value;
 		}
 		return Const4.INT_LENGTH + (size() * ownLength());
 	}
