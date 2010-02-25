@@ -85,7 +85,7 @@ public class SlotChange extends TreeInt {
 	}
 	
 	public boolean isNew() {
-		return isFreePointerOnRollback();
+		return _firstOperation == SlotChangeOperation.create;
 	}
     
 	private final boolean isFreeOnRollback() {
@@ -105,7 +105,7 @@ public class SlotChange extends TreeInt {
 //	}
 
 	public final boolean isFreePointerOnRollback() {
-		return _firstOperation == SlotChangeOperation.create;
+		return isNew();
 	}
 
 	public Slot newSlot() {

@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.jre5.idsystem;
 
-import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -20,8 +19,7 @@ public class RunTestsWithAllIdSystems implements TestSuiteBuilder {
 		Db4oTestSuite suite = new Db4oTestSuite() {
 			protected Class[] testCases() {
 				return new Class[] {
-						SimplestPossibleTestCase.class,
-						// RunTestsWithAllIdSystems.class, 
+						RunTestsWithAllIdSystems.class, 
 				};
 			}
 

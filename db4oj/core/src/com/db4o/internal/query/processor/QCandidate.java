@@ -457,9 +457,11 @@ public class QCandidate extends TreeInt implements Candidate {
 
 	}
 
-	public void onAttemptToAddDuplicate(Tree a_tree) {
+	@Override
+	public Tree onAttemptToAddDuplicate(Tree oldNode) {
 		_size = 0;
-		_root = (QCandidate) a_tree;
+		_root = (QCandidate) oldNode;
+		return oldNode;
 	}
 
 	private ReflectClass memberClass() {

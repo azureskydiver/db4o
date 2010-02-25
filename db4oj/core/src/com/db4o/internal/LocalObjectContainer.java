@@ -754,8 +754,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	overwriteDeletedBytes(slot.address(), _blockConverter.blocksToBytes(slot.length()));	
     }
 
-    public final void writeTransactionPointer(int address) {
-        _fileHeader.writeTransactionPointer(systemTransaction(), address);
+    public final void writeTransactionPointer(int pointer1, int pointer2) {
+        _fileHeader.writeTransactionPointer(systemTransaction(), pointer1, pointer2);
     }
     
     public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){

@@ -481,6 +481,10 @@ public final class HandlerRegistry {
     public boolean isSystemHandler(int id) {
     	return id > 0 && id <= _highestBuiltinTypeID;
     }
+    
+    public int lowestValidId(){
+    	return _highestBuiltinTypeID + 1;
+    }
 
 	public VirtualFieldMetadata virtualFieldByName(String name) {
         for (int i = 0; i < _virtualFields.length; i++) {

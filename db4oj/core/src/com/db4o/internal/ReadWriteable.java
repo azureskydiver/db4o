@@ -7,5 +7,7 @@ package com.db4o.internal;
  * @exclude
  */
 public interface ReadWriteable extends Readable{
-	public void write(ByteArrayBuffer a_writer);
+	
+	public void write(ByteArrayBuffer buffer);
+	
 }

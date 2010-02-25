@@ -54,7 +54,7 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 	            return (V)balance();
 	        }
 	    }else{
-	        newNode.onAttemptToAddDuplicate(this);
+	        return (V)newNode.onAttemptToAddDuplicate(this);
 	    }
 	    return (V)this;
 	}
@@ -243,9 +243,10 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
         return _subsequent.last();
     }
     
-	public void onAttemptToAddDuplicate(Tree a_tree){
+	public Tree onAttemptToAddDuplicate(Tree oldNode){
 		_size = 0;
-        _preceding = a_tree;
+        _preceding = oldNode;
+        return oldNode;
 	}
 	
     /**

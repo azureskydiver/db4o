@@ -1171,6 +1171,10 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public byte idSystemType() {
 		return _config.getAsByte(ID_SYSTEM_KEY);
 	}
+
+	public void useInMemoryIdSystem() {
+		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.IN_MEMORY);
+	}
 	
 
 }

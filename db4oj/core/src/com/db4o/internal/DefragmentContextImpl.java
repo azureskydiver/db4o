@@ -92,7 +92,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
         try {
             mapped=_services.mappedID(orig);
         } catch (MappingNotFoundException exc) {
-            mapped=_services.allocateTargetSlot(Const4.POINTER_LENGTH).address();
+            mapped=_services.targetNewId();
             _services.mapIDs(orig,mapped, false);
             if(doRegister){
                 _services.registerUnindexed(orig);
@@ -296,10 +296,18 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return container();
 	}
 
+	/**
+	 * only used by old handlers: OpenTypeHandler0, StringHandler0, ArrayHandler0.
+	 * Doesn't need to work with modern IdSystems.
+	 */
 	public Slot allocateTargetSlot(int length) {
 		return _services.allocateTargetSlot(length);
 	}
 
+	/**
+	 * only used by old handlers: OpenTypeHandler0, StringHandler0, ArrayHandler0.
+	 * Doesn't need to work with modern IdSystems.
+	 */
 	public Slot allocateMappedTargetSlot(int sourceAddress, int length) {
 		Slot slot = allocateTargetSlot(length);
 		_services.mapIDs(sourceAddress, slot.address(), false);

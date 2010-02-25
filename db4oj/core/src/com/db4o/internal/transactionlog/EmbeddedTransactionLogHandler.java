@@ -29,7 +29,7 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
             bytes.incrementOffset(Const4.INT_LENGTH);
             readWriteSlotChanges(bytes);
         }
-        _container.writeTransactionPointer(0);
+        _container.writeTransactionPointer(0, 0);
         flushDatabaseFile();
 	}
 
@@ -73,14 +73,14 @@ public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 			    
 			    flushDatabaseFile();
 	
-			    _container.writeTransactionPointer(transactionLogSlot.address());
+			    _container.writeTransactionPointer(transactionLogSlot.address(), transactionLogSlot.address());
 			    flushDatabaseFile();
 	
 			    if (writeSlots(slotChangeTree)) {
 			    	flushDatabaseFile();
 			    }
 	
-			    _container.writeTransactionPointer(0);
+			    _container.writeTransactionPointer(0, 0);
 			    
 			    
 			    commitHook.run();

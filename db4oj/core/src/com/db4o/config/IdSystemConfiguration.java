@@ -16,5 +16,12 @@ public interface IdSystemConfiguration {
 	 * configures db4o to use a BTree based ID system.
 	 */
 	public void useBTreeSystem();
+	
+	
+	/**
+	 * configures db4o to use an in-memory ID system.
+	 * All IDs get written to the database file on every commit.
+	 */
+	public void useInMemorySystem();
 
 }

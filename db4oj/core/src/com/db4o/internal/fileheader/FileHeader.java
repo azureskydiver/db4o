@@ -85,13 +85,13 @@ public abstract class FileHeader {
     public abstract void writeFixedPart(
         LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
     
-    public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionAddress);
+    public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2);
 
-    protected void writeTransactionPointer(Transaction systemTransaction, int transactionAddress, final int address, final int offset) {
+    protected void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2, final int address, final int offset) {
         StatefulBuffer bytes = new StatefulBuffer(systemTransaction, address, Const4.INT_LENGTH * 2);
         bytes.moveForward(offset);
-        bytes.writeInt(transactionAddress);
-        bytes.writeInt(transactionAddress);
+        bytes.writeInt(transactionPointer1);
+        bytes.writeInt(transactionPointer2);
         if (Debug4.xbytes) {
         	bytes.checkXBytes(false);
         }

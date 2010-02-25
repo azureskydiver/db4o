@@ -2,8 +2,10 @@
 
 package com.db4o.db4ounit.common.ids;
 
+import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
@@ -23,26 +25,29 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 	
 	public static class GlobalIdSystemTestUnit extends AbstractDb4oTestCase implements OptOutMultiSession, Db4oTestCase {
 	
-		private GlobalIdSystem _idSystem;
-		
 		@Override
-		protected void db4oSetupAfterStore() throws Exception {
-			_idSystem = _fixture.value().apply((LocalObjectContainer)db());
+		protected void configure(Configuration config) throws Exception {
+			IdSystemConfiguration idSystemConfiguration = Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config);
+			_fixture.value().apply(idSystemConfiguration);
+		}
+		
+		public void testPersistence () {
+			
 		}
 		
 		public void testSlotForNewIdDoesNotExist(){
-			int newId = _idSystem.newId();
-			Slot oldSlot = _idSystem.committedSlot(newId);
+			int newId = idSystem().newId();
+			Slot oldSlot = idSystem().committedSlot(newId);
 			Assert.isFalse(isValid(oldSlot));
 		}
 		
 		public void testSingleNewSlot(){
-			int id = _idSystem.newId();
-			Assert.areEqual(allocateNewSlot(id), _idSystem.committedSlot(id));
+			int id = idSystem().newId();
+			Assert.areEqual(allocateNewSlot(id), idSystem().committedSlot(id));
 		}
 		
 		public void testSingleSlotUpdate(){
-			int id = _idSystem.newId();
+			int id = idSystem().newId();
 			allocateNewSlot(id);
 			
 			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(id);
@@ -50,18 +55,18 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 			slotChange.notifySlotUpdated(freespaceManager(), updatedSlot);
 			commit(slotChange);
 			
-			Assert.areEqual(updatedSlot, _idSystem.committedSlot(id));
+			Assert.areEqual(updatedSlot, idSystem().committedSlot(id));
 		}
 		
 		public void testSingleSlotDelete(){
-			int id = _idSystem.newId();
+			int id = idSystem().newId();
 			allocateNewSlot(id);
 			
 			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(id);
 			slotChange.notifyDeleted(freespaceManager());
 			commit(slotChange);
 			
-			Assert.isFalse(isValid( _idSystem.committedSlot(id)));
+			Assert.isFalse(isValid( idSystem().committedSlot(id)));
 		}
 	
 		private Slot allocateNewSlot(int newId) {
@@ -73,7 +78,7 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 		}
 	
 		private void commit(final SlotChange ...slotChanges ) {
-			_idSystem.commit(new Visitable<SlotChange>() {
+			idSystem().commit(new Visitable<SlotChange>() {
 				public void accept(Visitor4<SlotChange> visitor) {
 					for(SlotChange slotChange : slotChanges){
 						visitor.visit(slotChange);	
@@ -97,31 +102,32 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 		private FreespaceManager freespaceManager(){
 			return localContainer().freespaceManager();
 		}
-		
+
+		private GlobalIdSystem idSystem() {
+			return localContainer().globalIdSystem();
+		}
 		
 	}
 	
-	private static FixtureVariable <Function4<LocalObjectContainer, GlobalIdSystem>> _fixture = FixtureVariable.newInstance("IdSystem"); 
+	private static FixtureVariable <Procedure4<IdSystemConfiguration>> _fixture = FixtureVariable.newInstance("IdSystem"); 
 
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[]{
 				new Db4oFixtureProvider(),
-				new SimpleFixtureProvider<Function4<LocalObjectContainer, GlobalIdSystem>>(_fixture, 
-						new Function4<LocalObjectContainer, GlobalIdSystem>() {
-							public GlobalIdSystem apply(LocalObjectContainer container) {
-								return new PointerBasedIdSystem(container);
+				new SimpleFixtureProvider<Procedure4<IdSystemConfiguration>>(_fixture, 
+						new Procedure4<IdSystemConfiguration>() {
+							public void apply(IdSystemConfiguration idSystemConfiguration) {
+								idSystemConfiguration.usePointerBasedSystem();
 							}
 						}
-						/*
-						  
 						,
-						new Function4<LocalObjectContainer, GlobalIdSystem>() {
-							public GlobalIdSystem apply(LocalObjectContainer container) {
-								return new InMemoryIdSystem();
+						new Procedure4<IdSystemConfiguration>() {
+							public void apply(IdSystemConfiguration idSystemConfiguration) {
+								idSystemConfiguration.useInMemorySystem();
 							}
-						}*/
+						}
 				)
 		};
 	}
