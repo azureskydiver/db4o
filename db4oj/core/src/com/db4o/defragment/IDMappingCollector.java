@@ -27,16 +27,6 @@ public class IDMappingCollector {
 		if(_ids==null) {
 			return;
 		}
-		int blockSize = context.blockSize();
-		boolean overlapping=(Const4.POINTER_LENGTH%blockSize>0);
-		int blocksPerPointer=Const4.POINTER_LENGTH/blockSize;
-		if(overlapping) {
-			blocksPerPointer++;
-		}
-		int bytesPerPointer = blocksPerPointer * blockSize;
-		int batchSize = _ids.size() * bytesPerPointer;
-		Slot pointerSlot = context.allocateTargetSlot(batchSize);
-		int pointerAddress=pointerSlot.address();
 		Iterator4 idIter=new TreeKeyIterator(_ids);
 		while(idIter.moveNext()) {
 			int objectID=((Integer)idIter.current()).intValue();
@@ -53,9 +43,7 @@ public class IDMappingCollector {
 					throw new IllegalStateException();
 				}
 			}
-			
-			context.mapIDs(objectID,pointerAddress, isClassID);
-			pointerAddress+=blocksPerPointer;
+			context.mapIDs(objectID,context.targetNewId(), isClassID);
 		}
 		_ids=null;
 	}

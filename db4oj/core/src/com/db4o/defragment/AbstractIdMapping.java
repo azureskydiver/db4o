@@ -10,11 +10,11 @@ import com.db4o.foundation.*;
  * 
  * @see Defragment
  */
-public abstract class AbstractContextIDMapping implements ContextIDMapping {
+public abstract class AbstractIdMapping implements IdMapping {
 
 	private Hashtable4	_classIDs = new Hashtable4();
 
-	public final void mapIDs(int origID, int mappedID, boolean isClassID) {
+	public final void mapId(int origID, int mappedID, boolean isClassID) {
 		if(isClassID) {
 			mapClassIDs(origID, mappedID);
 			return;

@@ -215,16 +215,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 			services.mapIDs(sourceAddress, targetSlot.address(), false);
 		}
 		
-		ByteArrayBuffer targetPointerReader=new ByteArrayBuffer(Const4.POINTER_LENGTH);
-		if(Deploy.debug) {
-			targetPointerReader.writeBegin(Const4.YAPPOINTER);
-		}
-		targetPointerReader.writeInt(targetSlot.address());
-		targetPointerReader.writeInt(targetSlot.length());
-		if(Deploy.debug) {
-			targetPointerReader.writeEnd();
-		}
-		services.targetWriteBytes(targetPointerReader,targetID);
+		services.mapping().mapId(targetID, targetSlot);
 		
 		DefragmentContextImpl context=new DefragmentContextImpl(sourceReader,services);
 		command.processCopy(context);

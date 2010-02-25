@@ -12,6 +12,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.mapping.*;
+import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 
 /**
@@ -134,6 +135,7 @@ public class Defragment {
 			firstPass(context, config);
 			secondPass(context, config);
 			defragUnindexed(context);
+			context.commitIds();
 			newClassCollectionID = context.mappedID(context
 					.sourceClassCollectionID());
 			context.targetClassCollectionID(newClassCollectionID);
