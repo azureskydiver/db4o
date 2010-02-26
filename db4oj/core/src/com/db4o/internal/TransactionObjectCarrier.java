@@ -11,9 +11,9 @@ import com.db4o.internal.references.*;
  */
 class TransactionObjectCarrier extends LocalTransaction{
 	
-	private final IdSystem _idSystem;
+	private final TransactionalIdSystem _idSystem;
 	
-	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, IdSystem idSystem, ReferenceSystem referenceSystem) {
+	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, TransactionalIdSystem idSystem, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, idSystem, referenceSystem);
 		_idSystem = idSystem;
 	}

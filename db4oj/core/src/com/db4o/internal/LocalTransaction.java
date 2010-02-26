@@ -27,9 +27,9 @@ public class LocalTransaction extends Transaction {
 	
 	private final Cache4<Integer, ByteArrayBuffer> _slotCache;
 
-	private final IdSystem _idSystem;
+	private final TransactionalIdSystem _idSystem;
 	
-	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, IdSystem idSystem, ReferenceSystem referenceSystem) {
+	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalIdSystem idSystem, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
         _committedCallbackDispatcher = new CommittedCallbackDispatcher() {
@@ -358,7 +358,7 @@ public class LocalTransaction extends Transaction {
 		idSystem().collectCallBackInfo(collector);
 	}
 	
-	public IdSystem idSystem() {
+	public TransactionalIdSystem idSystem() {
 		return _idSystem;
 	}
 

@@ -76,7 +76,7 @@ public class BTreeAssert {
 	public static void assertAllSlotsFreed(LocalTransaction trans, BTree bTree, CodeBlock block) throws Throwable {
 		
 		final LocalObjectContainer container = (LocalObjectContainer)trans.container();
-		IdSystem idSystem = trans.idSystem();
+		TransactionalIdSystem idSystem = trans.idSystem();
 		
 		Iterator4 allSlotIDs = bTree.allNodeIds(trans.systemTransaction());
         

@@ -93,7 +93,7 @@ public abstract class Transaction {
 		if (rollbackOnClose) {
 			rollback();
 		}
-		IdSystem idSystem = idSystem();
+		TransactionalIdSystem idSystem = idSystem();
 		if(idSystem != null){
 			idSystem.close();
 		}
@@ -315,5 +315,5 @@ public abstract class Transaction {
 		return new TransactionContext(this, value);
 	}
 	
-	public abstract IdSystem idSystem();
+	public abstract TransactionalIdSystem idSystem();
 }

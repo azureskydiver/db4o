@@ -8,7 +8,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public interface IdSystem {
+public interface TransactionalIdSystem {
 
 	public void collectCallBackInfo(CallbackInfoCollector collector);
 
