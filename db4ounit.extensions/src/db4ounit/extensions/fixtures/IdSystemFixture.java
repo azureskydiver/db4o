@@ -16,20 +16,20 @@ public class IdSystemFixture extends Db4oSolo {
 	 }
 	
 	public IdSystemFixture() {		
-		_idSystemType = GlobalIdSystemFactory.IN_MEMORY;
+		_idSystemType = StandardIdSystemFactory.IN_MEMORY;
 	}
 	
     protected ObjectContainer createDatabase(Configuration config) {
     	EmbeddedConfiguration embeddedConfiguration = Db4oLegacyConfigurationBridge.asEmbeddedConfiguration(config);
     	
         switch(_idSystemType){
-	    	case GlobalIdSystemFactory.POINTER_BASED:
+	    	case StandardIdSystemFactory.POINTER_BASED:
 	    		embeddedConfiguration.idSystem().usePointerBasedSystem();
 	    		break;
-	    	case GlobalIdSystemFactory.BTREE:
+	    	case StandardIdSystemFactory.BTREE:
 	    		embeddedConfiguration.idSystem().useBTreeSystem();
 	    		break;
-	    	case GlobalIdSystemFactory.IN_MEMORY:
+	    	case StandardIdSystemFactory.IN_MEMORY:
 	    		embeddedConfiguration.idSystem().useInMemorySystem();
 	    		break;
 	    	default:
@@ -42,13 +42,13 @@ public class IdSystemFixture extends Db4oSolo {
     public String label() {
     	String idSystemType = "";
         switch(_idSystemType){
-	    	case GlobalIdSystemFactory.POINTER_BASED:
+	    	case StandardIdSystemFactory.POINTER_BASED:
 	    		idSystemType = "PointerBased";
 	    		break;
-	    	case GlobalIdSystemFactory.BTREE:
+	    	case StandardIdSystemFactory.BTREE:
 	    		idSystemType = "BTree";
 	    		break;
-	    	case GlobalIdSystemFactory.IN_MEMORY:
+	    	case StandardIdSystemFactory.IN_MEMORY:
 	    		idSystemType = "InMemory";
 	    		break;
 	    	default:

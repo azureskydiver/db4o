@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public class GlobalIdSystemFactory {
+public class StandardIdSystemFactory {
 	
 	public static final byte LEGACY = 0;
 	
@@ -23,7 +23,7 @@ public class GlobalIdSystemFactory {
 	
 	public static final byte CUSTOM = 4;
 
-	public static GlobalIdSystem createNew(LocalObjectContainer localContainer) {
+	public static IdSystem newInstance(LocalObjectContainer localContainer) {
 		byte idSystemType = localContainer.systemData().idSystemType();
 		int idSystemId = localContainer.systemData().idSystemID();
 		

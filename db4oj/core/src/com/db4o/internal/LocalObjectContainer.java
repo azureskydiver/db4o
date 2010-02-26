@@ -39,7 +39,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     private SystemData          _systemData;
     
-    private GlobalIdSystem _globalIdSystem;
+    private IdSystem _globalIdSystem;
     
 	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
@@ -60,8 +60,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 						return freespaceManager();
 					}
 				}, 
-				new Closure4<GlobalIdSystem>() {
-					public GlobalIdSystem run() {
+				new Closure4<IdSystem>() {
+					public IdSystem run() {
 						return globalIdSystem();
 					}
 				}, 
@@ -465,7 +465,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     void readThis() throws OldFormatException {
-        newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM, GlobalIdSystemFactory.LEGACY);
+        newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM, StandardIdSystemFactory.LEGACY);
         blockSizeReadFromFile(1);
         
         _fileHeader = FileHeader.read(this);
@@ -527,7 +527,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
     
     protected void createIdSystem() {
-        _globalIdSystem = GlobalIdSystemFactory.createNew(this);
+        _globalIdSystem = StandardIdSystemFactory.newInstance(this);
 	}
 
 	private boolean freespaceMigrationRequired(FreespaceManager freespaceManager) {
@@ -927,7 +927,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		}
 	}
 	
-	public GlobalIdSystem globalIdSystem(){
+	public IdSystem globalIdSystem(){
 		return _globalIdSystem;
 	}
 

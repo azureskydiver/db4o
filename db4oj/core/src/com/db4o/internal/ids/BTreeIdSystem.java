@@ -8,7 +8,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class BTreeIdSystem implements GlobalIdSystem {
+public class BTreeIdSystem implements IdSystem {
 	
 	
 

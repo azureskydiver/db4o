@@ -103,7 +103,7 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 			return localContainer().freespaceManager();
 		}
 
-		private GlobalIdSystem idSystem() {
+		private IdSystem idSystem() {
 			return localContainer().globalIdSystem();
 		}
 		

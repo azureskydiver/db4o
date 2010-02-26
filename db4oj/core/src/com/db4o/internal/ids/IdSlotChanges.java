@@ -89,7 +89,7 @@ public class IdSlotChanges {
         _prefetchedIDs = _prefetchedIDs.removeLike(new TreeInt(id));
 	}
 	
-    final void freePrefetchedIDs(GlobalIdSystem idSystem) {
+    final void freePrefetchedIDs(IdSystem idSystem) {
         if (_prefetchedIDs == null) {
         	return;
         }
