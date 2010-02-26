@@ -2,6 +2,7 @@
 
 package com.db4o.internal.ids;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
@@ -70,7 +71,7 @@ public class InMemoryIdSystem implements GlobalIdSystem {
 	public Slot committedSlot(int id) {
 		IdSlotMapping idSlotMapping = (IdSlotMapping) Tree.find(_ids, new TreeInt(id));
 		if(idSlotMapping == null){
-			return null;
+			throw new InvalidIDException(id);
 		}
 		return idSlotMapping.slot();
 	}

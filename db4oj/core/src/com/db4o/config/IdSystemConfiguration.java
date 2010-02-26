@@ -23,5 +23,13 @@ public interface IdSystemConfiguration {
 	 * All IDs get written to the database file on every commit.
 	 */
 	public void useInMemorySystem();
+	
+	/**
+	 * configures db4o to use a custom ID system.
+	 * Pass an {@link IdSystemFactory} that creates the IdSystem.
+	 * Note that this factory has to be configured every time you
+	 * open a database that you configured to use a custom IdSystem.
+	 */
+	public void useCustomSystem(IdSystemFactory factory);
 
 }

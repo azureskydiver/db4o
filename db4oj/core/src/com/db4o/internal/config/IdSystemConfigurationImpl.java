@@ -29,4 +29,8 @@ public class IdSystemConfigurationImpl implements IdSystemConfiguration {
 		
 	}
 
+	public void useCustomSystem(IdSystemFactory factory) {
+		_config.useCustomIdSystem(factory);
+	}
+
 }
