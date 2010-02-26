@@ -443,7 +443,7 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     }
 
 	private void freeAllNodeIds(LocalTransaction systemTrans, final Iterator4 allNodeIDs) {
-		IdSystem idSystem = systemTrans.idSystem();
+		TransactionalIdSystem idSystem = systemTrans.idSystem();
         while(allNodeIDs.moveNext()){
             int id = ((Integer)allNodeIDs.current()).intValue();
             idSystem.notifySlotDeleted(id, slotChangeFactory());

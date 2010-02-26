@@ -8,7 +8,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public final class TransportIdSystem implements IdSystem {
+public final class TransportIdSystem implements TransactionalIdSystem {
 	
 	private final LocalObjectContainer _container;
 	

@@ -82,7 +82,7 @@ public final class ClientTransaction extends Transaction {
     }
 
 	@Override
-	public IdSystem idSystem() {
+	public TransactionalIdSystem idSystem() {
 		return null;
 	}
 

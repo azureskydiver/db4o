@@ -10,7 +10,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class TransactionalIdSystemImpl implements IdSystem {
+public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 	
 	private IdSlotChanges _slotChanges;
 
