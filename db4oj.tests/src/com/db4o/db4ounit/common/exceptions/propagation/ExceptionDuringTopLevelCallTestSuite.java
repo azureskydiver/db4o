@@ -5,16 +5,23 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.exceptions.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
+import com.db4o.internal.ids.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite implements Db4oTestCase, OptOutNetworkingCS {
+public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite implements Db4oTestCase, OptOutNetworkingCS, OptOutIdSystem {
 
 	public static class ExceptionDuringTopLevelCallTestUnit extends AbstractDb4oTestCase {
 	
 		private ExceptionSimulatingStorage _storage;
+		
+		private ExceptionSimulatingIdSystem _idSystem;
+		
+		private IdSystemFactory _idSystemFactory;
+		
 		private Object _unactivated;
 		
 		public static class Item {
@@ -23,11 +30,12 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		
 		@Override
 		protected void configure(Configuration config) throws Exception {
+			
 			if(Platform4.needsLockFileThread()){
 				config.lockDatabaseFile(false);
 			}
 			final ExceptionPropagationFixture propagationFixture = currentExceptionPropagationFixture();
-			_storage = new ExceptionSimulatingStorage(config.storage(), new ExceptionFactory() {
+			final ExceptionFactory exceptionFactory = new ExceptionFactory() {
 				private boolean _alreadyCalled = false;
 				
 				public void throwException() {
@@ -47,10 +55,23 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 				public void throwOnClose() {
 					propagationFixture.throwCloseException();
 				}
-			});
+			};
+			_storage = new ExceptionSimulatingStorage(config.storage(), exceptionFactory);
 			config.storage(_storage);
+			
+			_idSystemFactory = new IdSystemFactory() {
+				public IdSystem newInstance(LocalObjectContainer container, int idSystemId) {
+					_idSystem = new ExceptionSimulatingIdSystem(container, idSystemId, exceptionFactory);
+					return _idSystem;
+				}
+			};
+			configureIdSystem(config);
 		}
-		
+
+
+		private void configureIdSystem(Configuration config) {
+			Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).useCustomSystem(_idSystemFactory);
+		}
 		
 		@Override
 		protected void db4oSetupAfterStore() throws Exception {
@@ -61,6 +82,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 			_unactivated = retrieveOnlyInstance(Item.class);
 			db().deactivate(_unactivated);
 			_storage.triggerException(true);
+			_idSystem.triggerException(true);
 			DatabaseContext context = new DatabaseContext(db(), _unactivated);
 			currentExceptionPropagationFixture().assertExecute(context, currentOperationFixture());
 			if(context.storageIsClosed()){
@@ -69,7 +91,9 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		}
 		
 		private void assertIsNotLocked(String fileName) {
-			ObjectContainer oc = Db4oEmbedded.openFile(fileName);
+			EmbeddedConfiguration embeddedConfiguration = Db4oEmbedded.newConfiguration();
+			embeddedConfiguration.idSystem().useCustomSystem(_idSystemFactory);
+			ObjectContainer oc = Db4oEmbedded.openFile(embeddedConfiguration, fileName);
 			oc.close();
 		}
 
@@ -84,6 +108,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		@Override
 		protected void db4oTearDownBeforeClean() throws Exception {
 			_storage.triggerException(false);
+			_idSystem.triggerException(false);
 		}
 	}
 
