@@ -119,6 +119,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	private final static KeySpec ID_SYSTEM_KEY=new KeySpec(GlobalIdSystemFactory.DEFAULT);
 	
+	private final static KeySpec ID_SYSTEM_CUSTOM_FACTORY_KEY=new KeySpec(null);
+	
 	private final static KeySpec QUERY_EVALUATION_MODE_KEY=new KeySpec(QueryEvaluationMode.IMMEDIATE);
 	
 	private final static KeySpec LOCK_FILE_KEY=new KeySpec(true);
@@ -1175,6 +1177,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public void useInMemoryIdSystem() {
 		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.IN_MEMORY);
 	}
+
+	public void useCustomIdSystem(IdSystemFactory factory) {
+		_config.put(ID_SYSTEM_KEY, GlobalIdSystemFactory.CUSTOM);
+		_config.put(ID_SYSTEM_CUSTOM_FACTORY_KEY, factory);
+	}
 	
+	public IdSystemFactory customIdSystemFactory(){
+		return (IdSystemFactory) _config.get(ID_SYSTEM_CUSTOM_FACTORY_KEY);
+	}
 
 }

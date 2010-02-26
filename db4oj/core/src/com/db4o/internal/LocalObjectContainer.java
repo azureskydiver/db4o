@@ -54,7 +54,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	if(! isSystemTransaction){
     		systemIdSystem = systemTransaction().idSystem();
     	}
-    	IdSystem idSystem = new TransactionalIdSystem(
+    	IdSystem idSystem = new TransactionalIdSystemImpl(
     			new Closure4<FreespaceManager>() {
 					public FreespaceManager run() {
 						return freespaceManager();
@@ -65,7 +65,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 						return globalIdSystem();
 					}
 				}, 
-				(TransactionalIdSystem)systemIdSystem);
+				(TransactionalIdSystemImpl)systemIdSystem);
     	
 		return new LocalTransaction(this, parentTransaction, idSystem, referenceSystem);
 	}

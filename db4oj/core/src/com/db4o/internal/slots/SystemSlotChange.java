@@ -15,7 +15,7 @@ public class SystemSlotChange extends SlotChange {
 	}
 	
 	@Override
-	public void freeDuringCommit(TransactionalIdSystem idSystem,
+	public void freeDuringCommit(TransactionalIdSystemImpl idSystem,
 			FreespaceManager freespaceManager, boolean forFreespace) {
 		super.freeDuringCommit(idSystem, freespaceManager, forFreespace);
 		
@@ -24,7 +24,7 @@ public class SystemSlotChange extends SlotChange {
 	}
 	
 	@Override
-	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystem idSystem) {
+	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystemImpl idSystem) {
 		return null;
 	}
 

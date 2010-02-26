@@ -12,13 +12,13 @@ public class IdSlotChanges {
 	
     private final LockedTree _slotChanges = new LockedTree();
     
-    private final TransactionalIdSystem _idSystem;
+    private final TransactionalIdSystemImpl _idSystem;
 	
 	private final Closure4<FreespaceManager> _freespaceManager;
 	
 	private TreeInt _prefetchedIDs;
 
-	public IdSlotChanges(TransactionalIdSystem idSystem, Closure4<FreespaceManager> freespaceManager) {
+	public IdSlotChanges(TransactionalIdSystemImpl idSystem, Closure4<FreespaceManager> freespaceManager) {
 		_idSystem = idSystem;
 		_freespaceManager = freespaceManager;
 	}

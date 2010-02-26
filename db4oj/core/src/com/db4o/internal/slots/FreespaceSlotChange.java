@@ -34,7 +34,7 @@ public class FreespaceSlotChange extends SystemSlotChange {
 	}
 	
 	@Override
-	public void freeDuringCommit(TransactionalIdSystem idSystem,
+	public void freeDuringCommit(TransactionalIdSystemImpl idSystem,
 			FreespaceManager freespaceManager, boolean forFreespace) {
 		super.freeDuringCommit(idSystem, freespaceManager, forFreespace);
 		if(_freed == null){

@@ -50,7 +50,7 @@ public class SlotChange extends TreeInt {
 		return super.shallowCloneInternal(sc);
 	}
 	
-	public void freeDuringCommit(TransactionalIdSystem idSystem, FreespaceManager freespaceManager, boolean forFreespace) {
+	public void freeDuringCommit(TransactionalIdSystemImpl idSystem, FreespaceManager freespaceManager, boolean forFreespace) {
         if( isForFreespace() != forFreespace){
         	return;
         }
@@ -76,7 +76,7 @@ public class SlotChange extends TreeInt {
 		}
 	}
 	
-	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystem idSystem) {
+	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystemImpl idSystem) {
 		return idSystem.modifiedSlotInUnderlyingIdSystem(_key);
 	}
 	
