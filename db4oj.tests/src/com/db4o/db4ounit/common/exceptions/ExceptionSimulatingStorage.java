@@ -94,5 +94,7 @@ public class ExceptionSimulatingStorage extends StorageDecorator {
 		private boolean triggersException() {
 			return _triggerCondition._triggersException;
 		}
+		
+		
 	}
 }

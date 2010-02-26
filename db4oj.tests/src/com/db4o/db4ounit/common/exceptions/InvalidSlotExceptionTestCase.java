@@ -3,15 +3,19 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.io.*;
+import com.db4o.internal.config.*;
+import com.db4o.internal.ids.*;
+import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implements OptOutNonStandardBlockSize {
+public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implements OptOutIdSystem {
 	
 	private static final int INVALID_ID = 3;
 	
@@ -21,9 +25,15 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implement
 		new InvalidSlotExceptionTestCase().runAll();
 	}
 	
-	
 	protected void configure(Configuration config) throws Exception {
-		config.storage(new MockStorage());
+		IdSystemConfiguration idSystemConfiguration = Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config);
+		idSystemConfiguration.useCustomSystem(new IdSystemFactory() {
+			
+			public IdSystem newInstance(LocalObjectContainer container,
+					int idSystemId) {
+				return new MockIdSystem(container, idSystemId);
+			}
+		});
 	}
 	
 	public void testInvalidSlotException() throws Exception {
@@ -53,46 +63,22 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implement
 		}
 	}
 	
-	public static class MockStorage extends StorageDecorator {
-				
-		public MockStorage(){
-			super(new FileStorage());
+	public static class MockIdSystem extends DelegatingIdSystem {
+		
+		public MockIdSystem(LocalObjectContainer container, int idSystemId){
+			super(container, idSystemId);
 		}
 
 		@Override
-		protected Bin decorate(BinConfiguration config, Bin bin) {
-			return new MockBin(bin);
+		public Slot committedSlot(int id) {
+			if(id == OUT_OF_MEMORY_ID){
+				throw new OutOfMemoryError();
+			}
+			if(id == INVALID_ID){
+				throw new InvalidIDException(id);
+			}
+			return _delegate.committedSlot(id);
 		}
 		
-		private static class MockBin extends BinDecorator {
-			private boolean _deliverInvalidSlot;
-
-			public MockBin(Bin bin) {
-				super(bin);
-			}
-			
-			public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
-				seek(pos);
-				if(_deliverInvalidSlot){
-					ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.POINTER_LENGTH);
-					buffer.writeInt(1);
-					buffer.writeInt(Integer.MAX_VALUE);
-					System.arraycopy(buffer._buffer, 0, bytes, 0, Const4.POINTER_LENGTH);
-					return length;
-				}
-				return super.read(pos, bytes, length);
-			}
-
-			private void seek(long pos) throws Db4oIOException {
-				if(pos == OUT_OF_MEMORY_ID){
-					throw new OutOfMemoryError();
-				}
-				if(pos == INVALID_ID){
-					_deliverInvalidSlot = true;
-					return;
-				}
-				_deliverInvalidSlot = false;
-			}
-		}
 	}
 }

@@ -39,7 +39,9 @@ public class StandardIdSystemFactory {
 	    	case CUSTOM:
 	    		IdSystemFactory customIdSystemFactory = localContainer.configImpl().customIdSystemFactory();
 	    		if(customIdSystemFactory == null){
+	    			
 	    			throw new Db4oFatalException("Custom IdSystem configured but no factory was found. See IdSystemConfiguration#useCustomSystem()");
+	    			
 	    		}
 	    		return customIdSystemFactory.newInstance(localContainer, idSystemId);
 	        default:

@@ -56,4 +56,11 @@ public class IdSystemFixture extends Db4oSolo {
         }
         return "IdSystem-" + idSystemType + " " + super.label();
     }
+    
+    public boolean accept(Class clazz) {
+        return super.accept(clazz)
+                && !OptOutIdSystem.class.isAssignableFrom(clazz);
+    }
+
+
 }
