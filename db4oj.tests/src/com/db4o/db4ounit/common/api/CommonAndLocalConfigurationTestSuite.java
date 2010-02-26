@@ -213,11 +213,11 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			
 			IdSystemConfigurationProvider idSystemConfigurationProvider = subject();
 			IdSystemConfiguration idSystemConfiguration = idSystemConfigurationProvider.idSystem();
-			Assert.areEqual(GlobalIdSystemFactory.DEFAULT, legacyConfig.idSystemType());
+			Assert.areEqual(StandardIdSystemFactory.DEFAULT, legacyConfig.idSystemType());
 			idSystemConfiguration.useBTreeSystem();
-			Assert.areEqual(GlobalIdSystemFactory.BTREE, legacyConfig.idSystemType());
+			Assert.areEqual(StandardIdSystemFactory.BTREE, legacyConfig.idSystemType());
 			idSystemConfiguration.usePointerBasedSystem();
-			Assert.areEqual(GlobalIdSystemFactory.POINTER_BASED, legacyConfig.idSystemType());
+			Assert.areEqual(StandardIdSystemFactory.POINTER_BASED, legacyConfig.idSystemType());
 			
 			
 		}

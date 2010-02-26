@@ -10,7 +10,7 @@ import com.db4o.internal.transactionlog.*;
 /**
  * @exclude
  */
-public final class PointerBasedIdSystem implements GlobalIdSystem {
+public final class PointerBasedIdSystem implements IdSystem {
 	
 	final TransactionLogHandler _transactionLogHandler;
 	

@@ -8,7 +8,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public interface GlobalIdSystem {
+public interface IdSystem {
 
 	public int newId();
 

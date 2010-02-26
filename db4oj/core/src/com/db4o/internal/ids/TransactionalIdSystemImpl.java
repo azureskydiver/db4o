@@ -16,11 +16,11 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 
 	private TransactionalIdSystemImpl _systemIdSystem;
 	
-	private final Closure4<GlobalIdSystem> _globalIdSystem;
+	private final Closure4<IdSystem> _globalIdSystem;
 	
 	private final Closure4<FreespaceManager> _freespaceManager;
 	
-	public TransactionalIdSystemImpl(Closure4<FreespaceManager> freespaceManager, Closure4<GlobalIdSystem> globalIdSystem, TransactionalIdSystemImpl systemIdSystem){
+	public TransactionalIdSystemImpl(Closure4<FreespaceManager> freespaceManager, Closure4<IdSystem> globalIdSystem, TransactionalIdSystemImpl systemIdSystem){
 		_freespaceManager = freespaceManager;
 		_globalIdSystem = globalIdSystem;
 		_slotChanges = new IdSlotChanges(this, freespaceManager);
@@ -194,7 +194,7 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 		return _freespaceManager.run();
 	}
 
-	private GlobalIdSystem globalIdSystem() {
+	private IdSystem globalIdSystem() {
 		return _globalIdSystem.run();
 	}
 

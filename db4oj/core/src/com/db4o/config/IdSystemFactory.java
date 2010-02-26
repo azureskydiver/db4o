@@ -17,6 +17,6 @@ public interface IdSystemFactory {
 	 * @param idSystemId
 	 * @return
 	 */
-	public GlobalIdSystem newInstance(LocalObjectContainer container, int idSystemId);
+	public IdSystem newInstance(LocalObjectContainer container, int idSystemId);
 
 }

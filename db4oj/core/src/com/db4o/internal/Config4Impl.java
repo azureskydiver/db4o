@@ -117,7 +117,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
 	
-	private final static KeySpec ID_SYSTEM_KEY=new KeySpec(GlobalIdSystemFactory.DEFAULT);
+	private final static KeySpec ID_SYSTEM_KEY=new KeySpec(StandardIdSystemFactory.DEFAULT);
 	
 	private final static KeySpec ID_SYSTEM_CUSTOM_FACTORY_KEY=new KeySpec(null);
 	
@@ -1163,11 +1163,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public void usePointerBasedIdSystem() {
-		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.POINTER_BASED);		
+		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.POINTER_BASED);		
 	}
 
 	public void useBTreeIdSystem() {
-		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.BTREE);
+		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.BTREE);
 	}
 	
 	public byte idSystemType() {
@@ -1175,11 +1175,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public void useInMemoryIdSystem() {
-		_config.put(ID_SYSTEM_KEY,GlobalIdSystemFactory.IN_MEMORY);
+		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.IN_MEMORY);
 	}
 
 	public void useCustomIdSystem(IdSystemFactory factory) {
-		_config.put(ID_SYSTEM_KEY, GlobalIdSystemFactory.CUSTOM);
+		_config.put(ID_SYSTEM_KEY, StandardIdSystemFactory.CUSTOM);
 		_config.put(ID_SYSTEM_CUSTOM_FACTORY_KEY, factory);
 	}
 	

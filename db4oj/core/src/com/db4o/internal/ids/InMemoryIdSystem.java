@@ -10,7 +10,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class InMemoryIdSystem implements GlobalIdSystem {
+public class InMemoryIdSystem implements IdSystem {
 	
 	private final LocalObjectContainer _container;
 	
