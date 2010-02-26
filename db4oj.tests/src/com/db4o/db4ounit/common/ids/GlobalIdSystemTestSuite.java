@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.ids;
 
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
@@ -37,7 +38,12 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 		
 		public void testSlotForNewIdDoesNotExist(){
 			int newId = idSystem().newId();
-			Slot oldSlot = idSystem().committedSlot(newId);
+			Slot oldSlot = null;
+			try{
+				oldSlot = idSystem().committedSlot(newId);
+			}catch(InvalidIDException ex){
+				
+			}
 			Assert.isFalse(isValid(oldSlot));
 		}
 		
