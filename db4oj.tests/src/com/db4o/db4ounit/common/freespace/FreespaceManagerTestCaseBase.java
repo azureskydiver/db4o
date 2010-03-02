@@ -46,7 +46,6 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
 	}
     
     protected void produceSomeFreeSpace() {
-        FreespaceManager fm = currentFreespaceManager();
         int length = 300;
         Slot slot = localContainer().allocateSlot(length);
         ByteArrayBuffer buffer = new ByteArrayBuffer(length);
@@ -54,7 +53,7 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
         	buffer.checkXBytes(false);
         }
         localContainer().writeBytes(buffer, slot.address(), 0);
-        fm.free(slot);
+        localContainer().free(slot);
     }
 
     protected FreespaceManager currentFreespaceManager() {

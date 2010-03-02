@@ -27,5 +27,10 @@ public class SystemSlotChange extends SlotChange {
 	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystemImpl idSystem) {
 		return null;
 	}
+	
+	@Override
+	public boolean removeId() {
+		return _newSlot == Slot.ZERO;
+	}
 
 }

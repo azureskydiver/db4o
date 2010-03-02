@@ -46,23 +46,29 @@ public class FileHeaderVariablePart1 {
         return LENGTH;
     }
 
-    public void readThis(ByteArrayBuffer reader) {
-        _systemData.converterVersion(reader.readInt());
-        _systemData.freespaceSystem(reader.readByte());
-        _systemData.freespaceAddress(reader.readInt());
-        _systemData.identityId(reader.readInt());
-        _systemData.lastTimeStampID(reader.readLong());
-        _systemData.uuidIndexId(reader.readInt());
+    public void readThis(ByteArrayBuffer buffer) {
+		if (Deploy.debug) {
+		    buffer.readBegin(getIdentifier());
+		}
+        _systemData.converterVersion(buffer.readInt());
+        _systemData.freespaceSystem(buffer.readByte());
+        _systemData.freespaceAddress(buffer.readInt());
+        _systemData.identityId(buffer.readInt());
+        _systemData.lastTimeStampID(buffer.readLong());
+        _systemData.uuidIndexId(buffer.readInt());
     }
 
-    public void writeThis(ByteArrayBuffer writer) {
-        writer.writeInt(_systemData.converterVersion());
-        writer.writeByte(_systemData.freespaceSystem());
-        writer.writeInt(_systemData.freespaceAddress());
+    public void writeThis(ByteArrayBuffer buffer) {
+		if (Deploy.debug) {
+		    buffer.writeBegin(getIdentifier());
+		}
+        buffer.writeInt(_systemData.converterVersion());
+        buffer.writeByte(_systemData.freespaceSystem());
+        buffer.writeInt(_systemData.freespaceAddress());
         Db4oDatabase identity = _systemData.identity();
-        writer.writeInt(identity == null ? 0 : identity.getID(systemTransaction()));
-        writer.writeLong(_systemData.lastTimeStampID());
-        writer.writeInt(_systemData.uuidIndexId());
+        buffer.writeInt(identity == null ? 0 : identity.getID(systemTransaction()));
+        buffer.writeLong(_systemData.lastTimeStampID());
+        buffer.writeInt(_systemData.uuidIndexId());
     }
 
 	private Transaction systemTransaction() {
@@ -89,13 +95,7 @@ public class FileHeaderVariablePart1 {
 		final Slot committedSlot = _container.readPointerSlot(_id);
 		final Slot newSlot = _container.allocateSlot(length);
 		ByteArrayBuffer buffer = new ByteArrayBuffer(length);
-		if (Deploy.debug) {
-		    buffer.writeBegin(getIdentifier());
-		}
 		writeThis(buffer);
-		if (Deploy.debug) {
-		    buffer.writeEnd();
-		}
 		_container.writeEncrypt(buffer, newSlot.address(), 0);
 		return new Runnable(){
 			public void run() {
