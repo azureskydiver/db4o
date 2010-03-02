@@ -21,6 +21,7 @@ MA  02111-1307, USA. */
 package org.polepos.teams.db4o;
 
 import org.polepos.circuits.indianapolis.*;
+import org.polepos.runner.db4o.*;
 
 import com.db4o.config.*;
 import com.db4o.query.*;
@@ -28,7 +29,12 @@ import com.db4o.query.*;
 
 public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     
-    private static int maximumPayload;
+    public IndianapolisDb4o(Db4oEngine engine) {
+		super(engine);
+		
+	}
+
+	private static int maximumPayload;
     
 	@Override
 	public void configure(Configuration config) {

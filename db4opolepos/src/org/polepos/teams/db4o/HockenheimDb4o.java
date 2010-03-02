@@ -1,6 +1,7 @@
 package org.polepos.teams.db4o;
 
 import org.polepos.circuits.hockenheim.*;
+import org.polepos.runner.db4o.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -8,6 +9,11 @@ import com.db4o.query.*;
 
 public class HockenheimDb4o extends Db4oDriver implements HockenheimDriver {
 	
+	public HockenheimDb4o(Db4oEngine engine) {
+		super(engine);
+		
+	}
+
 	@Override
 	public void configure(Configuration config) {
 		

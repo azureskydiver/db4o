@@ -51,14 +51,18 @@ import com.db4o.polepos.continuous.filealgebra.*;
  */
 public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	
-	private static final int PERFORMANCE_PERCENTAGE_THRESHOLD = 10;
+	private static final int PERFORMANCE_PERCENTAGE_THRESHOLD = 5;
 
 	private static final String SETTINGS_FILE = "settings/PerfCircuits.properties";
+
+	private static final int NUM_RUNS = 11;
 
 	private final Db4oJarCollection _jarCollection;
 	private final PerformanceMonitoringReporter[] _reporters;
 	
     public static void main(String[] args) {
+    	System.setProperty(Circuit.NUM_RUNS_PROPERTY_ID, String.valueOf(NUM_RUNS));
+    	System.setProperty(Circuit.MEMORY_USAGE_PROPERTY_ID, Circuit.NullMemoryUsage.class.getName());
     	int[] selectedIndices = null;
     	try {
     		selectedIndices = parseSelectedIndices(args[0]);
@@ -149,19 +153,19 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-			 new Melbourne(),
-			 new SepangMulti(),
-			 new Sepang(),
-			 new Bahrain(),
-			 new Imola(),
-			 new Barcelona(),
+			 new Melbourne(), // ok
+			 new SepangMulti(), // ok
+			 new Sepang(), // ok
+			 new Bahrain(), // ok
+			 new Imola(), // ok
+			 new Barcelona(), // write???, delete :/
 			 new Monaco(),
 			 new Nurburgring(),
 			 new Montreal(),
 			 new IndianapolisFast(),
 			 new IndianapolisMedium(),
 			 new IndianapolisSlow(),
-			 new Magnycours(),
+			 new Magnycours(), // ok
 			 new Silverstone(),
 			 new Hockenheim(),
 			 new Hungaroring(),
@@ -169,23 +173,23 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
-	public Driver[] drivers() {
+	public Driver[] drivers(Db4oEngine engine) {
 		return new Driver [] {
-			new MelbourneDb4o(),
-			new SepangMultiDb4o(),
-			new SepangDb4o(),
-			new BahrainDb4o(),
-			new ImolaDb4o(),
-			new BarcelonaDb4o(),
-			new MonacoDb4o(),
-			new NurburgringDb4o(),
-			new MontrealDb4o(),
-			new MagnycoursDb4o(),
-			new IndianapolisDb4o(),
-			new SilverstoneDb4o(),
-			new HockenheimDb4o(),
-			new HungaroringDb4o(),
-			new IstanbulDb4o(),
+			new MelbourneDb4o(engine),
+			new SepangMultiDb4o(engine),
+			new SepangDb4o(engine),
+			new BahrainDb4o(engine),
+			new ImolaDb4o(engine),
+			new BarcelonaDb4o(engine),
+			new MonacoDb4o(engine),
+			new NurburgringDb4o(engine),
+			new MontrealDb4o(engine),
+			new MagnycoursDb4o(engine),
+			new IndianapolisDb4o(engine),
+			new SilverstoneDb4o(engine),
+			new HockenheimDb4o(engine),
+			new HungaroringDb4o(engine),
+			new IstanbulDb4o(engine),
 		};
 	}
     

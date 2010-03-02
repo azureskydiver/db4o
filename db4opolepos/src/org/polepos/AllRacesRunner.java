@@ -202,10 +202,10 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
-	public Driver[] drivers() {
+	public Driver[] drivers(Db4oEngine engine) {
 		return new Driver [] {
-			new MelbourneDb4o(),
-			new SepangDb4o(),
+			new MelbourneDb4o(engine),
+			new SepangDb4o(engine),
 //			new BahrainDb4o(),
 //			new ImolaDb4o(),
 //			new BarcelonaDb4o(),
