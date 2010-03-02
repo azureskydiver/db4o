@@ -47,8 +47,11 @@ public class InMemoryIdSystem implements IdSystem {
 				if(! slotChange.slotModified()){
 					return;
 				}
-				Slot newSlot = slotChange.newSlot();
-				_ids = Tree.add(_ids, new IdSlotMapping(slotChange._key, newSlot));
+				if(slotChange.removeId()){
+					_ids = (IdSlotMapping) Tree.removeLike(_ids, new TreeInt(slotChange._key));
+					return;
+				}
+				_ids = Tree.add(_ids, new IdSlotMapping(slotChange._key, slotChange.newSlot()));
 			}
 		});
 		writeThis();

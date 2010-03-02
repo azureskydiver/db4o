@@ -38,7 +38,7 @@ public class SlotChange extends TreeInt {
 	
 	private SlotChangeOperation _currentOperation;
 	
-	private Slot _newSlot;
+	protected Slot _newSlot;
     
 	public SlotChange(int id) {
 		super(id);
@@ -206,6 +206,10 @@ public class SlotChange extends TreeInt {
 	}
 	
 	protected boolean isForFreespace(){
+		return false;
+	}
+	
+	public boolean removeId(){
 		return false;
 	}
     

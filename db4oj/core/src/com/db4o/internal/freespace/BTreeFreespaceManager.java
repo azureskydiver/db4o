@@ -175,7 +175,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         createBTrees(0 , 0);
         _slotsByAddress.write(transaction());
         _slotsByLength.write(transaction());
-        _delegateIndirectionID = transaction().idSystem().newId(SlotChangeFactory.FREE_SPACE);
+        LocalObjectContainer container = (LocalObjectContainer) transaction().container();
+        _delegateIndirectionID = container.allocatePointerSlot();
         int[] ids = new int[] { _slotsByAddress.getID(), _slotsByLength.getID(), _delegateIndirectionID};
         _idArray = new PersistentIntegerArray(ids);
         _idArray.write(transaction());
@@ -237,6 +238,11 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     public void traverse(final Visitor4 visitor) {
 		_slotsByAddress.traverseKeys(transaction(), visitor);
 	}
+    
+    public void migrateTo(final FreespaceManager fm) {
+    	super.migrateTo(fm);
+    	_delegate.migrateTo(fm);
+    }
     
     public int write(LocalObjectContainer container) {
         try{
