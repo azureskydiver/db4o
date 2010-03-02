@@ -45,6 +45,10 @@ public class PerformanceMonitoringReporter implements Reporter {
 			Result otherTeamResult, 
 			long currentValue, 
 			long otherValue) {
+		long diff = currentValue - otherValue;
+		double percentageValue = (diff * 100D) / otherValue;
+		System.err.println(currentTeamResult.getCircuit().name() +"/" + currentTeamResult.getLap().name() + ": " + String.format("%.2f", percentageValue) + "% (" + otherValue + " vs " + currentValue);
+		
 		if(!_strategy.acceptableDiff(currentValue, otherValue)) {
 			_report.add(
 					currentTeamResult.getCircuit().name(),

@@ -22,6 +22,7 @@ package org.polepos.teams.db4o;
 import java.util.*;
 
 import org.polepos.circuits.magnycours.*;
+import org.polepos.runner.db4o.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -31,6 +32,11 @@ public class MagnycoursDb4o extends Db4oDriver implements
 		MagnycoursDriver {
 
 	
+	public MagnycoursDb4o(Db4oEngine engine) {
+		super(engine);
+		
+	}
+
 	@Override
 	public void configure(Configuration config) {
 		

@@ -2,12 +2,18 @@ package org.polepos.teams.db4o;
 
 import org.polepos.circuits.hungaroring.*;
 import org.polepos.framework.*;
+import org.polepos.runner.db4o.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
 public class HungaroringDb4o extends Db4oDriver implements HungaroringDriver {
+
+	public HungaroringDb4o(Db4oEngine engine) {
+		super(engine);
+		
+	}
 
 	private static int maximumPayload;
 	
