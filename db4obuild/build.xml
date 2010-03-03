@@ -26,6 +26,17 @@
 	java.vmargs=<OPTIONAL: java VM args for test suites>
 	sharpen.core.dir=<OPTIONAL: if you keep sharpen in a different location>
 	
+	
+ 	##################################
+ 	#          Flare Support         # 
+    ##################################
+    
+	flare.executable=<OPTIONAL: path to the flare executable, usually its installation folder/Flare.app/madbuild.exe
+								if this property is missing, flare wont be executed. so the reference documentation
+								will not be generated>
+									
+	
+	
 
  	##################################
  	#          Maven Support         # 
@@ -52,7 +63,7 @@
 	#android.enabled=true
 	
 	
-	An example:
+		An example:
 	dir.workspace=C:/_db4o/production
 	file.compiler.jdk1.3=C:/jdk1.3.1_12/bin/javac.exe
 	file.jvm.jdk1.1=/usr/java/jdk1.1/bin/java
@@ -65,6 +76,9 @@
 	path.classpath.jdk1.1=d:/java/jdk/jdk1.1.8/lib/classes.zip
 	eclipse.startup.jar=${eclipse.home}/plugins/org.eclipse.equinox.launcher_1.0.0.v20070606.jar
 	java.vmargs=-Ddb4ounit.file.path=/mnt/rd0/db4ounit -Djava.io.tmpdir=/mnt/rd0/tmp
+	
+	flare.executable=C:/Program Files/MadCap Software/MadCap Flare V5/Flare.app/madbuild.exe
+	
 -->
 	<import file="common.xml" />
 	
