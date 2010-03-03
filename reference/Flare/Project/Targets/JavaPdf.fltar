@@ -1,19 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<CatapultTarget
-  Version="1"
-  Comment="test pdf target"
-  Type="PDF"
-  Destinations=""
-  GlossaryTermConversion="marked"
-  conditions=""
-  GetLatestBeforeCompile="true"
-  ConditionTagExpression="include[Primary.Java or Primary.Pdf] "
-  PatchHeadingLevels="true"
-  TargetLanguage="en"
-  MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css">
-  <DocumentProperties
-    Subject="db4o"
-    Title="Reference" />
-  <PDF
-    ShowUsedBookmarks="false" />
+<?xml version="1.0" encoding="UTF-8"?>
+<CatapultTarget Version="1" Comment="test pdf target" Type="PDF" Destinations="" GlossaryTermConversion="marked" conditions="" GetLatestBeforeCompile="true" ConditionTagExpression="include[Primary.Java or Primary.Pdf] " PatchHeadingLevels="true" TargetLanguage="en" MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css" OutputFolder="e:/db4o-dist/java/temp" OutputFile="db4o-reference-java.pdf">
+  <DocumentProperties Subject="db4o" Title="Reference"/>
+  <PDF ShowUsedBookmarks="false"/>
+  <Destinations>
+    <Destination Link="/Project/Destinations/db4oref-publish.fldes"/>
+  </Destinations>
 </CatapultTarget>

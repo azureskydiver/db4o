@@ -1929,7 +1929,23 @@
 		</filehead>
 	</target>
 	
-	<target name="prepare.docs" depends="init, doctor, build.javadoc">
+	
+	<target name="flare-java" depends="init" if="flare.executable">
+
+		<flare output="${dir.dist.flare.temp}" target="JavaPdf" />
+		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/db4o-reference-java.pdf" todir="${dir.dist.java.build.reference}" />
+		
+		<flare output="${dir.dist.flare.temp}" target="JavaWeb" />
+		<copy todir="${dir.dist.java.build.reference}">
+			<fileset dir="${dir.dist.flare.temp}/Output/JavaWeb">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+	</target>
+	
+	
+	<target name="prepare.docs" depends="init, doctor, build.javadoc, flare-java">
 		<copy todir="${dir.dist.java.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.java}">
 				<include name="**/**" />
@@ -1964,24 +1980,6 @@
 		</copy>
 		
 		<mkdir dir="${dir.dist.java.build}/doc/reference" />
-		<copy todir="${dir.dist.java.build}/doc/reference">
-			<fileset dir="../docWiki/java">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="prepare.reference.pdf" unless="no.ftp">
-        <ftp server="${ftp.server}"
-            userid="${ftp.user}"
-            password="${ftp.password}" 
-            remotedir="${ftp.reference.path}/${db4o.version.dotted}"
-        	passive="true"
-            action="get">
-            <fileset dir="${dir.dist.java.build}/doc/reference">
-                <include name="db4o-reference-java.pdf" />
-            </fileset>
-        </ftp>
 	</target>
 
 	<target name="build.omej" depends="build.db4ojdk1.5.tests">
@@ -1994,7 +1992,7 @@
 	</target>
 	
 	<target name="package.java" depends="init, build.db4ojava, build.db4ojava.tests, 
-		prepare.docs, prepare.reference.pdf, prepare.java.src, build.omej">
+		prepare.docs, prepare.java.src, build.omej">
 		<copy todir="${dir.dist.java.build}">
 			<fileset dir="${dir.dist.java}" includes="lib/**" />
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />

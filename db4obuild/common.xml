@@ -104,6 +104,43 @@
 	
 	<property name="eclipse.startup.jar" location="${eclipse.home}/startup.jar" />
 	
+
+	<macrodef name="flare">
+		<attribute name="output"/>
+		<attribute name="target" />
+		<sequential>
+			
+			<echo>Producing Flare output</echo>
+			<echo>  Output: @{output}</echo>
+			<echo>  Target: @{target}</echo>
+			
+			
+			
+			<mkdir dir="@{output}"/>
+			
+			<delete>
+				<fileset dir="@{output}">
+					<include name="**/*" />
+				</fileset>
+			</delete>
+			
+			<xslt in="${flare.project.folder}/Project/Targets/@{target}.fltar" out="${dir.dist.flare.temp}/@{target}.fltar.tmp"
+			      style="${dir.config}/flare/flare_output_folder.xslt">
+				<param name="flareOutputPath" expression="@{output}"/>
+			</xslt>
+			
+			<copy file="${dir.dist.flare.temp}/@{target}.fltar.tmp" tofile="${flare.project.folder}/Project/Targets/@{target}.fltar" />
+
+			<delete file="${dir.dist.flare.temp}/@{target}.fltar.tmp" />
+			
+			<exec executable="${flare.executable}" failonerror="true">
+				<arg line="-project ${flare.project.file} -target @{target}"/>
+			</exec>
+			
+		</sequential>
+	</macrodef>
+	
+	
 	<macrodef name="sharpen">
 		<attribute name="workspace" />
 		<attribute name="resource" />
