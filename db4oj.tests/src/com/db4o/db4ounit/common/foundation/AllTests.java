@@ -44,6 +44,7 @@ public class AllTests extends ReflectionTestSuite {
 			Stack4TestCase.class,
 			TreeKeyIteratorTestCase.class,
 			TreeNodeIteratorTestCase.class,
+			TreeTestCase.class,
 		};
 	}
 

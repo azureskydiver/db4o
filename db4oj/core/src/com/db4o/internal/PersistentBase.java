@@ -9,37 +9,13 @@ import com.db4o.internal.slots.*;
 
 /**
  * @exclude
- * 
  */
-public abstract class PersistentBase implements Persistent, LinkLengthAware {
-
-    protected int _id; // UID and address of pointer to the object in our file
-
-    protected int _state = 2; // DIRTY and ACTIVE
-
-    public final boolean beginProcessing() {
-        if (bitIsTrue(Const4.PROCESSING)) {
-            return false;
-        }
-        bitTrue(Const4.PROCESSING);
-        return true;
-    }
-
-    final void bitFalse(int bitPos) {
-        _state &= ~(1 << bitPos);
-    }
-    
-    final boolean bitIsFalse(int bitPos) {
-        return (_state | (1 << bitPos)) != _state;
-    }
-
-    final boolean bitIsTrue(int bitPos) {
-        return (_state | (1 << bitPos)) == _state;
-    }
-
-    final void bitTrue(int bitPos) {
-        _state |= (1 << bitPos);
-    }
+public abstract class PersistentBase extends Identifiable implements Persistent, LinkLengthAware {
+	
+	
+	public PersistentBase(){
+		
+	}
 
     void cacheDirty(Collection4 col) {
         if (!bitIsTrue(Const4.CACHED_DIRTY)) {
@@ -48,28 +24,8 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
         }
     }
 
-    public void endProcessing() {
-        bitFalse(Const4.PROCESSING);
-    }
-    
     public void free(LocalTransaction trans){
     	trans.systemTransaction().idSystem().notifySlotDeleted(getID(), slotChangeFactory());
-    }
-
-    public int getID() {
-        return _id;
-    }
-
-    public final boolean isActive() {
-        return bitIsTrue(Const4.ACTIVE);
-    }
-
-    public boolean isDirty() {
-        return bitIsTrue(Const4.ACTIVE) && (!bitIsTrue(Const4.CLEAN));
-    }
-    
-    public final boolean isNew(){
-        return getID() == 0;
     }
 
     public final int linkLength() {
@@ -104,29 +60,7 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     protected ByteArrayBuffer readBufferById(Transaction trans){
     	return trans.container().readBufferById(trans, getID());
     }
-
     
-    public void setID(int a_id) {
-    	if(DTrace.enabled){
-    		DTrace.PERSISTENTBASE_SET_ID.log(a_id);
-    	}
-        _id = a_id;
-    }
-
-    public final void setStateClean() {
-        bitTrue(Const4.ACTIVE);
-        bitTrue(Const4.CLEAN);
-    }
-
-    public final void setStateDeactivated() {
-        bitFalse(Const4.ACTIVE);
-    }
-
-    public void setStateDirty() {
-        bitTrue(Const4.ACTIVE);
-        bitFalse(Const4.CLEAN);
-    }
-
     void setStateOnRead(ByteArrayBuffer reader) {
         if (Deploy.debug) {
             reader.readEnd();
@@ -178,7 +112,6 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
 	protected ByteArrayBuffer newWriteBuffer(int length) {
 		return new ByteArrayBuffer(length);
 	}
-	
     
 	private final void writeToFile(Transaction trans, ByteArrayBuffer writer, Slot slot) {
 		
@@ -215,13 +148,6 @@ public abstract class PersistentBase implements Persistent, LinkLengthAware {
     public void writeOwnID(Transaction trans, ByteArrayBuffer writer) {
         write(trans);
         writer.writeInt(getID());
-    }
-    
-    public int hashCode() {
-    	if(isNew()){
-    		throw new IllegalStateException();
-    	}
-    	return getID();
     }
     
     public SlotChangeFactory slotChangeFactory(){

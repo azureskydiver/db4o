@@ -22,7 +22,7 @@ import com.db4o.typehandlers.*;
  * 
  * @exclude
  */
-public class ObjectReference extends PersistentBase implements ObjectInfo, Activator {
+public class ObjectReference extends Identifiable implements ObjectInfo, Activator {
 	
 	private ClassMetadata _class;
 	private Object _object;
@@ -331,8 +331,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	final void store(Transaction trans, ClassMetadata classMetadata, Object obj){
 		_object = obj;
 		_class = classMetadata;
-		
-		writeObjectBegin();
 		
 		int id = trans.container().idForNewUserObject(trans);
 

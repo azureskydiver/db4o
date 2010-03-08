@@ -16,25 +16,39 @@ public class InMemoryIdSystem implements IdSystem {
 	
 	private IdSlotMapping _ids;
 	
-	private int _idGenerator;
-	
 	private Slot _slot;
 	
-	public InMemoryIdSystem(LocalObjectContainer container){
+	private final SequentialIdGenerator _idGenerator;
+	
+	/**
+	 * for testing purposes only.
+	 */
+	public InMemoryIdSystem(LocalObjectContainer container, final int maxValidId){
 		_container = container;
-		_idGenerator = _container.handlers().lowestValidId();
+		_idGenerator = new SequentialIdGenerator(new Function4<Integer, Integer>() {
+			public Integer apply(Integer start) {
+				return findFreeId(start, maxValidId);
+			}
+		}, _container.handlers().lowestValidId(), maxValidId);
+	}
+	
+	public InMemoryIdSystem(LocalObjectContainer container){
+		this(container, Integer.MAX_VALUE);
+		readThis();
+	}
+
+	private void readThis() {
 		SystemData systemData = _container.systemData();
 		_slot = new Slot(systemData.transactionPointer1(), systemData.transactionPointer2());
 		if(! _slot.isNull()){
 			ByteArrayBuffer buffer = _container.readBufferBySlot(_slot);
-			_idGenerator = buffer.readInt();
+			_idGenerator.read(buffer);
 			_ids = (IdSlotMapping) new TreeReader(buffer, new IdSlotMapping(0, null)).read();
 		}
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		// do nothing
 	}
 
 	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
@@ -61,7 +75,7 @@ public class InMemoryIdSystem implements IdSystem {
 		int slotLength = TreeInt.marshalledLength(_ids) + Const4.INT_LENGTH;
 		_slot = _container.allocateSlot(slotLength);
 		ByteArrayBuffer buffer = new ByteArrayBuffer(_slot.length());
-		buffer.writeInt(_idGenerator);
+		_idGenerator.write(buffer);
 		TreeInt.write(buffer, _ids);
 		_container.writeBytes(buffer, _slot.address(), 0);
 		_container.syncFiles();
@@ -85,12 +99,51 @@ public class InMemoryIdSystem implements IdSystem {
 	}
 
 	public int newId() {
-		return ++ _idGenerator;
+		int id = _idGenerator.newId();
+		_ids = Tree.add(_ids, new IdSlotMapping(id, Slot.ZERO));
+		return id;
+	}
+
+	private int findFreeId(final int start, final int end) {
+		if(_ids == null){
+			return start;
+		}
+		final IntByRef lastId = new IntByRef();
+		final IntByRef freeId = new IntByRef();
+		Tree.traverse(_ids, new TreeInt(start), new CancellableVisitor4<TreeInt>() {
+			public boolean visit(TreeInt node) {
+				int id = node._key;
+				if(lastId.value == 0){
+					if( id > start){
+						freeId.value = start;
+						return false;
+					}
+					lastId.value = id;
+					return true;
+				}
+				if(id > lastId.value + 1){
+					freeId.value = lastId.value + 1;
+					return false;
+				}
+				lastId.value = id;
+				return true;
+			}
+		});
+		if(freeId.value > 0){
+			return freeId.value;
+		}
+		if(lastId.value < end){
+			return Math.max(start, lastId.value + 1);
+		}
+		return 0;
 	}
 
 	public void returnUnusedIds(Visitable<Integer> visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.accept(new Visitor4<Integer>() {
+			public void visit(Integer obj) {
+				_ids = (IdSlotMapping) Tree.removeLike(_ids, new TreeInt(obj));
+			}
+		});
 	}
 
 }

@@ -411,6 +411,51 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
         tree.traverse(visitor);
     }
     
+	/**
+	 * Traverses a tree with a starting point node.
+	 * If there is no exact match for the starting node, the next higher will be taken.
+	 */
+    public static void traverse(Tree tree, Tree startingNode, CancellableVisitor4 visitor) {
+		if(tree == null){
+			return;
+		}
+		tree.traverse(startingNode, visitor);
+	}
+    
+	private boolean traverse(Tree startingNode, CancellableVisitor4 visitor) {
+		if(startingNode != null){
+			int cmp = compare(startingNode);
+			if(cmp < 0){
+				if(_subsequent != null){
+					return _subsequent.traverse(startingNode, visitor);
+				}
+				return true;
+			} else if (cmp > 0){
+				if(_preceding != null){
+					if(! _preceding.traverse(startingNode, visitor)){
+						return false;
+					}
+				}
+			}
+		} else {
+			if(_preceding != null){
+				if(! _preceding.traverse(null, visitor)){
+					return false;
+				}
+			}
+		}
+		if(! visitor.visit(this)){
+			return false;
+		}
+		if(_subsequent != null){
+			if(! _subsequent.traverse(null, visitor)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+
 	public final <V extends Tree<T>> void traverse(final Visitor4<V> visitor){
 		if(_preceding != null){
 			_preceding.traverse(visitor);
@@ -477,4 +522,6 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 			}
 		);
 	}
+
+
 }

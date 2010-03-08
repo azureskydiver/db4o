@@ -33,7 +33,7 @@ public class StandardIdSystemFactory {
 	    	case POINTER_BASED:
 	    		return new PointerBasedIdSystem(localContainer);
 	    	case BTREE:
-	    		return new BTreeIdSystem(idSystemId);
+	    		return new BTreeIdSystem(localContainer, new InMemoryIdSystem(localContainer));
 	    	case IN_MEMORY:
 	    		return new InMemoryIdSystem(localContainer);
 	    	case CUSTOM:

@@ -3,6 +3,8 @@
 package com.db4o.internal.ids;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -11,9 +13,48 @@ import com.db4o.internal.slots.*;
 public class BTreeIdSystem implements IdSystem {
 	
 	
+	/**
+	 * state to be stored:
+	 * BTree ID
+	 * IdGenerator
+	 * 
+	 */
+	
+	private final LocalObjectContainer _container;
+	
+	private IdSystem _idSystem;
+	
+	private final TransactionalIdSystem _transactionalIdSystem;
+	
+	private final SequentialIdGenerator _idGenerator;
+	
+	private BTree _bTree;
 
-	public BTreeIdSystem(int idSystemId) {
-		// TODO Auto-generated constructor stub
+	public BTreeIdSystem(LocalObjectContainer container, IdSystem idSystem, TransactionalIdSystem transactionalIdSystem, int maxValidId) {
+		_container = container;
+		_idSystem = idSystem;
+		_transactionalIdSystem = transactionalIdSystem;
+		_idGenerator = new SequentialIdGenerator(new Function4<Integer, Integer>() {
+			public Integer apply(Integer start) {
+				return findFreeId(start);
+			}
+		}, _container.handlers().lowestValidId(), maxValidId);
+	}
+	
+	public BTreeIdSystem(LocalObjectContainer container, final IdSystem idSystem){
+		this(container, idSystem, container.newTransactionalIdSystem(null, new Closure4<IdSystem>() {
+			public IdSystem run() {
+				return idSystem;
+			}
+		}), Integer.MAX_VALUE);
+		
+		
+
+	}
+	
+	
+	private int findFreeId(int start) {
+		throw new NotImplementedException();
 	}
 
 	public void close() {
@@ -32,11 +73,10 @@ public class BTreeIdSystem implements IdSystem {
 	}
 
 	public int newId() {
+		int id = _idGenerator.newId();
 		
 		
-		
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
