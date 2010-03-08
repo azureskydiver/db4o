@@ -16,78 +16,83 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
-	
+public class IdSystemTestSuite extends FixtureBasedTestSuite {
+
 	private static final int SLOT_LENGTH = 10;
-	
+
 	public static void main(String[] args) {
-		new ConsoleTestRunner(new GlobalIdSystemTestSuite()).run();
+		new ConsoleTestRunner(new IdSystemTestSuite()).run();
 	}
-	
-	public static class GlobalIdSystemTestUnit extends AbstractDb4oTestCase implements OptOutMultiSession, Db4oTestCase {
-	
+
+	public static class IdSystemTestUnit extends AbstractDb4oTestCase implements
+			OptOutMultiSession, Db4oTestCase {
+
 		@Override
 		protected void configure(Configuration config) throws Exception {
-			IdSystemConfiguration idSystemConfiguration = Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config);
+			IdSystemConfiguration idSystemConfiguration = Db4oLegacyConfigurationBridge
+					.asIdSystemConfiguration(config);
 			_fixture.value().apply(idSystemConfiguration);
 		}
-		
-		public void testPersistence () {
-			
+
+		public void testPersistence() {
+
 		}
-		
-		public void testSlotForNewIdDoesNotExist(){
+
+		public void testSlotForNewIdDoesNotExist() {
 			int newId = idSystem().newId();
 			Slot oldSlot = null;
-			try{
+			try {
 				oldSlot = idSystem().committedSlot(newId);
-			}catch(InvalidIDException ex){
-				
+			} catch (InvalidIDException ex) {
+
 			}
 			Assert.isFalse(isValid(oldSlot));
 		}
-		
-		public void testSingleNewSlot(){
+
+		public void testSingleNewSlot() {
 			int id = idSystem().newId();
 			Assert.areEqual(allocateNewSlot(id), idSystem().committedSlot(id));
 		}
-		
-		public void testSingleSlotUpdate(){
+
+		public void testSingleSlotUpdate() {
 			int id = idSystem().newId();
 			allocateNewSlot(id);
-			
-			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(id);
+
+			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS
+					.newInstance(id);
 			Slot updatedSlot = localContainer().allocateSlot(SLOT_LENGTH);
 			slotChange.notifySlotUpdated(freespaceManager(), updatedSlot);
 			commit(slotChange);
-			
+
 			Assert.areEqual(updatedSlot, idSystem().committedSlot(id));
 		}
-		
-		public void testSingleSlotDelete(){
+
+		public void testSingleSlotDelete() {
 			int id = idSystem().newId();
 			allocateNewSlot(id);
-			
-			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(id);
+
+			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS
+					.newInstance(id);
 			slotChange.notifyDeleted(freespaceManager());
 			commit(slotChange);
-			
-			Assert.isFalse(isValid( idSystem().committedSlot(id)));
+
+			Assert.isFalse(isValid(idSystem().committedSlot(id)));
 		}
-	
+
 		private Slot allocateNewSlot(int newId) {
-			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS.newInstance(newId);
+			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS
+					.newInstance(newId);
 			Slot allocatedSlot = localContainer().allocateSlot(SLOT_LENGTH);
 			slotChange.notifySlotCreated(allocatedSlot);
 			commit(slotChange);
 			return allocatedSlot;
 		}
-	
-		private void commit(final SlotChange ...slotChanges ) {
+
+		private void commit(final SlotChange... slotChanges) {
 			idSystem().commit(new Visitable<SlotChange>() {
 				public void accept(Visitor4<SlotChange> visitor) {
-					for(SlotChange slotChange : slotChanges){
-						visitor.visit(slotChange);	
+					for (SlotChange slotChange : slotChanges) {
+						visitor.visit(slotChange);
 					}
 				}
 			}, new Runnable() {
@@ -96,53 +101,55 @@ public class GlobalIdSystemTestSuite extends FixtureBasedTestSuite {
 				}
 			});
 		}
-	
+
 		private LocalObjectContainer localContainer() {
 			return (LocalObjectContainer) container();
 		}
-		
+
 		private boolean isValid(Slot slot) {
-			return slot != null && ! slot.isNull();
+			return slot != null && !slot.isNull();
 		}
-		
-		private FreespaceManager freespaceManager(){
+
+		private FreespaceManager freespaceManager() {
 			return localContainer().freespaceManager();
 		}
 
 		private IdSystem idSystem() {
-			return localContainer().globalIdSystem();
+			return localContainer().idSystem();
 		}
-		
-	}
-	
-	private static FixtureVariable <Procedure4<IdSystemConfiguration>> _fixture = FixtureVariable.newInstance("IdSystem"); 
 
+	}
+
+	private static FixtureVariable<Procedure4<IdSystemConfiguration>> _fixture = FixtureVariable
+			.newInstance("IdSystem");
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
-		return new FixtureProvider[]{
+		return new FixtureProvider[] {
 				new Db4oFixtureProvider(),
-				new SimpleFixtureProvider<Procedure4<IdSystemConfiguration>>(_fixture, 
-						new Procedure4<IdSystemConfiguration>() {
-							public void apply(IdSystemConfiguration idSystemConfiguration) {
+				new SimpleFixtureProvider<Procedure4<IdSystemConfiguration>>(
+						_fixture, new Procedure4<IdSystemConfiguration>() {
+							public void apply(
+									IdSystemConfiguration idSystemConfiguration) {
 								idSystemConfiguration.usePointerBasedSystem();
 							}
-						}
-						,
-						new Procedure4<IdSystemConfiguration>() {
-							public void apply(IdSystemConfiguration idSystemConfiguration) {
+						}, new Procedure4<IdSystemConfiguration>() {
+							public void apply(
+									IdSystemConfiguration idSystemConfiguration) {
 								idSystemConfiguration.useInMemorySystem();
 							}
-						}
-				)
-		};
+						}, new Procedure4<IdSystemConfiguration>() {
+							public void apply(
+									IdSystemConfiguration idSystemConfiguration) {
+								// idSystemConfiguration.useBTreeSystem();
+								
+							}
+						}) };
 	}
 
 	@Override
 	public Class[] testUnits() {
-		return new Class[] {
-				GlobalIdSystemTestUnit.class,
-		};
+		return new Class[] { IdSystemTestUnit.class, };
 	}
 
 }

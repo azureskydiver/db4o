@@ -140,7 +140,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 
 	private Slot committedSlot(DbSelector selector, int id) {
-		return selector.db(this).globalIdSystem().committedSlot(id);
+		return selector.db(this).idSystem().committedSlot(id);
 	}
 
 	public ByteArrayBuffer sourceBufferByAddress(int address,int length) throws IOException {
@@ -337,7 +337,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public int targetNewId() {
-		return _targetDb.globalIdSystem().newId();
+		return _targetDb.idSystem().newId();
 	}
 	
 	public IdMapping mapping(){
@@ -345,7 +345,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public void commitIds(){
-		_targetDb.globalIdSystem().commit(mapping().slotChanges(), Runnable4.DO_NOTHING);
+		_targetDb.idSystem().commit(mapping().slotChanges(), Runnable4.DO_NOTHING);
 	}
 	
 }

@@ -76,7 +76,7 @@ public class FileHeader1 extends FileHeader {
     @Override
     public void completeInterruptedTransaction(LocalObjectContainer container) {
     	SystemData systemData = container.systemData();
-    	container.globalIdSystem().completeInterruptedTransaction(systemData.transactionPointer1(), systemData.transactionPointer2());
+    	container.idSystem().completeInterruptedTransaction(systemData.transactionPointer1(), systemData.transactionPointer2());
     }
 
     public int length() {

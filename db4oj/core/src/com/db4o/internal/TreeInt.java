@@ -163,6 +163,11 @@ public class TreeInt extends Tree<Integer> implements ReadWriteable {
     public Integer key(){
     	return new Integer(_key);
     }
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		TreeInt other = (TreeInt) obj;
+		return other._key == _key;
+	}
 
 }

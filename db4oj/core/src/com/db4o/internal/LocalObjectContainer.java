@@ -39,7 +39,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     private SystemData          _systemData;
     
-    private IdSystem _globalIdSystem;
+    private IdSystem _idSystem;
     
 	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
@@ -54,20 +54,24 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	if(! isSystemTransaction){
     		systemIdSystem = systemTransaction().idSystem();
     	}
-    	TransactionalIdSystem idSystem = new TransactionalIdSystemImpl(
+    	Closure4<IdSystem> idSystem = new Closure4<IdSystem>() {
+			public IdSystem run() {
+				return idSystem();
+			}
+		};
+		TransactionalIdSystem transactionalIdSystem = newTransactionalIdSystem(systemIdSystem, idSystem);
+		return new LocalTransaction(this, parentTransaction, transactionalIdSystem, referenceSystem);
+	}
+
+	public TransactionalIdSystem newTransactionalIdSystem(TransactionalIdSystem systemIdSystem, Closure4<IdSystem> idSystem) {
+		return new TransactionalIdSystemImpl(
     			new Closure4<FreespaceManager>() {
 					public FreespaceManager run() {
 						return freespaceManager();
 					}
 				}, 
-				new Closure4<IdSystem>() {
-					public IdSystem run() {
-						return globalIdSystem();
-					}
-				}, 
+				idSystem, 
 				(TransactionalIdSystemImpl)systemIdSystem);
-    	
-		return new LocalTransaction(this, parentTransaction, idSystem, referenceSystem);
 	}
 
     public FreespaceManager freespaceManager() {
@@ -527,7 +531,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
     
     protected void createIdSystem() {
-        _globalIdSystem = StandardIdSystemFactory.newInstance(this);
+        _idSystem = StandardIdSystemFactory.newInstance(this);
 	}
 
 	private boolean freespaceMigrationRequired(FreespaceManager freespaceManager) {
@@ -922,13 +926,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 	
 	protected void closeIdSystem(){
-		if(_globalIdSystem != null){
-			_globalIdSystem.close();
+		if(_idSystem != null){
+			_idSystem.close();
 		}
 	}
 	
-	public IdSystem globalIdSystem(){
-		return _globalIdSystem;
+	public IdSystem idSystem(){
+		return _idSystem;
 	}
 
 	public Runnable commitHook() {

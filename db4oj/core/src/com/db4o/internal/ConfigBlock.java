@@ -96,7 +96,7 @@ public final class ConfigBlock {
 	
 	public void completeInterruptedTransaction(){
     	SystemData systemData = _container.systemData();
-		_container.globalIdSystem().completeInterruptedTransaction(systemData.transactionPointer1(), systemData.transactionPointer2());
+		_container.idSystem().completeInterruptedTransaction(systemData.transactionPointer1(), systemData.transactionPointer2());
 	}
     
 	private byte[] passwordToken() {
