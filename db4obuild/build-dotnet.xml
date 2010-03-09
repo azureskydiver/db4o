@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Db4objects.Db4o" default="build">
+<project name="Db4objects.Db4o" default="build-net20">
 	<!--
 	The following properties should be specified in machine.properties:
 	
@@ -137,7 +137,7 @@
 	<target name="run-tests-core" depends="build-core">
 		<exec taskname="core.net" executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
 			<env key="TEMP" value="${Tests.Temp.Path}"/>
-		</exec>	
+		</exec>
 	</target>
 	
 	<target name="run-tests-admin" depends="build-admin" unless="skip.admin">
@@ -146,7 +146,11 @@
 		</exec>
 	</target>
 	
-	<target name="run-tests-net" depends="run-tests-core, run-tests-admin, run-msbuild-tests" unless="mono">
+	<target name="run-tests-net" depends="run-tests-core, run-tests-admin, run-tests-integration-ta, run-msbuild-tests" unless="mono">
+	</target>
+	
+	<target name="run-tests-integration-ta" unless="mono">
+			<ant antfile="build-db4otool-tests-integration.xml" taskname=".Net TA Integration Tests" />
 	</target>
 	
 	<target name="run-tests-mono" depends="build-core-mono" if="mono">
@@ -164,7 +168,7 @@
 		</exec>
 	</target>
 	
-	<target name="package-net20" depends="build, meta-package" description="Builds the complete set of .net 2 distros">
+	<target name="package-net20" depends="build-net20, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
 	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 2 distros">
@@ -356,7 +360,7 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="init, configure-net2, build-all">
+	<target name="build-net20" depends="init, configure-net2, build-all" description="Builds Db4o for the .net 2.0 framework">
 	</target>
 	
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
@@ -374,7 +378,7 @@
 	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial, build-omn">
 	</target>
 	
-	<target name="rebuild" depends="clean, build">
+	<target name="rebuild" depends="clean, build-net20">
 	</target>
 	
 	<target name="api-diff">
