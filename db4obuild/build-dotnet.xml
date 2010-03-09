@@ -85,6 +85,11 @@
 			description="Builds and runs all the .net 3.5 relevant test cases (including Visual Basic LINQ and ASTORIA tests)">
 	</target>
 	
+	<target name="run-tests-net20"
+			depends="clean, configure-debug, configure-net2, run-tests-net"
+			description="Builds and runs all the .net 2.0 relevant test cases">
+	</target>
+	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 
@@ -150,9 +155,7 @@
 	</target>
 	
 	<target name="run-tests-integration-ta" unless="mono">
-			<!--
 			<ant antfile="build-db4otool-tests-integration.xml" taskname=".Net TA Integration Tests" />
-			-->
 	</target>
 	
 	<target name="run-tests-mono" depends="build-core-mono" if="mono">
