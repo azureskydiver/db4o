@@ -150,7 +150,9 @@
 	</target>
 	
 	<target name="run-tests-integration-ta" unless="mono">
+			<!--
 			<ant antfile="build-db4otool-tests-integration.xml" taskname=".Net TA Integration Tests" />
+			-->
 	</target>
 	
 	<target name="run-tests-mono" depends="build-core-mono" if="mono">
