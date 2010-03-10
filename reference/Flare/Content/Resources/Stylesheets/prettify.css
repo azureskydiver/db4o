@@ -124,3 +124,8 @@ body
 	font-size: 10pt;
 }
 
+body a
+{
+	padding-right: 1px;
+}
+
