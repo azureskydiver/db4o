@@ -3,9 +3,14 @@
     <head>
 		<script src="../Code/prettify.js">
 		</script>
+		<script  type="text/javascript">
+			window.onload = function(){
+                             prettyPrint();
+			};
+                </script>
     
     </head>
-    <body onload="prettyPrint()">
+    <body>
         <MadCap:breadcrumbsProxy />
 		<p>
 			<script type="text/javascript">/*<![CDATA[*/document.write('<a href="' + location.href +'">');
