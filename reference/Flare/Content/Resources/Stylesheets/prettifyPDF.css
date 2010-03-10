@@ -172,3 +172,8 @@ h6
 	page-break-after: avoid;
 }
 
+body a
+{
+	padding-right: 1px;
+}
+
