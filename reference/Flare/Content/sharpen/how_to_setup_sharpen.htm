@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="814" MadCap:lastWidth="624">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2194" MadCap:lastWidth="688">
     <head><title>How To Setup Sharpen	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -35,10 +35,12 @@ following files to your java project folder:</p>
         <p><b>sharpen.properties</b>
         </p>
         <p>    # eclipse workspace     dir.workspace=e:/db4o/trunk     <br /># java executable     file.jvm.jdk1.5=e:/Java/jdk1.6.0_02/bin/java.exe <br />    # Eclipse home directory     eclipse.home=e:/Eclipse     <br /># Eclipse startup jar     eclipse.startup.jar=${eclipse.home}/plugins/org.eclipse.equinox.launcher_1.0.0.v20070606.jar     <br /># Sandcastle can be used to convert javadoc to .NET xml comments <br />    # dir.lib.sandcastle=e:/sandcastle/     <br /># sharpen compile directory     dir.dist.classes.sharp=dist/sharpen     <br /># Eclipse plugins home     plugins.home=${eclipse.home}/plugins </p>
+        <p>Download <a href="how_to_setup_sharpen/sharpen.properties">sharpen.properties</a></p>
         <p>(The paths should be updates to match your environment) 
 
  </p>
         <MadCap:snippetBlock src="../Resources/Snippets/How To Setup Sharpen/Sharpen-Common.Xml/Sharpen-Common.Xml.flsnp" />
+        <p>Download<a href="how_to_setup_sharpen/sharpen.properties">&#160;</a><a href="how_to_setup_sharpen/sharpen-common.xml">sharpen-common.xml</a></p>
         <p>Sharpen.properties file defines some common properties that
 are used to install sharpen and then to convert java to c# using sharpen.</p>
         <p>In sharpen-common.xml we define install-sharpen-plugin
@@ -51,9 +53,7 @@ use sharpen task to convert java files. Sharpen task takes 2 arguments:</p>
      - defines the folder where java resources are located</li>
         </ul>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="example_conversion/sharpen.zip">Java </a>
-            </MadCap:conditionalText>
+        <p MadCap:conditions="Primary.Online"><a href="example_conversion/sharpen.zip">Java </a>
         </p>
     </body>
 </html>
