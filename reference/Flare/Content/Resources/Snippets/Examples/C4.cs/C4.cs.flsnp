@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">C4.cs
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="409" MadCap:lastWidth="549">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">C4.cs
 /**//* Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com */
 using Db4objects.Db4o;
 
-namespace Db4objects.Db4odoc.�onstructors
+namespace Db4objects.Db4odoc.Constructors
  {
   class C4 
    {
@@ -20,4 +25,6 @@ namespace Db4objects.Db4odoc.�onstructors
       return _s+_i;
     }
   }
-}</pre>    </body></html>
+}</pre>
+    </body>
+</html>
