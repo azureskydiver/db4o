@@ -232,6 +232,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return;
 			}
 		}
+		if(isCollectionClass(expr.method().declaringClass())) {
+			if(applyCollectionHandling(expr)) {
+				return;
+			}
+		}
+
 		ComparisonOperandAnchor receiver = null;
 		if (!isStatic) {
 			receiver = descend(((CallMethodExpr) expr).receiver());
@@ -455,6 +461,29 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			processEqualsCall((CallMethodExpr) expr,
 					ComparisonOperator.ENDS_WITH);
 			return true;
+		}
+		return false;
+	}
+
+	private boolean isCollectionClass(Type type) {
+		try {
+			ClassEditor editor = _context.classEditor(type);
+			return BloatUtil.implementsInHierarchy(editor, Collection.class, _context) ||
+					BloatUtil.implementsInHierarchy(editor, Map.class, _context);
+		} 
+		catch (ClassNotFoundException exc) {
+			exc.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean applyCollectionHandling(CallExpr expr) {
+		String methodName = expr.method().name();
+		if (methodName.equals("size")) {
+			throw new EarlyExitException();
+		}
+		if (methodName.equals("isEmpty")) {
+			throw new EarlyExitException();
 		}
 		return false;
 	}
