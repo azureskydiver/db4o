@@ -89,11 +89,18 @@ public class FileHeader0 extends FileHeader {
 	}
 
     public void initNew(LocalObjectContainer file) throws Db4oIOException {
+    	if(! isInitialized()){
+    		return;
+    	}
         _configBlock = ConfigBlock.forNewFile(file);
         initBootRecord(file);
     }
     
-    private void initBootRecord(LocalObjectContainer file){
+    private boolean isInitialized() {
+		return _configBlock != null;
+	}
+
+	private void initBootRecord(LocalObjectContainer file){
         
         file.showInternalClasses(true);
         try {

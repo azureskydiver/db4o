@@ -19,7 +19,7 @@ import com.db4o.internal.slots.*;
  */
 public class InMemoryIdMapping extends AbstractIdMapping {
 	
-	private IdSlotMapping _idsToSlots;
+	private IdSlotTree _idsToSlots;
 	
 	private Tree _tree;
 	
@@ -54,15 +54,15 @@ public class InMemoryIdMapping extends AbstractIdMapping {
 	}
 
 	public void mapId(int id, Slot slot) {
-		IdSlotMapping idSlotMapping = new IdSlotMapping(id, slot);
+		IdSlotTree idSlotMapping = new IdSlotTree(id, slot);
 		_idsToSlots = Tree.add(_idsToSlots, idSlotMapping);
 	}
 
 	public Visitable<SlotChange> slotChanges() {
 		return new Visitable<SlotChange>() {
 			public void accept(final Visitor4<SlotChange> outSideVisitor) {
-				Tree.traverse(_idsToSlots, new Visitor4<IdSlotMapping>() {
-					public void visit(IdSlotMapping idSlotMapping) {
+				Tree.traverse(_idsToSlots, new Visitor4<IdSlotTree>() {
+					public void visit(IdSlotTree idSlotMapping) {
 						SlotChange slotChange = new SlotChange(idSlotMapping._key);
 						slotChange.notifySlotCreated(idSlotMapping.slot());
 						outSideVisitor.visit(slotChange);

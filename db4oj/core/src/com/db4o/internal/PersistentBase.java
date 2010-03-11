@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 
@@ -12,11 +13,6 @@ import com.db4o.internal.slots.*;
  */
 public abstract class PersistentBase extends Identifiable implements Persistent, LinkLengthAware {
 	
-	
-	public PersistentBase(){
-		
-	}
-
     void cacheDirty(Collection4 col) {
         if (!bitIsTrue(Const4.CACHED_DIRTY)) {
             bitTrue(Const4.CACHED_DIRTY);
@@ -25,7 +21,7 @@ public abstract class PersistentBase extends Identifiable implements Persistent,
     }
 
     public void free(LocalTransaction trans){
-    	trans.systemTransaction().idSystem().notifySlotDeleted(getID(), slotChangeFactory());
+    	idSystem(trans.systemTransaction()).notifySlotDeleted(getID(), slotChangeFactory());
     }
 
     public final int linkLength() {
@@ -90,10 +86,14 @@ public abstract class PersistentBase extends Identifiable implements Persistent,
 	        Slot slot = container.allocateSlot(length);
 	        
 	        if(isNew()){
-	            setID(trans.idSystem().newId(slotChangeFactory()));
-                trans.idSystem().notifySlotCreated(_id, slot, slotChangeFactory());
+	            setID(idSystem(trans).newId(slotChangeFactory()));
+                idSystem(trans).notifySlotCreated(_id, slot, slotChangeFactory());
 	        }else{
-	            trans.idSystem().notifySlotUpdated(_id, slot, slotChangeFactory());
+	            idSystem(trans).notifySlotUpdated(_id, slot, slotChangeFactory());
+	        }
+	        
+	        if(DTrace.enabled){
+	        	DTrace.PERSISTENT_BASE_NEW_SLOT.logLength(getID(), slot);
 	        }
 	        
 	        ByteArrayBuffer writer = produceWriteBuffer(trans, length);
@@ -104,6 +104,10 @@ public abstract class PersistentBase extends Identifiable implements Persistent,
         }
 
     }
+
+	public TransactionalIdSystem idSystem(Transaction trans) {
+		return trans.idSystem();
+	}
 
 	protected ByteArrayBuffer produceWriteBuffer(Transaction trans, int length) {
 		return newWriteBuffer(length);

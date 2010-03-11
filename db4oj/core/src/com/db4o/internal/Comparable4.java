@@ -9,7 +9,7 @@ import com.db4o.marshall.*;
 /**
  * Interface for comparison support in queries.
  */
-public interface Comparable4 {
+public interface Comparable4<T> {
 	
 	/**
 	 * creates a prepared comparison to compare multiple objects
@@ -19,7 +19,7 @@ public interface Comparable4 {
 	 * against multiple other objects
 	 * @return the prepared comparison
 	 */
-	PreparedComparison prepareComparison(Context context, Object obj);
+	PreparedComparison prepareComparison(Context context, T obj);
 	
 }
 

@@ -16,7 +16,7 @@ public class IdSystemFixture extends Db4oSolo {
 	 }
 	
 	public IdSystemFixture() {		
-		_idSystemType = StandardIdSystemFactory.IN_MEMORY;
+		_idSystemType = StandardIdSystemFactory.BTREE;
 	}
 	
     protected ObjectContainer createDatabase(Configuration config) {

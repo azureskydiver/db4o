@@ -34,16 +34,22 @@ public class DTrace {
 	private static int UNUSED = -1;
     
     private static void breakPoint(){
-        if(enabled){ /* breakpoint here */ }
+        if(enabled){ 
+        	/* breakpoint here */
+        	int xxx = 1;
+        }
     }
     
     private static final void configure(){
         if(enabled){
         
+        	addRange(26);
+        	
+        	// addRangeWithEnd(390, 402);
+        	
+        	// addRangeWithLength(3840, 1);
             
-            // breakOnEvent(395);
-            
-            addRangeWithLength(49, 1);
+            // addRangeWithLength(180, 1);
             
             // addRange(4874);
             
@@ -73,7 +79,9 @@ public class DTrace {
 //                TRANS_COMMIT,
 //                });
         	
-//          turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
+         
+          // turnAllOffExceptFor(new DTrace[] {FREESPACEMANAGER_RAM_FREE });
+          
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
         }
     }
@@ -125,8 +133,8 @@ public class DTrace {
 			NOTIFY_SLOT_CHANGED = new DTrace(true, true, "notifySlotChanged", true);
 			NOTIFY_SLOT_DELETED = new DTrace(true, true, "notifySlotDeleted", true);
 			OBJECT_REFERENCE_CREATED  = new DTrace(true, true, "new ObjectReference", true);
-			PERSISTENT_OWN_LENGTH = new DTrace(true, true, "Persistent own length",
-                true);
+			PERSISTENT_BASE_NEW_SLOT = new DTrace(true, true, "PersistentBase new slot",true);
+			PERSISTENT_OWN_LENGTH = new DTrace(true, true, "Persistent own length", true);
             PERSISTENTBASE_WRITE = new DTrace(true, true, "persistentbase write", true);
             PERSISTENTBASE_SET_ID = new DTrace(true, true, "persistentbase setid", true);
             PRODUCE_SLOT_CHANGE = new DTrace(true, true, "produce slot change",
@@ -142,8 +150,8 @@ public class DTrace {
 					"trans removeFromClassIndexTree", true);
 			REREAD_OLD_UUID = new DTrace(true, true, "reread old uuid", true);
 			SERVER_MESSAGE_LOOP_EXCEPTION = new DTrace(true, true, "server message loop exception", true);
-			SLOT_SET_POINTER = new DTrace(true, true, "slot set pointer", true);
-			SLOT_DELETE = new DTrace(true, true, "slot delete", true);
+			SLOT_MAPPED = new DTrace(true, true, "slot mapped", true);
+			SLOT_COMMITTED = new DTrace(true, true, "slot committed", true);
 			SLOT_FREE_ON_COMMIT = new DTrace(true, true, "slot free on commit",
 					true);
 			SLOT_FREE_ON_ROLLBACK_ID = new DTrace(true, true,
@@ -239,6 +247,7 @@ public class DTrace {
     public static DTrace NOTIFY_SLOT_CHANGED;
     public static DTrace NOTIFY_SLOT_DELETED;
     public static DTrace OBJECT_REFERENCE_CREATED;
+    public static DTrace PERSISTENT_BASE_NEW_SLOT;
     public static DTrace PERSISTENT_OWN_LENGTH;
     public static DTrace PERSISTENTBASE_SET_ID;
     public static DTrace PERSISTENTBASE_WRITE;
@@ -253,8 +262,8 @@ public class DTrace {
     public static DTrace REMOVE_FROM_CLASS_INDEX;
     public static DTrace REREAD_OLD_UUID;
     public static DTrace SERVER_MESSAGE_LOOP_EXCEPTION;
-	public static DTrace SLOT_SET_POINTER;
-	public static DTrace SLOT_DELETE;
+	public static DTrace SLOT_MAPPED;
+	public static DTrace SLOT_COMMITTED;
 	public static DTrace SLOT_FREE_ON_COMMIT;
 	public static DTrace SLOT_FREE_ON_ROLLBACK_ID;
 	public static DTrace SLOT_FREE_ON_ROLLBACK_ADDRESS;
@@ -294,39 +303,65 @@ public class DTrace {
     
     public void logInfo(String info){
         if(enabled){
-            logEnd(UNUSED,0, info );
+            logEnd(UNUSED, UNUSED,0, info );
         }
     }
     
     public void log(long p, String info){
         if(enabled){
-            logEnd(p, 0, info);
+            logEnd(UNUSED, p, 0, info);
         }
         
     }
     
     public void logLength(long start, long length){
         if(enabled){
-            logEnd(start, start + length - 1);
+            logLength(UNUSED, start, length);
         }
     }
     
+    public void logLength(long id, long start, long length){
+        if(enabled){
+            logEnd(id, start, start + length - 1);
+        }
+    }
+
+    
     public void logLength(Slot slot){
+    	if(enabled){
+    		logLength(UNUSED, slot);
+    	}
+    }
+    
+    public void logLength(long id, Slot slot){
     	if(enabled){
     		if(slot == null){
     			return;
     		}
-    		logLength(slot.address(), slot.length());
+    		logLength(id, slot.address(), slot.length());
     	}
     }
+
     
     public void logEnd(long start, long end){
         if(enabled){
-            logEnd(start, end, null);
+            logEnd(UNUSED, start, end);
         }
     }
     
-    public void logEnd(long start, long end, String info){
+    public void logEnd(long id, long start, long end){
+        if(enabled){
+            logEnd(id, start, end, null);
+        }
+    }
+
+    
+    public void logEnd(long id, long start, long end, String info){
+    	
+//    	if(! Deploy.log){
+//    		return;
+//    	}
+    	
         if(enabled){
             if(! _enabled){
                 return;
@@ -338,6 +373,13 @@ public class DTrace {
             }
             
             for (int i = 0; i < _rangeCount; i++) {
+            	
+            	
+                // Case 0 ID in range
+                if(id >= _rangeStart[i] && id <= _rangeEnd[i]){
+                    inRange = true;
+                    break;
+                }
                 
                 // Case 1 start in range
                 if(start >= _rangeStart[i] && start <= _rangeEnd[i]){
@@ -365,6 +407,8 @@ public class DTrace {
                     _eventNr ++;
                     StringBuffer sb = new StringBuffer(":");
                     sb.append(formatInt(_eventNr, 6));
+                    sb.append(":");
+                    sb.append(formatInt(id));
                     sb.append(":");
                     sb.append(formatInt(start));
                     sb.append(":");

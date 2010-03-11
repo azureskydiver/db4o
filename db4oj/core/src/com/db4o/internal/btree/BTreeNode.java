@@ -5,6 +5,7 @@ package com.db4o.internal.btree;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
@@ -18,7 +19,8 @@ import com.db4o.marshall.*;
  * 
  * @exclude
  */
-public final class BTreeNode extends CacheablePersistentBase{
+// public final class BTreeNode extends CacheablePersistentBase{
+	public final class BTreeNode extends LocalPersistentBase{
     
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  
@@ -1215,6 +1217,11 @@ public final class BTreeNode extends CacheablePersistentBase{
     @Override
     public SlotChangeFactory slotChangeFactory() {
     	return _btree.slotChangeFactory();
+    }
+    
+    @Override
+    public TransactionalIdSystem idSystem(Transaction trans) {
+    	return _btree.idSystem(trans);
     }
     
 }

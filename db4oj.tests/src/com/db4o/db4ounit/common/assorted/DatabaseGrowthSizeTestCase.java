@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.config.*;
+import com.db4o.internal.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -12,7 +13,7 @@ public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements 
 	
 	private static final int SIZE = 10000;
 	
-	private static final int APPROXIMATE_HEADER_SIZE = 100;
+	private static final int MAXIMUM_HEADER_SIZE = 110;
 
 	public static void main(String[] args) {
 		new DatabaseGrowthSizeTestCase().runSolo();
@@ -24,14 +25,15 @@ public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements 
 	}
 	
 	public void test(){
+		
 		Assert.isGreater(SIZE, fileSession().fileLength());
-		Assert.isSmaller(SIZE + APPROXIMATE_HEADER_SIZE, fileSession().fileLength());
+		Assert.isSmaller(SIZE + MAXIMUM_HEADER_SIZE, fileSession().fileLength());
 		
 		Item item = Item.newItem(SIZE);
 		store(item);
 		
 		Assert.isGreater(SIZE * 2, fileSession().fileLength());
-		Assert.isSmaller(SIZE * 2 + APPROXIMATE_HEADER_SIZE, fileSession().fileLength());
+		Assert.isSmaller(SIZE * 2 + MAXIMUM_HEADER_SIZE, fileSession().fileLength());
 		
 		Object retrievedItem = retrieveOnlyInstance(Item.class);
 		Assert.areSame(item, retrievedItem);
