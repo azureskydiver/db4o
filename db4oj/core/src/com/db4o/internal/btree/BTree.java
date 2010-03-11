@@ -12,7 +12,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class BTree extends PersistentBase implements TransactionParticipant, BTreeStructureListener {
+public class BTree extends LocalPersistentBase implements TransactionParticipant, BTreeStructureListener {
     
     private static final byte BTREE_VERSION = (byte)1;
     
@@ -47,34 +47,48 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     
     private BTreeStructureListener _structureListener;
     
+    public BTree(Transaction trans, TransactionalIdSystem idSystem, int id, Indexable4 keyHandler, final int treeNodeSize) {
+    	super(idSystem);
+    	if (null == keyHandler) {
+    		throw new ArgumentNullException();
+    	}
+    	_nodeSize = treeNodeSize;
+    	
+    	_halfNodeSize = _nodeSize / 2;
+    	_nodeSize = _halfNodeSize * 2;
+    	_keyHandler = keyHandler;
+    	if(id == 0){
+    		setStateDirty();
+    		_root = new BTreeNode(this, 0, true, 0, 0, 0);
+    		_root.write(trans.systemTransaction());
+    		addNode(_root);
+    		write(trans.systemTransaction());
+    	}else{
+    		setID(id);
+    		setStateDeactivated();
+    	}
+    }
+    
+    public BTree(Transaction trans, int id, Indexable4 keyHandler, final int treeNodeSize) {
+    	this(trans, null, id, keyHandler, treeNodeSize);
+    }
+    
     public BTree(Transaction trans, Indexable4 keyHandler) {
     	this(trans, 0, keyHandler);
     }
     
+    public BTree(Transaction trans, TransactionalIdSystem idSystem, Indexable4 keyHandler) {
+    	this(trans, idSystem, 0, keyHandler);
+    }
+    
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
 		this(trans, id, keyHandler, config(trans).bTreeNodeSize());
+    }
+    
+    public BTree(Transaction trans, TransactionalIdSystem idSystem, int id, Indexable4 keyHandler){
+		this(trans, idSystem, id, keyHandler, config(trans).bTreeNodeSize());
     }	
 
-	public BTree(Transaction trans, int id, Indexable4 keyHandler, final int treeNodeSize) {
-		if (null == keyHandler) {
-    		throw new ArgumentNullException();
-    	}
-		_nodeSize = treeNodeSize;
-		
-        _halfNodeSize = _nodeSize / 2;
-        _nodeSize = _halfNodeSize * 2;
-        _keyHandler = keyHandler;
-        if(id == 0){
-            setStateDirty();
-            _root = new BTreeNode(this, 0, true, 0, 0, 0);
-            _root.write(trans.systemTransaction());
-            addNode(_root);
-            write(trans.systemTransaction());
-        }else{
-            setID(id);
-            setStateDeactivated();
-        }
-	}
     
 	public BTreeNode root() {
 		return _root;
@@ -443,7 +457,7 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     }
 
 	private void freeAllNodeIds(LocalTransaction systemTrans, final Iterator4 allNodeIDs) {
-		TransactionalIdSystem idSystem = systemTrans.idSystem();
+		TransactionalIdSystem idSystem = idSystem(systemTrans);
         while(allNodeIDs.moveNext()){
             int id = ((Integer)allNodeIDs.current()).intValue();
             idSystem.notifySlotDeleted(id, slotChangeFactory());

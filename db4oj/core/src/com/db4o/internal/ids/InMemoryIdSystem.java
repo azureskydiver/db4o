@@ -2,6 +2,7 @@
 
 package com.db4o.internal.ids;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -14,7 +15,7 @@ public class InMemoryIdSystem implements IdSystem {
 	
 	private final LocalObjectContainer _container;
 	
-	private IdSlotMapping _ids;
+	private IdSlotTree _ids;
 	
 	private Slot _slot;
 	
@@ -43,7 +44,7 @@ public class InMemoryIdSystem implements IdSystem {
 		if(! _slot.isNull()){
 			ByteArrayBuffer buffer = _container.readBufferBySlot(_slot);
 			_idGenerator.read(buffer);
-			_ids = (IdSlotMapping) new TreeReader(buffer, new IdSlotMapping(0, null)).read();
+			_ids = (IdSlotTree) new TreeReader(buffer, new IdSlotTree(0, null)).read();
 		}
 	}
 
@@ -62,10 +63,13 @@ public class InMemoryIdSystem implements IdSystem {
 					return;
 				}
 				if(slotChange.removeId()){
-					_ids = (IdSlotMapping) Tree.removeLike(_ids, new TreeInt(slotChange._key));
+					_ids = (IdSlotTree) Tree.removeLike(_ids, new TreeInt(slotChange._key));
 					return;
 				}
-				_ids = Tree.add(_ids, new IdSlotMapping(slotChange._key, slotChange.newSlot()));
+				if(DTrace.enabled){
+					DTrace.SLOT_COMMITTED.logLength(slotChange._key, slotChange.newSlot());
+				}
+				_ids = Tree.add(_ids, new IdSlotTree(slotChange._key, slotChange.newSlot()));
 			}
 		});
 		writeThis();
@@ -78,15 +82,17 @@ public class InMemoryIdSystem implements IdSystem {
 		_idGenerator.write(buffer);
 		TreeInt.write(buffer, _ids);
 		_container.writeBytes(buffer, _slot.address(), 0);
+		Runnable commitHook = _container.commitHook();
 		_container.syncFiles();
 		_container.writeTransactionPointer(_slot.address(), _slot.length());
+		commitHook.run();
 		_container.syncFiles();
 		_container.systemData().transactionPointer1(_slot.address());
 		_container.systemData().transactionPointer2(_slot.length());
 	}
 
 	public Slot committedSlot(int id) {
-		IdSlotMapping idSlotMapping = (IdSlotMapping) Tree.find(_ids, new TreeInt(id));
+		IdSlotTree idSlotMapping = (IdSlotTree) Tree.find(_ids, new TreeInt(id));
 		if(idSlotMapping == null){
 			throw new InvalidIDException(id);
 		}
@@ -100,7 +106,7 @@ public class InMemoryIdSystem implements IdSystem {
 
 	public int newId() {
 		int id = _idGenerator.newId();
-		_ids = Tree.add(_ids, new IdSlotMapping(id, Slot.ZERO));
+		_ids = Tree.add(_ids, new IdSlotTree(id, Slot.ZERO));
 		return id;
 	}
 
@@ -141,7 +147,7 @@ public class InMemoryIdSystem implements IdSystem {
 	public void returnUnusedIds(Visitable<Integer> visitable) {
 		visitable.accept(new Visitor4<Integer>() {
 			public void visit(Integer obj) {
-				_ids = (IdSlotMapping) Tree.removeLike(_ids, new TreeInt(obj));
+				_ids = (IdSlotTree) Tree.removeLike(_ids, new TreeInt(obj));
 			}
 		});
 	}

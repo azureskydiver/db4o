@@ -2,51 +2,42 @@
 
 package com.db4o.internal.ids;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
 /**
- * @exclude
- */
-public class IdSlotMapping extends TreeInt {
+* @exclude
+*/
+public class IdSlotMapping {
 	
-	private final Slot _slot;
-
-	public IdSlotMapping(int id, Slot slot) {
-		super(id);
-		_slot = slot;
+	public final int _id;
+	
+	public final int _address;
+	
+	public final int _length;
+	
+	public IdSlotMapping(int id, int address, int length) {
+		_id = id;
+		_address = address;
+		_length = length;
+	}
+	
+	public IdSlotMapping(int id, Slot slot){
+		this(id, slot.address(), slot.length());
+	}
+	
+	public Slot slot(){
+		return new Slot(_address, _length);
 	}
 
-	public Slot slot() {
-		return _slot;
-	}
-	
-	@Override
-	public Tree onAttemptToAddDuplicate(Tree oldNode) {
-		_preceding = oldNode._preceding;
-		_subsequent = oldNode._subsequent;
-		_size = oldNode._size;
-		return this;
-	}
-	
-	@Override
-	public int ownLength() {
-		return Const4.INT_LENGTH * 3;   // _key, _slot._address, _slot._length 
-	}
-	
-	@Override
-	public Object read(ByteArrayBuffer buffer) {
-		int id = buffer.readInt();
-		Slot slot = new Slot(buffer.readInt(), buffer.readInt());
-		return new IdSlotMapping(id, slot);
-	}
-	
-	@Override
 	public void write(ByteArrayBuffer buffer) {
-		buffer.writeInt(_key);
-		buffer.writeInt(_slot.address());
-		buffer.writeInt(_slot.length());
+		buffer.writeInt(_id);
+		buffer.writeInt(_address);
+		buffer.writeInt(_length);
 	}
-
+	
+	public static IdSlotMapping read(ByteArrayBuffer buffer){
+		return new IdSlotMapping(buffer.readInt(), buffer.readInt(), buffer.readInt());
+	}
+	
 }

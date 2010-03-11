@@ -138,11 +138,18 @@ public class FileHeader1 extends FileHeader {
     }
 
     public void writeVariablePart(LocalObjectContainer file, int part) {
+    	if(! isInitalized()){
+    		return;
+    	}
     	Runnable commitHook = commit();
     	file.syncFiles();
     	commitHook.run();
     	file.syncFiles();
     }
+
+	private boolean isInitalized() {
+		return _variablePart != null;
+	}
 
 	@Override
 	public void readIdentity(LocalObjectContainer container) {

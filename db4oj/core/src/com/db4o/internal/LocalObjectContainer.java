@@ -104,7 +104,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     void configureNewFile() {
-        
+    	
+    	blockSize(configImpl().blockSize());
+    	_fileHeader = new FileHeader2();
+    	setRegularEndAddress(_fileHeader.length());
+    	
         newSystemData(configImpl().freespaceSystem(), configImpl().idSystemType());
         systemData().converterVersion(Converter.VERSION);
         createStringIO(_systemData.stringEncoding());
@@ -115,14 +119,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         generateNewIdentity();
         
-        blockSize(configImpl().blockSize());
         
         AbstractFreespaceManager blockedFreespaceManager = AbstractFreespaceManager.createNew(this);
 		installFreespaceManager(blockedFreespaceManager);
         
-        _fileHeader = new FileHeader2();
-        
-        setRegularEndAddress(_fileHeader.length());
         
         initNewClassCollection();
         initializeEssentialClasses();
@@ -362,12 +362,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	        // make it dirty here, so the new identity is persisted:
 	        _timeStampIdGenerator.next();
 	        
-	        // _fileHeader is still null on startup.
-	        // Only later calls to setIdentity need to 
-	        // write the FileHeader variable part
-	        if(_fileHeader != null){
-	        	_fileHeader.writeVariablePart(this, 2);
-	        }
+	        _fileHeader.writeVariablePart(this, 2);
     	}
     }
 

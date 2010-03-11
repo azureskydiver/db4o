@@ -21,25 +21,37 @@ public class SequentialIdGenerator {
 	
 	private final Function4<Integer, Integer> _findFreeId;
 	
-	public SequentialIdGenerator(Function4<Integer, Integer> findFreeId, int minValidId, int maxValidId) {
-		
+	public SequentialIdGenerator(Function4<Integer, Integer> findFreeId, int initialValue, int minValidId, int maxValidId) {
 		_findFreeId = findFreeId;
-		// _minValidId = minValidId;
-		_minValidId = 26;
+		 _minValidId = minValidId;
 		_maxValidId = maxValidId;
-		_idGenerator = _minValidId - 1;
+		initializeGenerator(initialValue);
+	}
+	
+	public SequentialIdGenerator(Function4<Integer, Integer> findFreeId, int minValidId, int maxValidId) {
+		this(findFreeId, minValidId - 1, minValidId, maxValidId);
 	}
 
 	public void read(ByteArrayBuffer buffer) {
-		_idGenerator = buffer.readInt();
-		if(_idGenerator < 0){
+		initializeGenerator(buffer.readInt());
+	}
+	
+	private void initializeGenerator(int val){
+		if(val < 0){
 			_overflow = true;
-			_idGenerator = -_idGenerator;
+			_idGenerator = - val;
+			return;
 		}
+		_idGenerator = val;
+	}
+	
+	
+	public void write(ByteArrayBuffer buffer) {
+		buffer.writeInt(persistentGeneratorValue()); 
 	}
 
-	public void write(ByteArrayBuffer buffer) {
-		buffer.writeInt(_overflow ?  -_idGenerator : _idGenerator); 
+	public int persistentGeneratorValue() {
+		return _overflow ?  -_idGenerator : _idGenerator;
 	}
 	
 	public int newId() {

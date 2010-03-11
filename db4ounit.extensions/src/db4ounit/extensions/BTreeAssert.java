@@ -56,8 +56,8 @@ public class BTreeAssert {
 		visitor.assertExpectations();
 	}
 
-	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int nodeSize) {
-		return new BTree(stream.systemTransaction(), id, new IntHandler(), nodeSize);
+	public static BTree createIntKeyBTree(final ObjectContainerBase container, int id, int nodeSize) {
+		return new BTree(container.systemTransaction(), id, new IntHandler(), nodeSize);
 	}
 
 	public static void assertSingleElement(Transaction trans, BTree btree, Object element) {

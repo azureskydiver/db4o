@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.ids;
 
+import java.util.*;
+
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -17,12 +19,10 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 public class IdSystemTestSuite extends FixtureBasedTestSuite {
+	
+	private static int MAX_VALID_ID = 1000;
 
 	private static final int SLOT_LENGTH = 10;
-
-	public static void main(String[] args) {
-		new ConsoleTestRunner(new IdSystemTestSuite()).run();
-	}
 
 	public static class IdSystemTestUnit extends AbstractDb4oTestCase implements
 			OptOutMultiSession, Db4oTestCase {
@@ -32,10 +32,6 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 			IdSystemConfiguration idSystemConfiguration = Db4oLegacyConfigurationBridge
 					.asIdSystemConfiguration(config);
 			_fixture.value().apply(idSystemConfiguration);
-		}
-
-		public void testPersistence() {
-
 		}
 
 		public void testSlotForNewIdDoesNotExist() {
@@ -78,6 +74,31 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 
 			Assert.isFalse(isValid(idSystem().committedSlot(id)));
 		}
+		
+		public void testReturnUnusedIds(){
+			final int id = idSystem().newId();
+			
+			Slot slot = idSystem().committedSlot(id);
+			Assert.areEqual(Slot.ZERO, slot);
+			
+			idSystem().returnUnusedIds(new Visitable<Integer>() {
+				public void accept(Visitor4<Integer> visitor) {
+					visitor.visit(id);
+				}
+			});
+			
+			if(idSystem() instanceof PointerBasedIdSystem){
+				slot = idSystem().committedSlot(id);
+				Assert.areEqual(Slot.ZERO, slot);
+			} else {
+				Assert.expect(InvalidIDException.class, new CodeBlock() {
+					public void run() throws Throwable {
+						idSystem().committedSlot(id);
+					}
+				});
+			}
+			
+		}
 
 		private Slot allocateNewSlot(int newId) {
 			SlotChange slotChange = SlotChangeFactory.USER_OBJECTS
@@ -119,37 +140,174 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 		}
 
 	}
+	
+	public static class IdOverflowTestUnit extends AbstractDb4oTestCase implements
+		OptOutMultiSession, Db4oTestCase {
+		
+		public void testNewIdOverflow(){
+			
+			if(! _fixture.value().supportsIdOverflow()){
+				return;
+			}
+			
+			LocalObjectContainer container = (LocalObjectContainer) container();
+			
+			final IdSystem idSystem = _fixture.value().newInstance(container);
+			
+			final List<Integer> allFreeIds = allocateAllAvailableIds(idSystem);
+			assertNoMoreIdAvailable(idSystem);
+			
+			final List<Integer> subSetOfIds = new ArrayList<Integer>();
+			
+			int counter = 0;
+			for (int currentId : allFreeIds){
+				counter++;
+				if(counter % 3 == 0){
+					subSetOfIds.add(currentId);
+				}
+			}
+			
+			assertFreeAndReallocate(idSystem, subSetOfIds);
+			assertFreeAndReallocate(idSystem, allFreeIds);
+			
+		}
 
-	private static FixtureVariable<Procedure4<IdSystemConfiguration>> _fixture = FixtureVariable
+		private void assertFreeAndReallocate(final IdSystem idSystem,
+				final List<Integer> ids) {
+			
+			// Boundary condition: Last ID. Produced a bug when implementing. 
+			if(! ids.contains(MAX_VALID_ID)){
+				ids.add(MAX_VALID_ID);
+			}
+			
+			Assert.isGreater(0, ids.size());
+			
+			idSystem.returnUnusedIds(new Visitable<Integer>() {
+				public void accept(Visitor4<Integer> visitor) {
+					for(Integer expectedFreeId : ids){
+						visitor.visit(expectedFreeId);	
+					}
+				}
+			});
+			
+			int freedCount = ids.size();
+			
+			for (int i = 0; i < freedCount; i++) {
+				int newId = idSystem.newId();
+				Assert.isTrue(ids.contains(newId));
+				ids.remove((Object)newId);
+			}
+			
+			Assert.isTrue(ids.size() == 0);
+			assertNoMoreIdAvailable(idSystem);
+		}
+
+		private List<Integer> allocateAllAvailableIds(final IdSystem idSystem) {
+			final List<Integer> ids = new ArrayList<Integer>();
+			int newId = 0;
+			do{
+				newId = idSystem.newId();
+				ids.add(newId);
+			}
+			while(newId < MAX_VALID_ID);
+			return ids;
+		}
+
+		private void assertNoMoreIdAvailable(final IdSystem idSystem) {
+			Assert.expect(Db4oFatalException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					idSystem.newId();
+				}
+			});
+		}
+		
+	}
+	
+	
+
+	private static FixtureVariable<IdSystemProvider> _fixture = FixtureVariable
 			.newInstance("IdSystem");
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
 				new Db4oFixtureProvider(),
-				new SimpleFixtureProvider<Procedure4<IdSystemConfiguration>>(
-						_fixture, new Procedure4<IdSystemConfiguration>() {
+				new SimpleFixtureProvider<IdSystemProvider>(
+						_fixture, new IdSystemProvider() {
 							public void apply(
 									IdSystemConfiguration idSystemConfiguration) {
 								idSystemConfiguration.usePointerBasedSystem();
 							}
-						}, new Procedure4<IdSystemConfiguration>() {
+
+							public IdSystem newInstance(LocalObjectContainer container) {
+								return null;
+							}
+
+							public boolean supportsIdOverflow() {
+								return false;
+							}
+						}, new IdSystemProvider() {
 							public void apply(
 									IdSystemConfiguration idSystemConfiguration) {
 								idSystemConfiguration.useInMemorySystem();
 							}
-						}, new Procedure4<IdSystemConfiguration>() {
+
+							public IdSystem newInstance(LocalObjectContainer container) {
+								return new InMemoryIdSystem(container, MAX_VALID_ID);
+							}
+
+							public boolean supportsIdOverflow() {
+								return true;
+							}
+						}, new IdSystemProvider() {
 							public void apply(
 									IdSystemConfiguration idSystemConfiguration) {
-								// idSystemConfiguration.useBTreeSystem();
+								idSystemConfiguration.useBTreeSystem();
+							}
+
+							public IdSystem newInstance(LocalObjectContainer container) {
+								final IdSystem idSystem = new InMemoryIdSystem(container);
+								TransactionalIdSystem transactionalIdSystem = container.newTransactionalIdSystem(null, new Closure4<IdSystem>() {
+									public IdSystem run() {
+										return idSystem;
+									}
+								});
+								return new BTreeIdSystem(container, transactionalIdSystem, MAX_VALID_ID);
+							}
+
+							public boolean supportsIdOverflow() {
 								
+								// FIXME: implement next
+								
+								return false;
 							}
 						}) };
 	}
 
 	@Override
 	public Class[] testUnits() {
-		return new Class[] { IdSystemTestUnit.class, };
+		return new Class[] { 
+				IdSystemTestUnit.class,
+				IdOverflowTestUnit.class,
+				};
 	}
+	
+	
+	private static interface IdSystemProvider {
+		
+		public void apply(IdSystemConfiguration idSystemConfiguration);
+		
+		public boolean supportsIdOverflow();
+
+		public IdSystem newInstance(LocalObjectContainer container);
+		
+	}
+		
+		
+		
+		
+		
+	
+	
 
 }

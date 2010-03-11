@@ -8,7 +8,7 @@ import com.db4o.internal.caching.*;
 /**
  * @exclude
  */
-public abstract class CacheablePersistentBase extends PersistentBase{
+public abstract class CacheablePersistentBase extends LocalPersistentBase {
 	
 	@Override
 	protected ByteArrayBuffer produceReadBuffer(final Transaction trans) {

@@ -2,21 +2,33 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.ids.*;
+
 
 /**
  * @exclude
  */
-public class PersistentIntegerArray extends PersistentBase {
+public class PersistentIntegerArray extends LocalPersistentBase {
 	
 	private int[] _ints;
 	
-	public PersistentIntegerArray(int id) {
+	public PersistentIntegerArray(TransactionalIdSystem idSystem, int[] arr){
+		super(idSystem);
+		_ints = new int[arr.length];
+		System.arraycopy(arr, 0, _ints, 0, arr.length);
+	}
+	
+	public PersistentIntegerArray(TransactionalIdSystem idSystem, int id) {
+		super(idSystem);
 		setID(id);
 	}
 	
+	public PersistentIntegerArray(int id) {
+		this(null, id);
+	}
+	
 	public PersistentIntegerArray(int[] arr){
-		_ints = new int[arr.length];
-		System.arraycopy(arr, 0, _ints, 0, arr.length);
+		this(null, arr);
 	}
 
 	public byte getIdentifier() {

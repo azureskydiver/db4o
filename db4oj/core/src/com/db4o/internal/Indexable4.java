@@ -7,11 +7,11 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public interface Indexable4 extends Comparable4, LinkLengthAware{
+public interface Indexable4<T> extends Comparable4<T>, LinkLengthAware{
     
-    Object readIndexEntry(Context context, ByteArrayBuffer reader);
+    T readIndexEntry(Context context, ByteArrayBuffer reader);
     
-    void writeIndexEntry(Context context, ByteArrayBuffer writer, Object obj);
+    void writeIndexEntry(Context context, ByteArrayBuffer writer, T obj);
     
 	void defragIndexEntry(DefragmentContextImpl context);
 	

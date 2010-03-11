@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.slots.*;
 
@@ -148,26 +149,6 @@ public class DatabaseIdMapping extends AbstractIdMapping {
 				}
 			}
 		};
-	}
-	
-	public static class IdSlotMapping {
-		
-		public IdSlotMapping(int id, int address, int length) {
-			_id = id;
-			_address = address;
-			_length = length;
-		}
-
-		public int _id;
-		
-		public int _address;
-		
-		public int _length;
-		
-		public Slot slot(){
-			return new Slot(_address, _length);
-		}
-		
 	}
 	
 	

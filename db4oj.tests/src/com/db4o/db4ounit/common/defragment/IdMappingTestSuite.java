@@ -6,8 +6,8 @@ import java.util.*;
 
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.defragment.*;
-import com.db4o.defragment.DatabaseIdMapping.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 import db4ounit.*;
@@ -81,7 +81,7 @@ public class IdMappingTestSuite extends FixtureBasedTestSuite {
 		
 	}
 	
-	public static class TestableIdSlotMapping extends IdSlotMapping{
+	public static class TestableIdSlotMapping extends IdSlotMapping {
 
 		public TestableIdSlotMapping(int id, int address, int length) {
 			super(id, address, length);
