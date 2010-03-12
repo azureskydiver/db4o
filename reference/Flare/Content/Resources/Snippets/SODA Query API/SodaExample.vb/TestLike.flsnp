@@ -14,19 +14,27 @@ Public Shared Sub TestLike()
                     pilot = New Pilot("Test Pilot2", 102)
                     container.[Set](pilot)
 
-                    ' Simple.IQuery
+                    ' Simple query
                     Dim query1 As IQuery = container.Query()
                     query1.Constrain(GetType(Pilot))
                     query1.Descend("_name").Constrain("est")
                     Dim result As IObjectSet = query1.Execute()
                     ListResult(result)
-
-                    ' Like.IQuery
+                      
+                    ' // contains query: contains is case sensitive
                     Dim query2 As IQuery = container.Query()
                     query2.Constrain(GetType(Pilot))
                     ' All pilots with the name containing "est" will be retrieved
-                    query2.Descend("_name").Constrain("est").[Like]()
+                    query2.Descend("_name").Constrain("est").Contains()
                     result = query2.Execute()
+                    ListResult(result)
+                        
+                    ' // Like query: like is case insensitive
+                    Dim query3 As IQuery = container.Query()
+                    query3.Constrain(GetType(Pilot))
+                    ' All pilots with the name containing "est" will be retrieved
+                    query3.Descend("_name").Constrain("est").Like()
+                    result = query3.Execute()
                     ListResult(result)
                 Catch ex As Db4oException
                     Console.WriteLine("Db4o Exception: " + ex.Message)

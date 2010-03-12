@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.cs: TestContains
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="619" MadCap:lastWidth="596">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">SodaExample.cs: TestContains
 public static void TestContains()
          {
             File.Delete(Db4oFileName);
@@ -8,30 +13,32 @@ public static void TestContains()
                 try
                  {
                     ArrayList list = new ArrayList();
-                    Pilot pilot1 = new Pilot(&quot;Test 1&quot;, 1);
+                    Pilot pilot1 = new Pilot("Test 1", 1);
                     list.Add(pilot1);
-                    Pilot pilot2 = new Pilot(&quot;Test 2&quot;, 2);
+                    Pilot pilot2 = new Pilot("Test 2", 2);
                     list.Add(pilot2);
-                    Team team = new Team(&quot;Ferrari&quot;, list);
+                    Team team = new Team("Ferrari", list);
                     container.Store(team);
 
                     IQuery query = container.Query();
                     query.Constrain(typeof(Team));
-                    query.Descend(&quot;_pilots&quot;).Constrain(pilot2).Contains();
+                    query.Descend("_pilots").Constrain(pilot2);
                     IObjectSet result = query.Execute();
                     ListResult(result);
                 }
                 catch (Db4oException ex)
                  {
-                    Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
+                    Console.WriteLine("Db4o Exception: " + ex.Message);
                 }
                 catch (Exception ex)
                  {
-                    Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                    Console.WriteLine("System Exception: " + ex.Message);
                 }
                 finally
                  {
                     CloseDatabase();
                 }
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>
