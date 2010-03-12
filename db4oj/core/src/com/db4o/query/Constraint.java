@@ -127,19 +127,16 @@ public interface Constraint {
 	
 	
     /**
-     * sets the evaluation mode to containment comparison.
-     * For example:<br> 
-     * <code>Pilot pilot1 = new Pilot("Test 1", 1);</code><br>
-	 * <code>list.add(pilot1);</code><br>
-     * <code>Pilot pilot2 = new Pilot("Test 2", 2);</code><br>
-     * <code>list.add(pilot2);</code><br>
-     * <code>Team team = new Team("Ferrari", list);</code><br>
-     * <code>container.store(team);</code><br>
-     * <code>Query query = container.query();</code><br>
-     * <code>query.constrain(Team.class);</code><br>
-     * <code>query.descend("pilots").constrain(pilot2).contains();</code><br>
-     * will return the Team object as it contains pilot2.<br>
-     * If applied to a String object, this constrain will behave as {@link #like()}.
+     * sets the evaluation mode to string contains comparison.
+     * The contains comparison is case sensitive.
+     * For example:<br>
+     * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
+     * <code>container.store(pilot);</code><br>
+     * <code> ...</code><br>
+     * <code>query.constrain(Pilot.class);</code><br>
+     * <code>// All pilots with the name containing "est" will be retrieved</code><br>
+     * <code>query.descend("name").constrain("est").contains();</code><br>
+     * @see #like() like() for case insensitive string comparison
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint contains ();
