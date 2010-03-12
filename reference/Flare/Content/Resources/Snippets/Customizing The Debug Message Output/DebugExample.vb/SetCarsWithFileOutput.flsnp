@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="678" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">DebugExample.vb: SetCarsWithFileOutput
+        <pre class="prettyprint lang-vb" xml:space="preserve">DebugExample.vb: SetCarsWithFileOutput
 Private Shared Sub SetCarsWithFileOutput()
             ' Create StreamWriter for a file
             Dim f As FileInfo = New FileInfo("Debug.txt")

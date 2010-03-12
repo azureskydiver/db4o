@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="710">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Compare
+        <pre class="prettyprint lang-vb" xml:space="preserve">StringBuilderHandler.vb: Compare
 Private Shared Function Compare(ByVal a_compare As StringBuilder, _ 
 ByVal a_with As StringBuilder) As Integer
             If a_compare Is Nothing Then

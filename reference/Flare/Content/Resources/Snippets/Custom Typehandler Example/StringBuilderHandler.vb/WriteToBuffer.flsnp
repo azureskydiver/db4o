@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: WriteToBuffer
+        <pre class="prettyprint lang-vb" xml:space="preserve">StringBuilderHandler.vb: WriteToBuffer
 Private Shared Sub WriteToBuffer(ByVal buffer As IWriteBuffer, _ 
 ByVal str As String)
             Dim length As Integer = str.Length

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="680">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Client.vb: LinqGroupByQuery
+        <pre class="prettyprint lang-vb" xml:space="preserve">Client.vb: LinqGroupByQuery
 Private Shared Sub LinqGroupByQuery()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then

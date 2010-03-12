@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="758" MadCap:lastWidth="720">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ServerSetup.vb: 
+        <pre class="prettyprint lang-vb" xml:space="preserve">ServerSetup.vb: 
 			
 	' Copyright (C) 2009 Versant Inc. http://www.db4o.com
 	Namespace Db4odoc.ClientServer

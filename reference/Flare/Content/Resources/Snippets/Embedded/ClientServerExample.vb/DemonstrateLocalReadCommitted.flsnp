@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="780">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateLocalReadCommitted
+        <pre class="prettyprint lang-vb" xml:space="preserve">ClientServerExample.vb: DemonstrateLocalReadCommitted
 Public Shared Sub DemonstrateLocalReadCommitted(ByVal server As IObjectServer)
             Dim client1 As IObjectContainer = server.OpenClient()
             Dim client2 As IObjectContainer = server.OpenClient()

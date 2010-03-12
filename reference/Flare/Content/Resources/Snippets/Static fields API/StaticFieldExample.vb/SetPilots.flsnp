@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="630">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: SetPilots
+        <pre class="prettyprint lang-vb" xml:space="preserve">StaticFieldExample.vb: SetPilots
 Private Shared Sub SetPilots()
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Database()

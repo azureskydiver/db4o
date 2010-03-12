@@ -3,6 +3,8 @@
     <head>
 		<script src="../Code/prettify.js">
 		</script>
+		<script src="../Code/lang-vb.js">
+		</script>
 		<script  type="text/javascript">
 			window.onload = function(){
                              prettyPrint();

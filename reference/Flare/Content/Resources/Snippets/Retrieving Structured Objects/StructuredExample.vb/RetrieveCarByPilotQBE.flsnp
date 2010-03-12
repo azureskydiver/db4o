@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="720">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarByPilotQBE
+        <pre class="prettyprint lang-vb" xml:space="preserve">StructuredExample.vb: RetrieveCarByPilotQBE
 Private Shared Sub _ 
 RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
             Dim pilotproto As Pilot = New Pilot("Rubens Barrichello", 0)

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">QBEExample.vb: test4
+        <pre class="prettyprint lang-vb" xml:space="preserve">QBEExample.vb: test4
 Private Shared Sub Test4()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then

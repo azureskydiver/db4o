@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="700">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: OnDeleted
+        <pre class="prettyprint lang-vb" xml:space="preserve">CallbacksExample.vb: OnDeleted
 Private Shared Sub OnDeleted()Sub OnDeleted(ByVal sender As Object, _ 
 ByVal args As ObjectEventArgs)
             Dim obj As Object = args.Object

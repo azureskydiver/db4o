@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="760">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.vb: StoreObjects
+        <pre class="prettyprint lang-vb" xml:space="preserve">UniqueConstraintExample.vb: StoreObjects
 Private Shared Sub StoreObjects()
             File.Delete(FILENAME)
             Dim server As IObjectServer = _ 

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="700">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: UpdatePilotSeparateSessionsImprovedPart2
+        <pre class="prettyprint lang-vb" xml:space="preserve">StructuredExample.vb: UpdatePilotSeparateSessionsImprovedPart2
 Private Shared Sub _ 
 UpdatePilotSeparateSessionsImprovedPart2(ByVal db As IObjectContainer)
             Dim result As IObjectSet = db.QueryByExample(New Car("Ferrari"))

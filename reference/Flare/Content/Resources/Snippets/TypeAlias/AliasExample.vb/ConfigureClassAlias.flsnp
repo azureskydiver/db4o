@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: ConfigureClassAlias
+        <pre class="prettyprint lang-vb" xml:space="preserve">AliasExample.vb: ConfigureClassAlias
 Private Shared Function ConfigureClassAlias() As IEmbeddedConfiguration
             ' create a new alias
             tAlias = New TypeAlias ("Db4odoc.Aliases.Pilot, Db4odoc", _ 

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="690">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">MarkTransientExample.vb: SaveObjects
+        <pre class="prettyprint lang-vb" xml:space="preserve">MarkTransientExample.vb: SaveObjects
 Public Shared Sub  SaveObjects(ByVal configuration As IConfiguration)
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = _ 

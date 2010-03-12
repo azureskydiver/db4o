@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="660">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsX6Match
+        <pre class="prettyprint lang-vb" xml:space="preserve">SimpleExamples.vb: PilotsX6Match
 Private Shared Function PilotsX6Match(ByVal p As Pilot) As Boolean
             ' all Pilots with the name ending with 6 will
             ' be included

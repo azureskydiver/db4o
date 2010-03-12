@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="478" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">DebugExample.vb: SetCars
+        <pre class="prettyprint lang-vb" xml:space="preserve">DebugExample.vb: SetCars
 Private Shared Sub SetCars()
             ' Set the debug message levet to the maximum
             Dim configuration As IEmbeddedConfiguration = _ 

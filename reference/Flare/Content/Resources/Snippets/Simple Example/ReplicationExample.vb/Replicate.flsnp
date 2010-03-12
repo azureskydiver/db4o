@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="700">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: Replicate
+        <pre class="prettyprint lang-vb" xml:space="preserve">ReplicationExample.vb: Replicate
 Public Shared Sub Replicate()
             Dim desktop As IObjectContainer = _ 
 Db4oFactory.OpenFile(ConfigureReplication(), DtFileName)

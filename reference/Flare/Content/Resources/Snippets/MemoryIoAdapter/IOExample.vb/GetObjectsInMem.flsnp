@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="838" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">IOExample.vb: GetObjectsInMem
+        <pre class="prettyprint lang-vb" xml:space="preserve">IOExample.vb: GetObjectsInMem
 Private Shared Sub GetObjectsInMem()
             System.Console.WriteLine("Setting up in-memory database")
             Dim adapter As MemoryIoAdapter = New MemoryIoAdapter()

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: DemonstrateRemoteReadCommitted
+        <pre class="prettyprint lang-vb" xml:space="preserve">ClientServerExample.vb: DemonstrateRemoteReadCommitted
 Public Shared Sub DemonstrateRemoteReadCommitted(ByVal port As Integer, _ 
 ByVal user As String, ByVal password As String)
             Dim client1 As IObjectContainer = Db4oClientServer. _ 

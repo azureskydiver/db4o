@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="358" MadCap:lastWidth="720">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.vb: TestArbitrary
+        <pre class="prettyprint lang-vb" xml:space="preserve">DiagnosticExample.vb: TestArbitrary
 Public Shared Sub TestArbitrary()
             Dim configuration As IEmbeddedConfiguration = _ 
 Db4oEmbedded.NewConfiguration()

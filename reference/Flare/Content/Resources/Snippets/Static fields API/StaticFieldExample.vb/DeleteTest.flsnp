@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="498" MadCap:lastWidth="710">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: DeleteTest
+        <pre class="prettyprint lang-vb" xml:space="preserve">StaticFieldExample.vb: DeleteTest
 Private Shared Sub DeleteTest()
             Dim db As IObjectContainer = Database()
             If db IsNot Nothing Then

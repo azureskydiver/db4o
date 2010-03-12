@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="338" MadCap:lastWidth="850">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: ConfigureAlias
+        <pre class="prettyprint lang-vb" xml:space="preserve">AliasExample.vb: ConfigureAlias
 Private Shared Function ConfigureAlias() As IEmbeddedConfiguration
             Dim wAlias As WildcardAlias = New WildcardAlias ("Db4odoc.Aliases.*", _ 
 "Db4odoc.Aliases.NewAlias.*")

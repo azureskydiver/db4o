@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Write
+        <pre class="prettyprint lang-vb" xml:space="preserve">StringBuilderHandler.vb: Write
 Public Sub Write(ByVal context As IWriteContext, ByVal obj As Object) _ 
 Implements ITypeHandler4.Write
             Dim str As String = DirectCast(obj, StringBuilder).ToString()

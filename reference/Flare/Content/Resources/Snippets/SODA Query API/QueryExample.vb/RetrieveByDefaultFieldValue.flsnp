@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByDefaultFieldValue
+        <pre class="prettyprint lang-vb" xml:space="preserve">QueryExample.vb: RetrieveByDefaultFieldValue
 Public Shared Sub _ 
 RetrieveByDefaultFieldValue(ByVal db As IObjectContainer)
             Dim somebody As Pilot = New Pilot("Somebody else", 0)

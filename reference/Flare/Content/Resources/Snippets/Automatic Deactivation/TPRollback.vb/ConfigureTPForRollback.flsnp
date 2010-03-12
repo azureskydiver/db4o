@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: ConfigureTPForRollback
+        <pre class="prettyprint lang-vb" xml:space="preserve">TPRollback.vb: ConfigureTPForRollback
 Private Shared Function ConfigureTPForRollback() As IConfiguration
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             ' add TP support and rollback strategy

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="538" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">UtilityExample.vb: CheckStored
+        <pre class="prettyprint lang-vb" xml:space="preserve">UtilityExample.vb: CheckStored
 Public Shared Sub CheckStored()
             ' create a linked list with length 10
             Dim list As SensorPanel = New SensorPanel().CreateList(10)

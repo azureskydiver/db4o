@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="818" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.vb: RemoveTest
+        <pre class="prettyprint lang-vb" xml:space="preserve">ListDeletingExample.vb: RemoveTest
 Private Shared Sub RemoveTest()
             ' set update depth to 1 as we only 
             ' modify List field

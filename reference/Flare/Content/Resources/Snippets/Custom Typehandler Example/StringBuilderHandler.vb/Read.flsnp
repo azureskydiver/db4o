@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="238" MadCap:lastWidth="640">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Read
+        <pre class="prettyprint lang-vb" xml:space="preserve">StringBuilderHandler.vb: Read
 Public Function Read(ByVal context As IReadContext) As Object _ 
 Implements ITypeHandler4.Read
             Dim buffer As IReadBuffer = context

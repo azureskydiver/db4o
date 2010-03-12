@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="624">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">DefragmentExample.vb: ConfiguredDefragment
+        <pre class="prettyprint lang-vb" xml:space="preserve">DefragmentExample.vb: ConfiguredDefragment
 Public Shared Sub ConfiguredDefragment()
             Dim config As DefragmentConfig = New _ 
 DefragmentConfig(DB_FILE, BACKUP_FILE, New TreeIDMapping)
