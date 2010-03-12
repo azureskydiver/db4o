@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="730">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="475" MadCap:lastWidth="596">
     <head>
     </head>
     <body>
@@ -15,11 +15,11 @@ Public Shared Sub TestContains()
                     Dim pilot2 As New Pilot("Test 2", 2)
                     list.Add(pilot2)
                     Dim team As New Team("Ferrari", list)
-                    container.[Set](team)
+                    container.Store(team)
 
                     Dim query As IQuery = container.Query()
                     query.Constrain(GetType(Team))
-                    query.Descend("_pilots").Constrain(pilot2).Contains()
+                    query.Descend("_pilots").Constrain(pilot2)
                     Dim result As IObjectSet = query.Execute()
                     ListResult(result)
                 Catch ex As Db4oException
