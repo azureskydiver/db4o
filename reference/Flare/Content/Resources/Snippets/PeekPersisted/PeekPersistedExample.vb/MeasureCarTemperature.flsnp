@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="698" MadCap:lastWidth="860">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">PeekPersistedExample.vb: MeasureCarTemperature
+        <pre class="prettyprint lang-vb" xml:space="preserve">PeekPersistedExample.vb: MeasureCarTemperature
 Private Shared Sub MeasureCarTemperature()
             SetObjects()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)

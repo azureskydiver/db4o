@@ -1,62 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="3" MadCap:lastHeight="1736" MadCap:lastWidth="1027">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="3" MadCap:lastHeight="953" MadCap:lastWidth="766">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Db4oManager.cs: </pre>
-        <pre>using System;</pre>
-        <pre>using System.Collections.Generic;</pre>
-        <pre>using System.IO;</pre>
-        <pre>using Db4objects.Db4o;</pre>
-        <pre>using Db4objects.Db4odoc.ReportsExample.Persistent;</pre>
-        <pre>namespace Db4objects.Db4odoc.ReportsExample.Modules</pre>
-        <pre>{</pre>
-        <pre xml:space="preserve">   class Db4oManager</pre>
-        <pre xml:space="preserve">   {</pre>
-        <pre xml:space="preserve">      public const string DbFileName = "..//..//Data//formula1.db";</pre>
-        <pre xml:space="preserve">      public static IObjectContainer _db;</pre>
-        <pre xml:space="preserve">      private Db4oManager()</pre>
-        <pre xml:space="preserve">      {</pre>
-        <pre xml:space="preserve">      }</pre>
-        <pre>&#160;</pre>
-        <pre xml:space="preserve">      public static void FillUpDB()</pre>
-        <pre xml:space="preserve">      {</pre>
-        <pre xml:space="preserve">         Pilot pilot = new Pilot("Michael Schumacher", 100);</pre>
-        <pre xml:space="preserve">         Db().Store(pilot);</pre>
-        <pre xml:space="preserve">         pilot = new Pilot("David Barichello", 95);</pre>
-        <pre xml:space="preserve">         Db().Store(pilot);</pre>
-        <pre xml:space="preserve">         pilot = new Pilot("Kimi Raikkonen", 100);</pre>
-        <pre xml:space="preserve">         Db().Store(pilot);</pre>
-        <pre xml:space="preserve">      }</pre>
-        <pre>&#160;</pre>
-        <pre xml:space="preserve">      public static IList&lt;Pilot&gt; GetAllPilots()</pre>
-        <pre xml:space="preserve">      {</pre>
-        <pre xml:space="preserve">         IList&lt;Pilot&gt; result = Db().Query&lt;Pilot&gt;(typeof(Pilot));</pre>
-        <pre xml:space="preserve">         return result;</pre>
-        <pre xml:space="preserve">      }</pre>
-        <pre>&#160;</pre>
-        <pre xml:space="preserve">      public static void StoreObject(Object obj)</pre>
-        <pre xml:space="preserve">      {</pre>
-        <pre xml:space="preserve">         Db().Store(obj);</pre>
-        <pre xml:space="preserve">      }</pre>
-        <pre>&#160;</pre>
-        <pre xml:space="preserve">      public static IObjectContainer Db()</pre>
-        <pre xml:space="preserve">      {</pre>
-        <pre xml:space="preserve">         if (_db == null)</pre>
-        <pre xml:space="preserve">         {</pre>
-        <pre xml:space="preserve">         _db = Db4oFactory.OpenFile(DbFileName);</pre>
-        <pre xml:space="preserve">         }</pre>
-        <pre xml:space="preserve">         return _db;</pre>
-        <pre xml:space="preserve">      }</pre>
-        <pre>&#160;</pre>
-        <pre xml:space="preserve">      public static void CloseDb()</pre>
-        <pre xml:space="preserve">      {</pre>
-        <pre xml:space="preserve">         if (_db != null)</pre>
-        <pre xml:space="preserve">         {</pre>
-        <pre xml:space="preserve">            _db.Close();</pre>
-        <pre xml:space="preserve">         }</pre>
-        <pre xml:space="preserve">      }</pre>
-        <pre xml:space="preserve">   }</pre>
-        <pre>}</pre>
+        <pre class="prettyprint" xml:space="preserve">Db4oManager.cs: 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Db4objects.Db4o;
+using Db4objects.Db4odoc.ReportsExample.Persistent;
+namespace Db4objects.Db4odoc.ReportsExample.Modules
+{
+	class Db4oManager
+	{
+		public const string DbFileName = "..//..//Data//formula1.db";
+		public static IObjectContainer _db;
+		private Db4oManager()
+		{
+		}
+		
+		public static void FillUpDB()
+		{
+			Pilot pilot = new Pilot("Michael Schumacher", 100);
+			Db().Store(pilot);
+			pilot = new Pilot("David Barichello", 95);
+			Db().Store(pilot);
+			pilot = new Pilot("Kimi Raikkonen", 100);
+			Db().Store(pilot);
+		}
+		
+		public static IList&lt;Pilot&gt; GetAllPilots()
+		{
+			IList&lt;Pilot&gt; result = Db().Query&lt;Pilot&gt;(typeof(Pilot));
+			return result;
+		}
+		
+		public static void StoreObject(Object obj)
+		{
+			Db().Store(obj);
+		}
+		
+		public static IObjectContainer Db()
+		{
+			if (_db == null)
+			{
+				_db = Db4oFactory.OpenFile(DbFileName);
+			}
+			return _db;
+		}
+		
+		public static void CloseDb()
+		{
+			if (_db != null)
+			{
+			_db.Close();
+			}
+		}
+	}
+}		
+		
+		</pre>
     </body>
 </html>

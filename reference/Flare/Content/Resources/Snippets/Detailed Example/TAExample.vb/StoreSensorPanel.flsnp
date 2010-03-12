@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="860">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">TAExample.vb: StoreSensorPanel
+        <pre class="prettyprint lang-vb" xml:space="preserve">TAExample.vb: StoreSensorPanel
 Private Shared Sub StoreSensorPanel()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database(Db4oFactory.NewConfiguration)

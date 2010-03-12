@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="658" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: GetCarInfo
+        <pre class="prettyprint lang-vb" xml:space="preserve">ReflectorExample.vb: GetCarInfo
 Public Shared Sub GetCarInfo()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try

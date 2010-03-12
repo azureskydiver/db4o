@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="840">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: TestSerializable
+        <pre class="prettyprint lang-vb" xml:space="preserve">BuiltInTranslatorsExample.vb: TestSerializable
 Public Shared Sub TestSerializable()
             SaveSerializable()
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()

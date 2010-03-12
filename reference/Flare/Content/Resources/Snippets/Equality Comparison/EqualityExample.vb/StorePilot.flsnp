@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: StorePilot
+        <pre class="prettyprint lang-vb" xml:space="preserve">EqualityExample.vb: StorePilot
 Private Shared Sub StorePilot()
             Dim container As IObjectContainer = Database()
             If container IsNot Nothing Then

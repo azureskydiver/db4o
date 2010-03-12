@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="298" MadCap:lastWidth="710">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: RankPilotsAndMatch
+        <pre class="prettyprint lang-vb" xml:space="preserve">SimpleExamples.vb: RankPilotsAndMatch
 Private Shared Function RankPilotsAndMatch(ByVal p As Pilot) As Boolean
             ' Add ranking to the pilots during the query.
             ' Note: pilot records in the database won't

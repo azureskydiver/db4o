@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="650">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: QueryLocalServer
+        <pre class="prettyprint lang-vb" xml:space="preserve">ClientServerExample.vb: QueryLocalServer
 Public Shared Sub QueryLocalServer(ByVal server As IObjectServer)
             Dim client As IObjectContainer = server.OpenClient()
             ListResult(client.Query(Of Car)())

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="398" MadCap:lastWidth="720">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: StoreCollection
+        <pre class="prettyprint lang-vb" xml:space="preserve">TPCollectionExample.vb: StoreCollection
 Private Shared Sub StoreCollection()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database(ConfigureTP())

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="820">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: ModifyWithRollbackStrategy
+        <pre class="prettyprint lang-vb" xml:space="preserve">TPRollback.vb: ModifyWithRollbackStrategy
 Private Shared Sub ModifyWithRollbackStrategy()
             Dim container As IObjectContainer = Database(ConfigureTPForRollback())
             If container IsNot Nothing Then

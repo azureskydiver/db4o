@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="700">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: AccessLocalServer
+        <pre class="prettyprint lang-vb" xml:space="preserve">ClientServerExample.vb: AccessLocalServer
 Public Shared Sub AccessLocalServer()
             Dim server As IObjectServer = Db4oClientServer. _ 
 OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, 0)

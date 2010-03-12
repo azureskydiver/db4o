@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="790">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: SelectTestPilots6PointsMore
+        <pre class="prettyprint lang-vb" xml:space="preserve">SimpleExamples.vb: SelectTestPilots6PointsMore
 Private Shared Sub SelectTestPilots6PointsMore()
             Dim container As IObjectContainer = Database()
             If Not container Is Nothing Then

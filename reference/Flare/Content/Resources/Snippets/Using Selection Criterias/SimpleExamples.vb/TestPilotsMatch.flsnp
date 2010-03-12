@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="680">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: TestPilotsMatch
+        <pre class="prettyprint lang-vb" xml:space="preserve">SimpleExamples.vb: TestPilotsMatch
 Private Shared Function TestPilotsMatch(ByVal p As Pilot) As Boolean
             ' all Pilots containing "Test" in the name
             ' are included in the result

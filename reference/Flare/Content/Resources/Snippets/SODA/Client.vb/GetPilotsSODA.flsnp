@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="318" MadCap:lastWidth="630">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Client.vb: GetPilotsSODA
+        <pre class="prettyprint lang-vb" xml:space="preserve">Client.vb: GetPilotsSODA
 Private Shared Sub GetPilotsSODA()
             Console.WriteLine("Retrieving Pilot objects: SODA")
             Dim oc As IObjectContainer = _&#160;

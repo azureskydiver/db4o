@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="438" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">CollectionExample.vb: SetTeam
+        <pre class="prettyprint lang-vb" xml:space="preserve">CollectionExample.vb: SetTeam
 Public Shared Sub SetTeam()
             File.Delete(Db4oFileName)
             Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)

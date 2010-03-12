@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="578" MadCap:lastWidth="760">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">PessimisticThread.vb: run
+        <pre class="prettyprint lang-vb" xml:space="preserve">PessimisticThread.vb: run
 Public Sub Run()
             Try
                 Dim result As IList(Of Pilot) = _container.Query(Of Pilot)()

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="418" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: PilotQueryComparer
+        <pre class="prettyprint lang-vb" xml:space="preserve">SortingExample.vb: PilotQueryComparer
 Private Class PilotQueryComparer
             Implements IQueryComparator
 

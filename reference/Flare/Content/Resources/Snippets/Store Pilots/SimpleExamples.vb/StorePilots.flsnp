@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="750">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: StorePilots
+        <pre class="prettyprint lang-vb" xml:space="preserve">SimpleExamples.vb: StorePilots
 Private Shared Sub StorePilots()
             File.Delete(Db4oFileName)
             Dim container As IObjectContainer = Database()

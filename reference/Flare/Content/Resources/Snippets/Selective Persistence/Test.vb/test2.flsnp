@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="458" MadCap:lastWidth="970">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Test2.vb
+        <pre class="prettyprint lang-vb" xml:space="preserve">Test2.vb
 Class Test2
 	Private test1 As Test1
 	Private name As String

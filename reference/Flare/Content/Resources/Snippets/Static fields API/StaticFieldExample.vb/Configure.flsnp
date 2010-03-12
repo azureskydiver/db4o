@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="178" MadCap:lastWidth="640">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: Configure
+        <pre class="prettyprint lang-vb" xml:space="preserve">StaticFieldExample.vb: Configure
 Private Shared Sub Configure()
             System.Console.WriteLine(_ 
 "Saving static fields can be turned on for individual classes.")

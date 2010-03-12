@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="618" MadCap:lastWidth="820">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">FullLRUCachingStorage.vb
+        <pre class="prettyprint lang-vb" xml:space="preserve">FullLRUCachingStorage.vb
 ' Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com 
 
 

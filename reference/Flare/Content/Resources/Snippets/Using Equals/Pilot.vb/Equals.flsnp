@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="118" MadCap:lastWidth="740">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Pilot.vb: Equals
+        <pre class="prettyprint lang-vb" xml:space="preserve">Pilot.vb: Equals
 Public Overloads Overrides Function Equals(ByVal obj As Object) As Boolean
             Dim pilot As Pilot = DirectCast(obj, Pilot)
             Return pilot.Name.Equals(_name) AndAlso pilot.Points = _points

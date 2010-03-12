@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="778" MadCap:lastWidth="690">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Pilot.vb
+        <pre class="prettyprint lang-vb" xml:space="preserve">Pilot.vb
 ' Copyright (C) 2004 - 2007 Versant Inc. http://www.db4o.com 
 
 Namespace Db4objects.Db4odoc.Sorting

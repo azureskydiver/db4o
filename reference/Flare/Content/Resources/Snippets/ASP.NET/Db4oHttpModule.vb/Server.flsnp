@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="258" MadCap:lastWidth="730">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">Db4oHttpModule.vb: Server
+        <pre class="prettyprint lang-vb" xml:space="preserve">Db4oHttpModule.vb: Server
 Private Shared ReadOnly Property Server() As IObjectServer
             Get
                 Dim context As HttpContext = HttpContext.Current

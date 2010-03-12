@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="138" MadCap:lastWidth="800">
     <head>
     </head>
     <body>
-        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: AddDeleteConfiguration
+        <pre class="prettyprint lang-vb" xml:space="preserve">StaticFieldExample.vb: AddDeleteConfiguration
 Private Shared Sub AddDeleteConfiguration()
             If _configuration IsNot Nothing Then
                 _configuration.ObjectClass(GetType(Pilot)).CascadeOnDelete(True)
