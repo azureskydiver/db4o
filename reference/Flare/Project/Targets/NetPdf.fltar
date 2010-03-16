@@ -1,6 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CatapultTarget Version="1" Comment="test pdf target" Type="PDF" Destinations="" GlossaryTermConversion="marked" conditions="" GetLatestBeforeCompile="true" ConditionTagExpression="include[Primary..NET or Primary.c# or Primary.Pdf or Primary.VB.NET] " PatchHeadingLevels="true" TargetLanguage="en" MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css" OutputFolder="e:/db4o-dist/flare" OutputFile="db4o-reference-net.pdf">
-  <DocumentProperties Subject="db4o" Title="Reference"/>
-  <PDF ShowUsedBookmarks="false"/>
-    
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<CatapultTarget
+  Version="1"
+  Comment="test pdf target"
+  Type="PDF"
+  Destinations=""
+  GlossaryTermConversion="first"
+  conditions=""
+  GetLatestBeforeCompile="true"
+  ConditionTagExpression="include[Primary..NET or Primary.c# or Primary.Pdf or Primary.VB.NET] "
+  PatchHeadingLevels="true"
+  TargetLanguage="en"
+  MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css"
+  OutputFolder="e:/db4o-dist/flare"
+  OutputFile="db4o-reference-net.pdf">
+  <DocumentProperties
+    Subject="db4o"
+    Title="Reference" />
+  <PDF
+    ShowUsedBookmarks="false" />
+  <Glossaries>
+    <Glossary
+      Link="/Project/Glossaries/PrintGlossary.flglo" />
+  </Glossaries>
 </CatapultTarget>
