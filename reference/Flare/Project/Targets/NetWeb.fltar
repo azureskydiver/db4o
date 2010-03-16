@@ -1,2 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CatapultTarget Version="1" Comment="New Target" Type="WebHelp" Destinations="" GlossaryTermConversion="marked" ConditionTagExpression="include[Primary..NET or Primary.c# or Primary.Online or Primary.VB.NET] " MasterPageLayout="/Content/Resources/PageLayouts/Default.flpgl" MasterStylesheet="/Content/Resources/Stylesheets/prettify.css" MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp" UseCustomTopicFileExtension="false" Skin="/Project/Skins/RedVersant.flskn" OutputFolder="e:/db4o-dist/flare"/>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<CatapultTarget
+  Version="1"
+  Comment="New Target"
+  Type="WebHelp"
+  Destinations=""
+  GlossaryTermConversion="first"
+  ConditionTagExpression="include[Primary..NET or Primary.c# or Primary.Online or Primary.VB.NET] "
+  MasterPageLayout="/Content/Resources/PageLayouts/Default.flpgl"
+  MasterStylesheet="/Content/Resources/Stylesheets/prettify.css"
+  MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
+  UseCustomTopicFileExtension="false"
+  OutputFolder="e:/db4o-dist/flare"
+  Skin="/Project/Skins/RedVersant.flskn">
+  <Glossaries>
+    <Glossary
+      Link="/Project/Glossaries/OnlineGlossary.flglo" />
+  </Glossaries>
+</CatapultTarget>

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CatapultGlossary>
+  <GlossaryEntry>
+    <Terms>
+      <Term>NQ</Term>
+    </Terms>
+    <Definition
+      Link="">Native Query</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>OODBMS</Term>
+      <Term>ODBMS</Term>
+    </Terms>
+    <Definition
+      Link="">Object Oriented Database Management System</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>dRS</Term>
+    </Terms>
+    <Definition
+      Link="">db4o Replication System</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>OME</Term>
+      <Term>Object Manager</Term>
+    </Terms>
+    <Definition
+      Link="">Object Manager, a tool for browsing
+and managing db4o databases</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>OSGi</Term>
+      <Term>OSGI</Term>
+    </Terms>
+    <Definition
+      Link="">OSGi framework, a module system and service platform</Definition>
+  </GlossaryEntry>
+</CatapultGlossary>
