@@ -1908,6 +1908,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	    return stringIO.read(i_nameBytes);
     }
     
+    @Override
     public boolean writeObjectBegin() {
         if (!stateOK()) {
             return false;

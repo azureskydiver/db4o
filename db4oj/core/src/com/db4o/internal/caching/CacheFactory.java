@@ -26,5 +26,10 @@ public class CacheFactory {
 	public static <V> PurgeableCache4<Integer, V> newLRUIntCache(int size) {
 		return new LRUIntCache<V>(size);
 	}
+	
+	public static <V> PurgeableCache4<Long, V> newLRULongCache(int size) {
+		return new LRULongCache<V>(size);
+	}
+
 
 }

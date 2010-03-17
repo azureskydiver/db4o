@@ -55,7 +55,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     protected Object            _lock;
 
     // currently used to resolve self-linking concurrency problems
-    // in cylic links, stores only YapClass objects
+    // in cylic links, stores only ClassMetadata objects
     private List4           _pendingClassUpdates;
 
     // a value greater than 0 indicates class implementing the
@@ -1970,7 +1970,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public abstract void shutdown();
 
-    public abstract void writeDirty();
+    public abstract void writeDirtyClassMetadata();
 
     public abstract void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer);
 

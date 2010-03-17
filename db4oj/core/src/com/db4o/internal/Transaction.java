@@ -17,6 +17,8 @@ import com.db4o.reflect.*;
  */
 public abstract class Transaction {
 	
+	private Context _context;
+	
     // contains DeleteInfo nodes
     Tree _delete;
 
@@ -289,15 +291,18 @@ public abstract class Transaction {
     }
     
     public Context context(){
-        return new Context(){
-            public ObjectContainer objectContainer() {
-                return Transaction.this.objectContainer();
-            }
-
-            public Transaction transaction() {
-                return Transaction.this;
-            }
-        };
+    	if(_context == null){
+	    	_context = new Context(){
+	            public ObjectContainer objectContainer() {
+	                return Transaction.this.objectContainer();
+	            }
+	
+	            public Transaction transaction() {
+	                return Transaction.this;
+	            }
+	        };
+    	}
+        return _context;
     }
 
 	protected void traverseDelete(Visitor4 deleteVisitor) {

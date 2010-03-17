@@ -163,29 +163,30 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 		return this;
 	}
 	
-	public static final Tree find(Tree a_in, Tree a_tree){
-		if(a_in == null){
+	public static final Tree find(Tree inTree, Tree template){
+		if(inTree == null){
 			return null;
 		}
-		return a_in.find(a_tree);
+		return inTree.find(template);
 	}
 	
-	public final Tree find(final Tree a_tree){
-		int cmp = compare(a_tree);
-		if (cmp < 0){
-			if(_subsequent != null){
-				return _subsequent.find(a_tree);
+	
+	public final Tree find(final Tree template){
+		Tree current = this;
+		while(true){
+			int comparisonResult = current.compare(template);
+			if(comparisonResult == 0){
+				return current;
 			}
-		}else{
-			if (cmp > 0){
-				if(_preceding != null){
-					return _preceding.find(a_tree);
-				}
-			}else{
-				return this;
+			if(comparisonResult < 0){
+				current = current._subsequent;
+			} else {
+				current = current._preceding;
+			}
+			if(current == null){
+				return null;
 			}
 		}
-		return null;
 	}
 	
 	public static final Tree findGreaterOrEqual(Tree a_in, Tree a_finder){
@@ -366,27 +367,27 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 		return this;
 	}
     
-    public void setSizeOwn(){
+    public final void setSizeOwn(){
         _size = ownSize();
     }
     
-    public void setSizeOwnPrecedingSubsequent(){
+    public final void setSizeOwnPrecedingSubsequent(){
         _size = ownSize() + _preceding._size + _subsequent._size;
     }
     
-    public void setSizeOwnPreceding(){
+    public final void setSizeOwnPreceding(){
         _size = ownSize() + _preceding._size;
     }
     
-    public void setSizeOwnSubsequent(){
+    public final void setSizeOwnSubsequent(){
         _size = ownSize() + _subsequent._size;
     }
     
-    public void setSizeOwnPlus(Tree tree){
+    public final void setSizeOwnPlus(Tree tree){
         _size = ownSize() + tree._size;
     }
     
-    public void setSizeOwnPlus(Tree tree1, Tree tree2){
+    public final void setSizeOwnPlus(Tree tree1, Tree tree2){
         _size = ownSize() + tree1._size + tree2._size;
     }
 	
@@ -476,24 +477,19 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 	    a_visitor.visit(this);
 	}	
 	
-// Keep the debug methods to debug the depth	
-	
-//	final void debugDepth(){
-//	    System.out.println("Tree depth: " + debugDepth(0));
-//	}
-//	
-//	final int debugDepth(int d){
-//	    int max = d + 1;
-//	    if (i_preceding != null){
-//	        max = i_preceding.debugDepth(d + 1);
+	// Keep the debug method to debug the depth
+//	public final void debugLeafDepth(int currentDepth){
+//		currentDepth++;
+//		if(_preceding == null && _subsequent == null){
+//			System.out.println("" + currentDepth + " tree leaf depth.");
+//			return;
+//		}
+//	    if (_preceding != null){
+//	    	_preceding.debugLeafDepth(currentDepth);
 //	    }
-//	    if(i_subsequent != null){
-//	        int ms = i_subsequent.debugDepth(d + 1);
-//	        if(ms > max){
-//	            max = ms;
-//	        }
+//	    if(_subsequent != null){
+//	    	_subsequent.debugLeafDepth(currentDepth);
 //	    }
-//	    return max;
 //	}
 
 	protected Tree shallowCloneInternal(Tree tree) {

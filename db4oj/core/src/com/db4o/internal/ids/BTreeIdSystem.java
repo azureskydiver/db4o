@@ -55,7 +55,11 @@ public class BTreeIdSystem implements IdSystem {
 	private void initializeExisting(int persistentArrayId) {
 		_persistentState = new PersistentIntegerArray(_transactionalIdSystem, persistentArrayId);
 		_persistentState.read(transaction());
-		_bTree = new BTree(transaction(), _transactionalIdSystem, bTreeId(), new IdSlotMappingHandler());
+		_bTree = new BTree(transaction(), bTreeConfiguration(), bTreeId(), new IdSlotMappingHandler());
+	}
+
+	private BTreeConfiguration bTreeConfiguration() {
+		return new BTreeConfiguration(_transactionalIdSystem, false);
 	}
 
 	private int idGeneratorValue() {
@@ -78,13 +82,12 @@ public class BTreeIdSystem implements IdSystem {
 	
 
 	private void initializeNew() {
-		_bTree = new BTree(transaction(), _transactionalIdSystem, new IdSlotMappingHandler());
+		_bTree = new BTree(transaction(), bTreeConfiguration(), new IdSlotMappingHandler());
 		int idGeneratorValue = _container.handlers().lowestValidId() - 1;
 		_persistentState = new PersistentIntegerArray(_transactionalIdSystem, new int[]{_bTree.getID(), idGeneratorValue });
 		_persistentState.write(transaction());
 		systemData().idSystemID(_persistentState.getID());
 	}
-
 	
 	private int findFreeId(int start) {
 		throw new NotImplementedException();
@@ -98,9 +101,6 @@ public class BTreeIdSystem implements IdSystem {
 		BTreeRangeSingle range = (BTreeRangeSingle) _bTree.search(transaction(), new IdSlotMapping(id, 0, 0));
 		if(range.isEmpty()){
 			throw new InvalidIDException(id);
-		}
-		if(range.size() > 1){
-			throw new IllegalStateException();
 		}
 		IdSlotMapping mapping = (IdSlotMapping) range.first().key();
 		return mapping.slot();
@@ -181,9 +181,6 @@ public class BTreeIdSystem implements IdSystem {
 		public PreparedComparison prepareComparison(Context context, final IdSlotMapping sourceMapping) {
 			return new PreparedComparison<IdSlotMapping>() {
 				public int compareTo(IdSlotMapping targetMapping) {
-					if(targetMapping == null){
-						return 1;
-					}
 					return sourceMapping._id == targetMapping._id ? 
 							0 : (sourceMapping._id < targetMapping._id ? - 1 : 1); 
 				}

@@ -801,7 +801,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void writeDirty() {
+	public final void writeDirtyClassMetadata() {
 		// do nothing
 	}
 

@@ -6,7 +6,7 @@ package com.db4o.internal.btree;
 /**
  * @exclude
  */
-public class Searcher {
+public final class Searcher {
     
     private int _lower;
     

@@ -6,13 +6,17 @@ import com.db4o.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.caching.*;
 import com.db4o.internal.ids.*;
+import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
 public class BTree extends LocalPersistentBase implements TransactionParticipant, BTreeStructureListener {
+	
+	private final BTreeConfiguration _config;
     
     private static final byte BTREE_VERSION = (byte)1;
     
@@ -47,12 +51,19 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     
     private BTreeStructureListener _structureListener;
     
-    public BTree(Transaction trans, TransactionalIdSystem idSystem, int id, Indexable4 keyHandler, final int treeNodeSize) {
-    	super(idSystem);
+    private final Cache4<Integer, BTreeNodeCacheEntry> _nodeCache;
+    
+    private TreeIntObject _pendingNodesToReadMode;
+    
+    public BTree(Transaction trans, BTreeConfiguration config, int id, Indexable4 keyHandler, final int treeNodeSize) {
+    	super(config._idSystem);
+    	_config = config;
     	if (null == keyHandler) {
     		throw new ArgumentNullException();
     	}
     	_nodeSize = treeNodeSize;
+    	
+    	_nodeCache = CacheFactory.newLRUIntCache(20);
     	
     	_halfNodeSize = _nodeSize / 2;
     	_nodeSize = _halfNodeSize * 2;
@@ -69,27 +80,23 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	}
     }
     
-    public BTree(Transaction trans, int id, Indexable4 keyHandler, final int treeNodeSize) {
-    	this(trans, null, id, keyHandler, treeNodeSize);
+    public BTree(Transaction trans, BTreeConfiguration config, Indexable4 keyHandler) {
+    	this(trans, config, 0, keyHandler);
     }
     
-    public BTree(Transaction trans, Indexable4 keyHandler) {
-    	this(trans, 0, keyHandler);
+    public BTree(Transaction trans, BTreeConfiguration config, int id, Indexable4 keyHandler){
+		this(trans, config, id, keyHandler, config(trans).bTreeNodeSize());
     }
     
-    public BTree(Transaction trans, TransactionalIdSystem idSystem, Indexable4 keyHandler) {
-    	this(trans, idSystem, 0, keyHandler);
-    }
-    
-    public BTree(Transaction trans, int id, Indexable4 keyHandler){
-		this(trans, id, keyHandler, config(trans).bTreeNodeSize());
-    }
-    
-    public BTree(Transaction trans, TransactionalIdSystem idSystem, int id, Indexable4 keyHandler){
-		this(trans, idSystem, id, keyHandler, config(trans).bTreeNodeSize());
-    }	
+	public BTree(Transaction trans, int id, Indexable4 keyHandler) {
+		this(trans, BTreeConfiguration.DEFAULT, id, keyHandler);
+	}
+	
+	public BTree(Transaction trans, int id, Indexable4 keyHandler, int nodeSize) {
+		this(trans, BTreeConfiguration.DEFAULT, id, keyHandler, nodeSize);
+	}
 
-    
+
 	public BTreeNode root() {
 		return _root;
 	}
@@ -112,9 +119,9 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
             _root.write(trans.systemTransaction());
             addNode(_root);
         }
+        checkToReadMode();
     }
 
-    // FIXME: Change the signature to return true, if object could be removed.
 	public void remove(Transaction trans, Object key){
     	keyCantBeNull(key);
     	
@@ -122,12 +129,14 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	
         final Iterator4 pointers = search(trans, preparedComparison).pointers();
         if (!pointers.moveNext()) {
+        	checkToReadMode();
         	return;
         }
         BTreePointer first = (BTreePointer)pointers.current();
         ensureDirty(trans);
         BTreeNode node = first.node();
         node.remove(trans, preparedComparison, key, first.index());
+        checkToReadMode();
     }
     
     public BTreeRange search(Transaction trans, Object key) {
@@ -145,7 +154,9 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         
         BTreeNodeSearchResult start = searchLeaf(trans, preparedComparison, SearchTarget.LOWEST);
         BTreeNodeSearchResult end = searchLeaf(trans, preparedComparison, SearchTarget.HIGHEST);
-        return start.createIncludingRange(end);
+        BTreeRange range = start.createIncludingRange(end);
+        checkToReadMode();
+		return range;
     }
     
     private void keyCantBeNull(Object key) {
@@ -164,13 +175,16 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 	
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, PreparedComparison preparedComparison, SearchTarget target) {
         ensureActive(trans);
-        return _root.searchLeaf(trans, preparedComparison, target);
+        BTreeNodeSearchResult result = _root.searchLeaf(trans, preparedComparison, target);
+        checkToReadMode();
+		return result;
     }
     
     public void commit(final Transaction transaction){
     	updateSize(transaction);
     	commitNodes(transaction);
     	finishTransaction(transaction);
+    	checkToReadMode();
     }
 
 	private void updateSize(final Transaction transaction) {
@@ -183,7 +197,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 	    return trans.get(_sizeDeltaInTransaction);
     }
     
-    public void commitNodes(final Transaction trans){
+    private void commitNodes(final Transaction trans){
         processEachNode(new Procedure4<BTreeNode>() { public void apply(BTreeNode node) {
 			node.commit(trans);
 		}});
@@ -202,6 +216,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     public void rollback(final Transaction trans){
         rollbackNodes(trans);
         finishTransaction(trans);
+        checkToReadMode();
     }
 
 	private void finishTransaction(final Transaction trans) {
@@ -239,18 +254,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         Tree temp = _nodes;
         _nodes = null;
         
-        // FIXME: Caching doesn't work as expected. Disabled.
-        //        Reimplement with LRU cache for all nodes,
-        //        independant of _root.
-        
-//        if(_cacheHeight > 0){
-//            _root.markAsCached(_cacheHeight);
-//        }else{
-        
-            _root.holdChildrenAsIDs();
-            addNode(_root);
-            
-//        }
+        addNode(_root);
         
         temp.traverse(new Visitor4() {
             public void visit(Object obj) {
@@ -258,6 +262,10 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
                 node.purge();
             }
         });
+        
+        for(BTreeNodeCacheEntry entry : _nodeCache){
+        	entry._node.holdChildrenAsIDs();
+        }
     }
     
     private void processAllNodes(){
@@ -284,7 +292,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     }
     
     protected boolean canEnlistWithTransaction(){
-    	return true;
+    	return _config._canEnlistWithTransaction;
     }
     
     public byte getIdentifier() {
@@ -305,7 +313,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         TreeIntObject tio = (TreeIntObject)addtio.addedOrExisting();
         BTreeNode node = (BTreeNode)tio.getObject();
         if(node == null){
-            node = new BTreeNode(id, this);
+        	node = cacheEntry(new BTreeNode(id, BTree.this))._node;
             tio.setObject(node);
             addToProcessing(node);
         }
@@ -366,6 +374,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
             return;
         }
         _root.traverseKeys(trans, visitor);
+        checkToReadMode();
     }
     
     public void sizeChanged(Transaction transaction, BTreeNode node, int changeBy){
@@ -384,7 +393,9 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 		if (null == _root) {
 			return null;
 		}
-		return _root.firstPointer(trans);
+		BTreePointer pointer = _root.firstPointer(trans);
+		checkToReadMode();
+		return pointer;
 	}
 	
 	public BTreePointer lastPointer(Transaction trans) {
@@ -392,7 +403,9 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 		if (null == _root) {
 			return null;
 		}
-		return _root.lastPointer(trans);
+		BTreePointer pointer = _root.lastPointer(trans);
+		checkToReadMode();
+		return pointer;
 	}
 	
 	public BTree debugLoadFully(Transaction trans) {
@@ -437,9 +450,10 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 					});
 			}
 		});
+		checkToReadMode();
 	}
 
-	public int compareKeys(Context context, Object key1, Object key2) {
+	int compareKeys(Context context, Object key1, Object key2) {
 		PreparedComparison preparedComparison = _keyHandler.prepareComparison(context, key1);
 		return preparedComparison.compareTo(key2);
 	}
@@ -537,6 +551,43 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 			node.remove(transaction, index);
 			currentPointer = currentPointer.next();
 		}
+	}
+	
+	public Cache4<Integer, BTreeNodeCacheEntry> nodeCache(){
+		return _nodeCache;
+	}
+	
+	BTreeNodeCacheEntry cacheEntry(final BTreeNode node){
+    	return _nodeCache.produce(node.getID(), new Function4<Integer, BTreeNodeCacheEntry>() {
+			public BTreeNodeCacheEntry apply(Integer id) {
+				return new BTreeNodeCacheEntry(node);
+			}
+		}, new Procedure4<BTreeNodeCacheEntry>() {
+			public void apply(BTreeNodeCacheEntry entry) {
+				toReadMode(entry._node);
+			}
+		});
+	}
+	
+	@Override
+	public SlotChangeFactory slotChangeFactory() {
+		return _config._slotChangeFactory;
+	}
+	
+	public void toReadMode(BTreeNode node){
+		_pendingNodesToReadMode = Tree.add(_pendingNodesToReadMode, new TreeIntObject(node.getID(), node));
+	}
+	
+	public void checkToReadMode(){
+		if(_pendingNodesToReadMode == null){
+			return;
+		}
+		Tree.traverse(_pendingNodesToReadMode, new Visitor4<TreeIntObject>() {
+			public void visit(TreeIntObject treeIntObject) {
+				((BTreeNode)treeIntObject._object).toReadMode();
+			}
+		});
+		_pendingNodesToReadMode = null;
 	}
     
 }

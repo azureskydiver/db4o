@@ -26,7 +26,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
 	protected FileHeader       _fileHeader;
     
-    private final Collection4         _dirty = new Collection4();
+    private final Collection4         _dirtyClassMetadata = new Collection4();
     
     private FreespaceManager _freespaceManager;
     
@@ -614,7 +614,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public final void setDirtyInSystemTransaction(PersistentBase a_object) {
         a_object.setStateDirty();
-        a_object.cacheDirty(_dirty);
+        a_object.cacheDirty(_dirtyClassMetadata);
     }
 
     public final boolean setSemaphore(String name, int timeout) {
@@ -698,18 +698,18 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public abstract void writeBytes(ByteArrayBuffer buffer, int blockedAddress, int addressOffset);
 
-    public final void writeDirty() {        
+    public final void writeDirtyClassMetadata() {        
         writeCachedDirty();
     }
 
 	private void writeCachedDirty() {
-		Iterator4 i = _dirty.iterator();
+		Iterator4 i = _dirtyClassMetadata.iterator();
         while (i.moveNext()) {
         	PersistentBase dirty = (PersistentBase) i.current();
             dirty.write(systemTransaction());
             dirty.notCachedDirty();
         }
-        _dirty.clear();
+        _dirtyClassMetadata.clear();
 	}
 	
     public final void writeEncrypt(ByteArrayBuffer buffer, int address, int addressOffset) {

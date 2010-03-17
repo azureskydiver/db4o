@@ -191,7 +191,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	@Override
 	public void shutdown() {
 		processPendingClassUpdates();
-		writeDirty();
+		writeDirtyClassMetadata();
 		transaction().commit();
 	}
 	

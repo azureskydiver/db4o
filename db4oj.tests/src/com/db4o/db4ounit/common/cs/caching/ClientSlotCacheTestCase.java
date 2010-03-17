@@ -108,10 +108,10 @@ public class ClientSlotCacheTestCase extends AbstractDb4oTestCase implements Opt
 				for (int i = 0; i < SLOT_CACHE_SIZE + 1; i++) {
 					cache.add(trans(), i, new ByteArrayBuffer(i));
 				}
-				Assert.isNull(cache.get(trans(), 0));
 				for (int i = 1; i < SLOT_CACHE_SIZE + 1; i++) {
 					Assert.areEqual(i, cache.get(trans(), i).length());
 				}
+				Assert.isNull(cache.get(trans(), 0));
 			}
 		});
 		

@@ -9,11 +9,11 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-class LRUIntCache<V> implements PurgeableCache4<Integer, V> {
+class LRULongCache<V> implements PurgeableCache4<Long, V> {
 	
 	private static class Entry<V> {
 		
-		final int _key;
+		final long _key;
 		
 		final V _value;
 		
@@ -21,7 +21,7 @@ class LRUIntCache<V> implements PurgeableCache4<Integer, V> {
 		
 		Entry _next;
 		
-		public Entry(int key, V value){
+		public Entry(long key, V value){
 			_key = key;
 			_value = value;
 		}
@@ -43,27 +43,27 @@ class LRUIntCache<V> implements PurgeableCache4<Integer, V> {
 	private Entry _last;
 	
 
-	LRUIntCache(int size) {
+	LRULongCache(int size) {
 		_maxSize = size;
 		_slots = new Hashtable4(size);
 	}
 
-	public V produce(Integer key, Function4<Integer, V> producer, Procedure4<V> finalizer) {
-		int intKey = key;
+	public V produce(Long key, Function4<Long, V> producer, Procedure4<V> finalizer) {
+		long longKey = key;
 		if(_last == null){
 			V lastValue = producer.apply(key);
 			if(lastValue == null){
 				return null;
 			}
 			_size = 1;
-			Entry lastEntry = new Entry(intKey, lastValue);
-			_slots.put(intKey, lastEntry);
+			Entry lastEntry = new Entry(longKey, lastValue);
+			_slots.put(longKey, lastEntry);
 			_first = lastEntry;
 			_last = lastEntry;
 			return lastValue;
 		}
 		
-		final Entry<V> entry = (Entry)_slots.get(intKey);
+		final Entry<V> entry = (Entry)_slots.get(longKey);
 		
 		if (entry == null) {
 			if (_size >= _maxSize) {
@@ -73,15 +73,15 @@ class LRUIntCache<V> implements PurgeableCache4<Integer, V> {
 				if (null != finalizer) {
 					finalizer.apply((V) oldEntry._value);
 				}
-				_size--;
+				_size --;
 			}
 			V newValue = producer.apply(key);
 			if (newValue == null) {
 				return null;
 			}
 			_size++;
-			Entry newEntry = new Entry(intKey, newValue);
-			_slots.put(intKey, newEntry);
+			Entry newEntry = new Entry(longKey, newValue);
+			_slots.put(longKey, newEntry);
 			_first._previous = newEntry;
 			newEntry._next = _first;
 			_first = newEntry;
@@ -114,9 +114,9 @@ class LRUIntCache<V> implements PurgeableCache4<Integer, V> {
 		});
 	}
 
-	public V purge(Integer key) {
-		int intKey = key;
-		Entry<V> entry = (Entry<V>) _slots.remove(intKey);
+	public V purge(Long key) {
+		long longKey = key;
+		Entry<V> entry = (Entry<V>) _slots.remove(longKey);
 		if(entry == null){
 			return null;
 		}
