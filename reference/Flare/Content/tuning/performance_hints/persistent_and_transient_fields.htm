@@ -1,20 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Persistent and transient fields	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-        <h1>Persistent and transient fields</h1>
-<p>Do not create fields that you don't need for persistence</p>
-<a name="Advantage"></a><h2>Advantage</h2>
-<p>Storing only needed information will help to keep your database footprint as small as possible.</p>
-<a name="Effect"></a><h2>Effect</h2>
-<p>If your persistent class contains fields that do not need to be stored you should mark them as transient to prevent them from being stored:</p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:  <code>public class NotStorable {   private transient int length; . . .  }</code></p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET">
-<p>.NET: <code>public class NotStorable {   [Transient] private int length; . . .  }</code></p>
-</p><p MadCap:conditions="Primary:net" />
-<p>You can use <a href="../../implementation_strategies/callbacks.htm"  >Callbacks</a> or <a href="../../implementation_strategies/translators.htm"  >Translators</a> to set transient fields on retrieval.</p>
-<p>Also avoid storing classes having only transient information - their indexes' maintenance will produce unnecessary performance overhead.</p>
-<a name="Alternate strategies"></a><h2>Alternate strategies</h2>
-<p>In some cases you may want to persist class meta-information without the actual object data. The example can be database singleton for <a href="../../client-server/remote_code_execution.htm"  >remote code execution</a></p>    
-  </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="624" MadCap:lastWidth="463">
+    <head><title>Persistent and transient fields	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            <MadCap:keyword term="Transient" />Persistent and transient fields</h1>
+        <p>Do not create fields that you don't need for persistence</p><a name="Advantage"></a>
+        <h2>Advantage</h2>
+        <p>Storing only needed information will help to keep your database footprint as small as possible.</p><a name="Effect"></a>
+        <h2>Effect</h2>
+        <p>If your persistent class contains fields that do not need to be stored you should mark them as transient to prevent them from being stored:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:  <code>public class NotStorable {   private transient int length; . . .  }</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: <code>public class NotStorable {   [Transient] private int length; . . .  }</code></p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>You can use <a href="../../implementation_strategies/callbacks.htm">Callbacks</a> or <a href="../../implementation_strategies/translators.htm">Translators</a> to set transient fields on retrieval.</p>
+        <p>Also avoid storing classes having only transient information - their indexes' maintenance will produce unnecessary performance overhead.</p><a name="Alternate strategies"></a>
+        <h2>Alternate strategies</h2>
+        <p>In some cases you may want to persist class meta-information without the actual object data. The example can be database singleton for <a href="../../client-server/remote_code_execution.htm">remote code execution</a></p>
+    </body>
+</html>

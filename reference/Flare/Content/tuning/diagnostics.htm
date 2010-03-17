@@ -1,50 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Diagnostics	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Diagnostics</h1>
-<p>Db4o engine provides user with a special mechanism showing runtime diagnostics information. This functionality can become your guide to excellent performance and low memory consumption. 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="857" MadCap:lastWidth="463">
+    <head><title>Diagnostics	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            <MadCap:keyword term="Debug" />Diagnostics</h1>
+        <p>Db4o engine provides user with a special mechanism showing runtime diagnostics information. This functionality can become your guide to excellent performance and low memory consumption. 
 Diagnostics can be switched on in the configuration before opening the database file:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java: </p><p><code>configuration.diagnostic().addListener(new DiagnosticListener())</code> </p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-<p>.NET: </p><p><code>configuration.Diagnostic().AddListener(new DiagnosticListener())</code></p>
-</p><p MadCap:conditions="Primary:net" />
-<p>where DiagnosticListener is a callback interface tracking diagnostic messages from different parts of the system:</p>
-<p><code>public interface DiagnosticListener { 
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>configuration.diagnostic().addListener(new DiagnosticListener())</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: </p>
+            <p><code>configuration.Diagnostic().AddListener(new DiagnosticListener())</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>where DiagnosticListener is a callback interface tracking diagnostic messages from different parts of the system:</p>
+        <p><code>public interface DiagnosticListener { 
         public void onDiagnostic(Diagnostic d); 
-}</code> 
-</p>
-
-<p>Db4o provides 2 different listeners:</p>
-<ul>
-<li>
-DiagnosticToConsole (Java, prints diagnostic messages to the console);</li>
-<li>DiagnosticToTrace (.NET, prints diagnostic messages to the debug output window).</li>
-</ul>
-<p>Every diagnostic message is represented by it's own type, all possible types can be found in the com.db4o.diagnostic package/namespace.</p>
-<p>At the present moment the following diagnostic classes are implemented:</p>
-<ul>
-<li>
-ClassHasNoFields </li>
-<li>LoadedFromClassIndex </li>
-<li>NativeQueryNotOptimized </li>
-<li>UpdateDepthGreaterOne</li>
-<li>DescendIntoTranslator</li>
-</ul> More Reading:<ul>
-<li><p><a href="diagnostics/classhasnofields.htm"  >ClassHasNoFields</a></p></li>
-<li><p><a href="diagnostics/loadedfromclassindex.htm"  >LoadedFromClassIndex</a></p></li>
-<li><p><a href="diagnostics/nativequerynotoptimized.htm"  >NativeQueryNotOptimized</a></p></li>
-<li><p><a href="diagnostics/updatedepthgreaterone.htm"  >UpdateDepthGreaterOne</a></p></li>
-<li><p><a href="diagnostics/diagnostic_messages_filter.htm"  >Diagnostic Messages Filter</a></p></li>
-<li><p><a href="diagnostics/descendintotranslator.htm"  >DescendIntoTranslator</a></p></li>
-</ul> 
-
- 
-     
-    
-  </body></html>
+}</code>
+        </p>
+        <p>Db4o provides 2 different listeners:</p>
+        <ul>
+            <li>DiagnosticToConsole (Java, prints diagnostic messages to the console);</li>
+            <li>DiagnosticToTrace (.NET, prints diagnostic messages to the debug output window).</li>
+        </ul>
+        <p>Every diagnostic message is represented by it's own type, all possible types can be found in the com.db4o.diagnostic package/namespace.</p>
+        <p>At the present moment the following diagnostic classes are implemented:</p>
+        <ul>
+            <li>ClassHasNoFields </li>
+            <li>LoadedFromClassIndex </li>
+            <li>NativeQueryNotOptimized </li>
+            <li>UpdateDepthGreaterOne</li>
+            <li>DescendIntoTranslator</li>
+        </ul> More Reading:<ul><li><p><a href="diagnostics/classhasnofields.htm">ClassHasNoFields</a></p></li><li><p><a href="diagnostics/loadedfromclassindex.htm">LoadedFromClassIndex</a></p></li><li><p><a href="diagnostics/nativequerynotoptimized.htm">NativeQueryNotOptimized</a></p></li><li><p><a href="diagnostics/updatedepthgreaterone.htm">UpdateDepthGreaterOne</a></p></li><li><p><a href="diagnostics/diagnostic_messages_filter.htm">Diagnostic Messages Filter</a></p></li><li><p><a href="diagnostics/descendintotranslator.htm">DescendIntoTranslator</a></p></li></ul></body>
+</html>

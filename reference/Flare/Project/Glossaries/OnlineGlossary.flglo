@@ -77,8 +77,7 @@
   <GlossaryEntry>
     <Terms>
       <Term>Client-Server</Term>
-      <Term>Server</Term>
-      <Term>Client</Term>
+      <Term>C/S</Term>
     </Terms>
     <Definition
       Link="/Content/client-server.htm"></Definition>
@@ -131,13 +130,6 @@
     </Terms>
     <Definition
       Link="/Content/implementation_strategies/enhancement_tools.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Exception</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/exceptions.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -217,13 +209,6 @@
     </Terms>
     <Definition
       Link="/Content/object_lifecycle/object_construction.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Query</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/querying.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -312,5 +297,13 @@
     </Terms>
     <Definition
       Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm"></Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>QBE</Term>
+      <Term>QbE</Term>
+    </Terms>
+    <Definition
+      Link="/Content/object_lifecycle/querying/query_by_example.htm"></Definition>
   </GlossaryEntry>
 </CatapultGlossary>

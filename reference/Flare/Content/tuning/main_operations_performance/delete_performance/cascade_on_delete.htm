@@ -1,67 +1,63 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Cascade On Delete	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Cascade On Delete</h1><p> </p><p>If you are using cascadeOnDelete option and explicit deletion
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1458" MadCap:lastWidth="558">
+    <head><title>Cascade On Delete	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            <MadCap:keyword term="Cascade Behavior:Cascade Delete" />Cascade On Delete</h1>
+        <p>
+        </p>
+        <p>If you are using cascadeOnDelete option and explicit deletion
 of one object causes cascaded delete on several others, you may expect slower
 execution:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/runDeleteDepthTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/configureDepthTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/initShallowObject.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/init.flsnp" />
-
-</p><p MadCap:conditions="Primary:java" />
-
-<p>Note that in the first part of the test each object
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/runDeleteDepthTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/configureDepthTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/initShallowObject.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Cascade On Delete/DeletePerformanceBenchmark.java/init.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p>Note that in the first part of the test each object
 deletion only includes a single object. Therefore, when we delete a 1000
 objects the amount of the objects in the database is 1000 less. In the second
 part each object deletion will trigger deletion of all field objects
 (cascadeOnDelete option), therefore the amount of objects deleted from the
 database can be anywhere between 1000 (only lowest level objects) and 3000(all
 top level objects with their field objects).</p>
-
-<p><i>The results from the test machine:</i></p>
-
-<p><i>Delete test with
-objects of different depth</i></p>
-
-<p><i>Deleting 1000 of
-10000 objects with 1 levels of embedded objects:</i></p>
-
-<p><i>Store 10000
-objects: 528ms</i></p>
-
-<p><i>Amount of
-objects left: 10000</i></p>
-
-<p><i>Deleted 1000
-objects in: 197 ms.</i></p>
-
-<p><i>Amount of
-objects left: 9000</i></p>
-
-<p><i>Deleting 1000 of
-10000 objects with 3 levels of embedded objects:</i></p>
-
-<p><i>Store 30000
-objects: 1693ms</i></p>
-
-<p><i>Amount of
-objects left: 39000</i></p>
-
-<p><i>Deleted 1000
-objects in: 340 ms.</i></p>
-
-<p><i>Amount of
-objects left: 36978</i></p>
-
-
-
- 
-     
-    
- </body></html>
+        <p><i>The results from the test machine:</i>
+        </p>
+        <p><i>Delete test with
+objects of different depth</i>
+        </p>
+        <p><i>Deleting 1000 of
+10000 objects with 1 levels of embedded objects:</i>
+        </p>
+        <p><i>Store 10000
+objects: 528ms</i>
+        </p>
+        <p><i>Amount of
+objects left: 10000</i>
+        </p>
+        <p><i>Deleted 1000
+objects in: 197 ms.</i>
+        </p>
+        <p><i>Amount of
+objects left: 9000</i>
+        </p>
+        <p><i>Deleting 1000 of
+10000 objects with 3 levels of embedded objects:</i>
+        </p>
+        <p><i>Store 30000
+objects: 1693ms</i>
+        </p>
+        <p><i>Amount of
+objects left: 39000</i>
+        </p>
+        <p><i>Deleted 1000
+objects in: 340 ms.</i>
+        </p>
+        <p><i>Amount of
+objects left: 36978</i>
+        </p>
+    </body>
+</html>

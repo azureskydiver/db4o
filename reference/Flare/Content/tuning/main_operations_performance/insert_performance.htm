@@ -1,48 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Insert Performance	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Insert Performance</h1><p>  The following chapters provide some performance testing
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1166" MadCap:lastWidth="463">
+    <head><title>Insert Performance	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            <MadCap:keyword term="Performance:Inserts" />Insert Performance</h1>
+        <p>  The following chapters provide some performance testing
 examples, revealing the most influential performance factors. Together with the
 examples there are some approximate time measurement values that were achieved on
 a Toshiba Sattelite Pro A120 notebook with 1Gb RAM 120GB ATA drive running on Vista. Please, note that these values are not guaranteed
 and can vary considerably depending on a hardware and software used.</p>
-
-<p>In most of the tests the following simple object was used:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Insert Performance/InsertPerformanceBenchmark.java/Item.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Insert Performance/InsertPerformanceBenchmark.cs/Item.flsnp" />
-</p><p MadCap:conditions="Primary:net" />
-
-<p>In the tests Item objects were created with 3 levels of
+        <p>In most of the tests the following simple object was used:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Insert Performance/InsertPerformanceBenchmark.java/Item.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../Resources/Snippets/Insert Performance/InsertPerformanceBenchmark.cs/Item.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>In the tests Item objects were created with 3 levels of
 embedded Item objects. The amount of objects was varied for different tests.</p>
-
-
-
-<p>Please, be cautious to compare results of different tests
+        <p>Please, be cautious to compare results of different tests
 presented as different configurations are used in each test. </p>
-
-<p> More Reading:<ul>
-<li><p><a href="insert_performance/hardware_resources.htm"  >Hardware Resources</a></p></li>
-<li><p><a href="insert_performance/local_and_remote_modes.htm"  >Local And Remote Modes</a></p></li>
-<li><p><a href="insert_performance/commit_frequency.htm"  >Commit Frequency</a></p></li>
-<li><p><a href="insert_performance/object_structure.htm"  >Object Structure</a></p></li>
-<li><p><a href="insert_performance/indexes.htm"  >Indexes</a></p></li>
-<li><p><a href="insert_performance/inherited_objects.htm"  >Inherited Objects</a></p></li>
-<li><p><a href="insert_performance/configuration_options.htm"  >Configuration Options</a></p></li>
-</ul> 
-</p>
-
- 
-     
-
+        <p> More Reading:<ul><li><p><a href="insert_performance/hardware_resources.htm">Hardware Resources</a></p></li><li><p><a href="insert_performance/local_and_remote_modes.htm">Local And Remote Modes</a></p></li><li><p><a href="insert_performance/commit_frequency.htm">Commit Frequency</a></p></li><li><p><a href="insert_performance/object_structure.htm">Object Structure</a></p></li><li><p><a href="insert_performance/indexes.htm">Indexes</a></p></li><li><p><a href="insert_performance/inherited_objects.htm">Inherited Objects</a></p></li><li><p><a href="insert_performance/configuration_options.htm">Configuration Options</a></p></li></ul></p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="performancecs.zip">c# </a>
@@ -50,6 +31,5 @@ presented as different configurations are used in each test. </p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="performancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-    
-</body></html>
+    </body>
+</html>
