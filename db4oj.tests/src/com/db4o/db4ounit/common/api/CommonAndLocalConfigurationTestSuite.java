@@ -208,9 +208,6 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			CacheConfigurationProvider cacheProvider = subject();
 			final CacheConfiguration cache = cacheProvider.cache();
 			
-			cache.slotCacheSize(30);
-			Assert.areEqual(30, legacyConfig.slotCacheSize());
-			
 			IdSystemConfigurationProvider idSystemConfigurationProvider = subject();
 			IdSystemConfiguration idSystemConfiguration = idSystemConfigurationProvider.idSystem();
 			Assert.areEqual(StandardIdSystemFactory.DEFAULT, legacyConfig.idSystemType());

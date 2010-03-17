@@ -21,7 +21,7 @@ import com.db4o.marshall.*;
  */
 // public final class BTreeNode extends CacheablePersistentBase{
 	public final class BTreeNode extends LocalPersistentBase{
-    
+		
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  
     private static final int SLOT_LEADING_LENGTH = Const4.LEADING_LENGTH  + COUNT_LEAF_AND_3_LINK_LENGTH;
@@ -46,8 +46,6 @@ import com.db4o.marshall.*;
     
     private int _nextID;
     
-    private boolean _cached;
-    
     private boolean _dead;
     
     /* Constructor for new nodes */
@@ -65,8 +63,8 @@ import com.db4o.marshall.*;
         _isLeaf = isLeaf;
         prepareArrays();
     }
-    
-    /* Constructor for existing nodes, requires valid ID */
+
+	/* Constructor for existing nodes, requires valid ID */
     public BTreeNode(int id, BTree btree){
         _btree = btree;
         setID(id);
@@ -252,23 +250,23 @@ import com.db4o.marshall.*;
         if (_children[index] instanceof BTreeNode){
             return (BTreeNode)_children[index];
         }
-        return _btree.produceNode(((Integer)_children[index]).intValue());
+        return produceChild(index, ((Integer)_children[index]).intValue());
     }
     
     BTreeNode child(ByteArrayBuffer reader, int index){
         if( childLoaded(index) ){
             return (BTreeNode)_children[index];
         }
-        BTreeNode child = _btree.produceNode(childID(reader, index));
-
-        if(_children != null){
-            if(_cached || child.canWrite()){
-                _children[index] = child;
-            }
-        }
-        
-        return child;
+        return produceChild(index, childID(reader, index));
     }
+
+	private BTreeNode produceChild(int index, int childID) {
+		BTreeNode child = _btree.produceNode(childID);
+        if(_children != null){
+        	_children[index] = child;
+        }
+        return child;
+	}
     
     private int childID(ByteArrayBuffer reader, int index){
         if(_children == null){
@@ -313,8 +311,6 @@ import com.db4o.marshall.*;
             return;
         }
         
-        _cached = false;
-        
         if(! _isLeaf){
             return;
         }
@@ -346,7 +342,7 @@ import com.db4o.marshall.*;
         if(freeIfEmpty(trans)){
             return;
         }
-        
+
         setStateDirty();
         
         // TODO: Merge nodes here on low _count value.
@@ -607,37 +603,6 @@ import com.db4o.marshall.*;
         return _btree.keyHandler();
     }
     
-    void markAsCached(int height){
-    	
-    	throw new NotImplementedException();
-    	
-        // FIXME: Caching doesn't work as expected. Disabled.
-        //        Reimplement with LRU cache for all nodes,
-        //        independant of _root.
-
-    	
-//        _cached = true;
-//        _btree.addNode(this);
-//        
-//        if( _isLeaf || (_children == null)){
-//            return;
-//        }
-//        
-//        height --;
-//        
-//        if(height < 1){
-//            holdChildrenAsIDs();
-//            return;
-//        }
-//        
-//        for (int i = 0; i < _count; i++) {
-//            if(_children[i] instanceof BTreeNode){
-//                ((BTreeNode)_children[i]).markAsCached(height);
-//            }
-//        }
-    	
-    }
-    
     public int ownLength() {
         return SLOT_LEADING_LENGTH
           + (_count * entryLength())
@@ -645,7 +610,9 @@ import com.db4o.marshall.*;
     }
     
     ByteArrayBuffer prepareRead(Transaction trans){
-
+    	
+    	BTreeNodeCacheEntry cacheEntry = btree().cacheEntry(this); 
+		
         if(canWrite()){
             return null;
         }
@@ -656,21 +623,24 @@ import com.db4o.marshall.*;
         
         Transaction systemTransaction = trans.systemTransaction();
         
-		if(_cached){
-            read(systemTransaction);
-            _btree.addToProcessing(this);
-            return null;
+        ByteArrayBuffer buffer = cacheEntry.buffer();
+		if(buffer != null){
+	        // Cache hit, still unread
+			buffer.seek(0);
+			read(systemTransaction, buffer);
+			cacheEntry.buffer(null);
+			_btree.addToProcessing(this);
+			return null;
         }
         
-        ByteArrayBuffer reader = produceReadBuffer(systemTransaction);
-        
+        buffer = produceReadBuffer(systemTransaction);
         if (Deploy.debug) {
-            reader.readBegin(getIdentifier());
+            buffer.readBegin(getIdentifier());
         }
+        readNodeHeader(buffer);
         
-        readNodeHeader(reader);
-        
-        return reader;
+        cacheEntry.buffer(buffer);
+        return buffer;
     }
 
     void prepareWrite(Transaction trans){
@@ -679,12 +649,21 @@ import com.db4o.marshall.*;
             return;
         }
         
+        BTreeNodeCacheEntry cacheEntry = btree().cacheEntry(this);
+        
         if(canWrite()){
             setStateDirty();
             return;
         }
         
-        read(trans.systemTransaction());
+        ByteArrayBuffer buffer = cacheEntry.buffer();
+		if(buffer != null){
+			buffer.seek(0);
+			read(trans.systemTransaction(), buffer);
+			cacheEntry.buffer(null);
+		} else{
+			read(trans.systemTransaction());
+		}
         setStateDirty();
         _btree.addToProcessing(this);
     }
@@ -1006,21 +985,31 @@ import com.db4o.marshall.*;
             return;
         }
         
-        if(_cached){
-            return;
+        if(! isPatched()){
+        	return;
         }
         
+       holdChildrenAsIDs();
+       _btree.addNode(this);
+    }
+    
+    private boolean isPatched(){
+    	
+    	if(_dead){
+    		return false;
+    	}
+    	
         if(!canWrite()){
-            return;
+            return false;
         }
         
         for (int i = 0; i < _count; i++) {
             if(_keys[i] instanceof BTreePatch){
-                holdChildrenAsIDs();
-                _btree.addNode(this);
-                return;
+                return true;
             }
         }
+        
+        return false;
     }
     
     private void setParentID(Transaction trans, int id){
@@ -1054,6 +1043,7 @@ import com.db4o.marshall.*;
         }
     }
     
+    @Override
     public boolean writeObjectBegin() {
         if(_dead){
             return false;
@@ -1222,6 +1212,20 @@ import com.db4o.marshall.*;
     @Override
     public TransactionalIdSystem idSystem(Transaction trans) {
     	return _btree.idSystem(trans);
+    }
+    
+    public void toReadMode(){
+    	if(isNew()){
+    		return;
+    	}
+    	if(! canWrite()){
+    		return;
+    	}
+    	if(isPatched()){
+    		return;
+    	}
+    	_keys = null;
+    	_children = null;
     }
     
 }

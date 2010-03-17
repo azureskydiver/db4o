@@ -37,16 +37,18 @@ public abstract class PersistentBase extends Identifiable implements Persistent,
 			return;
 		}
 		try {
-			ByteArrayBuffer reader = produceReadBuffer(trans); 
-			
-			if (Deploy.debug) {
-				reader.readBegin(getIdentifier());
-			}
-			readThis(trans, reader);
-			setStateOnRead(reader);
+			read(trans, produceReadBuffer(trans));
 		} finally {
 			endProcessing();
 		}
+	}
+
+	protected void read(Transaction trans, ByteArrayBuffer reader) {
+		if (Deploy.debug) {
+			reader.readBegin(getIdentifier());
+		}
+		readThis(trans, reader);
+		setStateOnRead(reader);
 	}
     
     protected ByteArrayBuffer produceReadBuffer(Transaction trans){

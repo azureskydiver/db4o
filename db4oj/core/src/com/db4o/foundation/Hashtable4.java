@@ -61,6 +61,9 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 		return getFromObjectEntry(key.hashCode(), key);
 	}
 	
+	public Object get(long key){
+		return getFromLongEntry((int)key, key);
+	}
 	
 	public boolean containsKey(Object key) {
 		if (null == key) {
@@ -89,6 +92,10 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 	public void put(int key, Object value) {
 		putEntry(new HashtableIntEntry(key, value));
 	}
+	
+	public void put(long key, Object value) {
+		putEntry(new HashtableLongEntry(key, value));
+	}
 
 	public void put(Object key, Object value) {
 		if (null == key) {
@@ -102,13 +109,17 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 		return removeObjectEntry(intKey, objectKey);
 	}
 	
+	public Object remove(long longKey) {
+		return removeLongEntry((int)longKey, longKey);
+	}
+	
 	public Object remove(byte[] key) {
 		int intKey = HashtableByteArrayEntry.hash(key);
 		return removeObjectEntry(intKey, key);
 	}
 
-	public void remove(int key) {
-		removeIntEntry(key);
+	public Object remove(int key) {
+		return removeIntEntry(key);
 	}
 
 	/**
@@ -152,4 +163,21 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 		}
 		return null;
 	}
+	
+	private Object getFromLongEntry(int intKey, long longKey) {
+		final HashtableLongEntry entry = getLongEntry(intKey, longKey);		
+		return entry == null ? null : entry._object;
+	}
+	
+	private HashtableLongEntry getLongEntry(int intKey, long longKey) {
+		HashtableLongEntry entry = (HashtableLongEntry) _table[intKey & _mask];
+		while (entry != null) {
+			if (entry._key == intKey && entry._longKey == longKey) {
+				return entry;
+			}
+			entry = (HashtableLongEntry) entry._next;
+		}
+		return null;
+	}
+
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.btree;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.btree.*;
 
@@ -63,15 +65,27 @@ public class BTreePointerTestCase extends BTreeTestCaseBase {
 		for (int i = 0; i < expected.length; i++) {
 			Assert.isNotNull(pointer, "Expected '" + expected[i] + "'");
 			Assert.areNotSame(_btree.root(), pointer.node());
-			assertInReadMode(pointer.node());
+			assertInReadModeOrCached(pointer.node());
 			Assert.areEqual(expected[i], pointer.key());
-			assertInReadMode(pointer.node());
+			assertInReadModeOrCached(pointer.node());
 			pointer = pointer.next();
 		}
 	}
 
-	private void assertInReadMode(BTreeNode node) {
+	private void assertInReadModeOrCached(BTreeNode node) {
+		if(isCached(node)){
+			return;
+		}
 		Assert.isFalse(node.canWrite());
+	}
+
+	private boolean isCached(BTreeNode node) {
+		for(BTreeNodeCacheEntry entry : _btree.nodeCache()){
+			if(node == entry._node){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	protected BTree newBTree() {

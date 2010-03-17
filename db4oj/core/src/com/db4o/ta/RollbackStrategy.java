@@ -6,6 +6,7 @@ import com.db4o.*;
 
 /**
  * Interface defining rollback behavior when Transparent Persistence mode is on.
+ * @see TransparentPersistenceSupport
  */
 public interface RollbackStrategy {
 	

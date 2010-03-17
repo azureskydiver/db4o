@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.caching.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
@@ -24,8 +23,6 @@ public class LocalTransaction extends Transaction {
 	
 	private final CommittedCallbackDispatcher _committedCallbackDispatcher;
 	
-	private final Cache4<Integer, ByteArrayBuffer> _slotCache;
-
 	private final TransactionalIdSystem _idSystem;
 	
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalIdSystem idSystem, ReferenceSystem referenceSystem) {
@@ -39,19 +36,8 @@ public class LocalTransaction extends Transaction {
     			callbacks().commitOnCompleted(LocalTransaction.this, committedInfo);
     		}
     	};
-    	_slotCache = createSlotCache();
     	_idSystem = idSystem;
 	}
-
-	private Cache4<Integer, ByteArrayBuffer> createSlotCache() {
-	    if(isSystemTransaction()) {
-	    	int slotCacheSize = config().slotCacheSize();
-	    	if (slotCacheSize > 0) {
-	    		return CacheFactory.new2QCache(slotCacheSize);
-	    	}
-    	}
-    	return new NullCache4<Integer, ByteArrayBuffer>();
-    }
 
 	public Config4Impl config() {
 		return container().config();
@@ -127,11 +113,11 @@ public class LocalTransaction extends Transaction {
             DTrace.TRANS_COMMIT.logInfo( "server == " + container().isServer() + ", systemtrans == " +  isSystemTransaction());
         }
         
-        commit3Stream();
+        commitClassMetadata();
         
         commitParticipants();
         
-        container().writeDirty();
+        container().writeDirtyClassMetadata();
         
         idSystem().commit();
         
@@ -159,9 +145,9 @@ public class LocalTransaction extends Transaction {
 		}
     }
     
-    private void commit3Stream(){
+    private void commitClassMetadata(){
         container().processPendingClassUpdates();
-        container().writeDirty();
+        container().writeDirtyClassMetadata();
         container().classCollection().write(container().systemTransaction());
     }
     
@@ -375,10 +361,6 @@ public class LocalTransaction extends Transaction {
 	
 	public LazyObjectReference lazyReferenceFor(final int id) {
 		return new LazyObjectReference(LocalTransaction.this, id);
-	}
-	
-	public Cache4<Integer, ByteArrayBuffer> slotCache(){
-		return _slotCache;
 	}
 	
 }

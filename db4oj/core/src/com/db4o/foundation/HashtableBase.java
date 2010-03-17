@@ -185,17 +185,32 @@ public class HashtableBase {
 		}
 		return null;
 	}
+	
+	protected Object removeLongEntry(int intKey, long longKey) {
+		HashtableLongEntry entry = (HashtableLongEntry) _table[intKey & _mask];
+		HashtableLongEntry predecessor = null;
+		while (entry != null) {
+			if (entry._key == intKey && entry._longKey == longKey) {
+				removeEntry(predecessor, entry);
+				return entry._object;
+			}
+			predecessor = entry;
+			entry = (HashtableLongEntry) entry._next;
+		}
+		return null;
+	}
 
-	protected void removeIntEntry(int key) {
+	protected Object removeIntEntry(int key) {
 		HashtableIntEntry entry = _table[key & _mask];
 		HashtableIntEntry predecessor = null;
 		while (entry != null) {
 			if (entry._key == key) {
 				removeEntry(predecessor, entry);
-				return;
+				return entry._object;
 			}
 			predecessor = entry;
 			entry = entry._next;
 		}
+		return null;
 	}
 }

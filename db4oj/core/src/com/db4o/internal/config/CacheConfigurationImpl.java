@@ -16,11 +16,12 @@ public class CacheConfigurationImpl implements CacheConfiguration{
 		_config = config;
 	}
 
-	/*
+	/**
 	 * @sharpen.property
+	 * @deprecated since 7.14 BTrees have their own LRU cache now.
 	 */
 	public void slotCacheSize(int size) {
-		_config.slotCacheSize(size);
+		
 	}
 	
 }

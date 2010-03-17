@@ -185,8 +185,6 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	private static final KeySpec MAX_BATCH_QUEUE_SIZE_KEY = new KeySpec(Integer.MAX_VALUE);
 	
-	private static final KeySpec SLOT_CACHE_SIZE_KEY = new KeySpec(30);
-	
 	private final static KeySpec TAINTED_KEY = new KeySpec(false);
 	
 	private final static KeySpec REFERENCE_SYSTEM_FACTORY_KEY = new KeySpec(new ReferenceSystemFactory() {
@@ -1068,14 +1066,6 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	public CacheConfiguration cache() {
 		return new CacheConfigurationImpl(this);
-	}
-	
-	public void slotCacheSize(int size) {
-		_config.put(SLOT_CACHE_SIZE_KEY, size);
-	}
-	
-	public int slotCacheSize(){
-		return _config.getAsInt(SLOT_CACHE_SIZE_KEY);
 	}
 
 	public boolean fileBasedTransactionLog() {

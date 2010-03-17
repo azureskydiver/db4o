@@ -16,9 +16,9 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
 	private RamFreespaceManager _delegate;
 	
-	private FreespaceBTree _slotsByAddress;
+	private BTree _slotsByAddress;
 	
-	private FreespaceBTree _slotsByLength;
+	private BTree _slotsByLength;
 	
 	private PersistentIntegerArray _idArray;
     
@@ -58,8 +58,9 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	private void createBTrees(int addressID, int lengthID) {
-		_slotsByAddress = new FreespaceBTree(transaction(), addressID, new AddressKeySlotHandler());
-		_slotsByLength = new FreespaceBTree(transaction(), lengthID, new LengthKeySlotHandler());
+		BTreeConfiguration config = new BTreeConfiguration(null, SlotChangeFactory.FREE_SPACE, false);
+		_slotsByAddress = new BTree(transaction(), config, addressID, new AddressKeySlotHandler());
+		_slotsByLength = new BTree(transaction(), config, lengthID, new LengthKeySlotHandler());
 	}
 	
 	public void endCommit() {

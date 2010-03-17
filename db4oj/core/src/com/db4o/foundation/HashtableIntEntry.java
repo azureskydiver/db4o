@@ -15,9 +15,9 @@ public class HashtableIntEntry implements Entry4, DeepClone  {
 
 	public HashtableIntEntry _next;
 
-	HashtableIntEntry(int a_hash, Object a_object) {
-		_key = a_hash;
-		_object = a_object;
+	HashtableIntEntry(int key, Object obj) {
+		_key = key;
+		_object = obj;
 	}
 
 	public HashtableIntEntry() {
