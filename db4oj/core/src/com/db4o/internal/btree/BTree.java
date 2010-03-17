@@ -144,6 +144,14 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	return search(trans, keyHandler().prepareComparison(trans.context(), key));
     }
     
+    public BTreePointer searchOne(Transaction trans, Object key) {
+    	ensureActive(trans);
+    	keyCantBeNull(key);
+    	BTreeNodeSearchResult start = searchLeaf(trans, keyHandler().prepareComparison(trans.context(), key), SearchTarget.LOWEST);
+    	checkToReadMode();
+    	return start.firstValidPointer();
+    }
+    
     private BTreeRange search(Transaction trans, PreparedComparison preparedComparison) {
     	ensureActive(trans);
         
