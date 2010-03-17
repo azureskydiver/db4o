@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CatapultGlossary>
+  <GlossaryEntry>
+    <Terms>
+      <Term>CF</Term>
+    </Terms>
+    <Definition
+      Link="">.NET Compact Framework</Definition>
+  </GlossaryEntry>
+</CatapultGlossary>
