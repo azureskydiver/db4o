@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="4657" MadCap:lastWidth="1200">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="4301" MadCap:lastWidth="672">
     <head><title>Reference Cache In Client-Server Mode	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>Reference Cache In Client-Server Mode</h1>Db4o uses object <a href="../basic_concepts/object_identity/weak_references.htm"  >reference
+        <h1>
+            <MadCap:keyword term="Cache" />Reference Cache In Client-Server Mode</h1>Db4o uses object <a href="../basic_concepts/object_identity/weak_references.htm">reference
 cache</a> for easy access to persistent objects during one transaction. In
 client/server mode each client has its own reference cache, which helps to
 achieve good performance. However it gets complicated, when different clients
@@ -15,17 +14,6 @@ updated serially unless it is refreshed before each update.
 
 <p>The following example demonstrates this behaviour.</p><p MadCap:conditions="Primary.Java,Primary.All languages"><MadCap:snippetBlock src="../Resources/Snippets/Reference Cache In Client-Server Mode/InconsistentGraphExample.java/main.flsnp" /><MadCap:snippetBlock src="../Resources/Snippets/Reference Cache In Client-Server Mode/InconsistentGraphExample.java/run.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../Resources/Snippets/Reference Cache In Client-Server Mode/InconsistentGraphExample.cs/Main.flsnp" /><MadCap:snippetBlock src="../Resources/Snippets/Reference Cache In Client-Server Mode/InconsistentGraphExample.cs/Run.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../Resources/Snippets/Reference Cache In Client-Server Mode/InconsistentGraphExample.vb/Main.flsnp" /><MadCap:snippetBlock src="../Resources/Snippets/Reference Cache In Client-Server Mode/InconsistentGraphExample.vb/Run.flsnp" /></p><p MadCap:conditions="Primary:vb" /><p>In order to make the objects consistent on each client you
 must refresh them from the server when they get updated. This can be done by
-using <a href="../implementation_strategies/callbacks/commit-time_callbacks/committed_event_example.htm"  >Committed
-Callbacks</a>.</p> 
-         
-        <p>Download example code:</p>
-        <p>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="_modeinconsistentcs.zip">c#</a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="_modeinconsistentjava.zip">Java</a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="_modeinconsistentvb.zip">VB.NET</a>
-            </MadCap:conditionalText>
-        </p>
-    </body>
+using <a href="../implementation_strategies/callbacks/commit-time_callbacks/committed_event_example.htm">Committed
+Callbacks</a>.</p><p>Download example code:</p><p><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="_modeinconsistentcs.zip">c#</a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="_modeinconsistentjava.zip">Java</a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="_modeinconsistentvb.zip">VB.NET</a></MadCap:conditionalText></p></body>
 </html>

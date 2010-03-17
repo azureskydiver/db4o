@@ -1,32 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Embedded Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Embedded Configuration</h1>
-<p>  </p>
-<p> <MadCap:snippetText src="../../Resources/Snippets/EmbeddedConfiguration.flsnp" /> interface contains configuration methods specific to db4o used in Embedded (standalone) mode. EmbeddedConfiguration implementation provides access to all common configuration methods through common() method (Java) or Common property (.NET).</p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:  </p>
-<p><code>public CacheConfiguration cache();</code>  </p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET">
-<p>.NET:  </p>
-<p><code>public ICacheConfiguration Cache {get;}</code>  
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="586" MadCap:lastWidth="463">
+    <head><title>Embedded Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            <MadCap:keyword term="Embedded" />Embedded Configuration</h1>
+        <p>
+        </p>
+        <p>
+            <MadCap:snippetText src="../../Resources/Snippets/EmbeddedConfiguration.flsnp" /> interface contains configuration methods specific to db4o used in Embedded (standalone) mode. EmbeddedConfiguration implementation provides access to all common configuration methods through common() method (Java) or Common property (.NET).</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:  </p>
+            <p><code>public CacheConfiguration cache();</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET:  </p>
+            <p><code>public ICacheConfiguration Cache {get;}</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Returns cache configuration. </p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:  </p>
+            <p><code>public FileConfiguration file();</code>;  </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET:  </p>
+            <p><code>IFileConfiguration File {get;}</code>;  
 </p>
-</p><p MadCap:conditions="Primary:net" />
-<p>Returns cache configuration. </p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:  </p>
-<p><code>public FileConfiguration file();</code>;  </p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET">
-<p>.NET:  </p>
-<p><code>IFileConfiguration File {get;}</code>;  
-</p>
-</p><p MadCap:conditions="Primary:net" />
-<p>Returns file configuration, giving access to file-related configuration methods. </p>
- 
-     
-    
-  </body></html>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Returns file configuration, giving access to file-related configuration methods. </p>
+    </body>
+</html>

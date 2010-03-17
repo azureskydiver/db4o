@@ -53,4 +53,19 @@ and managing db4o databases</Definition>
     <Definition
       Link="">Transparent Activation</Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>C/S</Term>
+    </Terms>
+    <Definition
+      Link="">Client-Server</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>QBE</Term>
+      <Term>QbE</Term>
+    </Terms>
+    <Definition
+      Link="">Query By Example</Definition>
+  </GlossaryEntry>
 </CatapultGlossary>

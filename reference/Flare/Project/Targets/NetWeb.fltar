@@ -15,5 +15,7 @@
   <Glossaries>
     <Glossary
       Link="/Project/Glossaries/OnlineGlossary.flglo" />
+    <Glossary
+      Link="/Project/Glossaries/SharedGlossar.flglo" />
   </Glossaries>
 </CatapultTarget>
