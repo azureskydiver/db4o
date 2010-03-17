@@ -98,11 +98,11 @@ public class BTreeIdSystem implements IdSystem {
 	}
 
 	public Slot committedSlot(int id) {
-		BTreeRangeSingle range = (BTreeRangeSingle) _bTree.search(transaction(), new IdSlotMapping(id, 0, 0));
-		if(range.isEmpty()){
+		BTreePointer bTreePointer = _bTree.searchOne(transaction(), new IdSlotMapping(id, 0, 0));
+		if(bTreePointer == null){
 			throw new InvalidIDException(id);
 		}
-		IdSlotMapping mapping = (IdSlotMapping) range.first().key();
+		IdSlotMapping mapping = (IdSlotMapping) bTreePointer.key();
 		return mapping.slot();
 	}
 
