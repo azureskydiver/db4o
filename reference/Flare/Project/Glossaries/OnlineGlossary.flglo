@@ -305,4 +305,12 @@
     <Definition
       Link="/Content/sharpen.htm"></Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>Transparent Activation</Term>
+      <Term>TA</Term>
+    </Terms>
+    <Definition
+      Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm"></Definition>
+  </GlossaryEntry>
 </CatapultGlossary>

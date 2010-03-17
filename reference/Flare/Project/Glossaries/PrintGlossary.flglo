@@ -39,4 +39,18 @@ and managing db4o databases</Definition>
     <Definition
       Link="">OSGi framework, a module system and service platform</Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>TP</Term>
+    </Terms>
+    <Definition
+      Link="">Transparent Persistence</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>TA</Term>
+    </Terms>
+    <Definition
+      Link="">Transparent Activation</Definition>
+  </GlossaryEntry>
 </CatapultGlossary>
