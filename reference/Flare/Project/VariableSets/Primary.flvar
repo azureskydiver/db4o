@@ -9,7 +9,7 @@
   <Variable
     Name="CurrentVersion"
     Comment=""
-    Definition="Some text">7.12</Variable>
+    Definition="Some text">X.XX</Variable>
   <Variable
     Name="ObjectContainer"
     Comment=""
