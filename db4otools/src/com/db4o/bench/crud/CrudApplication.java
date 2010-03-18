@@ -20,11 +20,11 @@ public class CrudApplication {
 	
 	
 	public void run(int itemCount) {
-		Configuration config = prepare(itemCount);
-		create(itemCount, config);
-		read(config);
-		update(config);
-		delete(config);
+		deleteDbFile();
+		create(itemCount, newConfiguration(itemCount));
+		read(newConfiguration(itemCount));
+		update(newConfiguration(itemCount));
+		delete(newConfiguration(itemCount));
 		deleteDbFile();
 	}
 
@@ -73,11 +73,10 @@ public class CrudApplication {
 		oc.close();
 	}
 
-	private Configuration prepare(int itemCount) {
-		deleteDbFile();
+	private Configuration newConfiguration(int itemCount) {
 		RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
 		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFileName(itemCount));
-		Configuration config = Db4o.cloneConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.io(ioAdapter);
 		return config;
 	}
