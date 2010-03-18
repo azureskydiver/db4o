@@ -106,12 +106,27 @@ class LRUIntCache<V> implements PurgeableCache4<Integer, V> {
 	}
 
 	public Iterator iterator() {
-		return Iterators.platformIterator(new MappingIterator(_slots.valuesIterator()) {
-			@Override
-			protected Object map(Object current) {
-				return ((Entry)current)._value;
+		Iterator4 i = new Iterator4 () {
+			private Entry _cursor = _first;
+			private Entry _current;
+			public Object current() {
+				return _current._value;
 			}
-		});
+			public boolean moveNext() {
+				if(_cursor == null){
+					_current = null;
+					return false;
+				}
+				_current = _cursor;
+				_cursor = _cursor._next;
+				return true;
+			}
+			public void reset() {
+				_cursor = _first;
+				_current = null;
+			}
+		};
+		return Iterators.platformIterator(i);
 	}
 
 	public V purge(Integer key) {

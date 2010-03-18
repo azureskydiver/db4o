@@ -59,7 +59,7 @@ public class BTreeIdSystem implements IdSystem {
 	}
 
 	private BTreeConfiguration bTreeConfiguration() {
-		return new BTreeConfiguration(_transactionalIdSystem, false);
+		return new BTreeConfiguration(_transactionalIdSystem, 64, false);
 	}
 
 	private int idGeneratorValue() {

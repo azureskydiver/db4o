@@ -58,7 +58,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	private void createBTrees(int addressID, int lengthID) {
-		BTreeConfiguration config = new BTreeConfiguration(null, SlotChangeFactory.FREE_SPACE, false);
+		BTreeConfiguration config = new BTreeConfiguration(null, SlotChangeFactory.FREE_SPACE, 64, false);
 		_slotsByAddress = new BTree(transaction(), config, addressID, new AddressKeySlotHandler());
 		_slotsByLength = new BTree(transaction(), config, lengthID, new LengthKeySlotHandler());
 	}

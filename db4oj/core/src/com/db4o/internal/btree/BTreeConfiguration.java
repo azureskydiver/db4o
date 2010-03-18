@@ -10,7 +10,7 @@ import com.db4o.internal.slots.*;
  */
 public class BTreeConfiguration {
 	
-	public static final BTreeConfiguration DEFAULT = new BTreeConfiguration(null, true);
+	public static final BTreeConfiguration DEFAULT = new BTreeConfiguration(null, 20, true);
 	
 	public final TransactionalIdSystem _idSystem;
 
@@ -18,14 +18,18 @@ public class BTreeConfiguration {
 	
 	public final boolean _canEnlistWithTransaction;
 
-	public BTreeConfiguration(TransactionalIdSystem idSystem, SlotChangeFactory slotChangeFactory, boolean canEnlistWithTransaction) {
+	public final int _cacheSize;
+
+	public BTreeConfiguration(TransactionalIdSystem idSystem, SlotChangeFactory slotChangeFactory, int cacheSize, boolean canEnlistWithTransaction) {
 		_idSystem = idSystem;
 		_slotChangeFactory = slotChangeFactory;
 		_canEnlistWithTransaction = canEnlistWithTransaction;
+		_cacheSize = cacheSize;
 	}
 
-	public BTreeConfiguration(TransactionalIdSystem idSystem, boolean canEnlistWithTransaction){
-		this(idSystem, SlotChangeFactory.SYSTEM_OBJECTS, canEnlistWithTransaction);
+	public BTreeConfiguration(TransactionalIdSystem idSystem, int cacheSize, boolean canEnlistWithTransaction){
+		this(idSystem, SlotChangeFactory.SYSTEM_OBJECTS, cacheSize, canEnlistWithTransaction);
 	}
+
 	
 }

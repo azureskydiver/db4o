@@ -55,7 +55,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec BLOB_PATH_KEY=new KeySpec(null);
     
-    private final static KeySpec BTREE_NODE_SIZE_KEY=new KeySpec(119);
+    private final static KeySpec BTREE_NODE_SIZE_KEY=new KeySpec(201);
     
 	private final static KeySpec CALLBACKS_KEY=new KeySpec(CallBackMode.ALL);
     
