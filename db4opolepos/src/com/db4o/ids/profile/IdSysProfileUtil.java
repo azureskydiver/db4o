@@ -55,7 +55,7 @@ public class IdSysProfileUtil {
 
 	private static EmbeddedConfiguration config() {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		// config.idSystem().useBTreeSystem();
+		config.idSystem().useBTreeSystem();
 		// config.file().storage(new FileStorage());
 		return config;
 	}
