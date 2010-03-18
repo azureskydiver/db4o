@@ -8,11 +8,7 @@ import java.util.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class Iterator4JdkIterator implements Iterator{
-    
-    private static final Object BEFORE_START = new Object();
-    
-    private static final Object BEYOND_END = new Object();
+public final class Iterator4JdkIterator implements Iterator{
     
     private final Iterator4 _delegate;
     
@@ -20,37 +16,26 @@ public class Iterator4JdkIterator implements Iterator{
     
     public Iterator4JdkIterator(Iterator4 i){
         _delegate = i;
-        _current = BEFORE_START; 
+        if(_delegate.moveNext()){
+        	_current = _delegate.current();
+        }
     }
 
-    public boolean hasNext() {
-        checkBeforeStart();
-        return _current != BEYOND_END;
+    public final boolean hasNext() {
+        return _current != null;
     }
 
-    public Object next() {
-        checkBeforeStart();
-        if (_current == BEYOND_END){
+    public final Object next() {
+        if (_current == null){
             throw new NoSuchElementException();
         }
-        Object result = _current;
+        final Object result = _current;
         if(_delegate.moveNext()){
             _current = _delegate.current();
         }else{
-            _current = BEYOND_END;
+            _current = null;
         }
         return result;
-    }
-    
-    private void checkBeforeStart(){
-        if(_current != BEFORE_START){
-            return;
-        }
-        if(_delegate.moveNext()){
-            _current = _delegate.current();
-        }else{
-            _current = BEYOND_END;
-        }
     }
 
     public void remove() {
