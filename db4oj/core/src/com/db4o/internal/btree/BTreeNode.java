@@ -420,7 +420,7 @@ import com.db4o.marshall.*;
                     return;
                 }
                 remove(i);
-                if(i <= 1){
+                if(i < 1){
                     tellParentAboutChangedKey(trans);
                 }
                 if(_count == 0){
@@ -1055,20 +1055,19 @@ import com.db4o.marshall.*;
     }
     
     
-    public void writeThis(Transaction trans, ByteArrayBuffer a_writer) {
-        
+    public void writeThis(Transaction trans, ByteArrayBuffer buffer) {
         int count = 0;
-        int startOffset = a_writer._offset;
+        int startOffset = buffer._offset;
         
         final Context context = trans.context();
-        a_writer.incrementOffset(COUNT_LEAF_AND_3_LINK_LENGTH);
+        buffer.incrementOffset(COUNT_LEAF_AND_3_LINK_LENGTH);
 
         if(_isLeaf){
             for (int i = 0; i < _count; i++) {
                 Object obj = internalKey(trans, i);
                 if(obj != No4.INSTANCE){
                     count ++;
-					keyHandler().writeIndexEntry(context, a_writer, obj);
+					keyHandler().writeIndexEntry(context, buffer, obj);
                 }
             }
         }else{
@@ -1078,25 +1077,25 @@ import com.db4o.marshall.*;
                     Object childKey = child.firstKey(trans);
                     if(childKey != No4.INSTANCE){
                         count ++;
-                        keyHandler().writeIndexEntry(context, a_writer, childKey);
-                        a_writer.writeIDOf(trans, child);
+                        keyHandler().writeIndexEntry(context, buffer, childKey);
+                        buffer.writeIDOf(trans, child);
                     }
                 }else{
                     count ++;
-                    keyHandler().writeIndexEntry(context, a_writer, key(i));
-                    a_writer.writeIDOf(trans, _children[i]);
+                    keyHandler().writeIndexEntry(context, buffer, key(i));
+                    buffer.writeIDOf(trans, _children[i]);
                 }
             }
         }
         
-        int endOffset = a_writer._offset;
-        a_writer._offset = startOffset;
-        a_writer.writeInt(count);
-        a_writer.writeByte( _isLeaf ? (byte) 1 : (byte) 0);
-        a_writer.writeInt(_parentID);
-        a_writer.writeInt(_previousID);
-        a_writer.writeInt(_nextID);
-        a_writer._offset = endOffset;
+        int endOffset = buffer._offset;
+        buffer._offset = startOffset;
+        buffer.writeInt(count);
+        buffer.writeByte( _isLeaf ? (byte) 1 : (byte) 0);
+        buffer.writeInt(_parentID);
+        buffer.writeInt(_previousID);
+        buffer.writeInt(_nextID);
+        buffer._offset = endOffset;
 
     }
     

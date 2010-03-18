@@ -97,6 +97,7 @@ public class DTrace {
 			BTREE_NODE_REMOVE = new DTrace(true, true, "btreenode remove", true);
 			BTREE_NODE_COMMIT_OR_ROLLBACK = new DTrace(true, true,
 					"btreenode commit or rollback", true);
+			BTREE_PRODUCE_NODE = new DTrace(true, true, "btree produce node", true);
 			CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
             CLASSMETADATA_BY_ID = new DTrace(true, true, "classmetadata by id", true);
             CLASSMETADATA_INIT = new DTrace(true, true, "classmetadata init", true);
@@ -211,6 +212,7 @@ public class DTrace {
     public static DTrace BLOCKING_QUEUE_STOPPED_EXCEPTION;
 	public static DTrace BTREE_NODE_COMMIT_OR_ROLLBACK;
 	public static DTrace BTREE_NODE_REMOVE;
+	public static DTrace BTREE_PRODUCE_NODE;
     public static DTrace CANDIDATE_READ;
     public static DTrace CLASSMETADATA_BY_ID;
     public static DTrace CLASSMETADATA_INIT;

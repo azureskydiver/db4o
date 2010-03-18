@@ -63,7 +63,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	}
     	_nodeSize = treeNodeSize;
     	
-    	_nodeCache = CacheFactory.newLRUIntCache(20);
+    	_nodeCache = CacheFactory.newLRUIntCache(config._cacheSize);
     	
     	_halfNodeSize = _nodeSize / 2;
     	_nodeSize = _halfNodeSize * 2;
@@ -262,6 +262,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         Tree temp = _nodes;
         _nodes = null;
         
+        _root.holdChildrenAsIDs();
         addNode(_root);
         
         temp.traverse(new Visitor4() {
@@ -316,12 +317,15 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     }
     
     public BTreeNode produceNode(int id){
+    	if(DTrace.enabled){
+    		DTrace.BTREE_PRODUCE_NODE.log(id);
+    	}
         TreeIntObject addtio = new TreeIntObject(id);
         _nodes = (TreeIntObject)Tree.add(_nodes, addtio);
         TreeIntObject tio = (TreeIntObject)addtio.addedOrExisting();
         BTreeNode node = (BTreeNode)tio.getObject();
         if(node == null){
-        	node = cacheEntry(new BTreeNode(id, BTree.this))._node;
+        	node = cacheEntry(new BTreeNode(id, this))._node;
             tio.setObject(node);
             addToProcessing(node);
         }
