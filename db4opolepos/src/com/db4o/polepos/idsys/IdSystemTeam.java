@@ -11,7 +11,9 @@ public class IdSystemTeam extends Team {
 
 	private final static String PATH = "data/idsystem.db4o";
 	
-	private final IdSystemEngine _engine = new IdSystemEngine(new MemoryStorage(), PATH);
+	// private final IdSystemEngine _engine = new IdSystemEngine(new MemoryStorage(), PATH);
+	
+	private final IdSystemEngine _engine = new IdSystemEngine(PATH);
 	
 	@Override
 	public Car[] cars() {
