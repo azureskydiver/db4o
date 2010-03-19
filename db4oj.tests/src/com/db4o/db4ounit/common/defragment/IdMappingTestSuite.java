@@ -14,6 +14,9 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
+/**
+ * @sharpen.partial
+ */
 @decaf.Remove(decaf.Platform.JDK11)
 public class IdMappingTestSuite extends FixtureBasedTestSuite {
 	
@@ -96,26 +99,34 @@ public class IdMappingTestSuite extends FixtureBasedTestSuite {
 		
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	@Override
 	public FixtureProvider[] fixtureProviders() {
-		return new FixtureProvider[]{
-				new SimpleFixtureProvider<Function4<String, IdMapping>>(_fixture, 
-				new Function4<String, IdMapping>() {
-					public IdMapping apply(String fileName) {
-						return new DatabaseIdMapping(fileName);
-					}
-				},
-				new Function4<String, IdMapping>() {
-					public IdMapping apply(String fileName) {
-						return new InMemoryIdMapping();
-					}
-				}
-		)};
+		return new FixtureProvider[] {
+				new SimpleFixtureProvider<Function4<String, IdMapping>>(
+									_fixture,
+									new DatabaseIdMappingProvider(),
+									new InMemoryIdMappingProvider()) 
+					};
 	}
 
 	@Override
 	public Class[] testUnits() {
 		return new Class[]{IdMappingTestCase.class};
+	}
+	
+	private class DatabaseIdMappingProvider implements Function4<String, IdMapping> {
+		public IdMapping apply(String fileName) {
+			return new DatabaseIdMapping(fileName);
+		}		
+	}
+	
+	private class InMemoryIdMappingProvider implements Function4<String, IdMapping> {
+		public IdMapping apply(String fileName) {
+			return new InMemoryIdMapping();
+		}		
 	}
 		
 	private static FixtureVariable <Function4<String, IdMapping>> _fixture = FixtureVariable.newInstance("IdMapping");
