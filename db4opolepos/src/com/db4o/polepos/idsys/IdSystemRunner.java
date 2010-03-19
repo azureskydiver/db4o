@@ -14,7 +14,7 @@ public class IdSystemRunner extends AbstractRunner {
 	protected Circuit[] circuits() {
 		return new Circuit[] {
 				new PlainAllocateCircuit(),
-				new PlainMapCircuit(),
+				new PlainCommitCircuit(),
 				new PlainLookupCircuit(),
 		};
 	}

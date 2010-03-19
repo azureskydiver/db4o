@@ -11,7 +11,7 @@ public class CommitIds {
 	
 	private static int IDS_COUNT = 100000;
 	
-	private static int COMMIT_COUNT = 30000;
+	private static int COMMIT_COUNT = 5000;
 
 	public static void main(String[] args) {
 		clearDatabase();

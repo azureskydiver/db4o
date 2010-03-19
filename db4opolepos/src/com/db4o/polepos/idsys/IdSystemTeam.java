@@ -5,8 +5,6 @@ import java.io.*;
 
 import org.polepos.framework.*;
 
-import com.db4o.io.*;
-
 public class IdSystemTeam extends Team {
 
 	private final static String PATH = "data/idsystem.db4o";
@@ -37,7 +35,7 @@ public class IdSystemTeam extends Team {
 	public Driver[] drivers() {
 		return new Driver[] {
 			new PlainAllocateDriver(_engine),
-			new PlainMapDriver(_engine),
+			new PlainCommitDriver(_engine),
 			new PlainLookupDriver(_engine),
 		};
 	}

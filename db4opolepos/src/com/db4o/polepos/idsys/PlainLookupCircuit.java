@@ -8,7 +8,9 @@ public class PlainLookupCircuit extends Circuit {
 	@Override
 	protected void addLaps() {
 		add(new Lap("lapAllocate", false, false));
-		add(new Lap("lapLookup"));
+		add(new Lap("fullLookup"));
+		add(new Lap("multipleLookups"));
+		add(new Lap("fragmentedLookups"));
 	}
 
 	@Override
