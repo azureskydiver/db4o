@@ -29,10 +29,41 @@ public class PlainLookupDriver extends IdSystemDriver {
 		}, Runnable4.DO_NOTHING);
 	}
 
-	public void lapLookup() {
+	public void fullLookup() {
 		for (int idIdx = 0; idIdx < ids.length; idIdx++) {
 			idSystem().committedSlot(ids[idIdx]);
 		}
 	}
+	
+	public void multipleLookups() {
+		int selectCount = setup().getSelectCount();
+		int size = setup().getObjectSize();
+		int idx = 0;
+		for (int i = 0; i < selectCount; i++) {
+			if(idx + size > ids.length - 1){
+				idx = 0;
+			}
+			for (int idIdx = idx; idIdx < idx + size; idIdx++) {
+				idSystem().committedSlot(ids[idIdx]);		
+			}
+		}
+	}
+	
+	public void fragmentedLookups() {
+		int selectCount = setup().getSelectCount();
+		int size = setup().getObjectSize();
+		int idx = 0;
+		for (int select = 0; select < selectCount; select++) {
+			for (int i = 0; i < size; i++) {
+				idx += 37;
+				if(idx >= ids.length - 1){
+					idx = i;
+				}
+				idSystem().committedSlot(ids[idx]);		
+			}
+		}
+	}
+
+
 
 }
