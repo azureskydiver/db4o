@@ -17,6 +17,7 @@ public class AllTests extends ComposibleTestSuite {
 							 *  When you add a test here, make sure you create a Jira issue. 
 							 */
 							ActivateDepthTestCase.class,
+							CollectionUpdateTPTestCase.class, // COR-1897
 							InterfaceQueryTestCase.class, // COR-1131
 							LazyQueryDeleteTestCase.class,
 							RemovedFieldDefragmentTestCase.class,
