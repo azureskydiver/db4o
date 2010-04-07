@@ -11,7 +11,7 @@
     Comment=""
     Definition="Some text">X.XX</Variable>
   <Variable
-    Name="ObjectContainer"
+    Name="Plattform"
     Comment=""
-    Definition="Some text">objectContainer</Variable>
+    Definition="Some text" />
 </CatapultVariableSet>

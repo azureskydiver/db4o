@@ -7,4 +7,11 @@
     <Definition
       Link="">.NET Compact Framework</Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>RDBMS</Term>
+    </Terms>
+    <Definition
+      Link="">Relational Database Management System</Definition>
+  </GlossaryEntry>
 </CatapultGlossary>

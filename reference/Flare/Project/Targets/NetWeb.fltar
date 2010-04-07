@@ -18,4 +18,8 @@
     <Glossary
       Link="/Project/Glossaries/SharedGlossar.flglo" />
   </Glossaries>
+  <Variables>
+    <Variable
+      Name="BaseVariables/Plattform">.NET</Variable>
+  </Variables>
 </CatapultTarget>
