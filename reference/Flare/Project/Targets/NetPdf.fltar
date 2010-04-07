@@ -23,5 +23,9 @@
       Link="/Project/Glossaries/PrintGlossary.flglo" />
     <Glossary
       Link="/Project/Glossaries/SharedGlossar.flglo" />
-  </Glossaries>
+  </Glossaries>  
+  <Variables>
+    <Variable
+      Name="BaseVariables/Plattform">.NET</Variable>
+  </Variables>
 </CatapultTarget>

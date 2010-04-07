@@ -29,4 +29,8 @@
     <Glossary
       Link="/Project/Glossaries/SharedGlossar.flglo" />
   </Glossaries>
+  <Variables>
+    <Variable
+      Name="BaseVariables/Plattform">Java</Variable>
+  </Variables>
 </CatapultTarget>
