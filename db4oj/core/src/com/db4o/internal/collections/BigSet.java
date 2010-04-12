@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.btree.*;
 import com.db4o.marshall.*;
 
@@ -48,7 +49,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	}
 
 	private int store(E obj) {
-	    return container().store(_transaction, obj, Const4.UNSPECIFIED);
+	    return container().store(_transaction, obj, UnspecifiedUpdateDepth.INSTANCE);
     }
 
 	private void add(int id) {

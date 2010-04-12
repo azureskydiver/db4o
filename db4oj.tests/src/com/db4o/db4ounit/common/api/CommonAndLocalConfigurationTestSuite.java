@@ -13,6 +13,7 @@ import com.db4o.cs.config.*;
 import com.db4o.diagnostic.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.config.*;
 import com.db4o.internal.ids.*;
 import com.db4o.io.*;
@@ -129,7 +130,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			Assert.isTrue(legacy.testConstructors());
 			
 			common.updateDepth(1024);
-			Assert.areEqual(1024, legacy.updateDepth());
+			Assert.areEqual(UpdateDepthFactory.forDepth(1024), legacy.updateDepth());
 			
 			common.weakReferences(false);
 			Assert.isFalse(legacy.weakReferences());
@@ -215,10 +216,16 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			Assert.areEqual(StandardIdSystemFactory.BTREE, legacyConfig.idSystemType());
 			idSystemConfiguration.usePointerBasedSystem();
 			Assert.areEqual(StandardIdSystemFactory.POINTER_BASED, legacyConfig.idSystemType());
-			
-			
 		}
-		
+
+		public void testUnspecifiedUpdateDepthIsIllegal() {
+			final CommonConfigurationProvider common = subject();
+			Assert.expect(IllegalArgumentException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					common.common().updateDepth(Const4.UNSPECIFIED);
+				}
+			});
+		}
 	}
 	
 	@Override

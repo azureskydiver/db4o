@@ -5,6 +5,7 @@ package com.db4o.internal.marshall;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
@@ -24,7 +25,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
     
     private final ObjectReference _reference;
     
-    private int _updateDepth;
+    private UpdateDepth _updateDepth;
     
     private final boolean _isNew;
     
@@ -43,7 +44,7 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
 	private int _declaredAspectCount;
     
 
-    public MarshallingContext(Transaction trans, ObjectReference ref, int updateDepth, boolean isNew) {
+    public MarshallingContext(Transaction trans, ObjectReference ref, UpdateDepth updateDepth, boolean isNew) {
         _transaction = trans;
         _reference = ref;
         _nullBitMap = new BitMap4(aspectCount());
@@ -155,11 +156,11 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
         return classMetadata().config();
     }
 
-    public int updateDepth() {
+    public UpdateDepth updateDepth() {
         return _updateDepth;
     }
 
-    public void updateDepth(int depth) {
+    public void updateDepth(UpdateDepth depth) {
         _updateDepth = depth;
     }
 

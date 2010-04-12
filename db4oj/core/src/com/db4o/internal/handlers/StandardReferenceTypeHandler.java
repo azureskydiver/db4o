@@ -385,7 +385,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         }
 
         // FIXME: [TA] review activation depth
-        int depth = classMetadata().adjustDepthToBorders(2);
+        int depth = DepthUtil.adjustDepthToBorders(2);
         container.activate(transaction, obj, container.activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
         Platform4.forEachCollectionElement(obj, new Visitor4() {
             public void visit(Object elem) {

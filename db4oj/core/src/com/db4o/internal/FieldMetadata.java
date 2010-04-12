@@ -753,15 +753,8 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         _state = FieldMetadataState.UPDATING;
     }
 
-    private int adjustUpdateDepthForCascade(Object obj, int updateDepth) {
-        int minimumUpdateDepth = 1;
-        if (_containingClass.isCollection(obj)) {
-            minimumUpdateDepth = 2;
-        }
-        if (updateDepth < minimumUpdateDepth) {
-            return minimumUpdateDepth;
-        }
-        return updateDepth;
+    private UpdateDepth adjustUpdateDepthForCascade(Object obj, UpdateDepth updateDepth) {
+    	return updateDepth.adjustUpdateDepthForCascade(_containingClass.isCollection(obj));
     }
 
     private boolean cascadeOnUpdate(Config4Class parentClassConfiguration) {
@@ -771,7 +764,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     public void marshall(MarshallingContext context, Object obj){
     	
         // alive needs to be checked by all callers: Done
-        int updateDepth = context.updateDepth();
+        UpdateDepth updateDepth = context.updateDepth();
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
             context.updateDepth(adjustUpdateDepthForCascade(obj, updateDepth));
         }

@@ -483,53 +483,38 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     	return _container._handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(classReflector());
     }
 
-	public final int adjustUpdateDepth(Transaction trans, int depth) {
-		if (depth == Const4.UNSPECIFIED) {
-            depth = checkUpdateDepthUnspecified(trans.container().configImpl());
-            if (depth != Const4.UNSPECIFIED) {
-            	return depth - 1;
-            }
-            depth = adjustCollectionDepthToBorders(depth);
-        }
-        
+	public final UpdateDepth adjustUpdateDepth(Transaction trans, UpdateDepth depth) {
+		return depth.adjust(this);
+    }
+	
+	public boolean cascadesOnDeleteOrUpdate() {
 		Config4Class config = configOrAncestorConfig();
         if(config == null){
-            return depth - 1;
+            return false;
         }
         
         boolean cascadeOnDelete = config.cascadeOnDelete() == TernaryBool.YES;
         boolean cascadeOnUpdate = config.cascadeOnUpdate() == TernaryBool.YES;
-        
-        if ( cascadeOnDelete || cascadeOnUpdate) {
-            depth = adjustDepthToBorders(depth);
-        }
-        return depth - 1;
-    }
+        return cascadeOnDelete || cascadeOnUpdate;
+	}
 	
-	public int adjustCollectionDepthToBorders(int depth) {
+	public FixedActivationDepth adjustCollectionDepthToBorders(FixedActivationDepth depth) {
 	    if (! classReflector().isCollection()) {
 	        return depth;
 	    }
-	    return adjustDepthToBorders(depth);
+	    return depth.adjustDepthToBorders();
 	}
 
-	public int adjustDepthToBorders(int depth) {
-		int depthBorder = 2;
-		if (depth > Integer.MIN_VALUE && depth < depthBorder) {
-		    depth = depthBorder;
-		}
-		return depth;
-	}
-
-    private final int checkUpdateDepthUnspecified(Config4Impl config) {
-    	if (_config != null && _config.updateDepth() != -1) {
+    public final FixedUpdateDepth updateDepthFromConfig() {
+    	if (_config != null && _config.updateDepth() != null) {
     		return _config.updateDepth();
     	}
+    	Config4Impl config = configImpl();
     	
-        int depth = config.updateDepth();
+        FixedUpdateDepth depth = config.updateDepth();
         if (_ancestor != null) {
-            int ancestordepth = _ancestor.checkUpdateDepthUnspecified(config);
-            if (ancestordepth > depth) {
+            FixedUpdateDepth ancestordepth = _ancestor.updateDepthFromConfig();
+            if (ancestordepth.isBroaderThan(depth)) {
                 return ancestordepth;
             }
         }

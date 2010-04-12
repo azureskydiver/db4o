@@ -1,6 +1,7 @@
 package com.db4o.internal.handlers.versions;
 
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
@@ -75,7 +76,7 @@ public class OpenTypeHandler7 extends OpenTypeHandler {
 			boolean _firstUpdate = true;
 
 			@Override
-			public void writeUpdate(Transaction transaction, int updatedepth) {
+			public void writeUpdate(Transaction transaction, UpdateDepth updatedepth) {
 				if (!_firstUpdate) {
 					super.writeUpdate(transaction, updatedepth);
 					return;
