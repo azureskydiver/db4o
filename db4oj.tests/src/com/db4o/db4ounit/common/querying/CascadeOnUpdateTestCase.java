@@ -8,12 +8,16 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class CascadeOnUpdate extends AbstractDb4oTestCase {
+public class CascadeOnUpdateTestCase extends AbstractDb4oTestCase {
     
-    public static void main(String[] arguments) {
-        new CascadeOnUpdate().runNetworking();
+    public static class Holder {
+    	public Object child;
+    	
+    	public Holder(Object child) {
+    		this.child = child;
+    	}
     }
-	
+    
 	public static class Atom {
 		
 		public Atom child;
@@ -39,19 +43,18 @@ public class CascadeOnUpdate extends AbstractDb4oTestCase {
 	public Object child;
 
 	protected void configure(Configuration conf) {
-		conf.objectClass(this).cascadeOnUpdate(true);
+		conf.objectClass(Holder.class).cascadeOnUpdate(true);
 	}
 
 	protected void store() {
-		CascadeOnUpdate cou = new CascadeOnUpdate();
-		cou.child = new Atom(new Atom("storedChild"), "stored");
+		Holder cou = new Holder(new Atom(new Atom("storedChild"), "stored"));
 		db().store(cou);
 	}
 
 	public void test() throws Exception {
 		foreach(getClass(), new Visitor4() {
 			public void visit(Object obj) {
-				CascadeOnUpdate cou = (CascadeOnUpdate) obj;
+				Holder cou = (Holder) obj;
 				((Atom)cou.child).name = "updated";
 				((Atom)cou.child).child.name = "updated";
 				db().store(cou);
@@ -62,7 +65,7 @@ public class CascadeOnUpdate extends AbstractDb4oTestCase {
 		
 		foreach(getClass(), new Visitor4() {
 			public void visit(Object obj) {
-				CascadeOnUpdate cou = (CascadeOnUpdate) obj;
+				Holder cou = (Holder) obj;
 				Atom atom = (Atom)cou.child;
 				Assert.areEqual("updated", atom.name);
 				Assert.areNotEqual("updated", atom.child.name);

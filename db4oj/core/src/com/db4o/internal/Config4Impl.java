@@ -171,7 +171,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec TIMEOUT_SERVER_SOCKET_KEY=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
     
-	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(1);
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(UpdateDepthFactory.forDepth(1));
     
 	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL_KEY=new KeySpec(1000);
     
@@ -691,11 +691,14 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void updateDepth(int depth) {
+    	if(depth < 0) {
+    		throw new IllegalArgumentException("update depth must not be negative");
+    	}
         DiagnosticProcessor dp = diagnosticProcessor();
         if (dp.enabled()) {
             dp.checkUpdateDepth(depth);
         }
-    	_config.put(UPDATE_DEPTH_KEY,depth);
+    	_config.put(UPDATE_DEPTH_KEY, UpdateDepthFactory.forDepth(depth));
     }
     
     public void useBTreeSystem() {
@@ -950,8 +953,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsInt(TIMEOUT_SERVER_SOCKET_KEY);
 	}
 
-	public int updateDepth() {
-		return _config.getAsInt(UPDATE_DEPTH_KEY);
+	public FixedUpdateDepth updateDepth() {
+		return (FixedUpdateDepth) _config.get(UPDATE_DEPTH_KEY);
 	}
 
 	public int weakReferenceCollectionInterval() {

@@ -147,7 +147,7 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 	}
 
 	/** return false if class not completely initialized, otherwise true **/
-	boolean continueSet(Transaction trans, int updateDepth) {
+	boolean continueSet(Transaction trans, UpdateDepth updateDepth) {
 		if (! bitIsTrue(Const4.CONTINUE)) {
 		    return true;
 		}
@@ -404,7 +404,7 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		}
 	}
 
-	public void writeUpdate(Transaction transaction, int updatedepth) {
+	public void writeUpdate(Transaction transaction, UpdateDepth updatedepth) {
 
 		continueSet(transaction, updatedepth);
 		// make sure, a concurrent new, possibly triggered by objectOnNew
@@ -435,7 +435,7 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		}
 		
 		MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
-		if (context.updateDepth() < 0) {
+		if (context.updateDepth().negative()) {
 			endProcessing();
 			return;
 		}

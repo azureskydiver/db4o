@@ -646,9 +646,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		if (!ref.isActive() && (caresAboutDeleting(classMetadata) || caresAboutDeleted(classMetadata))) {
         	// Activate Objects for Callbacks, because in C/S mode Objects are not activated on the Server
 			// FIXME: [TA] review activation depth
-		    int depth = classMetadata.adjustCollectionDepthToBorders(1);
-        	activate(trans, obj, new FixedActivationDepth(depth));
-        }
+		    ActivationDepth depth = classMetadata.adjustCollectionDepthToBorders(new FixedActivationDepth(1));
+        	activate(trans, obj, depth);
+        } 
 	}
     
     private boolean caresAboutDeleting(ClassMetadata yc) {
@@ -1569,10 +1569,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public final void store(Transaction trans, Object obj)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
-    	store(trans, obj, Const4.UNSPECIFIED);
+    	store(trans, obj, UnspecifiedUpdateDepth.INSTANCE);
     }    
     
-	public final int store(Transaction trans, Object obj, int depth)
+	public final int store(Transaction trans, Object obj, UpdateDepth depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (_lock) {
             return storeInternal(trans, obj, depth, true);
@@ -1582,10 +1582,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public final int storeInternal(Transaction trans, Object obj,
 			boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
-       return storeInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
+       return storeInternal(trans, obj, UnspecifiedUpdateDepth.INSTANCE, checkJustSet);
     }
     
-    public int storeInternal(final Transaction trans, final Object obj, final int depth,
+    public int storeInternal(final Transaction trans, final Object obj, final UpdateDepth depth,
 			final boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
     	checkReadOnly();
@@ -1597,7 +1597,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	}, trans);
     }
     
-    public final int storeAfterReplication(Transaction trans, Object obj, int depth,  boolean checkJust) {
+    public final int storeAfterReplication(Transaction trans, Object obj, UpdateDepth depth,  boolean checkJust) {
         
         if (obj instanceof Db4oType) {
             Db4oType db4oType = db4oTypeStored(trans, obj);
@@ -1615,7 +1615,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             _handlers._replicationReferenceProvider = referenceProvider;
             
             try {
-            	store2(checkTransaction(), obj, 1, false);
+            	store2(checkTransaction(), obj, UpdateDepthFactory.forDepth(1), false);
             } finally {
             	_replicationCallState = Const4.NONE;
             	_handlers._replicationReferenceProvider = null;
@@ -1623,7 +1623,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
     
-    private final int store2(Transaction trans, Object obj, int depth, boolean checkJust) {
+    private final int store2(Transaction trans, Object obj, UpdateDepth depth, boolean checkJust) {
         int id = store3(trans, obj, depth, checkJust);
         if(stackIsSmall()){
             checkStillToSet();
@@ -1665,7 +1665,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         throw new ObjectNotStorableException(claxx);
     }
 
-    public final int store3(Transaction trans, Object obj, int updateDepth, boolean checkJustSet) {
+    public final int store3(Transaction trans, Object obj, UpdateDepth updateDepth, boolean checkJustSet) {
         if (obj == null || (obj instanceof TransientClass)) {
             return 0;
         }
@@ -1706,7 +1706,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
                         return ref.getID();
                     }
                 }
-                if (updateDepthSufficient(updateDepth)) {
+                if (updateDepth.sufficientDepth()) {
                     flagAsHandled(ref);
                     ref.writeUpdate(trans, updateDepth);
                 }
@@ -1722,11 +1722,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	    }
     }
 
-    private final boolean updateDepthSufficient(int updateDepth){
-    	return (updateDepth == Const4.UNSPECIFIED) || (updateDepth > 0);
-    }
-
-	private boolean objectCanNew(Transaction transaction, ClassMetadata yc, Object obj) {
+    private boolean objectCanNew(Transaction transaction, ClassMetadata yc, Object obj) {
 		return callbacks().objectCanNew(transaction, obj)
 			&& yc.dispatchEvent(transaction, obj, EventDispatchers.CAN_NEW);
 	}
@@ -1861,16 +1857,16 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     static class PendingSet {
     	public final Transaction transaction;
     	public final ObjectReference ref;
-    	public final int depth;
+    	public final UpdateDepth depth;
     	
-    	public PendingSet(Transaction transaction_, ObjectReference ref_, int depth_) {
+    	public PendingSet(Transaction transaction_, ObjectReference ref_, UpdateDepth depth_) {
     		this.transaction = transaction_;
     		this.ref = ref_;
     		this.depth = depth_;
 		}
     }
 
-    void stillToSet(Transaction transaction, ObjectReference ref, int updateDepth) {
+    void stillToSet(Transaction transaction, ObjectReference ref, UpdateDepth updateDepth) {
         if(stackIsSmall()){
             if(ref.continueSet(transaction, updateDepth)){
                 return;

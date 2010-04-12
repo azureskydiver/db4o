@@ -30,4 +30,9 @@ public class FixedActivationDepth extends ActivationDepthImpl {
 		return new FixedActivationDepth(_depth-1, _mode);
 	}
 
+	// TODO code duplication in fixed activation/update depth
+	public FixedActivationDepth adjustDepthToBorders() {
+		return new FixedActivationDepth(DepthUtil.adjustDepthToBorders(_depth));
+	}
+
 }

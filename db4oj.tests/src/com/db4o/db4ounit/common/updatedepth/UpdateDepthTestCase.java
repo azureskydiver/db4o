@@ -9,6 +9,7 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 @decaf.Remove
@@ -27,14 +28,16 @@ public class UpdateDepthTestCase extends FixtureTestSuiteDescription implements 
 				new UpdateDepths(0, Const4.UNSPECIFIED, Const4.UNSPECIFIED, 0),
 				
 				new UpdateDepths(1, Const4.UNSPECIFIED, Const4.UNSPECIFIED, Const4.UNSPECIFIED),
-				new UpdateDepths(2, Const4.UNSPECIFIED, Const4.UNSPECIFIED, 2)
+				new UpdateDepths(2, Const4.UNSPECIFIED, Const4.UNSPECIFIED, 2),
 				
-				));
+				new UpdateDepths(1, Const4.UNSPECIFIED, 1, Const4.UNSPECIFIED)
+				),
+			new Db4oFixtureProvider());
 		
 		testUnits(TestUnit.class);
 	}
 	
-	static class UpdateDepths {
+	static class UpdateDepths implements Labeled {
 
 		private final int expected;
 		private final int store;
@@ -47,7 +50,14 @@ public class UpdateDepthTestCase extends FixtureTestSuiteDescription implements 
 			this.globalConfig = globalConfigurationDepth;
 			this.itemConfig = itemConfigurationDepth;
 		}
-		
+
+		public String label() {
+			return val("eD", expected) + "," + val("sD", store) + "," + val("gC", globalConfig) + "," + val("iC", itemConfig);
+		}
+
+		private String val(String label, int value) {
+			return label + ":" + (value == Const4.UNSPECIFIED ? "?" : String.valueOf(value));
+		}
 	}
 	
 	public static final class TestUnit extends AbstractDb4oTestCase {

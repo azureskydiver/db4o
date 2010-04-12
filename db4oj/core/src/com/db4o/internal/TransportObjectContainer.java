@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.references.*;
@@ -208,7 +209,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
     }
     
     @Override
-    public int storeInternal(Transaction trans, Object obj, int depth,
+    public int storeInternal(Transaction trans, Object obj, UpdateDepth depth,
 			boolean checkJustSet)
     		throws DatabaseClosedException, DatabaseReadOnlyException {
     	int id = _parent.getID(null, obj);
