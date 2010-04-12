@@ -5,6 +5,7 @@ package com.db4o.drs.db4o;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.query.*;
 
 /**
@@ -36,7 +37,7 @@ public class ReplicationRecord implements Internal4{
         container.showInternalClasses(true);
         try {
 	        Transaction trans = container.checkTransaction();
-	        container.storeAfterReplication(trans, this, 1, false);
+	        container.storeAfterReplication(trans, this, UpdateDepthFactory.forDepth(1), false);
 	        container.commit(trans);
         } finally {
         	container.showInternalClasses(false);
