@@ -73,7 +73,7 @@ public class DatabaseIdMapping extends AbstractIdMapping {
 		if (classID != 0) {
 			return classID;
 		}
-		BTreeRange range = _idTree.search(trans(), new MappedIDPair(oldID, 0));
+		BTreeRange range = _idTree.searchRange(trans(), new MappedIDPair(oldID, 0));
 		Iterator4 pointers = range.pointers();
 		if (pointers.moveNext()) {
 			BTreePointer pointer = (BTreePointer) pointers.current();

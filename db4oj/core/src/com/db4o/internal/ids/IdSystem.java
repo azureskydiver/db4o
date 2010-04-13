@@ -20,6 +20,6 @@ public interface IdSystem {
 
 	public void completeInterruptedTransaction(int transactionId1, int transactionId2);
 
-	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock);
+	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter);
 
 }

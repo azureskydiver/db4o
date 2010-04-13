@@ -19,8 +19,7 @@ import com.db4o.marshall.*;
  * 
  * @exclude
  */
-// public final class BTreeNode extends CacheablePersistentBase{
-	public final class BTreeNode extends LocalPersistentBase{
+public final class BTreeNode extends LocalPersistentBase{
 		
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  
@@ -101,6 +100,7 @@ import com.db4o.marshall.*;
         if(_isLeaf){
             
             prepareWrite(trans);
+            setStateDirty();
             
             if (wasRemoved(trans, s)) {
             	cancelRemoval(trans, obj, s.cursor());
@@ -121,6 +121,7 @@ import com.db4o.marshall.*;
                 return null;
             }
             prepareWrite(trans);
+            setStateDirty();
             _keys[s.cursor()] = childNode._keys[0];
             if(childNode != childNodeOrSplit){
                 int splitCursor = s.cursor() + 1;
@@ -413,6 +414,7 @@ import com.db4o.marshall.*;
     
     private void removeChild(Transaction trans, BTreeNode child) {
         prepareWrite(trans);
+        setStateDirty();
         int id = child.getID();
         for (int i = 0; i < _count; i++) {
             if(childID(i) == id){
@@ -435,6 +437,7 @@ import com.db4o.marshall.*;
     
     private void keyChanged(Transaction trans, BTreeNode child) {
         prepareWrite(trans);
+        setStateDirty();
         int id = child.getID();
         for (int i = 0; i < _count; i++) {
             if(childID(i) == id){
@@ -571,6 +574,12 @@ import com.db4o.marshall.*;
         if(canWrite()){
             return internalKey(trans, index);
         }
+        if(reader == null){
+        	reader = prepareRead(trans);
+        }
+        if(canWrite()){
+            return internalKey(trans, index);
+        }
         seekKey(reader, index);
         return keyHandler().readIndexEntry(trans.context(), reader);
     }
@@ -652,7 +661,6 @@ import com.db4o.marshall.*;
         BTreeNodeCacheEntry cacheEntry = btree().cacheEntry(this);
         
         if(canWrite()){
-            setStateDirty();
             return;
         }
         
@@ -664,7 +672,6 @@ import com.db4o.marshall.*;
 		} else{
 			read(trans.systemTransaction());
 		}
-        setStateDirty();
         _btree.addToProcessing(this);
     }
     
@@ -706,6 +713,7 @@ import com.db4o.marshall.*;
             throw new IllegalStateException();
         }
         prepareWrite(trans);
+        setStateDirty();
         Object obj = null;
         
         BTreePatch patch = keyPatch(index);
@@ -731,6 +739,7 @@ import com.db4o.marshall.*;
         }
             
         prepareWrite(trans);
+        setStateDirty();
         
         BTreePatch patch = keyPatch(index);
         
@@ -1014,16 +1023,19 @@ import com.db4o.marshall.*;
     
     private void setParentID(Transaction trans, int id){
         prepareWrite(trans);
+        setStateDirty();
         _parentID = id;
     }
     
     private void setPreviousID(Transaction trans, int id){
         prepareWrite(trans);
+        setStateDirty();
         _previousID = id;
     }
     
     private void setNextID(Transaction trans, int id){
         prepareWrite(trans);
+        setStateDirty();
         _nextID = id;
     }
     
@@ -1218,6 +1230,9 @@ import com.db4o.marshall.*;
     		return;
     	}
     	if(! canWrite()){
+    		return;
+    	}
+    	if(isDirty()){
     		return;
     	}
     	if(isPatched()){

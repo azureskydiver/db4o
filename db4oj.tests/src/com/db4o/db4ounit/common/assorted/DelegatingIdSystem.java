@@ -20,8 +20,8 @@ public class DelegatingIdSystem implements IdSystem {
 	}
 
 	public void commit(Visitable<SlotChange> slotChanges,
-			Runnable commitBlock) {
-		_delegate.commit(slotChanges, commitBlock);
+			FreespaceCommitter freespaceCommitter) {
+		_delegate.commit(slotChanges, freespaceCommitter);
 	}
 
 	public Slot committedSlot(int id) {

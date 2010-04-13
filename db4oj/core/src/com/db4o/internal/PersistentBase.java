@@ -51,7 +51,7 @@ public abstract class PersistentBase extends Identifiable implements Persistent,
 		setStateOnRead(reader);
 	}
     
-    protected ByteArrayBuffer produceReadBuffer(Transaction trans){
+    protected final ByteArrayBuffer produceReadBuffer(Transaction trans){
     	return readBufferById(trans);
     }
     

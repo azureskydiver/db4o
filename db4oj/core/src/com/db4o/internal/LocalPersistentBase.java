@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
@@ -30,6 +31,9 @@ public abstract class LocalPersistentBase extends PersistentBase {
 	@Override
 	protected ByteArrayBuffer readBufferById(Transaction trans) {
 		Slot slot = idSystem(trans).currentSlot(getID());
+		if(DTrace.enabled){
+			DTrace.SLOT_READ.logLength(getID(), slot);
+		}
 		return ((LocalObjectContainer)trans.container()).readBufferBySlot(slot);
 	}
 

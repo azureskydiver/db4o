@@ -119,7 +119,7 @@ public class LocalTransaction extends Transaction {
         
         container().writeDirtyClassMetadata();
         
-        idSystem().commit();
+        idSystem().commit(new FreespaceCommitter(localContainer().freespaceManager()));
         
     }
 	

@@ -6,6 +6,7 @@ import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.db4ounit.common.exceptions.ExceptionSimulatingStorage.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 public class ExceptionSimulatingIdSystem extends DelegatingIdSystem{
@@ -71,11 +72,11 @@ public class ExceptionSimulatingIdSystem extends DelegatingIdSystem{
 	}
 	
 	@Override
-	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
+	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter) {
 		if (triggersException()) {
 			_exceptionFactory.throwException();
 		}
-		super.commit(slotChanges, commitBlock);
+		super.commit(slotChanges, freespaceCommitter);
 	}
 	
 

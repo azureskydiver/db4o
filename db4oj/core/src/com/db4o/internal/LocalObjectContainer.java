@@ -406,12 +406,12 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			throw new IllegalArgumentException();
 		}
 
-		if (DTrace.enabled) {
-			DTrace.READ_ID.log(id);
+		Slot slot = lastCommitted ? trans.idSystem().committedSlot(id) :  trans.idSystem().currentSlot(id);
+
+		if(DTrace.enabled){
+			DTrace.SLOT_READ.logLength(id, slot);
 		}
 
-		Slot slot = lastCommitted ? trans.idSystem().committedSlot(id) :  trans.idSystem().currentSlot(id);
-		
 		return readBufferBySlot(slot);
     }
     
@@ -420,11 +420,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			throw new IllegalArgumentException();
 		}
 
-		if (DTrace.enabled) {
-			DTrace.READ_ID.log(id);
-		}
-
 		Slot slot = lastCommitted ? trans.idSystem().committedSlot(id) :  trans.idSystem().currentSlot(id);
+		
+		if(DTrace.enabled){
+			DTrace.SLOT_READ.logLength(id, slot);
+		}
 		
 		return readStatefulBufferBySlot(trans, id, slot);
     }

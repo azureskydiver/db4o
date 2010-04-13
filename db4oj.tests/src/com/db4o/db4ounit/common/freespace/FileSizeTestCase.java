@@ -12,7 +12,7 @@ public class FileSizeTestCase extends FreespaceManagerTestCaseBase implements Op
     private static final int ITERATIONS = 100;
 
 	public static void main(String[] args) {
-		new FileSizeTestCase().runEmbedded();
+		new FileSizeTestCase().runSolo();
 	}
 	
 	public void testConsistentSizeOnRollback(){

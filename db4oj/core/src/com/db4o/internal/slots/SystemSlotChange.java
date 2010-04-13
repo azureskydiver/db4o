@@ -15,9 +15,9 @@ public class SystemSlotChange extends SlotChange {
 	}
 	
 	@Override
-	public void freeDuringCommit(TransactionalIdSystemImpl idSystem,
-			FreespaceManager freespaceManager, boolean forFreespace) {
-		super.freeDuringCommit(idSystem, freespaceManager, forFreespace);
+	public void accumulateFreeSlot(TransactionalIdSystemImpl idSystem,
+			FreespaceCommitter freespaceCommitter, boolean forFreespace) {
+		super.accumulateFreeSlot(idSystem, freespaceCommitter, forFreespace);
 		
 		// FIXME: If we are doing a delete, we should also free our pointer here.
 		

@@ -63,7 +63,7 @@ public class BTreeAssert {
 	public static void assertSingleElement(Transaction trans, BTree btree, Object element) {
 		Assert.areEqual(1, btree.size(trans));
 		
-		final BTreeRange result = btree.search(trans, element);
+		final BTreeRange result = btree.searchRange(trans, element);
 		ExpectingVisitor expectingVisitor = new ExpectingVisitor(new Object[] { element });
 		BTreeAssert.traverseKeys(result, expectingVisitor);
 		expectingVisitor.assertExpectations();

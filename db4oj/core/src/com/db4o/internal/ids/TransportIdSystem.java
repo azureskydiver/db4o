@@ -37,7 +37,7 @@ public final class TransportIdSystem implements TransactionalIdSystem {
 		writePointer(id, Slot.ZERO);
 	}
 	
-	public void commit() {
+	public void commit(FreespaceCommitter accumulator) {
 		// don't do anything
 	}
 	
@@ -80,6 +80,10 @@ public final class TransportIdSystem implements TransactionalIdSystem {
 
 	public void close() {
 		
+	}
+
+	public void accumulateFreeSlots(FreespaceCommitter freespaceCommitter, boolean forFreespace) {
+		// do nothing
 	}
 
 }

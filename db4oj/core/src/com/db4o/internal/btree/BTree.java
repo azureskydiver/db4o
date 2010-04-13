@@ -53,7 +53,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     
     private final Cache4<Integer, BTreeNodeCacheEntry> _nodeCache;
     
-    private TreeIntObject _pendingNodesToReadMode;
+    private TreeIntObject _evictedFromCache;
     
     public BTree(Transaction trans, BTreeConfiguration config, int id, Indexable4 keyHandler, final int treeNodeSize) {
     	super(config._idSystem);
@@ -111,7 +111,8 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	add(trans, preparedComparison, key);
     }
 
-	public void add(Transaction trans, PreparedComparison preparedComparison, Object key){	
+	public void add(Transaction trans, PreparedComparison preparedComparison, Object key){
+		
         ensureDirty(trans);
         BTreeNode rootOrSplit = _root.add(trans, preparedComparison, key);
         if(rootOrSplit != null && rootOrSplit != _root){
@@ -119,40 +120,54 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
             _root.write(trans.systemTransaction());
             addNode(_root);
         }
-        checkToReadMode();
+        convertCacheEvictedNodesToReadMode();
     }
 
 	public void remove(Transaction trans, Object key){
-    	keyCantBeNull(key);
-    	
-    	PreparedComparison preparedComparison = keyHandler().prepareComparison(trans.context(), key);
-    	
-        final Iterator4 pointers = search(trans, preparedComparison).pointers();
-        if (!pointers.moveNext()) {
-        	checkToReadMode();
-        	return;
-        }
-        BTreePointer first = (BTreePointer)pointers.current();
-        ensureDirty(trans);
-        BTreeNode node = first.node();
-        node.remove(trans, preparedComparison, key, first.index());
-        checkToReadMode();
+		BTreePointer bTreePointer = searchPointer(trans, key);
+		if(bTreePointer == null){
+			return;
+		}
+		ensureDirty(trans);
+		PreparedComparison preparedComparison = keyHandler().prepareComparison(trans.context(), key);
+		BTreeNode node = bTreePointer.node();
+		node.remove(trans, preparedComparison, key, bTreePointer.index());
+        convertCacheEvictedNodesToReadMode();
     }
     
-    public BTreeRange search(Transaction trans, Object key) {
+    public BTreeRange searchRange(Transaction trans, Object key) {
     	keyCantBeNull(key);
-    	return search(trans, keyHandler().prepareComparison(trans.context(), key));
+    	return searchRange(trans, keyHandler().prepareComparison(trans.context(), key));
     }
     
-    public BTreePointer searchOne(Transaction trans, Object key) {
+    public BTreePointer searchPointer(Transaction trans, Object key) {
     	ensureActive(trans);
     	keyCantBeNull(key);
-    	BTreeNodeSearchResult start = searchLeaf(trans, keyHandler().prepareComparison(trans.context(), key), SearchTarget.LOWEST);
-    	checkToReadMode();
-    	return start.firstValidPointer();
+    	PreparedComparison preparedComparison = keyHandler().prepareComparison(trans.context(), key);
+		BTreeNodeSearchResult start = searchLeaf(trans, preparedComparison, SearchTarget.LOWEST);
+    	BTreePointer bTreePointer = start.firstValidPointer();
+    	if(bTreePointer == null){
+    		convertCacheEvictedNodesToReadMode();
+    		return null;
+    	}
+    	Object found = bTreePointer.key();
+    	convertCacheEvictedNodesToReadMode();
+		if(preparedComparison.compareTo(found) == 0){
+			return bTreePointer;
+		}
+		return null;
     }
     
-    private BTreeRange search(Transaction trans, PreparedComparison preparedComparison) {
+    
+    public Object search(Transaction trans, Object key) {
+        BTreePointer bTreePointer = searchPointer(trans, key);
+        if(bTreePointer != null){
+        	return bTreePointer.key();
+        }
+        return null;
+    }
+    
+    private BTreeRange searchRange(Transaction trans, PreparedComparison preparedComparison) {
     	ensureActive(trans);
         
         // TODO: Optimize the following.
@@ -163,7 +178,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         BTreeNodeSearchResult start = searchLeaf(trans, preparedComparison, SearchTarget.LOWEST);
         BTreeNodeSearchResult end = searchLeaf(trans, preparedComparison, SearchTarget.HIGHEST);
         BTreeRange range = start.createIncludingRange(end);
-        checkToReadMode();
+        convertCacheEvictedNodesToReadMode();
 		return range;
     }
     
@@ -184,7 +199,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, PreparedComparison preparedComparison, SearchTarget target) {
         ensureActive(trans);
         BTreeNodeSearchResult result = _root.searchLeaf(trans, preparedComparison, target);
-        checkToReadMode();
+        convertCacheEvictedNodesToReadMode();
 		return result;
     }
     
@@ -192,7 +207,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	updateSize(transaction);
     	commitNodes(transaction);
     	finishTransaction(transaction);
-    	checkToReadMode();
+    	convertCacheEvictedNodesToReadMode();
     }
 
 	private void updateSize(final Transaction transaction) {
@@ -224,7 +239,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     public void rollback(final Transaction trans){
         rollbackNodes(trans);
         finishTransaction(trans);
-        checkToReadMode();
+        convertCacheEvictedNodesToReadMode();
     }
 
 	private void finishTransaction(final Transaction trans) {
@@ -386,7 +401,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
             return;
         }
         _root.traverseKeys(trans, visitor);
-        checkToReadMode();
+        convertCacheEvictedNodesToReadMode();
     }
     
     public void sizeChanged(Transaction transaction, BTreeNode node, int changeBy){
@@ -406,7 +421,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 			return null;
 		}
 		BTreePointer pointer = _root.firstPointer(trans);
-		checkToReadMode();
+		convertCacheEvictedNodesToReadMode();
 		return pointer;
 	}
 	
@@ -416,7 +431,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 			return null;
 		}
 		BTreePointer pointer = _root.lastPointer(trans);
-		checkToReadMode();
+		convertCacheEvictedNodesToReadMode();
 		return pointer;
 	}
 	
@@ -462,7 +477,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 					});
 			}
 		});
-		checkToReadMode();
+		convertCacheEvictedNodesToReadMode();
 	}
 
 	int compareKeys(Context context, Object key1, Object key2) {
@@ -576,7 +591,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 			}
 		}, new Procedure4<BTreeNodeCacheEntry>() {
 			public void apply(BTreeNodeCacheEntry entry) {
-				toReadMode(entry._node);
+				evictedFromCache(entry._node);
 			}
 		});
 	}
@@ -586,20 +601,20 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 		return _config._slotChangeFactory;
 	}
 	
-	public void toReadMode(BTreeNode node){
-		_pendingNodesToReadMode = Tree.add(_pendingNodesToReadMode, new TreeIntObject(node.getID(), node));
+	public void evictedFromCache(BTreeNode node){
+		_evictedFromCache = Tree.add(_evictedFromCache, new TreeIntObject(node.getID(), node));
 	}
 	
-	public void checkToReadMode(){
-		if(_pendingNodesToReadMode == null){
+	public void convertCacheEvictedNodesToReadMode(){
+		if(_evictedFromCache == null){
 			return;
 		}
-		Tree.traverse(_pendingNodesToReadMode, new Visitor4<TreeIntObject>() {
+		Tree.traverse(_evictedFromCache, new Visitor4<TreeIntObject>() {
 			public void visit(TreeIntObject treeIntObject) {
 				((BTreeNode)treeIntObject._object).toReadMode();
 			}
 		});
-		_pendingNodesToReadMode = null;
+		_evictedFromCache = null;
 	}
     
 }

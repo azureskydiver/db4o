@@ -34,9 +34,8 @@ public class FreespaceSlotChange extends SystemSlotChange {
 	}
 	
 	@Override
-	public void freeDuringCommit(TransactionalIdSystemImpl idSystem,
-			FreespaceManager freespaceManager, boolean forFreespace) {
-		super.freeDuringCommit(idSystem, freespaceManager, forFreespace);
+	public void accumulateFreeSlot(TransactionalIdSystemImpl idSystem, FreespaceCommitter freespaceCommitter, boolean forFreespace) {
+		super.accumulateFreeSlot(idSystem, freespaceCommitter, forFreespace);
 		if(_freed == null){
 			return;
 		}
@@ -45,8 +44,7 @@ public class FreespaceSlotChange extends SystemSlotChange {
         }
 		Iterator4 iterator = _freed.iterator();
 		while(iterator.moveNext()){
-			Slot slot = (Slot) iterator.current();
-			freespaceManager.free(slot);
+			freespaceCommitter.delayedFree((Slot) iterator.current());
 		}
 	}
 }

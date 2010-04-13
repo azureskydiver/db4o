@@ -67,7 +67,7 @@ public class BTreeSearchTestCase extends AbstractDb4oTestCase implements
 				ExpectingVisitor expectingVisitor = ExpectingVisitor
 						.createExpectingVisitor(keys[i], IntArrays4.occurences(
 								keys, keys[i]));
-				BTreeRange range = btree.search(trans, new Integer(keys[i]));
+				BTreeRange range = btree.searchRange(trans, new Integer(keys[i]));
 				BTreeAssert.traverseKeys(range, expectingVisitor);
 				expectingVisitor.assertExpectations();
 				lastValue = keys[i];

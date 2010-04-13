@@ -93,16 +93,30 @@ public class FileHeaderVariablePart1 {
 			_id = _container.allocatePointerSlot();
 		}
 		final Slot committedSlot = _container.readPointerSlot(_id);
-		final Slot newSlot = _container.allocateSlot(length);
+		final Slot newSlot = allocateSlot(length);
 		ByteArrayBuffer buffer = new ByteArrayBuffer(length);
 		writeThis(buffer);
 		_container.writeEncrypt(buffer, newSlot.address(), 0);
 		return new Runnable(){
 			public void run() {
+				
+				// FIXME: This is not transactional !!!
 				_container.writePointer(_id, newSlot);
-				_container.free(committedSlot);
+				
+				if(committedSlot == null || committedSlot.isNull()){
+					return;
+				}
+				_container.freespaceManager().freeTransactionLogSlot(committedSlot);
 			}
 		};
+	}
+
+	private Slot allocateSlot(int length) {
+		Slot reusedSlot = _container.freespaceManager().allocateTransactionLogSlot(length);
+		if(reusedSlot != null){
+			return reusedSlot;
+		}
+		return _container.appendBytes(length);
 	}
 
 	public int id() {

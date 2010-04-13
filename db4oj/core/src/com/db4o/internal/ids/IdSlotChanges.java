@@ -23,10 +23,10 @@ public class IdSlotChanges {
 		_freespaceManager = freespaceManager;
 	}
 
-	public final void freeSlotChanges(final boolean forFreespace, boolean traverseMutable) {
+	public final void accumulateFreeSlots(final FreespaceCommitter freespaceCommitter, final boolean forFreespace, boolean traverseMutable) {
         Visitor4 visitor = new Visitor4() {
             public void visit(Object obj) {
-                ((SlotChange)obj).freeDuringCommit(_idSystem, freespaceManager(), forFreespace);
+                ((SlotChange)obj).accumulateFreeSlot(_idSystem, freespaceCommitter, forFreespace);
             }
         };
         if(traverseMutable){

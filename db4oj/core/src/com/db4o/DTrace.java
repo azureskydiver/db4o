@@ -43,7 +43,9 @@ public class DTrace {
     private static final void configure(){
         if(enabled){
         
-        	addRange(26);
+        	// addRange(49);
+        	
+        	addRangeWithLength(431, 60);
         	
         	// addRangeWithEnd(390, 402);
         	
@@ -55,7 +57,7 @@ public class DTrace {
             
             // addRangeWithEnd(3835808, 3836267);
             
-            // breakOnEvent(5);
+            breakOnEvent(17);
             
             
             // addRangeWithLength(1068, 1);
@@ -131,7 +133,7 @@ public class DTrace {
 			JUST_SET = new DTrace(true, true, "just set", true);
 			NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
 			NOTIFY_SLOT_CREATED = new DTrace(true, true, "notifySlotCreated", true);
-			NOTIFY_SLOT_CHANGED = new DTrace(true, true, "notifySlotChanged", true);
+			NOTIFY_SLOT_UPDATED = new DTrace(true, true, "notify Slot updated", true);
 			NOTIFY_SLOT_DELETED = new DTrace(true, true, "notifySlotDeleted", true);
 			OBJECT_REFERENCE_CREATED  = new DTrace(true, true, "new ObjectReference", true);
 			PERSISTENT_BASE_NEW_SLOT = new DTrace(true, true, "PersistentBase new slot",true);
@@ -143,7 +145,6 @@ public class DTrace {
 			QUERY_PROCESS = new DTrace(true, true, "query process", true);
 			READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
 			READ_BYTES = new DTrace(true, true, "readBytes", true);
-			READ_ID = new DTrace(true, true, "read ID", true);
 			READ_SLOT = new DTrace(true, true, "read slot", true);
 			REFERENCE_REMOVED = new DTrace(true, true, "reference removed", true);
 			REGULAR_SEEK = new DTrace(true, true, "regular seek", true);
@@ -159,6 +160,7 @@ public class DTrace {
 					"slot free on rollback id", true);
 			SLOT_FREE_ON_ROLLBACK_ADDRESS = new DTrace(true, true,
 					"slot free on rollback address", true);
+			SLOT_READ = new DTrace(true, true, "slot read", true);
 			TRANS_COMMIT = new DTrace(true, true, "trans commit", true);
 			TRANS_DELETE = new DTrace(true, true, "trans delete", true);
 			TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
@@ -246,7 +248,7 @@ public class DTrace {
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
     public static DTrace NOTIFY_SLOT_CREATED;
-    public static DTrace NOTIFY_SLOT_CHANGED;
+    public static DTrace NOTIFY_SLOT_UPDATED;
     public static DTrace NOTIFY_SLOT_DELETED;
     public static DTrace OBJECT_REFERENCE_CREATED;
     public static DTrace PERSISTENT_BASE_NEW_SLOT;
@@ -257,7 +259,6 @@ public class DTrace {
     public static DTrace QUERY_PROCESS;
     public static DTrace READ_ARRAY_WRAPPER;
     public static DTrace READ_BYTES;
-    public static DTrace READ_ID;
     public static DTrace READ_SLOT;
     public static DTrace REFERENCE_REMOVED;
     public static DTrace REGULAR_SEEK;
@@ -269,6 +270,7 @@ public class DTrace {
 	public static DTrace SLOT_FREE_ON_COMMIT;
 	public static DTrace SLOT_FREE_ON_ROLLBACK_ID;
 	public static DTrace SLOT_FREE_ON_ROLLBACK_ADDRESS;
+	public static DTrace SLOT_READ;
     public static DTrace TRANS_COMMIT;
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;

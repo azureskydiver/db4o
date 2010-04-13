@@ -14,11 +14,13 @@ public interface TransactionalIdSystem {
 
 	public boolean isDirty();
 
-	public void commit();
+	public void commit(FreespaceCommitter freespaceCommitter);
 
 	public Slot committedSlot(int id);
 
 	public Slot currentSlot(int id);
+	
+	public void accumulateFreeSlots(FreespaceCommitter freespaceCommitter, boolean forFreespace);
 
 	public void rollback();
 

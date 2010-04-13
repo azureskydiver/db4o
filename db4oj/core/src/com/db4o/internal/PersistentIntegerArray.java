@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.internal.ids.*;
+import com.db4o.internal.slots.*;
 
 
 /**
@@ -60,6 +61,11 @@ public class PersistentIntegerArray extends LocalPersistentBase {
 	
 	public int[] array(){
 		return _ints;
+	}
+	
+	@Override
+	public SlotChangeFactory slotChangeFactory() {
+		return SlotChangeFactory.FREE_SPACE;
 	}
 
 }

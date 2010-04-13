@@ -96,5 +96,9 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 	public int write(LocalObjectContainer container) {
 		return _delegate.write(container);
 	}
+
+	public void slotFreed(Slot slot) {
+		_delegate.slotFreed(slot);
+	}
 }
 

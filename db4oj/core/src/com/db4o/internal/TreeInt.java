@@ -156,7 +156,11 @@ public class TreeInt extends Tree<Integer> implements ReadWriteable {
 			});
 			return length.value;
 		}
-		return Const4.INT_LENGTH + (size() * ownLength());
+		return marshalledLength(size());
+	}
+	
+	public final int marshalledLength(int size){
+		return Const4.INT_LENGTH + (size * ownLength());
 	}
 	
 	@Override

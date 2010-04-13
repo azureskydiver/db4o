@@ -86,5 +86,10 @@ public class FreespaceManagerForDebug implements FreespaceManager {
 		return 0;
 	}
 
+	public void slotFreed(Slot slot) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

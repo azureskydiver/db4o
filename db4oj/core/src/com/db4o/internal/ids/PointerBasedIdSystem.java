@@ -29,9 +29,9 @@ public final class PointerBasedIdSystem implements IdSystem {
 		return _container.readPointerSlot(id);
 	}
 
-	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
+	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter) {
 		Slot reservedSlot = _transactionLogHandler.allocateSlot(false, countSlotChanges(slotChanges));
-		commitBlock.run();
+		freespaceCommitter.commit();
 		_transactionLogHandler.applySlotChanges(slotChanges, countSlotChanges(slotChanges), reservedSlot);
 	}
 
