@@ -58,6 +58,10 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
         }
     	_lastReferenceReadWasReallyNull = false;
         
+    	if(objectId == Const4.INVALID_OBJECT_ID) {
+    		return null;
+    	}
+    	
         final ClassMetadata classMetadata = classMetadataForObjectId(objectId);
         if (null == classMetadata) {
         	// TODO: throw here

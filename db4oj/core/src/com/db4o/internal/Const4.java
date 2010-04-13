@@ -164,4 +164,6 @@ public final class Const4
      * @sharpen.ignore
      */
     public static final int MAX_STACK_DEPTH = 20;
+    
+    public static final int INVALID_OBJECT_ID = 1;
 }
