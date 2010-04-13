@@ -109,7 +109,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		int mapped = internalMappedID(id,lenient);
 		if(mapped==0) {
 			_listener.notifyDefragmentInfo(new DefragmentInfo("No mapping found for ID "+id));
-			return 0;
+			return Const4.INVALID_OBJECT_ID;
 		}
 		return mapped;
 	}
