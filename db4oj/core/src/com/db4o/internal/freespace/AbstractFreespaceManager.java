@@ -25,7 +25,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return systemType;
     }
     
-    private final Procedure4<Slot> _slotFreedCallback;
+    protected Procedure4<Slot> _slotFreedCallback;
     
     private final int _discardLimit;
     
@@ -133,7 +133,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
 		return systemType == FM_LEGACY_RAM  || systemType == FM_IX ;
 	}
 	
-    protected void slotFreed(Slot slot) {
+    public void slotFreed(Slot slot) {
     	if(_slotFreedCallback == null){
     		return;
     	}

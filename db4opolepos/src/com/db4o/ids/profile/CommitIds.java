@@ -34,7 +34,7 @@ public class CommitIds {
 							change.notifySlotCreated(new Slot(finalidIdx, 1));
 							visitor.visit(change);
 						}
-					}, Runnable4.DO_NOTHING);
+					}, FreespaceCommitter.DO_NOTHING);
 				}
 			}
 		};

@@ -44,5 +44,7 @@ public interface FreespaceManager {
 	public void freeTransactionLogSlot(Slot slot);
 	
 	public void listener(FreespaceListener listener);
+	
+	public void slotFreed(Slot slot);
 
 }

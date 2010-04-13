@@ -39,7 +39,7 @@ public class File4 {
 
 		java.io.File targetFile = new java.io.File(target);
 		targetFile.mkdirs();
-		targetFile.delete();
+		File4.delete(target);
 
 		if (sourceFile.isDirectory()) {
 			copyDirectory(sourceFile, targetFile);

@@ -41,7 +41,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase implements
 	}
 
 	protected BTreeRange search(Transaction trans, int key) {
-		return _btree.search(trans, new Integer(key));
+		return _btree.searchRange(trans, new Integer(key));
 	}
 
 	protected void commit(Transaction trans) {

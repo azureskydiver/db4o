@@ -94,7 +94,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 
 	private boolean contains(int id) {
 		synchronized(lock()){
-		    BTreeRange range = bTree().search(transaction(), new Integer(id));
+		    BTreeRange range = bTree().searchRange(transaction(), new Integer(id));
 			return ! range.isEmpty();
 		}
     }

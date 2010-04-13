@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -52,11 +53,14 @@ public class InMemoryIdSystem implements IdSystem {
 		// do nothing
 	}
 
-	public void commit(Visitable<SlotChange> slotChanges, Runnable commitBlock) {
-		commitBlock.run();
-		if(_slot != null &&  ! _slot.isNull()){
-			_container.free(_slot);
-		}
+	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter) {
+		
+		Slot reservedSlot = allocateSlot(false, estimatedSlotLength(estimateMappingCount(slotChanges)));
+		
+		freeSlot(_slot);
+		
+		freespaceCommitter.commit();
+		
 		slotChanges.accept(new Visitor4<SlotChange>() {
 			public void visit(SlotChange slotChange) {
 				if(! slotChange.slotModified()){
@@ -72,12 +76,58 @@ public class InMemoryIdSystem implements IdSystem {
 				_ids = Tree.add(_ids, new IdSlotTree(slotChange._key, slotChange.newSlot()));
 			}
 		});
-		writeThis();
+		writeThis(reservedSlot);
+		
+	}
+	
+	private Slot allocateSlot(boolean appendToFile, int slotLength) {
+    	if(! appendToFile){
+    		Slot slot = _container.freespaceManager().allocateSlot(slotLength);
+    		if(slot != null){
+    			return slot;
+    		}
+    	}
+    	return _container.appendBytes(slotLength);
 	}
 
-	private void writeThis() {
-		int slotLength = TreeInt.marshalledLength(_ids) + Const4.INT_LENGTH;
-		_slot = _container.allocateSlot(slotLength);
+	private int estimateMappingCount(Visitable<SlotChange> slotChanges) {
+		final IntByRef count = new IntByRef(); 
+		count.value = _ids == null ? 0 :_ids.size();
+		slotChanges.accept(new Visitor4<SlotChange>() {
+			
+			public void visit(SlotChange slotChange) {
+				if(! slotChange.slotModified() || slotChange.removeId()){
+					return;
+				}
+				count.value++;
+			}
+		});
+		return count.value;
+	}
+
+	private void writeThis(Slot reservedSlot) {
+		
+		// We need a little dance here to keep filling free slots
+		// with X bytes. The FreespaceManager would do it immediately
+		// upon the free call, but then our CrashSimulatingTestCase
+		// fails because we have the Xses in the file before flushing.
+		Slot xByteSlot = null;
+		
+		
+		if(Debug4.xbytes){
+			xByteSlot = _slot;
+		}
+		int slotLength = slotLength();
+		if (reservedSlot.length() >= slotLength){
+			_slot = reservedSlot;
+			reservedSlot = null;
+		} else{
+			if(Debug4.xbytes){
+				_container.freespaceManager().slotFreed(reservedSlot);
+			}
+			_slot = allocateSlot(true, slotLength);
+		}
+		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(_slot.length());
 		_idGenerator.write(buffer);
 		TreeInt.write(buffer, _ids);
@@ -89,6 +139,36 @@ public class InMemoryIdSystem implements IdSystem {
 		_container.syncFiles();
 		_container.systemData().transactionPointer1(_slot.address());
 		_container.systemData().transactionPointer2(_slot.length());
+		freeSlot(reservedSlot);
+		
+		if(Debug4.xbytes){
+			if(xByteSlot != null && ! xByteSlot.isNull()){
+				_container.freespaceManager().slotFreed(xByteSlot);
+			}
+		}
+	}
+
+	private void freeSlot(Slot slot) {
+		if(slot == null || slot.isNull()){
+			return;
+		}
+		FreespaceManager freespaceManager = _container.freespaceManager();
+		if(freespaceManager == null){
+			return;
+		}
+		freespaceManager.freeTransactionLogSlot(slot);
+	}
+
+	private int slotLength() {
+		return TreeInt.marshalledLength(_ids) + _idGenerator.marshalledLength();
+	}
+	
+	private int estimatedSlotLength(int estimatedCount) {
+		IdSlotTree template = _ids;
+		if(template == null){
+			template = new IdSlotTree(0, new Slot(0, 0));
+		}
+		return template.marshalledLength(estimatedCount) + _idGenerator.marshalledLength();
 	}
 
 	public Slot committedSlot(int id) {

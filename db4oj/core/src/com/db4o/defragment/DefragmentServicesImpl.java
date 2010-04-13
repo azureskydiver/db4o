@@ -12,6 +12,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.encoding.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -345,7 +346,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public void commitIds(){
-		_targetDb.idSystem().commit(mapping().slotChanges(), Runnable4.DO_NOTHING);
+		_targetDb.idSystem().commit(mapping().slotChanges(), FreespaceCommitter.DO_NOTHING);
 	}
 	
 }

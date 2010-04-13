@@ -85,7 +85,7 @@ public final class BTreePointer{
             nextReader = nextNode.prepareRead(_transaction);
             newIndex = nextNode.firstKeyIndex(_transaction);
         }
-        btree().checkToReadMode();
+        btree().convertCacheEvictedNodesToReadMode();
         return new BTreePointer(_transaction, nextReader, nextNode, newIndex);
     }
     

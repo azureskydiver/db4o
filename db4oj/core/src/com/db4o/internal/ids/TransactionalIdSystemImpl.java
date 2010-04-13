@@ -51,27 +51,22 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 		return _slotChanges.isDirty();
 	}
 
-	public void commit() {
+	public void commit(final FreespaceCommitter freespaceCommitter) {
 		Visitable<SlotChange> slotChangeVisitable = new Visitable<SlotChange>() {
 			public void accept(Visitor4<SlotChange> visitor) {
 				traverseSlotChanges(visitor);
 			}
 		};
-		globalIdSystem().commit(slotChangeVisitable, new Runnable() {
-			public void run() {
-				freeSlotChanges(false);
-				freespaceBeginCommit();
-				commitFreespace();
-				freeSlotChanges(true);
-			}
-		});
-        freespaceEndCommit();
+		freespaceCommitter.register(this);
+		accumulateFreeSlots(freespaceCommitter, false);
+		globalIdSystem().commit(slotChangeVisitable, freespaceCommitter);
 	}
+	
 
-	private void freeSlotChanges(boolean forFreespace) {
-		_slotChanges.freeSlotChanges(forFreespace, isSystemIdSystem());
+	public void accumulateFreeSlots(FreespaceCommitter accumulator, boolean forFreespace) {
+		_slotChanges.accumulateFreeSlots(accumulator, forFreespace, isSystemIdSystem());
 		if(! isSystemIdSystem()){
-			_systemIdSystem.freeSlotChanges(forFreespace);	
+			_systemIdSystem.accumulateFreeSlots(accumulator, forFreespace);
 		}
 	}
 	

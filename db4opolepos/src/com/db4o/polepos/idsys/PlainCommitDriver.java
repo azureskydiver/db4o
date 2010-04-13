@@ -2,6 +2,7 @@
 package com.db4o.polepos.idsys;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 
@@ -29,7 +30,7 @@ public class PlainCommitDriver extends IdSystemDriver {
 					visitor.visit(slotChange);
 				}
 			}
-		}, Runnable4.DO_NOTHING);
+		}, FreespaceCommitter.DO_NOTHING);
 	}
 	
 	public void multipleCommits() {
@@ -50,7 +51,7 @@ public class PlainCommitDriver extends IdSystemDriver {
 						visitor.visit(slotChange);
 					}
 				}
-			}, Runnable4.DO_NOTHING);
+			}, FreespaceCommitter.DO_NOTHING);
 		}
 		
 	}
@@ -72,7 +73,7 @@ public class PlainCommitDriver extends IdSystemDriver {
 						visitor.visit(slotChange);
 					}
 				}
-			}, Runnable4.DO_NOTHING);
+			}, FreespaceCommitter.DO_NOTHING);
 		}
 	}
 	

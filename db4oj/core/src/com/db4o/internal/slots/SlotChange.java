@@ -50,7 +50,7 @@ public class SlotChange extends TreeInt {
 		return super.shallowCloneInternal(sc);
 	}
 	
-	public void freeDuringCommit(TransactionalIdSystemImpl idSystem, FreespaceManager freespaceManager, boolean forFreespace) {
+	public void accumulateFreeSlot(TransactionalIdSystemImpl idSystem, FreespaceCommitter freespaceCommitter, boolean forFreespace) {
         if( isForFreespace() != forFreespace){
         	return;
         }
@@ -71,7 +71,7 @@ public class SlotChange extends TreeInt {
 			// No old slot at all can be the case if the object
 			// has been deleted by another transaction and we add it again.
 			if(slot != null && ! slot.isNull()){
-				freespaceManager.free(slot);
+				freespaceCommitter.delayedFree(slot);
 			}
 		}
 	}
@@ -151,8 +151,7 @@ public class SlotChange extends TreeInt {
 
 	public void notifySlotUpdated(FreespaceManager freespaceManager, Slot slot) {
 		if(DTrace.enabled){
-			DTrace.NOTIFY_SLOT_CHANGED.log(_key);
-			DTrace.NOTIFY_SLOT_CHANGED.logLength(slot);
+			DTrace.NOTIFY_SLOT_UPDATED.logLength(_key, slot);
 		}
 		freePreviouslyModifiedSlot(freespaceManager);
 		_newSlot = slot;
@@ -211,6 +210,15 @@ public class SlotChange extends TreeInt {
 	
 	public boolean removeId(){
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		String str = "id: " + _key;
+		if(_newSlot != null){
+			str += " newSlot: " + _newSlot; 
+		}
+		return str; 
 	}
     
 }

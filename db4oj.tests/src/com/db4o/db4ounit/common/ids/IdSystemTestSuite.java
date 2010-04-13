@@ -116,11 +116,7 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 						visitor.visit(slotChange);
 					}
 				}
-			}, new Runnable() {
-				public void run() {
-					// do nothing
-				}
-			});
+			}, FreespaceCommitter.DO_NOTHING);
 		}
 
 		private LocalObjectContainer localContainer() {
@@ -222,8 +218,6 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 		}
 		
 	}
-	
-	
 
 	private static FixtureVariable<IdSystemProvider> _fixture = FixtureVariable
 			.newInstance("IdSystem");
@@ -246,6 +240,10 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 							public boolean supportsIdOverflow() {
 								return false;
 							}
+
+							public String label() {
+								return "PointerBased";
+							}
 						}, new IdSystemProvider() {
 							public void apply(
 									IdSystemConfiguration idSystemConfiguration) {
@@ -258,6 +256,10 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 
 							public boolean supportsIdOverflow() {
 								return true;
+							}
+
+							public String label() {
+								return "InMemory";
 							}
 						}, new IdSystemProvider() {
 							public void apply(
@@ -281,6 +283,10 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 								
 								return false;
 							}
+
+							public String label() {
+								return "BTree";
+							}
 						}) };
 	}
 
@@ -293,7 +299,7 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 	}
 	
 	
-	private static interface IdSystemProvider {
+	private static interface IdSystemProvider extends Labeled{
 		
 		public void apply(IdSystemConfiguration idSystemConfiguration);
 		

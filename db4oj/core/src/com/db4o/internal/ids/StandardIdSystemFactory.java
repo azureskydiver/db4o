@@ -32,8 +32,10 @@ public class StandardIdSystemFactory {
 	    		return new PointerBasedIdSystem(localContainer);
 	    	case POINTER_BASED:
 	    		return new PointerBasedIdSystem(localContainer);
-	    	case BTREE:
-	    		return new BTreeIdSystem(localContainer, new InMemoryIdSystem(localContainer));
+			case BTREE:
+				// return new BTreeIdSystem(localContainer, new BTreeIdSystem(localContainer, new InMemoryIdSystem(localContainer)));
+				// return new BTreeIdSystem(localContainer, new PointerBasedIdSystem(localContainer));
+				return new BTreeIdSystem(localContainer, new InMemoryIdSystem(localContainer));
 	    	case IN_MEMORY:
 	    		return new InMemoryIdSystem(localContainer);
 	    	case CUSTOM:

@@ -52,6 +52,13 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
 	}
 	
 	public void freeTransactionLogSlot(Slot slot) {
+		if(Debug4.xbytes){
+			Procedure4<Slot> temp = _slotFreedCallback;
+			_slotFreedCallback = null;
+			free(slot);
+			_slotFreedCallback = temp;
+			return;
+		}
 		free(slot);
 	}
 

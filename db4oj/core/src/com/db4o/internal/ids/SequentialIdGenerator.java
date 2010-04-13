@@ -81,4 +81,8 @@ public class SequentialIdGenerator {
 		_idGenerator = id + 1;
 	}
 
+	public int marshalledLength() {
+		return Const4.INT_LENGTH;
+	}
+
 }
