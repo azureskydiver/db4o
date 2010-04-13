@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			ExtendsHashMapTestCase.class,
             HashMapQueryTestCase.class,
             MapNullKeyTestCase.class,
+            MapNullValueTestCase.class,
 			SimpleMapTestCase.class,
 		};
 	}

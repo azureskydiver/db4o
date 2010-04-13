@@ -30,4 +30,6 @@ public interface InternalReadContext extends ReadContext, HandlerVersionContext{
     
     public int handlerVersion();
     
+    public void notifyNullReferenceSkipped();
+
 }

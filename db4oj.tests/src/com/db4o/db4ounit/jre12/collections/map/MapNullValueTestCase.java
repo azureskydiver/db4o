@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.jre12.staging;
+package com.db4o.db4ounit.jre12.collections.map;
 
 import java.util.*;
 

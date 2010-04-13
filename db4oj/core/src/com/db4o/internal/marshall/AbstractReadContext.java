@@ -16,6 +16,8 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
     
     protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     
+    private boolean _lastReferenceReadWasReallyNull = false;
+    
     protected AbstractReadContext(Transaction transaction, ReadBuffer buffer){
     	super(transaction, buffer);
     }
@@ -47,12 +49,14 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
         }
         return Handlers4.readValueType(this, handler);
     }
-
+    
 	public final Object readObject() {
         int objectId = readInt();
         if (objectId == 0) {
+        	_lastReferenceReadWasReallyNull = true;
         	return null;
         }
+    	_lastReferenceReadWasReallyNull = false;
         
         final ClassMetadata classMetadata = classMetadataForObjectId(objectId);
         if (null == classMetadata) {
@@ -111,4 +115,11 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
         return container().decryptedBufferByAddress(address, length);
     }
 
+    public boolean lastReferenceReadWasReallyNull() {
+    	return _lastReferenceReadWasReallyNull;
+    }
+    
+    public void notifyNullReferenceSkipped() {
+    	_lastReferenceReadWasReallyNull = true;
+    }
 }
