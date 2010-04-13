@@ -17,6 +17,7 @@ public class OpenTypeHandler7 extends OpenTypeHandler {
 		InternalReadContext context = (InternalReadContext) readContext;
 		int payloadOffset = context.readInt();
 		if (payloadOffset == 0) {
+			context.notifyNullReferenceSkipped();
 			return null;
 		}
 		int savedOffSet = context.offset();

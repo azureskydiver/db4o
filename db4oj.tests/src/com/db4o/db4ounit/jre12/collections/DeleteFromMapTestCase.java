@@ -42,7 +42,7 @@ public class DeleteFromMapTestCase extends AbstractDb4oTestCase{
 		Assert.areEqual(0, holder._map.size());
 	}
 
-	public void _testDeleteValue(){
+	public void testDeleteValue(){
 		Item valueItem = storedItem(VALUE_ID);
 		db().delete(valueItem);
 		db().commit();

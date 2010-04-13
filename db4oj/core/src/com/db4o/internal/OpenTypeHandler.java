@@ -156,6 +156,7 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
         InternalReadContext context = (InternalReadContext) readContext;
         int payloadOffset = context.readInt();
         if(payloadOffset == 0){
+			context.notifyNullReferenceSkipped();
             return null;
         }
         int savedOffSet = context.offset();
