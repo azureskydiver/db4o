@@ -22,7 +22,7 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
 		btreeFm.start(0);
 		
 		fm = new FreespaceManager[]{
-			new RamFreespaceManager(null, container.configImpl().discardFreeSpace()),
+			new InMemoryFreespaceManager(null, container.configImpl().discardFreeSpace()),
 			btreeFm,
 		};
 	}

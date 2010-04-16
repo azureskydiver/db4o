@@ -43,9 +43,11 @@ public class DTrace {
     private static final void configure(){
         if(enabled){
         
-        	// addRange(49);
+//        	addRange(19);
+//        	
+//        	addRangeWithEnd(448, 460);
         	
-        	addRangeWithLength(431, 60);
+        	// addRange(13061);
         	
         	// addRangeWithEnd(390, 402);
         	
@@ -57,7 +59,7 @@ public class DTrace {
             
             // addRangeWithEnd(3835808, 3836267);
             
-            breakOnEvent(17);
+            // breakOnEvent(226);
             
             
             // addRangeWithLength(1068, 1);
@@ -82,7 +84,9 @@ public class DTrace {
 //                });
         	
          
-          // turnAllOffExceptFor(new DTrace[] {FREESPACEMANAGER_RAM_FREE });
+          // turnAllOffExceptFor(new DTrace[] {FREESPACEMANAGER_BTREE_FREE, FREESPACEMANAGER_RAM_FREE });
+          
+          
           
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
         }
@@ -118,7 +122,7 @@ public class DTrace {
 			FREE = new DTrace(true, true, "free", true);
 			FILE_FREE = new DTrace(true, true, "fileFree", true);
             FREESPACEMANAGER_GET_SLOT = new DTrace(true, true, "FreespaceManager getSlot", true);
-            FREESPACEMANAGER_RAM_FREE = new DTrace(true, true, "RamFreeSpaceManager free", true);
+            FREESPACEMANAGER_RAM_FREE = new DTrace(true, true, "InMemoryfreespaceManager free", true);
             FREESPACEMANAGER_BTREE_FREE = new DTrace(true, true, "BTreeFreeSpaceManager free", true);
 			FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
 	        FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
@@ -538,8 +542,8 @@ public class DTrace {
     public static void addRangeWithEnd(long start, long end){
         if(enabled){
             if(_rangeStart == null){
-                _rangeStart = new long[100];
-                _rangeEnd = new long[100];
+                _rangeStart = new long[1000];
+                _rangeEnd = new long[1000];
             }
             _rangeStart[_rangeCount] = start;
             _rangeEnd[_rangeCount] = end;

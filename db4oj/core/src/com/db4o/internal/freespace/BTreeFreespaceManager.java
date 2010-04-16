@@ -5,6 +5,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -14,7 +15,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
     private final LocalObjectContainer     _file;
 	
-	private RamFreespaceManager _delegate;
+	private InMemoryFreespaceManager _delegate;
 	
 	private BTree _slotsByAddress;
 	
@@ -28,10 +29,13 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 
 	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
 	
+	private TransactionalIdSystem _idSystem;
+	
 	public BTreeFreespaceManager(LocalObjectContainer file, Procedure4<Slot> slotFreedCallback,  int discardLimit) {
 		super(slotFreedCallback, discardLimit);
 		_file = file;
-		_delegate = new RamFreespaceManager(slotFreedCallback, discardLimit);
+		_delegate = new InMemoryFreespaceManager(slotFreedCallback, discardLimit);
+		_idSystem = file.idSystem().freespaceIdSystem();
 	}
 	
 	private void addSlot(Slot slot) {
@@ -58,7 +62,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	private void createBTrees(int addressID, int lengthID) {
-		BTreeConfiguration config = new BTreeConfiguration(null, SlotChangeFactory.FREE_SPACE, 64, false);
+		BTreeConfiguration config = new BTreeConfiguration(_idSystem, SlotChangeFactory.FREE_SPACE, 64, false);
 		_slotsByAddress = new BTree(transaction(), config, addressID, new AddressKeySlotHandler());
 		_slotsByLength = new BTree(transaction(), config, lengthID, new LengthKeySlotHandler());
 	}
@@ -72,7 +76,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     }
 
 	public void free(Slot slot) {
-		if(! started()){
+		if(! isStarted()){
 			return;
 		}
 		if(isDelegating()){
@@ -126,7 +130,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public Slot allocateSlot (int length) {
-		if(! started()){
+		if(! isStarted()){
 			return null;
 		}
 		if(isDelegating()){
@@ -155,7 +159,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	private void initializeExisting(int slotAddress) {
-        _idArray = new PersistentIntegerArray(slotAddress);
+        _idArray = new PersistentIntegerArray(_idSystem, slotAddress);
         _idArray.read(transaction());
         int[] ids = _idArray.array();
         int addressId = ids[0];
@@ -179,7 +183,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         LocalObjectContainer container = (LocalObjectContainer) transaction().container();
         _delegateIndirectionID = container.allocatePointerSlot();
         int[] ids = new int[] { _slotsByAddress.getID(), _slotsByLength.getID(), _delegateIndirectionID};
-        _idArray = new PersistentIntegerArray(ids);
+        _idArray = new PersistentIntegerArray(_idSystem, ids);
         _idArray.write(transaction());
         _file.systemData().freespaceAddress(_idArray.getID());
     }
@@ -220,7 +224,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		}
 	}
 
-	private boolean started(){
+	public boolean isStarted(){
 		return _idArray != null;
 	}
 
@@ -264,7 +268,5 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     private final LocalTransaction transaction(){
         return (LocalTransaction)_file.systemTransaction();
     }
-
-
-
+    
 }

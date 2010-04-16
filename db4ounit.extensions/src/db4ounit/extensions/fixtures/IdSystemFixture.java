@@ -36,6 +36,7 @@ public class IdSystemFixture extends Db4oSolo {
 	    		throw new IllegalStateException();
 	    		
         }
+        embeddedConfiguration.file().freespace().useBTreeSystem();
         return super.createDatabase(config);
     }
 

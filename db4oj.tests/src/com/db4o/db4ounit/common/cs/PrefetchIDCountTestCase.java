@@ -175,6 +175,10 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			// TODO Auto-generated method stub
 			return 0;
 		}
+
+		public boolean isStarted() {
+			return false;
+		}
 		
 	}
 }

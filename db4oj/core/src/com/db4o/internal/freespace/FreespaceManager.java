@@ -47,4 +47,6 @@ public interface FreespaceManager {
 	
 	public void slotFreed(Slot slot);
 
+	public boolean isStarted();
+	
 }

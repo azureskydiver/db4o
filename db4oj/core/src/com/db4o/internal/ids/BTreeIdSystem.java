@@ -60,7 +60,6 @@ public class BTreeIdSystem implements IdSystem {
 
 	private BTreeConfiguration bTreeConfiguration() {
 		return new BTreeConfiguration(_transactionalIdSystem, SlotChangeFactory.FREE_SPACE, 64, false);
-		// return new BTreeConfiguration(_transactionalIdSystem, SlotChangeFactory.SYSTEM_OBJECTS, 64, false);
 	}
 
 	private int idGeneratorValue() {
@@ -123,6 +122,7 @@ public class BTreeIdSystem implements IdSystem {
 
 	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter) {
 		
+		_container.freespaceManager().beginCommit();
 		slotChanges.accept(new Visitor4<SlotChange>() {
 			public void visit(SlotChange slotChange) {
 				if(! slotChange.slotModified()){
@@ -146,8 +146,14 @@ public class BTreeIdSystem implements IdSystem {
 		});
 		_bTree.commit(transaction());
 		idGeneratorValue(_idGenerator.persistentGeneratorValue());
-		_persistentState.setStateDirty();
-		_persistentState.write(transaction());
+		if(_idGenerator.isDirty()){
+			_idGenerator.setClean();
+			_persistentState.setStateDirty();
+			_persistentState.write(transaction());
+		}
+		_container.freespaceManager().endCommit();
+		
+		
 		_transactionalIdSystem.commit(freespaceCommitter);
 		_transactionalIdSystem.clear();
 	}
@@ -188,6 +194,10 @@ public class BTreeIdSystem implements IdSystem {
 			return Const4.INT_LENGTH * 3;
 		}
 
+	}
+
+	public TransactionalIdSystem freespaceIdSystem() {
+		return _transactionalIdSystem;
 	}
 
 }

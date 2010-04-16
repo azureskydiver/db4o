@@ -83,5 +83,9 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 		
 	}
 
+	public boolean isStarted() {
+		return false;
+	}
+
 
 }

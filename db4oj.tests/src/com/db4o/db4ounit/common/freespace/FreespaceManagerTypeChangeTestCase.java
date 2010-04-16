@@ -94,7 +94,7 @@ public class FreespaceManagerTypeChangeTestCase extends FreespaceManagerTestCase
             
             configuration.freespace().useRamSystem();
             reopen();
-            assertFreespaceManagerClass(RamFreespaceManager.class);
+            assertFreespaceManagerClass(InMemoryFreespaceManager.class);
 
             assertItemAvailable();
             deleteItem();

@@ -265,7 +265,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         if(length <= 0){
         	throw new IllegalArgumentException();
         }
-        if(_freespaceManager != null){
+        if(_freespaceManager != null && _freespaceManager.isStarted()){
         	Slot slot = _freespaceManager.allocateSlot(length);
             if(slot != null){
                 if(DTrace.enabled){
