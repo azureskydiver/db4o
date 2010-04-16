@@ -55,10 +55,12 @@ public class InMemoryIdSystem implements IdSystem {
 
 	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter) {
 		
+		Slot oldSlot = _slot;
+		
 		Slot reservedSlot = allocateSlot(false, estimatedSlotLength(estimateMappingCount(slotChanges)));
 		
-		freeSlot(_slot);
-		
+		// No more operations against the FreespaceManager.
+		// Time to free old slots.
 		freespaceCommitter.commit();
 		
 		slotChanges.accept(new Visitor4<SlotChange>() {
@@ -78,11 +80,13 @@ public class InMemoryIdSystem implements IdSystem {
 		});
 		writeThis(reservedSlot);
 		
+		freeSlot(oldSlot);
+		
 	}
 	
 	private Slot allocateSlot(boolean appendToFile, int slotLength) {
     	if(! appendToFile){
-    		Slot slot = _container.freespaceManager().allocateSlot(slotLength);
+    		Slot slot = _container.freespaceManager().allocateTransactionLogSlot(slotLength);
     		if(slot != null){
     			return slot;
     		}
@@ -230,6 +234,10 @@ public class InMemoryIdSystem implements IdSystem {
 				_ids = (IdSlotTree) Tree.removeLike(_ids, new TreeInt(obj));
 			}
 		});
+	}
+
+	public TransactionalIdSystem freespaceIdSystem() {
+		return null;
 	}
 
 }

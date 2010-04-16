@@ -89,4 +89,8 @@ public class NullFreespaceManager implements FreespaceManager {
 		return 0;
 	}
 
+	public boolean isStarted() {
+		return false;
+	}
+
 }

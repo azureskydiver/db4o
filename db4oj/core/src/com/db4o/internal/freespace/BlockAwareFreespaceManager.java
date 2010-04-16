@@ -100,5 +100,10 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 	public void slotFreed(Slot slot) {
 		_delegate.slotFreed(slot);
 	}
+
+	public boolean isStarted() {
+		return _delegate.isStarted();
+	}
+
 }
 

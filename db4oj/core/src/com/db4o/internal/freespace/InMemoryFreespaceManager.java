@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
 
-public class RamFreespaceManager extends AbstractFreespaceManager {
+public class InMemoryFreespaceManager extends AbstractFreespaceManager {
     
 	private final TreeIntObject _finder   = new TreeIntObject(0);
 
@@ -18,7 +18,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     
 	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
     
-	public RamFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit) {
+	public InMemoryFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit) {
 		super(slotFreedCallback, discardLimit);
 	}
 	
@@ -287,6 +287,10 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     
 	public void listener(FreespaceListener listener) {
 		_listener = listener;
+	}
+
+	public boolean isStarted() {
+		return true;
 	}
 
 

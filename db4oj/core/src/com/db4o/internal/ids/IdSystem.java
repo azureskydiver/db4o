@@ -22,4 +22,6 @@ public interface IdSystem {
 
 	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter);
 
+	public TransactionalIdSystem freespaceIdSystem();
+
 }

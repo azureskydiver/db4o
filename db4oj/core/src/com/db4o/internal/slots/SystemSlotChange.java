@@ -2,7 +2,6 @@
 
 package com.db4o.internal.slots;
 
-import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
 
 /**

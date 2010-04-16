@@ -91,5 +91,8 @@ public class FreespaceManagerForDebug implements FreespaceManager {
 		
 	}
 
+	public boolean isStarted() {
+		return false;
+	}
 
 }

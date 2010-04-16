@@ -68,14 +68,14 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	_halfNodeSize = _nodeSize / 2;
     	_nodeSize = _halfNodeSize * 2;
     	_keyHandler = keyHandler;
-    	if(id == 0){
+    	setID(id);
+    	if(isNew()){
     		setStateDirty();
     		_root = new BTreeNode(this, 0, true, 0, 0, 0);
     		_root.write(trans.systemTransaction());
     		addNode(_root);
     		write(trans.systemTransaction());
     	}else{
-    		setID(id);
     		setStateDeactivated();
     	}
     }
@@ -112,10 +112,11 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     }
 
 	public void add(Transaction trans, PreparedComparison preparedComparison, Object key){
-		
-        ensureDirty(trans);
+		ensureActive(trans);
+		enlist(trans);
         BTreeNode rootOrSplit = _root.add(trans, preparedComparison, key);
         if(rootOrSplit != null && rootOrSplit != _root){
+        	ensureDirty(trans);
             _root = new BTreeNode(trans, _root, rootOrSplit);
             _root.write(trans.systemTransaction());
             addNode(_root);
@@ -128,7 +129,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 		if(bTreePointer == null){
 			return;
 		}
-		ensureDirty(trans);
+		enlist(trans);
 		PreparedComparison preparedComparison = keyHandler().prepareComparison(trans.context(), key);
 		BTreeNode node = bTreePointer.node();
 		node.remove(trans, preparedComparison, key, bTreePointer.index());
@@ -212,7 +213,12 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 
 	private void updateSize(final Transaction transaction) {
 	    final ByRef<Integer> sizeInTransaction = sizeIn(transaction);
-		_size += sizeInTransaction.value;
+		int sizeModification = sizeInTransaction.value;
+		if(sizeModification == 0){
+			return;
+		}
+		ensureDirty(transaction);
+		_size += sizeModification;
 		sizeInTransaction.value = 0;
     }
 
@@ -245,7 +251,6 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 	private void finishTransaction(final Transaction trans) {
 	    final Transaction systemTransaction = trans.systemTransaction();
         writeAllNodes(systemTransaction);
-        setStateDirty();
         write(systemTransaction);
         purge();
     }
@@ -262,8 +267,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         }
     	_nodes.traverse(new Visitor4<TreeIntObject>() {
             public void visit(TreeIntObject obj) {
-                BTreeNode node = (BTreeNode)obj.getObject();
-                node.write(systemTransaction);
+                ((BTreeNode)obj.getObject()).write(systemTransaction);
             }
         });
     }
@@ -309,11 +313,15 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     
     private void ensureDirty(Transaction trans){
         ensureActive(trans);
-        if(canEnlistWithTransaction()){
-        	((LocalTransaction)trans).enlist(this);	
-        }
+        enlist(trans);
         setStateDirty();
     }
+
+	private void enlist(Transaction trans) {
+		if(canEnlistWithTransaction()){
+        	((LocalTransaction)trans).enlist(this);	
+        }
+	}
     
     protected boolean canEnlistWithTransaction(){
     	return _config._canEnlistWithTransaction;
@@ -406,10 +414,8 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     
     public void sizeChanged(Transaction transaction, BTreeNode node, int changeBy){
     	notifyCountChanged(transaction, node, changeBy);
-
     	final ByRef<Integer> sizeInTransaction = sizeIn(transaction);
 		sizeInTransaction.value = sizeInTransaction.value + changeBy;
-		
     }
 
 	public void dispose(Transaction transaction) {

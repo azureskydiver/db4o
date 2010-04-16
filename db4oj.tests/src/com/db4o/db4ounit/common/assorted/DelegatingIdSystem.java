@@ -40,6 +40,9 @@ public class DelegatingIdSystem implements IdSystem {
 	public void returnUnusedIds(Visitable<Integer> visitable) {
 		_delegate.returnUnusedIds(visitable);
 	}
-	
+
+	public TransactionalIdSystem freespaceIdSystem() {
+		return _delegate.freespaceIdSystem();
+	}
 
 }

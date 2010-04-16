@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
+public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements OptOutMultiSession, OptOutIdSystem {
 	
 	private static final int SIZE = 10000;
 	

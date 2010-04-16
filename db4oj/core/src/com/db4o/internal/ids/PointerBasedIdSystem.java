@@ -73,4 +73,8 @@ public final class PointerBasedIdSystem implements IdSystem {
 		_transactionLogHandler.completeInterruptedTransaction(transactionId1, transactionId2);
 	}
 
+	public TransactionalIdSystem freespaceIdSystem() {
+		return null;
+	}
+
 }

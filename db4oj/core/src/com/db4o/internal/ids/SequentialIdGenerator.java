@@ -19,6 +19,8 @@ public class SequentialIdGenerator {
 	
 	private boolean _overflow;
 	
+	private int _lastIdGenerator;
+	
 	private final Function4<Integer, Integer> _findFreeId;
 	
 	public SequentialIdGenerator(Function4<Integer, Integer> findFreeId, int initialValue, int minValidId, int maxValidId) {
@@ -40,11 +42,11 @@ public class SequentialIdGenerator {
 		if(val < 0){
 			_overflow = true;
 			_idGenerator = - val;
-			return;
+		}else {
+			_idGenerator = val;
 		}
-		_idGenerator = val;
+		_lastIdGenerator = _idGenerator;
 	}
-	
 	
 	public void write(ByteArrayBuffer buffer) {
 		buffer.writeInt(persistentGeneratorValue()); 
@@ -83,6 +85,14 @@ public class SequentialIdGenerator {
 
 	public int marshalledLength() {
 		return Const4.INT_LENGTH;
+	}
+	
+	public boolean isDirty(){
+		return _idGenerator != _lastIdGenerator;
+	}
+
+	public void setClean() {
+		_lastIdGenerator = _idGenerator;
 	}
 
 }

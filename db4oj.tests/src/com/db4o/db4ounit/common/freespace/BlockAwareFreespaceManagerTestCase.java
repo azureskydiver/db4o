@@ -18,7 +18,7 @@ public class BlockAwareFreespaceManagerTestCase implements TestLifeCycle {
 	
 	private final BlockConverter _blockConverter = new BlockSizeBlockConverter(BLOCK_SIZE);
 	
-	private final RamFreespaceManager _blocked = new RamFreespaceManager(null, 0);
+	private final InMemoryFreespaceManager _blocked = new InMemoryFreespaceManager(null, 0);
 	
 	private final BlockAwareFreespaceManager _nonBlocked = new BlockAwareFreespaceManager(_blocked , new BlockSizeBlockConverter(BLOCK_SIZE));
 

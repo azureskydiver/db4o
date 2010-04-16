@@ -55,7 +55,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         	case FM_BTREE:
         		return new BTreeFreespaceManager(file, slotFreedCallback, blockedDiscardLimit);
             default:
-                return new RamFreespaceManager(slotFreedCallback, blockedDiscardLimit);
+                return new InMemoryFreespaceManager(slotFreedCallback, blockedDiscardLimit);
         }
     }
     
@@ -139,7 +139,5 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     	}
     	_slotFreedCallback.apply(slot);
 	}
-
-
     
 }
