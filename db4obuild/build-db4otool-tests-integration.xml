@@ -31,6 +31,7 @@
 	
 	<target name="enhance" depends="properties,compile">	
 		<exec executable="${dir.dist.dll}\Db4oTool.exe" dir="${dir.dist.dll}" failonerror="true">
+			<arg value="-debug" />
 			<arg value="-ta"/>
 			<arg value="-collections"/>
 			<arg value="${file.test-app-executable}"/>
