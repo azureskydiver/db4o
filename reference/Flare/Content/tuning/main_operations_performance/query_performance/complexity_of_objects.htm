@@ -1,88 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Complexity Of Objects	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Complexity Of Objects	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Complexity Of Objects</h1>
-
-<p>More complex objects are usually more difficult not only to
+        <p>More complex objects are usually more difficult not only to
 store, but also to query and instantiate. The following test demonstrates how
 query performance depends on class structure, complexity and depth:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/runDifferentObjectsTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/init.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/configure.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/SimplestItem.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/ItemWithStringBuffer.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/ItemWithArray.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/ItemWithArrayList.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/RunDifferentObjectsTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/Init.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/Configure.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/SimplestItem.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/ItemWithStringBuilder.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/ItemWithArray.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/ItemWithArrayList.flsnp" />
-</p><p MadCap:conditions="Primary:net" />
-
-<p>Results from the test machine:</p>
-
-<p><i>- primitive object
-with int field</i></p>
-
-<p><i>Store 30000
-objects: 1878ms</i></p>
-
-<p><i>Querying
-SimplestItem: 1: 425ms</i></p>
-
-<p><i> </i></p>
-
-<p><i> - object with String field</i></p>
-
-<p><i>Store 30000
-objects: 2599ms</i></p>
-
-<p><i>Querying object
-with String field: level1/2: 436ms</i></p>
-
-<p><i> </i></p>
-
-<p><i> - object with StringBuffer field</i></p>
-
-<p><i>Store 30000
-objects: 5658ms</i></p>
-
-<p><i>Querying object
-with StringBuffer field: level1/2: 3489ms</i></p>
-
-<p><i> </i></p>
-
-<p><i> - object with int array field</i></p>
-
-<p><i>Store 30000
-objects: 2487ms</i></p>
-
-<p><i>Querying object
-with Array field: [1, 2, 3, 1]: 1777ms</i></p>
-
-<p><i> </i></p>
-
-<p><i> - object with ArrayList field</i></p>
-
-<p><i>Store 30000
-objects: 5302ms</i></p>
-
-<p><i>Querying object
-with ArrayList field: [1, 2, 3, 4]: 3796ms</i></p> 
-     
-
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/runDifferentObjectsTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/init.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/configure.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/SimplestItem.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/ItemWithStringBuffer.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/ItemWithArray.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.java/ItemWithArrayList.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/RunDifferentObjectsTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/Init.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/Configure.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/SimplestItem.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/ItemWithStringBuilder.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/ItemWithArray.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Complexity Of Objects/QueryPerformanceBenchmark.cs/ItemWithArrayList.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Results from the test machine:</p>
+        <p><i>- primitive object
+with int field</i>
+        </p>
+        <p><i>Store 30000
+objects: 1878ms</i>
+        </p>
+        <p><i>Querying
+SimplestItem: 1: 425ms</i>
+        </p>
+        <p><i></i>
+        </p>
+        <p><i> - object with String field</i>
+        </p>
+        <p><i>Store 30000
+objects: 2599ms</i>
+        </p>
+        <p><i>Querying object
+with String field: level1/2: 436ms</i>
+        </p>
+        <p><i></i>
+        </p>
+        <p><i> - object with StringBuffer field</i>
+        </p>
+        <p><i>Store 30000
+objects: 5658ms</i>
+        </p>
+        <p><i>Querying object
+with StringBuffer field: level1/2: 3489ms</i>
+        </p>
+        <p><i></i>
+        </p>
+        <p><i> - object with int array field</i>
+        </p>
+        <p><i>Store 30000
+objects: 2487ms</i>
+        </p>
+        <p><i>Querying object
+with Array field: [1, 2, 3, 1]: 1777ms</i>
+        </p>
+        <p><i></i>
+        </p>
+        <p><i> - object with ArrayList field</i>
+        </p>
+        <p><i>Store 30000
+objects: 5302ms</i>
+        </p>
+        <p><i>Querying object
+with ArrayList field: [1, 2, 3, 4]: 3796ms</i>
+        </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="queryperformancecs.zip">c# </a>
@@ -90,6 +84,5 @@ with ArrayList field: [1, 2, 3, 4]: 3796ms</i></p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="queryperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-    
-</body></html>
+    </body>
+</html>

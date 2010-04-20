@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Data Persistence	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Data Persistence	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Data Persistence</h1>
-
-<p>Software programs using different data
+        <p>Software programs using different data
 persistence technologies are an integral part of contemporary informational
 space. More than often such systems are implemented with the help of
 object-oriented programming language (Java, c#, etc.) and a relational database
@@ -17,8 +16,7 @@ consist of objects and are characterized by identity, state, behavior,
 encapsulation. The relational model consists of tables, columns, rows and
 foreign keys and is described by relation, attribute, tuple, relation value and
 relation variable.</p>
-
-<p>The object-relational mismatch has become
+        <p>The object-relational mismatch has become
 enormously significant with the total adoption of OO technology. This resulted
 in the rapid development of so-called object-relational mappers (ORM), such as
 Hibernate or Toplink. This solution "cures" the symptoms of the OR
@@ -30,8 +28,7 @@ mapper solution may be feasible in large, administered datacenter environments,
 it is prohibitive in distributed and zero-administration architectures such as
 those required for embedded databases in client software, mobile devices,
 middleware or real-time systems.</p>
-
-<p>Significant
+        <p>Significant
 side effects of the object relational mismatch manifest themselves in
 unnecessary system overhead with bloated footprints and runtime performance
 issues.  Of course, there is also overall
@@ -41,10 +38,7 @@ developers, incremental changes to your object models reek havoc during ORM sche
 evolution pitfalls.  The more complicated
 your models are, the more problematic keeping changes in sync with the internal
 mapping.</p>
-
-
-
-<p>Primary
+        <p>Primary
 performance issues come from the fact that despite being called a "relational
 database", an RDBMS does not store direct relations.   Relations are resolved at runtime by
 performing set based operations on primary-foreign key pairs.   This
@@ -55,10 +49,7 @@ Further, because discovering these relations over and over again
 requires continual access to index structures and data to perform the set
 operations, contention is much higher within database internals leading to poor
 scalability of individual database processes. </p>
-
-
-
-<p>Further,
+        <p>Further,
 lack of direct storage of relations cause the application design to become
 query driven instead of object modeling driven. 
 Using an object database, the relations are a fundamental part of the
@@ -68,10 +59,7 @@ and immediately accessible to the requesting thread.  This makes the internal st
 simpler and therefore less contention exists with data requests being isolated
 to data of interest instead of leveraging indexes or sequential scans.  The result, individual processes become more
 scalable under concurrency. </p>
-
-
-
-<p>Technology
+        <p>Technology
 is ever changing and today there is a whole world of object database experts in
 the software community.  Anyone who is an
 expert in ORM technology is an expert in object database technology.  All of the concepts found in object life cycle
@@ -82,8 +70,5 @@ objects, light weight transactions - are concepts created by and applicable to o
 technologies.  Now with the growing
 popularity of object based design and the proliferation of ORM tools, thousands
 of developers are becoming experts in the object database API.</p>
-
- 
-     
-    
-  </body></html>
+    </body>
+</html>

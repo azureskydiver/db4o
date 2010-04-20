@@ -1,98 +1,84 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>FreespaceFiller Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>FreespaceFiller Example	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>FreespaceFiller Example</h1>
-<p>First of
+        <p>First of
 all let's create a database and have a look at the resultant file:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/Item.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/createDatabase.flsnp" />
-</p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/Item.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/CreateDatabase.flsnp" />
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/Item.flsnp" />
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/CreateDatabase.flsnp" />
-
-</p><p MadCap:conditions="Primary:vb" /><p>So, we've
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/Item.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/createDatabase.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/Item.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/CreateDatabase.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/Item.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/CreateDatabase.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>So, we've
 stored lots of Item objects, each of them has 2 string fields. Let's open
 reference.db4o file with any text editor and check if we can see some useful
 information:</p>
-
-<p><img src="FreespaceFiller_Example/before1.jpg"/></p>
-
-<p>From the
+        <p>
+            <img src="FreespaceFiller_Example/before1.jpg" />
+        </p>
+        <p>From the
 image above you can see that all the string fields are actually readable without
 any special software.</p>
-
-<p>Now, lets
-create a default configuration - like Db4oEmbedded.newConfiguration() for Java or Db4oEmbedded.NewConfiguration()<b> </b>for .NET - and delete all the objects:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/deleteObjects.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/DeleteObjects.flsnp" />
-</p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/DeleteObjects.flsnp" />
-</p><p MadCap:conditions="Primary:vb" /><p>If you will
+        <p>Now, lets
+create a default configuration - like Db4oEmbedded.newConfiguration() for Java or Db4oEmbedded.NewConfiguration()<b></b>for .NET - and delete all the objects:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/deleteObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/DeleteObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/DeleteObjects.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>If you will
 open the database file in a text editor again - you won't see much change - the
 database file is still the same size and all the string information from the
 Item objects is still there. </p>
-
-<p>We can make
+        <p>We can make
 the deletion more effective by creating a custom configuration with a freespace
 filler implementation:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/getConfig.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/GetConfig.flsnp" />
-
-</p><p MadCap:conditions="Primary:cs" />
-
-<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/GetConfig.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/RandomFreespaceFiller.flsnp" />
-
-
-
-</p><p MadCap:conditions="Primary:vb" /><p>You can see
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.java/getConfig.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.cs/GetConfig.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/GetConfig.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/FreespaceFiller Example/FreespaceFillerExample.vb/RandomFreespaceFiller.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>You can see
 that the implementation is very simple - you only need to implement one method:
 fill. The parameter gives you a BlockAwareBinWindow and the implementation must
 create a byte array of the requested size to fill it in. In our implementation
 we use random bytes.</p>
-
-<p>Now, let's create
+        <p>Now, let's create
 the database again and run delete objects with the new configuration and look
 at the database file again.</p>
-
-<p><img src="FreespaceFiller_Example/after1.jpg"/></p>
-
-<p>Now instead
+        <p>
+            <img src="FreespaceFiller_Example/after1.jpg" />
+        </p>
+        <p>Now instead
 of the real data we can only see some random bytes.</p>
-
-<p>Don't
-forget that custom freespace filler slows down IO operations.</p> 
-     
-    
-</body></html>
+        <p>Don't
+forget that custom freespace filler slows down IO operations.</p>
+    </body>
+</html>

@@ -1,22 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="808" MadCap:lastWidth="650" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;a1;b1;c1;b2;uncomment">
-    <head><title>Db4o Databases Replication	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="249" MadCap:lastWidth="489" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;a1;b1;c1;b2;uncomment">
+    <head><title>Db4o Databases Replication	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
-    <body onload="prettyPrint()">
-        <h1>Db4o Databases Replication</h1>
-        <p>db4o-to-db4o replication is the simplest replication and is supported by both java and .NET versions.</p>
-        <p>In the following examples we will use Pilot class from the db4o documentation.</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Db4o Databases Replication/Pilot.java/Pilot.java.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Db4o Databases Replication/Pilot.cs/Pilot.cs.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Db4o Databases Replication/Pilot.vb/Pilot.vb.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:vb" />  
- More Reading:<ul><li><p><a href="db4o_databases_replication/initial_setup.htm">Initial Setup</a></p></li><li><p><a href="db4o_databases_replication/simple_example.htm">Simple Example</a></p></li><li><p><a href="db4o_databases_replication/bi-directional_replication.htm">Bi-Directional Replication</a></p></li><li><p><a href="db4o_databases_replication/selective_replication.htm">Selective Replication</a></p></li></ul></body>
+    <body>
+        <h1>
+            <MadCap:keyword term="dRS:db4o to db4o Replication;Replication:db4o to db4o" />db4o to db4o Replication</h1>
+        <p>The db4o to db4o replication allows you the keep multiple, independent db4o -databases in sync. A typical scenario is when a mobile device is synchronized periodically with the central server or a desktop application</p>
+        <p>dRS supports simple unidirectional replication where changes are replicated in one direction. <MadCap:xref href="db4o_databases_replication/simple_example.htm" target="" title="" alt="">See "Simple Example"</MadCap:xref></p>
+        <p>In addition dRS support bidirectional replication, where changes are replicated in both directions. <MadCap:xref href="db4o_databases_replication/bi-directional_replication.htm" target="" title="" alt="">See "Bidirectional Replication"</MadCap:xref></p>
+        <p>To avoid replicating the whole database, dRS support also partial replication, where only a subset of all objects are replicated. <MadCap:xref href="db4o_databases_replication/selective_replication.htm" target="" title="" alt="">See "Selective Replication"</MadCap:xref></p>
+        <p>Furthermore dRS can also replicate deletions of objects. <MadCap:xref href="db4o_databases_replication/deleted_objects_replication.htm" target="" title="" alt="">See "Replicate Deletions"</MadCap:xref></p>
+    </body>
 </html>

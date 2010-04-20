@@ -1,20 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1418" MadCap:lastWidth="6307">
-    <head><title>First Steps	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    <head><title>First Steps	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>First Steps</h1>
         <p>The main class of the benchmark is com.db4o.bench.IoBenchmark. Let's have a look at its run method to see what it does.
 			
-		<pre class="prettyprint"  xml:space="preserve">
+		<pre class="prettyprint" xml:space="preserve">
 private void run(IoBenchmarkArgumentParser argumentParser) throws IOException {             
 	runTargetApplication(argumentParser.objectCount()); 
 	prepareDbFile(argumentParser.objectCount());     
 	runBenchmark(argumentParser.objectCount());     
 }  		
-		</pre>         
-		
-		 <![CDATA[ ]]><br /> As you can see from this code, the benchmark consists of 3 stages: </p>
+		</pre> <![CDATA[ ]]><br /> As you can see from this code, the benchmark consists of 3 stages: </p>
         <ol>
             <li>Run a target application and log its I/O access pattern</li>
             <li>Replay the recorded I/O operations once to prepare a database file.  This

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <CatapultTarget
   Version="1"
   Comment="New Target"
@@ -7,7 +7,7 @@
   GlossaryTermConversion="first"
   ConditionTagExpression="include[Primary..NET or Primary.c# or Primary.Online or Primary.VB.NET] "
   MasterPageLayout="/Content/Resources/PageLayouts/Default.flpgl"
-  MasterStylesheet="/Content/Resources/Stylesheets/prettify.css"
+  MasterStylesheet="/Content/Resources/Stylesheets/OnlineStyle.css"
   MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
   UseCustomTopicFileExtension="false"
   OutputFolder="e:/db4o-dist/flare"
@@ -21,5 +21,11 @@
   <Variables>
     <Variable
       Name="BaseVariables/Plattform">.NET</Variable>
+    <Variable
+      Name="Primary/Artefact">assembly</Variable>
+    <Variable
+      Name="Primary/Iterable">IEnumerable</Variable>
+    <Variable
+      Name="Primary/Plattform">.NET</Variable>
   </Variables>
 </CatapultTarget>

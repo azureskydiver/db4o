@@ -1,52 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Database Size	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Database Size	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Database Size</h1>
-
-<p>Query performance can degrade with the amount of objects of
+        <p>Query performance can degrade with the amount of objects of
 the queried type:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/runQueryAmountOfObjectsTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/init.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/initLargeDb.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/configure.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/RunQueryAmountOfObjectsTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/Init.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/InitLargeDb.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/Configure.flsnp" />
-</p><p MadCap:conditions="Primary:net" />
-
-<p>However, the general size of the database, i.e. amount of
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/runQueryAmountOfObjectsTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/init.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/initLargeDb.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.java/configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/RunQueryAmountOfObjectsTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/Init.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/InitLargeDb.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Database Size/QueryPerformanceBenchmark.cs/Configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>However, the general size of the database, i.e. amount of
 other type of objects in the database should not have any impact on the query
 performance.</p>
-
-<p>Results from the test machine:</p>
-
-<p><i>Storing 10000 of  objects of depth 3</i></p>
-
-<p><i>Store 30000 objects:
-3305ms</i></p>
-
-<p><i>Select 1 object SODA:
-level1/1: 464ms</i></p>
-
-<p><i>Storing 100000 of  objects of depth 3</i></p>
-
-<p><i>Store 300000 objects:
-21338ms</i></p>
-
-<p><i>Select 1 object SODA:
-level1/1: 5316ms</i></p> 
-     
-
+        <p>Results from the test machine:</p>
+        <p><i>Storing 10000 of  objects of depth 3</i>
+        </p>
+        <p><i>Store 30000 objects:
+3305ms</i>
+        </p>
+        <p><i>Select 1 object SODA:
+level1/1: 464ms</i>
+        </p>
+        <p><i>Storing 100000 of  objects of depth 3</i>
+        </p>
+        <p><i>Store 300000 objects:
+21338ms</i>
+        </p>
+        <p><i>Select 1 object SODA:
+level1/1: 5316ms</i>
+        </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="queryperformancecs.zip">c# </a>
@@ -54,8 +47,5 @@ level1/1: 5316ms</i></p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="queryperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-
-    
-</body></html>
+    </body>
+</html>

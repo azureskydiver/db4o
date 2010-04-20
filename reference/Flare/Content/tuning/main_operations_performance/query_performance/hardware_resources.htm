@@ -1,58 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Hardware Resources	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Hardware Resources	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Hardware Resources</h1>
-
-<p>Effective querying requires enough operating memory and
+        <p>Effective querying requires enough operating memory and
 quick hard drive access. Hard drive access time is important as the object will
 be read from the physical location into the operating memory. However, hard
-drive speed is not so critical for querying as it is for <a href="../insert_performance.htm"  >inserting</a>.</p>
-
-<p>The following test uses a RAM drive to compare test results
+drive speed is not so critical for querying as it is for <a href="../insert_performance.htm">inserting</a>.</p>
+        <p>The following test uses a RAM drive to compare test results
 with the hard drive:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.java/runRamDiskTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.java/initForHardDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.java/configureRamDrive.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.cs/RunRamDiskTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.cs/InitForHardDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.cs/ConfigureRamDrive.flsnp" />
-</p><p MadCap:conditions="Primary:net" />
-
-<p>Test results:</p>
-
-<p><i>Storing 30000 objects
-of depth 3 on a hard drive:</i></p>
-
-<p><i>Store 90000 objects:
-6019ms</i></p>
-
-<p><i>Select 1 object:
-level1/1: 1515ms</i></p>
-
-<p><i>Storing 30000 objects
-of depth 3 on a RAM disk:</i></p>
-
-<p><i>Store 90000 objects:
-5264ms</i></p>
-
-<p><i>Select 1 object:
-level1/1: 1518ms</i></p>
-
-<p>You can see that the difference in query performance is negligible.</p>
-
- 
-     
-
-
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.java/runRamDiskTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.java/initForHardDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.java/configureRamDrive.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.cs/RunRamDiskTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.cs/InitForHardDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hardware Resources/QueryPerformanceBenchmark.cs/ConfigureRamDrive.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Test results:</p>
+        <p><i>Storing 30000 objects
+of depth 3 on a hard drive:</i>
+        </p>
+        <p><i>Store 90000 objects:
+6019ms</i>
+        </p>
+        <p><i>Select 1 object:
+level1/1: 1515ms</i>
+        </p>
+        <p><i>Storing 30000 objects
+of depth 3 on a RAM disk:</i>
+        </p>
+        <p><i>Store 90000 objects:
+5264ms</i>
+        </p>
+        <p><i>Select 1 object:
+level1/1: 1518ms</i>
+        </p>
+        <p>You can see that the difference in query performance is negligible.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="queryperformancecs.zip">c# </a>
@@ -60,7 +49,5 @@ level1/1: 1518ms</i></p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="queryperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

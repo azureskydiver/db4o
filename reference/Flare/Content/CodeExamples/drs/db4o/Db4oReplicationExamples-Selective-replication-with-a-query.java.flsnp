@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ObjectSet&lt;Car&gt; changesOnDesktop = desktopDatabase.query(new Predicate&lt;Car&gt;() {
+    public boolean match(Car p) {
+        return p.getName().startsWith(&quot;M&quot;);
+    }
+});
+
+for (Car changedObjectOnDesktop  : changesOnDesktop) {
+    replicationSession.replicate(changedObjectOnDesktop);
+}
+
+replicationSession.commit();</pre>
+		<div class="codesnippet-meta">Db4oReplicationExamples.java: Selective replication with a query<a href="Example-drs-db4o-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

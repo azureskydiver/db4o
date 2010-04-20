@@ -1,54 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Reading Db4o File	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Reading Db4o File</h1><p>For debugging, learning and teaching
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Reading Db4o File	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Reading Db4o File</h1>
+        <p>For debugging, learning and teaching
 purposes, the db4o file format can be modified to be (nearly ?) human readable.</p>
-
-<p>To do this, simply compile the sources
+        <p>To do this, simply compile the sources
 with Deploy.debug set to true, run an application that creates a db4o database
 file and look at the file with any editor.</p>
-
-<p>With the Deploy.debug setting all
+        <p>With the Deploy.debug setting all
 pointers in the database file will be readable with their physical address as a
 readable number.</p>
-
-<p>All other slots will be identifiable by a
+        <p>All other slots will be identifiable by a
 single character at the beginning. An index that explains the character
 constants can be found in com.db4o.internal.Const4.</p>
-
-<p>To understand the format best, you may
+        <p>To understand the format best, you may
 want to look at the <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/Db4o_Product_Design/Db4o_Core/File_Header">File
 Header</a> structure and at the #readThis() methods of classes derived from
 PersistentBase, like ClassMetadataRepository for instance.</p>
-
-<p>This functionality proved to be very
+        <p>This functionality proved to be very
 useful when db4o was originally written. By marking freespace with XXXXes a bug
 in the format could be spotted immediately by visual inspection of a database
-file.</p><p>To navigate through a database file in
+file.</p>
+        <p>To navigate through a database file in
 your favourite editor, it will work best if you write a macro for this editor
 that allows you to mark and select a number in the database file and to hit a
 button in the editor to jump to the corresponding offset in the database file
 (number of characters from the beginning).</p>
-				<p>Such macro for Microsoft Word is presented below:</p>
-				
-<MadCap:snippetBlock src="../../Resources/Snippets/Reading Db4o File/OffsetNavigator.Vb/OffsetNavigator.Vb.flsnp" />
-				<p>To make use of it, open Visual Basic Macro editor within your Word environment, create a new Macro in the Normal template and paste the code above. In order to make its usage easy assign a key sequence to call the macro command:</p><ul><li>open Tools/Customize/Commands/Keyboard;</li><li> select
-"Macros" as a Category and the newly-created macro name in the Commands list;</li><li> press
-a new key sequence for the command and press "Assign".  </li></ul><p>Now you can navigate
+        <p>Such macro for Microsoft Word is presented below:</p>
+        <MadCap:snippetBlock src="../../Resources/Snippets/Reading Db4o File/OffsetNavigator.Vb/OffsetNavigator.Vb.flsnp" />
+        <p>To make use of it, open Visual Basic Macro editor within your Word environment, create a new Macro in the Normal template and paste the code above. In order to make its usage easy assign a key sequence to call the macro command:</p>
+        <ul>
+            <li>open Tools/Customize/Commands/Keyboard;</li>
+            <li> select
+"Macros" as a Category and the newly-created macro name in the Commands list;</li>
+            <li> press
+a new key sequence for the command and press "Assign".  </li>
+        </ul>
+        <p>Now you can navigate
 through the human-readable db4o file using the selected key sequence.</p>
-
-
-
-<p> </p>
-
-
-
-
-
- 
-     
-    
-
-</body></html>
+        <p>
+        </p>
+    </body>
+</html>

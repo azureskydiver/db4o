@@ -1,43 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="829" MadCap:lastWidth="688" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;a1;b1;c1;b2;uncomment">
-    <head><title>Simple Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1582" MadCap:lastWidth="686">
+    <head><title>Simple Example	of db4o to db4o Replication</title>
     </head>
-    <body onload="prettyPrint()">
-        <h1>Simple Example</h1>
-        <p>The following example does a simple replication from a
-handheld database to the desktop database:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../../Resources/Snippets/Simple Example/ReplicationExample.java/replicate.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../../Resources/Snippets/Simple Example/ReplicationExample.cs/Replicate.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../../Resources/Snippets/Simple Example/ReplicationExample.vb/Replicate.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:vb" />We start by opening two Object Containers. The next line
-creates the ReplicationSession. This object contains all of the
-replication-related logic.
-
-<p>After creating the session, there is an interesting line:</p><p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java:</p><p><code>ObjectSet changed =
-replication.providerA().objectsChangedSinceLastReplication();
-</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><p>C#:</p><p><code>IObjectSet changed =
-replication.ProviderA().ObjectsChangedSinceLastReplication();
-</code></p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><p>VB:</p><p><code>Dim changed As IObjectSet =
-replication.ProviderA().ObjectsChangedSinceLastReplication()
-</code></p></p><p MadCap:conditions="Primary:vb" />This line of code will get the provider associated with the
-first of our sources (the handheld <MadCap:snippetText src="../../Resources/Snippets/ObjectContainer.flsnp" /> in this case). Then it
-finds all of the objects that have been updated or created. The
-new/modified objects will be returned in an enumerable ObjectSet. 
-<p>After that comes a simple loop where the resulting objects are replicated one
-at a time. 
-The <code>replication.commit()</code> call at the end is important. This line
-will save all of the changes we have made, and end any needed transactions.
-Forgetting to make this call will result in your replication changes being
-discarded when your application ends, or your ObjectContainers are closed. 
-The <code>#commit()</code> calls also mark all objects as replicated.
-Therefore, changed/new objects that are not replicated in this session
-will be marked as replicated.      </p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="../replicationvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="../replicationcs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../replicationjava.zip">Java </a></MadCap:conditionalText></p></body>
+    <body>
+        <h1>
+            <MadCap:keyword term="Replication:Simple Example;dRS:Simple Example;Replication:Unidirectional;dRS:Unidirectional Replication" />Simple Example</h1>
+        <p>A db4o-to-db4o replication is easy to use and easy to set up. There are only two steps required to get the replication started.</p>
+        <p>First ensure that you have added the dRS-<MadCap:variable name="Primary.Artefact"></MadCap:variable> to your project. <MadCap:xref href="../getting_started.htm" target="" title="" alt="">See "Getting Started" </MadCap:xref></p>
+        <p>The replication process needs two things. An UUID for each object to identify it across multiple databases. Furthermore every object needs a version-number to detect updates. In the reference documentation can find more <a href="../../implementation_strategies/ids_and_uuids.htm">information about UUIDs</a>. By default db4o doesn't generate a UUID nor keeps version numbers. So you need to configure this explicitly:              <![CDATA[ ]]></p>
+        <MadCap:snippetBlock src="../../CodeExamples/drs/db4o/Db4oReplicationExamples-Configure-db4o-to-generate-UUIDs-and-Version-Numbers.all.flsnp" />
+        <p>After this preparation, you can store, retrieve and update normally. To start the replication-process, open the two databases which take part in the replication. Then create an replication-session by passing the replication partners to the replication factory.</p>
+        <MadCap:snippetBlock src="../../CodeExamples/drs/db4o/Db4oReplicationExamples-Prepare-unidirectional-replication.all.flsnp" />
+        <p>Now the system is ready for replication. First request all changes from a replication partner. The replication session will return all objects which have been created or updated since the last replication. Then iterate over the returned objects and replicate object by object.</p>
+        <MadCap:snippetBlock src="../../CodeExamples/drs/db4o/Db4oReplicationExamples-One-direction-replication.all.flsnp" />
+        <p>To complete the replication, call commit on the replication session. This commit stores all changes in replication partners and finishes the running transactions. Furthermore it marks the objects as replicated to ensure that future replications only include the new changes. Without the commit call the replication-changes will be discarded! </p>
+    </body>
 </html>

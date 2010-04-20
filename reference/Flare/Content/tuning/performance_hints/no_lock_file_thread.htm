@@ -1,31 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>No lock file thread	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>No lock file thread	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>No lock file thread</h1>
-
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java: </p><p><code>configuration.lockDatabaseFile(false)</code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-<p>.NET: </p><p><code>configuration.LockDatabaseFile(false)</code></p>
-</p><p MadCap:conditions="Primary:net" />
-<a name="Advantage"></a><h2>Advantage</h2>
-<p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>configuration.lockDatabaseFile(false)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: </p>
+            <p><code>configuration.LockDatabaseFile(false)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" /><a name="Advantage"></a>
+        <h2>Advantage</h2>
+        <p>
 will prevent the creation of a lock file thread on Java platforms without NIO (&lt; JDK 1.4.1).
-</p>
-<a name="Effect"></a><h2>Effect</h2>
-<p>
-If file locking is not available on the system, db4o will regularily write a timestamp lock information to the database file, to prevent other VM sessions from accessing the database file at the same time. Uncontrolled concurrent access would inevitably lead to corruption of the database file. If the application ensures that it can not be started multiple times against the database file, db4o file locking may not be necessary.</p>
-<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
-<p>
+</p><a name="Effect"></a>
+        <h2>Effect</h2>
+        <p>
+If file locking is not available on the system, db4o will regularily write a timestamp lock information to the database file, to prevent other VM sessions from accessing the database file at the same time. Uncontrolled concurrent access would inevitably lead to corruption of the database file. If the application ensures that it can not be started multiple times against the database file, db4o file locking may not be necessary.</p><a name="Alternate Strategies"></a>
+        <h2>Alternate Strategies</h2>
+        <p>
 Database files can safely be opened from multiple sessions in readonly mode. Use:</p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java: </p><p><code>configuration.readOnly(true)</code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-<p>.NET: </p><p><code>configuration.ReadOnly(true)</code></p>
-</p><p MadCap:conditions="Primary:net" />    
-  </body></html>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>configuration.readOnly(true)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: </p>
+            <p><code>configuration.ReadOnly(true)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+    </body>
+</html>

@@ -1,51 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Using The Repository	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Using The Repository</h1> 
-<p>If you enjoy being on the "cutting edge" and want to follow up with the development process, you can use our SVN repository to get the most up-to-date db4o source code. </p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>If you are using <a href="http://www.eclipse.org/" target="_blank">Eclipse</a> it may be convenient for you to use <a href="http://www.polarion.org/index.php?page=overview&amp;project=subversive">Subversive plugin</a> as the Subversion client. </p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET">
-<p>If you are working with .NET you can use MS Visual Studio 2008 and any Subversion client you like. For many people on the team <a href="http://tortoisesvn.tigris.org/">Tortoise SVN client</a> works very well.</p>
-</p><p MadCap:conditions="Primary:net" />
-<p>Access to the public projects on our Subversion server is available under the following public URL. No login is required.</p>
-<p><a href="https://source.db4o.com/db4o/trunk/">https://source.db4o.com/db4o/trunk/</a></p>
-<p>The following projects are currently available.</p>
-<p>Projects may be under constant development. Source code is not guaranteed to be stable.</p>
-<p>Most top-level modules in svn  directly map to Eclipse projects, i.e. the root folder contains the Eclipse project metadata. If a top-level module acts as a container for related projects rather than as a standalone project, its name should be suffixed with <b>-projects</b> by convention, indicating that you'll have to look inside to find the actual project folders to check out. </p><p><b>bloat</b></p><p>Bytecode instrumentation library</p><p><b>cruisecontrol</b></p><p>Cruisecontrol project for db4o build</p><p><b>dashboard</b></p><p>db4o eclipse utility to watch db4o cruisecontrol build status</p><p><b>db4o-update-site</b></p><p>db4o OSGI plugin installation and update site </p><p><b>db4o.archives</b></p><p>Collection of db4o versions.</p><p><b>db4o.cs</b></p><p>db4o client/server specific sources  </p><p><b>db4o.instrumentation</b></p>Bytecode instrumentation for db4o. <p><b>db4o.net</b></p>
-db4o for .NET sources including dRS <p><b>db4oME </b>db4o for J2ME CLDC (spike project, to be integrated with regular production)</p>
-<p><b>db4obuild</b></p><p>Resources and scripts to build db4o</p><p><b>db4obuild.tests</b></p><p>Tests for db4obuild </p><p><b>db4odebugutils</b></p><p>Debug utilities for db4o  <b>db4oj</b> db4o core</p><p><b>db4oj.optional</b></p><p>optional db4o components (separate project to keep the core smaller) </p><p><b>db4oj.tests</b></p>
-<p>Collection of db4o regression tests </p><p><b>db4onqopt</b> 
-</p><p>Native query optimizer for Java</p>
-<p><b>db4opolepos</b> 
-</p><p><a href="http://polepos.sourceforge.net/">Poleposition</a> benchmark for db4o </p><p><b>db4otaj</b></p>
-<p>Instrumentation for db4o TA </p><p><b>db4otaj.tests.integration</b> </p><p>Transparent Activation tests  </p>
-<p><b>db4otesteclipse</b></p>
-<p>db4ounit integration in Eclipse </p><p><b>db4otools</b></p>
-<p>Instrumentation tools for db4o</p><p><b>db4ounit</b> </p>
-<p><a href="../db4o_testing_framework.htm"  >Unit-test framework for db4o</a> (no db4o dependencies)</p>
-<p><b>db4ounit.extensions</b> </p>
-<p>db4o-specific extensions for <a href="../db4o_testing_framework.htm"  >db4o testing framework</a> </p><p><b>decaf</b></p><p>       <b>decaf</b> - Java SDK version converter </p><p>       <b>decaf.functional.tests</b> - decaf functional tests </p><p>       <b>decaf.tests</b>  - decaf tests</p><b>docWiki</b>
-<p>Offline version of <a href="http://developer.db4o.com/Resources/view.aspx/Reference">db4o reference documentation</a> </p>
-<p><b>doctor </b>Internal db4o documentation system</p><p><b>dRS</b></p><p>db4o replication system  </p><p><b>drspolepos</b></p>
-<p>Polepolition benchmarks for dRS </p>
-<p><b>eiffel</b></p><p>Tests with Eiffel for .NET</p><p><b>enterprise</b></p><p>  <b>omj </b>Object Manager Enterprise for Java (Eclipse plugin) </p><p>  <b>omn</b> Object Manager Enterprise for .NET (Visual Studio plugin)</p><b>objectmanager</b> <p>Old Object Manager sources</p>
-<p><b>objectmanager-api </b>Object Manager API </p>
-<p><b>objectmanager-swing </b>Object Manager (database browser)</p>
-<p><b>osgi-projects</b>  <b>osgi_db4o -</b> OSGi db4o bundle with factory service  <b>osgi_db4o_test</b> - bundle to run db4ojdk1.2 test suite in OSGi context</p><p><b>reference</b></p>
-<p>Collection of examples for the reference documentation </p><p><b>sandbox</b> </p><p>Sandbox </p><p><b>sharpen</b></p><p> <b>sharpen.core</b> - java to c# converter    <b>sharpen.builder </b>- java to c# converter   <b>sharp.ui</b> - Eclipse UI java to c# converter extension <b> sharp.ui.tests</b> - tests for sharpen.ui </p><p><b>spikes</b></p>
-<p>Placeholder for db4o spike projects</p>
-<p><b>sync4o </b>Client and Server sync sources for the Funambol sync4j system.</p><b>tutorial</b>
-<p>Tutorial sources</p><p><b>version6converter</b></p><p>Converter for .NET legacy projects to db4o version 6 .NET conventions  </p>
-<p> The latest development source code is available from TRUNK. </p>
-<p>For branches, tags and versions we recommend downloading the distributions from our <a href="http://developer.db4o.com/files/default.aspx">download center</a>.</p>
-<p>Further reading:</p>
-<p><a href="db4o_directory_structure.htm"  >Db4o Directory Structure</a>  </p>
-<p><a href="building_java_version.htm"  >Building Java Version</a> </p>
-<p><a href="building_.net_version.htm"  >Building .NET Version</a> </p> 
-     
-    
-  </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Using The Repository	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Using The Repository</h1>
+        <p>If you enjoy being on the "cutting edge" and want to follow up with the development process, you can use our SVN repository to get the most up-to-date db4o source code. </p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>If you are using <a href="http://www.eclipse.org/" target="_blank">Eclipse</a> it may be convenient for you to use <a href="http://www.polarion.org/index.php?page=overview&amp;project=subversive">Subversive plugin</a> as the Subversion client. </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>If you are working with .NET you can use MS Visual Studio 2008 and any Subversion client you like. For many people on the team <a href="http://tortoisesvn.tigris.org/">Tortoise SVN client</a> works very well.</p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Access to the public projects on our Subversion server is available under the following public URL. No login is required.</p>
+        <p><a href="https://source.db4o.com/db4o/trunk/">https://source.db4o.com/db4o/trunk/</a>
+        </p>
+        <p>The following projects are currently available.</p>
+        <p>Projects may be under constant development. Source code is not guaranteed to be stable.</p>
+        <p>Most top-level modules in svn  directly map to Eclipse projects, i.e. the root folder contains the Eclipse project metadata. If a top-level module acts as a container for related projects rather than as a standalone project, its name should be suffixed with <b>-projects</b> by convention, indicating that you'll have to look inside to find the actual project folders to check out. </p>
+        <p><b>bloat</b>
+        </p>
+        <p>Bytecode instrumentation library</p>
+        <p><b>cruisecontrol</b>
+        </p>
+        <p>Cruisecontrol project for db4o build</p>
+        <p><b>dashboard</b>
+        </p>
+        <p>db4o eclipse utility to watch db4o cruisecontrol build status</p>
+        <p><b>db4o-update-site</b>
+        </p>
+        <p>db4o OSGI plugin installation and update site </p>
+        <p><b>db4o.archives</b>
+        </p>
+        <p>Collection of db4o versions.</p>
+        <p><b>db4o.cs</b>
+        </p>
+        <p>db4o client/server specific sources  </p>
+        <p><b>db4o.instrumentation</b>
+        </p>Bytecode instrumentation for db4o. <p><b>db4o.net</b></p>
+db4o for .NET sources including dRS <p><b>db4oME </b>db4o for J2ME CLDC (spike project, to be integrated with regular production)</p><p><b>db4obuild</b></p><p>Resources and scripts to build db4o</p><p><b>db4obuild.tests</b></p><p>Tests for db4obuild </p><p><b>db4odebugutils</b></p><p>Debug utilities for db4o  <b>db4oj</b> db4o core</p><p><b>db4oj.optional</b></p><p>optional db4o components (separate project to keep the core smaller) </p><p><b>db4oj.tests</b></p><p>Collection of db4o regression tests </p><p><b>db4onqopt</b></p><p>Native query optimizer for Java</p><p><b>db4opolepos</b></p><p><a href="http://polepos.sourceforge.net/">Poleposition</a> benchmark for db4o </p><p><b>db4otaj</b></p><p>Instrumentation for db4o TA </p><p><b>db4otaj.tests.integration</b></p><p>Transparent Activation tests  </p><p><b>db4otesteclipse</b></p><p>db4ounit integration in Eclipse </p><p><b>db4otools</b></p><p>Instrumentation tools for db4o</p><p><b>db4ounit</b></p><p><a href="../db4o_testing_framework.htm">Unit-test framework for db4o</a> (no db4o dependencies)</p><p><b>db4ounit.extensions</b></p><p>db4o-specific extensions for <a href="../db4o_testing_framework.htm">db4o testing framework</a></p><p><b>decaf</b></p><p><b>decaf</b> - Java SDK version converter </p><p><b>decaf.functional.tests</b> - decaf functional tests </p><p><b>decaf.tests</b>  - decaf tests</p><b>docWiki</b><p>Offline version of <a href="http://developer.db4o.com/Resources/view.aspx/Reference">db4o reference documentation</a></p><p><b>doctor </b>Internal db4o documentation system</p><p><b>dRS</b></p><p>db4o replication system  </p><p><b>drspolepos</b></p><p>Polepolition benchmarks for dRS </p><p><b>eiffel</b></p><p>Tests with Eiffel for .NET</p><p><b>enterprise</b></p><p><b>omj </b>Object Manager Enterprise for Java (Eclipse plugin) </p><p><b>omn</b> Object Manager Enterprise for .NET (Visual Studio plugin)</p><b>objectmanager</b><p>Old Object Manager sources</p><p><b>objectmanager-api </b>Object Manager API </p><p><b>objectmanager-swing </b>Object Manager (database browser)</p><p><b>osgi-projects</b><b>osgi_db4o -</b> OSGi db4o bundle with factory service  <b>osgi_db4o_test</b> - bundle to run db4ojdk1.2 test suite in OSGi context</p><p><b>reference</b></p><p>Collection of examples for the reference documentation </p><p><b>sandbox</b></p><p>Sandbox </p><p><b>sharpen</b></p><p><b>sharpen.core</b> - java to c# converter    <b>sharpen.builder </b>- java to c# converter   <b>sharp.ui</b> - Eclipse UI java to c# converter extension <b> sharp.ui.tests</b> - tests for sharpen.ui </p><p><b>spikes</b></p><p>Placeholder for db4o spike projects</p><p><b>sync4o </b>Client and Server sync sources for the Funambol sync4j system.</p><b>tutorial</b><p>Tutorial sources</p><p><b>version6converter</b></p><p>Converter for .NET legacy projects to db4o version 6 .NET conventions  </p><p> The latest development source code is available from TRUNK. </p><p>For branches, tags and versions we recommend downloading the distributions from our <a href="http://developer.db4o.com/files/default.aspx">download center</a>.</p><p>Further reading:</p><p><a href="db4o_directory_structure.htm">Db4o Directory Structure</a></p><p><a href="building_java_version.htm">Building Java Version</a></p><p><a href="building_.net_version.htm">Building .NET Version</a></p></body>
+</html>

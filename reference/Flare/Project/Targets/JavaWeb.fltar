@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <CatapultTarget
   Version="1"
   Comment="New Target"
@@ -7,7 +7,7 @@
   GlossaryTermConversion="first"
   ConditionTagExpression="include[Primary.Java or Primary.Online or Primary.Print] "
   MasterPageLayout="/Content/Resources/PageLayouts/Default.flpgl"
-  MasterStylesheet="/Content/Resources/Stylesheets/prettify.css"
+  MasterStylesheet="/Content/Resources/Stylesheets/OnlineStyle.css"
   MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
   UseCustomTopicFileExtension="false"
   OutputFolder="e:/db4o-dist/java/temp"

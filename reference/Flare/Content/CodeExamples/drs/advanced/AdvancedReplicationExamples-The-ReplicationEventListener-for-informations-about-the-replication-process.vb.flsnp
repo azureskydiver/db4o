@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Class LogReplicationListener
+    Implements IReplicationEventListener
+    Public Sub OnReplicate(ByVal replicationEvent As IReplicationEvent) _
+                                    Implements IReplicationEventListener.OnReplicate
+        Dim stateInDesktop As IObjectState = replicationEvent.StateInProviderA()
+        If stateInDesktop.IsNew() Then
+            Console.WriteLine(&quot;Object '{0}' is new on desktop database&quot;, _
+                              stateInDesktop.GetObject())
+        End If
+        If stateInDesktop.WasModified() Then
+            Console.WriteLine(&quot;Object '{0}' was modified on desktop database&quot;, _
+                              stateInDesktop.GetObject())
+        End If
+    End Sub
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Class LogReplicationListener
+    Implements IReplicationEventListener
+    Public Sub OnReplicate(ByVal replicationEvent As IReplicationEvent) _
+                                    Implements IReplicationEventListener.OnReplicate
+        Dim stateInDesktop As IObjectState = replicationEvent.StateInProviderA()
+        If stateInDesktop.IsNew() Then
+            Console.WriteLine(&quot;Object '{0}' is new on desktop database&quot;, _
+                              stateInDesktop.GetObject())
+        End If
+        If stateInDesktop.WasModified() Then
+            Console.WriteLine(&quot;Object '{0}' was modified on desktop database&quot;, _
+                              stateInDesktop.GetObject())
+        End If
+    End Sub
+End Class</pre>
+		<div class="codesnippet-meta">AdvancedReplicationExamples.vb: The ReplicationEventListener for informations about the replication process<a href="Example-drs-advanced-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

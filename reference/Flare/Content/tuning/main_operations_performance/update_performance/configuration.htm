@@ -1,33 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Configuration	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Configuration	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Configuration</h1>
-<P>db4o provides a wide range of configuration options to help you meet your performance and reliability requirements. The following example shows how different configurations affect update performance:</P>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/runConfigurationTest.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/updateItems.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/updateTopLevelItems.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/updateActivatableItems.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/configure.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/configureCascade.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/configureTP.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/ActivatableItem.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET">
-<MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/RunConfigurationTest.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/UpdateItems.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/UpdateTopLevelItems.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/UpdateActivatableItems.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/Configure.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/ConfigureCascade.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/ConfigureTP.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/ActivatableItem.flsnp" /></p><p MadCap:conditions="Primary:net" />
-<P>The results:</P>
-<P><I>Update test with different configurations</I></P>
-<P><I>Update test: default configurations</I></P>
-<P><I>Store 90000 objects: 7869ms</I></P>
-<P><I>Updated 90 items: 471ms</I></P>
-<P><I>Update test: memory IO adapter</I></P>
-<P><I>Store 90000 objects: 6622ms</I></P>
-<P><I>Updated 90 items: 289ms</I></P>
-<P><I>Update test: cascade on update</I></P>
-<P><I>Store 90000 objects: 6848ms</I></P>
-<P><I>Updated 90 items: 1531ms</I></P>
-<P><I>Update test: Transparent Persistence</I></P>
-<P><I>Store 90000 objects: 6604ms</I></P>
-<P><I>Updated 90 items: 1297ms</I></P>
-<P>From the results you can see that MemoryIoAdapter allows to improve performance, CascadeOnUpdate option results in a considerable drop of performance, and Transparent Persistence makes it better again.</P>
- 
-     
-
-
+        <P>db4o provides a wide range of configuration options to help you meet your performance and reliability requirements. The following example shows how different configurations affect update performance:</P>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/runConfigurationTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/updateItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/updateTopLevelItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/updateActivatableItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/configure.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/configureCascade.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/configureTP.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.java/ActivatableItem.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/RunConfigurationTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/UpdateItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/UpdateTopLevelItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/UpdateActivatableItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/Configure.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/ConfigureCascade.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/ConfigureTP.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Configuration/UpdatePerformanceBenchmark.cs/ActivatableItem.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <P>The results:</P>
+        <P>
+            <I>Update test with different configurations</I>
+        </P>
+        <P>
+            <I>Update test: default configurations</I>
+        </P>
+        <P>
+            <I>Store 90000 objects: 7869ms</I>
+        </P>
+        <P>
+            <I>Updated 90 items: 471ms</I>
+        </P>
+        <P>
+            <I>Update test: memory IO adapter</I>
+        </P>
+        <P>
+            <I>Store 90000 objects: 6622ms</I>
+        </P>
+        <P>
+            <I>Updated 90 items: 289ms</I>
+        </P>
+        <P>
+            <I>Update test: cascade on update</I>
+        </P>
+        <P>
+            <I>Store 90000 objects: 6848ms</I>
+        </P>
+        <P>
+            <I>Updated 90 items: 1531ms</I>
+        </P>
+        <P>
+            <I>Update test: Transparent Persistence</I>
+        </P>
+        <P>
+            <I>Store 90000 objects: 6604ms</I>
+        </P>
+        <P>
+            <I>Updated 90 items: 1297ms</I>
+        </P>
+        <P>From the results you can see that MemoryIoAdapter allows to improve performance, CascadeOnUpdate option results in a considerable drop of performance, and Transparent Persistence makes it better again.</P>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="updateperformancecs.zip">c# </a>
@@ -35,7 +75,5 @@
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="updateperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

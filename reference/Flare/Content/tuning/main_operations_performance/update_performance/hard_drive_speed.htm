@@ -1,61 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Hard Drive Speed	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Hard Drive Speed</h1><p>Update db4o operation requires disk access and therefore is
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Hard Drive Speed	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Hard Drive Speed</h1>
+        <p>Update db4o operation requires disk access and therefore is
 very dependent on the disk speed. To emulate a different drive speed we will
 use a RAMDISK utility, which creates an alternative storage media in the
 memory.</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/runHardDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/initForHardDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/runRamDiskTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/initForRamDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/configureDriveTest.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/RunHardDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/InitForHardDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/RunRamDiskTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/InitForRamDriveTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/ConfigureDriveTest.flsnp" />
-</p><p MadCap:conditions="Primary:net" />
-
-<p>The results:</p>
-
-<p><i>Update test: hard drive</i></p>
-
-<p><i>Store 30000 objects: 2884ms</i></p>
-
-<p><i>Updating  90
-objects on a hard drive:</i></p>
-
-<p><i>Updated 90 items: 250ms</i></p>
-
-<p><i>Update test: RAM disk</i></p>
-
-<p><i>Store 30000 objects: 1910ms</i></p>
-
-<p><i>Updating  90
-objects on a RAM drive:</i></p>
-
-<p><i>Updated 90
-items: 105ms</i></p>
-
-<p><i>The test shows
-that the faster media (RAMDISK) shows better performance on update.</i></p>
-
-
-
- 
-     
-
-
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/runHardDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/initForHardDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/runRamDiskTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/initForRamDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.java/configureDriveTest.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/RunHardDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/InitForHardDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/RunRamDiskTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/InitForRamDriveTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Hard Drive Speed/UpdatePerformanceBenchmark.cs/ConfigureDriveTest.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>The results:</p>
+        <p><i>Update test: hard drive</i>
+        </p>
+        <p><i>Store 30000 objects: 2884ms</i>
+        </p>
+        <p><i>Updating  90
+objects on a hard drive:</i>
+        </p>
+        <p><i>Updated 90 items: 250ms</i>
+        </p>
+        <p><i>Update test: RAM disk</i>
+        </p>
+        <p><i>Store 30000 objects: 1910ms</i>
+        </p>
+        <p><i>Updating  90
+objects on a RAM drive:</i>
+        </p>
+        <p><i>Updated 90
+items: 105ms</i>
+        </p>
+        <p><i>The test shows
+that the faster media (RAMDISK) shows better performance on update.</i>
+        </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="updateperformancecs.zip">c# </a>
@@ -63,6 +54,5 @@ that the faster media (RAMDISK) shows better performance on update.</i></p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="updateperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-    
-</body></html>
+    </body>
+</html>

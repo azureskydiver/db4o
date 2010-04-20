@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2381" MadCap:lastWidth="1022">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="dRS:Concurrency;Replication:Concurrency" />Concurrency-Limitations</h1>
+        <p>Currently the dRS has a limitation &#160;considering concurrently replicating and updating a database. Changes which are made during a replication are never replicated. For example a mobile device connects <a href="../../client-server.htm">to a db4o server </a> and replicates the changes. During that process other clients store changes on the server. Now all changes which happen during this replication process are never replicated to the mobile device. </p>
+        <MadCap:snippetBlock src="../../CodeExamples/drs/advanced/AdvancedReplicationExamples-Lost-replication.all.flsnp" />
+        <p>The only way to avoid this limitation is to prevent changing the database during a replication.</p>
+    </body>
+</html>
