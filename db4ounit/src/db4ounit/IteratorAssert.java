@@ -9,6 +9,10 @@ import com.db4o.foundation.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public class IteratorAssert {
     
+    public static void areEqual(Iterable expected, Iterable actual) {
+    	areEqual(expected.iterator(), actual.iterator());
+    }
+    
     public static void areEqual(Iterator expected, Iterator actual) {
         if (null == expected) {
             Assert.isNull(actual);
