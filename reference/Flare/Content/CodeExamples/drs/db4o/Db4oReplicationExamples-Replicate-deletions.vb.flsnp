@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim replicationSession As IReplicationSession = _
+    Replication.Begin(desktopDatabase, mobileDatabase)
+replicationSession.ReplicateDeletions(GetType(Car))
+replicationSession.Commit()</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim replicationSession As IReplicationSession = _
+    Replication.Begin(desktopDatabase, mobileDatabase)
+replicationSession.ReplicateDeletions(GetType(Car))
+replicationSession.Commit()</pre>
+		<div class="codesnippet-meta">Db4oReplicationExamples.vb: Replicate deletions<a href="Example-drs-db4o-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

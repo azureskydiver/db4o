@@ -2,7 +2,7 @@ package com.db4odoc.drs.db4o;
 
 public class Pilot  {
 	private String name;
-	int points;
+	private int points;
     
     public Pilot(String name)  {
         this.name=name;

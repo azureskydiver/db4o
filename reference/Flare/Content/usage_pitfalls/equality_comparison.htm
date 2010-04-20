@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Equality Comparison	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Equality Comparison	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Equality Comparison</h1>Db4o uses reference cache for quick
 access to persistent objects. Each persistent object is guaranteed to
 have only one instance in the object reference cache independently of
@@ -14,41 +14,11 @@ ref(n).
 objects, for example, one created in the runtime and another
 retrieved from the database, with the same data (field values) won't
 be equal for db4o. 
-</p>
-<p>There are 2 ways to compare db4o
-objects by data:</p>
-<ul><li><p>using
-	<a href="../object_lifecycle/querying/query_by_example.htm"  >QBE</a>;</p>
-	</li><li><p>implementing a suitable
-	<code>equals</code> method.</p>
-</li></ul>
-<p>Let's save an object to the database
-and try the above mentioned methods in practice.</p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<MadCap:snippetBlock src="../Resources/Snippets/Equality Comparison/EqualityExample.java/storePilot.flsnp" /></p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-<MadCap:snippetBlock src="../Resources/Snippets/Equality Comparison/EqualityExample.cs/StorePilot.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-<MadCap:snippetBlock src="../Resources/Snippets/Equality Comparison/EqualityExample.vb/StorePilot.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+</p><p>There are 2 ways to compare db4o
+objects by data:</p><ul><li><p>using
+	<a href="../object_lifecycle/querying/query_by_example.htm">QBE</a>;</p></li><li><p>implementing a suitable
+	<code>equals</code> method.</p></li></ul><p>Let's save an object to the database
+and try the above mentioned methods in practice.</p><p MadCap:conditions="Primary.Java,Primary.All languages"><MadCap:snippetBlock src="../Resources/Snippets/Equality Comparison/EqualityExample.java/storePilot.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><MadCap:snippetBlock src="../Resources/Snippets/Equality Comparison/EqualityExample.cs/StorePilot.flsnp" /></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><MadCap:snippetBlock src="../Resources/Snippets/Equality Comparison/EqualityExample.vb/StorePilot.flsnp" /></p><p MadCap:conditions="Primary:vb" />
 
- More Reading:<ul>
-<li><p><a href="equality_comparison/qbe.htm"  >QBE</a></p></li>
-<li><p><a href="equality_comparison/using_equals.htm"  >Using Equals</a></p></li>
-</ul> 
-
-
- 
-     
-
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="equality_comparison/equalityvb.zip">VB.NET </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="equality_comparison/equalitycs.zip">c# </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="equality_comparison/equalityjava.zip">Java </a>
-            </MadCap:conditionalText>
-        </p>
-
-    
-</body></html>
+ More Reading:<ul><li><p><a href="equality_comparison/qbe.htm">QBE</a></p></li><li><p><a href="equality_comparison/using_equals.htm">Using Equals</a></p></li></ul><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="equality_comparison/equalityvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="equality_comparison/equalitycs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="equality_comparison/equalityjava.zip">Java </a></MadCap:conditionalText></p></body>
+</html>

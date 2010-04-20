@@ -1,60 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>PeekPersisted	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>PeekPersisted	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>PeekPersisted</h1>
-
-
-<p>Db4o loads each object into reference cache only once in the session, thus ensuring that independently of the way of retrieving, you will always get a reference to the same object. This concept certainly makes things clearer, but in some cases you will want to operate on the copy of an object.
+        <p>Db4o loads each object into reference cache only once in the session, thus ensuring that independently of the way of retrieving, you will always get a reference to the same object. This concept certainly makes things clearer, but in some cases you will want to operate on the copy of an object.
 </p>
-<p>Typical usecases can be:</p>
-<ul>
-<li>
+        <p>Typical usecases can be:</p>
+        <ul>
+            <li>
 comparing object's changes in a running transaction with the original object in a database;</li>
-<li>safely changing an object without making changes to the database;</li>
-<li>
+            <li>safely changing an object without making changes to the database;</li>
+            <li>
 modifying an object in several threads independently, writing the changes to the database after conflict resolution.</li>
-</ul>
-<p>Db4o helps you with these tasks providing the following method:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<p>Java: <code>ExtObjectContainer.peekPersisted(object, depth, committed)</code></p>
-
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-<p>c#:   <code>IExtObjectContainer.PeekPersisted(object, depth, committed)</code></p>
-</p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-<p>VB:   <code>IExtObjectContainer.PeekPersisted(object, depth, committed)</code></p>
-</p><p MadCap:conditions="Primary:vb" />
-
-<p>This method creates a copy of a database object in memory instantiating its members up to depth parameter value. The object has no connection to the database.</p>
-<p>Committed parameter defines whether committed or set values are to be returned. 
+        </ul>
+        <p>Db4o helps you with these tasks providing the following method:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: <code>ExtObjectContainer.peekPersisted(object, depth, committed)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <p>c#:   <code>IExtObjectContainer.PeekPersisted(object, depth, committed)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <p>VB:   <code>IExtObjectContainer.PeekPersisted(object, depth, committed)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>This method creates a copy of a database object in memory instantiating its members up to depth parameter value. The object has no connection to the database.</p>
+        <p>Committed parameter defines whether committed or set values are to be returned. 
 Let's see how you can use it.</p>
-<p>We will use 2 threads measuring temperature independently in different parts of the car: somewhere in the cabin (getCabinTemperature) and on the conditioner unit (getConditionerTemperature).After some period of time the average measured value will be written to the database.</p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.java/measureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-<MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.cs/MeasureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-<MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.vb/MeasureCarTemperature.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-
-<p>peekPersisted method gives you an easy way to work with database objects' clones. Remember that these clones are totally disconnected from the database. If you will try to save such object:</p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:<code> ObjectContainer.set(peekPersistedObject)</code></p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-<p>c#:   <code>IObjectContainer.Set(peekPersistedObject)</code></p>
-</p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-<p>VB:   <code>IObjectContainer#Set(peekPersistedObject)</code></p>
-</p><p MadCap:conditions="Primary:vb" />
-<p>you will get a new object in the database.</p> 
-     
-    
+        <p>We will use 2 threads measuring temperature independently in different parts of the car: somewhere in the cabin (getCabinTemperature) and on the conditioner unit (getConditionerTemperature).After some period of time the average measured value will be written to the database.</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.java/measureCarTemperature.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.cs/MeasureCarTemperature.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../Resources/Snippets/PeekPersisted/PeekPersistedExample.vb/MeasureCarTemperature.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>peekPersisted method gives you an easy way to work with database objects' clones. Remember that these clones are totally disconnected from the database. If you will try to save such object:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:<code> ObjectContainer.set(peekPersistedObject)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <p>c#:   <code>IObjectContainer.Set(peekPersistedObject)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <p>VB:   <code>IObjectContainer#Set(peekPersistedObject)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:vb" />
+        <p>you will get a new object in the database.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="persistvb.zip">VB.NET </a>
@@ -64,7 +66,5 @@ Let's see how you can use it.</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="persistjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-
-</body></html>
+    </body>
+</html>

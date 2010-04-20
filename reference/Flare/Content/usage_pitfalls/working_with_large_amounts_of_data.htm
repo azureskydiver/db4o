@@ -1,23 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Working With Large Amounts Of Data	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-        <h1>Working With Large Amounts Of Data</h1><p>db4o is designed to manage large
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Working With Large Amounts Of Data	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Working With Large Amounts Of Data</h1>
+        <p>db4o is designed to manage large
 amounts of data. The following paragraphs highlight some information
-important for using db4o with large data.</p>
-<a name="Size of Database Files"></a><h2>Size of Database Files </h2>
-<p>In the default setting,
+important for using db4o with large data.</p><a name="Size of Database Files"></a>
+        <h2>Size of Database Files </h2>
+        <p>In the default setting,
 the maximum database file size is 2GB.   You can increase this
-value by <a href="../tuning/performance_hints/increasing_the_maximum_database_file_size.htm"  >configuring the internal db4o block size</a>:
+value by <a href="../tuning/performance_hints/increasing_the_maximum_database_file_size.htm">configuring the internal db4o block size</a>:
 </p>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:</p>
-<p><code>configuration.blockSize(blockSize)</code> </p>
-</p><p MadCap:conditions="Primary:java" />
-<p MadCap:conditions="Primary..NET">
-<p>.NET:</p>
-<p><code>configuration.BlockSize(blockSize)</code> </p>
-</p><p MadCap:conditions="Primary:net" />
-<p>As a parameter you can specify
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:</p>
+            <p><code>configuration.blockSize(blockSize)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET:</p>
+            <p><code>configuration.BlockSize(blockSize)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>As a parameter you can specify
 any value between 1 and 127. The resulting maximum database file size
 will be a multiple of 2GB. A recommended setting for large database
 files is 8, since internal pointers have this length.   Using <code>blockSize</code> the maximum database file size will be
@@ -26,37 +33,45 @@ Object Container is opened the first time. During the lifetime of an
 Object Container the setting will have to stay the same. Since
 Defragment copies all objects to a new Object Container, it can be
 used to change the blockSize of an existing database:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:</p>
-<p><code>Defragment.defrag("filename.db4o")</code> </p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<p>.NET:</p>
-
-<p><code>Defragment.Defrag("filename.db4o")</code> </p>
-</p><p MadCap:conditions="Primary:net" />
-<a name="Performance"></a><h2>Performance
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:</p>
+            <p><code>Defragment.defrag("filename.db4o")</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET:</p>
+            <p><code>Defragment.Defrag("filename.db4o")</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" /><a name="Performance"></a>
+        <h2>Performance
 </h2>
-<p>Navigation access times
+        <p>Navigation access times
 to objects and the performance of access by internal IDs remains
 constant, no matter how large database files are.   Query
 performance on unindexed objects drops linearly with an increasing
 number of objects per class.   Query performance on a large
-number of objects can be dramatically improved by <a href="../tuning/performance_hints/enable_field_indexes.htm"  >using indexes</a>:
-</p><p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java:</p>
-
-<p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(true);
-</code></p></p><p MadCap:conditions="Primary:java" /><p><p MadCap:conditions="Primary..NET">
+number of objects can be dramatically improved by <a href="../tuning/performance_hints/enable_field_indexes.htm">using indexes</a>:
 </p>
-<p>.NET:</p>
-
-<p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true);
-</code></p>
-
-<p></p><p MadCap:conditions="Primary:net" /></p>
-<p>db4o storage performance is very good. It is recommended to run your own benchmarks with large amounts of data to check the overall performance on your particular class hierarchy.</p>    
-  </body></html>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:</p>
+            <p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(true);
+</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p>
+            <p MadCap:conditions="Primary..NET">
+            </p>
+            <p>.NET:</p>
+            <p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true);
+</code>
+            </p>
+            <p>
+            </p>
+            <p MadCap:conditions="Primary:net" />
+        </p>
+        <p>db4o storage performance is very good. It is recommended to run your own benchmarks with large amounts of data to check the overall performance on your particular class hierarchy.</p>
+    </body>
+</html>

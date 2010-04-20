@@ -1,34 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Calling constructors	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Calling constructors	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Calling constructors</h1>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java: </p><p><code>Db4o.configure().callConstructors(true)</code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-<p>.NET: </p><p><code>Db4oFactory.Configure().CallConstructors(true)</code></p>
-</p><p MadCap:conditions="Primary:net" />
-<a name="Advantage"></a><h2>Advantage</h2>
-<p>
-will configure db4o to use constructors to instantiate objects.</p>
-<a name="Effect"></a><h2>Effect</h2>
-<p>
-On VMs where this is supported (Sun Java VM &gt; 1.4, .NET, Mono) db4o tries to create instances of objects without calling a constructor. On Java VMs db4o is using reflection for this feature so this may be considerably slower than using a constructor. For the best performance on Java it is recommended to add a public zero-parameter constructor to every persistent class and to turn constructors on. Benchmarks on .NET have shown that the default setting ( #callConstructors(false) ) is faster.</p>
-
-<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
-<p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>Db4o.configure().callConstructors(true)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: </p>
+            <p><code>Db4oFactory.Configure().CallConstructors(true)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Primary:net" /><a name="Advantage"></a>
+        <h2>Advantage</h2>
+        <p>
+will configure db4o to use constructors to instantiate objects.</p><a name="Effect"></a>
+        <h2>Effect</h2>
+        <p>
+On VMs where this is supported (Sun Java VM &gt; 1.4, .NET, Mono) db4o tries to create instances of objects without calling a constructor. On Java VMs db4o is using reflection for this feature so this may be considerably slower than using a constructor. For the best performance on Java it is recommended to add a public zero-parameter constructor to every persistent class and to turn constructors on. Benchmarks on .NET have shown that the default setting ( #callConstructors(false) ) is faster.</p><a name="Alternate Strategies"></a>
+        <h2>Alternate Strategies</h2>
+        <p>
 Constructors can also be turned on for individual classes only with</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-<p>Java: <code>Db4o.configure().objectClass(Foo.class).callConstructor(true)</code></p>
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-<p>.NET: <code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).CallConstructor(true)</code></p>
-</p><p MadCap:conditions="Primary:net" />
-<p>There are some classes (e.g. java.util.Calendar) that require a constructor to be called to work. Further details can be found in the <a href="../../object_lifecycle/object_construction.htm"  >Constructors</a>  chapter</p>
-
-    
-  </body></html>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: <code>Db4o.configure().objectClass(Foo.class).callConstructor(true)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: <code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).CallConstructor(true)</code></p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>There are some classes (e.g. java.util.Calendar) that require a constructor to be called to work. Further details can be found in the <a href="../../object_lifecycle/object_construction.htm">Constructors</a>  chapter</p>
+    </body>
+</html>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="831" MadCap:lastWidth="624">
-    <head><title>Dangerous Practices	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    <head><title>Dangerous Practices	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Dangerous Practices</h1>
@@ -9,16 +9,16 @@ databases are well protected against corruption. However some specific
 configurations can make your database file vulnerable.
 </p>
         <ol>
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-            <li><code>Configuration#lockDatabaseFile(false)</code>
-                <p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
+            <p MadCap:conditions="Primary.Java,Primary.All languages">
+                <li><code>Configuration#lockDatabaseFile(false)</code>
+                    <p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
 the same database file from different JVM sessions will corrupt the
 database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
 database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm">No lock file thread</a>.</p>
-            </li>
-</p>
-                <p MadCap:conditions="Primary:java" />
+                </li>
+            </p>
+            <p MadCap:conditions="Primary:java" />
             <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm">NonFlushingStorage</a></code>
                 <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm">special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
@@ -43,10 +43,7 @@ commit.
  <br />class A
 <br /> class C extends A
  <br />class B extends C
-<br /> 
- 
-
-</p></li>
+<br /></p></li>
                 <li>Removing a class from the top or within a class hierarchy. Example:
  
  <br />Original
@@ -59,9 +56,7 @@ commit.
  ------------------
  <br />class A
  <br />class C extends A
-<br /> 
- 
-</li>
+<br /></li>
                 <li>Changing the type of a field to be an array or back. Example:
  
  <br />Original
@@ -75,8 +70,7 @@ commit.
 <br /> class Foo {
    String [] bar;
  }
-<br /> 
-</li>
+<br /></li>
             </ol>
         </ol>If you apply such a refactoring, you will not be able to read existing objects correctly.
 <p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm">Refactoring and Schema Evolution</a></p></body>

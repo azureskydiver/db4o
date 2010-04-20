@@ -10,7 +10,7 @@
   ConditionTagExpression="include[Primary..NET or Primary.c# or Primary.Pdf or Primary.VB.NET] "
   PatchHeadingLevels="true"
   TargetLanguage="en"
-  MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css"
+  MasterStylesheet="/Content/Resources/Stylesheets/PrintStyle.css"
   OutputFolder="e:/db4o-dist/flare"
   OutputFile="db4o-reference-net.pdf">
   <DocumentProperties
@@ -23,9 +23,15 @@
       Link="/Project/Glossaries/PrintGlossary.flglo" />
     <Glossary
       Link="/Project/Glossaries/SharedGlossar.flglo" />
-  </Glossaries>  
+  </Glossaries>
   <Variables>
     <Variable
       Name="BaseVariables/Plattform">.NET</Variable>
+    <Variable
+      Name="Primary/Plattform">.NET</Variable>
+    <Variable
+      Name="Primary/Iterable">IEnumerable</Variable>
+    <Variable
+      Name="Primary/Artefact">assembly</Variable>
   </Variables>
 </CatapultTarget>

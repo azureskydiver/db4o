@@ -1767,17 +1767,17 @@
       Title="db4o Databases Replication"
       Link="/Content/db4o_replication_system_drs/db4o_databases_replication.htm">
       <TocEntry
-        Title="Initial Setup"
-        Link="/Content/db4o_replication_system_drs/db4o_databases_replication/initial_setup.htm" />
-      <TocEntry
         Title="Simple Example"
         Link="/Content/db4o_replication_system_drs/db4o_databases_replication/simple_example.htm" />
       <TocEntry
-        Title="bi-Directional Replication"
+        Title="Bidirectional Replication"
         Link="/Content/db4o_replication_system_drs/db4o_databases_replication/bi-directional_replication.htm" />
       <TocEntry
         Title="Selective Replication"
         Link="/Content/db4o_replication_system_drs/db4o_databases_replication/selective_replication.htm" />
+      <TocEntry
+        Title="Replicate Deletions"
+        Link="/Content/db4o_replication_system_drs/db4o_databases_replication/deleted_objects_replication.htm" />
     </TocEntry>
     <TocEntry
       Title="Replication With RDBMS"
@@ -1824,14 +1824,16 @@
       Link="/Content/db4o_replication_system_drs/advanced_replication_strategies.htm">
       <TocEntry
         Title="Events"
-        Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/events.htm">
-        <TocEntry
-          Title="Conflict Resolution"
-          Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/events/conflict_resolution.htm" />
-      </TocEntry>
+        Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/events.htm" />
       <TocEntry
-        Title="Deleted Objects Replication"
-        Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/deleted_objects_replication.htm" />
+        Title="Dealing with Conflicts"
+        Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/Dealing with Conflicts.htm"></TocEntry>
+      <TocEntry
+        Title="Prepare Old Databases for Replication"
+        Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/Prepare Old Databases for Replication.htm" />
+      <TocEntry
+        Title="Concurrency-Limitations"
+        Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/Concurrency.htm" />
     </TocEntry>
     <TocEntry
       Title="Deployment Instructions"
@@ -1964,18 +1966,4 @@
   <TocEntry
     Title="Contacts"
     Link="/Content/contacts.htm" />
-  <TocEntry
-    Title="Contacts"
-    Link="/Content/contacts.htm">
-    <TocEntry
-      Title="Usage Pitfalls"
-      Link="/Content/usage_pitfalls.htm" />
-  </TocEntry>
-  <TocEntry
-    Title="Tuning"
-    Link="/Content/tuning.htm">
-    <TocEntry
-      Title="Usage Pitfalls"
-      Link="/Content/usage_pitfalls.htm" />
-  </TocEntry>
 </CatapultToc>

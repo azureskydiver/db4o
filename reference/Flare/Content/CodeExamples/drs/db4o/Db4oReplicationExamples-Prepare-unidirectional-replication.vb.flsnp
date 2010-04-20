@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
+Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
+Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+' set the replication-direction from the desktop database to the mobile database. 
+replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB())</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
+Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
+Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+' set the replication-direction from the desktop database to the mobile database. 
+replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB())</pre>
+		<div class="codesnippet-meta">Db4oReplicationExamples.vb: Prepare unidirectional replication<a href="Example-drs-db4o-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

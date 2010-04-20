@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">class LogReplicationListener : IReplicationEventListener
+{
+    public void OnReplicate(IReplicationEvent replicationEvent)
+    {
+        IObjectState stateInDesktop = replicationEvent.StateInProviderA();
+        if (stateInDesktop.IsNew())
+        {
+            Console.WriteLine(&quot;Object '{0}' is new on desktop database&quot;,
+                stateInDesktop.GetObject());
+        }
+        if (stateInDesktop.WasModified())
+        {
+            Console.WriteLine(&quot;Object '{0}' was modified on desktop database&quot;, 
+                stateInDesktop.GetObject());
+        }
+    }
+}</pre>
+		<div class="codesnippet-meta">AdvancedReplicationExamples.cs: The ReplicationEventListener for informations about the replication process<a href="Example-drs-advanced-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

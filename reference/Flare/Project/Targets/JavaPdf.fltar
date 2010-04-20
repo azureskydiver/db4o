@@ -10,7 +10,7 @@
   ConditionTagExpression="include[Primary.Java or Primary.Pdf] "
   PatchHeadingLevels="true"
   TargetLanguage="en"
-  MasterStylesheet="/Content/Resources/Stylesheets/prettifyPDF.css"
+  MasterStylesheet="/Content/Resources/Stylesheets/PrintStyle.css"
   OutputFile="db4o-reference-java.pdf"
   OutputFolder="e:/db4o-dist/java/temp"
   MasterToc="/Project/TOCs/Primary TOC.fltoc">

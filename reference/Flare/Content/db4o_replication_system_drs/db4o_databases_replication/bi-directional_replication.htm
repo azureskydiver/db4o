@@ -1,26 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="808" MadCap:lastWidth="980" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;a1;b1;c1;b2;uncomment">
-    <head><title>Bi-Directional Replication	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1621" MadCap:lastWidth="728">
+    <head><title>Bidirectional Replication</title>
     </head>
-    <body onload="prettyPrint()">
-        <h1>Bi-Directional Replication</h1>
-        <p>
-        </p>
-        <p>The previous example copied all
-new or modified objects from the handheld device to the desktop database.
-What if we want to go the other way? Well, we only have to add one more loop:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../../Resources/Snippets/Bi-Directional Replication/ReplicationExample.java/replicateBiDirectional.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../../Resources/Snippets/Bi-Directional Replication/ReplicationExample.cs/replicateBiDirectional.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../../Resources/Snippets/Bi-Directional Replication/ReplicationExample.vb/replicateBiDirectional.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:vb" />Now our handheld contains all
-of the new and modified records from our desktop. <p>Easy, isn't it? Now, if there had been any modifications made to the
-destination database, the two are now both in sync with each other. </p><p MadCap:conditions="Primary.Online">Download example code:</p><p MadCap:conditions="Primary.Online"><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="../replicationvb.zip">VB.NET </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="../replicationcs.zip">c# </a></MadCap:conditionalText><MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../replicationjava.zip">Java </a></MadCap:conditionalText></p></body>
+    <body>
+        <h1>
+            <MadCap:keyword term="dRS:Bidirectional Replication;Replication:Bidirectional" />Bidirectional Replication</h1>
+        <p>It's quite often the case that you need replication in both directions. For example when you have a mobile device which keeps the data in sync with a desktop PC. Changes on the both partners have to be replicated to the other partner.</p>
+        <p>First, make sure that you've prepared and configured db4o properly. <MadCap:xref href="simple_example.htm" target="" title="" alt="">See "Simple Example"</MadCap:xref></p>
+        <p>Start a replication-session with the two replication partners. Note that no replication direction is set.</p>
+        <MadCap:snippetBlock src="../../CodeExamples/drs/db4o/Db4oReplicationExamples-Prepare-bidirectional-replication.all.flsnp" />
+        <p>Then get the changed objects from both replication partners. Each replication partner returns the updated and created object in a object-set. Then iterate over both object-sets and replicate the changes. </p>
+        <MadCap:snippetBlock src="../../CodeExamples/drs/db4o/Db4oReplicationExamples-Bidirectional-replication.all.flsnp" />
+    </body>
 </html>

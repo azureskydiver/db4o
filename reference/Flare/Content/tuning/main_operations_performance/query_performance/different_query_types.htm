@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Different Query Types	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Different Query Types	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
         <h1>Different Query Types</h1>
-
-<p>db4o provides different query syntaxes: Query By Example,
+        <p>db4o provides different query syntaxes: Query By Example,
 SODA, Native Queries and LINQ (for .NET 3.5 and higher).  Under the hood all these syntaxes are
 converted to SODA. The conversion can be very straightforward (as in case of
 QBE), or pretty sophisticated (some Native queries). The fact that conversion
@@ -17,61 +16,55 @@ Optimization is also applicable to LINQ queries, i.e. some of LINQ queries are
 currently too complex to analyze and optimize. In cases when optimization does
 not happen, the query is run against all instances of an object in the database,
 which is quite slow and consumes a lot of RAM.</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.java/runDifferentQueriesTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.java/init.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.java/configure.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.cs/RunDifferentQueriesTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.cs/Init.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.cs/Configure.flsnp" />
-</p><p MadCap:conditions="Primary:net" />
-
-<p>The following results were obtained on a test machine:</p>
-
-<p><i>Storing objects as a
-bulk:</i></p>
-
-<p><i>Store 30000 objects:
-5337 ms</i></p>
-
-<p><i>Query by example:</i></p>
-
-<p><i>Select 1 object QBE:
-level1/1: 1021 ms</i></p>
-
-<p><i>SODA:</i></p>
-
-<p><i>Select 1 object SODA:
-level1/1: 809 ms</i></p>
-
-<p><i>LINQ:</i></p>
-
-<p><i>Select 1 object LINQ:
-level1/1: 915 ms</i></p>
-
-<p><i>Native Query:</i></p>
-
-<p><i>Select 1 object NQ:
-level1/1: 1604 ms</i></p>
-
-<p><i>Native Query Unoptimized:</i></p>
-
-<p><i>Select 1 object NQ:
-level1/1: 5008 ms</i></p>
-
-<p>You can see that SODA query shows the best performance. The
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.java/runDifferentQueriesTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.java/init.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.java/configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.cs/RunDifferentQueriesTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.cs/Init.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Different Query Types/QueryPerformanceBenchmark.cs/Configure.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>The following results were obtained on a test machine:</p>
+        <p><i>Storing objects as a
+bulk:</i>
+        </p>
+        <p><i>Store 30000 objects:
+5337 ms</i>
+        </p>
+        <p><i>Query by example:</i>
+        </p>
+        <p><i>Select 1 object QBE:
+level1/1: 1021 ms</i>
+        </p>
+        <p><i>SODA:</i>
+        </p>
+        <p><i>Select 1 object SODA:
+level1/1: 809 ms</i>
+        </p>
+        <p><i>LINQ:</i>
+        </p>
+        <p><i>Select 1 object LINQ:
+level1/1: 915 ms</i>
+        </p>
+        <p><i>Native Query:</i>
+        </p>
+        <p><i>Select 1 object NQ:
+level1/1: 1604 ms</i>
+        </p>
+        <p><i>Native Query Unoptimized:</i>
+        </p>
+        <p><i>Select 1 object NQ:
+level1/1: 5008 ms</i>
+        </p>
+        <p>You can see that SODA query shows the best performance. The
 other query types are less performant due to conversion, however they can be
 easier to support and refactor. The worst performance is shown in the case of
 unoptimized Native Query: in this case all the objects from the database were
-instantiated and tested against the constraint.</p> 
-     
-
+instantiated and tested against the constraint.</p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="queryperformancecs.zip">c# </a>
@@ -79,7 +72,5 @@ instantiated and tested against the constraint.</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="queryperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

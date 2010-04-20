@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim replicationSession As IReplicationSession = _
+    Replication.Begin(desktopDatabase, mobileDatabase)
+Dim initialReplication As IList(Of Car) = desktopDatabase.Query(Of Car)()
+
+For Each changedObjectOnDesktop As Car In initialReplication
+    Dim infoAboutObject As IObjectInfo = desktopDatabase.Ext() _
+        .GetObjectInfo(changedObjectOnDesktop)
+    If infoAboutObject.GetUUID() Is Nothing Then
+        desktopDatabase.Ext().Store(changedObjectOnDesktop, 2)
+    End If
+    replicationSession.Replicate(changedObjectOnDesktop)
+Next
+replicationSession.Commit()</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim replicationSession As IReplicationSession = _
+    Replication.Begin(desktopDatabase, mobileDatabase)
+Dim initialReplication As IList(Of Car) = desktopDatabase.Query(Of Car)()
+
+For Each changedObjectOnDesktop As Car In initialReplication
+    Dim infoAboutObject As IObjectInfo = desktopDatabase.Ext() _
+        .GetObjectInfo(changedObjectOnDesktop)
+    If infoAboutObject.GetUUID() Is Nothing Then
+        desktopDatabase.Ext().Store(changedObjectOnDesktop, 2)
+    End If
+    replicationSession.Replicate(changedObjectOnDesktop)
+Next
+replicationSession.Commit()</pre>
+		<div class="codesnippet-meta">AdvancedReplicationExamples.vb: Migrate on the fly<a href="Example-drs-advanced-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

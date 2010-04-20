@@ -1,75 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Commit Frequency	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Commit Frequency</h1><p>Commit time has a major influence on all db4o operations.
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Commit Frequency	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Commit Frequency</h1>
+        <p>Commit time has a major influence on all db4o operations.
 Commit is generally a slow operation as it requires physical disk access. The
 following example shows how the frequency of commits affects the delete
 performance:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/runCommitTest.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p>The following initial setup is used:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/initForCommitTest.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p>Delete procedures are as follows:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/deleteAll.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/deleteAllWithCommit.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p>Item class used in this example has depth = 3:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/Item.flsnp" />
-</p><p MadCap:conditions="Primary:java" /><p>The results on the test computer are:</p>
-
-<p><i>Delete test with
-different commit frequency</i></p>
-
-<p><i>Test delete all:</i></p>
-
-<p><i>Store 30000
-objects: 2432ms</i></p>
-
-<p><i>Deleted all
-objects: 3731ms</i></p>
-
-<p><i>Test delete all
-with commit after each 1000 objects:</i></p>
-
-<p><i>Store 30000
-objects: 2103ms</i></p>
-
-<p><i>Deleted all objects: 8615ms</i></p>
-
-
-
-
-
-<p>You can see that the time required
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/runCommitTest.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p>The following initial setup is used:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/initForCommitTest.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p>Delete procedures are as follows:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/deleteAll.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/deleteAllWithCommit.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p>Item class used in this example has depth = 3:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/DeletePerformanceBenchmark.java/Item.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p>The results on the test computer are:</p>
+        <p><i>Delete test with
+different commit frequency</i>
+        </p>
+        <p><i>Test delete all:</i>
+        </p>
+        <p><i>Store 30000
+objects: 2432ms</i>
+        </p>
+        <p><i>Deleted all
+objects: 3731ms</i>
+        </p>
+        <p><i>Test delete all
+with commit after each 1000 objects:</i>
+        </p>
+        <p><i>Store 30000
+objects: 2103ms</i>
+        </p>
+        <p><i>Deleted all objects: 8615ms</i>
+        </p>
+        <p>You can see that the time required
 for deletion increased with the amount of commits. To improve the performance
 commit frequency should be kept relatively low, 
 in the same time it must ensure the integrity of the logical
-transactions.   </p> 
-     
-
-
+transactions.   </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="../performancecs.zip">c# </a>
@@ -77,6 +63,5 @@ transactions.   </p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="../performancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-    
-</body></html>
+    </body>
+</html>

@@ -1,50 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Commit Frequency	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-     
-       
-        <h1>Commit Frequency</h1><p>Commit frequency has a direct impact on db4o performance.
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Commit Frequency	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Commit Frequency</h1>
+        <p>Commit frequency has a direct impact on db4o performance.
 Commit is an expensive operation due to physical disk access. However, commit
 is also the only way to ensure that the whole transaction is stored safely on
 the disk and no data loss will occur in case of unexpected system failure.</p>
-
-<p>The following test shows how commit frequency influences the
+        <p>The following test shows how commit frequency influences the
 performance on update:</p>
-
-<p MadCap:conditions="Primary.Java,Primary.All languages">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/runCommitTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/ConfigureForCommitTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/updateItems.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/updateWithCommit.flsnp" />
-</p><p MadCap:conditions="Primary:java" />
-
-<p MadCap:conditions="Primary..NET">
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/RunCommitTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/ConfigureForCommitTest.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/UpdateItems.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/UpdateWithCommit.flsnp" />
-</p><p MadCap:conditions="Primary:net" /><p>The results:</p>
-
-<p><i>Update test with different commit frequency</i></p>
-
-<p><i>Test update all:</i></p>
-
-<p><i>Store 30000 objects: 2661ms</i></p>
-
-<p><i>Updated 10000 items: 1402ms</i></p>
-
-<p><i>Test update all with commit after each 1000 objects:</i></p>
-
-<p><i>Store 30000 objects: 2250ms</i></p>
-
-<p><i>Updated 10000 items : 2812ms</i></p>
-
- 
-     
-
-
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/runCommitTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/ConfigureForCommitTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/updateItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.java/updateWithCommit.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/RunCommitTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/ConfigureForCommitTest.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/UpdateItems.flsnp" />
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Commit Frequency/UpdatePerformanceBenchmark.cs/UpdateWithCommit.flsnp" />
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>The results:</p>
+        <p><i>Update test with different commit frequency</i>
+        </p>
+        <p><i>Test update all:</i>
+        </p>
+        <p><i>Store 30000 objects: 2661ms</i>
+        </p>
+        <p><i>Updated 10000 items: 1402ms</i>
+        </p>
+        <p><i>Test update all with commit after each 1000 objects:</i>
+        </p>
+        <p><i>Store 30000 objects: 2250ms</i>
+        </p>
+        <p><i>Updated 10000 items : 2812ms</i>
+        </p>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="updateperformancecs.zip">c# </a>
@@ -52,7 +46,5 @@ performance on update:</p>
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="updateperformancejava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

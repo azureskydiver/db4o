@@ -1,111 +1,109 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="453" MadCap:lastWidth="1017">
-    <head><title>IO Log File Statistics	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    <head><title>IO Log File Statistics	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-         
-             
-                <h1>IO Log File Statistics</h1>
-                <p>To get statistically meaningful results from the benchmark it is
+        <h1>IO Log File Statistics</h1>
+        <p>To get statistically meaningful results from the benchmark it is
 necessary that the I/O log file contains enough operations of each
 type. To get an overview on how well your I/O log file represents each
 operation, you can use the class LogStatistics in
 com.db4o.bench.logging.statistics. Given the file name of an I/O log file LogStatistics will produce an HTML file that contains a table with statistics: 
 </p>
-                <pre>
-                    <table border="0" cellpadding="4">
-                        <tr>
-                            <th>
-                            </th>
-                            <th>
-                            </th>
-                            <th>Count</th>
-                            <th>
-                            </th>
-                            <th>%</th>
-                            <th>
-                            </th>
-                            <th>Bytes</th>
-                            <th>
-                            </th>
-                            <th>%</th>
-                        </tr>
-                        <tr>
-                            <td>Reads</td>
-                            <td>
-                            </td>
-                            <td align="right">664'631</td>
-                            <td>
-                            </td>
-                            <td align="right">30.64</td>
-                            <td>
-                            </td>
-                            <td align="right">52'214'278</td>
-                            <td>
-                            </td>
-                            <td align="right">70.83</td>
-                        </tr>
-                        <tr>
-                            <td>Writes</td>
-                            <td>
-                            </td>
-                            <td align="right">360'001</td>
-                            <td>
-                            </td>
-                            <td align="right">16.6</td>
-                            <td>
-                            </td>
-                            <td align="right">21'508'576</td>
-                            <td>
-                            </td>
-                            <td align="right">29.17</td>
-                        </tr>
-                        <tr>
-                            <td>Seeks</td>
-                            <td>
-                            </td>
-                            <td align="right">1'024'632</td>
-                            <td>
-                            </td>
-                            <td align="right">47.23</td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Syncs</td>
-                            <td>
-                            </td>
-                            <td align="right">120'005</td>
-                            <td>
-                            </td>
-                            <td align="right">5.53</td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="9">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>
-                            </td>
-                            <td align="right">2'169'269</td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>73'722'854</td>
-                            <td>
-                            </td>
-                        </tr>
-                    </table> Average byte count per read: 78 Average byte count per write: 59 </pre>This is the output of LogStatistics when run with the file generated by
+        <pre>
+            <table border="0" cellpadding="4">
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                    <th>Count</th>
+                    <th>
+                    </th>
+                    <th>%</th>
+                    <th>
+                    </th>
+                    <th>Bytes</th>
+                    <th>
+                    </th>
+                    <th>%</th>
+                </tr>
+                <tr>
+                    <td>Reads</td>
+                    <td>
+                    </td>
+                    <td align="right">664'631</td>
+                    <td>
+                    </td>
+                    <td align="right">30.64</td>
+                    <td>
+                    </td>
+                    <td align="right">52'214'278</td>
+                    <td>
+                    </td>
+                    <td align="right">70.83</td>
+                </tr>
+                <tr>
+                    <td>Writes</td>
+                    <td>
+                    </td>
+                    <td align="right">360'001</td>
+                    <td>
+                    </td>
+                    <td align="right">16.6</td>
+                    <td>
+                    </td>
+                    <td align="right">21'508'576</td>
+                    <td>
+                    </td>
+                    <td align="right">29.17</td>
+                </tr>
+                <tr>
+                    <td>Seeks</td>
+                    <td>
+                    </td>
+                    <td align="right">1'024'632</td>
+                    <td>
+                    </td>
+                    <td align="right">47.23</td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Syncs</td>
+                    <td>
+                    </td>
+                    <td align="right">120'005</td>
+                    <td>
+                    </td>
+                    <td align="right">5.53</td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>
+                    </td>
+                    <td align="right">2'169'269</td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>73'722'854</td>
+                    <td>
+                    </td>
+                </tr>
+            </table> Average byte count per read: 78 Average byte count per write: 59 </pre>This is the output of LogStatistics when run with the file generated by
 CrudApplication with 30k objects, which is the default setting for the
 Ant target run.benchmark.medium. Typically
 sync operations are much rarer than seek operations. If you look at the

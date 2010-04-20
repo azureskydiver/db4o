@@ -13,5 +13,13 @@
   <Variable
     Name="Plattform"
     Comment=""
-    Definition="Some text" />
+    Definition="Some text">Java</Variable>
+  <Variable
+    Name="Artefact"
+    Comment=""
+    Definition="Some text">jar</Variable>
+  <Variable
+    Name="Iterable"
+    Comment=""
+    Definition="Some text">Iterable</Variable>
 </CatapultVariableSet>
