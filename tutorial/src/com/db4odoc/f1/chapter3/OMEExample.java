@@ -11,9 +11,13 @@ public class OMEExample extends Util {
 	final static String DB4OFILENAME = System.getProperty("user.home") + "/ome.db4o";
 	
     public static void main(String[] args) {
-        new File(DB4OFILENAME).delete();
+        deleteDatabase();
         storePilots();
     }
+
+	public static void deleteDatabase() {
+		new File(DB4OFILENAME).delete();
+	}
     
     public static void storePilots() {
     	ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded
