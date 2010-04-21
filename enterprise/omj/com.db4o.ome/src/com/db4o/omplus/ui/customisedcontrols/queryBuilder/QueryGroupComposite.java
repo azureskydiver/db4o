@@ -167,7 +167,7 @@ public class QueryGroupComposite extends Composite implements IObservable
 		closeButton.setToolTipText("Delete");
 		//closeButton.setText("Close Group");
 		closeButton.setImage(ImageUtility.getImage(OMPlusConstants.CLOSE_GROUP_ICON));
-		closeButton.addListener(SWT.MouseUp,new Listener()
+		closeButton.addListener(SWT.Selection,new Listener()
 		{
 
 			public void handleEvent(Event event) 

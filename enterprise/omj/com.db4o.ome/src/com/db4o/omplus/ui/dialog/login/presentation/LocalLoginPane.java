@@ -52,7 +52,7 @@ public class LocalLoginPane extends LoginPaneBase {
 		}
 		browseBtn.setToolTipText("Browse");
 
-		browseBtn.addListener(SWT.MouseUp, new Listener() {
+		browseBtn.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				FileDialog fileChooser = new FileDialog(parent.getShell(), SWT.OPEN);
 				String dbfile = fileChooser.open();

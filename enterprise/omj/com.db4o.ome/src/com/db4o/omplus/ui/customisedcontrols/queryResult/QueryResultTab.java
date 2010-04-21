@@ -695,7 +695,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 
 		resultObjectTableSaveButton.setLayoutData(btnData);
 		
-		resultObjectTableSaveButton.addListener(SWT.MouseUp, new Listener()
+		resultObjectTableSaveButton.addListener(SWT.Selection, new Listener()
 		{
 			public void handleEvent(Event event) 
 			{
@@ -805,7 +805,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		if(Activator.getDefault().getDatabaseInterface().readOnly()) {
 			return;
 		}
-		resultObjectTableDeleteButton.addListener(SWT.MouseUp, new Listener() {
+		resultObjectTableDeleteButton.addListener(SWT.Selection, new Listener() {
 		// Right now handling single row delete. no multiple selection.
 			public void handleEvent(Event event)
 			{
@@ -858,7 +858,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		btnData.left = new FormAttachment(0,5);		
 		resultObjectTreeSaveButton.setLayoutData(btnData);
 		
-		resultObjectTreeSaveButton.addListener(SWT.MouseUp, new Listener()
+		resultObjectTreeSaveButton.addListener(SWT.Selection, new Listener()
 		{
 			public void handleEvent(Event event) 
 			{
