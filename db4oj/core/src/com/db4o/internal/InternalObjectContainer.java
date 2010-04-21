@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.query.*;
 import com.db4o.reflect.*;
@@ -59,4 +60,5 @@ public interface InternalObjectContainer extends ExtObjectContainer {
 
 	public void storeAll(Transaction trans, Iterator4 objects);
 
+	public UpdateDepthProvider updateDepthProvider();
 }

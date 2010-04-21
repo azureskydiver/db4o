@@ -224,7 +224,7 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 	public void store(Object obj, int depth) {
         synchronized(lock()){
             checkClosed();
-            _server.store(_transaction, obj, (depth == Const4.UNSPECIFIED ? configImpl().updateDepthProvider().unspecified(false) : configImpl().updateDepthProvider().forDepth(depth)));
+            _server.store(_transaction, obj, (depth == Const4.UNSPECIFIED ? (UpdateDepth)updateDepthProvider().unspecified(false) : (UpdateDepth)updateDepthProvider().forDepth(depth)));
         }
     }
 
@@ -466,4 +466,7 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 		_server.storeAll(transaction, objects);
 	}
 
+	public UpdateDepthProvider updateDepthProvider() {
+		return configImpl().updateDepthProvider();
+	}
 }

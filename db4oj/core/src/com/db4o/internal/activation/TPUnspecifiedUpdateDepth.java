@@ -19,9 +19,8 @@ public class TPUnspecifiedUpdateDepth extends UnspecifiedUpdateDepth {
 	}
 
 	@Override
-	protected FixedUpdateDepth wrap(FixedUpdateDepth depth) {
-		((TPFixedUpdateDepth)depth).tpCommit(_tpCommit);
-		return depth;
+	protected FixedUpdateDepth forDepth(int depth) {
+		return new TPFixedUpdateDepth(depth, _tpCommit);
 	}
 
 }

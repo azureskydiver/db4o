@@ -954,8 +954,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsInt(TIMEOUT_SERVER_SOCKET_KEY);
 	}
 
-	public FixedUpdateDepth updateDepth() {
-		return updateDepthProvider().forDepth(_config.getAsInt(UPDATE_DEPTH_KEY));
+	public int updateDepth() {
+		return _config.getAsInt(UPDATE_DEPTH_KEY);
 	}
 
 	public int weakReferenceCollectionInterval() {

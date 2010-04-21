@@ -505,16 +505,16 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	    return depth.adjustDepthToBorders();
 	}
 
-    public final FixedUpdateDepth updateDepthFromConfig() {
-    	if (_config != null && _config.updateDepth() != null) {
+    public final int updateDepthFromConfig() {
+    	if (_config != null && _config.updateDepth() != Const4.UNSPECIFIED) {
     		return _config.updateDepth();
     	}
     	Config4Impl config = configImpl();
     	
-        FixedUpdateDepth depth = config.updateDepth();
+        int depth = config.updateDepth();
         if (_ancestor != null) {
-            FixedUpdateDepth ancestordepth = _ancestor.updateDepthFromConfig();
-            if (ancestordepth.isBroaderThan(depth)) {
+            int ancestordepth = _ancestor.updateDepthFromConfig();
+            if (ancestordepth > depth) {
                 return ancestordepth;
             }
         }

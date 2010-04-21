@@ -22,7 +22,7 @@ public abstract class UnspecifiedUpdateDepth implements UpdateDepth {
 	}
 
 	public UpdateDepth adjust(ClassMetadata clazz) {
-        FixedUpdateDepth depth = (FixedUpdateDepth) clazz.updateDepthFromConfig().descend();
+        FixedUpdateDepth depth = (FixedUpdateDepth) forDepth(clazz.updateDepthFromConfig()).descend();
 		return depth;
 	}
 	
@@ -34,5 +34,5 @@ public abstract class UnspecifiedUpdateDepth implements UpdateDepth {
 		throw new IllegalStateException();
 	}
 	
-	protected abstract FixedUpdateDepth wrap(FixedUpdateDepth depth);
+	protected abstract FixedUpdateDepth forDepth(int depth);
 }

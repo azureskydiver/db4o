@@ -1569,7 +1569,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public final void store(Transaction trans, Object obj)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
-    	store(trans, obj, config().updateDepthProvider().unspecified(false));
+    	store(trans, obj, updateDepthProvider().unspecified(false));
     }    
     
 	public final int store(Transaction trans, Object obj, UpdateDepth depth)
@@ -1582,7 +1582,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public final int storeInternal(Transaction trans, Object obj,
 			boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
-       return storeInternal(trans, obj, config().updateDepthProvider().unspecified(false), checkJustSet);
+       return storeInternal(trans, obj, updateDepthProvider().unspecified(false), checkJustSet);
     }
     
     public int storeInternal(final Transaction trans, final Object obj, final UpdateDepth depth,
@@ -1615,7 +1615,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             _handlers._replicationReferenceProvider = referenceProvider;
             
             try {
-            	store2(checkTransaction(), obj, configImpl().updateDepthProvider().forDepth(1), false);
+            	store2(checkTransaction(), obj, updateDepthProvider().forDepth(1), false);
             } finally {
             	_replicationCallState = Const4.NONE;
             	_handlers._replicationReferenceProvider = null;
@@ -2123,6 +2123,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	}
 	}
 
-
+	public UpdateDepthProvider updateDepthProvider() {
+		return configImpl().updateDepthProvider();
+	}
 
 }
