@@ -7,11 +7,20 @@ import com.db4o.internal.*;
 public final class FixedUpdateDepth implements UpdateDepth {
 
 	private int _depth;
+	private boolean _tpMode = false;
 	
 	public FixedUpdateDepth(int depth) {
 		_depth = depth;
 	}
 
+	public void tpMode(boolean tpMode) {
+		_tpMode = tpMode;
+	}
+	
+	public boolean tpMode() {
+		return _tpMode;
+	}
+	
 	public boolean sufficientDepth() {
     	return _depth > 0;
 	}
@@ -39,19 +48,25 @@ public final class FixedUpdateDepth implements UpdateDepth {
 
 	// TODO code duplication in fixed activation/update depth
 	public FixedUpdateDepth adjustDepthToBorders() {
-		return new FixedUpdateDepth(DepthUtil.adjustDepthToBorders(_depth));
+		FixedUpdateDepth depth = new FixedUpdateDepth(DepthUtil.adjustDepthToBorders(_depth));
+		depth.tpMode(_tpMode);
+		return depth;
 	}
 
     public UpdateDepth adjustUpdateDepthForCascade(boolean isCollection) {
         int minimumUpdateDepth = isCollection ? 2 : 1;
         if (_depth < minimumUpdateDepth) {
-            return new FixedUpdateDepth(minimumUpdateDepth);
+            FixedUpdateDepth depth = new FixedUpdateDepth(minimumUpdateDepth);
+            depth.tpMode(_tpMode);
+			return depth;
         }
         return this;
     }
 
     public UpdateDepth descend() {
-    	return new FixedUpdateDepth(_depth - 1);
+    	FixedUpdateDepth depth = new FixedUpdateDepth(_depth - 1);
+    	depth.tpMode(_tpMode);
+		return depth;
     }
     
     @Override

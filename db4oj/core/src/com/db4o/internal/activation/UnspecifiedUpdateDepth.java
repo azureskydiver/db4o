@@ -5,9 +5,13 @@ import com.db4o.internal.*;
 
 public class UnspecifiedUpdateDepth implements UpdateDepth {
 
-	public final static UnspecifiedUpdateDepth INSTANCE = new UnspecifiedUpdateDepth();
+	public final static UnspecifiedUpdateDepth INSTANCE = new UnspecifiedUpdateDepth(false);
+	public final static UnspecifiedUpdateDepth TP_INSTANCE = new UnspecifiedUpdateDepth(true);
 	
-	private UnspecifiedUpdateDepth() {
+	private boolean _tpMode;
+	
+	private UnspecifiedUpdateDepth(boolean tpMode) {
+		_tpMode = tpMode;
 	}
 
 	public boolean sufficientDepth() {
@@ -24,10 +28,9 @@ public class UnspecifiedUpdateDepth implements UpdateDepth {
 	}
 
 	public UpdateDepth adjust(ClassMetadata clazz) {
-        FixedUpdateDepth depth = clazz.updateDepthFromConfig();
-//        depth = clazz.adjustCollectionDepthToBorders(depth);
-//        return depth.adjust(clazz);
-        return depth.descend();
+        FixedUpdateDepth depth = (FixedUpdateDepth) clazz.updateDepthFromConfig().descend();
+        depth.tpMode(_tpMode);
+		return depth;
 	}
 
 	public UpdateDepth adjustUpdateDepthForCascade(boolean isCollection) {
@@ -36,5 +39,9 @@ public class UnspecifiedUpdateDepth implements UpdateDepth {
 
 	public UpdateDepth descend() {
 		throw new IllegalStateException();
+	}
+	
+	public boolean tpMode() {
+		return _tpMode;
 	}
 }

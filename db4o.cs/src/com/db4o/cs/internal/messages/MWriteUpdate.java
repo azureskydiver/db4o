@@ -22,7 +22,7 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 			Slot newSlot = null;
 			
 			if(clientSlot.isUpdate()){
-				transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
+				transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType);
 	            newSlot = localContainer().allocateSlotForUserObjectUpdate(_payLoad.transaction(), _payLoad.getID(), _payLoad.length());
 			} else if(clientSlot.isNew()){
 				// Just one known usecase for this one: For updating plain objects from old versions, since

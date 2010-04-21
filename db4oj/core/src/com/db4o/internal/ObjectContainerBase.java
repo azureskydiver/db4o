@@ -2071,6 +2071,12 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		}
 	}
 
+	public void storeAll(Transaction transaction, Iterator4 objects, UpdateDepth depth) {
+		while(objects.moveNext()){
+			store(transaction, objects.current(), depth);
+		}
+	}
+
 	public void withTransaction(Transaction transaction, Runnable runnable) {
 		synchronized (_lock) {
 			final Transaction old = _transaction;
