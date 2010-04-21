@@ -10,4 +10,5 @@ public interface UpdateDepth {
 	UpdateDepth adjust(ClassMetadata clazz);
 	UpdateDepth adjustUpdateDepthForCascade(boolean isCollection);
 	UpdateDepth descend();
+	boolean tpMode();
 }

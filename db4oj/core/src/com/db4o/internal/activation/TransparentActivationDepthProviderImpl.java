@@ -30,7 +30,7 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 	}
 	
 	private RollbackStrategy _rollbackStrategy;
-	private boolean _transparentPersistenceIsEnabled;
+	public boolean _transparentPersistenceIsEnabled;
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.internal.activation.TransparentActivationDepthProvider#enableTransparentPersistenceSupportFor(com.db4o.internal.InternalObjectContainer, com.db4o.ta.RollbackStrategy)
@@ -129,7 +129,7 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 
 		private void storeModifiedObjects() {
 	        final ObjectContainerBase container = _transaction.container();
-	        container.storeAll(_transaction, _modified.valuesIterator());
+	        container.storeAll(_transaction, _modified.valuesIterator(), UnspecifiedUpdateDepth.TP_INSTANCE);
 	        _transaction.processDeletes();
         }
 

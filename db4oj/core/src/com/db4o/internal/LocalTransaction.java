@@ -254,8 +254,8 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	
-	public void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, ArrayType typeInfo, int cascade) {
-    	new WriteUpdateProcessor(this, id, clazz, typeInfo, cascade).run();
+	public void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, ArrayType typeInfo) {
+    	new WriteUpdateProcessor(this, id, clazz, typeInfo).run();
     }
     
 	private Callbacks callbacks(){

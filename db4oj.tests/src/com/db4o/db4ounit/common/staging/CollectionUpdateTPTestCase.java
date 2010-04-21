@@ -21,9 +21,15 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 		
 		public transient Activator _activator;
 		public int _id;
+		public Child _child;
 		
 		public Item(int id) {
+			this(id, null);
+		}
+
+		public Item(int id, Child child) {
 			_id = id;
+			_child = child;
 		}
 
 		public void id(int id) {
@@ -34,6 +40,11 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 		public int id() {
 			_activator.activate(ActivationPurpose.READ);
 			return _id;
+		}
+		
+		public Child child() {
+			_activator.activate(ActivationPurpose.READ);
+			return _child;
 		}
 		
 		public void activate(ActivationPurpose purpose) {
@@ -48,6 +59,23 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 		public String toString() {
 			_activator.activate(ActivationPurpose.READ);
 			return "Item #" + _id;
+		}
+	}
+	
+	public static class Child {
+		public int _id;
+
+		public Child(int id) {
+			_id = id;
+		}
+		
+		public void id(int id) {
+			_id = id;
+		}
+		
+		@Override
+		public String toString() {
+			return "Child #" + _id;
 		}
 	}
 	
@@ -76,12 +104,12 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 
 	@Override
 	protected void store() throws Exception {
-		Holder holder = new Holder(new Item(1), new Item(2));
+		Holder holder = new Holder(new Item(1), new Item(2, new Child(7)));
 		store(holder);
 	}
 	
 	public void testStructureUpdate() throws Exception {
-		assertItemUpdates(1, new Procedure4<Holder>() {
+		assertUpdates(0, 0, new Procedure4<Holder>() {
 			public void apply(Holder holder) {
 				Item item = new Item(3);
 				store(item);
@@ -94,10 +122,10 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void testElementUpdate() throws Exception {
-		assertItemUpdates(1, new Procedure4<Holder>() {
+		assertUpdates(1, 0, new Procedure4<Holder>() {
 			public void apply(Holder holder) {
 				holder.item(0).id(42);
-//				db().store(holder, Integer.MAX_VALUE);
+				db().store(holder, Integer.MAX_VALUE);
 			}
 		});
 		reopen();
@@ -105,31 +133,46 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void testElementUpdateAndActivation() throws Exception {
-		assertItemUpdates(1, new Procedure4<Holder>() {
+		assertUpdates(1, 1, new Procedure4<Holder>() {
 			public void apply(Holder holder) {
 				holder.item(0).id(42);
 				holder.item(1).id();
-//				db().store(holder, Integer.MAX_VALUE);
+				db().store(holder, Integer.MAX_VALUE);
 			}
 		});
 		reopen();
 		assertHolderContent(42, ID2);
 	}
 
-	private void assertItemUpdates(int expectedCount, Procedure4<Holder> block) {
+	public void testChildUpdate() throws Exception {
+		assertUpdates(0, 1, new Procedure4<Holder>() {
+			public void apply(Holder holder) {
+				holder.item(1).child().id(100);
+				db().store(holder, Integer.MAX_VALUE);
+			}
+		});
+		reopen();
+		assertHolderContent(ID1, ID2);
+	}
+
+	private void assertUpdates(int expectedItemCount, int expectedChildCount, Procedure4<Holder> block) {
 		final IntByRef itemCount = new IntByRef(0);
+		final IntByRef childCount = new IntByRef(0);
 		eventRegistry().updated().addListener(new EventListener4<ObjectInfoEventArgs>() {
 			public void onEvent(Event4<ObjectInfoEventArgs> e, ObjectInfoEventArgs args) {
 				if(args.object() instanceof Item) {
-					System.out.println(args.object());
 					itemCount.value = itemCount.value + 1;
+				}
+				if(args.object() instanceof Child) {
+					childCount.value = childCount.value + 1;
 				}
 			}
 		});
 		Holder holder = retrieveOnlyInstance(Holder.class);
 		block.apply(holder);
 		commit();
-		Assert.areEqual(expectedCount, itemCount.value);
+		Assert.areEqual(expectedItemCount, itemCount.value);
+		Assert.areEqual(expectedChildCount, childCount.value);
 	}
 	
 	private void assertHolderContent(int... ids) {

@@ -76,8 +76,7 @@ public final class ClientTransaction extends Transaction {
     	}
     }
 
-    public void writeUpdateAdjustIndexes(int id, ClassMetadata classMetadata, ArrayType arrayType,
-        int cascade) {
+    public void writeUpdateAdjustIndexes(int id, ClassMetadata classMetadata, ArrayType arrayType) {
     	// do nothing
     }
 
