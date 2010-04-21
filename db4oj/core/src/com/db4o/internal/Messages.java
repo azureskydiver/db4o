@@ -72,7 +72,7 @@ public final class Messages {
 					"File not found: % Creating new file",
 					"Creation of file failed: %", // 15
 					"File write failed.",
-					"File format incompatible.",
+					"File format incompatible: %",
 					"Uncaught Exception. Engine closed.",
 					"writing log for %",
 					"% is closed. close() was called or open() failed.", // 20
