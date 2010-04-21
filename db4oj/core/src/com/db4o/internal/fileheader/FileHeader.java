@@ -30,7 +30,7 @@ public abstract class FileHeader {
         ByteArrayBuffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
-            Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
+            Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT, file.toString());
         } else {
         	header.read(file, reader);
         }
