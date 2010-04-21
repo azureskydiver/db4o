@@ -23,6 +23,7 @@ or the properties of the selected database class
 .1 Browsing the database ..
 In the  .l First previous chapter ..  we've learned how to create a new database ._
 and store objects in it. Let's create a new database and store some objects in it now:
+.s com.db4odoc.f1.chapter3.OMEExample#deleteDatabase ..
 .s com.db4odoc.f1.chapter3.OMEExample#storePilots ..
 Now we can see the resultant database in the Object Manager. Please select ._
 OME->Connect/Disconnect DB (or use a shortcut button from the toolbar menu) ._
