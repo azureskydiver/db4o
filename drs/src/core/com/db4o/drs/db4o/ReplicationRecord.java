@@ -37,7 +37,7 @@ public class ReplicationRecord implements Internal4{
         container.showInternalClasses(true);
         try {
 	        Transaction trans = container.checkTransaction();
-	        container.storeAfterReplication(trans, this, UpdateDepthFactory.forDepth(1), false);
+	        container.storeAfterReplication(trans, this, container.configImpl().updateDepthProvider().forDepth(1), false);
 	        container.commit(trans);
         } finally {
         	container.showInternalClasses(false);

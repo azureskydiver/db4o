@@ -69,7 +69,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         int imaginativeID = 500;
         ObjectReference ref = new ObjectReference(classMetadataForObject(obj), imaginativeID);
         ref.setObject(obj);
-        MarshallingContext marshallingContext = new MarshallingContext(trans(), ref, UpdateDepthFactory.forDepth(Integer.MAX_VALUE), true);
+        MarshallingContext marshallingContext = new MarshallingContext(trans(), ref, container().configImpl().updateDepthProvider().forDepth(Integer.MAX_VALUE), true);
         Handlers4.write(ref.classMetadata().typeHandler(), marshallingContext, obj);
         
         Pointer4 pointer = marshallingContext.allocateSlot();

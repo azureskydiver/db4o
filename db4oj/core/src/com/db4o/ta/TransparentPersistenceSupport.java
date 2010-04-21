@@ -2,6 +2,7 @@
 
 package com.db4o.ta;
 
+import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
@@ -48,4 +49,10 @@ public class TransparentPersistenceSupport extends TransparentActivationSupport 
 	    final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) activationProvider(container);
 		provider.enableTransparentPersistenceSupportFor(container, _rollbackStrategy);
     }
+	
+	@Override
+	public void prepare(Configuration configuration) {
+		super.prepare(configuration);
+		((Config4Impl)configuration).updateDepthProvider(new TPUpdateDepthProvider());
+	}
 }

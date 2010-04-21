@@ -1,7 +1,7 @@
 package com.db4o.internal.activation;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.ta.*;
 
 public class TPFixedUpdateDepth extends FixedUpdateDepth {
 
@@ -12,8 +12,15 @@ public class TPFixedUpdateDepth extends FixedUpdateDepth {
 		_tpCommit = tpCommit;
 	}
 
+	void tpCommit(boolean tpCommit) {
+		_tpCommit = tpCommit;
+	}
+	
 	public boolean canSkip(ClassMetadata clazz) {
-		throw new NotImplementedException();
+		if(_tpCommit) {
+			return false;
+		}
+		return clazz.reflector().forClass(Activatable.class).isAssignableFrom(clazz.classReflector());
 	}
 
 	@Override

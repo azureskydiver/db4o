@@ -130,7 +130,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			Assert.isTrue(legacy.testConstructors());
 			
 			common.updateDepth(1024);
-			Assert.areEqual(UpdateDepthFactory.forDepth(1024), legacy.updateDepth());
+			Assert.areEqual(legacy.updateDepthProvider().forDepth(1024), legacy.updateDepth());
 			
 			common.weakReferences(false);
 			Assert.isFalse(legacy.weakReferences());

@@ -47,7 +47,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
 	private final static KeySpec TRANSLATOR_NAME_KEY=new KeySpec((String)null);
     
-	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(null);
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(-1);
     
 	private final static KeySpec WRITE_AS_KEY=new KeySpec((String)null);
     
@@ -261,7 +261,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     	if(depth < 0) {
     		throw new IllegalArgumentException("update depth must not be negative");
     	}
-    	_config.put(UPDATE_DEPTH_KEY, UpdateDepthFactory.forDepth(depth));
+    	_config.put(UPDATE_DEPTH_KEY, depth);
     }
 
 	Config4Impl config() {
@@ -293,7 +293,8 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
 
 	FixedUpdateDepth updateDepth() {
-		return (FixedUpdateDepth) _config.get(UPDATE_DEPTH_KEY);
+		int depth = _config.getAsInt(UPDATE_DEPTH_KEY);
+		return depth == -1 ? null : config().updateDepthProvider().forDepth(depth);
 	}
 
 	String writeAs() {
