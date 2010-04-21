@@ -4,11 +4,10 @@ package com.db4o.internal.activation;
 import com.db4o.internal.*;
 
 public interface UpdateDepth {
-
 	boolean sufficientDepth();
 	boolean negative();
 	UpdateDepth adjust(ClassMetadata clazz);
 	UpdateDepth adjustUpdateDepthForCascade(boolean isCollection);
 	UpdateDepth descend();
-	boolean tpMode();
+	boolean canSkip(ClassMetadata clazz);
 }

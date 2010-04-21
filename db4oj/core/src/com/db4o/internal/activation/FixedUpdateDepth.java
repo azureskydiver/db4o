@@ -4,7 +4,7 @@ package com.db4o.internal.activation;
 import com.db4o.internal.*;
 
 
-public final class FixedUpdateDepth implements UpdateDepth {
+public abstract class FixedUpdateDepth implements UpdateDepth {
 
 	private int _depth;
 	private boolean _tpMode = false;
@@ -48,25 +48,19 @@ public final class FixedUpdateDepth implements UpdateDepth {
 
 	// TODO code duplication in fixed activation/update depth
 	public FixedUpdateDepth adjustDepthToBorders() {
-		FixedUpdateDepth depth = new FixedUpdateDepth(DepthUtil.adjustDepthToBorders(_depth));
-		depth.tpMode(_tpMode);
-		return depth;
+		return forDepth(DepthUtil.adjustDepthToBorders(_depth));
 	}
 
     public UpdateDepth adjustUpdateDepthForCascade(boolean isCollection) {
         int minimumUpdateDepth = isCollection ? 2 : 1;
         if (_depth < minimumUpdateDepth) {
-            FixedUpdateDepth depth = new FixedUpdateDepth(minimumUpdateDepth);
-            depth.tpMode(_tpMode);
-			return depth;
+            return forDepth(minimumUpdateDepth);
         }
         return this;
     }
 
     public UpdateDepth descend() {
-    	FixedUpdateDepth depth = new FixedUpdateDepth(_depth - 1);
-    	depth.tpMode(_tpMode);
-		return depth;
+    	return forDepth(_depth - 1);
     }
     
     @Override
@@ -84,4 +78,6 @@ public final class FixedUpdateDepth implements UpdateDepth {
     public int hashCode() {
     	return _depth;
     }
+    
+    protected abstract FixedUpdateDepth forDepth(int depth);
 }
