@@ -410,7 +410,7 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		boolean isTPProvider = (provider instanceof TransparentActivationDepthProviderImpl) && ((TransparentActivationDepthProviderImpl)provider)._transparentPersistenceIsEnabled;
 		ReflectClass activatableClass = container().reflector().forClass(Activatable.class);
 		boolean canSkipTP = isTPProvider && !updatedepth.tpMode() && activatableClass.isAssignableFrom(classMetadata().classReflector());
-		
+		 
 		continueSet(transaction, updatedepth);
 		// make sure, a concurrent new, possibly triggered by objectOnNew
 		// is written to the file
