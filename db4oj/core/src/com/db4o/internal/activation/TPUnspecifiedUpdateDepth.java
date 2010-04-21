@@ -1,15 +1,27 @@
 package com.db4o.internal.activation;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.ta.*;
 
 public class TPUnspecifiedUpdateDepth extends UnspecifiedUpdateDepth {
 
-	protected TPUnspecifiedUpdateDepth(boolean tpCommit) {
+	private boolean _tpCommit;
+	
+	TPUnspecifiedUpdateDepth(boolean tpCommit) {
+		_tpCommit = tpCommit;
 	}
 
 	public boolean canSkip(ClassMetadata clazz) {
-		throw new NotImplementedException();
+		if(_tpCommit) {
+			return false;
+		}
+		return clazz.reflector().forClass(Activatable.class).isAssignableFrom(clazz.classReflector());
+	}
+
+	@Override
+	protected FixedUpdateDepth wrap(FixedUpdateDepth depth) {
+		((TPFixedUpdateDepth)depth).tpCommit(_tpCommit);
+		return depth;
 	}
 
 }

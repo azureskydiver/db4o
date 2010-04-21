@@ -13,4 +13,9 @@ public class LegacyUnspecifiedUpdateDepth extends UnspecifiedUpdateDepth {
 		return false;
 	}
 
+	@Override
+	protected FixedUpdateDepth wrap(FixedUpdateDepth depth) {
+		return depth;
+	}
+
 }

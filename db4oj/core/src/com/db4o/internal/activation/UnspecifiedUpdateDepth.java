@@ -33,4 +33,6 @@ public abstract class UnspecifiedUpdateDepth implements UpdateDepth {
 	public UpdateDepth descend() {
 		throw new IllegalStateException();
 	}
+	
+	protected abstract FixedUpdateDepth wrap(FixedUpdateDepth depth);
 }

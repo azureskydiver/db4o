@@ -45,6 +45,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec ACTIVATION_DEPTH_KEY=new KeySpec(5);
 	
 	private final static KeySpec ACTIVATION_DEPTH_PROVIDER_KEY=new KeySpec(LegacyActivationDepthProvider.INSTANCE);
+	private final static KeySpec UPDATE_DEPTH_PROVIDER_KEY=new KeySpec(new LegacyUpdateDepthProvider());
     
 	private final static KeySpec ALLOW_VERSION_UPDATES_KEY=new KeySpec(false);
 
@@ -171,7 +172,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec TIMEOUT_SERVER_SOCKET_KEY=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
     
-	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(UpdateDepthFactory.forDepth(1));
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(1);
     
 	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL_KEY=new KeySpec(1000);
     
@@ -698,7 +699,7 @@ public final class Config4Impl implements Configuration, DeepClone,
         if (dp.enabled()) {
             dp.checkUpdateDepth(depth);
         }
-    	_config.put(UPDATE_DEPTH_KEY, UpdateDepthFactory.forDepth(depth));
+    	_config.put(UPDATE_DEPTH_KEY, depth);
     }
     
     public void useBTreeSystem() {
@@ -954,7 +955,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public FixedUpdateDepth updateDepth() {
-		return (FixedUpdateDepth) _config.get(UPDATE_DEPTH_KEY);
+		return updateDepthProvider().forDepth(_config.getAsInt(UPDATE_DEPTH_KEY));
 	}
 
 	public int weakReferenceCollectionInterval() {
@@ -1024,10 +1025,18 @@ public final class Config4Impl implements Configuration, DeepClone,
 		_config.put(ACTIVATION_DEPTH_PROVIDER_KEY, provider);
 	}
 
+	public void updateDepthProvider(UpdateDepthProvider provider) {
+		_config.put(UPDATE_DEPTH_PROVIDER_KEY, provider);
+	}
+
 	public ActivationDepthProvider activationDepthProvider() {
 		return (ActivationDepthProvider) _config.get(ACTIVATION_DEPTH_PROVIDER_KEY);
 	}
-	
+
+	public UpdateDepthProvider updateDepthProvider() {
+		return (UpdateDepthProvider) _config.get(UPDATE_DEPTH_PROVIDER_KEY);
+	}
+
 	public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler){
 	    if(_registeredTypeHandlers == null){
 	        _registeredTypeHandlers = new Collection4();

@@ -10,7 +10,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
-import com.db4o.ta.Activatable;
 import com.db4o.typehandlers.*;
 
 /**
@@ -406,10 +405,6 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 	}
 
 	public void writeUpdate(Transaction transaction, UpdateDepth updatedepth) {
-		ActivationDepthProvider provider = container().configImpl().activationDepthProvider();
-		boolean isTPProvider = (provider instanceof TransparentActivationDepthProviderImpl) && ((TransparentActivationDepthProviderImpl)provider)._transparentPersistenceIsEnabled;
-		ReflectClass activatableClass = container().reflector().forClass(Activatable.class);
-		boolean canSkipTP = isTPProvider && !updatedepth.tpMode() && activatableClass.isAssignableFrom(classMetadata().classReflector());
 		 
 		continueSet(transaction, updatedepth);
 		// make sure, a concurrent new, possibly triggered by objectOnNew
@@ -451,13 +446,13 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		
 		setStateClean();
 
-		if(!canSkipTP) {
+		if(!updatedepth.canSkip(classMetadata())) {
 			transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj));
 		}
 		
         Handlers4.write(_class.typeHandler(), context, obj);
         
-        if(canSkipTP) {
+        if(updatedepth.canSkip(classMetadata())) {
         	endProcessing();
         	return;
         }

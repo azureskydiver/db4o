@@ -6,7 +6,7 @@ public class LegacyUpdateDepthProvider implements UpdateDepthProvider {
 		return new LegacyFixedUpdateDepth(depth);
 	}
 
-	public UnspecifiedUpdateDepth unspecified() {
+	public UnspecifiedUpdateDepth unspecified(boolean tpCommitMode) {
 		return LegacyUnspecifiedUpdateDepth.INSTANCE;
 	}
 
