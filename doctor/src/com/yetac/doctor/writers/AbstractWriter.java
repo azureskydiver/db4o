@@ -75,6 +75,7 @@ public abstract class AbstractWriter extends Configuration implements
         
         try{
             runner=new ExampleRunner(getClass().getClassLoader(),yapFile);
+            runner.reset();
         }catch(Exception e){
             System.err.println("*** Example runner could not be installed. Continuing without. Reason:");
             e.printStackTrace();
