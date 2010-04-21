@@ -198,7 +198,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
 		ObjectContainerBase stream = trans.container();
 		stream.showInternalClasses(true);
 		try {
-		    stream.store3(trans,this, stream.configImpl().updateDepthProvider().forDepth(2), false);
+		    stream.store3(trans,this, stream.updateDepthProvider().forDepth(2), false);
 		    return stream.getID(trans, this);
 		} finally {
 			stream.showInternalClasses(false);

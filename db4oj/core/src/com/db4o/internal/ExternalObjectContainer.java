@@ -151,7 +151,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
 
 	public final void store(Object obj, int depth) 
         throws DatabaseClosedException, DatabaseReadOnlyException {
-		store(null, obj, depth == Const4.UNSPECIFIED ? configImpl().updateDepthProvider().unspecified(false) : configImpl().updateDepthProvider().forDepth(depth));
+		store(null, obj, depth == Const4.UNSPECIFIED ? (UpdateDepth)updateDepthProvider().unspecified(false) : (UpdateDepth)updateDepthProvider().forDepth(depth));
     }
     
     public final StoredClass storedClass(Object clazz) {

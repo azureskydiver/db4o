@@ -446,13 +446,13 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		
 		setStateClean();
 
-		if(!updatedepth.canSkip(classMetadata())) {
+		if(!context.updateDepth().canSkip(classMetadata())) {
 			transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj));
 		}
 		
         Handlers4.write(_class.typeHandler(), context, obj);
         
-        if(updatedepth.canSkip(classMetadata())) {
+        if(context.updateDepth().canSkip(classMetadata())) {
         	endProcessing();
         	return;
         }
