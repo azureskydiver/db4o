@@ -8,12 +8,14 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.ta.*;
 
 /**
  * @exclude
@@ -256,6 +258,8 @@ public final class Platform4 {
         netReadAsJava(config, "P1Object");
         netReadAsJava(config, "StaticClass");
         netReadAsJava(config, "StaticField");
+        
+        config.objectClass(ActivatableBase.class).indexed(false);
         
         jdk().commonConfigurations(config);
         jdk().extendConfiguration(config);
