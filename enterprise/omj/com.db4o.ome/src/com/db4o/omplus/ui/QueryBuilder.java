@@ -372,7 +372,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		
 		addGroupBtn = new Button(buttonCompositeForAttributeViewer, SWT.PUSH);
 		addGroupBtn.setText("Add Group");
-		addGroupBtn.addListener(SWT.MouseUp, new Listener()
+		addGroupBtn.addListener(SWT.Selection, new Listener()
 		{
 
 			public void handleEvent(Event event)
@@ -387,7 +387,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		
 		clearAllGroupsBtn = new Button(buttonCompositeForAttributeViewer, SWT.PUSH);
 		clearAllGroupsBtn.setText("Clear All");
-		clearAllGroupsBtn.addListener(SWT.MouseUp, new Listener()
+		clearAllGroupsBtn.addListener(SWT.Selection, new Listener()
 		{
 
 			public void handleEvent(Event event)
@@ -517,7 +517,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		
 		runQueryBtn = new Button(attributeViewerComposite, SWT.PUSH);
 		runQueryBtn.setText("Run Query");
-		runQueryBtn.addListener(SWT.MouseUp, new Listener()
+		runQueryBtn.addListener(SWT.Selection, new Listener()
 		{
 			public void handleEvent(Event event)
 			{				
