@@ -196,7 +196,6 @@ p.tip
 
 td
 {
-	font-size: .7em;
 	font-family: Verdana, Arial, Helvetica, Sans Serif;
 	margin-left: 0em;
 	padding-left: 1.5em;
@@ -243,10 +242,10 @@ pre.monospace
 	font-family: Consolas, "Droid Sans Mono", "DejaVu Sans Mono", "Courier New", courier, monospace;
 }
 
-pre.method
+span.method
 {
-	font-family: Consolas, "Droid Sans Mono", "DejaVu Sans Mono", "Courier New", courier, monospace;
 }
+
 
 code
 {

@@ -33,5 +33,13 @@
       Name="Primary/Iterable">IEnumerable</Variable>
     <Variable
       Name="Primary/Artefact">assembly</Variable>
+    <Variable
+      Name="Primary/Activatable">IActivatable</Variable>
+    <Variable
+      Name="Primary/getter/setter">properties</Variable>
+    <Variable
+      Name="Primary/Ant">MSBuild</Variable>
+    <Variable
+      Name="Primary/IDE">Visual Studio</Variable>
   </Variables>
 </CatapultTarget>

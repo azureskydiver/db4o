@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Drs.Advanced.AdvancedReplicationExamples</StartupObject>
+    <StartupObject>Db4oDoc.Ta.Example.TransparentActivationExamples</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\ta\example\Person.cs" />
+    <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

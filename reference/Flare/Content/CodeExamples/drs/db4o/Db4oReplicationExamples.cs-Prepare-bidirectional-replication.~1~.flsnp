@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
+IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
+IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);</pre>
+		<div class="codesnippet-meta">Db4oReplicationExamples.cs.~1~: Prepare bidirectional replication<a href="Example-drs-db4o-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

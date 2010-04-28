@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">configuration.File.GenerateUUIDs = ConfigScope.Globally;
+configuration.File.GenerateVersionNumbers = ConfigScope.Globally;</pre>
+		<div class="codesnippet-meta">Db4oReplicationExamples.cs.~1~: Configure db4o to generate UUIDs and Version-Numbers<a href="Example-drs-db4o-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

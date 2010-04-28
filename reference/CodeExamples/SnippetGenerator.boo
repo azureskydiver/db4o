@@ -10,18 +10,31 @@ import System.Web from 'System.Web'
 
 class CodeZip:
 	final allreadyGenerated = {}
+	final IgnoreFile = ".snippet-generator.include"
 	
-	def ZipDirectory(directoryToZip as DirectoryInfo, directoryToStore as DirectoryInfo, name as string):
+	def ZipDirectory(directoryToZip as DirectoryInfo, directoryToStore as DirectoryInfo, name as string):		
 		fileName = directoryToStore.FullName+"/"+ BuildName(directoryToZip)+"-${name}.zip"
 		if allreadyGenerated.Contains(directoryToZip.FullName):
 			return allreadyGenerated[directoryToZip.FullName]
 		allreadyGenerated.Add(directoryToZip.FullName,Path.GetFileName(fileName));
 		zipFile= ZipFile(fileName)
-		zipFile.AddDirectory(directoryToZip.FullName);
-		zipFile.Save();
-		zipFile.Dispose();
-		return Path.GetFileName(fileName);
-		
+		AddFiles(zipFile,directoryToZip)
+		zipFile.Save()
+		zipFile.Dispose()
+		return Path.GetFileName(fileName)
+	
+	def AddFiles(zipFile as ZipFile,directoryToZip as DirectoryInfo):
+		explicitIncludes = directoryToZip.GetFiles(IgnoreFile)
+		if explicitIncludes.Length > 0:
+			for line in File.ReadAllLines(explicitIncludes[0].FullName):
+				path = Path.Combine(directoryToZip.FullName,line)
+				if File.Exists(path):
+					zipFile.AddFile(path,"")
+				else:
+					zipFile.AddDirectory(path,line)
+		else:
+			zipFile.AddDirectory(directoryToZip.FullName)
+	
 	def BuildName(directoryToZip as DirectoryInfo):
 		return "Example-"+directoryToZip.Parent.Name +"-"+ directoryToZip.Name
 	
@@ -29,6 +42,8 @@ class CodeZip:
 
 class SnippetGenerator:
 	final SnippetPrefix = "#example:"
+	# For example in in a snippet from a XML-file we want to avoid the include the end-of-comment-symbols
+	final SnippetPrefixEndMarker = "#"
 	final SnippetEnd = "#end example"
 	final Template as string
 	final zipGenerator  as CodeZip
@@ -60,11 +75,11 @@ class SnippetGenerator:
 				snippetText.Add(line)
 							
 	def ExtractName(line as string):
-		return line.Substring(line.IndexOf(SnippetPrefix)+SnippetPrefix.Length)
+		lineWithoutStart = line.Substring(line.IndexOf(SnippetPrefix)+SnippetPrefix.Length)
+		return lineWithoutStart.Split(array(SnippetPrefixEndMarker),StringSplitOptions.None)[0]
 			
 	def IsSnippetStart(line as string):
-		return line.Contains(SnippetPrefix)
-		
+		return line.Contains(SnippetPrefix)		
 		
 	def IsSnippetEnd(line as string):
 		return line.Contains(SnippetEnd)
@@ -96,6 +111,7 @@ class SnippetGenerator:
 
 class CodeToSnippets:
 	final _SnippetGeneration as SnippetGenerator
+	final IgnoredFilesWithEnding = (".jar",".dll",".class")
 
 	def constructor(templatePath as string, zipGenerator as CodeZip):
 		_SnippetGeneration = SnippetGenerator(File.ReadAllText(templatePath),zipGenerator)
@@ -107,13 +123,22 @@ class CodeToSnippets:
 		
 	def CreateCodeSnippets(sourceDir as DirectoryInfo, snippetDir as DirectoryInfo, language as string):
 		for file in sourceDir.GetFiles():
-			_SnippetGeneration.HandleCodeFile(file,snippetDir,language)
+			if not IsIgnored(file):
+				_SnippetGeneration.HandleCodeFile(file,snippetDir,language)
 		for dir in sourceDir.GetDirectories():
 			HandleSubDirectory(dir,snippetDir,language)
 
 	def CreateCodeSnippets(sourceDir as string, snippetDir as string, language as string):
 		CreateCodeSnippets(Directory.CreateDirectory(sourceDir),Directory.CreateDirectory(snippetDir),language)
 
+	def IsIgnored(file as FileInfo):
+		fileName = file.Name
+		for ending in IgnoredFilesWithEnding:
+			if fileName.EndsWith(ending):
+				return true
+		return false
+		
+		
 class SnippetAggregator:
 	final Template as string
 			
@@ -151,8 +176,10 @@ Directory.CreateDirectory("../Flare/Content/CodeExamples").Delete(true)
 zipFileGenerator = CodeZip()
 
 snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator)
+snippetGenerator.CreateCodeSnippets("javaEnhancement","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
 
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator)
 snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../Flare/Content/CodeExamples","vb")

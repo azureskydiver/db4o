@@ -14,4 +14,10 @@
     <Definition
       Link="">Relational Database Management System</Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>MyTerm</Term>
+    </Terms>
+    <Definition></Definition>
+  </GlossaryEntry>
 </CatapultGlossary>

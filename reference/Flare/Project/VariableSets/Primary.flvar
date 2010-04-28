@@ -22,4 +22,20 @@
     Name="Iterable"
     Comment=""
     Definition="Some text">Iterable</Variable>
+  <Variable
+    Name="Activatable"
+    Comment=""
+    Definition="Some text">Activatable</Variable>
+  <Variable
+    Name="getter/setter"
+    Comment=""
+    Definition="Some text">getter/setter</Variable>
+  <Variable
+    Name="Ant"
+    Comment=""
+    Definition="Some text">Ant</Variable>
+  <Variable
+    Name="IDE"
+    Comment=""
+    Definition="Some text">Eclipse</Variable>
 </CatapultVariableSet>
