@@ -11,6 +11,7 @@
   MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
   UseCustomTopicFileExtension="false"
   OutputFolder="e:/db4o-dist/java/temp"
+  OutputFile="index.html"
   Skin="/Project/Skins/RedVersant.flskn">
   <Glossaries>
     <Glossary
