@@ -8,9 +8,9 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.slots.*;
-import com.db4o.reflect.*;
-import com.db4o.typehandlers.*;
+import com.db4o.internal.slots.Pointer4;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.typehandlers.ActivationContext;
 
 /**
  * A weak reference to an known object.
@@ -445,14 +445,14 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		logEvent(container, "update", Const4.STATE);
 		
 		setStateClean();
-
-		if(!context.updateDepth().canSkip(classMetadata())) {
+		
+		if(!context.updateDepth().canSkip(this)) {
 			transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj));
 		}
 		
         Handlers4.write(_class.typeHandler(), context, obj);
         
-        if(context.updateDepth().canSkip(classMetadata())) {
+        if(context.updateDepth().canSkip(this)) {
         	endProcessing();
         	return;
         }

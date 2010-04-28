@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.staging;
 
-import db4ounit.extensions.*;
+import db4ounit.extensions.ComposibleTestSuite;
 
 public class AllTests extends ComposibleTestSuite {
 
@@ -17,7 +17,6 @@ public class AllTests extends ComposibleTestSuite {
 							 *  When you add a test here, make sure you create a Jira issue. 
 							 */
 							ActivateDepthTestCase.class,
-							CollectionUpdateTPTestCase.class, // COR-1897
 							InterfaceQueryTestCase.class, // COR-1131
 							LazyQueryDeleteTestCase.class,
 							RemovedFieldDefragmentTestCase.class,
