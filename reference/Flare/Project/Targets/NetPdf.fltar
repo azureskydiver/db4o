@@ -15,7 +15,8 @@
   OutputFile="db4o-reference-net.pdf">
   <DocumentProperties
     Subject="db4o"
-    Title="Reference" />
+    Title="db4o Reference Documentation"
+    Author="Versant Corp." />
   <PDF
     ShowUsedBookmarks="false" />
   <Glossaries>

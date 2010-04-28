@@ -16,7 +16,8 @@
   MasterToc="/Project/TOCs/Primary TOC.fltoc">
   <DocumentProperties
     Subject="db4o"
-    Title="Reference" />
+    Title="db4o Reference Documentation"
+    Author="Versant Corp." />
   <PDF
     ShowUsedBookmarks="false" />
   <Destinations>
