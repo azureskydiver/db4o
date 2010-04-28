@@ -68,6 +68,7 @@ MadCap|xref.TOCPageNumber:hover
 /* Code Snippet */
 pre.prettyprint
 {
+	text-align: left;
 	border-bottom: #AAAAAA solid 1px;
 	background-color:#EEEEEE;
 	margin: 0;
