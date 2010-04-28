@@ -2,7 +2,7 @@ package com.db4o.internal.activation;
 
 public interface UpdateDepthProvider {
 
-	UnspecifiedUpdateDepth unspecified(boolean tpCommitMode);
+	UnspecifiedUpdateDepth unspecified(ModifiedObjectQuery query);
 	FixedUpdateDepth forDepth(int depth);
 	
 }

@@ -39,6 +39,7 @@ public class AllTestsJdk1_2 extends ComposibleTestSuite {
 					com.db4o.db4ounit.jre12.types.AllTests.class,
 					StandaloneNativeReflectorTestCase.class,
 					IterableBaseTestCase.class,
+					com.db4o.db4ounit.jre12.tp.AllTests.class,
 				});
 	}
 	

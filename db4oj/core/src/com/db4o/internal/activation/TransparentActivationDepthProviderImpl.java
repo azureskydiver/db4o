@@ -129,7 +129,12 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 
 		private void storeModifiedObjects() {
 	        final ObjectContainerBase container = _transaction.container();
-	        container.storeAll(_transaction, _modified.valuesIterator(), container.updateDepthProvider().unspecified(true));
+	        container.storeAll(_transaction, _modified.valuesIterator(), container.updateDepthProvider().unspecified(new ModifiedObjectQuery() {
+				
+				public boolean isModified(Object obj) {
+					return contains(obj);
+				}
+			}));
 	        _transaction.processDeletes();
         }
 

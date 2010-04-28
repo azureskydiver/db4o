@@ -5,27 +5,21 @@ import com.db4o.ta.*;
 
 public class TPFixedUpdateDepth extends FixedUpdateDepth {
 
-	private boolean _tpCommit;
+	private ModifiedObjectQuery _query;
 	
-	public TPFixedUpdateDepth(int depth, boolean tpCommit) {
+	public TPFixedUpdateDepth(int depth, ModifiedObjectQuery query) {
 		super(depth);
-		_tpCommit = tpCommit;
+		_query = query;
 	}
 
-	void tpCommit(boolean tpCommit) {
-		_tpCommit = tpCommit;
-	}
-	
-	public boolean canSkip(ClassMetadata clazz) {
-		if(_tpCommit) {
-			return false;
-		}
-		return clazz.reflector().forClass(Activatable.class).isAssignableFrom(clazz.classReflector());
+	public boolean canSkip(ObjectReference ref) {
+		ClassMetadata clazz = ref.classMetadata();
+		return clazz.reflector().forClass(Activatable.class).isAssignableFrom(clazz.classReflector()) && !_query.isModified(ref.getObject());
 	}
 
 	@Override
 	protected FixedUpdateDepth forDepth(int depth) {
-		return new TPFixedUpdateDepth(depth, _tpCommit);
+		return new TPFixedUpdateDepth(depth, _query);
 	}
 
 }

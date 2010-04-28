@@ -9,5 +9,5 @@ public interface UpdateDepth {
 	UpdateDepth adjust(ClassMetadata clazz);
 	UpdateDepth adjustUpdateDepthForCascade(boolean isCollection);
 	UpdateDepth descend();
-	boolean canSkip(ClassMetadata clazz);
+	boolean canSkip(ObjectReference ref);
 }

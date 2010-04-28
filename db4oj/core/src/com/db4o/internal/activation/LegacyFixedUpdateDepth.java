@@ -8,7 +8,7 @@ public class LegacyFixedUpdateDepth extends FixedUpdateDepth {
 		super(depth);
 	}
 
-	public boolean canSkip(ClassMetadata clazz) {
+	public boolean canSkip(ObjectReference ref) {
 		return false;
 	}
 

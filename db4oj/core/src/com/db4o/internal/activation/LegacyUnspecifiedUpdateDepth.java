@@ -9,7 +9,7 @@ public class LegacyUnspecifiedUpdateDepth extends UnspecifiedUpdateDepth {
 	private LegacyUnspecifiedUpdateDepth() {
 	}
 
-	public boolean canSkip(ClassMetadata clazz) {
+	public boolean canSkip(ObjectReference ref) {
 		return false;
 	}
 

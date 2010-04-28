@@ -49,7 +49,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	}
 
 	private int store(E obj) {
-	    return container().store(_transaction, obj, container().updateDepthProvider().unspecified(false));
+	    return container().store(_transaction, obj, container().updateDepthProvider().unspecified(NullModifiedObjectQuery.INSTANCE));
     }
 
 	private void add(int id) {
