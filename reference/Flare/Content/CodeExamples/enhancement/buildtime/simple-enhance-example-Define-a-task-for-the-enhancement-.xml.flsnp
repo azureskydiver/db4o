@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;path id=&quot;project.classpath&quot;&gt;
+    &lt;pathelement path=&quot;${basedir}/bin&quot;/&gt;
+    &lt;fileset dir=&quot;lib&quot;&gt;
+        &lt;include name=&quot;**/*.jar&quot;/&gt;
+    &lt;/fileset&gt;
+&lt;/path&gt;
+&lt;taskdef name=&quot;db4o-enhance&quot;
+         classname=&quot;com.db4o.enhance.Db4oEnhancerAntTask&quot;
+         classpathref=&quot;project.classpath&quot;/&gt;
+</pre>
+		<div class="codesnippet-meta">simple-enhance-example.xml: Define a task for the enhancement <a href="Example-enhancement-buildtime-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

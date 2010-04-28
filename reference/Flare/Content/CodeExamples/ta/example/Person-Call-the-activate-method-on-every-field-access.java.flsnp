@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">public void setName(String name) {
+    activate(ActivationPurpose.WRITE);
+    this.name = name;
+}
+
+public String getName()  {
+    activate(ActivationPurpose.READ);
+    return name;
+}
+
+public String toString()  {
+    // use the getter/setter withing the class,
+    // to ensure the activate-method is called
+    return getName();
+}</pre>
+		<div class="codesnippet-meta">Person.java: Call the activate method on every field access<a href="Example-ta-example-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

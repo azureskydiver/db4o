@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">{
+    ObjectContainer container = openDatabase();
+    Person person = Person.personWithHistory();
+    container.store(person);
+    container.close();
+}
+{
+    ObjectContainer container = openDatabase();
+    Person person = queryByName(container,&quot;Joanna the 10&quot;);
+    Person beginOfDynasty = person.getMother();
+
+    // With transparent persistence enabled, you can navigate deeply
+    // nested object graphs. db4o will ensure that the objects
+    // are loaded from the database.
+    while(null!=beginOfDynasty.getMother()){
+        beginOfDynasty = beginOfDynasty.getMother();
+    }
+    System.out.println(beginOfDynasty.getName());
+
+    // Updating a object doesn't requires no store call.
+    // Just change the objects and the call commit.
+    beginOfDynasty.setName(&quot;New Name&quot;);
+    container.commit();
+    container.close();
+}
+{
+    ObjectContainer container = openDatabase();
+    Person person = queryByName(container,&quot;New Name&quot;);
+    // The changes are stored, due to transparent persistence
+    System.out.println(person.getName());
+    container.close();
+}</pre>
+		<div class="codesnippet-meta">TransparentActivationExamples.java: Transparent persistence in action<a href="Example-ta-example-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

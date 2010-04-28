@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">public void bind(Activator activator) {
+    if (this.activator == activator) {
+        return;
+    }
+    if (activator != null &amp;&amp; null != this.activator) {
+        throw new IllegalStateException(&quot;Object can only be bound to one activator&quot;);
+    }
+    this.activator = activator;
+}
+
+public void activate(ActivationPurpose activationPurpose) {
+    if(null!=activator){
+        activator.activate(activationPurpose);
+    }
+}</pre>
+		<div class="codesnippet-meta">Person.java: Implement the activatable interface methods<a href="Example-ta-example-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

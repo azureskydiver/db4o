@@ -1,18 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="840" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
-    <head><title>Transparent Persistence Implementation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+    <head><title>Transparent Persistence Implementation</title>
     </head>
     <body onload="prettyPrint()">
         <h1>Transparent Persistence Implementation</h1>
         <p>The basic logic of Transparent Persistence (TP) is the
 following:</p>
         <ul>
-            <li>classes
-     available for Transparent Persistence should implement Activatable
-     interface, which allows to bind an object in the reference cache to the
+            <li>Classes
+     available for Transparent Persistence should implement the <MadCap:variable name="Primary.Activatable" />    -interface, which allows to bind an object in the reference cache to the
      current object container.</li>
-            <li>persistent
-     object should be initially explicitly stored to the database: 
+            <li>Persistent
+     objects should be initially explicitly stored to the database: 
      <p MadCap:conditions="Primary.Java,Primary.All languages"> Java: 
      <code>objectContainer.store(myObject)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET: 
      <code>objectContainer.Store(myObject)</code></p><p MadCap:conditions="Primary:net" /> 
@@ -20,17 +19,17 @@ following:</p>
      collection (currently you must use db4o-specific implementation for transparent collections: ArrayList4). For complex objects all field objects will be registered with
      the database with this call as well.</li>
             <li>Stored
-     object are bound to the Transparent Persistent framework when they are
+     objects are bound to the Transparent Persistent framework when they are
      instantiated in the reference cache. This happens after the initial
      store() or when an object is retrieved from the database through one of
      the querying mechanisms.</li>
             <li>Whenever
-     a commit() call is issued by the user, TP framework scans for modified
+     a commit() call is issued by the user, Transparent Persistent framework scans for modified
      persistent objects and implicitly calls store() on them before committing
      the transaction. Implicit commit with the mentioned above changes also occurs when the database is closed. </li>
         </ul>
         <p>Note that Transparent Persistence is based on Transparent
-Activation, so it is strongly recommended to study <a href="../activation/transparent_activation_framework.htm">Transparent Activation</a>documentation first.</p>
+Activation, so it is strongly recommended to study the <a href="../activation/transparent_activation_framework.htm">Transparent Activation</a> documentation first.</p>
         <p>In order to make use of Transparent Persistence you will
 need:</p>
         <ul>
@@ -42,7 +41,7 @@ need:</p>
       <code>configuration.add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET: 
       <code>configuration.Add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:net" /></li>
                 <li>Implement
-      Activatable/IActivatable interface for the persistent classes, either
+      <MadCap:variable name="Primary.Activatable" /> interface for the persistent classes, either
       manually or through using <a href="../../implementation_strategies/enhancement_tools.htm">enhancement tools</a>.</li>
                 <li>Call
       activate method at the beginning of all class methods that modify class

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public string Name
+{
+    get
+    {
+        Activate(ActivationPurpose.Read);
+        return name;
+    }
+    set
+    {
+        Activate(ActivationPurpose.Write);
+        name = value;
+    }
+}
+
+
+public override string ToString()
+{
+    // use the getter/setter withing the class,
+    // to ensure the activate-method is called
+    return Name;
+}
+</pre>
+		<div class="codesnippet-meta">Person.cs: Call the activate method on every field access<a href="Example-ta-example-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

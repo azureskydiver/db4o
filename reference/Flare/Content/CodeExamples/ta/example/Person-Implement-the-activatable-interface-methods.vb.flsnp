@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Sub Bind(ByVal activator As IActivator) _
+        Implements IActivatable.Bind
+    If m_activator Is activator Then
+        Exit Sub
+    End If
+    If activator IsNot Nothing AndAlso m_activator IsNot Nothing Then
+        Throw New InvalidOperationException(&quot;Object can only be bound to one activator&quot;)
+    End If
+    m_activator = activator
+End Sub
+
+Public Sub Activate(ByVal activationPurpose As ActivationPurpose) _
+        Implements IActivatable.Activate
+    If m_activator IsNot Nothing Then
+        m_activator.Activate(activationPurpose)
+    End If
+End Sub
+</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Sub Bind(ByVal activator As IActivator) _
+        Implements IActivatable.Bind
+    If m_activator Is activator Then
+        Exit Sub
+    End If
+    If activator IsNot Nothing AndAlso m_activator IsNot Nothing Then
+        Throw New InvalidOperationException(&quot;Object can only be bound to one activator&quot;)
+    End If
+    m_activator = activator
+End Sub
+
+Public Sub Activate(ByVal activationPurpose As ActivationPurpose) _
+        Implements IActivatable.Activate
+    If m_activator IsNot Nothing Then
+        m_activator.Activate(activationPurpose)
+    End If
+End Sub
+</pre>
+		<div class="codesnippet-meta">Person.vb: Implement the activatable interface methods<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

@@ -76,6 +76,8 @@
   <ItemGroup>
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.vb" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.vb" />
+    <Compile Include="Code\ta\example\Person.vb" />
+    <Compile Include="Code\ta\example\TransparentActivationExamples.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
