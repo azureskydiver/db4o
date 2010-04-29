@@ -41,6 +41,7 @@
 			<sources dir="${source.dir}">
 				<include name="**/*.class" />
 				<exclude name="**/ta/**" />
+				<exclude name="**/tp/**" />
 				<exclude name="**/activation/**" />
 				<exclude name="**/collections/transparent/**" />
 				<exclude name="**/typehandler/**" /> <!-- why? -->
