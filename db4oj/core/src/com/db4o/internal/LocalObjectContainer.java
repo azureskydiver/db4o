@@ -106,7 +106,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     void configureNewFile() {
     	
     	blockSize(configImpl().blockSize());
-    	_fileHeader = new FileHeader2();
+    	_fileHeader = FileHeader.newCurrentFileHeader();
     	setRegularEndAddress(_fileHeader.length());
     	
         newSystemData(configImpl().freespaceSystem(), configImpl().idSystemType());
@@ -129,7 +129,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         _fileHeader.initNew(this);
         
-        blockedFreespaceManager.start(_systemData.freespaceAddress());
+        blockedFreespaceManager.start(0);
     }
     
     private void newSystemData(byte freespaceSystemType, byte idSystemType){
@@ -430,7 +430,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
 	public ByteArrayBuffer readBufferBySlot(Slot slot) {
-		if (slot == null || slot.isNull()) {
+		if (Slot.isNull(slot)) {
 			return null;
 		}
 		
@@ -445,7 +445,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 	
 	public StatefulBuffer readStatefulBufferBySlot(Transaction trans, int id, Slot slot) {
-		if (slot == null || slot.isNull()) {
+		if (Slot.isNull(slot)) {
 			return null;
 		}
 		
@@ -490,13 +490,17 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         	return;
         }
         
+        if (!configImpl().commitRecoveryDisabled()) {
+        	_fileHeader.completeInterruptedTransaction(this);
+        }
+        
         FreespaceManager blockedFreespaceManager = AbstractFreespaceManager.createNew(this,
 				_systemData.freespaceSystem());
         
         installFreespaceManager(blockedFreespaceManager);
 		
-        blockedFreespaceManager.read(this, _systemData.freespaceID());
-        blockedFreespaceManager.start(_systemData.freespaceAddress());
+        blockedFreespaceManager.read(this, _systemData.inMemoryFreespaceSlot());
+        blockedFreespaceManager.start(_systemData.bTreeFreespaceId());
         
         if(freespaceMigrationRequired(blockedFreespaceManager)){
         	migrateFreespace(blockedFreespaceManager);
@@ -504,9 +508,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         writeHeader(true, false);
         
-        if (!configImpl().commitRecoveryDisabled()) {
-        	_fileHeader.completeInterruptedTransaction(this);
-        }
+//        if (!configImpl().commitRecoveryDisabled()) {
+//        	_fileHeader.completeInterruptedTransaction(this);
+//        }
 
         if(Converter.convert(new ConversionStage.SystemUpStage(this))){
             _systemData.converterVersion(Converter.VERSION);
@@ -556,20 +560,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		AbstractFreespaceManager.migrate(oldFreespaceManager, newFreespaceManager);
 		_fileHeader.writeVariablePart(this, 1);
 	}
-
-	public final int createFreespaceSlot(byte freespaceSystem){
-        _systemData.freespaceAddress(AbstractFreespaceManager.initSlot(this));
-        _systemData.freespaceSystem(freespaceSystem);
-        return _systemData.freespaceAddress();
-    }
-    
-    public int ensureFreespaceSlot(){
-        int address = systemData().freespaceAddress();
-		if(address == 0){
-            return createFreespaceSlot(systemData().freespaceSystem());
-        }
-        return address;
-    }
 
     public final void releaseSemaphore(String name) {
         releaseSemaphore(null, name);
@@ -718,17 +708,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _handlers.decrypt(buffer);
     }
     
-    void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
-        
-        int freespaceID=DEFAULT_FREESPACE_ID;
+    public void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
         if(shuttingDown){
-            freespaceID = _freespaceManager.write(this);
+            _freespaceManager.write(this);
             _freespaceManager = null;
         }
         
         StatefulBuffer writer = createStatefulBuffer(systemTransaction(), 0, _fileHeader.length());
         
-        _fileHeader.writeFixedPart(this, startFileLockingThread, shuttingDown, writer, blockSize(), freespaceID);
+        _fileHeader.writeFixedPart(this, startFileLockingThread, shuttingDown, writer, blockSize());
         
         if(shuttingDown){
             ensureLastSlotWritten();
@@ -753,8 +741,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	overwriteDeletedBytes(slot.address(), _blockConverter.blocksToBytes(slot.length()));	
     }
 
-    public final void writeTransactionPointer(int pointer1, int pointer2) {
-        _fileHeader.writeTransactionPointer(systemTransaction(), pointer1, pointer2);
+    public final void writeTransactionPointer(int pointer) {
+        _fileHeader.writeTransactionPointer(systemTransaction(), pointer);
     }
     
     public final Slot allocateSlotForUserObjectUpdate(Transaction trans, int id, int length){
@@ -931,13 +919,17 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 
 	public Runnable commitHook() {
-        if(! _timeStampIdGenerator.isDirty()){
-        	return Runnable4.DO_NOTHING;
-        }
         _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
         _timeStampIdGenerator.setClean();
-        return _fileHeader.commit();
+        return _fileHeader.commit(false);
 	}
-
+	
+	public final Slot allocateSafeSlot(int length) {
+		Slot reusedSlot = freespaceManager().allocateSafeSlot(length);
+		if(reusedSlot != null){
+			return reusedSlot;
+		}
+		return appendBytes(length);
+	}
 	
 }

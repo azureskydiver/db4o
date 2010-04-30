@@ -11,27 +11,24 @@ import com.db4o.internal.slots.*;
  */
 public class PersistentIntegerArray extends LocalPersistentBase {
 	
+	
+	private final SlotChangeFactory _slotChangeFactory;
+	
 	private int[] _ints;
 	
-	public PersistentIntegerArray(TransactionalIdSystem idSystem, int[] arr){
+	public PersistentIntegerArray(SlotChangeFactory slotChangeFactory, TransactionalIdSystem idSystem, int[] arr){
 		super(idSystem);
+		_slotChangeFactory = slotChangeFactory;
 		_ints = new int[arr.length];
 		System.arraycopy(arr, 0, _ints, 0, arr.length);
 	}
 	
-	public PersistentIntegerArray(TransactionalIdSystem idSystem, int id) {
+	public PersistentIntegerArray(SlotChangeFactory slotChangeFactory, TransactionalIdSystem idSystem, int id) {
 		super(idSystem);
+		_slotChangeFactory = slotChangeFactory;
 		setID(id);
 	}
 	
-	public PersistentIntegerArray(int id) {
-		this(null, id);
-	}
-	
-	public PersistentIntegerArray(int[] arr){
-		this(null, arr);
-	}
-
 	public byte getIdentifier() {
 		return Const4.INTEGER_ARRAY;
 	}
@@ -65,7 +62,7 @@ public class PersistentIntegerArray extends LocalPersistentBase {
 	
 	@Override
 	public SlotChangeFactory slotChangeFactory() {
-		return SlotChangeFactory.FREE_SPACE;
+		return _slotChangeFactory;
 	}
 
 }

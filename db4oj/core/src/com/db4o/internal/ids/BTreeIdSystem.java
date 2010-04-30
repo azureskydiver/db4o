@@ -13,9 +13,18 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class BTreeIdSystem implements IdSystem {
+public class BTreeIdSystem implements StackableIdSystem {
+	
+	private static final int BTREE_ID_INDEX = 0;
+	
+	private static final int ID_GENERATOR_INDEX = 1;
+	
+	private static final int CHILD_ID_INDEX = 2;
+	
 	
 	private final LocalObjectContainer _container;
+	
+	private final StackableIdSystem _parentIdSystem;
 	
 	private final TransactionalIdSystem _transactionalIdSystem;
 	
@@ -24,18 +33,22 @@ public class BTreeIdSystem implements IdSystem {
 	private BTree _bTree;
 	
 	private PersistentIntegerArray _persistentState;
-
-	public BTreeIdSystem(LocalObjectContainer container, TransactionalIdSystem transactionalIdSystem, int maxValidId) {
+	
+	public BTreeIdSystem(LocalObjectContainer container, final StackableIdSystem parentIdSystem, int maxValidId) {
 		_container = container;
-		_transactionalIdSystem = transactionalIdSystem;
-
-		int persistentArrayId = systemData().idSystemID();
+		_parentIdSystem = parentIdSystem;
+		_transactionalIdSystem = container.newTransactionalIdSystem(null, new Closure4<IdSystem>() {
+			public IdSystem run() {
+				return parentIdSystem;
+			}
+		});
+		
+		int persistentArrayId = parentIdSystem.childId();
 		if(persistentArrayId == 0){
 			initializeNew();
 		} else {
 			initializeExisting(persistentArrayId);
 		}
-
 		_idGenerator = new SequentialIdGenerator(new Function4<Integer, Integer>() {
 			public Integer apply(Integer start) {
 				return findFreeId(start);
@@ -43,50 +56,40 @@ public class BTreeIdSystem implements IdSystem {
 		},  idGeneratorValue(), _container.handlers().lowestValidId(), maxValidId);
 	}
 	
-	public BTreeIdSystem(LocalObjectContainer container, final IdSystem idSystem){
-		this(container, container.newTransactionalIdSystem(null, new Closure4<IdSystem>() {
-			public IdSystem run() {
-				return idSystem;
-			}
-		}), Integer.MAX_VALUE);
+	public BTreeIdSystem(LocalObjectContainer container, StackableIdSystem idSystem){
+		this(container, idSystem, Integer.MAX_VALUE);
 	}
 
-
 	private void initializeExisting(int persistentArrayId) {
-		_persistentState = new PersistentIntegerArray(_transactionalIdSystem, persistentArrayId);
+		_persistentState = new PersistentIntegerArray(SlotChangeFactory.ID_SYSTEM, _transactionalIdSystem, persistentArrayId);
 		_persistentState.read(transaction());
 		_bTree = new BTree(transaction(), bTreeConfiguration(), bTreeId(), new IdSlotMappingHandler());
 	}
 
 	private BTreeConfiguration bTreeConfiguration() {
-		return new BTreeConfiguration(_transactionalIdSystem, SlotChangeFactory.FREE_SPACE, 64, false);
+		return new BTreeConfiguration(_transactionalIdSystem, SlotChangeFactory.ID_SYSTEM, 64, false);
 	}
 
 	private int idGeneratorValue() {
-		return _persistentState.array()[1];
+		return _persistentState.array()[ID_GENERATOR_INDEX];
 	}
 	
 	private void idGeneratorValue(int value) {
-		_persistentState.array()[1] = value;
+		_persistentState.array()[ID_GENERATOR_INDEX] = value;
 	}
 
 
 	private int bTreeId() {
-		return _persistentState.array()[0];
+		return _persistentState.array()[BTREE_ID_INDEX];
 	}
-
-
-	private SystemData systemData() {
-		return _container.systemData();
-	}
-	
 
 	private void initializeNew() {
 		_bTree = new BTree(transaction(), bTreeConfiguration(), new IdSlotMappingHandler());
 		int idGeneratorValue = _container.handlers().lowestValidId() - 1;
-		_persistentState = new PersistentIntegerArray(_transactionalIdSystem, new int[]{_bTree.getID(), idGeneratorValue });
+		_persistentState = new PersistentIntegerArray(SlotChangeFactory.ID_SYSTEM, _transactionalIdSystem, 
+				new int[]{_bTree.getID(), idGeneratorValue, 0 });
 		_persistentState.write(transaction());
-		systemData().idSystemID(_persistentState.getID());
+		_parentIdSystem.childId(_persistentState.getID());
 	}
 	
 	private int findFreeId(int start) {
@@ -149,6 +152,9 @@ public class BTreeIdSystem implements IdSystem {
 		if(_idGenerator.isDirty()){
 			_idGenerator.setClean();
 			_persistentState.setStateDirty();
+			
+		}
+		if(_persistentState.isDirty()){
 			_persistentState.write(transaction());
 		}
 		_container.freespaceManager().endCommit();
@@ -198,6 +204,15 @@ public class BTreeIdSystem implements IdSystem {
 
 	public TransactionalIdSystem freespaceIdSystem() {
 		return _transactionalIdSystem;
+	}
+
+	public int childId() {
+		return _persistentState.array()[CHILD_ID_INDEX];
+	}
+
+	public void childId(int id) {
+		_persistentState.array()[CHILD_ID_INDEX] = id;
+		_persistentState.setStateDirty();
 	}
 
 }

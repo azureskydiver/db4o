@@ -15,9 +15,8 @@ public class ExceptionSimulatingIdSystem extends DelegatingIdSystem{
 	
 	private final ExceptionTriggerCondition _triggerCondition = new ExceptionTriggerCondition();
 
-	public ExceptionSimulatingIdSystem(LocalObjectContainer container,
-			int idSystemId,  ExceptionFactory exceptionFactory) {
-		super(container, idSystemId);
+	public ExceptionSimulatingIdSystem(LocalObjectContainer container, ExceptionFactory exceptionFactory) {
+		super(container);
 		_exceptionFactory = exceptionFactory;
 	}
 	

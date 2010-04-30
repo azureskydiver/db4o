@@ -98,7 +98,7 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			return null;
 		}
 
-		public Slot allocateTransactionLogSlot(int length) {
+		public Slot allocateSafeSlot(int length) {
 			return null;
 		}
 
@@ -126,7 +126,7 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			
 		}
 
-		public void freeTransactionLogSlot(Slot slot) {
+		public void freeSafeSlot(Slot slot) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -141,17 +141,12 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			
 		}
 
-		public void read(LocalObjectContainer container, int freeSpaceID) {
-			// TODO Auto-generated method stub
-			
-		}
-
 		public int slotCount() {
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
-		public void start(int slotAddress) {
+		public void start(int id) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -171,13 +166,22 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 			
 		}
 
-		public int write(LocalObjectContainer container) {
-			// TODO Auto-generated method stub
-			return 0;
+		public void write(LocalObjectContainer container) {
+			
 		}
 
 		public boolean isStarted() {
 			return false;
+		}
+
+		public Slot allocateTransactionLogSlot(int length) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void read(LocalObjectContainer container, Slot slot) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}

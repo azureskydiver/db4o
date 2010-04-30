@@ -144,10 +144,12 @@ public class DefragEncryptedFileTestCase extends Db4oTestWithTempFile {
 	        }
 	
 	        public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
+	        	byte[] encryptedBuffer = new byte[buffer.length];
+	        	System.arraycopy(buffer, 0, encryptedBuffer, 0, buffer.length);
 	            for (int i = 0; i < length; i++) {
-	                buffer[i] = (byte) (buffer[i] + _password.hashCode());
+	            	encryptedBuffer[i] = (byte) (encryptedBuffer[i] + _password.hashCode());
 	            }
-	            _bin.write(pos, buffer, length);
+	            _bin.write(pos, encryptedBuffer, length);
 	        }
         }
     }

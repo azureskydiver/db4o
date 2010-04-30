@@ -21,7 +21,7 @@ public class NullFreespaceManager implements FreespaceManager {
 		return null;
 	}
 
-	public Slot allocateTransactionLogSlot(int length) {
+	public Slot allocateSafeSlot(int length) {
 		return null;
 	}
 
@@ -45,7 +45,7 @@ public class NullFreespaceManager implements FreespaceManager {
 		
 	}
 
-	public void freeTransactionLogSlot(Slot slot) {
+	public void freeSafeSlot(Slot slot) {
 		
 	}
 
@@ -57,10 +57,6 @@ public class NullFreespaceManager implements FreespaceManager {
 		
 	}
 
-	public void read(LocalObjectContainer container, int freeSpaceID) {
-		
-	}
-
 	public int slotCount() {
 		return 0;
 	}
@@ -69,7 +65,7 @@ public class NullFreespaceManager implements FreespaceManager {
 		
 	}
 
-	public void start(int slotAddress) {
+	public void start(int id) {
 		
 	}
 
@@ -85,12 +81,19 @@ public class NullFreespaceManager implements FreespaceManager {
 		
 	}
 
-	public int write(LocalObjectContainer container) {
-		return 0;
+	public void write(LocalObjectContainer container) {
+		
 	}
 
 	public boolean isStarted() {
 		return false;
+	}
+
+	public Slot allocateTransactionLogSlot(int length) {
+		return null;
+	}
+
+	public void read(LocalObjectContainer container, Slot slot) {
 	}
 
 }

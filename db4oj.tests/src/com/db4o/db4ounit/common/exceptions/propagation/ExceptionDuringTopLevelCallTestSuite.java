@@ -60,8 +60,8 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 			config.storage(_storage);
 			
 			_idSystemFactory = new IdSystemFactory() {
-				public IdSystem newInstance(LocalObjectContainer container, int idSystemId) {
-					_idSystem = new ExceptionSimulatingIdSystem(container, idSystemId, exceptionFactory);
+				public IdSystem newInstance(LocalObjectContainer container) {
+					_idSystem = new ExceptionSimulatingIdSystem(container, exceptionFactory);
 					return _idSystem;
 				}
 			};

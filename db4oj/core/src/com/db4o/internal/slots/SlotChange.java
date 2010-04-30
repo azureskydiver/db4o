@@ -51,7 +51,7 @@ public class SlotChange extends TreeInt {
 	}
 	
 	public void accumulateFreeSlot(TransactionalIdSystemImpl idSystem, FreespaceCommitter freespaceCommitter, boolean forFreespace) {
-        if( isForFreespace() != forFreespace){
+        if( forFreespace() != forFreespace){
         	return;
         }
     	if(_firstOperation == SlotChangeOperation.create){
@@ -64,18 +64,22 @@ public class SlotChange extends TreeInt {
 			
 			// If we don't get a valid slot, the object may have just 
 			// been stored by the SystemTransaction and not committed yet.
-			if(slot == null || slot.isNull()){
+			if(Slot.isNull(slot)){
 				slot = modifiedSlotInUnderlyingIdSystem(idSystem); 
 			}
 			
 			// No old slot at all can be the case if the object
 			// has been deleted by another transaction and we add it again.
-			if(slot != null && ! slot.isNull()){
-				freespaceCommitter.delayedFree(slot);
+			if(! Slot.isNull(slot)){
+				freespaceCommitter.delayedFree(slot, freeToSystemFreespaceSystem());
 			}
 		}
 	}
 	
+	protected boolean forFreespace() {
+		return false;
+	}
+
 	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystemImpl idSystem) {
 		return idSystem.modifiedSlotInUnderlyingIdSystem(_key);
 	}
@@ -89,7 +93,7 @@ public class SlotChange extends TreeInt {
 	}
     
 	private final boolean isFreeOnRollback() {
-		return _newSlot != null && ! _newSlot.isNull();
+		return ! Slot.isNull(_newSlot);
 	}
 
 	public final boolean slotModified() {
@@ -159,10 +163,7 @@ public class SlotChange extends TreeInt {
 	}
 
 	protected void freePreviouslyModifiedSlot(FreespaceManager freespaceManager) {
-		if(_newSlot == null ){
-			return;
-		}
-		if(_newSlot.isNull()){
+		if(Slot.isNull(_newSlot)){
 			return;
 		}
 		free(freespaceManager, _newSlot);
@@ -204,10 +205,6 @@ public class SlotChange extends TreeInt {
 		_newSlot = Slot.ZERO;
 	}
 	
-	protected boolean isForFreespace(){
-		return false;
-	}
-	
 	public boolean removeId(){
 		return false;
 	}
@@ -219,6 +216,10 @@ public class SlotChange extends TreeInt {
 			str += " newSlot: " + _newSlot; 
 		}
 		return str; 
+	}
+	
+	protected boolean freeToSystemFreespaceSystem(){
+		return false;
 	}
     
 }

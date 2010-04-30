@@ -7,6 +7,10 @@ import db4ounit.extensions.*;
 
 public class AllTests extends ComposibleTestSuite {
 	
+	public static void main(String[] args) {
+		new AllTests().runSolo();
+	}
+	
 	protected Class[] testCases() {
 		return composeWith();
 	}
@@ -17,8 +21,8 @@ public class AllTests extends ComposibleTestSuite {
 	@Override
 	protected Class[] composeWith() {
 		return new Class[] {
-					CrashSimulatingTestCase.class,
-					ReadCommittedIsolationTestCase.class,
-				};
+				CrashSimulatingTestSuite.class,
+				ReadCommittedIsolationTestCase.class,
+			};
 	}
 }

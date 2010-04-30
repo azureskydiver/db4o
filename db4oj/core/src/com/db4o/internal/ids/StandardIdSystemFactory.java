@@ -24,8 +24,8 @@ public class StandardIdSystemFactory {
 	public static final byte CUSTOM = 4;
 
 	public static IdSystem newInstance(LocalObjectContainer localContainer) {
-		byte idSystemType = localContainer.systemData().idSystemType();
-		int idSystemId = localContainer.systemData().idSystemID();
+		SystemData systemData = localContainer.systemData();
+		byte idSystemType = systemData.idSystemType();
 		
         switch(idSystemType){
 	    	case LEGACY:
@@ -33,19 +33,23 @@ public class StandardIdSystemFactory {
 	    	case POINTER_BASED:
 	    		return new PointerBasedIdSystem(localContainer);
 			case BTREE:
-				// return new BTreeIdSystem(localContainer, new BTreeIdSystem(localContainer, new InMemoryIdSystem(localContainer)));
-				// return new BTreeIdSystem(localContainer, new PointerBasedIdSystem(localContainer));
-				return new BTreeIdSystem(localContainer, new InMemoryIdSystem(localContainer));
+				InMemoryIdSystem inMemoryIdSystem = new InMemoryIdSystem(localContainer);
+				BTreeIdSystem bTreeIdSystem = new BTreeIdSystem(localContainer, inMemoryIdSystem);
+				systemData.freespaceIdSystem(bTreeIdSystem.freespaceIdSystem());
+				
+				// TODO: implement small BTree as optional configuration
+				// return bTreeIdSystem;
+				
+				return new BTreeIdSystem(localContainer, bTreeIdSystem);
+				
 	    	case IN_MEMORY:
 	    		return new InMemoryIdSystem(localContainer);
 	    	case CUSTOM:
 	    		IdSystemFactory customIdSystemFactory = localContainer.configImpl().customIdSystemFactory();
 	    		if(customIdSystemFactory == null){
-	    			
 	    			throw new Db4oFatalException("Custom IdSystem configured but no factory was found. See IdSystemConfiguration#useCustomSystem()");
-	    			
 	    		}
-	    		return customIdSystemFactory.newInstance(localContainer, idSystemId);
+	    		return customIdSystemFactory.newInstance(localContainer);
 	        default:
 	        	return new PointerBasedIdSystem(localContainer);
         }

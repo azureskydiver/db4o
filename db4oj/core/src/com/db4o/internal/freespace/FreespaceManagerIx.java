@@ -18,11 +18,11 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 		super(null, discardLimit);
 	}
 
-	public Slot allocateTransactionLogSlot(int length) {
+	public Slot allocateSafeSlot(int length) {
 		throw new IllegalStateException();
 	}
 	
-	public void freeTransactionLogSlot(Slot slot) {
+	public void freeSafeSlot(Slot slot) {
 		throw new IllegalStateException();
 	}
     
@@ -59,11 +59,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     	throw new IllegalStateException();
 	}
     
-    public void read(LocalObjectContainer container, int freespaceID) {
-    	
-    }
-    
-    public void start(int slotAddress) {
+    public void start(int id) {
     	
     }
     
@@ -71,8 +67,8 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return FM_IX;
     }
 
-    public int write(LocalObjectContainer container) {
-        return 0;  
+    public void write(LocalObjectContainer container) {
+    	
     }
 
 	public void commit() {
@@ -85,6 +81,14 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 
 	public boolean isStarted() {
 		return false;
+	}
+
+	public Slot allocateTransactionLogSlot(int length) {
+		return null;
+	}
+
+	public void read(LocalObjectContainer container, Slot slot) {
+		
 	}
 
 

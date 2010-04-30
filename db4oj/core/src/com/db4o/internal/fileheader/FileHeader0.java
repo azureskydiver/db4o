@@ -72,7 +72,9 @@ public class FileHeader0 extends FileHeader {
     protected void read(LocalObjectContainer file, ByteArrayBuffer reader) throws OldFormatException {
         _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
-        readClassCollectionAndFreeSpace(file, reader);
+        SystemData systemData = file.systemData();
+		systemData.classCollectionID(reader.readInt());
+		reader.readInt();  // was freespace ID, can no longer be read
     }
 
     private void skipConfigurationLockTime(ByteArrayBuffer reader) {
@@ -118,8 +120,8 @@ public class FileHeader0 extends FileHeader {
         _configBlock.completeInterruptedTransaction();
     }
 
-    public void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2) {
-        writeTransactionPointer(systemTransaction, transactionPointer1, transactionPointer2, _configBlock.address(), ConfigBlock.TRANSACTION_OFFSET);
+    public void writeTransactionPointer(Transaction systemTransaction, int transactionPointer) {
+        writeTransactionPointer(systemTransaction, transactionPointer, _configBlock.address(), ConfigBlock.TRANSACTION_OFFSET);
     }
 
     public MetaIndex getUUIDMetaIndex() {
@@ -130,13 +132,13 @@ public class FileHeader0 extends FileHeader {
         return HEADER_LENGTH;
     }
 
-    public void writeFixedPart(LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
+    public void writeFixedPart(LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize_) {
         writer.writeByte(Const4.YAPFILEVERSION);
         writer.writeByte((byte)blockSize_);
         writer.writeInt(_configBlock.address());
         writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(file.systemData().classCollectionID());
-        writer.writeInt(freespaceID);
+        writer.writeInt(0);  // was freespace ID, now defunct
         if (Debug4.xbytes) {
             writer.checkXBytes(false);
         }
@@ -144,7 +146,7 @@ public class FileHeader0 extends FileHeader {
         file.syncFiles();
     }
     
-    public void writeVariablePart(LocalObjectContainer file, int part) {
+    public void writeVariablePart(LocalObjectContainer file, int part, boolean shuttingDown) {
         if(part == 1){
             _configBlock.write();
         }else if(part == 2){
@@ -173,7 +175,7 @@ public class FileHeader0 extends FileHeader {
 	}
 
 	@Override
-	public Runnable commit() {
+	public Runnable commit(boolean shuttingDown) {
 		writeVariablePart(_container, 2);
 		return Runnable4.DO_NOTHING;
 		

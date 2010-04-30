@@ -57,7 +57,7 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 				traverseSlotChanges(visitor);
 			}
 		};
-		freespaceCommitter.register(this);
+		freespaceCommitter.transactionalIdSystem(this);
 		accumulateFreeSlots(freespaceCommitter, false);
 		globalIdSystem().commit(slotChangeVisitable, freespaceCommitter);
 	}

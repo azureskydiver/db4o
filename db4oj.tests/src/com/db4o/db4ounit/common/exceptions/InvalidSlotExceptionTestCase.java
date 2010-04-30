@@ -5,7 +5,6 @@ package com.db4o.db4ounit.common.exceptions;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
 import com.db4o.internal.ids.*;
@@ -29,9 +28,8 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implement
 		IdSystemConfiguration idSystemConfiguration = Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config);
 		idSystemConfiguration.useCustomSystem(new IdSystemFactory() {
 			
-			public IdSystem newInstance(LocalObjectContainer container,
-					int idSystemId) {
-				return new MockIdSystem(container, idSystemId);
+			public IdSystem newInstance(LocalObjectContainer container) {
+				return new MockIdSystem(container);
 			}
 		});
 	}
@@ -65,8 +63,8 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implement
 	
 	public static class MockIdSystem extends DelegatingIdSystem {
 		
-		public MockIdSystem(LocalObjectContainer container, int idSystemId){
-			super(container, idSystemId);
+		public MockIdSystem(LocalObjectContainer container){
+			super(container);
 		}
 
 		@Override
