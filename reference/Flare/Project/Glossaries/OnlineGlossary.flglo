@@ -133,13 +133,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Backup</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/maintenance/backup.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>Defragment</Term>
     </Terms>
     <Definition
