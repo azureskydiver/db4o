@@ -82,11 +82,12 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                     // Probably no because old aspect versions might not be able
                     // to handle null...
                     if (isNull) {
-                        field.set(context.persistentObject(), null);
-                        return;
+                    	if(field.getStoredType() == null || !field.getStoredType().isPrimitive()) {
+                    		field.set(context.persistentObject(), null);
+                    	}
+                		return;
                     }
                 }
-			    
 
                 aspect.activate(context);
             }
@@ -97,8 +98,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
             context.restoreState(savedState);
             command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
                 protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
+                	FieldMetadata field = (FieldMetadata)aspect;
                     if (! isNull) {
-                        ((FieldMetadata)aspect).attemptUpdate(context);
+						field.attemptUpdate(context);
                     }
                 }
                 

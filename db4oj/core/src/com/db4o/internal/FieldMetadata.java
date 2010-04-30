@@ -716,7 +716,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return null;
         }
         ReflectClass fieldType = _reflectField.getFieldType();
-        if(fieldType == null){
+        if(fieldType == null) {
         	return null;
         }
 		return Handlers4.erasedFieldType(container(), fieldType);
@@ -738,7 +738,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             _state = FieldMetadataState.UNAVAILABLE;
             return;
         }
-        if (currentFieldType == _fieldType) {
+        if (currentFieldType == _fieldType && Handlers4.baseType(_reflectField.getFieldType()).isPrimitive() == _isPrimitive) {
         	return;
         }
     	// special case when migrating from type handler ids
