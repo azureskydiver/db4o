@@ -53,7 +53,7 @@ public class EagerObjectWriter {
 			final int id = idSlotPair.first;
 			final Slot slot = idSlotPair.second;
 			
-			if (slot == null || slot.isNull()) {
+			if (Slot.isNull(slot)) {
 				buffer.writeInt(id);
 				buffer.writeInt(0);
 				continue;

@@ -83,7 +83,7 @@ public final class TransportIdSystem implements TransactionalIdSystem {
 	}
 
 	public void accumulateFreeSlots(FreespaceCommitter freespaceCommitter, boolean forFreespace) {
-		// do nothing
+		
 	}
 
 }

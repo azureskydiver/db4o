@@ -12,7 +12,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class InMemoryIdSystem implements IdSystem {
+public class InMemoryIdSystem implements StackableIdSystem {
 	
 	private final LocalObjectContainer _container;
 	
@@ -21,6 +21,8 @@ public class InMemoryIdSystem implements IdSystem {
 	private Slot _slot;
 	
 	private final SequentialIdGenerator _idGenerator;
+
+	private int _childId;
 	
 	/**
 	 * for testing purposes only.
@@ -41,9 +43,10 @@ public class InMemoryIdSystem implements IdSystem {
 
 	private void readThis() {
 		SystemData systemData = _container.systemData();
-		_slot = new Slot(systemData.transactionPointer1(), systemData.transactionPointer2());
-		if(! _slot.isNull()){
+		_slot = systemData.idSystemSlot();
+		if(! Slot.isNull(_slot)){
 			ByteArrayBuffer buffer = _container.readBufferBySlot(_slot);
+			_childId = buffer.readInt();
 			_idGenerator.read(buffer);
 			_ids = (IdSlotTree) new TreeReader(buffer, new IdSlotTree(0, null)).read();
 		}
@@ -86,7 +89,7 @@ public class InMemoryIdSystem implements IdSystem {
 	
 	private Slot allocateSlot(boolean appendToFile, int slotLength) {
     	if(! appendToFile){
-    		Slot slot = _container.freespaceManager().allocateTransactionLogSlot(slotLength);
+    		Slot slot = _container.freespaceManager().allocateSafeSlot(slotLength);
     		if(slot != null){
     			return slot;
     		}
@@ -108,7 +111,7 @@ public class InMemoryIdSystem implements IdSystem {
 		});
 		return count.value;
 	}
-
+	
 	private void writeThis(Slot reservedSlot) {
 		
 		// We need a little dance here to keep filling free slots
@@ -116,7 +119,6 @@ public class InMemoryIdSystem implements IdSystem {
 		// upon the free call, but then our CrashSimulatingTestCase
 		// fails because we have the Xses in the file before flushing.
 		Slot xByteSlot = null;
-		
 		
 		if(Debug4.xbytes){
 			xByteSlot = _slot;
@@ -133,38 +135,37 @@ public class InMemoryIdSystem implements IdSystem {
 		}
 		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(_slot.length());
+		buffer.writeInt(_childId);
 		_idGenerator.write(buffer);
 		TreeInt.write(buffer, _ids);
 		_container.writeBytes(buffer, _slot.address(), 0);
+		_container.systemData().idSystemSlot(_slot);
 		Runnable commitHook = _container.commitHook();
 		_container.syncFiles();
-		_container.writeTransactionPointer(_slot.address(), _slot.length());
 		commitHook.run();
 		_container.syncFiles();
-		_container.systemData().transactionPointer1(_slot.address());
-		_container.systemData().transactionPointer2(_slot.length());
 		freeSlot(reservedSlot);
 		
 		if(Debug4.xbytes){
-			if(xByteSlot != null && ! xByteSlot.isNull()){
+			if(! Slot.isNull(xByteSlot)){
 				_container.freespaceManager().slotFreed(xByteSlot);
 			}
 		}
 	}
 
 	private void freeSlot(Slot slot) {
-		if(slot == null || slot.isNull()){
+		if(Slot.isNull(slot)){
 			return;
 		}
 		FreespaceManager freespaceManager = _container.freespaceManager();
 		if(freespaceManager == null){
 			return;
 		}
-		freespaceManager.freeTransactionLogSlot(slot);
+		freespaceManager.freeSafeSlot(slot);
 	}
 
 	private int slotLength() {
-		return TreeInt.marshalledLength(_ids) + _idGenerator.marshalledLength();
+		return TreeInt.marshalledLength(_ids) + _idGenerator.marshalledLength() + Const4.ID_LENGTH;
 	}
 	
 	private int estimatedSlotLength(int estimatedCount) {
@@ -172,7 +173,7 @@ public class InMemoryIdSystem implements IdSystem {
 		if(template == null){
 			template = new IdSlotTree(0, new Slot(0, 0));
 		}
-		return template.marshalledLength(estimatedCount) + _idGenerator.marshalledLength();
+		return template.marshalledLength(estimatedCount) + _idGenerator.marshalledLength() + Const4.ID_LENGTH;
 	}
 
 	public Slot committedSlot(int id) {
@@ -236,8 +237,12 @@ public class InMemoryIdSystem implements IdSystem {
 		});
 	}
 
-	public TransactionalIdSystem freespaceIdSystem() {
-		return null;
+	public int childId() {
+		return _childId;
+	}
+
+	public void childId(int id) {
+		_childId = id;
 	}
 
 }

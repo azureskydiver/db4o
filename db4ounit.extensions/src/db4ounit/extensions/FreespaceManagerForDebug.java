@@ -16,11 +16,11 @@ public class FreespaceManagerForDebug implements FreespaceManager {
         _listener = listener;
     }
     
-	public Slot allocateTransactionLogSlot(int length) {
+	public Slot allocateSafeSlot(int length) {
 		return null;
 	}
 
-	public void freeTransactionLogSlot(Slot slot) {
+	public void freeSafeSlot(Slot slot) {
 		
 	}
 	
@@ -52,11 +52,7 @@ public class FreespaceManagerForDebug implements FreespaceManager {
 		return null;
 	}
 
-    public void read(LocalObjectContainer container, int freeSlotsID) {
-
-    }
-
-    public void start(int slotAddress) {
+    public void start(int id) {
 
     }
 
@@ -68,8 +64,8 @@ public class FreespaceManagerForDebug implements FreespaceManager {
 		
 	}
 	
-    public int write(LocalObjectContainer container) {
-        return 0;
+    public void write(LocalObjectContainer container) {
+    	
     }
 
 	public void listener(FreespaceListener listener) {
@@ -93,6 +89,15 @@ public class FreespaceManagerForDebug implements FreespaceManager {
 
 	public boolean isStarted() {
 		return false;
+	}
+
+	public Slot allocateTransactionLogSlot(int length) {
+		
+		return null;
+	}
+
+	public void read(LocalObjectContainer container, Slot slot) {
+		
 	}
 
 }

@@ -40,6 +40,7 @@ public class AllTests extends ReflectionTestSuite {
 			NonblockingQueueTestCase.class,
 			ObjectPoolTestCase.class,
 			Path4TestCase.class,
+			SimpleCheckSumTestCase.class,
 			SortedCollection4TestCase.class,
 			Stack4TestCase.class,
 			TreeKeyIteratorTestCase.class,

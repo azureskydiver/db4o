@@ -193,7 +193,7 @@ public final class ConfigBlock {
         }
         
         if(oldLength > FREESPACE_ADDRESS_OFFSET){
-            systemData().freespaceAddress(reader.readInt());
+        	reader.readInt();  // was BTreeFreespaceID 
         }
         
         if(oldLength > CONVERTER_VERSION_OFFSET){
@@ -205,8 +205,6 @@ public final class ConfigBlock {
             	systemData().uuidIndexId(uuidIndexId);
             }
         }
-        
-        _container.ensureFreespaceSlot();
         
 		if(FileHeader.lockedByOtherSession(_container, lastAccessTime)){
 			_timerFileLock.checkIfOtherSessionAlive(_container, _address, ACCESS_TIME_OFFSET, lastAccessTime);
@@ -254,8 +252,7 @@ public final class ConfigBlock {
 		IntHandler.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
         writer.writeByte(systemData().freespaceSystem());
-        _container.ensureFreespaceSlot();
-        IntHandler.writeInt(systemData().freespaceAddress(), writer);
+        IntHandler.writeInt(0, writer);  // was BTreeFreespaceId, deprecated
         IntHandler.writeInt(systemData().converterVersion(), writer);
         IntHandler.writeInt(systemData().uuidIndexId(), writer);
 		writer.write();

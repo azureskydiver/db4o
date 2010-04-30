@@ -197,7 +197,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	}
 	
 	@Override
-	final void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
+	public final void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
 	    // do nothing
 	}
     
@@ -241,7 +241,6 @@ public class TransportObjectContainer extends LocalObjectContainer {
 		if (_memoryBin.length() == 0) {
 			configureNewFile();
 			commitTransaction();
-			writeHeader(false, false);
 		} else {
 			readThis();
 		}

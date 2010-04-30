@@ -3,6 +3,8 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
+import com.db4o.internal.ids.*;
+import com.db4o.internal.slots.*;
 
 /**
  * @exclude
@@ -13,9 +15,9 @@ public class SystemData {
     
     private int _converterVersion;
     
-    private int _freespaceAddress;
+    private Slot _inMemoryFreespaceSlot;
     
-    private int _freespaceID;
+    private int _bTreeFreespaceId;
     
     private byte _freespaceSystem;
     
@@ -31,30 +33,28 @@ public class SystemData {
     
     private byte _idSystemType;
     
-    private int _idSystemID;
-    
     private int _transactionPointer1;
     
     private int _transactionPointer2;
     
-    public SystemData(){
-    	
-    }
+    private Slot _idSystemSlot;
     
+    public Slot idSystemSlot() {
+		return _idSystemSlot;
+	}
+
+	public void idSystemSlot(Slot slot) {
+		_idSystemSlot = slot;
+	}
+
+	private TransactionalIdSystem _freespaceIdSystem;
+
     public void idSystemType(byte idSystem) {
 		_idSystemType = idSystem;
 	}
 
 	public byte idSystemType() {
 		return _idSystemType;
-	}
-
-	public void idSystemID(int idSystemID) {
-		_idSystemID = idSystemID;
-	}
-
-	public int idSystemID() {
-		return _idSystemID;
 	}
 
 	public int classCollectionID() {
@@ -73,20 +73,20 @@ public class SystemData {
         _converterVersion = version;
     }
     
-    public int freespaceAddress(){
-        return _freespaceAddress;
+    public int bTreeFreespaceId(){
+        return _bTreeFreespaceId;
     }
     
-    public void freespaceAddress(int address){
-        _freespaceAddress = address;
+    public void bTreeFreespaceId(int id){
+        _bTreeFreespaceId = id;
+    }
+    
+    public Slot inMemoryFreespaceSlot() {
+        return _inMemoryFreespaceSlot;
     }
 
-    public int freespaceID() {
-        return _freespaceID;
-    }
-
-    public void freespaceID(int id) {
-        _freespaceID = id;
+    public void inMemoryFreespaceSlot(Slot slot) {
+        _inMemoryFreespaceSlot = slot;
     }
     
     public byte freespaceSystem() {
@@ -152,5 +152,16 @@ public class SystemData {
 	public int transactionPointer2(){
 		return _transactionPointer2;
 	}
+	
+	public void freespaceIdSystem(TransactionalIdSystem transactionalIdSystem){
+		_freespaceIdSystem = transactionalIdSystem;
+	}
+	
+
+	public TransactionalIdSystem freespaceIdSystem() {
+		return _freespaceIdSystem;
+	}
+
+	
 	
 }

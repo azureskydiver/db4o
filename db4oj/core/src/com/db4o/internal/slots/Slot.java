@@ -106,4 +106,8 @@ public class Slot {
 		return _address == UPDATE;
 	}
 	
+	public static boolean isNull(Slot slot){
+		return slot == null || slot.isNull();
+	}
+	
 }

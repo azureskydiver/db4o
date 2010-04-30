@@ -33,7 +33,7 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
 		_freeBySize = Tree.add(_freeBySize, node);
 		_listener.slotAdded(node._key);
 	}
-    
+	
 	public Slot allocateTransactionLogSlot(int length) {
 		FreeSlotNode sizeNode = (FreeSlotNode) Tree.last(_freeBySize);
 		if(sizeNode == null || sizeNode._key < length){
@@ -50,8 +50,12 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
 		removeFromBothTrees(sizeNode);
 		return new Slot(sizeNode._peer._key, sizeNode._key);
 	}
+    
+	public Slot allocateSafeSlot(int length) {
+		return allocateSlot(length);
+	}
 	
-	public void freeTransactionLogSlot(Slot slot) {
+	public void freeSafeSlot(Slot slot) {
 		if(Debug4.xbytes){
 			Procedure4<Slot> temp = _slotFreedCallback;
 			_slotFreedCallback = null;
@@ -164,10 +168,6 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
         return TreeInt.marshalledLength((TreeInt)_freeBySize);
     }
 
-    public void read(LocalObjectContainer container, int freeSlotsID) {
-        readById(container, freeSlotsID);
-    }
-
     private void read(ByteArrayBuffer reader) {
         FreeSlotNode.sizeLimit = discardLimit();
         _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
@@ -183,8 +183,8 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
         _freeByAddress = addressTree.value;
     }
     
-    void read(LocalObjectContainer container, Slot slot){
-        if(slot.isNull()){
+    public void read(LocalObjectContainer container, Slot slot){
+        if(Slot.isNull(slot)){
             return;
         }
         ByteArrayBuffer buffer = container.readBufferBySlot(slot);
@@ -197,19 +197,6 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
 		}
     }
     
-    private void readById(LocalObjectContainer container, int freeSlotsID){
-        if (freeSlotsID <= 0){
-            return;
-        }
-        if(discardLimit() == Integer.MAX_VALUE){
-            return;
-        }
-        read(container, container.readPointerSlot(freeSlotsID));
-        if(! Debug4.freespace){
-          container.free(freeSlotsID, Const4.POINTER_LENGTH);
-        }
-    }
-
     private void removeFromBothTrees(FreeSlotNode sizeNode){
         removeFromFreeBySize(sizeNode);
         _freeByAddress = _freeByAddress.removeNode(sizeNode._peer);
@@ -224,7 +211,7 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
         return Tree.size(_freeByAddress);
     }
     
-    public void start(int slotAddress) {
+    public void start(int id) {
         // this is done in read(), nothing to do here
     }
     
@@ -256,20 +243,19 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
         });
     }
 
-    public int write(LocalObjectContainer container){
-        int pointerSlot = container.allocatePointerSlot();
+    public void write(LocalObjectContainer container){
 		Slot slot = container.allocateSlot(marshalledLength());
-		Pointer4 pointer = new Pointer4(pointerSlot, slot); 
-        write(container, pointer);
-        return pointer._id;
-    }
-
-    void write(LocalObjectContainer container, Pointer4 pointer) {
-    	ByteArrayBuffer buffer = new ByteArrayBuffer(pointer.length());
-        TreeInt.write(buffer, (TreeInt)_freeBySize);
-        container.writeEncrypt(buffer, pointer.address(), 0);
-        container.syncFiles();
-        container.writePointer(pointer.id(), pointer._slot);
+		while(slot.length() < marshalledLength()){
+			// This can happen if DatabaseGrowthSize is configured.
+			// Allocating a slot may produce an additional entry
+			// in this FreespaceManager.
+			container.free(slot);
+			slot = container.allocateSlot(marshalledLength());
+		}
+        ByteArrayBuffer buffer = new ByteArrayBuffer(slot.length());
+		TreeInt.write(buffer, (TreeInt)_freeBySize);
+		container.writeEncrypt(buffer, slot.address(), 0);
+		container.systemData().inMemoryFreespaceSlot(slot);
     }
 
     final static class ToStringVisitor implements Visitor4 {

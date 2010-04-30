@@ -696,4 +696,8 @@ public final class Platform4 {
 		jdk().throwIllegalArgumentException(origExc);
 	}
 	
+	public static final byte toSByte(byte b){
+		return b;
+	}
+	
 }

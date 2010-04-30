@@ -28,8 +28,8 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 		return _blockConverter.toNonBlockedLength(slot);
 	}
 
-	public Slot allocateTransactionLogSlot(int length) {
-		Slot slot = _delegate.allocateTransactionLogSlot(_blockConverter.bytesToBlocks(length));
+	public Slot allocateSafeSlot(int length) {
+		Slot slot = _delegate.allocateSafeSlot(_blockConverter.bytesToBlocks(length));
 		if(slot == null){
 			return null;
 		}
@@ -56,8 +56,8 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 		_delegate.freeSelf();
 	}
 
-	public void freeTransactionLogSlot(Slot slot) {
-		_delegate.freeTransactionLogSlot(_blockConverter.toBlockedLength(slot));
+	public void freeSafeSlot(Slot slot) {
+		_delegate.freeSafeSlot(_blockConverter.toBlockedLength(slot));
 		
 	}
 
@@ -69,15 +69,11 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 		throw new IllegalStateException();
 	}
 
-	public void read(LocalObjectContainer container, int freeSpaceID) {
-		throw new IllegalStateException();		
-	}
-
 	public int slotCount() {
 		return _delegate.slotCount();
 	}
 
-	public void start(int slotAddress) {
+	public void start(int id) {
 		throw new IllegalStateException();
 	}
 
@@ -93,8 +89,8 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 		_delegate.traverse(visitor);
 	}
 
-	public int write(LocalObjectContainer container) {
-		return _delegate.write(container);
+	public void write(LocalObjectContainer container) {
+		_delegate.write(container);
 	}
 
 	public void slotFreed(Slot slot) {
@@ -103,6 +99,18 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 
 	public boolean isStarted() {
 		return _delegate.isStarted();
+	}
+
+	public Slot allocateTransactionLogSlot(int length) {
+		Slot slot = _delegate.allocateTransactionLogSlot(_blockConverter.bytesToBlocks(length));
+		if(slot == null){
+			return null;
+		}
+		return _blockConverter.toNonBlockedLength(slot);
+	}
+
+	public void read(LocalObjectContainer container, Slot slot) {
+		throw new IllegalStateException();
 	}
 
 }

@@ -12,11 +12,17 @@ import com.db4o.internal.*;
  */
 public abstract class FileHeader {
     
-    private static final FileHeader[] AVAILABLE_FILE_HEADERS = new FileHeader[]{
+    public static final int TRANSACTION_POINTER_LENGTH = Const4.INT_LENGTH * 2;
+    
+	private static final FileHeader[] AVAILABLE_FILE_HEADERS = new FileHeader[]{
         new FileHeader0(null),
         new FileHeader1(),
         new FileHeader2(),
     };
+	
+	public static NewFileHeaderBase newCurrentFileHeader(){
+		return new FileHeader2();
+	}
     
     private static int readerLength(){
         int length = AVAILABLE_FILE_HEADERS[0].length();
@@ -83,36 +89,35 @@ public abstract class FileHeader {
     
     // TODO: freespaceID should not be passed here, it should be taken from SystemData
     public abstract void writeFixedPart(
-        LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
+        LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize);
     
-    public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2);
+    public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionPointer);
 
-    protected void writeTransactionPointer(Transaction systemTransaction, int transactionPointer1, int transactionPointer2, final int address, final int offset) {
-        StatefulBuffer bytes = new StatefulBuffer(systemTransaction, address, Const4.INT_LENGTH * 2);
+    protected void writeTransactionPointer(Transaction systemTransaction, int transactionPointer, final int address, final int offset) {
+        StatefulBuffer bytes = new StatefulBuffer(systemTransaction, address, TRANSACTION_POINTER_LENGTH);
         bytes.moveForward(offset);
-        bytes.writeInt(transactionPointer1);
-        bytes.writeInt(transactionPointer2);
+        bytes.writeInt(transactionPointer);
+        bytes.writeInt(transactionPointer);
         if (Debug4.xbytes) {
         	bytes.checkXBytes(false);
         }
+        // Dangerous write. 
+        // On corruption transaction pointers will not be the same and nothing will happen.
         bytes.write();
     }
     
-    public abstract void writeVariablePart(LocalObjectContainer file, int part);
-
-    protected final void readClassCollectionAndFreeSpace(LocalObjectContainer file, ByteArrayBuffer reader) {
-        SystemData systemData = file.systemData();
-        systemData.classCollectionID(reader.readInt());
-        systemData.freespaceID(reader.readInt());
+    public void writeVariablePart(LocalObjectContainer file, int part){
+    	writeVariablePart(file, part, false);
     }
+    
+    public abstract void writeVariablePart(LocalObjectContainer file, int part, boolean shuttingDown);
 
-	public static boolean lockedByOtherSession(LocalObjectContainer container, long lastAccessTime) {
+    public static boolean lockedByOtherSession(LocalObjectContainer container, long lastAccessTime) {
 		return container.needsLockFileThread() && ( lastAccessTime != 0);
 	}
 
 	public abstract void readIdentity(LocalObjectContainer container);
 	
-	public abstract Runnable commit();
-    
+	public abstract Runnable commit(boolean shuttingDown);
 
 }

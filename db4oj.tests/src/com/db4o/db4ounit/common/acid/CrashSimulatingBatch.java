@@ -10,10 +10,12 @@ import com.db4o.internal.transactionlog.*;
 
 
 public class CrashSimulatingBatch {
+	
+	private int _counter;
     
-    Collection4 writes = new Collection4();
+    private Collection4 _writes = new Collection4();
     
-    Collection4 currentWrite = new Collection4();
+    private Collection4 _currentWrite = new Collection4();
     
     public void add(String path, byte[] bytes, long offset, int length){
     	byte[] lockFileBuffer = null;
@@ -26,8 +28,11 @@ public class CrashSimulatingBatch {
 				e.printStackTrace();
 			}
     	}
-        CrashSimulatingWrite crashSimulatingWrite = new CrashSimulatingWrite(bytes, offset, length, lockFileBuffer, logFileBuffer);
-		currentWrite.add(crashSimulatingWrite);
+        CrashSimulatingWrite crashSimulatingWrite = new CrashSimulatingWrite(_counter++, bytes, offset, length, lockFileBuffer, logFileBuffer);
+        if(CrashSimulatingTestSuite.VERBOSE){
+        	System.out.println("Recording " + crashSimulatingWrite);
+        }
+		_currentWrite.add(crashSimulatingWrite);
     }
     
     private byte[] readAllBytes(String fileName) throws IOException{
@@ -40,15 +45,15 @@ public class CrashSimulatingBatch {
     }
 
     public void sync() {
-        writes.add(currentWrite);
-        currentWrite = new Collection4();
+        _writes.add(_currentWrite);
+        _currentWrite = new Collection4();
     }
 
     public int numSyncs() {
-    	return writes.size();
+    	return _writes.size();
     }
     
-    public int writeVersions(String file) throws IOException {
+    public int writeVersions(String file, boolean writeTrash) throws IOException {
         
         int count = 0;
         int rcount = 0;
@@ -59,24 +64,24 @@ public class CrashSimulatingBatch {
         
         File4.copy(lastFileName, rightFileName);
                 
-        Iterator4 syncIter = writes.iterator();
+        Iterator4 syncIter = _writes.iterator();
         while(syncIter.moveNext()){
             
             rcount++;
             
             Collection4 writesBetweenSync = (Collection4)syncIter.current();
             
-            if(CrashSimulatingTestCase.VERBOSE){
-                System.out.println("Writing file " + rightFileName + rcount );
+            if(CrashSimulatingTestSuite.VERBOSE){
+                System.out.println("Starting to write file " + rightFileName + rcount );
             }
             
             RandomAccessFile rightRaf = new RandomAccessFile(rightFileName, "rw");
             Iterator4 singleForwardIter = writesBetweenSync.iterator();
             while(singleForwardIter.moveNext()){
                 CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.current();
-                csw.write(rightFileName, rightRaf);
+                csw.write(rightFileName, rightRaf, false);
                 
-                if(CrashSimulatingTestCase.VERBOSE){
+                if(CrashSimulatingTestSuite.VERBOSE){
                     System.out.println(csw);
                 }
                 
@@ -90,8 +95,15 @@ public class CrashSimulatingBatch {
                 String currentFileName = file + "W" + count;
                 File4.copy(lastFileName, currentFileName);
                 
+                if(CrashSimulatingTestSuite.VERBOSE){
+                    System.out.println("Starting to write file " + currentFileName);
+                }
+                
                 RandomAccessFile raf = new RandomAccessFile(currentFileName, "rw");
-                csw.write(currentFileName, raf);
+                if(CrashSimulatingTestSuite.VERBOSE){
+                    System.out.println(csw);
+                }
+                csw.write(currentFileName, raf, writeTrash);
                 raf.close();
                 lastFileName = currentFileName;
             }

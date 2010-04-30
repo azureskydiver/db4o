@@ -11,7 +11,7 @@ public class DelegatingIdSystem implements IdSystem {
 	
 	protected final IdSystem _delegate;
 	
-	public DelegatingIdSystem(LocalObjectContainer container, int idSystemId){
+	public DelegatingIdSystem(LocalObjectContainer container){
 		_delegate = new InMemoryIdSystem(container);
 	}
 
@@ -39,10 +39,6 @@ public class DelegatingIdSystem implements IdSystem {
 
 	public void returnUnusedIds(Visitable<Integer> visitable) {
 		_delegate.returnUnusedIds(visitable);
-	}
-
-	public TransactionalIdSystem freespaceIdSystem() {
-		return _delegate.freespaceIdSystem();
 	}
 
 }

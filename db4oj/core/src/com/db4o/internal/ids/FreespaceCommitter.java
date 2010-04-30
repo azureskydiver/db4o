@@ -4,6 +4,7 @@ package com.db4o.internal.ids;
 
 import java.util.*;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
@@ -14,40 +15,39 @@ public class FreespaceCommitter {
 	
 	public static final FreespaceCommitter DO_NOTHING = new NullFreespaceCommitter();
 	
-	private final List<TransactionalIdSystem> _idSystems = new ArrayList<TransactionalIdSystem>();
+	private final List<Slot> _freeToUserFreespaceSystem = new ArrayList<Slot>();
 	
-	private final List<Slot> _toFree = new ArrayList<Slot>();
-	
+	private final List<Slot> _freeToSystemFreespaceSystem = new ArrayList<Slot>();
+
 	private final FreespaceManager _freespaceManager;
+	
+	private TransactionalIdSystem _transactionalIdSystem;
 	
 	public FreespaceCommitter(FreespaceManager freespaceManager) {
 		_freespaceManager = freespaceManager == null ? NullFreespaceManager.INSTANCE : freespaceManager;
 	}
 	
 	public void commit() {
-		apply();
+		apply(_freeToUserFreespaceSystem);
 		_freespaceManager.beginCommit();
+		
 		_freespaceManager.commit();
-		accumulate(true);
-		apply();
+		
+		_transactionalIdSystem.accumulateFreeSlots(this, true);
+		
+		apply(_freeToSystemFreespaceSystem);
 		_freespaceManager.endCommit();
 	}
 
-	private void apply() {
-		for(Slot slot : _toFree){
+	private void apply(List<Slot> toFree) {
+		for(Slot slot : toFree){
 			_freespaceManager.free(slot);
 		}
-		_toFree.clear();
+		toFree.clear();
 	}
 
-	private void accumulate(boolean forFreespace) {
-		for (TransactionalIdSystem idSystem : _idSystems) {
-			idSystem.accumulateFreeSlots(this, forFreespace);
-		}
-	}
-
-	public void register(TransactionalIdSystem transactionalIdSystem) {
-		_idSystems.add(transactionalIdSystem);
+	public void transactionalIdSystem(TransactionalIdSystem transactionalIdSystem) {
+		_transactionalIdSystem = transactionalIdSystem;
 	}
 	
 	private static class NullFreespaceCommitter extends FreespaceCommitter {
@@ -57,19 +57,18 @@ public class FreespaceCommitter {
 		}
 		
 		@Override
-		public void register(TransactionalIdSystem transactionalIdSystem) {
-			// do nothing
-		}
-		
-		@Override
 		public void commit() {
 			// do nothing
 		}
 		
 	}
 
-	public void delayedFree(Slot slot) {
-		_toFree.add(slot);
+	public void delayedFree(Slot slot, boolean freeToSystemFreeSpaceSystem) {
+		if(freeToSystemFreeSpaceSystem){
+			_freeToSystemFreespaceSystem.add(slot);
+		}else {
+			_freeToUserFreespaceSystem.add(slot);
+		}
 	}
 
 }

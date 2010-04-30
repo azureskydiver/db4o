@@ -88,6 +88,7 @@ public class FileSizeTestCase extends FreespaceManagerTestCaseBase implements Op
         int originalFileSize = databaseFileSize();
         for (int i = 0; i < ITERATIONS; i++) {
             runnable.run();
+            // System.out.println(databaseFileSize());
         }
         Assert.areEqual(originalFileSize, databaseFileSize());
     }

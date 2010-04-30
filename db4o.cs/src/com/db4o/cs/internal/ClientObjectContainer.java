@@ -847,10 +847,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		writeBatchedMessage(msg);
 	}
     
-	public final void writeTransactionPointer(int a_address, int pointer2) {
-		// do nothing
-	}
-
 	public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ArrayType arrayType, ByteArrayBuffer buffer) {
 		MsgD msg = Msg.WRITE_UPDATE.getWriter(trans, pointer, classMetadata, arrayType.value(), buffer);
 		writeBatchedMessage(msg);

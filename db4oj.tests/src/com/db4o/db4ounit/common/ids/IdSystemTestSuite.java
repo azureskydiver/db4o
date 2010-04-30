@@ -124,7 +124,7 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 		}
 
 		private boolean isValid(Slot slot) {
-			return slot != null && !slot.isNull();
+			return ! Slot.isNull(slot);
 		}
 
 		private FreespaceManager freespaceManager() {
@@ -268,13 +268,7 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 							}
 
 							public IdSystem newInstance(LocalObjectContainer container) {
-								final IdSystem idSystem = new InMemoryIdSystem(container);
-								TransactionalIdSystem transactionalIdSystem = container.newTransactionalIdSystem(null, new Closure4<IdSystem>() {
-									public IdSystem run() {
-										return idSystem;
-									}
-								});
-								return new BTreeIdSystem(container, transactionalIdSystem, MAX_VALID_ID);
+								return new BTreeIdSystem(container, new InMemoryIdSystem(container), MAX_VALID_ID);
 							}
 
 							public boolean supportsIdOverflow() {

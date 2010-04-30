@@ -26,11 +26,11 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 				fm[i].free(new Slot(100, 5));
 				fm[i].free(new Slot(140, 27));
 				
-				slot = fm[i].allocateTransactionLogSlot(28);
+				slot = fm[i].allocateSafeSlot(28);
 				Assert.isNull(slot);
 				Assert.areEqual(3, fm[i].slotCount());
 				
-				slot = fm[i].allocateTransactionLogSlot(27);
+				slot = fm[i].allocateSafeSlot(27);
 				Assert.areEqual(2, fm[i].slotCount());
 				Assert.areEqual(new Slot(140, 27), slot);
 			}
