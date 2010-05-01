@@ -26,7 +26,10 @@ public class SimpleCheckSumTestCase implements TestCase{
 	}
 	
 	// If we use more, our Hashtable runs out of memory.
-	private static final int TESTED_BYTE_ARRAY_LENGTH = 1000;
+	
+	// Addition: This was on 1000 but the server build ran out of memory.
+	//           Reducing to 100 for now 
+	private static final int TESTED_BYTE_ARRAY_LENGTH = 100;
 
 	private Hashtable4 _checkSums = new Hashtable4();
 	
