@@ -10,10 +10,6 @@ import com.db4o.query.*;
 
 public class HungaroringDb4o extends Db4oDriver implements HungaroringDriver {
 
-	public HungaroringDb4o(Db4oEngine engine) {
-		super(engine);
-		
-	}
 
 	private static int maximumPayload;
 	

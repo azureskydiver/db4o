@@ -29,10 +29,6 @@ import com.db4o.query.*;
 
 public class SilverstoneDb4o extends Db4oDriver implements SilverstoneDriver{
 	
-	public SilverstoneDb4o(Db4oEngine engine) {
-		super(engine);
-		
-	}
 
 	@Override
 	public void configure(Configuration config) {

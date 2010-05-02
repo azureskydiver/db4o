@@ -28,12 +28,18 @@ public class SilverstoneItem {
     
     private static final String WORKLOAD_TEMPLATE;
     
+    private static final String[] workloads = new String[100]; 
+    
+    
     static{
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < MAXIMUM_WORKLOAD_LENGTH; i++) {
             sb.append("L");
         }
         WORKLOAD_TEMPLATE = sb.toString();
+        for (int i = 0; i < workloads.length; i++) {
+			workloads[i] = WORKLOAD_TEMPLATE.substring(0, i); 
+		}
     }
     
     public int _index;
@@ -47,7 +53,7 @@ public class SilverstoneItem {
     public SilverstoneItem(int i) {
         _index = i;
         int loadLength = i % 100;
-        _workload = WORKLOAD_TEMPLATE.substring(0, loadLength);
+        _workload = workloads[loadLength];
     }
     
     public int getIndex(){

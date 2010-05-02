@@ -40,10 +40,11 @@ import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 import com.db4o.config.*;
+import com.db4o.configurations.*;
 import com.db4o.internal.*;
 import com.db4o.internal.caching.*;
+import com.db4o.internal.config.*;
 import com.db4o.io.*;
-import com.db4o.polepos.continuous.*;
 
 /**
  * Please read the README file in the home directory first.
@@ -54,9 +55,11 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
     private static String JAR_INTCB = "db4o-7.10.103.13376-all-java5.intcb.jar";
 
-    private static String JAR_DEVEL = "db4o-7.10.96.13184-all-java5.jar";
+    private static String JAR_DEVEL = "db4o-8.0.145.14388-all-java5.jar";
     
-    private static String JAR_STABLE = "db4o-7.4.88.12908-java5.jar";
+    private static String JAR_STABLE = "db4o-7.4.136.14268-java5.jar";
+    
+    private static String JAR_PRODUCTION = "db4o-7.12.145.14388-all-java5.jar";
     
     public static void main(String[] arguments) {
         new AllRacesRunner().run();
@@ -72,38 +75,30 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 		return new Team[] {
 				
-				db4oTeam(JAR_TRUNK),
-				db4oTeam(JAR_DEVEL),
-//				db4oTeam(JAR_STABLE),
-//				configuredDb4oTeam(new ConfigurationSetting[] { 
-//				fileBasedTransactionLog(),
-//				}),
+				// db4oTeam(JAR_TRUNK),
 				
-//				configuredDb4oTeam(new ConfigurationSetting[] { 
-//						slotCache(0),
-//						randomAccessFileAdapter(), }),
-//				configuredDb4oTeam(new ConfigurationSetting[] { 
-//						slotCache(30),
-//						randomAccessFileAdapter(), }),
-//				configuredDb4oTeam(new ConfigurationSetting[] { 
-//						slotCache(0),
-//						cachedIoAdapter(), }),
-//				configuredDb4oTeam(new ConfigurationSetting[] { 
-//						slotCache(30),
-//						cachedIoAdapter(), }),
-						
-            
-// configuredDb4oTeam(new ConfigurationSetting[]{
-// cachedIoAdapter()
-// }),
-//            
-
-            
-// db4oTeam(JAR_TRUNK, null),
-// db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER,
-// Db4oOptions.CLIENT_SERVER_TCP }),
+				configuredDb4oTeam(JAR_DEVEL, new BTreeIdSystem()),
+				configuredDb4oTeam(JAR_DEVEL, new BTreeIdSystem(), new BTreeFreespaceManager()),
+				db4oTeam(JAR_DEVEL),
+				configuredDb4oTeam(JAR_DEVEL, new BTreeFreespaceManager()),
+				db4oTeam(JAR_PRODUCTION),
+				configuredDb4oTeam(JAR_PRODUCTION, new BTreeFreespaceManager()),
 		};
 	}
+    
+    private ConfigurationSetting bTreeIdSystem(){
+    	return new ConfigurationSetting() {
+			
+			public String name() {
+				return "BTreeIdSystem";
+			}
+			
+			public void apply(Object config) {
+				Db4oLegacyConfigurationBridge.asIdSystemConfiguration((Config4Impl)config).useBTreeSystem();
+			}
+		};
+    	
+    }
     
     private ConfigurationSetting fileBasedTransactionLog(){
 		return new ConfigurationSetting(){
@@ -185,39 +180,41 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-			 new Melbourne(),
-			 new Sepang(),
-//			 new Bahrain(),
+//			 new Melbourne(),
+//			 new Sepang(),
+			 new Bahrain(),
 //			 new Imola(),
 //			 new Barcelona(),
 //			 new Monaco(),
 //			 new Nurburgring(),
 //			 new Montreal(),
-//			 new Indianapolis(),
+//			 new IndianapolisFast(),
+//			 new IndianapolisMedium(),
+//			 new IndianapolisSlow(),
 //			 new Magnycours(),
-//			 new Silverstone(),
+			 new Silverstone(),
 //			 new Hockenheim(),
 //			 new Hungaroring(),
 //			 new Istanbul(),
 		};
 	}
 
-	public Driver[] drivers(Db4oEngine engine) {
+	public Driver[] drivers() {
 		return new Driver [] {
-			new MelbourneDb4o(engine),
-			new SepangDb4o(engine),
-//			new BahrainDb4o(),
-//			new ImolaDb4o(),
-//			new BarcelonaDb4o(),
-//			new MonacoDb4o(),
-//			new NurburgringDb4o(),
-//			new MontrealDb4o(),
-//			new MagnycoursDb4o(),
-//			new IndianapolisDb4o(),
-//			new SilverstoneDb4o(),
-//			new HockenheimDb4o(),
-//			new HungaroringDb4o(),
-//			new IstanbulDb4o(),
+			new MelbourneDb4o(),
+			new SepangDb4o(),
+			new BahrainDb4o(),
+			new ImolaDb4o(),
+			new BarcelonaDb4o(),
+			new MonacoDb4o(),
+			new NurburgringDb4o(),
+			new MontrealDb4o(),
+			new MagnycoursDb4o(),
+			new IndianapolisDb4o(),
+			new SilverstoneDb4o(),
+			new HockenheimDb4o(),
+			new HungaroringDb4o(),
+			new IstanbulDb4o(),
 		};
 	}
     

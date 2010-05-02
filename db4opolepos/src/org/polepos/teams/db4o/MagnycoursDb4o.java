@@ -31,11 +31,6 @@ import com.db4o.query.*;
 public class MagnycoursDb4o extends Db4oDriver implements
 		MagnycoursDriver {
 
-	
-	public MagnycoursDb4o(Db4oEngine engine) {
-		super(engine);
-		
-	}
 
 	@Override
 	public void configure(Configuration config) {

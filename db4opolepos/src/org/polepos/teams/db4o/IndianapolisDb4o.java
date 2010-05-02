@@ -29,11 +29,6 @@ import com.db4o.query.*;
 
 public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     
-    public IndianapolisDb4o(Db4oEngine engine) {
-		super(engine);
-		
-	}
-
 	private static int maximumPayload;
     
 	@Override
