@@ -51,19 +51,19 @@ public class PerformanceCompetition extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
-	public Driver[] drivers(Db4oEngine engine) {
+	public Driver[] drivers() {
 		return new Driver [] {
-				new MelbourneDb4o(engine),
-		        new SepangDb4o(engine),
-		        new BahrainDb4o(engine),
-		        new ImolaDb4o(engine),
-		        new BarcelonaDb4o(engine),
-		        new MonacoDb4o(engine),
-		        new NurburgringDb4o(engine),
-		        new MontrealDb4o(engine),
-				new MagnycoursDb4o(engine),
-				new IndianapolisDb4o(engine),
-                new SilverstoneDb4o(engine),
+				new MelbourneDb4o(),
+		        new SepangDb4o(),
+		        new BahrainDb4o(),
+		        new ImolaDb4o(),
+		        new BarcelonaDb4o(),
+		        new MonacoDb4o(),
+		        new NurburgringDb4o(),
+		        new MontrealDb4o(),
+				new MagnycoursDb4o(),
+				new IndianapolisDb4o(),
+                new SilverstoneDb4o(),
 		};
 	}
 

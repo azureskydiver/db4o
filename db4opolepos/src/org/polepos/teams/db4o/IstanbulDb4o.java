@@ -29,10 +29,6 @@ import com.db4o.query.*;
 
 public class IstanbulDb4o extends Db4oDriver implements IstanbulDriver {
 	
-	public IstanbulDb4o(Db4oEngine engine) {
-		super(engine);
-		
-	}
 
 	@Override
 	public void configure(Configuration config) {

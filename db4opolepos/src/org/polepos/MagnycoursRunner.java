@@ -44,9 +44,9 @@ public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
 		};
 	}
 
-	public Driver[] drivers(Db4oEngine engine) {
+	public Driver[] drivers() {
 		return new Driver [] {
-				new MagnycoursDb4o(engine),
+				new MagnycoursDb4o(),
 		};
 	}
 	

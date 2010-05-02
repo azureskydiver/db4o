@@ -30,10 +30,6 @@ import com.db4o.config.*;
  */
 public class SepangMultiDb4o extends Db4oDriver implements SepangMultiDriver{
 	
-	public SepangMultiDb4o(Db4oEngine engine) {
-		super(engine);
-		
-	}
 
 	@Override
 	public void configure(Configuration config) {

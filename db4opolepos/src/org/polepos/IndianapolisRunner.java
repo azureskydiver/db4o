@@ -44,9 +44,9 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
 		};
 	}
 
-	public Driver[] drivers(Db4oEngine engine) {
+	public Driver[] drivers() {
 		return new Driver [] {
-				new IndianapolisDb4o(engine),
+				new IndianapolisDb4o(),
 		};
 	}
 	
