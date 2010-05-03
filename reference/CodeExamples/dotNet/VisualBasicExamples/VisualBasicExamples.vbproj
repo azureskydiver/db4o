@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3CAF686B-6504-4D47-95A8-185AAF528CC5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>VisualBasicExamples.Db4oDoc.Drs.Advanced.AdvancedReplicationExamples</StartupObject>
+    <StartupObject>VisualBasicExamples.Db4oDoc.Ta.Example.TransparentActivationExamples</StartupObject>
     <RootNamespace>VisualBasicExamples</RootNamespace>
     <AssemblyName>VisualBasicExamples</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -76,6 +76,9 @@
   <ItemGroup>
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.vb" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.vb" />
+    <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.vb" />
+    <Compile Include="Code\ta\collections\CollectionsExample.vb" />
+    <Compile Include="Code\ta\collections\Team.vb" />
     <Compile Include="Code\ta\example\Person.vb" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

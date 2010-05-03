@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class CanBeEnhanced
+    Private _names As IList(Of String) = New List(Of String)()
+
+    Public Function ContainsName(ByVal item As String) As Boolean
+        Return _names.Contains(item)
+    End Function
+
+    Public Sub AddName(ByVal item As String)
+        _names.Add(item)
+    End Sub
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class CanBeEnhanced
+    Private _names As IList(Of String) = New List(Of String)()
+
+    Public Function ContainsName(ByVal item As String) As Boolean
+        Return _names.Contains(item)
+    End Function
+
+    Public Sub AddName(ByVal item As String)
+        _names.Add(item)
+    End Sub
+End Class</pre>
+		<div class="codesnippet-meta">EnhancementLimitations.vb: Can be enhanced by the db4o-tools<a href="Example-ta-collectionEnhanceIssues-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

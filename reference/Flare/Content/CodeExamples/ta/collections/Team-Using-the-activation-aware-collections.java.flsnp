@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">public class Team  extends AbstractActivatable{ 
+
+    private List&lt;Pilot&gt; pilots = new ActivatableArrayList&lt;Pilot&gt;();
+
+    public boolean add(Pilot pilot) {
+        activate(ActivationPurpose.WRITE);
+        return pilots.add(pilot);
+    }
+
+    public Collection&lt;Pilot&gt; getPilots(){
+        activate(ActivationPurpose.READ);
+        return pilots;
+    }
+}</pre>
+		<div class="codesnippet-meta">Team.java: Using the activation aware collections<a href="Example-ta-collections-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

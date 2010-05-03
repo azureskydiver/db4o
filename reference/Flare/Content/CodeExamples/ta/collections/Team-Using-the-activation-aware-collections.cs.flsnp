@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public class Team : ActivatableBase
+{
+    private readonly IList&lt;Pilot&gt; pilots = new ActivatableList&lt;Pilot&gt;();
+
+    public void Add(Pilot pilot)
+    {
+        Activate(ActivationPurpose.Write);
+        pilots.Add(pilot);
+    }
+
+    public ICollection&lt;Pilot&gt; Pilots
+    {
+        get
+        {
+            Activate(ActivationPurpose.Read);
+            return pilots;
+        }
+    }
+}</pre>
+		<div class="codesnippet-meta">Team.cs: Using the activation aware collections<a href="Example-ta-collections-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

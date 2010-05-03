@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="549" MadCap:lastWidth="522">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="Transparent Activation:Collections" />Collections</h1>
+        <p>In order to support properly, a class need to implement the <MadCap:variable name="Primary.Activatable" />-interface. For your domain-classes this is quite easy to archive. But what about the <MadCap:variable name="Primary.Plattform" />-collections? Wouldn't it be nice if the collections integrate also with the transparent activation framework?</p>
+        <p>db4o brings special, transparent activation aware collections with it. This collections load the content only when the collections is actually used.</p>
+        <p>These collections are currently implemented:</p>
+        <MadCap:snippetBlock src="../../../Snippets/TA_TP_collection_list.flsnp" />
+        <p>It's recommended to use the collection-interfaces wherever possible instead of the concrete classes. This avoids unnecessary direct dependencies on the implementations and makes it easy to swap the implementations.</p>
+        <p>You can use the db4o-collection directly in your code. For example in the case you implement the transparent activation support yourself. Take a looks a few tips: <MadCap:xref href="collections/use_ta_collections.htm" target="" title="" alt="">See "Use the TA collections directly"</MadCap:xref></p>
+        <p>The enhancement tools can automatically replace the <MadCap:variable name="Primary.Plattform" />-collections with the db4o-equivalent. However there are few rules and limitations. <MadCap:xref href="collections/enhance_collections.htm" target="" title="" alt="">See "Enhance Collections"</MadCap:xref></p>
+    </body>
+</html>

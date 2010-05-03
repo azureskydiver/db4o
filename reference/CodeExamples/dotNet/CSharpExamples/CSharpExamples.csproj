@@ -53,6 +53,9 @@
   <ItemGroup>
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.cs" />
+    <Compile Include="Code\ta\collections\CollectionsExample.cs" />
+    <Compile Include="Code\ta\collections\Team.cs" />
     <Compile Include="Code\ta\example\Person.cs" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

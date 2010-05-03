@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class Team
+    Inherits ActivatableBase
+    Private ReadOnly m_pilots As IList(Of Pilot) = New ActivatableList(Of Pilot)()
+
+    Public Sub Add(ByVal pilot As Pilot)
+        Activate(ActivationPurpose.Write)
+        m_pilots.Add(pilot)
+    End Sub
+
+    Public ReadOnly Property Pilots() As ICollection(Of Pilot)
+        Get
+            Activate(ActivationPurpose.Read)
+            Return m_pilots
+        End Get
+    End Property
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class Team
+    Inherits ActivatableBase
+    Private ReadOnly m_pilots As IList(Of Pilot) = New ActivatableList(Of Pilot)()
+
+    Public Sub Add(ByVal pilot As Pilot)
+        Activate(ActivationPurpose.Write)
+        m_pilots.Add(pilot)
+    End Sub
+
+    Public ReadOnly Property Pilots() As ICollection(Of Pilot)
+        Get
+            Activate(ActivationPurpose.Read)
+            Return m_pilots
+        End Get
+    End Property
+End Class</pre>
+		<div class="codesnippet-meta">Team.vb: Using the activation aware collections<a href="Example-ta-collections-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
