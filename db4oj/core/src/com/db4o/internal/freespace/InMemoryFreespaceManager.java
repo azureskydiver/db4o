@@ -151,10 +151,10 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
         int address = node._peer._key;
         _freeByAddress = _freeByAddress.removeNode(node._peer);
         int remainingBlocks = blocksFound - length;
-    	if(canDiscard(remainingBlocks)){
-    		length = blocksFound;
+    	if(splitRemainder(remainingBlocks)){
+    		addFreeSlotNodes(address + length, remainingBlocks);
     	}else{
-    		addFreeSlotNodes(address + length, remainingBlocks);	
+    		length = blocksFound;
     	}
         
         if(DTrace.enabled){

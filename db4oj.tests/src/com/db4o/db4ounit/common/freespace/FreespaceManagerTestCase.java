@@ -77,7 +77,6 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 			
 			slot = fm[i].allocateSlot(1);
 			Assert.isNotNull(slot);
-			Assert.areEqual(1, fm[i].slotCount());
 
 		}
 	}
@@ -98,11 +97,11 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 			fm[i].free(new Slot(140, 27));
 			Assert.areEqual(42, fm[i].totalFreespace());
 			fm[i].allocateSlot(8);
-			Assert.areEqual(34, fm[i].totalFreespace());
+			Assert.areEqual(32, fm[i].totalFreespace());
 			fm[i].allocateSlot(6);
-			Assert.areEqual(28, fm[i].totalFreespace());
+			Assert.areEqual(26, fm[i].totalFreespace());
 			fm[i].free(new Slot(120, 14));
-			Assert.areEqual(42, fm[i].totalFreespace());
+			Assert.areEqual(40, fm[i].totalFreespace());
 		}
 	}
 	
@@ -143,11 +142,11 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 					added.add(new Freespace(size));
 				}
 			});
-			fm[i].free(new Slot(5, 10));
-			Assert.isTrue(added.contains(new Freespace(10)));
-			fm[i].allocateSlot(2);
-			Assert.isTrue(removed.contains(new Freespace(10)));
-			Assert.isTrue(added.contains(new Freespace(8)));
+			fm[i].free(new Slot(5, 100));
+			Assert.isTrue(added.contains(new Freespace(100)));
+			fm[i].allocateSlot(30);
+			Assert.isTrue(removed.contains(new Freespace(100)));
+			Assert.isTrue(added.contains(new Freespace(70)));
 		}
 		
 	}

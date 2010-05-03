@@ -143,7 +143,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 			Slot slot = (Slot) pointer.key();
 			removeSlot(slot);
 			int remainingLength = slot.length() - length;
-			if(! canDiscard(remainingLength)){
+			if(splitRemainder(remainingLength)){
                 addSlot(slot.subSlot(length));
                 slot = slot.truncate(length);
 			}

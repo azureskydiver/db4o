@@ -29,8 +29,8 @@ public class FreespaceManagerDiscardLimitTestCase extends FreespaceManagerTestCa
 			fm[i].free(new Slot(20,15));
 			
 			Slot slot = fm[i].allocateSlot(5);
-			assertSlot(new Slot(20,5), slot);
-			Assert.areEqual(1, fm[i].slotCount());
+			assertSlot(new Slot(20,15), slot);
+			Assert.areEqual(0, fm[i].slotCount());
 			fm[i].free(slot);
 			Assert.areEqual(1, fm[i].slotCount());
 			

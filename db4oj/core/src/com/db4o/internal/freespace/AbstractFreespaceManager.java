@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
 public abstract class AbstractFreespaceManager implements FreespaceManager {
+	
     
     public static final byte FM_DEBUG = 127;
     public static final byte FM_DEFAULT = 0;
@@ -17,6 +18,8 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     public static final byte FM_BTREE = 4;
     
     private static final int INTS_IN_SLOT = 12;
+    
+	private static final int REMAINDER_SIZE_LIMIT = 20; 
     
     public static byte checkType(byte systemType){
         if(systemType == FM_DEFAULT){
@@ -103,9 +106,16 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
 	protected int discardLimit() {
 		return _discardLimit;
 	}
+	
+	protected final boolean splitRemainder(int length){
+		if(canDiscard(length)){
+			return false;
+		}
+		return length > REMAINDER_SIZE_LIMIT;
+	}
     
-    final boolean canDiscard(int blocks) {
-		return blocks == 0 || blocks < discardLimit();
+    final boolean canDiscard(int length) {
+		return length == 0 || length < discardLimit();
 	}
     
     public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
