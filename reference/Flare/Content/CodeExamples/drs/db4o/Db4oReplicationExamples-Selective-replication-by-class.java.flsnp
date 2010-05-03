@@ -2,7 +2,8 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication(Pilot.class);
+        <pre class="prettyprint" xml:space="preserve">ObjectSet changesOnDesktop =
+        replicationSession.providerA().objectsChangedSinceLastReplication(Pilot.class);
 
 for (Object changedObjectOnDesktop : changesOnDesktop) {
     replicationSession.replicate(changedObjectOnDesktop);

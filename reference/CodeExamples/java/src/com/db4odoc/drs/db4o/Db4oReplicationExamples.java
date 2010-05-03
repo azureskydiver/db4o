@@ -94,7 +94,8 @@ public class Db4oReplicationExamples {
         ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
 
         // #example: Selective replication by class
-        ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication(Pilot.class);
+        ObjectSet changesOnDesktop =
+            replicationSession.providerA().objectsChangedSinceLastReplication(Pilot.class);
 
         for (Object changedObjectOnDesktop : changesOnDesktop) {
             replicationSession.replicate(changedObjectOnDesktop);

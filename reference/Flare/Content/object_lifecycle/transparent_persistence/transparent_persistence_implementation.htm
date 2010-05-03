@@ -32,8 +32,8 @@ following:</p>
 Activation, so it is strongly recommended to study the <a href="../activation/transparent_activation_framework.htm">Transparent Activation</a> documentation first.</p>
         <p>In order to make use of Transparent Persistence you will
 need:</p>
-        <ul>
-            <ol>
+        <ol>
+            
                 <li>Enable
       Transparent Activation (required for binding object instances to the TP
       framework) on the database level: 
@@ -49,8 +49,8 @@ need:</p>
       <p MadCap:conditions="Primary.Java,Primary.All languages"> Java: 
       <code>activate(ActivationPurpose.WRITE)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET 
       <code>Activate(ActivationPurpose.Write)</code></p><p MadCap:conditions="Primary:net" /></li>
-            </ol>
-        </ul>
+            
+        </ol>
         <p>Note that TransparentPersistenceSupport configuration implicitly adds TransparentActivationSupport. The fact is, that before
 modification each field object should be loaded into the reference cache and
 that is the job of TA. So TA should be utilized in any case before TP. You can also note that the way TA and TP links into objects is absolutely identical: TP also uses

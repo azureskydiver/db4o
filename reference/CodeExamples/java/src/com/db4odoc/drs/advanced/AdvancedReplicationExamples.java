@@ -48,10 +48,14 @@ public class AdvancedReplicationExamples {
                     public void onReplicate(ReplicationEvent replicationEvent) {
                         ObjectState stateInDesktop = replicationEvent.stateInProviderA();
                         if (stateInDesktop.isNew()) {
-                            System.out.println("Object '" + stateInDesktop.getObject() + "' is new on desktop database");
+                            System.out.println("Object '"
+                                    + stateInDesktop.getObject()
+                                    + "' is new on desktop database");
                         }
                         if (stateInDesktop.wasModified()) {
-                            System.out.println("Object '" + stateInDesktop.getObject() + "' was modified on desktop database");
+                            System.out.println("Object '"
+                                    + stateInDesktop.getObject()
+                                    + "' was modified on desktop database");
                         }
                     }
                 });
@@ -78,13 +82,13 @@ public class AdvancedReplicationExamples {
         // #example: Deal with conflicts
         ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase,
                 new ReplicationEventListener() {
-            public void onReplicate(ReplicationEvent replicationEvent) {
-                if (replicationEvent.isConflict()) {
-                    ObjectState stateOfTheDesktop = replicationEvent.stateInProviderA();
-                    replicationEvent.overrideWith(stateOfTheDesktop);
-                }
-            }
-        });
+                    public void onReplicate(ReplicationEvent replicationEvent) {
+                        if (replicationEvent.isConflict()) {
+                            ObjectState stateOfTheDesktop = replicationEvent.stateInProviderA();
+                            replicationEvent.overrideWith(stateOfTheDesktop);
+                        }
+                    }
+                });
         // #end example
 
         replicateBidirectional(replicationSession);
@@ -109,19 +113,19 @@ public class AdvancedReplicationExamples {
         // #example: Take latest change
         ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase,
                 new ReplicationEventListener() {
-            public void onReplicate(ReplicationEvent replicationEvent) {
-                if (replicationEvent.isConflict()) {
-                    ObjectState stateOfTheDesktop = replicationEvent.stateInProviderA();
-                    ObjectState stateOfTheMobile = replicationEvent.stateInProviderB();
+                    public void onReplicate(ReplicationEvent replicationEvent) {
+                        if (replicationEvent.isConflict()) {
+                            ObjectState stateDesktop = replicationEvent.stateInProviderA();
+                            ObjectState stateMobile = replicationEvent.stateInProviderB();
 
-                    if (stateOfTheDesktop.modificationDate() >= stateOfTheMobile.modificationDate()) {
-                        replicationEvent.overrideWith(stateOfTheDesktop);
-                    } else {
-                        replicationEvent.overrideWith(stateOfTheMobile);
+                            if (stateDesktop.modificationDate() >= stateMobile.modificationDate()) {
+                                replicationEvent.overrideWith(stateDesktop);
+                            } else {
+                                replicationEvent.overrideWith(stateMobile);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
         // #end example
 
         replicateBidirectional(replicationSession);
@@ -146,9 +150,12 @@ public class AdvancedReplicationExamples {
             serverDbConnection.commit();
 
             // The replication starts here
-            ObjectContainer connectionForReplication = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-            ReplicationSession replicationSession = Replication.begin(connectionForReplication, mobileDatabase);
-            ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
+            ObjectContainer connectionForReplication
+                    = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
+            ReplicationSession replicationSession
+                    = Replication.begin(connectionForReplication, mobileDatabase);
+            ObjectSet changesOnDesktop
+                    = replicationSession.providerA().objectsChangedSinceLastReplication();
 
             // during the replication other clients store data on the server
             serverDbConnection.store(new Pilot("Pilot 2"));
@@ -170,9 +177,12 @@ public class AdvancedReplicationExamples {
 
 
         {
-            ObjectContainer connectionForReplication = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-            ReplicationSession replicationSession = Replication.begin(connectionForReplication, mobileDatabase);
-            ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
+            ObjectContainer connectionForReplication
+                    = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
+            ReplicationSession replicationSession
+                    = Replication.begin(connectionForReplication, mobileDatabase);
+            ObjectSet changesOnDesktop
+                    = replicationSession.providerA().objectsChangedSinceLastReplication();
             for (Object changedOnDesktop : changesOnDesktop) {
                 replicationSession.replicate(changedOnDesktop);
             }

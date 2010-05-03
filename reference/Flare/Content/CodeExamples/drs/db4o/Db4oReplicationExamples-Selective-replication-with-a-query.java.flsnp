@@ -8,7 +8,7 @@
     }
 });
 
-for (Car changedObjectOnDesktop  : changesOnDesktop) {
+for (Car changedObjectOnDesktop : changesOnDesktop) {
     replicationSession.replicate(changedObjectOnDesktop);
 }
 

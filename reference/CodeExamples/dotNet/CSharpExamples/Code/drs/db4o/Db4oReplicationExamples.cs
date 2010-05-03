@@ -99,7 +99,8 @@ namespace Db4oDoc.Drs.Db4o
             IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
 
             // #example: Selective replication by class
-            IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSinceLastReplication(typeof (Pilot));
+            IObjectSet changesOnDesktop = 
+                replicationSession.ProviderA().ObjectsChangedSinceLastReplication(typeof (Pilot));
 
             foreach (object changedObjectOnDesktop in changesOnDesktop)
             {
