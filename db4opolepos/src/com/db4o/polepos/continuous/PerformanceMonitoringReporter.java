@@ -47,7 +47,7 @@ public class PerformanceMonitoringReporter implements Reporter {
 			long otherValue) {
 		long diff = currentValue - otherValue;
 		double percentageValue = (diff * 100D) / otherValue;
-		System.err.println(currentTeamResult.getCircuit().name() +"/" + currentTeamResult.getLap().name() + ": " + String.format("%.2f", percentageValue) + "% (" + otherValue + " vs " + currentValue);
+		System.err.println(currentTeamResult.getCircuit().name() +"/" + currentTeamResult.getLap().name() + ": " + String.format("%.2f", percentageValue) + "% (" + otherValue + " vs " + currentValue +")");
 		
 		if(!_strategy.acceptableDiff(currentValue, otherValue)) {
 			_report.add(
@@ -134,6 +134,7 @@ public class PerformanceMonitoringReporter implements Reporter {
 		}
 
 		public void add(Result result) {
+//			System.out.println(result.getTeam().name() + ", " + result.getCircuit().name() + ", "  + result.getLap().name() + ", " + result.getIndex());
 			if(_currentTeamName.equals(result.getTeam().name())) {
 				if(_currentTeamResult != null) {
 					throw new IllegalStateException();
