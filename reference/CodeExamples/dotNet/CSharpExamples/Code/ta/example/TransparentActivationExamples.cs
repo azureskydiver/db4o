@@ -12,15 +12,56 @@ namespace Db4oDoc.Ta.Example
 
         public static void Main(string[] args)
         {
+            TransparentActivationExample();
+            TransparentPersistenceExample();
+        }
+
+        private static void TransparentActivationExample()
+        {
             CleanUp();
 
-            // #example: Transparent persistence in action
-            using (IObjectContainer container = OpenDatabase())
+            // #example: Transparent activation in action
+            using (IObjectContainer container = OpenDatabaseTA())
             {
                 Person person = Person.PersonWithHistory();
                 container.Store(person);
             }
-            using (IObjectContainer container = OpenDatabase())
+            using (IObjectContainer container = OpenDatabaseTA())
+            {
+                Person person = QueryByName(container, "Joanna the 10");
+                Person beginOfDynasty = person.Mother;
+
+                // With transparent activation enabled, you can navigate deeply
+                // nested object graphs. db4o will ensure that the objects
+                // are loaded from the database.
+                while (null != beginOfDynasty.Mother)
+                {
+                    beginOfDynasty = beginOfDynasty.Mother;
+                }
+                Console.WriteLine(beginOfDynasty.Name);
+
+                // Updating a object doesn't requires no store call.
+                // Just change the objects and the call commit.
+                beginOfDynasty.Name = "New Name";
+                container.Commit();
+            }
+            // #end example
+
+            CleanUp();
+        }
+
+
+        private static void TransparentPersistenceExample()
+        {
+            CleanUp();
+
+            // #example: Transparent persistence in action
+            using (IObjectContainer container = OpenDatabaseTP())
+            {
+                Person person = Person.PersonWithHistory();
+                container.Store(person);
+            }
+            using (IObjectContainer container = OpenDatabaseTP())
             {
                 Person person = QueryByName(container, "Joanna the 10");
                 Person beginOfDynasty = person.Mother;
@@ -39,7 +80,7 @@ namespace Db4oDoc.Ta.Example
                 beginOfDynasty.Name = "New Name";
                 container.Commit();
             }
-            using (IObjectContainer container = OpenDatabase())
+            using (IObjectContainer container = OpenDatabaseTP())
             {
                 Person person = QueryByName(container, "New Name");
                 // The changes are stored, due to transparent persistence
@@ -60,11 +101,20 @@ namespace Db4oDoc.Ta.Example
             return container.Query(delegate(Person p) { return p.Name.Equals(name); })[0];
         }
 
-        private static IObjectContainer OpenDatabase()
+        private static IObjectContainer OpenDatabaseTP()
+        {
+            // #example: Activate transparent persistence
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.Add(new TransparentPersistenceSupport());
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFileName);
+            // #end example
+            return container;
+        }
+        private static IObjectContainer OpenDatabaseTA()
         {
             // #example: Activate transparent activation
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.Common.Add(new TransparentPersistenceSupport());
+            configuration.Common.Add(new TransparentActivationSupport());
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFileName);
             // #end example
             return container;

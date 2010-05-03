@@ -2,15 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using container As IObjectContainer = OpenDatabaseTP()
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using container As IObjectContainer = OpenDatabaseTA()
     Dim joanna As Person = Person.PersonWithHistory()
     container.Store(joanna)
 End Using
-Using container As IObjectContainer = OpenDatabaseTP()
+Using container As IObjectContainer = OpenDatabaseTA()
     Dim joanna As Person = QueryByName(container, &quot;Joanna the 10&quot;)
     Dim beginOfDynasty As Person = joanna.Mother
 
-    ' With transparent persistence enabled, you can navigate deeply
+    ' With transparent activation enabled, you can navigate deeply
     ' nested object graphs. db4o will ensure that the objects
     ' are loaded from the database.
     While beginOfDynasty.Mother IsNot Nothing
@@ -22,21 +22,16 @@ Using container As IObjectContainer = OpenDatabaseTP()
     ' Just change the objects and the call commit.
     beginOfDynasty.Name = &quot;New Name&quot;
     container.Commit()
-End Using
-Using container As IObjectContainer = OpenDatabaseTP()
-    Dim joanna As Person = QueryByName(container, &quot;New Name&quot;)
-    ' The changes are stored, due to transparent persistence
-    Console.WriteLine(joanna.Name)
 End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using container As IObjectContainer = OpenDatabaseTP()
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using container As IObjectContainer = OpenDatabaseTA()
     Dim joanna As Person = Person.PersonWithHistory()
     container.Store(joanna)
 End Using
-Using container As IObjectContainer = OpenDatabaseTP()
+Using container As IObjectContainer = OpenDatabaseTA()
     Dim joanna As Person = QueryByName(container, &quot;Joanna the 10&quot;)
     Dim beginOfDynasty As Person = joanna.Mother
 
-    ' With transparent persistence enabled, you can navigate deeply
+    ' With transparent activation enabled, you can navigate deeply
     ' nested object graphs. db4o will ensure that the objects
     ' are loaded from the database.
     While beginOfDynasty.Mother IsNot Nothing
@@ -48,13 +43,8 @@ Using container As IObjectContainer = OpenDatabaseTP()
     ' Just change the objects and the call commit.
     beginOfDynasty.Name = &quot;New Name&quot;
     container.Commit()
-End Using
-Using container As IObjectContainer = OpenDatabaseTP()
-    Dim joanna As Person = QueryByName(container, &quot;New Name&quot;)
-    ' The changes are stored, due to transparent persistence
-    Console.WriteLine(joanna.Name)
 End Using</pre>
-		<div class="codesnippet-meta">TransparentActivationExamples.vb: Transparent persistence in action<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">TransparentActivationExamples.vb: Transparent activation in action<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>
 	</div>
 

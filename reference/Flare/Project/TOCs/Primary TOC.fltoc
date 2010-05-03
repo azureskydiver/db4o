@@ -345,6 +345,9 @@
         Title="Transparent Activation Framework"
         Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm">
         <TocEntry
+          Title="Example"
+          Link="/Content/object_lifecycle/activation/transparent_activation_framework/detailed_example.htm" />
+        <TocEntry
           Title="TA Implementation"
           Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_implementation.htm" />
         <TocEntry
@@ -359,6 +362,10 @@
             Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.htm"
             conditions="Primary.All languages,Primary.Java"></TocEntry>
           <TocEntry
+            Title="Transparent Persistence For Java Collections"
+            Link="/Content/object_lifecycle/activation/transparent_activation_framework/transparent_persistence_for_java_collections.htm"
+            conditions="Primary.Java" />
+          <TocEntry
             Title="TA Enhancement With db4otool"
             Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_with_db4otool.htm"
             conditions="Primary..NET,Primary.All languages" />
@@ -368,11 +375,15 @@
             conditions="Primary.All languages,Primary.Java" />
         </TocEntry>
         <TocEntry
-          Title="Detailed Example"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/detailed_example.htm" />
-        <TocEntry
-          Title="Collection Example"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/collection_example.htm" />
+          Title="Collections"
+          Link="/Content/object_lifecycle/activation/transparent_activation_framework/Collections.htm">
+          <TocEntry
+            Title="Using TA Collections Directly"
+            Link="/Content/object_lifecycle/activation/transparent_activation_framework/collections/use_ta_collections.htm" />
+          <TocEntry
+            Title="Enhance Collections"
+            Link="/Content/object_lifecycle/activation/transparent_activation_framework/collections/enhance_collections.htm" />
+        </TocEntry>
         <TocEntry
           Title="Object Types In TA"
           Link="/Content/object_lifecycle/activation/transparent_activation_framework/object_types_in_ta.htm"></TocEntry>
@@ -406,7 +417,7 @@
         </TocEntry>
       </TocEntry>
       <TocEntry
-        Title="Collection Example"
+        Title="Collections"
         Link="/Content/object_lifecycle/transparent_persistence/collection_example.htm"></TocEntry>
     </TocEntry>
     <TocEntry

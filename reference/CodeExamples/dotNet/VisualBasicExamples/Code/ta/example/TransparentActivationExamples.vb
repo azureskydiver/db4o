@@ -9,14 +9,50 @@ Namespace Db4oDoc.Ta.Example
         Private Const DatabaseFileName As String = "database.db4o"
 
         Public Shared Sub Main(ByVal args As String())
+            TransparentActivationExample()
+            TransparentPersistenceExample()
+        End Sub
+
+        Private Shared Sub TransparentActivationExample()
             CleanUp()
 
-            ' #example: Transparent persistence in action
-            Using container As IObjectContainer = OpenDatabase()
+            ' #example: Transparent activation in action
+            Using container As IObjectContainer = OpenDatabaseTA()
                 Dim joanna As Person = Person.PersonWithHistory()
                 container.Store(joanna)
             End Using
-            Using container As IObjectContainer = OpenDatabase()
+            Using container As IObjectContainer = OpenDatabaseTA()
+                Dim joanna As Person = QueryByName(container, "Joanna the 10")
+                Dim beginOfDynasty As Person = joanna.Mother
+
+                ' With transparent activation enabled, you can navigate deeply
+                ' nested object graphs. db4o will ensure that the objects
+                ' are loaded from the database.
+                While beginOfDynasty.Mother IsNot Nothing
+                    beginOfDynasty = beginOfDynasty.Mother
+                End While
+                Console.WriteLine(beginOfDynasty.Name)
+
+                ' Updating a object doesn't requires no store call.
+                ' Just change the objects and the call commit.
+                beginOfDynasty.Name = "New Name"
+                container.Commit()
+            End Using
+            ' #end example
+
+            CleanUp()
+        End Sub
+
+
+        Private Shared Sub TransparentPersistenceExample()
+            CleanUp()
+
+            ' #example: Transparent persistence in action
+            Using container As IObjectContainer = OpenDatabaseTP()
+                Dim joanna As Person = Person.PersonWithHistory()
+                container.Store(joanna)
+            End Using
+            Using container As IObjectContainer = OpenDatabaseTP()
                 Dim joanna As Person = QueryByName(container, "Joanna the 10")
                 Dim beginOfDynasty As Person = joanna.Mother
 
@@ -33,10 +69,10 @@ Namespace Db4oDoc.Ta.Example
                 beginOfDynasty.Name = "New Name"
                 container.Commit()
             End Using
-            Using container As IObjectContainer = OpenDatabase()
-                Dim personWithNewName As Person = QueryByName(container, "New Name")
+            Using container As IObjectContainer = OpenDatabaseTP()
+                Dim joanna As Person = QueryByName(container, "New Name")
                 ' The changes are stored, due to transparent persistence
-                Console.WriteLine(personWithNewName.Name)
+                Console.WriteLine(joanna.Name)
             End Using
             ' #end example
 
@@ -51,10 +87,18 @@ Namespace Db4oDoc.Ta.Example
             Return container.Query(Function(p As Person) p.Name.Equals(name))(0)
         End Function
 
-        Private Shared Function OpenDatabase() As IObjectContainer
-            ' #example: Activate transparent activation
+        Private Shared Function OpenDatabaseTP() As IObjectContainer
+            ' #example: Activate transparent persistence
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             configuration.Common.Add(New TransparentPersistenceSupport())
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFileName)
+            ' #end example
+            Return container
+        End Function
+        Private Shared Function OpenDatabaseTA() As IObjectContainer
+            ' #example: Activate transparent activation
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.Add(New TransparentActivationSupport())
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFileName)
             ' #end example
             Return container

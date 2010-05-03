@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public class CanBeEnhanced
+{
+    private IList&lt;string&gt; _names = new List&lt;string&gt;();
+
+    public bool ContainsName(string item)
+    {
+        return _names.Contains(item);
+    }
+
+    public void AddName(string item)
+    {
+        _names.Add(item);
+    }
+}</pre>
+		<div class="codesnippet-meta">EnhancementLimitations.cs: Is enhanced to<a href="Example-ta-collectionEnhanceIssues-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
