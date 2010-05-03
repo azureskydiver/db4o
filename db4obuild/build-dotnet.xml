@@ -140,7 +140,7 @@
 	</target>
 	
 	<target name="run-tests-core" depends="build-core">
-		<exec taskname="core.net" executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
+		<exec taskname="core.net" executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="7200000">
 			<env key="TEMP" value="${Tests.Temp.Path}"/>
 		</exec>
 	</target>
