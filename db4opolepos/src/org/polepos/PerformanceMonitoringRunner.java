@@ -59,6 +59,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
 	private final Db4oJarCollection _jarCollection;
 	private final PerformanceMonitoringReporter[] _reporters;
+	private final File[] _libPaths;
 	
     public static void main(String[] args) {
     	System.setProperty(Circuit.NUM_RUNS_PROPERTY_ID, String.valueOf(NUM_RUNS));
@@ -117,6 +118,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     public PerformanceMonitoringRunner(int[] selectedIndices, File fixedFolder, File[] libPaths) {
     	List<FileSource> sources = new ArrayList<FileSource>();
     	
+    	_libPaths = libPaths;
     	for (File libPath : libPaths) {
 			sources.add(new FolderFileSource(libPath));
 		}
@@ -193,4 +195,8 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
     
+	@Override
+	protected File[] libPaths() {
+		return _libPaths;
+	}
 }
