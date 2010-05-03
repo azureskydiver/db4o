@@ -7,10 +7,14 @@
             public void onReplicate(ReplicationEvent replicationEvent) {
                 ObjectState stateInDesktop = replicationEvent.stateInProviderA();
                 if (stateInDesktop.isNew()) {
-                    System.out.println(&quot;Object '&quot; + stateInDesktop.getObject() + &quot;' is new on desktop database&quot;);
+                    System.out.println(&quot;Object '&quot;
+                            + stateInDesktop.getObject()
+                            + &quot;' is new on desktop database&quot;);
                 }
                 if (stateInDesktop.wasModified()) {
-                    System.out.println(&quot;Object '&quot; + stateInDesktop.getObject() + &quot;' was modified on desktop database&quot;);
+                    System.out.println(&quot;Object '&quot;
+                            + stateInDesktop.getObject()
+                            + &quot;' was modified on desktop database&quot;);
                 }
             }
         });</pre>

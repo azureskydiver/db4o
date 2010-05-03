@@ -118,8 +118,10 @@ namespace Db4oDoc.Drs.Advanced
                 serverDbConnection.Commit();
 
                 // The replication starts here
-                IObjectContainer connectionForReplication = Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
-                IReplicationSession replicationSession = Replication.Begin(connectionForReplication, mobileDatabase);
+                IObjectContainer connectionForReplication = 
+                    Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
+                IReplicationSession replicationSession = 
+                    Replication.Begin(connectionForReplication, mobileDatabase);
                 IObjectSet changesOnDesktop = 
                     replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
 
@@ -143,10 +145,12 @@ namespace Db4oDoc.Drs.Advanced
 
 
             {
-                IObjectContainer connectionForReplication = Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
+                IObjectContainer connectionForReplication =
+                    Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
                 IReplicationSession replicationSession =
                     Replication.Begin(connectionForReplication, mobileDatabase);
-                IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
+                IObjectSet changesOnDesktop = 
+                    replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
                 foreach (object changedOnDesktop in changesOnDesktop)
                 {
                     replicationSession.Replicate(changedOnDesktop);

@@ -31,7 +31,7 @@
     <Variable
       Name="Primary/Activatable">IActivatable</Variable>
     <Variable
-      Name="Primary/getter/setter">properties</Variable>
+      Name="Primary/getter/setter">property</Variable>
     <Variable
       Name="Primary/Ant">MSBuild</Variable>
     <Variable

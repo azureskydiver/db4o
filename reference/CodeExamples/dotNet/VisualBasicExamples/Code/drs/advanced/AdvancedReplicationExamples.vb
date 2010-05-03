@@ -116,7 +116,8 @@ Namespace Db4oDoc.Drs.Advanced
                 ' The replication starts here
                 Dim connectionForReplication As IObjectContainer = _
                     Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-                Dim replicationSession As IReplicationSession = Replication.Begin(connectionForReplication, mobileDatabase)
+                Dim replicationSession As IReplicationSession = _
+                    Replication.Begin(connectionForReplication, mobileDatabase)
                 Dim changesOnDesktop As IObjectSet = _
                     replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
 

@@ -13,9 +13,12 @@ ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
     serverDbConnection.commit();
 
     // The replication starts here
-    ObjectContainer connectionForReplication = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-    ReplicationSession replicationSession = Replication.begin(connectionForReplication, mobileDatabase);
-    ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
+    ObjectContainer connectionForReplication
+            = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
+    ReplicationSession replicationSession
+            = Replication.begin(connectionForReplication, mobileDatabase);
+    ObjectSet changesOnDesktop
+            = replicationSession.providerA().objectsChangedSinceLastReplication();
 
     // during the replication other clients store data on the server
     serverDbConnection.store(new Pilot(&quot;Pilot 2&quot;));
@@ -37,9 +40,12 @@ printPilots(mobileDatabase);
 
 
 {
-    ObjectContainer connectionForReplication = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-    ReplicationSession replicationSession = Replication.begin(connectionForReplication, mobileDatabase);
-    ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
+    ObjectContainer connectionForReplication
+            = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
+    ReplicationSession replicationSession
+            = Replication.begin(connectionForReplication, mobileDatabase);
+    ObjectSet changesOnDesktop
+            = replicationSession.providerA().objectsChangedSinceLastReplication();
     for (Object changedOnDesktop : changesOnDesktop) {
         replicationSession.replicate(changedOnDesktop);
     }

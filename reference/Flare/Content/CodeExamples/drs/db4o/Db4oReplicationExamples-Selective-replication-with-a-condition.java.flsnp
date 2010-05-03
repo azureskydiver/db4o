@@ -9,7 +9,7 @@ for (Object changedObjectOnDesktop : changesOnDesktop) {
         if (((Car) changedObjectOnDesktop).getName().startsWith(&quot;M&quot;)) {
             replicationSession.replicate(changedObjectOnDesktop);
         }
-    }            
+    }
 }
 
 replicationSession.commit();</pre>
