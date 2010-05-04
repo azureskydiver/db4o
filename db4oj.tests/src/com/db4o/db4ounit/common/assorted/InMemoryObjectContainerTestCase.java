@@ -32,7 +32,7 @@ public class InMemoryObjectContainerTestCase implements TestLifeCycle{
         
     }
     
-    public void testSizeIncrement(){
+    public void _testSizeIncrement(){
         int lastSize = fileSize();
         for (int i = 0; i < STORED_ITEMS; i++) {
             objectContainer.store(new Item());

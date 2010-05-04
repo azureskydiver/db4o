@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.config.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.internal.fileheader.*;
 
 import db4ounit.*;
@@ -34,6 +35,7 @@ public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements 
 	protected void configure(Configuration config) throws Exception {
 		config.databaseGrowthSize(SIZE);
 		config.blockSize(3);
+		Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).usePointerBasedSystem();
 	}
 	
 	public void test(){

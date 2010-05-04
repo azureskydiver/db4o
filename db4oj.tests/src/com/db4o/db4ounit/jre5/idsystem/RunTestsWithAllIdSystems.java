@@ -30,7 +30,7 @@ public class RunTestsWithAllIdSystems implements TestSuiteBuilder {
 
 		};
 
-		System.exit(suite.runSolo());
+		System.exit(suite.runAll());
 	}
 
 	public Iterator4 iterator() {

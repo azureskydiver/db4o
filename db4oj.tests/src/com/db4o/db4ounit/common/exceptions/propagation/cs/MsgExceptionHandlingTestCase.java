@@ -13,6 +13,7 @@ import com.db4o.db4ounit.common.cs.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.io.*;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -74,7 +75,7 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 			}
 		}
 		
-		public void syncAllowed(boolean isAllowed) {
+		public synchronized void syncAllowed(boolean isAllowed) {
 			_syncAllowed = isAllowed;
 		}
 		
@@ -82,7 +83,7 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 			return _illegalSyncInvocation;
 		}
 		
-		public void notifySyncInvocation() {
+		public synchronized void notifySyncInvocation() {
 			if(!_syncAllowed) {
 				_illegalSyncInvocation = true;
 			}
@@ -146,6 +147,12 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 
 	private void assertNonRecoverableExceptionForMessage(
 			MsgD message, Throwable throwable) {
+		
+		// Make sure the ClassMetadata of the exception is in the
+		// ObjectContainer otherwise we get side effects from producing it.
+		ReflectClass reflectClass = client().reflector().forClass(throwable.getClass());
+		client().produceClassMetadata(reflectClass);
+
 		_storage.syncAllowed(false);
 		client().write(message.getWriterForSingleObject(trans(), throwable));
 		assertDatabaseClosedException();

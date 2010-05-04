@@ -7,6 +7,7 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
@@ -55,17 +56,19 @@ public class FreespaceManagerTypeChangeSlotCountTestCase extends TestWithTempFil
     }
 
     private void createDatabaseUsingRamManager() {
-        configureRamManager();
+        configureRamFreespaceManager();
         open();
     }
     
     private void createDatabaseUsingBTreeManager() {
-        configureBTreeManager();
+        configureBTreeFreespaceManager();
         open();
     }
 
     private void open() {
-        _container = (LocalObjectContainer)Db4o.openFile(_currentConfig.run(), tempFile());
+        Configuration config = _currentConfig.run();
+        Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).usePointerBasedSystem();
+		_container = (LocalObjectContainer)Db4o.openFile(config, tempFile());
     }
 
     private void createFreeSpace() {
@@ -75,12 +78,12 @@ public class FreespaceManagerTypeChangeSlotCountTestCase extends TestWithTempFil
 
     private void migrateToBTree() throws Exception {
         _container.close();
-        configureBTreeManager();
+        configureBTreeFreespaceManager();
         open();
     }
 
 
-    private void configureBTreeManager() {
+    private void configureBTreeFreespaceManager() {
     	_currentConfig = new Closure4<Configuration>() { public Configuration run() {
          	final Configuration config = Db4o.newConfiguration();
          	config.freespace().useBTreeSystem();
@@ -90,12 +93,12 @@ public class FreespaceManagerTypeChangeSlotCountTestCase extends TestWithTempFil
     
     private void migrateToRam() throws Exception {
         _container.close();
-        configureRamManager();
+        configureRamFreespaceManager();
         open();
     }
 
 
-    private void configureRamManager() {
+    private void configureRamFreespaceManager() {
         _currentConfig = new Closure4<Configuration>() { public Configuration run() {
         	final Configuration config = Db4o.newConfiguration();
         	config.freespace().useRamSystem();
