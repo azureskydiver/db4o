@@ -33,23 +33,36 @@ public class ObjectUpdateFileSizeTestCase extends AbstractDb4oTestCase implement
 	}
 
 	private void assertFileSizeConstant() throws Exception {
-		defragment();
+		
 		long beforeUpdate = dbSize();
-		for (int i = 0; i < 15; ++i) {
-			updateItem();
+		
+		for (int j = 0; j < 10; j++) {
+			
+			defragment();
+			
+			for (int i = 0; i < 15; ++i) {
+				updateItem();
+			}
+			defragment();
+			long afterUpdate = dbSize();
+			
+			/*
+			 * FIXME: the database file size is uncertain? 
+			 * We met similar problem before.
+			 */
+			Assert.isTrue(afterUpdate - beforeUpdate < 30);
 		}
-		defragment();
-		long afterUpdate = dbSize();
-		/*
-		 * FIXME: the database file size is uncertain? 
-		 * We met similar problem before.
-		 */
-		Assert.isTrue(afterUpdate - beforeUpdate < 2);
+		
+		
 	}
 
 	private void warmUp() throws Exception, IOException {
-		for (int i = 0; i < 3; ++i) {
-			updateItem();
+		for (int j = 0; j < 3; j++) {
+			for (int i = 0; i < 3; ++i) {
+				updateItem();
+				db().commit();
+			}
+			defragment();
 		}
 	}
 

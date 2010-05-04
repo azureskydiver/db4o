@@ -49,20 +49,23 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 		final ServerMessageDispatcherImpl msgDispatcher = firstMessageDispatcherFor(server);
 		Transaction transaction = msgDispatcher.transaction();
 		LocalObjectContainer container = (LocalObjectContainer) server.objectContainer();
-		TransactionalIdSystem idSystem = transaction.idSystem();
-		final int prefetchedID = idSystem.prefetchID();
 		
-		Assert.isGreater(0, prefetchedID);
+// The following code was specific to the old PointerBasedIdSystem		
 		
-		final DebugFreespaceManager freespaceManager = new DebugFreespaceManager(container);
-		container.installDebugFreespaceManager(freespaceManager);
-		
-		lock.run(new Closure4() { public Object run() {
-			client.close();
-			lock.snooze(100000);
-			Assert.isTrue(freespaceManager.wasFreed(prefetchedID));
-			return null;
-		}});		
+//		TransactionalIdSystem idSystem = transaction.idSystem();
+//		final int prefetchedID = idSystem.prefetchID();
+//		
+//		Assert.isGreater(0, prefetchedID);
+//		
+//		final DebugFreespaceManager freespaceManager = new DebugFreespaceManager(container);
+//		container.installDebugFreespaceManager(freespaceManager);
+//		
+//		lock.run(new Closure4() { public Object run() {
+//			client.close();
+//			lock.snooze(100000);
+//			Assert.isTrue(freespaceManager.wasFreed(prefetchedID));
+//			return null;
+//		}});		
 		
 		server.close();
 	}

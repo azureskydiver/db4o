@@ -15,9 +15,9 @@ public class StandardIdSystemFactory {
 	
 	public static final byte POINTER_BASED = 1;
 	
-	public static final byte DEFAULT = POINTER_BASED;
-	
 	public static final byte STACKED_BTREE = 2;
+	
+	public static final byte DEFAULT = STACKED_BTREE;
 	
 	public static final byte IN_MEMORY = 3;
 	
