@@ -301,7 +301,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		}
 
 		@Override
-		public Class<?> requiredDriver() {
+		public Class<? extends Driver> requiredDriver() {
 			return null;
 		}
 	}
