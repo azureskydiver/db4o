@@ -77,12 +77,20 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				
 				// db4oTeam(JAR_TRUNK),
 				
-				configuredDb4oTeam(JAR_DEVEL, new BTreeIdSystem()),
-				configuredDb4oTeam(JAR_DEVEL, new BTreeIdSystem(), new BTreeFreespaceManager()),
-				db4oTeam(JAR_DEVEL),
-				configuredDb4oTeam(JAR_DEVEL, new BTreeFreespaceManager()),
+				configuredDb4oTeam(JAR_DEVEL),
+				configuredDb4oTeam(JAR_DEVEL, new SingleBTreeIdSystem()),
+				configuredDb4oTeam(JAR_DEVEL, new PointerBasedIdSystem()),
+				
 				db4oTeam(JAR_PRODUCTION),
-				configuredDb4oTeam(JAR_PRODUCTION, new BTreeFreespaceManager()),
+				
+				// configuredDb4oTeam(JAR_PRODUCTION, new BTreeFreespaceManager()),
+				
+				db4oTeam(JAR_STABLE),
+				
+				db4oTeam(JAR_DEVEL, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
+				db4oTeam(JAR_PRODUCTION, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
+				db4oTeam(JAR_STABLE, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
+				
 		};
 	}
     
@@ -94,7 +102,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 			}
 			
 			public void apply(Object config) {
-				Db4oLegacyConfigurationBridge.asIdSystemConfiguration((Config4Impl)config).useBTreeSystem();
+				Db4oLegacyConfigurationBridge.asIdSystemConfiguration((Config4Impl)config).useStackedBTreeSystem();
 			}
 		};
     	
@@ -180,22 +188,22 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-//			 new Melbourne(),
-//			 new Sepang(),
+			 new Melbourne(),
+			 new Sepang(),
 			 new Bahrain(),
-//			 new Imola(),
-//			 new Barcelona(),
-//			 new Monaco(),
-//			 new Nurburgring(),
-//			 new Montreal(),
-//			 new IndianapolisFast(),
-//			 new IndianapolisMedium(),
-//			 new IndianapolisSlow(),
-//			 new Magnycours(),
+			 new Imola(),
+			 new Barcelona(),
+			 new Monaco(),
+			 new Nurburgring(),
+			 new Montreal(),
+			 new IndianapolisFast(),
+			 new IndianapolisMedium(),
+			 new IndianapolisSlow(),
+			 new Magnycours(),
 			 new Silverstone(),
-//			 new Hockenheim(),
-//			 new Hungaroring(),
-//			 new Istanbul(),
+			 new Hockenheim(),
+			 new Hungaroring(),
+			 new Istanbul(),
 		};
 	}
 
