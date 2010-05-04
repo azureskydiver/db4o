@@ -13,9 +13,21 @@ public interface IdSystemConfiguration {
 	public void usePointerBasedSystem();
 	
 	/**
-	 * configures db4o to use a BTree based ID system.
+	 * configures db4o to use a stack of two BTreeIdSystems on 
+	 * top of an InMemoryIdSystem. This setup is scalable for
+	 * large numbers of IDs. It is the default configuration
+	 * when new databases are created.
 	 */
-	public void useBTreeSystem();
+	public void useStackedBTreeSystem();
+	
+	
+	/**
+	 * configures db4o to use a single BTreeIdSystem on
+	 * top of an InMemoryIdSystem. This setup is suitable for 
+	 * smaller databases with a small number of IDs.
+	 * For larger numbers of IDs call {@link #useStackedBTreeSystem()}.
+	 */
+	public void useSingleBTreeSystem();
 	
 	
 	/**

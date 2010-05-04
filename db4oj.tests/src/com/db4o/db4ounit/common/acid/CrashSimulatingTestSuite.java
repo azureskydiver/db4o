@@ -53,7 +53,7 @@ public class CrashSimulatingTestSuite  extends FixtureBasedTestSuite{
 						@Override
 						public void configure(Config4Impl config) {
 							
-							Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).useBTreeSystem();
+							Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).useStackedBTreeSystem();
 							// Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).useInMemorySystem();
 							// Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).usePointerBasedSystem();
 						}
@@ -94,7 +94,7 @@ public class CrashSimulatingTestSuite  extends FixtureBasedTestSuite{
 					new LabeledConfig("BTreeIdSystem"){
 						@Override
 						public void configure(Config4Impl config) {
-							Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).useBTreeSystem();
+							Db4oLegacyConfigurationBridge.asIdSystemConfiguration(config).useStackedBTreeSystem();
 						}
 					},
 					new LabeledConfig("InMemoryIdSystem"){

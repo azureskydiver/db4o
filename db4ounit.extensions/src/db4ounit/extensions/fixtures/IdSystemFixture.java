@@ -16,7 +16,7 @@ public class IdSystemFixture extends Db4oSolo {
 	 }
 	
 	public IdSystemFixture() {		
-		_idSystemType = StandardIdSystemFactory.BTREE;
+		_idSystemType = StandardIdSystemFactory.STACKED_BTREE;
 	}
 	
     protected ObjectContainer createDatabase(Configuration config) {
@@ -26,8 +26,8 @@ public class IdSystemFixture extends Db4oSolo {
 	    	case StandardIdSystemFactory.POINTER_BASED:
 	    		embeddedConfiguration.idSystem().usePointerBasedSystem();
 	    		break;
-	    	case StandardIdSystemFactory.BTREE:
-	    		embeddedConfiguration.idSystem().useBTreeSystem();
+	    	case StandardIdSystemFactory.STACKED_BTREE:
+	    		embeddedConfiguration.idSystem().useStackedBTreeSystem();
 	    		break;
 	    	case StandardIdSystemFactory.IN_MEMORY:
 	    		embeddedConfiguration.idSystem().useInMemorySystem();
@@ -48,7 +48,7 @@ public class IdSystemFixture extends Db4oSolo {
 	    	case StandardIdSystemFactory.POINTER_BASED:
 	    		idSystemType = "PointerBased";
 	    		break;
-	    	case StandardIdSystemFactory.BTREE:
+	    	case StandardIdSystemFactory.STACKED_BTREE:
 	    		idSystemType = "BTree";
 	    		break;
 	    	case StandardIdSystemFactory.IN_MEMORY:

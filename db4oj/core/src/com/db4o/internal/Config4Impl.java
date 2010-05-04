@@ -1168,8 +1168,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.POINTER_BASED);		
 	}
 
-	public void useBTreeIdSystem() {
-		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.BTREE);
+	public void useStackedBTreeIdSystem() {
+		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.STACKED_BTREE);
+	}
+	
+	public void useSingleBTreeIdSystem() {
+		_config.put(ID_SYSTEM_KEY,StandardIdSystemFactory.SINGLE_BTREE);
 	}
 	
 	public byte idSystemType() {

@@ -264,7 +264,7 @@ public class IdSystemTestSuite extends FixtureBasedTestSuite {
 						}, new IdSystemProvider() {
 							public void apply(
 									IdSystemConfiguration idSystemConfiguration) {
-								idSystemConfiguration.useBTreeSystem();
+								idSystemConfiguration.useStackedBTreeSystem();
 							}
 
 							public IdSystem newInstance(LocalObjectContainer container) {
