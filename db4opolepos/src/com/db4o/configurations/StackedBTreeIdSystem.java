@@ -7,14 +7,14 @@ import org.polepos.framework.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
 
-public class BTreeIdSystem implements ConfigurationSetting {
+public class StackedBTreeIdSystem implements ConfigurationSetting {
 
 	public String name() {
-		return "BTreeIdSystem";
+		return "StackedBTreeIdSystem";
 	}
 	
 	public void apply(Object config) {
-		Db4oLegacyConfigurationBridge.asIdSystemConfiguration((Config4Impl)config).useBTreeSystem();
+		Db4oLegacyConfigurationBridge.asIdSystemConfiguration((Config4Impl)config).useStackedBTreeSystem();
 	}
 
 }

@@ -20,8 +20,8 @@ public class IdSystemConfigurationImpl implements IdSystemConfiguration {
 		_config.usePointerBasedIdSystem();
 	}
 	
-	public void useBTreeSystem() {
-		_config.useBTreeIdSystem();
+	public void useStackedBTreeSystem() {
+		_config.useStackedBTreeIdSystem();
 	}
 
 	public void useInMemorySystem() {
@@ -31,6 +31,11 @@ public class IdSystemConfigurationImpl implements IdSystemConfiguration {
 
 	public void useCustomSystem(IdSystemFactory factory) {
 		_config.useCustomIdSystem(factory);
+	}
+
+	public void useSingleBTreeSystem() {
+		_config.useSingleBTreeIdSystem();
+		
 	}
 
 }

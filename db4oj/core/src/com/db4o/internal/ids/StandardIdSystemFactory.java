@@ -17,11 +17,13 @@ public class StandardIdSystemFactory {
 	
 	public static final byte DEFAULT = POINTER_BASED;
 	
-	public static final byte BTREE = 2;
+	public static final byte STACKED_BTREE = 2;
 	
 	public static final byte IN_MEMORY = 3;
 	
 	public static final byte CUSTOM = 4;
+	
+	public static final byte SINGLE_BTREE = 5;
 
 	public static IdSystem newInstance(LocalObjectContainer localContainer) {
 		SystemData systemData = localContainer.systemData();
@@ -32,16 +34,16 @@ public class StandardIdSystemFactory {
 	    		return new PointerBasedIdSystem(localContainer);
 	    	case POINTER_BASED:
 	    		return new PointerBasedIdSystem(localContainer);
-			case BTREE:
+			case STACKED_BTREE:
 				InMemoryIdSystem inMemoryIdSystem = new InMemoryIdSystem(localContainer);
 				BTreeIdSystem bTreeIdSystem = new BTreeIdSystem(localContainer, inMemoryIdSystem);
 				systemData.freespaceIdSystem(bTreeIdSystem.freespaceIdSystem());
-				
-				// TODO: implement small BTree as optional configuration
-				// return bTreeIdSystem;
-				
 				return new BTreeIdSystem(localContainer, bTreeIdSystem);
-				
+			case SINGLE_BTREE:
+				InMemoryIdSystem smallInMemoryIdSystem = new InMemoryIdSystem(localContainer);
+				BTreeIdSystem smallBTreeIdSystem = new BTreeIdSystem(localContainer, smallInMemoryIdSystem);
+				systemData.freespaceIdSystem(smallBTreeIdSystem.freespaceIdSystem());
+				return smallBTreeIdSystem;
 	    	case IN_MEMORY:
 	    		return new InMemoryIdSystem(localContainer);
 	    	case CUSTOM:

@@ -17,7 +17,7 @@ public class BTreeBasedCar extends IdSystemCar {
 //	}
 
 	public void configure(IdSystemConfiguration config) {
-		config.useBTreeSystem();
+		config.useStackedBTreeSystem();
 	}
 
 }
