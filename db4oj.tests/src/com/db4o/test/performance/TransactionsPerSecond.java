@@ -5,12 +5,36 @@ package com.db4o.test.performance;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 
 public class TransactionsPerSecond {
     
     public static void main(String[] args) {
-        new TransactionsPerSecond().run();
+    	new TransactionsPerSecond().run(pointerBasedIdSystem());
+    	new TransactionsPerSecond().run(stackedBTreeSystem());
+    	new TransactionsPerSecond().run(singleBTreeSystem());
     }
+
+	private static EmbeddedConfiguration pointerBasedIdSystem() {
+		System.out.println("PointerBasedIdSystem");
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    	config.idSystem().usePointerBasedSystem();
+		return config;
+	}
+	
+	private static EmbeddedConfiguration stackedBTreeSystem() {
+		System.out.println("StackedBTreeSystem");
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    	config.idSystem().useStackedBTreeSystem();
+		return config;
+	}
+	
+	private static EmbeddedConfiguration singleBTreeSystem() {
+		System.out.println("SingleBTreeSystem");
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    	config.idSystem().useSingleBTreeSystem();
+		return config;
+	}
     
     public static class Item{
         public int _int;
@@ -25,14 +49,11 @@ public class TransactionsPerSecond {
     
     private static final long TOTAL_COUNT = 5000;
     
-    public void run(){
-        
-        // This switch will make a big difference:
-        Db4o.configure().flushFileBuffers(false);
+    public void run(EmbeddedConfiguration config){
         
         new File(FILE).delete();
         
-        ObjectContainer objectContainer = Db4o.openFile(FILE).ext();
+        ObjectContainer objectContainer = Db4oEmbedded.openFile(config, FILE).ext();
         
         long start = System.currentTimeMillis();
         
