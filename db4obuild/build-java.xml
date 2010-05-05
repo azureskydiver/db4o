@@ -735,7 +735,7 @@
 			<dir path="${dir.dist.classes.osgi}" />
 			<!-- bloat packages are hardwired in template --> 
 		</listPackages>
-		<copy tofile="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF" file="${file.osgi.manifest}.TM" overwrite="true">
+		<copy tofile="${file.osgi.manifest.filtered}" file="${file.osgi.manifest}.TM" overwrite="true">
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="db4o.osgi.exported.packages" value="${db4o.osgi.exported.packages}"/>
@@ -1105,7 +1105,7 @@
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
-		<copy tofile="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest}.TM" overwrite="true">
+		<copy tofile="${file.osgi.test.manifest.filtered}" file="${file.osgi.test.manifest}.TM" overwrite="true">
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oTestActivator"/>
@@ -1782,6 +1782,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
+				<include name="**/lib/**/decaf-annotations.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.j.cs}">
@@ -1810,6 +1811,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="src/**/*.java" />
+				<include name="lib/easymock/*" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.j.tests}">
@@ -1884,7 +1886,7 @@
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
-		<copy tofile="${dir.dist.java.src}/${name.project.osgi}/META-INF/MANIFEST.MF" file="${file.osgi.manifest}.TM">
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi}/META-INF/MANIFEST.MF" file="${file.osgi.manifest.filtered}">
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
@@ -1910,7 +1912,7 @@
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
-		<copy tofile="${dir.dist.java.src}/${name.project.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest}.TM">
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest.filtered}">
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oWorkspaceActivator"/>
