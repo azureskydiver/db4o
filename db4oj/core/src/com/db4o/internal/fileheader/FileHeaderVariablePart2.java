@@ -143,7 +143,7 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
         int checkSumEndOffSet = buffer.offset();
         byte[] bytes = buffer._buffer;
         int length = checkSumEndOffSet - checkSumBeginOffset;
-        long checkSum = SimpleCheckSum.checkSum(bytes, checkSumBeginOffset, length);
+        long checkSum = CRC32.checkSum(bytes, checkSumBeginOffset, length);
         buffer.seek(checkSumOffset);
         buffer.writeLong(checkSum);
         buffer.seek(checkSumEndOffSet);
@@ -172,7 +172,7 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
 		long readCheckSum = buffer.readLong();
 		int checkSumBeginOffset = buffer.offset();
 		byte[] bytes = buffer._buffer;
-		long calculatedCheckSum = SimpleCheckSum.checkSum(bytes, checkSumBeginOffset, length);
+		long calculatedCheckSum = CRC32.checkSum(bytes, checkSumBeginOffset, length);
 		buffer.seek(initialOffSet);
 		return calculatedCheckSum == readCheckSum;
     }
