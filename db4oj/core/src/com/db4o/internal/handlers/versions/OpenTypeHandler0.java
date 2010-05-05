@@ -86,22 +86,17 @@ public class OpenTypeHandler0 extends OpenTypeHandler2 {
 	private int copyDependentSlot(DefragmentContext context, int sourceId) {
 		try {
 			ByteArrayBuffer sourceBuffer = context.sourceBufferById(sourceId);
-			Slot targetPointerSlot = context.allocateMappedTargetSlot(sourceId, Const4.POINTER_LENGTH);
 			Slot targetPayloadSlot = context.allocateTargetSlot(sourceBuffer.length());
-			ByteArrayBuffer pointerBuffer = new ByteArrayBuffer(Const4.POINTER_LENGTH);
-			pointerBuffer.writeInt(targetPayloadSlot.address());
-			pointerBuffer.writeInt(targetPayloadSlot.length());
-			context.targetWriteBytes(targetPointerSlot.address(), pointerBuffer);
-
+			int targetId = context.services().targetNewId();
+			context.services().mapIDs(sourceId, targetId, false);
+			context.services().mapping().mapId(targetId, targetPayloadSlot);
 			DefragmentContextImpl payloadContext = new DefragmentContextImpl(sourceBuffer, (DefragmentContextImpl) context);
-
 			int clazzId = payloadContext.copyIDReturnOriginalID();
 			TypeHandler4 payloadHandler = payloadContext.typeHandlerForId(clazzId);
 			TypeHandler4 versionedPayloadHandler = HandlerRegistry.correctHandlerVersion(payloadContext, payloadHandler);
 			versionedPayloadHandler.defragment(payloadContext);
-			
 			payloadContext.writeToTarget(targetPayloadSlot.address());
-			return targetPointerSlot.address();
+			return targetId;
 		}
 		catch (IOException ioexc) {
 			throw new Db4oIOException(ioexc);
