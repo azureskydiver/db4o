@@ -79,4 +79,9 @@ public class MemoryBin implements Bin {
 		}
 	}
 	
+	public void sync(Runnable runnable) {
+		runnable.run();
+	}
+
+	
 }

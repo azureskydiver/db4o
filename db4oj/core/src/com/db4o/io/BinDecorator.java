@@ -61,4 +61,8 @@ public class BinDecorator implements Bin {
     	_bin.write(position, bytes, bytesToWrite);
     }
 
+	public void sync(Runnable runnable) {
+		_bin.sync(runnable);
+	}
+
 }

@@ -52,6 +52,12 @@ class CountingStorage extends StorageDecorator {
 			}
 			
 			@Override
+			public void sync(Runnable runnable) {
+				++_numberOfSyncCalls;
+				super.sync(runnable);
+			}
+			
+			@Override
 			public int read(long position, byte[] bytes, int bytesToRead) {
 				int bytesRead = super.read(position, bytes, bytesToRead);
 				_numberOfBytesRead += bytesRead;

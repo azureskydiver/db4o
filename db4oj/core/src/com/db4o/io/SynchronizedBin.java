@@ -44,4 +44,11 @@ public class SynchronizedBin extends BinDecorator {
 			super.sync();
 		}
 	}
+	
+	@Override
+	public void sync(Runnable runnable) {
+		synchronized(_bin) {
+			super.sync(runnable);
+		}
+	}
 }

@@ -42,6 +42,13 @@ public class MockBin extends MethodCallRecorder implements Bin {
 	public void returnValueForNextCall(int value) {
 		_returnValue = value;
     }
+	
+	public void sync(Runnable runnable) {
+		sync();
+		runnable.run();
+		sync();
+	}
+
 
 
 }

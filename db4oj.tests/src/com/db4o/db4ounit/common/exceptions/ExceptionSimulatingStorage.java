@@ -68,6 +68,14 @@ public class ExceptionSimulatingStorage extends StorageDecorator {
 			} 
 			_bin.sync();
 		}
+		
+		@Override
+		public void sync(Runnable runnable) {
+			if (triggersException()) {
+				_exceptionFactory.throwException();
+			}
+			_bin.sync(runnable);
+		}
 
 		public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
 			if (triggersException()) {

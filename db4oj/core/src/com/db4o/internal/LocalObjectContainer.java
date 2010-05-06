@@ -673,6 +673,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     public abstract void syncFiles();
+    
+    public abstract void syncFiles(Runnable runnable);
 
     protected String defaultToString() {
         return fileName();

@@ -10,9 +10,24 @@ import com.db4o.config.*;
 public class TransactionsPerSecond {
     
     public static void main(String[] args) {
-    	new TransactionsPerSecond().run(pointerBasedIdSystem());
-    	new TransactionsPerSecond().run(stackedBTreeSystem());
-    	new TransactionsPerSecond().run(singleBTreeSystem());
+		gc();
+		new TransactionsPerSecond().run(pointerBasedIdSystem());
+		gc();
+		new TransactionsPerSecond().run(stackedBTreeSystem(false));
+		gc();
+		new TransactionsPerSecond().run(singleBTreeSystem(false));
+		gc();
+		new TransactionsPerSecond().run(stackedBTreeSystem(true));
+		gc();
+		new TransactionsPerSecond().run(singleBTreeSystem(true));
+    	
+    }
+    
+    public static void gc(){
+    	for (int i = 0; i < 10; i++) {
+    		System.gc();
+    		System.runFinalization();
+		}
     }
 
 	private static EmbeddedConfiguration pointerBasedIdSystem() {
@@ -22,20 +37,32 @@ public class TransactionsPerSecond {
 		return config;
 	}
 	
-	private static EmbeddedConfiguration stackedBTreeSystem() {
-		System.out.println("StackedBTreeSystem");
+	private static EmbeddedConfiguration stackedBTreeSystem(boolean asynchronousSync) {
+		print("StackedBTreeSystem", asynchronousSync);
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
     	config.idSystem().useStackedBTreeSystem();
+    	if(asynchronousSync){
+    		config.file().asynchronousSync(true);
+    	}
 		return config;
 	}
 	
-	private static EmbeddedConfiguration singleBTreeSystem() {
-		System.out.println("SingleBTreeSystem");
+	private static EmbeddedConfiguration singleBTreeSystem(boolean asynchronousSync) {
+		print("SingleBTreeSystem", asynchronousSync);
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
     	config.idSystem().useSingleBTreeSystem();
+    	if(asynchronousSync){
+    		config.file().asynchronousSync(true);
+    	}
 		return config;
 	}
     
+	private static void print(String systemType, boolean asynchronousSync) {
+		String syncType = asynchronousSync ? "asynchronous sync" : "serialized sync";
+		String msg = systemType + " " + syncType;
+		System.out.println(msg);
+	}
+	
     public static class Item{
         public int _int;
         public Item(){

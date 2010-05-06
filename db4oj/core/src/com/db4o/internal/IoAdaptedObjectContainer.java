@@ -37,7 +37,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 
     protected final void openImpl() throws OldFormatException,
 			DatabaseReadOnlyException {
-		final Storage storage = configImpl().storage();
+		Config4Impl configImpl = configImpl();
+		final Storage storage = configImpl.storage();
 		boolean isNew = !storage.exists(fileName());
 		if (isNew) {
 			logMsg(14, fileName());
@@ -45,20 +46,24 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 			_handlers.oldEncryptionOff();
 		}
 		
-		boolean readOnly = configImpl().isReadOnly();
-		boolean lockFile = Debug4.lockFile && configImpl().lockFile()
+		boolean readOnly = configImpl.isReadOnly();
+		boolean lockFile = Debug4.lockFile && configImpl.lockFile()
 				&& (!readOnly);
 		if (needsLockFileThread()) {
 			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false));
 			Bin synchronizedBin = new SynchronizedBin(fileBin);
 			_file = new BlockAwareBin(synchronizedBin);
 		} else {
-			_file = new BlockAwareBin(storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly)));	
+			Bin bin = storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly));
+			if(configImpl.asynchronousSync()){
+				bin = new ThreadedSyncBin(bin);
+			}
+			_file = new BlockAwareBin(bin);	
 		}
 		if (isNew) {
 			configureNewFile();
-			if (configImpl().reservedStorageSpace() > 0) {
-				reserve(configImpl().reservedStorageSpace());
+			if (configImpl.reservedStorageSpace() > 0) {
+				reserve(configImpl.reservedStorageSpace());
 			}
 			commitTransaction();
 			writeHeader(true, false);
@@ -247,6 +252,10 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
     public void syncFiles() {
         _file.sync();
     }
+    
+	public void syncFiles(Runnable runnable){
+		_file.sync(runnable);
+	}
 
     public void writeBytes(ByteArrayBuffer buffer, int blockedAddress, int addressOffset) {
 		if (Deploy.debug && !Deploy.flush) {
