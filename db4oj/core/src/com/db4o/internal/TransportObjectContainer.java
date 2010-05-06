@@ -343,6 +343,10 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	public Runnable commitHook() {
 		return Runnable4.DO_NOTHING;
 	}
+	
+	public void syncFiles(Runnable runnable){
+		runnable.run();
+	}
 
 
 }

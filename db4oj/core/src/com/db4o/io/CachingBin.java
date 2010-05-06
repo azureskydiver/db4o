@@ -115,6 +115,17 @@ class CachingBin extends BinDecorator {
 	}
 	
 	@Override
+	public void sync(final Runnable runnable) {
+		flushAllPages();
+		super.sync(new Runnable() {
+			public void run() {
+				runnable.run();
+				flushAllPages();
+			}
+		});
+	}
+	
+	@Override
 	public int syncRead(long position, byte[] bytes, int bytesToRead) {
 		return readInternal(position, bytes, bytesToRead, true);
 	}

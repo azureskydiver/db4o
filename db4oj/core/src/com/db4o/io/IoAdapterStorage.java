@@ -70,6 +70,13 @@ public class IoAdapterStorage implements Storage {
 		public void onEvent(Integer event) {
 			blockSize(event);
 		}
+		
+		public void sync(Runnable runnable) {
+			sync();
+			runnable.run();
+			sync();
+		}
+
 	}
 
 	public void delete(String uri) throws IOException {

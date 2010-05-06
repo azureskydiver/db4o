@@ -69,4 +69,9 @@ class FileConfigurationImpl implements FileConfiguration {
 	public void recoveryMode(boolean flag) {
 		_config.recoveryMode(flag);
 	}
+
+	public void asynchronousSync(boolean flag) {
+		_config.asynchronousSync(flag);
+		
+	}
 }

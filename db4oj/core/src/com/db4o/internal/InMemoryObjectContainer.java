@@ -154,4 +154,9 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 	protected void fatalStorageShutdown() {
 		shutdownDataStorage();
 	}
+	
+	public void syncFiles(Runnable runnable){
+		runnable.run();
+	}
+
 }

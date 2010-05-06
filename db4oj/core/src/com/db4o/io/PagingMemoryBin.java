@@ -106,4 +106,9 @@ class PagingMemoryBin implements Bin {
 	private int pageOffset(long pos) {
 		return (int)(pos % _pageSize);
 	}
+	
+	public void sync(Runnable runnable) {
+		runnable.run();
+	}
+
 }

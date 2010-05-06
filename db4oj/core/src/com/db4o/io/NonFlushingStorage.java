@@ -28,6 +28,13 @@ public class NonFlushingStorage extends StorageDecorator {
 		@Override
 		public void sync() {
 		}
+		
+		@Override
+		public void sync(Runnable runnable) {
+			runnable.run();
+		}
+		
+		
 	}
 
 }

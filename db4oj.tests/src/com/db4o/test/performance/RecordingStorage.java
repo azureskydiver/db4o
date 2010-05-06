@@ -72,6 +72,12 @@ public class RecordingStorage extends StorageDecorator {
 			super.sync();
 		}
 		
+		@Override
+		public void sync(Runnable runnable) {
+			writeLogChar('f');
+			super.sync(runnable);
+		}
+		
 		private void writeLog(char type, long pos, int length)
 				throws Db4oIOException {
 			try {

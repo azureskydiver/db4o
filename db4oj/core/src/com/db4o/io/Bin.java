@@ -40,6 +40,12 @@ public interface Bin {
 	
 	
 	/**
+	 * runs the Runnable between two calls to sync();
+	 */
+	void sync(Runnable runnable);
+	
+	
+	/**
 	 * reads a given number of bytes into an array of bytes at an 
 	 * offset position. In contrast to the normal {@link #read(long, byte[], int)}
 	 * method, the Bin should ensure direct access to the raw storage medium.

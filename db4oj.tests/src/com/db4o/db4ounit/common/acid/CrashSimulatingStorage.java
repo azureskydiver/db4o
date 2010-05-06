@@ -59,6 +59,17 @@ public class CrashSimulatingStorage extends StorageDecorator {
 	        super.sync();
 	        _batch.sync();
 	    }
+	    
+	    @Override
+	    public void sync(final Runnable runnable) {
+	    	super.sync(new Runnable() {
+				public void run() {
+					_batch.sync();
+					runnable.run();
+				}
+			});
+	    	_batch.sync();
+	    }
     
     }
 }

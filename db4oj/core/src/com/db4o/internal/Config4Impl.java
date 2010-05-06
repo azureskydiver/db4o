@@ -48,6 +48,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec UPDATE_DEPTH_PROVIDER_KEY=new KeySpec(new LegacyUpdateDepthProvider());
     
 	private final static KeySpec ALLOW_VERSION_UPDATES_KEY=new KeySpec(false);
+	
+	private final static KeySpec ASYNCHRONOUS_SYNC = new KeySpec(false);
 
     private final static KeySpec AUTOMATIC_SHUTDOWN_KEY=new KeySpec(true);
 
@@ -1191,6 +1193,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	public IdSystemFactory customIdSystemFactory(){
 		return (IdSystemFactory) _config.get(ID_SYSTEM_CUSTOM_FACTORY_KEY);
+	}
+
+	public void asynchronousSync(boolean flag) {
+		_config.put(ASYNCHRONOUS_SYNC, flag);
+	}
+	
+	public boolean asynchronousSync(){
+		return _config.getAsBoolean(ASYNCHRONOUS_SYNC);
 	}
 
 }

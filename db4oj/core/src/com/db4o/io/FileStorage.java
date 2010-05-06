@@ -124,6 +124,12 @@ public class FileStorage implements Storage {
 				throw new Db4oIOException();
 			}
 		}
+
+		public void sync(Runnable runnable) {
+			sync();
+			runnable.run();
+			sync();
+		}
 	}
 
 	public void delete(String uri) throws IOException {

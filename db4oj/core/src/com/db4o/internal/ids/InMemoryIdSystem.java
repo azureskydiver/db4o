@@ -141,9 +141,9 @@ public class InMemoryIdSystem implements StackableIdSystem {
 		_container.writeBytes(buffer, _slot.address(), 0);
 		_container.systemData().idSystemSlot(_slot);
 		Runnable commitHook = _container.commitHook();
-		_container.syncFiles();
-		commitHook.run();
-		_container.syncFiles();
+		
+		_container.syncFiles(commitHook);
+		
 		freeSlot(reservedSlot);
 		
 		if(Debug4.xbytes){

@@ -36,6 +36,12 @@ public class MonitoredStorage extends StorageDecorator {
 		}
 		
 		@Override
+		public void sync(Runnable runnable) {
+			super.sync(runnable);
+			_ioMBean.notifySync();
+		}
+		
+		@Override
 		public int read(long position, byte[] bytes, int bytesToRead) {
 			int bytesRead = super.read(position, bytes, bytesToRead);
 			_ioMBean.notifyBytesRead(bytesRead);

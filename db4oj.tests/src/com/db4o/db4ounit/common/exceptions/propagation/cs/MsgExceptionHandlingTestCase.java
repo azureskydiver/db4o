@@ -42,6 +42,13 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 			super.sync();
 			_storage.notifySyncInvocation();
 		}
+		
+		@Override
+		public void sync(Runnable runnable) {
+			super.sync(runnable);
+			_storage.notifySyncInvocation();
+		}
+		
 	}
 	
 	private static class CloseAwareStorage extends StorageDecorator {

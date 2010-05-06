@@ -157,6 +157,17 @@ public class BlockAwareBin extends BinDecorator {
 			throw e;
 		}
 	}
+	
+	@Override
+	public void sync(Runnable runnable) {
+		validateReadOnly();
+		try{
+			super.sync(runnable);
+		} catch(Db4oIOException e){
+			_readOnly = true;
+			throw e;
+		}
+	}
 
 	/**
 	 * writes a buffer to the seeked address

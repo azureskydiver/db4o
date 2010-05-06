@@ -15,13 +15,13 @@ public class Lock4 {
 
     public void snooze(long timeout) {
     	try {
-            this.wait(timeout);
+            wait(timeout);
         } catch (Exception e) {
         }
         
     }
 
     public void awake() {
-    	this.notifyAll();
+    	notifyAll();
     }
 }
