@@ -7,6 +7,8 @@ import com.db4o.foundation.*;
 
 public class ThreadedSyncBin extends BinDecorator {
 	
+	private static final int ONE_SECOND = 1000;
+
 	private volatile Runnable _syncRunnable ;
 	
 	private volatile boolean _closed;
@@ -22,7 +24,7 @@ public class ThreadedSyncBin extends BinDecorator {
 				Closure4 closure = new Closure4() {
 					public Object run() {
 						runSyncRunnable();
-						_lock.snooze(10);
+						_lock.snooze(ONE_SECOND);
 						return null;
 					}
 				};
@@ -41,6 +43,12 @@ public class ThreadedSyncBin extends BinDecorator {
 	public void close() {
     	waitForPendingSync();
     	_closed = true;
+		_lock.run(new Closure4() {
+			public Object run() {
+				_lock.awake();
+				return null;
+			}
+		});
     	super.close();
 	}
 	
