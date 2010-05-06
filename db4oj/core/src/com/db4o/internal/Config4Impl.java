@@ -49,7 +49,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec ALLOW_VERSION_UPDATES_KEY=new KeySpec(false);
 	
-	private final static KeySpec ASYNCHRONOUS_SYNC = new KeySpec(false);
+	private final static KeySpec ASYNCHRONOUS_SYNC_KEY = new KeySpec(false);
 
     private final static KeySpec AUTOMATIC_SHUTDOWN_KEY=new KeySpec(true);
 
@@ -1196,11 +1196,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public void asynchronousSync(boolean flag) {
-		_config.put(ASYNCHRONOUS_SYNC, flag);
+		_config.put(ASYNCHRONOUS_SYNC_KEY, flag);
 	}
 	
 	public boolean asynchronousSync(){
-		return _config.getAsBoolean(ASYNCHRONOUS_SYNC);
+		return _config.getAsBoolean(ASYNCHRONOUS_SYNC_KEY);
 	}
 
 }
