@@ -11,7 +11,6 @@ import com.db4o.cs.internal.config.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.query.*;
 import com.db4o.tools.*;
 
@@ -28,7 +27,6 @@ public class Test extends AllTests {
     public static int assertionCount = 0;
     static int run;
     
-    static MemoryFile memoryFile;
     static byte[] memoryFileContent;
     
     public static final boolean COMPARE_INTERNAL_OK = false;
@@ -38,9 +36,8 @@ public class Test extends AllTests {
     		return false;
     	}
         if (currentRunner != null) {
-            if(!MEMORY_FILE) {
-                return !clientServer || !currentRunner.REMOTE_SERVER;    
-            }
+            return !clientServer || !currentRunner.REMOTE_SERVER;    
+            
         }
         return false;
     }
@@ -66,7 +63,6 @@ public class Test extends AllTests {
     public static void close() {
 		closeClient();
 		closeServer();
-		closeMemoryFile();
         closeReplica();
     }
 
@@ -75,12 +71,6 @@ public class Test extends AllTests {
             while(!_replica.close()) {
             }
             _replica = null;
-        }
-    }
-
-	private static void closeMemoryFile() {
-	    if(memoryFile != null) {
-            memoryFileContent = memoryFile.getBytes();
         }
     }
 
@@ -127,12 +117,6 @@ public class Test extends AllTests {
             objectServer=null;
         }
         try {
-            if(MEMORY_FILE){
-            	File4.delete(fileName);
-                RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
-                raf.write(memoryFileContent);
-                raf.close();
-            }
             
             String targetFile = fileName + ".defrag.backup";
             DefragmentConfig defragConfig = new DefragmentConfig(fileName, targetFile);
@@ -147,13 +131,6 @@ public class Test extends AllTests {
 	            });
             }
 			com.db4o.defragment.Defragment.defrag(defragConfig);
-            
-            if(MEMORY_FILE){
-                RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
-                memoryFileContent = new byte[(int)raf.length()];
-                raf.read(memoryFileContent);
-                raf.close();
-            }
            
         } catch(Exception e){
             e.printStackTrace();
@@ -334,12 +311,7 @@ public class Test extends AllTests {
         if (clientServer) {
             oc = openClient();
         } else {
-            if(MEMORY_FILE) {
-                memoryFile = new MemoryFile(memoryFileContent);
-                oc = ExtDb4o.openMemoryFile(memoryFile).ext();
-            }else {
-                oc = Db4o.openFile(FILE_SOLO).ext();
-            }
+            oc = Db4o.openFile(FILE_SOLO).ext();
         }
         return oc;
     }

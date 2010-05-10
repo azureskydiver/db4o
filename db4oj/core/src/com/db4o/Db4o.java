@@ -224,26 +224,6 @@ public class Db4o {
 		return ObjectContainerFactory.openObjectContainer(Db4oLegacyConfigurationBridge.asEmbeddedConfiguration(config), databaseFileName);
 	}
 
-	protected static final ObjectContainer openMemoryFile1(
-			Configuration config, MemoryFile memoryFile)
-			throws Db4oIOException, DatabaseFileLockedException,
-			OldFormatException {
-		
-		Config4Impl.assertIsNotTainted(config);
-		
-		if(memoryFile == null){
-			memoryFile = new MemoryFile();
-		}
-		
-		if (Deploy.debug) {
-			System.out.println("db4o Debug is ON");
-		}
-	    
-		ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
-		Messages.logMsg(config, 5, "Memory File");
-		return oc;
-	}
-
 	
 	/**
      * Operates just like {@link Db4o#openServer(Configuration, String, int)}, but uses

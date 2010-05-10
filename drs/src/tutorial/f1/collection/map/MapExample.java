@@ -25,7 +25,6 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.hibernate.HibernateReplication;
-import com.db4o.ext.ExtDb4o;
 
 import f1.collection.Car;
 import org.hibernate.cfg.Configuration;
@@ -39,8 +38,8 @@ public class MapExample {
 
 		System.out.println("Running Map example.");
 
-		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
 		ObjectContainer objectContainer = Db4o.openFile("MapExample.db4o");
 
