@@ -19,6 +19,7 @@ public class AllTests extends ComposibleReflectionTestSuite {
 									MemoryIoAdapterTestCase.class,
 									NonFlushingStorageTestCase.class,
 									RandomAccessFileStorageFactoryTestCase.class,
+									SaveAsStorageTestCase.class,
 									StorageTestSuite.class,
 									StackBasedDiskFullTestCase.class,
 							});
