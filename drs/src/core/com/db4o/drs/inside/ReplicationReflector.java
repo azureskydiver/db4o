@@ -20,10 +20,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
+import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.drs.*;
 import com.db4o.drs.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.io.*;
 import com.db4o.reflect.*;
 
 
@@ -36,7 +39,9 @@ public class ReplicationReflector {
 			_container = containerFrom(providerB);
 		}
 		if(_container == null) {
-			_container = (InternalObjectContainer)ExtDb4o.openMemoryFile(new MemoryFile()).ext();
+			EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+			config.file().storage(new MemoryStorage());
+			_container = (InternalObjectContainer) Db4oEmbedded.openFile(config, "inmemory").ext();
 		}
 	}
 

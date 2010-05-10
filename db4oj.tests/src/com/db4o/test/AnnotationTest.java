@@ -3,33 +3,45 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.ext.*;
+import com.db4o.config.*;
+import com.db4o.io.*;
 
 
 /**
  */
 @decaf.Ignore
 public class AnnotationTest {
+	
+	
 
 	public static void main(String[] args) {
-		MemoryFile file = new MemoryFile();
-		ObjectContainer db = ExtDb4o.openMemoryFile(file);
+		
+		String uri = "file.db4o";
+		Storage storage = new MemoryStorage();
+		
+		ObjectContainer db = openObjectContainer(storage, uri);
 		try {
 			fillDBwithSheeps(db);
-			db = ExtDb4o.openMemoryFile(file);
+			db = openObjectContainer(storage, uri);
 			retriveSheep(db);
 
-			db = ExtDb4o.openMemoryFile(file);
+			db = openObjectContainer(storage, uri);
 			System.out.println("\n");
 			updateSheep(db);
 
-			db = ExtDb4o.openMemoryFile(file);
+			db = openObjectContainer(storage, uri);
 			System.out.println("\n");
 			deleteSheep(db);
 
 		} finally {
 			db.close();
 		}
+	}
+	
+	private static ObjectContainer openObjectContainer(Storage storage, String uri){
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.file().storage(storage);
+		return Db4oEmbedded.openFile(config, uri);
 	}
 
 	private static void updateSheep(ObjectContainer db) {

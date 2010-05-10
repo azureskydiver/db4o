@@ -36,7 +36,6 @@ public class AllTests extends ComposibleTestSuite {
 			            HandlerRegistryTestCase.class,
 			            IndexCreateDropTestCase.class,
 			            IndexedBlockSizeQueryTestCase.class,
-			            InMemoryObjectContainerTestCase.class,
 			            InvalidOffsetInDeleteTestCase.class,
 			            KnownClassesTestCase.class,
 			            LazyObjectReferenceTestCase.class,

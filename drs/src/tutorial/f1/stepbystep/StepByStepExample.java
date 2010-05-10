@@ -26,7 +26,6 @@ import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.hibernate.HibernateReplication;
 import com.db4o.drs.hibernate.ReplicationConfigurator;
-import com.db4o.ext.ExtDb4o;
 import com.db4o.query.Predicate;
 
 import org.hibernate.Session;
@@ -51,8 +50,8 @@ public class StepByStepExample {
 		System.out.println("Running StepByStep Example.");
 
 		System.out.println("Configuring db4o to generate uuids and version numbers for objects.");
-		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
 		storePilotAndCarToDb4o();
 

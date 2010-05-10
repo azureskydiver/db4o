@@ -2,7 +2,8 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.ext.*;
+import com.db4o.config.*;
+import com.db4o.io.*;
 import com.db4o.query.*;
 
 
@@ -40,7 +41,10 @@ public class DeleteDeep {
     }
     
     private void deleteDeep(ObjectContainer objectContainer, Object obj){
-        ObjectContainer allToDelete = ExtDb4o.openMemoryFile(null);
+    	Storage storage = new MemoryStorage();
+    	EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    	config.file().storage(storage);
+        ObjectContainer allToDelete = Db4oEmbedded.openFile(config, "inmemory");
         allToDelete.store(obj);
         ObjectSet objectSet = allToDelete.queryByExample(null);
         while(objectSet.hasNext()){

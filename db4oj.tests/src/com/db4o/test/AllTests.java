@@ -290,11 +290,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
         System.out.println("SERVER_HOSTNAME: " + SERVER_HOSTNAME);
         System.out.println("SERVER_PORT: " + SERVER_PORT);
         System.out.println("FILE_SERVER: " + FILE_SERVER);
-        if(MEMORY_FILE) {
-            System.out.println("MEMORY_FILE !!!");
-        }else {
-            System.out.println("FILE_SOLO: " + FILE_SOLO);
-        }
+        System.out.println("FILE_SOLO: " + FILE_SOLO);
         System.out.println("DELETE_FILE: " + DELETE_FILE);
         System.out.println("BLOB_PATH: " + BLOB_PATH + "\n");
 
