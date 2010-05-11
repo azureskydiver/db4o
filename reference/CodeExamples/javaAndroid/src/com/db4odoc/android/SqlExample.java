@@ -135,8 +135,7 @@ public class SqlExample {
 			String date = c.getString(2);
 			
 			Date dt = parseDate(date);
-			RegistrationRecord record = new RegistrationRecord(c.getString(1),
-					dt);
+			RegistrationRecord record = new RegistrationRecord(c.getString(1),dt);
 			
 			Car car = new Car();
 			car.setModel(c.getString(0));

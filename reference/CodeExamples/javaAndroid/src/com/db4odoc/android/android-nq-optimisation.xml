@@ -2,17 +2,20 @@
 <project name="db4o enhance project" default="enhance" basedir=".">
     
     
-    <!-- #example: Define a task for the enhancement #-->    
+    <!-- #example: Define the task for the enhancement #-->    
     <path id="project.classpath">
         <pathelement path="${basedir}/bin"/>
+    	<!-- The android.plattform points the Android-platform libraries -->
+        <fileset dir="${android.platform}/">
+            <include name="android.jar"/>
+        </fileset>
         <fileset dir="lib">
             <include name="**/*.jar"/>
         </fileset>
     </path>
     <taskdef name="db4o-enhance"
              classname="com.db4o.enhance.Db4oEnhancerAntTask"
-             classpathref="project.classpath"/>
-    
+             classpathref="project.classpath"/>    
     <!-- #end example -->
     
     
@@ -20,8 +23,8 @@
     <target name="enhance">
         <db4o-enhance classtargetdir="${basedir}/bin"
                       jartargetdir="${basedir}/lib"
-                      nq="true" ta="true"
-                      collections="true">
+                      nq="true" ta="false"
+                      collections="false">        	
             <classpath refid="project.classpath"/>
             <sources dir="${basedir}/bin">
                       <include name="**/*.class"/>
