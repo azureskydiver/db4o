@@ -2,12 +2,10 @@
 
 package com.db4o.internal;
 
-import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.fileheader.*;
-import com.db4o.internal.handlers.*;
 
 
 /**
@@ -66,12 +64,7 @@ public final class ConfigBlock {
 		+ (Const4.INT_LENGTH * 7)	// (two transaction pointers, PDB ID, lost int, freespace address, converter_version, index id)
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
-    
-    
-    public static ConfigBlock forNewFile(LocalObjectContainer file) throws Db4oIOException {
-        return new ConfigBlock(file, true, 0);
-    }
-    
+	
     public static ConfigBlock forExistingFile(LocalObjectContainer file, int address) throws Db4oIOException, OldFormatException {
         return new ConfigBlock(file, false, address);
     }
@@ -217,9 +210,6 @@ public final class ConfigBlock {
             _container.syncFiles();
             timerFileLock().checkOpenTime();
 		}
-		if(oldLength < LENGTH){
-			write();
-		}
 	}
 
 	private boolean allowAutomaticShutdown() {
@@ -234,49 +224,12 @@ public final class ConfigBlock {
 	private Config4Impl configImpl() {
 		return _container.configImpl();
 	}
-
-	public void write() {
-        
-        timerFileLock().checkHeaderLock();
-        addressChanged(_container.allocateSlot(LENGTH).address());
-        
-		StatefulBuffer writer = _container.createStatefulBuffer(_container.transaction(), _address,LENGTH);
-		IntHandler.writeInt(LENGTH, writer);
-        for (int i = 0; i < 2; i++) {
-            writer.writeLong(timerFileLock().openTime());
-        }
-		writer.writeByte(systemData().stringEncoding());
-		IntHandler.writeInt(systemData().transactionPointer1(), writer);
-		IntHandler.writeInt(systemData().transactionPointer2(), writer);
-		IntHandler.writeInt(_bootRecordID, writer);
-		IntHandler.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
-		writer.append(passwordToken());
-        writer.writeByte(systemData().freespaceSystem());
-        IntHandler.writeInt(0, writer);  // was BTreeFreespaceId, deprecated
-        IntHandler.writeInt(systemData().converterVersion(), writer);
-        IntHandler.writeInt(systemData().uuidIndexId(), writer);
-		writer.write();
-		writePointer();
-		_container.syncFiles();
-	}
     
     private void addressChanged(int address){
         _address = address;
         timerFileLock().setAddresses(_address, OPEN_TIME_OFFSET, ACCESS_TIME_OFFSET);
     }
 	
-	private void writePointer() {
-        timerFileLock().checkHeaderLock();
-		StatefulBuffer writer = _container.createStatefulBuffer(_container.transaction(), 0, Const4.ID_LENGTH);
-		writer.moveForward(2);
-		IntHandler.writeInt(_address, writer);
-		if (Debug4.xbytes) {
-			writer.checkXBytes(false);
-		}
-		writer.write();
-		timerFileLock().writeHeaderLock();
-	}
-    
     public int address(){
         return _address;
     }

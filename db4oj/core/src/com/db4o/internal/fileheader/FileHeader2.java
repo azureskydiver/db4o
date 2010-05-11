@@ -86,7 +86,7 @@ public class FileHeader2 extends NewFileHeaderBase {
         }
         writer.write();
         if(shuttingDown){
-        	writeVariablePart(file, 0, true);
+        	writeVariablePart(file, true);
         } else {
         	file.syncFiles();
         }

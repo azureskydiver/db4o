@@ -3,9 +3,7 @@
 package com.db4o.internal.fileheader;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.slots.*;
 
 
@@ -55,44 +53,11 @@ public class FileHeaderVariablePart1 extends FileHeaderVariablePart {
     }
 
     public void writeThis(ByteArrayBuffer buffer) {
-		if (Deploy.debug) {
-		    buffer.writeBegin(getIdentifier());
-		}
-        buffer.writeInt(systemData().converterVersion());
-        buffer.writeByte(systemData().freespaceSystem());
-        buffer.writeInt(0); // was BTreeFreespaceId, converted to slot, can no longer be used
-        Db4oDatabase identity = systemData().identity();
-        buffer.writeInt(identity == null ? 0 : identity.getID(systemTransaction()));
-        buffer.writeLong(systemData().lastTimeStampID());
-        buffer.writeInt(systemData().uuidIndexId());
+    	throw new IllegalStateException();
     }
 
-	private Transaction systemTransaction() {
-		return _container.systemTransaction();
-	}
-
 	public Runnable commit(boolean shuttingDown) {
-		int length = _container.blockConverter().blockAlignedBytes(ownLength());
-		if(_id == 0){
-			_id = _container.allocatePointerSlot();
-		}
-		final Slot committedSlot = _container.readPointerSlot(_id);
-		final Slot newSlot = allocateSlot(length);
-		ByteArrayBuffer buffer = new ByteArrayBuffer(length);
-		writeThis(buffer);
-		_container.writeEncrypt(buffer, newSlot.address(), 0);
-		return new Runnable(){
-			public void run() {
-				
-				// FIXME: This is not transactional !!!
-				_container.writePointer(_id, newSlot);
-				
-				if(Slot.isNull(committedSlot)){
-					return;
-				}
-				_container.freespaceManager().freeSafeSlot(committedSlot);
-			}
-		};
+		throw new IllegalStateException();
 	}
 
 	public int id() {

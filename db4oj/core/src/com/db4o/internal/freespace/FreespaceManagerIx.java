@@ -19,11 +19,11 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 	}
 
 	public Slot allocateSafeSlot(int length) {
-		throw new IllegalStateException();
+		return null;
 	}
 	
 	public void freeSafeSlot(Slot slot) {
-		throw new IllegalStateException();
+		// do nothing
 	}
     
     public void beginCommit() {

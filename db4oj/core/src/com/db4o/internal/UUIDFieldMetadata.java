@@ -142,7 +142,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	initIndex(transaction, sd.uuidIndexId());
     	if (sd.uuidIndexId() == 0) {
             sd.uuidIndexId(super.getIndex(transaction).getID());
-            file.getFileHeader().writeVariablePart(file, 1);
+            file.getFileHeader().writeVariablePart(file);
     	}
 	}
 

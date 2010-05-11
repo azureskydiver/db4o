@@ -90,14 +90,7 @@ public final class Debug4 {
      */
     public static final boolean lockFile = true;
     
-    /**
-     * turn to false, to prevent reading old PBootRecord object
-     * for debugging updating database files.
-     */
-    public static final boolean readBootRecord = true;
-    
-
-	public static void expect(boolean cond){
+    public static void expect(boolean cond){
         if(! cond){
             throw new RuntimeException("Should never happen");
         }

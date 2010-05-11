@@ -43,7 +43,11 @@ public abstract class FileHeader {
         return header;
     }
 
-	public abstract FileHeader convert(LocalObjectContainer file);
+	public FileHeader convert(LocalObjectContainer file){
+		FileHeader2 fileHeader = new FileHeader2();
+		fileHeader.initNew(file);
+		return fileHeader;
+	}
 
 	private static ByteArrayBuffer prepareFileHeaderReader(LocalObjectContainer file) {
 		ByteArrayBuffer reader = new ByteArrayBuffer(readerLength()); 
@@ -106,11 +110,11 @@ public abstract class FileHeader {
         bytes.write();
     }
     
-    public void writeVariablePart(LocalObjectContainer file, int part){
-    	writeVariablePart(file, part, false);
+    public void writeVariablePart(LocalObjectContainer file){
+    	writeVariablePart(file, false);
     }
     
-    public abstract void writeVariablePart(LocalObjectContainer file, int part, boolean shuttingDown);
+    public abstract void writeVariablePart(LocalObjectContainer file, boolean shuttingDown);
 
     public static boolean lockedByOtherSession(LocalObjectContainer container, long lastAccessTime) {
 		return container.needsLockFileThread() && ( lastAccessTime != 0);
