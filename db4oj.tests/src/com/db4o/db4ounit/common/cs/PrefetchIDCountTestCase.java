@@ -4,17 +4,18 @@ package com.db4o.db4ounit.common.cs;
 
 import java.util.*;
 
-import com.db4o.*;
-import com.db4o.cs.*;
+import com.db4o.ObjectContainer;
+import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.*;
 import com.db4o.cs.internal.*;
-import com.db4o.db4ounit.common.api.*;
+import com.db4o.db4ounit.common.api.TestWithTempFile;
 import com.db4o.events.*;
+import com.db4o.ext.InvalidIDException;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
-import com.db4o.internal.ids.*;
-import com.db4o.internal.slots.*;
+import com.db4o.internal.ids.TransactionalIdSystem;
+import com.db4o.internal.slots.Slot;
 
 import db4ounit.*;
 
@@ -48,24 +49,24 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 		
 		final ServerMessageDispatcherImpl msgDispatcher = firstMessageDispatcherFor(server);
 		Transaction transaction = msgDispatcher.transaction();
-		LocalObjectContainer container = (LocalObjectContainer) server.objectContainer();
 		
-// The following code was specific to the old PointerBasedIdSystem		
+		final TransactionalIdSystem idSystem = transaction.idSystem();
+		final int prefetchedID = idSystem.prefetchID();
 		
-//		TransactionalIdSystem idSystem = transaction.idSystem();
-//		final int prefetchedID = idSystem.prefetchID();
-//		
-//		Assert.isGreater(0, prefetchedID);
-//		
-//		final DebugFreespaceManager freespaceManager = new DebugFreespaceManager(container);
-//		container.installDebugFreespaceManager(freespaceManager);
-//		
-//		lock.run(new Closure4() { public Object run() {
-//			client.close();
-//			lock.snooze(100000);
-//			Assert.isTrue(freespaceManager.wasFreed(prefetchedID));
-//			return null;
-//		}});		
+		Assert.isGreater(0, prefetchedID);
+				
+		lock.run(new Closure4() { public Object run() {
+			client.close();
+			lock.snooze(100000);
+			
+			// This wont work with the PointerBasedIdSystem
+			Assert.expect(InvalidIDException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					idSystem.committedSlot(prefetchedID);
+				}
+			});
+			return null;
+		}});		
 		
 		server.close();
 	}
