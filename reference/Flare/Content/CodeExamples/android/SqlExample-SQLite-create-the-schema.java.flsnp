@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">db.execSQL(&quot;CREATE TABLE IF NOT EXISTS &quot; + DB_TABLE_PILOT + &quot; (&quot;
+		+ &quot;id INTEGER PRIMARY KEY AUTOINCREMENT, &quot;
+		+ &quot;name TEXT NOT NULL, points INTEGER NOT NULL);&quot;);
+// Foreign key constraint is parsed but not enforced
+// Here it is used for documentation purposes
+db.execSQL(&quot;CREATE TABLE IF NOT EXISTS &quot; + DB_TABLE_CAR + &quot; (&quot;
+		+ &quot;id INTEGER PRIMARY KEY AUTOINCREMENT, &quot;
+		+ &quot;model TEXT NOT NULL, pilot INTEGER NOT NULL,&quot;
+		+ &quot;FOREIGN KEY (pilot)&quot;
+		+ &quot;REFERENCES pilot(id) ON DELETE CASCADE);&quot;);
+db.execSQL(&quot;CREATE INDEX IF NOT EXISTS CAR_PILOT ON &quot; + DB_TABLE_CAR
+		+ &quot; (pilot);&quot;);</pre>
+		<div class="codesnippet-meta">SqlExample.java: SQLite create the schema<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

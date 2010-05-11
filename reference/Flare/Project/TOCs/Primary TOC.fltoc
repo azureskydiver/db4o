@@ -1135,41 +1135,41 @@
       Link="/Content/platform_specific_issues/android.htm"
       conditions="Primary.All languages,Primary.Java">
       <TocEntry
-        Title="General Info"
-        Link="/Content/platform_specific_issues/android/general_info.htm" />
+        Title="Getting Started"
+        Link="/Content/platform_specific_issues/android/getting_started.htm" />
       <TocEntry
-        Title="Application Structure"
-        Link="/Content/platform_specific_issues/android/application_structure.htm" />
-      <TocEntry
-        Title="Opening a Database"
-        Link="/Content/platform_specific_issues/android/opening_a_database.htm" />
-      <TocEntry
-        Title="Storing Data"
-        Link="/Content/platform_specific_issues/android/storing_data.htm" />
-      <TocEntry
-        Title="Retrieving Data"
-        Link="/Content/platform_specific_issues/android/retrieving_data.htm" />
-      <TocEntry
-        Title="Changing Data"
-        Link="/Content/platform_specific_issues/android/changing_data.htm" />
-      <TocEntry
-        Title="Deleting Data"
-        Link="/Content/platform_specific_issues/android/deleting_data.htm" />
-      <TocEntry
-        Title="Backup"
-        Link="/Content/platform_specific_issues/android/backup.htm" />
-      <TocEntry
-        Title="Closing a Database"
-        Link="/Content/platform_specific_issues/android/closing_a_database.htm" />
-      <TocEntry
-        Title="Schema Evolution"
-        Link="/Content/platform_specific_issues/android/schema_evolution.htm" />
-      <TocEntry
-        Title="Car"
-        Link="/Content/platform_specific_issues/android/car.htm" />
-      <TocEntry
-        Title="Pilot"
-        Link="/Content/platform_specific_issues/android/pilot.htm" />
+        Title="Comparison With SQLite"
+        Link="/Content/platform_specific_issues/android/comparison_with_sqlite.htm">
+        <TocEntry
+          Title="General Info"
+          Link="/Content/platform_specific_issues/android/general_info.htm"></TocEntry>
+        <TocEntry
+          Title="Application Structure" />
+        <TocEntry
+          Title="Opening a Database"
+          Link="/Content/platform_specific_issues/android/opening_a_database.htm" />
+        <TocEntry
+          Title="Storing Data"
+          Link="/Content/platform_specific_issues/android/storing_data.htm" />
+        <TocEntry
+          Title="Retrieving Data"
+          Link="/Content/platform_specific_issues/android/retrieving_data.htm" />
+        <TocEntry
+          Title="Changing Data"
+          Link="/Content/platform_specific_issues/android/changing_data.htm" />
+        <TocEntry
+          Title="Deleting Data"
+          Link="/Content/platform_specific_issues/android/deleting_data.htm" />
+        <TocEntry
+          Title="Backup"
+          Link="/Content/platform_specific_issues/android/backup.htm" />
+        <TocEntry
+          Title="Closing a Database"
+          Link="/Content/platform_specific_issues/android/closing_a_database.htm" />
+        <TocEntry
+          Title="Schema Evolution"
+          Link="/Content/platform_specific_issues/android/schema_evolution.htm" />
+      </TocEntry>
     </TocEntry>
   </TocEntry>
   <TocEntry

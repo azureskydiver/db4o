@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ContentValues initialValues = new ContentValues();
+
+initialValues.put(&quot;id&quot;, number);
+initialValues.put(&quot;name&quot;, &quot;Tester&quot;);
+initialValues.put(&quot;points&quot;, number);
+db.insert(DB_TABLE_PILOT, null, initialValues);
+
+initialValues = new ContentValues();
+
+initialValues.put(&quot;model&quot;, &quot;BMW&quot;);
+initialValues.put(&quot;pilot&quot;, number);
+db.insert(DB_TABLE_CAR, null, initialValues);</pre>
+		<div class="codesnippet-meta">SqlExample.java: store a car in SQLite<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

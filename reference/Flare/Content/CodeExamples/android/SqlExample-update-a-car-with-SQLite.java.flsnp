@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">SQLiteDatabase db = database();
+db.execSQL(&quot;INSERT INTO REG_RECORDS (id,year) VALUES ('A1', DATETIME('NOW'))&quot;);
+
+ContentValues updateValues = new ContentValues();
+updateValues.put(&quot;reg_record&quot;, &quot;A1&quot;);
+int count = db.update(DB_TABLE_CAR, updateValues,
+		&quot;pilot IN (SELECT id FROM &quot; + DB_TABLE_PILOT
+				+ &quot; WHERE points = 15)&quot;, null);
+if (count == 0) {
+	logToConsole(0, &quot;Car not found, refill the database to continue.&quot;,
+			false);
+} else {
+	Cursor c = db.rawQuery(&quot;SELECT c.model, r.id, r.year from car c, &quot;
+			+ &quot;REG_RECORDS r, pilot p where c.reg_record = r.id &quot;
+			+ &quot;AND c.pilot = p.id AND p.points = 15;&quot;, null);
+	if (c.getCount() == 0) {
+		logToConsole(0,
+				&quot;Car not found, refill the database to continue.&quot;,
+				false);
+		return;
+	}
+	c.moveToFirst();
+	String date = c.getString(2);
+	
+	Date dt = parseDate(date);
+	RegistrationRecord record = new RegistrationRecord(c.getString(1),
+			dt);
+	
+	Car car = new Car();
+	car.setModel(c.getString(0));
+	car.setRegistration(record);
+	logToConsole(startTime, &quot;Updated Car (&quot; + car + &quot;): &quot;, true);
+}</pre>
+		<div class="codesnippet-meta">SqlExample.java: update a car with SQLite<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
