@@ -33,10 +33,6 @@ class LRU2QLongCache<V> implements Cache4<Long,V>{
 	
 	public V produce(Long key, Function4<Long, V> producer, Procedure4<V> finalizer) {
 		
-		if(key == null){
-			throw new ArgumentNullException();
-		}
-		
 		if(_am.remove(key)){
 			_am.addFirst(key);
 			return _slots.get(key);
