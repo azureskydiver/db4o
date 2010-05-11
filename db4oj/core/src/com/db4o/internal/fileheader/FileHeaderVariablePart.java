@@ -48,7 +48,11 @@ public abstract class FileHeaderVariablePart {
         	file.activate(trans, identity, new FixedActivationDepth(2));
         	systemData().identity(identity);
         } else{
-        	// TODO: what?
+        	// TODO: What now?
+        	// Apparently we get this state after defragment
+        	// and defragment then sets the identity.
+        	// If we blindly generate a new identity here,
+        	// ObjectUpdateFileSizeTestCase reports trouble.
         }
     }
     

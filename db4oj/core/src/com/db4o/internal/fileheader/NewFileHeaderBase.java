@@ -43,7 +43,7 @@ public abstract class NewFileHeaderBase extends FileHeader {
 	    newTimerFileLock(file);
 		oldEncryptionOff(file);
 	    _variablePart = createVariablePart(file);
-	    writeVariablePart(file, 0);
+	    writeVariablePart(file);
 	}
 	
 	public abstract FileHeaderVariablePart createVariablePart(LocalObjectContainer file);
@@ -52,7 +52,7 @@ public abstract class NewFileHeaderBase extends FileHeader {
 		file._handlers.oldEncryptionOff();
 	}
 
-	public final void writeVariablePart(LocalObjectContainer file, int part, boolean shuttingDown) {
+	public final void writeVariablePart(LocalObjectContainer file, boolean shuttingDown) {
 		if(! isInitalized()){
 			return;
 		}

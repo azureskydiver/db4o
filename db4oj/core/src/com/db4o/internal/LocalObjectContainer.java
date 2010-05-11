@@ -22,8 +22,6 @@ import com.db4o.internal.slots.*;
  */
 public abstract class LocalObjectContainer extends ExternalObjectContainer implements InternalObjectContainer, EmbeddedObjectContainer{
     
-    private static final int DEFAULT_FREESPACE_ID = 0;
-
 	protected FileHeader       _fileHeader;
     
     private final Collection4         _dirtyClassMetadata = new Collection4();
@@ -362,7 +360,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	        // make it dirty here, so the new identity is persisted:
 	        _timeStampIdGenerator.next();
 	        
-	        _fileHeader.writeVariablePart(this, 2);
+	        _fileHeader.writeVariablePart(this);
     	}
     }
 
@@ -502,23 +500,19 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         blockedFreespaceManager.read(this, _systemData.inMemoryFreespaceSlot());
         blockedFreespaceManager.start(_systemData.bTreeFreespaceId());
         
+        _fileHeader = _fileHeader.convert(this);
+        
         if(freespaceMigrationRequired(blockedFreespaceManager)){
         	migrateFreespace(blockedFreespaceManager);
         }
         
         writeHeader(true, false);
-        
-//        if (!configImpl().commitRecoveryDisabled()) {
-//        	_fileHeader.completeInterruptedTransaction(this);
-//        }
 
         if(Converter.convert(new ConversionStage.SystemUpStage(this))){
             _systemData.converterVersion(Converter.VERSION);
-            _fileHeader.writeVariablePart(this, 1);
+            _fileHeader.writeVariablePart(this);
             transaction().commit();
         }
-        
-        _fileHeader = _fileHeader.convert(this);
         
     }
 
@@ -558,7 +552,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         installFreespaceManager(newFreespaceManager);
 		
 		AbstractFreespaceManager.migrate(oldFreespaceManager, newFreespaceManager);
-		_fileHeader.writeVariablePart(this, 1);
+		_fileHeader.writeVariablePart(this);
 	}
 
     public final void releaseSemaphore(String name) {

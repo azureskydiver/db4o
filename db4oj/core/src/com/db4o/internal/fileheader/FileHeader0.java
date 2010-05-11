@@ -4,7 +4,6 @@ package com.db4o.internal.fileheader;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 /**
@@ -42,10 +41,8 @@ public class FileHeader0 extends FileHeader {
     
     private PBootRecord _bootRecord;
     
-    private final LocalObjectContainer _container;
-    
     public FileHeader0(LocalObjectContainer container){
-    	_container = container;
+    	
     }
     
 
@@ -71,17 +68,13 @@ public class FileHeader0 extends FileHeader {
     
     protected void read(LocalObjectContainer file, ByteArrayBuffer reader) throws OldFormatException {
         _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
-        skipConfigurationLockTime(reader);
+        reader.incrementOffset(Const4.ID_LENGTH);
         SystemData systemData = file.systemData();
 		systemData.classCollectionID(reader.readInt());
 		reader.readInt();  // was freespace ID, can no longer be read
     }
 
-    private void skipConfigurationLockTime(ByteArrayBuffer reader) {
-        reader.incrementOffset(Const4.ID_LENGTH);
-    }
-
-	private Object getBootRecord(LocalObjectContainer file) {
+    private Object getBootRecord(LocalObjectContainer file) {
 		file.showInternalClasses(true);
 		try {
 			return file.getByID(file.systemTransaction(), _configBlock._bootRecordID);
@@ -91,31 +84,9 @@ public class FileHeader0 extends FileHeader {
 	}
 
     public void initNew(LocalObjectContainer file) throws Db4oIOException {
-    	if(! isInitialized()){
-    		return;
-    	}
-        _configBlock = ConfigBlock.forNewFile(file);
-        initBootRecord(file);
+    	throw new IllegalStateException();
     }
     
-    private boolean isInitialized() {
-		return _configBlock != null;
-	}
-
-	private void initBootRecord(LocalObjectContainer file){
-        
-        file.showInternalClasses(true);
-        try {
-	        _bootRecord = new PBootRecord();
-	        file.storeInternal(file.systemTransaction(), _bootRecord, false);
-	        
-	        _configBlock._bootRecordID = file.getID(file.systemTransaction(), _bootRecord);
-	        writeVariablePart(file, 1);
-        } finally {
-        	file.showInternalClasses(false);
-        }
-    }
-
     public void completeInterruptedTransaction(LocalObjectContainer container) {
         _configBlock.completeInterruptedTransaction();
     }
@@ -133,25 +104,11 @@ public class FileHeader0 extends FileHeader {
     }
 
     public void writeFixedPart(LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize_) {
-        writer.writeByte(Const4.YAPFILEVERSION);
-        writer.writeByte((byte)blockSize_);
-        writer.writeInt(_configBlock.address());
-        writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
-        writer.writeInt(file.systemData().classCollectionID());
-        writer.writeInt(0);  // was freespace ID, now defunct
-        if (Debug4.xbytes) {
-            writer.checkXBytes(false);
-        }
-        writer.write();
-        file.syncFiles();
+    	throw new IllegalStateException();
     }
     
-    public void writeVariablePart(LocalObjectContainer file, int part, boolean shuttingDown) {
-        if(part == 1){
-            _configBlock.write();
-        }else if(part == 2){
-            _bootRecord.write(file);
-        }
+    public void writeVariablePart(LocalObjectContainer file, boolean shuttingDown) {
+    	throw new IllegalStateException();
     }
 
 	@Override
@@ -159,11 +116,9 @@ public class FileHeader0 extends FileHeader {
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
-        Object bootRecord = Debug4.readBootRecord ? getBootRecord(container) : null;
+        Object bootRecord = getBootRecord(container);
         
         if (! (bootRecord instanceof PBootRecord)) {
-            initBootRecord(container);
-            container.generateNewIdentity();
             return;
         }
         
@@ -176,16 +131,7 @@ public class FileHeader0 extends FileHeader {
 
 	@Override
 	public Runnable commit(boolean shuttingDown) {
-		writeVariablePart(_container, 2);
-		return Runnable4.DO_NOTHING;
-		
+		throw new IllegalStateException();
 	}
-
-
-	@Override
-	public FileHeader convert(LocalObjectContainer file) {
-		return this;
-	}
-	
 
 }

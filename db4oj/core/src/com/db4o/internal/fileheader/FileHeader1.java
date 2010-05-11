@@ -2,10 +2,7 @@
 
 package com.db4o.internal.fileheader;
 
-import com.db4o.*;
 import com.db4o.internal.*;
-
-
 
 /**
  * @exclude
@@ -58,30 +55,11 @@ public class FileHeader1 extends NewFileHeaderBase {
     
     public void writeFixedPart(
         LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize) {
-    	SystemData systemData = file.systemData();
-        writer.append(SIGNATURE);
-        writer.writeByte(version());
-        writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
-        writer.writeLong(timeToWrite(_timerFileLock.openTime(), shuttingDown));
-        writer.writeLong(timeToWrite(System.currentTimeMillis(), shuttingDown));
-        writer.writeInt(systemData.transactionPointer1());
-        writer.writeInt(systemData.transactionPointer2());
-        writer.writeInt(blockSize);
-		writer.writeInt(systemData.classCollectionID());
-        writer.writeInt(0); // was freespace ID, now 
-        writer.writeInt(((FileHeaderVariablePart1)_variablePart).id());
-        if (Debug4.xbytes) {
-        	writer.checkXBytes(false);
-        }
-        writer.write();
-        file.syncFiles();
-        if(startFileLockingThread){
-        	file.threadPool().start(_timerFileLock);
-        }
+    	throw new IllegalStateException();
     }
 
     public void writeTransactionPointer(Transaction systemTransaction, int transactionPointer) {
-        writeTransactionPointer(systemTransaction, transactionPointer, 0, TRANSACTION_POINTER_OFFSET);
+    	throw new IllegalStateException();
     }
 
     protected NewFileHeaderBase createNew(){
@@ -90,13 +68,6 @@ public class FileHeader1 extends NewFileHeaderBase {
 	
     protected byte version() {
 		return (byte) 1;
-	}
-
-	@Override
-	public FileHeader convert(LocalObjectContainer file) {
-		FileHeader2 fileHeader = new FileHeader2();
-		fileHeader.initNew(file);
-		return fileHeader;
 	}
 
 	@Override
