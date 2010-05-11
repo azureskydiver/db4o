@@ -15,8 +15,8 @@ public final class SingleClassTypeHandlerPredicate implements TypeHandlerPredica
 		_class = clazz;
 	}
 	
-	public boolean match(ReflectClass classReflector) {
-		final ReflectClass reflectClass = classReflector.reflector().forClass(_class);
-		return classReflector == reflectClass;
+	public boolean match(ReflectClass candidate) {
+		final ReflectClass reflectClass = candidate.reflector().forClass(_class);
+		return candidate == reflectClass;
 	}
 }
