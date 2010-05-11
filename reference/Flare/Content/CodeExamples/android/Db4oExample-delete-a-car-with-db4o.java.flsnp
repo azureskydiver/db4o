@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer db = database();
+ObjectSet&lt;Car&gt; cars = db.query(new Predicate&lt;Car&gt;() {
+	public boolean match(Car car) {
+		return car.getPilot().getPoints()==5;
+	}			
+});
+for(Car car : cars){
+	db.delete(car);
+}</pre>
+		<div class="codesnippet-meta">Db4oExample.java: delete a car with db4o<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

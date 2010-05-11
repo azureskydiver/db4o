@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="836" MadCap:lastWidth="624">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2090" MadCap:lastWidth="280">
     <head><title>Transparent Activation	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -32,7 +32,7 @@ a transparent way.</p><a name="Solution"></a>
 package in Java and Db4objects.Db4o.Collections in .NET</p><a name="Migrating Between Databases"></a>
         <h2>Migrating Between Databases</h2><a name="Problem"></a>
         <h3>Problem</h3>
-        <p>Thansparent Activation is implemented through <code>Activatable/IActivatable</code> interface, which binds an object to the current object container. In a case when an object is stored to more than one object container, this logic won't work, as only one binding (activator) is allowed per object. </p><a name="Solution"></a>
+        <p>Transparent Activation is implemented through <code>Activatable/IActivatable</code> interface, which binds an object to the current object container. In a case when an object is stored to more than one object container, this logic won't work, as only one binding (activator) is allowed per object. </p><a name="Solution"></a>
         <h3>Solution</h3>
         <p>To allow correct behavior of the object between databases, the object should be unbinded before being stored to the next database. This can be done with the following code:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">

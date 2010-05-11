@@ -3,7 +3,7 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">ObjectSet changes = replicationSession.providerA().objectsChangedSinceLastReplication();
-for (Object changedObject : changes) {
+for (Object changedObject : changes) { 
     replicationSession.replicate(changedObject);
 }
 replicationSession.commit();</pre>

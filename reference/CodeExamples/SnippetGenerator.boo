@@ -178,6 +178,7 @@ zipFileGenerator = CodeZip()
 snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator)
 snippetGenerator.CreateCodeSnippets("javaEnhancement","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../Flare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("javaAndroid/src/com/db4odoc","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
 
