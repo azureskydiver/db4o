@@ -5,8 +5,8 @@
         <pre class="prettyprint" xml:space="preserve">&lt;target name=&quot;enhance&quot;&gt;
     &lt;db4o-enhance classtargetdir=&quot;${basedir}/bin&quot;
                   jartargetdir=&quot;${basedir}/lib&quot;
-                  nq=&quot;true&quot; ta=&quot;true&quot;
-                  collections=&quot;true&quot;&gt;
+                  nq=&quot;true&quot; ta=&quot;false&quot;
+                  collections=&quot;false&quot;&gt;        	
         &lt;classpath refid=&quot;project.classpath&quot;/&gt;
         &lt;sources dir=&quot;${basedir}/bin&quot;&gt;
                   &lt;include name=&quot;**/*.class&quot;/&gt;
@@ -20,7 +20,7 @@
     &lt;/db4o-enhance&gt;
 &lt;/target&gt;
 </pre>
-		<div class="codesnippet-meta">simple-enhance-example.xml: Define a target which runs the task <a href="Example-enhancement-buildtime-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">android-nq-optimisation.xml: Define a target which runs the task <a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>
 	</div>
 
