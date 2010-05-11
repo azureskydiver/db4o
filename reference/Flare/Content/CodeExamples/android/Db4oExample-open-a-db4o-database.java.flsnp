@@ -3,18 +3,7 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">String filePath = context.getFilesDir() + &quot;/android.db4o&quot;;
-ObjectContainer db = Db4oEmbedded.openFile(configure(), filePath);
-Pilot p = new Pilot();
-p.setPoints(5);
-db.store(p);
-db.query(new Predicate&lt;Pilot&gt;() {
-
-	@Override
-	public boolean match(Pilot p) {
-		// TODO Auto-generated method stub
-		return p.getPoints()==5;
-	}
-});</pre>
+ObjectContainer db = Db4oEmbedded.openFile(configure(), filePath);</pre>
 		<div class="codesnippet-meta">Db4oExample.java: open a db4o database<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>
 	</div>
