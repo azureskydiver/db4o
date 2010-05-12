@@ -4,7 +4,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class AllTests extends ComposibleReflectionTestSuite {
+public class AllTests extends ComposibleTestSuite {
 	
 	public static void main(String[] arguments) {
 		new ConsoleTestRunner(AllTests.class).run();
