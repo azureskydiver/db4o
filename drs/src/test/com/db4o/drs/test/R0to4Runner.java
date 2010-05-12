@@ -25,7 +25,6 @@ import java.util.*;
 
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.inside.ReplicationReflector;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;

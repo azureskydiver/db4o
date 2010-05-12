@@ -20,30 +20,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test.hibernate;
 
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.cfg.*;
+import org.hibernate.tool.hbm2ddl.*;
 
-import com.db4o.drs.hibernate.impl.ReplicationConfiguration;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.test.Car;
-import com.db4o.drs.test.CollectionHolder;
-import com.db4o.drs.test.DrsFixture;
-import com.db4o.drs.test.IByteArrayHolder;
-import com.db4o.drs.test.ListContent;
-import com.db4o.drs.test.ListHolder;
-import com.db4o.drs.test.MapContent;
-import com.db4o.drs.test.MapHolder;
-import com.db4o.drs.test.Pilot;
-import com.db4o.drs.test.R0;
-import com.db4o.drs.test.Replicated;
-import com.db4o.drs.test.SPCChild;
-import com.db4o.drs.test.SPCParent;
-import com.db4o.drs.test.SimpleArrayContent;
-import com.db4o.drs.test.SimpleArrayHolder;
-import com.db4o.drs.test.SimpleItem;
-import com.db4o.drs.test.SimpleListHolder;
+import com.db4o.drs.hibernate.impl.*;
+import com.db4o.drs.inside.*;
+import com.db4o.drs.test.*;
+import com.db4o.drs.test.regression.*;
 
 public abstract class RdbmsFixture implements DrsFixture {
+	
 	public static final Class[] mappings;
 	
 	protected String _name;
@@ -56,15 +42,25 @@ public abstract class RdbmsFixture implements DrsFixture {
 	
 	static {
 		mappings = new Class[]{
+				ActivatableItem.class,
+				Car.class,
+				CollectionHolder.class, 
 				IByteArrayHolder.class,
-				CollectionHolder.class, Replicated.class,
-				SPCParent.class, SPCChild.class,
-				ListHolder.class, ListContent.class,
-				SimpleListHolder.class, SimpleItem.class,				
-				MapHolder.class,  MapContent.class,
-				SimpleArrayContent.class, SimpleArrayHolder.class,
-				R0.class, Pilot.class, Car.class,
-                com.db4o.drs.test.regression.NewPilot.class};
+				ListContent.class,
+				ListHolder.class, 
+				MapContent.class,
+				MapHolder.class,  
+				Pilot.class, 
+				R0.class, 
+				Replicated.class,
+				SimpleArrayContent.class, 
+				SimpleArrayHolder.class,
+				SimpleItem.class,				
+				SimpleListHolder.class, 
+				SPCParent.class, 
+				SPCChild.class,
+                NewPilot.class,
+                };
 	}
 	
 	public static Configuration addAllMappings(Configuration cfg) {

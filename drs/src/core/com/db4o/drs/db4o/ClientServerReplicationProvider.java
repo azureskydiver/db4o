@@ -32,6 +32,6 @@ class ClientServerReplicationProvider extends FileReplicationProvider {
 	}
 	
 	protected void refresh(Object obj) {
-		_stream.refresh(obj, 1);
+		_container.refresh(obj, 1);
 	}
 }
