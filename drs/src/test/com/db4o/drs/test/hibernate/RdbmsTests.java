@@ -20,10 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test.hibernate;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.db4o.drs.test.ByteArrayTest;
 import com.db4o.drs.test.Db4oClientServerDrsFixture;
 import com.db4o.drs.test.DrsTestSuite;
 import com.db4o.drs.test.DrsTestSuiteBuilder;
@@ -31,66 +27,77 @@ import com.db4o.drs.test.DrsTestSuiteBuilder;
 import db4ounit.ConsoleTestRunner;
 
 public class RdbmsTests extends DrsTestSuite {
+	
 	public static void main(String[] args) {
+		new RdbmsTests().run();
+	}
+	
+	public int run(){
+		
+		int failureCount = 0;
+		
 		/*
 		 * The db4ounit forbids the reuse of provider by design Do not run two
 		 * HSql combinations at the same time, otherwise out of memory.
-		 * 
 		 */
 
-		//new RdbmsTests().runHsqlHsql();
-		new RdbmsTests().runHsqldb4oCS();
-//		new RdbmsTests().runOracledb4oCS();
-//		new RdbmsTests().runMySQLdb4oCS();
-//		new RdbmsTests().runPostgreSQLdb4oCS();
-		//new RdbmsTests().runMsSqldb4oCS();
-//		new RdbmsTests().runDb2db4oCS();
-		//new RdbmsTests().runDerbydb4oCS();
+//		failureCount += new RdbmsTests().runHsqlHsql();
+		
+		failureCount += new RdbmsTests().runHsqldb4oCS();
+		
+//		failureCount += new RdbmsTests().runOracledb4oCS();
+//		failureCount += new RdbmsTests().runMySQLdb4oCS();
+//		failureCount += new RdbmsTests().runPostgreSQLdb4oCS();
+//		failureCount += new RdbmsTests().runMsSqldb4oCS();
+//		failureCount += new RdbmsTests().runDb2db4oCS();
+//		failureCount += new RdbmsTests().runDerbydb4oCS();
+		
+		return failureCount;
 	}
 
-	public void runHsqlHsql() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
+	public int runHsqlHsql() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
 				new HsqlMemoryFixture("hsql-b"), getClass())).run();
 	}
 
-	public void runHsqldb4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
+	public int runHsqldb4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 
-	public void runOracledb4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new OracleFixture("Oracle-a"),
+	public int runOracledb4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new OracleFixture("Oracle-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 
-	public void runMySQLdb4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new MySQLFixture("MySQL-a"),
+	public int runMySQLdb4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new MySQLFixture("MySQL-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 
-	public void runPostgreSQLdb4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new PostgreSQLFixture(
+	public int runPostgreSQLdb4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new PostgreSQLFixture(
 				"PostgreSQL-a"), new Db4oClientServerDrsFixture("db4o-cs-b",
 				9587), getClass())).run();
 	}
 
-	public void runMsSqldb4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new MsSqlFixture("MsSql"),
+	public int runMsSqldb4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new MsSqlFixture("MsSql"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 	
-	public void runDb2db4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db2Fixture("Db2"),
+	public int runDb2db4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db2Fixture("Db2"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 	
-	public void runDerbydb4oCS() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new DerbyFixture("Derby"),
+	public int runDerbydb4oCS() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new DerbyFixture("Derby"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
@@ -101,9 +108,5 @@ public class RdbmsTests extends DrsTestSuite {
 			ReplicationConfiguratorTest.class,
 			RoundRobinWithManyProviders.class,
 		};
-	}
-
-	protected Class[] one() {
-		return new Class[] {ByteArrayTest.class};
 	}
 }

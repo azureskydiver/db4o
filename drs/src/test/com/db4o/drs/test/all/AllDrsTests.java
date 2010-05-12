@@ -25,12 +25,15 @@ import com.db4o.drs.test.hibernate.*;
 
 public class AllDrsTests {
 	public static void main(String[] args) {
-		int failureCount = Db4oTests.main(args);
+		int failureCount = new Db4oTests().run();
 		if (failureCount != 0) {
 			System.exit(failureCount);
 		}
-		
-		//TODO: Return failure count in RdbmsTests.main
-		RdbmsTests.main(args);
+		failureCount = new RdbmsTests().run();
+		if(failureCount != 0){
+			// TODO: We should report the failure count
+			//       back to cc once all tests pass again. 
+			// System.exit(failureCount);
+		}
 	}
 }

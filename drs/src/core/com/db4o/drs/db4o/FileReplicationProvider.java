@@ -49,7 +49,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private ReadonlyReplicationProviderSignature _mySignature;
 
-	protected final ExternalObjectContainer _stream;
+	protected final ExternalObjectContainer _container;
 
 	private final Reflector _reflector;
 
@@ -74,9 +74,9 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		cfg.callbacks(false);
 
 		_name = name;
-		_stream = (ExternalObjectContainer) objectContainer;
-		_reflector = _stream.reflector();
-		_signatureMap = new Db4oSignatureMap(_stream);
+		_container = (ExternalObjectContainer) objectContainer;
+		_reflector = _container.reflector();
+		_signatureMap = new Db4oSignatureMap(_container);
 		_activationStrategy = createActivationStrategy();
 	}
 
@@ -84,7 +84,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		if(isTransparentActivationEnabled()){
 			return new Procedure4() {
 				public void apply(Object obj) {
-					ObjectInfo objectInfo = _stream.getObjectInfo(obj);
+					ObjectInfo objectInfo = _container.getObjectInfo(obj);
 					((Activator)objectInfo).activate(ActivationPurpose.READ);
 				}
 			};
@@ -97,25 +97,25 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 				}
 				ReflectClass claxx = _reflector.forObject(obj);
 				int level = claxx.isCollection() ? 3 : 1;
-				_stream.activate(obj, level);
+				_container.activate(obj, level);
 			}
 		};
 	}
 
 	private boolean isTransparentActivationEnabled() {
-		return TransparentActivationSupport.isTransparentActivationEnabledOn(_stream);
+		return TransparentActivationSupport.isTransparentActivationEnabledOn(_container);
 	}
 
 	public ReadonlyReplicationProviderSignature getSignature() {
 		if (_mySignature == null) {
-			_mySignature = new Db4oReplicationProviderSignature(_stream
+			_mySignature = new Db4oReplicationProviderSignature(_container
 					.identity());
 		}
 		return _mySignature;
 	}
 
 	public Object getMonitor() {
-		return _stream.lock();
+		return _container.lock();
 	}
 
 	public void startReplicationTransaction(
@@ -125,9 +125,9 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 		synchronized (getMonitor()) {
 
-			Transaction trans = _stream.transaction();
+			Transaction trans = _container.transaction();
 
-			Db4oDatabase myIdentity = _stream.identity();
+			Db4oDatabase myIdentity = _container.identity();
 			_signatureMap.put(myIdentity);
 
 			Db4oDatabase otherIdentity = _signatureMap.produce(peerSignature
@@ -145,40 +145,40 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 			}
 
 			_replicationRecord = ReplicationRecord.queryForReplicationRecord(
-					_stream, trans, younger, older);
+					_container, trans, younger, older);
 			if (_replicationRecord == null) {
 				_replicationRecord = new ReplicationRecord(younger, older);
-				_replicationRecord.store(_stream);
+				_replicationRecord.store(_container);
 			}
 
-			long localInitialVersion = _stream.version();
+			long localInitialVersion = _container.version();
 		}
 	}
 
 	public void syncVersionWithPeer(long version) {
 		long versionTest = getCurrentVersion();
 		_replicationRecord._version = version;
-		_replicationRecord.store(_stream);
+		_replicationRecord.store(_container);
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 
 		long versionTest = getCurrentVersion();
 
-		_stream.raiseVersion(raisedDatabaseVersion);
-		_stream.commit();
+		_container.raiseVersion(raisedDatabaseVersion);
+		_container.commit();
 		_idsReplicatedInThisSession = null;
 
 	}
 
 	public void rollbackReplication() {
-		_stream.rollback();
+		_container.rollback();
 		_referencesByObject = null;
 		_idsReplicatedInThisSession = null;
 	}
 
 	public long getCurrentVersion() {
-		return _stream.version();
+		return _container.version();
 	}
 
 	public long getLastReplicationVersion() {
@@ -187,10 +187,10 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	public void storeReplica(Object obj) {
 		synchronized (getMonitor()) {
-			_stream.storeByNewReplication(this, obj);
+			_container.storeByNewReplication(this, obj);
 
 			// the ID is an int internally, it can be casted to int.
-			final TreeInt node = new TreeInt((int) _stream.getID(obj));
+			final TreeInt node = new TreeInt((int) _container.getID(obj));
 
 			if (_idsReplicatedInThisSession == null)
 				_idsReplicatedInThisSession = node;
@@ -228,7 +228,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 		refresh(obj);
 
-		ObjectInfo objectInfo = _stream.getObjectInfo(obj);
+		ObjectInfo objectInfo = _container.getObjectInfo(obj);
 
 		if (objectInfo == null) {
 			return null;
@@ -286,12 +286,12 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		if (uuid == null) {
 			return null;
 		}
-		Object obj = _stream.getByUUID(uuid);
+		Object obj = _container.getByUUID(uuid);
 		if (obj == null) {
 			return null;
 		}
-		if (!_stream.isActive(obj)) {
-			_stream.activate(obj, 1);
+		if (!_container.isActive(obj)) {
+			_container.activate(obj, 1);
 		}
 		return produceReference(obj, null, null);
 	}
@@ -312,13 +312,13 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
-		Query q = _stream.query();
+		Query q = _container.query();
 		whereModified(q);
 		return q.execute();
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		Query q = _stream.query();
+		Query q = _container.query();
 		q.constrain(clazz);
 		whereModified(q);
 		return q.execute();
@@ -338,17 +338,17 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public ObjectSet getStoredObjects(Class type) {
-		Query query = _stream.query();
+		Query query = _container.query();
 		query.constrain(type);
 		return query.execute();
 	}
 
 	public void storeNew(Object o) {
-		_stream.store(o);
+		_container.store(o);
 	}
 
 	public void update(Object o) {
-		_stream.store(o);
+		_container.store(o);
 	}
 
 	public String getName() {
@@ -360,11 +360,11 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void commit() {
-		_stream.commit();
+		_container.commit();
 	}
 
 	public void deleteAllInstances(Class clazz) {
-		Query q = _stream.query();
+		Query q = _container.query();
 		q.constrain(clazz);
 		Iterator objectSet = q.execute().iterator();
 		while (objectSet.hasNext())
@@ -372,13 +372,13 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void delete(Object obj) {
-		_stream.delete(obj);
+		_container.delete(obj);
 	}
 
 	public boolean wasModifiedSinceLastReplication(
 			ReplicationReference reference) {
 		if (_idsReplicatedInThisSession != null) {
-			int id = (int) _stream.getID(reference.object());
+			int id = (int) _container.getID(reference.object());
 			if (_idsReplicatedInThisSession.find(new TreeInt(id)) != null)
 				return false;
 		}
@@ -407,15 +407,15 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void replicateDeletion(Db4oUUID uuid) {
-		Object obj = _stream.getByUUID(uuid);
+		Object obj = _container.getByUUID(uuid);
 		if (obj == null)
 			return;
 
-		_stream.delete(obj);
+		_container.delete(obj);
 	}
 
 	public ExtObjectContainer getObjectContainer() {
-		return _stream;
+		return _container;
 	}
 
 	public boolean isProviderSpecific(Object original) {
