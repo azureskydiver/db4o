@@ -14,7 +14,7 @@
   UseBrowserDefaultSize="true"
   UseDefaultBrowserSetup="false"
   Title="db4o Reference Documentation"
-  AutoSyncTOC="false"
+  AutoSyncTOC="true"
   NavigationLinkTop="true"
   NavigationLinkBottom="false"
   BrowserSetup="">
