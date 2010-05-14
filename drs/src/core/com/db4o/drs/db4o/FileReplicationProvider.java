@@ -424,4 +424,8 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
 	}
+
+	public ObjectSet getStoredObjects() {
+		return _container.query().execute();
+	}
 }

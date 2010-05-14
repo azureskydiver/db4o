@@ -33,42 +33,76 @@ import db4ounit.fixtures.*;
 
 public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 	
-	private static final FixtureVariable TRANSPARENT_ACTIVATION_FIXTURE = new FixtureVariable("TransparentActivation");
+	private static final FixtureVariable<LabeledObject<Boolean>> TRANSPARENT_ACTIVATION_FIXTURE = FixtureVariable.newInstance("Transparent Activation");
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
-			new SubjectFixtureProvider(new Object[] {
+			new SubjectFixtureProvider(new CollectionHolderFactory[] {
 				collection1(),
 				collection2(),
 				collection3(),
 			}),
-			new SimpleFixtureProvider(TRANSPARENT_ACTIVATION_FIXTURE, new Object[]{true, false})
+			new SimpleFixtureProvider(TRANSPARENT_ACTIVATION_FIXTURE, (Object[])LabeledObject.forObjects(false, true)),
 		};
 	}
+	
+	public static abstract class CollectionHolderFactory implements Labeled {
+		public abstract CollectionHolder newCollectionHolder();
+	}
 
-	private Object collection1() {
-		return initialize(
-				new CollectionHolder(
-					new Hashtable(),
-					new HashSet(),
-					new LinkedList()));
+	private CollectionHolderFactory collection1() {
+		return new CollectionHolderFactory(){
+			@Override
+			public CollectionHolder newCollectionHolder() {
+				return initialize(
+						new CollectionHolder(
+								"Hashtable",
+								new Hashtable(),
+								new HashSet(),
+								new LinkedList()));
+
+			}
+			public String label() {
+				return "Hashtable";
+			}
+		};
 	}
 	
-	private Object collection2() {
-		return initialize(
-				new CollectionHolder(
-					new HashMap<String, String>(),
-					new HashSet(),
-					new ArrayList<String>()));
+	private CollectionHolderFactory collection2() {
+		return new CollectionHolderFactory(){
+			@Override
+			public CollectionHolder newCollectionHolder() {
+				return initialize(
+						new CollectionHolder(
+								"HashMap",
+								new HashMap<String, String>(),
+								new HashSet(),
+								new ArrayList<String>()));
+
+			}
+			public String label() {
+				return "HashMap";
+			}
+		};
 	}
 	
-	private Object collection3() {
-		return initialize(
-				new CollectionHolder(
-					new TreeMap<String, String>(),
-					new HashSet(),
-					new ArrayList()));
+	private CollectionHolderFactory collection3() {
+		return new CollectionHolderFactory(){
+			@Override
+			public CollectionHolder newCollectionHolder() {
+				return initialize(
+						new CollectionHolder(
+								"TreeMap",
+								new TreeMap<String, String>(),
+								new HashSet(),
+								new ArrayList()));
+
+			}
+			public String label() {
+				return "TreeMap";
+			}
+		};
 	}
 
 	private CollectionHolder initialize(CollectionHolder h1) {
@@ -88,12 +122,13 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 		
 		@Override
 		protected void configure(Configuration config) {
-			if((Boolean)TRANSPARENT_ACTIVATION_FIXTURE.value()){
+			if(TRANSPARENT_ACTIVATION_FIXTURE.value().value()){
 				config.add(new TransparentActivationSupport());
 			}
 		}
 	
 		public void test() {
+			
 			CollectionHolder h1 = subject();
 			
 			storeNewAndCommit(a().provider(), h1);
@@ -104,8 +139,11 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 			Assert.isTrue(it.hasNext());
 			
 			CollectionHolder replica = (CollectionHolder) it.next();
+			
+			b().provider().activate(replica);
 			assertSameClassIfDb4o(h1.map, replica.map);
 			for (Object key : h1.map.keySet()) {
+				b().provider().activate(replica.map);
 				Assert.areEqual(h1.map.get(key), replica.map.get(key));
 			}
 			
@@ -121,7 +159,8 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 		}
 
 		private CollectionHolder subject() {
-			return (CollectionHolder) SubjectFixtureProvider.value();
+			CollectionHolderFactory factory = SubjectFixtureProvider.value();
+			return factory.newCollectionHolder();
 		}
 
 		private void assertSameClassIfDb4o(final Object expectedInstance,
