@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1423" MadCap:lastWidth="749">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1386" MadCap:lastWidth="749">
     <head>
     </head>
     <body>
@@ -7,8 +7,8 @@
             <MadCap:keyword term="Enhancement:Build Time" />Build Time Enhancement Example</h1>
         <p>It possible to integrate the db4o enhancements into the build process,  using a special <MadCap:variable name="Primary.Ant" />-Task. </p>
         <h2>Preparation</h2>
-        <p MadCap:conditions="Primary..NET">The enhance-functionality resides in the Db4oTool.exe, Db4oTool.MSBuild.dll and its dependencies. This files are in the db4o-distribution. Ensure that all dll-files are in the same directory. Then ensure that the build-script has configured the right location for the Db4oTool.exe etc. For this example in the Db4oTool and dependencies are in the 'lib'-folder of the project</p>
-        <p MadCap:conditions="Primary.Java">The enhance-functionality is implemented in the db4o-<MadCap:variable name="Primary.CurrentVersion" />-instrumentation and db4o-<MadCap:variable name="Primary.CurrentVersion" />-tools-jar and its dependencies. This files are in the db4o-distribution. Take a look a the detail documentation for detailed infos. <MadCap:xref href="enhancement_for_java.htm" target="" title="" alt="">See "Enhancement For Java"</MadCap:xref><br />Or you can take the db4o-<MadCap:variable name="Primary.CurrentVersion" />-all-jar which includes all db4o-functionality and all dependencies. For this example the db4o-<MadCap:variable name="Primary.CurrentVersion"></MadCap:variable>-all-jar is in the 'lib'-folder of the project.</p>
+        <p MadCap:conditions="Primary..NET">The enhance-functionality resides in the Db4oTool.exe, Db4oTool.MSBuild.dll and its dependencies. All these files are in the db4o-distribution. Ensure that all dll-files are in the same directory. Then ensure that the build-script has configured the right location for the Db4oTool.exe etc. For this example in the Db4oTool and dependencies are in the 'lib'-folder of the project</p>
+        <p MadCap:conditions="Primary.Java">The enhance-functionality is implemented in the db4o-<MadCap:variable name="Primary.CurrentVersion" />-instrumentation and db4o-<MadCap:variable name="Primary.CurrentVersion" />-tools-jar and its dependencies. This files are in the db4o-distribution. Take a look a the detailed documentation for detailed infos. <MadCap:xref href="enhancement_for_java.htm" target="" title="" alt="">See "Enhancement For Java"</MadCap:xref><br />Or you can take the db4o-<MadCap:variable name="Primary.CurrentVersion" />-all-jar which includes all db4o-functionality and all dependencies. For this example the db4o-<MadCap:variable name="Primary.CurrentVersion"></MadCap:variable>-all-jar is in the 'lib'-folder of the project.</p>
         <h2>Create the Enhancement Task</h2>
         <p>First we define the enhancement-task. This task will process the <MadCap:variable name="Primary.Artefact" /> and enhance it. </p>
         <p MadCap:conditions="Primary.Java">If you haven't used Ant yet, read more on the <a href="http://ant.apache.org/">official Ant website</a>. </p>
