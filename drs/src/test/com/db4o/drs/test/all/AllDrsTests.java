@@ -31,9 +31,7 @@ public class AllDrsTests {
 		}
 		failureCount = new RdbmsTests().run();
 		if(failureCount != 0){
-			// TODO: We should report the failure count
-			//       back to cc once all tests pass again. 
-			// System.exit(failureCount);
+			System.exit(failureCount);
 		}
 	}
 }

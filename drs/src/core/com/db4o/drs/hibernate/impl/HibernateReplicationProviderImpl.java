@@ -20,50 +20,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.hibernate.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Criteria;
-import org.hibernate.EmptyInterceptor;
-import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.event.EventListeners;
-import org.hibernate.event.FlushEvent;
-import org.hibernate.event.FlushEventListener;
-import org.hibernate.event.PostInsertEvent;
-import org.hibernate.mapping.PersistentClass;
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+import org.hibernate.criterion.*;
+import org.hibernate.event.*;
+import org.hibernate.mapping.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.hibernate.metadata.ObjectReference;
-import com.db4o.drs.hibernate.metadata.PeerSignature;
-import com.db4o.drs.hibernate.metadata.ProviderSignature;
-import com.db4o.drs.hibernate.metadata.Record;
-import com.db4o.drs.hibernate.metadata.Uuid;
-import com.db4o.drs.inside.CollectionHandler;
-import com.db4o.drs.inside.CollectionHandlerImpl;
-import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
-import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.drs.inside.ReplicationReflector;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.foundation.Visitor4;
-import com.db4o.reflect.Reflector;
+import com.db4o.*;
+import com.db4o.drs.hibernate.metadata.*;
+import com.db4o.drs.inside.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
+	
+	private static final boolean SHOW_SQL = false;
+	
 	private boolean _simpleObjectContainerCommitCalled = true;
 
 	private Configuration _cfg;
@@ -112,6 +91,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
 		_name = name;
 		_cfg = ReplicationConfiguration.decorate(cfg);
+		
+		if(SHOW_SQL){
+			_cfg.setProperty("hibernate.show_sql", "true");
+		}
 
 		new TablesCreatorImpl(_cfg).validateOrCreate();
 

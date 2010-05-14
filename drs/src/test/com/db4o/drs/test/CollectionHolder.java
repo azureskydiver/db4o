@@ -28,8 +28,15 @@ public class CollectionHolder {
 	public List list;
 	public Set set;
 	
+	public CollectionHolder(String name, Map theMap, Set theSet, List theList) {
+		this.name = name;
+		map = theMap;
+		set = theSet;
+		list = theList;
+	}
+	
 	public CollectionHolder() {
-		this(new HashMap(), new HashSet(), new ArrayList());
+		this("HashMap", new HashMap(), new HashSet(), new ArrayList());
 	}
 
 	public CollectionHolder(String name) {
@@ -37,11 +44,6 @@ public class CollectionHolder {
 		this.name = name;
 	}
 
-	public CollectionHolder(Map theMap, Set theSet, List theList) {
-		map = theMap;
-		set = theSet;
-		list = theList;
-	}
 
 	public String toString() {
 		return name + ", hashcode = " + hashCode();
