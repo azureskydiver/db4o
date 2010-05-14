@@ -544,9 +544,6 @@
           Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/.net_enumerations.htm"
           conditions="Primary.All languages,Primary..NET">
           <TocEntry
-            Title="Viewing enum Values In OME"
-            Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/.net_enumerations/viewing_enum_values_in_ome.htm"></TocEntry>
-          <TocEntry
             Title="Enums Example"
             Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/.net_enumerations/enums_example.htm" />
         </TocEntry>
@@ -1899,7 +1896,13 @@
         Link="/Content/object_manager_enterprise/ome_for_visual_studio/browsing_a_database.htm" />
       <TocEntry
         Title="Querying"
-        Link="/Content/object_manager_enterprise/ome_for_visual_studio/querying.htm" />
+        Link="/Content/object_manager_enterprise/ome_for_visual_studio/querying.htm"></TocEntry>
+      <TocEntry
+        Title="Viewing Collections"
+        Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_collections.htm" />
+      <TocEntry
+        Title="Viewing enum Values In OME"
+        Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_enum_values_in_ome.htm"></TocEntry>
     </TocEntry>
   </TocEntry>
   <TocEntry
