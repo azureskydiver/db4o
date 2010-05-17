@@ -4,15 +4,28 @@ package com.db4o.db4ounit.common.freespace;
 
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 
-public class FileSizeTestCase extends FreespaceManagerTestCaseBase implements OptOutDefragSolo {
+public class FileSizeTestCase extends FreespaceManagerTestCaseBase {
     
     private static final int ITERATIONS = 100;
 
 	public static void main(String[] args) {
 		new FileSizeTestCase().runSolo();
+	}
+	
+	public void testConsistentSizeOnDefragment(){
+		storeSomeItems();
+		db().commit();
+        assertConsistentSize(new Runnable() {
+            public void run() {
+            	try {
+					defragment();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });
 	}
 	
 	public void testConsistentSizeOnRollback(){
@@ -82,15 +95,20 @@ public class FileSizeTestCase extends FreespaceManagerTestCaseBase implements Op
     }
     
     public void assertConsistentSize(Runnable runnable){
-        for (int i = 0; i < 10; i++) {
-            runnable.run();
-        }
+        warmup(runnable);
         int originalFileSize = databaseFileSize();
         for (int i = 0; i < ITERATIONS; i++) {
+//        	System.out.println(databaseFileSize());
             runnable.run();
-            // System.out.println(databaseFileSize());
         }
         Assert.areEqual(originalFileSize, databaseFileSize());
     }
+
+	private void warmup(Runnable runnable) {
+		for (int i = 0; i < 10; i++) {
+//        	System.out.println(databaseFileSize());
+            runnable.run();
+        }
+	}
 
 }
