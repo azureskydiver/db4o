@@ -30,21 +30,47 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 public class Db4oDrsFixture implements DrsFixture {
-	static final File RAM_DRIVE = new File("w:");
 	
 	protected String _name;
+	
 	protected ExtObjectContainer _db;
+	
 	protected TestableReplicationProviderInside _provider;
+	
 	protected final File testFile;
+	
 	private Configuration _config;
+	
+	static final String RAM_DRIVE_PROPERTY = "db4o.drs.path";
+	
+	private static final String PATH;
+	
+	static{
+		
+		String path = System.getProperty(RAM_DRIVE_PROPERTY);
+		if(path == null){
+			path = System.getenv(RAM_DRIVE_PROPERTY);
+		}
+		if(path == null || path.length() == 0){
+			System.out.println("You can tune dRS tests by setting the environment variable ");
+			System.out.println(RAM_DRIVE_PROPERTY);
+			System.out.println("to your RAM drive.");
+			path = ".";
+		}
+		PATH = path;
+	}
+	
 	
 	public Db4oDrsFixture(String name) {
 		_name = name;
 		
-		if (RAM_DRIVE.exists())
-			testFile = new File(RAM_DRIVE.getPath() + "drs_cs_" + _name + ".db4o");
-		else	
-			testFile = new File("drs_cs_" + _name + ".db4o");
+		File folder = new File(PATH);
+		if (! folder.exists()){
+			System.out.println("Path " + PATH + " does not exist. Using current working folder.");
+			System.out.println("Check the " + RAM_DRIVE_PROPERTY + " environment variable on your system.");
+			folder = new File(".");
+		}
+		testFile = new File(folder.getPath() + "/drs_cs_" + _name + ".db4o");
 	}
 	
 	public TestableReplicationProviderInside provider() {
