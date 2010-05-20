@@ -2,6 +2,7 @@
 
 package com.db4o.events;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 
 public class TransactionalEventArgs extends EventArgs {
@@ -15,4 +16,9 @@ public class TransactionalEventArgs extends EventArgs {
 	public Object transaction() {
 		return _transaction;
 	}
+	
+	public ObjectContainer objectContainer(){
+		return _transaction.objectContainer();
+	}
+	
 }

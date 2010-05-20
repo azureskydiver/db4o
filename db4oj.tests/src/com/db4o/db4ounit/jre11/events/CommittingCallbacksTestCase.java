@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.jre11.events;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
@@ -27,6 +28,7 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
 	
 	public static final class Item {
+		
 		public int id;
 		
 		public Item() {
@@ -62,6 +64,43 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 	protected void db4oTearDownBeforeClean() throws Exception {
 		committing().removeListener(_eventRecorder);
 	}
+	
+
+	public void testObjectStateInUpdatedCommittingCallBack() {
+
+		int oldId = 42;
+		int newId = 43;
+
+		Item item = new Item(oldId);
+		store(item);
+		db().commit();
+
+		final ObjectByRef<ObjectInfoCollection> updatedByRef = new ObjectByRef();
+		final ObjectByRef<ObjectContainer> objectContainerByRef = new ObjectByRef();
+		serverEventRegistry().committing().addListener(new EventListener4() {
+			public void onEvent(Event4 e, EventArgs args) {
+				CommitEventArgs commitEventArgs = (CommitEventArgs) args;
+				updatedByRef.value = commitEventArgs.updated();
+				objectContainerByRef.value = commitEventArgs.objectContainer();
+			}
+		});
+
+		item.id = newId;
+		store(item);
+		db().commit();
+
+		ObjectInfoCollection updated = updatedByRef.value;
+		Iterator4 i = updated.iterator();
+		i.moveNext();
+		ObjectInfo info = (ObjectInfo) i.current();
+		Item updatedItem = (Item) info.getObject();
+
+		ObjectContainer objectContainer = objectContainerByRef.value;
+		objectContainer.activate(updatedItem, 1);
+		Assert.areEqual(newId, updatedItem.id);
+
+	}
+
 	
 	public void testLocalTransactionIsAvailableToEventListener() {
 		if (isMultiSession()) {

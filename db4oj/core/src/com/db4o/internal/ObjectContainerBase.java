@@ -1730,6 +1730,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public abstract void setDirtyInSystemTransaction(PersistentBase a_object);
 
     public abstract boolean setSemaphore(String name, int timeout);
+    
+    public abstract boolean setSemaphore(final Transaction trans, final String name, final int timeout);
+    
+    public abstract void releaseSemaphore(final Transaction trans, final String name);
 
     void stringIO(LatinStringIO io) {
         _handlers.stringIO(io);

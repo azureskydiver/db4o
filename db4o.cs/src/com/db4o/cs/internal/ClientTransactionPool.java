@@ -39,6 +39,10 @@ public class ClientTransactionPool {
 				_fileName2Container.put(fileName, entry);
 			}
 			Transaction transaction = entry.newTransaction();
+			
+			ObjectContainerSession objectContainerSession = new ObjectContainerSession(entry._container, transaction);
+			transaction.setOutSideRepresentation(objectContainerSession);
+			
 			_transaction2Container.put(transaction, entry);
 			return transaction;
 		}

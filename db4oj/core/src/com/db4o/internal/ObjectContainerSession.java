@@ -27,21 +27,22 @@ import com.db4o.types.*;
 public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec   {
 
     
-    protected final LocalObjectContainer _server;
+    protected final ObjectContainerBase _server;
     
     protected final Transaction _transaction;
     
     private boolean _closed = false;
     
-    public ObjectContainerSession(LocalObjectContainer server, Transaction trans) {
+    public ObjectContainerSession(ObjectContainerBase server, Transaction trans) {
         _server = server;
         _transaction = trans;
+    }
+    
+    public ObjectContainerSession(ObjectContainerBase server) {
+        this(server, server.newUserTransaction());
         _transaction.setOutSideRepresentation(this);
     }
     
-    public ObjectContainerSession(LocalObjectContainer server) {
-        this(server, server.newUserTransaction());
-    }
 
     /** @param path */
     public void backup(String path) throws Db4oIOException, DatabaseClosedException,
@@ -65,10 +66,9 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 
     public Configuration configure() {
         
-        // FIXME: Consider allowing configuring
+    	// FIXME: Consider throwing NotSupportedException here.
         // throw new NotSupportedException();
         
-        // FIXME: Consider throwing NotSupportedException here.
         synchronized(lock()){
             checkClosed();
             return _server.configure();

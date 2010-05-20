@@ -108,8 +108,8 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
         ReferenceSystem referenceSystem = trans.referenceSystem();
         ObjectContainerSession client = new ObjectContainerSession(_server, trans);
         
-        // FIXME: close needs to unregister reference system
-        //        also for crashed clients 
+        // FIXME: Need to unregister reference system also
+        //        for crashed clients that never get closed. 
         client.close();
         
         // should have been removed on close.

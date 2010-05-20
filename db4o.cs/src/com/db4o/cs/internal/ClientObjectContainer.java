@@ -701,15 +701,20 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 		classCollection().read(systemTransaction());
 	}
-
-	public void releaseSemaphore(String name) {
+	
+	public void releaseSemaphore(Transaction trans, final String name){
 		synchronized (_lock) {
 			checkClosed();
 			if (name == null) {
 				throw new NullPointerException();
 			}
-			write(Msg.RELEASE_SEMAPHORE.getWriterForString(_transaction, name));
+			trans = checkTransaction(trans);
+			write(Msg.RELEASE_SEMAPHORE.getWriterForString(trans, name));
 		}
+	}
+
+	public void releaseSemaphore(String name) {
+		releaseSemaphore(_transaction, name);
 	}
 
 	public void releaseSemaphores(Transaction ta) {
@@ -747,19 +752,24 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public final void setDirtyInSystemTransaction(PersistentBase a_object) {
 		// do nothing
 	}
-
-	public boolean setSemaphore(String name, int timeout) {
+	
+	public boolean setSemaphore(Transaction trans, final String name, final int timeout){
 		synchronized (_lock) {
 			checkClosed();
+			trans = checkTransaction(trans);
 			if (name == null) {
 				throw new NullPointerException();
 			}
-			MsgD msg = Msg.SET_SEMAPHORE.getWriterForIntString(_transaction,
-					timeout, name);
+			MsgD msg = Msg.SET_SEMAPHORE.getWriterForIntString(trans,timeout, name);
 			write(msg);
 			Msg message = getResponse();
 			return (message.equals(Msg.SUCCESS));
 		}
+		
+	}
+
+	public boolean setSemaphore(String name, int timeout) {
+		return setSemaphore(_transaction, name, timeout);
 	}
 
     /**
