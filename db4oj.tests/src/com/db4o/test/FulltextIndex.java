@@ -99,9 +99,9 @@ public class FulltextIndex implements MessageRecipient{
     }
     
     public void processMessage(MessageContext context, Object message) {
-        final ObjectContainerBase container = (ObjectContainerBase) context.container();
-		FulltextIndex fti = (FulltextIndex)container.getByID(context.transaction(), ((IDMessage)message).id);
-        container.activate(context.transaction(), fti, new FixedActivationDepth(1));
+        final ExtObjectContainer container = (ExtObjectContainer) context.container();
+		FulltextIndex fti = (FulltextIndex)container.getByID(((IDMessage)message).id);
+        container.activate(fti, 1);
         fti.updateIndex(container);
     }
     
