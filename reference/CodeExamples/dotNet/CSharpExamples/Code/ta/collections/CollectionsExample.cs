@@ -20,7 +20,6 @@ namespace Db4oDoc.Code.TA.Collections
                 team.Add(new Pilot("John"));
                 team.Add(new Pilot("Max"));
                 container.Store(team);
-                container.Close();
             }
             using (IObjectContainer container = openDatabaseWithTA())
             {
@@ -29,7 +28,6 @@ namespace Db4oDoc.Code.TA.Collections
                 {
                     Console.WriteLine(pilot);
                 }
-                container.Close();
             }
             CleanUp();
         }

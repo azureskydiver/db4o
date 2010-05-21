@@ -285,16 +285,16 @@ namespace Db4oDoc.Drs.Advanced
 
         private static void StoreObjectsIn(string databaseFile)
         {
-            IObjectContainer db = OpenDatabase(databaseFile);
-            Pilot john = new Pilot("John", 100);
-            Car johnsCar = new Car(john, "John's Car");
-            db.Store(johnsCar);
-            Pilot max = new Pilot("Max", 200);
-            Car maxsCar = new Car(max, "Max's Car");
-            db.Store(maxsCar);
-            db.Commit();
-            db.Close();
-        }
+            using (IObjectContainer container = OpenDatabase(databaseFile)){
+                Pilot john = new Pilot("John", 100);
+                Car johnsCar = new Car(john, "John's Car");
+                container.Store(johnsCar);
+                Pilot max = new Pilot("Max", 200);
+                Car maxsCar = new Car(max, "Max's Car");
+                container.Store(maxsCar);
+                container.Commit();
+            }
+    }
 
         private static void PrintCars(IObjectContainer database)
         {

@@ -36,5 +36,7 @@
       Name="Primary/Ant">MSBuild</Variable>
     <Variable
       Name="Primary/IDE">Visual Studio</Variable>
+    <Variable
+      Name="Primary/UUID">Guid</Variable>
   </Variables>
 </CatapultTarget>
