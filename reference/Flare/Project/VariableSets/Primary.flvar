@@ -38,4 +38,8 @@
     Name="IDE"
     Comment=""
     Definition="Some text">Eclipse</Variable>
+  <Variable
+    Name="UUID"
+    Comment=""
+    Definition="Some text">UUID</Variable>
 </CatapultVariableSet>

@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/db4o/db4o-7.12.132.14217-all-java5.jar"/>
-	<classpathentry kind="lib" path="lib/dRS/dRS-7.12.132.14217-core.jar"/>
+	<classpathentry kind="lib" path="lib/db4o-8.0.146.14426-all-java5.jar"/>
+	<classpathentry kind="lib" path="lib/dRS-8.0.146.14426-core.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

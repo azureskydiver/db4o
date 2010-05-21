@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Ta.Example.TransparentActivationExamples</StartupObject>
+    <StartupObject>Db4oDoc.Code.DisconnectedObj.ObjectIdentity.ObjectIdentityExamples</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,23 +34,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=7.12.132.14217, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\db4o\Db4objects.Db4o.dll</HintPath>
+      <HintPath>..\lib\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.CS, Version=7.12.132.14217, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.CS, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\db4o\Db4objects.Db4o.CS.dll</HintPath>
+      <HintPath>..\lib\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Drs, Version=7.12.132.14217, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.Linq, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\drs\Db4objects.Drs.dll</HintPath>
+      <HintPath>..\lib\Db4objects.Db4o.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Db4objects.Drs, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Db4objects.Drs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\Db4oInternalIdExample.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\Db4oUuidExample.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\IdExamples.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\IIdExample.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\IDHolder.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\Pilot.cs" />
+    <Compile Include="Code\disconnectedobj\idexamples\UuidOnObject.cs" />
+    <Compile Include="Code\disconnectedobj\merging\Car.cs" />
+    <Compile Include="Code\disconnectedobj\merging\IDHolder.cs" />
+    <Compile Include="Code\disconnectedobj\merging\MergeExample.cs" />
+    <Compile Include="Code\disconnectedobj\merging\Pilot.cs" />
+    <Compile Include="Code\disconnectedobj\objectidentity\ObjectIdentityExamples.cs" />
+    <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
     <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.cs" />

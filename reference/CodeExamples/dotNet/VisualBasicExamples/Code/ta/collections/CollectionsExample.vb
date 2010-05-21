@@ -16,14 +16,12 @@ Namespace Db4oDoc.Code.TA.Collections
                 team.Add(New Pilot("John"))
                 team.Add(New Pilot("Max"))
                 container.Store(team)
-                container.Close()
             End Using
             Using container As IObjectContainer = openDatabaseWithTA()
                 Dim team As Team = container.Query(Of Team)()(0)
                 For Each pilot As Pilot In team.Pilots
                     Console.WriteLine(pilot)
                 Next
-                container.Close()
             End Using
             CleanUp()
         End Sub
