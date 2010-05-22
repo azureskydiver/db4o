@@ -40,7 +40,7 @@ public class ClientTransactionPool {
 			}
 			Transaction transaction = entry.newTransaction();
 			
-			ObjectContainerSession objectContainerSession = new ObjectContainerSession(entry._container, transaction);
+			ObjectContainerSession objectContainerSession = new ObjectContainerSession(entry.container(), transaction);
 			transaction.setOutSideRepresentation(objectContainerSession);
 			
 			_transaction2Container.put(transaction, entry);
@@ -103,12 +103,16 @@ public class ClientTransactionPool {
 		return _closed == true || _mainContainer.isClosed();
 	}
 
-	private static class ContainerCount {
-		public LocalObjectContainer _container;
+	public static class ContainerCount {
+		private LocalObjectContainer _container;
 		private int _count;
 
 		public ContainerCount(LocalObjectContainer container) {
 			this(container, 0);
+		}
+
+		public LocalObjectContainer container() {
+			return _container;
 		}
 
 		public ContainerCount(LocalObjectContainer container, int count) {
