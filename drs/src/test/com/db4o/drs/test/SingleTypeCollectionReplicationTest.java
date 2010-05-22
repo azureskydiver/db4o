@@ -160,7 +160,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 		}
 
 		private CollectionHolder subject() {
-			CollectionHolderFactory factory = SubjectFixtureProvider.value();
+			CollectionHolderFactory factory = (CollectionHolderFactory)SubjectFixtureProvider.value();
 			return factory.newCollectionHolder();
 		}
 
