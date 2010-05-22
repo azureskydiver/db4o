@@ -48,9 +48,13 @@ public class Db4oDrsFixture implements DrsFixture {
 	static{
 		
 		String path = System.getProperty(RAM_DRIVE_PROPERTY);
+		
+		/* doesn't sharpen. TODO: Fix sharpen
 		if(path == null){
 			path = System.getenv(RAM_DRIVE_PROPERTY);
 		}
+		*/
+		
 		if(path == null || path.length() == 0){
 			System.out.println("You can tune dRS tests by setting the environment variable ");
 			System.out.println(RAM_DRIVE_PROPERTY);
