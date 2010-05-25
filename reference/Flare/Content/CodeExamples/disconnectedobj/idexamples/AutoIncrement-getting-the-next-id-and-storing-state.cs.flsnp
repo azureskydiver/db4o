@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public int GetNextID(Type forClass)
+{
+    lock (dataLock)
+    {
+        PersistedAutoIncrements incrementState = EnsureLoadedIncrements();
+        return incrementState.NextNumber(forClass);
+    }
+}
+
+public void StoreState()
+{
+    lock (dataLock)
+    {
+        if (null != state)
+        {
+            container.Store(state);
+        }
+    }
+}
+</pre>
+		<div class="codesnippet-meta">AutoIncrement.cs: getting the next id and storing state<a href="Example-disconnectedobj-idexamples-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

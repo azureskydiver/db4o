@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">private class PersistedAutoIncrements
+{
+    private readonly IDictionary&lt;Type, int&gt; currentHighestIds = new Dictionary&lt;Type, int&gt;();
+
+    public int NextNumber(Type forClass)
+    {
+        int number;
+        if (!currentHighestIds.TryGetValue(forClass, out number))
+        {
+            number = 0;
+        }
+        number += 1;
+        currentHighestIds[forClass] = number;
+        return number;
+    }
+}
+</pre>
+		<div class="codesnippet-meta">AutoIncrement.cs: persistent auto increment<a href="Example-disconnectedobj-idexamples-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

@@ -10,10 +10,7 @@ import com.db4o.ext.ObjectInfo;
 
 import java.io.File;
 
-/**
- * @author roman.stoffel@gamlor.info
- * @since 19.04.2010
- */
+
 public class AdvancedReplicationExamples {
     public static final String DESKTOP_DATABASE_NAME = "desktopDatabase.db4o";
     public static final String MOBILE_DATABASE_NAME = "mobileDatabase.db4o";

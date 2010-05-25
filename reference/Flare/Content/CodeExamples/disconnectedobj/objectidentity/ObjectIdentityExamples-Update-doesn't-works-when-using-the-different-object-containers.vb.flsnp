@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim joe As Pilot
+Using container As IObjectContainer = OpenDatabase()
+    joe = QueryByName(container, &quot;Joe&quot;)
+End Using
+' The update on another object 
+joe.Name = &quot;Joe New&quot;
+Using otherContainer As IObjectContainer = OpenDatabase()
+    otherContainer.Store(joe)
+End Using
+Using container As IObjectContainer = OpenDatabase()
+    ' instead of updating the existing pilot,
+    ' a new instance was stored.
+    Dim pilots As IList(Of Pilot) = container.Query(Of Pilot)()
+    Console.WriteLine(&quot;Amount of pilots: &quot; &amp; pilots.Count)
+    For Each pilot As Pilot In pilots
+        Console.WriteLine(pilot)
+    Next
+End Using</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim joe As Pilot
+Using container As IObjectContainer = OpenDatabase()
+    joe = QueryByName(container, &quot;Joe&quot;)
+End Using
+' The update on another object 
+joe.Name = &quot;Joe New&quot;
+Using otherContainer As IObjectContainer = OpenDatabase()
+    otherContainer.Store(joe)
+End Using
+Using container As IObjectContainer = OpenDatabase()
+    ' instead of updating the existing pilot,
+    ' a new instance was stored.
+    Dim pilots As IList(Of Pilot) = container.Query(Of Pilot)()
+    Console.WriteLine(&quot;Amount of pilots: &quot; &amp; pilots.Count)
+    For Each pilot As Pilot In pilots
+        Console.WriteLine(pilot)
+    Next
+End Using</pre>
+		<div class="codesnippet-meta">ObjectIdentityExamples.vb: Update doesn't works when using the different object containers<a href="Example-disconnectedobj-objectidentity-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

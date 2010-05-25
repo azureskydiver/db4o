@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">private static class PersistedAutoIncrements {
+ private final Map&lt;Class, Integer&gt; currentHighestIds = new HashMap&lt;Class, Integer&gt;();
+
+    public int nextNumber(Class forClass) {
+        Integer number = currentHighestIds.get(forClass);
+        if (null == number) {
+            number = 0;
+        }
+        number += 1;
+        currentHighestIds.put(forClass,number);
+        return number;
+    }
+}</pre>
+		<div class="codesnippet-meta">AutoIncrement.java: persistent auto increment<a href="Example-disconnectedobj-idexamples-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

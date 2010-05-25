@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">Pilot joe;
+using (IObjectContainer container = OpenDatabase())
+{
+    joe = QueryByName(container, &quot;Joe&quot;);
+}
+// The update on another object 
+joe.Name = &quot;Joe New&quot;;
+using (IObjectContainer otherContainer = OpenDatabase())
+{
+    otherContainer.Store(joe);
+}
+using (IObjectContainer container = OpenDatabase())
+{
+    // instead of updating the existing pilot,
+    // a new instance was stored.
+    IList&lt;Pilot&gt; pilots = container.Query&lt;Pilot&gt;();
+    Console.WriteLine(&quot;Amount of pilots: &quot; + pilots.Count);
+    foreach (Pilot pilot in pilots)
+    {
+        Console.WriteLine(pilot);
+    }
+}</pre>
+		<div class="codesnippet-meta">ObjectIdentityExamples.cs: Update doesn't works when using the different object containers<a href="Example-disconnectedobj-objectidentity-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

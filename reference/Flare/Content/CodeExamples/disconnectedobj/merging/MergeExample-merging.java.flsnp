@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = openDatabase();
+
+// first get the object from the database
+Car carInDb = getCarById(container,disconnectedCar.getObjectId());
+
+// copy the value-objects (int, long, double, string etc)
+carInDb.setName(disconnectedCar.getName());
+
+// traverse into the references
+Pilot pilotInDB = carInDb.getPilot();
+Pilot disconnectedPilot = disconnectedCar.getPilot();
+
+// check if the object is still the same
+if(pilotInDB.getObjectId().equals(disconnectedPilot.getObjectId())){
+    // if it is, copy the value-objects
+    pilotInDB.setName(disconnectedPilot.getName());
+    pilotInDB.setPoints(disconnectedPilot.getPoints());
+} else{
+    // otherwise replace the object
+    carInDb.setPilot(disconnectedPilot); 
+}
+
+// finally store the changes
+container.store(pilotInDB);
+container.store(carInDb);</pre>
+		<div class="codesnippet-meta">MergeExample.java: merging<a href="Example-disconnectedobj-merging-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

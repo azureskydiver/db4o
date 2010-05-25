@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">{
+    ObjectContainer container = openDatabase();
+    Pilot joe = queryByName(container,&quot;Joe&quot;);
+    container.close();
+
+    // The update on another object container
+    ObjectContainer otherContainer = openDatabase();
+    joe.setName(&quot;Joe New&quot;);
+    otherContainer.store(joe);
+    otherContainer.close();
+}
+{
+    // instead of updating the existing pilot,
+    // a new instance was stored.
+    ObjectContainer container = openDatabase();
+    ObjectSet&lt;Pilot&gt; pilots = container.query(Pilot.class);
+    System.out.println(&quot;Amount of pilots: &quot;+pilots.size());
+    for (Pilot pilot : pilots) {
+        System.out.println(pilot);
+    }
+    container.close();
+}</pre>
+		<div class="codesnippet-meta">ObjectIdentityExamples.java: Update doesn't works when using the different object containers<a href="Example-disconnectedobj-objectidentity-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

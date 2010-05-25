@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">IGrowthStrategy growStrategy = new ConstantGrowthStrategy(100);
+MemoryStorage memory = new MemoryStorage(growStrategy);
+configuration.File.Storage = memory;</pre>
+		<div class="codesnippet-meta">IOConfigurationExamples.cs: Using memory-storage with constant grow strategy<a href="Example-configuration-io-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

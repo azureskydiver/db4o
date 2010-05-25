@@ -78,6 +78,8 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\acidproperties\DangerousPractises.vb" />
+    <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\Db4oInternalIdExample.vb" />

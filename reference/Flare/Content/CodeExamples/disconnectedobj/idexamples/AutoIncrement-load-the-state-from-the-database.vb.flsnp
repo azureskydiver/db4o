@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Function EnsureLoadedIncrements() As PersistedAutoIncrements
+    If state Is Nothing Then
+        state = LoadOrCreateState()
+    End If
+    Return state
+End Function
+
+Private Function LoadOrCreateState() As PersistedAutoIncrements
+    Dim existingState As IList(Of PersistedAutoIncrements) = container.Query(Of PersistedAutoIncrements)()
+    If 0 = existingState.Count Then
+        Return New PersistedAutoIncrements()
+    ElseIf 1 = existingState.Count Then
+        Return existingState(0)
+    Else
+        Throw New InvalidOperationException(&quot;Cannot have more than one state stored in database&quot;)
+    End If
+End Function
+
+</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Function EnsureLoadedIncrements() As PersistedAutoIncrements
+    If state Is Nothing Then
+        state = LoadOrCreateState()
+    End If
+    Return state
+End Function
+
+Private Function LoadOrCreateState() As PersistedAutoIncrements
+    Dim existingState As IList(Of PersistedAutoIncrements) = container.Query(Of PersistedAutoIncrements)()
+    If 0 = existingState.Count Then
+        Return New PersistedAutoIncrements()
+    ElseIf 1 = existingState.Count Then
+        Return existingState(0)
+    Else
+        Throw New InvalidOperationException(&quot;Cannot have more than one state stored in database&quot;)
+    End If
+End Function
+
+</pre>
+		<div class="codesnippet-meta">AutoIncrement.vb: load the state from the database<a href="Example-disconnectedobj-idexamples-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

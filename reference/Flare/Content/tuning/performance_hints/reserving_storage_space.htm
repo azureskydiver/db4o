@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1227" MadCap:lastWidth="1148">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="856" MadCap:lastWidth="547">
     <head><title>Reserving Storage Space	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -30,8 +30,7 @@ the context:</p>
             <li>global context:
 new database files will be created with an additional amount of bytes reserved;</li>
             <li>
-                <MadCap:snippetText src="../../Resources/Snippets/ObjectContainer.flsnp" />
-context: each call to reserveStorageSpace will allocate an extra space in the
+                <MadCap:snippetText src="../../Resources/Snippets/ObjectContainer.flsnp" />context: each call to reserveStorageSpace will allocate an extra space in the
 database file.</li>
         </ul>
         <p>Note: Allocated space will be lost on abnormal
@@ -41,38 +40,10 @@ should be called before the Defragment run to configure the allocation of
 storage space to be slightly greater than the anticipated database file size.</p><a name="Alternate Strategies"></a>
         <h2>Alternate Strategies</h2>
         <p>An alternative strategy can be to use MemoryStorage:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: </p>
-            <p><code>MemoryIoAdapter
-adapter = new MemoryIoAdapter();</code>
-            </p>
-            <p><code>configuration.io(adapter);</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <p>.NET: </p>
-            <p><code>MemoryIoAdapter
-adapter = new MemoryIoAdapter();</code>
-            </p>
-            <p><code>configuration.Io(adapter);</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:net" />
+        <MadCap:snippetBlock src="../../CodeExamples/configuration/io/IOConfigurationExamples-Using-memory-storage.all.flsnp" />
         <p>You can control the
-growth of the memory file by:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: </p>
-            <p><code>adapter.growBy(100);</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <p>.NET: </p>
-            <p><code>adapter.GrowBy(100);</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:net" />
+growth of the memory file by using a grow-strategy:</p>
+        <MadCap:snippetBlock src="../../CodeExamples/configuration/io/IOConfigurationExamples-Using-memory-storage-with-constant-grow-strategy.all.flsnp" />
         <p>And you can control
 the size of the file on disk using RandomAccessFile API. For more information
 see <a href="../../implementation_strategies/storage/memory_storage.htm">MemoryStorage</a>.</p>

@@ -38,5 +38,9 @@
       Name="Primary/IDE">Visual Studio</Variable>
     <Variable
       Name="Primary/UUID">Guid</Variable>
+    <Variable
+      Name="Primary/Storage">IStorage</Variable>
+    <Variable
+      Name="Primary/Bin">IBin</Variable>
   </Variables>
 </CatapultTarget>
