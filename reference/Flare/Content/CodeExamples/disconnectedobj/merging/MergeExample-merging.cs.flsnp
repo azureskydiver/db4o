@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = OpenDatabase())
+{
+    // first get the object from the database
+    Car carInDb = GetCarById(container, disconnectedCar.ObjectId);
+
+    // copy the value-objects (int, long, double, string etc)
+    carInDb.Name = disconnectedCar.Name;
+
+    // traverse into the references
+    Pilot pilotInDB = carInDb.Pilot;
+    Pilot disconnectedPilot = disconnectedCar.Pilot;
+
+    // check if the object is still the same
+    if (pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId))
+    {
+        // if it is, copy the value-objects
+        pilotInDB.Name = disconnectedPilot.Name;
+        pilotInDB.Points = disconnectedPilot.Points;
+    }
+    else
+    {
+        // otherwise replace the object
+        carInDb.Pilot = disconnectedPilot;
+    }
+
+    // finally store the changes
+    container.Store(pilotInDB);
+    container.Store(carInDb);</pre>
+		<div class="codesnippet-meta">MergeExample.cs: merging<a href="Example-disconnectedobj-merging-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

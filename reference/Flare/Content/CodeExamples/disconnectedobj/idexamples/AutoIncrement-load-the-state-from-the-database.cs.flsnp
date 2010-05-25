@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">private PersistedAutoIncrements EnsureLoadedIncrements()
+{
+    if (null == state)
+    {
+        state = LoadOrCreateState();
+    }
+    return state;
+}
+
+private PersistedAutoIncrements LoadOrCreateState()
+{
+    IList&lt;PersistedAutoIncrements&gt; existingState = container.Query&lt;PersistedAutoIncrements&gt;();
+    if (0 == existingState.Count)
+    {
+        return new PersistedAutoIncrements();
+    }
+    else if (1 == existingState.Count)
+    {
+        return existingState[0];
+    }
+    else
+    {
+        throw new InvalidOperationException(&quot;Cannot have more than one state stored in database&quot;);
+    }
+}
+</pre>
+		<div class="codesnippet-meta">AutoIncrement.cs: load the state from the database<a href="Example-disconnectedobj-idexamples-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

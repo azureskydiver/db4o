@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: Item
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="7889" MadCap:lastWidth="826">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: Item
 private void Update(Object item)
          {
             objectContainer.Store(item);
@@ -8,14 +13,14 @@ private void Update(Object item)
 
         private void RunDifferentObjectsTest()
          {
-            System.Console.WriteLine(&quot;Update test with different objects&quot;);
+            System.Console.WriteLine("Update test with different objects");
             int objectsToUpdate = 90;
             int updated = objectsToUpdate;
 
             InitDifferentObjectsTest();
 
             Clean();
-            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
+            System.Console.WriteLine(" - primitive object with int field");
             Open(Configure());
             StoreSimplest();
 
@@ -35,12 +40,12 @@ private void Update(Object item)
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with string field&quot;);
+            System.Console.WriteLine(" - object with string field");
             Store();
             updated = objectsToUpdate;
             result = objectContainer.QueryByExample(null);
@@ -50,7 +55,7 @@ private void Update(Object item)
                 if (result.HasNext())
                  {
                     Item item = (Item)result.Next();
-                    item._name = &quot;Updated&quot;;
+                    item._name = "Updated";
                     Update(item);
                 }
                 else
@@ -59,12 +64,12 @@ private void Update(Object item)
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
+            System.Console.WriteLine(" - object with StringBuilder field");
             StoreWithStringBuilder();
 
             updated = objectsToUpdate;
@@ -75,7 +80,7 @@ private void Update(Object item)
                 if (result.HasNext())
                  {
                     ItemWithStringBuilder item = (ItemWithStringBuilder)result.Next();
-                    item._name = new StringBuilder(&quot;Updated&quot;);
+                    item._name = new StringBuilder("Updated");
                     Update(item);
                 }
                 else
@@ -84,12 +89,12 @@ private void Update(Object item)
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with int array field&quot;);
+            System.Console.WriteLine(" - object with int array field");
             StoreWithArray();
             updated = objectsToUpdate;
             result = objectContainer.QueryByExample(null);
@@ -108,12 +113,12 @@ private void Update(Object item)
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
 
             Clean();
             Open(Configure());
-            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
+            System.Console.WriteLine(" - object with ArrayList field");
             StoreWithArrayList();
             updated = objectsToUpdate;
             result = objectContainer.QueryByExample(null);
@@ -132,7 +137,7 @@ private void Update(Object item)
                     break;
                 }
             }
-            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+            StopTimer("Updated " + updated + " items");
             Close();
         }
         // end RunDifferentObjectsTest
@@ -140,11 +145,11 @@ private void Update(Object item)
 
         private void RunIndexTest()
          {
-            System.Console.WriteLine(&quot;Update test for objects with and without indexed fields&quot;);
+            System.Console.WriteLine("Update test for objects with and without indexed fields");
 
             int objectsToUpdate = 100;
             Init();
-            System.Console.WriteLine(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects&quot;);
+            System.Console.WriteLine("Updating " + objectsToUpdate + " of " + _count + " objects");
             Clean();
             Open(Configure());
             Store();
@@ -153,7 +158,7 @@ private void Update(Object item)
 
             Clean();
             Init();
-            System.Console.WriteLine(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects with indexed field&quot;);
+            System.Console.WriteLine("Updating " + objectsToUpdate + " of " + _count + " objects with indexed field");
             Open(ConfigureIndexTest());
             Store();
             UpdateItems(objectsToUpdate);
@@ -186,7 +191,7 @@ private void Update(Object item)
             _count = 1000;
             _depth = 90;
             _isClientServer = true;
-            _host = &quot;localhost&quot;;
+            _host = "localhost";
         }
         // end InitForClientServer
 
@@ -194,7 +199,7 @@ private void Update(Object item)
          {
             _count = 30000;
             _depth = 1;
-            _filePath = &quot;r:\\performance.db4o&quot;;
+            _filePath = "r:\\performance.db4o";
             _isClientServer = false;
 
         }
@@ -204,7 +209,7 @@ private void Update(Object item)
          {
             _count = 10000;
             _depth = 3;
-            _filePath = &quot;performance.db4o&quot;;
+            _filePath = "performance.db4o";
             _isClientServer = false;
         }
         // end InitForHardDriveTest
@@ -260,7 +265,7 @@ private void Update(Object item)
          {
             IConfiguration config = Db4oFactory.NewConfiguration();
             config.Io(new MemoryIoAdapter());
-            config.ObjectClass(typeof(Item)).ObjectField(&quot;_name&quot;).Indexed(true);
+            config.ObjectClass(typeof(Item)).ObjectField("_name").Indexed(true);
             return config;
         }
         // end ConfigureIndexTest
@@ -296,15 +301,15 @@ private void Update(Object item)
             StartTimer();
             for (int i = 0; i &lt; _count; i++)
              {
-                Item item = new Item(&quot;level&quot; + i, null);
+                Item item = new Item("level" + i, null);
                 for (int j = 1; j &lt; _depth; j++)
                  {
-                    item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
+                    item = new Item("level" + i + "/" + j, item);
                 }
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end Store
 
@@ -313,15 +318,15 @@ private void Update(Object item)
             StartTimer();
             for (int i = 0; i &lt; _count; i++)
              {
-                ActivatableItem item = new ActivatableItem(&quot;level&quot; + i, null);
+                ActivatableItem item = new ActivatableItem("level" + i, null);
                 for (int j = 1; j &lt; _depth; j++)
                  {
-                    item = new ActivatableItem(&quot;level&quot; + i + &quot;/&quot; + j, item);
+                    item = new ActivatableItem("level" + i + "/" + j, item);
                 }
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end StoreActivatableItems
 
@@ -330,15 +335,15 @@ private void Update(Object item)
             StartTimer();
             for (int i = 0; i &lt; _count; i++)
              {
-                ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
+                ItemDerived item = new ItemDerived("level" + i, null);
                 for (int j = 1; j &lt; _depth; j++)
                  {
-                    item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
+                    item = new ItemDerived("level" + i + "/" + j, item);
                 }
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end StoreInherited
 
@@ -348,15 +353,15 @@ private void Update(Object item)
             StartTimer();
             for (int i = 0; i &lt; _count; i++)
              {
-                ItemWithStringBuilder item = new ItemWithStringBuilder(new StringBuilder(&quot;level&quot; + i), null);
+                ItemWithStringBuilder item = new ItemWithStringBuilder(new StringBuilder("level" + i), null);
                 for (int j = 1; j &lt; _depth; j++)
                  {
-                    item = new ItemWithStringBuilder(new StringBuilder(&quot;level&quot; + i + &quot;/&quot; + j), item);
+                    item = new ItemWithStringBuilder(new StringBuilder("level" + i + "/" + j), item);
                 }
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end StoreWithStringBuilder
 
@@ -373,7 +378,7 @@ private void Update(Object item)
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end StoreSimplest
 
@@ -393,7 +398,7 @@ private void Update(Object item)
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end StoreWithArray
 
@@ -419,7 +424,7 @@ private void Update(Object item)
                 objectContainer.Store(item);
             }
             objectContainer.Commit();
-            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+            StopTimer("Store " + TotalObjects() + " objects");
         }
         // end StoreWithArrayList
 
@@ -434,7 +439,7 @@ private void Update(Object item)
             if (_isClientServer)
              {
                 int port = TCP ? PORT : 0;
-                string user = &quot;db4o&quot;;
+                string user = "db4o";
                 string password = user;
                 objectServer = Db4oFactory.OpenServer(_filePath, port);
                 objectServer.GrantAccess(user, password);
@@ -468,7 +473,7 @@ private void Update(Object item)
          {
             long stop = DateTime.Now.Ticks;
             long duration = stop - _startTime;
-            System.Console.WriteLine(message + &quot;: &quot; + duration + &quot; ticks&quot;);
+            System.Console.WriteLine(message + ": " + duration + " ticks");
         }
         // end StopTimer
 
@@ -488,4 +493,6 @@ private void Update(Object item)
                 _name = name;
                 _child = child;
             }
-        }</pre>    </body></html>
+        }</pre>
+    </body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">   public synchronized int getNextID(Class forClass) {
+       PersistedAutoIncrements incrementState = ensureLoadedIncrements();
+       return incrementState.nextNumber(forClass);
+}
+
+   public synchronized void storeState(){
+       if(null!=state){
+           container.store(state);            
+       }
+   }</pre>
+		<div class="codesnippet-meta">AutoIncrement.java: getting the next id and storing state<a href="Example-disconnectedobj-idexamples-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

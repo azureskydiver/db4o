@@ -42,4 +42,12 @@
     Name="UUID"
     Comment=""
     Definition="Some text">UUID</Variable>
+  <Variable
+    Name="Storage"
+    Comment=""
+    Definition="Some text">Storage</Variable>
+  <Variable
+    Name="Bin"
+    Comment=""
+    Definition="Some text">Bin</Variable>
 </CatapultVariableSet>

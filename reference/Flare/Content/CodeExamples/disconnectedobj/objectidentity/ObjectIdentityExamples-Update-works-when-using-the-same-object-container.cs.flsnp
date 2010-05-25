@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = OpenDatabase())
+{
+    Pilot joe = QueryByName(container, &quot;Joe&quot;);
+    joe.Name = &quot;Joe New&quot;;
+    container.Store(joe);
+}
+using (IObjectContainer container = OpenDatabase())
+{
+    IList&lt;Pilot&gt; pilots = container.Query&lt;Pilot&gt;();
+    Console.WriteLine(&quot;Amount of pilots: &quot; + pilots.Count);
+    foreach (Pilot pilot in pilots)
+    {
+        Console.WriteLine(pilot);
+    }
+}</pre>
+		<div class="codesnippet-meta">ObjectIdentityExamples.cs: Update works when using the same object container<a href="Example-disconnectedobj-objectidentity-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

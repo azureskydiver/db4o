@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using container As IObjectContainer = OpenDatabase()
+    ' first get the object from the database
+    Dim carInDb As Car = GetCarById(container, disconnectedCar.ObjectId)
+
+    ' copy the value-objects (int, long, double, string etc)
+    carInDb.Name = disconnectedCar.Name
+
+    ' traverse into the references
+    Dim pilotInDB As Pilot = carInDb.Pilot
+    Dim disconnectedPilot As Pilot = disconnectedCar.Pilot
+
+    ' check if the object is still the same
+    If pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId) Then
+        ' if it is, copy the value-objects
+        pilotInDB.Name = disconnectedPilot.Name
+        pilotInDB.Points = disconnectedPilot.Points
+    Else
+        ' otherwise replace the object
+        carInDb.Pilot = disconnectedPilot
+    End If
+
+    ' finally store the changes
+    container.Store(pilotInDB)</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using container As IObjectContainer = OpenDatabase()
+    ' first get the object from the database
+    Dim carInDb As Car = GetCarById(container, disconnectedCar.ObjectId)
+
+    ' copy the value-objects (int, long, double, string etc)
+    carInDb.Name = disconnectedCar.Name
+
+    ' traverse into the references
+    Dim pilotInDB As Pilot = carInDb.Pilot
+    Dim disconnectedPilot As Pilot = disconnectedCar.Pilot
+
+    ' check if the object is still the same
+    If pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId) Then
+        ' if it is, copy the value-objects
+        pilotInDB.Name = disconnectedPilot.Name
+        pilotInDB.Points = disconnectedPilot.Points
+    Else
+        ' otherwise replace the object
+        carInDb.Pilot = disconnectedPilot
+    End If
+
+    ' finally store the changes
+    container.Store(pilotInDB)</pre>
+		<div class="codesnippet-meta">MergeExample.vb: merging<a href="Example-disconnectedobj-merging-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

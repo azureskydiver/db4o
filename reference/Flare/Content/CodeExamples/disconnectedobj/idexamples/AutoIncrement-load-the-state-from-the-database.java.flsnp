@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">private PersistedAutoIncrements ensureLoadedIncrements() {
+    if(null==state){
+        state = loadOrCreateState();
+    }
+    return state;
+
+}
+
+private PersistedAutoIncrements loadOrCreateState() {
+    ObjectSet&lt;PersistedAutoIncrements&gt; existingState = container.query(PersistedAutoIncrements.class);
+    if(0==existingState.size()){
+        return new PersistedAutoIncrements(); 
+    } else if(1==existingState.size()){
+        return existingState.get(0);
+    } else{
+        throw new IllegalStateException(&quot;Cannot have more than one state stored in database&quot;);
+    }
+}</pre>
+		<div class="codesnippet-meta">AutoIncrement.java: load the state from the database<a href="Example-disconnectedobj-idexamples-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
