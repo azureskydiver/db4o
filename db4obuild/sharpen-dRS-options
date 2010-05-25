@@ -7,6 +7,7 @@
 -organizeUsings
 
 -fullyQualify ICollectionHandler
+-fullyQualify AllTests
 	
 -namespaceMapping com.db4o.drs.test Db4objects.Drs.Tests
 -namespaceMapping com.db4o.drs Db4objects.Drs
