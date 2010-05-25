@@ -495,11 +495,16 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private static void out(String string) {
-		//System.out.println(string);
+		// System.out.println(string);
 	}
 
 	public void test() {
+		long start = System.currentTimeMillis();
 		actualTest();
+		long stop = System.currentTimeMillis();
+		long duration = stop - start;
+		System.out.println("ReplicationFeaturesMain takes " + duration + "ms");
+		System.out.println("Run combinations " + _testCombination);
 	}
 
 	private void tstDirection(Set4 direction) {
