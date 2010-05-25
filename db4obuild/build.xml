@@ -59,8 +59,22 @@
 	The path to this file can be specified via property "path.machine.properties", as in
 	ant -Dpath.machine.properties=machine.properties.win build-before-checkin
 	
+	
+	
+ 	##################################
+ 	#         Android Support        # 
+    ##################################
+	
+	
 	#The following line enables the Android build. You are going to need Android platform sdk tools in your path.
 	#android.enabled=true
+	
+	dir.android.home=<android sdk home>
+	android.apilevel=<android api level>
+	emulator.device=<name of the avd emulator device>
+	
+	
+	
 	
 	
 		An example:
@@ -78,6 +92,10 @@
 	java.vmargs=-Ddb4ounit.file.path=/mnt/rd0/db4ounit -Djava.io.tmpdir=/mnt/rd0/tmp
 	
 	flare.executable=C:/Program Files/MadCap Software/MadCap Flare V5/Flare.app/madbuild.exe
+	
+	android.apilevel=android-7
+	emulator.device=android-2.1
+	
 	
 -->
 	<import file="common.xml" />
