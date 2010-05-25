@@ -161,7 +161,8 @@ Namespace Db4oDoc.Code.Callbacks.EventRegistry
         End Sub
 
         ' #example: implement your event handling
-        Private Shared Sub HandleCommitting(ByVal sender As Object, ByVal commitEventArgs As CommitEventArgs)
+        Private Shared Sub HandleCommitting(ByVal sender As Object, _
+                                            ByVal commitEventArgs As CommitEventArgs)
             ' handle the event           
         End Sub
         ' #end example

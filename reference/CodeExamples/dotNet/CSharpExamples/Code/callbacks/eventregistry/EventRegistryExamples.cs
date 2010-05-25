@@ -182,7 +182,8 @@ namespace Db4oDoc.Code.Callbacks.EventRegistry
         }
 
         // #example: implement your event handling
-        private static void HandleCommitting(object sender, CommitEventArgs commitEventArgs)
+        private static void HandleCommitting(object sender,
+            CommitEventArgs commitEventArgs)
         {
             // handle the event           
         }
