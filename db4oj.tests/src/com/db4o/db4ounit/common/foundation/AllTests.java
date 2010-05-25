@@ -42,6 +42,7 @@ public class AllTests extends ReflectionTestSuite {
 			Path4TestCase.class,
 			SortedCollection4TestCase.class,
 			Stack4TestCase.class,
+			TimeStampIdGeneratorTestCase.class,
 			TreeKeyIteratorTestCase.class,
 			TreeNodeIteratorTestCase.class,
 			TreeTestCase.class,
