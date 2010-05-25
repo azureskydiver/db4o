@@ -50,4 +50,8 @@
     Name="Bin"
     Comment=""
     Definition="Some text">Bin</Variable>
+  <Variable
+    Name="EventRegistry"
+    Comment=""
+    Definition="Some text">EventRegistry</Variable>
 </CatapultVariableSet>

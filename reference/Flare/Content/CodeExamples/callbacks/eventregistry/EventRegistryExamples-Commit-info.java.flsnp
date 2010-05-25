@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+events.committed().addListener(new EventListener4&lt;CommitEventArgs&gt;() {
+    public void onEvent(Event4&lt;CommitEventArgs&gt; events,
+                        CommitEventArgs eventArgs) {
+        for(Iterator4 it=eventArgs.added().iterator();it.moveNext();){
+            LazyObjectReference reference = (LazyObjectReference) it.current();
+            System.out.println(&quot;Added &quot;+reference.getObject());
+        }
+        for(Iterator4 it=eventArgs.updated().iterator();it.moveNext();){
+            LazyObjectReference reference = (LazyObjectReference) it.current();
+            System.out.println(&quot;Updated &quot;+reference.getObject());
+        }
+        for(Iterator4 it=eventArgs.deleted().iterator();it.moveNext();){
+            FrozenObjectInfo deletedInfo = (FrozenObjectInfo) it.current();
+            // the deleted info might doesn't contain the object anymore and
+            // return the null.
+            System.out.println(&quot;Deleted &quot;+deletedInfo.getObject());
+        }
+    }
+});</pre>
+		<div class="codesnippet-meta">EventRegistryExamples.java: Commit-info<a href="Example-callbacks-eventregistry-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

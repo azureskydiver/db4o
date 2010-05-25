@@ -42,5 +42,7 @@
       Name="Primary/Storage">IStorage</Variable>
     <Variable
       Name="Primary/Bin">IBin</Variable>
+    <Variable
+      Name="Primary/EventRegistry">IEventRegistry</Variable>
   </Variables>
 </CatapultTarget>

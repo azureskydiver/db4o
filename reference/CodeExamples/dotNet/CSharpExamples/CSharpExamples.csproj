@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.DisconnectedObj.ObjectIdentity.ObjectIdentityExamples</StartupObject>
+    <StartupObject>Db4oDoc.Code.Callbacks.EventRegistry.EventRegistryExamples</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
+    <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.cs" />
