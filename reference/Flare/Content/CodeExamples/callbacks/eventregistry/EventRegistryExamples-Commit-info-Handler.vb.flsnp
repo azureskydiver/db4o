@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Sub HandlingCommitEvent(ByVal sender As Object, ByVal args As CommitEventArgs)
+    For Each reference As LazyObjectReference In args.Added
+        Console.WriteLine(&quot;Added &quot; &amp; reference.GetObject())
+    Next
+    For Each reference As LazyObjectReference In args.Updated
+        Console.WriteLine(&quot;Updated &quot; &amp; reference.GetObject())
+    Next
+    For Each reference As FrozenObjectInfo In args.Deleted
+        'the deleted info might doesn't contain the object anymore and
+        'return the null.
+        Console.WriteLine(&quot;Deleted &quot; &amp; reference.GetObject())
+    Next
+End Sub</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Sub HandlingCommitEvent(ByVal sender As Object, ByVal args As CommitEventArgs)
+    For Each reference As LazyObjectReference In args.Added
+        Console.WriteLine(&quot;Added &quot; &amp; reference.GetObject())
+    Next
+    For Each reference As LazyObjectReference In args.Updated
+        Console.WriteLine(&quot;Updated &quot; &amp; reference.GetObject())
+    Next
+    For Each reference As FrozenObjectInfo In args.Deleted
+        'the deleted info might doesn't contain the object anymore and
+        'return the null.
+        Console.WriteLine(&quot;Deleted &quot; &amp; reference.GetObject())
+    Next
+End Sub</pre>
+		<div class="codesnippet-meta">EventRegistryExamples.vb: Commit-info Handler<a href="Example-callbacks-eventregistry-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

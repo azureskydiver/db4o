@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+events.creating().addListener(new EventListener4&lt;CancellableObjectEventArgs&gt;() {
+    public void onEvent(Event4&lt;CancellableObjectEventArgs&gt; events,
+                        CancellableObjectEventArgs eventArgs) {
+        if(eventArgs.object() instanceof Person){
+            Person p = (Person) eventArgs.object();
+            if(p.getName().equals(&quot;Joe Junior&quot;)){
+                eventArgs.cancel();
+            }
+        }
+    }
+});</pre>
+		<div class="codesnippet-meta">EventRegistryExamples.java: Cancel store operation<a href="Example-callbacks-eventregistry-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
