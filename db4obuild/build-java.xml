@@ -2,7 +2,7 @@
 <project name="build db4o java">
 	
 	<import file="common.xml" />
-	<import file="build-android.xml" />
+	<import file="build-android-tests.xml"/>
 	
 	<target name="db4oj.properties" depends="properties">
 		<property name="java.src.core" value="${dir.dist.java}/src/core"/>
@@ -56,8 +56,7 @@
 		    build.db4otools1.5,
 		    build.db4otools.bench,
 			build.nodep,
-			build.osgi,
-			build.android" 
+			build.osgi" 
 	/>
 	
 	<target name="decaf.all" depends="decaf.workspace, install-decaf-plugin">
@@ -750,12 +749,9 @@
 
 	</target>
 	
-	<target name="build.android" depends="build.db4ojdk1.5" if="android.enabled">
-		<delete dir="${dir.dist.android}"/>
+	<target name="run.tests.android.jdk1.5" depends="build.nodep1.5,build.db4ojdk1.5.tests" if="dir.android.home">
 		<mkdir dir="${dir.dist.android}"/>
-		<dex inputfile="${file.jdk1.5.jar}" outputfile="${file.android.core}" />
-		<dex inputfile="${file.jdk1.5.cs.jar}" outputfile="${file.android.cs}" />
-		<dex inputfile="${file.jdk1.5.optional.jar}" outputfile="${file.android.optional}" />
+		<antcall target="db4oandroid-tests.run-tests"></antcall>
 	</target>
 	
 	<target name="unjar.bloat" depends="init">
@@ -823,7 +819,13 @@
 		</jar>
 	</target>
 
-	<target name="build.nodep1.5" depends="unjar.bloat">
+	<target name="build.nodep1.5" depends="
+		build.db4ojdk1.5, 
+		build.instrumentation1.5, 
+		build.nqopt1.5,
+		build.taj1.5,
+	    build.db4otools1.5,
+		unjar.bloat">
 		<bnd 
 			classpath="${dir.dist.classes.jdk1.5};${dir.dist.classes.jdk1.5.cs};${dir.dist.classes.jdk1.5.optional};${dir.dist.classes.jdk1.5.cs.optional};${dir.dist.classes.jdk1.5.instrumentation};${dir.dist.classes.jdk1.5.nqopt};${dir.dist.classes.jdk1.5.taj};${dir.dist.classes.jdk1.5.db4otools};${dir.dist.classes.bloat}" 
 			eclipse="false" 
@@ -1238,6 +1240,7 @@
 		depends="run.tests.jdk1.1, 
 			run.tests.jdk1.2,
 			run.tests.jdk1.5,
+			run.tests.android.jdk1.5,
 			run.tests.instrumentation,
 			run.tests.nqopt,
 			run.tests.taj,
@@ -2016,12 +2019,7 @@
 	</target>
 	
 	<target name="build.jdk1.5.perf" 
-		depends="build.db4ojdk1.5, 
-			build.instrumentation1.5, 
-			build.nqopt1.5,
-			build.taj1.5,
-		    build.db4otools1.5,
-			build.nodep1.5">
+		depends="build.nodep1.5">
 	</target>
 	
 	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk1.5" />
