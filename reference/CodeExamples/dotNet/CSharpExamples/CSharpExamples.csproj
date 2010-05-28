@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
+    <Compile Include="Code\collections\bigset\BigSetExample.cs" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.cs" />
