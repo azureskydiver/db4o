@@ -54,4 +54,8 @@
     Name="EventRegistry"
     Comment=""
     Definition="Some text">EventRegistry</Variable>
+  <Variable
+    Name="Map"
+    Comment=""
+    Definition="Some text">Map</Variable>
 </CatapultVariableSet>

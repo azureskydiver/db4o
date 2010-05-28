@@ -81,7 +81,7 @@ Namespace Db4oDoc.Code.TA.Collections
             End Set
         End Property
 
-        Public Function toString() As [String]
+        Public Overrides Function ToString() As String
             Return Name
         End Function
     End Class

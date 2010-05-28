@@ -50,5 +50,7 @@
       Name="Primary/Bin">IBin</Variable>
     <Variable
       Name="Primary/EventRegistry">IEventRegistry</Variable>
+    <Variable
+      Name="Primary/Map">Dictionary</Variable>
   </Variables>
 </CatapultTarget>
