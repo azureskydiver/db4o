@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.vb" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.vb" />
+    <Compile Include="Code\collections\bigset\BigSetExample.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.vb" />

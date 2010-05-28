@@ -118,6 +118,6 @@ public class MergeExample {
     private static ObjectContainer openDatabase() {
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         configuration.common().objectClass(IDHolder.class).objectField("uuid").indexed(true);
-        return Db4oEmbedded.openFile(DATABASE_FILE_NAME);
+        return Db4oEmbedded.openFile(configuration,DATABASE_FILE_NAME);
     }
 }

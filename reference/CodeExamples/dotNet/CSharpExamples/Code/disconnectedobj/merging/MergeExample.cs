@@ -120,7 +120,7 @@ namespace Db4oDoc.Code.DisconnectedObj.Merging
         {
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
             configuration.Common.ObjectClass(typeof (IDHolder)).ObjectField("guid").Indexed(true);
-            return Db4oEmbedded.OpenFile(DatabaseFileName);
+            return Db4oEmbedded.OpenFile(configuration, DatabaseFileName);
         }
     }
 }

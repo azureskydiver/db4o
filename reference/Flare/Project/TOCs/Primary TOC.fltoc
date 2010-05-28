@@ -516,14 +516,11 @@
         Title="Collections"
         Link="/Content/implementation_strategies/type_handling/collections.htm">
         <TocEntry
-          Title="Built-in db4o collections"
-          Link="/Content/implementation_strategies/type_handling/collections/built-in_db4o_collections.htm" />
-        <TocEntry
           Title="Collections Or Arrays"
           Link="/Content/implementation_strategies/type_handling/collections/collections_or_arrays.htm" />
         <TocEntry
-          Title="Fast Collections"
-          Link="/Content/implementation_strategies/type_handling/collections/fast_collections.htm" />
+          Title="Big Set"
+          Link="/Content/implementation_strategies/type_handling/collections/big_set.htm" />
       </TocEntry>
       <TocEntry
         Title="Final Fields"

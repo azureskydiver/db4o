@@ -102,7 +102,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.Merging
         Private Shared Function OpenDatabase() As IObjectContainer
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             configuration.Common.ObjectClass(GetType(IDHolder)).ObjectField("guid").Indexed(True)
-            Return Db4oEmbedded.OpenFile(DatabaseFileName)
+            Return Db4oEmbedded.OpenFile(configuration, DatabaseFileName)
         End Function
     End Class
 End Namespace
