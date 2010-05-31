@@ -9,7 +9,7 @@ public class UnavailableClassTestCaseBase extends AbstractDb4oTestCase {
 	}
 
 	protected void reopenHidingClasses(final Class<?>... classes) throws Exception {
-        closeAndResetConfig();
+		fixture().close();
     	fixture().config().reflectWith(new ExcludingReflector(classes));
     	open();
     }
