@@ -115,7 +115,8 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 
 		List<String> excluded = Arrays.asList(Pilot.class.getName(), Car.class.getName());
 
-		IteratorAssert.sameContent(excluded, classesNotFound);
+		Assert.areEqual(excluded.size(), classesNotFound.size());
+		Assert.isTrue(classesNotFound.containsAll(excluded));
 	}
 
 	public void testMissingClassesInServer() {
