@@ -117,6 +117,10 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	public final boolean contains(Object element) {		
 		return find(element) != null;
 	}
+	
+	public boolean containsAll(Iterable4 iter) {
+		return containsAll(iter.iterator());
+	}
 
 	public boolean containsAll(Iterator4 iter) {
 		assertNotNull(iter);
