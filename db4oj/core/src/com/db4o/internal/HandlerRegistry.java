@@ -58,7 +58,7 @@ public final class HandlerRegistry {
     
     Db4oReplicationReferenceProvider _replicationReferenceProvider;
     
-    public final DiagnosticProcessor      _diagnosticProcessor;
+    private final DiagnosticProcessor      _diagnosticProcessor;
     
     public boolean                 i_encrypt;
     byte[]                  i_encryptor;
@@ -555,6 +555,10 @@ public final class HandlerRegistry {
 		return container().reflector().forClass(clazz);
 	}
 	
+	public DiagnosticProcessor diagnosticProcessor() {
+		return _diagnosticProcessor;
+	}
+
 	private static class TypeInfo {
 	    
 	 // TODO: remove when no longer needed in HandlerRegistry

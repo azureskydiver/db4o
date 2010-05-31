@@ -134,6 +134,7 @@ public class KnownClassesRepository {
 			return ret;
 		}
 		
+		reportMissingClass(className);
 		ret = _builder.createClass(className, ensureClassAvailability(spec.superClassID()),spec.numFields());
 		
 		// step 1 only add to _classByID, keep the class out of _classByName and _classes
@@ -141,6 +142,10 @@ public class KnownClassesRepository {
 		_pendingClasses.add(new Integer(id));
 		
 		return ret;
+	}
+
+	private void reportMissingClass(String className) {
+		_stream.handlers().diagnosticProcessor().classMissed(className);
 	}
 
 	private void ensureClassRead(int id) {

@@ -16,6 +16,7 @@ public class AllTests extends Db4oTestSuite {
 				DescendIntoTranslatorTestCase.class,
 				DiagnosticsTestCase.class,
 				IndexFieldDiagnosticTestCase.class,
+				MissingClassTestCase.class,
 		};
 	}
 }

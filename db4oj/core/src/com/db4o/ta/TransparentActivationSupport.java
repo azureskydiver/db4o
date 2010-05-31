@@ -165,7 +165,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			}
 			NotTransparentActivationEnabled diagnostic = new NotTransparentActivationEnabled(
 					clazz);
-			DiagnosticProcessor processor = _container.handlers()._diagnosticProcessor;
+			DiagnosticProcessor processor = _container.handlers().diagnosticProcessor();
 			processor.onDiagnostic(diagnostic);
 		}
 

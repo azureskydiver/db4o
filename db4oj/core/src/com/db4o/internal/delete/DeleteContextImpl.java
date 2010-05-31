@@ -46,7 +46,7 @@ public class DeleteContextImpl extends ObjectHeaderContext implements DeleteCont
     }
 
 	public void defragmentRecommended() {
-        DiagnosticProcessor dp = container()._handlers._diagnosticProcessor;
+        DiagnosticProcessor dp = container()._handlers.diagnosticProcessor();
         if(dp.enabled()){
             dp.defragmentRecommended(DefragmentRecommendationReason.DELETE_EMBEDED);
         }

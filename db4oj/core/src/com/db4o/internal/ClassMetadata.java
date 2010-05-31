@@ -250,7 +250,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 			_aspects = toClassAspectArray(aspects);
 		}
 
-		DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
+		DiagnosticProcessor dp = _container._handlers.diagnosticProcessor();
 		if (dp.enabled()) {
 			dp.checkClassHasFields(this);
 		}
@@ -756,7 +756,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             // help to heal migration from earlier db4o
             // versions.
             
-            DiagnosticProcessor dp = container()._handlers._diagnosticProcessor;
+            DiagnosticProcessor dp = container()._handlers.diagnosticProcessor();
             if(dp.enabled()){
                 dp.deletionFailed();
             }
