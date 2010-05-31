@@ -1806,7 +1806,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	private Iterator4 staticReflectFields() {
 		return Iterators.filter(reflectFields(), new Predicate4() {
 			public boolean match(Object candidate) {
-				return ((ReflectField)candidate).isStatic();
+				return ((ReflectField)candidate).isStatic() && !((ReflectField)candidate).isTransient();
 			}
 		});
 	}

@@ -12,7 +12,7 @@ public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase {
     public static class Data {
         public static final PsfvHelper ONE = new PsfvHelper();
         public static final PsfvHelper TWO = new PsfvHelper();
-        public static final PsfvHelper THREE = new PsfvHelper();
+        public static final transient PsfvHelper THREE = new PsfvHelper();
         
         /**
          * field put here to simulate a setup order failure during
@@ -42,7 +42,7 @@ public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase {
         Data psfv = (Data)retrieveOnlyInstance(Data.class);
         Assert.areSame(Data.ONE,psfv.one);
         Assert.areSame(Data.TWO,psfv.two);
-        Assert.areSame(Data.THREE,psfv.three);
+        Assert.areNotSame(Data.THREE,psfv.three);
     }
     
     public static class PsfvHelper{
