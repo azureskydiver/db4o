@@ -59,6 +59,11 @@ public class Collections4 {
 		public boolean contains(Object obj) {
 			return _sequence.contains(obj);
 		}
+		
+		public boolean containsAll(Iterable4 iter) {
+			return _sequence.containsAll(iter);
+		}
+
 
 		public Object[] toArray() {
 			return _sequence.toArray();

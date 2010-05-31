@@ -23,6 +23,8 @@ public interface Sequence4 extends Iterable4 {
 	
 	boolean contains(Object obj);
 	
+	boolean containsAll(Iterable4 iter);
+	
 	Object[] toArray();
 	
 	Object[] toArray(Object[] array);

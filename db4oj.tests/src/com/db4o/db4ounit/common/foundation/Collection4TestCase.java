@@ -26,6 +26,89 @@ public class Collection4TestCase implements TestCase {
 		 
 	}
 	
+	public void testContains() {
+		Object a = new Object();
+		Collection4 c = new Collection4();
+		c.add(new Object());
+		Assert.isFalse(c.contains(a));
+		c.add(a);
+		Assert.isTrue(c.contains(a));
+		c.remove(a);
+		Assert.isFalse(c.contains(a));
+	}
+	
+	private static class Item {
+		private int id;
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + id;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Item other = (Item) obj;
+			if (id != other.id)
+				return false;
+			return true;
+		}
+
+		public Item(int id) {
+			this.id = id;
+		}
+		
+	}
+	
+	public void testContainsAll() {
+		
+		Item a = new Item(42);
+		Item b = new Item(a.id+1);
+		Item c = new Item(b.id+1);
+		Item a_ = new Item(a.id);
+		
+		Collection4 needle = new Collection4();
+		Collection4 haystack = new Collection4();
+		
+		haystack.add(a);
+		needle.add(a);
+		needle.add(b);
+		
+		Assert.isFalse(haystack.containsAll(needle));
+		
+		needle.remove(b);
+
+		Assert.isTrue(haystack.containsAll(needle));
+		
+		needle.add(b);
+		haystack.add(b);
+		
+		Assert.isTrue(haystack.containsAll(needle));
+		
+		needle.add(a_);
+		Assert.isTrue(haystack.containsAll(needle));
+		
+		needle.add(c);
+		
+		Assert.isFalse(haystack.containsAll(needle));
+
+		needle.clear();
+
+		Assert.isTrue(haystack.containsAll(needle));
+		
+		haystack.clear();
+
+		Assert.isTrue(haystack.containsAll(needle));
+	}
+	
 	public void testReplace(){
         final Collection4 c = new Collection4();
         c.replace("one", "two");
