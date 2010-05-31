@@ -103,6 +103,10 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public void objectFieldDoesNotExist(String className, String fieldName){
     	onDiagnostic(new ObjectFieldDoesNotExist(className, fieldName));
     }
+    
+    public void classMissed(String className) {
+    	onDiagnostic(new MissingClass(className));
+    }
 
     public void onDiagnostic(Diagnostic d) {
         if(_listeners == null){

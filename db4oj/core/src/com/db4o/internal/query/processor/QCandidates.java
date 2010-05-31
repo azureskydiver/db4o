@@ -354,7 +354,7 @@ public final class QCandidates implements Visitor4 {
     
 		i_root = result.tree;
         
-        DiagnosticProcessor dp = i_trans.container()._handlers._diagnosticProcessor;
+        DiagnosticProcessor dp = i_trans.container()._handlers.diagnosticProcessor();
         if (dp.enabled() && !isClassOnlyQuery()){
             dp.loadedFromClassIndex(i_classMetadata);
         }
