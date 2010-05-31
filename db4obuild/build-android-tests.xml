@@ -129,6 +129,14 @@
 			<arg line="-s ${android.emulator.serial.number}" />
 			<arg value="wait-for-device" />
 		</exec>
+
+		<!--
+			So far we couldnt find a way to know when the package manager is available so we could start installing/uninstalling packages in the device.
+			For more information: http://groups.google.com/group/android-developers/browse_thread/thread/6bb0551358485a25
+			Jira issue: http://tracker.db4o.com/browse/BLD-171
+		 -->
+		<sleep seconds="10" />
+		
 	</target>
 	
 	<target name="stop-emu" unless="emulator-available">
