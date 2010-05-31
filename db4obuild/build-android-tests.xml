@@ -2,7 +2,7 @@
 	<import file="common.xml" />
 	
 	<property name="android.apilevel" value="android-7" />
-	<property name="emulator.device" value="android-2.1" />
+	<property name="emulator.device" value="android-2.1-db4otests" />
 	
 	<property name="android.emulator.port" value="5568" />
 	<property name="android.emulator.serial.number" value="emulator-${android.emulator.port}" />
@@ -104,7 +104,13 @@
 			signedjar="${file.apk}" />
 	</target>
 	
-	<target name="start-emu" unless="emulator-available">
+	<target name="create-avd">
+		<exec executable="${dir.android.tools}/${android.tool.android}" inputstring="no">
+			<arg line="-s create avd -t ${android.apilevel} -n ${emulator.device} -f" />
+		</exec>
+	</target>
+	
+	<target name="start-emu" unless="emulator-available" depends="create-avd">
 		<exec executable="${file.android.tool.adb}" spawn="true">
 			<arg value="start-server" />
 		</exec>
