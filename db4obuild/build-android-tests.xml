@@ -33,7 +33,7 @@
 	<property name="file.apk.unsigned" value="${dir.dist.android}/db4otests.unsigned.apk" />
 	<property name="file.apk" value="${dir.dist.android}/db4otests.apk" />
 
-	<target name="run-tests" depends="sign-apk, run-emu" />
+	<target name="run-tests" depends="start-emu, sign-apk, run-emu" />
 	
 	<target name="run-emu" depends="start-emu, uninstall-package, install-package, run-tests-on-emulator, stop-emu, check-failure" />
 
@@ -106,7 +106,7 @@
 	
 	<target name="create-avd">
 		<exec executable="${dir.android.tools}/${android.tool.android}" inputstring="no">
-			<arg line="-s create avd -t ${android.apilevel} -n ${emulator.device} -f" />
+			<arg line="-s create avd -t ${android.apilevel} -n ${emulator.device} -f -c 64M" />
 		</exec>
 	</target>
 	
@@ -125,17 +125,21 @@
 		<!-- Big fat hack to stay away (but not rid) of race conditions between running the adb deamon and waiting for the device in windows -->
 		<sleep seconds="3" />
 		
+		<echo message="Waiting for device..." />
+		
 		<exec executable="${file.android.tool.adb}">
 			<arg line="-s ${android.emulator.serial.number}" />
 			<arg value="wait-for-device" />
 		</exec>
+		
+		<echo message="Device online." />
 
 		<!--
 			So far we couldnt find a way to know when the package manager is available so we could start installing/uninstalling packages in the device.
 			For more information: http://groups.google.com/group/android-developers/browse_thread/thread/6bb0551358485a25
 			Jira issue: http://tracker.db4o.com/browse/BLD-171
 		 -->
-		<sleep seconds="10" />
+		<sleep seconds="30" />
 		
 	</target>
 	
