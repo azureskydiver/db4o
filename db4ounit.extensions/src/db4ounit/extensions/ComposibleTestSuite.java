@@ -3,7 +3,7 @@ package db4ounit.extensions;
 
 public abstract class ComposibleTestSuite extends Db4oTestSuite {
 
-	protected Class[] composeTests(Class[] testCases) {
+	protected final Class[] composeTests(Class[] testCases) {
 		return concat(testCases, composeWith());
 	}
 
