@@ -38,7 +38,7 @@ public class Collection4TestCase implements TestCase {
 	}
 	
 	private static class Item {
-		private int id;
+		public int id;
 
 		@Override
 		public int hashCode() {
