@@ -4,19 +4,27 @@ package com.db4o.db4ounit.common.diagnostics;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 	
 	public static void main(String[] args) {
 		new AllTests().runAll();
     }
 
 	protected Class[] testCases() {
-		return new Class[] {
-				ClassHasNoFieldsTestCase.class,
-				DescendIntoTranslatorTestCase.class,
-				DiagnosticsTestCase.class,
-				IndexFieldDiagnosticTestCase.class,
-				MissingClassTestCase.class,
-		};
+		return composeTests(
+				new Class[] {
+						ClassHasNoFieldsTestCase.class,
+						DescendIntoTranslatorTestCase.class,
+						DiagnosticsTestCase.class,
+						IndexFieldDiagnosticTestCase.class 
+				});
+	}
+	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
+		return new Class[] { MissingClassTestCase.class };
 	}
 }

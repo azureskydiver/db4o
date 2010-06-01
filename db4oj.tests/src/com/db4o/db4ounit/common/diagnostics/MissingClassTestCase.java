@@ -1,21 +1,24 @@
 /* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
-
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.diagnostics;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.Db4oClientServer;
+import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.diagnostic.*;
-import com.db4o.io.MemoryStorage;
-import com.db4o.query.Predicate;
+import com.db4o.internal.*;
+import com.db4o.io.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.ExcludingReflector;
-import db4ounit.extensions.fixtures.OptOutMultiSession;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMultiSession {
 
@@ -108,15 +111,18 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 		}
 
 		assertPilotAndCarMissing(missingClasses);
-
 	}
 
 	private void assertPilotAndCarMissing(List classesNotFound) {
 
-		List<String> excluded = Arrays.asList(Pilot.class.getName(), Car.class.getName());
+		List<String> excluded = Arrays.asList(
+										ReflectPlatform.fullyQualifiedName(Pilot.class), 
+										ReflectPlatform.fullyQualifiedName(Car.class));
 
 		Assert.areEqual(excluded.size(), classesNotFound.size());
-		Assert.isTrue(classesNotFound.containsAll(excluded));
+		for(String candidate : excluded) {
+			Assert.isTrue(classesNotFound.contains(candidate));
+		}
 	}
 
 	public void testMissingClassesInServer() {
@@ -151,7 +157,7 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 		}
 
 		assertPilotAndCarMissing(serverMissedClasses);
-		Assert.isTrue(clientMissedClasses.isEmpty());
+		Assert.areEqual(0, clientMissedClasses.size());
 
 	}
 
@@ -171,22 +177,29 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 			prepareDiagnostic(clientConfig.common(), clientMissedClasses);
 			ObjectContainer client = Db4oClientServer.openClient(clientConfig, "localhost", PORT, USER, PASSWORD);
 
-			client.query(new Predicate() {
+			ObjectSet result = client.query(new Predicate() {
 
 				@Override
 				public boolean match(Object candidate) {
 					return true;
 				}
 			});
+			
+			iterateOver(result);
 
 			client.close();
 		} finally {
 			server.close();
 		}
 
-		Assert.isTrue(serverMissedClasses.isEmpty());
+		Assert.areEqual(0, serverMissedClasses.size());
 		assertPilotAndCarMissing(clientMissedClasses);
+	}
 
+	private void iterateOver(ObjectSet result) {
+		while (result.hasNext()) {
+			result.next();
+		}			
 	}
 
 	private void excludeClasses(CommonConfiguration commonConfiguration, Class<?>... classes) {
@@ -200,7 +213,7 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		prepare(config.file(), config.common(), missingClasses);
 		populateContainer(config);
-		Assert.isTrue(missingClasses.isEmpty());
+		Assert.areEqual(0, missingClasses.size());
 
 	}
 
