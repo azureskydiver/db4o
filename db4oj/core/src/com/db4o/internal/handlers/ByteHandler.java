@@ -15,7 +15,7 @@ public final class ByteHandler extends PrimitiveHandler {
 	private static final Byte DEFAULTVALUE = new Byte((byte)0);
 	
     public Object coerce(ReflectClass claxx, Object obj) {
-    	return Coercion4.toSByte(obj);
+    	return Coercion4.toByte(obj);
     }
 
 	public Object defaultValue(){
