@@ -20,7 +20,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMultiSession {
+public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle, OptOutMultiSession {
 
 	private static final String DB_URI = "test_db";
 
@@ -29,15 +29,22 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 	private static final String USER = "user";
 	private static final String PASSWORD = "password";
 
-	private MemoryStorage _storage = new MemoryStorage();
+	private transient MemoryStorage _storage = new MemoryStorage();
 
 	public static void main(String[] args) {
-		new ConsoleTestRunner(MissingClassTestCase.class).run();
+		new ConsoleTestRunner(MissingClassDiagnosticsTestCase.class).run();
+	}
+
+	public static class AcceptAllPredicate extends Predicate<Object> {
+		@Override
+		public boolean match(Object candidate) {
+			return true;
+		}
 	}
 
 	public static class Pilot {
-		private String name;
-		private List cars = new ArrayList();
+		public String name;
+		public List cars = new ArrayList();
 
 		public Pilot(String name) {
 			super();
@@ -100,12 +107,7 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 		EmbeddedObjectContainer excludingContainer = Db4oEmbedded.openFile(excludingConfig, DB_URI);
 
 		try {
-			excludingContainer.query(new Predicate() {
-				@Override
-				public boolean match(Object candidate) {
-					return true;
-				}
-			});
+			excludingContainer.query(new AcceptAllPredicate());
 		} finally {
 			excludingContainer.close();
 		}
@@ -143,13 +145,7 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 			prepareDiagnostic(clientConfig.common(), clientMissedClasses);
 			ObjectContainer client = Db4oClientServer.openClient(clientConfig, "localhost", PORT, USER, PASSWORD);
 
-			client.query(new Predicate() {
-
-				@Override
-				public boolean match(Object candidate) {
-					return true;
-				}
-			});
+			client.query(new AcceptAllPredicate());
 
 			client.close();
 		} finally {
@@ -177,13 +173,7 @@ public class MissingClassTestCase implements TestCase, TestLifeCycle, OptOutMult
 			prepareDiagnostic(clientConfig.common(), clientMissedClasses);
 			ObjectContainer client = Db4oClientServer.openClient(clientConfig, "localhost", PORT, USER, PASSWORD);
 
-			ObjectSet result = client.query(new Predicate() {
-
-				@Override
-				public boolean match(Object candidate) {
-					return true;
-				}
-			});
+			ObjectSet result = client.query(new AcceptAllPredicate());
 			
 			iterateOver(result);
 
