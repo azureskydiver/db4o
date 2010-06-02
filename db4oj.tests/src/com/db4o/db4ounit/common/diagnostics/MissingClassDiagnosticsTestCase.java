@@ -12,6 +12,7 @@ import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.diagnostic.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
@@ -80,8 +81,13 @@ public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle,
 		}
 	}
 
-	private void prepare(FileConfiguration fileConfig, CommonConfiguration commonConfig, final List classesNotFound) {
+	private void prepareHost(FileConfiguration fileConfig, CommonConfiguration commonConfig, final List classesNotFound) {
 		fileConfig.storage(_storage);
+		prepareCommon(commonConfig, classesNotFound);
+	}
+
+	private void prepareCommon(CommonConfiguration commonConfig, final List classesNotFound) {
+		commonConfig.reflectWith(Platform4.reflectorForType(Pilot.class));
 		prepareDiagnostic(commonConfig, classesNotFound);
 	}
 
@@ -100,7 +106,7 @@ public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle,
 		List missingClasses = new ArrayList();
 
 		EmbeddedConfiguration excludingConfig = Db4oEmbedded.newConfiguration();
-		prepare(excludingConfig.file(), excludingConfig.common(), missingClasses);
+		prepareHost(excludingConfig.file(), excludingConfig.common(), missingClasses);
 
 		excludeClasses(excludingConfig.common(), Pilot.class, Car.class);
 
@@ -133,7 +139,7 @@ public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle,
 		List clientMissedClasses = new ArrayList();
 
 		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
-		prepare(serverConfig.file(), serverConfig.common(), serverMissedClasses);
+		prepareHost(serverConfig.file(), serverConfig.common(), serverMissedClasses);
 
 		excludeClasses(serverConfig.common(), Pilot.class, Car.class);
 
@@ -141,8 +147,7 @@ public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle,
 		server.grantAccess(USER, PASSWORD);
 		try {
 			ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
-
-			prepareDiagnostic(clientConfig.common(), clientMissedClasses);
+			prepareCommon(clientConfig.common(), clientMissedClasses);
 			ObjectContainer client = Db4oClientServer.openClient(clientConfig, "localhost", PORT, USER, PASSWORD);
 
 			client.query(new AcceptAllPredicate());
@@ -163,14 +168,14 @@ public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle,
 		List clientMissedClasses = new ArrayList();
 
 		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
-		prepare(serverConfig.file(), serverConfig.common(), serverMissedClasses);
+		prepareHost(serverConfig.file(), serverConfig.common(), serverMissedClasses);
 
 		ObjectServer server = Db4oClientServer.openServer(serverConfig, DB_URI, PORT);
 		server.grantAccess(USER, PASSWORD);
 		try {
 			ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
+			prepareCommon(clientConfig.common(), clientMissedClasses);
 			excludeClasses(clientConfig.common(), Pilot.class, Car.class);
-			prepareDiagnostic(clientConfig.common(), clientMissedClasses);
 			ObjectContainer client = Db4oClientServer.openClient(clientConfig, "localhost", PORT, USER, PASSWORD);
 
 			ObjectSet result = client.query(new AcceptAllPredicate());
@@ -193,15 +198,14 @@ public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle,
 	}
 
 	private void excludeClasses(CommonConfiguration commonConfiguration, Class<?>... classes) {
-
-		commonConfiguration.reflectWith(new ExcludingReflector(classes));
+		commonConfiguration.reflectWith(new ExcludingReflector(ByRef.<Class<?>>newInstance(Pilot.class), classes));
 	}
 	
 	public void testClassesFound() throws IOException {
 
 		List missingClasses = new ArrayList();
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		prepare(config.file(), config.common(), missingClasses);
+		prepareHost(config.file(), config.common(), missingClasses);
 		populateContainer(config);
 		Assert.areEqual(0, missingClasses.size());
 

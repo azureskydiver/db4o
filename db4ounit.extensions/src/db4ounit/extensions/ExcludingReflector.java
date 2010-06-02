@@ -27,8 +27,29 @@ public class ExcludingReflector extends JdkReflector {
 	/**
 	 * @sharpen.remove.first
 	 */
+	public ExcludingReflector(ByRef<Class<?>> loaderClass, Class<?>... excludedClasses) {
+		super(loaderClass.value.getClassLoader());
+		
+		_excludedClasses = new Collection4();
+		for(Class<?> claxx : excludedClasses) {
+			_excludedClasses.add(claxx.getName());
+		}
+	}
+
+	/**
+	 * @sharpen.remove.first
+	 */
 	public ExcludingReflector(Collection4 excludedClasses) {
 		super(ExcludingReflector.class.getClassLoader());
+		
+		_excludedClasses = excludedClasses;
+    }
+
+	/**
+	 * @sharpen.remove.first
+	 */
+	public ExcludingReflector(ByRef<Class<?>> loaderClass, Collection4 excludedClasses) {
+		super(loaderClass.value.getClassLoader());
 		
 		_excludedClasses = excludedClasses;
     }
