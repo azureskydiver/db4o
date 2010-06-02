@@ -25,6 +25,6 @@ public class AllTests extends ComposibleTestSuite {
 	 */
 	@Override
 	protected Class[] composeWith() {
-		return new Class[] { MissingClassTestCase.class };
+		return new Class[] { MissingClassDiagnosticsTestCase.class };
 	}
 }
