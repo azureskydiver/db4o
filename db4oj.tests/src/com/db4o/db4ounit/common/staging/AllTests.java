@@ -18,11 +18,12 @@ public class AllTests extends ComposibleTestSuite {
 							 */
 							ActivateDepthTestCase.class,
 							InterfaceQueryTestCase.class, // COR-1131
+							GenericClassWithExistingSuperClassTestCase.class, // COR-1959
 							LazyQueryDeleteTestCase.class,
 							RemovedFieldDefragmentTestCase.class,
 							SODAClassTypeDescend.class,
 							StoredClassUnknownClassQueryTestCase.class, // COR-1542
-							UnavailableEnumTestCase.class,
+							UnavailableEnumTestCase.class, // special case of COR-1959
 							UntypedFieldSortingTestCase.class,
 					});
 	}

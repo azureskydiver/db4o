@@ -26,7 +26,7 @@ public class UnavailableEnumTestCase extends UnavailableClassTestCaseBase {
 	    store(new Item(Status.Open));
 	}
 	
-	public void _test() throws Exception {
+	public void test() throws Exception {
 		reopenHidingClasses(Item.class, Status.class);
 		for (Object o : newQuery().execute()) {
 			Assert.areSame(
