@@ -12,8 +12,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-
-public class SaveAsStorageTestCase extends AbstractDb4oTestCase implements OptOutMultiSession, OptOutInMemory, OptOutNoFileSystemData {
+public class SaveAsStorageTestCase extends AbstractDb4oTestCase implements OptOutMultiSession, OptOutInMemory, OptOutNoFileSystemData, OptOutSilverlight {
  
 	public static void main(String[] args) {
 		new SaveAsStorageTestCase().runSolo();
