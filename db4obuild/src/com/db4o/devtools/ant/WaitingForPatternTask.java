@@ -120,7 +120,6 @@ public class WaitingForPatternTask extends Task {
 	private void setupStdReaders() {
 		new LineReader(process.getInputStream(), new LineReaderListener() {
 
-			@Override
 			public void lineReady(String line) {
 				evaluatePattern(process, line);
 			}
@@ -129,7 +128,6 @@ public class WaitingForPatternTask extends Task {
 
 		new LineReader(process.getErrorStream(), new LineReaderListener() {
 
-			@Override
 			public void lineReady(String line) {
 				System.err.println(line);
 			}
