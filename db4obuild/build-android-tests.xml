@@ -6,12 +6,20 @@
 	
 	<property name="android.emulator.port" value="5568" />
 	<property name="android.emulator.serial.number" value="emulator-${android.emulator.port}" />
+
+	<property name="android.emulator.packageManager.timeout" value="300000" />
 	
 	<property name="db4o.junit.package.name" value="com.db4o.junit.launcher" />
 	<property name="db4o.junit.class.test.main" value="${db4o.junit.package.name}/Db4oTestCasesLauncher" />
 
 	
 	<taskdef name="dumpstderr" classname="com.db4o.devtools.ant.DumpStderrTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}"/>
+		</classpath>
+	</taskdef>
+		
+	<taskdef name="waitprocess" classname="com.db4o.devtools.ant.WaitingForPatternTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}"/>
 		</classpath>
@@ -131,15 +139,11 @@
 			<arg line="-s ${android.emulator.serial.number}" />
 			<arg value="wait-for-device" />
 		</exec>
+
+		<waitprocess pattern="Time to scan packages" command="${file.android.tool.adb} -s ${android.emulator.serial.number} logcat" timeout="${android.emulator.packageManager.timeout}" />
 		
 		<echo message="Device online." />
 
-		<!--
-			So far we couldnt find a way to know when the package manager is available so we could start installing/uninstalling packages in the device.
-			For more information: http://groups.google.com/group/android-developers/browse_thread/thread/6bb0551358485a25
-			Jira issue: http://tracker.db4o.com/browse/BLD-171
-		 -->
-		<sleep seconds="30" />
 		
 	</target>
 	
