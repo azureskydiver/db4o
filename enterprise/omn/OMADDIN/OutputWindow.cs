@@ -1,4 +1,5 @@
-﻿using EnvDTE;
+﻿/* Copyright (C) 2010 Versant Inc.  http://www.db4o.com */
+using EnvDTE;
 using EnvDTE80;
 
 namespace OMAddin

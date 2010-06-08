@@ -7,14 +7,9 @@
 		</KnownId>
 		
 		<KnownId>
-			<Id>omn.ObjectManagerEnterprise_vs2005</Id>
-			<Path>omn2005/ObjectManagerEnterprise-vs2005-@db4o.version.dotted@.msi</Path>
-		</KnownId>
-		
-		<KnownId>
-			<Id>omn.ObjectManagerEnterprise_vs2008</Id>
-			<Path>omn2008/ObjectManagerEnterprise-vs2008-@db4o.version.dotted@.msi</Path>
-		</KnownId>	
+			<Id>omn.ObjectManagerEnterprise</Id>
+			<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs@target.vs.version@.msi</Path>
+		</KnownId>			
 	</KnownIds>
 
 	<Features>
@@ -39,33 +34,18 @@
 	  </Feature>
     
 	  <Feature 
-		Id="OMN_2005"
-		Title="ObjectManager Enterprise VS 2005"
-		Description ="Visual Studio 2005 plugin with support for db4o databse object browsing">
-		<Content Include="omn2005/ObjectManagerEnterprise-vs2005*.*" />
+		Id="OMN"
+		Title="ObjectManager Enterprise"
+		Description ="Visual Studio plugin with support for db4o databse object browsing">
+		<Content Include="omn/ObjectManagerEnterprise-*.*" />
 		
 		<Shortcuts>		
 			<Shortcut>
-				<Path>omn2005/ObjectManagerEnterprise-vs2005-@db4o.version.dotted@.msi</Path>
-				<Name>Install VS 2005 ObjectManager plugin</Name>
+				<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs@target.vs.version@.msi</Path>
+				<Name>Install ObjectManager VS plugin</Name>
 			</Shortcut>
 		</Shortcuts>
-	  </Feature>	  
-	 
-	  <Feature 
-		Id="OMN_2008"
-		Title="ObjectManager Enterprise VS 2008"
-		Description ="Visual Studio 2008 plugin with support for db4o databse object browsing">
-		<Content Include="omn2008/ObjectManagerEnterprise-vs2008*.*" />
-		
-		<Shortcuts>		
-			<Shortcut>
-				<Path>omn2008/ObjectManagerEnterprise-vs2008-@db4o.version.dotted@.msi</Path>
-				<Name>Install VS 2008 ObjectManager plugin</Name>
-			</Shortcut>
-		</Shortcuts>		
-	  </Feature>	  	  
-	 
+	  </Feature>
 	 </Features>	
 
 </WixBuilderParameters>

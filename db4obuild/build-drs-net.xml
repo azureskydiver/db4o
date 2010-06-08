@@ -71,8 +71,7 @@
     	<msbuild outputpath="${drs.net.bin.dir}" solutionfile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs-2005.sln" />
     </target>
     
-    <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
-    	
+    <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">    	
     	<reset-src-dir dir="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs" />
     		
         <!-- .NET: drs -->
@@ -103,6 +102,9 @@
     		<sources refid="drs.sources" />
         </updatecsharpproject>
         
+    	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs-2010.csproj">
+    		<sources refid="drs.sources" />
+        </updatecsharpproject>
     	
         <!--.NET: drs.tests -->
     	<reset-src-dir dir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests" />
@@ -130,6 +132,9 @@
         	<sources refid="drs.tests.sources" />
         </updatecsharpproject>
 
+   		<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-2010.csproj">
+   	        	<sources refid="drs.tests.sources" />
+         </updatecsharpproject>
 
         <!--.NET: QuickStart -->
         <updateAssemblyInfo	version="${drs.net.version}">
