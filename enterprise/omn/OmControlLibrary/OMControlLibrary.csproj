@@ -301,6 +301,7 @@
     <None Include="Images\show_querybuilder.png" />
     <EmbeddedResource Include="Images\Browse.png" />
     <Content Include="Images\Closefolder.gif" />
+    <Content Include="Images\db4objects_logo_white_2a.jpg" />
     <Content Include="Images\filter.png" />
     <Content Include="Images\next_filter.png" />
     <Content Include="Images\Openfolder.gif" />

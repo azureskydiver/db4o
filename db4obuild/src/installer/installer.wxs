@@ -10,8 +10,7 @@
 	<CustomAction Id="InitializeTargetDir" Property="TARGETDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
 	<CustomAction Id="UpdateTargetDir" Property="TARGETDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
 	<CustomAction Id="Launch_Tutorial" FileKey="doc.tutorial.Db4oTutorial.exe" ExeCommand="" Execute="firstSequence" Return="asyncNoWait" />
-	<CustomAction Id="action.InstallOME2005" FileKey="omn.ObjectManagerEnterprise_vs2005" ExeCommand="" Return="asyncWait" />
-	<CustomAction Id="action.InstallOME2008" FileKey="omn.ObjectManagerEnterprise_vs2008" ExeCommand="" Return="asyncWait" />
+	<CustomAction Id="action.InstallOME" FileKey="omn.ObjectManagerEnterprise" ExeCommand="" Return="asyncWait" />
 	
 	<!-- INSTALLATION SEQUENCE PROPERTIES -->
 	<Property Id="LAUNCHTUTORIAL">1</Property>
@@ -32,14 +31,12 @@
 	</DirectoryRef>
 
 	<FeatureRef Id="ApplicationFiles" />
-	<FeatureRef Id="OMN_2005" />
-	<FeatureRef Id="OMN_2008" />
+	<FeatureRef Id="OMN" />
 
 	<InstallExecuteSequence>
 	  <FindRelatedProducts />
 	  <Custom Action="InitializeTargetDir" Before="CostInitialize" />
-	  <Custom Action="action.InstallOME2005" After="InstallFinalize">&amp;OMN_2005 = 3</Custom>
-	  <Custom Action="action.InstallOME2008" After="InstallFinalize">&amp;OMN_2008 = 3</Custom>
+	  <Custom Action="action.InstallOME" After="InstallFinalize">&amp;OMN = 3</Custom>
 	  <RemoveExistingProducts Before="InstallInitialize" />
 	</InstallExecuteSequence>
 
@@ -562,9 +559,9 @@
 
 	  <Dialog Id="ExitDialog" Width="370" Height="270" Title="[ProductName]" NoMinimize="yes">
 		<Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Finish]">
-		  <Publish Event="EndDialog" Value="Return">(NOT (&amp;OMN_2005 = 3))</Publish>
+		  <Publish Event="EndDialog" Value="Return">(NOT (&amp;OMN = 3))</Publish>
 		  <Publish Event="DoAction" Value="Launch_Tutorial"><![CDATA[(NOT Installed) AND (1 = LAUNCHTUTORIAL) AND (&ApplicationFiles = 3)]]></Publish>
-		  <Publish Event="NewDialog" Value="InstallOMNInstructions"><![CDATA[((&OMN_2005 = 3) OR (&OMN_2008 = 3)) AND (NOT Installed)]]></Publish>
+		  <Publish Event="NewDialog" Value="InstallOMNInstructions"><![CDATA[((&OMN = 3) OR (&OMN = 3)) AND (NOT Installed)]]></Publish>
 		</Control>
 		<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="[Button_Cancel]" />
 		<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" FixedSize="yes" TabSkip="no" Text="dialog.bmp" />
@@ -665,6 +662,7 @@
 	  </Dialog>
 	  <!-- END DIALOG DEFINITION -->
 	</UI>
+	
 	<Binary Id="completi" SourceFile="$(env.resources.dir)/completi.ico" />
 	<Binary Id="custicon" SourceFile="$(env.resources.dir)/custicon.ico" />
 	<Binary Id="insticon" SourceFile="$(env.resources.dir)/insticon.ico" />

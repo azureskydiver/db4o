@@ -1158,11 +1158,13 @@ namespace OMAddin
 		{
 			using (Stream imageStream = assembly.GetManifestResourceStream(resource))
 			{
+				button.Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStream));
+#if !NET_4_0
 				using (Stream imageStreamMask = assembly.GetManifestResourceStream(masked))
 				{
-					button.Picture = (StdPicture)PictureHost .IPictureDisp(Image.FromStream(imageStream));
                     button.Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
 				}
+#endif
 			}
 		}
 

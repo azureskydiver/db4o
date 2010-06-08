@@ -80,6 +80,11 @@
 	    <echo message="force.skip.sharpen = ${force.skip.sharpen}, skip.sharpen = ${skip.sharpen}" />
 	</target>
 	
+	<target name="run-tests-net40"
+			depends="clean, configure-debug, configure-net40, run-additional-linq-tests, run-tests-net"
+			description="Builds and runs all the .net 4.0 relevant test cases">
+	</target>
+		
 	<target name="run-tests-net35"
 			depends="clean, configure-debug, configure-net35, run-additional-linq-tests, run-tests-net"
 			description="Builds and runs all the .net 3.5 relevant test cases (including Visual Basic LINQ and ASTORIA tests)">
@@ -176,10 +181,15 @@
 	<target name="package-net20" depends="build-net20, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
-	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 2 distros">
+	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 3.5 distros">
+	</target>
+
+	<target name="package-net40" depends="build-net40, meta-package" description="Builds the complete set of .net 4.0 distros">
 	</target>
 	
 	<target name="package-net35-standalone" depends="init, configure-net35, meta-package" />
+	
+	<target name="package-net40-standalone" depends="init, configure-net40, meta-package" />
 	
 	<target name="meta-package" depends="ndoc, build-zip, build-net-installer">
 	</target>
@@ -362,6 +372,7 @@
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
 			<property name="target.framework.version" value="${target.framework.version}" />
+			<property name="target.vs.version" value="${msbuild.target.platform}" />
 		</ant>
 	</target>
 	
@@ -370,6 +381,9 @@
 	
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
 	</target>
+
+	<target name="build-net40" depends="init, configure-net40, build-all" description="Builds Db4o for the .net 4.0 framework including LINQ">
+	</target>	
 	
 	<target name="check-api" depends="init, configure-net35, build-core, api-diff" description="Compares the api of the current .net version against the last released one">
 	
@@ -418,15 +432,19 @@
 	    <reset-dir dir="${dir.dist.dll.compact}" />
 	    
 		<msb solution="${dir.n.v6}/Db4o" />
-		<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll.compact}" />
+		<antcall target="build-cf" />
 		<antcall target="build-silverlight" />
 	</target>
 	
 	<target name="build-silverlight" if = "silverlight.version">
 		<reset-dir dir="${dir.dist.dll.silverlight}" />
 		<msb solution="${dir.n.v6}/Db4o-Silverlight" outputPath="${dir.dist.dll.silverlight}" />
-	</target>	
+	</target>
 	
+	<target name="build-cf" unless="cf.not.supported">
+		<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll.compact}" />
+	</target>	
+		
 	<target name="run-tests-silverlight" depends="configure-net35, build-core">
 		<exec executable="${dir.dist.dll.silverlight}/Db4objects.Db4o.SilverlightTestHost.exe" failonerror="true" taskname="Run Silverlight Tests">
 			<arg line="${dir.dist.dll.silverlight}"/>
@@ -574,6 +592,7 @@
 			<projectFiles dir="${dir.n.v6}">
 				<include name="**/*-2005.csproj" />
 				<include name="**/*-2008.csproj" />				
+				<include name="**/*-2010.csproj" />				
 				<exclude name="Db4oTutorial/**" />
 				<exclude name="**/*Tests*.csproj" />
 			</projectFiles>
@@ -731,11 +750,19 @@
 				<sources refid="@{sources}" />
 			</updatecsharpproject>
 			
+			<updatecsharpproject projectFile="@{project}-2010.csproj">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+			
 			<updatecsharpproject projectFile="@{project}-CF-2008.csproj">
 				<sources refid="@{sources}" />
 			</updatecsharpproject>
 			
 			<updatecsharpproject projectFile="@{project}-Silverlight-2008.csproj" ignoreNonExisting="true">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+			
+			<updatecsharpproject projectFile="@{project}-Silverlight-2010.csproj" ignoreNonExisting="true">
 				<sources refid="@{sources}" />
 			</updatecsharpproject>
 		</sequential>
@@ -1016,14 +1043,14 @@
 				<include name="**/*.xml" />
 			</fileset>
 		</copy>
-		
-		<exec executable="${dir.build}/lib/boo/booi">
+
+		<exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
 			<arg path="${dir.build}/config" />
 			<arg path="${dir.dist}" />
 		</exec>
 		
-		<exec executable="${sandcastle.tools}/MRefBuilder" dir="${dir.dist.ndoc}" failonerror="true">
+		<exec executable="${sandcastle.tools}/MRefBuilder" dir="${dir.dist.ndoc}" failonerror="true" taskname="MRefBuilder">
 			<env key="DXROOT" file="${dir.lib.sandcastle}" />
 			<arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
@@ -1123,8 +1150,7 @@
 		<copy file="${dir.dist.ndoc}/Output/Db4o.chm" tofile="${dir.dist.ndoc}/db4o.chm" />
 	</target>	
 		
-	<target name="ndoc-net" unless="mono">
-	
+	<target name="ndoc-net" unless="mono">	
 		<antcall target="sandcastle" />
 	</target>
 	

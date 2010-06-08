@@ -75,6 +75,12 @@
 	
 	# for further customizations check build-android-tests.xml properties
 	
+
+    ##################################
+ 	#         Building on a x64 bit Windows box          # 
+    ##################################
+
+	dir.programfiles= ${env.ProgramFiles(x86)}
 	
 	
 	
@@ -325,6 +331,13 @@
 		</ant>
 	</target>
 	
+	<target name="buildnet40" depends="init" description=".NET 4.0 full build">
+		<ant antfile="build-java.xml" target="doctor"/>
+		<ant antfile="build-dotnet.xml" target="package-net40" >
+		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
+		</ant>
+	</target>
+	
 	<target name="test-cc" depends="init, runtestsnet, cc-net35" />
 	
 	<target name="cc-net35" depends="init">
@@ -334,6 +347,13 @@
 		<ant target="buildnet35" />
 	</target>
 
+	<target name="cc-net40" depends="init">
+		<ant antfile="build-dotnet.xml" target="run-tests-net40" >
+		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
+		</ant>
+		<ant target="buildnet40" />
+	</target>
+	
 	<target name="buildmono2" depends="compile.java.all">
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>
