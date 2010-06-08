@@ -58,7 +58,9 @@
     <Content Include="FAQ\FAQ_files\filelist.xml" />
     <Content Include="FAQ\FAQ_files\image001.gif" />
     <Content Include="FAQ\FAQ_files\image002.gif" />
-    <Content Include="OMAddin.AddIn" />
+    <Content Include="OMAddin.AddIn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ReadMe\ReadMe.htm" />
     <Content Include="ReadMe\ReadMe_files\colorschememapping.xml" />
     <Content Include="ReadMe\ReadMe_files\filelist.xml" />

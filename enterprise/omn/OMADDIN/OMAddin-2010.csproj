@@ -85,6 +85,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="OMAddin.AddIn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ReadMe_vs2010\ReadMe_vs2010.htm" />
     <Content Include="ReadMe_vs2010\ReadMe_vs2010_files\filelist.xml" />
     <Content Include="ReadMe_vs2010\ReadMe_vs2010_files\image001.jpg" />
