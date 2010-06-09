@@ -67,6 +67,8 @@
 				<arg value="-out" />
 				<arg value="${installer.msi}" />
 				
+				<arg value="-spdb" />
+				
 				<arg value="-sice:ICE20" />
 				<arg value="-sice:ICE69" />
 				<arg value="-sice:ICE64" />
