@@ -78,6 +78,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     
     private ClientSlotCache _clientSlotCache;
 
+    private int _serverSideID = 0;
+    
 	private MessageListener _messageListener = new MessageListener() {
 		public void onMessage(Msg msg) {
 			// do nothing
@@ -510,6 +512,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		int doEncrypt = payLoad.readInt();
 		if (doEncrypt == 0) {
 			_handlers.oldEncryptionOff();
+		}
+		if(payLoad.remainingByteCount() > 0) {
+			_serverSideID = payLoad.readInt();
 		}
 	}
 	
@@ -1175,4 +1180,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     	// do nothing
     }
 	
+    public int serverSideID() {
+    	return _serverSideID;
+    }
 }

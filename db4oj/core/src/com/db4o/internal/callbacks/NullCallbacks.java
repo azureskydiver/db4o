@@ -56,7 +56,7 @@ public class NullCallbacks implements Callbacks {
 	public void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
 	}
 	
-	public void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
+	public void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections, boolean isOwnCommit) {
 	}
 
 	public boolean caresAboutCommitting() {

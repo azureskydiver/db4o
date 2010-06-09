@@ -293,4 +293,7 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 		return _offset == _buffer.length;
 	}
 
+	public int remainingByteCount() {
+		return _buffer.length - _offset;
+	}
 }

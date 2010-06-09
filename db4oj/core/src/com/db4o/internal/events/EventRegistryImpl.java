@@ -126,18 +126,18 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		
 		withExceptionHandlingInCallback(new Runnable() {
         	public void run() {
-        		_committing.trigger(new CommitEventArgs(transaction, objectInfoCollections));
+        		_committing.trigger(new CommitEventArgs(transaction, objectInfoCollections, false));
         	}
         });
 	}
 	
-	public void commitOnCompleted(final Transaction transaction, final CallbackObjectInfoCollections objectInfoCollections) {
+	public void commitOnCompleted(final Transaction transaction, final CallbackObjectInfoCollections objectInfoCollections, final boolean isOwnCommit) {
 		if (!_committed.hasListeners())
 			return;
 		
 		withExceptionHandlingInCallback(new Runnable() {
         	public void run() {
-        		_committed.trigger(new CommitEventArgs(transaction, objectInfoCollections));
+        		_committed.trigger(new CommitEventArgs(transaction, objectInfoCollections, isOwnCommit));
         	}
         });
 	}
