@@ -33,7 +33,7 @@ public final class MCommit extends Msg implements MessageWithResponse {
 	private void addCommittedInfoMsg(CallbackObjectInfoCollections committedInfo, LocalTransaction serverTransaction) {
 		synchronized (containerLock()) {
 			Msg.COMMITTED_INFO.setTransaction(serverTransaction);
-			MCommittedInfo message = Msg.COMMITTED_INFO.encode(committedInfo);
+			MCommittedInfo message = Msg.COMMITTED_INFO.encode(committedInfo, serverMessageDispatcher().dispatcherID());
 			message.setMessageDispatcher(serverMessageDispatcher());
 			serverMessageDispatcher().server().addCommittedInfoMsg(message);
 		}

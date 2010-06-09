@@ -33,7 +33,7 @@ public class LocalTransaction extends Transaction {
     			return callbacks().caresAboutCommitted();
     		}
     		public void dispatchCommitted(CallbackObjectInfoCollections committedInfo) {
-    			callbacks().commitOnCompleted(LocalTransaction.this, committedInfo);
+    			callbacks().commitOnCompleted(LocalTransaction.this, committedInfo, false);
     		}
     	};
     	_idSystem = idSystem;

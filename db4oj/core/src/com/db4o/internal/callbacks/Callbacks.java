@@ -31,7 +31,7 @@ public interface Callbacks {
 	void classOnRegistered(ClassMetadata clazz);
 	
 	void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections);
-	void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections);
+	void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections, boolean isOwnCommit);
 
     boolean caresAboutDeleting();
     boolean caresAboutDeleted();

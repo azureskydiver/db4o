@@ -13,10 +13,12 @@ import com.db4o.internal.*;
 public class CommitEventArgs extends TransactionalEventArgs {
 	
 	private final CallbackObjectInfoCollections _collections;
+	private final boolean _isOwnCommit;
 
-	public CommitEventArgs(Transaction transaction, CallbackObjectInfoCollections collections) {
+	public CommitEventArgs(Transaction transaction, CallbackObjectInfoCollections collections, boolean isOwnCommit) {
 		super(transaction);
 		_collections = collections;
+		_isOwnCommit = isOwnCommit;
 	}
 	
 	/**
@@ -40,5 +42,9 @@ public class CommitEventArgs extends TransactionalEventArgs {
 	 */
 	public ObjectInfoCollection updated() {
 		return _collections.updated;
+	}
+
+	public boolean isOwnCommit() {
+		return _isOwnCommit;
 	}
 }
