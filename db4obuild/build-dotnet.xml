@@ -81,12 +81,12 @@
 	</target>
 	
 	<target name="run-tests-net40"
-			depends="clean, configure-debug, configure-net40, run-additional-linq-tests, run-tests-net"
+			depends="configure-debug, configure-net40, run-additional-linq-tests, run-tests-net"
 			description="Builds and runs all the .net 4.0 relevant test cases">
 	</target>
 		
 	<target name="run-tests-net35"
-			depends="clean, configure-debug, configure-net35, run-additional-linq-tests, run-tests-net"
+			depends="configure-debug, configure-net35, run-additional-linq-tests, run-tests-net"
 			description="Builds and runs all the .net 3.5 relevant test cases (including Visual Basic LINQ and ASTORIA tests)">
 	</target>
 	
