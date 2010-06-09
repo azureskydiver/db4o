@@ -71,7 +71,7 @@
 			<delete dir="${temp.dir}" />
 			<mkdir dir="${temp.dir}" />
 
-			<javac srcdir="@{srcdir}" destdir="${temp.dir}" target="1.5" source="1.5" failonerror="true" executable="${file.compiler.jdk1.3}" fork="yes">
+			<javac srcdir="@{srcdir}" destdir="${temp.dir}" target="1.5" source="1.5" failonerror="true">
 				<classpath refid="@{classpathrefid}" />
 			</javac>
 			<copy todir="${temp.dir}">
