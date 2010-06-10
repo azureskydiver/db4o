@@ -141,7 +141,7 @@ public class OwnCommittedCallbacksFixture {
 		private static final long TIMEOUT = 100;
 	
 		public void testCommittedCallbacks() throws InterruptedException {
-			final Object lockObject = new Object();
+			final Lock4 lockObject = new Lock4();
 			final BooleanByRef ownEvent = new BooleanByRef(false);
 			final BooleanByRef gotEvent = new BooleanByRef(false);
 			final BooleanByRef shallListen = new BooleanByRef(false);
@@ -159,16 +159,24 @@ public class OwnCommittedCallbacksFixture {
 					Assert.isFalse(gotEvent.value);
 					gotEvent.value = true;
 					ownEvent.value = args.isOwnCommit();
-					synchronized(lockObject) {
-						lockObject.notifyAll();
-					}
+					lockObject.run(new Closure4() {
+						public Object run() {
+							lockObject.awake();
+							return null;
+						}
+					});
 				}
 			});
 			shallListen.value = true;
 			action.commitItem(new OwnCommitCallbackFlaggedNetworkingTestSuite.Item(42), clientA, clientB);
-			synchronized(lockObject) {
-				lockObject.wait(TIMEOUT);
-			}
+
+			lockObject.run(new Closure4() {
+				public Object run() {
+					lockObject.snooze(TIMEOUT);
+					return null;
+				}
+			});
+
 			shallListen.value = false;
 			clientB.close();
 			clientA.close();
