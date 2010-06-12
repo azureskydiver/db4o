@@ -24,7 +24,7 @@ import org.polepos.framework.*;
 /**
  * @author Herkules
  */
-public class SepangMulti extends Circuit
+public class SepangMulti extends CircuitBase
 {
     
     @Override

@@ -3,7 +3,7 @@ package com.db4o.polepos.idsys;
 
 import org.polepos.framework.*;
 
-public class PlainAllocateCircuit extends Circuit {
+public class PlainAllocateCircuit extends CircuitBase {
 
 	@Override
 	protected void addLaps() {
@@ -16,7 +16,7 @@ public class PlainAllocateCircuit extends Circuit {
 	}
 
 	@Override
-	public Class<? extends Driver> requiredDriver() {
+	public Class<? extends DriverBase> requiredDriver() {
 		return PlainAllocateDriver.class;
 	}
 

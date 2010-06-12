@@ -2,7 +2,7 @@ package org.polepos.circuits.hungaroring;
 
 import org.polepos.framework.*;
 
-public class Hungaroring extends Circuit {
+public class Hungaroring extends CircuitBase {
 
     @Override
     public String description() {

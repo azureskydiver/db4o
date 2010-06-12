@@ -85,7 +85,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 			PerformanceComparisonStrategy strategy = initializeStrategyMock(current, other, expectations, measurementType);
 			PerformanceMonitoringReporter reporter = new PerformanceMonitoringReporter(CURRENT_TEAM_NAME, measurementType, strategy);
 			reporter.startSeason();
-			Circuit circuit = new Uberlandia();
+			CircuitBase circuit = new Uberlandia();
 			TurnSetup[] setups = createTurnSetups(numTurns);
 			Lap[] laps = createLaps(numLaps);
 			reporter.sendToCircuit(circuit);
@@ -98,9 +98,9 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		}
 	}
 
-	private void reportResults(Reporter reporter, Circuit circuit, TurnSetup[] setups, Lap[] laps, String teamName, Reading[][] readings) {
+	private void reportResults(Reporter reporter, CircuitBase circuit, TurnSetup[] setups, Lap[] laps, String teamName, Reading[][] readings) {
 		Team team = new MockTeam(teamName);
-		Car car = new MockCar(carName(teamName));
+		Car car = new MockCar(team, carName(teamName));
 		TurnResult[] turnResults = new TurnResult[setups.length];
 		for(int turnIdx = 0; turnIdx < readings.length; turnIdx++) {
 			turnResults[turnIdx] = new TurnResult();
@@ -274,7 +274,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		}
 
 		@Override
-		public Driver[] drivers() {
+		public DriverBase[] drivers() {
 			return null;
 		}
 
@@ -287,10 +287,15 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		public String website() {
 			return null;
 		}
+
+		@Override
+		public void setUp() {
+			
+		}
 		
 	}
 	
-	private static class MockCircuit extends Circuit {
+	private static class MockCircuit extends CircuitBase {
 		@Override
 		protected void addLaps() {
 		}
@@ -301,7 +306,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		}
 
 		@Override
-		public Class<? extends Driver> requiredDriver() {
+		public Class<? extends DriverBase> requiredDriver() {
 			return null;
 		}
 	}
@@ -313,7 +318,8 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 
 		private String _name;
 		
-		public MockCar(String name) {
+		public MockCar(Team team, String name) {
+			super(team);
 			_name = name;
 		}
 		

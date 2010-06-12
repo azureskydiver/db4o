@@ -31,8 +31,8 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
         new IndianapolisRunner().run();
     }
 	
-	public Circuit[] circuits() {
-		return new Circuit[] { 
+	public CircuitBase[] circuits() {
+		return new CircuitBase[] { 
 				new IndianapolisFast(),  
 		};
 	}
@@ -44,8 +44,8 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
 		};
 	}
 
-	public Driver[] drivers() {
-		return new Driver [] {
+	public DriverBase[] drivers() {
+		return new DriverBase [] {
 				new IndianapolisDb4o(),
 		};
 	}

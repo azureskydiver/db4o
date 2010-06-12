@@ -21,7 +21,7 @@ package org.polepos.circuits.istanbul;
 
 import org.polepos.framework.*;
 
-public class Istanbul extends Circuit {
+public class Istanbul extends CircuitBase {
 
 	@Override
 	public String description() {

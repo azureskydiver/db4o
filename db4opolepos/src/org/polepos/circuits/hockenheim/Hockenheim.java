@@ -22,7 +22,7 @@ package org.polepos.circuits.hockenheim;
 import org.polepos.framework.*;
 
 
-public class Hockenheim extends Circuit
+public class Hockenheim extends CircuitBase
 {
     
     @Override

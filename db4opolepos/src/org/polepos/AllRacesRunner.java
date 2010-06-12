@@ -81,15 +81,15 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				configuredDb4oTeam(JAR_DEVEL, new SingleBTreeIdSystem()),
 				configuredDb4oTeam(JAR_DEVEL, new PointerBasedIdSystem()),
 				
-				db4oTeam(JAR_PRODUCTION),
-				
-				// configuredDb4oTeam(JAR_PRODUCTION, new BTreeFreespaceManager()),
-				
-				db4oTeam(JAR_STABLE),
-				
-				db4oTeam(JAR_DEVEL, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
-				db4oTeam(JAR_PRODUCTION, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
-				db4oTeam(JAR_STABLE, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
+//				db4oTeam(JAR_PRODUCTION),
+//				
+//				// configuredDb4oTeam(JAR_PRODUCTION, new BTreeFreespaceManager()),
+//				
+//				db4oTeam(JAR_STABLE),
+//				
+//				db4oTeam(JAR_DEVEL, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
+//				db4oTeam(JAR_PRODUCTION, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
+//				db4oTeam(JAR_STABLE, new int[]{Db4oOptions.CLIENT_SERVER_TCP, Db4oOptions.CLIENT_SERVER}),
 				
 		};
 	}
@@ -186,29 +186,29 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
     
 
-	public Circuit[] circuits() {
-		return new Circuit[] {
-			 new Melbourne(),
-			 new Sepang(),
-			 new Bahrain(),
-			 new Imola(),
-			 new Barcelona(),
-			 new Monaco(),
-			 new Nurburgring(),
-			 new Montreal(),
-			 new IndianapolisFast(),
-			 new IndianapolisMedium(),
-			 new IndianapolisSlow(),
-			 new Magnycours(),
+	public CircuitBase[] circuits() {
+		return new CircuitBase[] {
+//			 new Melbourne(),
+//			 new Sepang(),
+//			 new Bahrain(),
+//			 new Imola(),
+//			 new Barcelona(),
+//			 new Monaco(),
+//			 new Nurburgring(),
+//			 new Montreal(),
+//			 new IndianapolisFast(),
+//			 new IndianapolisMedium(),
+//			 new IndianapolisSlow(),
+//			 new Magnycours(),
 			 new Silverstone(),
-			 new Hockenheim(),
-			 new Hungaroring(),
-			 new Istanbul(),
+//			 new Hockenheim(),
+//			 new Hungaroring(),
+//			 new Istanbul(),
 		};
 	}
 
-	public Driver[] drivers() {
-		return new Driver [] {
+	public DriverBase[] drivers() {
+		return new DriverBase [] {
 			new MelbourneDb4o(),
 			new SepangDb4o(),
 			new BahrainDb4o(),

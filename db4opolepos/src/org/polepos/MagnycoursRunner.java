@@ -31,8 +31,8 @@ public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
         new MagnycoursRunner().run();
     }
 	
-	public Circuit[] circuits() {
-		return new Circuit[] { 
+	public CircuitBase[] circuits() {
+		return new CircuitBase[] { 
 				new Magnycours(),  
 		};
 	}
@@ -44,8 +44,8 @@ public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
 		};
 	}
 
-	public Driver[] drivers() {
-		return new Driver [] {
+	public DriverBase[] drivers() {
+		return new DriverBase [] {
 				new MagnycoursDb4o(),
 		};
 	}

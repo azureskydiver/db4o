@@ -23,7 +23,7 @@ package org.polepos.circuits.magnycours;
 import org.polepos.framework.*;
 
 
-public class Magnycours extends Circuit {
+public class Magnycours extends CircuitBase {
 
     @Override
     public String description() {

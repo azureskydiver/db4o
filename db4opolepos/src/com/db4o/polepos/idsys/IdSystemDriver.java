@@ -6,7 +6,7 @@ import org.polepos.framework.*;
 import com.db4o.internal.*;
 import com.db4o.internal.ids.*;
 
-public abstract class IdSystemDriver extends Driver {
+public abstract class IdSystemDriver extends DriverBase {
 
 	private final IdSystemEngine _engine;
 	

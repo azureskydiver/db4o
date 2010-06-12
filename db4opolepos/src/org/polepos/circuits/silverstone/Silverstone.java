@@ -22,7 +22,7 @@ package org.polepos.circuits.silverstone;
 
 import org.polepos.framework.*;
 
-public class Silverstone extends Circuit {
+public class Silverstone extends CircuitBase {
 
     @Override
     protected void addLaps() {

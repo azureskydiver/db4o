@@ -3,7 +3,7 @@ package com.db4o.polepos.idsys;
 
 import org.polepos.framework.*;
 
-public class PlainLookupCircuit extends Circuit {
+public class PlainLookupCircuit extends CircuitBase {
 
 	@Override
 	protected void addLaps() {
@@ -19,7 +19,7 @@ public class PlainLookupCircuit extends Circuit {
 	}
 
 	@Override
-	public Class<? extends Driver> requiredDriver() {
+	public Class<? extends DriverBase> requiredDriver() {
 		return PlainLookupDriver.class;
 	}
 
