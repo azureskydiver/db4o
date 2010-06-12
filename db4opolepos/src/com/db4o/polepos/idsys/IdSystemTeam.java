@@ -16,8 +16,8 @@ public class IdSystemTeam extends Team {
 	@Override
 	public Car[] cars() {
 		return new Car[] {
-			new PointerBasedCar(),
-			new BTreeBasedCar(),
+			new PointerBasedCar(this),
+			new BTreeBasedCar(this),
 		};
 	}
 
@@ -32,8 +32,8 @@ public class IdSystemTeam extends Team {
 	}
 
 	@Override
-	public Driver[] drivers() {
-		return new Driver[] {
+	public DriverBase[] drivers() {
+		return new DriverBase[] {
 			new PlainAllocateDriver(_engine),
 			new PlainCommitDriver(_engine),
 			new PlainLookupDriver(_engine),
@@ -51,7 +51,7 @@ public class IdSystemTeam extends Team {
 	}
 
 	@Override
-	protected void setUp() {
+	public void setUp() {
 		try {
 			_engine.clear();
 		} catch (IOException exc) {

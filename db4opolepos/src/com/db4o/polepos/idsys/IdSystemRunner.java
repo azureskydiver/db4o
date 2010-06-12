@@ -11,8 +11,8 @@ public class IdSystemRunner extends AbstractRunner {
 	private static final int NUM_RUNS = 10;
 
 	@Override
-	protected Circuit[] circuits() {
-		return new Circuit[] {
+	protected CircuitBase[] circuits() {
+		return new CircuitBase[] {
 				new PlainAllocateCircuit(),
 				new PlainCommitCircuit(),
 				new PlainLookupCircuit(),
@@ -32,8 +32,8 @@ public class IdSystemRunner extends AbstractRunner {
 	}
 
 	public static void main(String[] args) {
-    	System.setProperty(Circuit.NUM_RUNS_PROPERTY_ID, String.valueOf(NUM_RUNS));
-    	System.setProperty(Circuit.MEMORY_USAGE_PROPERTY_ID, Circuit.NullMemoryUsage.class.getName());
+    	System.setProperty(CircuitBase.NUM_RUNS_PROPERTY_ID, String.valueOf(NUM_RUNS));
+    	System.setProperty(CircuitBase.MEMORY_USAGE_PROPERTY_ID, CircuitBase.NullMemoryUsage.class.getName());
 		new IdSystemRunner().run(SETTINGS_FILE);
 	}
 }

@@ -22,7 +22,7 @@ package org.polepos.circuits.indianapolis;
 import org.polepos.framework.*;
 
 
-public class IndianapolisMedium extends Circuit {
+public class IndianapolisMedium extends CircuitBase {
 
     @Override
     public String description() {

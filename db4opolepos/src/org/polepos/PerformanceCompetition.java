@@ -35,8 +35,8 @@ public class PerformanceCompetition extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
-	public Circuit[] circuits() {
-		return new Circuit[] { 
+	public CircuitBase[] circuits() {
+		return new CircuitBase[] { 
 				 new Melbourne(),
 				 new Sepang(),
 				 new Bahrain(),
@@ -51,8 +51,8 @@ public class PerformanceCompetition extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
-	public Driver[] drivers() {
-		return new Driver [] {
+	public DriverBase[] drivers() {
+		return new DriverBase [] {
 				new MelbourneDb4o(),
 		        new SepangDb4o(),
 		        new BahrainDb4o(),
