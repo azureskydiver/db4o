@@ -30,6 +30,7 @@ public class AllTests extends ReflectionTestSuite {
 			EnvironmentsTestCase.class,
 			HashSet4TestCase.class,
 			Hashtable4TestCase.class,
+			IdentityHashtable4TestCase.class,
 			IdentitySet4TestCase.class,
 			IntArrayListTestCase.class,
 			IntMatcherTestCase.class,
