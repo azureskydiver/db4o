@@ -77,6 +77,8 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
                 
                 //regression
                 DRS42Test.class,
+                
+                SameHashCodeTestCase.class,
 		};
 	}
 	

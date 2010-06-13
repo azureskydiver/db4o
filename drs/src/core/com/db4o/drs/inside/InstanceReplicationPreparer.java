@@ -48,7 +48,7 @@ class InstanceReplicationPreparer implements Visitor {
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
-	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(10000);
+	private Map4 _counterpartRefsByOriginal = new IdentityHashtable4(10000);
 	
 	private final ReplicationEventImpl _event;
 	private final ObjectStateImpl _stateInA;
