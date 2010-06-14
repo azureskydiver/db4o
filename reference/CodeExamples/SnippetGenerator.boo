@@ -111,7 +111,7 @@ class SnippetGenerator:
 
 class CodeToSnippets:
 	final _SnippetGeneration as SnippetGenerator
-	final IgnoredFilesWithEnding = (".jar",".dll",".class")
+	final IgnoredFilesWithEnding = (".jar",".dll",".class",".db4o")
 
 	def constructor(templatePath as string, zipGenerator as CodeZip):
 		_SnippetGeneration = SnippetGenerator(File.ReadAllText(templatePath),zipGenerator)
@@ -119,6 +119,8 @@ class CodeToSnippets:
 	def HandleSubDirectory(sourceDir as DirectoryInfo, snippetDir as DirectoryInfo, language as string):
 		directoryInSnippets=snippetDir.CreateSubdirectory(sourceDir.Name)
 		CreateCodeSnippets(sourceDir,directoryInSnippets,language)
+		if directoryInSnippets.GetFiles().Length == 0 and directoryInSnippets.GetDirectories().Length == 0:
+			directoryInSnippets.Delete(false)
 
 		
 	def CreateCodeSnippets(sourceDir as DirectoryInfo, snippetDir as DirectoryInfo, language as string):
@@ -178,8 +180,9 @@ zipFileGenerator = CodeZip()
 snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator)
 snippetGenerator.CreateCodeSnippets("javaEnhancement","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../Flare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("javaAndroid/src/com/db4odoc","../Flare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("javaAppExamples/","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../Flare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
 
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator)

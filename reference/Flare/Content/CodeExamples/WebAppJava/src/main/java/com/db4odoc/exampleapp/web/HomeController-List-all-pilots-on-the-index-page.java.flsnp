@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">@RequestMapping(value = &quot;list.html&quot;, method = RequestMethod.GET)
+public ModelAndView get() {
+    ObjectSet pilots = db4o.objectContainer().query(Pilot.class);
+    return new ModelAndView(&quot;list&quot;, &quot;pilots&quot;, new ArrayList&lt;Pilot&gt;(pilots));
+}</pre>
+		<div class="codesnippet-meta">HomeController.java: List all pilots on the index-page<a href="Example-exampleapp-web-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

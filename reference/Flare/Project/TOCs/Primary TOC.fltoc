@@ -1030,6 +1030,33 @@
       </TocEntry>
     </TocEntry>
     <TocEntry
+      Title="Web Environment"
+      Link="/Content/platform_specific_issues/web_environment.htm">
+      <TocEntry
+        Title="Isolation in Web-Applications"
+        Link="/Content/platform_specific_issues/web/web_isolation.htm" />
+      <TocEntry
+        Title="Servlets"
+        Link="/Content/platform_specific_issues/web/servlets.htm"
+        conditions="Primary.All languages,Primary.Java"></TocEntry>
+      <TocEntry
+        Title="Spring MVC Example"
+        Link="/Content/platform_specific_issues/web/spring_mvc_example.htm"
+        conditions="Primary.Java" />
+      <TocEntry
+        Title="ASP.NET Request Example"
+        Link="/Content/platform_specific_issues/web/asp.net_request_example.htm" />
+      <TocEntry
+        Title="ASP.NET Security"
+        Link="/Content/platform_specific_issues/web/asp.net_security.htm" />
+      <TocEntry
+        Title="ASP.NET Assembly Naming"
+        Link="/Content/platform_specific_issues/web/asp.net_assembly_naming.htm" />
+      <TocEntry
+        Title="ASP.NET MVC Example"
+        Link="/Content/platform_specific_issues/web/asp.net_mvc_example.htm" />
+    </TocEntry>
+    <TocEntry
       Title="db4o On Java Platforms"
       Link="/Content/platform_specific_issues/db4o_on_java_platforms.htm"
       conditions="Primary.All languages,Primary.Java" />
@@ -1065,10 +1092,6 @@
     <TocEntry
       Title="Symbian OS"
       Link="/Content/platform_specific_issues/symbian_os.htm"
-      conditions="Primary.All languages,Primary.Java"></TocEntry>
-    <TocEntry
-      Title="Servlets"
-      Link="/Content/platform_specific_issues/servlets.htm"
       conditions="Primary.All languages,Primary.Java"></TocEntry>
     <TocEntry
       Title="ASP.NET"

@@ -1,40 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="811" MadCap:lastWidth="630" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
-    <head><title>How To Use Unique Constraints	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="859" MadCap:lastWidth="586">
+    <head><title>How To Use Unique Constraints</title>
     </head>
     <body onload="prettyPrint()">
         <h1>How To Use Unique Constraints</h1>
         <p>In order to work with the unique constraints you will need to remember the
 following 3 steps.</p>
         <p>1. Add an index for a field you wish to be unique:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java:</p>
-            <p><code>configuration.objectClass(Item.class).objectField("field").indexed(true);</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <p>c#:</p>
-            <p><code>configuration.ObjectClass(typeof(Item)).ObjectField("field").Indexed(true);</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <p>VB:</p>
-            <p><code>configuration.ObjectClass(GetType(Item)).ObjectField("field").Indexed(true)</code>
-            </p>2. Configure a unique constraint: 
-
-<p>Java:</p><p><code>configuration.add(new UniqueFieldValueConstraint(Item.class,
-"field"));</code></p><p>c#:</p><p><code>configuration.Add(new UniqueFieldValueConstraint(typeof(Item),
-"field"));</code></p><p>VB:</p><p><code>configuration.Add(New UniqueFieldValueConstraint(GetType(Item),
-"field"))</code></p><p>3. Handle unique constraint violation:</p><p>Java: 
-<code>// open objectContainer</code><code>try {</code><code>  // do some work and save some objects</code><code>  objectContainer.commit();</code><code>} catch(UniqueFieldValueConstraintViolationException ex) {</code></p><p><code>  // log the error, notify the
-user</code><code>  objectContainer.rollback();</code><code>}</code></p><p>c#: 
-<code>// open objectContainer</code><code>try {</code><code>  // do some work and save some objects</code><code>  objectContainer.Commit();</code><code>} catch(UniqueFieldValueConstraintViolationException ex) {</code></p><p><code>  // log the error, notify the
-user</code><code>  objectContainer.Rollback();</code><code>}</code></p><p>VB: 
-<code>// open objectContainer</code><code>Try </code><code>  // do some work and save some objects</code><code>  objectContainer.Commit()</code><code> Catch ex As
-UniqueFieldValueConstraintViolationException </code></p><p><code>  // log the error, notify the
-user</code><code>  objectContainer.Rollback()</code><code>End Try</code></p></p>
-        <p MadCap:conditions="Primary:vb" />
+        <pre class="monospace" MadCap:conditions="Primary.Java">Java:<br />configuration.objectClass(Item.class).objectField("field").indexed(true);</pre>
+        <pre class="monospace" MadCap:conditions="Primary..NET">c#:<br />configuration.ObjectClass(typeof(Item)).ObjectField("field").Indexed(true);</pre>
+        <pre class="monospace" MadCap:conditions="Primary..NET">VB:<br />configuration.ObjectClass(GetType(Item)).ObjectField("field").Indexed(true)</pre>
+        <p>2. Configure a unique constraint:</p>
+        <pre class="monospace">Java:<br />configuration.add(new UniqueFieldValueConstraint(Item.class,"field"));</pre>
+        <pre class="monospace" MadCap:conditions="Primary..NET">c#:<br />configuration.Add(new UniqueFieldValueConstraint(typeof(Item),"field"));</pre>
+        <pre class="monospace" MadCap:conditions="Primary..NET">VB:<br />configuration.Add(New UniqueFieldValueConstraint(GetType(Item),"field"))</pre>
+        <p>3. Handle unique constraint violation:</p>
+        <pre class="monospace" xml:space="preserve" MadCap:conditions="Primary.Java">Java:<br />// open objectContainertry
+{
+  // do some work and save some objects  
+  objectContainer.commit();
+} catch(UniqueFieldValueConstraintViolationException ex) {<br />  // log the error, notify the user  <br /> objectContainer.rollback();<br />}</pre>
+        <pre class="monospace" xml:space="preserve" MadCap:conditions="Primary..NET">c#:<br />// open objectContainertry 
+{  <br />  // do some work and save some objects<br />  objectContainer.Commit();<br />} catch(UniqueFieldValueConstraintViolationException ex) {<br />  // log the error, notify the user<br />  objectContainer.Rollback();<br />}</pre>
+        <pre class="monospace" xml:space="preserve" MadCap:conditions="Primary..NET">VB:<br />' open objectContainer<br />Try<br />  ' do some work and save some objects
+  objectContainer.Commit() 
+Catch ex As UniqueFieldValueConstraintViolationException<br />   ' log the error, notify the user
+   objectContainer.Rollback()
+End</pre>
     </body>
 </html>

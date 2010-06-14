@@ -82,6 +82,7 @@
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.vb" />
     <Compile Include="Code\collections\bigset\BigSetExample.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
+    <Compile Include="Code\container\sessions\Db4oSessions.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\Db4oInternalIdExample.vb" />

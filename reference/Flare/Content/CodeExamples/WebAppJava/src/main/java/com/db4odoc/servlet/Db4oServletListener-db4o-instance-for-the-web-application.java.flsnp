@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">@Override
+public void contextInitialized(ServletContextEvent event) {
+    ServletContext context = event.getServletContext();
+    String filePath = context.getRealPath(&quot;WEB-INF/&quot;
+            + context.getInitParameter(KEY_DB4O_FILE_NAME));
+    EmbeddedObjectContainer rootContainer = Db4oEmbedded.openFile(filePath);
+    context.setAttribute(KEY_DB4O_SERVER, rootContainer);
+    context.log(&quot;db4o startup on &quot; + filePath);
+}
+
+
+@Override
+public void contextDestroyed(ServletContextEvent event) {
+    ServletContext context = event.getServletContext();
+    ObjectContainer rootContainer = (ObjectContainer) context.getAttribute(KEY_DB4O_SERVER);
+    context.removeAttribute(KEY_DB4O_SERVER);
+    close(rootContainer);
+    context.log(&quot;db4o shutdown&quot;);
+}</pre>
+		<div class="codesnippet-meta">Db4oServletListener.java: db4o-instance for the web-application<a href="Example-db4odoc-servlet-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

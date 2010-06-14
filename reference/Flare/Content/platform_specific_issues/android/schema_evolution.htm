@@ -10,19 +10,19 @@ not suffice and you need changes or additions? Let's look how db4o and SQLite
 applications can handle it.</p>
         <p>To keep the example simple, let's add a registration record
 to our car:</p>
-        <MadCap:snippetBlock src="../../CodeExamples/android/Car-Add-a-new-field-to-the-car.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/Android/src/com/db4odoc/android/Car-Add-a-new-field-to-the-car.all.flsnp" />
         <p>Ok, the application is changed to take care for the new class. What
 about our databases?</p>
         <h3>Schema Evolution in db4o</h3>
         <p>db4o supports such schema change on the fly: we can select
 values and update the new field too: </p>
-        <MadCap:snippetBlock src="../../CodeExamples/android/Db4oExample-update-a-car-with-db4o.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/Android/src/com/db4odoc/android/Db4oExample-update-a-car-with-db4o.all.flsnp" />
         <h3>Schema Evolution in SQLite</h3>
         <p>For SQLite database model should be synchronized with the
 object model:</p>
-        <MadCap:snippetBlock src="../../CodeExamples/android/SqlExample-upgrade-schema-in-SQLite.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/Android/src/com/db4odoc/android/SqlExample-upgrade-schema-in-SQLite.all.flsnp" />
         <p>Now we can try to retrieve and update records:</p>
-        <MadCap:snippetBlock src="../../CodeExamples/android/SqlExample-update-a-car-with-SQLite.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/Android/src/com/db4odoc/android/SqlExample-update-a-car-with-SQLite.all.flsnp" />
         <h3>Conclusion</h3>
         <p>You can see that schema evolution is much easier with db4o.
 But the main difficulty that is not visible from the example is that schema
