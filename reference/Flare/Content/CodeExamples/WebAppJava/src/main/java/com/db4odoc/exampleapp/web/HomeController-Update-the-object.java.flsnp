@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">@RequestMapping(value = &quot;/edit{id}.html&quot;, method = RequestMethod.POST)
+public ModelAndView editPilot(@PathVariable final String id, Pilot pilotFromForm) {
+    Pilot pilotFromDatabase = db4o.objectContainer().query(new Predicate&lt;Pilot&gt;() {
+        @Override
+        public boolean match(Pilot p) {
+            return p.getId().equals(id);
+        }
+    }).get(0);
+    pilotFromDatabase.setName(pilotFromForm.getName());
+    pilotFromDatabase.setPoints(pilotFromForm.getPoints());
+    db4o.objectContainer().store(pilotFromDatabase);
+    return new ModelAndView(new RedirectView(&quot;list.html&quot;));
+}</pre>
+		<div class="codesnippet-meta">HomeController.java: Update the object<a href="Example-exampleapp-web-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

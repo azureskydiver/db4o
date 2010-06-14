@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;dependency&gt;
+    &lt;groupId&gt;com.db4o&lt;/groupId&gt;
+    &lt;artifactId&gt;db4o-full-java5&lt;/artifactId&gt;
+    &lt;version&gt;8.0-SNAPSHOT&lt;/version&gt;
+ &lt;/dependency&gt;</pre>
+		<div class="codesnippet-meta">pom.xml: db4o via maven<a href="Example-javaAppExamples-WebAppJava-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

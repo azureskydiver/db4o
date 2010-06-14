@@ -1,295 +1,295 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CatapultGlossary>
-  <GlossaryEntry>
-    <Terms>
-      <Term>ID</Term>
-      <Term>Object ID</Term>
-      <Term>Internal ID</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/ids_and_uuids/internal_ids.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>UUID</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/ids_and_uuids/unique_universal_ids.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>OME</Term>
-      <Term>Object Manager</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_manager_enterprise.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>dRS</Term>
-    </Terms>
-    <Definition
-      Link="/Content/db4o_replication_system_drs.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>ACID</Term>
-    </Terms>
-    <Definition
-      Link="/Content/Basic_Concepts/acid_model.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Concurrency Control</Term>
-    </Terms>
-    <Definition
-      Link="/Content/Basic_Concepts/concurrency_control_and_locking.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Native Query</Term>
-      <Term>NQ</Term>
-    </Terms>
-    <Definition
-      Link="/Content/Basic_Concepts/native_query_concepts.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Transaction</Term>
-    </Terms>
-    <Definition
-      Link="/Content/Basic_Concepts/transaction.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Semaphores</Term>
-    </Terms>
-    <Definition
-      Link="/Content/client-server/semaphores.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>db4oUnit</Term>
-    </Terms>
-    <Definition
-      Link="/Content/db4o_testing_framework.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Client-Server</Term>
-      <Term>C/S</Term>
-    </Terms>
-    <Definition
-      Link="/Content/client-server.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Alias</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/aliases.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Callback</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/callbacks.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Annotation</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/using_annotations.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Attribute</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/using_attributes.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Reflection</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/db4o_reflection_api.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Encryption</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/encryption.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Freespace</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/freespace_management_system.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Defragment</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/maintenance/defragment.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Refactoring</Term>
-      <Term>Schema Evolution</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/refactoring_and_schema_evolution.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Storage</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/storage.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Translator</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/translators.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Typehandler</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/typehandlers.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Constraints</Term>
-      <Term>Unique Constraints</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/unique_constraints.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Activation</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/activation.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Delete Depth</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/delete_behavior/deleting_collections.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Constructor</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/object_construction.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Transparent Persistence</Term>
-      <Term>TP</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/transparent_persistence.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Update Depth</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/update_depth.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Android</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/android.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>ASP.NET</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/asp.net.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Automatic Properties</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/automatic_properties.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>OSGi</Term>
-      <Term>OSGI</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/database_for_osgi.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Isolated Storage</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/isolated_storage.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Servlet</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/servlets.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Symbian</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/symbian_os.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>OODBMS</Term>
-      <Term>ODBMS</Term>
-    </Terms>
-    <Definition
-      Link="/Content/product_philosophy/oodbms.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Sharpen</Term>
-    </Terms>
-    <Definition
-      Link="/Content/sharpen.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Transparent Activation</Term>
-      <Term>TA</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>QBE</Term>
-      <Term>QbE</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/querying/query_by_example.htm"></Definition>
-  </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>ID</Term>
+            <Term>Object ID</Term>
+            <Term>Internal ID</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/ids_and_uuids/internal_ids.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>UUID</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/ids_and_uuids/unique_universal_ids.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>OME</Term>
+            <Term>Object Manager</Term>
+        </Terms>
+        <Definition Link="/Content/object_manager_enterprise.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>dRS</Term>
+        </Terms>
+        <Definition Link="/Content/db4o_replication_system_drs.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>ACID</Term>
+        </Terms>
+        <Definition Link="/Content/Basic_Concepts/acid_model.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Concurrency Control</Term>
+        </Terms>
+        <Definition Link="/Content/Basic_Concepts/concurrency_control_and_locking.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Native Query</Term>
+            <Term>NQ</Term>
+        </Terms>
+        <Definition Link="/Content/Basic_Concepts/native_query_concepts.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Transaction</Term>
+        </Terms>
+        <Definition Link="/Content/Basic_Concepts/transaction.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Semaphores</Term>
+        </Terms>
+        <Definition Link="/Content/client-server/semaphores.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>db4oUnit</Term>
+        </Terms>
+        <Definition Link="/Content/db4o_testing_framework.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Client-Server</Term>
+            <Term>C/S</Term>
+        </Terms>
+        <Definition Link="/Content/client-server.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Alias</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/aliases.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Callback</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/callbacks.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Annotation</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/using_annotations.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Attribute</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/using_attributes.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Reflection</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/db4o_reflection_api.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Encryption</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/encryption.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Freespace</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/freespace_management_system.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Defragment</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/maintenance/defragment.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Refactoring</Term>
+            <Term>Schema Evolution</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/refactoring_and_schema_evolution.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Storage</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/storage.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Translator</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/translators.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Typehandler</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/typehandlers.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Constraints</Term>
+            <Term>Unique Constraints</Term>
+        </Terms>
+        <Definition Link="/Content/implementation_strategies/unique_constraints.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Activation</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/activation.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Delete Depth</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/delete_behavior/deleting_collections.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Constructor</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/object_construction.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Transparent Persistence</Term>
+            <Term>TP</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/transparent_persistence.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Update Depth</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/update_depth.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Android</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/android.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>ASP.NET</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/asp.net.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Automatic Properties</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/automatic_properties.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>OSGi</Term>
+            <Term>OSGI</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/database_for_osgi.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Isolated Storage</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/isolated_storage.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Servlet</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/web/servlets.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Symbian</Term>
+        </Terms>
+        <Definition Link="/Content/platform_specific_issues/symbian_os.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>OODBMS</Term>
+            <Term>ODBMS</Term>
+        </Terms>
+        <Definition Link="/Content/product_philosophy/oodbms.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Sharpen</Term>
+        </Terms>
+        <Definition Link="/Content/sharpen.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>Transparent Activation</Term>
+            <Term>TA</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm">
+        </Definition>
+    </GlossaryEntry>
+    <GlossaryEntry>
+        <Terms>
+            <Term>QBE</Term>
+            <Term>QbE</Term>
+        </Terms>
+        <Definition Link="/Content/object_lifecycle/querying/query_by_example.htm">
+        </Definition>
+    </GlossaryEntry>
 </CatapultGlossary>

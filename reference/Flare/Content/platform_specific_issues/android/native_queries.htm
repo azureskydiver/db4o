@@ -9,9 +9,9 @@
         <h2>Example Build Time Enhancement for Android</h2>
         <p>This example is based on the <a href="../../implementation_strategies/enhancement_tools/build_time_enhancement.htm">build time enhancement example</a>. This example only shows the important steps for optimizing the native queries for android.</p>
         <p>First define the enhancing task. It's important to also include the android-platform libraries, otherwise some classes cannot be found. </p>
-        <MadCap:snippetBlock src="../../CodeExamples/android/android-nq-optimisation-Define-the-task-for-the-enhancement-.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/Android/src/com/db4odoc/android/android-nq-optimisation-Define-the-task-for-the-enhancement-.all.flsnp" />
         <p>Then define the target which enhances the classes. This example only activates the Native Query optimization. However you can also activate TA or TP support if you like. <MadCap:xref href="../../object_lifecycle/transparent_persistence.htm" target="" title="" alt="">See "Transparent Persistence"</MadCap:xref></p>
-        <MadCap:snippetBlock src="../../CodeExamples/android/android-nq-optimisation-Define-a-target-which-runs-the-task-.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/Android/src/com/db4odoc/android/android-nq-optimisation-Define-a-target-which-runs-the-task-.all.flsnp" />
         <p>The next step is to integrate this Ant-Task in Eclipse. Right click on the project and then select 'Properties'. There switch to the 'Builders'-tab. Add a new 'Ant Builder'.</p>
         <p> On the 'Main'-tab select the enhancement-script:</p>
         <p>

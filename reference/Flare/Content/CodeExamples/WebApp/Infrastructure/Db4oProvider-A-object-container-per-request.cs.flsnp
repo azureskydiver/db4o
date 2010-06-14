@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">private void RegisterSessionCreation(HttpApplication httpApplication)
+{
+    httpApplication.BeginRequest += OpenSession;
+    httpApplication.EndRequest += CloseSession;
+}
+
+private void OpenSession(object sender, EventArgs e)
+{
+    IEmbeddedObjectContainer container =
+        (IEmbeddedObjectContainer)context.Application[DataBaseInstance];
+    IObjectContainer session = container.OpenSession();
+    HttpContext.Current.Items[SessionKey] = session;
+}
+
+private void CloseSession(object sender, EventArgs e)
+{
+    IObjectContainer session = (IObjectContainer)HttpContext.Current.Items[SessionKey];
+    session.Dispose();
+}</pre>
+		<div class="codesnippet-meta">Db4oProvider.cs: A object container per request<a href="Example-WebApp-Infrastructure-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

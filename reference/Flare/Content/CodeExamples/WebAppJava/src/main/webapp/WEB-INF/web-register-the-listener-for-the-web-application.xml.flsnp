@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;context-param&gt;
+    &lt;param-name&gt;database-file-name&lt;/param-name&gt;
+    &lt;param-value&gt;database.db4o&lt;/param-value&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+    &lt;listener-class&gt;com.db4odoc.servlet.Db4oServletListener&lt;/listener-class&gt;
+&lt;/listener&gt;</pre>
+		<div class="codesnippet-meta">web.xml: register the listener for the web application<a href="Example-webapp-WEB-INF-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
