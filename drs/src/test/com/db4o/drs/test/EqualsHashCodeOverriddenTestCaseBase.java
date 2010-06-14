@@ -48,7 +48,7 @@ public class EqualsHashCodeOverriddenTestCaseBase implements TestCase {
 		EmbeddedObjectContainer targetDb = openContainer("target");
 		try {
 			final ReplicationSession replication = Replication.begin(sourceDb, targetDb);
-			final ObjectSet<?> changed = replication.providerA().objectsChangedSinceLastReplication();
+			final ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 			while (changed.hasNext()) {
 				final Object o = changed.next();
 				if (holder.getClass() == o.getClass()) {
