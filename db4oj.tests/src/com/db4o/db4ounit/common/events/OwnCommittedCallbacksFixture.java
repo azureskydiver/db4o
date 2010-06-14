@@ -138,7 +138,7 @@ public class OwnCommittedCallbacksFixture {
 	}
 
 	public static class OwnCommitCallbackFlaggedTestUnit implements TestCase {
-		private static final long TIMEOUT = 100;
+		private static final long TIMEOUT = 1000;
 	
 		public void testCommittedCallbacks() throws InterruptedException {
 			final Lock4 lockObject = new Lock4();
