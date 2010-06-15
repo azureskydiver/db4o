@@ -7,7 +7,7 @@ special behaviour. For a complete list of all available methods ._
 see the API documentation for the .? java com.db4o.config and com.db4o.cs.config packages. ..? ._
 .? net Db4objects.Db4o.Config and Db4objects.Db4o.CS.Config namespaces. ..?  
 A more complete description of Configuration usage and scope can also ._
-be obtained from the  .l http://developer.db4o.com/resources/view.aspx/Reference/Tuning/Configuration Reference ..   documentation.
+be obtained from the  .l http://developer.db4o.com/Documentation.aspx Reference ..   documentation.
 
 Some hints around using configuration calls:
 

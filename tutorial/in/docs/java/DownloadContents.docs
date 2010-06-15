@@ -16,8 +16,7 @@ documentation occasionally.
 
 .b db4o- .p version .. /doc/reference/index.html ..
 The reference documentation is a complete compilation for ._
-experienced db4o users. It is maintained ._
-.l http://developer.db4o.com/Resources/view.aspx/Reference online .. .
+experienced db4o users. 
 
 .b db4o- .p version .. /doc/tutorial/index.html .. 
 This is the interactive HTML tutorial. Examples can be run "live" ._

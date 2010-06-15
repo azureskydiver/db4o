@@ -62,7 +62,7 @@ Db4oTool.MSBuild.dll contains the main MSBuild enhancer task:
 Db4oTool.MSBuild.Db4oEnhancerMSBuildTask
 
 For all possibilities of using this task see ._
-the  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework  topics on transparent activation ..  in ._
+the  .l http://developer.db4o.com/Documentation.aspx  topics on transparent activation ..  in ._
 the reference documentation.
 
 The simplest enhancer task does both: It optimizes Native Queries ._
