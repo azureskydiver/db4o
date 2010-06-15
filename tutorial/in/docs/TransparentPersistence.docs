@@ -72,7 +72,7 @@ For more information please refer to  .l Enhancement Enhancement chapter ..  .
 Transparent Persistence can considerably simplify the development process ._
 at the same time providing considerable performance benefits. For more ._
 information on Transparent Persistence please refer ._
-to our  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Transparent_Persistence online reference ..l  or ._
+to our  .l http://developer.db4o.com/Documentation.aspx online reference ..l  or ._
 your offline copy of the Reference documentation.   
 
 .1 Full source ..

@@ -130,17 +130,16 @@ That's it, folks. No, of course it isn't. There's much more to db4o ._
 we haven't covered yet: schema evolution, custom persistence for your classes, ._
 writing your own query objects, etc. A much more thorough documentation is ._
 provided in the reference that you should have also received with the ._
-download or  .l http://developer.db4o.com/resources/view.aspx/Reference online .. .
+download or  .l http://developer.db4o.com/Documentation.aspx online .. .
 
 We hope that this tutorial has helped to get you started with db4o. How ._
 should you continue now?
 
-- Register on db4o developer  .l http://developer.db4o.com/user/CreateUser.aspx?ReturnUrl=/default.aspx website .. . 
-The list of the membership benefits is presented  .l http://developer.db4o.com/content/MembershipBenefits.aspx online .. .
+- Register on db4o developer  .l http://www.db4o.com/Users/register.aspx website .. . 
 
 - You could browse the remaining chapters. They are a selection of themes ._
 from the reference that very frequently come up as questions in ._
-our  .l http://forums.db4o.com/forums/ .. .
+our  .l http://developer.db4o.com/Forums.aspx .. .
 
 - .i (Interactive version only) .. While this tutorial is basically sequential in ._
 nature, try to switch back and forth between the chapters and execute the ._
@@ -153,8 +152,8 @@ in full source code. Feel free to experiment with it.
 
 - If you're stuck, browse the information ._
 on our  .l http://www.db4o.com/ web site .. , check if your problem is submitted ._
-to  .l http://tracker.db4o.com/jira/secure/Dashboard.jspa Jira ..  or visit our ._
-forums at  .l http://forums.db4o.com/forums/ .. .
+to  .l http://tracker.db4o.com/ Jira ..  or visit our ._
+forums at  .l http://developer.db4o.com/Forums.aspx .. .
 
 
 .1 Full source ..

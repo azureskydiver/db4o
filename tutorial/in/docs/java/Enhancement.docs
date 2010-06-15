@@ -66,7 +66,7 @@ The db4o enhancer technology is new. Not all possible development environment ._
 setups have been checked by the db4o team and there may be incompatibility ._
 issues with your IDE when enhancing class and library files in place. By trying ._
 out in-place enhancement with your setup and by reporting back issues to ._
-the  .l http://developer.db4o.com/forums/default.aspx db4o forums ..  you ._
+the  .l http://developer.db4o.com/Forums.aspx db4o forums ..  you ._
 can help the db4o team to improve enhancement for your personal setup. A ._
 possible strategy to resolve problems with in-place enhancement ._
 would be to use different output directories than /bin and /lib as ._
@@ -79,7 +79,7 @@ db4otools.jar contains the main enhancer task:
 com.db4o.enhance.Db4oEnhancerAntTask
 
 For all possibilities of using this task see ._
-the  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework/TA_Enhanced_Example/TA_Enhancement_At_Build_Time  topic on build time enhancement ..  in ._
+the  .l http://developer.db4o.com/Documentation.aspx  topic on build time enhancement ..  in ._
 the reference documentation.
 
 The simplest enhancer task can do the following: 

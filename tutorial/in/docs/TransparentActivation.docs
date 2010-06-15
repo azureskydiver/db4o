@@ -93,7 +93,7 @@ As a final step we should clean up the database again.
 
 This was just a short introduction to Transparent Activation and ._
 what it can do for you. For more detailed information please see ._ 
-the pages on Transparent Activation in our  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework online reference ..l  or in ._
+the pages on Transparent Activation in our  .l http://developer.db4o.com/Documentation.aspx online reference ..l  or in ._
 your offline copy of the Reference documentation.
 
 .1 Full source ..
