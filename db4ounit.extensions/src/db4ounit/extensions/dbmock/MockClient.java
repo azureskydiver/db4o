@@ -224,5 +224,9 @@ public class MockClient implements ExtClient {
 	public void store(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
 		throw new NotImplementedException();
 	}
+	
+	public ObjectContainer openSession(){
+		throw new NotImplementedException();
+	}
 
 }

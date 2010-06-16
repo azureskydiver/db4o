@@ -13,14 +13,6 @@ import com.db4o.io.*;
  */
 public interface EmbeddedObjectContainer extends ObjectContainer{
 	
-	/**
-	 * opens a new ObjectContainer against the database file.
-	 * The ObjectContainer will have it's own transaction and
-	 * it's own reference system.
-	 * @return the new ObjectContainer session.
-	 * @since 7.10
-	 */
-	public ObjectContainer openSession();
 	
     /**
      * backs up a database file of an open ObjectContainer.

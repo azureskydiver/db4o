@@ -93,7 +93,7 @@ public class OwnCommittedCallbacksFixture {
 		}
 		
 		public ObjectContainer openClient() {
-			return _server.openSession();
+			return _server.ext().openSession();
 		}
 	
 		public void close() {

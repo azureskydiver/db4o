@@ -1179,6 +1179,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     protected void closeIdSystem() {
     	// do nothing
     }
+    
+	public ObjectContainer openSession(){
+		synchronized(lock()){
+			return new ObjectContainerSession(this);
+		}
+	}
+
 	
     public int serverSideID() {
     	return _serverSideID;
