@@ -49,7 +49,7 @@ public class EmbeddedObjectContainerSessionTestCase extends AbstractDb4oTestCase
 	}
 
 	private ObjectContainer openSession() {
-		return ((EmbeddedObjectContainer)db()).openSession();
+		return db().ext().openSession();
 	}
 
 	private void assertIsolation(ObjectContainer session1,

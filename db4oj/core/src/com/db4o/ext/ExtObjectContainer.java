@@ -253,6 +253,15 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public Object lock();
     
+	/**
+	 * opens a new ObjectContainer on top of this ObjectContainer.
+	 * The ObjectContainer will have it's own transaction and
+	 * it's own reference system.
+	 * @return the new ObjectContainer session.
+	 * @since 8.0
+	 */
+	public ObjectContainer openSession();
+    
     
 	/**
 	 * returns a transient copy of a persistent object with all members set

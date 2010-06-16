@@ -469,4 +469,10 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 	public UpdateDepthProvider updateDepthProvider() {
 		return configImpl().updateDepthProvider();
 	}
+	
+	public ObjectContainer openSession(){
+		synchronized(lock()){
+			return new ObjectContainerSession(_server);
+		}
+	}
 }
