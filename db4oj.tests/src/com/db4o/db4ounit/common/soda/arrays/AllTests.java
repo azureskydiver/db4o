@@ -29,6 +29,7 @@ public class AllTests extends Db4oTestSuite {
 				STArrIntegerWTTestCase.class,
 				STArrIntegerWTONTestCase.class,
 				STArrIntegerWUONTestCase.class,
+				ArrayDescendSubQueryTestCase.class,
 		};
 	}
 }

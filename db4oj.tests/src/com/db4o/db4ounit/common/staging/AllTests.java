@@ -21,7 +21,6 @@ public class AllTests extends ComposibleTestSuite {
 							GenericClassWithExistingSuperClassTestCase.class, // COR-1959
 							LazyQueryDeleteTestCase.class,
 							RemovedFieldDefragmentTestCase.class,
-							SODAClassTypeDescend.class,
 							StoredClassUnknownClassQueryTestCase.class, // COR-1542
 							UnavailableEnumTestCase.class, // special case of COR-1959
 							UntypedFieldSortingTestCase.class,

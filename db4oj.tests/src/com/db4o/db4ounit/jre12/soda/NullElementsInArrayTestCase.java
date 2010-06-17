@@ -1,6 +1,6 @@
 /* Copyright (C) 2008  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre12.staging;
+package com.db4o.db4ounit.jre12.soda;
 
 import com.db4o.*;
 import com.db4o.query.*;
@@ -75,7 +75,7 @@ public class NamedItem {
         ArrayAssert.areEqual(DATA, item.array);
     }
     
-    public void _testQueryIntegerNull(){
+    public void testQueryIntegerNull(){
         Query query = newQuery(Item.class);
         query.descend("array").constrain(null);
         Assert.areEqual(1, query.execute().size());

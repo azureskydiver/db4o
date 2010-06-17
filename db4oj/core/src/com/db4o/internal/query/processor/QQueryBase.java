@@ -384,7 +384,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		                    QCandidate candidate = (QCandidate)a_object;
 		                    if (candidate.include()) {
 		                        TreeInt ids = new TreeInt(candidate._key);
-		                        final ObjectByRef idsNew = new ObjectByRef(null);
+		                        final ByRef<TreeInt> idsNew = new ByRef<TreeInt>();
 		                        Iterator4 itPath = executionPath.iterator();
 		                        while (itPath.moveNext()) {
 		                            idsNew.value = null;
@@ -399,7 +399,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		                                            ObjectHeader oh = new ObjectHeader(stream, reader);
 		                                            CollectIdContext context = new CollectIdContext(_trans, oh, reader);
 		                                            oh.classMetadata().collectIDs(context, fieldName);
-		                                            idsNew.value = context.ids();
+		                                            idsNew.value = TreeInt.add(idsNew.value, context.ids());
 		                                        }
 		                                    }
 		                                });

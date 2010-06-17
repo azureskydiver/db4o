@@ -4,6 +4,8 @@ package com.db4o.db4ounit.jre12.soda;
 
 import com.db4o.db4ounit.common.util.*;
 import com.db4o.db4ounit.jre12.soda.collections.*;
+import com.db4o.db4ounit.jre12.soda.deepOR.*;
+import com.db4o.db4ounit.jre12.soda.experiments.*;
 
 import db4ounit.extensions.*;
 
@@ -14,27 +16,28 @@ public class AllTests  extends Db4oTestSuite {
 	protected Class[] testCases() {
 		 
 		return Db4oUnitTestUtil.mergeClasses(new Class[]{
-//				HashtableModifiedUpdateDepthTestCase.class,
+				HashtableModifiedUpdateDepthTestCase.class,
 				ObjectSetListAPITestSuite.class,
-//				STArrayListTTestCase.class,
-//				STArrayListUTestCase.class,
-//				STHashSetTTestCase.class,
-//				STHashSetUTestCase.class,
-//				STHashtableETTestCase.class,
-//				STHashtableEUTestCase.class,
-//				STHashtableTTestCase.class,
-//				STHashtableUTestCase.class,
-//				STLinkedListTTestCase.class,
-//				STLinkedListUTestCase.class,
-//				STOwnCollectionTTestCase.class,
-//				STTreeSetTTestCase.class,
-//				STTreeSetUTestCase.class,
-//				STVectorTTestCase.class,
-//				STVectorUTestCase.class,
-//				STOrContainsTestCase.class,
-//				STCurrentTestCase.class,
-//				STIdentityEvaluationTestCase.class,
-//				STNullOnPathTestCase.class,
+				NullElementsInArrayTestCase.class,
+				STArrayListTTestCase.class,
+				STArrayListUTestCase.class,
+				STHashSetTTestCase.class,
+				STHashSetUTestCase.class,
+				STHashtableETTestCase.class,
+				STHashtableEUTestCase.class,
+				STHashtableTTestCase.class,
+				STHashtableUTestCase.class,
+				STLinkedListTTestCase.class,
+				STLinkedListUTestCase.class,
+				STOwnCollectionTTestCase.class,
+				STTreeSetTTestCase.class,
+				STTreeSetUTestCase.class,
+				STVectorTTestCase.class,
+				STVectorUTestCase.class,
+				STOrContainsTestCase.class,
+				STCurrentTestCase.class,
+				STIdentityEvaluationTestCase.class,
+				STNullOnPathTestCase.class,
 		}, vectorQbeTestCases());
 	}
 	
