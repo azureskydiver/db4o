@@ -27,6 +27,7 @@ public class AllTests extends Db4oTestSuite {
 				OrderedOrConstraintTestCase.class,
 				OrderFollowedByConstraintTestCase.class,
 				QueryUnknownClassTestCase.class,
+				SODAClassTypeDescend.class,
 				SortMultipleTestCase.class,
 				STBooleanTestCase.class,				
 				STBooleanWUTestCase.class,
