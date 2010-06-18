@@ -2,6 +2,8 @@
 
 package com.db4o.cs.internal;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
@@ -12,6 +14,12 @@ public class ClassInfoHelper {
 	private Hashtable4 _classMetaTable = new Hashtable4();
 
 	private Hashtable4 _genericClassTable = new Hashtable4();
+
+	private Config4Impl _config;
+
+	public ClassInfoHelper(Config4Impl config) {
+		_config = config;
+	}
 
 	public ClassInfo getClassMeta(ReflectClass claxx) {
 
@@ -32,10 +40,19 @@ public class ClassInfoHelper {
 		ClassInfo classMeta = ClassInfo.newUserClass(claxx.getName());
 		classMeta.setSuperClass(mapSuperclass(claxx));
 
-		registerClassMeta(claxx.getName(), classMeta);
-
-		classMeta.setFields(mapFields(claxx.getDeclaredFields()));
+		registerClassMeta(claxx.getName(), classMeta);		
+		
+		classMeta.setFields(
+				mapFields(claxx.getDeclaredFields(), shouldStoreTransientFields(claxx)));
+		
 		return classMeta;
+	}
+
+	private boolean shouldStoreTransientFields(ReflectClass claxx) {		
+		Config4Class configClass = _config.configClass(claxx.getName());
+		return configClass == null 
+							? false 
+							: configClass.storeTransientFields();
 	}
 
 	private ClassInfo mapSuperclass(ReflectClass claxx) {
@@ -46,7 +63,12 @@ public class ClassInfoHelper {
 		return null;
 	}
 
-	private FieldInfo[] mapFields(ReflectField[] fields) {
+	private FieldInfo[] mapFields(ReflectField[] fields, boolean shouldStoreTransientFields) {
+		
+		if (!shouldStoreTransientFields) {
+			fields = filterTransientFields(fields);
+		}
+		
 		FieldInfo[] fieldsMeta = new FieldInfo[fields.length];
 		for (int i = 0; i < fields.length; ++i) {
 			final ReflectField field = fields[i];
@@ -56,7 +78,20 @@ public class ClassInfoHelper {
 			// TODO: need to handle NArray, currently it ignores NArray and alway sets NArray flag false.
 			fieldsMeta[i] = new FieldInfo(field.getName(), getClassMeta(fieldClass), isPrimitive, isArray, false);
 		}
+		
 		return fieldsMeta;
+	}
+
+	private ReflectField[] filterTransientFields(ReflectField[] fields) {		
+		List<ReflectField> filteredFields = new ArrayList<ReflectField>();
+		
+		for(ReflectField field : fields) {
+			if (!field.isTransient()) {
+				filteredFields.add(field);
+			}
+		}
+		
+		return filteredFields.toArray(new ReflectField[filteredFields.size()]);
 	}
 
 	private static boolean isObjectClass(ReflectClass claxx) {

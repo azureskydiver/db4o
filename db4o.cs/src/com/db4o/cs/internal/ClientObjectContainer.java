@@ -2,12 +2,12 @@
 
 package com.db4o.cs.internal;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.caching.ClientSlotCache;
+import com.db4o.cs.caching.*;
 import com.db4o.cs.config.*;
 import com.db4o.cs.internal.caching.*;
 import com.db4o.cs.internal.config.*;
@@ -18,14 +18,14 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.convert.Converter;
-import com.db4o.internal.encoding.UnicodeStringIO;
+import com.db4o.internal.convert.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.references.*;
-import com.db4o.internal.slots.Pointer4;
-import com.db4o.io.Storage;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.internal.slots.*;
+import com.db4o.io.*;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -74,7 +74,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	
 	private final ClientHeartbeat _heartbeat;
 	
-    private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+    private final ClassInfoHelper _classInfoHelper;
     
     private ClientSlotCache _clientSlotCache;
 
@@ -106,6 +106,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		_password = password;
 		_login = login;
 		_heartbeat = new ClientHeartbeat(this);
+		_classInfoHelper = new ClassInfoHelper(Db4oClientServerLegacyConfigurationBridge.asLegacy(config));
 		setAndConfigSocket(socket);
 		open();
 		config.applyConfigurationItems(this);
