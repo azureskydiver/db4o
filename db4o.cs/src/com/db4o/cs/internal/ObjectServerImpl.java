@@ -50,7 +50,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private final boolean _isEmbeddedServer;
 	
-	private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+	private final ClassInfoHelper _classInfoHelper;
 	
 	private final Event4Impl<StringEventArgs> _clientDisconnected = Event4Impl.newInstance();
 	private final Event4Impl<ClientConnectionEventArgs> _clientConnected = Event4Impl.newInstance();
@@ -71,6 +71,8 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		
 		_container.setServer(true);	
 		configureObjectServer();
+		
+		_classInfoHelper = new ClassInfoHelper(Db4oClientServerLegacyConfigurationBridge.asLegacy(serverConfig));
 		
 		_container.classCollection().checkAllClassChanges();
 		
