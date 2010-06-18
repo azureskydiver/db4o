@@ -24,6 +24,7 @@ public class AllTests extends ComposibleTestSuite {
 	@Override
 	protected Class[] composeWith() {
 		return new Class[] {
+						TransientFieldRefreshNoClassesOnServerTestCase.class,
 						UnavailableClassesWithTranslatorTestCase.class,
 						UnavailableClassesWithTypeHandlerTestCase.class,
 					};

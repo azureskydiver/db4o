@@ -1318,10 +1318,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     boolean isEnum() {
-    	if (!Deploy.csharp) {
-    		return Platform4.isEnum(reflector(), classReflector());
-    	}
-    	return false;
+    	return Platform4.isJavaEnum(reflector(), classReflector());
     }
     
     public boolean isPrimitive(){
@@ -1329,7 +1326,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     /**
-	 * no any, primitive, array or other tricks. overriden in YapClassAny and
+	 * no any, primitive, array or other tricks. overridden in YapClassAny and
 	 * YapClassPrimitive
 	 */
     public boolean isStronglyTyped() {

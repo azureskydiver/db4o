@@ -555,6 +555,10 @@ public final class Platform4 {
 	public static boolean isEnum(Reflector reflector, ReflectClass claxx) {
 		return jdk().isEnum(reflector, claxx);
 	}
+	
+	public static boolean isJavaEnum(GenericReflector reflector, ReflectClass classReflector) {
+		return isEnum(reflector, classReflector);
+	}	
 
     private static final void translate(ObjectClass oc, String to) {
         ((Config4Class)oc).translateOnDemand(DB4O_CONFIG + to);
@@ -666,7 +670,7 @@ public final class Platform4 {
     	_nullValues.put(int.class, new Integer(0));
     	_nullValues.put(float.class, new Float(0.0));
     	_nullValues.put(long.class, new Long(0));
-    	_nullValues.put(double.class, new Double(0.0));    	
+    	_nullValues.put(double.class, new Double(0.0));
 	}
 
 	private static Hashtable4 _nullValues;
@@ -697,6 +701,5 @@ public final class Platform4 {
 	
 	public static final byte toSByte(byte b){
 		return b;
-	}
-	
+	}	
 }

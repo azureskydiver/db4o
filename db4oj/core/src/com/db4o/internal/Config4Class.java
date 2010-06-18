@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.*;
 import com.db4o.reflect.*;
 
 
@@ -288,7 +287,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return (ObjectAttribute)_config.get(QUERY_ATTRIBUTE_PROVIDER_KEY);
 	}
 
-	boolean storeTransientFields() {
+	public boolean storeTransientFields() {
 		return _config.getAsBoolean(STORE_TRANSIENT_FIELDS_KEY);
 	}
 
