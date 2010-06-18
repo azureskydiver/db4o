@@ -322,7 +322,7 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY,turnOn);
     }
 
-    Config4Class configClass(String className) {
+    public Config4Class configClass(String className) {
 		Config4Class config = (Config4Class)exceptionalClasses().get(className);
 
         if (Debug4.configureAllClasses) {
