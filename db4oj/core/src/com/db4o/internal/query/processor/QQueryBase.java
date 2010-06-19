@@ -922,5 +922,9 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		}
 		return sb.toString();
 	}
+	
+	public QQuery parent() {
+		return i_parent;
+	}
 
 }

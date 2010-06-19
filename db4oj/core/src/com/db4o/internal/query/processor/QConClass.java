@@ -45,7 +45,7 @@ public class QConClass extends QConObject{
 	}
 	
 	public String getClassName() {
-		return _claxx.getName();
+		return _claxx == null ? null : _claxx.getName();
 	}
     
     public boolean canBeIndexLeaf(){
@@ -114,7 +114,7 @@ public class QConClass extends QConObject{
 	public String toString(){
 		String str = "QConClass ";
 		if(_claxx != null){
-			str += _claxx.toString() + " ";
+			str += _claxx.getName() + " ";
 		}
 		return str + super.toString();
 	}
