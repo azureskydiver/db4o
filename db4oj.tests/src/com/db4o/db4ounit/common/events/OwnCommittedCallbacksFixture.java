@@ -140,6 +140,9 @@ public class OwnCommittedCallbacksFixture {
 	public static class OwnCommitCallbackFlaggedTestUnit implements TestCase {
 		private static final long TIMEOUT = 1000;
 	
+		/**
+		 * @sharpen.if !CF
+		 */
 		public void testCommittedCallbacks() throws InterruptedException {
 			final Lock4 lockObject = new Lock4();
 			final BooleanByRef ownEvent = new BooleanByRef(false);
