@@ -22,7 +22,7 @@ public abstract class MemoryBackupTestCaseBase implements TestCase {
 
 	private static final String DB_PATH = "database";
 	private static final int NUM_ITEMS = 10;
-	private static final String BACKUP_PATH = Path4.combine(System.getProperty("db4ounit.file.path"), "/backup");
+	private static final String BACKUP_PATH = Path4.combine(Path4.getTempPath(), "backup");
 	
 	public void testMemoryBackup() throws Exception {
 		LocalObjectContainer origDb = (LocalObjectContainer) Db4oEmbedded.openFile(config(origStorage()), DB_PATH);
