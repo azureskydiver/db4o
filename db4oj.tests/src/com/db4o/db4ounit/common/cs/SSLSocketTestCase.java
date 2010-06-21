@@ -12,9 +12,10 @@ import com.db4o.cs.ssl.*;
 import com.db4o.db4ounit.util.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 @decaf.Remove
-public class SSLSocketTestCase extends StandaloneCSTestCaseBase {
+public class SSLSocketTestCase extends StandaloneCSTestCaseBase implements OptOutWorkspaceIssue {
 
 	private static final String KEYSTORE_PATH = "keystore/test_keystore";
 	private static final String KEYSTORE_PASSWORD = "keystore";
@@ -37,7 +38,7 @@ public class SSLSocketTestCase extends StandaloneCSTestCaseBase {
 	private SSLContext createContext() throws Exception {
 		KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 		char[] password = KEYSTORE_PASSWORD.toCharArray();
-		InputStream in  = new FileInputStream(new File(WorkspaceLocations.TEST_FOLDER, KEYSTORE_PATH).getAbsoluteFile());
+		InputStream in  = new FileInputStream(new File(WorkspaceLocations.getTestFolder(), KEYSTORE_PATH).getAbsoluteFile());
 		ks.load(in, password);
 		in.close();
 		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509", "SunJSSE");

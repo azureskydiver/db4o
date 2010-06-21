@@ -33,7 +33,9 @@ public abstract class AbstractFileBasedDb4oFixture extends AbstractSoloDb4oFixtu
 	}
 
 	protected void doClean() {
-		_databaseFile.delete();
+		if (_databaseFile.exists()) {
+			_databaseFile.delete();
+		}
 	}
 
 }

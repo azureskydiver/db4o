@@ -5,6 +5,7 @@ package com.db4o.db4ounit.jre.android;
 import com.db4o.db4ounit.jre5.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.Db4oAndroid;
 
 /**
  * @sharpen.ignore

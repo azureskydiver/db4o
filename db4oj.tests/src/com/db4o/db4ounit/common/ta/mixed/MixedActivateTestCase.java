@@ -8,8 +8,9 @@ import com.db4o.query.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutTemporary;
 
-public class MixedActivateTestCase extends ItemTestCaseBase {
+public class MixedActivateTestCase extends ItemTestCaseBase implements OptOutTemporary {
 
     private final int ITEM_DEPTH = 10;
 

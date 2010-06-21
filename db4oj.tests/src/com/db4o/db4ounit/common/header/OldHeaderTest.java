@@ -9,9 +9,10 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class OldHeaderTest implements TestLifeCycle, OptOutNoFileSystemData {
+public class OldHeaderTest implements TestLifeCycle, OptOutNoFileSystemData, OptOutWorkspaceIssue {
     
     public void test() throws IOException {
     	final String originalFilePath = originalFilePath();

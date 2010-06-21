@@ -160,10 +160,7 @@ public final class Const4
 	
     public static final String VIRTUAL_FIELD_PREFIX = "v4o";
 
-    /**
-     * @sharpen.ignore
-     */
-    public static final int MAX_STACK_DEPTH = 20;
-    
     public static final int INVALID_OBJECT_ID = 1;
+
+	public static final int DEFAULT_MAX_STACK_DEPTH = 20;
 }

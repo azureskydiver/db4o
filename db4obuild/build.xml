@@ -71,7 +71,6 @@
 	
 	dir.android.home=<android sdk home>
 	android.apilevel=<android api level>
-	emulator.device=<name of the avd emulator device>
 	
 	# for further customizations check build-android-tests.xml properties
 	

@@ -9,6 +9,7 @@ import db4ounit.*;
 public class ThreadPoolTestCase implements TestCase {
 	
 	ThreadPool4 _subject = new ThreadPool4Impl();
+//	ThreadPool4 _subject = new ParkingThreadPool4Impl();
 	
 	public void testFailureEvent() throws Exception {
 		

@@ -5,12 +5,13 @@ import java.util.*;
 import com.db4o.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutCtorIssue;
 
 /**
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class UnavailableClassAsTreeSetElementTestCase extends UnavailableClassTestCaseBase {
+public class UnavailableClassAsTreeSetElementTestCase extends UnavailableClassTestCaseBase implements OptOutCtorIssue {
 	
 	public static class Item implements Comparable {
 		private int _value;

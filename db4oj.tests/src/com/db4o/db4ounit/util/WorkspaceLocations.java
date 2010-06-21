@@ -6,5 +6,12 @@ package com.db4o.db4ounit.util;
  * @exclude
  */
 public class WorkspaceLocations {
-	public static final String TEST_FOLDER = WorkspaceServices.workspacePath("db4oj.tests/test");
+	private static String _testFolder = null;
+
+	public static String getTestFolder() {
+		if (_testFolder == null) {
+			_testFolder = WorkspaceServices.workspacePath("db4oj.tests/test");
+		}
+		return _testFolder;
+	}
 }

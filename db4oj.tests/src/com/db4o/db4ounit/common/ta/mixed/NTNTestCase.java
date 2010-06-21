@@ -5,11 +5,12 @@ package com.db4o.db4ounit.common.ta.mixed;
 import com.db4o.db4ounit.common.ta.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutStackOverflow;
 
 /**
  * @exclude
  */
-public class NTNTestCase extends ItemTestCaseBase {
+public class NTNTestCase extends ItemTestCaseBase implements OptOutStackOverflow {
 	
 	public static void main(String[] args) {
 		new NTNTestCase().runAll();

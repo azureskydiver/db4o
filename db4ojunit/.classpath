@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
+	<classpathentry kind="src" path="/db4ounit.extensions"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,7 @@
 package com.db4o.devtools.ant;
 
 import java.io.*;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.tools.ant.*;
 
@@ -19,7 +20,9 @@ public class WaitingForPatternTask extends Task {
 					String line;
 					try {
 						while ((line = reader.readLine()) != null) {
-							listener.lineReady(line);
+							if (!listener.lineReady(line)) {
+								break;
+							}
 						}
 					} catch (IOException e) {
 					} finally {
@@ -44,7 +47,7 @@ public class WaitingForPatternTask extends Task {
 
 	public interface LineReaderListener {
 
-		public void lineReady(String line);
+		public boolean lineReady(String line);
 
 	}
 
@@ -54,6 +57,7 @@ public class WaitingForPatternTask extends Task {
 	private Thread timeoutThread;
 	protected boolean timeoutError;
 	private Process process;
+	private CountDownLatch barrier = new CountDownLatch(1);
 
 	public long getTimeout() {
 		return timeout;
@@ -88,11 +92,15 @@ public class WaitingForPatternTask extends Task {
 
 			setupStdReaders();
 
-			setupTimeoutThread(process);
+			if (getTimeout() != 0) {
+				setupTimeoutThread(process);
+			}
 
 			waitForProcess();
 
-			releaseTimeoutThread();
+			if (getTimeout() != 0) {
+				releaseTimeoutThread();
+			}
 
 		} catch (IOException e) {
 			throw new BuildException(e);
@@ -109,9 +117,10 @@ public class WaitingForPatternTask extends Task {
 
 	private void waitForProcess() {
 		try {
-			process.waitFor();
+			barrier.await();
 		} catch (InterruptedException e1) {
 		}
+		process.destroy();
 		if (timeoutError) {
 			throw new BuildException(WaitingForPatternTask.class.getSimpleName() + " task failed due to timeout");
 		}
@@ -120,16 +129,17 @@ public class WaitingForPatternTask extends Task {
 	private void setupStdReaders() {
 		new LineReader(process.getInputStream(), new LineReaderListener() {
 
-			public void lineReady(String line) {
-				evaluatePattern(process, line);
+			public boolean lineReady(String line) {
+				return evaluatePattern(process, line);
 			}
 
 		});
 
 		new LineReader(process.getErrorStream(), new LineReaderListener() {
 
-			public void lineReady(String line) {
+			public boolean lineReady(String line) {
 				System.err.println(line);
+				return true;
 			}
 
 		});
@@ -159,9 +169,11 @@ public class WaitingForPatternTask extends Task {
 		timeoutThread.start();
 	}
 
-	private void evaluatePattern(final Process process, String line) {
+	private boolean evaluatePattern(final Process process, String line) {
 		if (line.contains(getPattern())) {
-			process.destroy();
+			barrier.countDown();
+			return false;
 		}
+		return true;
 	}
 }

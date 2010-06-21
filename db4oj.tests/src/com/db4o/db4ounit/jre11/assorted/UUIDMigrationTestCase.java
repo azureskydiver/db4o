@@ -12,13 +12,14 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
 /**
  * @exclude
  */
-public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
+public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData, OptOutWorkspaceIssue {
 	
 	public static void main(String[] args) {
 		new ConsoleTestRunner(UUIDMigrationTestCase.class).run();

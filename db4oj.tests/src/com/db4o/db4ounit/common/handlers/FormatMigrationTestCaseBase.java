@@ -13,13 +13,14 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
 /**
  * @sharpen.partial
  */
-public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData, OptOutMultiSession {
+public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData, OptOutMultiSession, OptOutWorkspaceIssue {
 	
     private static final String HOST = "127.0.0.1";
 

@@ -21,7 +21,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle, OptOutMultiSession {
+public class MissingClassDiagnosticsTestCase implements TestCase, TestLifeCycle, OptOutMultiSession, OptOutStackOverflow {
 
 	private static final String DB_URI = "test_db";
 
