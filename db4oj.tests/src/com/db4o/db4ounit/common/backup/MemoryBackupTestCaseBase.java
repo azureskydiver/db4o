@@ -3,10 +3,12 @@ package com.db4o.db4ounit.common.backup;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.foundation.io.Path4;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutTemporary;
 
 public abstract class MemoryBackupTestCaseBase implements TestCase {
 
@@ -20,7 +22,7 @@ public abstract class MemoryBackupTestCaseBase implements TestCase {
 
 	private static final String DB_PATH = "database";
 	private static final int NUM_ITEMS = 10;
-	private static final String BACKUP_PATH = "backup";
+	private static final String BACKUP_PATH = Path4.combine(System.getProperty("db4ounit.file.path"), "/backup");
 	
 	public void testMemoryBackup() throws Exception {
 		LocalObjectContainer origDb = (LocalObjectContainer) Db4oEmbedded.openFile(config(origStorage()), DB_PATH);

@@ -2,25 +2,26 @@
 
 package com.db4o.db4ounit.common.acid;
 
-import java.io.*;
+import java.io.IOException;
 
 import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.foundation.*;
+import com.db4o.config.Configuration;
+import com.db4o.foundation.Collection4;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
-import com.db4o.internal.config.*;
+import com.db4o.internal.config.Db4oLegacyConfigurationBridge;
 import com.db4o.io.*;
-import com.db4o.query.*;
+import com.db4o.query.Query;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.OptOutMultiSession;
 import db4ounit.fixtures.*;
 
 /**
  * @exclude
  */
-public class CrashSimulatingTestSuite  extends FixtureBasedTestSuite{
+public class CrashSimulatingTestSuite  extends FixtureBasedTestSuite implements OptOutVerySlow {
 	
     static final boolean VERBOSE = false;
 	
@@ -111,7 +112,7 @@ public class CrashSimulatingTestSuite  extends FixtureBasedTestSuite{
 		return new Class[]{CrashSimulatingTestCase.class};
 	}
 	
-	public static class CrashSimulatingTestCase implements TestCase, OptOutMultiSession {	
+	public static class CrashSimulatingTestCase implements TestCase, OptOutMultiSession, OptOutVerySlow {	
 	    
 	    /**
 	     * @sharpen.remove

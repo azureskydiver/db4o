@@ -759,6 +759,11 @@
 		<antcall target="db4oandroid-tests.run-tests"></antcall>
 	</target>
 	
+	<target name="run.tests.android.jdk1.5-nodep-justrun" depends="properties" if="dir.android.home">
+		<mkdir dir="${dir.dist.android}"/>
+		<antcall target="db4oandroid-tests.run-tests-on-emulator"></antcall>
+	</target>
+	
 	<target name="unjar.bloat" depends="init">
 		<mkdir dir="${dir.dist.classes.bloat}" />
 		<unjar src="${file.bloat.jar}" dest="${dir.dist.classes.bloat}" />

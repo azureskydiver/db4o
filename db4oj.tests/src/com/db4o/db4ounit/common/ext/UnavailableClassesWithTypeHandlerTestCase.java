@@ -17,7 +17,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile implements OptOutNetworkingCS {
+public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile implements OptOutNetworkingCS, OptOutCtorIssue {
 	
 	public static class HolderForClassWithTypeHandler {
 		public HolderForClassWithTypeHandler(Stack stack) {

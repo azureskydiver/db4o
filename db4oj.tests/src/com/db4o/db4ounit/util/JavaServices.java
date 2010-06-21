@@ -3,14 +3,15 @@
 package com.db4o.db4ounit.util;
 
 import java.io.*;
+import java.util.*;
 
-import com.db4o.*;
+import com.db4o.Db4oVersion;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
-import db4ounit.*;
-import db4ounit.extensions.util.*;
-import db4ounit.extensions.util.IOServices.*;
+import db4ounit.Assert;
+import db4ounit.extensions.util.IOServices;
+import db4ounit.extensions.util.IOServices.ProcessRunner;
 
 
 /**
@@ -23,7 +24,7 @@ public class JavaServices {
     }
 
     public static ProcessRunner startJava(String className, String[] args) throws IOException {
-        return IOServices.start(javaExecutable(), javaRunArguments(className, args));
+        return IOServices.start(javaExecutable(), javaRunArguments(className, args, false));
     }
 
 	public static String javac(String srcFile) throws IOException, InterruptedException
@@ -65,21 +66,26 @@ public class JavaServices {
     }
     
     private static String[] javaRunArguments(String className) {
-    	return javaRunArguments(className, new String[0]);
+    	return javaRunArguments(className, new String[0], true);
     }
 
-    private static String[] javaRunArguments(String className, String[] args) {
+    private static String[] javaRunArguments(String className, String[] args, boolean includeDb4oJars) {
     	String[] allArgs = new String[args.length + 3];
     	allArgs[0] = "-classpath";
+    	
+    	List<String> cp = new ArrayList<String>();
+    	cp.add(JavaServices.javaTempPath());
+    	cp.add(db4oCoreJarPath());
+    	if (includeDb4oJars) {
+    		cp.add(db4oCoreJarPath());
+    		cp.add(db4oJarPath("-optional"));
+    		cp.add(db4oJarPath("-cs"));
+    	}
+    	
     	allArgs[1] = IOServices.joinArgs(
 						File.pathSeparator,
-						new String[] {
-						JavaServices.javaTempPath(), 
-						currentClassPath(),
-						db4oCoreJarPath(), 
-						db4oJarPath("-optional"),
-						db4oJarPath("-cs")
-				}, runningOnWindows());
+						cp.toArray(new String[cp.size()]), 
+						runningOnWindows());
         allArgs[2] = className;
         System.arraycopy(args, 0, allArgs, 3, args.length);
         return allArgs;
@@ -103,8 +109,8 @@ public class JavaServices {
     }
     
     private static final JavaVM[] vmTypes = new JavaVM[]{
-        new J9(),
-        new SunWindows(),
+        new JavaRumtime(),
+        new DalvikRuntime(),
     };
     
     static interface JavaVM {
@@ -112,28 +118,22 @@ public class JavaServices {
         String executable();
     }
     
-    static class SunWindows implements JavaVM{
+    static class JavaRumtime implements JavaVM{
         public String executable() {
             return  Path4.combine(Path4.combine(javaHome(), "bin"), "java");
         }
         public boolean identified() {
-            return true;
+            return System.getProperty("java.vm.name").contains("Java");
         }
     }
     
-    static class J9 implements JavaVM{
+    static class DalvikRuntime implements JavaVM{
         public String executable() {
-            
-            // The following does start J9, but it produces an error:
-            // JVMJ9VM011W Unable to load jclfoun10_23: The specified module could not be found. 
-            
-            return property("com.ibm.oti.vm.exe");
+            return  Path4.combine(Path4.combine(javaHome(), "bin"), "dalvikvm");
         }
         public boolean identified() {
-            return false;
-            // return vmName().equals("J9");
+            return "Dalvik".equals(System.getProperty("java.vm.name"));
         }
-        
     }
     
     public static String db4oCoreJarPath()

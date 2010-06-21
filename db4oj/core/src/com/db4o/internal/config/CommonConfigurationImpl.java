@@ -148,4 +148,12 @@ public class CommonConfigurationImpl implements CommonConfiguration {
 		_config.nameProvider(provider);
 	}
 
+	public void maxStackDepth(int maxStackDepth) {
+		_config.maxStackDepth(maxStackDepth);
+	}
+
+	public int maxStackDepth() {
+		return _config.maxStackDepth();
+	}
+
 }

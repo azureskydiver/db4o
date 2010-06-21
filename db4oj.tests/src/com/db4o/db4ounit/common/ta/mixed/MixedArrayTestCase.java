@@ -3,8 +3,9 @@ package com.db4o.db4ounit.common.ta.mixed;
 import com.db4o.db4ounit.common.ta.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutStackOverflow;
 
-public class MixedArrayTestCase extends ItemTestCaseBase {
+public class MixedArrayTestCase extends ItemTestCaseBase implements OptOutStackOverflow {
 
 	public static void main(String[] args) {
 		new MixedArrayTestCase().runAll();

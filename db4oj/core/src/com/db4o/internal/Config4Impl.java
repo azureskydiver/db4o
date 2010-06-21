@@ -195,12 +195,15 @@ public final class Config4Impl implements Configuration, DeepClone,
 			return new TransactionalReferenceSystem();
 		}
 	});
-
+	
 	private static final KeySpec NAME_PROVIDER_KEY = new KeySpec(new NameProvider() {
 		public String name(ObjectContainer db) {
 			return null;
 		}
 	});
+	
+	private final static KeySpec MAX_STACK_DEPTH_KEY = new KeySpec(Const4.DEFAULT_MAX_STACK_DEPTH);
+
 
 	//  is null in the global configuration until deepClone is called
 	private ObjectContainerBase        _container;
@@ -216,6 +219,13 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final Event4Impl<EventArgs> _prefetchSettingsChanged = Event4Impl.newInstance();
 
 	private boolean _prefetchSlotCacheSizeModifiedExternally;
+	
+	{
+		// TODO find a better place to do this, and use AndroidConfiguration instead.
+		if ("Dalvik".equals(System.getProperty("java.vm.name"))) {
+			maxStackDepth(2);
+		}
+	}
 
     public int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
@@ -1201,6 +1211,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	public boolean asynchronousSync(){
 		return _config.getAsBoolean(ASYNCHRONOUS_SYNC_KEY);
+	}
+
+	public int maxStackDepth() {
+		return _config.getAsInt(MAX_STACK_DEPTH_KEY);
+	}
+
+	public void maxStackDepth(int maxStackDepth) {
+		_config.put(MAX_STACK_DEPTH_KEY, maxStackDepth);
 	}
 
 }

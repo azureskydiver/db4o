@@ -10,13 +10,15 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.IOServices.*;
 
 @decaf.Remove
 public class DatabaseFileLockedAcrossVMTestCase
 	extends TestWithTempFile
-	implements OptOutInMemory {
+	implements OptOutInMemory, OptOutWorkspaceIssue {
+	
 	
 	public void testLockedFile() throws IOException{
 		ProcessRunner externalVM = JavaServices.startJava(AcquireNativeLock.class.getName(), new String[]{ tempFile() });

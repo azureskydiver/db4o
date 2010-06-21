@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.config.encoding.*;
 import com.db4o.diagnostic.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.Const4;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
@@ -509,5 +510,28 @@ public interface CommonConfiguration {
 	 * {@link Object#toString()}.
 	 */
 	public void nameProvider(NameProvider provider);
+	
+	
+
+    /**
+     * <p>Sets the max stack depth that will be used for recursive storing and activating an object.
+     * <p>The default value is set to {@link Const4#DEFAULT_MAX_STACK_DEPTH}
+     * <p>On Android platform, we recomend setting this to 2.
+
+     * @param depth the desired max stack depth.
+     * 
+     * @sharpen.property
+     */
+    public void maxStackDepth(int maxStackDepth);
+    
+    /**
+     * gets the configured max stack depth.
+     * 
+     * @return the configured max stack depth.
+     * 
+     * @sharpen.property
+     */
+    public int maxStackDepth();
+
 
 }

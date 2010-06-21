@@ -20,7 +20,7 @@ public class WorkspaceServices {
 	}
 	
 	public static String workspaceTestFilePath(String fname) {
-		return Path4.combine(WorkspaceLocations.TEST_FOLDER, fname);
+		return Path4.combine(WorkspaceLocations.getTestFolder(), fname);
 	}
 	
 	/**

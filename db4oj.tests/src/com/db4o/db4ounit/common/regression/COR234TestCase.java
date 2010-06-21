@@ -11,13 +11,14 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
 /**
  * @exclude
  */
-public class COR234TestCase implements TestCase, OptOutNoFileSystemData {
+public class COR234TestCase implements TestCase, OptOutNoFileSystemData, OptOutWorkspaceIssue {
 
 	public void test() {
 		if (WorkspaceServices.workspaceRoot() == null) {

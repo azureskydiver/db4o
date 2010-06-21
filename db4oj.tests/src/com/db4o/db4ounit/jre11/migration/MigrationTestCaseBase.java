@@ -9,10 +9,11 @@ import com.db4o.foundation.io.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, OptOutNoFileSystemData {
+public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, OptOutNoFileSystemData, OptOutWorkspaceIssue {
 	
 	private static final String NULL_NAME = "NULL";
 	

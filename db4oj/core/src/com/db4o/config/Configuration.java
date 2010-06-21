@@ -820,5 +820,15 @@ public interface Configuration {
      */
     public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler);
 
-		    
+
+    /**
+     * @see CommonConfiguration#maxStackDepth()
+     */
+	public int maxStackDepth();
+	
+	/**
+	 * @see CommonConfiguration#maxStackDepth(int) 
+	 */
+	public void maxStackDepth(int maxStackDepth);
+
 }

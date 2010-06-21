@@ -26,5 +26,10 @@ public class Db4oFixtures {
 		return new Db4oNetworking(label);
 	}
 
+	@decaf.Ignore
+	public static Db4oAndroid newAndroid() {
+		return new Db4oAndroid();
+	}
+
 
 }

@@ -5,6 +5,7 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutTemporary;
 
 /**
  * This test case serves two purposes:
@@ -17,7 +18,7 @@ import db4ounit.*;
  * for details.
  *
  */
-public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
+public class CustomReflectorTestCase implements TestCase, TestLifeCycle, OptOutTemporary {
 
 	private static final String CAT_CLASS = "Cat";
 	private static final String[] CAT_FIELD_NAMES = new String[] { "name", "troubleMakingScore" };

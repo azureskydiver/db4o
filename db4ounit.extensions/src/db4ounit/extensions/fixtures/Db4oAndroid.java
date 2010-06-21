@@ -1,12 +1,10 @@
 /* Copyright (C) 2008  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre.android;
+package db4ounit.extensions.fixtures;
 
-import com.db4o.config.*;
-import com.db4o.io.*;
-import com.db4o.reflect.jdk.*;
+import com.db4o.config.Configuration;
 
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.*;
 
 /**
  * @sharpen.ignore
@@ -16,9 +14,12 @@ public class Db4oAndroid extends Db4oSolo{
 	
 	protected Configuration newConfiguration() {
 		Configuration config = super.newConfiguration();
-		config.storage(new FileStorage());
-		config.reflectWith(new JdkReflector(this.getClass().getClassLoader()));
 		return config;
+	}
+	
+	@Override
+	public boolean accept(Class clazz) {
+		return !OptOutTemporary.class.isAssignableFrom(clazz) && super.accept(clazz);
 	}
 	
 }

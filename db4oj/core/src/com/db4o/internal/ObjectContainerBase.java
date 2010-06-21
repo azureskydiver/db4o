@@ -1760,7 +1760,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
     
     private final boolean stackIsSmall(){
-        return _stackDepth < Const4.MAX_STACK_DEPTH;
+//    	return false;
+        return _stackDepth < config().maxStackDepth();
     }
 
     boolean stateMessages() {

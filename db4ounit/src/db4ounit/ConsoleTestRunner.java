@@ -36,9 +36,14 @@ public class ConsoleTestRunner {
 	public int run() {
 		return run(TestPlatform.getStdErr());
 	}
+	
+	protected TestResult createTestResult() {
+		return new TestResult();
+	}
 
 	public int run(Writer writer) {		
-		TestResult result = new TestResult();
+		
+		TestResult result = createTestResult();
 		
 		new TestRunner(_suite).run(new CompositeTestListener(new ConsoleListener(writer), result));
 		
