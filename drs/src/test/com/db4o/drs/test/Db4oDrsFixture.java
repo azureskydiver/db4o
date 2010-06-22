@@ -89,10 +89,6 @@ public class Db4oDrsFixture implements DrsFixture {
 		_db.close();
 	}
 
-	public ExtObjectContainer db() {
-		return _db;
-	}
-
 	public void open() {
 		_db = Db4o.openFile(cloneConfiguration(), testFile.getPath()).ext();
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
