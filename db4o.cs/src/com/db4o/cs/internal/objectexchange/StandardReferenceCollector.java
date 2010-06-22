@@ -19,7 +19,7 @@ public class StandardReferenceCollector implements ReferenceCollector {
 	    	// most probably ClassMetadata reading
 	    	return Iterators.EMPTY_ITERATOR;
 	    }
-	    if (classMetadata.isPrimitive()) {
+	    if (!classMetadata.hasIdentity()) {
 	    	throw new IllegalStateException(classMetadata.toString());
 	    }
 	    if (!Handlers4.isCascading(classMetadata.typeHandler())) {
