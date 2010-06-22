@@ -399,7 +399,11 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		                                            ObjectHeader oh = new ObjectHeader(stream, reader);
 		                                            CollectIdContext context = new CollectIdContext(_trans, oh, reader);
 		                                            oh.classMetadata().collectIDs(context, fieldName);
-		                                            idsNew.value = TreeInt.add(idsNew.value, context.ids());
+		                                            Tree.traverse(context.ids(), new Visitor4<TreeInt>() {
+														public void visit(TreeInt node) {
+															idsNew.value = TreeInt.add(idsNew.value, node._key);
+														}
+		                                            });
 		                                        }
 		                                    }
 		                                });
