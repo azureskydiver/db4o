@@ -143,10 +143,6 @@ public class Handlers4 {
 	    return handler instanceof CascadingTypeHandler;
 	}
 	
-	public static boolean isPrimitive(TypeHandler4 handler) {
-		return handler instanceof PrimitiveHandler;
-	}
-	
 	public static boolean isUntyped(TypeHandler4 handler) {
 		return handler instanceof OpenTypeHandler;
 	}

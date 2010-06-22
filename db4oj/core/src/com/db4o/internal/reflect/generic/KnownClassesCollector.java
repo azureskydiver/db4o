@@ -52,7 +52,7 @@ public class KnownClassesCollector {
 		if(isInternalClass(clazz))
 			return;
 		
-		if(isPrimitiveType(clazz))
+		if(!hasIdentity(clazz))
 			return;
 		
 		if(clazz.isArray())
@@ -65,8 +65,8 @@ public class KnownClassesCollector {
 		return _container._handlers.ICLASS_INTERNAL.isAssignableFrom(clazz);
 	}
 
-	private boolean isPrimitiveType(ReflectClass clazz) {
+	private boolean hasIdentity(ReflectClass clazz) {
 		ClassMetadata clazzMeta = _container.classMetadataForReflectClass(clazz);
-		return clazzMeta != null && clazzMeta.isPrimitive();
+		return clazzMeta == null || clazzMeta.hasIdentity();
 	}
 }

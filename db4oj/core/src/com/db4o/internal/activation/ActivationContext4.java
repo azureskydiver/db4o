@@ -41,7 +41,7 @@ public class ActivationContext4 implements ActivationContext {
         }
         final ActivationContext cascadingContext = forObject(obj);
 		final ClassMetadata classMetadata = cascadingContext.classMetadata();
-        if(classMetadata == null || classMetadata.isPrimitive()){
+        if(classMetadata == null || !classMetadata.hasIdentity()){
             return;
         }
         cascadeActivation(cascadingContext.descend());

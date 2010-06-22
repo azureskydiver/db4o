@@ -20,6 +20,7 @@ public class AllTests extends ComposibleTestSuite {
 							InterfaceQueryTestCase.class, // COR-1131
 							GenericClassWithExistingSuperClassTestCase.class, // COR-1959
 							LazyQueryDeleteTestCase.class,
+							OldVersionReflectFieldAfterRefactorTestCase.class, // COR-1937
 							RemovedFieldDefragmentTestCase.class,
 							StoredClassUnknownClassQueryTestCase.class, // COR-1542
 							UnavailableEnumTestCase.class, // special case of COR-1959
