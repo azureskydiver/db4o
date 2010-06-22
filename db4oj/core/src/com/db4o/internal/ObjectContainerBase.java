@@ -47,6 +47,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     // Counts the number of toplevel calls into YapStream
     private int           _stackDepth;
+    
+    private final int _maxStackDepth;
 
     private final ReferenceSystemRegistry _referenceSystemRegistry = new ReferenceSystemRegistry();
     
@@ -109,6 +111,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	_lock = new Object();
     	_config = (Config4Impl)config;
     	_environment = createEnvironment(_config);
+    	_maxStackDepth = _config.maxStackDepth();
     }
 
 	private Environment createEnvironment(Config4Impl config) {
@@ -1760,8 +1763,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
     
     private final boolean stackIsSmall(){
-//    	return false;
-        return _stackDepth < config().maxStackDepth();
+        return _stackDepth < _maxStackDepth;
     }
 
     boolean stateMessages() {
