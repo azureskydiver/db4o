@@ -23,6 +23,7 @@ package com.db4o.drs.test;
 import com.db4o.drs.inside.*;
 
 public interface DrsFixture {
+	
 	TestableReplicationProviderInside provider();
 
 	void open();
