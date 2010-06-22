@@ -179,7 +179,7 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
         Object obj = _object;
 		objectOnNew(trans, obj);
 		
-        if(! _class.isPrimitive()){
+        if(_class.hasIdentity()){
             _object = container.newWeakReference(this, obj);
         }
 		

@@ -1321,8 +1321,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     	return Platform4.isJavaEnum(reflector(), classReflector());
     }
     
-    public boolean isPrimitive(){
-        return false;
+    public boolean hasIdentity(){
+        return true;
     }
     
     /**

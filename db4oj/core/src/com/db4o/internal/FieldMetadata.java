@@ -314,7 +314,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         ObjectContainerBase container = context.container();
         ClassMetadata classMetadata = container.classMetadataForObject(context.targetObject());
-        if(classMetadata == null || classMetadata.isPrimitive()){
+        if(classMetadata == null || !classMetadata.hasIdentity()){
             return;
         }
         if(container.isActive(context.targetObject())){
@@ -351,12 +351,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
                 obj = j.current();
                 if (obj != null) {
                     
-                    if (_isPrimitive) {
-                        if (Handlers4.isPrimitive(getHandler())) {
-                            Object nullValue = _reflectField.getFieldType().nullValue();
-							if (obj.equals(nullValue)) {
-                                return;
-                            }
+                    if (_isPrimitive && !_isArray) {
+                        Object nullValue = _reflectField.getFieldType().nullValue();
+						if (obj.equals(nullValue)) {
+                            return;
                         }
                     }
                     

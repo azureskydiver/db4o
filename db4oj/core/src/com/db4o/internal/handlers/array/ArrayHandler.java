@@ -274,10 +274,10 @@ public class ArrayHandler implements CascadingTypeHandler, Comparable4, ValueTyp
 	}
 	
     public void defragment(DefragmentContext context) {
-        if(Handlers4.isPrimitive(_handler)){
-            context.incrementOffset(linkLength());
+        if(context.classMetadata().hasIdentity()){
+        	defragmentSlot(context);
         }else{
-            defragmentSlot(context);
+            context.incrementOffset(linkLength());
         }
     }
 

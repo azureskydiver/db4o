@@ -108,8 +108,8 @@ public class PrimitiveTypeMetadata extends ClassMetadata {
     }
     
 	@Override
-    public boolean isPrimitive(){
-        return true;
+    public boolean hasIdentity(){
+        return false;
     }
     
 	@Override
@@ -195,11 +195,7 @@ public class PrimitiveTypeMetadata extends ClassMetadata {
     }
     
     public Object deepClone(Object context) {
-    	if (true) throw new IllegalStateException();
-        TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
-        PrimitiveTypeMetadata original = (PrimitiveTypeMetadata) typeHandlerCloneContext.original;
-        TypeHandler4 delegateTypeHandler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler(null));
-        return new PrimitiveTypeMetadata(original.container(), delegateTypeHandler, original._id, original.classReflector());
+    	throw new IllegalStateException();
     }
     
     protected AspectTraversalStrategy detectAspectTraversalStrategy() {

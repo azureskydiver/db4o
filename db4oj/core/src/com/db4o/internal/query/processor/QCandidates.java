@@ -183,9 +183,6 @@ public final class QCandidates implements Visitor4 {
     	if(result.foundIndex()){
     		return result.iterateIDs();
     	}
-    	if(i_classMetadata.isPrimitive()){
-    		return Iterators.EMPTY_ITERATOR;
-    	}
     	if(!i_classMetadata.hasClassIndex()) {
     		return Iterators.EMPTY_ITERATOR;
     	}
