@@ -15,10 +15,10 @@ public class Db4oSessions {
 
     public void sessions(){
         // #example: Session object container
-        EmbeddedObjectContainer rootContainer = Db4oEmbedded.openFile(DATABASE_FILE_NAME);
+        ObjectContainer rootContainer = Db4oEmbedded.openFile(DATABASE_FILE_NAME);
 
         // open the db4o-session. For example at the beginning for a web-request
-        ObjectContainer session = rootContainer.openSession();
+        ObjectContainer session = rootContainer.ext().openSession();
         try{
             // do the operations on the session-container
             session.store(new Person("Joe"));
