@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3CAF686B-6504-4D47-95A8-185AAF528CC5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>VisualBasicExamples.Db4oDoc.Code.DisconnectedObj.ObjectIdentity.ObjectIdentityExamples</StartupObject>
+    <StartupObject>VisualBasicExamples.Db4oDoc.Code.ClientServer.Refresh.RefreshingObjects</StartupObject>
     <RootNamespace>VisualBasicExamples</RootNamespace>
     <AssemblyName>VisualBasicExamples</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.vb" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.vb" />
+    <Compile Include="Code\clientserver\refresh\RefreshingObjects.vb" />
     <Compile Include="Code\collections\bigset\BigSetExample.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
     <Compile Include="Code\container\sessions\Db4oSessions.vb" />

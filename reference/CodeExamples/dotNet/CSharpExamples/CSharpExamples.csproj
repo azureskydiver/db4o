@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.Callbacks.EventRegistry.EventRegistryExamples</StartupObject>
+    <StartupObject>Db4oDoc.Code.ClientServer.Refresh.RefreshingObjects</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
+    <Compile Include="Code\clientserver\refresh\RefreshingObjects.cs" />
     <Compile Include="Code\collections\bigset\BigSetExample.cs" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />

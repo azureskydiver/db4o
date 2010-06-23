@@ -8,10 +8,10 @@ Namespace Db4oDoc.Code.Container.Sessions
 
         Public Sub Sessions()
             ' #example: Session object container
-            Dim rootContainer As IEmbeddedObjectContainer = Db4oEmbedded.OpenFile(DatabaseFileName)
+            Dim rootContainer As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFileName)
 
             ' open the db4o-session. For example at the beginning for a web-request
-            Using session As IObjectContainer = rootContainer.OpenSession()
+            Using session As IObjectContainer = rootContainer.Ext().OpenSession()
                 ' do the operations on the session-container
                 session.Store(New Person("Joe"))
             End Using

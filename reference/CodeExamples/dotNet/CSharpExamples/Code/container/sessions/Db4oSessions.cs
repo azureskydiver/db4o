@@ -11,10 +11,10 @@ namespace Db4oDoc.Code.Container.Sessions
         public void Sessions()
         {
             // #example: Session object container
-            IEmbeddedObjectContainer rootContainer = Db4oEmbedded.OpenFile(DatabaseFileName);
+            IObjectContainer rootContainer = Db4oEmbedded.OpenFile(DatabaseFileName);
 
             // open the db4o-session. For example at the beginning for a web-request
-            using (IObjectContainer session = rootContainer.OpenSession())
+            using (IObjectContainer session = rootContainer.Ext().OpenSession())
             {
                 // do the operations on the session-container
                 session.Store(new Person("Joe"));

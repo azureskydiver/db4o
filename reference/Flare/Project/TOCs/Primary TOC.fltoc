@@ -1762,6 +1762,9 @@
       Link="/Content/client-server/switching_database_files_in_cs_mode.htm"
       conditions="Primary.TobeReviewed" />
     <TocEntry
+      Title="Refreshing Objects"
+      Link="/Content/client-server/refreshing_objects.htm" />
+    <TocEntry
       Title="Events In Client Server-Mode"
       Link="/Content/client-server/events_in_cs_mode.htm" />
     <TocEntry
