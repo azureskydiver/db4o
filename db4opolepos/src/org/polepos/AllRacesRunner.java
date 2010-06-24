@@ -78,8 +78,10 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				// db4oTeam(JAR_TRUNK),
 				
 				configuredDb4oTeam(JAR_DEVEL),
-				configuredDb4oTeam(JAR_DEVEL, new SingleBTreeIdSystem()),
-				configuredDb4oTeam(JAR_DEVEL, new PointerBasedIdSystem()),
+				configuredDb4oTeam(JAR_STABLE),
+				configuredDb4oTeam(JAR_PRODUCTION),
+//				configuredDb4oTeam(JAR_DEVEL, new SingleBTreeIdSystem()),
+//				configuredDb4oTeam(JAR_DEVEL, new PointerBasedIdSystem()),
 				
 //				db4oTeam(JAR_PRODUCTION),
 //				
