@@ -38,6 +38,7 @@ public class AllTests extends ComposibleTestSuite {
 						DeepPrefetchingCacheConcurrencyTestCase.class, // COR-1762
 						OwnCommitCallbackFlaggedEmbeddedTestSuite.class, // COR-1964
 						PingTestCase.class,
+						TAUnavailableClassAtServer.class, //COR-1987
 					};
 	}
 }
