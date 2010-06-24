@@ -11,6 +11,7 @@ import com.db4o.cs.caching.*;
 import com.db4o.cs.config.*;
 import com.db4o.cs.internal.caching.*;
 import com.db4o.cs.internal.config.*;
+import com.db4o.cs.internal.events.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.cs.internal.objectexchange.*;
 import com.db4o.events.*;
@@ -20,6 +21,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.encoding.*;
+import com.db4o.internal.events.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.references.*;
@@ -1045,7 +1047,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return _singleThreaded ? this : _messageDispatcher;
 	}
 
-	public void onCommittedListener() {
+	public void onCommittedListenerAdded() {
 		if(_singleThreaded) {
 			return;
 		}
@@ -1191,4 +1193,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     public int serverSideID() {
     	return _serverSideID;
     }
+    
+	public EventRegistryImpl newEventRegistry(){
+		return new ClientEventRegistryImpl(this);
+	}
+
 }

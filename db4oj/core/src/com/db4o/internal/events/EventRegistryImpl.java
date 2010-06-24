@@ -14,8 +14,6 @@ import com.db4o.query.*;
  */
 public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	
-	private final InternalObjectContainer _container;
-	
 	protected final Event4Impl _queryStarted = new Event4Impl();
 	protected final Event4Impl _queryFinished = new Event4Impl();
 	protected final Event4Impl _creating = new Event4Impl();
@@ -40,12 +38,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	 */
 	protected class CommittedEvent extends Event4Impl {
 		protected void onListenerAdded() {
-			onCommittedListener();
+			onCommittedListenerAdded();
 		}
-	}
-
-	public EventRegistryImpl(InternalObjectContainer container) {
-		_container = container;
 	}
 
 	// Callbacks implementation
@@ -218,7 +212,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	}
 	
 	/**
-	 * @sharpen.event.onAdd onCommittedListener
+	 * @sharpen.event.onAdd onCommittedListenerAdded
 	 */
 	public Event4 committed() {
 		return _committed;
@@ -236,10 +230,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		return _closing;
 	}
 	
-	protected void onCommittedListener() {
-		// TODO: notify the server that we are interested in 
-		// committed callbacks
-		_container.onCommittedListener();
+	protected void onCommittedListenerAdded() {
+		// do nothing 
 	}
 
 	public boolean caresAboutCommitting() {

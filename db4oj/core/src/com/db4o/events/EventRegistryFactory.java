@@ -27,7 +27,7 @@ public class EventRegistryFactory {
 			return (EventRegistry)callbacks;
 		}		
 		if (callbacks instanceof NullCallbacks) {
-			EventRegistryImpl impl = newEventRegistryFor(container);
+			EventRegistryImpl impl = container.newEventRegistry();
 			container.callbacks(impl);
 			return impl;
 		}
@@ -35,12 +35,5 @@ public class EventRegistryFactory {
 		// TODO: create a MulticastingCallbacks and register both
 		// the current one and the new one
 		throw new IllegalArgumentException();
-	}
-
-	private static EventRegistryImpl newEventRegistryFor(InternalObjectContainer container) {
-		if(container instanceof ObjectContainerBase && ((ObjectContainerBase)container).isClient()){
-			return new ClientEventRegistryImpl(container);
-		}
-		return new EventRegistryImpl(container);
 	}
 }

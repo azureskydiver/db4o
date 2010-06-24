@@ -2016,8 +2016,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		_replicationCallState = state;
 	}
 
-	public abstract void onCommittedListener();
-	
 	public ReferenceSystemRegistry referenceSystemRegistry(){
 	    return _referenceSystemRegistry;
 	}

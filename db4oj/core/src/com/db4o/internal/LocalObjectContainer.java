@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.convert.*;
+import com.db4o.internal.events.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
@@ -812,10 +813,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return (LocalTransaction)systemTransaction();
 	}
 	
-    public void onCommittedListener() {
-        // do nothing
-    }
-
 	public int instanceCount(ClassMetadata clazz, Transaction trans) {
 		synchronized(lock()) {
 			return clazz.indexEntryCount(trans);
@@ -926,6 +923,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			return reusedSlot;
 		}
 		return appendBytes(length);
+	}
+	
+	public EventRegistryImpl newEventRegistry(){
+		return new EventRegistryImpl();
 	}
 	
 }
