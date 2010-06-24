@@ -22,6 +22,10 @@ public class JavaServices {
     public static String java(String className) throws IOException, InterruptedException{
         return IOServices.exec(javaExecutable(), javaRunArguments(className));
     }
+    
+    public static String java(String className, String[] args) throws IOException, InterruptedException{
+        return IOServices.exec(javaExecutable(), javaRunArguments(className, args, false));
+    }
 
     public static ProcessRunner startJava(String className, String[] args) throws IOException {
         return IOServices.start(javaExecutable(), javaRunArguments(className, args, false));
@@ -50,7 +54,6 @@ public class JavaServices {
 	private static void assertJarExists(String path){
 		Assert.isTrue(File4.exists(path), "'" + path + "' not found. Make sure the jar was built before running this test.");		
 	}
-
 
     public static String startAndKillJavaProcess(String className, String expectedOutput, long timeout) throws IOException{
         return IOServices.execAndDestroy(javaExecutable(), javaRunArguments(className), expectedOutput, timeout);
