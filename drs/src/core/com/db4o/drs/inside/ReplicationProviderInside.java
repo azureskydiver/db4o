@@ -20,13 +20,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationProvider;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
 
 
-public interface ReplicationProviderInside extends ReplicationProvider, CollectionSource {
+public interface ReplicationProviderInside extends ReplicationProvider, CollectionSource, SimpleObjectContainer{
 	
 	void activate(Object object);
 
@@ -44,7 +43,6 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	 */
 	void destroy();
 
-	public ObjectSet getStoredObjects(Class type);
 
 	/**
 	 * Returns the current transaction serial number.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com
+/* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -18,14 +18,14 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-package com.db4o.drs.hibernate.impl;
+package com.db4o.drs.foundation;
 
-import com.db4o.drs.foundation.ObjectSetAbstractFacade;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
+public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
+	
 	private final Collection _delegate;
 
 	private Iterator _itor;
