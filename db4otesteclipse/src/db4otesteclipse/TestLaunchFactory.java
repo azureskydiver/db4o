@@ -92,6 +92,8 @@ public class TestLaunchFactory {
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classPath);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 		workingCopy.setAttribute(TESTTYPES_KEY, namesForTestTypes(testTypes));
+		String workingDir = testTypes.get(0).getJavaProject().getProject().getLocation().toString();
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY, workingDir);
 	}
 	
 	private IJavaProject containerForTypes(List<IMember> testTypes) {
