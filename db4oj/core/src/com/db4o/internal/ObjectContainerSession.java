@@ -11,6 +11,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
+import com.db4o.internal.events.*;
 import com.db4o.internal.query.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
@@ -421,10 +422,6 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
         }
     }
     
-    public void onCommittedListener() {
-        // do nothing
-    }
-    
     public ClassMetadata classMetadataForReflectClass(ReflectClass reflectClass) {
         return _server.classMetadataForReflectClass(reflectClass);
     }
@@ -474,5 +471,9 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 		synchronized(lock()){
 			return new ObjectContainerSession(_server);
 		}
+	}
+	
+	public EventRegistryImpl newEventRegistry(){
+		return new EventRegistryImpl();
 	}
 }
