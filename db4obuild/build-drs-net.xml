@@ -186,6 +186,7 @@
 				
 				<exclude name="test/**/test/all/*.java" />				
 				<exclude name="**/hibernate/**" />
+				<exclude name="**/versant/**" />
 				
 			</fileset>
 		    <fileset dir="${drs.dir}">

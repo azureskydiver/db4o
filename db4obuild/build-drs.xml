@@ -29,11 +29,11 @@
 	<target name="init" depends="properties">
 		<path id="class.path" description="universal classpath for all targets">
 			<fileset dir="${drs.dir.base}/lib">
-				<include name="*.jar" />
+				<include name="**/*.jar" />
 			</fileset>
 			
 			<fileset dir="${drs.dir.dist.lib}">
-				<include name="*.jar" />
+				<include name="**/*.jar" />
 			</fileset>
 			
 			<pathelement location="${drs.dir.dist.classes}" />
@@ -134,7 +134,14 @@
 		<zip destfile="${file.drs.zip}" >
 			<zipfileset dir="${drs.dir.base}" prefix="${zipbasedir}" includes="readme.html, drs.license.html" />
 			<zipfileset dir="${drs.dir.dist.temp}" prefix="${zipbasedir}" includes="compatibility.html" />
-			<zipfileset dir="${drs.dir.base}/lib" prefix="${zipbasedir}/lib" includes="*.jar, *.html" />
+			<zipfileset dir="${drs.dir.base}/lib" prefix="${zipbasedir}/lib" >
+				<include name="**/*.jar"/>
+				<include name="**/*.html"/>
+				<exclude name="derby/" />
+				<exclude name="doctor/" />
+				<exclude name="mysql/" />
+				<exclude name="postgresql/" />
+			</zipfileset>
 			<zipfileset file="${file.jdk1.5.jar}" prefix="${zipbasedir}/lib" />
 			<zipfileset file="${file.jdk1.5.db4ounit.jar}" prefix="${zipbasedir}/lib" />
 			<zipfileset dir="${drs.dir.src}" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
