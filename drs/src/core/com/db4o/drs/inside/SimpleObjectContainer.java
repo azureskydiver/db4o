@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com
+/* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -20,6 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
+import com.db4o.*;
+
 
 public interface SimpleObjectContainer {
 
@@ -28,18 +30,16 @@ public interface SimpleObjectContainer {
 	public void delete(Object obj);
 
 	public void deleteAllInstances(Class clazz);
+	
+	public ObjectSet getStoredObjects(Class type);
 
 	/**
 	 * Will cascade to save the whole graph of objects
-	 *
-	 * @param o
 	 */
 	public void storeNew(Object o);
 
 	/**
-	 * It won't cascade. Use it with caution.
-	 *
-	 * @param o
+	 * Updating won't cascade.
 	 */
 	public void update(Object o);
 

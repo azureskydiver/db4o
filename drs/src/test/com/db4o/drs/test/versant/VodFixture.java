@@ -18,6 +18,22 @@ public class VodFixture implements DrsFixture{
 		_name = name;
 	}
 	
+	
+	
+	
+	
+	/**
+	 * 
+	 * TODO: All code below is in VodDatabase. Delegate there.
+	 * 
+	 * 
+	 */
+	
+	
+	
+	
+	
+	
 	private boolean dbExists(){
 		DBListInfo[] dbList = DBUtility.dbList();
 		for (DBListInfo dbListInfo : dbList) {

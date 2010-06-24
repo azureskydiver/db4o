@@ -65,10 +65,6 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private final Procedure4 _activationStrategy;
 	
-	public FileReplicationProvider(ObjectContainer objectContainer) {
-		this(objectContainer, "null");
-	}
-
 	public FileReplicationProvider(ObjectContainer objectContainer, String name) {
 		Configuration cfg = objectContainer.ext().configure();
 		cfg.callbacks(false);

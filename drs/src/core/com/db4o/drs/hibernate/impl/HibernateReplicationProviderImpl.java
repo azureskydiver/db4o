@@ -33,6 +33,7 @@ import org.hibernate.event.*;
 import org.hibernate.mapping.*;
 
 import com.db4o.*;
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.hibernate.metadata.*;
 import com.db4o.drs.inside.*;
 import com.db4o.ext.*;
