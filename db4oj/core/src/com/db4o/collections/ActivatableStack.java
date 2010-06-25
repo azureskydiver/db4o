@@ -82,6 +82,12 @@ public class ActivatableStack<E> extends Stack<E> implements ActivatableList<E> 
 	}
 	
 	@Override
+	public boolean empty() {
+		activate(ActivationPurpose.READ);
+		return super.empty();
+	}
+	
+	@Override
 	public E get(int index) {
 		activate(ActivationPurpose.READ);
 		return super.get(index);
@@ -157,6 +163,12 @@ public class ActivatableStack<E> extends Stack<E> implements ActivatableList<E> 
 	public int size() {
 		activate(ActivationPurpose.READ);
 		return super.size();
+	}
+	
+	@Override
+	public synchronized int search(Object o) {
+		activate(ActivationPurpose.READ);
+		return super.search(o);
 	}
 	
 	@Override
