@@ -14,6 +14,12 @@ import db4ounit.*;
 
 public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 	
+	private static Class[] PERSISTENT_CLASSES = new Class[]{
+		Chain.class,
+		Holder.class,
+		Item.class,
+	};
+	
 	private static final String DATABASE_NAME = "SimpleObjectContainer";
 	
 	private VodDatabase _vod;	
@@ -43,8 +49,9 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 	}
 	
 	private void cleanDb(){
-		_provider.deleteAllInstances(Item.class);
-		_provider.deleteAllInstances(Holder.class);
+		for (int i = 0; i < PERSISTENT_CLASSES.length; i++) {
+			_provider.deleteAllInstances(PERSISTENT_CLASSES[i]);
+		}
 		_provider.commit();
 	}
 	
@@ -58,6 +65,10 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		tstDelete();
 		cleanDb();
 		tstUpdate();
+		cleanDb();
+		tstDeleteAllInstances();
+		cleanDb();
+		tstLongChain();
 		cleanDb();
 	}
 	
@@ -121,15 +132,55 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		assertContent(Item.class, item);
 	}
 	
+	public void tstDeleteAllInstances(){
+		Item item1 = new Item("one");
+		_provider.storeNew(item1);
+		Item item2 = new Item("two");
+		_provider.storeNew(item2);
+		_provider.commit();
+		assertContent(Item.class, item1, item2);
+		_provider.deleteAllInstances(Item.class);
+		_provider.commit();
+		assertContent(Item.class);
+	}
+	
+	public void tstLongChain(){
+		final int length = 1000;
+		Chain chain = Chain.newChainWithLength(length);
+		_provider.storeNew(chain);
+		_provider.commit();
+		transactional(new Runnable() {
+			public void run() {
+				Query query = _pm.newQuery(Chain.class, "this._id == 0");
+				Collection collection = (Collection)query.execute();
+				Chain chain = (Chain) collection.iterator().next();
+				Assert.areEqual(length, chain.length());
+			}
+		});
+	}
+	
+	
+	
 	private <T> void assertContent(Class<T> type, T...items) {
 		assertContent(type, Arrays.asList(items));
 	}
 	
-	private <T> void assertContent(Class<T> type, Iterable<T> items) {
+	private <T> void assertContent(final Class<T> type, final Iterable<T> items) {
+		transactional(new Runnable() {
+			public void run()  {
+				Collection collection = (Collection) _pm.newQuery(type).execute();
+				IteratorAssert.sameContent(items, collection);
+			}
+		});
+	}
+	
+	private void transactional(Runnable runnable) {
 		_pm.currentTransaction().begin();
-		Collection collection = (Collection) _pm.newQuery(type).execute();
-		IteratorAssert.sameContent(items, collection);
-		_pm.currentTransaction().rollback();
+		try{
+			runnable.run();
+		} finally {
+			_pm.currentTransaction().rollback();
+		}
 	}
 
 }

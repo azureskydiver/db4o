@@ -24,23 +24,25 @@ import com.db4o.*;
 
 
 public interface SimpleObjectContainer {
-
-	public void commit();
-
-	public void delete(Object obj);
-
-	public void deleteAllInstances(Class clazz);
 	
-	public ObjectSet getStoredObjects(Class type);
+	void activate(Object object);
+
+	void commit();
+
+	void delete(Object obj);
+
+	void deleteAllInstances(Class clazz);
+	
+	ObjectSet getStoredObjects(Class type);
 
 	/**
 	 * Will cascade to save the whole graph of objects
 	 */
-	public void storeNew(Object o);
+	void storeNew(Object o);
 
 	/**
 	 * Updating won't cascade.
 	 */
-	public void update(Object o);
+	void update(Object o);
 
 }

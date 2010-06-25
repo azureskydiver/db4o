@@ -27,12 +27,11 @@ import com.db4o.foundation.Visitor4;
 
 public interface ReplicationProviderInside extends ReplicationProvider, CollectionSource, SimpleObjectContainer{
 	
-	void activate(Object object);
 
-	/**
-	 * Activates the fields, e.g. Collections, arrays, of an object
-	 * <p/>
-	 * /** Clear the  ReplicationReference cache
+	
+	
+	/** 
+	 * Clear the  ReplicationReference cache
 	 */
 	void clearAllReferences();
 
