@@ -6,10 +6,6 @@ public class Item {
 	
 	private String _name;
 	
-	public Item(){
-		
-	}
-	
 	public Item(String name){
 		_name = name;
 	}
@@ -18,5 +14,20 @@ public class Item {
 		return _name;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof Item)){
+			return false;
+		}
+		Item other = (Item) obj;
+		if(_name == null){
+			return other._name == null;
+		}
+		return _name.equals(other._name);
+	}
+	
+	public void name(String name){
+		_name = name;
+	}
 
 }

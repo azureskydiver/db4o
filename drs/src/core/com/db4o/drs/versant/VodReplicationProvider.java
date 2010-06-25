@@ -12,10 +12,10 @@ import com.db4o.drs.inside.*;
 
 public class VodReplicationProvider implements SimpleObjectContainer{
 	
+	private final VodDatabase _vod;
+	
 	private final PersistenceManager _pm;
 	
-	private final VodDatabase _vod;
-
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
 		_pm = vod.createPersistenceManager();
@@ -28,13 +28,11 @@ public class VodReplicationProvider implements SimpleObjectContainer{
 	}
 
 	public void delete(Object obj) {
-		// TODO Auto-generated method stub
-		
+		_pm.deletePersistent(obj);
 	}
 
 	public void deleteAllInstances(Class clazz) {
-		// TODO Auto-generated method stub
-		
+		_pm.deletePersistentAll((Collection) _pm.newQuery(clazz).execute());
 	}
 
 	public ObjectSet getStoredObjects(Class type) {
@@ -42,13 +40,18 @@ public class VodReplicationProvider implements SimpleObjectContainer{
 		return new ObjectSetCollectionFacade(collection);
 	}
 
-	public void storeNew(Object o) {
-		_pm.makePersistent(o);
+	public void storeNew(Object obj) {
+		_pm.makePersistent(obj);
 	}
 
-	public void update(Object o) {
-		// TODO Auto-generated method stub
-		
+	public void update(Object obj) {
+		// do nothing
+		// JDO is transparent persistence
+	}
+
+	public void destroy() {
+		_pm.currentTransaction().rollback();
+		_pm.close();
 	}
 
 }
