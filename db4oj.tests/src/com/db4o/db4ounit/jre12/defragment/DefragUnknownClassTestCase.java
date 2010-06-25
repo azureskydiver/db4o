@@ -13,13 +13,14 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.util.*;
 
 /**
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class DefragUnknownClassTestCase extends TestWithTempFile {
+public class DefragUnknownClassTestCase extends TestWithTempFile implements OptOutTemporary {
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(DefragUnknownClassTestCase.class).run();

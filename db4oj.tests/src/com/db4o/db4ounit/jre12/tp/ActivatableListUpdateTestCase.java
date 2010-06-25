@@ -48,9 +48,14 @@ public class ActivatableListUpdateTestCase extends AbstractDb4oTestCase {
 		public List<Item> _list;
 		
 		public Holder(Item... items) {
-			_list = new ActivatableArrayList<Item>(items.length);
-			for (Item item : items) {
-				_list.add(item);
+			if (items != null) {
+				_list = new ActivatableArrayList<Item>(items.length);
+				for (Item item : items) {
+					_list.add(item);
+				}
+			}
+			else {
+				_list = new ActivatableArrayList<ActivatableListUpdateTestCase.Item>();
 			}
 		}
 		

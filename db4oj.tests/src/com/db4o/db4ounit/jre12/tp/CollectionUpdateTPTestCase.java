@@ -86,7 +86,9 @@ public class CollectionUpdateTPTestCase extends AbstractDb4oTestCase {
 		
 		public Holder(Item... items) {
 			_list = new ArrayList<Item>();
-			_list.addAll(Arrays.asList(items));
+			if (items != null) {
+				_list.addAll(Arrays.asList(items));
+			}
 		}
 		
 		public Item item(int idx) {

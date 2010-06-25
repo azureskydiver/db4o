@@ -49,7 +49,9 @@ public class Db4oTestCasesLauncher extends TestCase {
 //					com.db4o.db4ounit.common.AllTests.class, 
 //					BlockAwareBinTestSuite.class
 //					all
+					
 					com.db4o.db4ounit.jre11.AllTests.class,
+					com.db4o.db4ounit.jre12.AllTestsJdk1_2.class,		
 					
 					// stackoverflows:
 //					MissingClassDiagnosticsTestCase.class,
@@ -58,7 +60,6 @@ public class Db4oTestCasesLauncher extends TestCase {
 //					NonTALinkedListTestCase.class,
 //					NTNTestCase.class
 					
-//					com.db4o.db4ounit.jre12.AllTestsJdk1_2.class,
 					};
 
 			SelectiveDb4oAndroidFixture fixture = new SelectiveDb4oAndroidFixture(acceptedClasses, out, ignoreList);
