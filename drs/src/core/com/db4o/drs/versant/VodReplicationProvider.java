@@ -54,4 +54,9 @@ public class VodReplicationProvider implements SimpleObjectContainer{
 		_pm.close();
 	}
 
+	public void activate(Object object) {
+		// do nothing
+		// JDO is transparent activation
+	}
+
 }

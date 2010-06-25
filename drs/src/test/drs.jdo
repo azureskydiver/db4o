@@ -4,6 +4,7 @@
     <package name="com.db4o.drs.test.versant.data">
     	<class name="Item"/>
     	<class name="Holder"/>
+    	<class name="Chain"/>
     </package>    
 </jdo>    
 
