@@ -1,8 +1,5 @@
 package com.db4o.db4ounit.common.caching;
 
-import java.util.*;
-
-import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 
 import db4ounit.fixtures.*;
