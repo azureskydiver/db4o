@@ -30,6 +30,4 @@ public class Db4oFixtures {
 	public static Db4oAndroid newAndroid() {
 		return new Db4oAndroid();
 	}
-
-
 }
