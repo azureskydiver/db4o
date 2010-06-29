@@ -7,7 +7,7 @@ import com.db4o.config.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase implements OptOutTemporary {
+public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase implements OptOutStaticFieldIssue {
 	
     public static class Data {
         public static final PsfvHelper ONE = new PsfvHelper();

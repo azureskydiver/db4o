@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
  * @exclude
  */
 @decaf.Ignore
-public class EnumUpdateTestCase extends AbstractDb4oTestCase {
+public class EnumUpdateTestCase extends AbstractDb4oTestCase implements OptOutStaticFieldIssue {
 	
 	public enum MyEnum {
 		
