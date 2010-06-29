@@ -14,6 +14,8 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.common.staging.AllTests.class,
 			
+			SQLDateTestCase.class, // COR-1989
+			
 			/**
 			 *  When you add a test here, make sure you create a Jira issue. 
 			 */
