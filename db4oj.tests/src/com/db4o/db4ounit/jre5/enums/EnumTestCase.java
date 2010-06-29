@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 /**
  */
 @decaf.Ignore
-public class EnumTestCase extends AbstractDb4oTestCase {
+public class EnumTestCase extends AbstractDb4oTestCase implements OptOutStaticFieldIssue {
 	
 	public static void main(String[] args) {
 		new EnumTestCase().runAll();

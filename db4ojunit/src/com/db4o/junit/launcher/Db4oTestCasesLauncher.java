@@ -1,17 +1,14 @@
+/* Copyright (C) 2010 Versant Inc. http://www.db4o.com */
 package com.db4o.junit.launcher;
 
 import java.io.*;
 import java.util.*;
 
-import junit.framework.TestCase;
+import junit.framework.*;
 
-import com.db4o.db4ounit.common.assorted.LongLinkedListTestCase;
-import com.db4o.db4ounit.common.diagnostics.MissingClassDiagnosticsTestCase;
-import com.db4o.db4ounit.common.ta.mixed.*;
-import com.db4o.db4ounit.common.ta.nonta.NonTALinkedListTestCase;
-import com.db4o.foundation.io.Path4;
+import com.db4o.foundation.io.*;
 
-import db4ounit.extensions.Db4oTestSuiteBuilder;
+import db4ounit.extensions.*;
 
 public class Db4oTestCasesLauncher extends TestCase {
 
@@ -46,21 +43,9 @@ public class Db4oTestCasesLauncher extends TestCase {
 
 		try {
 			Class<?>[] classes = new Class[] { 
-//					com.db4o.db4ounit.common.AllTests.class, 
 //					BlockAwareBinTestSuite.class
-//					all
-					
-					com.db4o.db4ounit.jre11.AllTests.class,
-					com.db4o.db4ounit.jre12.AllTestsJdk1_2.class,		
-					
-					// stackoverflows:
-//					MissingClassDiagnosticsTestCase.class,
-//					LongLinkedListTestCase.class,
-//					MixedArrayTestCase.class,
-//					NonTALinkedListTestCase.class,
-//					NTNTestCase.class
-					
-					};
+					com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class,
+			};
 
 			SelectiveDb4oAndroidFixture fixture = new SelectiveDb4oAndroidFixture(acceptedClasses, out, ignoreList);
 

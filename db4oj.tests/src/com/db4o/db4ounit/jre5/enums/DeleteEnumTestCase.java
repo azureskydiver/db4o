@@ -12,7 +12,7 @@ import db4ounit.extensions.*;
 /**
  */
 @decaf.Ignore
-public class DeleteEnumTestCase extends AbstractDb4oTestCase {
+public class DeleteEnumTestCase extends AbstractDb4oTestCase implements OptOutStaticFieldIssue {
     
 	public static final class Item {
 		public TypeCountEnum a;
