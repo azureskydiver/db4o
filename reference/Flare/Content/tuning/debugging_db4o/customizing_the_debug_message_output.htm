@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2138" MadCap:lastWidth="595">
     <head><title>Customizing The Debug Message Output	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -11,19 +11,19 @@ messaging system in any environment db4o gives you an API to
 redirect debug output to another stream:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>Configuration.setOut(java.io.PrintStream)</code>
+            <p><code>configuration.common().outStream(outStream)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
             <p>c#: </p>
-            <p><code>IConfiguration.SetOut(System.IO.TextWriter)</code>
+            <p><code>configuration.Common.OutStream =&#160;outStream</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:cs" />
         <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
             <p>VB: </p>
-            <p><code>IConfiguration.SetOut(System.IO.TextWriter)</code>
+            <p><code>configuration.Common.OutStream = outStream</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:vb" />
@@ -51,27 +51,7 @@ not polluted with debug messages;</li>
             <li>debug information
 from the clients can be available on the server.</li>
         </ul>
-        <p>You can always
-switch back to the default setting using:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: </p>
-            <p><code>Configuration.setOut(System.out)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <p>c#: </p>
-            <p><code>IConfiguration.SetOut(System.Console.Out)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <p>VB: </p>
-            <p><code>IConfiguration.SetOut(System.Console.Out)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:vb" />
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p>&#160;</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="debuggingvb.zip">VB.NET </a>
             </MadCap:conditionalText>
