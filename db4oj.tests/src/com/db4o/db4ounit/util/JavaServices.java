@@ -49,12 +49,8 @@ public class JavaServices {
 	        		srcFile};
 
 			return IOServices.exec(WorkspaceServices.javacPath(),javacArgs);
-	}
+	}	
 	
-	private static void assertJarExists(String path){
-		Assert.isTrue(File4.exists(path), "'" + path + "' not found. Make sure the jar was built before running this test.");		
-	}
-
     public static String startAndKillJavaProcess(String className, String expectedOutput, long timeout) throws IOException{
         return IOServices.execAndDestroy(javaExecutable(), javaRunArguments(className), expectedOutput, timeout);
     }
@@ -78,7 +74,7 @@ public class JavaServices {
     	
     	List<String> cp = new ArrayList<String>();
     	cp.add(JavaServices.javaTempPath());
-    	cp.add(db4oCoreJarPath());
+    	cp.add(currentClassPath());
     	if (includeDb4oJars) {
     		cp.add(db4oCoreJarPath());
     		cp.add(db4oJarPath("-optional"));
@@ -91,8 +87,7 @@ public class JavaServices {
 						runningOnWindows());
         allArgs[2] = className;
         System.arraycopy(args, 0, allArgs, 3, args.length);
-        return allArgs;
-        
+        return allArgs;        
     }
 
     private static String currentClassPath(){
