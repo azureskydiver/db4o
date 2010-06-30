@@ -164,7 +164,6 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
     	int initialOffSet = buffer.offset();
     	int length = ownLength();
 		if (Deploy.debug) {
-			offset ++;
 		    length -= Const4.ADDED_LENGTH;
 		}
 		length -= CHECKSUM_LENGTH;
@@ -199,7 +198,11 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
 			// it's bound to be OK. (unless all bytes are zero or
 			// greyed out by some kind of overwriting algorithm.)
 			
-			if( ! checkSumOK(buffer, 0) ){
+			int firstOffset = 0;
+			if(Deploy.debug){
+				firstOffset += Const4.IDENTIFIER_LENGTH + Const4.BRACKETS_BYTES;
+			}
+			if( ! checkSumOK(buffer, firstOffset) ){
 				throw new Db4oFileHeaderCorruptionException();
 			}
 			return true;
