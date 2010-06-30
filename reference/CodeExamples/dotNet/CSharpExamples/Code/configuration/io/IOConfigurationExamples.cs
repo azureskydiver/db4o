@@ -19,12 +19,25 @@ namespace Db4oDoc.Code.Configuration.IO
 
         public static void UsingMemoryStorage()
         {
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
             // #example: Using memory-storage
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
             MemoryStorage memory = new MemoryStorage();
             configuration.File.Storage = memory;
-            // #end example
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            // #end example
+        }
+
+
+        public static void UsingPagingMemoryStorage()
+        {
+            // #example: Using paging memory-storage
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            PagingMemoryStorage memory = new PagingMemoryStorage();
+            configuration.File.Storage = memory;
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            // #end example
+            container.Close();
+
         }
 
         public static void StorageStack()

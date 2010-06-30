@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
+// change the configuration...
+ObjectServer server = Db4oClientServer.openServer(configuration,&quot;database.db4o&quot;,1337);</pre>
+		<div class="codesnippet-meta">ConfigurationBasics.java: Configure the db4o-server<a href="Example-configuration-basics-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

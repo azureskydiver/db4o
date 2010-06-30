@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim configuration As IServerConfiguration = Db4oClientServer.NewServerConfiguration()
+configuration.TimeoutServerSocket = (10 * 60 * 1000)</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IServerConfiguration = Db4oClientServer.NewServerConfiguration()
+configuration.TimeoutServerSocket = (10 * 60 * 1000)</pre>
+		<div class="codesnippet-meta">ServerConfigurationExamples.vb: configure the socket-timeout<a href="Example-configuration-server-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

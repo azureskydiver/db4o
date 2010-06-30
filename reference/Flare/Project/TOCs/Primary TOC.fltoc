@@ -468,6 +468,108 @@
     </TocEntry>
   </TocEntry>
   <TocEntry
+    Title="Configuration"
+    Link="/Content/configuration.htm">
+    <TocEntry
+      Title="Common Configuration"
+      Link="/Content/configuration/common_configuration.htm">
+      <TocEntry
+        Title="Intern Strings"
+        Link="/Content/configuration/common/intern_strings.htm" />
+      <TocEntry
+        Title="Mark Transient"
+        Link="/Content/configuration/common/mark_transient.htm" />
+      <TocEntry
+        Title="Name Provider"
+        Link="/Content/configuration/common/name_provider.htm" />
+      <TocEntry
+        Title="ObjectClass Configuration"
+        Link="/Content/configuration/common/objectclass_configuration.htm" />
+      <TocEntry
+        Title="Objectfield Configuration"
+        Link="/Content/configuration/common/objectfield_configuration.htm" />
+      <TocEntry
+        Title="Query Configuration"
+        Link="/Content/configuration/common/query_configuration.htm" />
+      <TocEntry
+        Title="Weak Reference Collection Interval"
+        Link="/Content/configuration/common/weak_reference_collection_interval.htm" />
+      <TocEntry
+        Title="Common Configuration Items"
+        Link="/Content/configuration/common/configuration_items.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="File Configuration"
+      Link="/Content/configuration/file_configuration.htm">
+      <TocEntry
+        Title="Asynchronous File-Sync"
+        Link="/Content/configuration/file/async_sync.htm" />
+      <TocEntry
+        Title="Blob Path"
+        Link="/Content/configuration/file/blob_path.htm" />
+      <TocEntry
+        Title="Database Growth Size"
+        Link="/Content/configuration/file/database_growth_size.htm" />
+      <TocEntry
+        Title="Disable Commit Recovery"
+        Link="/Content/configuration/file/disable_commit_recovery.htm" />
+      <TocEntry
+        Title="Freespace Configuration"
+        Link="/Content/configuration/file/freespace_configuration.htm">
+        <TocEntry
+          Title="Freespacefiller Example"
+          Link="/Content/configuration/file/freespace_configuration/freespacefiller_example.htm"></TocEntry>
+      </TocEntry>
+      <TocEntry
+        Title="Freespace Filler"
+        Link="/Content/configuration/file/freespace_filler.htm" />
+      <TocEntry
+        Title="Read Only"
+        Link="/Content/configuration/file/read_only.htm" />
+      <TocEntry
+        Title="Recovery Mode"
+        Link="/Content/configuration/file/recover_mode.htm" />
+      <TocEntry
+        Title="Reserve Storage Space"
+        Link="/Content/configuration/file/reserve_storage_space.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Client Configuration"
+      Link="/Content/configuration/client_configuration.htm">
+      <TocEntry
+        Title="Prefetch Depth"
+        Link="/Content/configuration/client/prefetch_depth.htm"></TocEntry>
+      <TocEntry
+        Title="Prefetch Object Count"
+        Link="/Content/configuration/client/prefetch_object_count.htm" />
+      <TocEntry
+        Title="Prefetch Slot Cache Size"
+        Link="/Content/configuration/client/prefetch_slot_cache_size.htm" />
+      <TocEntry
+        Title="Timeout Client Socket"
+        Link="/Content/configuration/client/timeout_client_socket.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Networking Configuration"
+      Link="/Content/configuration/network_configuration.htm">
+      <TocEntry
+        Title="Client Server Factory"
+        Link="/Content/configuration/networking/client_server_factory.htm"></TocEntry>
+      <TocEntry
+        Title="Max Batch Queue Size"
+        Link="/Content/configuration/networking/max_batch_queue_size.htm" />
+      <TocEntry
+        Title="Single Threaded Client"
+        Link="/Content/configuration/networking/single_threaded_client.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Id System"
+      Link="/Content/configuration/id_system.htm" />
+    <TocEntry
+      Title="Server Configuration"
+      Link="/Content/configuration/server_configuration.htm" />
+  </TocEntry>
+  <TocEntry
     Title="Implementation Strategies"
     Link="/Content/implementation_strategies.htm">
     <TocEntry
@@ -1348,50 +1450,6 @@
         conditions="Primary.All languages,Primary.Java" />
     </TocEntry>
     <TocEntry
-      Title="Configuration"
-      Link="/Content/tuning/configuration.htm">
-      <TocEntry
-        Title="Embedded Configuration"
-        Link="/Content/tuning/configuration/embedded_configuration.htm" />
-      <TocEntry
-        Title="Server Configuration"
-        Link="/Content/tuning/configuration/server_configuration.htm" />
-      <TocEntry
-        Title="Client Configuration"
-        Link="/Content/tuning/configuration/client_configuration.htm" />
-      <TocEntry
-        Title="Common Configuration"
-        Link="/Content/tuning/configuration/common_configuration.htm" />
-      <TocEntry
-        Title="ObjectClass Configuration"
-        Link="/Content/tuning/configuration/objectclass_configuration.htm" />
-      <TocEntry
-        Title="Objectfield Configuration"
-        Link="/Content/tuning/configuration/objectfield_configuration.htm" />
-      <TocEntry
-        Title="Cache Configuration"
-        Link="/Content/tuning/configuration/cache_configuration.htm" />
-      <TocEntry
-        Title="Freespace Configuration"
-        Link="/Content/tuning/configuration/freespace_configuration.htm">
-        <TocEntry
-          Title="Freespacefiller Example"
-          Link="/Content/tuning/configuration/freespace_configuration/freespacefiller_example.htm"></TocEntry>
-      </TocEntry>
-      <TocEntry
-        Title="Freespace Filler"
-        Link="/Content/tuning/configuration/freespace_filler.htm" />
-      <TocEntry
-        Title="Configuration Item"
-        Link="/Content/tuning/configuration/configuration_item.htm" />
-      <TocEntry
-        Title="File Configuration"
-        Link="/Content/tuning/configuration/file_configuration.htm" />
-      <TocEntry
-        Title="Query Configuration"
-        Link="/Content/tuning/configuration/query_configuration.htm" />
-    </TocEntry>
-    <TocEntry
       Title="Selective Persistence"
       Link="/Content/tuning/selective_persistence.htm">
       <TocEntry
@@ -1449,7 +1507,9 @@
       <TocEntry
         Title="Automatic Shutdown"
         Link="/Content/tuning/performance_hints/automatic_shutdown.htm"
-        conditions="Primary.Java,Primary.All languages" />
+        VolumeNumberReset="same"
+        SectionNumberReset="continue"
+        ChapterNumberReset="continue" />
       <TocEntry
         Title="No Callbacks"
         Link="/Content/tuning/performance_hints/no_callbacks.htm" />
@@ -1494,8 +1554,7 @@
         Link="/Content/tuning/performance_hints/randomaccessfileadapter.htm" />
       <TocEntry
         Title="Reserving Storage Space"
-        Link="/Content/tuning/performance_hints/reserving_storage_space.htm"
-        conditions="Primary.TobeReviewed" />
+        Link="/Content/tuning/performance_hints/reserving_storage_space.htm" />
       <TocEntry
         Title="trnflow"
         Link="/Content/tuning/performance_hints/trnflow.jpg" />
@@ -1565,8 +1624,7 @@
       Link="/Content/tuning/native_query_optimization.htm">
       <TocEntry
         Title="Optimization At Query Execution Time"
-        Link="/Content/tuning/native_query_optimization/optimization_at_query_execution_time.htm"
-        conditions="Primary.All languages,Primary.Java" />
+        Link="/Content/tuning/native_query_optimization/optimization_at_query_execution_time.htm" />
       <TocEntry
         Title="NQ Optimization At Load Time"
         Link="/Content/tuning/native_query_optimization/nq_optimization_at_load_time.htm"

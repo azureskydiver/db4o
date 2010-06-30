@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="753" MadCap:lastWidth="463">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="590" MadCap:lastWidth="536">
     <head><title>Prefetching IDs For New Objects	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -7,18 +7,18 @@
             <MadCap:keyword term="Prefetching" />Prefetching IDs For New Objects</h1>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>void ClientServerConfiguration.prefetchIDCount(int prefetchIDCount);</code>
+            <p><code>configuration.prefetchIDCount(prefetchIDCount);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>void ClientServerConfiguration.PrefetchIDCount(int prefetchIDCount);</code>
+            <p><code>configuration.PrefetchIDCount = prefetchIDCount;</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>Sets the number of IDs to be pre-allocated in
-the database for new objects created on the client</p><a name="Advantage"></a>
+the database for new objects created on the client.</p><a name="Advantage"></a>
         <h2>Advantage</h2>
         <p>Prefetching several IDs for the new objects
 created on the client allows to improve the performance by reducing
@@ -40,7 +40,7 @@ unnecessary preallocated space. </p>
         <p>The default
 PrefetchIDCount is 10.</p><a name="Alternate Strategies"></a>
         <h2>Alternate Strategies</h2>A possible alternative can be using
-<a href="../../client-server/remote_code_execution/using_messaging_api_for_remote_code_execution.htm">Messaging</a>for bulk inserts on the server. 
+<a href="../../client-server/remote_code_execution/using_messaging_api_for_remote_code_execution.htm">Messaging</a> for bulk inserts on the server. 
 
 
     
