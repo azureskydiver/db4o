@@ -108,10 +108,6 @@ public class SlotChange extends TreeInt {
 //		return isBitSet(FREE_POINTER_ON_COMMIT_BIT);
 //	}
 
-	public final boolean isFreePointerOnRollback() {
-		return isNew();
-	}
-
 	public Slot newSlot() {
 		return _newSlot;
 	}
@@ -126,12 +122,6 @@ public class SlotChange extends TreeInt {
 	public void rollback(FreespaceManager freespaceManager) {
 		if (isFreeOnRollback()) {
 			freespaceManager.free(_newSlot);
-		}
-		if(isFreePointerOnRollback()){
-		    if(DTrace.enabled){
-		        DTrace.FREE_POINTER_ON_ROLLBACK.logLength(_key, Const4.POINTER_LENGTH);
-		    }
-			freespaceManager.free(new Slot(_key, Const4.POINTER_LENGTH));
 		}
 	}
 
