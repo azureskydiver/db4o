@@ -22,14 +22,22 @@ public class StoredFieldImpl implements StoredField {
     }
 
     public void createIndex() {
-        _fieldMetadata.createIndex();
+    	synchronized(lock()){
+    		_fieldMetadata.createIndex();
+    	}
     }
     
     public void dropIndex() {
-    	_fieldMetadata.dropIndex();
+    	synchronized(lock()){
+    		_fieldMetadata.dropIndex();
+    	}
     }
 
-    public FieldMetadata fieldMetadata(){
+    private Object lock() {
+		return _transaction.container().lock();
+	}
+
+	public FieldMetadata fieldMetadata(){
         return _fieldMetadata;
     }
     
@@ -54,7 +62,9 @@ public class StoredFieldImpl implements StoredField {
     }
 
     public void rename(String name) {
-        _fieldMetadata.rename(name);
+    	synchronized(lock()){
+    		_fieldMetadata.rename(name);
+    	}
     }
 
     public void traverseValues(Visitor4 visitor) {
