@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ObjectServer server = 
+        Db4oClientServer.openServer(DATABASE_FILE_NAME, PORT_NUMBER);
+EventRegistry eventsOnServer =
+        EventRegistryFactory.forObjectContainer(server.ext().objectContainer());    </pre>
+		<div class="codesnippet-meta">EventRegistryExamples.java: register for events on the server<a href="Example-callbacks-eventregistry-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

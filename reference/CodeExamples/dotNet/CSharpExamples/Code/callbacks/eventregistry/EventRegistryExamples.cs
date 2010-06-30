@@ -45,6 +45,16 @@ namespace Db4oDoc.Code.Callbacks.EventRegistry
             CleanUp();
         }
 
+        private static void RegisterForEventsOnTheServer()
+        {
+            // #example: register for events on the server
+            IObjectServer server = 
+                    Db4oClientServer.OpenServer(DatabaseFileName, PortNumber);
+            IEventRegistry eventsOnServer = 
+                    EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer());
+            // #end example
+        }
+
         private static void EventsClientServer()
         {
             CleanUp();

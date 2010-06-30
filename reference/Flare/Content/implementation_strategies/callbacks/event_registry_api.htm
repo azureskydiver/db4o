@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3845" MadCap:lastWidth="707">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4243" MadCap:lastWidth="770">
     <head><title>Event Registry API</title>
     </head>
     <body>
@@ -19,6 +19,9 @@
         <p>Some events can actually cancel the operation. All events which have a CancellableObjectEventArgs-parameter can cancel the operation. When you cancel a operation in a event-handler. When you cancel in a event, the operation won't be executed. For example:</p>
         <MadCap:snippetBlock src="../../CodeExamples/callbacks/eventregistry/EventRegistryExamples-Cancel-store-operation.all.flsnp" />
         <MadCap:snippetBlock src="../../CodeExamples/callbacks/eventregistry/EventRegistryExamples-Cancel-store-operation-Handler.all.flsnp" />
+        <h2>Register Events On The Server</h2>
+        <p>When you want to register for the events on the server, you should register it on the server-container. </p>
+        <MadCap:snippetBlock src="../../CodeExamples/callbacks/eventregistry/EventRegistryExamples-register-for-events-on-the-server.all.flsnp" />
         <h2>Commit-Events</h2>
         <p>Commit-events bring a collection of the added, updated and deleted object with it. You can iterate over these objects. The updated- and added-collections contain LazyObjectReferences, the deleted-event a FrozenObjectInfos. Note that you may cannot get deleted object-instance anymore, but only the meta-info. Further the object doesn't need to be activated. So when you need to read information out if it, ensure that you've activated it first.</p>
         <MadCap:snippetBlock src="../../CodeExamples/callbacks/eventregistry/EventRegistryExamples-Commit-info.all.flsnp" />

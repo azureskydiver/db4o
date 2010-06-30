@@ -46,6 +46,15 @@ public class EventRegistryExamples {
         cleanUp();
     }
 
+    private static void registerForEventsOnTheServer(){
+        // #example: register for events on the server
+        ObjectServer server = 
+                Db4oClientServer.openServer(DATABASE_FILE_NAME, PORT_NUMBER);
+        EventRegistry eventsOnServer =
+                EventRegistryFactory.forObjectContainer(server.ext().objectContainer());    
+        // #end example
+    }
+
     private static void eventsClientServer() {
         cleanUp();
         storeJoe();
