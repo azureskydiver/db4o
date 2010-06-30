@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="359" MadCap:lastWidth="586">
     <head><title>No schema changes	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>No schema changes</h1>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>Db4o.configure().detectSchemaChanges(false)</code>
+            <p><code>configuration.common.detectSchemaChanges(false)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>Db4oFactory.Configure().DetectSchemaChanges(false)</code>
+            <p><code>configuration.Common.DetectSchemaChanges = false</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" /><a name="Advantage"></a>
         <h2>Advantage</h2>
-        <p>will prevent db4o from analysing the class structure upon opening a database file.</p><a name="Effect"></a>
+        <p>Will prevent db4o from analysing the class structure upon opening a database file.</p><a name="Effect"></a>
         <h2>Effect</h2>
         <p>Upon system startup, db4o will use reflection to scan the structure of all persistent classes. This process can take some time, if a large number of classes are present in the database file. For the best possible startup performance on "warm" database files (all classes already analyzed in a previous startup), this feature can be turned off.</p>
     </body>

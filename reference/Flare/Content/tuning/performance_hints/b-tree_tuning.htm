@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1263" MadCap:lastWidth="542">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="804" MadCap:lastWidth="586">
     <head><title>B-Tree tuning	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -11,13 +11,13 @@
         <p>In order to use B-tree capabilities for field indexes you will simply need to define indexed fields in your classes:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.objectClass(Foo.class).objectField("field").indexed(true)</code>
+            <p><code>configuration.common().objectClass(Foo.class).objectField("field").indexed(true)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("field").Indexed(true)</code>
+            <p><code>configuration.Common.ObjectClass(typeof(Foo)).ObjectField("field").Indexed(true)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" /><a name="Effect"></a>
@@ -26,15 +26,23 @@
 </p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.bTreeCacheHeight(height)</code>
+            <p><code>configuration.common().bTreeNodeSize(size)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.BTreeCacheHeight(height)</code>
+            <p><code>configuration.Common.BTreeNodeSize = size</code>
             </p>
         </p>
-        <p MadCap:conditions="Primary:net" />configures the size of BTree nodes in indexes.
-<p MadCap:conditions="Primary.Java,Primary.All languages"><p>Java: </p><p><code>configuration.bTreeNodeSize(size)</code></p></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"><p>.NET: </p><p><code>configuration.BTreeNodeSize(size)</code></p></p><p MadCap:conditions="Primary:net" /><p>configures caching of B-tree nodes. Clean B-tree nodes will be unloaded on #commit and #rollback unless they are configured as cached here.</p><p>Higher values for the cache height will get you better performance at more RAM consumption.</p><p>With the node size you can fine-tune exactly how many reads the B-tree will need to get to leaf nodes. Lower values will allow a lower memory footprint and more efficient reading and writing of small slots. Higher values will reduce the overall number of read and write operations and allow better performance at the cost of more RAM use.</p><p>If you raise the number of elements per node and/or the cache depth, you will use more RAM but achieve higher performance. In principle, if you set the node size to a very high value and cache the first node, you should get exactly the same behavior as with the old class indexes. </p><p>For now the default settings are 1 for the height of the cache and 100 for the size of the nodes.</p><p>When testing B-tree you should remember that B-trees only really start to give you performance advantages with larger numbers of objects. With object counts of 1,000 or 10,000 the old flat index is highly efficient because everything is kept in memory. Using tests with more than 100,000 objects you will really see things degrade with:</p><ul><li>performance, because of a full purge called each time on commit</li><li>memory consumption, because the index will be reloaded completely immediately when the next object is added.</li></ul></body>
+        <p MadCap:conditions="Primary:net" />
+        <p>Clean B-tree nodes will be unloaded on #commit and #rollback unless they are configured as cached here.</p>
+        <p>With the node size you can fine-tune exactly how many reads the B-tree will need to get to leaf nodes. Lower values will allow a lower memory footprint and more efficient reading and writing of small slots. Higher values will reduce the overall number of read and write operations and allow better performance at the cost of more RAM use.</p>
+        <p>For now the default settings is 100 for the size of the nodes.</p>
+        <p>When testing B-tree you should remember that B-trees only really start to give you performance advantages with larger numbers of objects. With object counts of 1,000 or 10,000 the old flat index is highly efficient because everything is kept in memory. Using tests with more than 100,000 objects you will really see things degrade with:</p>
+        <ul>
+            <li>performance, because of a full purge called each time on commit</li>
+            <li>memory consumption, because the index will be reloaded completely immediately when the next object is added.</li>
+        </ul>
+    </body>
 </html>
