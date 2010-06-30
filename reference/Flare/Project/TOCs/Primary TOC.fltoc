@@ -1689,6 +1689,10 @@
         Link="/Content/usage_pitfalls/equality_comparison/using_equals.htm" />
     </TocEntry>
     <TocEntry
+      Title="UUID Hash Code"
+      Link="/Content/usage_pitfalls/uuid_hash_code.htm"
+      conditions="Primary.Java" />
+    <TocEntry
       Title="Reference Cache In Client-Server Mode"
       Link="/Content/usage_pitfalls/reference_cache_in_client-server_mode.htm"></TocEntry>
     <TocEntry
