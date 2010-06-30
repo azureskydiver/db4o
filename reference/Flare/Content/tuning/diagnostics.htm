@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="857" MadCap:lastWidth="463">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="678" MadCap:lastWidth="586">
     <head><title>Diagnostics	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -9,13 +9,13 @@
 Diagnostics can be switched on in the configuration before opening the database file:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.diagnostic().addListener(new DiagnosticListener())</code>
+            <p><code>configuration.common().diagnostic().addListener(new DiagnosticListener())</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.Diagnostic().AddListener(new DiagnosticListener())</code>
+            <p><code>configuration.Common.Diagnostic.AddListener(new DiagnosticListener())</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />
