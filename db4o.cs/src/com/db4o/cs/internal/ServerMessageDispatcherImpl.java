@@ -246,7 +246,12 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 		}
 		
 		ensureStackTraceCapture(exc);
-		message.writeException((RuntimeException)exc);
+		
+		// Writing exceptions can produce ClassMetadata in
+		// the main ObjectContainer.
+		synchronized (_mainLock) {
+			message.writeException((RuntimeException)exc);
+		}
 	}
 	
 	/**
