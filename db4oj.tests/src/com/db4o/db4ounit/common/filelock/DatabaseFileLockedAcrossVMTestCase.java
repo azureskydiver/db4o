@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.filelock;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.db4ounit.util.*;
@@ -12,7 +10,7 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
-import db4ounit.extensions.util.IOServices.*;
+import db4ounit.extensions.util.IOServices.ProcessRunner;
 
 @decaf.Remove
 public class DatabaseFileLockedAcrossVMTestCase
@@ -20,13 +18,15 @@ public class DatabaseFileLockedAcrossVMTestCase
 	implements OptOutInMemory, OptOutWorkspaceIssue {
 	
 	
-	public void testLockedFile() throws IOException{
-		ProcessRunner externalVM = JavaServices.startJava(AcquireNativeLock.class.getName(), new String[]{ tempFile() });
-		externalVM.checkIfStarted("ready", 3000);
+	public void testLockedFile() throws Exception {
+		ProcessRunner externalVM = JavaServices.startJava(AcquireNativeLock.class.getName(), new String[]{ tempFile() });		
+		
+		waitToFinish(externalVM);
+		
 		try {
 			Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
 				public void run() throws Throwable {
-					EmbeddedObjectContainer objectContainer = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
+					Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
 				}
 			});
 		} finally {
@@ -38,7 +38,16 @@ public class DatabaseFileLockedAcrossVMTestCase
 			}
 		}
 	}
-	
+
+
+	private void waitToFinish(ProcessRunner process) {
+		try {
+			process.checkIfStarted("ready", 3000);
+		} catch (Exception ex) {
+			process.destroy();
+			throw new RuntimeException(ex);
+		}			
+	}	
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(DatabaseFileLockedAcrossVMTestCase.class).run();
