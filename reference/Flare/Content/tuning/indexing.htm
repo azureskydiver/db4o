@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1213" MadCap:lastWidth="511">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="828" MadCap:lastWidth="586">
     <head><title>Indexing	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>
             <MadCap:keyword term="Indexing;Index" />
             <MadCap:keyword term="Performance:Queries" />Indexing</h1>
-        <p>db4o allows to index fields to provide maximum querying performance. To request an index to be created, you would issue the following API method call in your global <a href="configuration.htm">db4o configuration method</a> before you open an ObjectContainer/ObjectServer:</p>
+        <p>db4o allows to index fields to provide maximum querying performance. To request an index to be created, you would issue the following API method call in your global <a href="../configuration.htm">db4o configuration method</a> before you open an ObjectContainer/ObjectServer:</p>
         <p>// assuming</p>
         <p><code>class Foo{      String bar; }</code>
         </p>
@@ -23,7 +23,7 @@
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>If the configuration is set in this way, an index on the Foo#bar field will be created (if not present already) the next time you open an ObjectContainer/ObjectServer and you use the Foo class the first time in your applcation. </p>
-        <p>Contrary to all other <a href="configuration.htm">configuration calls</a> indexes - once created - will remain in a database even if the index configuration call is not issued before opening an ObjectContainer/ObjectServer. </p>
+        <p>Contrary to all other <a href="../configuration.htm">configuration calls</a> indexes - once created - will remain in a database even if the index configuration call is not issued before opening an ObjectContainer/ObjectServer. </p>
         <p>To drop an index you would also issue a configuration call in your db4o configuration method:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>

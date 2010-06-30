@@ -15,12 +15,24 @@ Namespace Db4oDoc.Code.Configuration.IO
         End Sub
 
         Public Shared Sub UsingMemoryStorage()
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             ' #example: Using memory-storage
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             Dim memory As New MemoryStorage()
             configuration.File.Storage = memory
             ' #end example
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+        End Sub
+
+        Public Shared Sub UsingPagingMemoryStorage()
+            ' #example: Using paging memory-storage
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim memory As New PagingMemoryStorage()
+            configuration.File.Storage = memory
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+
+            ' #end example
+            container.Close()
+
         End Sub
 
         Public Shared Sub StorageStack()

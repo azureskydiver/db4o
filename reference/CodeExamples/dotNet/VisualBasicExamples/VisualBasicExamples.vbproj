@@ -82,6 +82,8 @@
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.vb" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.vb" />
     <Compile Include="Code\collections\bigset\BigSetExample.vb" />
+    <Compile Include="Code\configuration\basics\ConfigurationBasics.vb" />
+    <Compile Include="Code\configuration\file\FileConfiguration.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
     <Compile Include="Code\container\sessions\Db4oSessions.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.vb" />
@@ -140,6 +142,12 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\configuration\client\ClientConfigurationExamples.vb" />
+    <Compile Include="Code\configuration\common\CommonConfigurationExamples.vb" />
+    <Compile Include="Code\configuration\idsystem\IdSystemConfigurationExamples.vb" />
+    <Compile Include="Code\configuration\network\NetworkConfigurationExample.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -52,5 +52,9 @@
       Name="Primary/EventRegistry">IEventRegistry</Variable>
     <Variable
       Name="Primary/Map">Dictionary</Variable>
+    <Variable
+      Name="Primary/getter">property</Variable>
+    <Variable
+      Name="Primary/Annotation">Attribute</Variable>
   </Variables>
 </CatapultTarget>

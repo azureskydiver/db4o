@@ -58,4 +58,12 @@
     Name="Map"
     Comment=""
     Definition="Some text">Map</Variable>
+  <Variable
+    Name="getter"
+    Comment=""
+    Definition="Some text">getter</Variable>
+  <Variable
+    Name="Annotation"
+    Comment=""
+    Definition="Some text">Annotation</Variable>
 </CatapultVariableSet>

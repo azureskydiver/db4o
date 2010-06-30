@@ -2,6 +2,7 @@ package com.db4odoc.configuration.io;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
+import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.io.*;
 
@@ -15,16 +16,28 @@ public class IOConfigurationExamples {
         MemoryStorage memory = new MemoryStorage(growStrategy);
         configuration.file().storage(memory);
         // #end example
-        EmbeddedObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
 
     }
+
     public static void usingMemoryStorage(){
-        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         // #example: Using memory-storage
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         MemoryStorage memory = new MemoryStorage();
         configuration.file().storage(memory);
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
         // #end example
-        EmbeddedObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+
+    }
+
+    public static void usingPagingMemoryStorage(){
+        // #example: Using paging memory-storage
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        PagingMemoryStorage memory = new PagingMemoryStorage();
+        configuration.file().storage(memory);
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        // #end example
+        container.close();
 
     }
 
@@ -40,7 +53,7 @@ public class IOConfigurationExamples {
         // finally configure db4o with our storage-stack
         configuration.file().storage(storageWithCaching);
         // #end example
-        EmbeddedObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
         
     }
 
