@@ -41,6 +41,7 @@ public class AllTests extends ComposibleTestSuite {
 			            LazyObjectReferenceTestCase.class,
 			            LockedTreeTestCase.class,
 			            LongLinkedListTestCase.class,
+			            ManyRollbacksTestCase.class,
 			            MultiDeleteTestCase.class,
 			            ObjectUpdateFileSizeTestCase.class,
 			            ObjectConstructorTestCase.class,
