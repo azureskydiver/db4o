@@ -40,6 +40,15 @@ Namespace Db4oDoc.Code.Callbacks.EventRegistry
             CleanUp()
         End Sub
 
+        Private Shared Sub RegisterForEventsOnTheServer()
+            ' #example: register for events on the server
+            Dim server As IObjectServer = _
+                    Db4oClientServer.OpenServer(DatabaseFileName, PortNumber)
+            Dim eventsOnServer As IEventRegistry = _ 
+                    EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer())
+            ' #end example
+        End Sub
+
         Private Shared Sub EventsClientServer()
             CleanUp()
             StoreJoe()

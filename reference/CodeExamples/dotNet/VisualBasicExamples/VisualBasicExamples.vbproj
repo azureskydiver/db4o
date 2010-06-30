@@ -148,6 +148,7 @@
     <Compile Include="Code\configuration\common\CommonConfigurationExamples.vb" />
     <Compile Include="Code\configuration\idsystem\IdSystemConfigurationExamples.vb" />
     <Compile Include="Code\configuration\network\NetworkConfigurationExample.vb" />
+    <Compile Include="Code\configuration\server\ServerConfigurationExamples.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
