@@ -57,11 +57,11 @@ public abstract class Identifiable {
         return getID() == 0;
     }
 
-    public void setID(int a_id) {
+    public void setID(int id) {
     	if(DTrace.enabled){
-    		DTrace.PERSISTENTBASE_SET_ID.log(a_id);
+    		DTrace.PERSISTENTBASE_SET_ID.log(id);
     	}
-        _id = a_id;
+        _id = id;
     }
 
     public final void setStateClean() {
