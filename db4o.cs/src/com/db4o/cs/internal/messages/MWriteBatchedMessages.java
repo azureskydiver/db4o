@@ -2,6 +2,7 @@
 
 package com.db4o.cs.internal.messages;
 
+import com.db4o.*;
 import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
 
@@ -24,9 +25,15 @@ public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
 					msgd.payLoad().incrementOffset(Const4.INT_LENGTH);
 					Transaction t = checkParentTransaction(ta, msgd.payLoad());
 					msgd.setTransaction(t);
+					if (Debug4.messages) {
+						System.out.println(msgd + " dispatched at " + ta.container());
+					}
 					dispatcher.processMessage(msgd);
 				}
 			} else {
+				if (Debug4.messages) {
+					System.out.println(clonedMessage + " dispatched at " + ta.container());
+				}
 				dispatcher.processMessage(clonedMessage);
 			}
 		}
