@@ -55,6 +55,8 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     
     private TreeIntObject _evictedFromCache;
     
+	private boolean _disposed;
+    
     public BTree(Transaction trans, BTreeConfiguration config, int id, Indexable4 keyHandler, final int treeNodeSize) {
     	super(config._idSystem);
     	_config = config;
@@ -203,8 +205,11 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         convertCacheEvictedNodesToReadMode();
 		return result;
     }
-    
+	
     public void commit(final Transaction transaction){
+    	if(_disposed){
+    		return;
+    	}
     	updateSize(transaction);
     	commitNodes(transaction);
     	finishTransaction(transaction);
@@ -499,6 +504,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
 	}
 
     public void free(LocalTransaction systemTrans) {
+    	_disposed = true;
         freeAllNodeIds(systemTrans, allNodeIds(systemTrans));
         super.free((LocalTransaction)systemTrans);
     }
