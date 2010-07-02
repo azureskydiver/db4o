@@ -57,16 +57,18 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	String getName();
 
 	ReadonlyReplicationProviderSignature getSignature();
+	
+	ReplicationReference produceReference(Object obj);
 
 	/**
-	 * Returns the ReplicationReference of an object
-	 *
-	 * @param obj            object queried
-	 * @param referencingObj
-	 * @param fieldName
-	 * @return null if the object is not owned by this ReplicationProvider.
+	 * Collection version of getting a ReplicationReference: 
+	 * If the object is not a first class object, we need the
+	 * parent object.
+	 * @return null, if there is no reference for this object.
 	 */
-	ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName);
+	ReplicationReference produceReference(Object obj, Object parentObject, String fieldNameOnParent);
+	
+	
 
 	/**
 	 * Returns the ReplicationReference of an object by specifying the uuid of the object.

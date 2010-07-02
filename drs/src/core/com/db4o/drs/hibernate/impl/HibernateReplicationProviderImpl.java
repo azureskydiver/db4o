@@ -56,7 +56,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private Transaction _transaction;
 
-	private ObjectReferenceMap _objRefs = new ObjectReferenceMap();
+	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 
 	private boolean _alive = false;
 
@@ -126,7 +126,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final void clearAllReferences() {
 		ensureReplicationActive();
 
-		_objRefs.clear();
+		_replicationReferences.clear();
 	}
 
 	public final void commit() {
@@ -180,7 +180,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		_dirtyRefs = null;
 
-		_objRefs = null;
+		_replicationReferences = null;
 
 		EventListeners eventListeners = getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
@@ -276,7 +276,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			Object referencingObj, String fieldName) {
 		ensureReplicationActive();
 
-		ReplicationReference existing = _objRefs.get(obj);
+		ReplicationReference existing = _replicationReferences.get(obj);
 		if (existing != null)
 			return existing;
 
@@ -294,7 +294,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		getSession().flush();
 
-		ReplicationReference exist = _objRefs.getByUUID(uuid);
+		ReplicationReference exist = _replicationReferences.getByUUID(uuid);
 		if (exist != null) return exist;
 
 		if (_collectionHandler.canHandleClass(hint)) {
@@ -319,8 +319,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		else {
 			Db4oUUID uuid = counterpartReference.uuid();
 			long version = counterpartReference.version();
-
-			return _objRefs.put(obj, uuid, version);
+			ReplicationReferenceImpl replicationReference = new ReplicationReferenceImpl(obj, uuid, version);
+			_replicationReferences.put(replicationReference);
+			return replicationReference;
 		}
 	}
 
@@ -416,7 +417,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
 		if (_collectionHandler.canHandle(entity)) return;
 
-		ReplicationReference ref = _objRefs.get(entity);
+		ReplicationReference ref = _replicationReferences.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 
@@ -478,7 +479,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
 		if (_collectionHandler.canHandle(entity)) return;
 
-		ReplicationReference ref = _objRefs.get(entity);
+		ReplicationReference ref = _replicationReferences.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 
@@ -492,7 +493,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
 
-		_objRefs.visitEntries(visitor);
+		_replicationReferences.visitEntries(visitor);
 	}
 
 	public final boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
@@ -601,7 +602,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
 		Uuid uuid = ref.getUuid();
-		return _objRefs.put(obj, new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature()), ref.getModified());
+		
+		ReplicationReferenceImpl replicationReference = 
+			new ReplicationReferenceImpl(obj, new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature()), ref.getModified());
+		_replicationReferences.put(replicationReference);
+		return replicationReference;
 	}
 
 	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid) {
@@ -610,8 +615,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			return null;
 		else {
 			Object obj = getSession().load(of.getClassName(), of.getTypedId());
-
-			return _objRefs.put(obj, uuid, of.getModified());
+			
+			ReplicationReferenceImpl replicationReference = 
+				new ReplicationReferenceImpl(obj, uuid, of.getModified());
+			_replicationReferences.put(replicationReference);
+			return replicationReference;
 		}
 	}
 
@@ -676,4 +684,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public void replicationReflector(ReplicationReflector replicationReflector) {
 		_collectionHandler = new CollectionHandlerImpl(replicationReflector);
 	}
+	
+	public ReplicationReference produceReference(Object obj) {
+		return produceReference(obj, null, null);
+	}
+
 }

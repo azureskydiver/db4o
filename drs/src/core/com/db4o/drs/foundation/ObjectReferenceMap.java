@@ -18,56 +18,62 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-package com.db4o.drs.hibernate.impl;
+package com.db4o.drs.foundation;
 
 import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.drs.inside.ReplicationReferenceImpl;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
 
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
-final class ObjectReferenceMap {
-	private final Map<Object, ReplicationReference> _delegate;
+public final class ObjectReferenceMap {
+	
+	private Map<Object, ReplicationReference> _objectToReplicationReference;
+	
+	private Map<Db4oUUID, ReplicationReference> _uuidToReplicationReference;
 
 	public ObjectReferenceMap() {
-		_delegate = new IdentityHashMap();
-	}
-
-	public final void clear() {
-		_delegate.clear();
+		init();
 	}
 
 	public final ReplicationReference get(Object obj) {
-		return _delegate.get(obj);
+		return _objectToReplicationReference.get(obj);
 	}
 
 	public ReplicationReference getByUUID(Db4oUUID uuid) {
-		for (ReplicationReference ref : _delegate.values())
-			if (ref.uuid().equals(uuid))
-				return ref;
-		return null;
+		return _uuidToReplicationReference.get(uuid);
 	}
-
-	public final ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
-		if (_delegate.containsKey(obj)) throw new RuntimeException("key already existed");
-		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
-		_delegate.put(obj, result);
-		return result;
+	
+	public final void put(ReplicationReference replicationReference) {
+		if(replicationReference == null){
+			throw new IllegalArgumentException();
+		}
+		if (_objectToReplicationReference.containsKey(replicationReference.object())){
+			throw new RuntimeException("key already existed");
+		}
+		_objectToReplicationReference.put(replicationReference.object(), replicationReference);
+		_uuidToReplicationReference.put(replicationReference.uuid(), replicationReference);
 	}
 
 	public String toString() {
-		return _delegate.toString();
+		return _objectToReplicationReference.toString();
 	}
 
 	public final void visitEntries(Visitor4 visitor) {
-		Iterator i = _delegate.values().iterator();
-
+		Iterator i = _objectToReplicationReference.values().iterator();
 		while (i.hasNext())
 			visitor.visit(i.next());
 	}
+
+	public void init() {
+		_objectToReplicationReference = new IdentityHashMap();
+		_uuidToReplicationReference = new HashMap<Db4oUUID, ReplicationReference>();
+	}
+	
+	public void clear(){
+		init();
+	}
+	
 }
 
 

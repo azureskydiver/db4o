@@ -424,4 +424,8 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	public ObjectSet getStoredObjects() {
 		return _container.query().execute();
 	}
+
+	public ReplicationReference produceReference(Object obj) {
+		return produceReference(obj, null, null);
+	}
 }
