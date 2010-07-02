@@ -26,7 +26,6 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
-import com.db4o.internal.*;
 
 import db4ounit.*;
 

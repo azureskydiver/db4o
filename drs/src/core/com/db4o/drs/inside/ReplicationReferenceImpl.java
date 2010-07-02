@@ -23,6 +23,7 @@ package com.db4o.drs.inside;
 import com.db4o.ext.Db4oUUID;
 
 public final class ReplicationReferenceImpl implements ReplicationReference {
+	
 	private boolean _objectIsNew;
 
 	private final Object _obj;

@@ -27,10 +27,10 @@ public interface ReplicationReference {
 	Db4oUUID uuid();
 
 	/**
-	 * IMPORTANT
-	 * <p/>
-	 * Must return the latests version of the object AND OF ALL COLLECTIONS IT REFERENCES IN ITS
-	 * FIELDS because collections are treated as 2nd class objects (just like arrays) for Hibernate replication
+	 * Must return the latests version of the object AND OF 
+	 * ALL COLLECTIONS IT REFERENCES IN ITS FIELDS because 
+	 * collections are treated as 2nd class objects 
+	 * (just like arrays) for Hibernate replication
 	 * compatibility purposes.
 	 */
 	long version();

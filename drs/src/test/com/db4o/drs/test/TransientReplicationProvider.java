@@ -434,4 +434,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		CollectionHandler _collectionHandler = new CollectionHandlerImpl(replicationReflector);
 		_traverser = new MyTraverser(replicationReflector, _collectionHandler);
 	}
+	
+	public ReplicationReference produceReference(Object obj) {
+		return produceReference(obj, null, null);
+	}
 }

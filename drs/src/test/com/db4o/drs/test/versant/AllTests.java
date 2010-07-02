@@ -7,6 +7,10 @@ import db4ounit.*;
 public class AllTests extends ReflectionTestSuite {
 	
 	public static void main(String[] args) {
+		
+		
+		
+		
 		new AllTests().run();
 	}
 
@@ -14,6 +18,7 @@ public class AllTests extends ReflectionTestSuite {
 		return new Class[] { 
 			VodDatabaseLifecycleTestCase.class,
 			VodDatabaseTestCase.class,
+			VodReplicationProviderTestCase.class,
 			VodSimpleObjectContainerTestCase.class,
 		};
 	}
