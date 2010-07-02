@@ -2,32 +2,38 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.db4ounit.common.util.*;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
     }
 
 	protected Class[] testCases() {
-		Class[] fieldBased={
+		return composeTests(new Class[] {
 				IndexedNodeTestCase.class,
 	            FieldIndexTestCase.class,
 	            FieldIndexProcessorTestCase.class,
 	            StringFieldIndexTestCase.class,
-		};
-		Class[] neutral={
 				DoubleFieldIndexTestCase.class,
 				RuntimeFieldIndexTestCase.class,
 				SecondLevelIndexTestCase.class,
 	            StringIndexTestCase.class,
 	            StringIndexCorruptionTestCase.class,
 	            StringIndexWithSuperClassTestCase.class,
-		};
-		
-		return Db4oUnitTestUtil.mergeClasses(neutral, fieldBased);
+		});
     }
+	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
+		return new Class[] {
+				CommitAfterDroppedFieldIndexTestCase.class,
+				};
+	}
+
 }

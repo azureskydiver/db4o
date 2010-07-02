@@ -131,14 +131,13 @@ public class BTreeIdSystem implements StackableIdSystem {
 				if(! slotChange.slotModified()){
 					return;
 				}
+				_bTree.remove(transaction(), new IdSlotMapping(slotChange._key, 0, 0));
 				if(slotChange.removeId()){
-					_bTree.remove(transaction(), new IdSlotMapping(slotChange._key, 0, 0));
 					return;
 				}
 				
 				// TODO: Maybe we want a BTree that doesn't allow duplicates.
-				_bTree.remove(transaction(), new IdSlotMapping(slotChange._key, 0, 0));
-				
+				// Then we could do the following in one step without removing first.
 				_bTree.add(transaction(), new IdSlotMapping(slotChange._key, slotChange.newSlot()));
 				
 				if(DTrace.enabled){
