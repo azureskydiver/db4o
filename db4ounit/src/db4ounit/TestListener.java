@@ -12,5 +12,7 @@ public interface TestListener {
 	void testFailed(Test test, Throwable failure);
 	
 	void runFinished();
+	
+	void failure(String msg, Throwable failure);
 
 }
