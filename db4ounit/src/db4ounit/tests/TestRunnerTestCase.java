@@ -64,6 +64,10 @@ public class TestRunnerTestCase implements TestCase {
             public void run() {
                 Assert.areEqual(0, 1);
             }
+
+			public boolean isLeafTest() {
+				return true;
+			}
 	        
 	    };
 	    

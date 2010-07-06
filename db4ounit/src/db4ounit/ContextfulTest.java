@@ -22,6 +22,14 @@ public class ContextfulTest extends Contextful implements Test {
 		});
 	}
 
+	public boolean isLeafTest() {
+		return (Boolean)run(new Closure4<Boolean>() {
+			public Boolean run() {
+				return testInstance().isLeafTest();
+			}
+		});
+	}
+
 	public void run() {
 		run(new Runnable() {
 			public void run() {

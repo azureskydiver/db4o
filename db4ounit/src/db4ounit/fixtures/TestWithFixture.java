@@ -52,4 +52,8 @@ public final class TestWithFixture implements Test {
 	private Object fixtureLabel() {
 		return (_fixtureLabel == null ? _value : _fixtureLabel);
 	}
+
+	public boolean isLeafTest() {
+		return _test.isLeafTest();
+	}
 }

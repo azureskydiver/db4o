@@ -37,15 +37,9 @@ public class TestRunner {
 	}
 
 	private void runTest(final Test test, TestListener listener) {
-		if(test instanceof OpaqueTestSuite) {
-			runSuite((OpaqueTestSuite)test, listener);
-			return;
+		if(test.isLeafTest()) {
+			listener.testStarted(test);
 		}
-		runSingleTest(test, listener);
-	}
-
-	private void runSingleTest(final Test test, TestListener listener) {
-		listener.testStarted(test);
 		try {
 			test.run();
 		} catch (TestException x) {
@@ -54,19 +48,6 @@ public class TestRunner {
 		} catch (Exception failure) {
 			listener.testFailed(test, failure);
 		}
-	}
-
-	private void runSuite(OpaqueTestSuite suite, final TestListener listener) {
-//		suite.executor(new TestExecutor() {
-//			public void execute(Test test) {
-//				runTest(test, listener);
-//			}
-//
-//			public void fail(Test test, Throwable failure) {
-//				listener.testFailed(test, failure);
-//			}
-//		});
-		suite.run();
 	}
 
 }
