@@ -18,4 +18,8 @@ public class TestDecorationAdapter implements Test {
 		_test.run();
 	}
 
+	public boolean isLeafTest() {
+		return _test.isLeafTest();
+	}
+
 }

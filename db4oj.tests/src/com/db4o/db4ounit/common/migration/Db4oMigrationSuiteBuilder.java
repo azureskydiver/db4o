@@ -133,6 +133,10 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 		private Db4oLibraryEnvironment environment() {
 			return _library.environment;
 		}
+
+		public boolean isLeafTest() {
+			return true;
+		}
 		
 	}
 }

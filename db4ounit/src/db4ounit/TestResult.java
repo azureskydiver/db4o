@@ -16,7 +16,7 @@ public class TestResult extends Printable implements TestListener {
 	public TestResult() {
 	}
 
-	public void testStarted(Test test) {		
+	public void testStarted(Test test) {	
 		++_testCount;
 	}	
 	

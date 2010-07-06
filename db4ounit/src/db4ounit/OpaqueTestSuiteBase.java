@@ -2,36 +2,31 @@ package db4ounit;
 
 import com.db4o.foundation.*;
 
-public abstract class OpaqueTestSuiteBase implements OpaqueTestSuite {
+public abstract class OpaqueTestSuiteBase implements Test {
 
-	private final Iterator4<Test> _tests;
-	private TestExecutor _executor;
+	private final Closure4<Iterator4<Test>> _tests;
 	
-	public OpaqueTestSuiteBase(Iterator4<Test> tests) {
+	public OpaqueTestSuiteBase(Closure4<Iterator4<Test>> tests) {
 		_tests = tests;
-	}
-	
-	public void executor(TestExecutor executor) {
-		_executor = executor;
-	}
-
-	public String label() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public void run() {
 		TestExecutor executor = Environments.my(TestExecutor.class);
+		Iterator4<Test> tests = _tests.run();
 		try {
 			suiteSetUp();
-			while(_tests.moveNext()) {
-				executor.execute(_tests.current());
+			while(tests.moveNext()) {
+				executor.execute(tests.current());
 			}
 			suiteTearDown();
 		}
 		catch(Exception exc) {
 			executor.fail(this, exc);
 		}
+	}
+	
+	public boolean isLeafTest() {
+		return false;
 	}
 	
 	protected abstract void suiteSetUp() throws Exception;

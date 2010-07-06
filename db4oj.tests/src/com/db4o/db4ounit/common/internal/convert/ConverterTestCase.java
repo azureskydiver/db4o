@@ -25,6 +25,10 @@ public class ConverterTestCase implements TestSuiteBuilder {
 						public void run() {
 							assertConverterBehaviorForVersion(version);
                         }
+
+						public boolean isLeafTest() {
+							return true;
+						}
 						
 					};
                 }

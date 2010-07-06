@@ -82,4 +82,8 @@ public class TestMethod implements Test {
 			}
 		}
 	}
+
+	public boolean isLeafTest() {
+		return true;
+	}
 }

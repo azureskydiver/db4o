@@ -24,4 +24,8 @@ public class FailingTest implements Test {
 	public void run() {
 		throw new TestException(_error);
 	}
+
+	public boolean isLeafTest() {
+		return true;
+	}
 }

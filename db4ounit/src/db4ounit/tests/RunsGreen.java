@@ -13,4 +13,8 @@ class RunsGreen implements Test {
 
 	public void run() {
 	}
+
+	public boolean isLeafTest() {
+		return true;
+	}
 }

@@ -6,7 +6,7 @@ public class ClassLevelFixtureTestSuite extends OpaqueTestSuiteBase {
 
 	private final Class<?> _clazz;
 	
-	public ClassLevelFixtureTestSuite(Class<?> clazz, Iterator4<Test> tests) {
+	public ClassLevelFixtureTestSuite(Class<?> clazz, Closure4<Iterator4<Test>> tests) {
 		super(tests);
 		_clazz = clazz;
 	}
@@ -19,6 +19,10 @@ public class ClassLevelFixtureTestSuite extends OpaqueTestSuiteBase {
 	@Override
 	protected void suiteTearDown() throws Exception {
 		_clazz.getMethod("classTearDown", null).invoke(null, null);
+	}
+
+	public String label() {
+		return _clazz.getName();
 	}
 
 }
