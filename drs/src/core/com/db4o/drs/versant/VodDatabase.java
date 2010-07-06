@@ -3,21 +3,30 @@
 package com.db4o.drs.versant;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.util.*;
+import com.versant.core.jdo.*;
+import com.versant.odbms.*;
 import com.versant.util.*;
 
 public class VodDatabase {
 	
+	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
+
+	private static final int DEFAULT_PORT = 5019;
+
 	private final String _name;
 	
 	private final Properties _properties;
 	
-	private PersistenceManagerFactory _persistenceManagerFactory; 
+	private PersistenceManagerFactory _persistenceManagerFactory;
+	
+	private DatastoreManagerFactory _datastoreManagerFactory;
 
 	public VodDatabase(String name, Properties properties){
 		_name = name;
@@ -30,7 +39,7 @@ public class VodDatabase {
 	}
 	
 	private void amendDefaultProperties(){
-		amendPropertyIfNotExists("javax.jdo.option.ConnectionURL", "versant:" + _name + "@localhost");
+		amendPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
 		amendPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 	}
 	
@@ -121,6 +130,54 @@ public class VodDatabase {
 			tempFile.delete();
 		}
 	}
+
+	public DatastoreManager createDatastoreManager() {
+		return datastoreManagerFactory().getDatastoreManager();
+	}
 	
+	private DatastoreManagerFactory datastoreManagerFactory(){
+		if(_datastoreManagerFactory == null){
+			ConnectionInfo con = new ConnectionInfo(_name, host(), port(), userName(), passWord());
+			_datastoreManagerFactory = new DatastoreManagerFactory(con, new ConnectionProperties());
+		}
+		return _datastoreManagerFactory;
+	}
+	
+	private String userName(){
+        return _properties.getProperty("javax.jdo.option.ConnectionUserName");
+	}
+	
+	private String passWord(){
+		return _properties.getProperty("javax.jdo.option.ConnectionPassword");
+	}
+	
+	private int port(){
+		int port = connectionUrl().getPort();
+		if(port != -1){
+			return port;
+		}
+		return DEFAULT_PORT;
+	}
+	
+	private String host(){
+		return connectionUrl().getHost();
+	}
+
+	private String connectionUrlAsString() {
+		String connectionURL = _properties.getProperty(CONNECTION_URL_KEY);
+		if(connectionURL == null){
+			amendDefaultProperties();
+		}
+		connectionURL = _properties.getProperty(CONNECTION_URL_KEY);
+		return connectionURL.replaceAll("versant:", "http:");
+	}
+	
+	private URL connectionUrl(){
+		try {
+			return new URL(connectionUrlAsString());
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

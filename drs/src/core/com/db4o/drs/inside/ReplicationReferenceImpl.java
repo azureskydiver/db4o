@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.ext.Db4oUUID;
+import com.db4o.drs.foundation.*;
 
 public final class ReplicationReferenceImpl implements ReplicationReference {
 	
@@ -28,7 +28,7 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 
 	private final Object _obj;
 
-	private final Db4oUUID _uuid;
+	private final DrsUUID _uuid;
 
 	private final long _version;
 
@@ -38,7 +38,7 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 
 	private boolean _markedForDeleting;
 
-	public ReplicationReferenceImpl(Object obj, Db4oUUID uuid, long version) {
+	public ReplicationReferenceImpl(Object obj, DrsUUID uuid, long version) {
 		this._obj = obj;
 		this._uuid = uuid;
 		this._version = version;
@@ -110,7 +110,7 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 				'}';
 	}
 
-	public final Db4oUUID uuid() {
+	public final DrsUUID uuid() {
 		return _uuid;
 	}
 

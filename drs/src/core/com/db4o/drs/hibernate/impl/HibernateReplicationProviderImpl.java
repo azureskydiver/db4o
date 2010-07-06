@@ -286,7 +286,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			return produceObjectReference(obj);
 	}
 
-	public final ReplicationReference produceReferenceByUUID(final Db4oUUID uuid, Class hint) {
+	public final ReplicationReference produceReferenceByUUID(final DrsUUID uuid, Class hint) {
 		ensureReplicationActive();
 
 		if (uuid == null) throw new IllegalArgumentException("uuid cannot be null");
@@ -317,7 +317,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (_collectionHandler.canHandle(obj))
 			return null;
 		else {
-			Db4oUUID uuid = counterpartReference.uuid();
+			DrsUUID uuid = counterpartReference.uuid();
 			long version = counterpartReference.version();
 			ReplicationReferenceImpl replicationReference = new ReplicationReferenceImpl(obj, uuid, version);
 			_replicationReferences.put(replicationReference);
@@ -325,7 +325,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-	public void replicateDeletion(Db4oUUID uuid) {
+	public void replicateDeletion(DrsUUID uuid) {
 		ObjectReference ref = Util.getByUUID(getSession(), translate(uuid));
 
 		if (ref == null) return;
@@ -501,7 +501,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return reference.version() > getLastReplicationVersion();
 	}
 
-	Uuid translate(Db4oUUID du) {
+	Uuid translate(DrsUUID du) {
 		Uuid uuid = new Uuid();
 		uuid.setCreated(du.getLongPart());
 		uuid.setProvider(produceProviderSignature(du.getSignaturePart()));
@@ -604,12 +604,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Uuid uuid = ref.getUuid();
 		
 		ReplicationReferenceImpl replicationReference = 
-			new ReplicationReferenceImpl(obj, new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature()), ref.getModified());
+			new ReplicationReferenceImpl(obj, new DrsUUIDImpl(new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature())), ref.getModified());
 		_replicationReferences.put(replicationReference);
 		return replicationReference;
 	}
 
-	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid) {
+	private ReplicationReference produceObjectReferenceByUUID(DrsUUID uuid) {
 		ObjectReference of = Util.getByUUID(getSession(), translate(uuid));
 		if (of == null)
 			return null;

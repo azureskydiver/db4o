@@ -26,6 +26,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.activation.*;
 import com.db4o.config.Configuration;
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
@@ -258,7 +259,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 			ReplicationReference counterpartReference,
 			ReplicationReference referencingObjCounterPartRef, String fieldName) {
 
-		Db4oUUID uuid = counterpartReference.uuid();
+		DrsUUID uuid = counterpartReference.uuid();
 
 		if (uuid == null) {
 			return null;
@@ -278,11 +279,11 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		return ref;
 	}
 
-	public ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint) {
+	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
 		if (uuid == null) {
 			return null;
 		}
-		Object obj = _container.getByUUID(uuid);
+		Object obj = _container.getByUUID(uuid.db4oUUID());
 		if (obj == null) {
 			return null;
 		}
@@ -402,8 +403,8 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		return getName();
 	}
 
-	public void replicateDeletion(Db4oUUID uuid) {
-		Object obj = _container.getByUUID(uuid);
+	public void replicateDeletion(DrsUUID uuid) {
+		Object obj = _container.getByUUID(uuid.db4oUUID());
 		if (obj == null)
 			return;
 

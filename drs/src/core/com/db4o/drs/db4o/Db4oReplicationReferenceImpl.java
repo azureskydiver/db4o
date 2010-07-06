@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.db4o;
 
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
@@ -83,12 +84,12 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 		hc_traverse(visitor);
 	}
 
-	public Db4oUUID uuid() {
+	public DrsUUID uuid() {
 		Db4oDatabase db = signaturePart();
 		if (db == null) {
 			return null;
 		}
-		return new Db4oUUID(longPart(), db.getSignature());
+		return new DrsUUIDImpl(new Db4oUUID(longPart(), db.getSignature()));
 	}
 
 	public long version() {

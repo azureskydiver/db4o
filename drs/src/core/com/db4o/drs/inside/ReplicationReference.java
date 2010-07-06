@@ -20,11 +20,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
+import com.db4o.drs.foundation.*;
 import com.db4o.ext.Db4oUUID;
 
 public interface ReplicationReference {
 
-	Db4oUUID uuid();
+	DrsUUID uuid();
 
 	/**
 	 * Must return the latests version of the object AND OF 

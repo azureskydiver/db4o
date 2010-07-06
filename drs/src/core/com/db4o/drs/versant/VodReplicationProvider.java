@@ -9,8 +9,10 @@ import javax.jdo.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.versant.core.jdo.*;
+import com.versant.odbms.*;
+import com.versant.odbms.model.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
@@ -18,12 +20,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final PersistenceManager _pm;
 	
+	private final DatastoreManager _dm;
+	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
 		_pm = vod.createPersistenceManager();
 		_pm.currentTransaction().begin();
+		_dm = _vod.createDatastoreManager();
 	}
 
 	public void commit() {
@@ -84,8 +89,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void clearAllReferences() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		_replicationReferences.clear();
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
@@ -129,10 +133,21 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 	
 	private ReplicationReference produceNewReference(final Object obj, Object referencingObj, String fieldName) {
-		return new ReplicationReferenceImpl(obj, null, 0);
+		if(obj == null){
+			throw new IllegalArgumentException();
+		}
+		DatastoreObject dso = datastoreObject(obj);
+		return new ReplicationReferenceImpl(obj, null, dso.getTimestamp());
 	}
 
-	public ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint) {
+	private DatastoreObject datastoreObject(final Object obj) {
+		VersantOid versantOid = (VersantOid) _pm.getTransactionalObjectId(obj);
+		DatastoreObject[] loidsAsDSO = _dm.getLoidsAsDSO(new Object[] { new DatastoreLoid(versantOid.pk) });
+		_dm.groupReadObjects(loidsAsDSO, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		return loidsAsDSO[0];
+	}
+
+	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();
 	}
@@ -144,7 +159,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		throw new com.db4o.foundation.NotImplementedException();
 	}
 
-	public void replicateDeletion(Db4oUUID uuid) {
+	public void replicateDeletion(DrsUUID uuid) {
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();
 	}
