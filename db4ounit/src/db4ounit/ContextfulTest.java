@@ -43,12 +43,6 @@ public class ContextfulTest extends Contextful implements Test {
 	}
 
 	public Test transmogrify(final Function4<Test, Test> fun) {
-		final TestFactory factory = _factory;
-		_factory = new TestFactory() {
-			public Test newInstance() {
-				return factory.newInstance().transmogrify(fun);
-			}
-		};
-		return this;
+		return fun.apply(this);
 	}
 }
