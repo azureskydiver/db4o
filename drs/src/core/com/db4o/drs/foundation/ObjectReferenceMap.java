@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.foundation;
 
 import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
 
 import java.util.*;
@@ -30,7 +29,7 @@ public final class ObjectReferenceMap {
 	
 	private Map<Object, ReplicationReference> _objectToReplicationReference;
 	
-	private Map<Db4oUUID, ReplicationReference> _uuidToReplicationReference;
+	private Map<DrsUUID, ReplicationReference> _uuidToReplicationReference;
 
 	public ObjectReferenceMap() {
 		init();
@@ -40,7 +39,7 @@ public final class ObjectReferenceMap {
 		return _objectToReplicationReference.get(obj);
 	}
 
-	public ReplicationReference getByUUID(Db4oUUID uuid) {
+	public ReplicationReference getByUUID(DrsUUID uuid) {
 		return _uuidToReplicationReference.get(uuid);
 	}
 	
@@ -67,7 +66,7 @@ public final class ObjectReferenceMap {
 
 	public void init() {
 		_objectToReplicationReference = new IdentityHashMap();
-		_uuidToReplicationReference = new HashMap<Db4oUUID, ReplicationReference>();
+		_uuidToReplicationReference = new HashMap<DrsUUID, ReplicationReference>();
 	}
 	
 	public void clear(){

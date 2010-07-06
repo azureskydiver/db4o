@@ -30,6 +30,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 public class TransientReplicationProvider implements TestableReplicationProvider, TestableReplicationProviderInside {
+	
 	private TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 
 	private final String _name;
@@ -123,7 +124,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return createReferenceFor(obj);
 	}
 
-	public ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hintIgnored) {
+	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hintIgnored) {
 		if (uuid == null) {
 			return null;
 		}
@@ -134,7 +135,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
 		//System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
-		Db4oUUID uuid = counterpartReference.uuid();
+		DrsUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 
 		if (getObject(uuid) != null) throw new RuntimeException("Object exists already.");
@@ -192,7 +193,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public void delete(Object obj) {
-		Db4oUUID uuid = produceReference(obj, null, null).uuid();
+		DrsUUID uuid = produceReference(obj, null, null).uuid();
 		_uuidsDeletedSinceLastReplication.add(uuid);
 		_storedObjects.remove(obj);
 	}
@@ -266,7 +267,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return (ObjectInfo) _storedObjects.get(candidate);
 	}
 
-	public Object getObject(Db4oUUID uuid) {
+	public Object getObject(DrsUUID uuid) {
 		Iterator4 iter = storedObjectsCollection(Object.class).iterator();
 		while (iter.moveNext()) {
 			Object candidate = iter.current();
@@ -287,7 +288,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_storedObjects.remove(reference.object());
 	}
 
-	private void store(Object obj, Db4oUUID uuid, long version) {
+	private void store(Object obj, DrsUUID uuid, long version) {
 		if (obj == null) throw new RuntimeException();
 		_storedObjects.put(obj, new ObjectInfo(uuid, version));
 	}
@@ -299,7 +300,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 		ObjectInfo info = getInfo(obj);
 		if (info == null)
-			store(obj, new Db4oUUID(_timeStampIdGenerator.generate(), _signature.getSignature()), vvv);
+			store(obj, new DrsUUIDImpl(new Db4oUUID(_timeStampIdGenerator.generate(), _signature.getSignature())), vvv);
 		else
 			info._version = vvv;
 	}
@@ -312,7 +313,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return getInfo(candidate)._version > _lastReplicationVersion;
 	}
 
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+	public boolean wasDeletedSinceLastReplication(DrsUUID uuid) {
 		return _uuidsDeletedSinceLastReplication.contains(uuid);
 	}
 
@@ -361,7 +362,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			return getInfo(_object)._version;
 		}
 
-		public Db4oUUID uuid() {
+		public DrsUUID uuid() {
 			return getInfo(_object)._uuid;
 		}
 
@@ -397,10 +398,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	private static class ObjectInfo {
-		public final Db4oUUID _uuid;
+		public final DrsUUID _uuid;
 		public long _version;
 
-		public ObjectInfo(Db4oUUID uuid, long version) {
+		public ObjectInfo(DrsUUID uuid, long version) {
 			_uuid = uuid;
 			_version = version;
 		}
@@ -422,7 +423,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 	}
 
-	public void replicateDeletion(Db4oUUID uuid) {
+	public void replicateDeletion(DrsUUID uuid) {
 		_storedObjects.remove(getObject(uuid));
 	}
 

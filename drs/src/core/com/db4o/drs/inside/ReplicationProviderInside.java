@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.inside;
 
 import com.db4o.drs.ReplicationProvider;
+import com.db4o.drs.foundation.*;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
 
@@ -77,7 +78,7 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	 * @param hint the type of the object
 	 * @return the ReplicationReference or null if the reference cannot be found
 	 */
-	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
+	ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint);
 
 	ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
 
@@ -113,5 +114,5 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 
 	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
 
-	void replicateDeletion(Db4oUUID uuid);
+	void replicateDeletion(DrsUUID uuid);
 }

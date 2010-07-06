@@ -21,6 +21,7 @@ public class VodReplicationProviderTestCase implements TestLifeCycle {
 	private PersistenceManager _pm;
 	
 	TestableReplicationProviderInside _provider;
+
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
@@ -42,13 +43,28 @@ public class VodReplicationProviderTestCase implements TestLifeCycle {
 	public void testReplicationReference(){
 		Item item = new Item("one");
 		_provider.storeNew(item);
+		_provider.commit();
 		
-		ReplicationReference replicationReference = _provider.produceReference(item);
-		Assert.isNotNull(replicationReference);
-		Assert.areSame(item, replicationReference.object());
+		ReplicationReference replicationReferenceOnFirstStore = _provider.produceReference(item);
+		Assert.isNotNull(replicationReferenceOnFirstStore);
+		Assert.areSame(item, replicationReferenceOnFirstStore.object());
 		
-		ReplicationReference secondReference = _provider.produceReference(item);
-		Assert.areSame(replicationReference, secondReference);
+		ReplicationReference secondReferenceOnFirstStore = _provider.produceReference(item);
+		Assert.areSame(replicationReferenceOnFirstStore, secondReferenceOnFirstStore);
+		
+		long versionOnStore = replicationReferenceOnFirstStore.version();
+		
+		Assert.isGreater(0, versionOnStore);
+		
+		item.name("modified");
+		_provider.update(item);
+		_provider.commit();
+		
+		_provider.clearAllReferences();
+		
+		ReplicationReference replicationReferenceOnUpdate = _provider.produceReference(item);
+		long versionOnUpdate = replicationReferenceOnUpdate.version();
+		Assert.isGreater(versionOnStore, versionOnUpdate);
 	}
 
 }

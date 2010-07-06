@@ -23,6 +23,7 @@ package com.db4o.drs.test;
 import java.util.Iterator;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
 import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.drs.inside.ReplicationReferenceImpl;
@@ -78,7 +79,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		startReplication();
 
-		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
+		DrsUUID uuidCar1 = uuid(findCar("Car1"));
 		Assert.isNotNull(uuidCar1);
 
 		a().provider().replicateDeletion(uuidCar1);
@@ -89,7 +90,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		startReplication();
 
-		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
+		DrsUUID uuidPilot2 = uuid(findPilot("Pilot2"));
 		Assert.isNotNull(uuidPilot2);
 		a().provider().replicateDeletion(uuidPilot2);
 
@@ -251,12 +252,12 @@ public class ReplicationProviderTest extends DrsTestCase {
 		ReplicationReference reference = a().provider().produceReference(object1, null, null);
 		Assert.areEqual(reference.object(), object1);
 
-		Db4oUUID uuid = reference.uuid();
+		DrsUUID uuid = reference.uuid();
 		ReplicationReference ref2 = a().provider().produceReferenceByUUID(uuid, Pilot.class);
 		Assert.areEqual(ref2, reference);
 
 		a().provider().clearAllReferences();
-		Db4oUUID db4oUUID = a().provider().produceReference(object1, null, null).uuid();
+		DrsUUID db4oUUID = a().provider().produceReference(object1, null, null).uuid();
 		Assert.isTrue(db4oUUID.equals(uuid));
 		commitReplication();
 
@@ -271,7 +272,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		startReplication();
 
 		Pilot object1 = new Pilot("Albert Kwan", 25);
-		Db4oUUID uuid = new Db4oUUID(5678, B_SIGNATURE_BYTES);
+		DrsUUID uuid = new DrsUUIDImpl(new Db4oUUID(5678, B_SIGNATURE_BYTES));
 
 		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
 		a().provider().referenceNewObject(object1, ref, null, null);
@@ -298,7 +299,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		startReplication();
 
 		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(1234, B_SIGNATURE_BYTES);
+		DrsUUID uuid = new DrsUUIDImpl(new Db4oUUID(1234, B_SIGNATURE_BYTES));
 
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
 
@@ -338,7 +339,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().commit();
 	}
 
-	private Db4oUUID uuid(Object obj) {
+	private DrsUUID uuid(Object obj) {
 		return a().provider().produceReference(obj, null, null).uuid();
 	}
 

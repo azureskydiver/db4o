@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.inside;
 
 import com.db4o.drs.*;
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.traversal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -107,7 +108,7 @@ class InstanceReplicationPreparer implements Visitor {
 
 		ReplicationProviderInside other = other(owner);
 
-		Db4oUUID uuid = ownerRef.uuid();
+		DrsUUID uuid = ownerRef.uuid();
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, _obj.getClass());
 
 		if (refA == null)
@@ -200,19 +201,19 @@ class InstanceReplicationPreparer implements Visitor {
 	}
 
 
-	private void markAsNotProcessed(Db4oUUID uuid) {
+	private void markAsNotProcessed(DrsUUID uuid) {
 		_uuidsProcessedInSession.remove(uuid);
 	}
 
 
-	private void markAsProcessed(Db4oUUID uuid) {
+	private void markAsProcessed(DrsUUID uuid) {
 		if (_uuidsProcessedInSession.get(uuid) != null) throw new RuntimeException("illegal state");
 
 		_uuidsProcessedInSession.put(uuid, uuid); //Using this Hashtable4 as a Set.
 	}
 
 
-	private boolean wasProcessed(Db4oUUID uuid) {
+	private boolean wasProcessed(DrsUUID uuid) {
 		return _uuidsProcessedInSession.get(uuid) != null;
 	}
 
