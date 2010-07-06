@@ -24,5 +24,19 @@ public class ClassLevelFixtureTestSuite extends OpaqueTestSuiteBase {
 	public String label() {
 		return _clazz.getName();
 	}
+	
+	public Test transmogrify(final Function4<Test, Test> fun) {
+		return new ClassLevelFixtureTestSuite(_clazz, 
+			new Closure4<Iterator4<Test>>() {
+				public Iterator4<Test> run() {
+					return Iterators.map(tests().run(), new Function4<Test, Test>() {
+						public Test apply(Test test) {
+							return fun.apply(test);
+						}
+					});
+				}
+			});
+	}
+
 
 }

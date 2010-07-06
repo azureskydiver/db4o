@@ -29,13 +29,13 @@ public class SampleClassLevelTestSuite extends FixtureBasedTestSuite implements 
 		System.out.println("suite teardown");
 	}
 
-	private static FixtureVariable<String> FIXTURE = FixtureVariable.newInstance("name");
+	private static FixtureVariable<Name> FIXTURE = FixtureVariable.newInstance("name");
 	
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
 			new Db4oFixtureProvider(),
-			new SimpleFixtureProvider<String>(FIXTURE, "foo", "bar"),	
+			new SimpleFixtureProvider<Name>(FIXTURE, new Name("foo"), new Name("bar")),	
 		};
 	}
 
@@ -44,5 +44,22 @@ public class SampleClassLevelTestSuite extends FixtureBasedTestSuite implements 
 		return new Class[] {
 			SampleClassLevelTestUnit.class,	
 		};
+	}
+	
+	public static class Name implements Labeled {
+		private String _name;
+
+		public Name(String name) {
+			_name = name;
+		}
+		
+		public String label() {
+			return _name;
+		}
+		
+		@Override
+		public String toString() {
+			return _name;
+		}
 	}
 }

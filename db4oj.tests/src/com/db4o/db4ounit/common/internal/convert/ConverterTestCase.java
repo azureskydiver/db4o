@@ -30,6 +30,9 @@ public class ConverterTestCase implements TestSuiteBuilder {
 							return true;
 						}
 						
+						public Test transmogrify(Function4<Test, Test> fun) {
+							return fun.apply(this);
+						}
 					};
                 }
 			});
