@@ -6,13 +6,16 @@ public class AllTests extends ReflectionTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
-			TestExceptionWithInnerCause.class,
 			AssertTestCase.class,
+			ClassLevelFixtureTestTestCase.class,
 			CompositeTestListenerTestCase.class,
 			ExceptionInTearDownDoesNotShadowTestCase.class,
 			FrameworkTestCase.class,
+			OpaqueTestSuiteFailureTestCase.class,
+			OpaqueTestSuiteTestCase.class,
 			ReflectionTestSuiteBuilderTestCase.class,
 			ReinstantiatePerMethodTest.class,
+			TestExceptionWithInnerCause.class,
 			TestLifeCycleTestCase.class,
 			TestRunnerTestCase.class,
 			
