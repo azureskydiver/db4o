@@ -50,7 +50,11 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	protected Iterator4 fromClass(final Class clazz) throws Exception {
 		return (Iterator4)withContext(new Closure4() {
 			public Object run() {
-				return new ContextfulIterator(suiteFor(clazz));
+				Iterator4 suite = new ContextfulIterator(suiteFor(clazz));
+				if(ClassLevelFixtureTest.class.isAssignableFrom(clazz)) {
+					suite = Iterators.iterate(new ClassLevelFixtureTestSuite(clazz, suite));
+				}
+				return suite;
 			}
 		});
 	}

@@ -6,31 +6,67 @@ import com.db4o.foundation.*;
 
 public class TestRunner {
 	
+	public static DynamicVariable<TestExecutor> EXECUTOR = DynamicVariable.newInstance();
+	
 	private final Iterable4 _tests;
 
 	public TestRunner(Iterable4 tests) {
 		_tests = tests;
 	}
 
-	public void run(TestListener listener) {
-		
+	public void run(final TestListener listener) {
 		listener.runStarted();
-		
-		final Iterator4 iterator = _tests.iterator();
-		while (iterator.moveNext()) {
-			final Test test = (Test)iterator.current();
-			listener.testStarted(test);
-			try {
-				test.run();
-			} catch (TestException x) {
-			    Throwable reason = x.getReason();
-				listener.testFailed(test, reason == null ? x : reason);
-			} catch (Exception failure) {
+		TestExecutor executor = new TestExecutor() {
+			public void execute(Test test) {
+				runTest(test, listener);
+			}
+
+			public void fail(Test test, Throwable failure) {
 				listener.testFailed(test, failure);
 			}
-		}
-		
+		};
+		Environments.runWith(Environments.newClosedEnvironment(executor), new Runnable() {
+			public void run() {
+				final Iterator4 iterator = _tests.iterator();
+				while (iterator.moveNext()) {
+					runTest((Test)iterator.current(), listener);
+				}
+			}
+		});
 		listener.runFinished();
+	}
+
+	private void runTest(final Test test, TestListener listener) {
+		if(test instanceof OpaqueTestSuite) {
+			runSuite((OpaqueTestSuite)test, listener);
+			return;
+		}
+		runSingleTest(test, listener);
+	}
+
+	private void runSingleTest(final Test test, TestListener listener) {
+		listener.testStarted(test);
+		try {
+			test.run();
+		} catch (TestException x) {
+		    Throwable reason = x.getReason();
+			listener.testFailed(test, reason == null ? x : reason);
+		} catch (Exception failure) {
+			listener.testFailed(test, failure);
+		}
+	}
+
+	private void runSuite(OpaqueTestSuite suite, final TestListener listener) {
+//		suite.executor(new TestExecutor() {
+//			public void execute(Test test) {
+//				runTest(test, listener);
+//			}
+//
+//			public void fail(Test test, Throwable failure) {
+//				listener.testFailed(test, failure);
+//			}
+//		});
+		suite.run();
 	}
 
 }

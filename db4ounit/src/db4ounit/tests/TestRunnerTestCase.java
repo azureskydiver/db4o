@@ -37,6 +37,10 @@ public class TestRunnerTestCase implements TestCase {
 			public void runFinished() {
 				recorder.record(new MethodCall("runFinished"));
 			}
+
+			public void failure(String msg, Throwable failure) {
+				recorder.record(new MethodCall("failure", msg, failure));
+			}
 			
 		};
 		new TestRunner(tests).run(listener);

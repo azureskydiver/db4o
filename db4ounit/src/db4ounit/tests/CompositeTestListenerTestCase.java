@@ -32,6 +32,10 @@ public class CompositeTestListenerTestCase implements TestCase {
 		public void testStarted(Test test) {
 			record("testStarted", new Object[] { test });
 		}
+
+		public void failure(String msg, Throwable failure) {
+			record("failure", new Object[] { msg, failure });
+		}
 		
 		private void record(String name) {
 			record(name, new Object[0]);

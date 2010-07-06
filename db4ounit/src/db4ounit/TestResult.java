@@ -24,6 +24,9 @@ public class TestResult extends Printable implements TestListener {
 		_failures.add(new TestFailure(test.label(), failure));
 	}
 	
+	public void failure(String msg, Throwable failure) {
+	}
+	
 	/**
 	 * @sharpen.property
 	 */
@@ -65,4 +68,5 @@ public class TestResult extends Printable implements TestListener {
 	public void runFinished() {
 		_watch.stop();
 	}
+
 }

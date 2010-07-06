@@ -32,4 +32,9 @@ public class CompositeTestListener implements TestListener {
 		_listener2.testStarted(test);
 	}
 
+	public void failure(String msg, Throwable failure) {
+		_listener1.failure(msg, failure);
+		_listener2.failure(msg, failure);
+	}
+
 }

@@ -4,6 +4,8 @@ package db4ounit;
 
 import java.io.*;
 
+import javax.swing.JTable.*;
+
 public class ConsoleListener implements TestListener {
 	
 	private final Writer _writer;
@@ -41,5 +43,10 @@ public class ConsoleListener implements TestListener {
 		} catch (IOException x) {
 			TestPlatform.printStackTrace(_writer, x);
 		}
+	}
+
+	public void failure(String msg, Throwable failure) {
+		print("\t ! " + msg);
+		printFailure(failure);
 	}
 }
