@@ -35,6 +35,16 @@ public class Arrays4 {
 	    return -1;
 	}
 
+	public static int indexOf(int[] array, int element) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	
 	public static boolean equals(final byte[] x, final byte[] y) {
 		if (x == y) {
 			return true;
