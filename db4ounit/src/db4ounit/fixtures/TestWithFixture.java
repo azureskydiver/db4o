@@ -54,12 +54,16 @@ public final class TestWithFixture implements Test {
 	}
 
 	public boolean isLeafTest() {
-		return _test.isLeafTest();
+		final BooleanByRef isLeaf = new BooleanByRef();
+		runDecorated(new Runnable() {
+			public void run() {
+				isLeaf.value = _test.isLeafTest();
+			}
+		});
+		return isLeaf.value;
 	}
 
 	public Test transmogrify(Function4<Test, Test> fun) {
-//		_test = _test.transmogrify(fun);
-//		return this;
 		return fun.apply(this);
 	}
 }
