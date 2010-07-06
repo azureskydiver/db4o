@@ -69,6 +69,9 @@ public class TestRunnerTestCase implements TestCase {
 				return true;
 			}
 	        
+			public Test transmogrify(Function4<Test, Test> fun) {
+				return fun.apply(this);
+			}
 	    };
 	    
 	    Iterable4 tests = Iterators.iterable(new Object[] {

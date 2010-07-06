@@ -8,7 +8,7 @@ import db4ounit.fixtures.*;
 
 public class ContextfulTest extends Contextful implements Test {
 	
-	private final TestFactory _factory;
+	private TestFactory _factory;
 
 	public ContextfulTest(TestFactory factory) {
 		_factory = factory;
@@ -40,5 +40,15 @@ public class ContextfulTest extends Contextful implements Test {
 
 	private Test testInstance() {
 		return _factory.newInstance();
+	}
+
+	public Test transmogrify(final Function4<Test, Test> fun) {
+		final TestFactory factory = _factory;
+		_factory = new TestFactory() {
+			public Test newInstance() {
+				return factory.newInstance().transmogrify(fun);
+			}
+		};
+		return this;
 	}
 }

@@ -2,6 +2,8 @@
 
 package db4ounit.fixtures;
 
+import com.db4o.foundation.*;
+
 import db4ounit.*;
 
 final class FixtureDecorator implements TestDecorator {
@@ -15,11 +17,21 @@ final class FixtureDecorator implements TestDecorator {
 		_fixtureIndex = fixtureIndex;
 	}
 
-	public Test decorate(Test test) {
+	public Test decorate(final Test test) {
+		final String label = label();
+		return test.transmogrify(new Function4<Test, Test>() {
+			public Test apply(Test innerTest) {
+				return new TestWithFixture(innerTest, label, _provider, _fixture);
+			}
+		});
+		
+	}
+
+	private String label() {
 		String label = _provider.label() + "[" + _fixtureIndex + "]";
 		if(_fixture instanceof Labeled) {
 			label += ":" + ((Labeled)_fixture).label();
 		}
-		return new TestWithFixture(test, label, _provider, _fixture);
+		return label;
 	}
 }

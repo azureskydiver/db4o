@@ -2,6 +2,8 @@
 
 package db4ounit;
 
+import com.db4o.foundation.*;
+
 public class TestDecorationAdapter implements Test {
 
 	private final Test _test;
@@ -20,6 +22,10 @@ public class TestDecorationAdapter implements Test {
 
 	public boolean isLeafTest() {
 		return _test.isLeafTest();
+	}
+	
+	public Test transmogrify(Function4<Test, Test> fun) {
+		return fun.apply(this);
 	}
 
 }

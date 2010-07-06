@@ -4,7 +4,7 @@ import com.db4o.foundation.*;
 
 public abstract class OpaqueTestSuiteBase implements Test {
 
-	private final Closure4<Iterator4<Test>> _tests;
+	private Closure4<Iterator4<Test>> _tests;
 	
 	public OpaqueTestSuiteBase(Closure4<Iterator4<Test>> tests) {
 		_tests = tests;
@@ -28,6 +28,24 @@ public abstract class OpaqueTestSuiteBase implements Test {
 	public boolean isLeafTest() {
 		return false;
 	}
+	
+	protected Closure4<Iterator4<Test>> tests() {
+		return _tests;
+	}
+	
+//	public Test transmogrify(final Function4<Test, Test> fun) {
+//		final Closure4<Iterator4<Test>> tests = _tests;
+//		_tests = new Closure4<Iterator4<Test>>() {
+//			public Iterator4<Test> run() {
+//				return Iterators.map(tests.run(), new Function4<Test, Test>() {
+//					public Test apply(Test test) {
+//						return fun.apply(test);
+//					}
+//				});
+//			}
+//		};
+//		return this;
+//	}
 	
 	protected abstract void suiteSetUp() throws Exception;
 	protected abstract void suiteTearDown() throws Exception;

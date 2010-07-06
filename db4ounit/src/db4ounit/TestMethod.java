@@ -2,6 +2,8 @@ package db4ounit;
 
 import java.lang.reflect.*;
 
+import com.db4o.foundation.*;
+
 /**
  * Reflection based db4ounit.Test implementation.
  */
@@ -85,5 +87,9 @@ public class TestMethod implements Test {
 
 	public boolean isLeafTest() {
 		return true;
+	}
+
+	public Test transmogrify(Function4<Test, Test> fun) {
+		return fun.apply(this);
 	}
 }

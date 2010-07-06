@@ -5,7 +5,7 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 public final class TestWithFixture implements Test {
-	private final Test _test;
+	private Test _test;
 	private final FixtureVariable _variable;
 	private final Object _value;
 	private final String _fixtureLabel;
@@ -55,5 +55,11 @@ public final class TestWithFixture implements Test {
 
 	public boolean isLeafTest() {
 		return _test.isLeafTest();
+	}
+
+	public Test transmogrify(Function4<Test, Test> fun) {
+//		_test = _test.transmogrify(fun);
+//		return this;
+		return fun.apply(this);
 	}
 }
