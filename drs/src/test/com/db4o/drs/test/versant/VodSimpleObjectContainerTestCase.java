@@ -12,7 +12,7 @@ import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
+public class VodSimpleObjectContainerTestCase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	private static Class[] PERSISTENT_CLASSES = new Class[]{
 		Chain.class,
@@ -30,21 +30,29 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 	// so we can see what's committed, using a second reference system.
 	private PersistenceManager _pm;
 	
-	
+	public static void classSetUp() throws Exception {
+		VodDatabase vod = new VodDatabase(DATABASE_NAME);
+		vod.createDb();
+		vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
+		vod.enhance("bin");
+	}
+
+	public static void classTearDown() {
+		VodDatabase vod = new VodDatabase(DATABASE_NAME);
+		vod.removeDb();
+	}
+
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
-		_vod.createDb();
 		_vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
-		_vod.enhance("bin");
 		_provider = new VodReplicationProvider(_vod);
 		_pm = _vod.createPersistenceManager();
+		cleanDb();
 	}
 
 	public void tearDown() throws Exception {
 		_pm.close();
-		
 		_provider.destroy();
-		_vod.removeDb();
 		_vod = null;
 	}
 	
@@ -55,31 +63,14 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		_provider.commit();
 	}
 	
-	public void testAll(){
-		tstStoreNew();
-		cleanDb();
-		tstStoredSimpleObjects();
-		cleanDb();
-		tstStoredCompoundObjects();
-		cleanDb();
-		tstDelete();
-		cleanDb();
-		tstUpdate();
-		cleanDb();
-		tstDeleteAllInstances();
-		cleanDb();
-		tstLongChain();
-		cleanDb();
-	}
-	
-	public void tstStoreNew(){
+	public void testStoreNew(){
 		Item item = new Item("one");
 		_provider.storeNew(item);
 		_provider.commit();
 		assertContent(Item.class, item);
 	}
 	
-	public void tstStoredSimpleObjects() {
+	public void testStoredSimpleObjects() {
 		ObjectSet storedObjects = _provider.getStoredObjects(Item.class);
 		Assert.areEqual(0, storedObjects.size());
 		List<Item> items = new ArrayList<Item>();
@@ -95,7 +86,7 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		assertContent(Item.class, items);
 	}
 
-	public void tstStoredCompoundObjects() {
+	public void testStoredCompoundObjects() {
 		List<Holder> holders = new ArrayList<Holder>();
 		for (int i = 0; i < 3; i++) {
 			Item item = new Item(String.valueOf(i));
@@ -113,7 +104,7 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		IteratorAssert.sameContent(holders, storedObjects);
 	}
 	
-	public void tstDelete(){
+	public void testDelete(){
 		Item item = new Item("one");
 		_provider.storeNew(item);
 		_provider.commit();
@@ -122,7 +113,7 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		assertContent(Item.class);
 	}
 	
-	public void tstUpdate(){
+	public void testUpdate(){
 		Item item = new Item("one");
 		_provider.storeNew(item);
 		_provider.commit();
@@ -132,7 +123,7 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		assertContent(Item.class, item);
 	}
 	
-	public void tstDeleteAllInstances(){
+	public void testDeleteAllInstances(){
 		Item item1 = new Item("one");
 		_provider.storeNew(item1);
 		Item item2 = new Item("two");
@@ -144,7 +135,7 @@ public class VodSimpleObjectContainerTestCase implements TestLifeCycle {
 		assertContent(Item.class);
 	}
 	
-	public void tstLongChain(){
+	public void testLongChain(){
 		final int length = 1000;
 		Chain chain = Chain.newChainWithLength(length);
 		_provider.storeNew(chain);
