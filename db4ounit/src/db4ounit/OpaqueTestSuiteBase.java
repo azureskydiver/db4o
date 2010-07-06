@@ -33,19 +33,20 @@ public abstract class OpaqueTestSuiteBase implements Test {
 		return _tests;
 	}
 	
-//	public Test transmogrify(final Function4<Test, Test> fun) {
-//		final Closure4<Iterator4<Test>> tests = _tests;
-//		_tests = new Closure4<Iterator4<Test>>() {
-//			public Iterator4<Test> run() {
-//				return Iterators.map(tests.run(), new Function4<Test, Test>() {
-//					public Test apply(Test test) {
-//						return fun.apply(test);
-//					}
-//				});
-//			}
-//		};
-//		return this;
-//	}
+	public Test transmogrify(final Function4<Test, Test> fun) {
+		return transmogrified(
+			new Closure4<Iterator4<Test>>() {
+				public Iterator4<Test> run() {
+					return Iterators.map(tests().run(), new Function4<Test, Test>() {
+						public Test apply(Test test) {
+							return fun.apply(test);
+						}
+					});
+				}
+			});
+	}
+
+	protected abstract OpaqueTestSuiteBase transmogrified(Closure4<Iterator4<Test>> tests);
 	
 	protected abstract void suiteSetUp() throws Exception;
 	protected abstract void suiteTearDown() throws Exception;
