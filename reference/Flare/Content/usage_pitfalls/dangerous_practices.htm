@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="831" MadCap:lastWidth="624">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="770" MadCap:lastWidth="573">
     <head><title>Dangerous Practices	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -15,11 +15,11 @@ configurations can make your database file vulnerable.
 the same database file from different JVM sessions will corrupt the
 database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
-database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm">No lock file thread</a>.</p>
+database file at a time. For more information see <a href="../configuration/file/lock_database.htm">No lock file thread</a>.</p>
                 </li>
             </p>
             <p MadCap:conditions="Primary:java" />
-            <li><code><a href="../implementation_strategies/storage/nonflushingstorage.htm">NonFlushingStorage</a></code>
+            <li><code><a href="../configuration/file/storage/nonflushingstorage.htm">NonFlushingStorage</a></code>
                 <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm">special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
 revert the order of writes to optimize file performance. db4o can

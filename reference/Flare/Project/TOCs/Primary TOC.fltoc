@@ -508,6 +508,9 @@
         Title="Blob Path"
         Link="/Content/configuration/file/blob_path.htm" />
       <TocEntry
+        Title="Block Size"
+        Link="/Content/configuration/file/block_size.htm" />
+      <TocEntry
         Title="Database Growth Size"
         Link="/Content/configuration/file/database_growth_size.htm" />
       <TocEntry
@@ -524,6 +527,15 @@
         Title="Freespace Filler"
         Link="/Content/configuration/file/freespace_filler.htm" />
       <TocEntry
+        Title="Generate UUIDs"
+        Link="/Content/configuration/file/generate_uuids.htm" />
+      <TocEntry
+        Title="Generate Version Numbers"
+        Link="/Content/configuration/file/generate_version_numbers.htm" />
+      <TocEntry
+        Title="Lock Database File"
+        Link="/Content/configuration/file/lock_database.htm" />
+      <TocEntry
         Title="Read Only"
         Link="/Content/configuration/file/read_only.htm" />
       <TocEntry
@@ -532,6 +544,43 @@
       <TocEntry
         Title="Reserve Storage Space"
         Link="/Content/configuration/file/reserve_storage_space.htm" />
+      <TocEntry
+        Title="Storage"
+        Link="/Content/configuration/file/storage.htm">
+        <TocEntry
+          Title="FileStorage"
+          Link="/Content/configuration/file/storage/filestorage.htm" />
+        <TocEntry
+          Title="Memory Storage"
+          Link="/Content/configuration/file/storage/memory_storage.htm">
+          <TocEntry
+            Title="Simple Example"
+            Link="/Content/configuration/file/storage/memory_storage/simple_example.htm" />
+          <TocEntry
+            Title="Storing MemoryBin Data"
+            Link="/Content/configuration/file/storage/memory_storage/storing_memorybin_data.htm" />
+          <TocEntry
+            Title="Reusing MemoryBins"
+            Link="/Content/configuration/file/storage/memory_storage/reusing_memorybins.htm" />
+        </TocEntry>
+        <TocEntry
+          Title="CachingStorage"
+          Link="/Content/configuration/file/storage/cachingstorage.htm">
+          <TocEntry
+            Title="Cache Configuration Example"
+            Link="/Content/configuration/file/storage/cachingstorage/cache_configuration_example.htm" />
+        </TocEntry>
+        <TocEntry
+          Title="NonFlushingStorage"
+          Link="/Content/configuration/file/storage/nonflushingstorage.htm" />
+        <TocEntry
+          Title="Pluggable Storage"
+          Link="/Content/configuration/file/storage/pluggable_storage.htm">
+          <TocEntry
+            Title="Logging Storage"
+            Link="/Content/configuration/file/storage/pluggable_storage/logging_storage.htm" />
+        </TocEntry>
+      </TocEntry>
     </TocEntry>
     <TocEntry
       Title="Client Configuration"
@@ -712,7 +761,8 @@
       <TocEntry
         Title="Db4otool"
         Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.htm"
-        conditions="Primary..NET">
+        conditions="Primary..NET"
+        ReplaceMergeNode="false">
         <TocEntry
           Title="Db4oTool Usage"
           Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool/db4otool_usage.htm" />
@@ -792,43 +842,6 @@
         <TocEntry
           Title="Car"
           Link="/Content/implementation_strategies/callbacks/commit-time_callbacks/car.htm" />
-      </TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Storage"
-      Link="/Content/implementation_strategies/storage.htm">
-      <TocEntry
-        Title="FileStorage"
-        Link="/Content/implementation_strategies/storage/filestorage.htm" />
-      <TocEntry
-        Title="Memory Storage"
-        Link="/Content/implementation_strategies/storage/memory_storage.htm">
-        <TocEntry
-          Title="Simple Example"
-          Link="/Content/implementation_strategies/storage/memory_storage/simple_example.htm" />
-        <TocEntry
-          Title="Storing MemoryBin Data"
-          Link="/Content/implementation_strategies/storage/memory_storage/storing_memorybin_data.htm" />
-        <TocEntry
-          Title="Reusing MemoryBins"
-          Link="/Content/implementation_strategies/storage/memory_storage/reusing_memorybins.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="CachingStorage"
-        Link="/Content/implementation_strategies/storage/cachingstorage.htm">
-        <TocEntry
-          Title="Cache Configuration Example"
-          Link="/Content/implementation_strategies/storage/cachingstorage/cache_configuration_example.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="NonFlushingStorage"
-        Link="/Content/implementation_strategies/storage/nonflushingstorage.htm" />
-      <TocEntry
-        Title="Pluggable Storage"
-        Link="/Content/implementation_strategies/storage/pluggable_storage.htm">
-        <TocEntry
-          Title="Logging Storage"
-          Link="/Content/implementation_strategies/storage/pluggable_storage/logging_storage.htm" />
       </TocEntry>
     </TocEntry>
     <TocEntry
@@ -1550,9 +1563,6 @@
         Title="Prefetching Objects For Query Results"
         Link="/Content/tuning/performance_hints/prefetching_objects_for_query_results.htm" />
       <TocEntry
-        Title="FileStorage"
-        Link="/Content/tuning/performance_hints/randomaccessfileadapter.htm" />
-      <TocEntry
         Title="Reserving Storage Space"
         Link="/Content/tuning/performance_hints/reserving_storage_space.htm" />
       <TocEntry
@@ -1562,7 +1572,7 @@
         Title="Unicode"
         Link="/Content/tuning/performance_hints/unicode.htm" />
       <TocEntry
-        Title="Using RandomAccessFileAdapter"
+        Title="Using FileStorage"
         Link="/Content/tuning/performance_hints/using_randomaccessfileadapter.htm" />
     </TocEntry>
     <TocEntry

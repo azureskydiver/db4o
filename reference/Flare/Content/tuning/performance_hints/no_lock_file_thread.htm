@@ -1,21 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="565" MadCap:lastWidth="586">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="447" MadCap:lastWidth="586">
     <head><title>No lock file thread	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>No lock file thread</h1>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: </p>
-            <p><code>configuration.file().lockDatabaseFile(false)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <p>.NET: </p>
-            <p><code>configuration.File.LockDatabaseFile = false</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:net" /><a name="Advantage"></a>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">You can disable the file locking. <MadCap:xref href="../../configuration/file/lock_database.htm" target="" title="" alt="">See "Lock Database File"</MadCap:xref></p>
         <h2>Advantage</h2>
         <p>will prevent the creation of a lock file thread on Java platforms without NIO (&lt; JDK 1.4.1).
 </p><a name="Effect"></a>

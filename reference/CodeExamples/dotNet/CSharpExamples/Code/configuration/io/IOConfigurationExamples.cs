@@ -6,6 +6,41 @@ namespace Db4oDoc.Code.Configuration.IO
 {
     public class IOConfigurationExamples
     {
+        public static void FileStorage()
+        {
+            // #example: Using the pure file storage
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            IStorage fileStorage = new FileStorage();
+            configuration.File.Storage = fileStorage;
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            // #end example
+
+        }
+        public static void CachingStorage()
+        {
+            // #example: Using a caching storage
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            IStorage fileStorage = new FileStorage();
+            IStorage cachingStorage = new CachingStorage(fileStorage, 128, 1024);
+            configuration.File.Storage = cachingStorage;
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            // #end example
+
+        }
+
+        public static void NonFlushingStorage()
+        {
+            // #example: Using the non-flushing storage
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            IStorage fileStorage = new FileStorage();
+            // the non-flushing storage improves performance, but risks database corruption.
+            IStorage cachingStorage = new NonFlushingStorage(fileStorage);
+            configuration.File.Storage = cachingStorage;
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            // #end example
+
+        }
+
         public static void SpecifyGrowStrategyForMemoryStorage()
         {
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();

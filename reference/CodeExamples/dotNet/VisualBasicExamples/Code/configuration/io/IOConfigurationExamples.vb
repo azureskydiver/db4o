@@ -4,6 +4,40 @@ Imports Db4objects.Db4o.IO
 
 Namespace Db4oDoc.Code.Configuration.IO
     Public Class IOConfigurationExamples
+
+        Public Shared Sub FileStorage()
+            ' #example: Using the pure file storage
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim fileStorage As IStorage = New FileStorage()
+            configuration.File.Storage = fileStorage
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+            ' #end example
+
+        End Sub
+        Public Shared Sub CachingStorage()
+            ' #example: Using a caching storage
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim fileStorage As IStorage = New FileStorage()
+            Dim cachingStorage As IStorage = New CachingStorage(fileStorage, 128, 1024)
+            configuration.File.Storage = cachingStorage
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+            ' #end example
+
+        End Sub
+
+        Public Shared Sub NonFlushingStorage()
+            ' #example: Using the non-flushing storage
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            Dim fileStorage As IStorage = New FileStorage()
+            ' the non-flushing storage improves performance, but risks database corruption.
+            Dim cachingStorage As IStorage = New NonFlushingStorage(FileStorage)
+            configuration.File.Storage = cachingStorage
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(Configuration, "database.db4o")
+            ' #end example
+        End Sub
+
+
+
         Public Shared Sub SpecifyGrowStrategyForMemoryStorage()
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             ' #example: Using memory-storage with constant grow strategy

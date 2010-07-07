@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public class LRUCachingStorage : CachingStorage {
+    private readonly int pageCount;
+
+    public LRUCachingStorage(IStorage storage):base(storage) {
+        this.pageCount = 128;
+    }
+
+    public LRUCachingStorage(IStorage storage, int pageCount, int pageSize)
+        : base(storage, pageCount, pageSize)
+    {
+        this.pageCount = pageCount;
+    }
+
+    protected override ICache4 NewCache()
+    {
+        return CacheFactory.NewLRUCache(pageCount);
+    }
+}</pre>
+		<div class="codesnippet-meta">LRUCachingStorage.cs: Exchange the cache-implementation<a href="Example-configuration-io-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

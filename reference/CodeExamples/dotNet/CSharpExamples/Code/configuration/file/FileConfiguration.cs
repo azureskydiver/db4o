@@ -1,3 +1,4 @@
+using System;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 
@@ -26,6 +27,74 @@ namespace Db4oDoc.Code.Configuration.File
             container.Close();
 
         }
+
+        public static void IncreaseBlockSize()
+        {
+            // #example: Increase block size for larger databases
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.File.BlockSize = 8;
+            // #end example
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            container.Close();
+        }
+
+        public static void GlobalUUID()
+        {
+            // #example: Enable db4o uuids globally
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.File.GenerateUUIDs = ConfigScope.Globally;
+            // #end example
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            container.Close();
+        }
+
+        public static void IndividualUUID()
+        {
+            // #example: Enable db4o uuids for certain classes
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.File.GenerateUUIDs = ConfigScope.Individually;
+            configuration.Common.ObjectClass(typeof (SpecialClass)).GenerateUUIDs(true);
+            // #end example
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+
+            SpecialClass withUUID = new SpecialClass();
+            container.Store(withUUID);
+            NormalClass withoutUUID = new NormalClass();
+            container.Store(withoutUUID);
+
+            AssertNotNull(container.Ext().GetObjectInfo(withUUID).GetUUID());
+            AssertNull(container.Ext().GetObjectInfo(withoutUUID).GetUUID());
+
+            container.Close();
+        }
+
+        public static void GlobalVersions(){
+            // #example: Enable db4o versions globally
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.File.GenerateVersionNumbers = ConfigScope.Globally;
+            // #end example
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            container.Close();
+        }
+        public static void IndividualVersions(){
+            // #example: Enable db4o versions for certain classes
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.File.GenerateVersionNumbers = (ConfigScope.Individually);
+            configuration.Common.ObjectClass(typeof(SpecialClass)).GenerateVersionNumbers(true);
+            // #end example
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+
+            SpecialClass withVersion = new SpecialClass();
+            container.Store(withVersion);
+            NormalClass withoutVersion = new NormalClass();
+            container.Store(withoutVersion);
+
+            AssertTrue(container.Ext().GetObjectInfo(withVersion).GetVersion()!=0);
+            AssertTrue(container.Ext().GetObjectInfo(withoutVersion).GetVersion()==0);
+
+            container.Close();
+        }
+
         public static void ReserveSpace()
         {
             // #example: Configure the growth size
@@ -46,6 +115,17 @@ namespace Db4oDoc.Code.Configuration.File
             container.Close();
 
         }
+
+        public static void DoNotLockDatabaseFile()
+        {
+            // #example: Disable the database file lock
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.File.LockDatabaseFile = false;
+            // #end example
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
+            container.Close();
+        }
+
         public static void ReadOnlyMode()
         {
             // #example: Set read only mode
@@ -74,6 +154,34 @@ namespace Db4oDoc.Code.Configuration.File
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
             container.Close();
         }
+
+        private static void AssertNotNull(object uuid)
+        {
+            if (null == uuid)
+            {
+                throw new Exception("Expected not null");
+            }
+        }
+        private static void AssertNull(object uuid)
+        {
+            if (null != uuid)
+            {
+                throw new Exception("Expected null");
+            }
+        }
+        private static void AssertTrue(bool value)
+        {
+            if (!value)
+            {
+                throw new Exception("Expected true");
+            }
+        }
     }
 
+    class SpecialClass{
+        
+    }
+    class NormalClass{
+
+    }
 }
