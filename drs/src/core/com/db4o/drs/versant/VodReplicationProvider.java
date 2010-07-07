@@ -132,13 +132,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return reference; 
 	}
 	
-	private ReplicationReference produceNewReference(final Object obj, Object referencingObj, String fieldName) {
-		if(obj == null){
-			throw new IllegalArgumentException();
-		}
-		DatastoreObject dso = datastoreObject(obj);
-		return new ReplicationReferenceImpl(obj, null, dso.getTimestamp());
-	}
 
 	private DatastoreObject datastoreObject(final Object obj) {
 		VersantOid versantOid = (VersantOid) _pm.getTransactionalObjectId(obj);
@@ -218,6 +211,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	public ReplicationReference produceReference(Object obj) {
 		return produceReference(obj, null, null);
+	}
+	
+	private ReplicationReference produceNewReference(final Object obj, Object referencingObj, String fieldName) {
+		if(obj == null){
+			throw new IllegalArgumentException();
+		}
+		DatastoreObject dso = datastoreObject(obj);
+		return new ReplicationReferenceImpl(obj, null, dso.getTimestamp());
 	}
 	
 

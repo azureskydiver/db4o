@@ -8,60 +8,10 @@ import javax.jdo.*;
 
 import com.db4o.*;
 import com.db4o.drs.test.versant.data.*;
-import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodSimpleObjectContainerTestCase implements TestLifeCycle, ClassLevelFixtureTest {
-	
-	private static Class[] PERSISTENT_CLASSES = new Class[]{
-		Chain.class,
-		Holder.class,
-		Item.class,
-	};
-	
-	private static final String DATABASE_NAME = "SimpleObjectContainer";
-	
-	private VodDatabase _vod;	
-	
-	private VodReplicationProvider _provider;
-	
-	// This is a direct PersistenceManager that works around the _provider
-	// so we can see what's committed, using a second reference system.
-	private PersistenceManager _pm;
-	
-	public static void classSetUp() throws Exception {
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.createDb();
-		vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
-		vod.enhance("bin");
-	}
-
-	public static void classTearDown() {
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.removeDb();
-	}
-
-	public void setUp() throws Exception {
-		_vod = new VodDatabase(DATABASE_NAME);
-		_vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
-		_provider = new VodReplicationProvider(_vod);
-		_pm = _vod.createPersistenceManager();
-		cleanDb();
-	}
-
-	public void tearDown() throws Exception {
-		_pm.close();
-		_provider.destroy();
-		_vod = null;
-	}
-	
-	private void cleanDb(){
-		for (int i = 0; i < PERSISTENT_CLASSES.length; i++) {
-			_provider.deleteAllInstances(PERSISTENT_CLASSES[i]);
-		}
-		_provider.commit();
-	}
+public class VodSimpleObjectContainerTestCase extends VodDatabaseTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	public void testStoreNew(){
 		Item item = new Item("one");
