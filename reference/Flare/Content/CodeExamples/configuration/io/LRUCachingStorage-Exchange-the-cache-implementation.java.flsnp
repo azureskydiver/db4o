@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">public class LRUCachingStorage extends CachingStorage {
+    private final int pageCount;
+
+    public LRUCachingStorage(Storage storage) {
+        super(storage);
+        this.pageCount = 128;
+    }
+
+    public LRUCachingStorage(Storage storage, int pageCount, int pageSize) {
+        super(storage, pageCount, pageSize);
+        this.pageCount = pageCount;
+    }
+
+    @Override
+    protected Cache4&lt;Long, Object&gt; newCache() {
+        return CacheFactory.newLRUCache(pageCount);
+    }
+}</pre>
+		<div class="codesnippet-meta">LRUCachingStorage.java: Exchange the cache-implementation<a href="Example-configuration-io-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

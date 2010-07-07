@@ -1,13 +1,46 @@
 package com.db4odoc.configuration.io;
 
 import com.db4o.Db4oEmbedded;
-import com.db4o.EmbeddedObjectContainer;
 import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.io.*;
 
 
 public class IOConfigurationExamples {
+
+    public static void fileStorage(){
+        // #example: Using the pure file storage
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        Storage fileStorage = new FileStorage();
+        configuration.file().storage(fileStorage);
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        // #end example
+
+    }
+    
+    public static void cachingStorage(){
+        // #example: Using a caching storage
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        Storage fileStorage = new FileStorage();
+        // A cache with 128 pages of 1024KB size, gives a 128KB cache
+        Storage cachingStorage = new CachingStorage(fileStorage,128,1024);
+        configuration.file().storage(cachingStorage);
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        // #end example
+
+    }
+
+    public static void nonFlushingStorage(){
+        // #example: Using the non-flushing storage
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        Storage fileStorage = new FileStorage();
+        // the non-flushing storage improves performance, but risks database corruption.
+        Storage cachingStorage = new NonFlushingStorage(fileStorage);
+        configuration.file().storage(cachingStorage);
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        // #end example
+
+    }
 
     public static void specifyGrowStrategyForMemoryStorage(){
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();

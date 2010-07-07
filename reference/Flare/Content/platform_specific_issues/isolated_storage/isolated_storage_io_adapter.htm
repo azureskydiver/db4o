@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="1375" MadCap:lastWidth="1530">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="1255" MadCap:lastWidth="623">
     <head><title>Isolated Storage IO Adapter	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -7,7 +7,7 @@
         <p>In order to access Isolated Storage you must use <code>IsolatedStorageFileStream</code>,
 which is a class derived from <code>FileStream</code>. db4o by default uses
 
-<a href="../../implementation_strategies/storage/cachingstorage.htm">CachingStorage</a> (depending on
+<a href="../../configuration/file/storage/cachingstorage.htm">CachingStorage</a> (depending on
 version), which under the hood are using <code>FileStream</code> to read and
 write db4o database file. As <code>IsolatedStorageFileStream</code> provides
 the same interface as <code>FileStream</code> we can use it with a custom IO

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+Storage fileStorage = new FileStorage();
+// the non-flushing storage improves performance, but risks database corruption.
+Storage cachingStorage = new NonFlushingStorage(fileStorage);
+configuration.file().storage(cachingStorage);
+ObjectContainer container = Db4oEmbedded.openFile(configuration, &quot;database.db4o&quot;);</pre>
+		<div class="codesnippet-meta">IOConfigurationExamples.java: Using the non-flushing storage<a href="Example-configuration-io-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

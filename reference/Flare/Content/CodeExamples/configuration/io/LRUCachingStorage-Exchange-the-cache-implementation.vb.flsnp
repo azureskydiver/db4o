@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class LRUCachingStorage
+    Inherits CachingStorage
+    Private ReadOnly pageCount As Integer
+
+    Public Sub New(ByVal storage As IStorage)
+        MyBase.New(storage)
+        Me.pageCount = 128
+    End Sub
+
+    Public Sub New(ByVal storage As IStorage, ByVal pageCount As Integer, ByVal pageSize As Integer)
+        MyBase.New(storage, pageCount, pageSize)
+        Me.pageCount = pageCount
+    End Sub
+
+    Protected Overrides Function NewCache() As ICache4
+        Return CacheFactory.NewLRUCache(pageCount)
+    End Function
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class LRUCachingStorage
+    Inherits CachingStorage
+    Private ReadOnly pageCount As Integer
+
+    Public Sub New(ByVal storage As IStorage)
+        MyBase.New(storage)
+        Me.pageCount = 128
+    End Sub
+
+    Public Sub New(ByVal storage As IStorage, ByVal pageCount As Integer, ByVal pageSize As Integer)
+        MyBase.New(storage, pageCount, pageSize)
+        Me.pageCount = pageCount
+    End Sub
+
+    Protected Overrides Function NewCache() As ICache4
+        Return CacheFactory.NewLRUCache(pageCount)
+    End Function
+End Class</pre>
+		<div class="codesnippet-meta">LRUCachingStorage.vb: Exchange the cache-implementation<a href="Example-configuration-io-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

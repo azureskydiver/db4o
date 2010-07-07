@@ -111,7 +111,7 @@ class SnippetGenerator:
 
 class CodeToSnippets:
 	final _SnippetGeneration as SnippetGenerator
-	final IgnoredFilesWithEnding = (".jar",".dll",".class",".db4o")
+	final IgnoredFilesWithEnding = (".jar",".dll",".class",".db4o",".dat")
 
 	def constructor(templatePath as string, zipGenerator as CodeZip):
 		_SnippetGeneration = SnippetGenerator(File.ReadAllText(templatePath),zipGenerator)

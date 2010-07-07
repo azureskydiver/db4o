@@ -69,6 +69,7 @@
     <Compile Include="Code\configuration\file\FileConfiguration.cs" />
     <Compile Include="Code\configuration\idsystem\IdSystemConfigurationExamples.cs" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.cs" />
+    <Compile Include="Code\configuration\io\LRUCachingStorage.cs" />
     <Compile Include="Code\configuration\network\NetworkConfigurationExample.cs" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />

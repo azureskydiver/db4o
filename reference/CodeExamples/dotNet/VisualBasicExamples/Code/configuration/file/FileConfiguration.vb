@@ -22,6 +22,71 @@ Namespace Db4oDoc.Code.Configuration.File
             container.Close()
 
         End Sub
+
+        Public Shared Sub IncreaseBlockSize()
+            ' #example: Increase block size for larger databases
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.File.BlockSize = 8
+            ' #end example
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+            container.Close()
+        End Sub
+
+        Public Shared Sub GlobalUUID()
+            ' #example: Enable db4o uuids globally
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.File.GenerateUUIDs = ConfigScope.Globally
+            ' #end example
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+            container.Close()
+        End Sub
+
+        Public Shared Sub IndividualUUID()
+            ' #example: Enable db4o uuids for certain classes
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.File.GenerateUUIDs = ConfigScope.Individually
+            configuration.Common.ObjectClass(GetType(SpecialClass)).GenerateUUIDs(True)
+            ' #end example
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+
+            Dim withUUID As New SpecialClass()
+            container.Store(withUUID)
+            Dim withoutUUID As New NormalClass()
+            container.Store(withoutUUID)
+
+            AssertNotNull(container.Ext().GetObjectInfo(withUUID).GetUUID())
+            AssertNull(container.Ext().GetObjectInfo(withoutUUID).GetUUID())
+
+            container.Close()
+        End Sub
+
+        Public Shared Sub GlobalVersions()
+            ' #example: Enable db4o versions globally
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.File.GenerateVersionNumbers = ConfigScope.Globally
+            ' #end example
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(Configuration, "database.db4o")
+            container.Close()
+        End Sub
+        Public Shared Sub IndividualVersions()
+            ' #example: Enable db4o versions for certain classes
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.File.GenerateVersionNumbers = (ConfigScope.Individually)
+            configuration.Common.ObjectClass(GetType(SpecialClass)).GenerateVersionNumbers(True)
+            ' #end example
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+
+            Dim withVersion As New SpecialClass()
+            container.Store(withVersion)
+            Dim withoutVersion As New NormalClass()
+            container.Store(withoutVersion)
+
+            AssertTrue(container.Ext().GetObjectInfo(withVersion).GetVersion() <> 0)
+            AssertTrue(container.Ext().GetObjectInfo(withoutVersion).GetVersion() = 0)
+
+            container.Close()
+        End Sub
+
         Public Shared Sub ReserveSpace()
             ' #example: Configure the growth size
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
@@ -40,6 +105,16 @@ Namespace Db4oDoc.Code.Configuration.File
             container.Close()
 
         End Sub
+
+        Public Shared Sub DoNotLockDatabaseFile()
+            ' #example: Disable the database file lock
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.File.LockDatabaseFile = False
+            ' #end example
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
+            container.Close()
+        End Sub
+
         Public Shared Sub ReadOnlyMode()
             ' #example: Set read only mode
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
@@ -65,6 +140,30 @@ Namespace Db4oDoc.Code.Configuration.File
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
             container.Close()
         End Sub
+
+        Private Shared Sub AssertNotNull(ByVal uuid As Object)
+            If uuid Is Nothing Then
+                Throw New Exception("Expected not null")
+            End If
+        End Sub
+        Private Shared Sub AssertNull(ByVal uuid As Object)
+            If uuid IsNot Nothing Then
+                Throw New Exception("Expected null")
+            End If
+        End Sub
+        Private Shared Sub AssertTrue(ByVal value As Boolean)
+            If value Then
+                Throw New Exception("Expected true")
+            End If
+        End Sub
+
+    End Class
+
+    Class SpecialClass
+
+    End Class
+    Class NormalClass
+
     End Class
 
 End Namespace
