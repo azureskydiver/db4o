@@ -35,3 +35,4 @@ sharpen/sharpen.ui/bin/
 tutorial/bin/
 sharpen/sharpen.ui.tests/bin-testcases/
 db4obuild/*.db4o
+db4obuild/machine.properties
