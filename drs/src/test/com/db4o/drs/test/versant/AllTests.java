@@ -7,10 +7,6 @@ import db4ounit.*;
 public class AllTests extends ReflectionTestSuite {
 	
 	public static void main(String[] args) {
-		
-		
-		
-		
 		new AllTests().run();
 	}
 
