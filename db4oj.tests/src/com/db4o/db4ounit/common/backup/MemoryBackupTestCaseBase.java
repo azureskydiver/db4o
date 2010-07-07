@@ -1,14 +1,16 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.backup;
 
-import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.foundation.io.Path4;
-import com.db4o.internal.*;
-import com.db4o.io.*;
+import com.db4o.internal.LocalObjectContainer;
+import com.db4o.io.Storage;
 
-import db4ounit.*;
-import db4ounit.extensions.OptOutTemporary;
+import db4ounit.Assert;
+import db4ounit.TestCase;
 
 public abstract class MemoryBackupTestCaseBase implements TestCase {
 
