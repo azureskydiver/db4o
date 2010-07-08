@@ -1,12 +1,17 @@
 package com.db4odoc.f1.chapter4;
 
-import java.io.*;
-import java.util.*;
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
+import com.db4odoc.f1.Util;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.query.*;
-import com.db4odoc.f1.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CollectionsExample extends Util {
 	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
@@ -100,12 +105,12 @@ public class CollectionsExample extends Util {
 		List<Car> results = db.query(new Predicate<Car>() {
 			public boolean match(Car candidate) {
 				List history = candidate.getHistory();
-				for (int i = 0; i < history.size(); i++) {
-					SensorReadout readout = (SensorReadout) history.get(i);
-					if (Arrays.binarySearch(readout.getValues(), 0.6) >= 0
-							|| Arrays.binarySearch(readout.getValues(), 0.2) >= 0)
-						return true;
-				}
+                for (Object aHistory : history) {
+                    SensorReadout readout = (SensorReadout) aHistory;
+                    if (Arrays.binarySearch(readout.getValues(), 0.6) >= 0
+                            || Arrays.binarySearch(readout.getValues(), 0.2) >= 0)
+                        return true;
+                }
 				return false;
 			}
 		});
@@ -126,8 +131,8 @@ public class CollectionsExample extends Util {
 		Query query = db.query();
 		query.constrain(SensorReadout.class);
 		Query valuequery = query.descend("values");
-		valuequery.constrain(new Double(0.3));
-		valuequery.constrain(new Double(0.1));
+		valuequery.constrain(0.3);
+		valuequery.constrain(0.1);
 		ObjectSet result = query.execute();
 		listResult(result);
 	}
@@ -138,8 +143,8 @@ public class CollectionsExample extends Util {
 		Query historyquery = query.descend("history");
 		historyquery.constrain(SensorReadout.class);
 		Query valuequery = historyquery.descend("values");
-		valuequery.constrain(new Double(0.3));
-		valuequery.constrain(new Double(0.1));
+		valuequery.constrain(0.3);
+		valuequery.constrain(0.1);
 		ObjectSet result = query.execute();
 		listResult(result);
 	}

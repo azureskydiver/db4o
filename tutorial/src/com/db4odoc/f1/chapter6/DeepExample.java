@@ -1,26 +1,28 @@
 package com.db4odoc.f1.chapter6;
 
-import java.io.*;
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.EmbeddedConfiguration;
+import com.db4odoc.f1.Util;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4odoc.f1.*;
+import java.io.File;
 
 public class DeepExample extends Util {
 	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
 
 	public static void main(String[] args) {
 		new File(DB4OFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(DB4OFILENAME);
+		ObjectContainer db = Db4oEmbedded.openFile(DB4OFILENAME);
 		storeCar(db);
 		db.close();
-		db = Db4o.openFile(DB4OFILENAME);
+		db = Db4oEmbedded.openFile(DB4OFILENAME);
 		db.close();
 		takeManySnapshots();
-		db = Db4o.openFile(DB4OFILENAME);
+		db = Db4oEmbedded.openFile(DB4OFILENAME);
 		retrieveAllSnapshots(db);
 		db.close();
-		db = Db4o.openFile(DB4OFILENAME);
+		db = Db4oEmbedded.openFile(DB4OFILENAME);
 		retrieveSnapshotsSequentially(db);
 		retrieveSnapshotsSequentiallyImproved(db);
 		db.close();
@@ -35,9 +37,9 @@ public class DeepExample extends Util {
 	}
 
 	public static void takeManySnapshots() {
-		Configuration config = Db4o.newConfiguration();
-		config.objectClass(Car.class).cascadeOnUpdate(true);
-		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.common().objectClass(Car.class).cascadeOnUpdate(true);
+		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {
 			Car car = (Car) result.next();
@@ -67,10 +69,10 @@ public class DeepExample extends Util {
 	}
 
 	public static void retrieveSnapshotsSequentiallyCascade() {
-		Configuration config = Db4o.newConfiguration();
-		config.objectClass(TemperatureSensorReadout.class).cascadeOnActivate(
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.common().objectClass(TemperatureSensorReadout.class).cascadeOnActivate(
 				true);
-		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
+		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {

@@ -1,10 +1,13 @@
 package com.db4odoc.f1.chapter1;
 
-import java.util.*;
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
+import com.db4odoc.f1.Util;
 
-import com.db4o.*;
-import com.db4o.query.*;
-import com.db4odoc.f1.*;
+import java.util.List;
 
 public class NQExample extends Util {
 
@@ -35,8 +38,8 @@ public class NQExample extends Util {
         query.constrain(Pilot.class);
         Query pointQuery=query.descend("points");
         query.descend("name").constrain("Rubens Barrichello")
-        	.or(pointQuery.constrain(new Integer(99)).greater()
-        	    .and(pointQuery.constrain(new Integer(199)).smaller()));
+        	.or(pointQuery.constrain(99).greater()
+        	    .and(pointQuery.constrain(199).smaller()));
         ObjectSet result=query.execute();
         listResult(result);
     }
@@ -56,11 +59,11 @@ public class NQExample extends Util {
     	final int[] points={1,100};
         List<Pilot> result=db.query(new Predicate<Pilot>() {
         	public boolean match(Pilot pilot) {
-        		for(int i=0;i<points.length;i++) {
-        			if(pilot.getPoints()==points[i]) {
-        				return true;
-        			}
-        		}
+                for (int point : points) {
+                    if (pilot.getPoints() == point) {
+                        return true;
+                    }
+                }
         		return pilot.getName().startsWith("Rubens");
 			}
         });

@@ -63,7 +63,7 @@ public class QueryExample extends Util {
             ObjectContainer db) {
         Query query=db.query();
         query.constrain(Pilot.class);
-        query.descend("points").constrain(new Integer(100));
+        query.descend("points").constrain(100);
         ObjectSet result=query.execute();
         listResult(result);
     }
@@ -82,7 +82,7 @@ public class QueryExample extends Util {
         Constraint constr=query.descend("name")
                 .constrain("Michael Schumacher");
         query.descend("points")
-                .constrain(new Integer(99)).and(constr);
+                .constrain(99).and(constr);
         ObjectSet result=query.execute();
         listResult(result);
     }
@@ -93,7 +93,7 @@ public class QueryExample extends Util {
         Constraint constr=query.descend("name")
                 .constrain("Michael Schumacher");
         query.descend("points")
-                .constrain(new Integer(99)).or(constr);
+                .constrain(99).or(constr);
         ObjectSet result=query.execute();
         listResult(result);
     }
@@ -102,7 +102,7 @@ public class QueryExample extends Util {
         Query query=db.query();
         query.constrain(Pilot.class);
         query.descend("points")
-                .constrain(new Integer(99)).greater();
+                .constrain(99).greater();
         ObjectSet result=query.execute();
         listResult(result);
     }
@@ -113,7 +113,7 @@ public class QueryExample extends Util {
         db.store(somebody);
         Query query=db.query();
         query.constrain(Pilot.class);
-        query.descend("points").constrain(new Integer(0));
+        query.descend("points").constrain(0);
         ObjectSet result=query.execute();
         listResult(result);
         db.delete(somebody);
