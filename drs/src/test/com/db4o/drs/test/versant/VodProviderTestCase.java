@@ -9,7 +9,7 @@ import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodReplicationProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
+public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	public void testReferenceExists(){
 		Item item = storeAndCommitSingleItem();
