@@ -29,5 +29,10 @@ public class Item {
 	public void name(String name){
 		_name = name;
 	}
+	
+	@Override
+	public String toString() {
+		return "Item name:'" + _name + "'";
+	}
 
 }

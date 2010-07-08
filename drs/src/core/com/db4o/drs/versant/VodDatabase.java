@@ -10,7 +10,6 @@ import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.util.*;
-import com.versant.core.jdo.*;
 import com.versant.odbms.*;
 import com.versant.util.*;
 

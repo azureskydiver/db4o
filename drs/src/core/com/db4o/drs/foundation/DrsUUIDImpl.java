@@ -20,10 +20,6 @@ public class DrsUUIDImpl implements DrsUUID {
 		return _db4oUUID.getSignaturePart();
 	}
 
-	public Db4oUUID db4oUUID() {
-		return _db4oUUID;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if( ! (obj instanceof DrsUUIDImpl)){

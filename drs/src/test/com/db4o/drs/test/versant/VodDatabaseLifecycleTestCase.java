@@ -8,7 +8,7 @@ import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodDatabaseLifecycleTestCase implements TestCase{
+public class VodDatabaseLifecycleTestCase extends VodDatabaseTestCaseBase{
 	
 	private static final String DATABASE_NAME = "VodDatabaseLifecycleTestCase"; 
 	
@@ -24,7 +24,7 @@ public class VodDatabaseLifecycleTestCase implements TestCase{
 	
 	public void testEnhancer() throws Exception{
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
+		registerMetadataFiles(vod);
 		vod.enhance("bin");
 		
 		// TODO: Test is some known class is PersistenceCapable
