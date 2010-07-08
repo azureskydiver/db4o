@@ -70,7 +70,6 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
      * It is recommended to use the same values for {@link #timeoutClientSocket(int)}
      * and {@link #timeoutServerSocket(int)}.
      * <br>
-	 * This setting can be used on both client and server.<br><br> 
 	 * @param milliseconds
 	 *            time in milliseconds
 	 *            

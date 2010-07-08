@@ -7,7 +7,8 @@ import com.db4o.messaging.MessageRecipient;
 
 
 /**
- * Configuration interface for networking configuration settings.
+ * Configuration interface for networking configuration settings.<br><br>
+ * The network settings should be configured in exactly the same on the server and client.
  * @since 7.5
  */
 public interface NetworkingConfiguration {
