@@ -10,7 +10,8 @@ import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.foundation.*;
-import com.versant.core.jdo.*;
+import com.db4o.internal.encoding.*;
+import com.versant.core.vds.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
 
@@ -23,6 +24,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private final DatastoreManager _dm;
 	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
+	
+	private final Signatures _signatures = new Signatures();
 	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
@@ -127,22 +130,28 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if (reference != null){
 			return reference;
 		}
-		reference = produceNewReference(obj, referencingObj, fieldName);
+		reference = produceNewReference(obj);
 		_replicationReferences.put(reference);
 		return reference; 
 	}
 	
 
 	private DatastoreObject datastoreObject(final Object obj) {
-		VersantOid versantOid = (VersantOid) _pm.getTransactionalObjectId(obj);
-		DatastoreObject[] loidsAsDSO = _dm.getLoidsAsDSO(new Object[] { new DatastoreLoid(versantOid.pk) });
+		DatastoreLoid datastoreLoid = new DatastoreLoid(VdsUtils.getLOID(obj, _pm));
+		DatastoreObject[] loidsAsDSO = _dm.getLoidsAsDSO(new Object[] { datastoreLoid });
 		_dm.groupReadObjects(loidsAsDSO, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
 		return loidsAsDSO[0];
 	}
 
-	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+	private long loidFrom(DrsUUID uuid) {
+		long databaseId = _signatures.idFor(uuid);
+		if(databaseId == 0){
+			return 0;
+		}
+		long db4oLongPart = uuid.getLongPart();
+		long vodObjectIdPart = 
+			TimeStampIdGenerator.convert64BitIdTo48BitId(db4oLongPart);
+		return (databaseId << 48) | vodObjectIdPart;
 	}
 
 	public ReplicationReference referenceNewObject(Object obj,
@@ -213,13 +222,59 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return produceReference(obj, null, null);
 	}
 	
-	private ReplicationReference produceNewReference(final Object obj, Object referencingObj, String fieldName) {
+	private ReplicationReference produceNewReference(final Object obj) {
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
+		
 		DatastoreObject dso = datastoreObject(obj);
-		return new ReplicationReferenceImpl(obj, null, dso.getTimestamp());
+		
+		DatastoreLoid datastoreLoid = new DatastoreLoid(dso.getLOID());
+		int databaseId = datastoreLoid.getDatabaseId();
+		Signature signature = produceSignatureFor(databaseId);
+		
+		VodUUID vodUUID = new VodUUID(signature, (short)databaseId, datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2());
+		
+		return new ReplicationReferenceImpl(obj, vodUUID, dso.getTimestamp());
 	}
 	
+	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
+		if(uuid == null){
+			throw new IllegalArgumentException();
+		}
+		ReplicationReference reference = _replicationReferences.getByUUID(uuid);
+		if(reference != null){
+			return reference;
+		}
+		long loid = loidFrom(uuid);
+		
+		if(loid == 0){
+			return null;
+		}
+		
+		Object obj = VdsUtils.getObjectByLOID(loid, true, _pm);
+		if(obj == null){
+			return null;
+		}
+		
+		reference = produceNewReference(obj);
+		_replicationReferences.put(reference);
+		return reference; 
+	}
+
+	private Signature produceSignatureFor(int databaseId) {
+		Signature signature = _signatures.signatureFor(databaseId);
+		if(signature != null){
+			return signature;
+		}
+		signature = new Signature(signatureBytes(databaseId));
+		
+		_signatures.add(databaseId, signature);
+		return signature;
+	}
+	
+	private byte[] signatureBytes(int databaseId){
+		return new LatinStringIO().write("vod-" + databaseId);
+	}
 
 }

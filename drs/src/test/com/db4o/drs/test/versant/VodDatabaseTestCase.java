@@ -8,8 +8,7 @@ import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodDatabaseTestCase implements TestLifeCycle {
-	
+public class VodDatabaseTestCase extends VodDatabaseTestCaseBase implements TestLifeCycle {
 	
 	private static final String DATABASE_NAME = "VodDatabaseTestCase";
 	
@@ -26,7 +25,7 @@ public class VodDatabaseTestCase implements TestLifeCycle {
 	}
 	
 	public void testPersistenceManagerFactory(){
-		_vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
+		registerMetadataFiles(_vod);
 		PersistenceManager pmf = _vod.createPersistenceManager();
 		Assert.isFalse(pmf.isClosed());
 		pmf.close();

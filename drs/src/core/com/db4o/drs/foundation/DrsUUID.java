@@ -2,15 +2,11 @@
 
 package com.db4o.drs.foundation;
 
-import com.db4o.ext.*;
-
 public interface DrsUUID {
-
-	long getLongPart();
-
-	byte[] getSignaturePart();
-
-	Db4oUUID db4oUUID();
 	
+	// might become: 64-Bit id (db4o format)
+	long getLongPart();
+	
+	byte[] getSignaturePart();
 
 }

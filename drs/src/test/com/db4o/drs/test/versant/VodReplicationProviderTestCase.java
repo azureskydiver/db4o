@@ -2,16 +2,14 @@
 
 package com.db4o.drs.test.versant;
 
-import javax.jdo.*;
-
-
-
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
+import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodReplicationProviderTestCase extends VodDatabaseTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
+public class VodReplicationProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	public void testReferenceExists(){
 		Item item = storeAndCommitSingleItem();
@@ -44,10 +42,41 @@ public class VodReplicationProviderTestCase extends VodDatabaseTestCaseBase impl
 		Assert.isGreater(version1, version2);
 	}
 
-	public void testReferenceUUID(){
+	public void testReferenceUUIDIsCreated(){
 		Item item = storeAndCommitSingleItem();
 		ReplicationReference reference = _provider.produceReference(item);
-		// Assert.isNotNull(reference.uuid());
+		DrsUUID uuid = reference.uuid();
+		Assert.isNotNull(uuid);
+		Assert.isGreater(0, uuid.getSignaturePart().length);
+		Assert.areNotEqual(0, uuid.getLongPart());
+	}
+	
+	public void testProduceReferenceByUUID(){
+		Item item = storeAndCommitSingleItem();
+		ReplicationReference reference = _provider.produceReference(item);
+		DrsUUID uuid = reference.uuid();
+		ReplicationReference producedReference = _provider.produceReferenceByUUID(uuid, null);
+		Assert.areSame(reference, producedReference);
+	}
+	
+	public void testReferenceByUUIDReturnsObjectOnClear(){
+		assertReferenceByUUID(_provider);
+	}
+	
+	public void testReferenceByUUIDOnNewProvider(){
+		// assertReferenceByUUID(new VodReplicationProvider(_vod));
+	}
+
+	private void assertReferenceByUUID(VodReplicationProvider testProvider) {
+		Item item = storeAndCommitSingleItem();
+		ReplicationReference reference = _provider.produceReference(item);
+		DrsUUID uuid = reference.uuid();
+		
+		_provider.clearAllReferences();
+		
+		ReplicationReference producedReference = testProvider.produceReferenceByUUID(uuid, null);
+		Assert.isNotNull(producedReference);
+		Assert.areEqual(item, producedReference.object());
 	}
 
 	private Item storeAndCommitSingleItem() {

@@ -216,13 +216,13 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		}
 
 		if (_referencesByObject != null) {
-			Db4oReplicationReferenceImpl existingNode = _referencesByObject
-					.find(obj);
+			Db4oReplicationReferenceImpl existingNode = _referencesByObject.find(obj);
 			if (existingNode != null) {
 				return existingNode;
 			}
 		}
 
+		// TODO: Why refresh here? Try without and run all tests!
 		refresh(obj);
 
 		ObjectInfo objectInfo = _container.getObjectInfo(obj);
@@ -235,8 +235,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		if (uuid == null)
 			throw new NullPointerException();
 
-		Db4oReplicationReferenceImpl newNode = new Db4oReplicationReferenceImpl(
-				objectInfo);
+		Db4oReplicationReferenceImpl newNode = new Db4oReplicationReferenceImpl(objectInfo);
 
 		addReference(newNode);
 
@@ -283,14 +282,14 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		if (uuid == null) {
 			return null;
 		}
-		Object obj = _container.getByUUID(uuid.db4oUUID());
+		Object obj = _container.getByUUID(new Db4oUUID(uuid.getLongPart(), uuid.getSignaturePart()));
 		if (obj == null) {
 			return null;
 		}
 		if (!_container.isActive(obj)) {
 			_container.activate(obj, 1);
 		}
-		return produceReference(obj, null, null);
+		return produceReference(obj);
 	}
 
 	public void visitCachedReferences(final Visitor4 visitor) {
@@ -404,7 +403,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void replicateDeletion(DrsUUID uuid) {
-		Object obj = _container.getByUUID(uuid.db4oUUID());
+		Object obj = _container.getByUUID(new Db4oUUID(uuid.getLongPart(), uuid.getSignaturePart()));
 		if (obj == null)
 			return;
 

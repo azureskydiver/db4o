@@ -11,7 +11,7 @@ import com.db4o.drs.test.versant.data.*;
 
 import db4ounit.*;
 
-public class VodSimpleObjectContainerTestCase extends VodDatabaseTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
+public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	public void testStoreNew(){
 		Item item = new Item("one");
