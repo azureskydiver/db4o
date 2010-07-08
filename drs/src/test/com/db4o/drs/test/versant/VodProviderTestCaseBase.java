@@ -22,7 +22,7 @@ public class VodProviderTestCaseBase extends VodDatabaseTestCaseBase {
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
-		registerMetadataFiles(_vod);
+		registerMetadataFile(_vod);
 		_pm = _vod.createPersistenceManager();
 		cleanDb();
 		_provider = new VodReplicationProvider(_vod);
@@ -46,8 +46,8 @@ public class VodProviderTestCaseBase extends VodDatabaseTestCaseBase {
 	public static void classSetUp() throws Exception {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.createDb();
-		vod.amendPropertyIfNotExists("versant.metadata.0", "drs.jdo");
-		vod.enhance("bin");
+		registerMetadataFile(vod);
+		vod.enhance();
 	}
 
 	public static void classTearDown() {

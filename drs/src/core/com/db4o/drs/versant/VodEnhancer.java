@@ -10,22 +10,15 @@ public class VodEnhancer {
 	
 	public static void main(String[] args) throws Exception {
 		
-		if(args == null || args.length != 2){
-			throw new RuntimeException("Expected two args: PropertiesFilePath and outputDir");
+		if(args == null || args.length != 1){
+			throw new RuntimeException("Expected one argument: PropertiesFilePath");
 		}
-		
 		String propertiesFilePath = args[0];
-		String outputDir = args[1];
+		
 		
 		
 		Enhancer enhancer = new Enhancer();
 		enhancer.setPropertiesFile(new File(propertiesFilePath));
-		
-		System.out.println("OTUOSJSJS");
-		System.out.println(new File(outputDir).getAbsolutePath());
-		
-		
-		enhancer.setOutputDir(new File(outputDir));
 		enhancer.enhance();
 	}
 

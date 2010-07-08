@@ -64,12 +64,19 @@ public class VodReplicationProviderTestCase extends VodProviderTestCaseBase impl
 	}
 	
 	public void testReferenceByUUIDOnNewProvider(){
-		// assertReferenceByUUID(new VodReplicationProvider(_vod));
+		VodReplicationProvider provider = new VodReplicationProvider(_vod);
+		
+		assertReferenceByUUID(provider);
+		provider.destroy();
 	}
 
 	private void assertReferenceByUUID(VodReplicationProvider testProvider) {
 		Item item = storeAndCommitSingleItem();
 		ReplicationReference reference = _provider.produceReference(item);
+		
+		// make sure signatures are persisted
+		_provider.commit();
+
 		DrsUUID uuid = reference.uuid();
 		
 		_provider.clearAllReferences();

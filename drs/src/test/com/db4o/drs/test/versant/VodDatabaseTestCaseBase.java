@@ -8,8 +8,9 @@ import db4ounit.*;
 
 public abstract class VodDatabaseTestCaseBase implements TestCase {
 	
-	protected void registerMetadataFiles(VodDatabase vod) {
+	protected static void registerMetadataFile(VodDatabase vod) {
 		vod.amendPropertyIfNotExists("versant.metadata.0", "drs-test.jdo");
+		vod.amendPropertyIfNotExists("versant.metadata.1", "drs.jdo");
 	}
 
 }

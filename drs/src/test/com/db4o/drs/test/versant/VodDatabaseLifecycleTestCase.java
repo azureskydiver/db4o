@@ -24,8 +24,8 @@ public class VodDatabaseLifecycleTestCase extends VodDatabaseTestCaseBase{
 	
 	public void testEnhancer() throws Exception{
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		registerMetadataFiles(vod);
-		vod.enhance("bin");
+		registerMetadataFile(vod);
+		vod.enhance();
 		
 		// TODO: Test is some known class is PersistenceCapable
 		

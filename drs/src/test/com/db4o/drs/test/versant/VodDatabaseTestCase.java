@@ -25,7 +25,7 @@ public class VodDatabaseTestCase extends VodDatabaseTestCaseBase implements Test
 	}
 	
 	public void testPersistenceManagerFactory(){
-		registerMetadataFiles(_vod);
+		registerMetadataFile(_vod);
 		PersistenceManager pmf = _vod.createPersistenceManager();
 		Assert.isFalse(pmf.isClosed());
 		pmf.close();
