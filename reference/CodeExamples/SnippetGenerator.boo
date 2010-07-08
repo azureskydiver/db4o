@@ -184,9 +184,11 @@ snippetGenerator.CreateCodeSnippets("javaAppExamples/","../Flare/Content/CodeExa
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../Flare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../Flare/Content/CodeExamples","csharp")
 
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator)
 snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../Flare/Content/CodeExamples","vb")
+snippetGeneratorForVB.CreateCodeSnippets("silverlight/silverlightVB/Code","../Flare/Content/CodeExamples","vb")
 
 aggreatedSnippet = SnippetAggregator(File.ReadAllText("./AggregateSnippetTemplate.flsnp"))
 aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../Flare/Content/CodeExamples"))

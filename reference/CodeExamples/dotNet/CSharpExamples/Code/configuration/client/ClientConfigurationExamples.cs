@@ -38,6 +38,16 @@ namespace Db4oDoc.Code.Configuration.Client
             container.Close();
 
         }
+        public static void PrefetchIDCount()
+        {
+            // #example: Configure the prefetch id count
+            IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
+            configuration.PrefetchSlotCacheSize = 128;
+            // #end example
+            IObjectContainer container = Db4oClientServer.OpenClient(configuration, "localhost", 1337, "user", "password");
+            container.Close();
+
+        }
         public static void ConnectionTimeOut()
         {
             // #example: Configure the timeout
