@@ -61,8 +61,8 @@ public interface CommonConfiguration {
      * when the database file is opened.
      * <br><br>Aliases should be configured before opening a database file
      * or connecting to a server.<br><br>
-     * In client/server environment this setting should be used on the client
-     * and on the server side.
+     * In client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      */
     public void addAlias(Alias alias);
     
@@ -104,8 +104,8 @@ public interface CommonConfiguration {
      * increase performance of queries.<br><br>
      * {@link com.db4o.ObjectContainer#deactivate ObjectContainer#deactivate(Object, depth)}
      * can be used to manually free memory by deactivating objects.<br><br>
-     * In client/server environment the same setting should be used on both 
-     * client and server<br><br>.
+     * In client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * @param depth the desired global activation depth.
      * @see ObjectClass#maximumActivationDepth configuring classes individually
      * 
@@ -144,8 +144,8 @@ public interface CommonConfiguration {
      * version updating on.
      * <br><br>If automatic updating is turned off, db4o will refuse
      * to open database files that use an older database file format.<br><br>
-     * In client-server environment this setting should be used on both client 
-     * and server.
+     * In client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * 
      * @sharpen.property
      */
@@ -161,9 +161,7 @@ public interface CommonConfiguration {
      * in the finalizer.<br><br>
      * Some JVMs have severe problems with both methods. For these rare cases the
      * autoShutDown feature may be turned off.<br><br>
-     * The default and recommended setting is <code>true</code>.<br><br>
-     * In client-server environment this setting should be used on both client 
-     * and server.
+     * The default and recommended setting is <code>true</code>.
      * @param flag whether db4o should shut down automatically.
      * 
      * @sharpen.property
@@ -178,8 +176,8 @@ public interface CommonConfiguration {
      * <br>Higher values will reduce the overall number of
      * read and write operations and allow better performance
      * at the cost of more RAM use.<br><br>
-     * This setting should be used on both client and server in
-     * client-server environment. 
+     * In client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * @param size the number of elements held in one BTree node.
      * 
      * @sharpen.property
@@ -192,8 +190,8 @@ public interface CommonConfiguration {
      * A tuning hint: If callbacks are not used, you can turn this feature off, to
      * prevent db4o from looking for callback methods in persistent classes. This will
      * increase the performance on system startup.<br><br>
-     * In client/server environment this setting should be used on both 
-     * client and server.
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * @param flag false to turn callback methods off
      * @see com.db4o.ext.ObjectCallbacks Using callbacks
      * 
@@ -215,8 +213,8 @@ public interface CommonConfiguration {
      * This setting may also be overridden for individual classes in
      * {@link ObjectClass#callConstructor(boolean)}.
      * <br><br>The default setting depends on the features supported by your current environment.<br><br>
-     * In client/server environment this setting should be used on both 
-     * client and server.
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * <br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
@@ -234,8 +232,8 @@ public interface CommonConfiguration {
      * <br><br>This setting can be set to false in a production environment after
      * all persistent classes have been stored at least once and classes will not
      * be modified any further in the future.<br><br>
-     * In a client/server environment this setting should be configured both on the 
-     * client and and on the server.
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * <br><br>Default value:<br>
      * <code>true</code>
      * @param flag the desired setting
@@ -269,8 +267,8 @@ public interface CommonConfiguration {
      * if an object can not be stored.
      * <br><br>
      * The default for this setting is <b>true</b>.<br><br>
-     * In client/server environment this setting should be used on both 
-     * client and server.<br><br>
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way.<br><br> 
      * @param flag true to throw Exceptions if objects can not be stored.
      * 
      * @sharpen.property
@@ -279,8 +277,8 @@ public interface CommonConfiguration {
 
     /**
      * configures db4o to call #intern() on strings upon retrieval.
-     * In client/server environment the setting should be used on both
-     * client and server.
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. 
      * @param flag true to intern strings
      * 
      * @sharpen.property
@@ -293,8 +291,8 @@ public interface CommonConfiguration {
      * wish to use to mark fields as transient. Multiple transient attributes 
      * are possible by calling this method multiple times with different
      * attribute names.<br><br>
-     * In client/server environment the setting should be used on both
-     * client and server.<br><br>
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. <br><br>
      * @param attributeName - the fully qualified name of the attribute, including
      * it's namespace  
      * 
@@ -347,7 +345,8 @@ public interface CommonConfiguration {
      * on the classpath at runtime for this
      * switch to have effect. 
      * <br><br>The default setting is <code>true</code>.<br><br>
-     * In client-server environment this setting should be used on both client and server.<br><br>  
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. <br><br>  
      * @param optimizeNQ true, if db4o should try to optimize
      * native queries at query execution time, false otherwise
      * 
@@ -408,12 +407,13 @@ public interface CommonConfiguration {
      * database file. To set up the database with the correct string encoding,
      * this configuration needs to be set correctly <b>before</b> a database 
      * file is created with the first call to
-     * {@link com.db4o.Db4o#openFile} or  {@link com.db4o.Db4o#openServer}.
+     * {@link com.db4o.Db4oEmbedded#openFile} or  {@link com.db4o.cs.Db4oClientServer#openServer}.
      * <br><br>For subsequent open calls, db4o remembers built-in
      * string encodings. If a custom encoding is used (an encoding that is 
      * not supplied from within the db4o library), the correct encoding
      * needs to be configured correctly again for all subsequent calls 
-     * that open database files.
+     * that open database files.<br><br>
+     * In a client-server mode, the server and all clients need to have the same string encoding.<br><br>
      * <br><br>Example:<br>
      * <code>config.stringEncoding(StringEncodings.utf8()));</code>
      * @see StringEncodings
@@ -428,8 +428,8 @@ public interface CommonConfiguration {
      * <br><br>In a production environment this setting can be set to <code>false</code>,
      * if all persistent classes have public default constructors.
      * <br><br>
-     * In client-server environment this setting should be used on both client and server
-     * side. <br><br>
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. <br><br>
      * Default value:<br>
      * <code>true</code>
      * @param flag the desired setting
@@ -447,8 +447,8 @@ public interface CommonConfiguration {
      * The default setting is 1: Only the object passed to
      * {@link com.db4o.ObjectContainer#store}
      * will be updated.<br><br>
-     * In client-server environment this setting should be used on both client and
-     * server sides.<br><br>
+     * In a client/server environment it is good practice to configure the
+     * client and the server in exactly the same way. <br><br>
      * @param depth the depth of the desired update.
      * @see ObjectClass#updateDepth
      * @see ObjectClass#cascadeOnUpdate
