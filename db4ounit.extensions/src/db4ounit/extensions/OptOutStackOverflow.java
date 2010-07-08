@@ -2,5 +2,5 @@
 
 package db4ounit.extensions;
 
-public interface OptOutStackOverflow /* extends OptOutTemporary  */ {
+public interface OptOutStackOverflow extends OptOutTemporary {
 }
