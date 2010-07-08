@@ -580,11 +580,18 @@
             Title="Logging Storage"
             Link="/Content/configuration/file/storage/pluggable_storage/logging_storage.htm" />
         </TocEntry>
+        <TocEntry
+          Title="Isolated Storage For Silverlight"
+          Link="/Content/configuration/file/storage/isolated_storage.htm"
+          conditions="Primary..NET" />
       </TocEntry>
     </TocEntry>
     <TocEntry
       Title="Client Configuration"
       Link="/Content/configuration/client_configuration.htm">
+      <TocEntry
+        Title="Message Sender"
+        Link="/Content/configuration/client/message_sender.htm" />
       <TocEntry
         Title="Prefetch Depth"
         Link="/Content/configuration/client/prefetch_depth.htm"></TocEntry>
@@ -594,6 +601,9 @@
       <TocEntry
         Title="Prefetch Slot Cache Size"
         Link="/Content/configuration/client/prefetch_slot_cache_size.htm" />
+      <TocEntry
+        Title="Prefetching IDs For New Objects"
+        Link="/Content/configuration/client/prefecht_id_count.htm" />
       <TocEntry
         Title="Timeout Client Socket"
         Link="/Content/configuration/client/timeout_client_socket.htm" />
@@ -1273,26 +1283,6 @@
         Link="/Content/platform_specific_issues/automatic_properties/automatic_properties_explained.htm" />
     </TocEntry>
     <TocEntry
-      Title="Isolated Storage"
-      Link="/Content/platform_specific_issues/isolated_storage.htm"
-      conditions="Primary..NET,Primary.All languages">
-      <TocEntry
-        Title="Isolated Storage IO Adapter"
-        Link="/Content/platform_specific_issues/isolated_storage/isolated_storage_io_adapter.htm" />
-      <TocEntry
-        Title="Isolated Storage Example"
-        Link="/Content/platform_specific_issues/isolated_storage/isolated_storage_example.htm" />
-      <TocEntry
-        Title="Benefits And Limitations"
-        Link="/Content/platform_specific_issues/isolated_storage/benefits_and_limitations.htm" />
-      <TocEntry
-        Title="Db4oIsolatedStorageFile"
-        Link="/Content/platform_specific_issues/isolated_storage/db4oisolatedstoragefile.htm" />
-      <TocEntry
-        Title="IsolatedStorageFileAdapter"
-        Link="/Content/platform_specific_issues/isolated_storage/isolatedstoragefileadapter.htm" />
-    </TocEntry>
-    <TocEntry
       Title="Android"
       Link="/Content/platform_specific_issues/android.htm"
       conditions="Primary.All languages,Primary.Java">
@@ -1556,12 +1546,6 @@
       <TocEntry
         Title="Persistent And Transient Fields"
         Link="/Content/tuning/performance_hints/persistent_and_transient_fields.htm" />
-      <TocEntry
-        Title="Prefetching IDs For New Objects"
-        Link="/Content/tuning/performance_hints/prefetching_ids_for_new_objects.htm" />
-      <TocEntry
-        Title="Prefetching Objects For Query Results"
-        Link="/Content/tuning/performance_hints/prefetching_objects_for_query_results.htm" />
       <TocEntry
         Title="Reserving Storage Space"
         Link="/Content/tuning/performance_hints/reserving_storage_space.htm" />

@@ -242,13 +242,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Isolated Storage</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/isolated_storage.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>Servlet</Term>
     </Terms>
     <Definition

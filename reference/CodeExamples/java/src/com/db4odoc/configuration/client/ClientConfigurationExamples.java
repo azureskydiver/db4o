@@ -35,6 +35,15 @@ public class ClientConfigurationExamples {
         container.close();
 
     }
+    public static void prefetchIDCount(){
+        // #example: Configure the prefetch id count
+        ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+        configuration.prefetchIDCount(128);
+        // #end example
+        ObjectContainer container = Db4oClientServer.openClient(configuration, "localhost",1337,"user","password");
+        container.close();
+
+    }
     public static void connectionTimeOut(){
         // #example: Configure the timeout
         ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();

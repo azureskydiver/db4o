@@ -34,6 +34,17 @@ Namespace Db4oDoc.Code.Configuration.Client
             container.Close()
 
         End Sub
+
+        Public Shared Sub PrefetchIDCount()
+            ' #example: Configure the prefetch id count
+            Dim configuration As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
+            configuration.PrefetchSlotCacheSize = 128
+            ' #end example
+            Dim container As IObjectContainer = Db4oClientServer.OpenClient(configuration, "localhost", 1337, "user", "password")
+            container.Close()
+
+        End Sub
+
         Public Shared Sub ConnectionTimeOut()
             ' #example: Configure the timeout
             Dim configuration As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
