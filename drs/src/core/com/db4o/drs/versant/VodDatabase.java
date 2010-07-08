@@ -105,21 +105,19 @@ public class VodDatabase {
 		return _persistenceManagerFactory;
 	}
 	
-	public void enhance(String outDir) throws IOException, InterruptedException{
-		
-		File outDirFile = new File(outDir);
+	public void enhance() throws IOException, InterruptedException{
 		
 		String tempFileName = Path4.getTempFileName();
 		File tempFile = new File(tempFileName);
 		try{
 			FileWriter writer = new FileWriter(tempFile);
+			if(DrsDebug.verbose){
+				_properties.store(System.err, null);
+			}
 			_properties.store(writer, null);
 			writer.close();
 			
-			System.out.println(outDirFile.getAbsolutePath());
-
-			
-			String[] args = new String[]{tempFile.getAbsolutePath(), outDirFile.getAbsolutePath()};
+			String[] args = new String[]{tempFile.getAbsolutePath()};
 			
 			String output = JavaServices.java("com.db4o.drs.versant.VodEnhancer", args);
 			if(DrsDebug.verbose){

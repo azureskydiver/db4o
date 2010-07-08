@@ -2,13 +2,15 @@
 
 package com.db4o.drs.versant.metadata;
 
-public class SignatureToDatabaseId {
+import com.db4o.internal.encoding.*;
+
+public class DatabaseSignature {
 	
 	private int databaseId;
 	
 	private byte[] signature;
 	
-	public SignatureToDatabaseId(int databaseId, byte[] signature){
+	public DatabaseSignature(int databaseId, byte[] signature){
 		this.databaseId = databaseId;
 		this.signature = signature;
 	}
@@ -19,6 +21,11 @@ public class SignatureToDatabaseId {
 	
 	public byte[] signature(){
 		return signature;
+	}
+	
+	@Override
+	public String toString() {
+		return "DatabaseSignature databaseId:" + databaseId + " signature:" + new LatinStringIO().read(signature);
 	}
 
 }

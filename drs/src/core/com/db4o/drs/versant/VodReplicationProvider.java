@@ -9,6 +9,7 @@ import javax.jdo.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
 import com.versant.core.vds.*;
@@ -29,9 +30,25 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
+		
+		// TODO: _vod.amendJdoMetaDataFile("drs.jdo");
+		
 		_pm = vod.createPersistenceManager();
 		_pm.currentTransaction().begin();
+		
+		loadSignatures();
+		
 		_dm = _vod.createDatastoreManager();
+	}
+
+	private void loadSignatures() {
+		Extent<DatabaseSignature> extent = _pm.getExtent(DatabaseSignature.class);
+		for (DatabaseSignature entry : extent) {
+			if(DrsDebug.verbose){
+				System.out.println(entry);
+			}
+			_signatures.add(entry);
+		}
 	}
 
 	public void commit() {
@@ -64,6 +81,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void destroy() {
 		_pm.currentTransaction().rollback();
 		_pm.close();
+		_dm.close();
 	}
 
 	public void activate(Object object) {
@@ -269,6 +287,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		signature = new Signature(signatureBytes(databaseId));
 		
+		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
+		_pm.makePersistent(databaseSignature);
 		_signatures.add(databaseId, signature);
 		return signature;
 	}
