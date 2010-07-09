@@ -8,7 +8,9 @@ import javax.jdo.*;
 
 import com.db4o.drs.versant.*;
 
-public class VodProviderTestCaseBase extends VodDatabaseTestCaseBase {
+import db4ounit.*;
+
+public class VodProviderTestCaseBase  implements TestCase  {
 	
 	protected static final String DATABASE_NAME = "VodDatabaseTestCaseBase";
 	
@@ -22,7 +24,6 @@ public class VodProviderTestCaseBase extends VodDatabaseTestCaseBase {
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
-		registerMetadataFile(_vod);
 		_pm = _vod.createPersistenceManager();
 		cleanDb();
 		_provider = new VodReplicationProvider(_vod);
@@ -46,7 +47,6 @@ public class VodProviderTestCaseBase extends VodDatabaseTestCaseBase {
 	public static void classSetUp() throws Exception {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.createDb();
-		registerMetadataFile(vod);
 		vod.enhance();
 	}
 

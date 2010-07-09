@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant;
 
+import javax.jdo.*;
+
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
@@ -55,37 +57,50 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		Item item = storeAndCommitSingleItem();
 		ReplicationReference reference = _provider.produceReference(item);
 		DrsUUID uuid = reference.uuid();
-		ReplicationReference producedReference = _provider.produceReferenceByUUID(uuid, null);
-		Assert.areSame(reference, producedReference);
+		Assert.areSame(reference, _provider.produceReferenceByUUID(uuid, null));
 	}
 	
 	public void testReferenceByUUIDReturnsObjectOnClear(){
-		assertReferenceByUUID(_provider);
+		Item item = storeAndCommitSingleItem();
+		ReplicationReference reference = _provider.produceReference(item);
+		DrsUUID uuid = reference.uuid();
+		_provider.clearAllReferences();
+		Assert.areEqual(item, _provider.produceReferenceByUUID(uuid, null).object());
 	}
 	
 	public void testReferenceByUUIDOnNewProvider(){
-		VodReplicationProvider provider = new VodReplicationProvider(_vod);
-		
-		assertReferenceByUUID(provider);
-		provider.destroy();
-	}
-
-	private void assertReferenceByUUID(VodReplicationProvider testProvider) {
 		Item item = storeAndCommitSingleItem();
 		ReplicationReference reference = _provider.produceReference(item);
-		
-		// make sure signatures are persisted
 		_provider.commit();
-
 		DrsUUID uuid = reference.uuid();
-		
-		_provider.clearAllReferences();
-		
-		ReplicationReference producedReference = testProvider.produceReferenceByUUID(uuid, null);
-		Assert.isNotNull(producedReference);
-		Assert.areEqual(item, producedReference.object());
+		VodReplicationProvider provider = new VodReplicationProvider(_vod);
+		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
+		provider.destroy();
 	}
-
+	
+	public void _testQueryForVersion(){
+		Item item = storeAndCommitSingleItem();
+		ReplicationReference reference = _provider.produceReference(item);
+		long version = reference.version();
+		System.out.println("Version " + version);
+		
+		String filter = "this.o_ts_timestamp == param";
+		
+		_pm.currentTransaction().begin();
+		
+		Query query = _pm.newQuery(Item.class, filter);
+		query.declareParameters("int param");
+		Iterable<Item> iterable = (Iterable<Item>) query.execute(version);
+		for (Item item2 : iterable) {
+			System.out.println("Query worked");
+			System.out.println(item2);
+		}
+		
+		_pm.currentTransaction().rollback();
+		
+		
+	}
+	
 	private Item storeAndCommitSingleItem() {
 		Item item = new Item("one");
 		_provider.storeNew(item);

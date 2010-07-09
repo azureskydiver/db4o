@@ -16,6 +16,10 @@ import com.versant.util.*;
 public class VodDatabase {
 	
 	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
+	
+	private static final String JDO_METADATA_KEY = "versant.metadata."; 
+	
+
 
 	private static final int DEFAULT_PORT = 5019;
 
@@ -30,19 +34,20 @@ public class VodDatabase {
 	public VodDatabase(String name, Properties properties){
 		_name = name;
 		_properties = properties;
-		amendDefaultProperties();
+		addDefaultProperties();
 	}
 	
 	public VodDatabase(String name){
 		this(name, new Properties());
 	}
 	
-	private void amendDefaultProperties(){
-		amendPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
-		amendPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
+	private void addDefaultProperties(){
+		addPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
+		addPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
+		addJdoMetaDataFiles();
 	}
 	
-	public void amendPropertyIfNotExists(String key, String value) {
+	public void addPropertyIfNotExists(String key, String value) {
 		if(_properties.containsKey(key)){
 			return;
 		}
@@ -163,7 +168,7 @@ public class VodDatabase {
 	private String connectionUrlAsString() {
 		String connectionURL = _properties.getProperty(CONNECTION_URL_KEY);
 		if(connectionURL == null){
-			amendDefaultProperties();
+			addDefaultProperties();
 		}
 		connectionURL = _properties.getProperty(CONNECTION_URL_KEY);
 		return connectionURL.replaceAll("versant:", "http:");
@@ -175,6 +180,42 @@ public class VodDatabase {
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private void addJdoMetaDataFiles() {
+		for (File file : new File("bin").listFiles()) {
+			if(! file.isDirectory()  && file.getName().endsWith(".jdo")){
+				addJdoMetaDataFile(file.getName());
+			}
+		}
+	}
+
+	public void addJdoMetaDataFile(String fileName) {
+		
+		final int maxMetadataEntries = 1000;
+		final int quitSearchingAfterGap = 5;
+		final int notSet = -1;
+		
+		int freeEntry = notSet;
+		int lastOccupied = notSet;
+		
+		for (int i = 0; i < maxMetadataEntries; i++) {
+			String property = _properties.getProperty(JDO_METADATA_KEY + i);
+			if(property == null){
+				if(freeEntry == notSet){
+					freeEntry = i;
+				}
+				if(i - lastOccupied > quitSearchingAfterGap){
+					break;
+				}
+			} else {
+				lastOccupied = i;
+				if(fileName.equals(property)){
+					return;
+				}
+			}
+		}
+		_properties.setProperty(JDO_METADATA_KEY + freeEntry, fileName);
 	}
 
 }

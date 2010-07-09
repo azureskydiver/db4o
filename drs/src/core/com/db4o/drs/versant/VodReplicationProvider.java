@@ -30,14 +30,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
-		
-		// TODO: _vod.amendJdoMetaDataFile("drs.jdo");
-		
 		_pm = vod.createPersistenceManager();
 		_pm.currentTransaction().begin();
-		
 		loadSignatures();
-		
 		_dm = _vod.createDatastoreManager();
 	}
 
