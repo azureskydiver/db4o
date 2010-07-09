@@ -8,7 +8,7 @@ import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodDatabaseTestCase extends VodDatabaseTestCaseBase implements TestLifeCycle {
+public class VodDatabaseTestCase implements TestLifeCycle {
 	
 	private static final String DATABASE_NAME = "VodDatabaseTestCase";
 	
@@ -17,7 +17,6 @@ public class VodDatabaseTestCase extends VodDatabaseTestCaseBase implements Test
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
 		_vod.createDb();
-		
 	}
 
 	public void tearDown() throws Exception {
@@ -25,12 +24,9 @@ public class VodDatabaseTestCase extends VodDatabaseTestCaseBase implements Test
 	}
 	
 	public void testPersistenceManagerFactory(){
-		registerMetadataFile(_vod);
 		PersistenceManager pmf = _vod.createPersistenceManager();
 		Assert.isFalse(pmf.isClosed());
 		pmf.close();
 	}
-	
-	
 
 }

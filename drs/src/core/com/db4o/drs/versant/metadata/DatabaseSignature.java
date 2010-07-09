@@ -25,7 +25,10 @@ public class DatabaseSignature {
 	
 	@Override
 	public String toString() {
-		return "DatabaseSignature databaseId:" + databaseId + " signature:" + new LatinStringIO().read(signature);
+		return "DatabaseSignature databaseId:" 
+			+ databaseId 
+			+ " signature:" 
+			+ new LatinStringIO().read(signature);
 	}
 
 }
