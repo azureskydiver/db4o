@@ -45,6 +45,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
+    <Reference Include="DB4objects.Db4o.CS.Optional, Version=8.0.152.14558, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\DB4objects.Db4o.CS.Optional.dll</HintPath>
+    </Reference>
     <Reference Include="Db4objects.Db4o.NativeQueries, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.NativeQueries.dll</HintPath>
@@ -144,6 +148,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\clientserver\messaging\MessagingExample.vb" />
+    <Compile Include="Code\clientserver\ssl\SSLExample.vb" />
     <Compile Include="Code\configuration\client\ClientConfigurationExamples.vb" />
     <Compile Include="Code\configuration\common\CommonConfigurationExamples.vb" />
     <Compile Include="Code\configuration\io\LRUCachingStorage.vb" />

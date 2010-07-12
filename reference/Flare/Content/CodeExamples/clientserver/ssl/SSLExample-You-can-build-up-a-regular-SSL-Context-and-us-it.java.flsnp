@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">
+// You can build your own SSLContext and use all features of Java's SSL-support.
+// To keep this example small, we just use the default-context instead of building one.
+SSLContext context = SSLContext.getDefault();
+
+
+ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
+configuration.common().add(new SSLSupport(context));</pre>
+		<div class="codesnippet-meta">SSLExample.java: You can build up a regular SSL-Context and us it<a href="Example-clientserver-ssl-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="4" MadCap:lastHeight="795" MadCap:lastWidth="612">
     <head><title>Transparent Persistence Implementation</title>
     </head>
     <body onload="prettyPrint()">
@@ -33,23 +33,21 @@ Activation, so it is strongly recommended to study the <a href="../activation/tr
         <p>In order to make use of Transparent Persistence you will
 need:</p>
         <ol>
-            
-                <li>Enable
+            <li>Enable
       Transparent Activation (required for binding object instances to the TP
       framework) on the database level: 
       <p MadCap:conditions="Primary.Java,Primary.All languages"> Java: 
-      <code>configuration.add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET: 
-      <code>configuration.Add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:net" /></li>
-                <li>Implement
+      <code>configuration.common().add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET: 
+      <code>configuration.Common.Add(new TransparentPersistenceSupport());</code></p><p MadCap:conditions="Primary:net" /></li>
+            <li>Implement
       <MadCap:variable name="Primary.Activatable" /> interface for the persistent classes, either
       manually or through using <a href="../../implementation_strategies/enhancement_tools.htm">enhancement tools</a>.</li>
-                <li>Call
+            <li>Call
       activate method at the beginning of all class methods that modify class
       fields: 
       <p MadCap:conditions="Primary.Java,Primary.All languages"> Java: 
       <code>activate(ActivationPurpose.WRITE)</code></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET"> .NET 
       <code>Activate(ActivationPurpose.Write)</code></p><p MadCap:conditions="Primary:net" /></li>
-            
         </ol>
         <p>Note that TransparentPersistenceSupport configuration implicitly adds TransparentActivationSupport. The fact is, that before
 modification each field object should be loaded into the reference cache and

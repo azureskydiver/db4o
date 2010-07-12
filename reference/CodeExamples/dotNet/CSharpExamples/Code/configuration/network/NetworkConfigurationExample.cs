@@ -1,12 +1,22 @@
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
+using Db4objects.Db4o.CS.Foundation;
 using Db4objects.Db4o.CS.Internal.Config;
 
 namespace Db4oDoc.Code.Configuration.Network
 {
     public class NetworkConfigurationExample
     {
+
+        private static void EnableBatchMode()
+        {
+            // #example: enable or disable batch mode
+            IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
+            configuration.Networking.BatchMessages = true;
+            // #end example
+            IObjectContainer container = Db4oClientServer.OpenClient(configuration, "localhost", 1337, "sa", "sa");
+        }
 
         private static void ReplaceClientServerFactory()
         {
@@ -34,6 +44,16 @@ namespace Db4oDoc.Code.Configuration.Network
             // #end example
             IObjectContainer container = Db4oClientServer.OpenClient(configuration, "localhost", 1337, "sa", "sa");
         }
+
+        private static void PluggableSocket()
+        {
+            // #example: Exchange the socket-factory
+            IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
+            configuration.Networking.SocketFactory = new StandardSocket4Factory();
+            // #end example
+            IObjectContainer container = Db4oClientServer.OpenClient(configuration, "localhost", 1337, "sa", "sa");
+        }
+
 
     }
 }

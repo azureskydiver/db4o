@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
+configuration.networking().messageRecipient(new MessageRecipient() {
+    public void processMessage(MessageContext messageContext, Object o) {
+        System.out.println(&quot;The server received a '&quot; + o + &quot;' message&quot;);
+        // you can respond to the client
+        messageContext.sender().send(new HelloMessage(&quot;Hi Client!&quot;));
+    }
+});
+ObjectServer server = Db4oClientServer.openServer(configuration, DATABASE_FILE, PORT_NUMBER);</pre>
+		<div class="codesnippet-meta">MessagingExample.java: configure a message receiver for the server<a href="Example-clientserver-messaging-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

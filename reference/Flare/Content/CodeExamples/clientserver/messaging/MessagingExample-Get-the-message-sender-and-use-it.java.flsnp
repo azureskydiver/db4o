@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">MessageSender sender = configuration.messageSender();
+ObjectContainer container = Db4oClientServer.openClient(configuration, &quot;localhost&quot;, PORT_NUMBER, USER_AND_PASSWORD, USER_AND_PASSWORD);
+
+
+sender.send(new HelloMessage(&quot;Hi Server!&quot;));</pre>
+		<div class="codesnippet-meta">MessagingExample.java: Get the message sender and use it<a href="Example-clientserver-messaging-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

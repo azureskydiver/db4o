@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.Collections.BigSet.BigSetExample</StartupObject>
+    <StartupObject>Db4oDoc.Code.ClientServer.SSL.SSLExample</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
+    <Reference Include="DB4objects.Db4o.CS.Optional, Version=8.0.152.14558, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\temp\db4o-net35\db4o-8.0\bin\net-3.5\DB4objects.Db4o.CS.Optional.dll</HintPath>
+    </Reference>
     <Reference Include="Db4objects.Db4o.Linq, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.Linq.dll</HintPath>
@@ -56,12 +60,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
+    <Compile Include="Code\clientserver\messaging\MessagingExample.cs" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.cs" />
+    <Compile Include="Code\clientserver\ssl\SSLExample.cs" />
     <Compile Include="Code\collections\bigset\BigSetExample.cs" />
     <Compile Include="Code\configuration\basics\ConfigurationBasics.cs" />
     <Compile Include="Code\configuration\client\ClientConfigurationExamples.cs" />

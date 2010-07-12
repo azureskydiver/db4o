@@ -1,6 +1,7 @@
 package com.db4odoc.clientserver.messaging;
 
 
+// #example: The message class
 public class HelloMessage {
     private final String message;
 
@@ -13,3 +14,4 @@ public class HelloMessage {
         return message;
     }
 }
+// #end example

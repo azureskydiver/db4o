@@ -22,14 +22,24 @@ public class MessagingExample {
     private static void messagingExample() {
         ObjectServer server = startUpServer();
 
-        ClientContainerAndMessageSender client = startClient();
-        MessageSender sender = client.getSender();
+        // #example: configure a message receiver for a client
+        ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+        configuration.networking().messageRecipient(new MessageRecipient() {
+            public void processMessage(MessageContext messageContext, Object o) {
+                System.out.println("The client received a '" + o + "' message");
+            }
+        });
+        // #end example
+
+        // #example: Get the message sender and use it
+        MessageSender sender = configuration.messageSender();
+        ObjectContainer container = Db4oClientServer.openClient(configuration, "localhost", PORT_NUMBER, USER_AND_PASSWORD, USER_AND_PASSWORD);
+
 
         sender.send(new HelloMessage("Hi Server!"));
+        // #end example
 
         waitForAWhile();
-        ObjectContainer container = client.getContainer();
-        container.commit();
         container.close();
 
 
@@ -44,47 +54,21 @@ public class MessagingExample {
         }
     }
 
-    private static ClientContainerAndMessageSender startClient() {
-        ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
-        configuration.networking().messageRecipient(new MessageRecipient() {
-            public void processMessage(MessageContext messageContext, Object o) {
-                System.out.println("The client received a '"+o+"' message");
-            }
-        });
-        MessageSender messageSender = configuration.messageSender();
-        ObjectContainer container = Db4oClientServer.openClient(configuration, "localhost",PORT_NUMBER, USER_AND_PASSWORD,USER_AND_PASSWORD);
-        return new ClientContainerAndMessageSender(messageSender, container);
-    }
-
     private static ObjectServer startUpServer() {
+        // #example: configure a message receiver for the server
         ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
         configuration.networking().messageRecipient(new MessageRecipient() {
             public void processMessage(MessageContext messageContext, Object o) {
-                System.out.println("The server received a '"+o+"' message");
+                System.out.println("The server received a '" + o + "' message");
+                // you can respond to the client
                 messageContext.sender().send(new HelloMessage("Hi Client!"));
             }
         });
         ObjectServer server = Db4oClientServer.openServer(configuration, DATABASE_FILE, PORT_NUMBER);
+        // #end example
         server.grantAccess(USER_AND_PASSWORD, USER_AND_PASSWORD);
         return server;
     }
 
 
-    private static class ClientContainerAndMessageSender{
-        private final MessageSender sender;
-        private final ObjectContainer container;
-
-        private ClientContainerAndMessageSender(MessageSender sender, ObjectContainer container) {
-            this.sender = sender;
-            this.container = container;
-        }
-
-        public MessageSender getSender() {
-            return sender;
-        }
-
-        public ObjectContainer getContainer() {
-            return container;
-        }
-    }
 }

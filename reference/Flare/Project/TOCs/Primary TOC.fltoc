@@ -612,14 +612,23 @@
       Title="Networking Configuration"
       Link="/Content/configuration/network_configuration.htm">
       <TocEntry
+        Title="Batch Mode"
+        Link="/Content/configuration/networking/batch_mode.htm"></TocEntry>
+      <TocEntry
         Title="Client Server Factory"
         Link="/Content/configuration/networking/client_server_factory.htm"></TocEntry>
+      <TocEntry
+        Title="Message Recipient"
+        Link="/Content/configuration/networking/message_recipient.htm" />
       <TocEntry
         Title="Max Batch Queue Size"
         Link="/Content/configuration/networking/max_batch_queue_size.htm" />
       <TocEntry
         Title="Single Threaded Client"
         Link="/Content/configuration/networking/single_threaded_client.htm" />
+      <TocEntry
+        Title="Pluggable Sockets"
+        Link="/Content/configuration/networking/pluggable_sockets.htm" />
     </TocEntry>
     <TocEntry
       Title="Id System"
@@ -1773,9 +1782,6 @@
         Title="Network Server"
         Link="/Content/client-server/networked/network_server.htm" />
       <TocEntry
-        Title="Out-of-Band Signalling"
-        Link="/Content/client-server/networked/out-of-band_signalling.htm" />
-      <TocEntry
         Title="Simple db4o Server"
         Link="/Content/client-server/networked/simple_db4o_server.htm" />
       <TocEntry
@@ -1840,14 +1846,6 @@
         Link="/Content/client-server/semaphores/controlling_login_information.htm" />
     </TocEntry>
     <TocEntry
-      Title="Pluggable Sockets"
-      Link="/Content/client-server/pluggable_sockets.htm">
-      <TocEntry
-        Title="Using SSL For Client-Server Communication"
-        Link="/Content/client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm"
-        conditions="Primary.Java" />
-    </TocEntry>
-    <TocEntry
       Title="Remote Code Execution"
       Link="/Content/client-server/remote_code_execution.htm">
       <TocEntry
@@ -1871,15 +1869,8 @@
       Title="Messaging"
       Link="/Content/client-server/messaging.htm" />
     <TocEntry
-      Title="Batch Mode"
-      Link="/Content/client-server/batch_mode.htm">
-      <TocEntry
-        Title="Controlling Memory Consumption"
-        Link="/Content/client-server/batch_mode/controlling_memory_consumption.htm" />
-      <TocEntry
-        Title="Batch Messaging Example"
-        Link="/Content/client-server/batch_mode/batch_messaging_example.htm" />
-    </TocEntry>
+      Title="Using SSL For Client-Server Communication"
+      Link="/Content/client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm" />
   </TocEntry>
   <TocEntry
     Title="db4o Replication System dRS"

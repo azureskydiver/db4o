@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public class HelloMessage
+{
+    private readonly string message;
+
+    public HelloMessage(string message)
+    {
+        this.message = message;
+    }
+
+    public override string ToString()
+    {
+        return message;
+    }
+}
+</pre>
+		<div class="codesnippet-meta">MessagingExample.cs: The message class<a href="Example-clientserver-messaging-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

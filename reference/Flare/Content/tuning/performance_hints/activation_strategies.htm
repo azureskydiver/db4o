@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="812" MadCap:lastWidth="624">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1054" MadCap:lastWidth="586">
     <head><title>Activation strategies	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Activation strategies</h1>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: <br /></p>
-            <p><code>configuration.activationDepth(activationDepth);<br /></code>
+            <p><code>configuration,common().activationDepth(activationDepth);<br /></code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: <br /></p>
-            <p><code>configuration.ActivationDepth(activationDepth);<br /></code>
+            <p><code>configuration.Common.ActivationDepth(activationDepth);<br /></code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" /><a name="Advantage"></a>
@@ -37,13 +37,25 @@
         <p>or use specific object settings:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java:<br /></p>
-            <p><code>configuration.<br />objectClass("yourClass").minimumActivationDepth(minimumDepth);</code><code>configuration.objectClass("yourClass").<br />maximumActivationDepth(maximumDepth)</code><code>;<br />configuration.objectClass("yourClass").<br />cascadeOnActivate;<br />(bool)</code><code>configuration.objectClass("yourClass").<br />objectField("field").cascadeOnActivate(bool);<br /></code>
+            <p><code>configuration.<br />objectClass("yourClass").minimumActivationDepth(minimumDepth);</code>
+            </p>
+            <p><code>configuration.common().objectClass("yourClass").<br />maximumActivationDepth(maximumDepth);</code>
+            </p>
+            <p><code>configuration.common().objectClass("yourClass").<br />cascadeOnActivate(bool);</code>
+            </p>
+            <p><code>configuration.common().objectClass("yourClass").<br />objectField("field").cascadeOnActivate(bool);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET:<br /></p>
-            <p><code>configuration.ObjectClass("yourClass").<br />MinimumActivationDepth(minimumDepth)</code><code>;<br />configuration.ObjectClass("yourClass").<br />MaximumActivationDepth(maximumDepth);<br /></code><code>configuration.ObjectClass("yourClass").<br />CascadeOnActivate (bool)</code><code>;<br />configuration.ObjectClass("yourClass").<br />ObjectField("field").CascadeOnActivate(bool);<br /></code>
+            <p><code>configuration.Common.ObjectClass("yourClass").<br />MinimumActivationDepth(minimumDepth);</code>
+            </p>
+            <p><code>configuration.Common.ObjectClass("yourClass").<br />MaximumActivationDepth(maximumDepth);</code>
+            </p>
+            <p><code>configuration.Common.ObjectClass("yourClass").<br />CascadeOnActivate(bool);</code>
+            </p>
+            <p><code>configuration.Common.ObjectClass("yourClass").<br />ObjectField("field").CascadeOnActivate(bool);<br /></code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />

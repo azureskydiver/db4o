@@ -12,13 +12,13 @@
         </p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(true); </code>
+            <p><code>configuration.common().objectClass(Foo.class).objectField("bar").indexed(true); </code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true); </code>
+            <p><code>configuration.Common.ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true); </code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />
@@ -27,26 +27,26 @@
         <p>To drop an index you would also issue a configuration call in your db4o configuration method:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(false);</code>
+            <p><code>configuration.common().objectClass(Foo.class).objectField("bar").indexed(false);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(false);</code>
+            <p><code>configuration.Common.ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(false);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>Actually dropping the index will take place the next time the respective class is used.db4o will tell you when it creates and drops indexes, if you choose a message level of 1 or higher:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.messageLevel(1);</code>
+            <p><code>configuration.common().messageLevel(1);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.MessageLevel(1);</code>
+            <p><code>configuration.Common.MessageLevel(1);</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />

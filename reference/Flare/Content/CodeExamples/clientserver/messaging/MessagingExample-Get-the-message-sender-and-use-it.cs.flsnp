@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">IMessageSender sender = configuration.MessageSender;
+using (IObjectContainer container = Db4oClientServer.OpenClient(configuration, &quot;localhost&quot;,
+                                                                PortNumber, UserAndPassword,
+                                                                UserAndPassword))
+{
+    sender.Send(new HelloMessage(&quot;Hi Server!&quot;));
+    WaitForAWhile();
+}</pre>
+		<div class="codesnippet-meta">MessagingExample.cs: Get the message sender and use it<a href="Example-clientserver-messaging-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
