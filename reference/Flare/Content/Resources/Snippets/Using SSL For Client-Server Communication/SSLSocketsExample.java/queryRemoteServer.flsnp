@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SSLSocketsExample.java: queryRemoteServer
-private static void queryRemoteServer(String host, int port,String user,String password) throws IOException  {
-    Configuration config = Db4o.newConfiguration();
-        ObjectContainer client=Db4o.openClient(config, &quot;localhost&quot;,port,user,password, socketFactory);
-        listResult(client.queryByExample(new Pilot(null, 0)));
-        client.close();
-    }</pre>    </body></html>
