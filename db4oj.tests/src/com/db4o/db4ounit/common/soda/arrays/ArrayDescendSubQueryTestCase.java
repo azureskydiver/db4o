@@ -65,9 +65,9 @@ public class ArrayDescendSubQueryTestCase extends AbstractDb4oTestCase {
 		topQuery.descend("_title").constrain("ddd");
 		Query subQuery = topQuery.descend("_cites").descend("_author");
 		ObjectSet<Object> result = subQuery.execute();
-		while(result.hasNext()) {
-			System.out.println(result.next());
-		}
+//		while(result.hasNext()) {
+//			System.out.println(result.next());
+//		}
 		Assert.areEqual(2, result.size());
 	}
 }
