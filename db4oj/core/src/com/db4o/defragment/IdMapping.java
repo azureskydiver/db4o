@@ -59,4 +59,10 @@ public interface IdMapping {
 	 * Shuts down the mapping after use.
 	 */
 	void close();
+	
+	/**
+	 * returns the slot address for an ID 
+	 */
+	public int addressForId(int id);
+	
 }

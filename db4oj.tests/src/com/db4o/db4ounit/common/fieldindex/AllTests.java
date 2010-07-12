@@ -20,6 +20,7 @@ public class AllTests extends ComposibleTestSuite {
 				DoubleFieldIndexTestCase.class,
 				RuntimeFieldIndexTestCase.class,
 				SecondLevelIndexTestCase.class,
+				StringFieldIndexDefragmentTestCase.class,
 	            StringIndexTestCase.class,
 	            StringIndexCorruptionTestCase.class,
 	            StringIndexWithSuperClassTestCase.class,

@@ -52,6 +52,14 @@ public class InMemoryIdMapping extends AbstractIdMapping {
 	protected void mapNonClassIDs(int origID, int mappedID) {
 		_tree = Tree.add(_tree, new TreeIntObject(origID, new Integer(mappedID)));
 	}
+	
+	public int addressForId(int id){
+		IdSlotTree node = (IdSlotTree) _idsToSlots.find(id);
+		if(node == null){
+			throw new IllegalStateException();
+		}
+		return node.slot().address();
+	}
 
 	public void mapId(int id, Slot slot) {
 		IdSlotTree idSlotMapping = new IdSlotTree(id, slot);
