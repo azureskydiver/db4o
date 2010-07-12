@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Class ClientMessageReceiver
+    Implements IMessageRecipient
+    Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _
+        Implements IMessageRecipient.ProcessMessage
+        Console.WriteLine(&quot;The client received a '{0}' message&quot;, message)
+    End Sub
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Class ClientMessageReceiver
+    Implements IMessageRecipient
+    Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _
+        Implements IMessageRecipient.ProcessMessage
+        Console.WriteLine(&quot;The client received a '{0}' message&quot;, message)
+    End Sub
+End Class</pre>
+		<div class="codesnippet-meta">MessagingExample.vb: The message receiver for the client<a href="Example-clientserver-messaging-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

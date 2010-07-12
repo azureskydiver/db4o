@@ -1,54 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="3797" MadCap:lastWidth="574" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;a1;b1;c1;b2;uncomment">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3592" MadCap:lastWidth="973" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;a1;b1;c1;b2;uncomment">
     <head><title>Messaging	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>
-            <MadCap:keyword term="Network" />
+            <MadCap:keyword term="Network:Messaging" />
             <MadCap:keyword term="Messaging" />Messaging</h1>
-        <p>In client/server mode the TCP connection between the client and the server can also be used to send messages from the client to the server.</p>
-        <p>Possible use cases could be:</p>
+        <p>In client/server it possible to send messages between a client and the server. Possible use cases could be:</p>
         <ul>
             <li>Shutting down and restarting the server.</li>
             <li>Triggering server backup.</li>
             <li>Using a customized login strategy to restrict the number of allowed client connections.</li>
         </ul>
-        <p>Here is some example code how this can be done.</p>
-        <p>First we need to decide on a class that we want to use as the message. Any object that is storable in db4o can be used as a message, but strings and other simple types will not be carried (as they are not storable in db4o on their own). Let's create a dedicated class:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.java/MyClientServerMessage.java.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.cs/MyClientServerMessage.cs.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MyClientServerMessage.vb/MyClientServerMessage.vb.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:vb" />
-        <p>Now we have to add some code to the server to react to arriving messages. This can be done by configuring a MessageRecipient object on the server. Let's simply print out all objects that arrive as messages. For the following we assume that we already have an ObjectServer object, opened with <a href="embedded.htm">Db4o.openServer()</a>.</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.java/MessagingExample.java.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.cs/MessagingExample.cs.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Messaging/MessagingExample.vb/MessagingExample.vb.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:vb" />
-        <p>The MessageSender object on the client can be reused to send multiple messages.</p>
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="messagingjava.zip">Java</a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="messagingcs.zip">c#</a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="messagingvb.zip">VB.NET</a>
-            </MadCap:conditionalText>
-        </p>
+        <h2>Sending and Receiving Messages</h2>
+        <p>First you need to decide on a class that you want to use as the message. Any object that is storable in db4o can be used as a message. Of course you use multiple classes for representing different messages. Let's create a dedicated class.</p>
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/HelloMessage-The-message-class.all.flsnp" />
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/MessagingExample-The-message-class.all.flsnp" />
+        <p>Now you need to register a handler which handles arriving messages. This can be done by configuring a message recipient on the server. Let's simply print out the arriving message. Additionally we answer to the client with another message.</p>
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/MessagingExample-configure-a-message-receiver-for-the-server.all.flsnp" />
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/MessagingExample-The-message-receiver-for-the-server.all.flsnp" />
+        <p>The same can be done on the client. Register a handler for the received messages. </p>
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/MessagingExample-configure-a-message-receiver-for-a-client.all.flsnp" />
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/MessagingExample-The-message-receiver-for-the-client.all.flsnp" />
+        <p>Now on the client we can get a message sender. The message sender allows you to send a message to the server. In this example we send a hello message.</p>
+        <MadCap:snippetBlock src="../CodeExamples/clientserver/messaging/MessagingExample-Get-the-message-sender-and-use-it.all.flsnp" />
     </body>
 </html>

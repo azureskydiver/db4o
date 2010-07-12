@@ -3,12 +3,18 @@ package com.db4odoc.configuration.network;
 import com.db4o.ObjectContainer;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ClientConfiguration;
+import com.db4o.cs.foundation.StandardSocket4Factory;
 import com.db4o.cs.internal.config.StandardClientServerFactory;
 
 
 public class NetworkConfigurationExample {
-    public static void main(String[] args) {
 
+    private static void enableBatchMode(){
+        // #example: enable or disable batch mode
+        ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+        configuration.networking().batchMessages(true);
+        // #end example
+        ObjectContainer container = Db4oClientServer.openClient(configuration, "localhost", 1337, "sa", "sa");
     }
 
     private static void replaceClientServerFactory(){
@@ -31,6 +37,14 @@ public class NetworkConfigurationExample {
         // #example: single threaded client
         ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
         configuration.networking().singleThreadedClient(true);
+        // #end example
+        ObjectContainer container = Db4oClientServer.openClient(configuration, "localhost", 1337, "sa", "sa");
+    }
+
+    private static void pluggableSocket(){
+        // #example: Exchange the socket-factory
+        ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+        configuration.networking().socketFactory(new StandardSocket4Factory());
         // #end example
         ObjectContainer container = Db4oClientServer.openClient(configuration, "localhost", 1337, "sa", "sa");
     }

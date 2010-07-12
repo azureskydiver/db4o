@@ -1,29 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2314" MadCap:lastWidth="770" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;a1;b1;c1;b2;uncomment;setMessageRecipient;processMessage">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="2149" MadCap:lastWidth="1267" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;a1;b1;c1;b2;uncomment;setMessageRecipient;processMessage">
     <head><title>Using SSL For Client-Server Communication			</title>
     </head>
     <body>
         <h1>
-            <MadCap:keyword term="Communication" />Using SSL For Client-Server Communication</h1>
-        <p>With the default settings db4o client-server communication is not encrypted and thus can potentially be a dangerous security hole. This can be fixed with a <a href="../pluggable_sockets.htm">new pluggable socket</a> client/server implementation. Let's look at a simple example - we will use SSL protocol to protect our communication channel.</p>
-        <p>Basically the task is to create a NativeSocketFactory implementation that will create sockets able to communicate through an encrypted channel. In Java these would be SSLServerSocket and SSLSocket.</p>
-        <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SecureSocketFactory.java/SecureSocketFactory.java.flsnp" />
-        <p>In order for this class to work correctly we need to provide a correctly initialized SSLContext. For those who are not familiar with Java SSL implementation it is recommended to get acquainted with Java documentation for SSLContext, TrustManager, KeyStore and KeyManagerFactory APIs.</p>
-        <p>For encryption purposes we will need to create a new keystore. This can be done with the following command:</p>
-        <p><code>keytool -genkey -keystore SSLcert -storepass password</code>
-        </p>
-        <p>This command creates a file SSLcert, which contains a keystore protected by "password" password. For a test keystore you can provide any answers to the keytool questions and leave the key password the same as the keystore password. For easy access copy the SSLcert file into your projects directory.</p>
-        <p>Now we are ready to create a SecureSocketFactory</p>
-        <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/createSecureSocketFactory.flsnp" />
-        <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/createTrustManager.flsnp" />
-        <p>Starting a server and opening client connections with the new socket factory is as simple as usual:</p>
-        <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/main.flsnp" />
-        <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/storeObjectsRemotely.flsnp" />
-        <MadCap:snippetBlock src="../../Resources/Snippets/Using SSL For Client-Server Communication/SSLSocketsExample.java/queryRemoteServer.flsnp" />
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="SSLjava.zip">Java </a>
-            </MadCap:conditionalText>
-        </p>
+            <MadCap:keyword term="SSL;Encryption" />Using SSL For Client-Server Communication</h1>
+        <p>With the default settings db4o client-server communication is not encrypted and thus can potentially be a dangerous security hole. db4o supports SSL for client server communication. The implementation uses the <a href="../../configuration/networking/pluggable_sockets.htm">pluggable socket</a> to provide secure sockets. </p>
+        <div MadCap:conditions="Primary.Java">
+            <p>The SSL-communication uses the standard Java Secure Socket Extensions, which are part of the normal JRE. You take a look a to <a href="http://java.sun.com/javase/technologies/security/">full documentation here</a>. </p>
+            <p>You simply need to add the SSLSupport on the server and the clients and you done. The default-implementation uses the default SSLContext for the client and the server.</p>
+            <MadCap:snippetBlock src="../../CodeExamples/clientserver/ssl/SSLExample-Add-SSL-support-to-the-server.all.flsnp" />
+            <MadCap:snippetBlock src="../../CodeExamples/clientserver/ssl/SSLExample-Add-SSL-support-to-the-client.all.flsnp" />
+            <p>Of course you also can build your own SSLContext with the Java API. After you've build the SSL-Context, you can pass it to the SSLSupport-constructor. Read in the Java documentation how to <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html">build a proper SSLContext:</a></p>
+            <MadCap:snippetBlock src="../../CodeExamples/clientserver/ssl/SSLExample-You-can-build-up-a-regular-SSL-Context-and-us-it.all.flsnp" />
+        </div>
+        <div MadCap:conditions="Primary..NET">
+            <p>The SSL communication uses the .NET security libraries to implement the secure communication. Currently only one way authentication is supported, where the server need to have a valid certificate. Clients-certificates are currently not supported.</p>
+            <p>On the server you need to add a the server SSL support. Additionally you need to specify a the server certificate. This way you can choose from where you want to get the server-certificate. Take a look at the <a href="http://msdn.microsoft.com/en-us/library/system.net.security.aspx">.NET documentation for a more details</a>.</p>
+            <MadCap:snippetBlock src="../../CodeExamples/clientserver/ssl/SSLExample-Add-SSL-support-to-the-server.all.flsnp" />
+            <p>On the client you need to use the client SLL support. Add a callback for additional certificate verification.</p>
+            <MadCap:snippetBlock src="../../CodeExamples/clientserver/ssl/SSLExample-Add-SSL-support-to-the-client.all.flsnp" />
+            <MadCap:snippetBlock src="../../CodeExamples/clientserver/ssl/SSLExample-callback-for-validating-the-certificate.all.flsnp" />
+        </div>
     </body>
 </html>

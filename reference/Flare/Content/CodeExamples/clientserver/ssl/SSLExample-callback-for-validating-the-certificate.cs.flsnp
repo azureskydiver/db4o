@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">private static bool CheckCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+{
+    // here you can check the certificates of the server and accept it if it's ok.)
+    return true;
+}</pre>
+		<div class="codesnippet-meta">SSLExample.cs: callback for validating the certificate<a href="Example-clientserver-ssl-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

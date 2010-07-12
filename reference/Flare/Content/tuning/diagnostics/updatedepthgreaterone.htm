@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="385" MadCap:lastWidth="586">
     <head><title>UpdateDepthGreaterOne	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -7,26 +7,26 @@
         <p>UpdateDepth configuration setting allows you to specify the level of objects' enclosure where update command will still be valid:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.updateDepth(depth)</code>
+            <p><code>configuration.common().updateDepth(depth)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.UpdateDepth(depth)</code>
+            <p><code>configuration.Common.UpdateDepth(depth)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>This setting has a considerable impact on performance and can make the application very slow. It is recommended to keep the default configuration setting (UpdateDepth(0)) and specify UpdateDepth for selected classes, where cascaded update will be really useful:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: </p>
-            <p><code>configuration.objectClass(Car.class).updateDepth(3)</code>
+            <p><code>configuration.common().objectClass(Car.class).updateDepth(3)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
             <p>.NET: </p>
-            <p><code>configuration.ObjectClass(typeof(Car)).UpdateDepth(3)</code>
+            <p><code>configuration.Common.ObjectClass(typeof(Car)).UpdateDepth(3)</code>
             </p>
         </p>
         <p MadCap:conditions="Primary:net" />
