@@ -11,6 +11,7 @@ import com.db4o.internal.btree.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.slots.*;
+import com.db4o.query.*;
 
 /**
  * Database based mapping for IDs during a defragmentation run.
@@ -151,6 +152,16 @@ public class DatabaseIdMapping extends AbstractIdMapping {
 		};
 	}
 	
-	
+	public int addressForId(int id){
+		Query query = _mappingDb.query();
+		query.constrain(IdSlotMapping.class);
+		query.descend("_id").constrain(id);
+		ObjectSet<IdSlotMapping> objectSet = query.execute();
+		if(objectSet.size() != 1){
+			throw new IllegalStateException();
+		}
+		IdSlotMapping mapping = objectSet.next();
+		return mapping.slot().address();
+	}
 	
 }

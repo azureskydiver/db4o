@@ -81,6 +81,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		FileStorage storage = new FileStorage();
 		storage.delete(fileName);
 		Configuration db4oConfig = DefragmentConfig.vanillaDb4oConfig(blockSize);
+		db4oConfig.objectClass(IdSlotMapping.class).objectField("_id").indexed(true);
 		db4oConfig.storage(storage);
 		return (LocalObjectContainer)Db4o.openFile(db4oConfig,fileName).ext();
 	}
@@ -331,6 +332,10 @@ public class DefragmentServicesImpl implements DefragmentServices {
 
 	public int sourceAddressByID(int sourceID) {
 		return committedSlot(SOURCEDB, sourceID).address();
+	}
+	
+	public int targetAddressByID(int sourceID) {
+		return _mapping.addressForId(sourceID);
 	}
 
 	public boolean accept(StoredClass klass) {

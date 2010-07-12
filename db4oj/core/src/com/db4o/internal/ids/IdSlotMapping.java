@@ -10,11 +10,12 @@ import com.db4o.internal.slots.*;
 */
 public class IdSlotMapping {
 	
-	public final int _id;
+	// persistent and indexed in DatabaseIdMapping, don't change the name
+	public int _id;
 	
-	public final int _address;
+	public int _address;
 	
-	public final int _length;
+	public int _length;
 	
 	public IdSlotMapping(int id, int address, int length) {
 		_id = id;

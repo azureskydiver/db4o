@@ -161,8 +161,7 @@ public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, Bu
     }
 
 	public void defragIndexEntry(DefragmentContextImpl context) {
-		// address
-		context.copyID(false,true);
+		context.copyAddress();
 		// length
 		context.incrementIntSize();
 	}

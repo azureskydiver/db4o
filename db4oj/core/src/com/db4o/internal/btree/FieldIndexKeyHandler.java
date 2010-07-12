@@ -4,7 +4,6 @@ package com.db4o.internal.btree;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 
 
@@ -15,7 +14,7 @@ public class FieldIndexKeyHandler implements Indexable4{
 	
     private final Indexable4 _valueHandler;
     
-    private final IntHandler _parentIdHandler;
+    private final IDHandler _parentIdHandler;
     
     public FieldIndexKeyHandler(Indexable4 delegate_) {
         _parentIdHandler = new IDHandler();

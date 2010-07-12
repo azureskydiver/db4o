@@ -19,7 +19,7 @@ import com.db4o.typehandlers.*;
  * @exclude
  */
 public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentContext {
-    
+	
 	private ByteArrayBuffer _source;
 	
 	private ByteArrayBuffer _target;
@@ -29,6 +29,8 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	private final ObjectHeader _objectHeader;
 	
 	private int _declaredAspectCount;
+
+	private int _currentParentSourceID;
 	
 	public DefragmentContextImpl(ByteArrayBuffer source, DefragmentContextImpl context) {
 		this(source, context._services, context._objectHeader);
@@ -118,8 +120,16 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
 	public int copyIDReturnOriginalID() {
+		return copyIDReturnOriginalID(false, false);
+	}
+	
+	public int copyIDReturnOriginalID(boolean flipNegative,boolean lenient) {
 		int id=_source.readInt();
-		internalCopyID(false, false, id);
+		internalCopyID(flipNegative, lenient, id);
+		boolean flipped = flipNegative && (id < 0);
+		if(flipped) {
+			return -id;
+		}
 		return id;
 	}
 
@@ -374,6 +384,25 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 
 	public SlotFormat slotFormat() {
 		return SlotFormat.forHandlerVersion(handlerVersion());
+	}
+
+	public void currentParentSourceID(int id) {
+		_currentParentSourceID = id;
+	}
+	
+	public int consumeCurrentParentSourceID() {
+		int id = _currentParentSourceID;
+		_currentParentSourceID = 0;
+		return id;
+	}
+
+	public void copyAddress() {
+		int sourceEntryAddress = _source.readInt();
+		int sourceId = consumeCurrentParentSourceID();
+		int sourceObjectAddress = _services.sourceAddressByID(sourceId);
+		int entryOffset = sourceEntryAddress - sourceObjectAddress;
+		int targetObjectAddress = _services.targetAddressByID(_services.mappedID(sourceId));
+		_target.writeInt(targetObjectAddress + entryOffset);
 	}
     
 }

@@ -57,7 +57,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 	}
 	
 	public void defragIndexEntry(DefragmentContextImpl context) {
-		context.copyID(false,true);
+		context.copyAddress();
 		context.incrementIntSize();
 	}
 
