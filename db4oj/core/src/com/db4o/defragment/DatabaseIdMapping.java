@@ -66,7 +66,7 @@ public class DatabaseIdMapping extends AbstractIdMapping {
 		_commitFrequency=commitFrequency;
 	}
 
-	public int mappedId(int oldID, boolean lenient) {
+	public int mappedId(int oldID) {
 		if (_cache.orig() == oldID) {
 			return _cache.mapped();
 		}
@@ -81,20 +81,7 @@ public class DatabaseIdMapping extends AbstractIdMapping {
 			_cache = (MappedIDPair) pointer.key();
 			return _cache.mapped();
 		}
-		if (lenient) {
-			return mapLenient(oldID, range);
-		}
 		return 0;
-	}
-
-	private int mapLenient(int oldID, BTreeRange range) {
-		range = range.smaller();
-		BTreePointer pointer = range.lastPointer();
-		if (pointer == null) {
-			return 0;
-		}
-		MappedIDPair mappedIDs = (MappedIDPair) pointer.key();
-		return mappedIDs.mapped() + (oldID - mappedIDs.orig());
 	}
 
 	protected void mapNonClassIDs(int origID, int mappedID) {

@@ -48,17 +48,8 @@ public class IdMappingTestSuite extends FixtureBasedTestSuite {
 
 		private void assertMapping(boolean useClassId) {
 			_idMapping.mapId(1, 2, useClassId);
-			int mappedId = _idMapping.mappedId(1, useClassId);
+			int mappedId = _idMapping.mappedId(1);
 			Assert.areEqual(2, mappedId);
-		}
-		
-		public void testLenientMapping(){
-			_idMapping.mapId(10, 20, false);
-			_idMapping.mapId(30, 50, false);
-			int mappedId = _idMapping.mappedId(2, false);
-			Assert.areEqual(0, mappedId);
-			mappedId = _idMapping.mappedId(20, true);
-			Assert.areEqual(30, mappedId);
 		}
 		
 		public void testSlotMapping(){
