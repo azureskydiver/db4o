@@ -23,7 +23,7 @@ public class InMemoryIdMapping extends AbstractIdMapping {
 	
 	private Tree _tree;
 	
-	public int mappedId(int oldID, boolean lenient) {
+	public int mappedId(int oldID) {
 		int classID = mappedClassID(oldID);
 		if(classID != 0) {
 			return classID;
@@ -31,14 +31,6 @@ public class InMemoryIdMapping extends AbstractIdMapping {
 		TreeIntObject res = (TreeIntObject) TreeInt.find(_tree, oldID);
 		if(res != null){
 			return ((Integer)res._object).intValue();
-		}
-		if(lenient){
-			TreeIntObject nextSmaller = (TreeIntObject) Tree.findSmaller(_tree, new TreeInt(oldID));
-			if(nextSmaller != null){
-				int baseOldID = nextSmaller._key;
-				int baseNewID = ((Integer)nextSmaller._object).intValue();
-				return baseNewID + oldID - baseOldID; 
-			}
 		}
 		return 0;
 	}

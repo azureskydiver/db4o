@@ -36,7 +36,7 @@ public interface DefragmentServices extends IDMapping {
 	
 	ClassMetadata classMetadataForId(int id);
 
-	int mappedID(int id,boolean lenient);
+	int mappedID(int id);
 
 	void registerUnindexed(int id);
 	

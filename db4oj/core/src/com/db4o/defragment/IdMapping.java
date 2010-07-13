@@ -16,15 +16,11 @@ public interface IdMapping {
 
 	/**
 	 * Returns a previously registered mapping ID for the given ID if it exists.
-	 * If lenient mode is set to true, will provide the mapping ID for the next
-	 * smaller original ID a mapping exists for, plus the difference between the 
-	 * found ID and the original ID. Otherwise it returns 0.
-	 * 
 	 * @param origID The original ID
-	 * @param lenient If true, lenient mode will be used for lookup, strict mode otherwise.
+	 * 
 	 * @return The mapping ID for the given original ID or 0, if none has been registered.
 	 */
-	int mappedId(int origId, boolean lenient);
+	int mappedId(int origId);
 
 	/**
 	 * Registers a mapping for the given IDs.

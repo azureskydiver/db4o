@@ -11,7 +11,7 @@ import com.db4o.internal.handlers.*;
 public class IDHandler extends IntHandler {
 
     public void defragIndexEntry(DefragmentContextImpl context) {
-    	int sourceId = context.copyIDReturnOriginalID(true, false);
+    	int sourceId = context.copyIDReturnOriginalID(true);
     	context.currentParentSourceID(sourceId);
     }
 

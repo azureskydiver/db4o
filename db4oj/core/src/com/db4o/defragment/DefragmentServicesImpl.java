@@ -92,23 +92,23 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
-		int mapped=internalMappedID(oldID,false);
+		int mapped=internalMappedID(oldID);
 		return (mapped!=0 ? mapped : defaultID);
 	}
 
-	public int mappedID(int oldID) throws MappingNotFoundException {
-		int mapped=internalMappedID(oldID,false);
+	public int strictMappedID(int oldID) throws MappingNotFoundException {
+		int mapped=internalMappedID(oldID);
 		if(mapped==0) {
 			throw new MappingNotFoundException(oldID);
 		}
 		return mapped;
 	}
 
-	public int mappedID(int id,boolean lenient) throws MappingNotFoundException {
+	public int mappedID(int id) {
 		if(id == 0){
 			return 0;
 		}
-		int mapped = internalMappedID(id,lenient);
+		int mapped = internalMappedID(id);
 		if(mapped==0) {
 			_listener.notifyDefragmentInfo(new DefragmentInfo("No mapping found for ID "+id));
 			return Const4.INVALID_OBJECT_ID;
@@ -116,14 +116,14 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		return mapped;
 	}
 
-	private int internalMappedID(int oldID,boolean lenient) throws MappingNotFoundException {
+	private int internalMappedID(int oldID) throws MappingNotFoundException {
 		if(oldID==0) {
 			return 0;
 		}
 		if(_sourceDb.handlers().isSystemHandler(oldID)) {
 			return oldID;
 		}
-		return _mapping.mappedId(oldID,lenient);
+		return _mapping.mappedId(oldID);
 	}
 
 	public void mapIDs(int oldID,int newID, boolean isClassID) {
@@ -300,30 +300,6 @@ public class DefragmentServicesImpl implements DefragmentServices {
 
 	public ObjectHeader sourceObjectHeader(ByteArrayBuffer buffer) {
 		return new ObjectHeader(_sourceDb, buffer);
-	}
-	
-	public boolean hasFieldIndex(ClassMetadata clazz) {
-		// actually only two states are used here, the third is implicit in null
-		TernaryBool cachedHasFieldIndex = ((TernaryBool) _hasFieldIndexCache.get(clazz));
-		if(cachedHasFieldIndex != null) {
-			return cachedHasFieldIndex.definiteYes();
-		}
-		final BooleanByRef hasFieldIndex = new BooleanByRef(false);
-		ClassMetadata curClazz = clazz;
-		while(!hasFieldIndex.value && curClazz != null) {
-			curClazz.traverseDeclaredFields(new Procedure4() {
-				public void apply(Object arg) {
-					FieldMetadata curField = (FieldMetadata)arg;
-					if (curField.hasIndex()
-							&& Handlers4.isIndirectedIndexed(curField.getHandler())) {
-						hasFieldIndex.value = true;
-					}
-				}
-			});
-			curClazz = curClazz.getAncestor();
-		}
-		_hasFieldIndexCache.put(clazz, TernaryBool.forBoolean(hasFieldIndex.value));
-		return hasFieldIndex.value;
 	}
 
 	public int blockSize() {

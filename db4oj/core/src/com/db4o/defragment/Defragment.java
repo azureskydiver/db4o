@@ -12,7 +12,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.mapping.*;
-import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 
 /**
@@ -136,7 +135,7 @@ public class Defragment {
 			secondPass(context, config);
 			defragUnindexed(context);
 			context.commitIds();
-			newClassCollectionID = context.mappedID(context
+			newClassCollectionID = context.strictMappedID(context
 					.sourceClassCollectionID());
 			context.targetClassCollectionID(newClassCollectionID);
 			int sourceIdentityID = context
@@ -223,7 +222,7 @@ public class Defragment {
 				public void processCopy(DefragmentContextImpl context){
 					ClassMetadata.defragObject(context);
 				}
-			}, true);
+			});
 		}
 	}
 

@@ -7,7 +7,6 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.internal.marshall.*;
 
 /**
  * Second step in the defragmenting process: Fills in target file pointer slots, copies
@@ -41,9 +40,6 @@ final class SecondPassCommand implements PassCommand {
 
 	public void processObjectSlot(final DefragmentServicesImpl services, final ClassMetadata classMetadata, int id) throws CorruptionException, IOException {
 		ByteArrayBuffer sourceBuffer = services.sourceBufferByID(id);
-		ObjectHeader objHead = services.sourceObjectHeader(sourceBuffer);
-		sourceBuffer._offset = 0;
-		boolean registerAddresses = services.hasFieldIndex(objHead.classMetadata());
 		DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
 			public void processCopy(DefragmentContextImpl context) {
 				ClassMetadata.defragObject(context);
@@ -55,7 +51,7 @@ final class SecondPassCommand implements PassCommand {
 					}
 				}
 			}
-		},registerAddresses, sourceBuffer);
+		},sourceBuffer);
 	}
 
 	public void processClassCollection(final DefragmentServicesImpl services) throws CorruptionException, IOException {

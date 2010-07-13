@@ -92,7 +92,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
         
         int mapped=-1;
         try {
-            mapped=_services.mappedID(orig);
+            mapped=_services.strictMappedID(orig);
         } catch (MappingNotFoundException exc) {
             mapped=_services.targetNewId();
             _services.mapIDs(orig,mapped, false);
@@ -114,18 +114,18 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return writeMappedID(id);
 	}
 
-	public int copyID(boolean flipNegative,boolean lenient) {
+	public int copyID(boolean flipNegative) {
 		int id=_source.readInt();
-		return internalCopyID(flipNegative, lenient, id);
+		return internalCopyID(flipNegative, id);
 	}
 
 	public int copyIDReturnOriginalID() {
-		return copyIDReturnOriginalID(false, false);
+		return copyIDReturnOriginalID(false);
 	}
 	
-	public int copyIDReturnOriginalID(boolean flipNegative,boolean lenient) {
+	public int copyIDReturnOriginalID(boolean flipNegative) {
 		int id=_source.readInt();
-		internalCopyID(flipNegative, lenient, id);
+		internalCopyID(flipNegative, id);
 		boolean flipped = flipNegative && (id < 0);
 		if(flipped) {
 			return -id;
@@ -133,12 +133,12 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return id;
 	}
 
-	private int internalCopyID(boolean flipNegative, boolean lenient, int id) {
+	private int internalCopyID(boolean flipNegative, int id) {
 		boolean flipped = flipNegative && (id < 0);
 		if(flipped) {
 			id=-id;
 		}
-		int mapped=_services.mappedID(id,lenient);
+		int mapped=_services.mappedID(id);
 		if(flipped) {
 			mapped=-mapped;
 		}
@@ -206,24 +206,15 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return _services;
 	}
 
-	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command)  {
-		processCopy(services, sourceID, command, false);
-	}
-
-	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) {
+	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command) {
 		ByteArrayBuffer sourceReader = context.sourceBufferByID(sourceID);
-		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
+		processCopy(context, sourceID, command, sourceReader);
 	}
 
-	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, ByteArrayBuffer sourceReader) {
-		int targetID=services.mappedID(sourceID);
+	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command, ByteArrayBuffer sourceReader) {
+		int targetID=services.strictMappedID(sourceID);
 	
 		Slot targetSlot = services.allocateTargetSlot(sourceReader.length());
-		
-		if(registerAddressMapping) {
-			int sourceAddress=services.sourceAddressByID(sourceID);
-			services.mapIDs(sourceAddress, targetSlot.address(), false);
-		}
 		
 		services.mapping().mapId(targetID, targetSlot);
 		
@@ -260,7 +251,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
     public int writeMappedID(int originalID) {
-		int mapped=_services.mappedID(originalID,false);
+		int mapped=_services.mappedID(originalID);
 		_target.writeInt(mapped);
 		return mapped;
 	}
@@ -290,7 +281,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
 	public int mappedID(int origID) {
-		return mapping().mappedID(origID);
+		return mapping().strictMappedID(origID);
 	}
 
 	public ObjectContainer objectContainer() {
@@ -401,7 +392,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		int sourceId = consumeCurrentParentSourceID();
 		int sourceObjectAddress = _services.sourceAddressByID(sourceId);
 		int entryOffset = sourceEntryAddress - sourceObjectAddress;
-		int targetObjectAddress = _services.targetAddressByID(_services.mappedID(sourceId));
+		int targetObjectAddress = _services.targetAddressByID(_services.strictMappedID(sourceId));
 		_target.writeInt(targetObjectAddress + entryOffset);
 	}
     

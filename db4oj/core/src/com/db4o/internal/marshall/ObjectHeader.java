@@ -57,7 +57,7 @@ public final class ObjectHeader {
     	ByteArrayBuffer source = context.sourceBuffer();
     	ByteArrayBuffer target = context.targetBuffer();
 		ObjectHeader header=new ObjectHeader(context.services().systemTrans().container(),null,source);
-    	int newID =context.mapping().mappedID(header.classMetadata().getID());
+    	int newID =context.mapping().strictMappedID(header.classMetadata().getID());
         if (Deploy.debug) {
             target.readBegin(Const4.YAPOBJECT);
         }
