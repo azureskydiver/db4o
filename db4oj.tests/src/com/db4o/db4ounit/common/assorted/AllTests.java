@@ -49,7 +49,7 @@ public class AllTests extends ComposibleTestSuite {
 			            PlainObjectTestCase.class,
 			            PeekPersistedTestCase.class,
 			            PersistentIntegerArrayTestCase.class,
-			            PersistStaticFieldValuesTestCase.class,
+			            PersistStaticFieldValuesTestSuite.class,
 			            PreventMultipleOpenTestCase.class,
 			            QueryByInterface.class,
 			            ReAddCascadedDeleteTestCase.class,

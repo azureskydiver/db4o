@@ -1578,7 +1578,12 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	public final int store(Transaction trans, Object obj, UpdateDepth depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (_lock) {
-            return storeInternal(trans, obj, depth, true);
+			try {
+				showInternalClasses(true);
+				return storeInternal(trans, obj, depth, true);
+			} finally {
+				showInternalClasses(false);
+			}
         }
 	}
     
@@ -1875,6 +1880,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     void stillToSet(Transaction transaction, ObjectReference ref, UpdateDepth updateDepth) {
         if(stackIsSmall()){
+        	checkStillToSet();
             if(ref.continueSet(transaction, updateDepth)){
                 return;
             }
