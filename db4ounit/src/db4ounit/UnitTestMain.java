@@ -44,11 +44,23 @@ public class UnitTestMain {
 		});
 	}
 	
-	protected Test testMethod(String className, String methodName)
+	private Test testMethod(String className, String methodName)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		Class clazz = Class.forName(className);
-		return new TestMethod(clazz.newInstance(), findMethod(clazz, methodName));
+		final Test test = wrapTest(new TestMethod(clazz.newInstance(), findMethod(clazz, methodName)));
+		if(!ClassLevelFixtureTest.class.isAssignableFrom(clazz)) {
+			return test;
+		}
+		return new ClassLevelFixtureTestSuite(clazz, new Closure4<Iterator4<Test>>() {
+			public Iterator4<Test> run() {
+				return Iterators.iterate(test);
+			}
+		});
+	}
+	
+	protected Test wrapTest(Test test) {
+		return test;
 	}
 
 	private Method findMethod(final Class clazz, String methodName) {
