@@ -11,21 +11,21 @@ public class SearcherTestCase implements TestCase, TestLifeCycle{
     
     private Searcher _searcher;
     
-    private final int FIRST = 4;
+    private final static int FIRST = 4;
     
-    private final int LAST = 11;
+    private final static int LAST = 11;
     
-    private final int[] EVEN_VALUES = new int[] {4, 7, 9, 11};
+    private final static int[] EVEN_VALUES = new int[] {4, 7, 9, 11};
     
-    private final int[] ODD_VALUES = new int[] {4, 7, 8, 9, 11};
+    private final static int[] ODD_VALUES = new int[] {4, 7, 8, 9, 11};
 
-    private final int[] NON_MATCHES = new int[] {3, 5, 6, 10, 12};
+    private final static int[] NON_MATCHES = new int[] {3, 5, 6, 10, 12};
 
-    private final int[] MATCHES = new int[] {4, 7, 9, 11};
+    private final static int[] MATCHES = new int[] {4, 7, 9, 11};
     
-    private final int BEFORE = FIRST - 1;
+    private final static int BEFORE = FIRST - 1;
     
-    private final int BEYOND = LAST + 1;
+    private final static int BEYOND = LAST + 1;
     
     public void ttestPrintResults(){
         // not a test, but nice to visualize
