@@ -5,7 +5,6 @@
         <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 configuration.common().add(new TransparentPersistenceSupport());
 // other configurations...
-
 ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);</pre>
 		<div class="codesnippet-meta">CommonConfigurationExamples.java: add an additional configuration item<a href="Example-configuration-common-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">private class DiagnosticFilter : IDiagnosticListener
+{
+    private readonly ICollection&lt;Type&gt; filterFor;
+    private readonly IDiagnosticListener target;
+
+    public DiagnosticFilter(IDiagnosticListener target, params Type[] filterFor)
+    {
+        this.target = target;
+        this.filterFor = new List&lt;Type&gt;(filterFor);
+    }
+
+    public void OnDiagnostic(IDiagnostic diagnostic)
+    {
+        Type type = diagnostic.GetType();
+        if (filterFor.Contains(type))
+        {
+            target.OnDiagnostic(diagnostic);
+        }
+    }
+}</pre>
+		<div class="codesnippet-meta">DiagnosticsExamples.cs: A simple message filter<a href="Example-tuning-diagnostics-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">private static class DiagnosticFilter implements DiagnosticListener{
+    private final Set&lt;Class&gt; filterFor;
+    private final DiagnosticListener delegate;
+
+    private DiagnosticFilter(DiagnosticListener delegate,Class&lt;? extends Diagnostic&gt;...filterFor) {
+        this.delegate = delegate;
+        this.filterFor = new HashSet&lt;Class&gt;(Arrays.asList(filterFor));
+    }
+
+    public void onDiagnostic(Diagnostic diagnostic) {
+        Class&lt;?&gt; type = diagnostic.getClass();
+        if(filterFor.contains(type)){
+            delegate.onDiagnostic(diagnostic);
+        }
+    }
+}</pre>
+		<div class="codesnippet-meta">DiagnosticsExamples.java: A simple message filter<a href="Example-tuning-diagnostics-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

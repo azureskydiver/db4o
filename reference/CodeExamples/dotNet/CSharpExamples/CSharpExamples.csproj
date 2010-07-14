@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.ClientServer.SSL.SSLExample</StartupObject>
+    <StartupObject>Db4oDoc.Code.Configuration.Alias.AliasExamples</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +70,7 @@
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.cs" />
     <Compile Include="Code\clientserver\ssl\SSLExample.cs" />
     <Compile Include="Code\collections\bigset\BigSetExample.cs" />
+    <Compile Include="Code\configuration\alias\AliasExamples.cs" />
     <Compile Include="Code\configuration\basics\ConfigurationBasics.cs" />
     <Compile Include="Code\configuration\client\ClientConfigurationExamples.cs" />
     <Compile Include="Code\configuration\common\CommonConfigurationExamples.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Code\configuration\io\IOConfigurationExamples.cs" />
     <Compile Include="Code\configuration\io\LRUCachingStorage.cs" />
     <Compile Include="Code\configuration\network\NetworkConfigurationExample.cs" />
+    <Compile Include="Code\configuration\objectconfig\ObjectConfigurationExamples.cs" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Code\ta\collections\Team.cs" />
     <Compile Include="Code\ta\example\Person.cs" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
+    <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

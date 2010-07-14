@@ -66,4 +66,12 @@
     Name="Annotation"
     Comment=""
     Definition="Some text">Annotation</Variable>
+  <Variable
+    Name="JVM"
+    Comment=""
+    Definition="Some text">JVM</Variable>
+  <Variable
+    Name="close"
+    Comment=""
+    Definition="Some text">close</Variable>
 </CatapultVariableSet>

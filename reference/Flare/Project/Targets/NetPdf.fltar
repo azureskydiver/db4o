@@ -56,5 +56,9 @@
       Name="Primary/getter">property</Variable>
     <Variable
       Name="Primary/Annotation">Attribute</Variable>
+    <Variable
+      Name="Primary/close">dispose</Variable>
+    <Variable
+      Name="Primary/JVM">CLR</Variable>
   </Variables>
 </CatapultTarget>

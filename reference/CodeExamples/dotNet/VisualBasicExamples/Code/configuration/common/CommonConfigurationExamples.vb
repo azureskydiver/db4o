@@ -1,19 +1,135 @@
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Diagnostic
+Imports Db4objects.Db4o.Internal.Reflect
 
 Namespace Db4oDoc.Code.Configuration.Common
     Public Class CommonConfigurationExamples
         Private Const DatabaseFile As String = "database.db4o"
 
-
-        Private Shared Sub ExampleForCommonConfig()
-            ' #example: change activation depth
+        Private Shared Sub ChangeGlobalActivationDepth()
+            ' #example: Change activation depth
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             configuration.Common.ActivationDepth = 2
-            ' other configurations...
+            ' #end example
 
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub UpdateFileFormat()
+            ' #example: Update the database-format
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.AllowVersionUpdates = True
+
+            ' reopen and close the database to do the update
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
             ' #end example
+        End Sub
+
+        Private Shared Sub DisableAutomaticShutdown()
+            ' #example: Disable automatic shutdown
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.AutomaticShutDown = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+
+        Private Shared Sub ChangeBTreeNodeSize()
+            ' #example: Change B-tree node size
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.BTreeNodeSize = 256
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(Configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub DisableCallbacks()
+            ' #example: Disable callbacks
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.Callbacks = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub CallConstructors()
+            ' #example: Call constructors
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.CallConstructors = True
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub DisableSchemaEvolution()
+            ' #example: Disable schema evolution
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.DetectSchemaChanges = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub AddDiagnosticListener()
+            ' #example: Add a diagnostic listener
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.Diagnostic.AddListener(New DiagnosticToConsole())
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub DisableExceptionsOnNotStorableObjects()
+            ' #example: Disable exceptions on not storable objects
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.ExceptionsOnNotStorable = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+
+            container.Close()
+        End Sub
+
+        Private Shared Sub ChangeMessageLevel()
+            ' #example: Change the message-level
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.MessageLevel = 4
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+
+            container.Close()
+        End Sub
+
+        Private Shared Sub ChangeOutputStream()
+            ' #example: Change the output stream
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.OutStream = Console.Out
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+
+            container.Close()
+        End Sub
+
+        Private Shared Sub ChangeQueryMode()
+            ' #example: Change the query mode
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.Queries.EvaluationMode(QueryEvaluationMode.Immediate)
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+
             container.Close()
         End Sub
 
@@ -25,6 +141,16 @@ Namespace Db4oDoc.Code.Configuration.Common
 
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
 
+            container.Close()
+        End Sub
+
+        Private Shared Sub ChangeReflector()
+            ' #example: Change the reflector
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.ReflectWith(New FastNetReflector())
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
             container.Close()
         End Sub
 

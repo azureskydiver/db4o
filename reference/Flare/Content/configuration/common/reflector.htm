@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="507" MadCap:lastWidth="707">
+    <head>
+    </head>
+    <body>
+        <h1>Changing The Reflector</h1>
+        <p>Allows you to change the reflector for db4o. The Reflector is responsible to inspect the metadata of objects and report them to db4o. <MadCap:xref href="../../implementation_strategies/db4o_reflection_api.htm" target="" title="" alt="">See "Db4o Reflection API"</MadCap:xref></p>
+        <p MadCap:conditions="Primary.Java">For example you can use the default JdkReflector, but specify explicitly the class-loader which is used.</p>
+        <p MadCap:conditions="Primary..NET">There are currently two main reflectors available:</p>
+        <ul MadCap:conditions="Primary..NET">
+            <li MadCap:conditions="Primary..NET">NetReflector: The default reflector which uses standard .NET reflection for inspecting and accessing objects.</li>
+            <li>FastNetReflector:&#160;A reflector which generates special access-code for each class. Therefore it is a lot faster than the default NetReflector. However it has a higher memory-consumption due to the generated code.</li>
+        </ul>
+        <MadCap:snippetBlock src="../../CodeExamples/configuration/common/CommonConfigurationExamples-Change-the-reflector.all.flsnp" />
+    </body>
+</html>

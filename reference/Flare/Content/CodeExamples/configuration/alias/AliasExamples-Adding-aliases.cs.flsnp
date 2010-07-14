@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">// add an alias for a specific type
+configuration.Common.AddAlias(
+    new TypeAlias(&quot;Db4oDoc.Code.Configuration.Alias.OldTypeInDatabase, Db4oDoc&quot;,
+                  &quot;Db4oDoc.Code.Configuration.Alias.NewType, Db4oDoc&quot;));
+// or add an alias for a whole namespace
+configuration.Common.AddAlias(
+    new WildcardAlias(&quot;Db4oDoc.Code.Configuration.Alias.Old.Namespace.*, Db4oDoc&quot;,
+                      &quot;Db4oDoc.Code.Configuration.Alias.Current.Namespace.*, Db4oDoc&quot;));</pre>
+		<div class="codesnippet-meta">AliasExamples.cs: Adding aliases<a href="Example-configuration-alias-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029" MadCap:conditions="Primary.Java,Primary.All languages">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="358" MadCap:lastWidth="586" MadCap:conditions="Primary.Java,Primary.All languages">
     <head><title>Classloader And Generic Classes	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -10,6 +10,6 @@
             <LI>If your application design does not guarantee that application classes and db4o will be loaded by the same classloader, use 
 <P><code> Configuration#reflectWith(new JdkReflector(classLoader))</code></P>where classLoader is the classloader of your application classes.</LI>
         </OL>
-        <P>The above-mentioned cases should be distinguished from a case when Java application uses a db4o database created from a .NET application. In this particular case .NET class definitions should be replaced by Java class definitions with the help of <a href="../implementation_strategies/aliases.htm">Aliases</a>.</P>
+        <P>The above-mentioned cases should be distinguished from a case when Java application uses a db4o database created from a .NET application. In this particular case .NET class definitions should be replaced by Java class definitions with the help of <a href="../configuration/common/alias.htm">Aliases</a>.</P>
     </body>
 </html>
