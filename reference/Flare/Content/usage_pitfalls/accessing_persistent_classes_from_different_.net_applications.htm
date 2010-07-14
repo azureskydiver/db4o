@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html MadCap:lastBlockDepth="3" MadCap:lastHeight="885" MadCap:lastWidth="516" xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:conditions="Primary..NET">
+<html MadCap:lastBlockDepth="3" MadCap:lastHeight="835" MadCap:lastWidth="625" xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:conditions="Primary..NET">
     <head><title>Accessing Persistent Classes From Different .NET Applications	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -15,15 +15,15 @@ name and assembly name:</p>
         </p>
         <p>Two different .NET applications (libraries) usually have
 different assembly names. If you do not use
-<a href="../implementation_strategies/aliases.htm">aliasing</a>, the class name will be appended
+<a href="../configuration/common/alias.htm">aliasing</a>, the class name will be appended
 with the current application assembly name.</p><a name="Solution"></a>
         <h2>Solution</h2>
         <p>In order to access db4o persistent classes from different
 applications (libraries) you will need to use an
-<a href="../implementation_strategies/aliases.htm">Alias</a>. For example:</p>
+<a href="../configuration/common/alias.htm">Alias</a>. For example:</p>
         <p><b>Application1.exe ("Application1" assembly):</b>
         </p>
-        <p><code>objectContainer.Set(new MyClasses.Pilot("David
+        <p><code>objectContainer.Store(new MyClasses.Pilot("David
 Barrichello",99))</code>
         </p>
         <p><code>// internally the class is saved as "MyClasses.Pilot,
@@ -36,14 +36,14 @@ Application1".</code>
             <p><code>// create an Alias for the MyClasses.Pilot,
 Application1:</code>
             </p>
-            <p><code>IConfiguration configuration =
-Db4oFactory.NewConfiguration();</code>
+            <p><code>IEmbeddedConfiguration configuration =
+Db4oEmbedded.NewConfiguration();</code>
             </p>
-            <p><code>configuration.AddAlias(new
+            <p><code>configuration.Common.AddAlias(new
 TypeAlias("MyClasses.Pilot, Application1", " MyClasses.Pilot, Application2"));</code>
             </p>
             <p><code>IObjectContainer container =
-Db4oFactory.OpenFile(configuration, "reference.db4o");</code>
+Db4oEmbedded.OpenFile(configuration, "reference.db4o");</code>
             </p>
             <p><code>// now you query as usual</code>
             </p>
@@ -57,13 +57,13 @@ Test());</code>
             <p><code>// create an Alias for the MyClasses.Pilot,
 Application1:</code>
             </p>
-            <p><code>Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()</code>
+            <p><code>Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()</code>
             </p>
-            <p><code>configuration.AddAlias(new
+            <p><code>configuration.Common.AddAlias(new
 TypeAlias("MyClasses.Pilot, Application1", " MyClasses.Pilot, Application2"))</code>
             </p>
             <p><code>Dim container As IObjectContainer  =
-Db4oFactory.OpenFile(configuration, "reference.db4o")</code>
+Db4oEmbedded.OpenFile(configuration, "reference.db4o")</code>
             </p>
             <p><code>// now you query as usual</code>
             </p>
@@ -74,6 +74,6 @@ Test())</code>
         <p MadCap:conditions="Primary:vb" />
         <p>For more information see
 <a href="../object_lifecycle/class_name_format_in_.net.htm">Class Name Format In .NET</a> and
-<a href="../implementation_strategies/aliases.htm">Aliases</a>.</p>
+<a href="../configuration/common/alias.htm">Aliases</a>.</p>
     </body>
 </html>

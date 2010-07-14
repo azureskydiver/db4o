@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Class DiagnosticFilter
+    Implements IDiagnosticListener
+    Private ReadOnly filterFor As ICollection(Of Type)
+    Private ReadOnly target As IDiagnosticListener
+
+    Public Sub New(ByVal target As IDiagnosticListener, ByVal ParamArray filterFor As Type())
+        Me.target = target
+        Me.filterFor = New List(Of Type)(filterFor)
+    End Sub
+
+    Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
+        Implements IDiagnosticListener.OnDiagnostic
+
+        Dim type As Type = diagnostic.[GetType]()
+        If filterFor.Contains(type) Then
+            target.OnDiagnostic(diagnostic)
+        End If
+    End Sub
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Class DiagnosticFilter
+    Implements IDiagnosticListener
+    Private ReadOnly filterFor As ICollection(Of Type)
+    Private ReadOnly target As IDiagnosticListener
+
+    Public Sub New(ByVal target As IDiagnosticListener, ByVal ParamArray filterFor As Type())
+        Me.target = target
+        Me.filterFor = New List(Of Type)(filterFor)
+    End Sub
+
+    Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
+        Implements IDiagnosticListener.OnDiagnostic
+
+        Dim type As Type = diagnostic.[GetType]()
+        If filterFor.Contains(type) Then
+            target.OnDiagnostic(diagnostic)
+        End If
+    End Sub
+End Class</pre>
+		<div class="codesnippet-meta">DiagnosticsExamples.vb: A simple message filter<a href="Example-tuning-diagnostics-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

@@ -277,19 +277,6 @@
           Link="/Content/object_lifecycle/querying/linq/linq_for_compact_framework.htm" />
       </TocEntry>
       <TocEntry
-        Title="Query Modes"
-        Link="/Content/object_lifecycle/querying/query_modes.htm">
-        <TocEntry
-          Title="Immediate Queries"
-          Link="/Content/object_lifecycle/querying/query_modes/immediate_queries.htm" />
-        <TocEntry
-          Title="Lazy Queries"
-          Link="/Content/object_lifecycle/querying/query_modes/lazy_queries.htm" />
-        <TocEntry
-          Title="Snapshot Queries"
-          Link="/Content/object_lifecycle/querying/query_modes/snapshot_queries.htm" />
-      </TocEntry>
-      <TocEntry
         Title="SODA Evaluations"
         Link="/Content/object_lifecycle/querying/soda_evaluations.htm">
         <TocEntry
@@ -474,11 +461,47 @@
       Title="Common Configuration"
       Link="/Content/configuration/common_configuration.htm">
       <TocEntry
+        Title="Activation Depth"
+        Link="/Content/configuration/common/activation_depth.htm" />
+      <TocEntry
+        Title="Aliases"
+        Link="/Content/configuration/common/alias.htm" />
+      <TocEntry
+        Title="Allow Version Updates"
+        Link="/Content/configuration/common/updating_db4o_file_format.htm" />
+      <TocEntry
+        Title="Automatic Shutdown"
+        Link="/Content/configuration/common/automatic_shutdown.htm"
+        VolumeNumberReset="same"
+        SectionNumberReset="continue"
+        ChapterNumberReset="continue" />
+      <TocEntry
+        Title="B-Tree Node Size"
+        Link="/Content/configuration/common/btree_node_size.htm" />
+      <TocEntry
+        Title="Disable Callbacks"
+        Link="/Content/configuration/common/no_callbacks.htm" />
+      <TocEntry
+        Title="Calling Constructors"
+        Link="/Content/configuration/common/calling_constructors.htm" />
+      <TocEntry
+        Title="Disable Schema Change Detection"
+        Link="/Content/configuration/common/no_schema_changes.htm" />
+      <TocEntry
+        Title="Diagnostics"
+        Link="/Content/configuration/common/diagnostics.htm" />
+      <TocEntry
+        Title="Exceptions On Not Storable Objects"
+        Link="/Content/configuration/common/exceptionsonnotstorable.htm" />
+      <TocEntry
         Title="Intern Strings"
         Link="/Content/configuration/common/intern_strings.htm" />
       <TocEntry
         Title="Mark Transient"
         Link="/Content/configuration/common/mark_transient.htm" />
+      <TocEntry
+        Title="Message Level"
+        Link="/Content/configuration/common/message_level.htm" />
       <TocEntry
         Title="Name Provider"
         Link="/Content/configuration/common/name_provider.htm" />
@@ -489,8 +512,24 @@
         Title="Objectfield Configuration"
         Link="/Content/configuration/common/objectfield_configuration.htm" />
       <TocEntry
-        Title="Query Configuration"
-        Link="/Content/configuration/common/query_configuration.htm" />
+        Title="Changing the Output Stream"
+        Link="/Content/configuration/common/out_stream.htm" />
+      <TocEntry
+        Title="Query Modes"
+        Link="/Content/configuration/common/query_modes.htm">
+        <TocEntry
+          Title="Immediate Queries"
+          Link="/Content/configuration/common/query_modes/immediate_queries.htm" />
+        <TocEntry
+          Title="Lazy Queries"
+          Link="/Content/configuration/common/query_modes/lazy_queries.htm" />
+        <TocEntry
+          Title="Snapshot Queries"
+          Link="/Content/configuration/common/query_modes/snapshot_queries.htm" />
+      </TocEntry>
+      <TocEntry
+        Title="Changing The Reflector"
+        Link="/Content/configuration/common/reflector.htm" />
       <TocEntry
         Title="Weak Reference Collection Interval"
         Link="/Content/configuration/common/weak_reference_collection_interval.htm" />
@@ -662,9 +701,6 @@
       <TocEntry
         Title="System Info"
         Link="/Content/implementation_strategies/maintenance/system_info.htm" />
-      <TocEntry
-        Title="Updating db4o File Format"
-        Link="/Content/implementation_strategies/maintenance/updating_db4o_file_format.htm" />
       <TocEntry
         Title="Backup"
         Link="/Content/implementation_strategies/maintenance/backup.htm" />
@@ -993,20 +1029,11 @@
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Aliases"
-      Link="/Content/implementation_strategies/aliases.htm">
-      <TocEntry
-        Title="TypeAlias"
-        Link="/Content/implementation_strategies/aliases/typealias.htm" />
-      <TocEntry
-        Title="WildcardAlias"
-        Link="/Content/implementation_strategies/aliases/wildcardalias.htm" />
-      <TocEntry
-        Title="Cross-Platform Aliasing"
-        Link="/Content/implementation_strategies/aliases/cross-platform_aliasing.htm" />
+      Title="Cross-Platform Aliasing"
+      Link="/Content/implementation_strategies/aliases/cross-platform_aliasing.htm">
       <TocEntry
         Title="Cross-Platform Aliasing From .NET To Java"
-        Link="/Content/implementation_strategies/aliases/cross-platform_aliasing_from_.net_to_java.htm" />
+        Link="/Content/implementation_strategies/aliases/cross-platform_aliasing_from_.net_to_java.htm"></TocEntry>
       <TocEntry
         Title="Cross-Platform Client-Server"
         Link="/Content/implementation_strategies/aliases/cross-platform_client-server.htm">
@@ -1500,7 +1527,7 @@
         Link="/Content/tuning/performance_hints/discarding_free_space.htm" />
       <TocEntry
         Title="Calling Constructors"
-        Link="/Content/tuning/performance_hints/calling_constructors.htm" />
+        Link="/Content/configuration/common/calling_constructors.htm" />
       <TocEntry
         Title="Defragment"
         Link="/Content/tuning/performance_hints/defragment.htm" />
@@ -1511,23 +1538,8 @@
         Title="Turning Off Weak References"
         Link="/Content/tuning/performance_hints/turning_off_weak_references.htm" />
       <TocEntry
-        Title="No Shutdown Thread"
-        Link="/Content/tuning/performance_hints/no_shutdown_thread.htm" />
-      <TocEntry
         Title="No Class Index"
         Link="/Content/tuning/performance_hints/no_class_index.htm" />
-      <TocEntry
-        Title="Automatic Shutdown"
-        Link="/Content/tuning/performance_hints/automatic_shutdown.htm"
-        VolumeNumberReset="same"
-        SectionNumberReset="continue"
-        ChapterNumberReset="continue" />
-      <TocEntry
-        Title="No Callbacks"
-        Link="/Content/tuning/performance_hints/no_callbacks.htm" />
-      <TocEntry
-        Title="B-tree Tuning"
-        Link="/Content/tuning/performance_hints/b-tree_tuning.htm" />
       <TocEntry
         Title="Commit Strategies"
         Link="/Content/tuning/performance_hints/commit_strategies.htm" />
@@ -1545,7 +1557,7 @@
         Link="/Content/tuning/performance_hints/no_lock_file_thread.htm" />
       <TocEntry
         Title="No Schema Changes"
-        Link="/Content/tuning/performance_hints/no_schema_changes.htm" />
+        Link="/Content/configuration/common/no_schema_changes.htm" />
       <TocEntry
         Title="No Test Instances"
         Link="/Content/tuning/performance_hints/no_test_instances.htm" />
@@ -1587,11 +1599,7 @@
         Title="Debug Messaging System"
         Link="/Content/tuning/debugging_db4o/debug_messaging_system.htm" />
       <TocEntry
-        Title="Customizing The Debug Message Output"
-        Link="/Content/tuning/debugging_db4o/customizing_the_debug_message_output.htm" />
-      <TocEntry
-        Title="ExceptionsOnNotStorable"
-        Link="/Content/tuning/debugging_db4o/exceptionsonnotstorable.htm" />
+        Title="Customizing The Debug Message Output" />
       <TocEntry
         Title="Using Dtrace"
         Link="/Content/tuning/debugging_db4o/using_dtrace.htm"
@@ -1604,23 +1612,18 @@
       Title="Diagnostics"
       Link="/Content/tuning/diagnostics.htm">
       <TocEntry
-        Title="ClassHasNoFields"
-        Link="/Content/tuning/diagnostics/classhasnofields.htm" />
+        Title="ClassHasNoFields" />
       <TocEntry
-        Title="LoadedFromClassIndex"
-        Link="/Content/tuning/diagnostics/loadedfromclassindex.htm" />
+        Title="LoadedFromClassIndex" />
       <TocEntry
-        Title="NativeQueryNotOptimized"
-        Link="/Content/tuning/diagnostics/nativequerynotoptimized.htm" />
+        Title="NativeQueryNotOptimized" />
       <TocEntry
-        Title="UpdateDepthGreaterOne"
-        Link="/Content/tuning/diagnostics/updatedepthgreaterone.htm" />
+        Title="UpdateDepthGreaterOne" />
       <TocEntry
         Title="Diagnostic Messages Filter"
         Link="/Content/tuning/diagnostics/diagnostic_messages_filter.htm" />
       <TocEntry
-        Title="DescendIntoTranslator"
-        Link="/Content/tuning/diagnostics/descendintotranslator.htm" />
+        Title="DescendIntoTranslator" />
     </TocEntry>
     <TocEntry
       Title="Native Query Optimization"
