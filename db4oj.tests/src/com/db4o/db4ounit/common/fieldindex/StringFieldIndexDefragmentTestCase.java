@@ -13,7 +13,7 @@ public class StringFieldIndexDefragmentTestCase extends AbstractDb4oTestCase imp
 	
     public static class Item {
     	
-        private String _name;
+        public String _name;
 
 		public Item(String name) {
 			_name = name;
