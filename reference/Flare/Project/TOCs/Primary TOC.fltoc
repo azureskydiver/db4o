@@ -461,8 +461,14 @@
       Title="Common Configuration"
       Link="/Content/configuration/common_configuration.htm">
       <TocEntry
+        Title="Common Configuration Items"
+        Link="/Content/configuration/common/configuration_items.htm" />
+      <TocEntry
         Title="Activation Depth"
         Link="/Content/configuration/common/activation_depth.htm" />
+      <TocEntry
+        Title="Update Depth"
+        Link="/Content/configuration/common/update_depth.htm" />
       <TocEntry
         Title="Aliases"
         Link="/Content/configuration/common/alias.htm" />
@@ -506,11 +512,8 @@
         Title="Name Provider"
         Link="/Content/configuration/common/name_provider.htm" />
       <TocEntry
-        Title="ObjectClass Configuration"
-        Link="/Content/configuration/common/objectclass_configuration.htm" />
-      <TocEntry
-        Title="Objectfield Configuration"
-        Link="/Content/configuration/common/objectfield_configuration.htm" />
+        Title="Disable Optimize Native Queries"
+        Link="/Content/configuration/common/disable_optimize_nq.htm" />
       <TocEntry
         Title="Changing the Output Stream"
         Link="/Content/configuration/common/out_stream.htm" />
@@ -531,11 +534,17 @@
         Title="Changing The Reflector"
         Link="/Content/configuration/common/reflector.htm" />
       <TocEntry
+        Title="String Encoding"
+        Link="/Content/configuration/common/string_encoding.htm" />
+      <TocEntry
+        Title="Disable Constructor Testing"
+        Link="/Content/configuration/common/no_test_instances.htm" />
+      <TocEntry
         Title="Weak Reference Collection Interval"
         Link="/Content/configuration/common/weak_reference_collection_interval.htm" />
       <TocEntry
-        Title="Common Configuration Items"
-        Link="/Content/configuration/common/configuration_items.htm" />
+        Title="Disable Weak References"
+        Link="/Content/configuration/common/disable_weak_references.htm" />
     </TocEntry>
     <TocEntry
       Title="File Configuration"
@@ -669,6 +678,12 @@
         Title="Pluggable Sockets"
         Link="/Content/configuration/networking/pluggable_sockets.htm" />
     </TocEntry>
+    <TocEntry
+      Title="Class Specific Configuration"
+      Link="/Content/configuration/objectclass_configuration.htm" />
+    <TocEntry
+      Title="Field Specific Configuration"
+      Link="/Content/configuration/objectfield_configuration.htm" />
     <TocEntry
       Title="Id System"
       Link="/Content/configuration/id_system.htm" />
@@ -1074,13 +1089,6 @@
       <TocEntry
         Title="Defragmentation Role"
         Link="/Content/implementation_strategies/freespace_management_system/defragmentation_role.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="String Encoding"
-      Link="/Content/implementation_strategies/string_encoding.htm">
-      <TocEntry
-        Title="StringEncoding Example"
-        Link="/Content/implementation_strategies/string_encoding/stringencoding_example.htm"></TocEntry>
     </TocEntry>
     <TocEntry
       Title="Reporting"
@@ -1526,17 +1534,11 @@
         Title="Discarding Free Space"
         Link="/Content/tuning/performance_hints/discarding_free_space.htm" />
       <TocEntry
-        Title="Calling Constructors"
-        Link="/Content/configuration/common/calling_constructors.htm" />
-      <TocEntry
         Title="Defragment"
         Link="/Content/tuning/performance_hints/defragment.htm" />
       <TocEntry
         Title="Activation Strategies"
         Link="/Content/tuning/performance_hints/activation_strategies.htm" />
-      <TocEntry
-        Title="Turning Off Weak References"
-        Link="/Content/tuning/performance_hints/turning_off_weak_references.htm" />
       <TocEntry
         Title="No Class Index"
         Link="/Content/tuning/performance_hints/no_class_index.htm" />
@@ -1553,32 +1555,8 @@
         Title="Inheritance Hierarchies"
         Link="/Content/tuning/performance_hints/inheritance_hierarchies.htm" />
       <TocEntry
-        Title="No Lock File Thread"
-        Link="/Content/tuning/performance_hints/no_lock_file_thread.htm" />
-      <TocEntry
-        Title="No Schema Changes"
-        Link="/Content/configuration/common/no_schema_changes.htm" />
-      <TocEntry
-        Title="No Test Instances"
-        Link="/Content/tuning/performance_hints/no_test_instances.htm" />
-      <TocEntry
-        Title="Optimizing Native Queries"
-        Link="/Content/tuning/performance_hints/optimizing_native_queries.htm" />
-      <TocEntry
         Title="Persistent And Transient Fields"
         Link="/Content/tuning/performance_hints/persistent_and_transient_fields.htm" />
-      <TocEntry
-        Title="Reserving Storage Space"
-        Link="/Content/tuning/performance_hints/reserving_storage_space.htm" />
-      <TocEntry
-        Title="trnflow"
-        Link="/Content/tuning/performance_hints/trnflow.jpg" />
-      <TocEntry
-        Title="Unicode"
-        Link="/Content/tuning/performance_hints/unicode.htm" />
-      <TocEntry
-        Title="Using FileStorage"
-        Link="/Content/tuning/performance_hints/using_randomaccessfileadapter.htm" />
     </TocEntry>
     <TocEntry
       Title="Runtime Statistics"

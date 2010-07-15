@@ -2,6 +2,7 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Diagnostic
 Imports Db4objects.Db4o.Internal.Reflect
+Imports Db4objects.Db4o.Config.Encoding
 
 Namespace Db4oDoc.Code.Configuration.Common
     Public Class CommonConfigurationExamples
@@ -177,6 +178,16 @@ Namespace Db4oDoc.Code.Configuration.Common
             container.Close()
         End Sub
 
+        Private Shared Sub DisableWeakReferences()
+            ' #example: Disable weak references
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.WeakReferences = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
         Private Shared Sub MarkTransient()
             CleanUp()
 
@@ -192,6 +203,46 @@ Namespace Db4oDoc.Code.Configuration.Common
             ReadWithTransientMarker()
 
             CleanUp()
+        End Sub
+
+        Private Shared Sub ChangeStringEncoding()
+            ' #example: Use the utf8 encoding
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.StringEncoding = StringEncodings.Utf8()
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub DisableTestingConstructors()
+            ' #example: Disable testing for callable constructors
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.TestConstructors = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub IncreasingUpdateDepth()
+            ' #example: Increasing the update-depth
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.UpdateDepth = 2
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
+        End Sub
+
+        Private Shared Sub DisableRuntimeNQOptimizer()
+            ' #example: Disable the runtime native query optimizer
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.OptimizeNativeQueries = False
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+            container.Close()
         End Sub
 
         Private Shared Sub CleanUp()

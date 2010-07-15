@@ -5,6 +5,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.config.QueryEvaluationMode;
 import com.db4o.config.SimpleNameProvider;
+import com.db4o.config.encoding.StringEncodings;
 import com.db4o.diagnostic.DiagnosticToConsole;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.db4o.ta.TransparentPersistenceSupport;
@@ -198,6 +199,16 @@ public class CommonConfigurationExamples {
 
         container.close();
     }
+    
+    private static void disableWeakReferences() {
+        // #example: Disable weak references
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().weakReferences(false);
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        container.close();
+    }
 
     private static void markTransient() {
         cleanUp();
@@ -215,6 +226,47 @@ public class CommonConfigurationExamples {
 
         cleanUp();
     }
+
+    private static void changeStringEncoding() {
+        // #example: Use the utf8 encoding
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().stringEncoding(StringEncodings.utf8());
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        container.close();
+    } 
+
+    private static void disableRuntimeNQOptimizer() {
+        // #example: Disable the runtime native query optimizer
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().optimizeNativeQueries(false);
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        container.close();
+    }
+
+    private static void disableTestingConstructors() {
+        // #example: Disable testing for callable constructors
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().testConstructors(false);
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        container.close();
+    }
+
+    private static void increasingUpdateDepth() {
+        // #example: Increasing the update-depth
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().updateDepth(2);
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        container.close();
+    }
+
     private static void readWithTransientMarker() {
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         configuration.common().markTransient(TransientMarker.class.getName());

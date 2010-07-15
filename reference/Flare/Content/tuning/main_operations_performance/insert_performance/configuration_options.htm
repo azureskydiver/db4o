@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="253" MadCap:lastWidth="586">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="253" MadCap:lastWidth="508">
     <head><title>Configuration Options	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -8,10 +8,10 @@
 performance. Some of them we've already came across in the previous topics:</p>
         <p><i><a href="../../../configuration/file/storage/memory_storage.htm">MemoryStorage</a></i>- improves the insert performance, by replacing disk access with memory access.</p>
         <p>
-            <p><i><a href="../../performance_hints/no_lock_file_thread.htm">lockDatabaseFile</a></i>- reduces the resources consumption by removing database lock thread. Should
+            <p><i><a href="../../../configuration/file/lock_database.htm">lockDatabaseFile</a></i>- reduces the resources consumption by removing database lock thread. Should
 only be used for JVM versions &lt; 1.4</p>
         </p>
-        <p><i><a href="../../performance_hints/turning_off_weak_references.htm">weakReferences</a></i>- switching weak references off during insert operation releases extra resources
+        <p><i><a href="../../../configuration/common/disable_weak_references.htm">weakReferences</a></i>- switching weak references off during insert operation releases extra resources
 and removed the cleanup thread.</p>
         <p><i><a href="../../../configuration/file/storage/nonflushingstorage.htm">NonFlushingStorage</a></i>- switching off flushFileBuffers can improve commit performance as the commit
 information will be cached by the operating system. However this setting is
