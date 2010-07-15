@@ -1,30 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="7354" MadCap:lastWidth="640">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="7026" MadCap:lastWidth="637">
     <head><title>Enable Field Indexes	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <h1>
-            <MadCap:keyword term="Indexing" />
-            <MadCap:keyword term="Index" />Enable Field Indexes</h1>
-        <p>For class Car with field "pilot":</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: </p>
-            <p><code>Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(true)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <p>c#:   </p>
-            <p><code>Db4oFactory.Configure().ObjectClass(typeof(Car)).ObjectField("pilot").Indexed(true)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <p>VB:   </p>
-            <p><code>Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("pilot").Indexed(true)</code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:vb" /><a name="Advantage"></a>
+        <h1>Enable Field Indexes</h1>
+        <p>For class Person with field "name":</p>
+        <MadCap:snippetBlock src="../../CodeExamples/configuration/objectfield/ObjectFieldConfigurations-Index-a-certain-field.all.flsnp" />
         <h2>Advantage</h2>
         <p>The fastest way to improve the performance of your queries is to enable indexing on some of your class's key fields. You can read how to do it in <a href="../indexing.htm">Indexing</a> chapter of this documentation.</p>
         <p>Further step of index tuning is to optimize indexes for Class.Field1.Field2 access. What will give us the best performance:</p>

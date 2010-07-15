@@ -1,6 +1,7 @@
 using System;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Config.Encoding;
 using Db4objects.Db4o.Diagnostic;
 using Db4objects.Db4o.Internal.Reflect;
 
@@ -204,7 +205,17 @@ namespace Db4oDoc.Code.Configuration.Common
             // #end example
 
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
+            container.Close();
+        }
 
+        private static void DisableWeakReferences()
+        {
+            // #example: Disable weak references
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.WeakReferences = false;
+            // #end example
+
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
             container.Close();
         }
 
@@ -224,6 +235,50 @@ namespace Db4oDoc.Code.Configuration.Common
             ReadWithTransientMarker();
 
             CleanUp();
+        }
+
+        private static void ChangeStringEncoding()
+        {
+            // #example: Use the utf8 encoding
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.StringEncoding = StringEncodings.Utf8();
+            // #end example
+
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
+            container.Close();
+        }
+
+        private static void DisableRuntimeNQOptimizer()
+        {
+            // #example: Disable the runtime native query optimizer
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.OptimizeNativeQueries = false;
+            // #end example
+
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
+            container.Close();
+        }
+
+        private static void DisableTestingConstructors()
+        {
+            // #example: Disable testing for callable constructors
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.TestConstructors = false;
+            // #end example
+
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
+            container.Close();
+        }
+
+        private static void IncreasingUpdateDepth()
+        {
+            // #example: Increasing the update-depth
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.UpdateDepth = 2;
+            // #end example
+
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
+            container.Close();
         }
 
         private static void CleanUp()

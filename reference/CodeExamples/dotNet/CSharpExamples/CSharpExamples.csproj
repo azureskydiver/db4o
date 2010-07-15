@@ -80,6 +80,7 @@
     <Compile Include="Code\configuration\io\LRUCachingStorage.cs" />
     <Compile Include="Code\configuration\network\NetworkConfigurationExample.cs" />
     <Compile Include="Code\configuration\objectconfig\ObjectConfigurationExamples.cs" />
+    <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.cs" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="5661" MadCap:lastWidth="637">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="Cascade Behavior;Cascade Behavior:Cascade Delete;Cascade Behavior:Cascade Update;Cascade Behavior:Cascade Activation;Configuration:Class Configuration" />Class Specific Configuration</h1>
+        <p>Some settings are object-specific and are configured for the class. It's part of the <a href="common_configuration.htm">common</a>-configuration, which is available on the client, server and embedded-mode of db4o.</p>
+        <p>Its recommended that you use the same configuration for the client and the server.</p>
+        <h2>Access the Class Configuration</h2>
+        <p>The configuration for a specific class follows always the same pattern. First you specify for which type the configuration applies. You pass the type, the name as string or event an instance of the specific class to the configuration.</p>
+        <h2>Call Constructor</h2>
+        <p>By default db4o bypassed the constructor when it loads the objects from the database. When you're class relies on the constructor to be called, for example to initialize transient state, you can enable it. You can do this also on the global configuration for all types. <MadCap:xref href="common/calling_constructors.htm" target="" title="" alt="">See "Calling Constructors"</MadCap:xref></p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Call-constructor.all.flsnp" />
+        <h2>Cascade on Activate</h2>
+        <p>db4o uses the concept of <a href="../object_lifecycle/activation.htm">activation</a> to avoid loading to much data into memory. When turned on the activation cascades for this types. This means that when an instance is activated, all referenced objects are also activated.&#160;</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-When-activated,-activate-also-all-references.all.flsnp" />
+        <h2>Cascade on Delete</h2>
+        <p>When turned on the deletion cascades to all referred objects. </p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-When-deleted,-delete-also-all-references.all.flsnp" />
+        <h2>Cascade on Update</h2>
+        <p>When turned on, the update cascades to all referred objects.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-When-updated,-update-also-all-references.all.flsnp" />
+        <h2>Enable Replication</h2>
+        <p>This is just a shortcut for enabling UUIDs and version number for this type.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Enable-this-type-for-replication.all.flsnp" />
+        <h2>Generate UUIDs</h2>
+        <p>Generate UUIDs for instances of this type. UUIDs are mainly used for <a href="../db4o_replication_system_drs.htm">replication</a>.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Generate-uuids-for-this-type.all.flsnp" />
+        <h2>Generate Version Numbers</h2>
+        <p>Generate Version Numbers for instances of this type. Version Numbers are mainly used for <a href="../db4o_replication_system_drs.htm">replication</a>.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Generate-versions-for-this-type.all.flsnp" />
+        <h2>Disable Class Index</h2>
+        <p>By default there's a index which indexes all instances of a certain type. When you never query this type and only access it by navigation, you can safely disable this index.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Disable-class-index.all.flsnp" />
+        <h2>Maximum Activation Depth</h2>
+        <p>Sets the maximum <a href="../object_lifecycle/activation.htm">activation depth</a> for this type. Useful to avoid accidentally activating large objects.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Set-maximum-activation-depth.all.flsnp" />
+        <h2>Minimum Activation Depth</h2>
+        <p>Sets the minimum <a href="../object_lifecycle/activation.htm">activation depth</a> for this type. Useful to load always load referenced objects.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Set-minimum-activation-depth.all.flsnp" />
+        <h2>Persist Static Fields</h2>
+        <p>By default db4o doesn't store static fields. With this setting you force db4o to also store the value of the static fields.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Persist-also-the-static-fields.all.flsnp" />
+        <h2>Rename Class</h2>
+        <p>You can rename a class. Useful when you reactor you're code. <MadCap:xref href="../implementation_strategies/refactoring_and_schema_evolution.htm" target="" title="" alt="">See "Refactoring and Schema Evolution"</MadCap:xref></p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Rename-this-type.all.flsnp" />
+        <h2>Store Transient Fields</h2>
+        <p>By default db4o doesn't store transient fields. With this setting you can force db4o to event store transient fields.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Store-also-transient-fields.all.flsnp" />
+        <h2>Set a Translator</h2>
+        <p>You can specify a special translator for this type. A translator is a special way to add you're costume serialization for a type. <MadCap:xref href="../implementation_strategies/translators.htm" target="" title="" alt="">See "Translators"</MadCap:xref></p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Use-a-translator-for-this-type.all.flsnp" />
+        <h2>Update Depth</h2>
+        <p>By default db4o only stores changes on the updated object, but not the changes on referenced objects. With a higher update-depth db4o will traverse along the object graph to a certain depth and update all objects. <MadCap:xref href="../object_lifecycle/update_depth.htm" target="" title="" alt="">See "Update Depth"</MadCap:xref>. You can also specify this <a href="common/update_depth.htm">globally</a>. </p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Set-the-update-depth.all.flsnp" />
+        <p>&#160;</p>
+    </body>
+</html>
