@@ -873,6 +873,7 @@
 				encoding="UTF-8">
 				<classpath>
 					<pathelement path="${file.jdk@{target}.jar}" />
+					<pathelement path="${file.jdk@{target}.optional.jar}" />
 					<pathelement path="${file.jdk@{target}.cs.jar}" />
 					<pathelement path="${file.decaf.annotations}" />
 					<pathelement path="${file.easymock.jar}" />

@@ -85,8 +85,12 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 		return _delegate.totalFreespace();
 	}
 
-	public void traverse(Visitor4 visitor) {
-		_delegate.traverse(visitor);
+	public void traverse(final Visitor4 visitor) {
+		_delegate.traverse(new Visitor4<Slot>() {
+			public void visit(Slot slot) {
+				visitor.visit(_blockConverter.toNonBlockedLength(slot));
+			}
+		});
 	}
 
 	public void write(LocalObjectContainer container) {

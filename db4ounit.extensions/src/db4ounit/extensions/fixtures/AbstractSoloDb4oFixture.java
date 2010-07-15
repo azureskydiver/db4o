@@ -33,15 +33,18 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
     }
 
 	public void close() throws Exception {
-		
-		preClose();
+		try {
+			preClose();
+		}
+		finally {
 		
 		if (null != _db) {
-			Assert.isTrue(_db.close());
-			try {
-				threadPool().join(3000);
-			} finally {
-				_db = null;
+				Assert.isTrue(_db.close());
+				try {
+					threadPool().join(3000);
+				} finally {
+					_db = null;
+				}
 			}
 		}
 	}	

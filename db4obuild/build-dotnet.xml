@@ -414,6 +414,7 @@
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4oUnit.dll" />
 				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Db4o.Optional.dll" />
 			</reference>
 		</csc>
 	</target>

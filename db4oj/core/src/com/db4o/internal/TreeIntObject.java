@@ -74,4 +74,7 @@ public class TreeIntObject extends TreeInt {
 		return true;
 	}
 
+	public static TreeIntObject add(TreeIntObject tree, int key, Object value) {
+		return Tree.add(tree, new TreeIntObject(key, value));
+	}
 }

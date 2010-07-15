@@ -10,7 +10,7 @@ import db4ounit.extensions.fixtures.*;
 
 public class DatabaseReadonlyExceptionTestCase
 	extends AbstractDb4oTestCase
-	implements OptOutTA, OptOutInMemory {
+	implements OptOutTA, OptOutInMemory, OptOutDefragSolo {
 
 	public static void main(String[] args) {
 		new DatabaseReadonlyExceptionTestCase().runAll();
