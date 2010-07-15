@@ -214,4 +214,7 @@ public class BTreeIdSystem implements StackableIdSystem {
 		_persistentState.setStateDirty();
 	}
 
+	public void traverseIds(Visitor4<IdSlotMapping> visitor) {
+		_bTree.traverseKeys(_container.systemTransaction(), visitor);
+	}
 }

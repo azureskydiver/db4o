@@ -9,8 +9,9 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ObjectContainerEventsTestCase extends AbstractDb4oTestCase {
+public class ObjectContainerEventsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	public void testClose() throws Exception {
 		

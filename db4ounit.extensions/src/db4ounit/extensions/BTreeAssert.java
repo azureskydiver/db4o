@@ -4,6 +4,7 @@ package db4ounit.extensions;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.freespace.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
@@ -93,6 +94,7 @@ public class BTreeAssert {
         
         final Collection4 freedSlots = new Collection4();
         
+        FreespaceManager freespaceManager = container.freespaceManager();
         container.installDebugFreespaceManager(
             new FreespaceManagerForDebug(new SlotListener() {
                 public void onFree(Slot slot) {
@@ -101,7 +103,8 @@ public class BTreeAssert {
         }));
         
         block.run();
-        
+
+        container.installDebugFreespaceManager(freespaceManager);
         
         Assert.isTrue(freedSlots.containsAll(allSlots.iterator()));
 	}
