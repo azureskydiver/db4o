@@ -1577,8 +1577,6 @@
         Title="Debug Messaging System"
         Link="/Content/tuning/debugging_db4o/debug_messaging_system.htm" />
       <TocEntry
-        Title="Customizing The Debug Message Output" />
-      <TocEntry
         Title="Using Dtrace"
         Link="/Content/tuning/debugging_db4o/using_dtrace.htm"
         conditions="Primary.Java,Primary.All languages" />
@@ -1590,18 +1588,8 @@
       Title="Diagnostics"
       Link="/Content/tuning/diagnostics.htm">
       <TocEntry
-        Title="ClassHasNoFields" />
-      <TocEntry
-        Title="LoadedFromClassIndex" />
-      <TocEntry
-        Title="NativeQueryNotOptimized" />
-      <TocEntry
-        Title="UpdateDepthGreaterOne" />
-      <TocEntry
         Title="Diagnostic Messages Filter"
         Link="/Content/tuning/diagnostics/diagnostic_messages_filter.htm" />
-      <TocEntry
-        Title="DescendIntoTranslator" />
     </TocEntry>
     <TocEntry
       Title="Native Query Optimization"
