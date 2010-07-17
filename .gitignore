@@ -36,3 +36,8 @@ tutorial/bin/
 sharpen/sharpen.ui.tests/bin-testcases/
 db4obuild/*.db4o
 db4obuild/machine.properties
+.metadata
+db4obuild/*.log
+db4obuild/*.db4o
+db4oj.tests/*.log
+db4oj.tests/*.db4o
