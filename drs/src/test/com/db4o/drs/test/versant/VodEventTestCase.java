@@ -3,13 +3,11 @@
 package com.db4o.drs.test.versant;
 
 import java.io.*;
-import java.util.*;
 
 import javax.jdo.*;
 
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.foundation.*;
 import com.db4o.util.*;
 import com.versant.event.*;
 import com.versant.odbms.*;
@@ -27,12 +25,10 @@ public class VodEventTestCase implements TestCase, ClassLevelFixtureTest {
 		_vod = new VodDatabase(DATABASE_NAME);
 		_vod.createDb();
 		_vod.enhance();
-		System.out.println("classSetup");
 	}
 
 	public static void classTearDown() {
 		_vod.removeDb();
-		System.out.println("classTearDown");
 	}
 	
 	private static VodDatabase _vod;
