@@ -1,18 +1,15 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.backup;
 
-import com.db4o.Db4oEmbedded;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.foundation.io.Path4;
-import com.db4o.internal.LocalObjectContainer;
-import com.db4o.io.Storage;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
+import com.db4o.internal.*;
+import com.db4o.io.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
+import db4ounit.*;
 
-public abstract class MemoryBackupTestCaseBase implements TestCase {
+public abstract class MemoryBackupTestCaseBase extends TestWithTempFile {
 
 	public static class Item {
 		public int _id;
@@ -24,19 +21,18 @@ public abstract class MemoryBackupTestCaseBase implements TestCase {
 
 	private static final String DB_PATH = "database";
 	private static final int NUM_ITEMS = 10;
-	private static final String BACKUP_PATH = Path4.combine(Path4.getTempPath(), "backup");
-	
+	 
 	public void testMemoryBackup() throws Exception {
 		LocalObjectContainer origDb = (LocalObjectContainer) Db4oEmbedded.openFile(config(origStorage()), DB_PATH);
 		store(origDb);
-		backup(origDb, BACKUP_PATH);
+		backup(origDb, tempFile());
 		origDb.close();
 	
-		ObjectContainer backupDb = Db4oEmbedded.openFile(config(backupStorage()), BACKUP_PATH);
+		ObjectContainer backupDb = Db4oEmbedded.openFile(config(backupStorage()), tempFile());
 		ObjectSet<Item> result = backupDb.query(Item.class);
 		Assert.areEqual(NUM_ITEMS, result.size());
 		backupDb.close();
-		backupStorage().delete(BACKUP_PATH);
+		backupStorage().delete(tempFile());
 	}
 
 	protected abstract void backup(LocalObjectContainer origDb, String backupPath);
