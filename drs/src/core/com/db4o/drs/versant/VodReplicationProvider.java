@@ -42,7 +42,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			if(DrsDebug.verbose){
 				System.out.println(entry);
 			}
-			_signatures.add(entry);
+			_signatures.add( entry.databaseId(),new Signature(entry.signature()));
 		}
 	}
 
