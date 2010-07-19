@@ -13,6 +13,8 @@ import db4ounit.*;
 
 public class VodProviderTestCaseBase  implements TestCase  {
 	
+	private boolean EXPOSE_OBJECT_DELETE_BUG = true;
+	
 	protected static final String DATABASE_NAME = "VodDatabaseTestCaseBase";
 	
 	protected VodReplicationProvider _provider;
@@ -40,11 +42,14 @@ public class VodProviderTestCaseBase  implements TestCase  {
 		_pm.currentTransaction().begin();
 		Collection allObjects = (Collection) _pm.newQuery(Object.class).execute();
 		for (Object object : allObjects) {
-			// System.out.println("Deleting " + object.toString());
+			System.out.println("Deleting " + object.toString());
 			_pm.deletePersistent(object);
 		}
 		_pm.currentTransaction().commit();
 		
+		if(EXPOSE_OBJECT_DELETE_BUG){
+			return;
+		}
 		
 		// TODO: The code below shouldn't be needed but somehow
 		//       querying for Object.class doesn't always work.

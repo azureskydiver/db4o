@@ -50,6 +50,9 @@ public class VodDatabase {
 	}
 	
 	private void addDefaultProperties(){
+		
+		// addPropertyIfNotExists("versant.l2CacheEnabled", "false");
+		
 		addPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
 		addPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 		addJdoMetaDataFiles();
