@@ -11,15 +11,22 @@ import javax.jdo.*;
 import com.db4o.drs.inside.*;
 import com.db4o.util.*;
 import com.versant.odbms.*;
+import com.versant.trans.*;
 import com.versant.util.*;
 
 public class VodDatabase {
 	
+	
+	private static final String VEDSECHN_SCHEMA = "/lib/vedsechn.sch";
+
+	private static final String CHANNEL_SCHEMA = "/lib/channel.sch";
+
 	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
 	
 	private static final String JDO_METADATA_KEY = "versant.metadata."; 
-	
 
+	static final String VED_DRIVER = "veddriver";
+	
 
 	private static final int DEFAULT_PORT = 5019;
 
@@ -30,6 +37,7 @@ public class VodDatabase {
 	private PersistenceManagerFactory _persistenceManagerFactory;
 	
 	private DatastoreManagerFactory _datastoreManagerFactory;
+
 
 	public VodDatabase(String name, Properties properties){
 		_name = name;
@@ -99,10 +107,12 @@ public class VodDatabase {
 		DBUtility.createDB(_name);
 	}
 
+	// JDO
 	public PersistenceManager createPersistenceManager() {
 		return persistenceManagerFactory().getPersistenceManager();
 	}
 	
+	// JDO
 	private PersistenceManagerFactory persistenceManagerFactory(){
 		if(_persistenceManagerFactory == null){
 			_persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(_properties);
@@ -124,19 +134,21 @@ public class VodDatabase {
 			
 			String[] args = new String[]{tempFile.getAbsolutePath()};
 			
-			String output = JavaServices.java("com.db4o.drs.versant.VodEnhancer", args);
+			ProcessResult processResult = JavaServices.java("com.db4o.drs.versant.VodEnhancer", args);
 			if(DrsDebug.verbose){
-				System.out.println(output);
+				System.out.println(processResult);
 			}
 		} finally {
 			tempFile.delete();
 		}
 	}
 
+	// COBRA
 	public DatastoreManager createDatastoreManager() {
 		return datastoreManagerFactory().getDatastoreManager();
 	}
 	
+	// COBRA
 	private DatastoreManagerFactory datastoreManagerFactory(){
 		if(_datastoreManagerFactory == null){
 			ConnectionInfo con = new ConnectionInfo(_name, host(), port(), userName(), passWord());
@@ -217,5 +229,28 @@ public class VodDatabase {
 		}
 		_properties.setProperty(JDO_METADATA_KEY + freeEntry, fileName);
 	}
+
+	// JVI
+	public TransSession createTransSession() {
+        Properties properties = new Properties ();
+        properties.put ("database", _name);
+        properties.put ("lockmode", com.versant.fund.Constants.NOLOCK + "");
+        properties.put ("options",  com.versant.fund.Constants.READ_ACCESS + "");
+        return new TransSession(properties);
+	}
+	
+	public String versantRootPath() {
+		return DBUtility.versantRootPath();
+	}
+
+	public void createEventSchema() {
+		defineSchema(CHANNEL_SCHEMA);
+		defineSchema(VEDSECHN_SCHEMA);
+	}
+
+	private void defineSchema(String schema) {
+		DBUtility.defineSchema(_name, new File(new File(versantRootPath()), schema).getAbsolutePath());
+	}
+	
 
 }
