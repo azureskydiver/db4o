@@ -4,8 +4,6 @@ package com.db4o.drs.foundation;
 
 import java.util.*;
 
-import com.db4o.drs.versant.metadata.*;
-
 public class Signatures {
 	
 	private final Map<Integer, Signature> _byId = new HashMap<Integer, Signature>();
@@ -31,10 +29,6 @@ public class Signatures {
 
 	public long idFor(DrsUUID uuid) {
 		return idFor(new Signature(uuid.getSignaturePart()));
-	}
-
-	public void add(DatabaseSignature databaseSignature) {
-		add( databaseSignature.databaseId(),new Signature(databaseSignature.signature()));
 	}
 
 }
