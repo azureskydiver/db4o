@@ -16,11 +16,11 @@ import com.db4o.util.IOServices.*;
 
 public class JavaServices {
 
-    public static String java(String className) throws IOException, InterruptedException{
+    public static ProcessResult java(String className) throws IOException, InterruptedException{
         return IOServices.exec(javaExecutable(), javaRunArguments(className));
     }
     
-    public static String java(String className, String[] args) throws IOException, InterruptedException{
+    public static ProcessResult java(String className, String[] args) throws IOException, InterruptedException{
         return IOServices.exec(javaExecutable(), javaRunArguments(className, args));
     }
 

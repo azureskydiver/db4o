@@ -2,16 +2,22 @@
 
 package com.db4o.drs.test.versant;
 
-import javax.jdo.*;
 
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
+import com.versant.odbms.*;
+import com.versant.odbms.query.*;
+import com.versant.odbms.query.Operator.*;
 
 import db4ounit.*;
 
 public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
+	
+	public static void main(String[] args) {
+		new ConsoleTestRunner(VodProviderTestCase.class).run();
+	}
 	
 	public void testReferenceExists(){
 		Item item = storeAndCommitSingleItem();
@@ -78,28 +84,33 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		provider.destroy();
 	}
 	
-	public void _testQueryForVersion(){
+	public void testQueryForVersion(){
+		
 		Item item = storeAndCommitSingleItem();
+		System.out.println(item);
 		ReplicationReference reference = _provider.produceReference(item);
 		long version = reference.version();
 		System.out.println("Version " + version);
 		
-		String filter = "this.o_ts_timestamp == param";
 		
-		_pm.currentTransaction().begin();
-		
-		Query query = _pm.newQuery(Item.class, filter);
-		query.declareParameters("int param");
-		Iterable<Item> iterable = (Iterable<Item>) query.execute(version);
-		for (Item item2 : iterable) {
-			System.out.println("Query worked");
-			System.out.println(item2);
+		DatastoreManager dm = _vod.createDatastoreManager();
+		dm.beginTransaction();
+		DatastoreQuery query = new DatastoreQuery("Item");
+		Expression expression = new Expression(
+				new SubExpression(new Field("o_ts_timestamp")), 
+				UnaryOperator.GREATER_THAN, 
+				new SubExpression(1));
+		query.setExpression(expression);
+		Object[] loids = dm.executeQuery(query, DataStoreLockMode.NOLOCK,
+				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		for (Object loid : loids) {
+			// System.out.println(loid);
 		}
-		
-		_pm.currentTransaction().rollback();
-		
-		
 	}
+
+	
+	
+
 	
 	private Item storeAndCommitSingleItem() {
 		Item item = new Item("one");

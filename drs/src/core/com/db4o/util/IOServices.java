@@ -26,24 +26,24 @@ public class IOServices {
 		}
 	}
 	
-	public static String exec(String program) throws IOException, InterruptedException{
+	public static ProcessResult exec(String program) throws IOException, InterruptedException{
 	    return exec(program, null);
 	}
 	
-	public static String exec(String program, String[] arguments) throws IOException, InterruptedException{
+	public static ProcessResult exec(String program, String[] arguments) throws IOException, InterruptedException{
 	    ProcessRunner runner = new ProcessRunner(program, arguments);
 	    runner.waitFor();
-	    return runner.formattedResult();  
+	    return runner.processResult();  
 	}
 
 	public static ProcessRunner start(String program, String[] arguments) throws IOException {
 	    return new ProcessRunner(program, arguments);
 	}
 
-	public static String execAndDestroy(String program, String[] arguments, String expectedOutput, long timeout) throws IOException{
+	public static ProcessResult execAndDestroy(String program, String[] arguments, String expectedOutput, long timeout) throws IOException{
         ProcessRunner runner = new ProcessRunner(program, arguments);
         runner.destroy(expectedOutput, timeout);
-        return runner.formattedResult();
+        return runner.processResult();
     }
 	
 	public static class DestroyTimeoutException extends RuntimeException{
@@ -163,29 +163,10 @@ public class IOServices {
 	        _errorReader.stop();
 	    }
 	    
-	    public String formattedResult(){
-	        String res = formatOutput("IOServices.exec", _command); 
-	        
-	        if(_inputReader.hasResult()){
-	            res += formatOutput("out", _inputReader.result()); 
-	        }
-	        if(_errorReader.hasResult()){
-	            res += formatOutput("err", _errorReader.result()); 
-	        }
-	        
-	        res += formatOutput("result", new Integer(_result).toString());
-	        
-	        return res;  
-
+	    public ProcessResult processResult(){
+	    	return new ProcessResult(_command, _inputReader.result(), _errorReader.result(), _result);
 	    }
 	    
-	    private String formatOutput(String task, String output){
-	        return headLine(task) + output + "\n";
-	    }
-	    
-	    private String headLine(String task){
-	        return "\n" + task + "\n----------------\n";  
-	    }
 	    
 	}
 	
