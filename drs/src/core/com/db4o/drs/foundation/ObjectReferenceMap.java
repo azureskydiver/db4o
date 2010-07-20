@@ -20,11 +20,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.foundation;
 
-import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.foundation.Visitor4;
-
 import java.util.*;
 
+import com.db4o.drs.inside.*;
+import com.db4o.foundation.*;
+
+/**
+ * @sharpen.ignore
+ */
 public final class ObjectReferenceMap {
 	
 	private Map<Object, ReplicationReference> _objectToReplicationReference;

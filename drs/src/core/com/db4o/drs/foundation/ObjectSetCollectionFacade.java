@@ -21,9 +21,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.foundation;
 
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 	
 	private final Collection _delegate;

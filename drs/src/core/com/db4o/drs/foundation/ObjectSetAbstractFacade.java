@@ -25,6 +25,9 @@ import com.db4o.ext.ExtObjectSet;
 
 import java.util.*;
 
+/**
+ * @sharpen.ignore
+ */
 public abstract class ObjectSetAbstractFacade implements ObjectSet {
 	private RuntimeException notSupported() {
 		return new UnsupportedOperationException("not supported");

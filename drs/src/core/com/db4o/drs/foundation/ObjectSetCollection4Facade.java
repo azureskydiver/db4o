@@ -22,6 +22,9 @@ package com.db4o.drs.foundation;
 
 import com.db4o.foundation.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class ObjectSetCollection4Facade extends ObjectSetAbstractFacade {
 	
     Collection4 _delegate;
