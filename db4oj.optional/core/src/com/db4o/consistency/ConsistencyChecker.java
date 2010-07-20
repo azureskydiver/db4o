@@ -7,6 +7,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
@@ -55,15 +56,21 @@ public class ConsistencyChecker {
 		final List<SlotWithSource> bogusSlots;
 		final List<Pair<SlotWithSource,SlotWithSource>> overlaps;
 		final List<Pair<String,Integer>> invalidObjectIds;
+		final List<Pair<String,Integer>> invalidFieldIndexEntries;
 		
-		public ConsistencyReport(List<SlotWithSource> bogusSlots, List<Pair<SlotWithSource,SlotWithSource>> overlaps, List<Pair<String,Integer>> invalidClassIds) {
+		public ConsistencyReport(
+				List<SlotWithSource> bogusSlots, 
+				List<Pair<SlotWithSource,SlotWithSource>> overlaps, 
+				List<Pair<String,Integer>> invalidClassIds, 
+				List<Pair<String,Integer>> invalidFieldIndexEntries) {
 			this.bogusSlots = bogusSlots;
 			this.overlaps = overlaps;
 			this.invalidObjectIds = invalidClassIds;
+			this.invalidFieldIndexEntries = invalidFieldIndexEntries;
 		}
 		
 		public boolean consistent() {
-			return bogusSlots.size() == 0 && overlaps.size() == 0 && invalidObjectIds.size() == 0;
+			return bogusSlots.size() == 0 && overlaps.size() == 0 && invalidObjectIds.size() == 0 && invalidFieldIndexEntries.size() == 0;
 		}
 		
 		@Override
@@ -74,11 +81,13 @@ public class ConsistencyChecker {
 			StringBuffer message = new StringBuffer("INCONSISTENCIES DETECTED\n")
 				.append(overlaps.size() + " overlaps\n")
 				.append(bogusSlots.size() + " bogus slots\n")
-				.append(invalidObjectIds.size() + " invalid class ids\n");
+				.append(invalidObjectIds.size() + " invalid class ids\n")
+				.append(invalidFieldIndexEntries.size() + " invalid field index entries\n");
 			message.append("(slot lengths are non-blocked)\n");
 			appendInconsistencyReport(message, "OVERLAPS", overlaps);
 			appendInconsistencyReport(message, "BOGUS SLOTS", bogusSlots);
 			appendInconsistencyReport(message, "INVALID OBJECT IDS", invalidObjectIds);
+			appendInconsistencyReport(message, "INVALID FIELD INDEX ENTRIES", invalidFieldIndexEntries);
 			return message.toString();
 		}
 		
@@ -106,7 +115,7 @@ public class ConsistencyChecker {
 	public ConsistencyReport checkSlotConsistency() {
 		mapIdSystem();
 		mapFreespace();
-		return new ConsistencyReport(bogusSlots, collectOverlaps(), checkClassIndices());
+		return new ConsistencyReport(bogusSlots, collectOverlaps(), checkClassIndices(), checkFieldIndices());
 	}
 
 	private List<Pair<String,Integer>> checkClassIndices() {
@@ -124,19 +133,47 @@ public class ConsistencyChecker {
 			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) clazz.index();
 			index.traverseAll(_db.systemTransaction(), new Visitor4<Integer>() {
 				public void visit(Integer id) {
-					try {
-						Slot slot = idSystem.committedSlot(id);
-						if(Slot.isNull(slot)) {
-							invalidIds.add(new Pair(clazz.getName(), id));
-						}
-					}
-					catch(InvalidIDException exc) {
+					if(!idIsValid(id)) {
 						invalidIds.add(new Pair(clazz.getName(), id));
 					}
 				}
 			});
 		}
 		return invalidIds;
+	}
+	
+	private List<Pair<String, Integer>> checkFieldIndices() {
+		final List<Pair<String,Integer>> invalidIds = new LinkedList<Pair<String,Integer>>();
+		ClassMetadataIterator clazzIter = _db.classCollection().iterator();
+		while(clazzIter.moveNext()) {
+			final ClassMetadata clazz = clazzIter.currentClass();
+			clazz.traverseDeclaredFields(new Procedure4<FieldMetadata>() {
+				public void apply(final FieldMetadata field) {
+					if(!field.hasIndex()) {
+						return;
+					}
+					BTree fieldIndex = field.getIndex(_db.systemTransaction());
+					fieldIndex.traverseKeys(_db.systemTransaction(), new Visitor4<FieldIndexKey>() {
+						public void visit(FieldIndexKey fieldIndexKey) {
+							int parentID = fieldIndexKey.parentID();
+							if(!idIsValid(parentID)) {
+								invalidIds.add(new Pair<String, Integer>(clazz.getName() + "#" + field.getName(), parentID));
+							}
+						}
+					});
+				}
+			});
+		}
+		return invalidIds;
+	}
+
+	private boolean idIsValid(int id) {
+		try {
+			return !Slot.isNull(_db.idSystem().committedSlot(id));
+		}
+		catch(InvalidIDException exc) {
+			return false;
+		}
 	}
 
 	private List<Pair<SlotWithSource, SlotWithSource>> collectOverlaps() {
