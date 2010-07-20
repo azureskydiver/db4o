@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq.Expressions;
@@ -73,6 +74,7 @@ namespace Db4oTestRunner
 					{
 						logger.LogMessageFormated(Color.Blue, Verdata10Bold(), "======= Db4o Version {0} ======",
 						                          Db4oVersionFor(versionFolder));
+
 						if (!enabled)
 						{
 							logger.LogMessage("Test disable by the user.");
@@ -90,9 +92,9 @@ namespace Db4oTestRunner
 								runner.Run(logger);
 							}
 						}
-						catch (SerializationException se)
+						catch (Exception ex)
 						{
-							logger.LogException(se);
+							logger.LogException(ex);
 						}
 						finally
 						{
@@ -143,6 +145,7 @@ namespace Db4oTestRunner
 			domain.AssemblyResolve += (sender, args) =>
 			                          	{
 			                          		string assemblyPath = (string)AppDomain.CurrentDomain.GetData(TEST_ASSEMBLY_PATH_DATA_NAME);
+											TraceInformation("Trying to resolve '{0}' to '{1}'", args.Name, assemblyPath);
 			                          		return assemblyPath.Contains(UnqualifiedAssemblyName(args)) ? Assembly.LoadFrom(assemblyPath) : null;
 			                          	};
 		}
@@ -197,8 +200,14 @@ namespace Db4oTestRunner
 			setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 			setup.PrivateBinPath = assemblyPath;
 			setup.ConfigurationFile = Path.Combine(assemblyPath, "Db4oTestRunner.exe.config");
+			TraceInformation("[{0}] Configuration File: '{1}'", assemblyPath, setup.ConfigurationFile);
 
 			return setup;
+		}
+
+		private static void TraceInformation(string msg, params string[] args)
+		{
+			Trace.TraceInformation(msg, args);
 		}
 
 		private void TryFillTestList(string assemblyPath)
