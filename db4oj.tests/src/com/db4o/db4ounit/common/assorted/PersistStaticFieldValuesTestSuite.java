@@ -80,7 +80,7 @@ public class PersistStaticFieldValuesTestSuite extends FixtureBasedTestSuite imp
 	    }
 	    
 	    public static class PsfvHelper{
-	    	private String name;
+	    	public String name;
 
 			public PsfvHelper(String name) {
 				super();
