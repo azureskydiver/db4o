@@ -78,7 +78,6 @@
 		<copy todir="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/core/Db4objects/Drs">
 				<include name="**/*.cs" />
-				<exclude name="Foundation/*.cs" />
 				<exclude name="Inside/ReplicationPlatform.cs" />
 				<exclude name="**/Tests/**" />
 			</fileset>
