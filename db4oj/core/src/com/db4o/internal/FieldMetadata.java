@@ -155,10 +155,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return;
         }
         
-        if(_index == null){
+        BTree index = getIndex(trans);
+		if(index == null){
             return;
         }
-        _index.remove(trans, createFieldIndexKey(parentID,  indexEntry));
+        index.remove(trans, createFieldIndexKey(parentID,  indexEntry));
     }
 
     //TODO: Split into command query separation.
