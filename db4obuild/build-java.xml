@@ -1402,17 +1402,11 @@
 		<ant antfile="${dir.dist.taj.tests.integration}/build.xml" dir="${dir.dist.taj.tests.integration}"/>
 	</target>
 
-	<!-- TODO temporary task for testing, remove -->
-	<target name="run.tests.taj.integration.standalone">
-		<ant antfile="${dir.j.taj.tests.integration}/build.xml" dir="${dir.j.taj.tests.integration}"/>
-	</target>
-
 	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests">
         <path id="tests.jdk1.5.runtime.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
         	<path refid="tests.jdk1.5.cp" />
         </path>
-        
 		<java taskname="core/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
@@ -1444,10 +1438,10 @@
 			<classpath refid="tests.jdk1.5.runtime.cp" />
 			<arg value="-withExceptions" />
 		</java>
-		<java taskname="tests defrag/jdk1.5" jvm="${file.jvm.jdk1.5}" 
+		<java taskname="tests consistency/jdk1.5" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
-			classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" 
+			classname="com.db4o.db4ounit.jre5.AllTestsConsistencyCheck" 
 			failonerror="true" 
 			timeout="3000000">
 			<sysproperty key="dir.workspace" value="${dir.base}" />
@@ -1471,7 +1465,6 @@
 			<classpath refid="tests.jdk1.5.runtime.cp" />
 			<arg value="-withExceptions" />
 		</java>
-
 	</target>
 	
 	<target name="run.tests.nqopt" depends="build.nqopt.tests">
