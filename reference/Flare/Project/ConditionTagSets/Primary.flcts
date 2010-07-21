@@ -2,28 +2,28 @@
 <CatapultConditionTagSet>
   <ConditionTag
     Name="Pdf"
-    BackgroundColor="#ff0000" />
+    BackgroundColor="#dadada" />
   <ConditionTag
     Name="Online"
-    BackgroundColor="#00ff00" />
+    BackgroundColor="#ff0000" />
   <ConditionTag
-    BackgroundColor="LightBlue"
+    BackgroundColor="#0404ca"
     Name="Java"
     Comment="java related" />
   <ConditionTag
-    BackgroundColor="LightCoral"
+    BackgroundColor="#80d966"
     Name="c#"
     Comment="" />
   <ConditionTag
-    BackgroundColor="LightCyan"
+    BackgroundColor="#7ecf81"
     Name="VB.NET"
     Comment="" />
   <ConditionTag
-    BackgroundColor="LightGreen"
+    BackgroundColor="#3ffb00"
     Name=".NET"
     Comment="" />
   <ConditionTag
-    BackgroundColor="LightPink"
+    BackgroundColor="#c0c0c0"
     Name="All languages"
     Comment="java + .NET" />
   <ConditionTag

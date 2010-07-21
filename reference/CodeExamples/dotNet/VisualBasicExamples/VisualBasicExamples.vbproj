@@ -159,6 +159,9 @@
     <Compile Include="Code\configuration\objectconfig\ObjectConfigurationExamples.vb" />
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.vb" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.vb" />
+    <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.vb" />
+    <Compile Include="Code\strategies\refactoring\RefactoringExamples.vb" />
+    <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.vb" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

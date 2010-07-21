@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.Configuration.Alias.AliasExamples</StartupObject>
+    <StartupObject>Db4oDoc.Code.Strategies.Refactoring.RefactoringExamples</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -100,6 +100,9 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.cs" />
+    <Compile Include="Code\strategies\refactoring\RefactoringExamples.cs" />
+    <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.cs" />
     <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.cs" />
     <Compile Include="Code\ta\collections\CollectionsExample.cs" />
     <Compile Include="Code\ta\collections\Team.cs" />

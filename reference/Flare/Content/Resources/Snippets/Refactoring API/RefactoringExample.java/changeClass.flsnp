@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.java: changeClass
-private static void changeClass() {
-    Configuration configuration = Db4o.newConfiguration();
-    configuration.objectClass(Pilot.class).rename(&quot;com.db4odoc.f1.refactoring.PilotNew&quot;);
-    configuration.objectClass(PilotNew.class).objectField(&quot;name&quot;).rename(&quot;identity&quot;);
-    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
-    container.close();
-  }</pre>    </body></html>
