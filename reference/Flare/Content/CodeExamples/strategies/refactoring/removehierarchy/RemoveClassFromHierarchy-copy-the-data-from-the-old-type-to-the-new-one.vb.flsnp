@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim allMammals As IList(Of Human) = container.Query(Of Human)()
+For Each oldHuman As Human In allMammals
+    Dim newHuman As New HumanNew(&quot;&quot;)
+    newHuman.BodyTemperature = oldHuman.BodyTemperature
+    newHuman.IQ = oldHuman.IQ
+    newHuman.Name = oldHuman.Name
+
+    container.Store(newHuman)
+    container.Delete(oldHuman)</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim allMammals As IList(Of Human) = container.Query(Of Human)()
+For Each oldHuman As Human In allMammals
+    Dim newHuman As New HumanNew(&quot;&quot;)
+    newHuman.BodyTemperature = oldHuman.BodyTemperature
+    newHuman.IQ = oldHuman.IQ
+    newHuman.Name = oldHuman.Name
+
+    container.Store(newHuman)
+    container.Delete(oldHuman)</pre>
+		<div class="codesnippet-meta">RemoveClassFromHierarchy.vb: copy the data from the old type to the new one<a href="Example-refactoring-removehierarchy-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

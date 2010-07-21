@@ -1018,7 +1018,7 @@
         Title="Automatic Refactoring"
         Link="/Content/implementation_strategies/refactoring_and_schema_evolution/automatic_refactoring.htm" />
       <TocEntry
-        Title="Refactoring API"
+        Title="Renaming API"
         Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_api.htm" />
       <TocEntry
         Title="Field Type Change"
@@ -1026,15 +1026,6 @@
       <TocEntry
         Title="Refactoring Class Hierarchy"
         Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy.htm">
-        <TocEntry
-          Title="A"
-          Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/a.htm" />
-        <TocEntry
-          Title="B"
-          Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/b.htm" />
-        <TocEntry
-          Title="C"
-          Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/c.htm" />
         <TocEntry
           Title="Removing Class From A Hierarchy"
           Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/removing_class_from_a_hierarchy.htm" />
@@ -2050,6 +2041,9 @@
       Title="Coding Style"
       Link="/Content/working_with_source_code/coding_style.htm" />
   </TocEntry>
+  <TocEntry
+    Title="Dependency Overview"
+    Link="/Content/dependency_overview.htm" />
   <TocEntry
     Title="License"
     Link="/Content/license.htm" />

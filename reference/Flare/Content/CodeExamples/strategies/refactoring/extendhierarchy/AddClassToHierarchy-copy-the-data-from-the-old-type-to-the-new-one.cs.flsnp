@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">IList&lt;Human&gt; allMammals = container.Query&lt;Human&gt;();
+foreach (Human oldHuman in allMammals)
+{
+    HumanNew newHuman = new HumanNew(&quot;&quot;);
+    newHuman.BodyTemperature = oldHuman.BodyTemperature;
+    newHuman.IQ = oldHuman.IQ;
+    newHuman.Name = oldHuman.Name;
+
+    container.Store(newHuman);
+    container.Delete(oldHuman);
+}</pre>
+		<div class="codesnippet-meta">AddClassToHierarchy.cs: copy the data from the old type to the new one<a href="Example-refactoring-extendhierarchy-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
