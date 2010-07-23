@@ -4,7 +4,6 @@ package com.db4o.drs.versant.eventlistener;
 
 import java.io.*;
 
-import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.metadata.*;
 import com.versant.event.*;
@@ -50,7 +49,6 @@ public class EventProcessor {
 		    client.addExceptionListener (exception_listener);
 		    
 		    EventChannel channel1 = createChannel(client, ClassMetadata.class.getName());
-		    EventChannel channel2 = createChannel(client, Item.class.getSimpleName());
 		    // createChannel(client, Item.class.getName());
 		    
 		    println("Listening for events on " + _eventConfiguration.databaseName);
@@ -90,17 +88,14 @@ public class EventProcessor {
 		channel.addVersantEventListener (new ClassEventListener() {
 			
 			public void instanceModified (VersantEventObject event){
-				println(Item.class.getName());
 				println(className);
 			}
 
 			public void instanceCreated (VersantEventObject event) {
-				println(Item.class.getName());
 				println(className);
 			}
 
 			public void instanceDeleted (VersantEventObject event) {
-				println(Item.class.getName());
 				println(className);
 			}
 			
