@@ -3,9 +3,9 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.File.AsynchronousSync(True)</pre>
+configuration.File.AsynchronousSync = True</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.File.AsynchronousSync(True)</pre>
+configuration.File.AsynchronousSync = True</pre>
 		<div class="codesnippet-meta">FileConfiguration.vb: Allow asynchronous synchronisation of the file-flushes<a href="Example-configuration-file-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>
 	</div>

@@ -3,7 +3,7 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.File.AsynchronousSync(true);</pre>
+configuration.File.AsynchronousSync = true;</pre>
 		<div class="codesnippet-meta">FileConfiguration.cs: Allow asynchronous synchronisation of the file-flushes<a href="Example-configuration-file-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>
 	</div>

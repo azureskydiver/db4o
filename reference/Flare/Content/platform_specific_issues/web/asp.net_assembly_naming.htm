@@ -4,7 +4,7 @@
     </head>
     <body>
         <h1>ASP.NET Assembly Naming</h1>
-        <p>If you are creating your application in ASP.NET 2.0 you should take into consideration the fact that the assembly names are generated automatically on each build by default. Db4o distinguish persisted classes by name, namespace and assembly, so after the assembly name change, you won't be able to access classes saved with the previous version of the assembly.</p>
+        <p>If you are creating your application in ASP.NET 2.0 you should take into consideration that the assembly names are generated automatically on each build by default. Db4o distinguish persisted classes by name, namespace and assembly. So after the assembly name has changed, you won't be able to access classes saved with the previous version of the assembly.</p>
         <p>There are several workarounds:</p>
         <UL>
             <LI>You can create a separate class library keeping db4o logic and persistent classes. This can also help if you need to access fully trusted db4o library from partially trusted ASP application</LI>

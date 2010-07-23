@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">[DataServiceKey(&quot;TeamName&quot;)]
+public class Team
+{
+    private string teamName;
+    private string motivation;
+    private IList&lt;Person&gt; members = new List&lt;Person&gt;();
+
+    public Team()
+    {
+    }
+
+    public Team(string teamName)
+    {
+        this.teamName = teamName;
+    }
+
+    public string TeamName
+    {
+        get { return teamName; }
+        set { teamName = value; }
+    }
+
+    public string Motivation
+    {
+        get { return motivation; }
+        set { motivation = value; }
+    }
+
+    public IList&lt;Person&gt; Members
+    {
+        get { return members; }
+        set { members = value; }
+    }
+}</pre>
+		<div class="codesnippet-meta">Team.cs: The Team has also a key<a href="Example-WCFDataServices-WCFDataServices-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
