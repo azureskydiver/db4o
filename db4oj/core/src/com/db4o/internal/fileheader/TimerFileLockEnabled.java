@@ -66,7 +66,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
 		
 		// If someone changes the system clock here, he is out of luck.
 		while (System.currentTimeMillis() < currentTime + waitTime) {
-			Cool.sleepIgnoringInterruption(waitTime);
+			Runtime4.sleep(waitTime);
 		}
 		
 		long currentAccessTime = readLong(address, offset);

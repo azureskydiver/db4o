@@ -40,7 +40,7 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements O
 	public void testKeptAliveClient(){
 	    Item item = new Item("one");
         store(item);
-	    Cool.sleepIgnoringInterruption(TIMEOUT * 2);
+	    Runtime4.sleep(TIMEOUT * 2);
 	    Assert.areSame(item, retrieveOnlyInstance(Item.class));
 	}
 	
@@ -69,7 +69,7 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements O
 	public static class TestMessageRecipient implements MessageRecipient {
 		public void processMessage(MessageContext con, Object message) {
             _clientWasBlocked = true;
-			Cool.sleepIgnoringInterruption(TIMEOUT * 3);
+			Runtime4.sleep(TIMEOUT * 3);
 		}
 	}
 

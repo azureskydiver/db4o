@@ -118,4 +118,28 @@ public class Reflection4 {
         }
     }
     
+    public static String dump(Object obj){
+    	if(obj == null){
+    		return "null";
+    	}
+    	Class clazz = obj.getClass();
+    	StringBuffer sb = new StringBuffer();
+    	sb.append(clazz.getName());
+    	Field[] fields = clazz.getDeclaredFields();
+    	for (Field field : fields) {
+    		sb.append("\n");
+    		Platform4.setAccessible(field);
+    		sb.append("\t");
+			sb.append(field.getName());
+			sb.append(": ");
+			try {
+				sb.append(field.get(obj));
+			} catch (Exception e) {
+				sb.append("Exception caught: ");
+				sb.append(e);
+			} 
+		}
+    	return sb.toString();
+    }
+    
 }

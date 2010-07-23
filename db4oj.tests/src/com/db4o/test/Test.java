@@ -175,7 +175,7 @@ public class Test extends AllTests {
             }
         }
         if (objectServer != null) {
-            Cool.sleepIgnoringInterruption(1000);
+            Runtime4.sleep(1000);
             objectServer.close();
             objectServer = null;
         }
@@ -349,7 +349,7 @@ public class Test extends AllTests {
 				objectServer.close();
 				objectServer = null;
 			}
-			Cool.sleepIgnoringInterruption(500);
+			Runtime4.sleep(500);
 			return open();
 		}else{
 			return reOpen();

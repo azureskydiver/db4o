@@ -94,7 +94,7 @@ public class Regression {
 				// We don't want to run out of main to allow sequential
 				// execution of Ant tasks.
 				do {
-				    Cool.sleepIgnoringInterruption(300);
+				    Runtime4.sleep(300);
 				} while (threadsSharp);
 
 			} catch (Exception e) {

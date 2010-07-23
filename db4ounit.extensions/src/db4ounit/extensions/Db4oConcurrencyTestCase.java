@@ -27,7 +27,7 @@ public class Db4oConcurrencyTestCase extends Db4oClientServerTestCase {
 	
 	protected void waitForAllTasksDone() throws Exception {
 		while(!areAllTasksDone()) {
-			Cool.sleepIgnoringInterruption(1);
+			Runtime4.sleep(1);
 		}
 	}
 

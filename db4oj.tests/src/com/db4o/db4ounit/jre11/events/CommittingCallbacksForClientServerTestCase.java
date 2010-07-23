@@ -34,7 +34,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 		client.store(item);
 		client.commit();
 		
-		Cool.sleepIgnoringInterruption(50);
+		Runtime4.sleep(50);
 		
 		EventAssert.assertCommitEvent(serverRecorder, serverEventRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
 	    

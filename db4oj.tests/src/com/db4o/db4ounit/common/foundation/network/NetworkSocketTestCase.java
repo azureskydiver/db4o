@@ -150,9 +150,9 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 	    public void ensureStarted(){
 	        _thread.start();
 	        while(! isRunning()){
-	            Cool.sleepIgnoringInterruption(10);
+	            Runtime4.sleep(10);
 	        }
-	        Cool.sleepIgnoringInterruption(10);
+	        Runtime4.sleep(10);
 	    }
 	    
 	    public Throwable caught(){

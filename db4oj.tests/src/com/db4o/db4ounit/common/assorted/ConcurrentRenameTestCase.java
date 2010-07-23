@@ -42,7 +42,7 @@ public class ConcurrentRenameTestCase implements TestLifeCycle {
 				try {
 					for (int i = 0; i < NUM_ITERATIONS; i++) {
 						exercise(_db);
-						Cool.sleepIgnoringInterruption(1);
+						Runtime4.sleep(1);
 					}
 				}
 				catch(Throwable ex) {

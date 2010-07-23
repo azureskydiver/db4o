@@ -6,14 +6,14 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-public class CoolTestCase implements TestCase {
+public class Runtime4TestCase implements TestCase {
 
 	public void testLoopWithTimeoutReturnsWhenBlockIsFalse() {
 		
 		StopWatch watch = new AutoStopWatch();		
-		Cool.loopWithTimeout(500, new ConditionalBlock() {
-			public boolean run() {
-				return false;
+		Runtime4.retry(500, new Closure4<Boolean>() {
+			public Boolean run() {
+				return true;
 			}
 		});
 		Assert.isSmaller(500, watch.peek());
@@ -21,9 +21,9 @@ public class CoolTestCase implements TestCase {
 	
 	public void testLoopWithTimeoutReturnsAfterTimeout() {
 		StopWatch watch = new AutoStopWatch();		
-		Cool.loopWithTimeout(500, new ConditionalBlock() {
-			public boolean run() {
-				return true;
+		Runtime4.retry(500, new Closure4<Boolean>() {
+			public Boolean run() {
+				return false;
 			}
 		});
 		watch.stop();

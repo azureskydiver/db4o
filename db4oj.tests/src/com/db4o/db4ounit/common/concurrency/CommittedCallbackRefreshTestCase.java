@@ -107,7 +107,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 			
 		}
 		
-		Cool.sleepIgnoringInterruption(1000);
+		Runtime4.sleep(1000);
 		
 		for (int  i= 0; i < items.length; i++) {
 			synchronized(_lock){
@@ -115,7 +115,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 			}
 		}
 		
-		Cool.sleepIgnoringInterruption(3000);
+		Runtime4.sleep(3000);
 	}
 
 

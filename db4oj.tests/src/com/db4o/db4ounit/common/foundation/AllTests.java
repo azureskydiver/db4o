@@ -25,7 +25,7 @@ public class AllTests extends ReflectionTestSuite {
 			Collection4TestCase.class,
 			Collections4TestCase.class,
 			CompositeIterator4TestCase.class,
-			CoolTestCase.class,
+			Runtime4TestCase.class,
 			DynamicVariableTestCase.class,
 			EnvironmentsTestCase.class,
 			HashSet4TestCase.class,

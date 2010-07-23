@@ -30,7 +30,7 @@ public class ServerTimeoutTestCase extends ClientServerTestCaseBase {
 		ClientMessageDispatcher clientDispatcher = ((ClientObjectContainer) db())
 			.messageDispatcher();
 		clientDispatcher.close();
-		Cool.sleepIgnoringInterruption(1000);
+		Runtime4.sleep(1000);
 		Assert.isFalse(serverDispatcher.isMessageDispatcherAlive());
 	}
 

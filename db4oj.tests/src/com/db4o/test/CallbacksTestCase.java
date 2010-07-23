@@ -119,7 +119,7 @@ public class CallbacksTestCase
 	    oc.delete(this);
 	    oc.commit();
 	    
-	    Cool.sleepIgnoringInterruption(100);
+	    Runtime4.sleep(100);
 
 	    ensure(CAN_DELETE);
 	    ensure(DELETE);
