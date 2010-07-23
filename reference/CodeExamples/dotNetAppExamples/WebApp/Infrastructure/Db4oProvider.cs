@@ -54,9 +54,9 @@ namespace Db4oDoc.WebApp.Infrastructure
 
         private void OpenSession(object sender, EventArgs e)
         {
-            IEmbeddedObjectContainer container =
-                (IEmbeddedObjectContainer)context.Application[DataBaseInstance];
-            IObjectContainer session = container.OpenSession();
+            IObjectContainer container =
+                (IObjectContainer)context.Application[DataBaseInstance];
+            IObjectContainer session = container.Ext().OpenSession();
             HttpContext.Current.Items[SessionKey] = session;
         }
 

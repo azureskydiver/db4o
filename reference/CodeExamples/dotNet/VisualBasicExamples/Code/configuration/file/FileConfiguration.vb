@@ -6,7 +6,7 @@ Namespace Db4oDoc.Code.Configuration.File
         Public Shared Sub AsynchronousSync()
             ' #example: Allow asynchronous synchronisation of the file-flushes
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.File.AsynchronousSync(True)
+            configuration.File.AsynchronousSync = True
             ' #end example
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
             container.Close()

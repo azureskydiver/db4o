@@ -105,13 +105,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Reflection</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/db4o_reflection_api.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>Encryption</Term>
     </Terms>
     <Definition

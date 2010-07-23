@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">[DataServiceKey(&quot;Email&quot;)]
+public class Person
+{
+    private string name;
+    private string email;
+
+    // Note that a default constructor is required for WCF
+    public Person()
+    {
+    }
+
+    public Person(string email, string name)
+    {
+        this.email = email;
+        this.name = name;
+    }
+
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+
+    public string Email
+    {
+        get { return email; }
+        set { email = value; }
+    }
+
+}</pre>
+		<div class="codesnippet-meta">Person.cs: Add at least one key<a href="Example-WCFDataServices-WCFDataServices-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

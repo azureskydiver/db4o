@@ -10,11 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Db4oDoc</RootNamespace>
     <AssemblyName>Db4oDoc</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.Strategies.Refactoring.RefactoringExamples</StartupObject>
+    <StartupObject>Db4oDoc.Code.Query.Linq.LinqExamples</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,33 +34,53 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.CS, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.CS, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
-    <Reference Include="DB4objects.Db4o.CS.Optional, Version=8.0.152.14558, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="DB4objects.Db4o.CS.Optional, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\..\temp\db4o-net35\db4o-8.0\bin\net-3.5\DB4objects.Db4o.CS.Optional.dll</HintPath>
+      <HintPath>..\lib\DB4objects.Db4o.CS.Optional.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Linq, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.Data.Services, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Db4objects.Db4o.Data.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Db4objects.Db4o.Linq, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Optional, Version=7.12.132.14217, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.NativeQueries, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\VSProjects\ConsoleApplication1\ConsoleApplication1\lib\Db4objects.Db4o.Optional.dll</HintPath>
+      <HintPath>..\lib\Db4objects.Db4o.NativeQueries.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Drs, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.Optional, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Db4objects.Db4o.Optional.dll</HintPath>
+    </Reference>
+    <Reference Include="Db4objects.Drs, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Drs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +120,7 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\query\linq\LinqExamples.cs" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.cs" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.cs" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.cs" />
@@ -110,6 +131,9 @@
     <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Code\platform\dataservices\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

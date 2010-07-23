@@ -22,10 +22,9 @@ public class Car {
     // #end example
 
     public Car(){
-    	
     }
     
-    public Car(String model) {
+    public Car(String model) {    			
         this.model=model;
         this.pilot=null;
     }

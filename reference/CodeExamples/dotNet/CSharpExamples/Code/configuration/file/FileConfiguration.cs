@@ -10,7 +10,7 @@ namespace Db4oDoc.Code.Configuration.File
         {
             // #example: Allow asynchronous synchronisation of the file-flushes
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.File.AsynchronousSync(true);
+            configuration.File.AsynchronousSync = true;
             // #end example
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
             container.Close();

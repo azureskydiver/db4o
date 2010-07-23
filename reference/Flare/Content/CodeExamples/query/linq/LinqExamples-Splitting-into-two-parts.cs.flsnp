@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">var optimizedPart = from Person p in container
+                    where p.Age &gt; 18 &amp;&amp; p.Age &lt; 70
+                    select p;
+var endResult = from p in optimizedPart.AsEnumerable()
+              where p.Name.Substring(2).Contains(&quot;n&quot;)
+              select p;</pre>
+		<div class="codesnippet-meta">LinqExamples.cs: Splitting into two parts<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

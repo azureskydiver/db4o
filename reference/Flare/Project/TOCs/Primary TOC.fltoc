@@ -199,7 +199,7 @@
       Link="/Content/object_lifecycle/simple_persistence.htm" />
     <TocEntry
       Title="Class Name Format In .NET"
-      Link="/Content/object_lifecycle/class_name_format_in_.net.htm"
+      Link="/Content/platform_specific_issues/class_name_format_in_.net.htm"
       conditions="Primary..NET,Primary.All languages" />
     <TocEntry
       Title="Querying"
@@ -264,13 +264,10 @@
         Link="/Content/object_lifecycle/querying/linq.htm"
         conditions="Primary.All languages,Primary..NET">
         <TocEntry
-          Title="Simple Example"
-          Link="/Content/object_lifecycle/querying/linq/simple_example.htm" />
+          Title="LINQ Examples"
+          Link="/Content/object_lifecycle/querying/linq/linq_examples.htm" />
         <TocEntry
-          Title="Type Safety"
-          Link="/Content/object_lifecycle/querying/linq/type_safety.htm" />
-        <TocEntry
-          Title="Optimization"
+          Title="LINQ Optimization"
           Link="/Content/object_lifecycle/querying/linq/optimization.htm" />
         <TocEntry
           Title="LINQ For Compact Framework"
@@ -302,9 +299,6 @@
           Title="Evaluation Results Sorting"
           Link="/Content/object_lifecycle/querying/sorting_query_results/evaluation_results_sorting.htm" />
       </TocEntry>
-      <TocEntry
-        Title="Custom Query Comparator"
-        Link="/Content/object_lifecycle/querying/custom_query_comparator.htm"></TocEntry>
     </TocEntry>
     <TocEntry
       Title="Working With Structured Objects"
@@ -794,6 +788,12 @@
         Link="/Content/implementation_strategies/typehandlers/typehandler_usages.htm"></TocEntry>
     </TocEntry>
     <TocEntry
+      Title="Class Name Format In .NET"
+      Link="/Content/platform_specific_issues/class_name_format_in_.net.htm"
+      conditions="Primary..NET"
+      StartSection="false"
+      StartChapter="false" />
+    <TocEntry
       Title="Using Annotations"
       Link="/Content/implementation_strategies/using_annotations.htm"
       conditions="Primary.All languages,Primary.Java" />
@@ -1217,6 +1217,59 @@
         Link="/Content/platform_specific_issues/web/asp.net_mvc_example.htm" />
     </TocEntry>
     <TocEntry
+      Title="WCF Data Services (aka ADO.NET Data Services)"
+      Link="/Content/platform_specific_issues/wcf_data_services.htm"
+      conditions="Primary..NET"
+      StartSection="false"
+      StartChapter="false" />
+    <TocEntry
+      Title="Android"
+      Link="/Content/platform_specific_issues/android.htm"
+      conditions="Primary.All languages,Primary.Java">
+      <TocEntry
+        Title="Getting Started"
+        Link="/Content/platform_specific_issues/android/getting_started.htm" />
+      <TocEntry
+        Title="Pitfalls and Tested Functionality"
+        Link="/Content/platform_specific_issues/android/state_and_pitfalls.htm" />
+      <TocEntry
+        Title="Native Queries"
+        Link="/Content/platform_specific_issues/android/native_queries.htm" />
+      <TocEntry
+        Title="Comparison With SQLite"
+        Link="/Content/platform_specific_issues/android/comparison_with_sqlite.htm">
+        <TocEntry
+          Title="General Info"
+          Link="/Content/platform_specific_issues/android/general_info.htm"></TocEntry>
+        <TocEntry
+          Title="Application Structure" />
+        <TocEntry
+          Title="Opening a Database"
+          Link="/Content/platform_specific_issues/android/opening_a_database.htm" />
+        <TocEntry
+          Title="Storing Data"
+          Link="/Content/platform_specific_issues/android/storing_data.htm" />
+        <TocEntry
+          Title="Retrieving Data"
+          Link="/Content/platform_specific_issues/android/retrieving_data.htm" />
+        <TocEntry
+          Title="Changing Data"
+          Link="/Content/platform_specific_issues/android/changing_data.htm" />
+        <TocEntry
+          Title="Deleting Data"
+          Link="/Content/platform_specific_issues/android/deleting_data.htm" />
+        <TocEntry
+          Title="Backup"
+          Link="/Content/platform_specific_issues/android/backup.htm" />
+        <TocEntry
+          Title="Closing a Database"
+          Link="/Content/platform_specific_issues/android/closing_a_database.htm" />
+        <TocEntry
+          Title="Schema Evolution"
+          Link="/Content/platform_specific_issues/android/schema_evolution.htm" />
+      </TocEntry>
+    </TocEntry>
+    <TocEntry
       Title="db4o On Java Platforms"
       Link="/Content/platform_specific_issues/db4o_on_java_platforms.htm"
       conditions="Primary.All languages,Primary.Java" />
@@ -1316,50 +1369,6 @@
       <TocEntry
         Title="Automatic Properties Explained"
         Link="/Content/platform_specific_issues/automatic_properties/automatic_properties_explained.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Android"
-      Link="/Content/platform_specific_issues/android.htm"
-      conditions="Primary.All languages,Primary.Java">
-      <TocEntry
-        Title="Getting Started"
-        Link="/Content/platform_specific_issues/android/getting_started.htm" />
-      <TocEntry
-        Title="Native Queries"
-        Link="/Content/platform_specific_issues/android/native_queries.htm" />
-      <TocEntry
-        Title="Comparison With SQLite"
-        Link="/Content/platform_specific_issues/android/comparison_with_sqlite.htm">
-        <TocEntry
-          Title="General Info"
-          Link="/Content/platform_specific_issues/android/general_info.htm"></TocEntry>
-        <TocEntry
-          Title="Application Structure" />
-        <TocEntry
-          Title="Opening a Database"
-          Link="/Content/platform_specific_issues/android/opening_a_database.htm" />
-        <TocEntry
-          Title="Storing Data"
-          Link="/Content/platform_specific_issues/android/storing_data.htm" />
-        <TocEntry
-          Title="Retrieving Data"
-          Link="/Content/platform_specific_issues/android/retrieving_data.htm" />
-        <TocEntry
-          Title="Changing Data"
-          Link="/Content/platform_specific_issues/android/changing_data.htm" />
-        <TocEntry
-          Title="Deleting Data"
-          Link="/Content/platform_specific_issues/android/deleting_data.htm" />
-        <TocEntry
-          Title="Backup"
-          Link="/Content/platform_specific_issues/android/backup.htm" />
-        <TocEntry
-          Title="Closing a Database"
-          Link="/Content/platform_specific_issues/android/closing_a_database.htm" />
-        <TocEntry
-          Title="Schema Evolution"
-          Link="/Content/platform_specific_issues/android/schema_evolution.htm" />
-      </TocEntry>
     </TocEntry>
   </TocEntry>
   <TocEntry
