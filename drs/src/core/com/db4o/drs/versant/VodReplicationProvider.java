@@ -28,12 +28,22 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final Signatures _signatures = new Signatures();
 	
+	private final Hashtable<String, ClassMetadata> _knownClasses = new Hashtable<String, ClassMetadata>();
+	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
-		_pm = vod.createPersistenceManager();
+		_pm = _vod.createPersistenceManager();
+		_dm = _vod.createDatastoreManager();
 		_pm.currentTransaction().begin();
 		loadSignatures();
-		_dm = _vod.createDatastoreManager();
+		loadKnownClasses();
+	}
+
+	private void loadKnownClasses() {
+		Extent<ClassMetadata> extent = _pm.getExtent(ClassMetadata.class);
+		for (ClassMetadata classMetadata : extent) {
+			_knownClasses.put(classMetadata.name(), classMetadata);
+		}
 	}
 
 	private void loadSignatures() {
@@ -65,8 +75,33 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void storeNew(Object obj) {
+		if(obj == null){
+			throw new IllegalArgumentException();
+		}
+		ensureClassKnown(obj);
+		
 		_pm.makePersistent(obj);
 	}
+
+	private void ensureClassKnown(Object obj) {
+		
+		Class clazz = obj.getClass();
+		String className = clazz.getName();
+		
+		if( _knownClasses.get(className) != null){
+			return;
+		}
+		
+		PersistenceManager pm = _vod.createPersistenceManager();
+		
+		pm.currentTransaction().begin();
+		ClassMetadata classMetadata = new ClassMetadata(_vod.schemaName(clazz), className);
+		pm.makePersistent(classMetadata);
+		_knownClasses.put(className, classMetadata);
+		pm.currentTransaction().commit();
+		pm.close();
+	}
+
 
 	public void update(Object obj) {
 		// do nothing

@@ -11,11 +11,12 @@ import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
-public class VodProviderTestCaseBase  implements TestCase  {
+public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest  {
 	
-	private boolean EXPOSE_OBJECT_DELETE_BUG = true;
+	private boolean EXPOSE_OBJECT_DELETE_BUG = false;
 	
 	protected static final String DATABASE_NAME = "VodDatabaseTestCaseBase";
+	
 	
 	protected VodReplicationProvider _provider;
 	
@@ -72,6 +73,7 @@ public class VodProviderTestCaseBase  implements TestCase  {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.createDb();
 		vod.enhance();
+		vod.createEventSchema();
 	}
 
 	public static void classTearDown() {

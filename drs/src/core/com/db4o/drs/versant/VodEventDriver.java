@@ -11,24 +11,39 @@ import com.db4o.util.IOServices.*;
 
 public class VodEventDriver {
 
-	private final String _databaseName;
 	
-	private final File _configFile;
+	
+	private final EventConfiguration _eventConfiguration;
 	
 	private ProcessRunner _process;
-
-	public VodEventDriver(String databaseName, File configFile) {
-		_databaseName = databaseName;
-		_configFile = configFile;
+	
+	public VodEventDriver(EventConfiguration config) {
+		_eventConfiguration = config;
 	}
 
 	public boolean start() {
 		if(_process != null){
 			throw new IllegalStateException();
 		}
+		File configFile = new File(Path4.getTempFileName());
 		try {
+			_eventConfiguration.writeConfigFile(configFile);
+			return startVedProcess(configFile.getAbsolutePath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			configFile.delete();
+		}
+		return true;
+	}
+
+	private boolean startVedProcess(String configFilePath) {
+		if(_process != null){
+			throw new IllegalStateException();
+		}
+		try {		
 			_process = IOServices.start(VodDatabase.VED_DRIVER, new String[]{
-					_databaseName, _configFile.getAbsolutePath() 
+					databaseName(), configFilePath 
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -36,7 +51,7 @@ public class VodEventDriver {
 			return false;
 		}
 		try{
-			_process.checkIfStarted(_databaseName, 10000);
+			_process.checkIfStarted(databaseName(), 10000);
 		} catch (RuntimeException ex){
 			ex.printStackTrace();
 			destroyProcess();
@@ -44,6 +59,7 @@ public class VodEventDriver {
 		}
 		return true;
 	}
+	
 
 	private void destroyProcess() {
 		if(_process != null){
@@ -64,6 +80,21 @@ public class VodEventDriver {
 			throw new IllegalStateException();
 		}
 		destroyProcess();
+	}
+
+
+
+
+	private String databaseName() {
+		return _eventConfiguration.databaseName;
+	}
+	
+	public void printStartupFailure(){
+		System.err.println("Failed to start " + VodDatabase.VED_DRIVER);
+		System.err.println("Configuration:\n" + _eventConfiguration);
+		if(_process != null){
+			System.err.println(_process.processResult());
+		}
 	}
 
 }
