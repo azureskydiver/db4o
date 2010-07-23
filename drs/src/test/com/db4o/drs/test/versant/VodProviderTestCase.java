@@ -3,10 +3,15 @@
 package com.db4o.drs.test.versant;
 
 
+import java.util.*;
+
+import javax.jdo.*;
+
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.metadata.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
 import com.versant.odbms.query.Operator.*;
@@ -84,7 +89,29 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		provider.destroy();
 	}
 	
-	public void testQueryForVersion(){
+	public void testClassMetadataIsLoaded(){
+		storeAndCommitSingleItem();
+		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod);
+		storeAndCommitSingleItem(secondProvider);
+		secondProvider.destroy();
+		assertOnlyOneClassMetadataInstance();
+	}
+
+	private void assertOnlyOneClassMetadataInstance() {
+		String className = Item.class.getName();
+		_pm.currentTransaction().begin();
+		try{
+			Query query = _pm.newQuery(ClassMetadata.class, "this.fullyQualifiedName == param");
+			query.declareParameters("String param");
+			Collection result = (Collection) query.execute(className);
+			Assert.areEqual(1, result.size());
+			Assert.isTrue(result.contains(new ClassMetadata(null, className)));
+		} finally {
+			_pm.currentTransaction().rollback();
+		}
+	}
+	
+	public void _testQueryFor_o_ts_timestamp(){
 		
 		Item item = storeAndCommitSingleItem();
 		System.out.println(item);
@@ -109,13 +136,14 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	}
 
 	
-	
-
-	
 	private Item storeAndCommitSingleItem() {
+		return storeAndCommitSingleItem(_provider);
+	}
+
+	private Item storeAndCommitSingleItem(VodReplicationProvider provider) {
 		Item item = new Item("one");
-		_provider.storeNew(item);
-		_provider.commit();
+		provider.storeNew(item);
+		provider.commit();
 		return item;
 	}
 	

@@ -1,6 +1,7 @@
 /* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.drs.test.versant;
+package com.db4o.drs.test.versant.eventlistener;
+
 
 import db4ounit.*;
 
@@ -12,12 +13,7 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			com.db4o.drs.test.versant.eventlistener.AllTests.class,				
-			VodDatabaseLifecycleTestCase.class,
-			VodDatabaseTestCase.class,
-			VodEventTestCase.class,
-			VodProviderTestCase.class,
-			VodSimpleObjectContainerTestCase.class,
+				EventListenerIntegrationTestCase.class,
 		};
 	}
 

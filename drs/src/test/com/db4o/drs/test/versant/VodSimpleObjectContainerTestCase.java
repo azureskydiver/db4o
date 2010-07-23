@@ -8,10 +8,12 @@ import javax.jdo.*;
 
 import com.db4o.*;
 import com.db4o.drs.test.versant.data.*;
+import com.versant.odbms.*;
+import com.versant.odbms.model.*;
 
 import db4ounit.*;
 
-public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
+public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase implements TestLifeCycle {
 	
 	public void testStoreNew(){
 		Item item = new Item("one");
@@ -123,5 +125,22 @@ public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase im
 			_pm.currentTransaction().rollback();
 		}
 	}
+	
+	public void testSchema(){
+		
+		_provider.storeNew(new Item("one"));
+		_provider.commit();
+
+		DatastoreManager dm = _vod.createDatastoreManager();
+		DatastoreInfo info = dm.getPrimaryDatastoreInfo();
+		SchemaEditor editor = dm.getSchemaEditor();
+		long[] classLoids = dm.locateAllClasses(info, false);
+		for (int i = 0; i < classLoids.length; i++) {
+			DatastoreSchemaClass dc = editor.findClass(classLoids[i], info);
+			System.out.println(dc.getName());
+		}
+		dm.close();
+	}
+
 
 }

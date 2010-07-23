@@ -26,6 +26,42 @@ public class IOServices {
 		}
 	}
 	
+	public static boolean killProcess(String processName) throws IOException, InterruptedException{
+		ProcessInfo processInfo = findProcess(processName);
+		if(processInfo == null){
+			return false;
+		}
+		ProcessResult processResult = exec("taskkill.exe", new String[]{"/PID", Long.toString(processInfo.processId), "/F"});
+		return processResult.returnValue == 0;
+	}
+	
+	public static ProcessInfo findProcess(String processName) throws IOException, InterruptedException{
+		ProcessInfo[] runningProcesses = runningProcesses();
+		for (ProcessInfo processInfo : runningProcesses) {
+			if(processName.equals(processInfo.name)){
+				return processInfo;
+			}
+		}
+		return null;
+	}
+	
+	public static ProcessInfo[] runningProcesses() throws IOException, InterruptedException{
+		ProcessResult processResult = exec("tasklist.exe", new String[]{"/fo", "csv", "/nh"});
+		String[] lines = processResult.out.split("\n");
+		ProcessInfo[] result = new ProcessInfo[lines.length];
+		for (int i = 0; i < lines.length; i++) {
+			String[] infos = lines[i].split(",");
+			String processName = unquote(infos[0]);
+			long processId = Long.parseLong(unquote(infos[1]));
+			result[i] = new ProcessInfo(processName, processId);
+		}
+		return result;
+	}
+	
+	private static String unquote(String str){
+		return str.replaceAll("\"", "");
+	}
+	
 	public static ProcessResult exec(String program) throws IOException, InterruptedException{
 	    return exec(program, null);
 	}
@@ -65,13 +101,13 @@ public class IOServices {
         private final Process _process;
         
         private int _result;
-	    
+        
 	    public ProcessRunner(String program, String[] arguments) throws IOException{
-	        _command = generateCommand(program, arguments);
-            _process = Runtime.getRuntime().exec(_command);
-            _inputReader = new StreamReader(_process.getInputStream());
-            _errorReader = new StreamReader(_process.getErrorStream());
-            _startTime = System.currentTimeMillis();
+    		_command = generateCommand(program, arguments);
+    		_process = Runtime.getRuntime().exec(_command);
+    		_inputReader = new StreamReader(_process.getInputStream());
+    		_errorReader = new StreamReader(_process.getErrorStream());
+    		_startTime = System.currentTimeMillis();
 	    }
 	    
 	    private String generateCommand (String program, String[] arguments){
@@ -94,7 +130,7 @@ public class IOServices {
 	        return _inputReader.outputHasStarted() || _errorReader.outputHasStarted();
 	    }
 
-	    private boolean outputContains(String str){
+	    public boolean outputContains(String str){
 	        return _inputReader.outputContains(str) || _errorReader.outputContains(str);
 	    }
 	    

@@ -10,7 +10,12 @@ import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.util.*;
+import com.versant.core.jdo.*;
+import com.versant.core.metadata.*;
+import com.versant.core.storagemanager.*;
 import com.versant.odbms.*;
+import com.versant.odbms.model.*;
+import com.versant.odbms.model.UserSchemaClass;
 import com.versant.trans.*;
 import com.versant.util.*;
 
@@ -38,7 +43,6 @@ public class VodDatabase {
 	
 	private DatastoreManagerFactory _datastoreManagerFactory;
 
-
 	public VodDatabase(String name, Properties properties){
 		_name = name;
 		_properties = properties;
@@ -52,6 +56,9 @@ public class VodDatabase {
 	private void addDefaultProperties(){
 		
 		// addPropertyIfNotExists("versant.l2CacheEnabled", "false");
+		
+		// addPropertyIfNotExists("versant.vdsNamingPolicy", "none");
+		
 		
 		addPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
 		addPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
@@ -116,7 +123,7 @@ public class VodDatabase {
 	}
 	
 	// JDO
-	private PersistenceManagerFactory persistenceManagerFactory(){
+	public PersistenceManagerFactory persistenceManagerFactory(){
 		if(_persistenceManagerFactory == null){
 			_persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(_properties);
 		}
@@ -242,6 +249,7 @@ public class VodDatabase {
         return new TransSession(properties);
 	}
 	
+	// JVI
 	public String versantRootPath() {
 		return DBUtility.versantRootPath();
 	}
@@ -251,9 +259,25 @@ public class VodDatabase {
 		defineSchema(VEDSECHN_SCHEMA);
 	}
 
+	// JVI
 	private void defineSchema(String schema) {
 		DBUtility.defineSchema(_name, new File(new File(versantRootPath()), schema).getAbsolutePath());
 	}
 	
+	// COBRA through JDO
+	private ModelMetaData modelMetadata() {
+		VersantPMFInternal internalPersistenceManagerFactory = (VersantPMFInternal) persistenceManagerFactory();
+		StorageManagerFactory storageManagerFactory = internalPersistenceManagerFactory.getStorageManagerFactory();
+		return storageManagerFactory.getModelMetaData();
+	}
+	
+	// COBRA through JDO 
+	public String schemaName(Class clazz) {
+		ModelMetaData modelMetadata = modelMetadata();
+		UserSchemaModel userModel = (UserSchemaModel)modelMetadata.vdsModel;
+		ClassMetaData classMetaData = modelMetadata.getClassMetaData(clazz);
+		UserSchemaClass userSchemaClass = userModel.getAssociatedSchemaClass(classMetaData);
+		return userSchemaClass.getName();
+	}
 
 }
