@@ -54,7 +54,7 @@ public class PingTestCase extends Db4oClientServerTestCase implements OptOutAllB
 
 	public static class TestMessageRecipient implements MessageRecipient {
 		public void processMessage(MessageContext con, Object message) {
-			Cool.sleepIgnoringInterruption(3000);
+			Runtime4.sleep(3000);
 		}
 	}
 

@@ -39,7 +39,7 @@ public class SetSemaphore {
             	threads[i].join();
 			}
             
-            Cool.sleepIgnoringInterruption(50);
+            Runtime4.sleep(50);
 
             Test.ensure(clients[0].setSemaphore("hi", 0));
             clients[0].close();
@@ -78,7 +78,7 @@ public class SetSemaphore {
             Test.ensure(_client.setSemaphore("hi", 50000));
             time = System.currentTimeMillis() - time;
             // System.out.println("Time to get semaphore: " + time);
-            Cool.sleepIgnoringInterruption(50);
+            Runtime4.sleep(50);
 
             // System.out.println("About to release semaphore.");
             _client.releaseSemaphore("hi");

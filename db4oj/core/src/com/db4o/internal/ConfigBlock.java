@@ -206,7 +206,7 @@ public final class ConfigBlock {
 		if(_container.needsLockFileThread()){
 			// We give the other process a chance to 
 			// write its lock.
-			Cool.sleepIgnoringInterruption(100);
+			Runtime4.sleep(100);
             _container.syncFiles();
             timerFileLock().checkOpenTime();
 		}

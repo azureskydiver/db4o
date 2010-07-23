@@ -29,6 +29,10 @@ public class IOServices {
 	    return exec(program, null);
 	}
 	
+	// TODO: There is a copy of this file in the dRS project. 
+	//       In this copy we have changed the signature of 
+	//       this method to return a ProcessRunneer.
+	//       Port back here!
 	public static String exec(String program, String[] arguments) throws IOException, InterruptedException{
 	    ProcessRunner runner = new ProcessRunner(program, arguments);
 	    runner.waitFor();
@@ -98,7 +102,7 @@ public class IOServices {
 	    }
 	    
 	    private void checkTimeOut(long time){
-	        Cool.sleepIgnoringInterruption(10);
+	        Runtime4.sleep(10);
 	        if(System.currentTimeMillis() - _startTime > time){
 	            throw new DestroyTimeoutException();
 	        }

@@ -97,7 +97,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 				
 				// Let the database engine continue to do 
 				// some work if it likes to.
-				Cool.sleepIgnoringInterruption(1);
+				Runtime4.sleep(1);
 
 			}
 	

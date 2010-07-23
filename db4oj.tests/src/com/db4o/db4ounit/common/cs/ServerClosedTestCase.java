@@ -26,7 +26,7 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase implements Op
 			ServerMessageDispatcherImpl serverDispatcher = (ServerMessageDispatcherImpl) iter
 					.current();
 			serverDispatcher.socket().close();
-			Cool.sleepIgnoringInterruption(1000);
+			Runtime4.sleep(1000);
 			Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 				public void run() throws Throwable {
 					db.queryByExample(null);

@@ -81,7 +81,7 @@ public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 		public void run() {
 			while (notStopped()) {
 				_dispatcher.write(Msg.PING);
-				Cool.sleepIgnoringInterruption(1);
+				Runtime4.sleep(1);
 			}
 		}
 	}

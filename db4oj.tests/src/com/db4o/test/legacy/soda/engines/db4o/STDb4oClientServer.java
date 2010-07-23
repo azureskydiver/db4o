@@ -54,7 +54,7 @@ public class STDb4oClientServer implements STEngine {
 			server = Db4oClientServer.openServer(FILE, PORT);
 			server.grantAccess(USER, PASS);
 			// wait for the server to be online
-			Cool.sleepIgnoringInterruption(3000);
+			Runtime4.sleep(3000);
 		}
 		try {
 			con = Db4oClientServer.openClient(HOST, PORT, USER, PASS);
