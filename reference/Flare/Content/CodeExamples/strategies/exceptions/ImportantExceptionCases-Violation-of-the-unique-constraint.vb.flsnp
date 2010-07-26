@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">container.Store(New UniqueId(42))
+container.Store(New UniqueId(42))
+Try
+    container.Commit()
+Catch e As UniqueFieldValueConstraintViolationException
+    ' Violated the unique-constraint!
+    ' Retry with a new value or handle this gracefully
+    container.Rollback()
+End Try</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">container.Store(New UniqueId(42))
+container.Store(New UniqueId(42))
+Try
+    container.Commit()
+Catch e As UniqueFieldValueConstraintViolationException
+    ' Violated the unique-constraint!
+    ' Retry with a new value or handle this gracefully
+    container.Rollback()
+End Try</pre>
+		<div class="codesnippet-meta">ImportantExceptionCases.vb: Violation of the unique constraint<a href="Example-strategies-exceptions-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

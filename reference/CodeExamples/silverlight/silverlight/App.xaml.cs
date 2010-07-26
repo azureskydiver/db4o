@@ -9,11 +9,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Db4objects.Db4o;
+using Db4objects.Db4o.IO;
 
 namespace silverlight
 {
     public partial class App : Application
     {
+        private IObjectContainer container;
 
         public App()
         {
@@ -26,12 +29,15 @@ namespace silverlight
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            this.RootVisual = new MainPage();
+            var cfg = Db4oEmbedded.NewConfiguration();
+            cfg.File.Storage = new IsolatedStorageStorage();
+            container = Db4oEmbedded.OpenFile(cfg,"database.db4o");
+            this.RootVisual = new MainPage(container);
         }
 
         private void Application_Exit(object sender, EventArgs e)
         {
-
+            container.Dispose();
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

@@ -674,7 +674,53 @@
     </TocEntry>
     <TocEntry
       Title="Class Specific Configuration"
-      Link="/Content/configuration/objectclass_configuration.htm" />
+      Link="/Content/configuration/objectclass_configuration.htm">
+      <TocEntry
+        Title="Call Constructor"
+        Link="/Content/configuration/objectclass/call_constructor.htm" />
+      <TocEntry
+        Title="Cascade on Delete"
+        Link="/Content/configuration/objectclass/cascade_on_delete.htm" />
+      <TocEntry
+        Title="Cascade on Update"
+        Link="/Content/configuration/objectclass/cascade_on_update.htm" />
+      <TocEntry
+        Title="Cascade on Activate"
+        Link="/Content/configuration/objectclass/cascade_on-activate.htm" />
+      <TocEntry
+        Title="Disable Class Index"
+        Link="/Content/configuration/objectclass/diable_class_index.htm" />
+      <TocEntry
+        Title="Enable Replication"
+        Link="/Content/configuration/objectclass/enable_replication.htm" />
+      <TocEntry
+        Title="Generate UUIDs"
+        Link="/Content/configuration/objectclass/generate_uuid.htm" />
+      <TocEntry
+        Title="Generate Version Numbers"
+        Link="/Content/configuration/objectclass/generate_version_numbers.htm" />
+      <TocEntry
+        Title="Maximum Activation Depth"
+        Link="/Content/configuration/objectclass/maximum_activation_depth.htm" />
+      <TocEntry
+        Title="Minimum Activation Depth"
+        Link="/Content/configuration/objectclass/minimum_activation_depth.htm" />
+      <TocEntry
+        Title="Persist Static Fields"
+        Link="/Content/configuration/objectclass/persist_static_fields.htm" />
+      <TocEntry
+        Title="Rename Class"
+        Link="/Content/configuration/objectclass/rename_class.htm" />
+      <TocEntry
+        Title="Set a Translator"
+        Link="/Content/configuration/objectclass/set_a_translator.htm" />
+      <TocEntry
+        Title="Store Transient Fields"
+        Link="/Content/configuration/objectclass/store_transient_fields.htm" />
+      <TocEntry
+        Title="Update Depth"
+        Link="/Content/configuration/objectclass/update_depth.htm" />
+    </TocEntry>
     <TocEntry
       Title="Field Specific Configuration"
       Link="/Content/configuration/objectfield_configuration.htm" />
@@ -1146,7 +1192,7 @@
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Exceptions"
+      Title="Exception Handling"
       Link="/Content/implementation_strategies/exceptions.htm">
       <TocEntry
         Title="Exception Types"
@@ -1223,6 +1269,10 @@
       StartSection="false"
       StartChapter="false" />
     <TocEntry
+      Title="Silverlight"
+      Link="/Content/platform_specific_issues/silverlight.htm"
+      conditions="Primary..NET" />
+    <TocEntry
       Title="Android"
       Link="/Content/platform_specific_issues/android.htm"
       conditions="Primary.All languages,Primary.Java">
@@ -1288,10 +1338,6 @@
     <TocEntry
       Title="Deployment Instructions"
       Link="/Content/platform_specific_issues/deployment_instructions.htm" />
-    <TocEntry
-      Title="db4o On MONO"
-      Link="/Content/platform_specific_issues/db4o_on_mono.htm"
-      conditions="Primary..NET,Primary.All languages"></TocEntry>
     <TocEntry
       Title="Cross-Platform Applications"
       Link="/Content/platform_specific_issues/cross-platform_applications.htm">

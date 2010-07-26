@@ -3,9 +3,13 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.File.Storage = New IsolatedStorageStorage()</pre>
+configuration.File.Storage = New IsolatedStorageStorage()
+
+Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, &quot;database.db4o&quot;)</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.File.Storage = New IsolatedStorageStorage()</pre>
+configuration.File.Storage = New IsolatedStorageStorage()
+
+Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, &quot;database.db4o&quot;)</pre>
 		<div class="codesnippet-meta">IOExamples.vb: use the isolated storage on silverlight<a href="Example-configuration-io-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
 		</div>
 	</div>

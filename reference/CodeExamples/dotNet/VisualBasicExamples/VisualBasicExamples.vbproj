@@ -164,6 +164,7 @@
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.vb" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.vb" />
     <Compile Include="Code\query\linq\LinqExamples.vb" />
+    <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.vb" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.vb" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.vb" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.vb" />
