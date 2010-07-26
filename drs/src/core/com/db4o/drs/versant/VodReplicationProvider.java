@@ -96,7 +96,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		PersistenceManager pm = _vod.createPersistenceManager();
 		
 		pm.currentTransaction().begin();
-		ClassMetadata classMetadata = new ClassMetadata(_vod.schemaName(clazz), className);
+		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
 		pm.makePersistent(classMetadata);
 		_knownClasses.put(className, classMetadata);
 		pm.currentTransaction().commit();

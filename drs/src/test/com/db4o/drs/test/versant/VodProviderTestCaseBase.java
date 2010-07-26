@@ -15,8 +15,11 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	
 	private boolean EXPOSE_OBJECT_DELETE_BUG = false;
 	
-	protected static final String DATABASE_NAME = "VodDatabaseTestCaseBase";
+	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
+	protected VodDatabase _vod;
+	
+	protected VodJdo _jdo;
 	
 	protected VodReplicationProvider _provider;
 	
@@ -24,11 +27,11 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	// so we can see what's committed, using a second reference system.
 	protected PersistenceManager _pm;
 
-	protected VodDatabase _vod;
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
 		_pm = _vod.createPersistenceManager();
+		_jdo = new VodJdo(_vod, _pm);
 		cleanDb();
 		_provider = new VodReplicationProvider(_vod);
 	}

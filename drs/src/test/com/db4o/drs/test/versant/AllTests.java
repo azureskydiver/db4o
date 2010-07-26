@@ -16,6 +16,7 @@ public class AllTests extends ReflectionTestSuite {
 			VodDatabaseLifecycleTestCase.class,
 			VodDatabaseTestCase.class,
 			VodEventTestCase.class,
+			VodJviTestCase.class,
 			VodProviderTestCase.class,
 			VodSimpleObjectContainerTestCase.class,
 		};
