@@ -12,9 +12,6 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
-import com.versant.core.vds.*;
-import com.versant.odbms.*;
-import com.versant.odbms.model.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
@@ -22,7 +19,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final PersistenceManager _pm;
 	
-	private final DatastoreManager _dm;
+	private final VodCobra _cobra;
+	
+	private final VodJdo _jdo;
 	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
@@ -33,7 +32,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
 		_pm = _vod.createPersistenceManager();
-		_dm = _vod.createDatastoreManager();
+		_jdo = new VodJdo(vod, _pm);
+		_cobra = new VodCobra(vod);
 		_pm.currentTransaction().begin();
 		loadSignatures();
 		loadKnownClasses();
@@ -42,7 +42,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private void loadKnownClasses() {
 		Extent<ClassMetadata> extent = _pm.getExtent(ClassMetadata.class);
 		for (ClassMetadata classMetadata : extent) {
-			_knownClasses.put(classMetadata.name(), classMetadata);
+			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata);
 		}
 	}
 
@@ -85,6 +85,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private void ensureClassKnown(Object obj) {
 		
+
 		Class clazz = obj.getClass();
 		String className = clazz.getName();
 		
@@ -111,7 +112,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void destroy() {
 		_pm.currentTransaction().rollback();
 		_pm.close();
-		_dm.close();
+		_cobra.close();
 	}
 
 	public void activate(Object object) {
@@ -183,14 +184,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return reference; 
 	}
 	
-
-	private DatastoreObject datastoreObject(final Object obj) {
-		DatastoreLoid datastoreLoid = new DatastoreLoid(VdsUtils.getLOID(obj, _pm));
-		DatastoreObject[] loidsAsDSO = _dm.getLoidsAsDSO(new Object[] { datastoreLoid });
-		_dm.groupReadObjects(loidsAsDSO, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
-		return loidsAsDSO[0];
-	}
-
 	private long loidFrom(DrsUUID uuid) {
 		long databaseId = _signatures.idFor(uuid);
 		if(databaseId == 0){
@@ -274,16 +267,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
-		
-		DatastoreObject dso = datastoreObject(obj);
-		
-		DatastoreLoid datastoreLoid = new DatastoreLoid(dso.getLOID());
-		int databaseId = datastoreLoid.getDatabaseId();
-		Signature signature = produceSignatureFor(databaseId);
-		
-		VodUUID vodUUID = new VodUUID(signature, (short)databaseId, datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2());
-		
-		return new ReplicationReferenceImpl(obj, vodUUID, dso.getTimestamp());
+		VodId vodId = _cobra.idFor(_jdo.loid(obj));
+		Signature signature = produceSignatureFor(vodId.databaseId);
+		VodUUID vodUUID = new VodUUID(signature, vodId);
+		return new ReplicationReferenceImpl(obj, vodUUID, vodId.timestamp);
 	}
 	
 	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
@@ -300,7 +287,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return null;
 		}
 		
-		Object obj = VdsUtils.getObjectByLOID(loid, true, _pm);
+		Object obj = _jdo.objectByLoid(loid);
 		if(obj == null){
 			return null;
 		}

@@ -235,6 +235,7 @@ public class IOServices {
                     if(i >= 0){
                         synchronized(_lock){
                             _stringBuffer.append((char)i);
+                            // System.out.print((char)i);
                         }
                     }
                 }

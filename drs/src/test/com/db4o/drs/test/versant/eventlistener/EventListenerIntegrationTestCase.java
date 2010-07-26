@@ -22,7 +22,6 @@ import com.versant.core.storagemanager.*;
 import com.versant.core.vds.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
-import com.versant.odbms.model.UserSchemaClass;
 
 import db4ounit.*;
 
@@ -30,43 +29,51 @@ import db4ounit.*;
 public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 	
 
-	public void testListenerStartAndStop() throws Exception{
-		ProcessRunner eventListenerProcess = startListener();
-		eventListenerProcess.destroy();
+	public void _testListenerStartAndStop() throws Exception{
+		VodEventDriver eventDriver = startEventDriver();
+		try {
+			ProcessRunner eventListenerProcess = startListener();
+			eventListenerProcess.destroy();
+		} finally {
+			eventDriver.stop();
+		}
 	}
 
 	
 	public void testStoreObject() throws Exception {
 		VodEventDriver eventDriver = startEventDriver();
 		try {
-			final ProcessRunner eventListenerProcess = startListener();
+//			final ProcessRunner eventListenerProcess = startListener();
 			
-//			final EventProcessor eventProcessor = new EventProcessor(newEventConfiguration());
-//			Thread eventProcessorThread = new Thread(new Runnable() {
-//				public void run() {
-//					try {
-//						eventProcessor.run();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			});
-//			eventProcessorThread.start();
+			final EventProcessor eventProcessor = new EventProcessor(newEventConfiguration());
+			Thread eventProcessorThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+						eventProcessor.run();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			eventProcessorThread.start();
+			
+			final String expectedOutput = Item.class.getName();
+			
 			try{
-				boolean result = Runtime4.retry(5000, new Closure4<Boolean>() {
+				boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
 					public Boolean run() {
-						// System.out.println("Storing an Item");
 						_provider.storeNew(new Item("one"));
 						_provider.commit();
-						return eventListenerProcess.outputContains(ClassMetadata.class.getName());
-						// return eventProcessor.outputContains(ClassMetadata.class.getName());
+						Runtime4.sleep(100);
+						// return eventListenerProcess.outputContains(expectedOutput);
+						return eventProcessor.outputContains(expectedOutput);
 					}
 				});
-				Assert.isTrue(result, "Timeout: Expected output not printed by EventListener.");
+				Assert.isTrue(result, "Timeout: Expected output '" + expectedOutput + "' not printed by EventListener.");
 			} finally {
-				eventListenerProcess.destroy();
-//				eventProcessor.stop();
-//				eventProcessorThread.join();
+//				eventListenerProcess.destroy();
+				eventProcessor.stop();
+				eventProcessorThread.join();
 			}
 		}finally {
 			eventDriver.stop();
