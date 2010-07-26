@@ -10,22 +10,12 @@ import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.util.*;
-import com.versant.core.jdo.*;
-import com.versant.core.metadata.*;
-import com.versant.core.storagemanager.*;
 import com.versant.odbms.*;
-import com.versant.odbms.model.*;
-import com.versant.odbms.model.UserSchemaClass;
-import com.versant.trans.*;
 import com.versant.util.*;
 
 public class VodDatabase {
 	
 	
-	private static final String VEDSECHN_SCHEMA = "/lib/vedsechn.sch";
-
-	private static final String CHANNEL_SCHEMA = "/lib/channel.sch";
-
 	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
 	
 	private static final String JDO_METADATA_KEY = "versant.metadata."; 
@@ -117,12 +107,10 @@ public class VodDatabase {
 		DBUtility.createDB(_name);
 	}
 
-	// JDO
 	public PersistenceManager createPersistenceManager() {
 		return persistenceManagerFactory().getPersistenceManager();
 	}
 	
-	// JDO
 	public PersistenceManagerFactory persistenceManagerFactory(){
 		if(_persistenceManagerFactory == null){
 			_persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(_properties);
@@ -153,12 +141,10 @@ public class VodDatabase {
 		}
 	}
 
-	// COBRA
 	public DatastoreManager createDatastoreManager() {
 		return datastoreManagerFactory().getDatastoreManager();
 	}
 	
-	// COBRA
 	private DatastoreManagerFactory datastoreManagerFactory(){
 		if(_datastoreManagerFactory == null){
 			ConnectionInfo con = new ConnectionInfo(_name, host(), port(), userName(), passWord());
@@ -240,44 +226,14 @@ public class VodDatabase {
 		_properties.setProperty(JDO_METADATA_KEY + freeEntry, fileName);
 	}
 
-	// JVI
-	public TransSession createTransSession() {
-        Properties properties = new Properties ();
-        properties.put ("database", _name);
-        properties.put ("lockmode", com.versant.fund.Constants.NOLOCK + "");
-        properties.put ("options",  com.versant.fund.Constants.READ_ACCESS + "");
-        return new TransSession(properties);
-	}
-	
-	// JVI
-	public String versantRootPath() {
-		return DBUtility.versantRootPath();
-	}
-
 	public void createEventSchema() {
-		defineSchema(CHANNEL_SCHEMA);
-		defineSchema(VEDSECHN_SCHEMA);
-	}
-
-	// JVI
-	private void defineSchema(String schema) {
-		DBUtility.defineSchema(_name, new File(new File(versantRootPath()), schema).getAbsolutePath());
+		VodJvi jvi = new VodJvi(this);
+		jvi.createEventSchema();
+		jvi.close();
 	}
 	
-	// COBRA through JDO
-	private ModelMetaData modelMetadata() {
-		VersantPMFInternal internalPersistenceManagerFactory = (VersantPMFInternal) persistenceManagerFactory();
-		StorageManagerFactory storageManagerFactory = internalPersistenceManagerFactory.getStorageManagerFactory();
-		return storageManagerFactory.getModelMetaData();
+	public String databaseName(){
+		return _name;
 	}
 	
-	// COBRA through JDO 
-	public String schemaName(Class clazz) {
-		ModelMetaData modelMetadata = modelMetadata();
-		UserSchemaModel userModel = (UserSchemaModel)modelMetadata.vdsModel;
-		ClassMetaData classMetaData = modelMetadata.getClassMetaData(clazz);
-		UserSchemaClass userSchemaClass = userModel.getAssociatedSchemaClass(classMetaData);
-		return userSchemaClass.getName();
-	}
-
 }

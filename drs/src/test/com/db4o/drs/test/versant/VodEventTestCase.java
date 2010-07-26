@@ -66,7 +66,7 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 		
 			    EventChannel channel = client.getChannel ("item");
 			    if (channel == null) {
-			        ClassChannelBuilder builder = new ClassChannelBuilder (_vod.schemaName(Item.class));
+			        ClassChannelBuilder builder = new ClassChannelBuilder (_jdo.schemaName(Item.class));
 			        channel = client.newChannel ("item", builder);
 			    }
 			    
