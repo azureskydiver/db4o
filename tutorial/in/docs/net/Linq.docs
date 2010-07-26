@@ -9,9 +9,12 @@ In order to use LINQ you will need to add reference to ._
  Db4objects.Db4o.Linq.dll and usage to your program class:
 .c using System.Linq;
 using Db4objects.Db4o.Linq; ..  
+
 If you are already familiar with LINQ syntax, you can just start writing ._
 LINQ to query db4o.  Otherwise you may want to familiarise yourself with ._
-LINQ resources on  .l http://msdn2.microsoft.com/en-us/library/bb397926.aspx MSDN ..l
+LINQ resources on  .l http://msdn2.microsoft.com/en-us/library/bb397926.aspx MSDN.
+
+Note that LINQ requires at least .NET 3.5.
 
 .2 Linq Examples ..
 Let's prepare some objects in our database to query against:
