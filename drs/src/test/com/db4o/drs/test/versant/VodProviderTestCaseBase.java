@@ -43,7 +43,6 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		_pm.currentTransaction().begin();
 		Collection allObjects = (Collection) _pm.newQuery(Object.class).execute();
 		for (Object object : allObjects) {
-			System.out.println("Deleting " + object.toString());
 			_pm.deletePersistent(object);
 		}
 		_pm.currentTransaction().commit();

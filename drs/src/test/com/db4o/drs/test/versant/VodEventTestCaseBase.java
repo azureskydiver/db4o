@@ -8,9 +8,9 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
 	protected static final String EVENT_LOGFILE_NAME = "DrsEventLogFile.log";
 	
-	protected static final int CLIENT_PORT = 4016;
+	protected static final int CLIENT_PORT = 4001;
 	
-	protected static final int SERVER_PORT = 4017;
+	protected static final int SERVER_PORT = 4002;
 	
 	protected EventConfiguration newEventConfiguration() {
 		return new EventConfiguration(DATABASE_NAME, EVENT_LOGFILE_NAME,  "localhost", SERVER_PORT, "localhost", CLIENT_PORT, true);
