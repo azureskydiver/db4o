@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">try
+{
+    IObjectContainer container = Db4oClientServer.OpenClient(&quot;localhost&quot;, 1337, &quot;sa&quot;, &quot;sa&quot;);
+}
+catch (Db4oIOException e)
+{
+    // Couldn't connect to the server.
+    // Ask for new connection-settings or handle this case gracefully
+}</pre>
+		<div class="codesnippet-meta">ImportantExceptionCases.cs: Cannot connect to the server<a href="Example-strategies-exceptions-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

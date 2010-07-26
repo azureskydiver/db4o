@@ -121,6 +121,7 @@
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
     <Compile Include="Code\query\linq\LinqExamples.cs" />
+    <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.cs" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.cs" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.cs" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.cs" />
