@@ -6,10 +6,11 @@ import com.db4o.config.*;
 import com.db4o.monitoring.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class ReferenceSystemMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutDefragSolo {
+public class ReferenceSystemMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutDefragSolo, OptOutNotSupportedJavaxManagementIssue {
 	
 	public static void main(String[] args) {
 		new ReferenceSystemMonitoringSupportTestCase().runNetworking();

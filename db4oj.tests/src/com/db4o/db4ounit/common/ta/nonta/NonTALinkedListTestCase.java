@@ -2,15 +2,14 @@
 
 package com.db4o.db4ounit.common.ta.nonta;
 
-import com.db4o.db4ounit.common.ta.*;
+import com.db4o.db4ounit.common.ta.LinkedList;
 
-import db4ounit.*;
-import db4ounit.extensions.OptOutStackOverflow;
+import db4ounit.Assert;
 
 /**
  * @exclude
  */
-public class NonTALinkedListTestCase extends NonTAItemTestCaseBase implements OptOutStackOverflow {
+public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
     
 	private static final LinkedList LIST = LinkedList.newList(10);
 

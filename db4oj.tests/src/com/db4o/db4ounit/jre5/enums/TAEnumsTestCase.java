@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 
 
 @decaf.Ignore
-public class TAEnumsTestCase extends AbstractDb4oTestCase implements OptOutStaticFieldIssue {
+public class TAEnumsTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {
 		new TAEnumsTestCase().runSolo();

@@ -9,7 +9,7 @@ import com.db4o.reflect.*;
  */
 public class CustomReflector implements Reflector {
 	
-	private final Reflector _delegate = Platform4.reflectorForType(Object.class);
+	private final Reflector _delegate = Platform4.reflectorForType(CustomReflector.class);
 	private final CustomClassRepository _classRepository;
 	private Reflector _parent;
 

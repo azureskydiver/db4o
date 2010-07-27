@@ -68,6 +68,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     private List4           _stillToActivate;
     private List4           _stillToDeactivate;
     private List4           _stillToSet;
+    private boolean 		_handlingStackLimitPendings = false;
 
     // used for ClassMetadata and ClassMetadataRepository
     // may be parent or equal to i_trans
@@ -1631,14 +1632,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
     
-    private final int store2(Transaction trans, Object obj, UpdateDepth depth, boolean checkJust) {
-        int id = store3(trans, obj, depth, checkJust);
-        if(stackIsSmall()){
-            checkStillToSet();
-        }
-        return id;
-    }
-    
     public void checkStillToSet() {
         List4 postponedStillToSet = null;
         while (_stillToSet != null) {
@@ -1673,7 +1666,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         throw new ObjectNotStorableException(claxx);
     }
 
-    public final int store3(Transaction trans, Object obj, UpdateDepth updateDepth, boolean checkJustSet) {
+    public final int store2(Transaction trans, Object obj, UpdateDepth updateDepth, boolean checkJustSet) {
         if (obj == null || (obj instanceof TransientClass)) {
             return 0;
         }
@@ -1852,14 +1845,40 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             return true;
         }
         flagAsHandled(ref);
-        _stackDepth++;
+        incStackDepth();
         try{
             ref.activateInternal(context);
         } finally {
-            _stackDepth--;
+            decStackDepth();
         }
         return true;
     }
+
+    
+	private int decStackDepth() {
+		int i = _stackDepth--;
+		
+		if (stackIsSmall() && !_handlingStackLimitPendings) {
+			
+			_handlingStackLimitPendings = true;
+			try {
+				handleStackLimitPendings();
+			} finally {
+				_handlingStackLimitPendings = false;
+			}
+		}
+		return i;
+	}
+
+	private void handleStackLimitPendings() {
+		checkStillToSet();
+//		activatePending();
+//		deactivatePending();
+	}
+
+	private int incStackDepth() {
+		return _stackDepth++;
+	}
 
     public final void stillToDeactivate(Transaction trans, Object a_object, ActivationDepth a_depth,
         boolean a_forceUnknownDeactivate) {
@@ -1880,7 +1899,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     void stillToSet(Transaction transaction, ObjectReference ref, UpdateDepth updateDepth) {
         if(stackIsSmall()){
-        	checkStillToSet();
             if(ref.continueSet(transaction, updateDepth)){
                 return;
             }
@@ -1938,14 +1956,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     		DTrace.BEGIN_TOP_LEVEL_CALL.log();
     	}
     	generateCallIDOnTopLevel();
-    	_stackDepth++;
+    	incStackDepth();
     }
     
     private final void endTopLevelCall(){
     	if(DTrace.enabled){
     		DTrace.END_TOP_LEVEL_CALL.log();
     	}
-    	_stackDepth--;
+    	decStackDepth();
     	generateCallIDOnTopLevel();
     }
     

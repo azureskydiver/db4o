@@ -8,7 +8,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class PeekPersistedTestCase extends AbstractDb4oTestCase implements OptOutStackOverflow {
+public class PeekPersistedTestCase extends AbstractDb4oTestCase implements OptOutStackOverflowIssue {
 	
 	public static final class Item {
 		

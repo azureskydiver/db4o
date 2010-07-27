@@ -2,15 +2,15 @@
 
 package com.db4o.db4ounit.common.ta.mixed;
 
-import com.db4o.activation.*;
-import com.db4o.db4ounit.common.ta.*;
-import com.db4o.query.*;
-import com.db4o.ta.*;
+import com.db4o.activation.ActivationPurpose;
+import com.db4o.activation.Activator;
+import com.db4o.db4ounit.common.ta.ItemTestCaseBase;
+import com.db4o.query.Query;
+import com.db4o.ta.Activatable;
 
-import db4ounit.*;
-import db4ounit.extensions.OptOutTemporary;
+import db4ounit.Assert;
 
-public class MixedActivateTestCase extends ItemTestCaseBase implements OptOutTemporary {
+public class MixedActivateTestCase extends ItemTestCaseBase {
 
     private final int ITEM_DEPTH = 10;
 

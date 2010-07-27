@@ -10,9 +10,10 @@ import com.db4o.io.*;
 import com.db4o.monitoring.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
 
 @decaf.Remove
-public class Db4oMBeanRegistryTestCase implements TestCase {
+public class Db4oMBeanRegistryTestCase implements TestCase, OptOutNotSupportedJavaxManagementIssue {
 
 	public static interface Mock1MBean {
 	}

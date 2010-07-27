@@ -9,9 +9,10 @@ import com.db4o.io.*;
 import com.db4o.monitoring.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
 
 @decaf.Remove
-public class MonitoredStorageTestCase implements TestLifeCycle {
+public class MonitoredStorageTestCase implements TestLifeCycle, OptOutNotSupportedJavaxManagementIssue {
 	
 	private CountingStorage _storage = new CountingStorage(new MemoryStorage());
 	

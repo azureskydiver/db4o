@@ -12,7 +12,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 @decaf.Remove(decaf.Platform.JDK11)
-public class MigrationHopsTestCase extends TestWithTempFile implements OptOutTemporary {
+public class MigrationHopsTestCase extends TestWithTempFile implements OptOutWorkspaceIssue {
 	
 	private Db4oLibraryEnvironmentProvider _environmentProvider;
 	
