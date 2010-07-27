@@ -71,135 +71,133 @@ namespace OManager.BusinessLayer.Login
 
         public void AddQueryToList(OMQuery query)
         {
-            try
-            {
-                container = Db4oClient.RecentConn;
-                if (QueryList != null)
-                {
-                    CompareQueryTimestamps comp = new CompareQueryTimestamps();
-                    
-                    List<OMQuery> qList = FetchAllQueries();
-                  //  qList.Sort(comp);
-                  
+			try
+			{
+				container = Db4oClient.RecentConn;
+				if (QueryList != null)
+				{
+					CompareQueryTimestamps comp = new CompareQueryTimestamps();
 
-                    if (qList.Count >= 20)
-                    {
-                        bool check = false;
-                        foreach (OMQuery qry in qList)
-                        {
-                            if (qry.QueryString == query.QueryString)
-                            {
-                                //check if the query string is among 5
-                                check = true;
-                            }
-                        }
-                        //if it is not among five then remove the last item from the list
-                        if (check == false)
-                        {
-                            OMQuery q = qList[qList.Count - 1];
-                            qList.RemoveAt(qList.Count - 1);
-                            foreach (OMQuery qry1 in this.QueryList)
-                            {
-                                if (q.QueryString.Equals(qry1.QueryString))
-                                {
-                                    this.QueryList.Remove(qry1);
-                                    break;
-                                }
-                            }
-                            container.Delete(q);
-                            container.Commit();
-                        }
-                    }
-
-                    List<OMQuery> qListForClass;
-                    qListForClass = FetchQueriesForAClass(query.BaseClass);
-                    qListForClass.Sort(comp);
-                    if (qListForClass.Count >= 5)
-                    {
-                        bool check = false;
-                        foreach (OMQuery qry in qListForClass)
-                        {
-                            if (qry.QueryString == query.QueryString)
-                            {
-                                //check if the query string is among 5
-                                check = true;
-                            }
-                        }
-                        //if it is not among five then remove the last item from the list
-                        if (check == false)
-                        {
-                            OMQuery q = qListForClass[qListForClass.Count - 1];
-                            qListForClass.RemoveAt(qListForClass.Count - 1);
-                            foreach (OMQuery qry1 in this.QueryList)
-                            {
-                                if (q.QueryString.Equals(qry1.QueryString))
-                                {
-                                    this.QueryList.Remove(qry1);
-                                    break;
-                                }
-                            }
-                            container.Delete(q);
-                            container.Commit();
-                        }
-                    }
-
-                   
+					List<OMQuery> qList = FetchAllQueries();
+					//  qList.Sort(comp);
 
 
-                    // recent queries should always be 5 for a class therefore its checked 
-                    //against qListForClass.
-                    foreach (OMQuery q in qListForClass)
-                    {
-                        if (q != null)
-                        {
-                            if (q.QueryString != null)
-                            {
-                                if (q.QueryString.Equals(query.QueryString))
-                                {
-                                    //if query string is same as already in the list then remove from the list
-                                    //so that same string can be added again with updated timestamp
+					if (qList.Count >= 20)
+					{
+						bool check = false;
+						foreach (OMQuery qry in qList)
+						{
+							if (qry.QueryString == query.QueryString)
+							{
+								//check if the query string is among 5
+								check = true;
+							}
+						}
+						//if it is not among five then remove the last item from the list
+						if (check == false)
+						{
+							OMQuery q = qList[qList.Count - 1];
+							qList.RemoveAt(qList.Count - 1);
+							foreach (OMQuery qry1 in this.QueryList)
+							{
+								if (q.QueryString.Equals(qry1.QueryString))
+								{
+									this.QueryList.Remove(qry1);
+									break;
+								}
+							}
+							container.Delete(q);
+							container.Commit();
+						}
+					}
 
-                                    foreach (OMQuery qry1 in this.QueryList)
-                                    {
-                                        if (q.QueryString.Equals(qry1.QueryString))
-                                        {
-                                            this.QueryList.Remove(qry1);
-                                            break;
-                                        }
-                                    }
-                                                               
-                                   
-                                }
-                            }
-                        }
-                    }
+					List<OMQuery> qListForClass = FetchQueriesForAClass(query.BaseClass);
+					if (qListForClass != null)
+					{
+						qListForClass.Sort(comp);
+						if (qListForClass.Count >= 5)
+						{
+							bool check = false;
+							foreach (OMQuery qry in qListForClass)
+							{
+								if (qry.QueryString == query.QueryString)
+								{
+									//check if the query string is among 5
+									check = true;
+								}
+							}
+							//if it is not among five then remove the last item from the list
+							if (check == false)
+							{
+								OMQuery q = qListForClass[qListForClass.Count - 1];
+								qListForClass.RemoveAt(qListForClass.Count - 1);
+								foreach (OMQuery qry1 in this.QueryList)
+								{
+									if (q.QueryString.Equals(qry1.QueryString))
+									{
+										this.QueryList.Remove(qry1);
+										break;
+									}
+								}
+								container.Delete(q);
+								container.Commit();
+							}
+						}
 
-                    //add query with latest timestamp.
-                    this.QueryList.Add(query);
-                    RecentQueries temprc = this.ChkIfRecentConnIsInDb();
-                    if (temprc != null)
-                    {
-                        temprc.Timestamp = DateTime.Now;
-                        temprc.QueryList = this.QueryList;
 
-                    }
-                    else
-                        temprc = this;
+						// recent queries should always be 5 for a class therefore its checked 
+						//against qListForClass.
+						foreach (OMQuery q in qListForClass)
+						{
+							if (q != null)
+							{
+								if (q.QueryString != null)
+								{
+									if (q.QueryString.Equals(query.QueryString))
+									{
+										//if query string is same as already in the list then remove from the list
+										//so that same string can be added again with updated timestamp
 
-                    container.Ext().Set(temprc, 5);
-                    container.Commit();
-                    container = null;
-                    Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+										foreach (OMQuery qry1 in this.QueryList)
+										{
+											if (q.QueryString.Equals(qry1.QueryString))
+											{
+												this.QueryList.Remove(qry1);
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					//add query with latest timestamp.
+					this.QueryList.Add(query);
+					RecentQueries temprc = this.ChkIfRecentConnIsInDb();
+					if (temprc != null)
+					{
+						temprc.Timestamp = DateTime.Now;
+						temprc.QueryList = this.QueryList;
+					}
+					else
+					{
+						temprc = this;
+						temprc.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
+					}
+					container.Ext().Set(temprc, 5);
+					container.Commit();
+					container = null;
+					Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
 
 
-                }
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                container = null;
-                Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
-            }
+				}
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.HandleException(oEx);
+				container = null;
+				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+			}
         }
 
         private List<OMQuery> FetchAllQueries()
@@ -241,7 +239,7 @@ namespace OManager.BusinessLayer.Login
                 query.Constrain(typeof(RecentQueries));
                 query.Descend("m_connParam").Descend("m_connection").Constrain(m_connParam.Connection);    
                 objSet = query.Execute();
-                if (objSet != null)
+				if (objSet != null && objSet.Count>0 )
                 {
                     RecentQueries recentQueries = (RecentQueries)objSet.Next();
                     foreach (OMQuery q in recentQueries.QueryList)

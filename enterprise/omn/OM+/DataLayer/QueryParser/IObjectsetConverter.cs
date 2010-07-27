@@ -84,7 +84,7 @@ namespace OManager.DataLayer.QueryParser
                         string[] splitstring = str.Split('.');
                         if (splitstring.Length > length)
                         {
-                            length = splitstring.Length;
+                            length = splitstring.Length-1;
                         }
                     }
                     
@@ -130,7 +130,7 @@ namespace OManager.DataLayer.QueryParser
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
-                return null;
+                return new List<Hashtable>( );
             }
         }
 

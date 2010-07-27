@@ -60,6 +60,64 @@ namespace OMControlLibrary
 		public void Setobjectid(long[] objectIds)
 		{
 			objectid = objectIds;
+			LoadData();
+		}
+
+		private void LoadData()
+		{
+			
+			masterView.Rows.Clear(); 
+			detailsTabs.Items.Clear();
+			detailsTabs.SelectedItem=null;
+			
+			Hashtable hAttributes = new Hashtable();
+			try
+			{
+				omQuery = (OMQuery)Helper.OMResultedQuery[ClassName];
+				if (omQuery != null)
+				{
+					hAttributes = omQuery.AttributeList;
+				}
+				PagingData pagingData = new PagingData(m_pagingStartIndex);
+
+				if (objectid != null)
+				{
+					lstObjIdLong = new List<long>(objectid);
+					pagingData.ObjectId = lstObjIdLong;
+
+					const int pageNumber = m_pagingStartIndex + 1;
+					lblPageCount.Text = pagingData.GetPageCount().ToString();
+					txtCurrentPage.Text = pageNumber.ToString();
+					labelNoOfObjects.Text = pagingData.ObjectId.Count.ToString();
+					if (lstObjIdLong.Count > 0)
+					{
+						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass, omQuery.AttributeList);
+						masterView.SetDataGridColumnHeader(hashListResult, ClassName, omQuery.AttributeList);
+						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
+						ListofModifiedObjects.AddDatagrid(ClassName, masterView);
+					}
+
+					if (pagingData.ObjectId.Count <= PagingData.PAGE_SIZE)
+					{
+						btnPrevious.Enabled = false;
+						btnFirst.Enabled = false;
+						btnNext.Enabled = false;
+						btnLast.Enabled = false;
+					}
+					else
+					{
+						btnPrevious.Enabled = false;
+						btnFirst.Enabled = false;
+						btnNext.Enabled = true ;
+						btnLast.Enabled = true ;
+					}
+
+				}
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.ShowMessage(oEx);
+			}
 		}
 
 		#region Constructor
@@ -73,21 +131,20 @@ namespace OMControlLibrary
 				SetStyle(ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
 
 				InitializeComponent();
-
-				omQuery = (OMQuery) Helper.OMResultedQuery[ClassName];
-				
 				Events events = ApplicationObject.Events;
 				_windowsEvents = events.get_WindowEvents(null);
 				_windowsEvents.WindowActivated += _windowsEvents_WindowActivated;
-				Events2 event_1 = (Events2) ApplicationObject.Events;
-				windowsVisEvents = event_1.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
-				windowsVisEvents.WindowHiding += windowsVisEvents_WindowHiding;
+				
+				InitializeResultDataGridView();
+				InitializeTabControl();
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
+		
 
 		#endregion
 
@@ -96,11 +153,10 @@ namespace OMControlLibrary
 		//FIXME: Find a way to get rid of the dependency on Caption being equal to "Close"
 		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
-            //if (LostFocus.Caption == "Closed")
-            //    return;
 
-			if (GotFocus.Caption != "Query Builder" && GotFocus.Caption != "db4o Browser" &&
-			    GotFocus.Caption != "DataBase Properties" && GotFocus.Caption != "")
+
+			if (GotFocus.Caption != Constants.QUERYBUILDER && GotFocus.Caption != Constants.DB4OBROWSER  &&
+				GotFocus.Caption != Constants.DB4OPROPERTIES  && GotFocus.Caption != "")
 			{
 				PropertiesTab.Instance.ShowObjectPropertiesTab = false;
 				SelectTreeNodeInObjBrowser(GotFocus.Caption);
@@ -130,11 +186,7 @@ namespace OMControlLibrary
 								: ObjectBrowser.Instance.DbtreeviewObject;
 		}
 
-		public void windowsVisEvents_WindowHiding(Window Window)
-		{
-		    Helper.SaveData();
-           
-		}
+	
 
 	   
 
@@ -146,51 +198,12 @@ namespace OMControlLibrary
 		{
 			try
 			{
+
 				OMETrace.WriteFunctionStart();
 				CheckForIllegalCrossThreadCalls = false;
-				InitializeTabControl();
-				InitializeResultDataGridView();
-				Hashtable hAttributes = new Hashtable();
-				if (omQuery != null)
-				{
-					hAttributes = omQuery.AttributeList;
-				}
-				PagingData pagingData = new PagingData(m_pagingStartIndex);
+				SetLiterals();
+				OMETrace.WriteFunctionEnd();
 
-				if (objectid != null)
-				{
-					lstObjIdLong = new List<long>(objectid);
-					pagingData.ObjectId = lstObjIdLong;
-
-					const int pageNumber = m_pagingStartIndex + 1;
-					lblPageCount.Text = pagingData.GetPageCount().ToString();
-					txtCurrentPage.Text = pageNumber.ToString();
-					labelNoOfObjects.Text = pagingData.ObjectId.Count.ToString();
-					if (lstObjIdLong.Count > 0)
-					{
-						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass, omQuery.AttributeList);
-						masterView.SetDataGridColumnHeader(hashListResult, ClassName, omQuery.AttributeList);
-						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
-						ListofModifiedObjects.AddDatagrid(ClassName, masterView);
-					}
-
-					if (pagingData.ObjectId.Count <= PagingData.PAGE_SIZE)
-					{
-						btnPrevious.Enabled = false;
-						btnNext.Enabled = false;
-						btnFirst.Enabled = false;
-						btnLast.Enabled = false;
-					}
-					else
-					{
-						btnPrevious.Enabled = false;
-						btnFirst.Enabled = false;
-					}
-
-					SetLiterals();
-
-					OMETrace.WriteFunctionEnd();
-				}
 			}
 			catch (Exception oEx)
 			{
@@ -904,7 +917,8 @@ namespace OMControlLibrary
                             "Object is already deleted. This window will get closed now. Please fire the query again for refreshed results.",
                             Helper.GetResourceString(Constants.PRODUCT_CAPTION),MessageBoxButtons.OK ,
 				                         MessageBoxIcon.Information);
-                        Helper.QueryResultToolWindow.Close(vsSaveChanges.vsSaveChangesYes);
+						Window queryResult = ViewBase.GetWindow(Helper.GetCaption(ClassName));
+						queryResult.Close(vsSaveChanges.vsSaveChangesYes);
                     }
                    
                        

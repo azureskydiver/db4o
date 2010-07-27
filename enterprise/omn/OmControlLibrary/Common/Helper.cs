@@ -40,7 +40,7 @@ namespace OMControlLibrary.Common
 		private static Hashtable m_hashClassGUID;
 		private static Hashtable m_hashTableBaseClass = new Hashtable();
 		static System.Threading.Thread SessionThread;
-		private static bool checkObjectBrowser;
+		
 
 		public static AccountManagementService serviceProxy;
 		public static CommandBarButton m_statusLabel;
@@ -63,11 +63,8 @@ namespace OMControlLibrary.Common
 		#endregion
 
 		#region Static Properties
-
-		public static bool CheckObjectBrowser
-		{
-			get { return checkObjectBrowser; }
-		}
+		
+		
 
 		public static Hashtable HashTableBaseClass
 		{
@@ -502,7 +499,7 @@ namespace OMControlLibrary.Common
 			try
 			{
 				BaseClass = string.Empty;
-				checkObjectBrowser = false;
+
 				ClassName = string.Empty;
 				DbInteraction = null;
 				if (HashClassGUID != null)
@@ -557,13 +554,13 @@ namespace OMControlLibrary.Common
 		}
 		private static byte[] StrToByteArray(string str)
 		{
-			System.Text.ASCIIEncoding encoding = new ASCIIEncoding();
+			ASCIIEncoding encoding = new ASCIIEncoding();
 			return encoding.GetBytes(str);
 		}
 
 		private static string ByteArrayToStr(byte[] array)
 		{
-			System.Text.ASCIIEncoding encoding = new ASCIIEncoding();
+			ASCIIEncoding encoding = new ASCIIEncoding();
 			return encoding.GetString(array);
 		}
 
@@ -679,24 +676,43 @@ namespace OMControlLibrary.Common
             }
             return caption;
         }
-        public delegate void delPassData(long[] objectid);
-        public static void CreateQueryResultToolwindow(long[] objectid)
+		public static void SetPicture(Assembly assembly, _CommandBarButton button, string resource, string masked)
+		{
+		   using (Stream imageStream = assembly.GetManifestResourceStream(resource))
+			{
+				button.Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStream));
+#if !NET_4_0
+				using (Stream imageStreamMask = assembly.GetManifestResourceStream(masked))
+				{
+                    button.Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
+				}
+#endif
+			}
+		}
+        public static void SetTabPicture(Window window, string iconResource)
         {
-
-            string caption = GetCaption(BaseClass);
-            QueryResult queryResult;
-            QueryResultToolWindow = ViewBase.CreateToolWindow(Constants.QUERYRESULT, caption, GetClassGUID(BaseClass), out queryResult);
-            delPassData del = queryResult.Setobjectid;
-            del(objectid);
-
-            QueryResultToolWindow.IsFloating = false;
-            QueryResultToolWindow.Linkable = false;
-            if (QueryResultToolWindow.AutoHides)
-            {
-                QueryResultToolWindow.AutoHides = false;
-            }
-            QueryResultToolWindow.Visible = true;
+            window.SetTabPicture(Helper.GetResourceImage(iconResource));
         }
+        public delegate void delPassData(long[] objectid);
+		public static void CreateQueryResultToolwindow(long[] objectid)
+		{
+			string caption = GetCaption(BaseClass);
+			QueryResultToolWindow = ViewBase.CreateToolWindow(Constants.QUERYRESULT, caption, GetClassGUID(BaseClass));
+			QueryResultToolWindow.IsFloating = false;
+			QueryResultToolWindow.Linkable = false;
+			if (QueryResultToolWindow.AutoHides)
+			{
+				QueryResultToolWindow.AutoHides = false;
+			}
+			QueryResultToolWindow.Visible = true;
+
+			QueryResult queryResult = QueryResultToolWindow.Object as QueryResult;
+			delPassData del = queryResult.Setobjectid;
+			del(objectid);
+
+
+
+		}
 
         public static void AddElementToAttributeGrid(dbDataGridView dbDataGridAttributes, string className, string fullpath)
         {

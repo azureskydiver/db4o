@@ -8,7 +8,7 @@
     <ProjectGuid>{56758956-B261-405F-9E79-66C97A7CE65D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OmControlLibrary</RootNamespace>
+    <RootNamespace>OMControlLibrary</RootNamespace>
     <AssemblyName>OmControlLibrary</AssemblyName>
     <StartupObject>
     </StartupObject>
@@ -79,6 +79,7 @@
     <Compile Include="DataGridViewGroup.Designer.cs">
       <DependentUpon>DataGridViewGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="ILoadData.cs" />
     <Compile Include="IView.cs" />
     <Compile Include="Login.cs">
       <SubType>UserControl</SubType>
@@ -244,7 +245,7 @@
     <Content Include="Images\clear_filter.gif" />
     <EmbeddedResource Include="Images\close.gif" />
     <Content Include="Images\Closefolder.gif" />
-    <Content Include="Images\db4o.ico" />
+    <EmbeddedResource Include="Images\db4o.ico" />
     <EmbeddedResource Include="Images\defrag1.gif" />
     <EmbeddedResource Include="Images\delete.gif" />
     <Content Include="Images\db4objects_logo_white_2a.jpg" />

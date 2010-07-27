@@ -31,7 +31,7 @@ namespace OMControlLibrary.Common
 		#region Windows Related Constants
 
 		//GUIDS
-		public const string GUID_OBJECTBROWSER = "{286981df-4d5d-4d66-9caf-c21793f6836e}";
+		public const string GUID_OBJECTBROWSER = "{286981DF-4D5D-4D66-9CAF-C21793F6836E}";
 		public const string GUID_QUERYBUILDER = "{426E8D27-3D33-4fc8-B3E9-9883AADC679F}";
 		public const string GUID_PROPERTIES = "{997e97ed-a58a-4ac2-aa89-c95068ae3750}";
 
@@ -51,8 +51,15 @@ namespace OMControlLibrary.Common
 		public const string LOGIN_CAPTION_OPEN = "LOGIN_CAPTION_OPEN";
 		public const string LOGIN_CAPTION_CONNECT = "LOGIN_CAPTION_CONNECT";
 
+		public const string QUERYBUILDER = "Query Builder";
+		public const string LOGIN = "Connection Info";
+		public const string DB4OBROWSER = "db4o Browser";
+		public const string DB4OPROPERTIES = "DataBase Properties";
+
 		//Toolbar Captions
 		public const string TOOLBAR_DISCONNECT = "Disconnect";
+
+
 
 
 		#endregion

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
@@ -20,7 +21,8 @@ using Constants = OMControlLibrary.Common.Constants;
 
 namespace OMControlLibrary
 {
-	public partial class QueryBuilder : ViewBase
+	[ComVisible(true)]
+	public partial class QueryBuilder : ViewBase, ILoadData 
 	{
 		private static QueryBuilder instance;
 
@@ -149,29 +151,21 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				OMETrace.WriteFunctionStart();
-
+				
 				//Initialization of Queries tablelayour where the QueryGridGrup will be added
 				InitializeQueriesTableLayoutPanel();
-
-				//Add DataGridview Group to the Query Panel
-				defaultGroup = AddDataGridViewToPanel();
-
-				//Initialize Recent Queries
-				InitializeRecentQueries();
-
 				//Initialization of Attribute List
 				InitializeAttributesDataGrid();
-
-				SetLiterals();
-
-				recentQueriesToolTip = new ToolTip();
-
-				instance = this;
+				InitializeRecentQueries();
+				defaultGroup = AddDataGridViewToPanel();
+				OMETrace.WriteFunctionStart();
 				Events events = ApplicationObject.Events;
 				_windowsEvents = events.get_WindowEvents(null);
 				_windowsEvents.WindowActivated += _windowsEvents_WindowActivated;
 				OMETrace.WriteFunctionEnd();
+
+				SetLiterals();
+				recentQueriesToolTip = new ToolTip();
 			}
 			catch (Exception oEx)
 			{
@@ -179,9 +173,21 @@ namespace OMControlLibrary
 			}
 		}
 
+		public void LoadAppropriatedata()
+		{
+
+			ClearAllQueries();
+			comboboxRecentQueries.SelectedIndex = 0;
+			//InitializeAttributesDataGrid();
+			instance = this;
+
+		}
+
+	
+
 		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
-			if (GotFocus.Caption == "Query Builder")
+			if (GotFocus.Caption == Constants.QUERYBUILDER )
 			{
 				PropertiesTab.Instance.ShowObjectPropertiesTab = false;
 				PropertiesTab.Instance.ShowClassProperties = true;
@@ -366,7 +372,17 @@ namespace OMControlLibrary
 			{
 				objectid = dbInteraction.ExecuteQueryResults(omQuery);
 				e.Result = objectid;
-				bw.ReportProgress(1000);
+
+				for (int i = 0; i < 10000; i++)
+				{
+					if (bw.CancellationPending )
+					{
+						e.Cancel = true;
+						break;
+					}
+					bw.ReportProgress(i * 100 / 10000);
+				}
+				
 				isrunning = false;
 			}
 			catch (Exception oEx)
@@ -401,8 +417,12 @@ namespace OMControlLibrary
 				EnableDisableDatabaseConnection(true);
 
 				isrunning = false;
-				bw.CancelAsync();
-				bw = null;
+				if (bw != null)
+				{
+					bw.CancelAsync();
+					bw.Dispose();
+					bw = null;
+				}
 				ApplicationObject.StatusBar.Clear();
 				ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
 				ApplicationObject.StatusBar.Text = "Query run successfully!";
@@ -450,21 +470,18 @@ namespace OMControlLibrary
 				EnableDisableDatabaseConnection(false);
 
 				bw = new BackgroundWorker();
+				
 				bw.WorkerReportsProgress = true;
 				bw.WorkerSupportsCancellation = true;
 				bw.ProgressChanged += bw_ProgressChanged;
 				bw.DoWork += bw_DoWork;
 				bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-				ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
-				isrunning = true;
+				
 
 				bw.RunWorkerAsync();
-
-				for (double i = 1; i < 10000 && isrunning; i = (i + 1)%1000)
-				{
-					if (bw.IsBusy)
-						bw.ReportProgress((int) i*100/10000);
-				}
+				ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
+				isrunning = true;
+			
 			}
 			catch (Exception oEx)
 			{
@@ -680,6 +697,7 @@ namespace OMControlLibrary
 						}
 					}
 					e.Effect = DragDropEffects.Move;
+					
 				}
 			}
 		}
@@ -761,16 +779,18 @@ namespace OMControlLibrary
 		/// <param name="e"></param>
 		private void comboboxRecentQueries_Click(object sender, EventArgs e)
 		{
-            try
-            {
+			try
+			{
+				comboboxRecentQueries.DataSource = null;
+				if (comboboxRecentQueries != null)
+					comboboxRecentQueries.Items.Clear();
+				Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
 
-                Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
-
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.ShowMessage(oEx);
-            }
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.ShowMessage(oEx);
+			}
 		}
 
 		/// <summary>
@@ -1130,32 +1150,34 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-
+				int count = 0;
 				//Get all query groups added to query builder
-				int count = tableLayoutPanelQueries.Controls.Count;
-				for (int i = count; i > 1; i--)
+				
+				if (tableLayoutPanelQueries != null)
 				{
-					tableLayoutPanelQueries.Controls.RemoveAt(i - 1);
-					QueryGroupCount--;
+					count = tableLayoutPanelQueries.Controls.Count;
+					for (int i = count; i > 1; i--)
+					{
+						tableLayoutPanelQueries.Controls.RemoveAt(i - 1);
+						QueryGroupCount--;
+					}
+					DataGridViewGroup dataGridViewGroup = (DataGridViewGroup) tableLayoutPanelQueries.Controls[0];
+					dbDataGridView dataGridView = dataGridViewGroup.DataGridViewQuery;
+
+					//Clear all query expressions
+					if (dataGridView != null && dataGridView.RowCount > 0)
+					{
+						dataGridView.Rows.Clear();
+					}
+					tableLayoutPanelQueries.Height = tableLayoutPanelQueries.Height - dataGridViewGroup.Height;
 				}
+					//Clears the attribute list
+					if (dbDataGridAttributes != null && dbDataGridAttributes.RowCount > 0)
+					{
+						dbDataGridAttributes.Rows.Clear();
+					}
 
-				DataGridViewGroup dataGridViewGroup = (DataGridViewGroup)tableLayoutPanelQueries.Controls[0];
-				dbDataGridView dataGridView = dataGridViewGroup.DataGridViewQuery;
-
-				//Clear all query expressions
-				if (dataGridView != null && dataGridView.RowCount > 0)
-				{
-					dataGridView.Rows.Clear();
-				}
-
-				//Clears the attribute list
-				if (dbDataGridAttributes != null && dbDataGridAttributes.RowCount > 0)
-				{
-					dbDataGridAttributes.Rows.Clear();
-				}
-
-				tableLayoutPanelQueries.Height = tableLayoutPanelQueries.Height - dataGridViewGroup.Height;
-
+					
 				// Remove base class from helper base class hashtable
 				// so that next time it will set for the new class
 				Helper.HashTableBaseClass.Clear();
@@ -1494,10 +1516,13 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-				for (int attributeCount = 0; attributeCount < dbDataGridAttributes.RowCount; attributeCount++)
+				if (dbDataGridAttributes != null)
 				{
-					list.Add(dbDataGridAttributes.Rows[attributeCount].Cells[0].Value.ToString()
-							 , dbDataGridAttributes.Rows[attributeCount].Cells[0].Tag.ToString());
+					for (int attributeCount = 0; attributeCount < dbDataGridAttributes.RowCount; attributeCount++)
+					{
+						list.Add(dbDataGridAttributes.Rows[attributeCount].Cells[0].Value.ToString()
+						         , dbDataGridAttributes.Rows[attributeCount].Cells[0].Tag.ToString());
+					}
 				}
 
 				OMETrace.WriteFunctionEnd();
@@ -1534,5 +1559,7 @@ namespace OMControlLibrary
 		}
 
 		#endregion
+
+		
 	}
 }

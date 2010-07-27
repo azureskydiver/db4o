@@ -206,8 +206,11 @@ namespace OManager.DataLayer.QueryParser
 				TreeGridNode objectNode = new TreeGridNode();
 				parentNode.Nodes.Add(objectNode);
 				object value = field.Get(parentObj);
-               
-                    objectNode.Tag = value;
+				if (value != null)
+				{
+					container.Ext().Activate(value, 2);
+				}
+				objectNode.Tag = value;
 
                     IType fieldType = ResolveFieldType(field);
                     objectNode.Cells[0].Value = AppendIDTo(field.GetName(), GetLocalID(value), fieldType);
@@ -229,8 +232,8 @@ namespace OManager.DataLayer.QueryParser
                     objectNode.ImageIndex = 0; //class
                     if (value != null)
                     {
-                        container = Db4oClient.Client;
-                        container.Ext().Activate(value, 2);
+						//container = Db4oClient.Client;
+						//container.Ext().Activate(value, 2);
 
                         TreeGridNode treenodeDummyChildNode = new TreeGridNode();
                         objectNode.Nodes.Add(treenodeDummyChildNode);
