@@ -90,16 +90,46 @@
 									  Name="windows.prf"
 									  Source="@dir.omn.installer.script@\windows.prf" 
 									  DiskId="1" Vital="no" />
-								<!-- VS windows configuration file -->
+							
 							</Component>
+              <!-- FAQ Files for help -->
+              <Directory Id="FAQLOCATION" Name="FAQ">
+                <Component Id="FAQComponent" Guid="{F6CDA2C8-DC87-C321-A25D-44190A1C83EE}">
+                  <File Id="FAQ.id" 
+                        Name="FAQ.htm" 
+                        KeyPath="yes" DiskId="1" 
+                        Source="@dir.omn.faq@\FAQ.htm" />
+                </Component>
+                <Directory Id="FAQFILESLOCATION" Name="FAQ Files" >
+                  <Component Id="FAQFileComponent" Guid="{4959E673-7137-A838-E506-BFF599503C88}">
+                    <File Id="FAQXMLFILES.id" 
+                          Name="filelist.xml"
+                          Source="@dir.omn.faq@\FAQ_files\filelist.xml" 
+                          DiskId="1" />                  
+                    
+                    <File Id="FAQIMAGE1" 
+                          Name="image001.gif" 
+                          DiskId="1" 
+                          Source="@dir.omn.faq@\FAQ_files\image001.gif" />
+                 
+                    <File Id="FAQIMAGE2" 
+                          Name="image002.gif" 
+                          KeyPath="yes" 
+                          DiskId="1" 
+                          Source="@dir.omn.faq@\FAQ_files\image002.gif" />
+                  </Component>
+                </Directory>
+              </Directory>
 						</Directory>
 					</Directory>
 				</Directory>
 			</Directory>
 		</Directory>
-		
+    <!-- VS windows configuration file -->
 		<Feature Id="OME" Title="db4o Object Manager" Level="1" ConfigurableDirectory='INSTALLLOCATION'>
 			<ComponentRef Id="OMEComponent" />
+      <ComponentRef Id="FAQComponent" />
+      <ComponentRef Id="FAQFileComponent" />
 		</Feature>
 		
 		<Condition Message="You need to be an administrator to install this product.">Privileged</Condition>

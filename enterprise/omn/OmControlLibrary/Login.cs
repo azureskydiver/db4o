@@ -1,26 +1,29 @@
 /* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using System.Reflection;
+using EnvDTE80;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using Microsoft.VisualStudio.CommandBars;
-using System.IO;
-using stdole;
 using OME.Logging.Common;
+using stdole;
+using Constants = OMControlLibrary.Common.Constants;
+
 
 namespace OMControlLibrary
 {
-	#region public partial class Login : ViewBase
 	/// <summary>
 	/// Using this user control, user can login to ObjectManager Enterprise.
 	/// </summary>
-	public partial class Login
+
+	[ComVisible(true)]
+	public partial class Login: ILoadData
 	{
 		#region Member Variables
 
@@ -35,8 +38,8 @@ namespace OMControlLibrary
 
 		//Constants
 
-		private const string IMAGE_DISCONNECT = "OMAddin.Images.DB_DISCONNECT2_a.GIF";//DBdisconnect.gif";
-		private const string IMAGE_DISCONNECT_MASKED = "OMAddin.Images.DB_DISCONNECT2_b.BMP";//DBdisconnect_Masked.bmp";
+        private const string IMAGE_DISCONNECT = "OMAddin.Images.DB_DISCONNECT2_a.GIF";
+        private const string IMAGE_DISCONNECT_MASKED = "OMAddin.Images.DB_DISCONNECT2_b.BMP";
 
 		private const string OPEN_FILE_DIALOG_FILTER = "db4o Database Files(*.yap, *.db4o)|*.yap;*.db4o|All Files(*.*)|*.*";
 		private const string STRING_SERVER = "server:";
@@ -56,26 +59,10 @@ namespace OMControlLibrary
 		public Login()
 		{
 			InitializeComponent();
-			try
-			{
-				m_recentConnections = GetAllRecentConnections();
-				if (m_recentConnections != null)
-				{
-					foreach (RecentQueries recentQuery in m_recentConnections)
-					{
-						if (recentQuery.ConnParam.Host != null)
-							radioButtonRemote.Checked = true;
-						else
-							radioButtonLocal.Checked = true;
-						break;
-					}
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+		
 		}
+
+		
 
 		#endregion
 
@@ -122,12 +109,7 @@ namespace OMControlLibrary
 				m_cmdBarCtrlBackup = cmdBarCtrlBackup;
 				m_cmdBarCtrlCreateDemoDb = dbCreateDemoDbControl;
 
-
-				if (Helper.LoginToolWindow != null)
-					Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
-
-				object ctlObj;
-				Helper.LoginToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_LOGIN, string.Empty, NewFormattedGuid(), out ctlObj);
+				Helper.LoginToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_LOGIN, Common.Constants.LOGIN, NewFormattedGuid());
 
 				if (Helper.LoginToolWindow.AutoHides)
 				{
@@ -136,6 +118,8 @@ namespace OMControlLibrary
 				Helper.LoginToolWindow.Visible = true;
 				Helper.LoginToolWindow.Width = 425;
 				Helper.LoginToolWindow.Height = 170;
+
+				
 			}
 			catch (Exception oEx)
 			{
@@ -157,25 +141,24 @@ namespace OMControlLibrary
 			try
 			{
 				string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
-				object ctlobj;
 
-				queryBuilderToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER, out ctlobj);
+				queryBuilderToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER );
+				
 				if (queryBuilderToolWindow.AutoHides)
 				{
 					queryBuilderToolWindow.AutoHides = false;
 				}
-
-				queryBuilderToolWindow.Visible = true;
 				queryBuilderToolWindow.IsFloating = false;
 				queryBuilderToolWindow.Linkable = false;
+				queryBuilderToolWindow.Visible = true;
+				
 			}
-			catch (Exception oEx)
+			catch (Exception e)
 			{
-				LoggingHelper.ShowMessage(oEx);
+				LoggingHelper.HandleException(e); 
 			}
 		}
-
-
+		
 
 
 		#endregion
@@ -184,32 +167,78 @@ namespace OMControlLibrary
 
 		#region Private
 
+		 public void LoadAppropriatedata()
+		{
+			
+			
+			toolTipForTextBox.RemoveAll();
+			comboBoxFilePath.Items.Clear();
+			textBoxConnection.Text = "";
+			m_recentConnections = GetAllRecentConnections();
+			if (m_recentConnections != null)
+			{
+				foreach (RecentQueries recentQuery in m_recentConnections)
+				{
+					if (recentQuery.ConnParam.Host != null)
+					{
+						ShowAppropriatePanel(false);
+						PopulateRemoteRecentConnections();
+
+					}
+					else
+					{
+						m_cmdBarCtrlBackup.Enabled = false;
+					    m_cmdBarCtrlCreateDemoDb.Enabled = true;
+						ShowAppropriatePanel(true);
+						PopulateLocalRecentConnections();
+					}
+					break;
+				}
+				if (comboBoxFilePath.Items.Count > 1)
+				{
+					comboBoxFilePath.SelectedIndex = 1;
+				}
+			}
+		}
+
+		private void RegisterEvents()
+		{
+			comboBoxFilePath.DropdownItemSelected += new ToolTipComboBox.DropdownItemSelectedEventHandler(comboBoxFilePath_DropdownItemSelected);
+			comboBoxFilePath.SelectedIndexChanged += new System.EventHandler(comboBoxFilePath_SelectedIndexChanged);
+		}
+
+		private void ShowAppropriatePanel(bool param)
+		{
+			panelLocal.Visible = param;
+			panelRemote.Visible = !param;
+			radioButtonLocal.Checked = param;
+			radioButtonRemote.Checked = !param;
+		}
+
 		#region AfterSuccessfullyConnected()
 		private void AfterSuccessfullyConnected()
 		{
 			try
 			{
-				m_cmdBarCtrlConnect.Caption = Common.Constants.TOOLBAR_DISCONNECT;
-				((CommandBarButton)m_cmdBarCtrlConnect).State = MsoButtonState.msoButtonDown;
+				m_cmdBarCtrlConnect.Caption = Common.Constants.TOOLBAR_DISCONNECT;		
 
 				m_cmdBarBtnConnect.Caption = Common.Constants.TOOLBAR_DISCONNECT;
 				m_cmdBarBtnConnect.TooltipText = Common.Constants.TOOLBAR_DISCONNECT;
-				m_cmdBarBtnConnect.State = MsoButtonState.msoButtonDown;
+				
 
 				if (radioButtonLocal.Checked)
 				{
 					m_cmdBarCtrlBackup.Enabled = true;
 					m_cmdBarCtrlCreateDemoDb.Enabled = false;
 				}
-				Stream imgageStream = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT);
-				Stream imageStreamMask = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT_MASKED);
-				((CommandBarButton)m_cmdBarCtrlConnect.Control).Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imgageStream));
-				((CommandBarButton)m_cmdBarCtrlConnect.Control).Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
+				Helper.SetPicture(m_AddIn_Assembly, (CommandBarButton)m_cmdBarCtrlConnect.Control, IMAGE_DISCONNECT, IMAGE_DISCONNECT_MASKED);
+				Helper.SetPicture(m_AddIn_Assembly, (CommandBarButton)m_cmdBarBtnConnect.Control, IMAGE_DISCONNECT, IMAGE_DISCONNECT_MASKED);
+				
+#if !NET_4_0
+                ((CommandBarButton)m_cmdBarCtrlConnect).State = MsoButtonState.msoButtonDown;
+				m_cmdBarBtnConnect.State = MsoButtonState.msoButtonDown;
+#endif
 
-
-				((CommandBarButton)m_cmdBarBtnConnect.Control).Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imgageStream));
-				((CommandBarButton)m_cmdBarBtnConnect.Control).Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
-                
 			}
 			catch (Exception oEx)
 			{
@@ -311,13 +340,26 @@ namespace OMControlLibrary
 		{
 			try
 			{
+
+				LoadAppropriatedata();
 				SetLiterals();
+				textBoxConnection.Clear();
+				textBoxHost.Clear();
+				textBoxPassword.Clear();
+				textBoxPort.Clear();
+				textBoxPassword.Clear();
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
+		
+
+		
+
+		
 		#endregion
 
 		#region radioButton_Click
@@ -330,17 +372,15 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				if (comboBoxFilePath.Items.Count > 0)
-					comboBoxFilePath.SelectedIndex = 0;
 
-				if (((RadioButton)sender).Text.Equals(Helper.GetResourceString(Common.Constants.LOGIN_CAPTION_LOCAL)))
+				comboBoxFilePath.Items.Clear();
+				toolTipForTextBox.RemoveAll();
+				if (radioButtonLocal.Checked)
 				{
 					textBoxConnection.Clear();
 					panelLocal.Visible = true;
 					panelRemote.Visible = false;
 					buttonConnect.Text = Helper.GetResourceString(Common.Constants.LOGIN_CAPTION_OPEN);
-					Helper.LoginToolWindow.Caption =
-						Helper.GetResourceString(Common.Constants.LOGIN_WINDOW_LOCAL_CAPTION);
 					PopulateLocalRecentConnections();
 				}
 				else
@@ -349,12 +389,9 @@ namespace OMControlLibrary
 					textBoxPort.Clear();
 					textBoxUserName.Clear();
 					textBoxPassword.Clear();
-
 					panelLocal.Visible = false;
 					panelRemote.Visible = true;
 					buttonConnect.Text = Helper.GetResourceString(Common.Constants.LOGIN_CAPTION_CONNECT);
-					Helper.LoginToolWindow.Caption =
-						Helper.GetResourceString(Common.Constants.LOGIN_WINDOW_REMOTE_CAPTION);
 					PopulateRemoteRecentConnections();
 					m_cmdBarCtrlBackup.Enabled = false;
 					m_cmdBarCtrlCreateDemoDb.Enabled = true;
@@ -363,11 +400,7 @@ namespace OMControlLibrary
 				{
 					comboBoxFilePath.SelectedIndex = 1;
 				}
-				else if (comboBoxFilePath.Items.Count == 1)
-				{
-					comboBoxFilePath.Items.Clear();
-					toolTipForTextBox.RemoveAll();
-				}
+				
 			}
 			catch (Exception oEx)
 			{
@@ -405,7 +438,8 @@ namespace OMControlLibrary
 				{
 					if (comboBoxFilePath.Items.Count > 0)
 					{
-						comboBoxFilePath.SelectedIndex = 1;
+						comboBoxFilePath.SelectedText = Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT);  
+						//comboBoxFilePath.SelectedIndex = 1;
 					}
 				}
 			}
@@ -424,7 +458,8 @@ namespace OMControlLibrary
 			string exceptionString = string.Empty;
 			try
 			{
-				if (((Button)sender).Text.Equals(Helper.GetResourceString(Common.Constants.LOGIN_CAPTION_OPEN))) // Local Connection
+				
+				if(radioButtonLocal.Checked )
 				{
 
 					if (!(Validations.ValidateLocalLoginParams(ref comboBoxFilePath, ref textBoxConnection)))
@@ -454,12 +489,10 @@ namespace OMControlLibrary
 				}
 				try
 				{
-					buttonConnect.Enabled = false;
 					currRecentQueries = new RecentQueries(conparam);
 					RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
 					if (tempRecentQueries != null)
 						currRecentQueries = tempRecentQueries;
-                   
  
 					exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
 				}
@@ -467,26 +500,35 @@ namespace OMControlLibrary
 				{
 					LoggingHelper.ShowMessage(oEx);
 				}
+				
 				if (exceptionString == string.Empty)
 				{
 					dbInteraction.SetCurrentRecentConnection(currRecentQueries);
 					dbInteraction.SaveRecentConnection(currRecentQueries);
 					AfterSuccessfullyConnected();
+					
+					Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
+
 					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
 					ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;
-					CreateQueryBuilderToolWindow();
 
 					PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
 					PropertyPaneToolWin.PropWindow.Visible = true;
-					if (Helper.LoginToolWindow.AutoHides)
-					{
-						Helper.LoginToolWindow.AutoHides = false;
-					}
-					Helper.LoginToolWindow.Visible = false;
+
+					CreateQueryBuilderToolWindow();
+
+					
+					
+					
+  					
+					
+					
+					
+					
 				}
 				else
 				{
-					buttonConnect.Enabled = true;
+					//buttonConnect.Enabled = true;
 					textBoxConnection.Clear();
 					MessageBox.Show(exceptionString,
 						Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
@@ -539,7 +581,7 @@ namespace OMControlLibrary
 					{
 						textBoxConnection.Clear();
 					}
-
+					
 				}
 			}
 			catch (Exception oEx)
@@ -547,6 +589,9 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
+		
+
 		#endregion
 
 		#region comboBoxFilePath_DropdownItemSelected
@@ -575,9 +620,9 @@ namespace OMControlLibrary
 				textBoxConnection.Clear();
 				textBoxPassword.Clear();
 				textBoxUserName.Clear();
+
 				Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
-				//FIXME: Find a way to get rid of the dependency on Caption being equal to "Close"
-				Helper.LoginToolWindow.Caption = "Closed";
+
 			}
 			catch (Exception oEx)
 			{
@@ -618,6 +663,7 @@ namespace OMControlLibrary
 			if (e.Modifiers == Keys.Control)
 				e.Handled = true;
 		}
+
+		
 	}
-	#endregion
 }

@@ -219,9 +219,12 @@ namespace OMControlLibrary
 
 		internal void SelectItem(OMETabStripItem tabItem)
 		{
-			tabItem.Dock = DockStyle.Fill;
-			tabItem.Visible = true;
-			tabItem.Selected = true;
+			if (tabItem != null)
+			{
+				tabItem.Dock = DockStyle.Fill;
+				tabItem.Visible = true;
+				tabItem.Selected = true;
+			}
 		}
 
 		internal void UnSelectItem(OMETabStripItem tabItem)
@@ -856,7 +859,7 @@ namespace OMControlLibrary
 				SelectItem(selectedItem);
 				Invalidate();
 
-				if (!selectedItem.IsDrawn)
+				if (selectedItem!=null && !selectedItem.IsDrawn)
 				{
 					Items.MoveTo(0, selectedItem);
 					Invalidate();

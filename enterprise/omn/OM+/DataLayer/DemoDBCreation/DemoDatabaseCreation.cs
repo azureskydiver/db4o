@@ -59,6 +59,7 @@ namespace OManager.DataLayer.DemoDBCreation
                     Children ch1 = new Children();
                     ch1.Child_name = "Baby " + i;
                     ch1.Child_no = 1;
+                    ch1.DateOfBirth = DateTime.Now;
                     c1.Pilot.Children = new Children();
                     c1.Pilot.Children = ch1;
                     c1.Pilot.Dbl = i / 3;

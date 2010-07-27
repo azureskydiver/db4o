@@ -8,7 +8,7 @@
     <ProjectGuid>{F173E7B7-3117-4EE6-8BEC-F33DC4C25749}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OMPlus</RootNamespace>
+    <RootNamespace>OManager</RootNamespace>
     <AssemblyName>OMPlus</AssemblyName>
     <StartupObject>
     </StartupObject>
@@ -85,12 +85,11 @@
     <Compile Include="DataLayer\Reflection\Reflection.cs" />
     <Compile Include="DataLayer\Reflection\TypeImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resource.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resource.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -127,8 +126,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\treeview_class.gif" />
-    <Content Include="Resources\treeview_collection.gif" />
-    <Content Include="Resources\treeview_primitive.gif" />
+    <None Include="Resources\treeview_class.gif" />
+    <None Include="Resources\treeview_collection.gif" />
+    <None Include="Resources\treeview_primitive.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

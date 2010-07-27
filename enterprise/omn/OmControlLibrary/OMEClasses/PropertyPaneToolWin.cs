@@ -18,7 +18,7 @@ namespace OMControlLibrary
 				if (propWindow == null)
 				{
 					CreatePropertiesPaneToolWindow(false);
-					PropertyPaneToolWin.propWindow.Visible = false;
+					propWindow.Visible = false;
 				}
 				return propWindow;
 			}
@@ -33,38 +33,26 @@ namespace OMControlLibrary
 			try
 			{
 				const string className = Common.Constants.CLASS_NAME_PROPERTIES;
-				string caption;
 				const string guidpos = Common.Constants.GUID_PROPERTIES;
 
-				if (DbDetails)
-				{
-					caption = Helper.GetResourceString(Common.Constants.PROPERTIES_TAB_DATABASE_CAPTION);
-				}
-				else
-				{
-					caption = Helper.ClassName + Helper.GetResourceString(Common.Constants.PROPERTIES_TAB_CAPTION);
-				}
+				string caption = Helper.GetResourceString(Common.Constants.PROPERTIES_TAB_DATABASE_CAPTION);
+				PropWindow = ViewBase.CreateToolWindow(className, caption, guidpos);
+				Helper.SetTabPicture(PropWindow, Common.Constants.DB4OICON);
 				
-				object ctlobj;
-				PropWindow = ViewBase.CreateToolWindow(className, caption, guidpos, out ctlobj);
-				SetTabPicture(PropWindow, Common.Constants.DB4OICON);
-
-				//if (PropWindow.AutoHides)
+				if (PropWindow.AutoHides)
 				{
 					PropWindow.AutoHides = false;
 				}
 				PropWindow.Visible = true;
 			}
+
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
 
-		private static void SetTabPicture(Window window, string iconResource)
-		{
-			window.SetTabPicture(Helper.GetResourceImage(iconResource));
-		}
+		
 	}
 
 	public class ObjectBrowserToolWin
@@ -91,13 +79,14 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				object ctlobj;
-				objBrowserWindow = ViewBase.CreateToolWindow(
-										Common.Constants.CLASS_NAME_OBJECTBROWSER, 
-										Helper.GetResourceString(Common.Constants.DB4O_BROWSER_CAPTION), 
-										Common.Constants.GUID_OBJECTBROWSER, out ctlobj);
+					objBrowserWindow = ViewBase.CreateToolWindow(
+											Common.Constants.CLASS_NAME_OBJECTBROWSER,
+											Helper.GetResourceString(Common.Constants.DB4O_BROWSER_CAPTION),
+											Common.Constants.GUID_OBJECTBROWSER);
 
-				objBrowserWindow.SetTabPicture(Helper.GetResourceImage(Common.Constants.DB4OICON));
+                    Helper.SetTabPicture(objBrowserWindow, Common.Constants.DB4OICON);
+					//objBrowserWindow.SetTabPicture(Helper.GetResourceImage(Common.Constants.DB4OICON));
+				
 				if (objBrowserWindow.AutoHides)
 				{
 					objBrowserWindow.AutoHides = false;

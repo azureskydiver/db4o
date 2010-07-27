@@ -29,22 +29,23 @@ namespace OManager.DataLayer.Modal
 
         public bool IsIndexed()
         {
-            try
-            {
-                IStoredClass storedClass = objectContainer.Ext().StoredClass(m_classname);
-                if (null == storedClass)
-                {
+			try
+			{
+				IStoredClass storedClass = objectContainer.Ext().StoredClass(m_classname);
+				if (null == storedClass)
 					return false;
-				}
 
 				IStoredField field = DataLayerCommon.GetDeclaredStoredFieldInHeirarchy(storedClass, m_fieldname);
+				if (field == null)
+					return false;
+
 				return field.HasIndex();
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return false;
-            }
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.HandleException(oEx);
+				return false;
+			}
         }
 
         public  bool IsPrimitive()

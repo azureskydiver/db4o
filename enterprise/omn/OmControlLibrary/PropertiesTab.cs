@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using EnvDTE;
 using OManager.BusinessLayer.Login;
@@ -255,32 +256,41 @@ namespace OMControlLibrary
 				CheckForIllegalCrossThreadCalls = false;
 				dbGridViewProperties.Dock = DockStyle.Fill;
 
-				tabItemObjectProperties.Visible = instance.m_showObjectPropertiesTab;
-				if (!tabItemClassProperties.Visible)
-					tabItemClassProperties.Visible = instance.m_showClassProperties;
+				LoadProperties();
 
-				if (Helper.Tab_index.Equals(0))
-				{
-					DisplayDatabaseProperties();
-				}
-				else if (Helper.Tab_index.Equals(1))
-				{
-					DisplayClassProperties();
-				}
-				else if (Helper.Tab_index.Equals(2))
-				{
-					DisplayObjectProperties();
-				}
-
-				tabStripProperties.SelectedItem = tabStripProperties.Items[Helper.Tab_index];
-
-				instance = this;
+				
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
+		private void LoadProperties()
+		{
+			tabItemObjectProperties.Visible = instance.m_showObjectPropertiesTab;
+			if (!tabItemClassProperties.Visible)
+				tabItemClassProperties.Visible = instance.m_showClassProperties;
+
+			if (Helper.Tab_index.Equals(0))
+			{
+				DisplayDatabaseProperties();
+			}
+			else if (Helper.Tab_index.Equals(1))
+			{
+				DisplayClassProperties();
+			}
+			else if (Helper.Tab_index.Equals(2))
+			{
+				DisplayObjectProperties();
+			}
+
+			tabStripProperties.SelectedItem = tabStripProperties.Items[Helper.Tab_index];
+
+			instance = this;
+		}
+
+		
 
 		private void tabStripProperties_TabStripItemSelectionChanged(TabStripItemChangedEventArgs e)
 		{
@@ -348,23 +358,7 @@ namespace OMControlLibrary
 					saveIndexInstance.Indexed.Add(boolValue);
 				}
 
-				foreach (Window w in ApplicationObject.ToolWindows.DTE.Windows)
-				{
-					if (Helper.HashClassGUID != null)
-					{
-						IDictionaryEnumerator eNum = Helper.HashClassGUID.GetEnumerator();
-						while (eNum.MoveNext())
-						{
-							string winId = w.ObjectKind.ToLower();
-							string enumwinId = eNum.Value.ToString().ToLower();
-							if (winId == enumwinId)
-							{
-								w.Close(vsSaveChanges.vsSaveChangesNo);
-								break;
-							}
-						}
-					}
-				}
+				CloseQueryResultToolWindows();
 				
 				ConnParams conparam = dbInteraction.GetCurrentRecentConnection().ConnParam;
 				dbInteraction.CloseCurrDb();
@@ -389,6 +383,27 @@ namespace OMControlLibrary
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
+			}
+		}
+
+		private void CloseQueryResultToolWindows()
+		{
+			foreach (KeyValuePair<Window, bool> entry in PluginWindows)
+			{
+				switch(entry.Key.Caption  )
+				{
+					case Constants.QUERYBUILDER:
+					case Constants.DB4OPROPERTIES :
+					case Constants.DB4OBROWSER:
+						break;
+					default:
+						if (entry.Value)
+						{
+							entry.Key.Close(vsSaveChanges.vsSaveChangesNo);
+						}
+						break;
+				}
+					
 			}
 		}
 

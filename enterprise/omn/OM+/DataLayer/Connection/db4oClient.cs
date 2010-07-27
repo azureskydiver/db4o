@@ -1,6 +1,8 @@
 using System;
 using System.Configuration;
 using Db4objects.Db4o;
+using Db4objects.Db4o.CS;
+using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Config;
 using OManager.BusinessLayer.Login;
@@ -50,11 +52,11 @@ namespace OManager.DataLayer.Connection
 			get
 			{
 				exceptionConnection = "";
-				Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.Lazy);
-				Db4oFactory.Configure().ActivationDepth(1);
-				Db4oFactory.Configure().AllowVersionUpdates(true);
-				Db4oFactory.Configure().BlockSize(8);
-			    Db4oFactory.Configure().Add(new JavaSupport());
+				//Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.Lazy);
+				//Db4oFactory.Configure().ActivationDepth(1);
+				//Db4oFactory.Configure().AllowVersionUpdates(true);
+				//Db4oFactory.Configure().BlockSize(8);
+				//Db4oFactory.Configure().Add(new JavaSupport());
                
 				try
 				{
@@ -67,15 +69,20 @@ namespace OManager.DataLayer.Connection
 							// Retrieve an objectContainer for this client. 
 							if (conn.Host != null)
 							{
-								objContainer = Db4oFactory.OpenClient(conn.Host, conn.Port, conn.UserName, conn.PassWord);
+								IClientConfiguration config = Db4oClientServer.NewClientConfiguration();
+								ConfigureCommon(config.Common);
+
+								objContainer = Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord);
 								typeResolver = new TypeResolver(objContainer.Ext().Reflector());
 							}
 							else
 							{
                                 if (File.Exists(conn.Connection))
                                 {
+									IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
+									ConfigureCommon(config.Common);
 
-                                    objContainer = Db4oFactory.OpenFile(conn.Connection);
+									objContainer = Db4oEmbedded.OpenFile(config,conn.Connection);
                                     typeResolver = new TypeResolver(objContainer.Ext().Reflector());
                                 }
                                 else
@@ -115,7 +122,17 @@ namespace OManager.DataLayer.Connection
 			}
 
 		}
-        private static string GetTypeName(Type type)
+
+		protected static void ConfigureCommon(ICommonConfiguration config)
+		{
+			config.Queries.EvaluationMode(QueryEvaluationMode.Lazy);
+			config.ActivationDepth = 1;
+			config.AllowVersionUpdates = true ;
+			config.Add(new JavaSupport());
+		}
+
+
+		private static string GetTypeName(Type type)
         {
             return type.FullName + ", " + type.Assembly.GetName().Name;
         }
@@ -125,6 +142,7 @@ namespace OManager.DataLayer.Connection
 			{
 				try
 				{
+					RecentConnFile = GetOMNConfigdbPath();
 					if (userConfigDatabase == null && RecentConnFile != null)
 					{
 						Db4oFactory.Configure().UpdateDepth(int.MaxValue);
@@ -192,6 +210,12 @@ namespace OManager.DataLayer.Connection
 			Db4oFactory.Configure().LockDatabaseFile(false);
 
 			return Db4oFactory.OpenFile(path);
+		}
+
+		private static string GetOMNConfigdbPath()
+		{
+			string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			return Path.Combine(applicationDataPath, Path.Combine("db4objects", Path.Combine("ObjectManagerEnterprise", "ObjectManagerPlus.yap")));
 		}
 	}
 }

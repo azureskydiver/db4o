@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
+using EnvDTE80;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
@@ -12,17 +14,19 @@ using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
+using Constants = OMControlLibrary.Common.Constants;
 
 namespace OMControlLibrary
 {
-    public partial class ObjectBrowser
+	[ComVisible(true)]
+    public partial class ObjectBrowser : ILoadData 
     {
         #region Private Member Variables
 
         RecentQueries recConnection;
         dbInteraction dbInteractionObject;
         dbTreeView dbAssemblyTreeView;
-
+	
         internal dbTreeView DbAssemblyTreeView
         {
             get { return dbAssemblyTreeView; }
@@ -50,11 +54,14 @@ namespace OMControlLibrary
         private const string CONST_COMMA_STRING = ",";
         private const string CONST_FILTER_DEFAULT_STRING = "<Search>";
 
-        #endregion
+        bool isrunning = true;
+		BackgroundWorker backgroundWorkerToRunQuery;
+		long[] objectid; 
+		
+		#endregion
 
         #region Singleton for Object Browser
         private static ObjectBrowser instance;
-
         public static ObjectBrowser Instance
         {
             get
@@ -66,7 +73,10 @@ namespace OMControlLibrary
                 return instance;
             }
         }
-        #endregion
+
+    	
+
+    	#endregion
 
         #region Constructor
         public ObjectBrowser()
@@ -112,54 +122,13 @@ namespace OMControlLibrary
                 OMETrace.WriteFunctionStart();
                 CheckForIllegalCrossThreadCalls = false;
                 SetLiterals();
-                Helper.ClassName = null;
-                dbInteractionObject = new dbInteraction();
+            	InitalizeBackgroundWorker();
+				InitializeAssemblyTreeView();
+				Initalizedbtreeviewobject();
+				SetObjectBrowserImages();
+				LoadAppropriatedata();
 
-                storedclasses = dbInteractionObject.FetchAllStoredClasses();
 
-                if (storedclasses != null)
-                    classCount = storedclasses.Count;
-
-                //Assembly view disabled for java db. I don't know any other way
-                ICollection keysCollection= storedclasses.Keys;
-                foreach (string str in keysCollection )
-                {
-                    if(!str.Contains( ","))
-                    {
-                        toolStripButtonAssemblyView.Enabled = false;
-                        break;
-                    }
-                }
-
-                InitializeAssemblyTreeView();
-
-                //Set Treeview Image List
-                dbtreeviewObject.SetTreeViewImages();
-
-                //Populate the TreeView
-                dbtreeviewObject.AddFavouritFolderFromDatabase();
-                dbtreeviewObject.AddTreeNode(storedclasses, null);
-
-                SetObjectBrowserImages();
-
-                SelectFirstClassNode();
-
-                dbtreeviewObject.OnContextMenuItemClicked += TreeView_OnContextMenuItemClicked;
-                dbtreeviewObject.MouseDown += TreeView_MouseDown;
-
-                propertiesTab = PropertiesTab.Instance;
-                if (classCount == 0)
-                {
-                    propertiesTab.ShowClassProperties = false;
-                    toolStripButtonAssemblyView.Enabled = toolStripButtonFlatView.Enabled = false;
-                }
-                recConnection = dbInteraction.GetCurrentRecentConnection();
-                PopulateSearchStrings();
-
-                dbtreeviewObject.Focus();
-                OMETrace.WriteFunctionEnd();
-                toolStripButtonFlatView.Checked = true;
-                instance = this;
             }
             catch (Exception oEx)
             {
@@ -167,41 +136,151 @@ namespace OMControlLibrary
             }
         }
 
-        private void PopulateSearchStrings()
-        {
-            long TimeforSearhStringCreation =
-                dbInteraction.GetTimeforSearchStringCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
-            long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
-            if (TimeforSearhStringCreation != 0)
-            {
-                if (TimeforSearhStringCreation > TimeforDbCreation)
-                {
-                    listSearchStrings = dbInteraction.GetSearchString(recConnection.ConnParam);
-                    FillFilterComboBox(listSearchStrings);
-                    toolStripComboBoxFilter.SelectedIndex = 0;
-                }
-                else
-                {
+		private void Initalizedbtreeviewobject()
+		{
+			dbtreeviewObject.SetTreeViewImages();
+			dbtreeviewObject.OnContextMenuItemClicked += TreeView_OnContextMenuItemClicked;
+			dbtreeviewObject.MouseDown += TreeView_MouseDown;
+		}
 
-                    dbInteraction.RemoveSearchString(dbInteraction.GetCurrentRecentConnection().ConnParam);
-                    AddSearchItem();
-                    toolStripComboBoxFilter.SelectedIndex = 0;
-                }
-            }
-            else
-            {
-                AddSearchItem();
-                toolStripComboBoxFilter.SelectedIndex = 0;
-            }
-        }
+		private void InitalizeBackgroundWorker()
+		{
+			backgroundWorkerToRunQuery = new BackgroundWorker();
+			backgroundWorkerToRunQuery.WorkerReportsProgress = true;
+			backgroundWorkerToRunQuery.WorkerSupportsCancellation = true;
+			backgroundWorkerToRunQuery.ProgressChanged += BackgroundWorkerToRunQuery_ProgressChanged;
+			backgroundWorkerToRunQuery.DoWork += BackgroundWorkerToRunQuery_DoWork;
+			backgroundWorkerToRunQuery.RunWorkerCompleted += BackgroundWorkerToRunQuery_RunWorkerCompleted;
+		}
 
-        private void AddSearchItem()
-        {
-            toolStripComboBoxFilter.Items.Clear();
-            toolStripComboBoxFilter.Items.Add(CONST_FILTER_DEFAULT_STRING);
-        }
+		
+		
+		public void LoadAppropriatedata()
+		{
+			DefaultSetting();
 
-        private void SelectFirstClassNode()
+			Helper.ClassName = null;
+			dbInteractionObject = new dbInteraction();
+
+			storedclasses = dbInteractionObject.FetchAllStoredClasses();
+
+			if (storedclasses != null)
+				classCount = storedclasses.Count;
+
+			//Assembly view disabled for java db. I don't know any other way
+			ICollection keysCollection = storedclasses.Keys;
+			foreach (string str in keysCollection)
+			{
+				if (!str.Contains(","))
+				{
+					toolStripButtonAssemblyView.Enabled = false;
+					break;
+				}
+			}
+
+			//Populate the TreeView
+			dbtreeviewObject.AddFavouritFolderFromDatabase();
+			dbtreeviewObject.AddTreeNode(storedclasses, null);
+			SelectFirstClassNode();
+			propertiesTab = PropertiesTab.Instance;
+			if (classCount == 0)
+			{
+				propertiesTab.ShowClassProperties = false;
+				toolStripButtonAssemblyView.Enabled = toolStripButtonFlatView.Enabled = false;
+			}
+			recConnection = dbInteraction.GetCurrentRecentConnection();
+			PopulateSearchStrings();
+
+			dbtreeviewObject.Focus();
+			dbtreeviewObject.Refresh();
+			OMETrace.WriteFunctionEnd();
+			
+			instance = this;
+		}
+
+		private void DefaultSetting()
+		{
+			dbtreeviewObject.Nodes.Clear();
+			dbAssemblyTreeView.Nodes.Clear();
+			dbAssemblyTreeView.Visible = false;
+			dbtreeviewObject.Visible = true;
+			toolStripButtonFolder.Enabled = true;
+			toolStripButtonFlatView.Enabled = true;
+			toolStripButtonAssemblyView.Enabled = true;
+			toolStripButtonFlatView.Checked = true;
+			toolStripButtonAssemblyView.Checked = false;
+		}
+
+		void AttachNecessaryEvents()
+    	{
+			Events2 eventsSource = (Events2)ApplicationObject.Events;
+			WindowVisibilityEvents events = eventsSource.get_WindowVisibilityEvents(null);
+			events.WindowHiding += new _dispWindowVisibilityEvents_WindowHidingEventHandler(events_WindowHiding);
+    	}
+
+		void events_WindowHiding(Window Window)
+		{
+			Window win = ViewBase.GetWindow("db4o Browser");
+			ViewBase.PluginWindows[win] = false;
+		}
+
+    	
+		private static bool GetWindow(string caption)
+		{
+			foreach (KeyValuePair<Window, bool> entry in PluginWindows)
+			{
+				if (caption == entry.Key.Caption)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+
+		private void PopulateSearchStrings()
+		{
+			if (toolStripComboBoxFilter == null)
+				toolStripComboBoxFilter = new ToolStripComboBox();
+
+			long TimeforSearhStringCreation =
+				dbInteraction.GetTimeforSearchStringCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
+			long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
+			if (TimeforSearhStringCreation != 0)
+			{
+				if (TimeforSearhStringCreation > TimeforDbCreation)
+				{
+					listSearchStrings = dbInteraction.GetSearchString(recConnection.ConnParam);
+					FillFilterComboBox(listSearchStrings);
+
+				}
+				else
+				{
+
+					dbInteraction.RemoveSearchString(dbInteraction.GetCurrentRecentConnection().ConnParam);
+					AddSearchItem();
+
+				}
+			}
+			else
+			{
+				AddSearchItem();
+
+			}
+			
+				toolStripComboBoxFilter.SelectedIndex = 0;
+			
+		}
+
+		private void AddSearchItem()
+		{
+
+			toolStripComboBoxFilter.Items.Clear();
+			toolStripComboBoxFilter.Items.Add(CONST_FILTER_DEFAULT_STRING);
+
+		}
+
+    	private void SelectFirstClassNode()
         {
             if (dbtreeviewObject.Nodes.Count == 0)
                 return;
@@ -547,7 +626,7 @@ namespace OMControlLibrary
         {
             try
             {
-                queryBuilder = QueryBuilder.Instance;
+				queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
                 switch (e.Tag.ToString())
                 {
                     case Common.Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS:
@@ -558,7 +637,7 @@ namespace OMControlLibrary
                         {
                             AddToAttributeList(queryBuilder.DataGridViewAttributes, (TreeNode)e.Data);
 
-                            ApplicationObject.ToolWindows.DTE.Windows.Item("Query Builder").Activate();
+							ApplicationObject.ToolWindows.DTE.Windows.Item(Constants.QUERYBUILDER).Activate();
                         }
                         break;
                     case Common.Constants.CONTEXT_MENU_EXPRESSION_GROUP:
@@ -575,11 +654,11 @@ namespace OMControlLibrary
                         bool rowAdded = datagridObject.AddToQueryBuilder((TreeNode)e.Data, queryBuilder);
                         if (rowAdded)
                         {
-                            queryBuilder = QueryBuilder.Instance;
+							queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
                             queryBuilder.EnableRunQuery = true;
                         }
 
-                        ApplicationObject.ToolWindows.DTE.Windows.Item("Query Builder").Activate();
+						ApplicationObject.ToolWindows.DTE.Windows.Item(Constants.QUERYBUILDER).Activate();
                         break;
 
                     case "Rename":
@@ -588,13 +667,14 @@ namespace OMControlLibrary
                         break;
 
                     case "Delete Folder":
-                        FavouriteFolder Fav = new FavouriteFolder(null, dbtreeviewObject.SelectedNode.Text);
+						FavouriteFolder Fav = new FavouriteFolder(null, ((TreeNode)e.Data).Text);
                         dbInteraction.UpdateFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
-                        dbtreeviewObject.Nodes.Remove(dbtreeviewObject.SelectedNode);
+						dbtreeviewObject.Nodes.Remove((TreeNode)e.Data);
                         break;
                     case "Delete Class":
-                        TreeNode tNode = dbtreeviewObject.SelectedNode;
-                        TreeNode parentNode = dbtreeviewObject.SelectedNode.Parent;
+						TreeNode tNode = (TreeNode)e.Data;
+						TreeNode parentNode = ((TreeNode)e.Data).Parent ;
+						
                         if (tNode != null && parentNode != null)
                         {
 
@@ -635,7 +715,7 @@ namespace OMControlLibrary
                 //If field is not selected and Query Group has no clauses then reset the base class.
                 if (datagridAttributeList.Rows.Count == 0)
                 {
-                    queryBuilder = QueryBuilder.Instance;
+					queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
                     queryBuilder.CheckForDataGridViewQueryRows();
                 }
 
@@ -678,7 +758,7 @@ namespace OMControlLibrary
                 if (e.Button == MouseButtons.Right)
                 {
                     TreeNode treenode;
-                    queryBuilder = QueryBuilder.Instance;
+					queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
                     List<string> list;
                     if (dbtreeviewObject != null && dbtreeviewObject.Visible)
                     {
@@ -747,128 +827,146 @@ namespace OMControlLibrary
         /// </summary>
         private void ShowObjectsForAClass()
         {
-            try
-            {
-                queryBuilder = QueryBuilder.Instance;
+			try
+			{
+				queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
 
-                listQueryAttributes = queryBuilder.GetSelectedAttributes();
+				listQueryAttributes = queryBuilder.GetSelectedAttributes();
 
-                //Only Set BaseClass with current class
-                if (toolStripButtonAssemblyView.Checked)
-                {
-                    Helper.BaseClass = dbAssemblyTreeView.SelectedNode.Parent != null ? dbAssemblyTreeView.SelectedNode.Text : Helper.ClassName;
-                }
-                else
-                {
-                    Helper.BaseClass = dbtreeviewObject.SelectedNode.Parent != null ? dbtreeviewObject.SelectedNode.Text : Helper.ClassName;
-                }
+				//Only Set BaseClass with current class
+				if (toolStripButtonAssemblyView.Checked)
+				{
+					Helper.BaseClass = dbAssemblyTreeView.SelectedNode.Parent != null
+					                   	? dbAssemblyTreeView.SelectedNode.Text
+					                   	: Helper.ClassName;
+				}
+				else
+				{
+					Helper.BaseClass = dbtreeviewObject.SelectedNode.Parent != null
+					                   	? dbtreeviewObject.SelectedNode.Text
+					                   	: Helper.ClassName;
+				}
 
 
-                //Prepare query for View Objects
-                omQuery = new OMQuery(Helper.BaseClass, DateTime.Now);
+				//Prepare query for View Objects
+				omQuery = new OMQuery(Helper.BaseClass, DateTime.Now);
 
-                if (Helper.HashTableBaseClass.Contains(Helper.BaseClass))
-                    omQuery.AttributeList = listQueryAttributes;
+				if (Helper.HashTableBaseClass.Contains(Helper.BaseClass))
+					omQuery.AttributeList = listQueryAttributes;
 
-                //Need to fectch attribute list in query result for same OMQuery
-                if (Helper.OMResultedQuery.Contains(omQuery.BaseClass))
-                {
-                    Helper.OMResultedQuery[omQuery.BaseClass] = omQuery;
-                }
-                else
-                {
-                    Helper.OMResultedQuery.Add(omQuery.BaseClass, omQuery);
-                }
+				//Need to fectch attribute list in query result for same OMQuery
+				if (Helper.OMResultedQuery.Contains(omQuery.BaseClass))
+				{
+					Helper.OMResultedQuery[omQuery.BaseClass] = omQuery;
+				}
+				else
+				{
+					Helper.OMResultedQuery.Add(omQuery.BaseClass, omQuery);
+				}
 
-                dbtreeviewObject.UpdateTreeNodeSelection(dbtreeviewObject.SelectedNode, toolStripButtonAssemblyView.Checked);
-                bw = new BackgroundWorker();
-                bw.WorkerReportsProgress = true;
-                bw.WorkerSupportsCancellation = true;
-                bw.ProgressChanged += bw_ProgressChanged;
-                bw.DoWork += bw_DoWork;
-                bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-                ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
-                bw.RunWorkerAsync();
+				dbtreeviewObject.UpdateTreeNodeSelection(dbtreeviewObject.SelectedNode, toolStripButtonAssemblyView.Checked);
 
-                for (double i = 1; i < 10000; i++)
-                {
-                    i++;
-                    if (bw.IsBusy)
-                        bw.ReportProgress((int)i * 100 / 10000);
 
-                    if (isrunning == false)
-                        break;
-                    if (i == 9999)
-                        i = 1;
-                }
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.ShowMessage(oEx);
-            }
+
+
+				ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
+				if (backgroundWorkerToRunQuery.IsBusy)
+					backgroundWorkerToRunQuery.CancelAsync();
+				else
+					backgroundWorkerToRunQuery.RunWorkerAsync(); 
+
+				isrunning = true;
+				
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.ShowMessage(oEx);
+			}
         }
 
 
         #region Background worker for showing all objects
 
-        static void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        static void BackgroundWorkerToRunQuery_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             ApplicationObject.StatusBar.Progress(true, "Running Query ... ", e.ProgressPercentage * 10, 10000);
 
         }
 
-        bool isrunning = true;
-        BackgroundWorker bw = new BackgroundWorker();
-        long[] objectid;
+        
 
-        void bw_DoWork(object sender, DoWorkEventArgs e)
+        void BackgroundWorkerToRunQuery_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            try
-            {
-                Instance.Enabled = false;
-                PropertiesTab.Instance.Enabled = false;
-                QueryBuilder.Instance.Enabled = false;
-                objectid = dbInteraction.ExecuteQueryResults(omQuery);
-                e.Result = objectid;
-                bw.ReportProgress(1000);
-                isrunning = false;
+			try
+			{
+				Instance.Enabled = false;
+				PropertiesTab.Instance.Enabled = false;
+				QueryBuilder.Instance.Enabled = false;
+				objectid = dbInteraction.ExecuteQueryResults(omQuery);
+				e.Result = objectid;
+				if (backgroundWorkerToRunQuery != null && backgroundWorkerToRunQuery.IsBusy)
+				{
+					for (int i = 0; i < 10000; i++)
+					{
+						if (backgroundWorkerToRunQuery.CancellationPending)
+						{
+							e.Cancel = true;
+							isrunning = false;
+							break;
+						}
+						backgroundWorkerToRunQuery.ReportProgress(i*100/10000);
+					}
+				}
 
-
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.ShowMessage(oEx);
-            }
+				isrunning = false;
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.ShowMessage(oEx);
+			}
 
 
         }
+		
 
-        void ClearStatusBar()
+		void ClearStatusBar()
         {
-            bw.CancelAsync();
-            bw = null;
+			if (backgroundWorkerToRunQuery != null)
+			{
+				backgroundWorkerToRunQuery.CancelAsync();
+				
+			}
+
             ApplicationObject.StatusBar.Clear();
             ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
         }
 
-        void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void BackgroundWorkerToRunQuery_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
             {
-                Helper.CreateQueryResultToolwindow(objectid);
-                //Refresh Object Browser window after runnig the query each time.
-                queryBuilder.ClearAllQueries();
-                Instance.Enabled = true;
-                PropertiesTab.Instance.Enabled = true;
-                QueryBuilder.Instance.Enabled = true;
-                isrunning = false;
-                bw.CancelAsync();
-                bw = null;
-                ApplicationObject.StatusBar.Clear();
-                ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
-                ApplicationObject.StatusBar.Text = "Query run successfully!";
-                ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
+				
+					Helper.CreateQueryResultToolwindow(objectid);
+					//Refresh Object Browser window after runnig the query each time.
+					queryBuilder.ClearAllQueries();
+					Instance.Enabled = true;
+					PropertiesTab.Instance.Enabled = true;
+					QueryBuilder.Instance.Enabled = true;
+					isrunning = false;
+					if (backgroundWorkerToRunQuery != null)
+					{
+						backgroundWorkerToRunQuery.CancelAsync();
+
+						
+						
+					}
+					ApplicationObject.StatusBar.Clear();
+					ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
+					ApplicationObject.StatusBar.Text = "Query run successfully!";
+					ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
+					
+				
             }
             catch (Exception oEx)
             {
@@ -906,7 +1004,7 @@ namespace OMControlLibrary
                 dbAssemblyTreeView.AfterExpand += dbtreeviewObject_AfterExpand;
                 dbAssemblyTreeView.OnContextMenuItemClicked += TreeView_OnContextMenuItemClicked;
                 dbAssemblyTreeView.MouseDown += TreeView_MouseDown;
-
+				
                 tableLayoutPanelObjectTreeView.Controls.Add(dbAssemblyTreeView, 0, 1);
             }
             catch (Exception oEx)
@@ -1203,6 +1301,8 @@ namespace OMControlLibrary
             dbtreeviewObject.AddFavoriteFolder();
         }
 
-    }
+
+		
+	}
     
 }

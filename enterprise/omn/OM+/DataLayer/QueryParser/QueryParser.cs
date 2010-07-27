@@ -122,28 +122,7 @@ namespace OManager.DataLayer.QueryParser
             }
         }
 
-        public void ToCheckQueryDirectly()
-        {
-            //Common.LogicalOperators groupOperator = Common.LogicalOperators.EMPTY;
-
-            //IQuery query1 = objectContainer.Query();
-            //IConstraint cn = query1.Constrain(clsDetails.GetType(OMQuery.BaseClass));
-            //IConstraint cn1 = query1.Descend("_pilot").Descend("_points").Constrain(0).Greater();
-            //IConstraint cn2 = query1.Descend("_pilot").Descend("dbl").Constrain(0).Greater();
-            //// IConstraint groupcn = cn1.And(cn2);
-            //// IConstraint cn2= query.Descend("_pilot").Descend("_name").Constrain("Vidisha")   ;
-            //IConstraint cn3 = query1.Descend("_pilot").Descend("single").Constrain(1).Greater();
-            //// IConstraint groupcn1 = cn3;
-            ////IConstraint cnx = cn2.And(cn3);
-            ////groupcn.And(groupcn1);  
-
-
-            //IObjectSet objSet1 = query1.Execute();
-
-            //objectContainer = Db4oClient.Client;
-            //IQuery query = objectContainer.Query(); 
-        }
-        
+      
         public IConstraint ApplyOperator(IConstraint cons, string db4oOperator)
         {
             try
