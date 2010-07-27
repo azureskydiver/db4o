@@ -20,7 +20,6 @@ import db4ounit.CodeBlock;
 import db4ounit.extensions.ExcludingReflector;
 import db4ounit.extensions.OptOutExcludingClassLoaderIssue;
 import db4ounit.extensions.fixtures.OptOutNetworkingCS;
-import db4ounit.extensions.util.ExcludingClassLoader;
 
 public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile implements OptOutNetworkingCS, OptOutExcludingClassLoaderIssue {
 	
@@ -39,7 +38,7 @@ public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile 
 	public void testDefrag() {
 		final Throwable e = Assert.expect(IllegalStateException.class, new CodeBlock() { public void run() throws Throwable {
 			final DefragmentConfig config = new DefragmentConfig(tempFile());
-			config.db4oConfig(configWith(new com.db4o.reflect.jdk.JdkReflector(new ExcludingClassLoader(getClass().getClassLoader(), Stack.class))));
+			config.db4oConfig(configWith(new com.db4o.reflect.jdk.JdkReflector(new db4ounit.extensions.util.ExcludingClassLoader(getClass().getClassLoader(), Stack.class))));
 			Defragment.defrag(config);
 		}});
 		Assert.isTrue(e.getMessage().indexOf("_fieldWithTypeHandler") >= 0, "Message should contain the offending field.");
