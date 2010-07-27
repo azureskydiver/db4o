@@ -8,7 +8,7 @@
 	<property name="dir.omn.dist" value="${dir.dist.dll}/omn" />
 	<property name="output.dir" value="bin" />
 
-	<target name="build-omn-standalone" depends="configure-net35, build-omn" description="Builds OMN">
+	<target name="build-omn-standalone" depends="configure-net2, build-omn" description="Builds OMN">
 	</target>
 	
 	<target name="build-omn" depends="properties, prepare-build" description="Builds OMN">
@@ -73,6 +73,7 @@
 					<filter token="db4o.version.dotted" value="${db4o.version.dotted}" />
 					<filter token="target.vs-year.version" value="${msbuild.target.platform}" />
 					<filter token="dir.omn.installer.script" value="${dir.omn.dist.src}/Installer"/>
+					<filter token="dir.omn.faq" value="${dir.omn.dist.src}/OMADDIN/FAQ"/>					
 					<filter token="target.vs-serial.version" value="${VSSerialVersion}" />
 				</filterset>
 		</copy>
