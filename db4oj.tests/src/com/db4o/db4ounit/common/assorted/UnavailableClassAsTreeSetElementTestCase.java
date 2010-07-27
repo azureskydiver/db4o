@@ -1,17 +1,18 @@
 package com.db4o.db4ounit.common.assorted;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
-import com.db4o.*;
+import com.db4o.ObjectSet;
 
-import db4ounit.*;
-import db4ounit.extensions.OptOutCtorIssue;
+import db4ounit.Assert;
+import db4ounit.extensions.OptOutExcludingClassLoaderIssue;
 
 /**
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class UnavailableClassAsTreeSetElementTestCase extends UnavailableClassTestCaseBase implements OptOutCtorIssue {
+public class UnavailableClassAsTreeSetElementTestCase extends UnavailableClassTestCaseBase implements OptOutExcludingClassLoaderIssue {
 	
 	public static class Item implements Comparable {
 		private int _value;
@@ -29,6 +30,7 @@ public class UnavailableClassAsTreeSetElementTestCase extends UnavailableClassTe
 		Set<Item> _items = new TreeSet<Item>();
 		
 		public Parent(Item... items) {
+			if (items != null)
 			for (Item item : items) {
 	            _items.add(item);
             }

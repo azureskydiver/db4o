@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class LongLinkedListTestCase extends AbstractDb4oTestCase implements OptOutStackOverflow {
+public class LongLinkedListTestCase extends AbstractDb4oTestCase {
 	
 	private static final int COUNT = 1000;
 	

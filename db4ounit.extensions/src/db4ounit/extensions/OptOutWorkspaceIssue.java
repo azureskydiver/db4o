@@ -2,6 +2,6 @@
 
 package db4ounit.extensions;
 
-// related to issue COR-1973
+//related to issue UNIT-31
 public interface OptOutWorkspaceIssue extends OptOutTemporary {
 }

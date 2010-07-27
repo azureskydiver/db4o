@@ -12,10 +12,11 @@ import com.db4o.monitoring.*;
 import com.db4o.query.Query;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class QueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration {
+public class QueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagementIssue {
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {

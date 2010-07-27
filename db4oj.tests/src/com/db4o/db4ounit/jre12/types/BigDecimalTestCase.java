@@ -7,7 +7,7 @@ import java.math.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class BigDecimalTestCase extends AbstractDb4oTestCase implements OptOutTemporary {
+public class BigDecimalTestCase extends AbstractDb4oTestCase implements OptOutBigMathIssue {
 	
 	public static void main(String[] args) {
 		new BigDecimalTestCase().runAll();

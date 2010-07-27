@@ -18,7 +18,7 @@ import db4ounit.extensions.OptOutTemporary;
  * for details.
  *
  */
-public class CustomReflectorTestCase implements TestCase, TestLifeCycle, OptOutTemporary {
+public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 
 	private static final String CAT_CLASS = "Cat";
 	private static final String[] CAT_FIELD_NAMES = new String[] { "name", "troubleMakingScore" };

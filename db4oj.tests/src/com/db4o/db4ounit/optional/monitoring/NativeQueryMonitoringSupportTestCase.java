@@ -8,10 +8,11 @@ import com.db4o.diagnostic.NativeQueryNotOptimized;
 import com.db4o.foundation.ByRef;
 import com.db4o.monitoring.*;
 import db4ounit.Assert;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
 import db4ounit.extensions.fixtures.CustomClientServerConfiguration;
 
 @decaf.Remove
-public class NativeQueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration {
+public class NativeQueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagementIssue {
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {

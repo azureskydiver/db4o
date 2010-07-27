@@ -8,10 +8,11 @@ import com.db4o.monitoring.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class ObjectLifecycleMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration {
+public class ObjectLifecycleMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagementIssue {
 	
 	public static class Item {
 		

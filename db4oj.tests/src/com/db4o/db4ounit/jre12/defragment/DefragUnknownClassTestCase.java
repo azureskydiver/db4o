@@ -20,7 +20,7 @@ import db4ounit.extensions.util.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class DefragUnknownClassTestCase extends TestWithTempFile implements OptOutTemporary {
+public class DefragUnknownClassTestCase extends TestWithTempFile implements OptOutExcludingClassLoaderIssue {
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(DefragUnknownClassTestCase.class).run();

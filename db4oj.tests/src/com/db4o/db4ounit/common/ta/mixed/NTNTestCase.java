@@ -2,15 +2,15 @@
 
 package com.db4o.db4ounit.common.ta.mixed;
 
-import com.db4o.db4ounit.common.ta.*;
+import com.db4o.db4ounit.common.ta.ItemTestCaseBase;
+import com.db4o.db4ounit.common.ta.LinkedList;
 
-import db4ounit.*;
-import db4ounit.extensions.OptOutStackOverflow;
+import db4ounit.Assert;
 
 /**
  * @exclude
  */
-public class NTNTestCase extends ItemTestCaseBase implements OptOutStackOverflow {
+public class NTNTestCase extends ItemTestCaseBase {
 	
 	public static void main(String[] args) {
 		new NTNTestCase().runAll();

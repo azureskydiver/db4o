@@ -20,7 +20,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			DeleteEnumTestCase.class,
-			EnumTestCase.class,
+			EnumTestSuite.class,
 			EnumUpdateTestCase.class,
 			SimpleEnumTestCase.class,
 			TAEnumsTestCase.class,

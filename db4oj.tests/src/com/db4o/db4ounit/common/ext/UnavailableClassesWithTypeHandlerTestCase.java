@@ -4,20 +4,25 @@
  */
 package com.db4o.db4ounit.common.ext;
 
-import java.util.*;
+import java.util.Stack;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.db4ounit.common.api.*;
-import com.db4o.defragment.*;
-import com.db4o.reflect.*;
+import com.db4o.Db4oEmbedded;
+import com.db4o.EmbeddedObjectContainer;
+import com.db4o.ObjectContainer;
+import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.db4ounit.common.api.TestWithTempFile;
+import com.db4o.defragment.Defragment;
+import com.db4o.defragment.DefragmentConfig;
+import com.db4o.reflect.Reflector;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
-import db4ounit.extensions.util.*;
+import db4ounit.Assert;
+import db4ounit.CodeBlock;
+import db4ounit.extensions.ExcludingReflector;
+import db4ounit.extensions.OptOutExcludingClassLoaderIssue;
+import db4ounit.extensions.fixtures.OptOutNetworkingCS;
+import db4ounit.extensions.util.ExcludingClassLoader;
 
-public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile implements OptOutNetworkingCS, OptOutCtorIssue {
+public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile implements OptOutNetworkingCS, OptOutExcludingClassLoaderIssue {
 	
 	public static class HolderForClassWithTypeHandler {
 		public HolderForClassWithTypeHandler(Stack stack) {
