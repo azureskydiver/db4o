@@ -16,12 +16,12 @@ public class ClassLevelFixtureTestSuite extends OpaqueTestSuiteBase {
 
 	@Override
 	protected void suiteSetUp() throws Exception {
-		_clazz.getMethod(SETUP_METHOD_NAME, null).invoke(null, null);
+		_clazz.getMethod(SETUP_METHOD_NAME, (Class)null).invoke(null, (Object[])null);
 	}
 
 	@Override
 	protected void suiteTearDown() throws Exception {
-		_clazz.getMethod(TEARDOWN_METHOD_NAME, null).invoke(null, null);
+		_clazz.getMethod(TEARDOWN_METHOD_NAME, (Class)null).invoke(null, (Object[])null);
 	}
 
 	public String label() {
