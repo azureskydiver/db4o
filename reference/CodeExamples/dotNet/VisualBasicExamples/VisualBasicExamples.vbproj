@@ -57,6 +57,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Db4o.NativeQueries.dll</HintPath>
     </Reference>
+    <Reference Include="Db4objects.Db4o.Optional, Version=8.0.156.14687, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Db4objects.Db4o.Optional.dll</HintPath>
+    </Reference>
     <Reference Include="Db4objects.Drs, Version=8.0.146.14426, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Drs.dll</HintPath>
@@ -169,6 +173,14 @@
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.vb" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.vb" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.vb" />
+    <Compile Include="Code\tuning\monitoring\CSMonitoring.vb" />
+    <Compile Include="Code\tuning\monitoring\DataObject.vb" />
+    <Compile Include="Code\tuning\monitoring\FreespaceMonitoring.vb" />
+    <Compile Include="Code\tuning\monitoring\InstallPerformanceCounters.vb" />
+    <Compile Include="Code\tuning\monitoring\IOMonitoring.vb" />
+    <Compile Include="Code\tuning\monitoring\ObjectLifecycleMonitoring.vb" />
+    <Compile Include="Code\tuning\monitoring\QueryMonitoring.vb" />
+    <Compile Include="Code\tuning\monitoring\ReferenceSystemMonitoring.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

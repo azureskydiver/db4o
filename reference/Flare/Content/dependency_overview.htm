@@ -14,15 +14,15 @@
         <area shape="rectangle" coords="247,277,404,296" href="#db4o-all" />
     </map>
     <map id="map2">
-        <area shape="rectangle" coords="231,-1,345,31" href="#net-db4o"/>
-        <area shape="rectangle" coords="395,108,545,139" href="#net-linq"/>
-        <area shape="rectangle" coords="186,249,365,286" href="#net-data"/>
-        <area shape="rectangle" coords="289,166,413,199" href="#net-cs"/>
-        <area shape="rectangle" coords="418,165,571,199" href="#net-optional"/>
-        <area shape="rectangle" coords="387,252,553,285" href="#net-cs-optional"/>
-        <area shape="rectangle" coords="-1,252,177,284" href="#net-nq"/>
-        <area shape="rectangle" coords="122,340,230,373" href="#net-tool"/>
-        <area shape="rectangle" coords="113,405,238,440" href="#net-tool-msbuild"/>
+        <area shape="rectangle" coords="231,-1,345,31" href="#net-db4o" />
+        <area shape="rectangle" coords="395,108,545,139" href="#net-linq" />
+        <area shape="rectangle" coords="186,249,365,286" href="#net-data" />
+        <area shape="rectangle" coords="289,166,413,199" href="#net-cs" />
+        <area shape="rectangle" coords="418,165,571,199" href="#net-optional" />
+        <area shape="rectangle" coords="387,252,553,285" href="#net-cs-optional" />
+        <area shape="rectangle" coords="-1,252,177,284" href="#net-nq" />
+        <area shape="rectangle" coords="122,340,230,373" href="#net-tool" />
+        <area shape="rectangle" coords="113,405,238,440" href="#net-tool-msbuild" />
     </map>
     <body>
         <h1>Dependency Overview</h1>
@@ -43,7 +43,7 @@
             <p>When you use the <a href="implementation_strategies/enhancement_tools.htm">compile-time optimization</a> instead of the runtime optimization, it also requires the Ant library. However when you do compile-time optimization, you don't need this jar and its dependencies at runtime.</p>
             <p>Note that the native queries work also without this jar in the classpath. However the queries cannot be optimized without this jar and will run a lot slower.</p>
             <h2><a name="db4o-optional"></a>db4o-X.XX-optional-javaX.jar</h2>
-            <p>This jar contains some additional features and functionality for db4o, like <a href="tuning/Runtime_Statistics.htm">monitoring capabilities</a>, <a href="implementation_strategies/type_handling/bigmath.htm">BigMath-support</a> and .NET support. It depends on the db4o-core jar.</p>
+            <p>This jar contains some additional features and functionality for db4o, like <a href="tuning/runtime_statistics.htm">monitoring capabilities</a>, <a href="implementation_strategies/type_handling/bigmath.htm">BigMath-support</a> and .NET support. It depends on the db4o-core jar.</p>
             <h2><a name="db4o-cs-optional"></a>db4o-X.XX-cs.optional-javaX.jar</h2>
             <p>This jar contains additional features for the client-server-mode, like <a href="client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm">SSL</a> and monitoring support. It depends on the db4o-cs, db4o-optional and the db4o-core jar.</p>
             <h2><a name="db4o-ta"></a>db4o-X.XX-taj-javaX.jar</h2>
@@ -67,7 +67,7 @@
             <h2><a name="net-data"></a>Db4objects.Db4o.Data.Services.dll</h2>
             <p>This assembly contains the ADO.NET Data Services implementation for db4o. It depends on the Db4object.Db4o.dll assembly. While this assembly doesn't depend on the Db4object.Db4o.Linq.dll, you still need that assembly for the ADO.NET Data Services LINQ query support.</p>
             <h2><a name="net-optional"></a>Db4objects.Db4o.Optional.dll</h2>
-            <p>This assembly contains some additional features and functionality for db4o, like <a href="tuning/Runtime_Statistics.htm">monitoring capabilities</a> and Java support.</p>
+            <p>This assembly contains some additional features and functionality for db4o, like <a href="tuning/runtime_statistics.htm">monitoring capabilities</a> and Java support.</p>
             <h2><a name="net-cs-optional"></a>Db4objects.Db4o.CS.Optional.dll</h2>
             <p>This assembly contains some additional features and functionality for the db4o client server support. Like <a href="client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm">SSL</a> and monitoring capabilities. It depends on the Db4objects.Db4o.dll, Db4objects.Db4o.CS.dll, Db4objects.Db4o.Optional.dll and the Db4objects.Db4o.LINQ.dll assembly. </p>
             <h2><a name="net-nq"></a>Db4objects.Db4o.NativeQueries.dll</h2>
