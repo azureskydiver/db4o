@@ -15,10 +15,10 @@ import com.db4o.db4ounit.optional.monitoring.*;
 import com.db4o.ext.*;
 import com.db4o.monitoring.*;
 
-import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagement;
 
 @decaf.Ignore
-public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile implements OptOutNotSupportedJavaxManagementIssue {
+public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile implements OptOutNotSupportedJavaxManagement {
 
 	protected static class Item {
 		public String _name;

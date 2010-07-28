@@ -9,12 +9,12 @@ import com.db4o.internal.slots.*;
 import com.db4o.monitoring.*;
 
 import db4ounit.*;
-import db4ounit.extensions.OptOutNotSupportedJavaxManagementIssue;
+import db4ounit.extensions.OptOutNotSupportedJavaxManagement;
 import db4ounit.extensions.fixtures.*;
 
 
 @decaf.Remove
-public class FreespaceMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagementIssue {
+public class FreespaceMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagement {
 	
 	public static class Item{
 		
