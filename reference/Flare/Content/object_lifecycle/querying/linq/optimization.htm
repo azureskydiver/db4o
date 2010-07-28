@@ -23,7 +23,7 @@ Without Persistent Classes</a>. </p>
         <p> In Visual Studio, you can see a message in the debugger-output for each unoptimized query. First open the debug output window (Debug-&gt;Windows-&gt;Output). Then your application. A query which cannot be optimized will produce this message:</p>
         <p>'A first chance exception of type 'Db4objects.Db4o.Linq.QueryOptimizationException' occurred in Db4objects.Db4o.Linq.dll'</p>
         <p>To find it out for a particular query, break before the query. Then step over the query and see if the message has been printed out.</p>
-        <p>For a broader picture, you can also use <a href="../../../tuning/Runtime_Statistics.htm">db4o's monitoring support</a>. This will report the amount of unoptimized queries per second.</p>
+        <p>For a broader picture, you can also use <a href="../../../tuning/runtime_statistics.htm">db4o's monitoring support</a>. This will report the amount of unoptimized queries per second.</p>
         <h2>Improve Unoptimizable Queries </h2>
         <p>In the case you have a query which cannot optimized, it's often possible to split the query in two parts. The first part runs optimized. After that you run a regular LINQ to Object query to do the rest of the job. Lets look a this example:</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/linq/LinqExamples-Unoptimizable-query.all.flsnp" />

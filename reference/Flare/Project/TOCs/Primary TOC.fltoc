@@ -1606,15 +1606,28 @@
     </TocEntry>
     <TocEntry
       Title="Runtime Statistics"
-      Link="/Content/tuning/Runtime_Statistics.htm">
+      Link="/Content/tuning/runtime_statistics.htm">
       <TocEntry
-        Title="Performance Counters Example"
-        Link="/Content/tuning/Runtime_Statistics/Performance Counters Example.htm"
-        conditions="Primary..NET,Primary.All languages" />
+        Title="Install and Monitor"
+        Link="/Content/tuning/Runtime_Statistics/install_and_monitor.htm" />
       <TocEntry
-        Title="Statistics Example"
-        Link="/Content/tuning/Runtime_Statistics/Statistics Example.htm"
-        conditions="Primary.Java,Primary.All languages" />
+        Title="Monitoring Queries"
+        Link="/Content/tuning/Runtime_Statistics/monitor_queries.htm" />
+      <TocEntry
+        Title="Monitor Object Lifecycle"
+        Link="/Content/tuning/Runtime_Statistics/monitor_object_lifecycle.htm" />
+      <TocEntry
+        Title="Monitor IO"
+        Link="/Content/tuning/Runtime_Statistics/monitor_io.htm" />
+      <TocEntry
+        Title="Monitor Freespace"
+        Link="/Content/tuning/Runtime_Statistics/monitor_freespace.htm" />
+      <TocEntry
+        Title="Monitor Network"
+        Link="/Content/tuning/Runtime_Statistics/monitor_network.htm" />
+      <TocEntry
+        Title="Monitor Reference System"
+        Link="/Content/tuning/Runtime_Statistics/monitor_reference_system.htm" />
     </TocEntry>
     <TocEntry
       Title="Debugging db4o"

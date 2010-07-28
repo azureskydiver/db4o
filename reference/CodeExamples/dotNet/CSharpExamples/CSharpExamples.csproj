@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.Query.Linq.LinqExamples</StartupObject>
+    <StartupObject>Db4oDoc.Code.Tuning.Monitoring.ObjectLifecycleMonitoring</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -131,6 +131,14 @@
     <Compile Include="Code\ta\example\Person.cs" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
+    <Compile Include="Code\tuning\monitoring\IOMonitoring.cs" />
+    <Compile Include="Code\tuning\monitoring\CSMonitoring.cs" />
+    <Compile Include="Code\tuning\monitoring\DataObject.cs" />
+    <Compile Include="Code\tuning\monitoring\FreespaceMonitoring.cs" />
+    <Compile Include="Code\tuning\monitoring\InstallPerformanceCounters.cs" />
+    <Compile Include="Code\tuning\monitoring\ObjectLifecycleMonitoring.cs" />
+    <Compile Include="Code\tuning\monitoring\QueryMonitoring.cs" />
+    <Compile Include="Code\tuning\monitoring\ReferenceSystemMonitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

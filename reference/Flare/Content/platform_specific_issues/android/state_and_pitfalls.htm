@@ -14,7 +14,7 @@
         <p>The BitMath is slightly different implemented on Android. Therefore it doesn't work out of the box with db4o. But when you add the Big-Math support, it will work just fine. Add the BigMath-support to the configuration. <MadCap:xref href="../../implementation_strategies/type_handling/bigmath.htm" target="" title="" alt="">See "BigMath"</MadCap:xref></p>
         <MadCap:snippetBlock src="../../CodeExamples/configuration/configitems/ConfigurationItemsExamples-Add-support-for-BigDecimal-and-BigInteger.all.flsnp" />
         <h2>Monitoring Not Supported</h2>
-        <p>Android doesn't provide the Java monitoring and instrumenting facilities. Therefore db4o's support for <a href="../../tuning/Runtime_Statistics.htm">monitoring</a> doesn't work as well.</p>
+        <p>Android doesn't provide the Java monitoring and instrumenting facilities. Therefore db4o's support for <a href="../../tuning/runtime_statistics.htm">monitoring</a> doesn't work as well.</p>
         <h2>Tested Functionality</h2>
         <p>Currently the automated tests for db4o run against the Android version 2.1. db4o should run also on older Androids versions. </p>
         <p>Since the Dalvik VM doesn't use regular Java bytecode and class-files and therefore uses different a different class-loader strategy, we don't test features of db4o which utilize this features. However this is only relevant for advanced db4o features which need those functionality. </p>
