@@ -1,0 +1,91 @@
+/* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com */
+
+package com.db4o.drs.versant.metadata;
+
+import com.db4o.internal.*;
+
+public class ObjectLifecycleEvent {
+	
+	public static class Operations {
+		
+		public final int value;
+
+		private final String _description;
+
+		private Operations(int value, String description) {
+			this.value = value;
+			_description = description;
+		}
+
+		public static final Operations CREATE = new Operations(1, "create");
+		
+		public static final Operations UPDATE = new Operations(2, "update");
+		
+		public static final Operations DELETE = new Operations(3, "delete");
+		
+		public static Operations forValue(int value){
+			switch(value){
+				case 1:
+					return CREATE;
+				case 2:
+					return UPDATE;
+				case 3:
+					return DELETE;
+				default:
+					throw new IllegalArgumentException();
+			}
+		}
+		
+		@Override
+		public String toString() {
+			return _description;
+		}
+		
+	}
+	
+	private long classMetadataLoid;
+	
+	private long objectLoid;
+	
+	private int operation;
+	
+	private long timestamp;
+	
+	public ObjectLifecycleEvent(long classMetadataLoid, long objectLoid, int operation, long timestamp) {
+		this.classMetadataLoid = classMetadataLoid;
+		this.objectLoid = objectLoid;
+		this.operation = operation;
+		this.timestamp = timestamp;
+	}
+
+	public ObjectLifecycleEvent(){
+		
+	}
+	
+	public void activate(){
+		// just access one field
+		timestamp();
+	}
+	
+	public long classMetadataLoid() {
+		return classMetadataLoid;
+	}
+
+	public long objectLoid() {
+		return objectLoid;
+	}
+
+	public int operation() {
+		return operation;
+	}
+	
+	public long timestamp(){
+		return timestamp;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + objectLoid + "," + Operations.forValue(operation) + ")";
+	}
+
+}

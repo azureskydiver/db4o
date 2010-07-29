@@ -13,15 +13,10 @@ import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.eventlistener.Program.*;
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
 import com.db4o.util.*;
 import com.db4o.util.IOServices.*;
-import com.versant.core.jdo.*;
-import com.versant.core.metadata.*;
-import com.versant.core.storagemanager.*;
-import com.versant.core.vds.*;
-import com.versant.odbms.*;
-import com.versant.odbms.model.*;
 
 import db4ounit.*;
 
@@ -40,7 +35,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 	}
 
 	
-	public void testStoreObject() throws Exception {
+	public void testStoreSingleObject() throws Exception {
 		VodEventDriver eventDriver = startEventDriver();
 		try {
 //			final ProcessRunner eventListenerProcess = startListener();
@@ -56,20 +51,34 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				}
 			});
 			eventProcessorThread.start();
-			
-			final String expectedOutput = Item.class.getName();
-			
 			try{
 				boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
 					public Boolean run() {
-						_provider.storeNew(new Item("one"));
+						Item item = new Item("one");
+						_provider.storeNew(item);
 						_provider.commit();
-						Runtime4.sleep(100);
-						// return eventListenerProcess.outputContains(expectedOutput);
-						return eventProcessor.outputContains(expectedOutput);
+						
+						final long objectLoid = _provider.loid(item);
+						
+						return _jdo.transactional(new Closure4<Boolean>() {
+							public Boolean run() {
+								Query query = _pm.newQuery(ObjectLifecycleEvent.class, "this.objectLoid == param");
+								query.declareParameters("long param");
+								Collection<ObjectLifecycleEvent> objectLifecycleEvents = (Collection<ObjectLifecycleEvent>) query.execute(objectLoid);
+								if(objectLifecycleEvents.size() != 1){
+									return false;
+								}
+								ObjectLifecycleEvent objectLifecycleEvent = objectLifecycleEvents.iterator().next();
+								Assert.areEqual(Operations.CREATE.value, objectLifecycleEvent.operation());
+								Assert.isGreater(1, objectLifecycleEvent.timestamp());
+								Assert.isGreater(1, objectLifecycleEvent.classMetadataLoid());
+								return true;
+							}
+						});
 					}
 				});
-				Assert.isTrue(result, "Timeout: Expected output '" + expectedOutput + "' not printed by EventListener.");
+				Assert.isTrue(result, "Timeout: ObjectLifecycleEvent object not stored.");
+				
 			} finally {
 //				eventListenerProcess.destroy();
 				eventProcessor.stop();
