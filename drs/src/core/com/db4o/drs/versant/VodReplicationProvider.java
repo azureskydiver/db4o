@@ -84,9 +84,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private void ensureClassKnown(Object obj) {
-		
+		ensureClassKnown(obj.getClass());
+	}
 
-		Class clazz = obj.getClass();
+	private void ensureClassKnown(Class clazz) {
 		String className = clazz.getName();
 		
 		if( _knownClasses.get(className) != null){
@@ -245,6 +246,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
+		
+		// TODO: We have to do the following to turn the event listener
+		//       on for this class. Make sure there is a test case.
+		
+		// ensureClassKnown(clazz);
+		
+		
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();
 	}
@@ -312,6 +320,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private byte[] signatureBytes(int databaseId){
 		return new LatinStringIO().write("vod-" + databaseId);
+	}
+
+	public long loid(Object obj) {
+		return _jdo.loid(obj);
 	}
 
 }

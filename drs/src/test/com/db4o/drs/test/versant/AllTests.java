@@ -12,7 +12,8 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			com.db4o.drs.test.versant.eventlistener.AllTests.class,				
+			com.db4o.drs.test.versant.eventlistener.AllTests.class,
+			VodCobraTestCase.class,
 			VodDatabaseLifecycleTestCase.class,
 			VodDatabaseTestCase.class,
 			VodEventTestCase.class,

@@ -4,6 +4,7 @@ package com.db4o.drs.versant;
 
 import javax.jdo.*;
 
+import com.db4o.foundation.*;
 import com.versant.core.jdo.*;
 import com.versant.core.metadata.*;
 import com.versant.core.storagemanager.*;
@@ -42,6 +43,20 @@ public class VodJdo {
 		ClassMetaData classMetaData = modelMetadata.getClassMetaData(clazz);
 		UserSchemaClass userSchemaClass = userModel.getAssociatedSchemaClass(classMetaData);
 		return userSchemaClass.getName();
+	}
+	
+	public <T> T transactional(Closure4<T> closure) {
+		boolean transactionActive = _pm.currentTransaction().isActive();
+		if(! transactionActive){
+			_pm.currentTransaction().begin();
+		}
+		try{
+			return closure.run();
+		}finally{
+			if(! transactionActive){
+				_pm.currentTransaction().rollback();
+			}
+		}
 	}
 	
 

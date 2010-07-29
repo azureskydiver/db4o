@@ -19,6 +19,12 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 	
 	
 	
+	private final class LoggingExceptionListener implements ExceptionListener {
+		public void exceptionOccurred (Throwable exception){
+		    exception.printStackTrace ();
+		}
+	}
+
 	// Doesn't work: VOD throws ClassCastException when
 	// trying to get system schema classes.
 	public void _testEventSchemaCreation(){
@@ -51,49 +57,47 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 	
 	public void testSimpleEvent() throws Exception {
 		PersistenceManager pm = _vod.createPersistenceManager();
-		VodEventDriver eventDriver = startEventDriver();
 		try{
-			EventClient client = EventProcessor.newEventClient(newEventConfiguration());
+			VodEventDriver eventDriver = startEventDriver();
 			try{
-				
-			    ExceptionListener exception_listener = new ExceptionListener (){
-			        public void exceptionOccurred (Throwable exception){
-			            exception.printStackTrace ();
-			        }
-			    };
-			    
-			    client.addExceptionListener (exception_listener);
-		
-			    EventChannel channel = client.getChannel ("item");
-			    if (channel == null) {
+				EventClient client = newEventClient();
+				try{
 			        ClassChannelBuilder builder = new ClassChannelBuilder (_jdo.schemaName(Item.class));
-			        channel = client.newChannel ("item", builder);
-			    }
-			    
-			    RecordingEventListener eventListener = new RecordingEventListener(VodEvent.CREATED, VodEvent.MODIFIED);
-		
-			    channel.addVersantEventListener (eventListener);
-				
-			    Item item = new Item("two");
-				pm.currentTransaction().begin();
-				pm.makePersistent(item);
-				pm.currentTransaction().commit();
-				
-				pm.currentTransaction().begin();
-				item.name("newName");
-				
-				pm.currentTransaction().commit();
-				pm.close();
-				
-				eventListener.verify(10000);
-			} finally {
-				client.shutdown();
+			        EventChannel channel = client.newChannel ("item", builder);
+				    RecordingEventListener eventListener = new RecordingEventListener(VodEvent.CREATED, VodEvent.MODIFIED);
+				    channel.addVersantEventListener (eventListener);
+				    Item item = storeAndCommitItem(pm);
+					updateItem(pm, item);
+					eventListener.verify(10000);
+				} finally {
+					client.shutdown();
+				}
+			} finally{
+				eventDriver.stop();
 			}
-		} finally{
-			eventDriver.stop();
+		} finally {
+			pm.close();
 		}
 	}
-	
 
+	private void updateItem(PersistenceManager pm, Item item) {
+		pm.currentTransaction().begin();
+		item.name("newName");
+		pm.currentTransaction().commit();
+	}
+
+	private Item storeAndCommitItem(PersistenceManager pm) {
+		Item item = new Item("two");
+		pm.currentTransaction().begin();
+		pm.makePersistent(item);
+		pm.currentTransaction().commit();
+		return item;
+	}
+
+	private EventClient newEventClient() throws IOException {
+		EventClient client = EventProcessor.newEventClient(newEventConfiguration());
+		client.addExceptionListener (new LoggingExceptionListener());
+		return client;
+	}
 
 }
