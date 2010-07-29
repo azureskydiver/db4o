@@ -136,7 +136,7 @@
 		 needs to be configured correctly again for all subsequent calls
 		 that open database files.
 		 <br /><br />
-		 In client-server mode, the server and all clients need to have the same string encoding.<br><br>
+		 In client-server mode, the server and all clients need to have the same string encoding.<br /><br />
 		 Example:<br />
 		 <code>config.StringEncoding = StringEncodings.Utf8();</code>
 		 </remarks>
