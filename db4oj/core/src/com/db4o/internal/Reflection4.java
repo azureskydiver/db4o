@@ -13,6 +13,10 @@ import java.lang.reflect.*;
  * TODO: this class should go to foundation.reflect, along with ReflectException and ReflectPlatform
  */
 public class Reflection4 {
+	
+	public static Object invokeStatic(Class clazz, String methodName) {
+		return invoke(clazz, methodName, null, null, null);
+	}
     
     public static Object invoke (Object obj, String methodName) throws ReflectException {
         return invoke(obj.getClass(), methodName, null, null, obj );
@@ -34,8 +38,7 @@ public class Reflection4 {
         return invoke(clazz, methodName, paramClasses, params, null);
     }
     
-    private static Object invoke(Class clazz, String methodName,
-			Class[] paramClasses, Object[] params, Object onObject) {
+    private static Object invoke(Class clazz, String methodName, Class[] paramClasses, Object[] params, Object onObject) {
     	return invoke(params, onObject, getMethod(clazz, methodName, paramClasses));
 	}
 
@@ -99,6 +102,7 @@ public class Reflection4 {
 				Platform4.setAccessible(field);
 				return field;
 			} catch (Exception e) {
+				
 			}
 			curclazz=curclazz.getSuperclass();
 		}
@@ -106,8 +110,12 @@ public class Reflection4 {
 	}
 
 	public static Object getFieldValue(final Object obj, final String fieldName)
-			throws IllegalAccessException {
-		return getField(obj.getClass(), fieldName).get(obj);
+		throws ReflectException {
+		try {
+			return getField(obj.getClass(), fieldName).get(obj);
+		} catch (Exception e) {
+			throw new ReflectException(e);
+		}
 	}
 
     public static Object newInstance(Object template) {

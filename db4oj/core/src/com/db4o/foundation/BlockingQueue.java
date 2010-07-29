@@ -4,20 +4,20 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class BlockingQueue implements Queue4 {
+public class BlockingQueue<T> implements Queue4<T> {
     
-	protected NonblockingQueue _queue = new NonblockingQueue();
+	protected NonblockingQueue<T> _queue = new NonblockingQueue<T>();
 
 	protected Lock4 _lock = new Lock4();
 	
 	protected boolean _stopped;
 
-	public void add(final Object obj) {
+	public void add(final T obj) {
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
-		_lock.run(new Closure4() {
-			public Object run() {
+		_lock.run(new Closure4<Void>() {
+			public Void run() {
 				_queue.add(obj);
 				_lock.awake();
 				return null;
@@ -26,25 +26,24 @@ public class BlockingQueue implements Queue4 {
 	}
 
 	public boolean hasNext() {
-		Boolean hasNext = (Boolean) _lock.run(new Closure4() {
-			public Object run() {
-				return new Boolean(_queue.hasNext());
+		return _lock.run(new Closure4<Boolean>() {
+			public Boolean run() {
+				return _queue.hasNext();
 			}
 		});
-		return hasNext.booleanValue();
 	}
 
-	public Iterator4 iterator() {
-		return (Iterator4) _lock.run(new Closure4() {
-			public Object run() {
+	public Iterator4<T> iterator() {
+		return _lock.run(new Closure4<Iterator4<T>>() {
+			public Iterator4<T> run() {
 				return _queue.iterator();
 			}
 		});
 	}
 
-	public Object next() throws BlockingQueueStoppedException {
-		return _lock.run(new Closure4() {
-			public Object run() {
+	public T next() throws BlockingQueueStoppedException {
+		return _lock.run(new Closure4<T>() {
+			public T run() {
 				while(true){
 					if (_queue.hasNext()) {
 						return _queue.next();
@@ -59,8 +58,8 @@ public class BlockingQueue implements Queue4 {
 	}
 	
 	public void stop(){
-		_lock.run(new Closure4() {
-			public Object run() {
+		_lock.run(new Closure4<Void>() {
+			public Void run() {
 				_stopped = true;
 				_lock.awake();
 				return null;
@@ -68,9 +67,9 @@ public class BlockingQueue implements Queue4 {
 		});
 	}
 
-	public Object nextMatching(final Predicate4 condition) {
-		return _lock.run(new Closure4() {
-			public Object run() {
+	public T nextMatching(final Predicate4<T> condition) {
+		return _lock.run(new Closure4<T>() {
+			public T run() {
 				return _queue.nextMatching(condition);
 			}
 		});

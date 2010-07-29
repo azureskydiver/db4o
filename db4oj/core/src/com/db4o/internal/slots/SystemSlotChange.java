@@ -23,7 +23,7 @@ public class SystemSlotChange extends SlotChange {
 	}
 	
 	@Override
-	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystemImpl idSystem) {
+	protected Slot modifiedSlotInParentIdSystem(TransactionalIdSystemImpl idSystem) {
 		return null;
 	}
 	

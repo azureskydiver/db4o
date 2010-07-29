@@ -14,17 +14,14 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 	
 	private IdSlotChanges _slotChanges;
 
-	private TransactionalIdSystemImpl _systemIdSystem;
+	private TransactionalIdSystemImpl _parentIdSystem;
 	
 	private final Closure4<IdSystem> _globalIdSystem;
 	
-	private final Closure4<FreespaceManager> _freespaceManager;
-	
-	public TransactionalIdSystemImpl(Closure4<FreespaceManager> freespaceManager, Closure4<IdSystem> globalIdSystem, TransactionalIdSystemImpl systemIdSystem){
-		_freespaceManager = freespaceManager;
+	public TransactionalIdSystemImpl(Closure4<FreespaceManager> freespaceManager, Closure4<IdSystem> globalIdSystem, TransactionalIdSystemImpl parentIdSystem){
 		_globalIdSystem = globalIdSystem;
 		_slotChanges = new IdSlotChanges(this, freespaceManager);
-		_systemIdSystem = systemIdSystem;
+		_parentIdSystem = parentIdSystem;
 	}
 	
 	public void collectCallBackInfo(final CallbackInfoCollector collector) {
@@ -65,13 +62,13 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 
 	public void accumulateFreeSlots(FreespaceCommitter accumulator, boolean forFreespace) {
 		_slotChanges.accumulateFreeSlots(accumulator, forFreespace, isSystemIdSystem());
-		if(! isSystemIdSystem()){
-			_systemIdSystem.accumulateFreeSlots(accumulator, forFreespace);
+		if(_parentIdSystem != null){
+			_parentIdSystem.accumulateFreeSlots(accumulator, forFreespace);
 		}
 	}
 	
 	private boolean isSystemIdSystem() {
-		return _systemIdSystem == null;
+		return _parentIdSystem == null;
 	}
 
 	public void completeInterruptedTransaction(int transactionId1, int transactionId2) {
@@ -103,14 +100,14 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
                 return change.newSlot();
             }
         }
-        return modifiedSlotInUnderlyingIdSystem(id); 
+        return modifiedSlotInParentIdSystem(id); 
 	}
 
-	public Slot modifiedSlotInUnderlyingIdSystem(int id) {
-		if(isSystemIdSystem()){
-        	return null;
-        }
-        return _systemIdSystem.modifiedSlot(id);
+	public final Slot modifiedSlotInParentIdSystem(int id) {
+		if(_parentIdSystem == null){
+			return null;
+		}
+        return _parentIdSystem.modifiedSlot(id);
 	}
 
 	public void rollback() {
@@ -130,32 +127,11 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 	}
 
 	private void traverseSlotChanges(Visitor4<SlotChange> visitor){
-		if(! isSystemIdSystem()){
-			_systemIdSystem.traverseSlotChanges(visitor);
+		if(_parentIdSystem != null){
+			_parentIdSystem.traverseSlotChanges(visitor);
 		}
 		_slotChanges.traverseSlotChanges(visitor);
 	}
-
-	private void freespaceBeginCommit(){
-        if(freespaceManager() == null){
-            return;
-        }
-        freespaceManager().beginCommit();
-    }
-    
-    private void freespaceEndCommit(){
-        if(freespaceManager() == null){
-            return;
-        }
-        freespaceManager().endCommit();
-    }
-    
-    private void commitFreespace(){
-        if(freespaceManager() == null){
-            return;
-        }
-        freespaceManager().commit();
-    }
     
 	public int newId(SlotChangeFactory slotChangeFactory) {
 		int id = acquireId();
@@ -183,10 +159,6 @@ public class TransactionalIdSystemImpl implements TransactionalIdSystem {
 	
 	public void notifySlotDeleted(int id, SlotChangeFactory slotChangeFactory) {
 		_slotChanges.notifySlotDeleted(id, slotChangeFactory);
-	}
-
-	private FreespaceManager freespaceManager() {
-		return _freespaceManager.run();
 	}
 
 	private IdSystem globalIdSystem() {

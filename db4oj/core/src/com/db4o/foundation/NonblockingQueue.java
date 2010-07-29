@@ -5,16 +5,16 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class NonblockingQueue implements Queue4 {
+public class NonblockingQueue<T> implements Queue4<T> {
 
-	private List4 _insertionPoint;
-	private List4 _next;
+	private List4<T> _insertionPoint;
+	private List4<T> _next;
 	
     /* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#add(java.lang.Object)
 	 */
-    public final void add(Object obj) {
-    	List4 newNode = new List4(null, obj);
+    public final void add(T obj) {
+    	List4<T> newNode = new List4<T>(null, obj);
     	if (_insertionPoint == null) {
     		_next = newNode;
     	} else {
@@ -26,11 +26,11 @@ public class NonblockingQueue implements Queue4 {
 	/* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#next()
 	 */
-	public final Object next() {
+	public final T next() {
 		if(_next == null){
 			return null;
 		}
-		Object ret = _next._element;
+		T ret = _next._element;
 		removeNext();
 		return ret;
 	}
@@ -42,15 +42,15 @@ public class NonblockingQueue implements Queue4 {
 		}
 	}
 	
-	public Object nextMatching(Predicate4 condition) {
+	public T nextMatching(Predicate4<T> condition) {
 		if (null == condition) {
 			throw new ArgumentNullException();
 		}
 		
-		List4 current = _next;
-		List4 previous = null;
+		List4<T> current = _next;
+		List4<T> previous = null;
 		while (null != current) {
-			final Object element = current._element;
+			final T element = current._element;
 			if (condition.match(element)) {
 				if (previous == null) {
 					removeNext();
@@ -75,10 +75,10 @@ public class NonblockingQueue implements Queue4 {
 	/* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#iterator()
 	 */
-	public Iterator4 iterator() {
-		final List4 origInsertionPoint = _insertionPoint;
-		final List4 origNext = _next;
-		return new Iterator4Impl(_next) {
+	public Iterator4<T> iterator() {
+		final List4<T> origInsertionPoint = _insertionPoint;
+		final List4<T> origNext = _next;
+		return new Iterator4Impl<T>(_next) {
 			
 			public boolean moveNext() {
 				if (queueWasModified()) {

@@ -121,7 +121,7 @@ public class ClientSlotCacheTestCase extends AbstractDb4oTestCase implements Opt
 		ClientSlotCache clientSlotCache = null;
 		try {
 			clientSlotCache = (ClientSlotCache) Reflection4.getFieldValue(container(), "_clientSlotCache");
-		} catch (IllegalAccessException e) {
+		} catch (ReflectException e) {
 			Assert.fail("Can't get field _clientSlotCache on  container. " + e.toString() );
 		}
 		procedure.apply(clientSlotCache);

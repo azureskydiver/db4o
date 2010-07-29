@@ -6,10 +6,10 @@ package  com.db4o.foundation;
 /**
  * @exclude
  */
-public class Iterator4Impl implements Iterator4 {
+public class Iterator4Impl<T> implements Iterator4 {
 	
-    private final List4 _first;
-    private List4 _next;
+    private final List4<T> _first;
+    private List4<T> _next;
 	
 	private Object _current;
 
@@ -30,11 +30,11 @@ public class Iterator4Impl implements Iterator4 {
 		return true;
 	}
 
-	public Object current(){
+	public T current(){
 		if (Iterators.NO_ELEMENT == _current) {
 			throw new IllegalStateException();
 		}
-		return _current;
+		return (T) _current;
 	}
 	
 	public void reset() {
