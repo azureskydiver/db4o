@@ -1,5 +1,5 @@
 package db4ounit.extensions;
 
-public interface OptOutNotSupportedJavaxManagement extends OptOutTemporary {
+public interface OptOutNotSupportedJavaxManagement extends OptOutAndroid {
 
 }

@@ -3,5 +3,5 @@
 package db4ounit.extensions;
 
 // related to issue UNIT-34
-public interface OptOutExcludingClassLoaderIssue extends OptOutTemporary {
+public interface OptOutExcludingClassLoaderIssue extends OptOutAndroid {
 }

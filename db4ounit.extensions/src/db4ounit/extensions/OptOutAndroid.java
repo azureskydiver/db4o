@@ -2,5 +2,5 @@
 
 package db4ounit.extensions;
 
-public interface OptOutTemporary {
+public interface OptOutAndroid {
 }
