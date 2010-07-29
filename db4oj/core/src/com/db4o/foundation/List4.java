@@ -5,45 +5,45 @@ package com.db4o.foundation;
 import com.db4o.types.*;
 
 /**
- * elements in linked list Collection4
+ * simplest possible linked list
  * 
  * @exclude
  */
-public final class List4 implements Unversioned
+public final class List4<T> implements Unversioned
 {
 	// TODO: encapsulate field access
 	/**
 	 * next element in list
 	 */
-	public List4 _next;
+	public List4<T> _next;
 	
 	/**
 	 * carried object
 	 */
-	public Object _element;  
+	public T _element;  
 	
 	/**
 	 * db4o constructor to be able to store objects of this class
 	 */
 	public List4() {}
 	
-	public List4(Object element) {
+	public List4(T element) {
 		_element = element;
 	}
 
-	public List4(List4 next, Object element) {
+	public List4(List4<T> next, T element) {
 		_next = next;
 		_element = element;
 	}
 
-	boolean holds(Object obj) {
+	boolean holds(T obj) {
 		if(obj == null){
 			return _element == null;
 		}
 		return obj.equals(_element);
 	}
 
-	public static int size(List4 list) {
+	public static int size(List4<?> list) {
 		int counter = 0;
 		List4 nextList = list; 
 		while(nextList != null){

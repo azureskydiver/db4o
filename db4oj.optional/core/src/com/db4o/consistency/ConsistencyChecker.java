@@ -12,11 +12,11 @@ import com.db4o.internal.classindex.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 
-@decaf.Ignore(decaf.Platform.JDK11)
+
 public class ConsistencyChecker {
 
 	private final LocalObjectContainer _db;
-	private final List<SlotWithSource> bogusSlots = new LinkedList<SlotWithSource>();
+	private final List<SlotWithSource> bogusSlots = new ArrayList<SlotWithSource>();
 	private TreeIntObject mappings;
 
 	public static class SlotSource {
@@ -91,7 +91,7 @@ public class ConsistencyChecker {
 			return message.toString();
 		}
 		
-		private <T> void appendInconsistencyReport(StringBuffer str, String title, Collection<T> entries) {
+		private <T> void appendInconsistencyReport(StringBuffer str, String title, List<T> entries) {
 			if(entries.size() != 0) {
 				str.append(title + "\n");
 				int count = 0;
@@ -119,7 +119,7 @@ public class ConsistencyChecker {
 	}
 
 	private List<Pair<String,Integer>> checkClassIndices() {
-		final List<Pair<String,Integer>> invalidIds = new LinkedList<Pair<String,Integer>>();
+		final List<Pair<String,Integer>> invalidIds = new ArrayList<Pair<String,Integer>>();
 		final IdSystem idSystem= _db.idSystem();
 		if(!(idSystem instanceof BTreeIdSystem)) {
 			return invalidIds;
@@ -143,7 +143,7 @@ public class ConsistencyChecker {
 	}
 	
 	private List<Pair<String, Integer>> checkFieldIndices() {
-		final List<Pair<String,Integer>> invalidIds = new LinkedList<Pair<String,Integer>>();
+		final List<Pair<String,Integer>> invalidIds = new ArrayList<Pair<String,Integer>>();
 		ClassMetadataIterator clazzIter = _db.classCollection().iterator();
 		while(clazzIter.moveNext()) {
 			final ClassMetadata clazz = clazzIter.currentClass();
@@ -178,7 +178,7 @@ public class ConsistencyChecker {
 
 	private List<Pair<SlotWithSource, SlotWithSource>> collectOverlaps() {
 		final BlockConverter blockConverter = _db.blockConverter();
-		final List<Pair<SlotWithSource,SlotWithSource>> overlaps = new LinkedList<Pair<SlotWithSource,SlotWithSource>>();
+		final List<Pair<SlotWithSource,SlotWithSource>> overlaps = new ArrayList<Pair<SlotWithSource,SlotWithSource>>();
 		final ByRef<SlotWithSource> prevSlot = ByRef.newInstance();
 		mappings.traverse(new Visitor4<TreeIntObject>() {
 			public void visit(TreeIntObject obj) {

@@ -1,6 +1,7 @@
 package db4ounit;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 public class ClassLevelFixtureTestSuite extends OpaqueTestSuiteBase {
 
@@ -16,12 +17,12 @@ public class ClassLevelFixtureTestSuite extends OpaqueTestSuiteBase {
 
 	@Override
 	protected void suiteSetUp() throws Exception {
-		_clazz.getMethod(SETUP_METHOD_NAME, (Class)null).invoke(null, (Object[])null);
+		Reflection4.invokeStatic(_clazz, SETUP_METHOD_NAME);
 	}
 
 	@Override
 	protected void suiteTearDown() throws Exception {
-		_clazz.getMethod(TEARDOWN_METHOD_NAME, (Class)null).invoke(null, (Object[])null);
+		Reflection4.invokeStatic(_clazz, TEARDOWN_METHOD_NAME);
 	}
 
 	public String label() {

@@ -7,7 +7,7 @@ package com.db4o.foundation;
  */
 public class Lock4 {
 
-    public Object run(Closure4 closure) {
+    public <T> T run(Closure4<T> closure) {
     	synchronized(this){
     		return closure.run();
     	}

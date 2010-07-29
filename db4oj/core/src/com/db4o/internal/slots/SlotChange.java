@@ -58,14 +58,10 @@ public class SlotChange extends TreeInt {
     		return;
     	}
 		if(_currentOperation == SlotChangeOperation.update || _currentOperation == SlotChangeOperation.delete){
-			Slot slot = idSystem.committedSlot(_key);
 			
-			
-			
-			// If we don't get a valid slot, the object may have just 
-			// been stored by the SystemTransaction and not committed yet.
+			Slot slot = modifiedSlotInParentIdSystem(idSystem);
 			if(Slot.isNull(slot)){
-				slot = modifiedSlotInUnderlyingIdSystem(idSystem); 
+				slot = idSystem.committedSlot(_key);
 			}
 			
 			// No old slot at all can be the case if the object
@@ -80,8 +76,8 @@ public class SlotChange extends TreeInt {
 		return false;
 	}
 
-	protected Slot modifiedSlotInUnderlyingIdSystem(TransactionalIdSystemImpl idSystem) {
-		return idSystem.modifiedSlotInUnderlyingIdSystem(_key);
+	protected Slot modifiedSlotInParentIdSystem(TransactionalIdSystemImpl idSystem) {
+		return idSystem.modifiedSlotInParentIdSystem(_key);
 	}
 	
 	public boolean isDeleted() {
