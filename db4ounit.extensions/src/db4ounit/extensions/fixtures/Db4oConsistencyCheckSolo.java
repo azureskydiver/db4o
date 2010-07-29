@@ -13,7 +13,6 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 
-@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oConsistencyCheckSolo extends Db4oSolo {
 
 	@Override
