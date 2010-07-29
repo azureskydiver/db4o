@@ -3,5 +3,5 @@
 package db4ounit.extensions;
 
 //related to issue UNIT-31
-public interface OptOutWorkspaceIssue extends OptOutTemporary {
+public interface OptOutWorkspaceIssue extends OptOutAndroid {
 }

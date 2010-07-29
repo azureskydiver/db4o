@@ -2,8 +2,6 @@
 
 package db4ounit.extensions.fixtures;
 
-import com.db4o.config.Configuration;
-
 import db4ounit.extensions.*;
 
 /**
@@ -12,14 +10,9 @@ import db4ounit.extensions.*;
 @decaf.Ignore
 public class Db4oAndroid extends Db4oSolo{
 	
-	protected Configuration newConfiguration() {
-		Configuration config = super.newConfiguration();
-		return config;
-	}
-	
 	@Override
 	public boolean accept(Class clazz) {
-		return !OptOutTemporary.class.isAssignableFrom(clazz) && super.accept(clazz);
+		return !OptOutAndroid.class.isAssignableFrom(clazz) && super.accept(clazz);
 	}
 	
 }

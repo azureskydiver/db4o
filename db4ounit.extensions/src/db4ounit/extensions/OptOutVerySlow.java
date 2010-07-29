@@ -2,5 +2,6 @@
 
 package db4ounit.extensions;
 
-public interface OptOutVerySlow extends OptOutTemporary {
+// related to UNIT-35
+public interface OptOutVerySlow extends OptOutAndroid {
 }

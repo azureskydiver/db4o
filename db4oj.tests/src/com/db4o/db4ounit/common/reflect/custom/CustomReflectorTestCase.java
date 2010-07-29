@@ -5,7 +5,7 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
-import db4ounit.extensions.OptOutTemporary;
+import db4ounit.extensions.OptOutAndroid;
 
 /**
  * This test case serves two purposes:
