@@ -45,7 +45,7 @@ public class Program {
 		if(! parseArguments(args)){
 			return;
 		}
-		new EventProcessor(_eventConfiguration).run();
+		new EventProcessor(_eventConfiguration, System.out).run();
 	}
 	
 	private boolean parseArguments(String[] args) {

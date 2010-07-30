@@ -15,16 +15,11 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	
 	public void testStore(){
 		ensureSchemaCreated();
-		_cobra.beginTransaction();
-		try {
-			long expectedObjectLoid = 2;
-			ObjectLifecycleEvent objectLifecycleEvent = new ObjectLifecycleEvent(1, expectedObjectLoid, 3, 4);
-			long loid = _cobra.store(objectLifecycleEvent);
-			Assert.isGreater(0, loid);
-			Assert.areEqual(expectedObjectLoid, _cobra.fieldValue(loid, "objectLoid"));
-		} finally{
-			_cobra.rollbackTranssaction();
-		}
+		long expectedObjectLoid = 2;
+		ObjectLifecycleEvent objectLifecycleEvent = new ObjectLifecycleEvent(1, expectedObjectLoid, 3, 4);
+		long loid = _cobra.store(objectLifecycleEvent);
+		Assert.isGreater(0, loid);
+		Assert.areEqual(expectedObjectLoid, _cobra.fieldValue(loid, "objectLoid"));
 	}
 
 	private void ensureSchemaCreated() {

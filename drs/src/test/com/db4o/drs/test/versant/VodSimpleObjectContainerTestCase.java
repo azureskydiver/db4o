@@ -89,41 +89,24 @@ public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase im
 	
 	public void testLongChain(){
 		final int length = 1000;
-		Chain chain = Chain.newChainWithLength(length);
-		_provider.storeNew(chain);
+		_provider.storeNew(Chain.newChainWithLength(length));
 		_provider.commit();
-		transactional(new Runnable() {
-			public void run() {
-				Query query = _pm.newQuery(Chain.class, "this._id == 0");
-				Collection collection = (Collection)query.execute();
-				Chain chain = (Chain) collection.iterator().next();
-				Assert.areEqual(length, chain.length());
-			}
-		});
+		Query query = _pm.newQuery(Chain.class, "this._id == 0");
+		Collection collection = (Collection)query.execute();
+		Chain chain = (Chain) collection.iterator().next();
+		Assert.areEqual(length, chain.length());
 	}
-	
-	
 	
 	private <T> void assertContent(Class<T> type, T...items) {
 		assertContent(type, Arrays.asList(items));
 	}
 	
 	private <T> void assertContent(final Class<T> type, final Iterable<T> items) {
-		transactional(new Runnable() {
-			public void run()  {
-				Collection collection = (Collection) _pm.newQuery(type).execute();
-				IteratorAssert.sameContent(items, collection);
-			}
-		});
-	}
-	
-	private void transactional(Runnable runnable) {
-		_pm.currentTransaction().begin();
-		try{
-			runnable.run();
-		} finally {
-			_pm.currentTransaction().rollback();
+		Collection collection = (Collection) _pm.newQuery(type).execute();
+		for (Object object : collection) {
+			_pm.refresh(object);
 		}
+		IteratorAssert.sameContent(items, collection);
 	}
 	
 	public void testSchema(){

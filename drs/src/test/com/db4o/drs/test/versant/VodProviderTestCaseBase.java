@@ -19,9 +19,11 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	
 	protected VodDatabase _vod;
 	
-	protected VodJdo _jdo;
-	
 	protected VodReplicationProvider _provider;
+	
+	// This is a direct _VodJdo connection that works around our _provider 
+	// so we can see what's committed, using a second reference system.
+	protected VodJdo _jdo;
 	
 	// This is a direct PersistenceManager that works around the _provider
 	// so we can see what's committed, using a second reference system.
@@ -30,25 +32,25 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
-		_pm = _vod.createPersistenceManager();
-		_jdo = new VodJdo(_vod, _pm);
+		_jdo = new VodJdo(_vod);
+		_pm = _jdo.persistenceManager();
 		cleanDb();
 		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public void tearDown() throws Exception {
-		_pm.close();
+		_jdo.close();
 		_provider.commit();
 		_provider.destroy();
 	}
 	
 	private void cleanDb(){
-		_pm.currentTransaction().begin();
+		
 		Collection allObjects = (Collection) _pm.newQuery(Object.class).execute();
 		for (Object object : allObjects) {
 			_pm.deletePersistent(object);
 		}
-		_pm.currentTransaction().commit();
+		_jdo.commit();
 		
 		if(EXPOSE_OBJECT_DELETE_BUG){
 			return;
@@ -62,12 +64,11 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		};
 		
 		for (int i = 0; i < deleteClasses.length; i++) {
-			_pm.currentTransaction().begin();
 			allObjects = (Collection) _pm.newQuery(deleteClasses[i]).execute();
 			for (Object object : allObjects) {
 				_pm.deletePersistent(object);
 			}
-			_pm.currentTransaction().commit();
+			_jdo.commit();
 		}
 	}
 	
