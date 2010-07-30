@@ -14,6 +14,8 @@
         get { return Container.AsQueryable&lt;Team&gt;(); }
     }
 
+
+
     /// You need to implement the open-session and return a object container
     /// The best practise is to use a separate object-container per request.
     /// For example use the 

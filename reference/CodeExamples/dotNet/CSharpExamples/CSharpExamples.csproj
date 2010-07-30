@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
-    <StartupObject>Db4oDoc.Code.Tuning.Monitoring.ObjectLifecycleMonitoring</StartupObject>
+    <StartupObject>Db4oDoc.Boot</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boot.cs" />
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.cs" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />
+    <Compile Include="Code\crossplatform\MyClient.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\Db4oInternalIdExample.cs" />

@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="651" MadCap:lastWidth="586">
     <head><title>Discarding Free Space	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Discarding Free Space</h1>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: <code>Db4o.configure().freespace().discardSmallerThan(byteCount)</code></p>
+            <p>Java: <code>configuration.file().freespace().discardSmallerThan(byteCount)</code></p>
         </p>
         <p MadCap:conditions="Primary:java" />
         <p MadCap:conditions="Primary..NET">
-            <p>.NET: <code>Db4oFactory.Configure().Freespace().DiscardSmallerThan(byteCount)</code></p>
+            <p>.NET: <code>configuration.File.Freespace.DiscardSmallerThan(byteCount)</code></p>
         </p>
         <p MadCap:conditions="Primary:net" />
         <p>Configures the minimum size of free space slots in the database file that are to 
@@ -22,11 +22,9 @@ be reused. </p>
         <h2>Advantage</h2>
         <p>Allows fine-tuning of performance/size relation for your environment. </p><a name="Effect"></a>
         <h2>Effect</h2>
-        <p>
-When objects are updated or deleted, the space previously occupied in the database file is marked as "free", so it can be reused. db4o maintains two lists in RAM, sorted by address and by size. Adjacent entries are merged. After a large number of updates or deletes have been executed, the lists can become large, causing RAM consumption and performance loss for maintenance. With this method you can specify an upper bound for the byte slot size to discard.</p><a name="Alternate Strategies"></a>
+        <p>When objects are updated or deleted, the space previously occupied in the database file is marked as "free", so it can be reused. db4o maintains two lists in RAM, sorted by address and by size. Adjacent entries are merged. After a large number of updates or deletes have been executed, the lists can become large, causing RAM consumption and performance loss for maintenance. With this method you can specify an upper bound for the byte slot size to discard.</p><a name="Alternate Strategies"></a>
         <h2>Alternate Strategies</h2>
-        <p>
-Regular defragment will also keep the number of free space slots small. See:</p>
+        <p>Regular defragment will also keep the number of free space slots small. See:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java: <code>com.db4o.defragment.Defragment</code></p>
         </p>

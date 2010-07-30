@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="">
+        <pre class="prettyprint" xml:space="preserve">public class Person {
+    private String firstname;
+    private String sirname;
+
+    public Person(String firstname, String sirname) {
+        this.firstname = firstname;
+        this.sirname = sirname;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getSirname() {
+        return sirname;
+    }
+
+    public void setSirname(String sirname) {
+        this.sirname = sirname;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Person{&quot; +
+                &quot;firstname='&quot; + firstname + '\'' +
+                &quot;, sirname='&quot; + sirname + '\'' +
+                '}';
+    }
+}</pre>
+		<div class="codesnippet-meta">Person.java: The person class in Java<a href="Example-db4odoc-crossplatform-mixed-languages.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>
