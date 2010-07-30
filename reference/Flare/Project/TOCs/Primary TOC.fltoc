@@ -834,12 +834,6 @@
         Link="/Content/implementation_strategies/typehandlers/typehandler_usages.htm"></TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Class Name Format In .NET"
-      Link="/Content/platform_specific_issues/class_name_format_in_.net.htm"
-      conditions="Primary..NET"
-      StartSection="false"
-      StartChapter="false" />
-    <TocEntry
       Title="Using Annotations"
       Link="/Content/implementation_strategies/using_annotations.htm"
       conditions="Primary.All languages,Primary.Java" />
@@ -1081,23 +1075,6 @@
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Cross-Platform Aliasing"
-      Link="/Content/implementation_strategies/aliases/cross-platform_aliasing.htm">
-      <TocEntry
-        Title="Cross-Platform Aliasing From .NET To Java"
-        Link="/Content/implementation_strategies/aliases/cross-platform_aliasing_from_.net_to_java.htm"></TocEntry>
-      <TocEntry
-        Title="Cross-Platform Client-Server"
-        Link="/Content/implementation_strategies/aliases/cross-platform_client-server.htm">
-        <TocEntry
-          Title="Java Client-.Net Server"
-          Link="/Content/implementation_strategies/aliases/cross-platform_client-server/java_client-.net_server.htm" />
-        <TocEntry
-          Title="Java Server-.NET Client"
-          Link="/Content/implementation_strategies/aliases/cross-platform_client-server/java_server-.net_client.htm" />
-      </TocEntry>
-    </TocEntry>
-    <TocEntry
       Title="Encryption"
       Link="/Content/implementation_strategies/encryption.htm">
       <TocEntry
@@ -1273,6 +1250,12 @@
       Link="/Content/platform_specific_issues/silverlight.htm"
       conditions="Primary..NET" />
     <TocEntry
+      Title="Class Name Format In .NET"
+      Link="/Content/platform_specific_issues/class_name_format_in_.net.htm"
+      conditions="Primary..NET"
+      StartSection="false"
+      StartChapter="false" />
+    <TocEntry
       Title="Android"
       Link="/Content/platform_specific_issues/android.htm"
       conditions="Primary.All languages,Primary.Java">
@@ -1341,9 +1324,6 @@
     <TocEntry
       Title="Cross-Platform Applications"
       Link="/Content/platform_specific_issues/cross-platform_applications.htm">
-      <TocEntry
-        Title="Configuration"
-        Link="/Content/platform_specific_issues/cross-platform_applications/configuration.htm" />
       <TocEntry
         Title="Limitations Of db4o Cross-Platform Usage"
         Link="/Content/platform_specific_issues/cross-platform_applications/limitations_of_db4o_cross-platform_usage.htm" />
@@ -1563,9 +1543,6 @@
           Title="test2"
           Link="/Content/tuning/selective_persistence/transient_classes/test2.htm" />
       </TocEntry>
-      <TocEntry
-        Title="Storing Transient Fields"
-        Link="/Content/tuning/selective_persistence/storing_transient_fields.htm" />
     </TocEntry>
     <TocEntry
       Title="Indexing"

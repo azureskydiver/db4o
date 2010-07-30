@@ -177,15 +177,25 @@ Directory.CreateDirectory("../Flare/Content/CodeExamples").Delete(true)
 		
 zipFileGenerator = CodeZip()
 
+# regular examples
 snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator)
-snippetGenerator.CreateCodeSnippets("javaEnhancement","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../Flare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("javaAppExamples/","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
-snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../Flare/Content/CodeExamples","csharp")
-snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../Flare/Content/CodeExamples","csharp")
 
+# enhancement-examples
+snippetGenerator.CreateCodeSnippets("javaEnhancement","../Flare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
+
+# mini-example-applications
+snippetGenerator.CreateCodeSnippets("javaAppExamples/","../Flare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../Flare/Content/CodeExamples","csharp")
+
+# crossplattform
+snippetGenerator.CreateCodeSnippets("crossplatform/src/java/com/db4odoc","../Flare/Content/CodeExamples","mixed-languages")
+snippetGenerator.CreateCodeSnippets("crossplatform/src/csharp/","../Flare/Content/CodeExamples","mixed-languages")
+
+# vb-stuff with other template:
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator)
 snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../Flare/Content/CodeExamples","vb")
 snippetGeneratorForVB.CreateCodeSnippets("silverlight/silverlightVB/Code","../Flare/Content/CodeExamples","vb")

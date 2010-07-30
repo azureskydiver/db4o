@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="">
+        <pre class="prettyprint" xml:space="preserve">configuration.common().addAlias(
+        new WildcardAlias(&quot;Db4odoc.CrossPlatform.CrossPlatform.*, Db4odoc.CrossPlatform&quot;,
+                            &quot;com.db4odoc.crossplatform.*&quot;));</pre>
+		<div class="codesnippet-meta">JavaClient.java: You need to add aliases for your types<a href="Example-db4odoc-crossplatform-mixed-languages.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

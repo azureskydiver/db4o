@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="907" MadCap:lastWidth="586">
-    <head><title>Freespace Configuration	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    <head>
     </head>
-    <body onload="prettyPrint()">
+    <body>
         <h1>Freespace Configuration</h1>
         <p>When objects are
 updated or deleted, the space previously occupied in the database file
 is marked as "free". The freespace management system takes care of this space by maintaining two lists in
-RAM, sorted by address and by size. The following configuration methods allow to tune the freespace management system to help you optimize your system:</p>
+memory, sorted by address and by size. The following configuration methods allow to tune the freespace management system to help you optimize your system:</p>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
             <p>Java:  </p>
             <p><code>public void discardSmallerThan(int byteCount);</code>

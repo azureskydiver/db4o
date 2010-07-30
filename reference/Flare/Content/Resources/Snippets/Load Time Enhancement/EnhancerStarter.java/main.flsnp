@@ -1,7 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnhancerStarter.java: main
-public static void main(String[] args) throws Exception  {
-    ClassFilter filter = new ByNameClassFilter(&quot;enhancement.&quot;, true);
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="225" MadCap:lastWidth="756">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">EnhancerStarter.java: main
+public static void main(String[] args) throws Exception  { 
+    //&#160;use a class-filter to only enhance certain classes
+    ClassFilter filter = new ByNameClassFilter("yourpackages.datamodel.", true);
+    // specify which enhancements you need.&#160;Typically the native-query
+    // optimisation and tranparent activation support
     BloatClassEdit[] edits =  { new TranslateNQToSODAEdit() , new InjectTransparentActivationEdit(filter) };
-    URL[] urls =  { new File(&quot;/work/workspaces/db4o/tatest/bin&quot;).toURI().toURL() };
-    Db4oInstrumentationLauncher.launch(edits, urls, EnhancerMain.class.getName(), new String[] {});
-  }</pre>    </body></html>
+    //&#160;specify the where the jars &amp; classes of your project are
+    URL[] urls =  { new File("/work/workspaces/db4o/tatest/bin").toURI().toURL() };
+    //&#160;the launch the application
+    Db4oInstrumentationLauncher.launch(edits, urls, EnhancerMain.class.getName(), args);
+  }</pre>
+    </body>
+</html>

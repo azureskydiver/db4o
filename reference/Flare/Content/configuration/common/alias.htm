@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="959" MadCap:lastWidth="1218">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1059" MadCap:lastWidth="791">
     <head>
     </head>
     <body>
@@ -13,9 +13,10 @@
             <li>Your own implementation, by implementing the Alias-interface.</li>
         </ul>
         <p>Each alias has two arguments. The first argument it the name which the type has in the database. The second argument is the type which is currently used. Ensure that you alias only to types which can be resolved.</p>
-        <p MadCap:conditions="Primary..NET">Note that in .NET the types-names contain the full namespace, classname and the assembly-name. For example the when you have an assembly called 'MyProject', a namespace 'Company.Project' and a class named Person, the name of the type is: 'Company.Project.Person, MyProject'</p>
+        <p MadCap:conditions="Primary..NET">Note that in <a href="../../platform_specific_issues/class_name_format_in_.net.htm">.NET the types-names</a> contain the full namespace, classname and the assembly-name. For example the when you have an assembly called 'MyProject', a namespace 'Company.Project' and a class named Person, the name of the type is: 'Company.Project.Person, MyProject'</p>
+        <p>Furthermore the order in which you add the Aliases matters. Add first the most specific alias and the go to the more general alias. For example add first all TypeAlias and then the WildCardAlias.</p>
         <MadCap:snippetBlock src="../../CodeExamples/configuration/alias/AliasExamples-Adding-aliases.all.flsnp" />
         <p>&#160;</p>
-        <p>Aliases are also used for <a href="../../implementation_strategies/aliases/cross-platform_aliasing.htm">cross-platform databases</a>. </p>
+        <p>Aliases are also used for cross-platform databases. </p>
     </body>
 </html>

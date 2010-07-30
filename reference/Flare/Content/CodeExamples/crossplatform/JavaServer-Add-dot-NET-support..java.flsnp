@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="">
+        <pre class="prettyprint" xml:space="preserve">// Add .NET support. In client-server mode set the CS-support flag to true
+// In embedded-mode to false
+configuration.common().add(new DotnetSupport(true));</pre>
+		<div class="codesnippet-meta">JavaServer.java: Add dot NET support.<a href="Example-db4odoc-crossplatform-mixed-languages.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		</div>
+	</div>
+
+    </body>
+</html>

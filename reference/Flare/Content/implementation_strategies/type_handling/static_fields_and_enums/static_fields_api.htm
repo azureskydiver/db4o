@@ -1,28 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="822" MadCap:lastWidth="680">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="11272" MadCap:lastWidth="623">
     <head><title>Static fields API	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>Static fields API</h1>
-        <p>By default db4o does not persist static fields. Normally this is not necessary as static values are set for a class, not for an object. However you can set up db4o to store static fields if you need to implement constant or enumeration:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Java: </p>
-            <p><code>Db4o.configure().objectClass(Foo.class).persistStaticFieldValues() </code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <p>c#:   </p>
-            <p><code>Db4oFactory.Configure().ObjectClass(typeof(Foo)).PersistStaticFieldValues() </code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <p>VB:   </p>
-            <p><code>Db4oFactory.Configure().ObjectClass(GetType(Foo)).PersistStaticFieldValues() </code>
-            </p>
-        </p>
-        <p MadCap:conditions="Primary:vb" />
+        <p>By default db4o does not persist static fields. Normally this is not necessary as static values are set for a class, not for an object. However you can set up db4o to store static fields if you need to implement constant or enumeration: <MadCap:xref href="../../../configuration/objectclass/persist_static_fields.htm" target="" title="" alt="">See "Persist Static Fields"</MadCap:xref></p>
+        <MadCap:snippetBlock src="../../../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Persist-also-the-static-fields.all.flsnp" />
         <p>Do not use this option unnecessarily, as it will slow down the process of opening database files and the stored objects will occupy space in the database file.</p>
         <p>This option does not have any effect on primitive types (int, boolean, etc). Use their object alternatives instead (Integer, Boolean, etc).</p>
         <p>When this setting is on for a specific class, all non-primitive-typed static field values of this class are stored the first time an object of the class is stored, and restored, every time a database file is opened afterwards, after class meta information is loaded for this class (when the class objects are retrieved with a query, for example).</p>
