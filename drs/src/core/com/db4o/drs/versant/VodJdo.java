@@ -18,9 +18,14 @@ public class VodJdo {
 	
 	private final PersistenceManager _pm;
 
-	public VodJdo(VodDatabase vod, PersistenceManager pm) {
+	public VodJdo(VodDatabase vod) {
 		_vod = vod;
-		_pm = pm;
+		_pm = _vod.createPersistenceManager();
+		_pm.currentTransaction().begin();
+	}
+	
+	public PersistenceManager persistenceManager(){
+		return _pm;
 	}
 
 	public long loid(Object obj) {
@@ -58,6 +63,22 @@ public class VodJdo {
 			}
 		}
 	}
+
+	public void close() {
+		_pm.currentTransaction().rollback();
+		_pm.close();
+	}
 	
+	public void commit(){
+		_pm.currentTransaction().commit();
+		_pm.currentTransaction().begin();
+	}
+	
+	public void rollback(){
+		_pm.currentTransaction().rollback();
+		_pm.currentTransaction().begin();
+	}
 
 }
+
+

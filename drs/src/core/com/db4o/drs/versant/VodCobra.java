@@ -9,14 +9,11 @@ import com.versant.odbms.model.*;
 
 public class VodCobra {
 	
-	private final VodDatabase _vod;
-	
 	private DatastoreManager _dm;
 
-
 	public VodCobra(VodDatabase vod) {
-		_vod = vod;
-		_dm = _vod.createDatastoreManager();
+		_dm = vod.createDatastoreManager();
+		_dm.beginTransaction();
 	}
 	
 	public static long loidAsLong(String loidAsString){
@@ -28,34 +25,15 @@ public class VodCobra {
 	}
 	
 	public Object fieldValue(final long loid, final String fieldName) {
-		return transactional(new Closure4<Object>() {
-			public Object run() {
-				DatastoreObject datastoreObject = new DatastoreObject(loid);
-				_dm.readObject(datastoreObject, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
-				DatastoreSchemaField[] fields = datastoreObject.getSchemaClass().getFields();
-				for (DatastoreSchemaField field : fields) {
-					if(fieldName.equals(field.getName())){
-						return datastoreObject.readObject(field);
-					}
-				}
-				throw new IllegalArgumentException("Field " + fieldName + " not found.");
-			}
-		});
-	}
-
-	
-	private Object transactional(Closure4<Object> closure) {
-		boolean transactionActive = _dm.isTransactionActive();
-		if(! transactionActive){
-			beginTransaction();
-		}
-		try{
-			return closure.run();
-		}finally{
-			if(! transactionActive){
-				rollbackTranssaction();
+		DatastoreObject datastoreObject = new DatastoreObject(loid);
+		_dm.readObject(datastoreObject, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		DatastoreSchemaField[] fields = datastoreObject.getSchemaClass().getFields();
+		for (DatastoreSchemaField field : fields) {
+			if(fieldName.equals(field.getName())){
+				return datastoreObject.readObject(field);
 			}
 		}
+		throw new IllegalArgumentException("Field " + fieldName + " not found.");
 	}
 	
 	private DatastoreObject datastoreObject(long loid) {
@@ -101,17 +79,15 @@ public class VodCobra {
 		_dm.groupWriteObjects(new DatastoreObject[] { datastoreObject },Options.NO_OPTIONS);
 		return loid;
 	}
-
-	public void beginTransaction() {
+	
+	public void commit(){
+		_dm.commitTransaction();
 		_dm.beginTransaction();
 	}
 	
-	public void commitTransaction(){
-		_dm.commitTransaction();
-	}
-	
-	public void rollbackTranssaction(){
+	public void rollback(){
 		_dm.rollbackTransaction();
+		_dm.beginTransaction();
 	}
 	
 

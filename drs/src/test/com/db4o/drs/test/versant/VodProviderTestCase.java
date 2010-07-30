@@ -99,16 +99,11 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 
 	private void assertOnlyOneClassMetadataInstance() {
 		String className = Item.class.getName();
-		_pm.currentTransaction().begin();
-		try{
-			Query query = _pm.newQuery(ClassMetadata.class, "this.fullyQualifiedName == param");
-			query.declareParameters("String param");
-			Collection result = (Collection) query.execute(className);
-			Assert.areEqual(1, result.size());
-			Assert.isTrue(result.contains(new ClassMetadata(null, className)));
-		} finally {
-			_pm.currentTransaction().rollback();
-		}
+		Query query = _pm.newQuery(ClassMetadata.class, "this.fullyQualifiedName == param");
+		query.declareParameters("String param");
+		Collection result = (Collection) query.execute(className);
+		Assert.areEqual(1, result.size());
+		Assert.isTrue(result.contains(new ClassMetadata(null, className)));
 	}
 	
 	public void _testQueryFor_o_ts_timestamp(){

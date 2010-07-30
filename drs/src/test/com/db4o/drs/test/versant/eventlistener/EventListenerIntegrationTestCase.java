@@ -40,7 +40,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		try {
 //			final ProcessRunner eventListenerProcess = startListener();
 			
-			final EventProcessor eventProcessor = new EventProcessor(newEventConfiguration());
+			final EventProcessor eventProcessor = new EventProcessor(newEventConfiguration(), System.out);
 			Thread eventProcessorThread = new Thread(new Runnable() {
 				public void run() {
 					try {

@@ -31,10 +31,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
-		_pm = _vod.createPersistenceManager();
-		_jdo = new VodJdo(vod, _pm);
+		_jdo = new VodJdo(vod);
+		_pm = _jdo.persistenceManager();
 		_cobra = new VodCobra(vod);
-		_pm.currentTransaction().begin();
 		loadSignatures();
 		loadKnownClasses();
 	}
@@ -57,8 +56,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commit() {
-		_pm.currentTransaction().commit();
-		_pm.currentTransaction().begin();
+		_jdo.commit();
 	}
 
 	public void delete(Object obj) {
@@ -111,8 +109,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void destroy() {
-		_pm.currentTransaction().rollback();
-		_pm.close();
+		_jdo.close();
 		_cobra.close();
 	}
 
