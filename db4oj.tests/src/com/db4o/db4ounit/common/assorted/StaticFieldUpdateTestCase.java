@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class StaticFieldUpdateTestCase extends AbstractDb4oTestCase {
 
 	public static class SimpleEnum {
-		public final String _name;
+		public String _name;
 		
 		public SimpleEnum(String name) {
 			_name = name;
