@@ -201,6 +201,25 @@
 			<arg value="am" />
 			<arg value="instrument" />
 			<arg value="-w" />
+			<!--
+			
+			To debug a testcase in android:
+			
+			1) Uncomment the following line:
+			<arg line="-e debug true" />
+
+			2) Run this ant build. After a while, the run will stop just showing 
+			   "run-tests-on-emulator:" and will wait forever until you connect 
+			   a debugger. 
+			   To do so, you have to forward a local tcp port to testcase launcher
+			   process id in the android device (or emulator). Which can be done by:
+			   $ adb forward tcp:9090 jdwp:`adb jdwp | tail -n1`
+			   
+			3) In eclipse, create a "Remote Java Application" debug configuration
+			   pointing to your localhost port 9090 (or whatever port you've forwarded)
+			   and launch it.
+			   
+			-->
 			<arg line="-e class ${db4o.junit.class.test.main}" />
 			<arg value="${db4o.junit.package.name}/android.test.InstrumentationTestRunner" />
 		</exec>
