@@ -30,6 +30,7 @@ public class Runtime4 {
 			if (block.run()) {
 				return true;
 			}
+			sleep(1);
 		} while (watch.peek() < millisecondsTimeout);
 		return false;
 	}
