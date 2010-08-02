@@ -4,7 +4,6 @@ package com.db4o.drs.test.versant;
 
 import java.io.*;
 
-import javax.jdo.*;
 
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
@@ -56,41 +55,30 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 
 	
 	public void testSimpleEvent() throws Exception {
-		PersistenceManager pm = _vod.createPersistenceManager();
+		EventClient client = newEventClient();
 		try{
-			VodEventDriver eventDriver = startEventDriver();
-			try{
-				EventClient client = newEventClient();
-				try{
-			        ClassChannelBuilder builder = new ClassChannelBuilder (_jdo.schemaName(Item.class));
-			        EventChannel channel = client.newChannel ("item", builder);
-				    RecordingEventListener eventListener = new RecordingEventListener(VodEvent.CREATED, VodEvent.MODIFIED);
-				    channel.addVersantEventListener (eventListener);
-				    Item item = storeAndCommitItem(pm);
-					updateItem(pm, item);
-					eventListener.verify(10000);
-				} finally {
-					client.shutdown();
-				}
-			} finally{
-				eventDriver.stop();
-			}
+	        ClassChannelBuilder builder = new ClassChannelBuilder (_jdo.schemaName(Item.class));
+	        EventChannel channel = client.newChannel ("item", builder);
+		    RecordingEventListener eventListener = new RecordingEventListener(VodEvent.CREATED, VodEvent.MODIFIED);
+		    channel.addVersantEventListener (eventListener);
+		    Item item = storeAndCommitItem();
+			updateItem(item);
+			eventListener.verify(10000);
 		} finally {
-			pm.close();
+			client.shutdown();
 		}
 	}
+	
 
-	private void updateItem(PersistenceManager pm, Item item) {
-		pm.currentTransaction().begin();
+	private void updateItem(Item item) {
 		item.name("newName");
-		pm.currentTransaction().commit();
+		_jdo.commit();
 	}
 
-	private Item storeAndCommitItem(PersistenceManager pm) {
+	private Item storeAndCommitItem() {
 		Item item = new Item("two");
-		pm.currentTransaction().begin();
-		pm.makePersistent(item);
-		pm.currentTransaction().commit();
+		_jdo.store(item);
+		_jdo.commit();
 		return item;
 	}
 

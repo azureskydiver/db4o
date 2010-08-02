@@ -163,6 +163,11 @@ public class IOServices {
     	        
 	        } finally {
 	            _process.destroy();
+	            try {
+					_process.waitFor();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 	            stopReaders();
 	        }
 	    }

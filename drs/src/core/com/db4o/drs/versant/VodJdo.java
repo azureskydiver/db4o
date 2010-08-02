@@ -2,9 +2,10 @@
 
 package com.db4o.drs.versant;
 
+import java.util.*;
+
 import javax.jdo.*;
 
-import com.db4o.foundation.*;
 import com.versant.core.jdo.*;
 import com.versant.core.metadata.*;
 import com.versant.core.storagemanager.*;
@@ -50,20 +51,6 @@ public class VodJdo {
 		return userSchemaClass.getName();
 	}
 	
-	public <T> T transactional(Closure4<T> closure) {
-		boolean transactionActive = _pm.currentTransaction().isActive();
-		if(! transactionActive){
-			_pm.currentTransaction().begin();
-		}
-		try{
-			return closure.run();
-		}finally{
-			if(! transactionActive){
-				_pm.currentTransaction().rollback();
-			}
-		}
-	}
-
 	public void close() {
 		_pm.currentTransaction().rollback();
 		_pm.close();
@@ -78,6 +65,15 @@ public class VodJdo {
 		_pm.currentTransaction().rollback();
 		_pm.currentTransaction().begin();
 	}
+
+	public <T> Collection<T> query(Class<T> extent) {
+		return (Collection<T>) _pm.newQuery(extent).execute();
+	}
+
+	public void store(Object obj) {
+		_pm.makePersistent(obj);
+	}
+	
 
 }
 
