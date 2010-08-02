@@ -2,8 +2,6 @@
 
 package com.db4o.drs.versant.metadata;
 
-import com.db4o.internal.*;
-
 public class ObjectLifecycleEvent {
 	
 	public static class Operations {
@@ -86,6 +84,15 @@ public class ObjectLifecycleEvent {
 	@Override
 	public String toString() {
 		return "(" + objectLoid + "," + Operations.forValue(operation) + ")";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof ObjectLifecycleEvent) ){
+			return false;
+		}
+		ObjectLifecycleEvent other = (ObjectLifecycleEvent) obj;
+		return objectLoid == other.objectLoid && timestamp == other.timestamp && operation == other.operation;
 	}
 
 }

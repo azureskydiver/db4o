@@ -13,6 +13,12 @@ import db4ounit.*;
 
 public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest  {
 	
+	protected static final String EVENT_LOGFILE_NAME = "DrsEventLogFile.log";
+	
+	protected static final int CLIENT_PORT = 4009;
+	
+	protected static final int SERVER_PORT = 4010;
+	
 	private boolean EXPOSE_OBJECT_DELETE_BUG = false;
 	
 	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
@@ -28,7 +34,8 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	// This is a direct PersistenceManager that works around the _provider
 	// so we can see what's committed, using a second reference system.
 	protected PersistenceManager _pm;
-
+	
+	private static VodEventDriver _eventDriver;
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
@@ -77,11 +84,30 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		vod.createDb();
 		vod.enhance();
 		vod.createEventSchema();
+		_eventDriver = startEventDriver();
 	}
 
 	public static void classTearDown() {
+		_eventDriver.stop();
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.removeDb();
 	}
+	
+	private static VodEventDriver startEventDriver() {
+		VodEventDriver eventDriver = new VodEventDriver(newEventConfiguration());
+		boolean started = eventDriver.start();
+		if(! started ){
+			eventDriver.printStartupFailure();
+			throw new IllegalStateException();
+		}
+		return eventDriver;
+	}
+	
+	protected static EventConfiguration newEventConfiguration() {
+		return new EventConfiguration(DATABASE_NAME, EVENT_LOGFILE_NAME,  "localhost", SERVER_PORT, "localhost", CLIENT_PORT, true);
+	}
+
+
+
 
 }

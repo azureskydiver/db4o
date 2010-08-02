@@ -2,10 +2,12 @@
 
 package com.db4o.drs.versant;
 
-import com.db4o.foundation.*;
+import java.util.*;
+
 import com.db4o.internal.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
+import com.versant.odbms.query.*;
 
 public class VodCobra {
 	
@@ -56,28 +58,129 @@ public class VodCobra {
 		return new VodId(datastoreLoid.getDatabaseId(), datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2(), datastoreObject.getTimestamp());
 	}
 
-	// Expecting only objects where classes are stored with fully qualified name:
-	// Relying on: obj.getClass().getName()
 	public long store(Object obj) {
-		DatastoreInfo info = _dm.getDefaultDatastore();
-		SchemaEditor schemaEditor = _dm.getSchemaEditor();
-		
-		DatastoreSchemaClass datastoreSchemaClass = schemaEditor.findClass(obj.getClass().getName(), info);
-		
-		
-		long loid = _dm.getNewLoid();
-		
-		DatastoreObject datastoreObject = new DatastoreObject(loid, datastoreSchemaClass, info);
-		datastoreObject.setTimestamp(1);
-		datastoreObject.allocate();
-		datastoreObject.setIsNew(true);
-		
-		for (DatastoreSchemaField field : datastoreSchemaClass.getFields()) {
-			datastoreObject.writeObject(field, Reflection4.getFieldValue(obj, field.getName()));
+		DatastoreObject datastoreObject = newDatastoreObject(obj.getClass());
+		writeFields(obj, datastoreObject);
+		write(datastoreObject);
+		return datastoreObject.getLOID();
+	}
+
+	private void writeFields(Object obj, DatastoreObject datastoreObject) {
+		for (CobraField field : fields(classOf(datastoreObject))) {
+			field.write(obj, datastoreObject);
 		}
+	}
+
+	private void write(DatastoreObject datastoreObject) {
+		_dm.groupWriteObjects(new DatastoreObject[] { datastoreObject }, Options.NO_OPTIONS);
+	}
+	
+	public void store(long loid, Object obj) {
+		DatastoreObject datastoreObject = datastoreObjectForUpdate(loid);
+		Class<Object> clazz = classOf(datastoreObject);
+		for (CobraField field : fields(clazz)) {
+			field.write(obj, datastoreObject);
+		}
+		write(datastoreObject);
+	}
+	
+	public Collection<Long> loids(Class<?> extent) {
+		Object[] loids = datastoreLoids(extent);
+		ArrayList<Long> result = new ArrayList<Long>();
+		for ( int i = 0; i < loids.length; i++ ){
+			result.add(((DatastoreLoid) loids[i]).value());
+		}
+		return result;
+	}
+	
+	public <T> T objectByLoid(long loid){
+		DatastoreObject datastoreObject = existingDatastoreObject(loid);
+		Class<T> clazz = classOf(datastoreObject);
+		T result;
+		try {
+			result = clazz.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		CobraField[] fields = fields(clazz);
+		for (int j = 0; j < fields.length; j++) {
+			fields[j].read(result, datastoreObject);
+		}
+		return result;
+	}
+
+	private <T> Class<T> classOf(DatastoreObject datastoreObject) {
+		DatastoreSchemaClass schemaClass = datastoreObject.getSchemaClass();
+		Class<T> clazz;
+		try {
+			clazz = (Class<T>) Class.forName(schemaClass.getName());
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		return clazz;
+	}
+	
+	private DatastoreObject newDatastoreObject(Class clazz) {
+		DatastoreObject datastoreObject = new DatastoreObject(_dm.getNewLoid(), datastoreSchemaClass(clazz), _dm.getDefaultDatastore());
+		datastoreObject.setTimestamp(1);
+		datastoreObject.setIsNew(true);
+		datastoreObject.allocate();
+		return datastoreObject;
+	}
+
+	private DatastoreObject existingDatastoreObject(long loid) {
+		DatastoreObject datastoreObject = new DatastoreObject(new DatastoreLoid(loid));
+		_dm.readObject(datastoreObject, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		return datastoreObject;
+	}
+	
+	private DatastoreObject datastoreObjectForUpdate(long loid) {
+		DatastoreObject oldDatastoreObject = existingDatastoreObject(loid);
 		
-		_dm.groupWriteObjects(new DatastoreObject[] { datastoreObject },Options.NO_OPTIONS);
-		return loid;
+		DatastoreObject newDatastoreObject = new DatastoreObject(loid, oldDatastoreObject.getSchemaClass(), oldDatastoreObject.getDatastoreInfo());
+		newDatastoreObject.setTimestamp(oldDatastoreObject.getTimestamp() + 1);
+		newDatastoreObject.setIsNew(false);
+		newDatastoreObject.allocate();
+		
+		return newDatastoreObject;
+	}
+
+	public <T> Collection<T> query(Class<T> extent) {
+		Object[] loids = datastoreLoids(extent);
+		if(loids.length == 0){
+			return new ArrayList<T>();
+		}
+		DatastoreObject[] datastoreObjects = new DatastoreObject[loids.length];
+		for ( int i = 0; i < loids.length; i++ ){
+			datastoreObjects[i]= new DatastoreObject((DatastoreLoid) loids[i]);
+		}
+		_dm.groupReadObjects(datastoreObjects, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		CobraField[] fields = fields(extent);
+		List<T> result = new ArrayList<T>();
+		for ( int i = 0; i < datastoreObjects.length; i++ ) {
+			try {
+				T obj = extent.newInstance();
+				for (int j = 0; j < fields.length; j++) {
+					fields[j].read(obj, datastoreObjects[i]);
+				}
+				result.add(obj);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	private Object[] datastoreLoids(Class<?> extent) {
+		DatastoreQuery query = new DatastoreQuery(extent.getName());
+		Object[] loids = _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
+				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		return loids;
+	}
+	
+	private DatastoreSchemaClass datastoreSchemaClass(Class clazz) {
+		// Using clazz.getName here, assuming fully qualified name
+		return _dm.getSchemaEditor().findClass(clazz.getName(), _dm.getDefaultDatastore());
 	}
 	
 	public void commit(){
@@ -89,6 +192,50 @@ public class VodCobra {
 		_dm.rollbackTransaction();
 		_dm.beginTransaction();
 	}
+	
+
+	
+	private CobraField[] fields(Class clazz){
+		DatastoreSchemaClass datastoreSchemaClass = datastoreSchemaClass(clazz);
+		DatastoreSchemaField[] datastoreSchemaFields = datastoreSchemaClass.getFields();
+		CobraField[] cobraFields = new CobraField[datastoreSchemaFields.length];
+		for (int i = 0; i < datastoreSchemaFields.length; i++) {
+			java.lang.reflect.Field field = Reflection4.getField(clazz, datastoreSchemaFields[i].getName());
+			cobraFields[i] = new CobraField(datastoreSchemaFields[i], field);
+		}
+		return cobraFields;
+	}
+	
+	
+	class CobraField {
+		
+		private DatastoreSchemaField _datastoreSchemaField;
+		
+		private java.lang.reflect.Field _field;
+		
+		public CobraField(DatastoreSchemaField datastoreSchemaField, java.lang.reflect.Field field){
+			_datastoreSchemaField = datastoreSchemaField;
+			_field = field;
+		}
+
+		public void write(Object obj, DatastoreObject datastoreObject) {
+			datastoreObject.writeObject(_datastoreSchemaField, Reflection4.getFieldValue(obj, _datastoreSchemaField.getName()));
+		}
+		
+		public void read(Object obj, DatastoreObject datastoreObject) {
+			if(_field == null){
+				return;
+			}
+			try {
+				_field.set(obj, datastoreObject.readObject(_datastoreSchemaField));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+
 	
 
 }

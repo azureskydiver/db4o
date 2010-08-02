@@ -3,6 +3,8 @@
 package com.db4o.drs.versant.eventlistener;
 
 import java.io.*;
+import java.util.*;
+
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
@@ -13,7 +15,6 @@ public class EventProcessor {
 	
 	private final int COMMIT_INTERVAL = 1000; // 1 sec
 	
-
 	private final EventConfiguration _eventConfiguration;
 	
 	private final PrintStream _out;
@@ -32,9 +33,17 @@ public class EventProcessor {
 	
 	private final Object _lock = new Object();
 	
-	SimpleTimer _commitTimer = new SimpleTimer(new Committer(), COMMIT_INTERVAL, "EventProcessor Commit");
+	SimpleTimer _commitTimer = new SimpleTimer(
+			new Runnable() {
+				public void run() {
+					commit();
+				}}, 
+			COMMIT_INTERVAL, 
+			"EventProcessor Commit");
 	
 	private Thread _commitThread = new Thread(_commitTimer);
+	
+	private long _timestampLoid;
 	
 	public EventProcessor(EventConfiguration eventConfiguration, PrintStream out) throws IOException {
 		_eventConfiguration = eventConfiguration;
@@ -52,7 +61,43 @@ public class EventProcessor {
 	    
 	    _commitThread.start();
 	    
-	    // TODO: Initialize TimestampIdGenerator
+	    
+	    try{
+	    	produceLastTimestamp();
+	    } catch (Exception ex){
+	    	unrecoverableExceptionOccurred(ex);
+	    }
+	    
+	    startChannelsFromKnownClasses();
+	}
+
+	private void startChannelsFromKnownClasses() throws IOException {
+		Collection<Long> classMetadataLoids = _cobra.loids(ClassMetadata.class);
+	    for (Long loid : classMetadataLoids) {
+	    	ClassMetadata classMetadata = _cobra.objectByLoid(loid);
+	    	createChannel(new ClassChannelSpec(classMetadata.name(), loid));
+		}
+	}
+
+	private void produceLastTimestamp() throws Exception {
+		Collection<Long> timestampLoids = _cobra.loids(CommitTimestamp.class);
+	    
+	    switch(timestampLoids.size()){
+	    
+	    	case 0:
+		    	_timestampLoid = _cobra.store(new CommitTimestamp(0));
+		    	_cobra.commit();
+		    	return;
+	    	case 1:
+	    		_timestampLoid = timestampLoids.iterator().next();
+	    		CommitTimestamp timestamp = _cobra.objectByLoid(_timestampLoid);
+	    		System.out.println("Timestamp read: " + timestamp.value());
+	    		_timeStampIdGenerator.setMinimumNext(timestamp.value());
+	    		return;
+	    	default:
+	    		throw new IllegalStateException("Multiple CommitTimestamp instances in database");
+	    }
+	    
 	}
 
 	public static EventClient newEventClient(EventConfiguration config) throws IOException {
@@ -60,6 +105,7 @@ public class EventProcessor {
 			return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort,config.databaseName);
 		} catch (IOException ioException){
 			System.err.println("Connection failed using\n" + config);
+			ioException.printStackTrace();
 			throw ioException;
 		}
 	}
@@ -79,6 +125,7 @@ public class EventProcessor {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		commit();
 		_cobra.close();
 	}
 
@@ -132,9 +179,12 @@ public class EventProcessor {
 				// do nothing
 			}
 			public void instanceCreated (VersantEventObject event) {
-				long classMetadataLoid = VodCobra.loidAsLong(event.getRaiserLoid());
-				String className = (String)_cobra.fieldValue(classMetadataLoid, "name");
-				_newChannels.add(new ClassChannelSpec(className, classMetadataLoid));
+				synchronized(_lock){
+					long classMetadataLoid = VodCobra.loidAsLong(event.getRaiserLoid());
+					String className = (String)_cobra.fieldValue(classMetadataLoid, "name");
+					_newChannels.add(new ClassChannelSpec(className, classMetadataLoid));
+					_dirty = true;
+				}
 			}
 			public void instanceDeleted (VersantEventObject event) {
 				// do nothing
@@ -190,13 +240,12 @@ public class EventProcessor {
     	// and react to it from some daemon code in the app?
 	}
 	
-	private class Committer implements Runnable {
-		public void run() {
-			synchronized(_lock){
-				if(_dirty){
-					_cobra.commit();
-					_dirty = false;
-				}
+	private void commit() {
+		synchronized(_lock){
+			if(_dirty){
+				_cobra.store(_timestampLoid, new CommitTimestamp(_timeStampIdGenerator.last()));
+				_cobra.commit();
+				_dirty = false;
 			}
 		}
 	}

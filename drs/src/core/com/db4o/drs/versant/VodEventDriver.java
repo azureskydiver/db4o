@@ -82,9 +82,6 @@ public class VodEventDriver {
 		destroyProcess();
 	}
 
-
-
-
 	private String databaseName() {
 		return _eventConfiguration.databaseName;
 	}

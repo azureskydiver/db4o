@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant;
 
+import java.util.*;
+
 import javax.jdo.*;
 
 import com.db4o.drs.versant.*;
@@ -21,7 +23,19 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		Assert.isGreater(0, loid);
 		Assert.areEqual(expectedObjectLoid, _cobra.fieldValue(loid, "objectLoid"));
 	}
-
+	
+	public void testQueryForExtent() {
+		ensureSchemaCreated();
+		ObjectLifecycleEvent original = new ObjectLifecycleEvent(1, 2, 3, 4);
+		_cobra.store(original);
+		
+		Collection<ObjectLifecycleEvent> result = _cobra.query(ObjectLifecycleEvent.class);
+		
+		Assert.areEqual(1, result.size());
+		ObjectLifecycleEvent retrieved = result.iterator().next();
+		Assert.areEqual(original, retrieved);
+	}
+	
 	private void ensureSchemaCreated() {
 		PersistenceManager pm = _vod.createPersistenceManager();
 		pm.close();
