@@ -20,6 +20,13 @@ import com.db4o.reflect.jdk.*;
  */
 public class JDKReflect extends JDK {
 	
+	public final static class Factory implements JDKFactory {
+		public JDK tryToCreate() {
+	    	return new JDKReflect();
+		}
+	}
+
+	
 	/**
 	 * always call super if you override
 	 */
@@ -58,10 +65,14 @@ public class JDKReflect extends JDK {
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
      */
-    final boolean methodIsAvailable(String className, String methodName,
-			Class[] params) {
+    final boolean methodIsAvailable(String className, String methodName, Class[] params) {
 		return Reflection4.getMethod(className, methodName, params) != null;
 	}
+    
+    @Override
+    boolean supportSkipConstructorCall() {
+		return methodIsAvailable(Platform4.REFLECTIONFACTORY, Platform4.GETCONSTRUCTOR, new Class[] { Class.class, constructorClass() });
+    }
     
     public void registerCollections(GenericReflector reflector) {
         reflector.registerCollection(java.util.Vector.class);

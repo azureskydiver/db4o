@@ -164,11 +164,7 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public ReflectConstructor getSerializableConstructor() {
-    	Constructor<?> serializableConstructor = Platform4.jdk().serializableConstructor(_clazz);
-		if (null == serializableConstructor) {
-			return null;
-		}
-		return new JdkConstructor(_reflector, serializableConstructor);
+    	return  Platform4.jdk().serializableConstructor(_reflector, _clazz);
     }
 
 	public Object nullValue() {

@@ -14,10 +14,20 @@ import com.db4o.reflect.generic.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore(decaf.Platform.JDK11)
+@decaf.Remove(decaf.Platform.JDK11)
 class JDK_1_2 extends JDKReflect {
 	
 	JDK_1_2(){
+	}
+	
+	@decaf.Remove(decaf.Platform.JDK11)
+	public final static class Factory implements JDKFactory {
+		public JDK tryToCreate() {
+	    	if(!classIsAvailable(Platform4.ACCESSIBLEOBJECT)){
+	    		return null;
+	    	}
+	    	return new JDK_1_2();
+		}
 	}
 	
 	public Class loadClass(String className, Object loader) throws ClassNotFoundException {

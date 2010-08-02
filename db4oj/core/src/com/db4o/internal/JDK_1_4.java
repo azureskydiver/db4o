@@ -9,11 +9,14 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore(decaf.Platform.JDK11)
+@decaf.Remove(decaf.Platform.JDK11)
 class JDK_1_4 extends JDK_1_3 {
 	
 	private Hashtable fileLocks;
@@ -21,6 +24,16 @@ class JDK_1_4 extends JDK_1_3 {
 	private Object _reflectionFactory;
 	private Constructor _objectConstructor;
 	private Method _factoryMethod;
+	
+	@decaf.Remove(decaf.Platform.JDK11)
+	public final static class Factory implements JDKFactory {
+		public JDK tryToCreate() {
+	    	if(!classIsAvailable("java.nio.channels.FileLock")){
+	    		return null;
+	    	}
+	    	return new JDK_1_4();
+		}
+	}
 	
 	synchronized void lockFile(String path,Object file) {
 		// Conversion to canonical is already done by RandomAccessFileAdapter, but it's probably
@@ -65,14 +78,20 @@ class JDK_1_4 extends JDK_1_3 {
 		fileLocks.remove(path);
 	}
 	
-	public Constructor serializableConstructor(Class clazz){
+	public ReflectConstructor serializableConstructor(Reflector reflector, Class clazz){
 	    if(_reflectionFactory == null){
 	        if(! initSerializableConstructor()){
 	            Platform4.callConstructorCheck = TernaryBool.YES;
 	            return null;
 	        }
 	    }
-	    return (Constructor) Reflection4.invoke(new Object[]{clazz, _objectConstructor}, _reflectionFactory, _factoryMethod);
+	    Constructor serializableConstructor = (Constructor) Reflection4.invoke(new Object[]{clazz, _objectConstructor}, _reflectionFactory, _factoryMethod);
+	    
+		if (null == serializableConstructor) {
+			return null;
+		}
+		return new JdkConstructor(reflector, serializableConstructor);
+
 	}
 	
 	
