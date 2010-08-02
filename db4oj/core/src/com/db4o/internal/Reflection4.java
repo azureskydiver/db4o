@@ -4,6 +4,8 @@ package com.db4o.internal;
 
 import java.lang.reflect.*;
 
+import com.db4o.foundation.*;
+
 /**
  * @exclude
  * 
@@ -127,27 +129,51 @@ public class Reflection4 {
     }
     
     public static String dump(Object obj){
-    	if(obj == null){
+    	return dumpPreventRecursion(obj, new IdentitySet4(), 2);
+    }
+
+	private static String dumpPreventRecursion(Object obj, IdentitySet4 dumped, int stackLimit) {
+		stackLimit--;
+		if(obj == null){
     		return "null";
     	}
+		
     	Class clazz = obj.getClass();
+    	if(Platform4.isSimple(clazz)){
+    		return obj.toString();
+    	}
     	StringBuffer sb = new StringBuffer();
     	sb.append(clazz.getName());
+    	sb.append(" (");
+    	sb.append(System.identityHashCode(obj));
+    	sb.append(")");
+
+		if(dumped.contains(obj) || stackLimit <= 0){
+			return sb.toString();
+		}
+		dumped.add(obj);
     	Field[] fields = clazz.getDeclaredFields();
     	for (Field field : fields) {
-    		sb.append("\n");
     		Platform4.setAccessible(field);
+    		try {
+				if( field.get(null) == field.get(obj) ){
+					continue;  // static field.getModifiers() wouldn't sharpen 
+				}
+			} catch (Exception e) {
+			} 
+    		sb.append("\n");
     		sb.append("\t");
 			sb.append(field.getName());
 			sb.append(": ");
 			try {
-				sb.append(field.get(obj));
+				sb.append(dumpPreventRecursion(field.get(obj), dumped, stackLimit));
 			} catch (Exception e) {
 				sb.append("Exception caught: ");
 				sb.append(e);
 			} 
 		}
     	return sb.toString();
-    }
+	}
+
     
 }
