@@ -350,8 +350,10 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	}
 
 	private void listen() {
+		// we are keeping a reference to container to avoid race conditions upon closing this server
+		final LocalObjectContainer threadContainer = _container;
 		while (_serverSocket != null) {
-			withEnvironment(new Runnable() { public void run() {
+			threadContainer.withEnvironment(new Runnable() { public void run() {
 				try {
 					Socket4 socket = _serverSocket.accept();
 					ServerMessageDispatcherImpl messageDispatcher = 
@@ -361,7 +363,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 								socket,
 								newThreadId(),
 								false,
-								_container.lock());
+								threadContainer.lock());
 					
 					addServerMessageDispatcher(messageDispatcher);
 						
