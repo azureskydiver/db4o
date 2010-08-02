@@ -69,6 +69,10 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 		runResourceTestCase("RemoveAllClassesInArray");
 	}
 
+	public void testRemoveAllInnerClassesInArray() throws Exception {
+		runResourceTestCase("RemoveAllInnerClassesInArray");
+	}
+
 	@Override
 	protected String packagePath() {
 		return "annotations";
