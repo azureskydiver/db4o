@@ -22,9 +22,6 @@ import com.db4o.reflect.generic.*;
  */
 public final class Platform4 {
     
-
-    private static final String	JDK_PACKAGE	= "com.db4o.internal.";
-
 	static private TernaryBool collectionCheck=TernaryBool.UNSPECIFIED;
 
     static private JDK jdkWrapper;
@@ -376,37 +373,46 @@ public final class Platform4 {
         return jdkWrapper;
     }
     
+    
+	public static class JDKFactoryInstantiationException extends RuntimeException {
+
+		public JDKFactoryInstantiationException(Throwable cause) {
+			super(JDKFactory.class.getSimpleName() + " instances must have a public default constructor and be accessible from "
+					+ Platform4.class.getSimpleName(), cause);
+		}
+
+	}
+    
     private static void createJdk() {
     	
-        if (classIsAvailable("java.lang.reflect.Method")){
-            jdkWrapper = (JDK)ReflectPlatform.createInstance(JDK_PACKAGE + "JDKReflect");
-        }
+    	
+    	Class<?>[] jdkFactories = {
+    			DalvikVM.Factory.class,
+    			JDK_5.Factory.class,
+    			JDK_1_4.Factory.class,
+    			JDK_1_3.Factory.class,
+    			JDK_1_2.Factory.class,
+    			JDKReflect.Factory.class,
+    	};
+    	
+    	for (Class<?> clazz : jdkFactories) {
+			try {
+				
+				jdkWrapper = ((JDKFactory) clazz.newInstance()).tryToCreate();
+				if (jdkWrapper != null) {
+					break;
+				}
+				
+			} catch (SecurityException e) {
+				throw new JDKFactoryInstantiationException(e);
+			} catch (IllegalAccessException e) {
+				throw new JDKFactoryInstantiationException(e);
+			} catch (InstantiationException e) {
+				throw new JDKFactoryInstantiationException(e);
+			}
+		}
 
-        if (classIsAvailable(Platform4.ACCESSIBLEOBJECT)){
-        	jdkWrapper = createJDKWrapper("1_2");
-        }
         
-        if (jdk().methodIsAvailable("java.lang.Runtime","addShutdownHook",
-                new Class[] { Thread.class })){
-        	jdkWrapper = createJDKWrapper("1_3");
-        }
-
-        if(classIsAvailable("java.nio.channels.FileLock")){
-        	jdkWrapper = createJDKWrapper("1_4");
-        }
-        
-        if(classIsAvailable("java.lang.Enum")){
-        	jdkWrapper = createJDKWrapper("5");
-        }
-        
-    }
-    
-    private static JDK createJDKWrapper(String name){
-        JDK newWrapper = (JDK)ReflectPlatform.createInstance(JDK_PACKAGE + "JDK_" + name);
-        if(newWrapper != null){
-            return newWrapper;
-        }
-        return jdkWrapper;
     }
     
 	public static boolean isSimple(Class a_class){
@@ -457,12 +463,7 @@ public final class Platform4 {
     public static boolean callConstructor() {
         if (callConstructorCheck.isUnspecified()) {
             
-            if(jdk().methodIsAvailable(
-                REFLECTIONFACTORY,
-                GETCONSTRUCTOR,
-                new Class[]{Class.class, jdk().constructorClass()}
-                )){
-                
+            if(jdk().supportSkipConstructorCall()){
                 callConstructorCheck = TernaryBool.NO;
                 return false;
             }

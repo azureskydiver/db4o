@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
@@ -11,6 +10,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
 
 /**
@@ -122,6 +122,10 @@ public class JDK {
 	boolean methodIsAvailable(String className, String methodName, Class[] params) {
     	return false;
     }
+	
+	boolean supportSkipConstructorCall() {
+		return false;
+	}
 
 	public long nanoTime() {
 		throw new NotImplementedException();
@@ -139,7 +143,7 @@ public class JDK {
 		
 	}
 	
-	public Constructor serializableConstructor(Class clazz){
+	public ReflectConstructor serializableConstructor(Reflector reflector, Class clazz){
 	    return null;
 	}
 	
@@ -184,6 +188,10 @@ public class JDK {
 	public void throwIllegalArgumentException(Throwable origExc) {
 		throw new IllegalArgumentException("Argument " + origExc.getClass().getName() + " not an unchecked Exception.");
 	}
+
+	protected static final boolean classIsAvailable(String className) {
+    	return ReflectPlatform.forName(className) != null;
+    }
 
 
 }

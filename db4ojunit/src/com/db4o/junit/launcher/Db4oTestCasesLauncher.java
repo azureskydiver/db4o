@@ -19,7 +19,7 @@ public class Db4oTestCasesLauncher extends TestCase {
 	private static final String TESTS_OUTPUT_FILE = SDCARD_PATH + "/db4o-tests-output.txt";
 
 	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException {
-		new Db4oTestCasesLauncher().test(new PrintWriter(System.out));
+		new Db4oTestCasesLauncher().test(new PrintWriter(System.out, true));
 	}
 
 	protected PrintWriter acceptedClasses = null;
@@ -27,6 +27,8 @@ public class Db4oTestCasesLauncher extends TestCase {
 	public void test() throws FileNotFoundException, ClassNotFoundException {
 		PrintWriter out = new PrintWriter(TESTS_OUTPUT_FILE);
 		test(out);
+		out.flush();
+		out.close();
 	}
 
 	private void test(final PrintWriter out) {

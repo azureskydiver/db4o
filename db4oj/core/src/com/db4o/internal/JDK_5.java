@@ -13,9 +13,19 @@ import com.db4o.reflect.jdk.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Remove
 class JDK_5 extends JDK_1_4 {
 
+	@decaf.Remove
+	public final static class Factory implements JDKFactory {
+		public JDK tryToCreate() {
+	    	if(!classIsAvailable("java.lang.Enum")){
+	    		return null;
+	    	}
+	    	return new JDK_5();
+		}
+	}
+	
 	public Config4Class extendConfiguration(ReflectClass clazz,
 			Configuration config, Config4Class classConfig) {
 		Class javaClazz = JdkReflector.toNative(clazz);

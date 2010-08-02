@@ -5,8 +5,19 @@ package com.db4o.internal;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore(decaf.Platform.JDK11)
+@decaf.Remove(decaf.Platform.JDK11)
 class JDK_1_3 extends JDK_1_2{
+	
+	@decaf.Remove(decaf.Platform.JDK11)
+	public final static class Factory implements JDKFactory {
+		public JDK tryToCreate() {
+	    	if(Reflection4.getMethod("java.lang.Runtime","addShutdownHook",
+	            new Class[] { Thread.class }) == null){
+	      		return null;
+	      	}
+	      	return new JDK_1_3();
+		}
+	}
 
 	Thread addShutdownHook(Runnable runnable){
 		Thread thread = new Thread(runnable);

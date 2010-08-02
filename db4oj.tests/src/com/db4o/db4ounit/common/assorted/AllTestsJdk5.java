@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
  * @sharpen.ignore
  */
 @decaf.Ignore
-public class AllTestsJdk5 extends Db4oConcurrencyTestSuite {
+public class AllTestsJdk5 extends Db4oTestSuite {
 
 	public static void main(String[] args) {
 		System.exit(new AllTestsJdk5().runAll());
