@@ -4,8 +4,6 @@ package com.db4o.drs.test.versant;
 
 import java.util.*;
 
-import javax.jdo.*;
-
 import com.db4o.*;
 import com.db4o.drs.test.versant.data.*;
 import com.versant.odbms.*;
@@ -91,9 +89,7 @@ public class VodSimpleObjectContainerTestCase extends VodEventProcessorEnabledTe
 		final int length = 1000;
 		_provider.storeNew(Chain.newChainWithLength(length));
 		_provider.commit();
-		Query query = _pm.newQuery(Chain.class, "this._id == 0");
-		Collection collection = (Collection)query.execute();
-		Chain chain = (Chain) collection.iterator().next();
+		Chain chain = _jdo.query(Chain.class, "this._id == 0").iterator().next();
 		Assert.areEqual(length, chain.length());
 	}
 	
@@ -102,9 +98,9 @@ public class VodSimpleObjectContainerTestCase extends VodEventProcessorEnabledTe
 	}
 	
 	private <T> void assertContent(final Class<T> type, final Iterable<T> items) {
-		Collection collection = (Collection) _pm.newQuery(type).execute();
-		for (Object object : collection) {
-			_pm.refresh(object);
+		Collection<T> collection = _jdo.query(type);
+		for (Object obj : collection) {
+			_jdo.refresh(obj);
 		}
 		IteratorAssert.sameContent(items, collection);
 	}

@@ -5,8 +5,6 @@ package com.db4o.drs.test.versant;
 
 import java.util.*;
 
-import javax.jdo.*;
-
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
@@ -99,9 +97,7 @@ public class VodProviderTestCase extends VodEventProcessorEnabledTestCaseBase  i
 
 	private void assertOnlyOneClassMetadataInstance() {
 		String className = Item.class.getName();
-		Query query = _pm.newQuery(ClassMetadata.class, "this.fullyQualifiedName == param");
-		query.declareParameters("String param");
-		Collection result = (Collection) query.execute(className);
+		Collection result = _jdo.query(ClassMetadata.class, "this.fullyQualifiedName == '" + className + "'");
 		Assert.areEqual(1, result.size());
 		Assert.isTrue(result.contains(new ClassMetadata(null, className)));
 	}

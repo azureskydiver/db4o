@@ -4,8 +4,6 @@ package com.db4o.drs.test.versant;
 
 import java.util.*;
 
-import javax.jdo.*;
-
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
 
@@ -31,16 +29,11 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	// so we can see what's committed, using a second reference system.
 	protected VodJdo _jdo;
 	
-	// This is a direct PersistenceManager that works around the _provider
-	// so we can see what's committed, using a second reference system.
-	protected PersistenceManager _pm;
-	
 	private static VodEventDriver _eventDriver;
 	
 	public void setUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
 		_jdo = new VodJdo(_vod);
-		_pm = _jdo.persistenceManager();
 		cleanDb();
 		_provider = new VodReplicationProvider(_vod);
 	}
@@ -53,9 +46,9 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	
 	private void cleanDb(){
 		
-		Collection allObjects = (Collection) _pm.newQuery(Object.class).execute();
+		Collection allObjects = _jdo.query(Object.class);
 		for (Object object : allObjects) {
-			_pm.deletePersistent(object);
+			_jdo.delete(object);
 		}
 		_jdo.commit();
 		
@@ -71,10 +64,7 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		};
 		
 		for (int i = 0; i < deleteClasses.length; i++) {
-			allObjects = (Collection) _pm.newQuery(deleteClasses[i]).execute();
-			for (Object object : allObjects) {
-				_pm.deletePersistent(object);
-			}
+			_jdo.deleteAll(deleteClasses[i]);
 			_jdo.commit();
 		}
 	}

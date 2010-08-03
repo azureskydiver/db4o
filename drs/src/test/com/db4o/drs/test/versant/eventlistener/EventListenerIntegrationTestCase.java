@@ -29,12 +29,9 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
 					public Boolean run() {
 						Item item = storeAndCommitItem();
-						
 						final long objectLoid = _provider.loid(item);
-						
-						Query query = _pm.newQuery(ObjectLifecycleEvent.class, "this.objectLoid == param");
-						query.declareParameters("long param");
-						Collection<ObjectLifecycleEvent> objectLifecycleEvents = (Collection<ObjectLifecycleEvent>) query.execute(objectLoid);
+						Collection<ObjectLifecycleEvent> objectLifecycleEvents = 
+							_jdo.query(ObjectLifecycleEvent.class, "this.objectLoid == " + objectLoid); 
 						if(objectLifecycleEvents.size() != 1){
 							return false;
 						}
