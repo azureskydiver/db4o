@@ -123,12 +123,10 @@ public class VodCobra {
 	
 	private DatastoreObject datastoreObjectForUpdate(long loid) {
 		DatastoreObject oldDatastoreObject = existingDatastoreObject(loid);
-		
 		DatastoreObject newDatastoreObject = new DatastoreObject(loid, oldDatastoreObject.getSchemaClass(), oldDatastoreObject.getDatastoreInfo());
 		newDatastoreObject.setTimestamp(oldDatastoreObject.getTimestamp() + 1);
 		newDatastoreObject.setIsNew(false);
 		newDatastoreObject.allocate();
-		
 		return newDatastoreObject;
 	}
 
@@ -185,25 +183,28 @@ public class VodCobra {
 		DatastoreSchemaField[] datastoreSchemaFields = datastoreSchemaClass.getFields();
 		CobraField[] cobraFields = new CobraField[datastoreSchemaFields.length];
 		for (int i = 0; i < datastoreSchemaFields.length; i++) {
-			java.lang.reflect.Field field = Reflection4.getField(clazz, datastoreSchemaFields[i].getName());
-			cobraFields[i] = new CobraField(datastoreSchemaFields[i], field);
+			cobraFields[i] = new CobraField(clazz, datastoreSchemaFields[i]);
 		}
 		return cobraFields;
 	}
 	
-	class CobraField {
+	private class CobraField {
 		
 		private DatastoreSchemaField _datastoreSchemaField;
 		
 		private java.lang.reflect.Field _field;
 		
-		public CobraField(DatastoreSchemaField datastoreSchemaField, java.lang.reflect.Field field){
+		public CobraField(Class clazz, DatastoreSchemaField datastoreSchemaField){
 			_datastoreSchemaField = datastoreSchemaField;
-			_field = field;
+			_field = Reflection4.getField(clazz, name());
 		}
 
 		public void write(Object obj, DatastoreObject datastoreObject) {
-			datastoreObject.writeObject(_datastoreSchemaField, Reflection4.getFieldValue(obj, _datastoreSchemaField.getName()));
+			datastoreObject.writeObject(_datastoreSchemaField, Reflection4.getFieldValue(obj, name()));
+		}
+		
+		private String name(){
+			return _datastoreSchemaField.getName();
 		}
 		
 		public void read(Object obj, DatastoreObject datastoreObject) {
@@ -217,9 +218,6 @@ public class VodCobra {
 			}
 		}
 	}
-
-
-
 	
 
 }

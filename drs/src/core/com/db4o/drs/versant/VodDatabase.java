@@ -107,10 +107,6 @@ public class VodDatabase {
 		DBUtility.createDB(_name);
 	}
 
-	public PersistenceManager createPersistenceManager() {
-		return persistenceManagerFactory().getPersistenceManager();
-	}
-	
 	public PersistenceManagerFactory persistenceManagerFactory(){
 		if(_persistenceManagerFactory == null){
 			_persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(_properties);

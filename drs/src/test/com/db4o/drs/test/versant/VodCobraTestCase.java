@@ -38,13 +38,11 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	}
 	
 	private void ensureSchemaCreated() {
-		PersistenceManager pm = _vod.createPersistenceManager();
-		pm.close();
+		new VodJdo(_vod).close();
 	}
 
 	public void setUp() throws Exception {
 		_cobra = new VodCobra(_vod);
-		
 	}
 
 	public void tearDown() throws Exception {

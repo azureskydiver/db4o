@@ -21,7 +21,7 @@ public class VodJdo {
 
 	public VodJdo(VodDatabase vod) {
 		_vod = vod;
-		_pm = _vod.createPersistenceManager();
+		_pm = _vod.persistenceManagerFactory().getPersistenceManager();
 		_pm.currentTransaction().begin();
 	}
 	
