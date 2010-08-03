@@ -13,7 +13,7 @@ import db4ounit.*;
 public class VodDatabaseTestCase extends VodDatabaseTestCaseBase {
 	
 	public void testPersistenceManagerFactory(){
-		PersistenceManager pmf = _vod.createPersistenceManager();
+		PersistenceManager pmf = _vod.persistenceManagerFactory().getPersistenceManager();
 		Assert.isFalse(pmf.isClosed());
 		pmf.close();
 	}
