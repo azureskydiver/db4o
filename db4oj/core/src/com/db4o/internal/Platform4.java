@@ -377,8 +377,8 @@ public final class Platform4 {
 	public static class JDKFactoryInstantiationException extends RuntimeException {
 
 		public JDKFactoryInstantiationException(Throwable cause) {
-			super(JDKFactory.class.getSimpleName() + " instances must have a public default constructor and be accessible from "
-					+ Platform4.class.getSimpleName(), cause);
+			super(JDKFactory.class.getName() + " instances must have a public default constructor and be accessible from "
+					+ Platform4.class.getName(), cause);
 		}
 
 	}
