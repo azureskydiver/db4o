@@ -1,0 +1,7 @@
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/bin/Debug/Db4objects.Db4o.dll
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/bin/Debug/Db4objects.Db4o.Linq.dll
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/bin/Debug/Mono.Reflection.dll
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/bin/Debug/NewCecilPerfTest.exe.mdb
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/bin/Debug/NewCecilPerfTest.exe
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/obj/x86/Debug/NewCecilPerfTest.exe
+/Users/raphaelferraz/devel/git/db4o/sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/obj/x86/Debug/NewCecilPerfTest.exe.mdb

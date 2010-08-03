@@ -41,3 +41,4 @@ db4obuild/*.log
 db4obuild/*.db4o
 db4oj.tests/*.log
 db4oj.tests/*.db4o
+sandbox/fabio/NewCecilPerfTest/NewCecilPerfTest/bin
