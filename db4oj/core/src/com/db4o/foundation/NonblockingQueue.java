@@ -81,15 +81,10 @@ public class NonblockingQueue<T> implements Queue4<T> {
 		return new Iterator4Impl<T>(_next) {
 			
 			public boolean moveNext() {
-				if (queueWasModified()) {
+				if (origInsertionPoint != _insertionPoint || origNext != _next) {
 					throw new IllegalStateException();
 				}
 				return super.moveNext();
-			}
-
-			private boolean queueWasModified() {
-				return origInsertionPoint != _insertionPoint
-					|| origNext != _next;
 			}
 		};
 	}
