@@ -37,6 +37,9 @@ public class VodCobra {
 		DatastoreLoid datastoreLoid = new DatastoreLoid(loid);
 		
 		DatastoreObject datastoreObject = datastoreObject(loid);
+		
+		System.err.println("VodCobra#idFor: TODO: create correct timestamp here");
+		
 		// TODO: Create correct timestamp here
 		
 		return new VodId(datastoreLoid.getDatabaseId(), datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2(), datastoreObject.getTimestamp());

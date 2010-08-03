@@ -79,6 +79,23 @@ public class VodJdo {
 		_pm.evict(obj);
 		return objectByLoid(loid);
 	}
+
+	public void deleteAll(Class clazz) {
+		_pm.deletePersistentAll((Collection) _pm.newQuery(clazz).execute());
+	}
+
+	public void delete(Object obj) {
+		_pm.deletePersistent(obj);
+	}
+
+	public <T> Collection<T> query(Class<T> clazz, String filter) {
+		Query query = _pm.newQuery(clazz, filter);
+		return (Collection<T>) query.execute();
+	}
+
+	public void refresh(Object obj) {
+		_pm.refresh(obj);
+	}
 	
 }
 

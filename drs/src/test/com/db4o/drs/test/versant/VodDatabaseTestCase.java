@@ -2,14 +2,11 @@
 
 package com.db4o.drs.test.versant;
 
-import java.io.*;
 
 import javax.jdo.*;
 
-import com.db4o.drs.versant.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
-import com.versant.trans.*;
 
 import db4ounit.*;
 

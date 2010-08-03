@@ -4,8 +4,6 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
-import javax.jdo.*;
-
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
@@ -16,8 +14,6 @@ import com.db4o.internal.encoding.*;
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
 	private final VodDatabase _vod;
-	
-	private final PersistenceManager _pm;
 	
 	private final VodCobra _cobra;
 	
@@ -32,22 +28,19 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
 		_jdo = new VodJdo(vod);
-		_pm = _jdo.persistenceManager();
 		_cobra = new VodCobra(vod);
 		loadSignatures();
 		loadKnownClasses();
 	}
 
 	private void loadKnownClasses() {
-		Extent<ClassMetadata> extent = _pm.getExtent(ClassMetadata.class);
-		for (ClassMetadata classMetadata : extent) {
+		for (ClassMetadata classMetadata : _jdo.query(ClassMetadata.class)) {
 			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata);
 		}
 	}
 
 	private void loadSignatures() {
-		Extent<DatabaseSignature> extent = _pm.getExtent(DatabaseSignature.class);
-		for (DatabaseSignature entry : extent) {
+		for (DatabaseSignature entry : _jdo.query(DatabaseSignature.class)) {
 			if(DrsDebug.verbose){
 				System.out.println(entry);
 			}
@@ -60,16 +53,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void delete(Object obj) {
-		_pm.deletePersistent(obj);
+		_jdo.delete(obj);
 	}
 
 	public void deleteAllInstances(Class clazz) {
-		_pm.deletePersistentAll((Collection) _pm.newQuery(clazz).execute());
+		_jdo.deleteAll(clazz);
 	}
 
-	public ObjectSet getStoredObjects(Class type) {
-		Collection collection = (Collection) _pm.newQuery(type).execute();
-		return new ObjectSetCollectionFacade(collection);
+	public ObjectSet getStoredObjects(Class clazz) {
+		return new ObjectSetCollectionFacade(_jdo.query(clazz));
 	}
 
 	public void storeNew(Object obj) {
@@ -333,7 +325,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		signature = new Signature(signatureBytes(databaseId));
 		
 		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
-		_pm.makePersistent(databaseSignature);
+		_jdo.store(databaseSignature);
 		_signatures.add(databaseId, signature);
 		return signature;
 	}
