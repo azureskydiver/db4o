@@ -25,14 +25,20 @@ public class Runtime4 {
 	 * elapses.
 	 */
 	public static boolean retry(long millisecondsTimeout, Closure4<Boolean> block) {
+		return retry(millisecondsTimeout, 1, block);
+	}
+	
+	
+	public static boolean retry(long millisecondsTimeout, int millisecondsBetweenRetries, Closure4<Boolean> block) {
 		final StopWatch watch = new AutoStopWatch();
 		do {
 			if (block.run()) {
 				return true;
 			}
-			sleep(1);
+			sleep(millisecondsBetweenRetries);
 		} while (watch.peek() < millisecondsTimeout);
 		return false;
 	}
+
 
 }
