@@ -33,8 +33,8 @@ public class VodJdo {
 		return VdsUtils.getLOID(obj, _pm);
 	}
 
-	public Object objectByLoid(long loid) {
-		return VdsUtils.getObjectByLOID(loid, true, _pm);
+	public <T> T objectByLoid(long loid) {
+		return (T) VdsUtils.getObjectByLOID(loid, true, _pm);
 	}
 	
 	private ModelMetaData modelMetadata() {
@@ -73,8 +73,13 @@ public class VodJdo {
 	public void store(Object obj) {
 		_pm.makePersistent(obj);
 	}
-	
 
+	public <T> T peek (T obj) {
+		long loid = loid(obj);
+		_pm.evict(obj);
+		return objectByLoid(loid);
+	}
+	
 }
 
 

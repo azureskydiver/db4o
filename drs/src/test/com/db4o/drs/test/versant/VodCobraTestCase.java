@@ -21,7 +21,8 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		ObjectLifecycleEvent objectLifecycleEvent = new ObjectLifecycleEvent(1, expectedObjectLoid, 3, 4);
 		long loid = _cobra.store(objectLifecycleEvent);
 		Assert.isGreater(0, loid);
-		Assert.areEqual(expectedObjectLoid, _cobra.fieldValue(loid, "objectLoid"));
+		ObjectLifecycleEvent storedObjectLifecycleEvent = _cobra.objectByLoid(loid);
+		Assert.areEqual(expectedObjectLoid, storedObjectLifecycleEvent.objectLoid());
 	}
 	
 	public void testQueryForExtent() {

@@ -20,7 +20,7 @@ public class VodDatabase {
 	
 	private static final String JDO_METADATA_KEY = "versant.metadata."; 
 
-	static final String VED_DRIVER = "veddriver";
+	public static final String VED_DRIVER = "veddriver";
 	
 
 	private static final int DEFAULT_PORT = 5019;
@@ -45,7 +45,7 @@ public class VodDatabase {
 	
 	private void addDefaultProperties(){
 		
-		// addPropertyIfNotExists("versant.l2CacheEnabled", "false");
+		addPropertyIfNotExists("versant.l2CacheEnabled", "false");
 		
 		// addPropertyIfNotExists("versant.vdsNamingPolicy", "none");
 		

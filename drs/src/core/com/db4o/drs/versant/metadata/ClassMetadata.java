@@ -4,15 +4,37 @@ package com.db4o.drs.versant.metadata;
 
 import com.db4o.internal.*;
 
+/**
+ * 
+ * ClassMetadata instances are stored by VodReplicationProvider
+ * in #ensureClassKnown.
+ * EventProcessor listens to creation of ClassMetadata instances.
+ * It modifies the monitored boolean as soon as the listener channel
+ * for the class is up. This way we can wait in the 
+ * ReplicationProvider until the monitored boolean is set, so we 
+ * don't loose any events for the very first stored objects.
+ */
 public class ClassMetadata {
 	
 	private String name;
 	
 	private String fullyQualifiedName;
-
-	public ClassMetadata(String name, String fullyQualifiedName){
+	
+	/** This flag is exclusively used by the EventProcessor to signal it has started 
+	 * the channel for newly created or registered classes, so we can wait for this
+	 * flag to change, so we don't loose events for the first objects. 
+	 */
+	private boolean monitored;
+	
+	public ClassMetadata(String name, String fullyQualifiedName, boolean monitored){
 		this.name = name;
 		this.fullyQualifiedName = fullyQualifiedName;
+		this.monitored = monitored;
+	}
+
+
+	public ClassMetadata(String name, String fullyQualifiedName){
+		this(name, fullyQualifiedName, false);
 	}
 	
 	@Override
@@ -42,6 +64,10 @@ public class ClassMetadata {
 
 	public String fullyQualifiedName() {
 		return fullyQualifiedName;
+	}
+	
+	public boolean monitored(){
+		return monitored;
 	}
 
 }

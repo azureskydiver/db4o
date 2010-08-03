@@ -21,22 +21,6 @@ public class VodCobra {
 	public static long loidAsLong(String loidAsString){
 		return DatastoreLoid.asValue(loidAsString);
 	}
-
-	public Object fieldValue(String loidAsString, String fieldName) {
-		return fieldValue(DatastoreLoid.asValue(loidAsString), fieldName);
-	}
-	
-	public Object fieldValue(final long loid, final String fieldName) {
-		DatastoreObject datastoreObject = new DatastoreObject(loid);
-		_dm.readObject(datastoreObject, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
-		DatastoreSchemaField[] fields = datastoreObject.getSchemaClass().getFields();
-		for (DatastoreSchemaField field : fields) {
-			if(fieldName.equals(field.getName())){
-				return datastoreObject.readObject(field);
-			}
-		}
-		throw new IllegalArgumentException("Field " + fieldName + " not found.");
-	}
 	
 	private DatastoreObject datastoreObject(long loid) {
 		DatastoreLoid datastoreLoid = new DatastoreLoid(loid);
@@ -193,8 +177,6 @@ public class VodCobra {
 		_dm.beginTransaction();
 	}
 	
-
-	
 	private CobraField[] fields(Class clazz){
 		DatastoreSchemaClass datastoreSchemaClass = datastoreSchemaClass(clazz);
 		DatastoreSchemaField[] datastoreSchemaFields = datastoreSchemaClass.getFields();
@@ -205,7 +187,6 @@ public class VodCobra {
 		}
 		return cobraFields;
 	}
-	
 	
 	class CobraField {
 		

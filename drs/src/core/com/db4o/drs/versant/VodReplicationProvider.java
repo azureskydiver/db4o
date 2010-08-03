@@ -77,8 +77,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalArgumentException();
 		}
 		ensureClassKnown(obj);
-		
-		_pm.makePersistent(obj);
+		_jdo.store(obj);
 	}
 
 	private void ensureClassKnown(Object obj) {
@@ -92,14 +91,38 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return;
 		}
 		
-		PersistenceManager pm = _vod.createPersistenceManager();
 		
-		pm.currentTransaction().begin();
+		final VodJdo jdo = new VodJdo(_vod);
+		
 		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
-		pm.makePersistent(classMetadata);
+		
+		jdo.store(classMetadata);
 		_knownClasses.put(className, classMetadata);
-		pm.currentTransaction().commit();
-		pm.close();
+		jdo.commit();
+		
+		final ByRef<ClassMetadata> classMetadataByRef = ByRef.newInstance(classMetadata);
+		
+		
+		try{
+			int timeoutInMillis = 10000;
+			int millisecondsBetweenRetries = 50;
+			boolean eventListenerHasChangedMonitored = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
+				public Boolean run() {
+					// The eventlistener listens to creation of ClassMetadata objects.
+					// It will change the monitored field as soon as the channel is up.
+					classMetadataByRef.value = jdo.peek(classMetadataByRef.value);
+					return classMetadataByRef.value.monitored();
+				}
+			});
+			if(! eventListenerHasChangedMonitored){
+				Class eventListenerProgram = com.db4o.drs.versant.eventlistener.Program.class;
+				throw new IllegalStateException("Event listener process did not respond to ClassMetadata creation for " 
+						+ className + ". Ensure that " + eventListenerProgram.getName() + " is running.");
+				
+			}
+		} finally {
+			jdo.close();
+		}
 	}
 
 
