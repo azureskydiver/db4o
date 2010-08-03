@@ -13,7 +13,7 @@ import com.versant.odbms.model.*;
 
 import db4ounit.*;
 
-public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase implements TestLifeCycle {
+public class VodSimpleObjectContainerTestCase extends VodEventProcessorEnabledTestCaseBase implements TestLifeCycle {
 	
 	public void testStoreNew(){
 		Item item = new Item("one");

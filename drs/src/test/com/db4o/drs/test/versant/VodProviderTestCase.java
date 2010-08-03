@@ -18,7 +18,7 @@ import com.versant.odbms.query.Operator.*;
 
 import db4ounit.*;
 
-public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
+public class VodProviderTestCase extends VodEventProcessorEnabledTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	public static void main(String[] args) {
 		new ConsoleTestRunner(VodProviderTestCase.class).run();
@@ -126,7 +126,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		Object[] loids = dm.executeQuery(query, DataStoreLockMode.NOLOCK,
 				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
 		for (Object loid : loids) {
-			// System.out.println(loid);
+			System.out.println(loid);
 		}
 	}
 

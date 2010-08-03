@@ -38,11 +38,7 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 		final EventProcessor eventProcessor = new EventProcessor(newEventConfiguration(), printOut);
 		Thread eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
-				try {
-					eventProcessor.run();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				eventProcessor.run();
 			}
 		});
 		eventProcessorThread.start();
@@ -64,7 +60,7 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	}
 	
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
-		withEventProcessor(closure, "");
+		withEventProcessor(closure, "Listening");
 	}
 	
 	protected void withEventProcessor(Closure4<Void> closure, String expectedOutput) throws Exception {

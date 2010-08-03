@@ -79,14 +79,9 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 			withEventProcessor(new Closure4<Void>() {
 				public Void run() {
 					storeAndCommitItem();
-					
-					// FIXME: If we remove the following, we don't get a nice
-					//        commit of the event processor. Check !
-					Runtime4.sleep(1100);
-					
 					return null;
 				}
-			}, "Item");
+			}, "Event stored");
 		}
 	}
 	

@@ -13,6 +13,8 @@ import com.versant.event.*;
 
 public class EventProcessor {
 	
+	public static final String LISTENING_MESSAGE = "Listening for events on ";
+
 	private final int COMMIT_INTERVAL = 1000; // 1 sec
 	
 	private final EventConfiguration _eventConfiguration;
@@ -45,7 +47,7 @@ public class EventProcessor {
 	
 	private long _timestampLoid;
 	
-	public EventProcessor(EventConfiguration eventConfiguration, PrintStream out) throws IOException {
+	public EventProcessor(EventConfiguration eventConfiguration, PrintStream out)  {
 		_eventConfiguration = eventConfiguration;
 		_out = out;
 		
@@ -71,11 +73,11 @@ public class EventProcessor {
 	    startChannelsFromKnownClasses();
 	}
 
-	private void startChannelsFromKnownClasses() throws IOException {
+	private void startChannelsFromKnownClasses() {
 		Collection<Long> classMetadataLoids = _cobra.loids(ClassMetadata.class);
 	    for (Long loid : classMetadataLoids) {
 	    	ClassMetadata classMetadata = _cobra.objectByLoid(loid);
-	    	createChannel(new ClassChannelSpec(classMetadata.name(), loid));
+	    	createChannel(new ClassChannelSpec(classMetadata.name(), classMetadata.fullyQualifiedName(),  loid));
 		}
 	}
 
@@ -91,7 +93,7 @@ public class EventProcessor {
 	    	case 1:
 	    		_timestampLoid = timestampLoids.iterator().next();
 	    		CommitTimestamp timestamp = _cobra.objectByLoid(_timestampLoid);
-	    		System.out.println("Timestamp read: " + timestamp.value());
+	    		println("Timestamp read: " + timestamp.value());
 	    		_timeStampIdGenerator.setMinimumNext(timestamp.value());
 	    		return;
 	    	default:
@@ -100,19 +102,19 @@ public class EventProcessor {
 	    
 	}
 
-	public static EventClient newEventClient(EventConfiguration config) throws IOException {
+	public static EventClient newEventClient(EventConfiguration config)  {
 		try{
 			return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort,config.databaseName);
 		} catch (IOException ioException){
-			System.err.println("Connection failed using\n" + config);
-			ioException.printStackTrace();
-			throw ioException;
+			System.err.println("Connection failed using\n" + config + "\nMake sure that " + VodDatabase.VED_DRIVER + " is running.");
+			unrecoverableExceptionOccurred(ioException);
 		}
+		return null;
 	}
 
-	public void run() throws IOException {
+	public void run() {
 	    createMetaChannel(_client);
-	    println("Listening for events on " + _eventConfiguration.databaseName);
+	    println(LISTENING_MESSAGE + _eventConfiguration.databaseName);
 	    channelCreationLoop();
 		shutdown();
 	}
@@ -133,7 +135,11 @@ public class EventProcessor {
 		try{
 			while(! _stopped){
 				try {
-					createChannel(_newChannels.next());
+					ClassChannelSpec spec = _newChannels.next();
+					createChannel(spec);
+					ClassMetadata classMetadata = new ClassMetadata(spec._className, spec._fullyQualifiedName, true);
+					_cobra.store(spec._classMetadataLoid, classMetadata);
+					_cobra.commit();
 				} catch(BlockingQueueStoppedException ex){
 					break;
 				}
@@ -143,13 +149,8 @@ public class EventProcessor {
 		}
 	}
 	
-	private void createChannel(final ClassChannelSpec channelSpec) throws IOException{
-		String channelName = channelName(channelSpec._className);
-		EventChannel channel = _client.getChannel (channelName);
-		if (channel == null) {
-			ClassChannelBuilder builder = new ClassChannelBuilder (channelSpec._className);
-			channel = _client.newChannel (channelName, builder);
-		}
+	private void createChannel(final ClassChannelSpec channelSpec) {
+		EventChannel channel = produceClassChannel(channelSpec._className);
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
 				storeObjectLifeCycleEvent(event, Operations.UPDATE, channelSpec);
@@ -164,16 +165,8 @@ public class EventProcessor {
 		println("Listener channel created for class " + channelSpec._className);
 	}
 
-	private EventChannel createMetaChannel(final EventClient client) throws IOException {
-		String className = ClassMetadata.class.getName();
-		String channelName = channelName(className);
-		EventChannel channel = client.getChannel (channelName);
-		
-		
-		if (channel == null) {
-			ClassChannelBuilder builder = new ClassChannelBuilder (className);
-		    channel = client.newChannel (channelName, builder);
-		}
+	private EventChannel createMetaChannel(final EventClient client)  {
+		EventChannel channel = produceClassChannel(ClassMetadata.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
 				// do nothing
@@ -181,8 +174,8 @@ public class EventProcessor {
 			public void instanceCreated (VersantEventObject event) {
 				synchronized(_lock){
 					long classMetadataLoid = VodCobra.loidAsLong(event.getRaiserLoid());
-					String className = (String)_cobra.fieldValue(classMetadataLoid, "name");
-					_newChannels.add(new ClassChannelSpec(className, classMetadataLoid));
+					ClassMetadata classMetadata = _cobra.objectByLoid(classMetadataLoid);
+					_newChannels.add(new ClassChannelSpec(classMetadata.name(),classMetadata.fullyQualifiedName(), classMetadataLoid));
 					_dirty = true;
 				}
 			}
@@ -191,6 +184,21 @@ public class EventProcessor {
 			}
 		});
 		return channel;
+	}
+
+	private EventChannel produceClassChannel(String className) {
+		String channelName = channelName(className);
+		try {
+			EventChannel channel = _client.getChannel (channelName);
+			if(channel != null){
+				return channel;
+			}
+			ClassChannelBuilder builder = new ClassChannelBuilder (className);
+			return _client.newChannel (channelName, builder);
+		} catch (IOException e) {
+			unrecoverableExceptionOccurred(e);
+		}
+		return null;
 	}
 	
 	private void storeObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
@@ -224,6 +232,7 @@ public class EventProcessor {
 		}
 		synchronized (_lock) {
 			_out.println(msg);
+			// System.out.println(msg);
 		}
 	}
 	
@@ -232,8 +241,11 @@ public class EventProcessor {
 		_newChannels.stop();
 	}
 
-	private void unrecoverableExceptionOccurred(Throwable t) {
+	private static void unrecoverableExceptionOccurred(Throwable t) {
 		t.printStackTrace();
+		throw new RuntimeException(t);
+		
+		
     	// TODO: Now what???
     	// Events will be broken from now on. 
     	// Maybe store some kind of BigTrouble object in the database
@@ -243,6 +255,7 @@ public class EventProcessor {
 	private void commit() {
 		synchronized(_lock){
 			if(_dirty){
+				println("Timestamp stored " + _timeStampIdGenerator.last());
 				_cobra.store(_timestampLoid, new CommitTimestamp(_timeStampIdGenerator.last()));
 				_cobra.commit();
 				_dirty = false;
@@ -254,10 +267,13 @@ public class EventProcessor {
 
 		public final String _className;
 		
+		public final String _fullyQualifiedName;
+		
 		public final long _classMetadataLoid;
 
-		public ClassChannelSpec(String className, long classMetadataLoid) {
+		public ClassChannelSpec(String className, String fullyQualifiedName, long classMetadataLoid) {
 			_className = className;
+			_fullyQualifiedName = fullyQualifiedName;
 			_classMetadataLoid = classMetadataLoid;
 		}
 
