@@ -5,9 +5,12 @@ package com.db4o.drs.versant;
 import java.io.*;
 
 import com.db4o.internal.*;
+import com.db4o.util.DrsRuntime4;
 
 public class EventConfiguration {
 	
+	private static final String VED_LIB_BASENAME = "vedse";
+
 	public final String databaseName;
 	
 	public final String logFileName;
@@ -42,7 +45,7 @@ public class EventConfiguration {
 		System.err.println("Channel engine is only configured for windows here.");
 		
 		writer.println("<EngineLibs>");
-		writer.println("vedse.dll");
+		writer.println(DrsRuntime4.runningOnWindows() ? VED_LIB_BASENAME + ".dll" : "lib" + VED_LIB_BASENAME + ".so");
 		writer.println("</EngineLibs>");
 		
 		writer.flush();
