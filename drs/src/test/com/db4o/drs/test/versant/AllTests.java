@@ -14,6 +14,7 @@ public class AllTests extends ReflectionTestSuite {
 		return new Class[] {
 //			AllVodDrsIntegrationTests.class,
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
+			JdoMetadataGeneratorTestCase.class,
 			VodCobraTestCase.class,
 			VodDatabaseLifecycleTestCase.class,
 			VodDatabaseTestCase.class,

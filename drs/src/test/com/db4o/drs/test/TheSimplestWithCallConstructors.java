@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.test;
 
 import com.db4o.config.*;
+import com.db4o.drs.test.data.*;
 
 
 public class TheSimplestWithCallConstructors extends TheSimplest {

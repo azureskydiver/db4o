@@ -4,6 +4,8 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
+import javax.jdo.spi.*;
+
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
@@ -24,6 +26,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private final Signatures _signatures = new Signatures();
 	
 	private final Hashtable<String, ClassMetadata> _knownClasses = new Hashtable<String, ClassMetadata>();
+
+	private ReplicationReflector _replicationReflector;
 	
 	public VodReplicationProvider(VodDatabase vod) {
 		_vod = vod;
@@ -67,6 +71,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void storeNew(Object obj) {
 		if(obj == null){
 			throw new IllegalArgumentException();
+		}
+		if(! (obj instanceof PersistenceCapable)){
+			String msg = "Object of " + obj.getClass() + " does not implement PersistenceCapable. Recommended action: Enhance all persistent classes for JDO using an enhancer.";
+			throw new IllegalStateException(msg);
 		}
 		ensureClassKnown(obj);
 		_jdo.store(obj);
@@ -261,8 +269,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		_replicationReflector = replicationReflector;
 	}
 
 	public boolean isProviderSpecific(Object original) {

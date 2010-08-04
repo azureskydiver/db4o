@@ -4,6 +4,6 @@ package com.db4o.drs.inside;
 
 public class DrsDebug {
 	
-	public static final boolean verbose = true;
+	public static final boolean verbose = false;
 
 }

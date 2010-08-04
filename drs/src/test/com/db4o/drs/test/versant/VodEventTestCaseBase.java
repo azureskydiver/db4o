@@ -16,6 +16,10 @@ import db4ounit.*;
 
 public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
+	protected void withEventProcessor(Closure4<Void> closure, String expectedOutput) throws Exception {
+		withEventProcessorInSameProcess(closure, expectedOutput);
+		// withEventProcessorInSeparateProcess(closure, expectedOutput);
+	}
 	
 	private void withEventProcessorInSeparateProcess (Closure4<Void> closure, final String expectedOutput) throws Exception {
 		final ProcessRunner eventListenerProcess = startEventListenerProcess();
@@ -61,11 +65,6 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
 		withEventProcessor(closure, "Listening");
-	}
-	
-	protected void withEventProcessor(Closure4<Void> closure, String expectedOutput) throws Exception {
-		withEventProcessorInSameProcess(closure, expectedOutput);
-		// withEventProcessorInSeparateProcess(closure, expectedOutput);
 	}
 	
 	protected ProcessRunner startEventListenerProcess() throws IOException {

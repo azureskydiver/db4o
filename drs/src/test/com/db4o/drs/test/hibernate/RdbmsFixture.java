@@ -26,6 +26,7 @@ import org.hibernate.tool.hbm2ddl.*;
 import com.db4o.drs.hibernate.impl.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
+import com.db4o.drs.test.data.*;
 import com.db4o.drs.test.regression.*;
 
 public abstract class RdbmsFixture implements DrsFixture {

@@ -22,7 +22,7 @@ public class VodDatabaseLifecycleTestCase implements TestCase {
 		Assert.isFalse(vod.dbExists());
 	}
 	
-	public void testEnhancer() throws Exception{
+	public void testEnhancer() {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.enhance();
 		

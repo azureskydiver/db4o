@@ -14,6 +14,7 @@ public class VodDrsFixture implements DrsFixture{
 
 	public VodDrsFixture(String name){
 		_vod = new VodDatabase(name);
+		_vod.enhance();
 	}
 	
 	public void clean() {
