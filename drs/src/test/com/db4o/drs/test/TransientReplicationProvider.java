@@ -233,10 +233,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 // --------------------- Interface TestableReplicationProviderInside ---------------------
 
-	public boolean supportsCascadeDelete() {
-		return false;
-	}
-
 	public boolean supportsHybridCollection() {
 		return true;
 	}

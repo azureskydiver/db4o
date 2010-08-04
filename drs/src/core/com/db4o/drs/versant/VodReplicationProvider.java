@@ -133,11 +133,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		// JDO is transparent activation
 	}
 
-	public boolean supportsCascadeDelete() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
-	}
-
 	public boolean supportsHybridCollection() {
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();

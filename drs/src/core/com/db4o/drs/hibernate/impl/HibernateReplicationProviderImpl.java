@@ -433,10 +433,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
-	public boolean supportsCascadeDelete() {
-		return true;
-	}
-
 	public boolean supportsHybridCollection() {
 		return false;
 	}

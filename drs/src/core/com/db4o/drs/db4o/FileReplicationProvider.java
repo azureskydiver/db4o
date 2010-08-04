@@ -394,10 +394,6 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		return false;
 	}
 
-	public boolean supportsCascadeDelete() {
-		return true;
-	}
-
 	public String toString() {
 		return getName();
 	}
