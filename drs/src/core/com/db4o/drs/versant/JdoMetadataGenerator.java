@@ -12,6 +12,10 @@ public class JdoMetadataGenerator {
 		_root = root;
 	}
 	
+	public File generate(Class sampleClass){
+		return generate(sampleClass.getPackage().getName());
+	}
+	
 	public File generate(String packageName) {
 		try {
 			String path = packageName.replace('.', '/');
