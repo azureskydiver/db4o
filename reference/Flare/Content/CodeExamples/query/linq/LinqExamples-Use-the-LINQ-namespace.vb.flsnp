@@ -6,7 +6,12 @@
 Imports Db4objects.Db4o.Linq</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Imports System.Linq
 Imports Db4objects.Db4o.Linq</pre>
-		<div class="codesnippet-meta">LinqExamples.vb: Use the LINQ namespace<a href="Example-query-linq-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			LinqExamples.vb: Use the LINQ namespace
+			<div class="codedownload">
+				<a href="Example-query-linq-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

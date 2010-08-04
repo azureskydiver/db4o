@@ -6,7 +6,12 @@
 AddHandler events.Creating, AddressOf HandleCreatingEvent</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim events As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
 AddHandler events.Creating, AddressOf HandleCreatingEvent</pre>
-		<div class="codesnippet-meta">EventRegistryExamples.vb: Cancel store operation<a href="Example-callbacks-eventregistry-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			EventRegistryExamples.vb: Cancel store operation
+			<div class="codedownload">
+				<a href="Example-callbacks-eventregistry-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

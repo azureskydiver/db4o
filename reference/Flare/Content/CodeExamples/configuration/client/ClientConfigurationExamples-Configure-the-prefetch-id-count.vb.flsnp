@@ -6,7 +6,12 @@
 configuration.PrefetchSlotCacheSize = 128</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
 configuration.PrefetchSlotCacheSize = 128</pre>
-		<div class="codesnippet-meta">ClientConfigurationExamples.vb: Configure the prefetch id count<a href="Example-configuration-client-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			ClientConfigurationExamples.vb: Configure the prefetch id count
+			<div class="codedownload">
+				<a href="Example-configuration-client-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

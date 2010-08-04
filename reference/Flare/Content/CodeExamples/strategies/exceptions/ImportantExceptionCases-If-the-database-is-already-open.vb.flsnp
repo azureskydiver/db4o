@@ -14,7 +14,12 @@ Catch e As DatabaseFileLockedException
     ' Database is already open!
     ' Use another database-file or handle this case gracefully
 End Try</pre>
-		<div class="codesnippet-meta">ImportantExceptionCases.vb: If the database is already open<a href="Example-strategies-exceptions-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			ImportantExceptionCases.vb: If the database is already open
+			<div class="codedownload">
+				<a href="Example-strategies-exceptions-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

@@ -16,7 +16,12 @@ Using session As IObjectContainer = rootContainer.Ext().OpenSession()
     ' do the operations on the session-container
     session.Store(New Person(&quot;Joe&quot;))
 End Using</pre>
-		<div class="codesnippet-meta">Db4oSessions.vb: Session object container<a href="Example-container-sessions-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oSessions.vb: Session object container
+			<div class="codedownload">
+				<a href="Example-container-sessions-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

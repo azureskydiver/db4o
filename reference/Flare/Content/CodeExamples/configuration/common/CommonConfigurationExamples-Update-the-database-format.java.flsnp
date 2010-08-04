@@ -8,7 +8,12 @@ configuration.common().allowVersionUpdates(true);
 // reopen and close the database to do the update
 ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
 container.close();</pre>
-		<div class="codesnippet-meta">CommonConfigurationExamples.java: Update the database-format<a href="Example-configuration-common-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			CommonConfigurationExamples.java: Update the database-format
+			<div class="codedownload">
+				<a href="Example-configuration-common-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

@@ -5,7 +5,12 @@
         <pre class="prettyprint" xml:space="preserve">Car car = new Car(&quot;BMW&quot;);
 car.setPilot(new Pilot(&quot;Tester&quot;, points));
 container.store(car);</pre>
-		<div class="codesnippet-meta">Db4oExample.java: store a car in db4o<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oExample.java: store a car in db4o
+			<div class="codedownload">
+				<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

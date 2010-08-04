@@ -3,7 +3,12 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">Db4oPerformanceCounters.Install();</pre>
-		<div class="codesnippet-meta">InstallPerformanceCounters.cs: Install the performance counters<a href="Example-tuning-monitoring-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			InstallPerformanceCounters.cs: Install the performance counters
+			<div class="codedownload">
+				<a href="Example-tuning-monitoring-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

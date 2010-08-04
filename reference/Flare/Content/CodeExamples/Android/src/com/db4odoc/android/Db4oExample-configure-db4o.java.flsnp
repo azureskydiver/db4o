@@ -5,7 +5,12 @@
         <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 configuration.common().objectClass(Car.class).objectField(&quot;pilot&quot;).indexed(true);
 configuration.common().objectClass(Pilot.class).objectField(&quot;points&quot;).indexed(true);</pre>
-		<div class="codesnippet-meta">Db4oExample.java: configure db4o<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oExample.java: configure db4o
+			<div class="codedownload">
+				<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

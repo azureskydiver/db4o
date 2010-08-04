@@ -38,7 +38,12 @@ Public Overloads Overrides Function ToString() As String
     Return Name
 End Function
 </pre>
-		<div class="codesnippet-meta">Person.vb: Call the activate method on every field access<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Person.vb: Call the activate method on every field access
+			<div class="codedownload">
+				<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

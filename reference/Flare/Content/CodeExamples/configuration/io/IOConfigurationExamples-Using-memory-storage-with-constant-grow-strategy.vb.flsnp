@@ -8,7 +8,12 @@ configuration.File.Storage = memory</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim growStrategy As IGrowthStrategy = New ConstantGrowthStrategy(100)
 Dim memory As New MemoryStorage(growStrategy)
 configuration.File.Storage = memory</pre>
-		<div class="codesnippet-meta">IOConfigurationExamples.vb: Using memory-storage with constant grow strategy<a href="Example-configuration-io-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			IOConfigurationExamples.vb: Using memory-storage with constant grow strategy
+			<div class="codedownload">
+				<a href="Example-configuration-io-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

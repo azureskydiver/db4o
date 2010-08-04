@@ -8,7 +8,12 @@
         handleCommitting(source,arguments);
     }
 });</pre>
-		<div class="codesnippet-meta">EventRegistryExamples.java: register for a event<a href="Example-callbacks-eventregistry-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			EventRegistryExamples.java: register for a event
+			<div class="codedownload">
+				<a href="Example-callbacks-eventregistry-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

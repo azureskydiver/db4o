@@ -3,7 +3,12 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">configuration.Common.ObjectClass(typeof (IDHolder)).ObjectField(&quot;guid&quot;).Indexed(true);</pre>
-		<div class="codesnippet-meta">UuidOnObject.cs: index the uuid-field<a href="Example-disconnectedobj-idexamples-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			UuidOnObject.cs: index the uuid-field
+			<div class="codedownload">
+				<a href="Example-disconnectedobj-idexamples-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

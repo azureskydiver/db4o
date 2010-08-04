@@ -6,7 +6,12 @@
 configuration.File.DatabaseGrowthSize = 4096</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 configuration.File.DatabaseGrowthSize = 4096</pre>
-		<div class="codesnippet-meta">FileConfiguration.vb: Configure the growth size<a href="Example-configuration-file-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			FileConfiguration.vb: Configure the growth size
+			<div class="codedownload">
+				<a href="Example-configuration-file-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

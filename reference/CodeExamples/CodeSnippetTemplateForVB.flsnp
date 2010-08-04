@@ -4,7 +4,12 @@
 	<div class="codesnippet" MadCap:conditions="{2}">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">{0}</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">{0}</pre>
-		<div class="codesnippet-meta">{3}<a href="{1}" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			{3}
+			<div class="codedownload">
+				<a href="{1}" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
 		</div>
 	</div>
 

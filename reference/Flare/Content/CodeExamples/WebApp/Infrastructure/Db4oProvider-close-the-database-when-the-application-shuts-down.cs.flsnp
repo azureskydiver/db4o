@@ -10,7 +10,12 @@
         toDispose.Dispose();
     }
 }</pre>
-		<div class="codesnippet-meta">Db4oProvider.cs: close the database when the application shuts down<a href="Example-WebApp-Infrastructure-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oProvider.cs: close the database when the application shuts down
+			<div class="codedownload">
+				<a href="Example-WebApp-Infrastructure-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

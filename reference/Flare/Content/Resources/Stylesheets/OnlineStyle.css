@@ -83,6 +83,7 @@ div.codesnippet{
 div.codesnippet-meta{
 	padding: 4px;
 }
-a.codedownload{
+div.codedownload{
 	float:right;
+	margin-left:1pt;
 }

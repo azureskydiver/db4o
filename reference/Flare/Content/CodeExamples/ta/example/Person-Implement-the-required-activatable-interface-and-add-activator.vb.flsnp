@@ -10,7 +10,12 @@
     Implements IActivatable
     &lt;Transient()&gt; _
     Private m_activator As IActivator</pre>
-		<div class="codesnippet-meta">Person.vb: Implement the required activatable interface and add activator<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Person.vb: Implement the required activatable interface and add activator
+			<div class="codedownload">
+				<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

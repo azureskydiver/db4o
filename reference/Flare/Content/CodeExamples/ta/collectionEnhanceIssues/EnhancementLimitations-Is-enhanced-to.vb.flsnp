@@ -24,7 +24,12 @@ End Class</pre>
         _names.Add(item)
     End Sub
 End Class</pre>
-		<div class="codesnippet-meta">EnhancementLimitations.vb: Is enhanced to<a href="Example-ta-collectionEnhanceIssues-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			EnhancementLimitations.vb: Is enhanced to
+			<div class="codedownload">
+				<a href="Example-ta-collectionEnhanceIssues-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

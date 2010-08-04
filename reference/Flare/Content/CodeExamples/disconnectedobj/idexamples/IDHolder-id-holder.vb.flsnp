@@ -24,7 +24,12 @@ Public Property Id() As Integer
     End Set
 End Property
 </pre>
-		<div class="codesnippet-meta">IDHolder.vb: id holder<a href="Example-disconnectedobj-idexamples-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			IDHolder.vb: id holder
+			<div class="codedownload">
+				<a href="Example-disconnectedobj-idexamples-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

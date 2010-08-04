@@ -8,7 +8,12 @@ configuration.Common.ObjectClass(GetType(Person)).EnableReplication(True)</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 ' is a short-cut for generateUUIDs and generateVersionNumbers
 configuration.Common.ObjectClass(GetType(Person)).EnableReplication(True)</pre>
-		<div class="codesnippet-meta">ObjectConfigurationExamples.vb: Enable this type for replication<a href="Example-configuration-objectconfig-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			ObjectConfigurationExamples.vb: Enable this type for replication
+			<div class="codedownload">
+				<a href="Example-configuration-objectconfig-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

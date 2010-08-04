@@ -4,7 +4,12 @@
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">Storage fileStorage = new FileStorage();
 configuration.file().storage(new NonFlushingStorage(fileStorage));</pre>
-		<div class="codesnippet-meta">DangerousPractises.java: Using the non-flushing storage weakens the ACID-properties<a href="Example-db4odoc-acidproperties-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			DangerousPractises.java: Using the non-flushing storage weakens the ACID-properties
+			<div class="codedownload">
+				<a href="Example-db4odoc-acidproperties-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

@@ -10,7 +10,12 @@ foreach (var team in teams)
 {
     Console.Out.WriteLine(team.TeamName);
 }</pre>
-		<div class="codesnippet-meta">SimpleConsoleClient.cs: Now the service can be used<a href="Example-WCFDataServices-ConsoleClient-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			SimpleConsoleClient.cs: Now the service can be used
+			<div class="codedownload">
+				<a href="Example-WCFDataServices-ConsoleClient-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

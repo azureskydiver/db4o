@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1111" MadCap:lastWidth="560" MadCap:conditions="Primary..NET">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1128" MadCap:lastWidth="554" MadCap:conditions="Primary..NET">
     <head>
     </head>
     <body>
         <h1>ASP.NET MVC Example</h1>
-        <p>This example is a tiny crud application which shows how to use db4o in ASP.NET MVC 2.0.
-		<span MadCap:conditions="Primary.Online"> Download the <a href="../../CodeExamples/WebApp/Example-dotNetAppExamples-WebApp-csharp.zip">code here</a>. This example requires Visual Studio 2008 and ASP.NET MVC 2.0 installed. Unzip the project. Add the db4o-assemblies to the Lib-folder. Then you open the project and run it.&#160;</span></p>
+        <p>This example is a tiny CRUD application which shows how to use db4o in ASP.NET MVC 2.0.
+		<span MadCap:conditions="Primary.Online"> Download the <a href="../../CodeExamples/WebApp/Example-dotNetAppExamples-WebApp-csharp.zip">code here</a>. This example requires Visual Studio 2008 and ASP.NET MVC 2.0 installed. Unzip the project. Add the db4o-assemblies to the Lib-folder. Then open the project and run it.&#160;</span></p>
         <h2>Managing Object Containers</h2>
-        <p>This example uses the code from the <a href="asp.net_request_example.htm">request-example</a> to have a object container for each request. On each new request a object container is opened. Then all operations are done on this container. When the request ends, the container is closed.</p>
+        <p>This example uses the code from the <a href="asp.net_request_example.htm">request-example</a> <![CDATA[ ]]>to create a object container for each request. On each new request a object container is opened. Then all operations are done on this container. When the request ends, the container is disposed.</p>
         <h2>Object Identification</h2>
         <p>This example uses a GUID for each object to identify it across requests. Persisted objects inherit from the IDHolder class which contains the id-field. Take a look at alternatives for ids. <MadCap:xref href="../disconnected_objects/comparison_of_ids.htm" target="" title="" alt="">See "Comparison Of Different IDs"</MadCap:xref></p>
         <h2>Using db4o</h2>

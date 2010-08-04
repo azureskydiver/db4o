@@ -6,7 +6,12 @@
 configuration.Networking.BatchMessages = True</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
 configuration.Networking.BatchMessages = True</pre>
-		<div class="codesnippet-meta">NetworkConfigurationExample.vb: enable or disable batch mode<a href="Example-configuration-network-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			NetworkConfigurationExample.vb: enable or disable batch mode
+			<div class="codedownload">
+				<a href="Example-configuration-network-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

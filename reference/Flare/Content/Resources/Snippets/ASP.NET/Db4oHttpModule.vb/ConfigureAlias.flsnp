@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="198" MadCap:lastWidth="650">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="147" MadCap:lastWidth="632">
     <head>
     </head>
     <body>
-        <pre class="prettyprint lang-vb" xml:space="preserve">Db4oHttpModule.vb: ConfigureAlias
-Public Sub ConfigureAlias()
+        <pre class="prettyprint lang-vb" xml:space="preserve">
+	     Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration();
             Dim asm As Assembly = Assembly.GetExecutingAssembly()
             Dim asmName = "Db4objects.Db4odoc.Web.Data.*, " + _ 
 asm.GetName().ToString().Substring(0, _ 
 asm.GetName().ToString().LastIndexOf("Version") - 2)
-            Db4oFactory.Configure().AddAlias(New _ 
-WildcardAlias("Db4objects.Db4odoc.Web.Data.*, WebSite", asmName))
-        End Sub</pre>
+            configuration.Common.AddAlias(New _ 
+WildcardAlias("Db4objects.Db4odoc.Web.Data.*, WebSite", asmName))</pre>
     </body>
 </html>

@@ -4,7 +4,12 @@
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 configuration.common().add(new BigMathSupport());</pre>
-		<div class="codesnippet-meta">ConfigurationItemsExamples.java: Add support for BigDecimal and BigInteger<a href="Example-configuration-configitems-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			ConfigurationItemsExamples.java: Add support for BigDecimal and BigInteger
+			<div class="codedownload">
+				<a href="Example-configuration-configitems-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

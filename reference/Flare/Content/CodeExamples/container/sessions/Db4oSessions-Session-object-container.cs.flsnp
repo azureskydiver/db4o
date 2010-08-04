@@ -10,7 +10,12 @@ using (IObjectContainer session = rootContainer.Ext().OpenSession())
     // do the operations on the session-container
     session.Store(new Person(&quot;Joe&quot;));
 }</pre>
-		<div class="codesnippet-meta">Db4oSessions.cs: Session object container<a href="Example-container-sessions-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oSessions.cs: Session object container
+			<div class="codedownload">
+				<a href="Example-container-sessions-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 
