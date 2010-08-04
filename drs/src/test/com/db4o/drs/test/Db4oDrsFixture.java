@@ -33,6 +33,8 @@ public class Db4oDrsFixture implements DrsFixture {
 	
 	protected String _name;
 	
+	
+	// TODO: No need to maintain the database here. It can be in the provider. 
 	protected ExtObjectContainer _db;
 	
 	protected TestableReplicationProviderInside _provider;
@@ -87,6 +89,7 @@ public class Db4oDrsFixture implements DrsFixture {
 	public void close() {
 		_provider.destroy();
 		_db.close();
+		_provider = null;
 	}
 
 	public void open() {

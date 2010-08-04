@@ -2,17 +2,17 @@
 
 package com.db4o.drs.test.versant;
 
-import java.util.*;
-
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.versant.*;
 
-public class VodFixture implements DrsFixture{
+public class VodDrsFixture implements DrsFixture{
 	
 	private final VodDatabase _vod;
+	
+	protected VodReplicationProvider _provider;
 
-	public VodFixture(String name){
+	public VodDrsFixture(String name){
 		_vod = new VodDatabase(name);
 	}
 	
@@ -21,18 +21,17 @@ public class VodFixture implements DrsFixture{
 	}
 	
 	public void close() {
-		
+		_provider.destroy();
+		_provider = null;
 	}
 
 	public void open() {
 		_vod.produceDb();
-		
-		
+		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public TestableReplicationProviderInside provider() {
-		// return new VodReplicationProvider(vod);
-		return null;
+		return _provider;
 	}
 
 }
