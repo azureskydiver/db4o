@@ -103,8 +103,11 @@ public class IOServices {
         private int _result;
         
 	    public ProcessRunner(String program, String[] arguments) throws IOException{
+	    	String[] args = new String[arguments.length + 1];
+	    	args[0] = program;
+	    	System.arraycopy(arguments, 0, args, 1, arguments.length);
     		_command = generateCommand(program, arguments);
-    		_process = Runtime.getRuntime().exec(_command);
+    		_process = Runtime.getRuntime().exec(args);
     		_inputReader = new StreamReader(_process.getInputStream());
     		_errorReader = new StreamReader(_process.getErrorStream());
     		_startTime = System.currentTimeMillis();

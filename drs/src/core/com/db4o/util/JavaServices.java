@@ -50,7 +50,7 @@ public class JavaServices {
 						JavaServices.javaTempPath(), 
 						currentClassPath(),
 						
-				}, runningOnWindows());
+				}, DrsRuntime4.runningOnWindows());
         allArgs[2] = className;
         System.arraycopy(args, 0, allArgs, 3, args.length);
         return allArgs;
@@ -94,14 +94,6 @@ public class JavaServices {
 	public static String javaTempPath()
 	{
 		return IOServices.buildTempPath("java");
-	}
-	
-	private static boolean runningOnWindows() {
-		String osName = System.getProperty("os.name");
-		if(osName == null) {
-			return false;
-		}
-		return osName.indexOf("Win") >= 0;
 	}
 	
 }
