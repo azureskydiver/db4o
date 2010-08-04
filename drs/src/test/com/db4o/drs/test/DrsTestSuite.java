@@ -31,7 +31,7 @@ import db4ounit.*;
 public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	@SuppressWarnings("unchecked")
-	protected final Class[] testCases() {
+	protected Class[] testCases() {
 //		if (true) return specificTestCases();
 //		if (true) return new Class[] { UntypedFieldTestCase.class };
 		return concat(shared(), specificTestCases());
