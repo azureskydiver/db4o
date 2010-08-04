@@ -20,6 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
+import com.db4o.drs.test.data.*;
+
 public class SPCParent {
 
 	private SPCChild child;

@@ -26,6 +26,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
 
@@ -45,7 +46,6 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				SimpleArrayContent.class, SimpleArrayHolder.class,
 				R0.class, Pilot.class, Car.class, Student.class, Person.class};
 	}
-	
 
 	private final DrsFixturePair _fixtures = DrsFixtureVariable.value();
 	private ReplicationReflector _reflector;

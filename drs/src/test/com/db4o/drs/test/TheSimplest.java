@@ -25,7 +25,7 @@ import java.util.Iterator;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.test.SPCChild;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.Assert;
 

@@ -27,8 +27,8 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
 import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.drs.inside.ReplicationReferenceImpl;
+import com.db4o.drs.test.data.*;
 import com.db4o.ext.Db4oUUID;
-//import com.db4o.test.Test;
 
 import db4ounit.Assert;
 

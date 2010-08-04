@@ -10,7 +10,7 @@ public abstract class VodDatabaseTestCaseBase implements TestCase, ClassLevelFix
 	
 	private static final String DATABASE_NAME = "VodDatabaseTestCaseBase";
 	
-	public static void classSetUp() throws Exception {
+	public static void classSetUp() {
 		_vod = new VodDatabase(DATABASE_NAME);
 		_vod.produceDb();
 		_vod.enhance();

@@ -24,6 +24,7 @@ import com.db4o.drs.ObjectState;
 import com.db4o.drs.ReplicationEvent;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.Assert;
 

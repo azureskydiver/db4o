@@ -114,8 +114,7 @@ public class VodDatabase {
 		return _persistenceManagerFactory;
 	}
 	
-	public void enhance() throws IOException, InterruptedException{
-		
+	public void enhance() {
 		String tempFileName = Path4.getTempFileName();
 		File tempFile = new File(tempFileName);
 		try{
@@ -132,6 +131,10 @@ public class VodDatabase {
 			if(DrsDebug.verbose){
 				System.out.println(processResult);
 			}
+		} catch(IOException ioe){
+			throw new RuntimeException(ioe);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
 		} finally {
 			tempFile.delete();
 		}
