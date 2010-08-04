@@ -8,7 +8,12 @@ try {
 } catch (IOException e) {
     e.printStackTrace();
 }</pre>
-		<div class="codesnippet-meta">FileConfiguration.java: Configure the blob-path<a href="Example-configuration-file-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			FileConfiguration.java: Configure the blob-path
+			<div class="codedownload">
+				<a href="Example-configuration-file-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

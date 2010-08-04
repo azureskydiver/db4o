@@ -18,7 +18,12 @@ Public ReadOnly Property ObjectId() As Guid
     End Get
 End Property
 </pre>
-		<div class="codesnippet-meta">IDHolder.vb: generate the id<a href="Example-disconnectedobj-idexamples-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			IDHolder.vb: generate the id
+			<div class="codedownload">
+				<a href="Example-disconnectedobj-idexamples-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

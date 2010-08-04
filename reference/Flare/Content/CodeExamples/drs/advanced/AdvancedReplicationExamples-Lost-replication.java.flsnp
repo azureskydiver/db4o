@@ -54,7 +54,12 @@ printPilots(mobileDatabase);
 
 // Pilot 2 is still not replicated
 printPilots(mobileDatabase);</pre>
-		<div class="codesnippet-meta">AdvancedReplicationExamples.java: Lost replication<a href="Example-drs-advanced-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			AdvancedReplicationExamples.java: Lost replication
+			<div class="codedownload">
+				<a href="Example-drs-advanced-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

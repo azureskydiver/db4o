@@ -4,11 +4,13 @@
 	<div class="codesnippet" MadCap:conditions="">
         <pre class="prettyprint" xml:space="preserve">configuration.Common.AddAlias(
         new WildcardAlias(&quot;com.db4odoc.crossplatform.*&quot;,
-            &quot;Db4odoc.CrossPlatform.CrossPlatform.*, Db4odoc.CrossPlatform&quot;));
-configuration.Common.AddAlias(
-        new TypeAlias(&quot;com.db4odoc.crossplatform.Person1&quot;,
-            &quot;Db4odoc.CrossPlatform.CrossPlatform.Person, Db4odoc.CrossPlatform&quot;));</pre>
-		<div class="codesnippet-meta">DotNetClient.cs: You need to add aliases for your types<a href="Example-csharp-crossplatform-mixed-languages.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+            &quot;Db4odoc.CrossPlatform.CrossPlatform.*, Db4odoc.CrossPlatform&quot;));</pre>
+		<div class="codesnippet-meta">
+			DotNetClient.cs: You need to add aliases for your types
+			<div class="codedownload">
+				<a href="Example-csharp-crossplatform-mixed-languages.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

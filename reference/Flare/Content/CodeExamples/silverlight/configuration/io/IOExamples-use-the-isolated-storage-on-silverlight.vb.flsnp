@@ -10,7 +10,12 @@ Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, &quot;d
 configuration.File.Storage = New IsolatedStorageStorage()
 
 Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, &quot;database.db4o&quot;)</pre>
-		<div class="codesnippet-meta">IOExamples.vb: use the isolated storage on silverlight<a href="Example-configuration-io-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			IOExamples.vb: use the isolated storage on silverlight
+			<div class="codedownload">
+				<a href="Example-configuration-io-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

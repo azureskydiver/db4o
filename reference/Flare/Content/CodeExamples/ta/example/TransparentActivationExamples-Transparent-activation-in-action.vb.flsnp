@@ -44,7 +44,12 @@ Using container As IObjectContainer = OpenDatabaseTA()
     beginOfDynasty.Name = &quot;New Name&quot;
     container.Commit()
 End Using</pre>
-		<div class="codesnippet-meta">TransparentActivationExamples.vb: Transparent activation in action<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			TransparentActivationExamples.vb: Transparent activation in action
+			<div class="codedownload">
+				<a href="Example-ta-example-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

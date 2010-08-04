@@ -6,7 +6,12 @@
 configuration.Common.ObjectClass(GetType(Person)).UpdateDepth(2)</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 configuration.Common.ObjectClass(GetType(Person)).UpdateDepth(2)</pre>
-		<div class="codesnippet-meta">ObjectConfigurationExamples.vb: Set the update depth<a href="Example-configuration-objectconfig-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			ObjectConfigurationExamples.vb: Set the update depth
+			<div class="codedownload">
+				<a href="Example-configuration-objectconfig-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

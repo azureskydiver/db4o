@@ -11,7 +11,12 @@ foreach (Person person in queryResult)
 {
     // do something with the persons
 }</pre>
-		<div class="codesnippet-meta">QueriesInSilverlight.cs: Queries in Silverlight<a href="Example-silverlight-model-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			QueriesInSilverlight.cs: Queries in Silverlight
+			<div class="codedownload">
+				<a href="Example-silverlight-model-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

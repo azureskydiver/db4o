@@ -8,7 +8,12 @@
 var endResult = from p in optimizedPart.AsEnumerable()
               where p.Name.Substring(2).Contains(&quot;n&quot;)
               select p;</pre>
-		<div class="codesnippet-meta">LinqExamples.cs: Splitting into two parts<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			LinqExamples.cs: Splitting into two parts
+			<div class="codedownload">
+				<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

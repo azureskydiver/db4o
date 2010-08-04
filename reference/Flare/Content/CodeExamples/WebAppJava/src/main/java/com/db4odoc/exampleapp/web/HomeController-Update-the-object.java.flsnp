@@ -15,7 +15,12 @@ public ModelAndView editPilot(@PathVariable final String id, Pilot pilotFromForm
     db4o.objectContainer().store(pilotFromDatabase);
     return new ModelAndView(new RedirectView(&quot;list.html&quot;));
 }</pre>
-		<div class="codesnippet-meta">HomeController.java: Update the object<a href="Example-exampleapp-web-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			HomeController.java: Update the object
+			<div class="codedownload">
+				<a href="Example-exampleapp-web-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

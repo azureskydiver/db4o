@@ -15,7 +15,12 @@ private IEmbeddedObjectContainer OpenDatabase()
     string filePath = HttpContext.Current.Server.MapPath(relativePath);
     return Db4oEmbedded.OpenFile(filePath);
 }</pre>
-		<div class="codesnippet-meta">Db4oProvider.cs: open database when the application starts<a href="Example-WebApp-Infrastructure-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oProvider.cs: open database when the application starts
+			<div class="codedownload">
+				<a href="Example-WebApp-Infrastructure-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

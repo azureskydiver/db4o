@@ -18,7 +18,12 @@ For Each changedObjectOnDesktop As Car In changesOnDesktop
 Next
 
 replicationSession.Commit()</pre>
-		<div class="codesnippet-meta">Db4oReplicationExamples.vb: Selective replication with a query<a href="Example-drs-db4o-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oReplicationExamples.vb: Selective replication with a query
+			<div class="codedownload">
+				<a href="Example-drs-db4o-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

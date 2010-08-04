@@ -28,7 +28,12 @@ End Sub</pre>
         Console.WriteLine(&quot;Deleted &quot; &amp; reference.GetObject())
     Next
 End Sub</pre>
-		<div class="codesnippet-meta">EventRegistryExamples.vb: Commit-info Handler<a href="Example-callbacks-eventregistry-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			EventRegistryExamples.vb: Commit-info Handler
+			<div class="codedownload">
+				<a href="Example-callbacks-eventregistry-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

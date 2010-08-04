@@ -10,7 +10,12 @@ using (IObjectContainer container = Db4oClientServer.OpenClient(configuration, &
     sender.Send(new HelloMessage(&quot;Hi Server!&quot;));
     WaitForAWhile();
 }</pre>
-		<div class="codesnippet-meta">MessagingExample.cs: Get the message sender and use it<a href="Example-clientserver-messaging-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			MessagingExample.cs: Get the message sender and use it
+			<div class="codedownload">
+				<a href="Example-clientserver-messaging-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

@@ -100,19 +100,6 @@ namespace Db4oDoc.Code.Configuration.Common
             container.Close();
         }
 
-        private static void ExampleForCommonConfig()
-        {
-            // #example: change activation depth
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.Common.ActivationDepth = 2;
-            // other configurations...
-            configuration.IdSystem.UsePointerBasedSystem();
-
-            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
-            // #end example
-            container.Close();
-        }
-
         private static void DisableExceptionsOnNotStorableObjects()
         {
             // #example: Disable exceptions on not storable objects

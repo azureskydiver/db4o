@@ -13,7 +13,12 @@ try{
     // close the container. For example when the request ends
     session.close();
 }</pre>
-		<div class="codesnippet-meta">Db4oSessions.java: Session object container<a href="Example-container-sessions-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oSessions.java: Session object container
+			<div class="codedownload">
+				<a href="Example-container-sessions-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

@@ -14,7 +14,12 @@ Using container As IObjectContainer = Db4oClientServer.OpenClient(configuration,
     sender.Send(New HelloMessage(&quot;Hi Server!&quot;))
     WaitForAWhile()
 End Using</pre>
-		<div class="codesnippet-meta">MessagingExample.vb: Get the message sender and use it<a href="Example-clientserver-messaging-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			MessagingExample.vb: Get the message sender and use it
+			<div class="codedownload">
+				<a href="Example-clientserver-messaging-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

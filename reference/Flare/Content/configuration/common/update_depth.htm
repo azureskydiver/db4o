@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="821" MadCap:lastWidth="539">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="789" MadCap:lastWidth="560">
     <head>
     </head>
     <body>
@@ -7,7 +7,7 @@
         <p>By default db4o only stores changes on the updated object, but not the changes on referenced objects. With a higher update-depth db4o will traverse along the object graph to a certain depth and update all objects. <MadCap:xref href="../../object_lifecycle/update_depth.htm" target="" title="" alt="">See "Update Depth". </MadCap:xref></p>
         <p>With the update-depth you configure how deep db4o updates the object-graph. </p>
         <MadCap:snippetBlock src="../../CodeExamples/configuration/common/CommonConfigurationExamples-Increasing-the-update-depth.all.flsnp" />
-        <p>A higher update depth is usually more convenient to work with. However the higher the update depth the more time it takes to update the objects. Therefore its a tradeoff. Note that you can also use <a href="../../object_lifecycle/transparent_persistence.htm">transparent persistence</a>, which takes of updating the right objects.</p>
+        <p>A higher update depth is usually more convenient, because you don't need to explicitly update each changed object. However the higher the update depth the more time it takes to update the objects. Therefore its a tradeoff. Note that you can also use <a href="../../object_lifecycle/transparent_persistence.htm">transparent persistence</a>, which takes of updating the right objects.</p>
         <h2>Class Specific Configuration</h2>
         <p>You can also configure a class specific update depth. <MadCap:xref href="../objectclass_configuration.htm" target="" title="" alt="">See "ObjectClass Configuration"</MadCap:xref></p>
         <MadCap:snippetBlock src="../../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Set-the-update-depth.all.flsnp" />

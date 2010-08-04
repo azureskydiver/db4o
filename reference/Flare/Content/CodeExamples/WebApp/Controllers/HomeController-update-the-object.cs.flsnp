@@ -12,7 +12,12 @@ public ActionResult Edit(Guid id, Pilot editedPilot)
 
     return RedirectToAction(&quot;Index&quot;);
 }</pre>
-		<div class="codesnippet-meta">HomeController.cs: update the object<a href="Example-WebApp-Controllers-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			HomeController.cs: update the object
+			<div class="codedownload">
+				<a href="Example-WebApp-Controllers-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

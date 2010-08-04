@@ -10,7 +10,12 @@ End Function</pre>
     ' here you can check the certificates of the server and accept it if it's ok.
     Return True
 End Function</pre>
-		<div class="codesnippet-meta">SSLExample.vb: callback for validating the certificate<a href="Example-clientserver-ssl-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			SSLExample.vb: callback for validating the certificate
+			<div class="codedownload">
+				<a href="Example-clientserver-ssl-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

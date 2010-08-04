@@ -6,7 +6,12 @@
                  where p.Age &gt; 21
                  orderby p.Name
                  select p;</pre>
-		<div class="codesnippet-meta">LinqExamples.cs: Use sorting on the query<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			LinqExamples.cs: Use sorting on the query
+			<div class="codedownload">
+				<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

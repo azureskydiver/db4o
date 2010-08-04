@@ -4,7 +4,12 @@
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">configuration.File.GenerateUUIDs = ConfigScope.Globally;
 configuration.File.GenerateVersionNumbers = ConfigScope.Globally;</pre>
-		<div class="codesnippet-meta">Db4oReplicationExamples.cs: Configure db4o to generate UUIDs and Version-Numbers<a href="Example-drs-db4o-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			Db4oReplicationExamples.cs: Configure db4o to generate UUIDs and Version-Numbers
+			<div class="codedownload">
+				<a href="Example-drs-db4o-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 

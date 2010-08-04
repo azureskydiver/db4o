@@ -5,7 +5,12 @@
         <pre class="prettyprint" xml:space="preserve">var adults = from Person p in container
              where p.Name.ToLowerInvariant().Equals(&quot;joe&quot;)
              select p;</pre>
-		<div class="codesnippet-meta">LinqExamples.cs: Unoptimizable query, because of the 'operations' withing the query<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Example Code</a>
+		<div class="codesnippet-meta">
+			LinqExamples.cs: Unoptimizable query, because of the 'operations' withing the query
+			<div class="codedownload">
+				<a href="Example-query-linq-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
 		</div>
 	</div>
 
