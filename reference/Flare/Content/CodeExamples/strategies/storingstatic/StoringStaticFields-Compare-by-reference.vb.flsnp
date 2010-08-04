@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">' When you enable persist static field values, you can compare by reference
+' because db4o stores the static field
+If car.Color Is Color.Black Then
+    Console.WriteLine(&quot;Black cars are boring&quot;)
+ElseIf car.Color Is Color.Red Then
+    Console.WriteLine(&quot;Fire engine?&quot;)</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">' When you enable persist static field values, you can compare by reference
+' because db4o stores the static field
+If car.Color Is Color.Black Then
+    Console.WriteLine(&quot;Black cars are boring&quot;)
+ElseIf car.Color Is Color.Red Then
+    Console.WriteLine(&quot;Fire engine?&quot;)</pre>
+		<div class="codesnippet-meta">
+			StoringStaticFields.vb: Compare by reference
+			<div class="codedownload">
+				<a href="Example-strategies-storingstatic-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

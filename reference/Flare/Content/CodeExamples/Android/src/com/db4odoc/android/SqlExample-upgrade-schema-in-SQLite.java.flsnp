@@ -11,7 +11,7 @@ db.execSQL(&quot;ALTER TABLE &quot; + DB_TABLE_CAR + &quot; ADD reg_record TEXT;
 			<div class="codedownload">
 				<a href="Example-db4odoc-android-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
-			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
 		</div>
 	</div>
 
