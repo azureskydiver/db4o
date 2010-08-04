@@ -1,4 +1,6 @@
-using Db4oDoc.Code.CrossPlatform;
+
+using System;
+using Db4oDoc.Code.Strategies.StoringStatic;
 
 namespace Db4oDoc
 {
@@ -6,7 +8,8 @@ namespace Db4oDoc
     {
         public static void Main(string[] args)
         {
-            MyClient.Main(args);
+            StoringStaticFields.Main(args);
+            Console.Read();
         }
     }
 }

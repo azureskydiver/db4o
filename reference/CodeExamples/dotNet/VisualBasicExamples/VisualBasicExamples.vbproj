@@ -172,6 +172,7 @@
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.vb" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.vb" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.vb" />
+    <Compile Include="Code\strategies\storingstatic\StoringStaticFields.vb" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.vb" />
     <Compile Include="Code\tuning\monitoring\CSMonitoring.vb" />
     <Compile Include="Code\tuning\monitoring\DataObject.vb" />

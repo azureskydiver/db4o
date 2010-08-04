@@ -810,7 +810,7 @@
           Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/java_enumerations.htm"
           conditions="Primary.Java,Primary.All languages" />
         <TocEntry
-          Title="Static Fields API"
+          Title="Storing Static Fields"
           Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/static_fields_api.htm" />
         <TocEntry
           Title="Usage of Static Fields"

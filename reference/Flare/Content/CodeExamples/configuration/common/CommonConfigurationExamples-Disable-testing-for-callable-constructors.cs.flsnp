@@ -9,7 +9,7 @@ configuration.Common.TestConstructors = false;</pre>
 			<div class="codedownload">
 				<a href="Example-configuration-common-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
-			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
 		</div>
 	</div>
 

@@ -11,7 +11,7 @@ configuration.Common.ObjectClass(GetType(Person)).Indexed(False)</pre>
 			<div class="codedownload">
 				<a href="Example-configuration-objectconfig-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
-			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
 		</div>
 	</div>
 

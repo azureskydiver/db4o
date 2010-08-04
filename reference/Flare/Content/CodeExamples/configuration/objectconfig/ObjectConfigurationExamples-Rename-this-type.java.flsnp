@@ -9,7 +9,7 @@ configuration.common().objectClass(Person.class).rename(&quot;com.db4odoc.new.pa
 			<div class="codedownload">
 				<a href="Example-configuration-objectconfig-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
-			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#">Copy Code</a></div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
 		</div>
 	</div>
 
