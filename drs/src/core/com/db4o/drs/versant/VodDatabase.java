@@ -196,6 +196,26 @@ public class VodDatabase {
 			}
 		}
 	}
+	
+	public void addJdoMetaDataFile(File file) {
+	
+		// FIXME: This doesn't work yet.
+		
+		String path;
+		try {
+			path = file.getCanonicalPath();
+			path = path.replace('\\', '/');
+			System.out.println(path);
+			addJdoMetaDataFile(path);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+
+	}
 
 	public void addJdoMetaDataFile(String fileName) {
 		

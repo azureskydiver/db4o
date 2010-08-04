@@ -12,9 +12,8 @@ import db4ounit.*;
 public class JdoMetadataGeneratorTestCase implements TestCase {
 	
 	public void test() throws Exception{
-		String packageName = SPCChild.class.getPackage().getName();
 		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
-		File generatedFile = generator.generate(packageName);
+		File generatedFile = generator.generate(SPCChild.class);
 		BufferedReader reader = new BufferedReader(new FileReader(generatedFile));
 		String expected = "<class name=\"" +  SPCChild.class.getName() + "\"/>";
 		String line = null;
