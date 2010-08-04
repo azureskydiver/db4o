@@ -83,7 +83,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return;
 		}
 		
-		
 		final VodJdo jdo = new VodJdo(_vod);
 		
 		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
@@ -253,11 +252,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
+		ensureClassKnown(clazz);
 		
-		// TODO: We have to do the following to turn the event listener
-		//       on for this class. Make sure there is a test case.
-		
-		// ensureClassKnown(clazz);
 		
 		
 		// TODO Auto-generated method stub

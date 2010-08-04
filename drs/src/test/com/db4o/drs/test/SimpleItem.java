@@ -1,8 +1,11 @@
 package com.db4o.drs.test;
 
 public class SimpleItem {
+	
 	private String value;
+	
 	private SimpleItem child;
+	
 	private SimpleListHolder parent;
 	
 	public SimpleItem() {

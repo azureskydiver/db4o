@@ -98,7 +98,7 @@ public class VodDatabase {
 		}
 	}
 	
-	public void createDb(){
+	public void produceDb(){
 		if(dbExists()){
 			return;
 		}

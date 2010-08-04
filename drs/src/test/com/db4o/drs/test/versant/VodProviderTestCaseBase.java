@@ -71,7 +71,7 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	
 	public static void classSetUp() throws Exception {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.createDb();
+		vod.produceDb();
 		vod.enhance();
 		vod.createEventSchema();
 		_eventDriver = startEventDriver();
