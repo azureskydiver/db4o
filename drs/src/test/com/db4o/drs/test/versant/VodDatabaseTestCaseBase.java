@@ -12,7 +12,7 @@ public abstract class VodDatabaseTestCaseBase implements TestCase, ClassLevelFix
 	
 	public static void classSetUp() throws Exception {
 		_vod = new VodDatabase(DATABASE_NAME);
-		_vod.createDb();
+		_vod.produceDb();
 		_vod.enhance();
 	}
 

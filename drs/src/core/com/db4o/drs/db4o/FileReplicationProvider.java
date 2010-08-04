@@ -115,8 +115,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		return _container.lock();
 	}
 
-	public void startReplicationTransaction(
-			ReadonlyReplicationProviderSignature peerSignature) {
+	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature) {
 
 		clearAllReferences();
 

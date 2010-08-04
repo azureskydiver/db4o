@@ -16,7 +16,7 @@ public class VodDatabaseLifecycleTestCase implements TestCase {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.removeDb();
 		Assert.isFalse(vod.dbExists());
-		vod.createDb();
+		vod.produceDb();
 		Assert.isTrue(vod.dbExists());
 		vod.removeDb();
 		Assert.isFalse(vod.dbExists());

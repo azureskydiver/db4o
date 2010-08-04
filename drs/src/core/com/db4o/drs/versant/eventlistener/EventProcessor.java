@@ -168,9 +168,6 @@ public class EventProcessor {
 	private EventChannel createMetaChannel(final EventClient client)  {
 		EventChannel channel = produceClassChannel(ClassMetadata.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
-			public void instanceModified (VersantEventObject event){
-				// do nothing
-			}
 			public void instanceCreated (VersantEventObject event) {
 				synchronized(_lock){
 					long classMetadataLoid = VodCobra.loidAsLong(event.getRaiserLoid());
@@ -178,6 +175,9 @@ public class EventProcessor {
 					_newChannels.add(new ClassChannelSpec(classMetadata.name(),classMetadata.fullyQualifiedName(), classMetadataLoid));
 					_dirty = true;
 				}
+			}
+			public void instanceModified (VersantEventObject event){
+				// do nothing
 			}
 			public void instanceDeleted (VersantEventObject event) {
 				// do nothing
