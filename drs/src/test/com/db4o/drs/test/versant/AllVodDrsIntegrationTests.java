@@ -3,7 +3,6 @@
 package com.db4o.drs.test.versant;
 
 import com.db4o.drs.test.*;
-import com.db4o.drs.versant.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -18,9 +17,12 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 	
 	public static class VodDrsSuite extends DrsTestSuite {
 		
+		
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Class[] testCases() {
+			
 			
 			if (true) {
 				

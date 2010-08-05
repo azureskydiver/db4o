@@ -4,24 +4,16 @@ package com.db4o.drs.test.versant.eventlistener;
 
 import java.util.*;
 
-import javax.jdo.*;
-
 import com.db4o.drs.test.versant.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
-import com.db4o.util.IOServices.*;
 
 import db4ounit.*;
 
 
 public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
-	
-	public void _testListenerStartAndStop() throws Exception{
-		ProcessRunner eventListenerProcess = startEventListenerProcess();
-		eventListenerProcess.destroy();
-	}
 	
 	public void testStoreSingleObject() throws Exception {
 		withEventProcessor(new Closure4<Void>() {

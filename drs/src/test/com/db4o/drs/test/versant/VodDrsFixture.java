@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
-import com.db4o.drs.test.data.*;
 import com.db4o.drs.versant.*;
 
 public class VodDrsFixture implements DrsFixture{
@@ -17,29 +16,37 @@ public class VodDrsFixture implements DrsFixture{
 	
 	protected VodReplicationProvider _provider;
 	
+	
 
 	public VodDrsFixture(String name){
 		_vod = new VodDatabase(name);
 		if(! enhanced ){
-			JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
+			File root = new File("bin");
+			
+			JdoMetadataGenerator generator = new JdoMetadataGenerator(root);
 			
 			// TODO: Knowledge about all the persistent classes right
 			// now is in DrsTestCase.mappings
 			// Move to a smarter place and pull all the package names
 			// from there to generate .jdo files for all of them.
 			
-			File jdoFile = generator.generate(SPCChild.class);
-			
-			_vod.addJdoMetaDataFile(jdoFile);
+			_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.data")));
 			
 			_vod.enhance();
 			enhanced = true;
 		}
+		_vod.produceDb();
+		
+		_vod.startEventDriver();
+		
+		
+		
 		
 	}
 	
+	
 	public void clean() {
-		_vod.removeDb();
+		// delete all persistent instances
 	}
 	
 	public void close() {
@@ -48,12 +55,19 @@ public class VodDrsFixture implements DrsFixture{
 	}
 
 	public void open() {
-		_vod.produceDb();
 		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public TestableReplicationProviderInside provider() {
 		return _provider;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " " + _vod;
+	}
+
+	
+	
 
 }

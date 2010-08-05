@@ -9,7 +9,10 @@ import java.util.*;
 import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.eventlistener.Program.*;
 import com.db4o.util.*;
+import com.db4o.util.IOServices.*;
 import com.versant.odbms.*;
 import com.versant.util.*;
 
@@ -32,6 +35,15 @@ public class VodDatabase {
 	private PersistenceManagerFactory _persistenceManagerFactory;
 	
 	private DatastoreManagerFactory _datastoreManagerFactory;
+	
+	private static int nextPort = 4100;
+	
+	private VodEventDriver _eventDriver;
+	
+	private EventConfiguration _eventConfiguration;
+
+	private EventProcessorSupport _eventProcessorSupport;
+	
 
 	public VodDatabase(String name, Properties properties){
 		_name = name;
@@ -196,26 +208,6 @@ public class VodDatabase {
 			}
 		}
 	}
-	
-	public void addJdoMetaDataFile(File file) {
-	
-		// FIXME: This doesn't work yet.
-		
-		String path;
-		try {
-			path = file.getCanonicalPath();
-			path = path.replace('\\', '/');
-			System.out.println(path);
-			addJdoMetaDataFile(path);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-
-	}
 
 	public void addJdoMetaDataFile(String fileName) {
 		
@@ -244,6 +236,22 @@ public class VodDatabase {
 		}
 		_properties.setProperty(JDO_METADATA_KEY + freeEntry, fileName);
 	}
+	
+	public void startEventDriver() {
+		if(_eventDriver != null){
+			throw new IllegalStateException("Event driver can only be started once.");
+		}
+		int clientPort = nextPort++;
+		int serverPort = nextPort++;
+		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPort, true);
+		_eventDriver = new VodEventDriver(_eventConfiguration);
+		boolean started = _eventDriver.start();
+		if(! started ){
+			_eventDriver.printStartupFailure();
+			_eventDriver = null;
+			throw new IllegalStateException();
+		}
+	}
 
 	public void createEventSchema() {
 		VodJvi jvi = new VodJvi(this);
@@ -253,6 +261,62 @@ public class VodDatabase {
 	
 	public String databaseName(){
 		return _name;
+	}
+	
+	@Override
+	public String toString() {
+		return "VOD " + _name;
+	}
+
+	public void stopEventDriver() {
+		_eventDriver.stop();
+		_eventDriver = null;
+	}
+	
+	public void startEventProcessor(){
+		if(_eventProcessorSupport != null){
+			throw new IllegalStateException();
+		}
+		_eventProcessorSupport = new EventProcessorSupport(_eventConfiguration);
+	}
+	
+	public void stopEventProcessor(){
+		_eventProcessorSupport.stop();
+		_eventProcessorSupport = null;
+	}
+	
+	public ProcessRunner startEventProcessorInSeparateProcess() throws IOException {
+		
+		List<String> arguments = new ArrayList<String>();
+		
+		addArgument(arguments, Arguments.DATABASE, _name);
+		addArgument(arguments, Arguments.LOGFILE, _eventConfiguration.logFileName);
+		addArgument(arguments, Arguments.SERVER_PORT, _eventConfiguration.serverPort);
+		addArgument(arguments, Arguments.CLIENT_PORT, _eventConfiguration.clientPort);
+		
+		String[] argumentsAsString = new String[arguments.size()];
+		argumentsAsString = arguments.toArray(argumentsAsString);
+		
+		ProcessRunner eventListenerProcess = JavaServices.startJava(Program.class.getName(), argumentsAsString);
+		eventListenerProcess.checkIfStarted(_name, 10000);
+		return eventListenerProcess;
+	}
+	
+	private static void addArgument(List<String> arguments, String argumentName, int argumentValue) {
+		addArgument(arguments, argumentName, String.valueOf(argumentValue));
+	}
+
+	private static void addArgument(List<String> arguments, String argumentName, String argumentValue) {
+		addArgument(arguments, argumentName);
+		arguments.add(argumentValue);
+	}
+	
+	private static void addArgument(List<String> arguments, String argumentName) {
+		arguments.add("-" + argumentName);
+	}
+	
+	public EventConfiguration eventConfiguration(){
+		return _eventConfiguration;
 	}
 	
 }

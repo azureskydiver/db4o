@@ -4,6 +4,10 @@ package com.db4o.drs.inside;
 
 public class DrsDebug {
 	
-	public static final boolean verbose = true;
+	private static boolean production = false;
+	
+	public static final boolean runEventListenerEmbedded = !production;
+	
+	public static final boolean verbose = !production;
 
 }

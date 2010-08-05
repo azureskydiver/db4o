@@ -12,10 +12,6 @@ public class JdoMetadataGenerator {
 		_root = root;
 	}
 	
-	public File generate(Class sampleClass){
-		return generate(sampleClass.getPackage().getName());
-	}
-	
 	public File generate(String packageName) {
 		try {
 			String path = packageName.replace('.', '/');
@@ -31,7 +27,7 @@ public class JdoMetadataGenerator {
 			for (File file : packageFolder.listFiles()) {
 				if(! file.isDirectory()  && file.getName().endsWith(".class")){
 					writer.print("    	<class name=\"");
-					writer.print(className(_root, file));
+					writer.print(className(file));
 					writer.println("\"/>");
 				}
 			}
@@ -45,10 +41,13 @@ public class JdoMetadataGenerator {
 		}
 	}
 	
-	private String className(File root, File file) {
-		int rootPathLength = root.getAbsolutePath().length();
-		String name = file.getAbsolutePath().substring(rootPathLength + 1);
-		return stripDotClass(name.replace(File.separatorChar, '.'));
+	public String className(File file) {
+		return stripDotClass(resourcePath(file).replace(File.separatorChar, '.'));
+	}
+	
+	public String resourcePath(File file) {
+		int rootPathLength = _root.getAbsolutePath().length();
+		return file.getAbsolutePath().substring(rootPathLength + 1);
 	}
 
 	private String stripDotClass(String name) {
