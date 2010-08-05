@@ -91,34 +91,38 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return;
 		}
 		
-		final VodJdo jdo = new VodJdo(_vod);
-		
 		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
-		
-		jdo.store(classMetadata);
 		_knownClasses.put(className, classMetadata);
+		
+		ClassMetadata changed = ensureStoreChanged(classMetadata, new Function4<ClassMetadata, Boolean>() {
+			public Boolean apply(ClassMetadata value) {
+				return value.monitored();
+			}
+		});
+		if(changed == null){
+			Class eventListenerProgram = com.db4o.drs.versant.eventlistener.Program.class;
+			throw new IllegalStateException("Event listener process did not respond to ClassMetadata creation for " 
+					+ className + ". Ensure that " + eventListenerProgram.getName() + " is running.");
+		}
+	}
+
+	private <T> T ensureStoreChanged(T obj, final Function4<T, Boolean> modifiedCheck) {
+		final VodJdo jdo = new VodJdo(_vod);
+		jdo.store(obj);
 		jdo.commit();
 		
-		final ByRef<ClassMetadata> classMetadataByRef = ByRef.newInstance(classMetadata);
-		
+		final ByRef<T> peeked = ByRef.newInstance(obj);
 		
 		try{
 			int timeoutInMillis = 10000;
 			int millisecondsBetweenRetries = 50;
-			boolean eventListenerHasChangedMonitored = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
+			boolean changed = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
 				public Boolean run() {
-					// The eventlistener listens to creation of ClassMetadata objects.
-					// It will change the monitored field as soon as the channel is up.
-					classMetadataByRef.value = jdo.peek(classMetadataByRef.value);
-					return classMetadataByRef.value.monitored();
+					peeked.value = jdo.peek(peeked.value);
+					return modifiedCheck.apply(peeked.value);
 				}
 			});
-			if(! eventListenerHasChangedMonitored){
-				Class eventListenerProgram = com.db4o.drs.versant.eventlistener.Program.class;
-				throw new IllegalStateException("Event listener process did not respond to ClassMetadata creation for " 
-						+ className + ". Ensure that " + eventListenerProgram.getName() + " is running.");
-				
-			}
+			return changed ? peeked.value : null;
 		} finally {
 			jdo.close();
 		}
@@ -165,8 +169,20 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getCurrentVersion() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		Long syncRequestLoid = _cobra.singleInstanceLoid(TimestampSyncRequest.class);
+		TimestampSyncRequest syncRequest =
+				syncRequestLoid == null 
+				? new TimestampSyncRequest() 
+				: (TimestampSyncRequest)_cobra.objectByLoid(syncRequestLoid);
+		TimestampSyncRequest response = ensureStoreChanged(syncRequest, new Function4<TimestampSyncRequest, Boolean>() {
+			public Boolean apply(TimestampSyncRequest syncRequest) {
+				return syncRequest.isAnswered();
+			}
+		});
+		if(response == null || !response.isAnswered()) {
+			throw new IllegalStateException("No timestamp sync response received.");
+		}
+		return response.timestamp();
 	}
 
 	public long getLastReplicationVersion() {
