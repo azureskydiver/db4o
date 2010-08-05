@@ -11,17 +11,11 @@ import db4ounit.*;
 
 public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest  {
 	
-	protected static final String EVENT_LOGFILE_NAME = "DrsEventLogFile.log";
-	
-	protected static final int CLIENT_PORT = 4009;
-	
-	protected static final int SERVER_PORT = 4010;
-	
 	private boolean EXPOSE_OBJECT_DELETE_BUG = false;
 	
 	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
-	protected VodDatabase _vod;
+	protected static VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
 	
@@ -29,16 +23,13 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	// so we can see what's committed, using a second reference system.
 	protected VodJdo _jdo;
 	
-	private static VodEventDriver _eventDriver;
-	
-	public void setUp() throws Exception {
-		_vod = new VodDatabase(DATABASE_NAME);
+	public void setUp() {
 		_jdo = new VodJdo(_vod);
 		cleanDb();
 		_provider = new VodReplicationProvider(_vod);
 	}
 
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		_jdo.close();
 		_provider.commit();
 		_provider.destroy();
@@ -70,34 +61,20 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	}
 	
 	public static void classSetUp() {
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.produceDb();
-		vod.enhance();
-		vod.createEventSchema();
-		_eventDriver = startEventDriver();
+		if(_vod != null){
+			throw new IllegalStateException();
+		}
+		_vod = new VodDatabase(DATABASE_NAME);
+		_vod.produceDb();
+		_vod.enhance();
+		_vod.createEventSchema();
+		_vod.startEventDriver();
 	}
 
 	public static void classTearDown() {
-		_eventDriver.stop();
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.removeDb();
+		_vod.stopEventDriver();
+		_vod.removeDb();
+		_vod = null;
 	}
-	
-	private static VodEventDriver startEventDriver() {
-		VodEventDriver eventDriver = new VodEventDriver(newEventConfiguration());
-		boolean started = eventDriver.start();
-		if(! started ){
-			eventDriver.printStartupFailure();
-			throw new IllegalStateException();
-		}
-		return eventDriver;
-	}
-	
-	protected static EventConfiguration newEventConfiguration() {
-		return new EventConfiguration(DATABASE_NAME, EVENT_LOGFILE_NAME,  "localhost", SERVER_PORT, "localhost", CLIENT_PORT, true);
-	}
-
-
-
 
 }

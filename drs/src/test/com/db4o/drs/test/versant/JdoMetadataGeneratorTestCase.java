@@ -13,7 +13,7 @@ public class JdoMetadataGeneratorTestCase implements TestCase {
 	
 	public void test() throws Exception{
 		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
-		File generatedFile = generator.generate(SPCChild.class);
+		File generatedFile = generator.generate("com.db4o.drs.test.data");
 		BufferedReader reader = new BufferedReader(new FileReader(generatedFile));
 		String expected = "<class name=\"" +  SPCChild.class.getName() + "\"/>";
 		String line = null;

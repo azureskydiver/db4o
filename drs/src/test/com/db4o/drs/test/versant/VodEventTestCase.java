@@ -48,11 +48,10 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 	}
 	
 	public void testEventDriverStartAndStop() throws IOException {
-		VodEventDriver eventDriver = new VodEventDriver(newEventConfiguration());
+		VodEventDriver eventDriver = new VodEventDriver(_vod.eventConfiguration());
 		Assert.isTrue(eventDriver.start());
 		eventDriver.stop();
 	}
-
 	
 	public void testSimpleEvent() throws Exception {
 		EventClient client = newEventClient();
@@ -83,7 +82,7 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 	}
 
 	private EventClient newEventClient() throws IOException {
-		EventClient client = EventProcessor.newEventClient(newEventConfiguration());
+		EventClient client = EventProcessor.newEventClient(_vod.eventConfiguration());
 		client.addExceptionListener (new LoggingExceptionListener());
 		return client;
 	}

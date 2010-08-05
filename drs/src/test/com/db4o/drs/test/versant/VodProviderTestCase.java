@@ -16,10 +16,22 @@ import com.versant.odbms.query.Operator.*;
 
 import db4ounit.*;
 
-public class VodProviderTestCase extends VodEventProcessorEnabledTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest {
+public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	public static void main(String[] args) {
 		new ConsoleTestRunner(VodProviderTestCase.class).run();
+	}
+	
+	@Override
+	public void setUp() {
+		super.setUp();
+		_vod.startEventProcessor();
+	}
+	
+	@Override
+	public void tearDown() {
+		super.tearDown();
+		_vod.stopEventProcessor();
 	}
 	
 	public void testReferenceExists(){
