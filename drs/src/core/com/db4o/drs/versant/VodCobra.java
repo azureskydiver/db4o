@@ -188,6 +188,19 @@ public class VodCobra {
 		return cobraFields;
 	}
 	
+	public <T> Long singleInstanceLoid(Class<T> extent) {
+		Collection<Long> loids = loids(extent);
+	    
+	    switch(loids.size()){
+	    	case 0:
+		    	return null;
+	    	case 1:
+	    		return loids.iterator().next();
+	    	default:
+	    		throw new IllegalStateException("Multiple " + extent.getSimpleName() + " instances in database");
+	    }
+	}
+	
 	private class CobraField {
 		
 		private DatastoreSchemaField _datastoreSchemaField;

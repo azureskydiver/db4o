@@ -82,24 +82,21 @@ public class EventProcessor {
 	}
 
 	private void produceLastTimestamp() throws Exception {
-		Collection<Long> timestampLoids = _cobra.loids(CommitTimestamp.class);
-	    
-	    switch(timestampLoids.size()){
-	    
-	    	case 0:
-		    	_timestampLoid = _cobra.store(new CommitTimestamp(0));
-		    	_cobra.commit();
-		    	return;
-	    	case 1:
-	    		_timestampLoid = timestampLoids.iterator().next();
-	    		CommitTimestamp timestamp = _cobra.objectByLoid(_timestampLoid);
-	    		println("Timestamp read: " + timestamp.value());
-	    		_timeStampIdGenerator.setMinimumNext(timestamp.value());
-	    		return;
-	    	default:
-	    		throw new IllegalStateException("Multiple CommitTimestamp instances in database");
-	    }
-	    
+		Long timestampLoid = _cobra.singleInstanceLoid(CommitTimestamp.class);
+		if(timestampLoid == null) {
+	    	_timestampLoid = _cobra.store(new CommitTimestamp(0));
+	    	_cobra.commit();
+		}
+		else {
+    		_timestampLoid = timestampLoid;
+    		CommitTimestamp timestamp = timestamp();
+    		println("Timestamp read: " + timestamp.value());
+    		_timeStampIdGenerator.setMinimumNext(timestamp.value());
+		}
+	}
+
+	private CommitTimestamp timestamp() {
+		return _cobra.objectByLoid(_timestampLoid);
 	}
 
 	public static EventClient newEventClient(EventConfiguration config)  {
@@ -114,6 +111,7 @@ public class EventProcessor {
 
 	public void run() {
 	    createMetaChannel(_client);
+	    createCommitSyncChannel();
 	    println(LISTENING_MESSAGE + _eventConfiguration.databaseName);
 	    channelCreationLoop();
 		shutdown();
@@ -163,6 +161,36 @@ public class EventProcessor {
 			}
 		});
 		println("Listener channel created for class " + channelSpec._className);
+	}
+
+	private void createCommitSyncChannel() {
+		EventChannel channel = produceClassChannel(TimestampSyncRequest.class.getName());
+		channel.addVersantEventListener (new ClassEventListener() {
+			public void instanceModified (VersantEventObject event){
+				processSynchronizationRequest(event);
+			}
+			
+			public void instanceCreated (VersantEventObject event) {
+				processSynchronizationRequest(event);
+			}
+			
+			public void instanceDeleted (VersantEventObject event) {
+			}
+			
+			private void processSynchronizationRequest(VersantEventObject event) {
+				synchronized(_lock){
+					long syncRequestLoid = VodCobra.loidAsLong(event.getRaiserLoid());
+					TimestampSyncRequest syncRequest = _cobra.objectByLoid(syncRequestLoid);
+					if(syncRequest.isAnswered()) {
+						return;
+					}
+					CommitTimestamp timestamp = timestamp();
+					syncRequest.timestamp(timestamp.value());
+					_cobra.store(syncRequestLoid, syncRequest);
+					_cobra.commit();
+				}
+			}
+		});
 	}
 
 	private EventChannel createMetaChannel(final EventClient client)  {

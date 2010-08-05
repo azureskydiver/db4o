@@ -42,8 +42,6 @@ public class EventConfiguration {
 		writer.println("Log " + logFileName);
 		writer.println("LogLevel 2 ");
 		
-		System.err.println("Channel engine is only configured for windows here.");
-		
 		writer.println("<EngineLibs>");
 		writer.println(DrsRuntime4.runningOnWindows() ? VED_LIB_BASENAME + ".dll" : "lib" + VED_LIB_BASENAME + ".so");
 		writer.println("</EngineLibs>");
