@@ -373,9 +373,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	return trans.idSystem().newId(SlotChangeFactory.USER_OBJECTS);
     }
 
-    public void raiseVersion(long a_minimumVersion) {
+    public void raiseVersion(long minimumVersion) {
         synchronized (lock()) {
-            _timeStampIdGenerator.setMinimumNext(a_minimumVersion);
+            _timeStampIdGenerator.setMinimumNext(minimumVersion);
         }
     }
 
