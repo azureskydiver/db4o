@@ -5,6 +5,7 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.util.*;
 
+import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
@@ -164,6 +165,9 @@ public class EventProcessor {
 	}
 
 	private void createCommitSyncChannel() {
+		if (true){
+			return;
+		}
 		EventChannel channel = produceClassChannel(TimestampSyncRequest.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
@@ -260,7 +264,9 @@ public class EventProcessor {
 		}
 		synchronized (_lock) {
 			_out.println(msg);
-			// System.out.println(msg);
+			if(DrsDebug.verbose){
+				System.out.println(msg);
+			}
 		}
 	}
 	
@@ -303,6 +309,11 @@ public class EventProcessor {
 			_className = className;
 			_fullyQualifiedName = fullyQualifiedName;
 			_classMetadataLoid = classMetadataLoid;
+		}
+		
+		@Override
+		public String toString() {
+			return com.db4o.internal.Reflection4.dump(this);
 		}
 
 	}
