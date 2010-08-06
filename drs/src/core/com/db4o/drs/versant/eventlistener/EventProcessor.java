@@ -165,9 +165,6 @@ public class EventProcessor {
 	}
 
 	private void createCommitSyncChannel() {
-		if (true){
-			return;
-		}
 		EventChannel channel = produceClassChannel(TimestampSyncRequest.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
@@ -223,9 +220,15 @@ public class EventProcessor {
 		try {
 			EventChannel channel = _client.getChannel (channelName);
 			if(channel != null){
+				if(DrsDebug.verbose){
+					System.out.println("Reusing existing channel " + channelName);
+				}
 				return channel;
 			}
 			ClassChannelBuilder builder = new ClassChannelBuilder (className);
+			if(DrsDebug.verbose){
+				System.out.println("Creating new channel " + channelName);
+			}
 			return _client.newChannel (channelName, builder);
 		} catch (IOException e) {
 			unrecoverableExceptionOccurred(e);

@@ -37,7 +37,11 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	}
 	
 	private void withEventProcessorInSameProcess (Closure4<Void> closure, final String expectedOutput) throws Exception {
+		
+		// TODO: This will not really scale for large number of objects.
+		//       The ByteArrayOutputStream will bloat memory.
 		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+		
 		PrintStream printOut = new PrintStream(byteOut);
 		final EventProcessor eventProcessor = new EventProcessor(_vod.eventConfiguration(), printOut);
 		Thread eventProcessorThread = new Thread(new Runnable() {
@@ -47,23 +51,28 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 		});
 		eventProcessorThread.start();
 		try{
+			if(! waitForOutputToContain(byteOut, EventProcessor.LISTENING_MESSAGE)){
+				throw new IllegalStateException("EventProcessor did not tell us that it's up");
+			}
 			closure.run();
-			boolean result = Runtime4.retry(10000, 50, new Closure4<Boolean>() {
-				public Boolean run() {
-					byte[] byteArray = byteOut.toByteArray();
-					String output = new String(byteArray);
-					return output.contains(expectedOutput);
-				}
-			});
-			Assert.isTrue(result, "Output does not contain '" + expectedOutput + "'"); 
+			Assert.isTrue(waitForOutputToContain(byteOut, expectedOutput), "Output does not contain '" + expectedOutput + "'"); 
 		} finally {
 			eventProcessor.stop();
 			eventProcessorThread.join();
+			printOut.close();
 		}
+	}
+
+	private boolean waitForOutputToContain(final ByteArrayOutputStream byteOut, final String expectedOutput) {
+		return Runtime4.retry(100000, new Closure4<Boolean>() {
+			public Boolean run() {
+				return new String(byteOut.toByteArray()).contains(expectedOutput);
+			}
+		});
 	}
 	
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
-		withEventProcessor(closure, "Listening");
+		withEventProcessor(closure, EventProcessor.LISTENING_MESSAGE);
 	}
 
 }
