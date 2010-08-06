@@ -20,10 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.drs.ReplicationProvider;
+import com.db4o.drs.*;
 import com.db4o.drs.foundation.*;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 
 
 public interface ReplicationProviderInside extends ReplicationProvider, CollectionSource, SimpleObjectContainer{
@@ -55,6 +54,8 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 
 	Object getMonitor();
 
+	void runIsolated(Block4 block);
+	
 	String getName();
 
 	ReadonlyReplicationProviderSignature getSignature();
