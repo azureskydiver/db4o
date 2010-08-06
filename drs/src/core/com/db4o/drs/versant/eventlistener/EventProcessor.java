@@ -15,6 +15,8 @@ import com.versant.event.*;
 public class EventProcessor {
 	
 	public static final String LISTENING_MESSAGE = "Listening for events on ";
+	
+	public static final String COMMIT_MESSAGE = "EventProcessor commit";
 
 	private final int COMMIT_INTERVAL = 1000; // 1 sec
 	
@@ -292,9 +294,9 @@ public class EventProcessor {
 	private void commit() {
 		synchronized(_lock){
 			if(_dirty){
-				println("Timestamp stored " + _timeStampIdGenerator.last());
 				_cobra.store(_timestampLoid, new CommitTimestamp(_timeStampIdGenerator.last()));
 				_cobra.commit();
+				println(COMMIT_MESSAGE);
 				_dirty = false;
 			}
 		}

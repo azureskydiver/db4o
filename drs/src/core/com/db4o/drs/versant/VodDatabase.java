@@ -59,8 +59,12 @@ public class VodDatabase {
 		
 		addPropertyIfNotExists("versant.l2CacheEnabled", "false");
 		
+		/**
+		 * Setting the following property produces fully qualified classnames.
+		 * VOD also uses fully qualified classnames, if they are fully qualified
+		 * in the .jdo file.
+		 */
 		// addPropertyIfNotExists("versant.vdsNamingPolicy", "none");
-		
 		
 		addPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
 		addPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
@@ -273,11 +277,12 @@ public class VodDatabase {
 		_eventDriver = null;
 	}
 	
-	public void startEventProcessor(){
+	public EventProcessorSupport startEventProcessor(){
 		if(_eventProcessorSupport != null){
 			throw new IllegalStateException();
 		}
 		_eventProcessorSupport = new EventProcessorSupport(_eventConfiguration);
+		return _eventProcessorSupport;
 	}
 	
 	public void stopEventProcessor(){

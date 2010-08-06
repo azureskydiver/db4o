@@ -16,9 +16,11 @@ public class EventProcessorSupport {
 	
 	private final EventProcessor _eventProcessor;
 
+	private final ByteArrayOutputStream _byteOut;
+
 	public EventProcessorSupport(EventConfiguration eventConfiguration) {
-		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		PrintStream printOut = new PrintStream(byteOut);
+		_byteOut = new ByteArrayOutputStream();
+		PrintStream printOut = new PrintStream(_byteOut);
 		_eventProcessor = new EventProcessor(eventConfiguration, printOut);
 		_eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
@@ -26,16 +28,25 @@ public class EventProcessorSupport {
 			}
 		});
 		_eventProcessorThread.start();
-		boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
-			public Boolean run() {
-				byte[] byteArray = byteOut.toByteArray();
-				String output = new String(byteArray);
-				return output.contains(EventProcessor.LISTENING_MESSAGE);
-			}
-		});
-		if(! result){
+		if(! waitForOutput(EventProcessor.LISTENING_MESSAGE)){
 			throw new IllegalStateException("Event processor does not report '" + EventProcessor.LISTENING_MESSAGE + "'");
 		}
+	}
+
+	public boolean waitForOutput(final String string) {
+		boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
+			public Boolean run() {
+				return outputContains(string);
+			}
+		});
+		_byteOut.reset();
+		return result;
+	}
+	
+	private boolean outputContains(String string) {
+		byte[] byteArray = _byteOut.toByteArray();
+		String output = new String(byteArray);
+		return output.contains(string);
 	}
 	
 	public void stop(){
