@@ -107,4 +107,9 @@ public class Db4oDrsFixture implements DrsFixture {
 		}
 		return _config;
 	}
+	
+	public void destroy(){
+		
+	}
+
 }

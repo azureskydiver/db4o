@@ -52,7 +52,7 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 		eventProcessorThread.start();
 		try{
 			if(! waitForOutputToContain(byteOut, EventProcessor.LISTENING_MESSAGE)){
-				throw new IllegalStateException("EventProcessor did not tell us that it's up");
+				throw new IllegalStateException("EventProcessor does not report to be up. No message '" + EventProcessor.LISTENING_MESSAGE + "'");
 			}
 			closure.run();
 			Assert.isTrue(waitForOutputToContain(byteOut, expectedOutput), "Output does not contain '" + expectedOutput + "'"); 
