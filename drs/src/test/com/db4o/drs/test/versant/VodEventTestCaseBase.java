@@ -48,13 +48,10 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 		eventProcessorThread.start();
 		try{
 			closure.run();
-			boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
+			boolean result = Runtime4.retry(10000, 50, new Closure4<Boolean>() {
 				public Boolean run() {
 					byte[] byteArray = byteOut.toByteArray();
 					String output = new String(byteArray);
-					if(DrsDebug.verbose){
-						System.out.println(output);
-					}
 					return output.contains(expectedOutput);
 				}
 			});
