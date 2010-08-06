@@ -103,10 +103,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return _lastReplicationVersion;
 	}
 
-	public Object getMonitor() {
-		return this;
-	}
-
 	public String getName() {
 		return _name;
 	}
@@ -437,7 +433,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public void runIsolated(Block4 block) {
-		synchronized(getMonitor()) {
+		synchronized(this) {
 			block.run();
 		}
 	}

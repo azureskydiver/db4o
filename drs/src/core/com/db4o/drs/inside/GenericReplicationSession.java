@@ -64,9 +64,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_providerA = (ReplicationProviderInside) providerA;
 		_providerB = (ReplicationProviderInside) providerB;
 		_listener = listener;
-
-		synchronized (_providerA.getMonitor()) {
-			synchronized (_providerB.getMonitor()) {
+		
+		runIsolated(new Block4() {
+			public void run() {
 				_providerA.startReplicationTransaction(_providerB.getSignature());
 				_providerB.startReplicationTransaction(_providerA.getSignature());
 
@@ -75,7 +75,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 				_lastReplicationVersion = _providerA.getLastReplicationVersion();
 			}
-		}
+		});
 
 		resetProcessedUuids();
 	}

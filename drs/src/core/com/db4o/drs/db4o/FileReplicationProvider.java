@@ -111,7 +111,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		return _mySignature;
 	}
 
-	public Object getMonitor() {
+	private Object lock() {
 		return _container.lock();
 	}
 
@@ -119,7 +119,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 		clearAllReferences();
 
-		synchronized (getMonitor()) {
+		synchronized (lock()) {
 
 			Transaction trans = _container.transaction();
 
@@ -182,7 +182,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void storeReplica(Object obj) {
-		synchronized (getMonitor()) {
+		synchronized (lock()) {
 			_container.storeByNewReplication(this, obj);
 
 			// the ID is an int internally, it can be casted to int.
@@ -425,7 +425,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void runIsolated(Block4 block) {
-		synchronized(getMonitor()) {
+		synchronized(lock()) {
 			block.run();
 		}
 	}
