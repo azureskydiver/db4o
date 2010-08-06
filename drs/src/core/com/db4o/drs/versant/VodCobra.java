@@ -4,10 +4,12 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
+import com.db4o.drs.versant.metadata.*;
 import com.db4o.internal.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
 import com.versant.odbms.query.*;
+import com.versant.odbms.query.Operator.*;
 
 public class VodCobra {
 	
@@ -22,27 +24,69 @@ public class VodCobra {
 		return DatastoreLoid.asValue(loidAsString);
 	}
 	
-	private DatastoreObject datastoreObject(long loid) {
-		DatastoreLoid datastoreLoid = new DatastoreLoid(loid);
-		DatastoreObject[] loidsAsDSO = _dm.getLoidsAsDSO(new Object[] { datastoreLoid });
-		_dm.groupReadObjects(loidsAsDSO, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
-		return loidsAsDSO[0];
-	}
-
 	public void close() {
 		_dm.close();
 	}
+	
+	public static class  CobraQuery <T> {
+		
+		private DatastoreQuery _query;
+		
+		private final Class<T> _clazz;
+
+		public CobraQuery(Class<T> clazz) {
+			_clazz = clazz;
+			_query = new DatastoreQuery(clazz.getName());
+		}
+		
+		public void equals(String fieldName, Object value){
+			Expression expression = new Expression(
+					new SubExpression(new Field(fieldName)), 
+					UnaryOperator.EQUALS, 
+					new SubExpression(value));
+			_query.setExpression(expression);
+		}
+		
+		public void orderBy(String fieldName, boolean descending) {
+			_query.setOrderByExpression(new OrderByExpression[]{
+					new OrderByExpression(new SubExpression(new Field(fieldName)), descending)
+			});
+		}
+		
+		public void limit(int objectCount){
+			_query.setMaxObjects(objectCount);
+		}
+
+		public Object[] loids(VodCobra cobra) {
+			return cobra._dm.executeQuery(_query, DataStoreLockMode.NOLOCK,
+					DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		}
+		
+		public Collection<T> execute(VodCobra cobra) {
+			Object[] loids = loids(cobra);
+			if(loids.length == 0){
+				return new ArrayList<T>();
+			}
+			return cobra.readObjects(_clazz, loids);
+		}
+		
+	}
 
 	public VodId idFor(long loid) {
+		CobraQuery<ObjectLifecycleEvent> query = new CobraQuery(ObjectLifecycleEvent.class);
+		query.equals("objectLoid", loid);
+		query.orderBy("timestamp", true);
+		
+		// The following didn't work. Maybe limit processing happens on the server before ordering. 
+		// query.limit(1);
+		
+		Collection<ObjectLifecycleEvent> events = query.execute(this);
+		for (ObjectLifecycleEvent objectLifecycleEvent : events) {
+			System.out.println(objectLifecycleEvent);
+		}
+		long timestamp = events.isEmpty() ? 0 : events.iterator().next().timestamp();
 		DatastoreLoid datastoreLoid = new DatastoreLoid(loid);
-		
-		DatastoreObject datastoreObject = datastoreObject(loid);
-		
-		System.err.println("VodCobra#idFor: TODO: create correct timestamp here");
-		
-		// TODO: Create correct timestamp here
-		
-		return new VodId(datastoreLoid.getDatabaseId(), datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2(), datastoreObject.getTimestamp());
+		return new VodId(datastoreLoid.getDatabaseId(), datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2(), timestamp);
 	}
 
 	public long store(Object obj) {
@@ -135,6 +179,10 @@ public class VodCobra {
 		if(loids.length == 0){
 			return new ArrayList<T>();
 		}
+		return readObjects(extent, loids);
+	}
+
+	private <T> Collection<T> readObjects(Class<T> extent, Object[] loids) {
 		DatastoreObject[] datastoreObjects = new DatastoreObject[loids.length];
 		for ( int i = 0; i < loids.length; i++ ){
 			datastoreObjects[i]= new DatastoreObject((DatastoreLoid) loids[i]);

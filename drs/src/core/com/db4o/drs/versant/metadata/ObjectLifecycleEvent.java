@@ -83,7 +83,7 @@ public class ObjectLifecycleEvent {
 
 	@Override
 	public String toString() {
-		return "(" + objectLoid + "," + Operations.forValue(operation) + ")";
+		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,time:" + timestamp + ")";
 	}
 	
 	@Override

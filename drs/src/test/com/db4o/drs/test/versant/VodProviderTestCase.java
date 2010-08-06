@@ -9,6 +9,7 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.metadata.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
@@ -18,6 +19,8 @@ import db4ounit.*;
 
 public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
+	private EventProcessorSupport _eventProcessorSupport;
+
 	public static void main(String[] args) {
 		new ConsoleTestRunner(VodProviderTestCase.class).run();
 	}
@@ -25,7 +28,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	@Override
 	public void setUp() {
 		super.setUp();
-		_vod.startEventProcessor();
+		_eventProcessorSupport = _vod.startEventProcessor();
 	}
 	
 	@Override
@@ -147,13 +150,25 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		Item item = new Item("one");
 		provider.storeNew(item);
 		provider.commit();
+		waitForCommitFeedbackFromEventProcessor();
 		return item;
+	}
+
+	private void waitForCommitFeedbackFromEventProcessor() {
+		waitForOutput(EventProcessor.COMMIT_MESSAGE);
 	}
 	
 	private void update(Item item) {
 		item.name("modified");
 		_provider.update(item);
 		_provider.commit();
+		waitForCommitFeedbackFromEventProcessor();
+	}
+	
+	private void waitForOutput(String string){
+		if (! _eventProcessorSupport.waitForOutput(string)){
+			throw new IllegalStateException("Expected output " + string + " never printed by EventProcessor");
+		}
 	}
 	
 }

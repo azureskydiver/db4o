@@ -266,8 +266,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		Set<Long> loids = new HashSet<Long>();
+		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, "");
+		for (ObjectLifecycleEvent event : allEvents) {
+			loids.add(event.objectLoid());
+		}
+		Collection<Object> objects = new ArrayList<Object>(loids.size());
+		for (Long loid : loids) {
+			objects.add(_jdo.objectByLoid(loid));
+		}
+		return new ObjectSetCollectionFacade(objects);
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
