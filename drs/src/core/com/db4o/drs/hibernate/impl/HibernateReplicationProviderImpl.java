@@ -214,10 +214,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return _replicationRecord.getTime();
 	}
 
-	public final Object getMonitor() {
-		return this;
-	}
-
 	public final String getName() {
 		return _name;
 	}
@@ -686,7 +682,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public void runIsolated(Block4 block) {
-		synchronized(getMonitor()) {
+		// TODO: Here we should make sure that no other HibernateReplicationProvider is interacting
+		// with the database, by storing a singleton "lock" object.
+		synchronized(this) {
 			block.run();
 		}
 	}

@@ -190,11 +190,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		throw new com.db4o.foundation.NotImplementedException();
 	}
 
-	public Object getMonitor() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
-	}
-
 	public String getName() {
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();
