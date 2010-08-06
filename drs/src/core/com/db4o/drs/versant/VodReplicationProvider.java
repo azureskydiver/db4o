@@ -240,6 +240,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void startReplicationTransaction(
 			ReadonlyReplicationProviderSignature peerSignature) {
+		
+		// clearAllReferences();
+		
+		
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();
 	}
@@ -255,8 +259,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void visitCachedReferences(Visitor4 visitor) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		_replicationReferences.visitEntries(visitor);
 	}
 
 	public boolean wasModifiedSinceLastReplication(
@@ -356,7 +359,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void runIsolated(Block4 block) {
-		// TODO
+		System.err.println("FIXMEPLEASE VodReplicationProvider#runIsolated IS NOT ISOLATED");
+		block.run();
 	}
 
 }
