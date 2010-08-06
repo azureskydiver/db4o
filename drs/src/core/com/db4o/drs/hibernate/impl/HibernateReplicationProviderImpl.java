@@ -685,4 +685,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return produceReference(obj, null, null);
 	}
 
+	public void runIsolated(Block4 block) {
+		synchronized(getMonitor()) {
+			block.run();
+		}
+	}
+
 }

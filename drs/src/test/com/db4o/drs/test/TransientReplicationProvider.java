@@ -435,4 +435,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public ReplicationReference produceReference(Object obj) {
 		return produceReference(obj, null, null);
 	}
+
+	public void runIsolated(Block4 block) {
+		synchronized(getMonitor()) {
+			block.run();
+		}
+	}
 }

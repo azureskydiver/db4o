@@ -98,21 +98,34 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_processedUuids = null;
 	}
 
+	private void runIsolated(final Block4 block) {
+		_providerA.runIsolated(new Block4() {
+			public void run() {
+				_providerB.runIsolated(new Block4() {
+					public void run() {
+						block.run();
+					}
+				});
+			}
+		});
+	}
+	
 	public final void commit() {
-		synchronized (_providerA.getMonitor()) {
-			synchronized (_providerB.getMonitor()) {
+		runIsolated(new Block4() {
+			public void run() {
 				long maxVersion = _providerA.getCurrentVersion() > _providerB.getCurrentVersion()
-						? _providerA.getCurrentVersion() : _providerB.getCurrentVersion();
+						? _providerA.getCurrentVersion() 
+						: _providerB.getCurrentVersion();
 
 				_providerA.syncVersionWithPeer(maxVersion);
 				_providerB.syncVersionWithPeer(maxVersion);
-
+		
 				maxVersion ++;
-
+		
 				_providerA.commitReplicationTransaction(maxVersion);
 				_providerB.commitReplicationTransaction(maxVersion);
 			}
-		}
+		});
 	}
 
 	public final ReplicationProvider providerA() {

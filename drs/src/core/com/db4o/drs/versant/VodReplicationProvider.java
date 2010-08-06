@@ -352,4 +352,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return _jdo.loid(obj);
 	}
 
+	public void runIsolated(Block4 block) {
+		// TODO
+	}
+
 }
