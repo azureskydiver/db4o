@@ -484,7 +484,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
-
 		_replicationReferences.visitEntries(visitor);
 	}
 
@@ -517,13 +516,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	private void ensureReplicationActive() {
 		ensureAlive();
 		if (!isReplicationActive())
-			throw new UnsupportedOperationException("Method not supported because replication transaction is not active");
+			throw new UnsupportedOperationException("Replication transaction IS NOT active");
 	}
 
 	private void ensureReplicationInActive() {
 		ensureAlive();
 		if (isReplicationActive())
-			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
+			throw new UnsupportedOperationException("Replication transaction IS active");
 	}
 
 	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
