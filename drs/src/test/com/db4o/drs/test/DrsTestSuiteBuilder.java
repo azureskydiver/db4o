@@ -22,7 +22,7 @@ package com.db4o.drs.test;
 
 import com.db4o.foundation.*;
 
-import db4ounit.ReflectionTestSuiteBuilder;
+import db4ounit.*;
 
 public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
@@ -33,12 +33,28 @@ public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	}
 	
 	public DrsTestSuiteBuilder(DrsFixture a, DrsFixture b, Class[] classes) {
-		super(classes);
+		super(appendDestructor(classes));
 		_fixtures = new DrsFixturePair(a, b);
+	}
+	
+	private static Class[] appendDestructor(Class[] classes){
+		Class[] newClasses = new Class[classes.length + 1];
+		System.arraycopy(classes, 0, newClasses, 0, classes.length);
+		newClasses[newClasses.length - 1] = DrsFixtureDestructor.class;
+		return newClasses;
+	}
+	
+	public static class DrsFixtureDestructor implements TestCase {
+		public void testFixtureDestruction(){
+			DrsFixturePair fixturePair = DrsFixtureVariable.value();
+			fixturePair.a.destroy();
+			fixturePair.b.destroy();
+		}
 	}
 	
 	@Override
 	protected Object withContext(Closure4 closure) {
 		return DrsFixtureVariable.with(_fixtures, closure);
 	}
+	
 }

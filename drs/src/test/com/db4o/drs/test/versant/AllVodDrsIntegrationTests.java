@@ -10,8 +10,12 @@ import db4ounit.*;
 public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 
 	public Iterator4 iterator() {
+		
 		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
-				new VodDrsFixture("vod-drs-b"), VodDrsSuite.class).iterator();
+				new Db4oDrsFixture("db4o-drs-b"), VodDrsSuite.class).iterator();
+		
+//		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
+//				new VodDrsFixture("vod-drs-b"), VodDrsSuite.class).iterator();
 		
 	}
 	

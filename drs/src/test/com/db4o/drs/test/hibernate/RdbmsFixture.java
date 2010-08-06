@@ -102,4 +102,8 @@ public abstract class RdbmsFixture implements DrsFixture {
 		addAllMappings(tmp);
 		return ReplicationConfiguration.decorate(tmp);
 	}
+	
+	public void destroy(){
+		
+	}
 }

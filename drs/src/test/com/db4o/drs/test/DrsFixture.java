@@ -31,4 +31,6 @@ public interface DrsFixture {
 	void close();
 
 	void clean();
+
+	void destroy();
 }

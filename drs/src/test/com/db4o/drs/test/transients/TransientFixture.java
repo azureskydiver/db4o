@@ -47,4 +47,9 @@ public class TransientFixture implements DrsFixture {
 	public void open()  {
 		_provider = new TransientReplicationProvider(new byte[]{65}, _name);
 	}
+	
+	public void destroy(){
+		
+	}
+
 }

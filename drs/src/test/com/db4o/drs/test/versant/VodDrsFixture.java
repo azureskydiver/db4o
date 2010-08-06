@@ -15,11 +15,10 @@ public class VodDrsFixture implements DrsFixture{
 	private final VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
-	
-	
 
 	public VodDrsFixture(String name){
 		_vod = new VodDatabase(name);
+		_vod.produceDb();
 		if(! enhanced ){
 			File root = new File("bin");
 			
@@ -33,20 +32,20 @@ public class VodDrsFixture implements DrsFixture{
 			_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.data")));
 			
 			_vod.enhance();
+			_vod.createEventSchema();
 			enhanced = true;
 		}
-		_vod.produceDb();
-		
 		_vod.startEventDriver();
 		
 		
+		new VodJdo(_vod).close();
 		
-		
+		_vod.startEventProcessor();
 	}
 	
-	
 	public void clean() {
-		// delete all persistent instances
+		// TODO: Do we need to delete all persistent instances here?
+		//       It looks like this is already done in DrsTestCase#clean()
 	}
 	
 	public void close() {
@@ -66,8 +65,10 @@ public class VodDrsFixture implements DrsFixture{
 	public String toString() {
 		return this.getClass().getSimpleName() + " " + _vod;
 	}
-
 	
-	
+	public void destroy(){
+		_vod.stopEventProcessor();
+		_vod.stopEventDriver();
+	}
 
 }
