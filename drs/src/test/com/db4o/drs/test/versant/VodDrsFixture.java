@@ -18,6 +18,7 @@ public class VodDrsFixture implements DrsFixture{
 
 	public VodDrsFixture(String name){
 		_vod = new VodDatabase(name);
+		_vod.removeDb();
 		_vod.produceDb();
 		if(! enhanced ){
 			File root = new File("bin");
@@ -69,6 +70,7 @@ public class VodDrsFixture implements DrsFixture{
 	public void destroy(){
 		_vod.stopEventProcessor();
 		_vod.stopEventDriver();
+		_vod.removeDb();
 	}
 
 }
