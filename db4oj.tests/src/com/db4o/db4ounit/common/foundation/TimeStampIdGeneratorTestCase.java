@@ -45,6 +45,29 @@ public class TimeStampIdGeneratorTestCase implements TestCase {
 		}
 	}
 	
+	public void testContinousIncrement(){
+		TimeStampIdGenerator generator = new TimeStampIdGenerator();
+		assertContinousIncrement(generator);
+	}
+
+	private void assertContinousIncrement(TimeStampIdGenerator generator) {
+		long oldId = generator.generate();
+		for (int i = 0; i < 1000000; i++) {
+			long newId = generator.generate();
+			Assert.isGreater(oldId, newId);
+			oldId = newId;
+		}
+	}
+	
+	public void testTimeStaysTheSame(){
+		TimeStampIdGenerator generatorWithSameTime = new TimeStampIdGenerator(){
+			protected long now() {
+				return 1;
+			};
+		};
+		assertContinousIncrement(generatorWithSameTime);
+	}
+	
 	
 	
 

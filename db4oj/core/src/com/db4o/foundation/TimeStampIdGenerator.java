@@ -35,7 +35,7 @@ public class TimeStampIdGenerator {
 	}
 
 	public long generate() {
-		long t = System.currentTimeMillis();
+		long t = now();
 		if(t > _lastTime){
 			_lastTime = t;
 			_counter = 0;
@@ -45,6 +45,10 @@ public class TimeStampIdGenerator {
 		_counter++;
 		updateTimeOnCounterLimitOverflow();
 		return last();
+	}
+
+	protected long now() {
+		return System.currentTimeMillis();
 	}
 
 	private final void updateTimeOnCounterLimitOverflow() {
