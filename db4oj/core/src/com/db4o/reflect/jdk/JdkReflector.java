@@ -18,6 +18,8 @@ public class JdkReflector implements Reflector {
     protected Reflector _parent;
     private ReflectArray _array;
 	private ReflectorConfiguration _config;
+	
+	
     
     /**
      * Constructor
@@ -32,12 +34,23 @@ public class JdkReflector implements Reflector {
      * @param classLoader class loader
      */
 	public JdkReflector(JdkLoader classLoader){
-		this(classLoader, null);
+		this(classLoader, defaultConfiguration());
 	}
 	
 	private JdkReflector(JdkLoader classLoader, ReflectorConfiguration config){
 		_classLoader = classLoader;
 		_config = config;
+	}
+
+	private static ReflectorConfiguration defaultConfiguration() {
+		return new ReflectorConfiguration() {
+			public boolean testConstructors() {
+				return false;
+			}
+			public boolean callConstructor(ReflectClass clazz) {
+				return false;
+			}
+		};
 	}
 	
 	/**
