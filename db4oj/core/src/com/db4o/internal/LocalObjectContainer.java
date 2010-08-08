@@ -12,10 +12,12 @@ import com.db4o.internal.events.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
+import com.db4o.internal.qlin.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
+import com.db4o.qlin.*;
 
 
 /**
@@ -927,6 +929,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	
 	public EventRegistryImpl newEventRegistry(){
 		return new EventRegistryImpl();
+	}
+	
+	public <T> QLin<T> from(Class<T> clazz) {
+		return new QLinRoot<T>(query(), clazz);
 	}
 	
 }

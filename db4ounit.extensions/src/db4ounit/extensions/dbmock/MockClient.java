@@ -8,6 +8,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
+import com.db4o.qlin.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -226,6 +227,10 @@ public class MockClient implements ExtClient {
 	}
 	
 	public ObjectContainer openSession(){
+		throw new NotImplementedException();
+	}
+
+	public <T> QLin<T> from(Class<T> clazz) {
 		throw new NotImplementedException();
 	}
 

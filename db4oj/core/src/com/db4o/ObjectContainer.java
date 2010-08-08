@@ -5,6 +5,7 @@ package  com.db4o;
 import java.util.*;
 
 import com.db4o.ext.*;
+import com.db4o.qlin.*;
 import com.db4o.query.*;
 
 
@@ -25,7 +26,7 @@ import com.db4o.query.*;
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
  * @sharpen.ignore
  */
-public interface ObjectContainer {
+public interface ObjectContainer extends QLinable {
 	
     /**
      * activates all members on a stored object to the specified depth.

@@ -18,8 +18,8 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
     public final StatefulQueryResult _delegate;
     
-    public ObjectSetFacade(QueryResult qResult){
-        _delegate = new StatefulQueryResult(qResult);
+    public ObjectSetFacade(QueryResult queryResult){
+        _delegate = new StatefulQueryResult(queryResult);
     }
     
 	public void sort(QueryComparator cmp) {
