@@ -141,5 +141,12 @@ public class Arrays4 {
 			}
 		});
 	}
+	
+	public static Object[] append(Object[]array, Object obj){
+		Object[] newArray = new Object[array.length + 1];
+		System.arraycopy(array, 0, newArray, 0, array.length);
+		newArray[array.length] = obj;
+		return newArray;
+	}
 
 }
