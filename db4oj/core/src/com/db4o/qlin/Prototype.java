@@ -6,8 +6,8 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 /**
- * Internal implementation for QLinSupport mapping
- * of expressions to fields.
+ * Internal implementation for ExpressionMapper and QLinSupport 
+ * mapping of expressions to fields.
  * @exclude
  */
 public class Prototype <T> {
@@ -28,23 +28,25 @@ public class Prototype <T> {
 		return _object;
 	}
 
-	public static <T> Prototype<T> forContext(QLinContext context){
-		ReflectClass claxx = context.classReflector();
+	public static <T> Prototype<T> forClass(ReflectClass claxx, boolean ignoreTransient){
 		T obj = (T) claxx.newInstance();
 		final Prototype<T> prototype = new Prototype<T>(obj);
-		prototype.init(context, claxx);
+		prototype.init(claxx, ignoreTransient);
 		return prototype;
 	}
 
-	private void init(final QLinContext context, final ReflectClass claxx) {
+	private void init(final ReflectClass claxx, final boolean ignoreTransient) {
 		Reflections.forEachField(claxx, new Procedure4<ReflectField>() {
 			public void apply(ReflectField field) {
 				if(field.isStatic()){
 					return;
 				}
+				if(ignoreTransient && field.isTransient()){
+					return;
+				}
 				ReflectClass fieldType = field.getFieldType();
 				
-				IntegerConverter converter = integerConverterforClassName(context, fieldType.getName());
+				IntegerConverter converter = integerConverterforClassName(claxx.reflector(), fieldType.getName());
 				if(converter != null){
 					int id = ++intIdGenerator;
 					Object integerRepresentation = converter.fromInteger(id);
@@ -65,16 +67,15 @@ public class Prototype <T> {
 		});
 	}
 	
-	public String matchToFieldName(QLinContext context, Object expression) {
+	public String backingFieldPath(Reflector reflector, Object expression) {
 		if(expression == null){
 			return null;
 		}
-		ReflectClass claxx = context.reflector.forObject(expression);
+		ReflectClass claxx = reflector.forObject(expression);
 		if(claxx == null){
 			return null;
 		}
-		
-		IntegerConverter converter = integerConverterforClassName(context, claxx.getName());
+		IntegerConverter converter = integerConverterforClassName(reflector, claxx.getName());
 		if(converter != null){
 			final Pair<?, String> mappedPair = (Pair)_fieldsByIntId.get(converter.toInteger(expression));
 			if(mappedPair == null){
@@ -92,9 +93,9 @@ public class Prototype <T> {
 		return (String)_fieldsByIdentity.get(expression);
 	}
 	
-	private static IntegerConverter integerConverterforClassName(QLinContext context, String className){
-		if(_converters == null){
-			_converters = new Hashtable4();
+	private static IntegerConverter integerConverterforClassName(Reflector reflector, String className){
+		if(_integerConverters == null){
+			_integerConverters = new Hashtable4();
 			IntegerConverter[] converters = new IntegerConverter[]{
 				new IntegerConverter(){
 					public String primitiveName() {return int.class.getName();}
@@ -141,21 +142,21 @@ public class Prototype <T> {
 				},
 			};
 			for (IntegerConverter converter : converters) {
-				_converters.put(converter.primitiveName(), converter);
-				if(! converter.primitiveName().equals(converter.wrapperName(context))){
-					_converters.put(converter.wrapperName(context), converter);
+				_integerConverters.put(converter.primitiveName(), converter);
+				if(! converter.primitiveName().equals(converter.wrapperName(reflector))){
+					_integerConverters.put(converter.wrapperName(reflector), converter);
 				}
 			}
 		}
-		return (IntegerConverter) _converters.get(className);
+		return (IntegerConverter) _integerConverters.get(className);
 	}
 	
-	private static Hashtable4 _converters;
+	private static Hashtable4 _integerConverters;
 	
 	private static abstract class IntegerConverter <T> {
 		
-		public String wrapperName(QLinContext context){
-			return context.reflector.forObject(fromInteger(1)).getName();
+		public String wrapperName(Reflector reflector){
+			return reflector.forObject(fromInteger(1)).getName();
 		}
 		
 		public abstract String primitiveName();

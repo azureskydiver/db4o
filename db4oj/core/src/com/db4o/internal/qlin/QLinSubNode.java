@@ -9,7 +9,7 @@ import com.db4o.query.*;
 /**
  * @exclude
  */
-public abstract class QLinSubNode<T> extends QLinNode<T>{
+public abstract class QLinSubNode<T> extends QLinSodaNode<T>{
 	
 	protected final QLinRoot<T> _root;
 
@@ -17,21 +17,22 @@ public abstract class QLinSubNode<T> extends QLinNode<T>{
 		_root = root;
 	}
 	
-	public QLin<T> where(Object expression) {
-		return new QLinField<T>(_root, query().descend(QLinSupport.field(expression).getName()));
+	protected QLinRoot<T> root(){
+		return _root;
 	}
 	
-	public ObjectSet<T> select() {
-		return _root.select();
-	}
-	
-	private Query query(){
-		return _root.query();
+	protected Query query(){
+		return root().query();
 	}
 	
 	public QLin<T> limit(int size){
-		_root.limit(size);
+		root().limit(size);
 		return this;
 	}
+	
+	public ObjectSet<T> select() {
+		return root().select();
+	}
+
 
 }

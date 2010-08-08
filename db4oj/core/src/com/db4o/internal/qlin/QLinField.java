@@ -12,9 +12,9 @@ public class QLinField<T> extends QLinSubNode<T>{
 	
 	private final Query _node;
 	
-	public QLinField(QLinRoot<T> root, Query node) {
+	public QLinField(QLinRoot<T> root, Object expression){
 		super(root);
-		_node = node;
+		_node = root.descend(expression);
 	}
 	
 	@Override

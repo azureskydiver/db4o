@@ -14,4 +14,8 @@ public class QLinException extends Db4oException{
 		super(message);
 	}
 
+	public QLinException(Throwable cause) {
+		super(cause);
+	}
+
 }
