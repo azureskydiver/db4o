@@ -117,9 +117,9 @@ class JDK_1_2 extends JDKReflect {
 		reflector.registerCollection(java.util.Map.class);
 	}
 
-    void setAccessible(Object a_accessible) {
+    void setAccessible(Object accessible) {
 		try {
-			((java.lang.reflect.AccessibleObject) a_accessible)
+			((java.lang.reflect.AccessibleObject) accessible)
 					.setAccessible(true);
 		} catch (SecurityException e) {
 
