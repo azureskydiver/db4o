@@ -9,12 +9,11 @@ import static com.db4o.qlin.QLinSupport.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-// JDK 1.1 is just not supported because we don't have IteratorAssert.
-@decaf.Remove(decaf.Platform.JDK11)
+
 /**
- * not sure about Silverlight yet, let's not risk the build.
  * @sharpen.if !SILVERLIGHT
  */
+@decaf.Remove(decaf.Platform.JDK11)
 public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeCycle {
 	
 	
