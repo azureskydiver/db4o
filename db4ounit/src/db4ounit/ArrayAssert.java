@@ -35,6 +35,17 @@ public class ArrayAssert {
     public static void areEqual(Object[] expected, Object[] actual) {
 		areEqualImpl(expected, actual);
 	}
+    
+    public static void areEqual(String[] expected, String[] actual) {
+    	// JDK 1.1 needs the conversion
+		areEqualImpl(stringArrayToObjectArray(expected), stringArrayToObjectArray(actual));
+	}
+
+	private static Object[] stringArrayToObjectArray(String[] expected) {
+		Object[] expectedAsObject = new Object[expected.length];
+    	System.arraycopy(expected, 0, expectedAsObject, 0, expected.length);
+    	return expectedAsObject;
+	}
 
 	/**
 	 * @sharpen.ignore
