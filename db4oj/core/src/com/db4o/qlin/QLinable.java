@@ -4,8 +4,7 @@ package com.db4o.qlin;
 
 /**
  * support for the new experimental QLin ("Coolin") query interface.
- * We would really like to have LINQ for Java instead. For now this 
- * is the best we can do.
+ * We would really like to have LINQ for Java instead. 
  * @since 8.0
  */
 public interface QLinable {
