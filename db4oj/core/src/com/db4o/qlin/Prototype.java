@@ -54,6 +54,9 @@ public class Prototype <T> {
 				}
 				if(! fieldType.isPrimitive()){
 					Object identityInstance = fieldType.newInstance();
+					if(identityInstance == null){
+						return;
+					}
 					field.set(_object, identityInstance);
 					_fieldsByIdentity.put(identityInstance, field.getName());
 					return;
