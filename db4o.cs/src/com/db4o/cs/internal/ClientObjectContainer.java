@@ -22,11 +22,13 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.events.*;
+import com.db4o.internal.qlin.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
+import com.db4o.qlin.*;
 import com.db4o.reflect.*;
 
 /**
@@ -1196,6 +1198,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     
 	public EventRegistryImpl newEventRegistry(){
 		return new ClientEventRegistryImpl(this);
+	}
+	
+	public <T> QLin<T> from(Class<T> clazz) {
+		return new QLinRoot<T>(query(), clazz);
 	}
 
 }
