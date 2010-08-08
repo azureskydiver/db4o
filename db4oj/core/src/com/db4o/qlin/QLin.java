@@ -6,9 +6,8 @@ import com.db4o.*;
 
 /**
  * a node in a QLin ("Coolin") query.
- * QLin is db4o's new experimental query interface.
+ * QLin is a new experimental query interface.
  * We would really like to have LINQ for Java instead. 
- * For now this is the best we can do. 
  * @since 8.0
  */
 public interface QLin<T> {

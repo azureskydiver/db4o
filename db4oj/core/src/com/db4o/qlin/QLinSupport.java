@@ -24,7 +24,7 @@ public class QLinSupport {
 	 * query. 
 	 * @see QLin#where(Object)
 	 */
-	public static <T> T prototype (Class<T> clazz){
+	public static <T> T prototype(Class<T> clazz){
 		final String className = clazz.getName();
 		Prototype<T> prototype = (Prototype) _prototypes.get(className);
 		if(prototype != null){
@@ -41,7 +41,8 @@ public class QLinSupport {
 	private static <T> QLinContext adjustContext(Class<T> clazz) {
 		QLinContext context = _context.value();
 		if(context == null){
-			throw new QLinException("Context not set for the current thread. context() should be called automatically by the framework.");
+			// get the emergency Reflector
+			context = new QLinContext(com.db4o.internal.Platform4.reflectorForType(clazz), clazz);
 		}
 		context = context.createNewFor(clazz);
 		_context.value(context);
@@ -60,7 +61,7 @@ public class QLinSupport {
 	/**
 	 * shortcut for the {@link #prototype(Class)} method.
 	 */
-	public static <T> T   p (Class<T> clazz){
+	public static <T> T p(Class<T> clazz){
 		return prototype(clazz);
 	}
 	
@@ -106,12 +107,12 @@ public class QLinSupport {
 		if(!warned){
 			System.err.println("\n*** Warning ****** Warning ****** Warning ****** Warning ****** Warning ***\n");
 			System.err.println("QLin (\"Coolin\") is an experimental new query interface for db4o and dRS.");
-			System.err.println("We would love to have real LINQ for Java. For now this is the best we can do.\n");
+			System.err.println("We would love to have real LINQ for Java instead.\n");
 			System.err.println("Kudos to Thomas Mueller for the inspiration that it is possible to map");
 			System.err.println("expressions to fields: http://www.h2database.com/html/jaqu.html\n");
 			System.err.println("QLin computes underlying field names from methods by doing wild magic.");
 			System.err.println("Side effects upon calling methods from within queries may be potentially dangerous.");
-			System.err.println("\nThere is no guarantee yet that QLin will be in the final db4o 8.0 release.");
+			System.err.println("\nThere is no guarantee that QLin will be in the final db4o 8.0 release.");
 			System.err.println("\n*** Warning ****** Warning ****** Warning ****** Warning ****** Warning ***\n");
 
 			warned = true;
