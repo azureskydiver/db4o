@@ -9,56 +9,10 @@ import static com.db4o.qlin.QLinSupport.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
+// JDK 1.1 is just not supported because we don't have IteratorAssert.
 @decaf.Remove(decaf.Platform.JDK11)
-public class BasicQLinTestCase extends AbstractDb4oTestCase {
+public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeCycle {
 	
-	public static class Cat {
-		
-		public int age;
-		
-		public String name;
-		
-		public Cat spouse;
-		
-		public Cat father;
-		
-		public Cat mother;
-		
-		public Cat(String name){
-			this.name = name;
-		}
-		
-		public Cat(String name, int age){
-			this(name);
-			this.age = age;
-		}
-		
-		public String name(){
-			return name;
-		}
-		
-		public void spouse(Cat spouse){
-			this.spouse = spouse;
-			spouse.spouse = this;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if(! (obj instanceof Cat)){
-				return false;
-			}
-			Cat other = (Cat) obj;
-			if (name == null) {
-				return other.name == null;
-			}
-			return name.equals(other.name);
-		}
-		
-		public int age(){
-			return age;
-		}
-		
-	}
 	
 	public void testFromSelect(){
 		storeAll(occamAndZora());
@@ -146,7 +100,22 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase {
 					.startsWith("Occ")
 					.select());
 	}
-
+	
+	public void testQueryingByInterface(){
+		storeAll(occamAndIsetta());
+		Dog dog = prototype(Dog.class);
+		Cat cat = prototype(Cat.class);
+		assertQuery(isetta(), dog, "Isetta");
+		assertQuery(occam(), cat, "Occam");
+	}
+	
+	public void assertQuery(List<? extends Pet> expected, Pet pet, String name){
+		IteratorAssert.sameContent(expected, 
+				db().from(pet.getClass())
+					.where(pet.name())
+					.equal(name)
+					.select());
+	}
 	
 	private void storeAll(List expected) {
 		for (Object obj : expected) {
@@ -167,6 +136,21 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase {
 	private List<Cat> occam() {
 		return singleCat("Occam");
 	}
+	
+	private List<Cat> zora() {
+		return singleCat("Zora");
+	}
+	
+	private List<Dog> isetta() {
+		return singleDog("Isetta");
+	}
+	
+	private List<Pet> occamAndIsetta(){
+		List<Pet> list = new ArrayList<Pet>();
+		list.add(new Cat("Occam"));
+		list.add(new Dog("Isetta"));
+		return list;
+	}
 
 	private List<Cat> singleCat(String name) {
 		List<Cat> list = new ArrayList<Cat>();
@@ -174,8 +158,88 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase {
 		return list;
 	}
 	
-	private List<Cat> zora() {
-		return singleCat("Zora");
+	private List<Dog> singleDog(String name) {
+		List<Dog> list = new ArrayList<Dog>();
+		list.add(new Dog(name));
+		return list;
+	}
+	
+	public static class Cat implements Pet {
+		
+		public int age;
+		
+		public String name;
+		
+		public Cat spouse;
+		
+		public Cat father;
+		
+		public Cat mother;
+		
+		public Cat(String name){
+			this.name = name;
+		}
+		
+		public Cat(String name, int age){
+			this(name);
+			this.age = age;
+		}
+		
+		public String name(){
+			return name;
+		}
+		
+		public void spouse(Cat spouse){
+			this.spouse = spouse;
+			spouse.spouse = this;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if(! (obj instanceof Cat)){
+				return false;
+			}
+			Cat other = (Cat) obj;
+			if (name == null) {
+				return other.name == null;
+			}
+			return name.equals(other.name);
+		}
+		
+		public int age(){
+			return age;
+		}
+		
+	}
+	
+	public static class Dog implements Pet {
+		
+		private String _name;
+		
+		public Dog(String name){
+			_name = name;
+		}
+
+		public String name() {
+			return _name;
+		}
+		
+		public boolean equals(Object obj) {
+			if(! (obj instanceof Dog)){
+				return false;
+			}
+			Dog other = (Dog) obj;
+			if (_name == null) {
+				return other._name == null;
+			}
+			return _name.equals(other._name);
+		}
+	}
+	
+	public interface Pet<T> {
+		
+		public String name();
+		
 	}
 
 }
