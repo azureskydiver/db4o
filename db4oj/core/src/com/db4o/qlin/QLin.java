@@ -39,5 +39,13 @@ public interface QLin<T> {
 	public QLin<T> smaller(Object obj);
 
 	public QLin<T> greater(Object obj);
+	
+	
+	/**
+	 * orders the query by the expression.
+	 * Use the {@link QLinSupport#ascending()} and {@link QLinSupport#descending()}
+	 * helper methods to set the direction.
+	 */
+	public QLin<T> orderBy(Object expression, QLinOrderByDirection direction);
 
 }

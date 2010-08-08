@@ -3,6 +3,7 @@
 package com.db4o.qlin;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 
@@ -12,9 +13,10 @@ import com.db4o.reflect.*;
  */
 public class QLinSupport {
 	
-	private static final DynamicVariable<QLinContext> _context = DynamicVariable.newInstance();
+	private static final Prototypes _prototypes = 
+		new Prototypes(Platform4.reflectorForType(QLinSupport.class), true);
 	
-	private static final Hashtable4 _prototypes = new Hashtable4();
+	private static final DynamicVariable<QLinContext> _context = DynamicVariable.newInstance();
 	
 	private static volatile boolean warned = false;
 	
@@ -25,28 +27,25 @@ public class QLinSupport {
 	 * @see QLin#where(Object)
 	 */
 	public static <T> T prototype(Class<T> clazz){
-		final String className = clazz.getName();
-		Prototype<T> prototype = (Prototype) _prototypes.get(className);
-		if(prototype != null){
-			return prototype.object();
+		try{
+			return _prototypes.forClass(clazz);
+		} catch(PrototypesException ex){
+			throw new QLinException(ex);
 		}
-		prototype = Prototype.forContext(adjustContext(clazz));
-		if(prototype == null){
-			throw new QLinException("Prototype could not be created for " + clazz);
-		}
-		_prototypes.put(className, prototype);
-		return prototype.object();
 	}
 
-	private static <T> QLinContext adjustContext(Class<T> clazz) {
+	/**
+	 * sets the context for the next query on this thread.
+	 * This method should never have to be called manually.
+	 * The framework should set the context up. 
+	 */
+	public static <T> QLinContext context(Class<T> clazz) {
 		QLinContext context = _context.value();
 		if(context == null){
-			// get the emergency Reflector
+			// get the standalone emergency Reflector
 			context = new QLinContext(com.db4o.internal.Platform4.reflectorForType(clazz), clazz);
 		}
-		context = context.createNewFor(clazz);
-		_context.value(context);
-		return context;
+		return context(context.createNewFor(clazz));
 	}
 	
 	/**
@@ -54,8 +53,9 @@ public class QLinSupport {
 	 * This method should never have to be called manually.
 	 * The framework should set the context up. 
 	 */
-	public static void context(QLinContext context){
+	public static <T> QLinContext context(QLinContext context){
 		_context.value(context);
+		return context;
 	}
 	
 	/**
@@ -66,17 +66,6 @@ public class QLinSupport {
 	}
 	
 	
-	/**
-	 * maps expressions to fields.
-	 * This method is intended to be used by the framework only.
-	 * Other frameworks might also find our approach nifty to try. 
-	 * We were inspired when we saw how Thomas Mueller mapped
-	 * expressions to fields for his JaQu query interface, Kudos!
-	 * http://www.h2database.com/html/jaqu.html
-	 * We took the idea a bit further and made it work for all
-	 * primitives except for boolean and we plan to also get 
-	 * deeper expressions and collections working nicely.
-	 */
 	public static ReflectField field(Object expression){
 		warnOnce();
 		
@@ -86,14 +75,15 @@ public class QLinSupport {
 		if(expression instanceof ReflectField){
 			return (ReflectField)expression;
 		}
+		
 		final QLinContext context = _context.value();
-		Prototype prototype = (Prototype) _prototypes.get(context.clazz.getName());
-		if(prototype != null){
-			String fieldName = prototype.matchToFieldName(context, expression);
-			if(fieldName != null){
-				expression = fieldName;
-			}
+		
+		
+		String[] path = _prototypes.backingFieldPath(context.clazz, expression);
+		if(path != null){
+			expression = path[0];
 		}
+		
 		if(expression instanceof String){
 			ReflectField field = Reflections.field(context.classReflector(), (String)expression);
 			if(field != null){
@@ -118,5 +108,14 @@ public class QLinSupport {
 			warned = true;
 		}
 	}
+	
+	public static QLinOrderByDirection ascending(){
+		return QLinOrderByDirection.ASCENDING;
+	}
+	
+	public static QLinOrderByDirection descending(){
+		return QLinOrderByDirection.DESCENDING;
+	}
+	
 	
 }

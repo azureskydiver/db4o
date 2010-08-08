@@ -10,10 +10,12 @@ import com.db4o.internal.query.result.*;
 import com.db4o.qlin.*;
 import com.db4o.query.*;
 
+import static com.db4o.qlin.QLinSupport.*;
+
 /**
  * @exclude
  */
-public class QLinRoot<T> extends QLinNode<T>{
+public class QLinRoot<T> extends QLinSodaNode<T>{
 	
 	private final QQuery _query;
 	
@@ -22,7 +24,7 @@ public class QLinRoot<T> extends QLinNode<T>{
 	public QLinRoot(Query query, Class<T> clazz) {
 		_query = (QQuery) query;
 		query.constrain(clazz);
-		QLinSupport.context(new QLinContext(((InternalQuery) query).container().reflector(), clazz));
+		context(new QLinContext(((InternalQuery) query).container().reflector(), clazz));
 	}
 	
 	public Query query(){
@@ -45,10 +47,6 @@ public class QLinRoot<T> extends QLinNode<T>{
 		}
 		return new ObjectSetFacade(limitedResult);
 	}
-
-	public QLin<T> where(Object expression) {
-		return new QLinField<T>(this, query().descend(QLinSupport.field(expression).getName()));
-	}
 	
 	public QLin<T> limit(int size){
 		if(size < 1){
@@ -56,6 +54,17 @@ public class QLinRoot<T> extends QLinNode<T>{
 		}
 		_limit = size;
 		return this;
+	}
+
+
+	@Override
+	protected QLinRoot<T> root() {
+		return this;
+	}
+
+	Query descend(Object expression) {
+		// TODO: Implement deep descend
+		return query().descend(field(expression).getName());
 	}
 
 }

@@ -45,7 +45,6 @@ public class AllTests extends ComposibleTestSuite {
 						com.db4o.db4ounit.common.internal.AllTests.class,
 						com.db4o.db4ounit.common.ids.AllTests.class,
 						com.db4o.db4ounit.common.io.AllTests.class,
-						com.db4o.db4ounit.common.qlin.AllTests.class,
 						com.db4o.db4ounit.common.querying.AllTests.class,
 						com.db4o.db4ounit.common.refactor.AllTests.class,
 						com.db4o.db4ounit.common.references.AllTests.class,
@@ -72,6 +71,7 @@ public class AllTests extends ComposibleTestSuite {
 	protected Class[] composeWith() {
 		return new Class[] {
 				com.db4o.db4ounit.common.cs.AllTests.class, 
+				com.db4o.db4ounit.common.qlin.AllTests.class,
 				};
 	}
 }
