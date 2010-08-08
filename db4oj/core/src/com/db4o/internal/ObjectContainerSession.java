@@ -12,8 +12,10 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.events.*;
+import com.db4o.internal.qlin.*;
 import com.db4o.internal.query.*;
 import com.db4o.io.*;
+import com.db4o.qlin.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -25,7 +27,7 @@ import com.db4o.types.*;
  * @exclude
  * @sharpen.partial
  */
-public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec   {
+public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec, QLinable   {
 
     
     protected final ObjectContainerBase _server;
@@ -475,5 +477,9 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 	
 	public EventRegistryImpl newEventRegistry(){
 		return new EventRegistryImpl();
+	}
+	
+	public <T> QLin<T> from(Class<T> clazz) {
+		return new QLinRoot<T>(query(), clazz);
 	}
 }

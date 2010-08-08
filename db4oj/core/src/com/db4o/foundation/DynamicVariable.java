@@ -26,6 +26,13 @@ public class DynamicVariable<T> {
 			: value;
 	}
 	
+	/**
+	 * @sharpen.property
+	 */
+	public void value(T value){
+		_value.set(value);
+	}
+	
 	protected T defaultValue() {
 		return null;
 	}

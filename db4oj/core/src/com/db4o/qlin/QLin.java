@@ -1,0 +1,44 @@
+/* Copyright (C) 2010  Versant Inc.  http://www.db4o.com */
+
+package com.db4o.qlin;
+
+import com.db4o.*;
+
+/**
+ * a node in a QLin ("Coolin") query.
+ * QLin is db4o's new experimental query interface.
+ * We would really like to have LINQ for Java instead. 
+ * For now this is the best we can do. 
+ * @since 8.0
+ */
+public interface QLin<T> {
+	
+	/**
+	 * adds a where node to this QLin query.
+	 * @param expression can be any of the following:
+	 * 
+	 */
+	public QLin<T> where(Object expression);
+	
+	/**
+	 * executes the QLin query and returns the result
+	 * as an {@link ObjectSet}.
+	 * Note that ObjectSet extends List and Iterable
+	 * on the platforms that support these interfaces. 
+	 * You may want to use these interfaces instead of
+	 * working directly against an ObjectSet.
+	 */
+	public ObjectSet<T> select ();
+	
+	
+	public QLin<T> equal(Object obj);
+
+	public QLin<T> startsWith(String string);
+
+	public QLin<T> limit(int size);
+
+	public QLin<T> smaller(Object obj);
+
+	public QLin<T> greater(Object obj);
+
+}

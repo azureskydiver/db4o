@@ -6,6 +6,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.qlin.*;
 import com.db4o.query.*;
 
 /**
@@ -82,6 +83,10 @@ public class MockEmbedded implements EmbeddedObjectContainer {
 	}
 
 	public void store(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
+		throw new NotImplementedException();
+	}
+	
+	public <T> QLin<T> from(Class<T> clazz) {
 		throw new NotImplementedException();
 	}
 
