@@ -2,11 +2,15 @@
 
 package com.db4o.drs.test.versant;
 
+import static com.db4o.qlin.QLinSupport.*;
+
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.VodCobra.*;
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.qlin.*;
 
 import db4ounit.*;
 
@@ -52,6 +56,30 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		
 		loids = query.loids(_cobra);
 		Assert.areEqual(1, loids.length);
+	}
+	
+	public void testCobraQLin(){
+		
+		long objectLoid = 42;
+		
+		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
+		
+		ObjectSet<ObjectLifecycleEvent> events = _cobra.from(ObjectLifecycleEvent.class)
+			  .where(event.objectLoid())
+			  .equal(objectLoid)
+			  .limit(1)
+			  .select();
+		
+		Assert.areEqual(0, events.size());
+		
+		_cobra.store(new ObjectLifecycleEvent(1, objectLoid, 3, 4));
+		
+		events = _cobra.from(ObjectLifecycleEvent.class)
+			  .where(event.objectLoid())
+			  .equal(objectLoid)
+			  .limit(1)
+			  .select();
+		Assert.areEqual(1, events.size());
 	}
 	
 	private void ensureSchemaCreated() {

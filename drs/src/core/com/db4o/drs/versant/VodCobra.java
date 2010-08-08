@@ -4,14 +4,16 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
+import com.db4o.drs.versant.cobra.qlin.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.internal.*;
+import com.db4o.qlin.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
 import com.versant.odbms.query.*;
 import com.versant.odbms.query.Operator.*;
 
-public class VodCobra {
+public class VodCobra implements QLinable{
 	
 	private DatastoreManager _dm;
 
@@ -58,8 +60,7 @@ public class VodCobra {
 		}
 
 		public Object[] loids(VodCobra cobra) {
-			return cobra._dm.executeQuery(_query, DataStoreLockMode.NOLOCK,
-					DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+			return cobra.executeQuery(_query);
 		}
 		
 		public Collection<T> execute(VodCobra cobra) {
@@ -181,10 +182,15 @@ public class VodCobra {
 		}
 		return readObjects(extent, loids);
 	}
+	
+	public <T> Collection<T> readObjects(Class<T> extent, Object[] loids) {
+		return readObjects(extent, loids, -1);
+	}
 
-	private <T> Collection<T> readObjects(Class<T> extent, Object[] loids) {
-		DatastoreObject[] datastoreObjects = new DatastoreObject[loids.length];
-		for ( int i = 0; i < loids.length; i++ ){
+	public <T> Collection<T> readObjects(Class<T> extent, Object[] loids, int limit) {
+		int size = limit > 0 ? Math.min(loids.length, limit) : loids.length;
+		DatastoreObject[] datastoreObjects = new DatastoreObject[size];
+		for ( int i = 0; i < size; i++ ){
 			datastoreObjects[i]= new DatastoreObject((DatastoreLoid) loids[i]);
 		}
 		_dm.groupReadObjects(datastoreObjects, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
@@ -205,10 +211,7 @@ public class VodCobra {
 	}
 
 	private Object[] datastoreLoids(Class<?> extent) {
-		DatastoreQuery query = new DatastoreQuery(extent.getName());
-		Object[] loids = _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
-				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
-		return loids;
+		return executeQuery(new DatastoreQuery(extent.getName()));
 	}
 	
 	private DatastoreSchemaClass datastoreSchemaClass(Class clazz) {
@@ -279,6 +282,14 @@ public class VodCobra {
 			}
 		}
 	}
-	
+
+	public <T> QLin<T> from(Class<T> clazz) {
+		return new CLinRoot<T>(this, clazz);
+	}
+
+	public Object[] executeQuery(DatastoreQuery query) {
+		return _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
+				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+	}
 
 }
