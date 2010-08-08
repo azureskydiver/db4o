@@ -2,15 +2,17 @@
 
 package com.db4o.db4ounit.common.qlin;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.qlin.*;
+import com.db4o.reflect.generic.*;
 
 import db4ounit.*;
 
 /**
- * not sure about Silverlight yet, let's not risk the build.
  * @sharpen.if !SILVERLIGHT
  */
+@decaf.Remove(decaf.Platform.JDK11)
 public class PrototypesTestCase implements TestLifeCycle {
 	
 	private Prototypes _prototypes; 
@@ -54,48 +56,40 @@ public class PrototypesTestCase implements TestLifeCycle {
 	
 	public void testLevel2(){
 		Item item = prototype(Item.class);
-		print(item, item.child().name());
+		assertPath(item, item.child().name(), "_child", "_name");
 	}
 	
-	public void _testBug1(){
+	public void testCallingOwnFramework(){
 		PrototypesTestCase testCase = prototype(PrototypesTestCase.class);
-		print(testCase, testCase._prototypes.toString());
-		
+		assertPath(testCase, testCase._prototypes, "_prototypes");
 	}
 	
+	public void testWildToString(){
+		PrototypesTestCase testCase = prototype(PrototypesTestCase.class);
+		assertIsNull(testCase, testCase._prototypes.toString());
+	}
+	
+	
+	// keep this method, it's helpful for new tests
 	private <T> void print(T t, Object expression){
-		print(_prototypes.backingFieldPath(t.getClass(), expression));
+		Iterator4<String> path = _prototypes.backingFieldPath(t.getClass(), expression);
+		if(path == null){
+			print("null");
+			return;
+		}
+		print(Iterators.join(path, "[", "]", ", "));
 	}
 
-	// Arrays.toString can do this, but it's not available on JDK 1.1
-	private void print(String... strings) {
-		if(strings == null){
-			println("null");
-			return;
-		}
-		if(strings.length == 0){
-			println("()");
-			return;
-		}
-		String message = "(" + strings[0];
-		if(strings.length == 1){
-			println(message + ")");
-			return;
-		}
-		for (int i = 1; i < strings.length; i++) {
-			message += ", ";
-			message += strings[i]; 
-		}
-		message += ")";
-		println(message);
-	}
-
-	private void println(String string) {
+	private void print(String string) {
 		System.out.println(string);
+	}
+	
+	private <T> void assertIsNull(T t, Object expression) {
+		Assert.isNull(_prototypes.backingFieldPath(t.getClass(), expression));
 	}
 
 	private <T> void assertPath(T t, Object expression, String... expected) {
-		ArrayAssert.areEqual(expected, _prototypes.backingFieldPath(t.getClass(), expression));
+		Iterator4Assert.areEqual(expected, _prototypes.backingFieldPath(t.getClass(), expression));
 	}
 
 	private <T> T prototype(Class<T> clazz) {
@@ -104,13 +98,15 @@ public class PrototypesTestCase implements TestLifeCycle {
 
 
 	public void setUp() throws Exception {
-		_prototypes = new Prototypes(Platform4.reflectorForType(Item.class), true);
+		_prototypes = new Prototypes(new GenericReflector(Platform4.reflectorForType(Item.class)), RECURSION_DEPTH, IGNORE_TRANSIENT_FIELDS);
 	}
-
-
 
 	public void tearDown() throws Exception {
 		
 	}
+	
+	private static final boolean IGNORE_TRANSIENT_FIELDS = true;
+	
+	private static final int RECURSION_DEPTH = 4;
 	
 }
