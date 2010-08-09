@@ -26,6 +26,11 @@ public class VodJviTestCase extends VodDatabaseTestCaseBase implements TestLifeC
 		TransSession session = _jvi.createTransSession();
 		Assert.isNotNull(session);
 	}
+	
+	public void testNewDbId(){
+		// using the same name twice will fail
+		Assert.isGreater(0, _jvi.newDbId("VodJviTestCase.test" + System.currentTimeMillis() ));
+	}
 
 	public void setUp() throws Exception {
 		_jvi = new VodJvi(_vod);
@@ -34,7 +39,6 @@ public class VodJviTestCase extends VodDatabaseTestCaseBase implements TestLifeC
 	public void tearDown() throws Exception {
 		_jvi.close();
 	}
-	
 
 
 }

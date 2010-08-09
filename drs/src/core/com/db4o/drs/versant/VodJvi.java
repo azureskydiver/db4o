@@ -5,6 +5,7 @@ package com.db4o.drs.versant;
 import java.io.*;
 import java.util.*;
 
+import com.db4o.drs.inside.*;
 import com.versant.trans.*;
 import com.versant.util.*;
 
@@ -43,6 +44,28 @@ public class VodJvi {
         properties.put ("lockmode", com.versant.fund.Constants.NOLOCK + "");
         properties.put ("options",  com.versant.fund.Constants.READ_ACCESS + "");
         return new TransSession(properties);
+	}
+	
+	public short newDbId(String databaseName){
+		databaseName = ensureAllCharactersArePrintable(databaseName);
+		Properties props = new Properties();
+		props.put("-c", "");
+		int dbid = com.versant.util.DBUtility.dbid(databaseName,props);
+		if(DrsDebug.verbose){
+			System.out.println("dbid " + dbid + " created for '" + databaseName + "'");
+		}
+		return (short) dbid;
+	}
+
+	private String ensureAllCharactersArePrintable(String databaseName) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < databaseName.length(); i++) {
+			char c = databaseName.charAt(i);
+			if(Character.isLetterOrDigit(c)){
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 }

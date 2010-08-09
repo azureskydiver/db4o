@@ -34,4 +34,9 @@ public class Signature {
 		return hc;
 	}
 	
+	@Override
+	public String toString() {
+		return new String(bytes);
+	}
+	
 }

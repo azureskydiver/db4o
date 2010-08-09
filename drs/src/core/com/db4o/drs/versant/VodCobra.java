@@ -253,5 +253,9 @@ public class VodCobra implements QLinable{
 		return _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
 				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
 	}
+	
+	public short databaseId(){
+		return _dm.getDefaultDatastore().getDBID();	
+	}
 
 }
