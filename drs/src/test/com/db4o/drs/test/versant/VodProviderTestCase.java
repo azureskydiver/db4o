@@ -10,6 +10,8 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
@@ -97,14 +99,18 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		ReplicationReference reference = _provider.produceReference(item);
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
-		VodReplicationProvider provider = new VodReplicationProvider(_vod);
+		VodCobra cobra = new VodCobra(_vod);
+		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		VodReplicationProvider provider = new VodReplicationProvider(_vod, cobra, comm);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
 	}
 	
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
-		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod);
+		VodCobra cobra = new VodCobra(_vod);
+		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod, cobra, comm);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();
 		assertOnlyOneClassMetadataInstance();

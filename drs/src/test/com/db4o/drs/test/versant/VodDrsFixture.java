@@ -7,6 +7,8 @@ import java.io.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 
 public class VodDrsFixture implements DrsFixture{
 	
@@ -55,7 +57,9 @@ public class VodDrsFixture implements DrsFixture{
 	}
 
 	public void open() {
-		_provider = new VodReplicationProvider(_vod);
+		VodCobra cobra = new VodCobra(_vod);
+		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		_provider = new VodReplicationProvider(_vod, cobra, comm);
 	}
 
 	public TestableReplicationProviderInside provider() {

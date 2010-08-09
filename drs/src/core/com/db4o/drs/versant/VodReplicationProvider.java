@@ -9,6 +9,7 @@ import javax.jdo.spi.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
@@ -20,6 +21,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private final VodCobra _cobra;
 	
 	private final VodJdo _jdo;
+
+	ProviderSideCommunication _comm;
 	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
@@ -29,10 +32,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private ReplicationReflector _replicationReflector;
 	
-	public VodReplicationProvider(VodDatabase vod) {
+	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ProviderSideCommunication comm) {
 		_vod = vod;
+		_comm = comm;
 		_jdo = new VodJdo(vod);
-		_cobra = new VodCobra(vod);
+		_cobra = cobra;
 		loadSignatures();
 		loadKnownClasses();
 	}
@@ -94,40 +98,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
 		_knownClasses.put(className, classMetadata);
 		
-		ClassMetadata changed = ensureStoreChanged(classMetadata, new Function4<ClassMetadata, Boolean>() {
-			public Boolean apply(ClassMetadata value) {
-				return value.monitored();
-			}
-		});
-		if(changed == null){
-			Class eventListenerProgram = com.db4o.drs.versant.eventlistener.Program.class;
-			throw new IllegalStateException("Event listener process did not respond to ClassMetadata creation for " 
-					+ className + ". Ensure that " + eventListenerProgram.getName() + " is running.");
-		}
+		_comm.registerClassMetadata(classMetadata);
 	}
-
-	private <T> T ensureStoreChanged(T obj, final Function4<T, Boolean> modifiedCheck) {
-		final VodJdo jdo = new VodJdo(_vod);
-		jdo.store(obj);
-		jdo.commit();
-		
-		final ByRef<T> peeked = ByRef.newInstance(obj);
-		
-		try{
-			int timeoutInMillis = 10000;
-			int millisecondsBetweenRetries = 50;
-			boolean changed = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
-				public Boolean run() {
-					peeked.value = jdo.peek(peeked.value);
-					return modifiedCheck.apply(peeked.value);
-				}
-			});
-			return changed ? peeked.value : null;
-		} finally {
-			jdo.close();
-		}
-	}
-
 
 	public void update(Object obj) {
 		// do nothing
@@ -169,20 +141,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getCurrentVersion() {
-		Long syncRequestLoid = _cobra.singleInstanceLoid(TimestampSyncRequest.class);
-		TimestampSyncRequest syncRequest =
-				syncRequestLoid == null 
-				? new TimestampSyncRequest() 
-				: (TimestampSyncRequest)_cobra.objectByLoid(syncRequestLoid);
-		TimestampSyncRequest response = ensureStoreChanged(syncRequest, new Function4<TimestampSyncRequest, Boolean>() {
-			public Boolean apply(TimestampSyncRequest syncRequest) {
-				return syncRequest.isAnswered();
-			}
-		});
-		if(response == null || !response.isAnswered()) {
-			throw new IllegalStateException("No timestamp sync response received.");
-		}
-		return response.timestamp();
+		return _comm.requestTimestamp();
 	}
 
 	public long getLastReplicationVersion() {
@@ -359,8 +318,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void runIsolated(Block4 block) {
-		System.err.println("FIXMEPLEASE VodReplicationProvider#runIsolated IS NOT ISOLATED");
-		block.run();
+		_comm.requestIsolation(IsolationMode.DELAYED);
+		try {
+			block.run();
+		}
+		finally {
+			_comm.requestIsolation(IsolationMode.IMMEDIATE);
+		}
 	}
 
 }
