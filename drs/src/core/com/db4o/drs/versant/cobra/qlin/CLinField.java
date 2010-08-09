@@ -3,7 +3,6 @@
 package com.db4o.drs.versant.cobra.qlin;
 
 import com.db4o.qlin.*;
-import com.db4o.query.*;
 import com.versant.odbms.query.*;
 import com.versant.odbms.query.Operator.*;
 

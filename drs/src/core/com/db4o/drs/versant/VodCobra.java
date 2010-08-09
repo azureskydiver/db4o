@@ -4,6 +4,9 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
+import static com.db4o.qlin.QLinSupport.*;
+
+import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.cobra.qlin.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.internal.*;
@@ -11,7 +14,6 @@ import com.db4o.qlin.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
 import com.versant.odbms.query.*;
-import com.versant.odbms.query.Operator.*;
 
 public class VodCobra implements QLinable{
 	
@@ -29,61 +31,21 @@ public class VodCobra implements QLinable{
 	public void close() {
 		_dm.close();
 	}
-	
-	public static class  CobraQuery <T> {
-		
-		private DatastoreQuery _query;
-		
-		private final Class<T> _clazz;
-
-		public CobraQuery(Class<T> clazz) {
-			_clazz = clazz;
-			_query = new DatastoreQuery(clazz.getName());
-		}
-		
-		public void equals(String fieldName, Object value){
-			Expression expression = new Expression(
-					new SubExpression(new Field(fieldName)), 
-					UnaryOperator.EQUALS, 
-					new SubExpression(value));
-			_query.setExpression(expression);
-		}
-		
-		public void orderBy(String fieldName, boolean descending) {
-			_query.setOrderByExpression(new OrderByExpression[]{
-					new OrderByExpression(new SubExpression(new Field(fieldName)), descending)
-			});
-		}
-		
-		public void limit(int objectCount){
-			_query.setMaxObjects(objectCount);
-		}
-
-		public Object[] loids(VodCobra cobra) {
-			return cobra.executeQuery(_query);
-		}
-		
-		public Collection<T> execute(VodCobra cobra) {
-			Object[] loids = loids(cobra);
-			if(loids.length == 0){
-				return new ArrayList<T>();
-			}
-			return cobra.readObjects(_clazz, loids);
-		}
-		
-	}
 
 	public VodId idFor(long loid) {
-		CobraQuery<ObjectLifecycleEvent> query = new CobraQuery(ObjectLifecycleEvent.class);
-		query.equals("objectLoid", loid);
-		query.orderBy("timestamp", true);
 		
-		// The following didn't work. Maybe limit processing happens on the server before ordering. 
-		// query.limit(1);
-		
-		Collection<ObjectLifecycleEvent> events = query.execute(this);
-		for (ObjectLifecycleEvent objectLifecycleEvent : events) {
-			System.out.println(objectLifecycleEvent);
+		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
+		Collection<ObjectLifecycleEvent> events = 
+			from(ObjectLifecycleEvent.class)
+				.where(event.objectLoid())
+				.equal(loid)
+				.orderBy(event.timestamp(), descending())
+				.limit(1)
+				.select();
+		if(DrsDebug.verbose){
+			for (ObjectLifecycleEvent objectLifecycleEvent : events) {
+				System.out.println("#idFor() found: " + objectLifecycleEvent);
+			}
 		}
 		long timestamp = events.isEmpty() ? 0 : events.iterator().next().timestamp();
 		DatastoreLoid datastoreLoid = new DatastoreLoid(loid);
