@@ -77,7 +77,7 @@ public class VodJdo {
 	public <T> T peek (T obj) {
 		long loid = loid(obj);
 		_pm.evict(obj);
-		return objectByLoid(loid);
+		return this.<T>objectByLoid(loid);
 	}
 
 	public void deleteAll(Class clazz) {
