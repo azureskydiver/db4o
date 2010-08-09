@@ -200,11 +200,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void startReplicationTransaction(
 			ReadonlyReplicationProviderSignature peerSignature) {
 		
-		// clearAllReferences();
+		clearAllReferences();
 		
 		
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		
 	}
 
 	public void storeReplica(Object obj) {

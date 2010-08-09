@@ -20,29 +20,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.drs.*;
 import com.db4o.drs.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.io.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 
 public class ReplicationReflector {
+	
 	private InternalObjectContainer _container;
+	
+	private Reflector _reflector;
 
 	public ReplicationReflector(ReplicationProvider providerA, ReplicationProvider providerB) {
-		_container = containerFrom(providerA);
-		if(_container == null) {
-			_container = containerFrom(providerB);
+		if((_container = containerFrom(providerA)) != null) {
+			return;
 		}
-		if(_container == null) {
-			EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-			config.file().storage(new MemoryStorage());
-			_container = (InternalObjectContainer) Db4oEmbedded.openFile(config, "inmemory").ext();
+		if((_container = containerFrom(providerB)) != null) {
+			return;
 		}
+		_reflector = new GenericReflector(null, Platform4.reflectorForType(this.getClass()));
 	}
 
 	public Object[] arrayContents(Object array) {
@@ -61,11 +60,11 @@ public class ReplicationReflector {
 	}
 
 	public ReflectClass forObject(Object obj) {
-		return _container.reflector().forObject(obj);
+		return reflector().forObject(obj);
 	}
 
 	public ReflectClass forClass(Class clazz) {
-		return _container.reflector().forClass(clazz);
+		return reflector().forClass(clazz);
 	}
 
 	ReflectClass getComponentType(ReflectClass claxx) {
@@ -90,6 +89,9 @@ public class ReplicationReflector {
 	}
 
 	public boolean isValueType(ReflectClass clazz) {
+		if(_container == null){
+			return clazz.isImmutable();
+		}
 		ClassMetadata classMetadata = _container.classMetadataForReflectClass(clazz);
 		if(classMetadata == null) {
 			return false;
@@ -111,5 +113,9 @@ public class ReplicationReflector {
 	
 	private ReflectArray arrayReflector() {
 		return _container.reflector().array();
+	}
+	
+	private Reflector reflector(){
+		return _container == null ? _reflector : _container.reflector();
 	}
 }
