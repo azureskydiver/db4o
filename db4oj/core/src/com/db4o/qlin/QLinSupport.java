@@ -5,6 +5,7 @@ package com.db4o.qlin;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
 
 
@@ -28,18 +29,14 @@ public class QLinSupport {
 		}
 	}
 
+	
 	/**
 	 * sets the context for the next query on this thread.
 	 * This method should never have to be called manually.
 	 * The framework should set the context up. 
 	 */
-	public static <T> QLinContext context(Class<T> clazz) {
-		QLinContext context = _context.value();
-		if(context == null){
-			// get the standalone emergency Reflector
-			context = new QLinContext(com.db4o.internal.Platform4.reflectorForType(clazz), clazz);
-		}
-		return context(context.createNewFor(clazz));
+	public static void context(ReflectClass claxx){
+		_context.value(claxx);
 	}
 	
 	/**
@@ -47,9 +44,8 @@ public class QLinSupport {
 	 * This method should never have to be called manually.
 	 * The framework should set the context up. 
 	 */
-	public static <T> QLinContext context(QLinContext context){
-		_context.value(context);
-		return context;
+	public static void context(Class clazz){
+		_context.value(ReflectorUtils.reflectClassFor(_prototypes.reflector(), clazz));
 	}
 	
 	/**
@@ -81,7 +77,7 @@ public class QLinSupport {
 		if(expression instanceof ReflectField){
 			return Iterators.iterate( ((ReflectField)expression).getName());
 		}
-		Iterator4 path = _prototypes.backingFieldPath(_context.value().clazz, expression);
+		Iterator4 path = _prototypes.backingFieldPath(_context.value(), expression);
 		if(path != null){
 			return path;
 		}
@@ -97,7 +93,7 @@ public class QLinSupport {
 		if(expression instanceof ReflectField){
 			return (ReflectField)expression;
 		}
-		Iterator4 path = _prototypes.backingFieldPath(_context.value().clazz, expression);
+		Iterator4 path = _prototypes.backingFieldPath(_context.value(), expression);
 		if(path != null){
 			if(path.moveNext()){
 				expression = path.current();
@@ -113,7 +109,7 @@ public class QLinSupport {
 
 	private static ReflectField fieldByFieldName(Object expression) {
 		if(expression instanceof String){
-			ReflectField field = Reflections.field(_context.value().classReflector(), (String)expression);
+			ReflectField field = ReflectorUtils.field(_context.value(), (String)expression);
 			if(field != null){
 				return field;
 			}
@@ -151,6 +147,6 @@ public class QLinSupport {
 		RECURSION_DEPTH, 
 		IGNORE_TRANSIENT_FIELDS);
 	
-	private static final DynamicVariable<QLinContext> _context = DynamicVariable.newInstance();
+	private static final DynamicVariable<ReflectClass> _context = DynamicVariable.newInstance();
 	
 }

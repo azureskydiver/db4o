@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.core;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -26,6 +27,27 @@ public class ReflectorUtils {
         
         return reflector.forObject(clazz);
     }
-
+	
+	public static ReflectField field(ReflectClass claxx, String name){
+		while(claxx!=null) {
+			try {
+				return claxx.getDeclaredField(name);
+			} catch (Exception e) {
+				
+			}
+			claxx=claxx.getSuperclass();
+		}
+		return null;
+	}
+	
+	public static void forEachField(ReflectClass claxx, Procedure4<ReflectField> procedure){
+		while(claxx!=null) {
+			final ReflectField[] declaredFields = claxx.getDeclaredFields();
+			for (ReflectField reflectField : declaredFields) {
+				procedure.apply(reflectField);
+			}
+			claxx=claxx.getSuperclass();
+		}
+	}
 
 }

@@ -24,7 +24,7 @@ public class QLinRoot<T> extends QLinSodaNode<T>{
 	public QLinRoot(Query query, Class<T> clazz) {
 		_query = (QQuery) query;
 		query.constrain(clazz);
-		context(new QLinContext(((InternalQuery) query).container().reflector(), clazz));
+		context(clazz);
 	}
 	
 	public Query query(){
