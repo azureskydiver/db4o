@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.self;
 
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 public class SelfClass implements ReflectClass {
@@ -168,6 +169,10 @@ public class SelfClass implements ReflectClass {
 	
 	public boolean ensureCanBeInstantiated() {
 		return true;
+	}
+
+	public boolean isImmutable() {
+		return isPrimitive() || Platform4.isSimple(_class);
 	}
 	
 }

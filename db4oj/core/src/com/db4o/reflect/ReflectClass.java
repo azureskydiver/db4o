@@ -2,6 +2,8 @@
 
 package com.db4o.reflect;
 
+import com.db4o.internal.*;
+
 
 /** 
  * representation for java.lang.Class.
@@ -58,4 +60,13 @@ public interface ReflectClass {
 	 * @return true, if instances of this class can be created, false otherwise
 	 */
 	public boolean ensureCanBeInstantiated();
+	
+	/**
+	 * We need this for replication, to find out if a class needs to be traversed
+	 * or if it simply can be copied across. For now we will simply return 
+	 * the classes that are {@link #isPrimitive()} and {@link Platform4#isSimple(Class)}
+	 * We can think about letting users add an Immutable annotation.  
+	 */
+	public boolean isImmutable();
+	
 }

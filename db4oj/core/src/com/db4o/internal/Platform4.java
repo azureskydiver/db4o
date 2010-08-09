@@ -415,9 +415,9 @@ public final class Platform4 {
         
     }
     
-	public static boolean isSimple(Class a_class){
+	public static boolean isSimple(Class clazz){
 		for (int i = 0; i < SIMPLE_CLASSES.length; i++) {
-			if(a_class == SIMPLE_CLASSES[i]){
+			if(clazz == SIMPLE_CLASSES[i]){
 				return true;
 			}
 		}
