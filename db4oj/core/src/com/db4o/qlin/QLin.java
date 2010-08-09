@@ -47,5 +47,7 @@ public interface QLin<T> {
 	 * helper methods to set the direction.
 	 */
 	public QLin<T> orderBy(Object expression, QLinOrderByDirection direction);
+	
+	public T oneOrDefault(T defaultValue);
 
 }
