@@ -9,12 +9,12 @@ import com.db4o.internal.*;
 
 public class Compare {
 
-	static boolean hasPublicConstructor(Class a_class) {
-		if (a_class == null || a_class == String.class) {
+	static boolean hasPublicConstructor(Class clazz) {
+		if (clazz == null || clazz == String.class) {
 			return false;
 		}
 		try {
-			Object o = a_class.newInstance();
+			Object o = clazz.newInstance();
 			if (o != null)
 				return true;
 		} catch (Throwable t) {
@@ -23,23 +23,20 @@ public class Compare {
 	}
 	
 	static boolean isPrimitiveOrPrimitiveWrapper(Class clazz){
-		if(clazz.isPrimitive()){
-			return true;
-		}
-		return Platform4.isSimple(clazz);
+		return clazz.isPrimitive() || Platform4.isSimple(clazz); 
 	}
 
-	static Object normalizeNArray(Object a_object) {
-		if (Array.getLength(a_object) > 0) {
-			Object first = Array.get(a_object, 0);
+	static Object normalizeNArray(Object obj) {
+		if (Array.getLength(obj) > 0) {
+			Object first = Array.get(obj, 0);
 			if (first != null && first.getClass().isArray()) {
-				int dim[] = arrayDimensions(a_object);
+				int dim[] = arrayDimensions(obj);
 				Object all = new Object[arrayElementCount(dim)];
-				normalizeNArray1(a_object, all, 0, dim, 0);
+				normalizeNArray1(obj, all, 0, dim, 0);
 				return all;
 			}
 		}
-		return a_object;
+		return obj;
 	}
 
 	public static void compare(

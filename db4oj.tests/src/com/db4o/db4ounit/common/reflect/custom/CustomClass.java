@@ -120,5 +120,9 @@ public class CustomClass implements ReflectClass {
 	public boolean ensureCanBeInstantiated() {
 		return true;
 	}
+
+	public boolean isImmutable() {
+		return false;
+	}
 	
 }
