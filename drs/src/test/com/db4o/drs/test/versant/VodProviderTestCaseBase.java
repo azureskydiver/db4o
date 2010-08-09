@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 
 import db4ounit.*;
 
@@ -26,7 +28,9 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	public void setUp() {
 		_jdo = new VodJdo(_vod);
 		cleanDb();
-		_provider = new VodReplicationProvider(_vod);
+		VodCobra cobra = new VodCobra(_vod);
+		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		_provider = new VodReplicationProvider(_vod, cobra, comm);
 	}
 
 	public void tearDown() {

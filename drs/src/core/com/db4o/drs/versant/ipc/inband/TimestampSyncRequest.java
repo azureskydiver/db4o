@@ -1,4 +1,4 @@
-package com.db4o.drs.versant.metadata;
+package com.db4o.drs.versant.ipc.inband;
 
 public class TimestampSyncRequest {
 	private long _timestamp;

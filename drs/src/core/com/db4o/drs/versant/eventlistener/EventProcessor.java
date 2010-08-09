@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
@@ -18,6 +19,10 @@ public class EventProcessor {
 	
 	public static final String COMMIT_MESSAGE = "EventProcessor commit";
 
+	private static final long PAUSE_TIMEOUT = 60000;
+
+	private static final int PAUSE_INTERVAL = 50;
+
 	private final int COMMIT_INTERVAL = 1000; // 1 sec
 	
 	private final EventConfiguration _eventConfiguration;
@@ -27,6 +32,8 @@ public class EventProcessor {
 	private final EventClient _client;
 	
 	private volatile boolean _stopped;
+
+	private volatile long _pausedAt;
 	
 	private final VodCobra _cobra;
 	
@@ -136,13 +143,25 @@ public class EventProcessor {
 	private void taskQueueProcessorLoop() {
 		try{
 			while(! _stopped){
-				try {
-					Block4 task = _queuedTasks.next();
-					synchronized(_lock) {
-						task.run();
+				if(_pausedAt == 0) {
+					try {
+						Block4 task = _queuedTasks.next();
+						synchronized(_lock) {
+							task.run();
+						}
+					} catch(BlockingQueueStoppedException ex){
+						break;
 					}
-				} catch(BlockingQueueStoppedException ex){
-					break;
+				}
+				else {
+					boolean unpaused = Runtime4.retry(PAUSE_TIMEOUT, PAUSE_INTERVAL, new Closure4<Boolean>() {
+						public Boolean run() {
+							return _pausedAt == 0;
+						}
+					});
+					if(!unpaused) {
+						throw new IllegalStateException("Isolated state timed out.");
+					}
 				}
 			}
 		} catch (Exception ex){
@@ -181,7 +200,9 @@ public class EventProcessor {
 			}
 			
 			private void queueSynchronizationRequest(VersantEventObject event) {
-				_queuedTasks.add(new TimestampSyncRequestTask(event.getRaiserLoid()));
+				synchronized(_lock) {
+					new TimestampSyncRequestTask(event.getRaiserLoid()).run(); // TODO inline task
+				}
 			}
 		});
 	}
@@ -225,7 +246,8 @@ public class EventProcessor {
 	}
 	
 	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
-		_queuedTasks.add(new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation));
+		ObjectLifeCycleEventStoreTask task = new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation);
+		_queuedTasks.add(task);
 	}
 
 	private void persistObjectLifeCycleEvent(ObjectLifecycleEvent objectLifecycleEvent) {

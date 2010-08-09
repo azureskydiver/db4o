@@ -6,7 +6,10 @@
     	<class name="com.db4o.drs.versant.metadata.CommitTimestamp"/>
     	<class name="com.db4o.drs.versant.metadata.DatabaseSignature"/>
     	<class name="com.db4o.drs.versant.metadata.ObjectLifecycleEvent"/>
-    	<class name="com.db4o.drs.versant.metadata.TimestampSyncRequest"/>
+    </package>    
+    <package name="com.db4o.drs.versant.ipc.inband">
+    	<class name="com.db4o.drs.versant.ipc.inband.TimestampSyncRequest"/>
+    	<class name="com.db4o.drs.versant.ipc.inband.IsolationModeRequest"/>
     </package>    
 </jdo>    
 
