@@ -170,11 +170,6 @@ public class Prototypes {
 					return null;
 				}
 				if(entry.first.equals(expression)){
-					
-					// can't inline the following otherwise sharpen 
-					// will create another array around it for varargs
-					// Object[] path_Dont_Inline_Me = (Object[]) entry.second;
-					
 					return Iterators.iterate((Object[]) entry.second);
 				}
 				return null;

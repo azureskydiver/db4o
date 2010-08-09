@@ -2,6 +2,7 @@
 
 package com.db4o.internal.qlin;
 
+import com.db4o.*;
 import com.db4o.qlin.*;
 
 /**
@@ -24,6 +25,17 @@ public abstract class QLinNode <T> implements QLin<T> {
 	
 	public QLin<T> greater(Object obj) {
 		throw new QLinException("#greater() is not supported on this node");
+	}
+	
+	public T oneOrDefault(T defaultValue){
+		ObjectSet<T> collection = select();
+		if(collection.isEmpty()){
+			return defaultValue;
+		}
+		if(collection.size() > 1){
+			throw new QLinException("Expected one or none. Found: " + collection.size());
+		}
+		return collection.iterator().next();
 	}
 
 }
