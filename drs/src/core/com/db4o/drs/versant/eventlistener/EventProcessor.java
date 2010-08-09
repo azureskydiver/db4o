@@ -64,16 +64,17 @@ public class EventProcessor {
 	    
 	    _cobra = new VodCobra(new VodDatabase(eventConfiguration.databaseName));
 	    
-	    _commitThread.start();
-	    
-	    
-	    try{
-	    	produceLastTimestamp();
-	    } catch (Exception ex){
-	    	unrecoverableExceptionOccurred(ex);
+	    synchronized(_lock){
+		    _commitThread.start();
+		    
+		    try{
+		    	produceLastTimestamp();
+		    } catch (Exception ex){
+		    	unrecoverableExceptionOccurred(ex);
+		    }
+		    
+		    startChannelsFromKnownClasses();
 	    }
-	    
-	    startChannelsFromKnownClasses();
 	}
 
 	private void startChannelsFromKnownClasses() {
@@ -139,8 +140,10 @@ public class EventProcessor {
 					ClassChannelSpec spec = _newChannels.next();
 					createChannel(spec);
 					ClassMetadata classMetadata = new ClassMetadata(spec._className, spec._fullyQualifiedName, true);
-					_cobra.store(spec._classMetadataLoid, classMetadata);
-					_cobra.commit();
+					synchronized (_lock) {
+						_cobra.store(spec._classMetadataLoid, classMetadata);
+						_cobra.commit();
+					}
 				} catch(BlockingQueueStoppedException ex){
 					break;
 				}

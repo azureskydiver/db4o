@@ -38,26 +38,6 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		Assert.areEqual(original, retrieved);
 	}
 	
-	public void testCobraQueries(){
-		
-		long objectLoid = 42;
-		
-		CobraQuery query = new CobraQuery(ObjectLifecycleEvent.class);
-		query.equals("objectLoid", objectLoid);
-		query.orderBy("timestamp", true);
-		query.limit(1);
-		
-		Object[] loids = query.loids(_cobra);
-		
-		Assert.isNotNull(loids);
-		Assert.areEqual(0, loids.length);
-		
-		_cobra.store(new ObjectLifecycleEvent(1, objectLoid, 3, 4));
-		
-		loids = query.loids(_cobra);
-		Assert.areEqual(1, loids.length);
-	}
-	
 	public void testCobraQLin(){
 		
 		long objectLoid = 42;

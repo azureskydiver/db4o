@@ -41,10 +41,6 @@ public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 		return _delegate.contains(o);
 	}
 
-	public Collection getDelegate() {
-		return _delegate;
-	}
-
 	public final boolean hasNext() {
 		return _itor.hasNext();
 	}
@@ -61,7 +57,13 @@ public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 		return _delegate.size();
 	}
 	
+	@Override
 	public Iterator iterator() {
-		return _itor;
+		return _delegate.iterator();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return _delegate.isEmpty();
 	}
 }
