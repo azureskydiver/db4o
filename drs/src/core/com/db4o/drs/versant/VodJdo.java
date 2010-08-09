@@ -92,6 +92,25 @@ public class VodJdo {
 		Query query = _pm.newQuery(clazz, filter);
 		return (Collection<T>) query.execute();
 	}
+	
+	public <T> T queryOneOrNone(Class<T> clazz, String filter) {
+		Collection<T> collection = query(clazz, filter);
+		if(collection.isEmpty()){
+			return null;
+		}
+		if(collection.size() > 1){
+			throw new IllegalStateException("Expecting one. Found: " +  collection.size() + " [" + clazz + "] " + filter);
+		}
+		return collection.iterator().next();
+	}
+	
+	public <T> T queryOne(Class<T> clazz, String filter) {
+		Collection<T> collection = query(clazz, filter);
+		if(collection.size() != 1){
+			throw new IllegalStateException("Expecting exactly one object. Found:" +  collection.size() + " [" + clazz + "] " + filter);
+		}
+		return collection.iterator().next();
+	}
 
 	public void refresh(Object obj) {
 		_pm.refresh(obj);

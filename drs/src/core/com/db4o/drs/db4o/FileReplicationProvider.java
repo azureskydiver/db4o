@@ -146,25 +146,18 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 				_replicationRecord = new ReplicationRecord(younger, older);
 				_replicationRecord.store(_container);
 			}
-
-			long localInitialVersion = _container.version();
 		}
 	}
 
 	public void syncVersionWithPeer(long version) {
-		long versionTest = getCurrentVersion();
 		_replicationRecord._version = version;
 		_replicationRecord.store(_container);
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-
-		long versionTest = getCurrentVersion();
-
 		_container.raiseVersion(raisedDatabaseVersion);
 		_container.commit();
 		_idsReplicatedInThisSession = null;
-
 	}
 
 	public void rollbackReplication() {

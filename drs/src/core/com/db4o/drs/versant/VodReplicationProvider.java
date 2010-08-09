@@ -16,13 +16,13 @@ import com.db4o.internal.encoding.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
-	private final VodDatabase _vod;
-	
 	private final VodCobra _cobra;
 	
 	private final VodJdo _jdo;
+	
+	private final VodJvi _jvi;
 
-	ProviderSideCommunication _comm;
+	private final ProviderSideCommunication _comm;
 	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
@@ -32,13 +32,32 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private ReplicationReflector _replicationReflector;
 	
+	private ReplicationCommitRecord _replicationCommitRecord;
+	
+	private final ReadonlyReplicationProviderSignature _mySignature;
+	
+	private final short _myDatabaseId;
+	
 	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ProviderSideCommunication comm) {
-		_vod = vod;
 		_comm = comm;
 		_jdo = new VodJdo(vod);
+		_jvi = new VodJvi(vod);
 		_cobra = cobra;
 		loadSignatures();
 		loadKnownClasses();
+		_myDatabaseId = _cobra.databaseId();
+		final Signature mySignature = produceSignatureFor(_myDatabaseId);
+		_mySignature = new ReadonlyReplicationProviderSignature() {
+			public byte[] getSignature() {
+				return mySignature.bytes;
+			}
+			public long getId() {
+				return 0;
+			}
+			public long getCreated() {
+				return _myDatabaseId;
+			}
+		};
 	}
 
 	private void loadKnownClasses() {
@@ -145,8 +164,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getLastReplicationVersion() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		return _replicationCommitRecord.timestamp();
 	}
 
 	public String getName() {
@@ -155,8 +173,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ReadonlyReplicationProviderSignature getSignature() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		return _mySignature;
 	}
 
 	public ReplicationReference produceReference(final Object obj, Object referencingObj, String fieldName) {
@@ -197,13 +214,28 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		throw new com.db4o.foundation.NotImplementedException();
 	}
 
-	public void startReplicationTransaction(
-			ReadonlyReplicationProviderSignature peerSignature) {
-		
+	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
 		clearAllReferences();
-		
-		
-		
+		Signature peerSignature = new Signature(peer.getSignature());
+		int peerId = _signatures.idFor(peerSignature);
+		if(peerId == 0){
+			peerId = _jvi.newDbId(peerSignature.toString());
+			storeSignature(peerId, peerSignature);
+			_signatures.add(peerId, peerSignature);
+		}
+		int lowerId = Math.min(peerId, _myDatabaseId);
+		int higherId = Math.max(peerId, _myDatabaseId);
+		String filter = "this.lowerPeer.databaseId == " + lowerId + " & this.higherPeer.databaseId == " + higherId;
+		_replicationCommitRecord = _jdo.queryOneOrNone(ReplicationCommitRecord.class, filter);
+		if(_replicationCommitRecord != null){
+			return;
+		}
+		_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
+		_jdo.store(_replicationCommitRecord);
+	}
+
+	private DatabaseSignature databaseSignature(int databaseId) {
+		return _jdo.queryOne(DatabaseSignature.class, "this.databaseId == " + databaseId);
 	}
 
 	public void storeReplica(Object obj) {
@@ -301,11 +333,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return signature;
 		}
 		signature = new Signature(signatureBytes(databaseId));
-		
+		storeSignature(databaseId, signature);
+		return signature;
+	}
+
+	private void storeSignature(int databaseId, Signature signature) {
 		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
 		_jdo.store(databaseSignature);
 		_signatures.add(databaseId, signature);
-		return signature;
 	}
 	
 	private byte[] signatureBytes(int databaseId){
