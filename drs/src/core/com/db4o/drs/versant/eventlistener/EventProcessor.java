@@ -32,7 +32,7 @@ public class EventProcessor {
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
-	private final BlockingQueue<ClassChannelSpec> _newChannels = new BlockingQueue<ClassChannelSpec>();
+	private final BlockingQueue<Block4> _queuedTasks = new BlockingQueue<Block4>();
 	
 	private volatile boolean _dirty;
 	
@@ -117,7 +117,7 @@ public class EventProcessor {
 	    createMetaChannel(_client);
 	    createCommitSyncChannel();
 	    println(LISTENING_MESSAGE + _eventConfiguration.databaseName);
-	    channelCreationLoop();
+	    taskQueueProcessorLoop();
 		shutdown();
 	}
 
@@ -133,16 +133,13 @@ public class EventProcessor {
 		_cobra.close();
 	}
 
-	private void channelCreationLoop() {
+	private void taskQueueProcessorLoop() {
 		try{
 			while(! _stopped){
 				try {
-					ClassChannelSpec spec = _newChannels.next();
-					createChannel(spec);
-					ClassMetadata classMetadata = new ClassMetadata(spec._className, spec._fullyQualifiedName, true);
-					synchronized (_lock) {
-						_cobra.store(spec._classMetadataLoid, classMetadata);
-						_cobra.commit();
+					Block4 task = _queuedTasks.next();
+					synchronized(_lock) {
+						task.run();
 					}
 				} catch(BlockingQueueStoppedException ex){
 					break;
@@ -157,13 +154,13 @@ public class EventProcessor {
 		EventChannel channel = produceClassChannel(channelSpec._className);
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
-				storeObjectLifeCycleEvent(event, Operations.UPDATE, channelSpec);
+				queueObjectLifeCycleEvent(event, Operations.UPDATE, channelSpec);
 			}
 			public void instanceCreated (VersantEventObject event) {
-				storeObjectLifeCycleEvent(event, Operations.CREATE, channelSpec);
+				queueObjectLifeCycleEvent(event, Operations.CREATE, channelSpec);
 			}
 			public void instanceDeleted (VersantEventObject event) {
-				storeObjectLifeCycleEvent(event, Operations.DELETE, channelSpec);				
+				queueObjectLifeCycleEvent(event, Operations.DELETE, channelSpec);				
 			}
 		});
 		println("Listener channel created for class " + channelSpec._className);
@@ -173,28 +170,18 @@ public class EventProcessor {
 		EventChannel channel = produceClassChannel(TimestampSyncRequest.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
-				processSynchronizationRequest(event);
+				queueSynchronizationRequest(event);
 			}
 			
 			public void instanceCreated (VersantEventObject event) {
-				processSynchronizationRequest(event);
+				queueSynchronizationRequest(event);
 			}
 			
 			public void instanceDeleted (VersantEventObject event) {
 			}
 			
-			private void processSynchronizationRequest(VersantEventObject event) {
-				synchronized(_lock){
-					long syncRequestLoid = VodCobra.loidAsLong(event.getRaiserLoid());
-					TimestampSyncRequest syncRequest = _cobra.objectByLoid(syncRequestLoid);
-					if(syncRequest.isAnswered()) {
-						return;
-					}
-					CommitTimestamp timestamp = timestamp();
-					syncRequest.timestamp(timestamp.value());
-					_cobra.store(syncRequestLoid, syncRequest);
-					_cobra.commit();
-				}
+			private void queueSynchronizationRequest(VersantEventObject event) {
+				_queuedTasks.add(new TimestampSyncRequestTask(event.getRaiserLoid()));
 			}
 		});
 	}
@@ -203,12 +190,8 @@ public class EventProcessor {
 		EventChannel channel = produceClassChannel(ClassMetadata.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceCreated (VersantEventObject event) {
-				synchronized(_lock){
-					long classMetadataLoid = VodCobra.loidAsLong(event.getRaiserLoid());
-					ClassMetadata classMetadata = _cobra.objectByLoid(classMetadataLoid);
-					_newChannels.add(new ClassChannelSpec(classMetadata.name(),classMetadata.fullyQualifiedName(), classMetadataLoid));
-					_dirty = true;
-				}
+				RegisterClassMetadataTask task = new RegisterClassMetadataTask(event.getRaiserLoid());
+				_queuedTasks.add(task);
 			}
 			public void instanceModified (VersantEventObject event){
 				// do nothing
@@ -241,19 +224,12 @@ public class EventProcessor {
 		return null;
 	}
 	
-	private void storeObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
-		synchronized (_lock) {
-			long loid = VodCobra.loidAsLong(event.getRaiserLoid());
-			ObjectLifecycleEvent objectLifecycleEvent = 
-				new ObjectLifecycleEvent(
-						channelSpec._classMetadataLoid,
-						loid,
-						operation.value,
-						_timeStampIdGenerator.generate());
-			_cobra.store(objectLifecycleEvent);
-			println("Event stored: " + objectLifecycleEvent);
-			_dirty = true;
-		}
+	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
+		_queuedTasks.add(new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation));
+	}
+
+	private void persistObjectLifeCycleEvent(ObjectLifecycleEvent objectLifecycleEvent) {
+		_cobra.store(objectLifecycleEvent);
 	}
 
 	private String channelName(final String className) {
@@ -280,7 +256,7 @@ public class EventProcessor {
 	
 	public void stop(){
 		_stopped = true;
-		_newChannels.stop();
+		_queuedTasks.stop();
 	}
 
 	private static void unrecoverableExceptionOccurred(Throwable t) {
@@ -324,6 +300,87 @@ public class EventProcessor {
 			return com.db4o.internal.Reflection4.dump(this);
 		}
 
+	}
+
+	
+	private class ObjectLifeCycleEventStoreTask implements Block4 {
+
+		private long _classLoid;
+		private String _objectLoid;
+		private Operations _operation;
+		
+		public ObjectLifeCycleEventStoreTask(long classLoid, String objectLoid, Operations operation) {
+			_classLoid = classLoid;
+			_objectLoid = objectLoid;
+			_operation = operation;
+		}
+		
+		public void run() {
+			long loid = VodCobra.loidAsLong(_objectLoid);
+			ObjectLifecycleEvent objectLifecycleEvent = 
+				new ObjectLifecycleEvent(
+						_classLoid,
+						loid,
+						_operation.value,
+						_timeStampIdGenerator.generate());
+			persistObjectLifeCycleEvent(objectLifecycleEvent);
+			println("Event stored: " + objectLifecycleEvent);
+			_dirty = true;
+		}
+		
+		@Override
+		public String toString() {
+			return getClass().getSimpleName()+ ": " + _classLoid + ", " + _objectLoid + ", " + _operation;
+		}
+	}
+	
+	private class TimestampSyncRequestTask implements Block4 {
+		private String _loidString;
+		
+		private TimestampSyncRequestTask(String loidString) {
+			_loidString = loidString;
+		}
+		
+		public void run() {
+			long syncRequestLoid = VodCobra.loidAsLong(_loidString);
+			TimestampSyncRequest syncRequest = _cobra.objectByLoid(syncRequestLoid);
+			if(syncRequest.isAnswered()) {
+				return;
+			}
+			CommitTimestamp timestamp = timestamp();
+			syncRequest.timestamp(timestamp.value());
+			_cobra.store(syncRequestLoid, syncRequest);
+			_cobra.commit();
+		}
+		
+		@Override
+		public String toString() {
+			return getClass().getSimpleName()+ ": " + _loidString;
+		}
+	}
+
+	private class RegisterClassMetadataTask implements Block4 {
+
+		private String _classId;
+		
+		public RegisterClassMetadataTask(String classId) {
+			_classId = classId;
+		}
+		
+		public void run() {
+			long classMetadataLoid = VodCobra.loidAsLong(_classId);
+			ClassMetadata origClassMetadata = _cobra.objectByLoid(classMetadataLoid);
+			_dirty = true;
+			createChannel(new ClassChannelSpec(origClassMetadata.name(),origClassMetadata.fullyQualifiedName(), classMetadataLoid));
+			ClassMetadata flaggedClassMetadata = new ClassMetadata(origClassMetadata.name(),origClassMetadata.fullyQualifiedName(), true);
+			_cobra.store(classMetadataLoid, flaggedClassMetadata);
+			_cobra.commit();
+		}		
+		
+		@Override
+		public String toString() {
+			return getClass().getSimpleName()+ ": " + _classId;
+		}
 	}
 
 }
