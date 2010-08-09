@@ -4,6 +4,7 @@ package com.db4o.qlin;
 
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 
 
 /**
@@ -47,14 +48,14 @@ public class Prototypes {
 		if(clazz == null){
 			throw new PrototypesException("Class can not be null");
 		}
-		final String className = clazz.getName();
-		Prototype<T> prototype = (Prototype) _prototypes.get(className);
-		if(prototype != null){
-			return prototype.object();
-		}
 		ReflectClass claxx = _reflector.forClass(clazz);
 		if(claxx == null){
 			throw new PrototypesException("Not found in the reflector: " + clazz);
+		}
+		final String className = claxx.getName();
+		Prototype<T> prototype = (Prototype) _prototypes.get(className);
+		if(prototype != null){
+			return prototype.object();
 		}
 		prototype = new Prototype(claxx);
 		_prototypes.put(className, prototype);
@@ -63,10 +64,26 @@ public class Prototypes {
 	
 	/**
 	 * analyzes the passed expression and tries to find the path to the 
-	 * backing field that is accessed.
+	 * backing field that is accessed. 
 	 */
 	public <T> Iterator4<String> backingFieldPath(Class<T> clazz, Object expression){
-		Prototype prototype = (Prototype) _prototypes.get(clazz.getName());
+		return backingFieldPath(_reflector.forClass(clazz), expression);
+	}
+	
+	/**
+	 * analyzes the passed expression and tries to find the path to the 
+	 * backing field that is accessed. 
+	 */
+	public <T> Iterator4<String> backingFieldPath(ReflectClass claxx, Object expression){
+		return backingFieldPath(claxx.getName(), expression);
+	}
+	
+	/**
+	 * analyzes the passed expression and tries to find the path to the 
+	 * backing field that is accessed. 
+	 */
+	public <T> Iterator4<String> backingFieldPath(String className, Object expression){
+		Prototype prototype = (Prototype) _prototypes.get(className);
 		if(prototype == null){
 			return null;
 		}
@@ -95,7 +112,7 @@ public class Prototypes {
 			if(depth < 0){
 				return;
 			}
-			Reflections.forEachField(claxx, new Procedure4<ReflectField>() {
+			ReflectorUtils.forEachField(claxx, new Procedure4<ReflectField>() {
 				public void apply(ReflectField field) {
 					if(field.isStatic()){
 						return;
@@ -253,6 +270,10 @@ public class Prototypes {
 		
 	}
 	
-	private static final String STRING_IDENTIFIER = "QLinIdentity"; 
+	private static final String STRING_IDENTIFIER = "QLinIdentity";
+	
+	public Reflector reflector(){
+		return _reflector;
+	}
 
 }
