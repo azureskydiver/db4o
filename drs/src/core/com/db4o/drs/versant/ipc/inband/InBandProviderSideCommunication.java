@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 
 public class InBandProviderSideCommunication implements ProviderSideCommunication {
 
-	private VodDatabase _vod;
+	private VodDatabase _vod;  // FIXME: REMOVE !! (just didn't remove, so you can merge)
 	private VodCobra _cobra;
 	
 	public InBandProviderSideCommunication(VodDatabase vod, VodCobra cobra) {
@@ -16,7 +16,7 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 	}
 	
 	public void registerClassMetadata(ClassMetadata classMetadata) {
-		ClassMetadata changed = ensureStoreChanged(classMetadata, new Function4<ClassMetadata, Boolean>() {
+		ClassMetadata changed = ensureStoreChanged(classMetadata, 0, new Function4<ClassMetadata, Boolean>() {
 			public Boolean apply(ClassMetadata value) {
 				return value.monitored();
 			}
@@ -34,10 +34,16 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 		if(DISABLE_ISOLATION) {
 			return;
 		}
-		IsolationModeRequest isolationRequest = singleInstance(IsolationModeRequest.class, new IsolationModeRequest(isolationMode));
+		Long loid = _cobra.singleInstanceLoid(IsolationModeRequest.class);
+		IsolationModeRequest isolationRequest;
+		if(loid == null){
+			isolationRequest = new IsolationModeRequest(isolationMode);
+		} else {
+			isolationRequest = (IsolationModeRequest)_cobra.objectByLoid(loid);
+		}
 		isolationRequest.isolationMode(isolationMode);
 		isolationRequest.isResponse(false);
-		IsolationModeRequest response = ensureStoreChanged(isolationRequest, new Function4<IsolationModeRequest, Boolean>() {
+		IsolationModeRequest response = ensureStoreChanged(isolationRequest, loid, new Function4<IsolationModeRequest, Boolean>() {
 			public Boolean apply(IsolationModeRequest isolationRequest) {
 				return isolationRequest.isResponse();
 			}
@@ -46,10 +52,28 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 			throw new IllegalStateException("No isolation mode response received.");
 		}
 	}
+	
+	public void syncTimestamp(long timestamp){
+		sendTimestampSync(true, timestamp);
+	}
 
 	public long requestTimestamp() {
-		TimestampSyncRequest syncRequest = singleInstance(TimestampSyncRequest.class, new TimestampSyncRequest());
-		TimestampSyncRequest response = ensureStoreChanged(syncRequest, new Function4<TimestampSyncRequest, Boolean>() {
+		return sendTimestampSync(false, 0);
+	}
+
+	private long sendTimestampSync(boolean forceSync, long myTimeStamp) {
+		Long loid = _cobra.singleInstanceLoid(TimestampSyncRequest.class);
+		TimestampSyncRequest syncRequest;
+		if(loid == null){
+			syncRequest = new TimestampSyncRequest();
+			loid = 0L;
+		} else {
+			syncRequest = (TimestampSyncRequest)_cobra.objectByLoid(loid);
+		}
+		syncRequest.resetForRequest();
+		syncRequest.timestamp(myTimeStamp);
+		syncRequest.forceSync(forceSync);
+		TimestampSyncRequest response = ensureStoreChanged(syncRequest, loid, new Function4<TimestampSyncRequest, Boolean>() {
 			public Boolean apply(TimestampSyncRequest syncRequest) {
 				return syncRequest.isAnswered();
 			}
@@ -60,31 +84,24 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 		return response.timestamp();
 	}
 
-	private <T> T singleInstance(Class<T> extent, T defaultValue) {
-		Long loid = _cobra.singleInstanceLoid(extent);
-		return loid == null ? defaultValue : (T)_cobra.objectByLoid(loid);
-	}
-
-	private <T> T ensureStoreChanged(T obj, final Function4<T, Boolean> modifiedCheck) {
-		final VodJdo jdo = new VodJdo(_vod);
-		jdo.store(obj);
-		jdo.commit();
-		
-		final ByRef<T> peeked = ByRef.newInstance(obj);
-		
-		try{
-			int timeoutInMillis = 10000;
-			int millisecondsBetweenRetries = 50;
-			boolean changed = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
-				public Boolean run() {
-					peeked.value = jdo.peek(peeked.value);
-					return modifiedCheck.apply(peeked.value);
-				}
-			});
-			return changed ? peeked.value : null;
-		} finally {
-			jdo.close();
+	private <T> T ensureStoreChanged(T obj, long loid, final Function4<T, Boolean> modifiedCheck) {
+		if(loid == 0){
+			loid = _cobra.store(obj);
+		} else {
+			_cobra.store(loid, obj);
 		}
+		_cobra.commit();
+		final long finalLoid = loid;
+		final ByRef<T> peeked = ByRef.newInstance(obj);
+		int timeoutInMillis = 10000;
+		int millisecondsBetweenRetries = 50;
+		boolean changed = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
+			public Boolean run() {
+				peeked.value = _cobra.objectByLoid(finalLoid);
+				return modifiedCheck.apply(peeked.value);
+			}
+		});
+		return changed ? peeked.value : null;
 	}
 
 }

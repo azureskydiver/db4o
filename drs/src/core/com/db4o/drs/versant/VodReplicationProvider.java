@@ -244,8 +244,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		_comm.syncTimestamp(maxVersion);
 	}
 
 	public void visitCachedReferences(Visitor4 visitor) {

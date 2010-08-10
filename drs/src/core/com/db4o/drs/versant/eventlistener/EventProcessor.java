@@ -369,8 +369,12 @@ public class EventProcessor {
 			if(syncRequest.isAnswered()) {
 				return;
 			}
+			if(syncRequest.forceSync()){
+				_timeStampIdGenerator.setMinimumNext(syncRequest.timestamp());
+			}
 			CommitTimestamp timestamp = timestamp();
 			syncRequest.timestamp(timestamp.value());
+			syncRequest.answered(true);
 			_cobra.store(syncRequestLoid, syncRequest);
 			_cobra.commit();
 		}

@@ -210,7 +210,7 @@ public class VodCobra implements QLinable{
 	    	case 1:
 	    		return loids.iterator().next();
 	    	default:
-	    		throw new IllegalStateException("Multiple " + extent.getSimpleName() + " instances in database");
+	    		throw new IllegalStateException("Multiple " + extent.getSimpleName() + " instances in database: " + loids.size());
 	    }
 	}
 	
