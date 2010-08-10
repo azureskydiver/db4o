@@ -55,7 +55,7 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	    });
 		Object lock = new Object();
 		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
-		final EventProcessor eventProcessor = new EventProcessor(_vod.eventConfiguration(), printOut, cobra, comm, lock);
+		final EventProcessor eventProcessor = new EventProcessor(client, _vod.eventConfiguration(), printOut, cobra, comm, lock);
 		Thread eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
 				eventProcessor.run();
