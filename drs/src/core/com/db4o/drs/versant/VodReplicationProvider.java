@@ -16,6 +16,8 @@ import com.db4o.internal.encoding.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
+	private final VodDatabase _vod;
+	
 	private final VodCobra _cobra;
 	
 	private final VodJdo _jdo;
@@ -40,6 +42,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ProviderSideCommunication comm) {
 		_comm = comm;
+		_vod = vod;
 		_jdo = new VodJdo(vod);
 		_jvi = new VodJvi(vod);
 		_cobra = cobra;
@@ -116,8 +119,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
 		_knownClasses.put(className, classMetadata);
-		
-		_comm.registerClassMetadata(classMetadata);
+
+		_cobra.store(classMetadata);
+		_cobra.commit();
+
+		_comm.waitForClassMetadataAcknowledgment(classMetadata.fullyQualifiedName());
 	}
 
 	public void update(Object obj) {

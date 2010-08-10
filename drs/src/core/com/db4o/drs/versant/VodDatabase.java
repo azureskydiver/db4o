@@ -245,9 +245,9 @@ public class VodDatabase {
 		if(_eventDriver != null){
 			throw new IllegalStateException("Event driver can only be started once.");
 		}
-		int clientPort = nextPort++;
-		int serverPort = nextPort++;
-		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPort, true);
+		int serverPort = nextPort();
+		EventClientPortSelectionStrategy clientPortStrategy = new IncrementingEventClientPortSelectionStrategy(nextPort());
+		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, true);
 		_eventDriver = new VodEventDriver(_eventConfiguration);
 		boolean started = _eventDriver.start();
 		if(! started ){
@@ -257,6 +257,10 @@ public class VodDatabase {
 		}
 	}
 
+	private static int nextPort() {
+		return nextPort++;
+	}
+	
 	public void createEventSchema() {
 		VodJvi jvi = new VodJvi(this);
 		jvi.createEventSchema();
@@ -297,7 +301,7 @@ public class VodDatabase {
 		addArgument(arguments, Arguments.DATABASE, _name);
 		addArgument(arguments, Arguments.LOGFILE, _eventConfiguration.logFileName);
 		addArgument(arguments, Arguments.SERVER_PORT, _eventConfiguration.serverPort);
-		addArgument(arguments, Arguments.CLIENT_PORT, _eventConfiguration.clientPort);
+		addArgument(arguments, Arguments.CLIENT_PORT, _eventConfiguration.clientPort());
 		
 		String[] argumentsAsString = new String[arguments.size()];
 		argumentsAsString = arguments.toArray(argumentsAsString);

@@ -5,7 +5,10 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.foundation.*;
+import com.versant.event.*;
 
 /**
  * @exclude
@@ -21,7 +24,15 @@ public class EventProcessorSupport {
 	public EventProcessorSupport(EventConfiguration eventConfiguration) {
 		_byteOut = new ByteArrayOutputStream();
 		PrintStream printOut = new PrintStream(_byteOut);
-		_eventProcessor = new EventProcessor(eventConfiguration, printOut);
+		VodCobra cobra = new VodCobra(new VodDatabase(eventConfiguration.databaseName));
+		VodEventClient client = new VodEventClient(eventConfiguration, new ExceptionListener (){
+	        public void exceptionOccurred (Throwable exception){
+	        	EventProcessor.unrecoverableExceptionOccurred(exception);
+	        }
+	    });
+		Object lock = new Object();
+		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
+		_eventProcessor = new EventProcessor(eventConfiguration, printOut, cobra, comm, lock);
 		_eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
 				_eventProcessor.run();

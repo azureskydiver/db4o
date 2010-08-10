@@ -7,25 +7,10 @@ import com.db4o.foundation.*;
 
 public class InBandProviderSideCommunication implements ProviderSideCommunication {
 
-	private VodDatabase _vod;  // FIXME: REMOVE !! (just didn't remove, so you can merge)
 	private VodCobra _cobra;
 	
 	public InBandProviderSideCommunication(VodDatabase vod, VodCobra cobra) {
-		_vod = vod;
 		_cobra = cobra;
-	}
-	
-	public void registerClassMetadata(ClassMetadata classMetadata) {
-		ClassMetadata changed = ensureStoreChanged(classMetadata, 0, new Function4<ClassMetadata, Boolean>() {
-			public Boolean apply(ClassMetadata value) {
-				return value.monitored();
-			}
-		});
-		if(changed == null){
-			Class eventListenerProgram = com.db4o.drs.versant.eventlistener.Program.class;
-			throw new IllegalStateException("Event listener process did not respond to ClassMetadata creation for " 
-					+ classMetadata.name() + ". Ensure that " + eventListenerProgram.getName() + " is running.");
-		}
 	}
 
 	private static boolean DISABLE_ISOLATION = true;
@@ -82,6 +67,25 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 			throw new IllegalStateException("No timestamp sync response received.");
 		}
 		return response.timestamp();
+	}
+
+	public void waitForClassMetadataAcknowledgment(String fullyQualifiedName) {
+		Long loid = _cobra.singleInstanceLoid(ClassMetadataAcknowledgement.class);
+		ClassMetadataAcknowledgement acknowledgement;
+		if(loid == null){
+			acknowledgement = new ClassMetadataAcknowledgement(fullyQualifiedName, false);
+			loid = 0L;
+		} else {
+			acknowledgement = (ClassMetadataAcknowledgement)_cobra.objectByLoid(loid);
+		}
+		ClassMetadataAcknowledgement response = ensureStoreChanged(acknowledgement, loid, new Function4<ClassMetadataAcknowledgement, Boolean>() {
+			public Boolean apply(ClassMetadataAcknowledgement acknowledgement) {
+				return acknowledgement.acknowledged();
+			}
+		});
+		if(!response.acknowledged()) {
+			throw new IllegalStateException("No class metadata acknowledgment received for " + fullyQualifiedName);
+		}
 	}
 
 	private <T> T ensureStoreChanged(T obj, long loid, final Function4<T, Boolean> modifiedCheck) {

@@ -5,9 +5,13 @@ package com.db4o.drs.test.versant;
 import java.io.*;
 
 import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.foundation.*;
 import com.db4o.util.IOServices.*;
+import com.versant.event.*;
 
 import db4ounit.*;
 
@@ -43,7 +47,15 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		
 		PrintStream printOut = new PrintStream(byteOut);
-		final EventProcessor eventProcessor = new EventProcessor(_vod.eventConfiguration(), printOut);
+		VodCobra cobra = new VodCobra(new VodDatabase(_vod.eventConfiguration().databaseName));
+		VodEventClient client = new VodEventClient(_vod.eventConfiguration(), new ExceptionListener (){
+	        public void exceptionOccurred (Throwable exception){
+	        	EventProcessor.unrecoverableExceptionOccurred(exception);
+	        }
+	    });
+		Object lock = new Object();
+		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
+		final EventProcessor eventProcessor = new EventProcessor(_vod.eventConfiguration(), printOut, cobra, comm, lock);
 		Thread eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
 				eventProcessor.run();

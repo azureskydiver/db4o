@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
@@ -29,7 +30,7 @@ public class EventProcessor {
 	
 	private final PrintStream _out;
 	
-	private final EventClient _client;
+	private final VodEventClient _client;
 	
 	private volatile boolean _stopped;
 
@@ -43,7 +44,7 @@ public class EventProcessor {
 	
 	private volatile boolean _dirty;
 	
-	private final Object _lock = new Object();
+	private final Object _lock;
 	
 	SimpleTimer _commitTimer = new SimpleTimer(
 			new Runnable() {
@@ -57,19 +58,22 @@ public class EventProcessor {
 	
 	private long _timestampLoid;
 	
-	public EventProcessor(EventConfiguration eventConfiguration, PrintStream out)  {
+	private EventProcessorSideCommunication _comm;
+	
+	public EventProcessor(EventConfiguration eventConfiguration, PrintStream out, VodCobra cobra, EventProcessorSideCommunication comm, Object lock)  {
+		_lock = lock;
+		
 		_eventConfiguration = eventConfiguration;
 		_out = out;
+		_comm = comm;
 		
-		_client = EventProcessor.newEventClient(_eventConfiguration);
-		
-	    _client.addExceptionListener (new ExceptionListener (){
+		_client = new VodEventClient(eventConfiguration, new ExceptionListener (){
 	        public void exceptionOccurred (Throwable exception){
-	        	unrecoverableExceptionOccurred(exception);
+	        	EventProcessor.unrecoverableExceptionOccurred(exception);
 	        }
 	    });
 	    
-	    _cobra = new VodCobra(new VodDatabase(eventConfiguration.databaseName));
+	    _cobra = cobra;
 	    
 	    synchronized(_lock){
 		    _commitThread.start();
@@ -112,7 +116,7 @@ public class EventProcessor {
 
 	public static EventClient newEventClient(EventConfiguration config)  {
 		try{
-			return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort,config.databaseName);
+			return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort(),config.databaseName);
 		} catch (IOException ioException){
 			System.err.println("Connection failed using\n" + config + "\nMake sure that " + VodDatabase.VED_DRIVER + " is running.");
 			unrecoverableExceptionOccurred(ioException);
@@ -121,8 +125,8 @@ public class EventProcessor {
 	}
 
 	public void run() {
-	    createMetaChannel(_client);
-	    createCommitSyncChannel();
+	    registerClassMetadataListener();
+	    registerSyncRequestListener();
 	    println(LISTENING_MESSAGE + _eventConfiguration.databaseName);
 	    taskQueueProcessorLoop();
 		shutdown();
@@ -130,6 +134,7 @@ public class EventProcessor {
 
 	private void shutdown() {
 		_client.shutdown();
+		_comm.shutdown();
 		_commitTimer.stop();
 		try {
 			_commitThread.join();
@@ -170,7 +175,7 @@ public class EventProcessor {
 	}
 	
 	private void createChannel(final ClassChannelSpec channelSpec) {
-		EventChannel channel = produceClassChannel(channelSpec._className);
+		EventChannel channel = _client.produceClassChannel(channelSpec._className);
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
 				queueObjectLifeCycleEvent(event, Operations.UPDATE, channelSpec);
@@ -185,34 +190,19 @@ public class EventProcessor {
 		println("Listener channel created for class " + channelSpec._className);
 	}
 
-	private void createCommitSyncChannel() {
-		EventChannel channel = produceClassChannel(TimestampSyncRequest.class.getName());
-		channel.addVersantEventListener (new ClassEventListener() {
-			public void instanceModified (VersantEventObject event){
-				queueSynchronizationRequest(event);
-			}
-			
-			public void instanceCreated (VersantEventObject event) {
-				queueSynchronizationRequest(event);
-			}
-			
-			public void instanceDeleted (VersantEventObject event) {
-			}
-			
-			private void queueSynchronizationRequest(VersantEventObject event) {
-				synchronized(_lock) {
-					new TimestampSyncRequestTask(event.getRaiserLoid()).run(); // TODO inline task
-				}
+	private void registerSyncRequestListener() {
+		_comm.registerSyncRequestListener(new Block4() {
+			public void run() {
+				_comm.sendTimestamp(timestamp().value());
 			}
 		});
 	}
 
-	private EventChannel createMetaChannel(final EventClient client)  {
-		EventChannel channel = produceClassChannel(ClassMetadata.class.getName());
+	private void registerClassMetadataListener()  {
+		EventChannel channel = _client.produceClassChannel(ClassMetadata.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceCreated (VersantEventObject event) {
-				RegisterClassMetadataTask task = new RegisterClassMetadataTask(event.getRaiserLoid());
-				_queuedTasks.add(task);
+				_queuedTasks.add(new RegisterClassMetadataTask(event.getRaiserLoid()));
 			}
 			public void instanceModified (VersantEventObject event){
 				// do nothing
@@ -221,30 +211,8 @@ public class EventProcessor {
 				// do nothing
 			}
 		});
-		return channel;
 	}
 
-	private EventChannel produceClassChannel(String className) {
-		String channelName = channelName(className);
-		try {
-			EventChannel channel = _client.getChannel (channelName);
-			if(channel != null){
-				if(DrsDebug.verbose){
-					System.out.println("Reusing existing channel " + channelName);
-				}
-				return channel;
-			}
-			ClassChannelBuilder builder = new ClassChannelBuilder (className);
-			if(DrsDebug.verbose){
-				System.out.println("Creating new channel " + channelName);
-			}
-			return _client.newChannel (channelName, builder);
-		} catch (IOException e) {
-			unrecoverableExceptionOccurred(e);
-		}
-		return null;
-	}
-	
 	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
 		ObjectLifeCycleEventStoreTask task = new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation);
 		_queuedTasks.add(task);
@@ -252,16 +220,6 @@ public class EventProcessor {
 
 	private void persistObjectLifeCycleEvent(ObjectLifecycleEvent objectLifecycleEvent) {
 		_cobra.store(objectLifecycleEvent);
-	}
-
-	private String channelName(final String className) {
-		String name =  "dRS_Channel_For_" + className;
-		name = name.replaceAll("\\.", "");
-		int beginIndex = name.length() - 32;
-		if(beginIndex > 0){
-			name = name.substring(beginIndex);
-		}
-		return name;
 	}
 
 	private synchronized void println(String msg) {
@@ -281,7 +239,7 @@ public class EventProcessor {
 		_queuedTasks.stop();
 	}
 
-	private static void unrecoverableExceptionOccurred(Throwable t) {
+	public static void unrecoverableExceptionOccurred(Throwable t) {
 		t.printStackTrace();
 		throw new RuntimeException(t);
 		
@@ -395,12 +353,10 @@ public class EventProcessor {
 		
 		public void run() {
 			long classMetadataLoid = VodCobra.loidAsLong(_classId);
-			ClassMetadata origClassMetadata = _cobra.objectByLoid(classMetadataLoid);
+			ClassMetadata classMetadata = _cobra.objectByLoid(classMetadataLoid);
 			_dirty = true;
-			createChannel(new ClassChannelSpec(origClassMetadata.name(),origClassMetadata.fullyQualifiedName(), classMetadataLoid));
-			ClassMetadata flaggedClassMetadata = new ClassMetadata(origClassMetadata.name(),origClassMetadata.fullyQualifiedName(), true);
-			_cobra.store(classMetadataLoid, flaggedClassMetadata);
-			_cobra.commit();
+			createChannel(new ClassChannelSpec(classMetadata.name(),classMetadata.fullyQualifiedName(), classMetadataLoid));
+			_comm.acknowledgeClassMetadataRegistration(classMetadata.fullyQualifiedName());
 		}		
 		
 		@Override

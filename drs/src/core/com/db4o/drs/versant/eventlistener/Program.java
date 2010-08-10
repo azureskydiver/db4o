@@ -8,6 +8,9 @@ import java.io.*;
 import org.apache.commons.cli.*;
 
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
+import com.versant.event.*;
 
 import static com.db4o.drs.versant.eventlistener.Program.Arguments.*;
 
@@ -45,7 +48,15 @@ public class Program {
 		if(! parseArguments(args)){
 			return;
 		}
-		new EventProcessor(_eventConfiguration, System.out).run();
+		VodCobra cobra = new VodCobra(new VodDatabase(_eventConfiguration.databaseName));
+		VodEventClient client = new VodEventClient(_eventConfiguration, new ExceptionListener (){
+	        public void exceptionOccurred (Throwable exception){
+	        	EventProcessor.unrecoverableExceptionOccurred(exception);
+	        }
+	    });
+		Object lock = new Object();
+		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
+		new EventProcessor(_eventConfiguration, System.out, cobra, comm, lock).run();
 	}
 	
 	private boolean parseArguments(String[] args) {
@@ -115,7 +126,7 @@ public class Program {
 					server,
 					optionAsInt(line, SERVER_PORT),
 					client,
-					optionAsInt(line, CLIENT_PORT),
+					new FixedEventClientPortSelectionStrategy(optionAsInt(line, CLIENT_PORT)),
 					line.hasOption(VERBOSE));
 			
 		} catch(MissingOptionException moex){
