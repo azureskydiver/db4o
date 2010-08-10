@@ -53,6 +53,13 @@ public class VodCobra implements QLinable{
 	}
 
 	public long store(Object obj) {
+		if(obj instanceof CobraPersistentObject){
+			long loid = ((CobraPersistentObject)obj).loid();
+			if(loid > 0){
+				store(loid, obj);
+				return loid;
+			}
+		}
 		DatastoreObject datastoreObject = newDatastoreObject(obj.getClass());
 		writeFields(obj, datastoreObject);
 		write(datastoreObject);
@@ -87,22 +94,6 @@ public class VodCobra implements QLinable{
 		return result;
 	}
 	
-	public <T> T objectByLoid(long loid){
-		DatastoreObject datastoreObject = existingDatastoreObject(loid);
-		Class<T> clazz = classOf(datastoreObject);
-		T result;
-		try {
-			result = clazz.newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		CobraField[] fields = fields(clazz);
-		for (int j = 0; j < fields.length; j++) {
-			fields[j].read(result, datastoreObject);
-		}
-		return result;
-	}
-
 	private <T> Class<T> classOf(DatastoreObject datastoreObject) {
 		DatastoreSchemaClass schemaClass = datastoreObject.getSchemaClass();
 		Class<T> clazz;
@@ -161,6 +152,7 @@ public class VodCobra implements QLinable{
 		for ( int i = 0; i < datastoreObjects.length; i++ ) {
 			try {
 				T obj = extent.newInstance();
+				ensureLoidSet(obj, ((DatastoreLoid) loids[i]).value());
 				for (int j = 0; j < fields.length; j++) {
 					fields[j].read(obj, datastoreObjects[i]);
 				}
@@ -168,6 +160,29 @@ public class VodCobra implements QLinable{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		return result;
+	}
+
+	private <T> void ensureLoidSet(T obj, long loid) {
+		if(obj instanceof CobraPersistentObject){
+			((CobraPersistentObject)obj).loid(loid);
+		}
+	}
+	
+	public <T> T objectByLoid(long loid){
+		DatastoreObject datastoreObject = existingDatastoreObject(loid);
+		Class<T> clazz = classOf(datastoreObject);
+		T result;
+		try {
+			result = clazz.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		ensureLoidSet(result, loid);
+		CobraField[] fields = fields(clazz);
+		for (int j = 0; j < fields.length; j++) {
+			fields[j].read(result, datastoreObject);
 		}
 		return result;
 	}
@@ -226,11 +241,19 @@ public class VodCobra implements QLinable{
 		}
 
 		public void write(Object obj, DatastoreObject datastoreObject) {
-			datastoreObject.writeObject(_datastoreSchemaField, Reflection4.getFieldValue(obj, name()));
+			if(isCobraPersitentObject()){
+				datastoreObject.writeObject(_datastoreSchemaField, store(obj));
+			} else {
+				datastoreObject.writeObject(_datastoreSchemaField, Reflection4.getFieldValue(obj, name()));
+			}
 		}
 		
 		private String name(){
 			return _datastoreSchemaField.getName();
+		}
+		
+		public boolean isCobraPersitentObject(){
+			return CobraPersistentObject.class.isAssignableFrom(_field.getType());
 		}
 		
 		public void read(Object obj, DatastoreObject datastoreObject) {

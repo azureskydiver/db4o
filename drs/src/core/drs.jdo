@@ -3,6 +3,7 @@
 <jdo>
     <package name="com.db4o.drs.versant.metadata">
     	<class name="com.db4o.drs.versant.metadata.ClassMetadata"/>
+    	<class name="com.db4o.drs.versant.metadata.CobraPersistentObject"/>
     	<class name="com.db4o.drs.versant.metadata.CommitTimestamp"/>
     	<class name="com.db4o.drs.versant.metadata.DatabaseSignature"/>
     	<class name="com.db4o.drs.versant.metadata.ObjectLifecycleEvent"/>

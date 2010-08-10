@@ -3,7 +3,7 @@
 package com.db4o.drs.versant.metadata;
 
 
-public class ReplicationCommitRecord {
+public class ReplicationCommitRecord extends CobraPersistentObject {
 	
 	private DatabaseSignature higherPeer;
 	
@@ -18,6 +18,10 @@ public class ReplicationCommitRecord {
 	
 	public long timestamp(){
 		return timestamp;
+	}
+	
+	public void timestamp(long timestamp){
+		this.timestamp = timestamp;
 	}
 
 }

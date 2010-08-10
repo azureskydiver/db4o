@@ -60,18 +60,20 @@ public class EventProcessor {
 	
 	private EventProcessorSideCommunication _comm;
 	
-	public EventProcessor(EventConfiguration eventConfiguration, PrintStream out, VodCobra cobra, EventProcessorSideCommunication comm, Object lock)  {
+	public EventProcessor(VodEventClient client, EventConfiguration eventConfiguration, PrintStream out, VodCobra cobra, EventProcessorSideCommunication comm, Object lock)  {
 		_lock = lock;
 		
 		_eventConfiguration = eventConfiguration;
 		_out = out;
 		_comm = comm;
 		
-		_client = new VodEventClient(eventConfiguration, new ExceptionListener (){
-	        public void exceptionOccurred (Throwable exception){
-	        	EventProcessor.unrecoverableExceptionOccurred(exception);
-	        }
-	    });
+		_client = client;
+		
+//		_client = new VodEventClient(eventConfiguration, new ExceptionListener (){
+//	        public void exceptionOccurred (Throwable exception){
+//	        	EventProcessor.unrecoverableExceptionOccurred(exception);
+//	        }
+//	    });
 	    
 	    _cobra = cobra;
 	    

@@ -21,7 +21,7 @@ public class EventConfiguration {
 	
 	public final String clientHost;
 	
-	private final EventClientPortSelectionStrategy _clientPortStrategy;
+	private final int clientPort;
 	
 	public final boolean verbose;
 	
@@ -31,7 +31,7 @@ public class EventConfiguration {
 		this.serverHost = serverHost;
 		this.serverPort = serverPort;
 		this.clientHost = clientHost;
-		_clientPortStrategy = clientPortStrategy;
+		this.clientPort = clientPortStrategy.clientPort();
 		this.verbose = verbose;
 	}
 
@@ -51,7 +51,7 @@ public class EventConfiguration {
 	}
 	
 	public int clientPort() {
-		return _clientPortStrategy.clientPort();
+		return clientPort;
 	}
 	
 	@Override
