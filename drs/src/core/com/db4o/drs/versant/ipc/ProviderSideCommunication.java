@@ -6,4 +6,5 @@ public interface ProviderSideCommunication {
 	void requestIsolation(IsolationMode isolationMode);
 	long requestTimestamp();
 	void registerClassMetadata(ClassMetadata classMetadata);
+	void syncTimestamp(long timestamp);
 }
