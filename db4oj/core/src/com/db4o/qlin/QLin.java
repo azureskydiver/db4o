@@ -27,6 +27,9 @@ public interface QLin<T> {
 	 * You may want to use these interfaces instead of
 	 * working directly against an ObjectSet.
 	 */
+	// FIXME: The return value should not be as closely bound to db4o.
+	// Collection is mutable, it's not nice.
+	// Discuss !!!
 	public ObjectSet<T> select ();
 	
 	
@@ -48,6 +51,6 @@ public interface QLin<T> {
 	 */
 	public QLin<T> orderBy(Object expression, QLinOrderByDirection direction);
 	
-	public T oneOrDefault(T defaultValue);
+	public T singleOrDefault(T defaultValue);
 
 }
