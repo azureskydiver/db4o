@@ -21,17 +21,17 @@ public class EventConfiguration {
 	
 	public final String clientHost;
 	
-	public final int clientPort;
+	private final EventClientPortSelectionStrategy _clientPortStrategy;
 	
 	public final boolean verbose;
 	
-	public EventConfiguration(String databaseName, String logFileName, String serverHost, int serverPort, String clientHost, int clientPort, boolean verbose) {
+	public EventConfiguration(String databaseName, String logFileName, String serverHost, int serverPort, String clientHost, EventClientPortSelectionStrategy clientPortStrategy, boolean verbose) {
 		this.databaseName = databaseName;
 		this.logFileName = logFileName;
 		this.serverHost = serverHost;
 		this.serverPort = serverPort;
 		this.clientHost = clientHost;
-		this.clientPort = clientPort;
+		_clientPortStrategy = clientPortStrategy;
 		this.verbose = verbose;
 	}
 
@@ -48,6 +48,10 @@ public class EventConfiguration {
 		
 		writer.flush();
 		writer.close();
+	}
+	
+	public int clientPort() {
+		return _clientPortStrategy.clientPort();
 	}
 	
 	@Override

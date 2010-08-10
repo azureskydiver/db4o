@@ -20,16 +20,9 @@ public class ClassMetadata {
 	
 	private String fullyQualifiedName;
 	
-	/** This flag is exclusively used by the EventProcessor to signal it has started 
-	 * the channel for newly created or registered classes, so we can wait for this
-	 * flag to change, so we don't loose events for the first objects. 
-	 */
-	private boolean monitored;
-	
 	public ClassMetadata(String name, String fullyQualifiedName, boolean monitored){
 		this.name = name;
 		this.fullyQualifiedName = fullyQualifiedName;
-		this.monitored = monitored;
 	}
 
 
@@ -65,9 +58,4 @@ public class ClassMetadata {
 	public String fullyQualifiedName() {
 		return fullyQualifiedName;
 	}
-	
-	public boolean monitored(){
-		return monitored;
-	}
-
 }
