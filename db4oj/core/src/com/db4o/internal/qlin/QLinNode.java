@@ -29,7 +29,7 @@ public abstract class QLinNode <T> implements QLin<T> {
 	
 	public T oneOrDefault(T defaultValue){
 		ObjectSet<T> collection = select();
-		if(collection.isEmpty()){
+		if(collection.size() == 0){
 			return defaultValue;
 		}
 		if(collection.size() > 1){
