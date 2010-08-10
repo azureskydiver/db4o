@@ -27,15 +27,23 @@ public abstract class QLinNode <T> implements QLin<T> {
 		throw new QLinException("#greater() is not supported on this node");
 	}
 	
-	public T oneOrDefault(T defaultValue){
+	public T singleOrDefault(T defaultValue){
 		ObjectSet<T> collection = select();
 		if(collection.size() == 0){
 			return defaultValue;
 		}
 		if(collection.size() > 1){
+			// Consider: Use a more specific exception if a query does not return
+			//           the expected result
 			throw new QLinException("Expected one or none. Found: " + collection.size());
 		}
-		return collection.iterator().next();
+		
+		// The following would be the right way to work against
+		// a collection but for now it won't decaf.
+		// return collection.iterator().next();
+		
+		// This is the ugly old 
+		return collection.next();
 	}
 
 }
