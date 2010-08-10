@@ -71,7 +71,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 				_providerB.startReplicationTransaction(_providerA.getSignature());
 
 				if (_providerA.getLastReplicationVersion() != _providerB.getLastReplicationVersion())
-					throw new RuntimeException("Version numbers must be the same");
+					throw new RuntimeException("Version numbers must be the same but (" 
+							+ _providerA.getName() + ":" + _providerA.getLastReplicationVersion() 
+							+ ")  (" + _providerB.getName() + ":" + _providerB.getLastReplicationVersion() + ")");
 
 				_lastReplicationVersion = _providerA.getLastReplicationVersion();
 			}

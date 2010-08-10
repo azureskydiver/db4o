@@ -32,7 +32,7 @@ public class EventProcessorSupport {
 	    });
 		Object lock = new Object();
 		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
-		_eventProcessor = new EventProcessor(eventConfiguration, printOut, cobra, comm, lock);
+		_eventProcessor = new EventProcessor(client, eventConfiguration, printOut, cobra, comm, lock);
 		_eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
 				_eventProcessor.run();

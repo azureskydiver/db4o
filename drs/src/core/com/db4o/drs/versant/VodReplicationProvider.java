@@ -43,9 +43,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ProviderSideCommunication comm) {
 		_comm = comm;
 		_vod = vod;
+		_cobra = cobra;
 		_jdo = new VodJdo(vod);
 		_jvi = new VodJvi(vod);
-		_cobra = cobra;
 		loadSignatures();
 		loadKnownClasses();
 		_myDatabaseId = _cobra.databaseId();
@@ -161,8 +161,17 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		_comm.syncTimestamp(raisedDatabaseVersion);
+		_jdo.commit();
+		
+		// FileReplicationProvider does this:
+		// _idsReplicatedInThisSession = null;
+		
+		
+		// HibernateReplicationProvider does this:
+		// _dirtyRefs.clear();
+		// _inReplication = false;
+		
 	}
 
 	public long getCurrentVersion() {
@@ -174,8 +183,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		return _vod.databaseName();
 	}
 
 	public ReadonlyReplicationProviderSignature getSignature() {
@@ -231,13 +239,24 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		int lowerId = Math.min(peerId, _myDatabaseId);
 		int higherId = Math.max(peerId, _myDatabaseId);
+		
+		
+		// TODO: Enhance QLin for deep queries. Retrieve from Cobra directly here.
+		
 		String filter = "this.lowerPeer.databaseId == " + lowerId + " & this.higherPeer.databaseId == " + higherId;
-		_replicationCommitRecord = _jdo.queryOneOrNone(ReplicationCommitRecord.class, filter);
-		if(_replicationCommitRecord != null){
+		ReplicationCommitRecord replicationCommitRecordByJdo = _jdo.queryOneOrNone(ReplicationCommitRecord.class, filter);
+		
+		if(replicationCommitRecordByJdo == null){
+			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
+			_cobra.store(_replicationCommitRecord);
 			return;
 		}
-		_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
-		_jdo.store(_replicationCommitRecord);
+		
+		long commitRecordLoid = _jdo.loid(replicationCommitRecordByJdo);
+		_replicationCommitRecord = _cobra.objectByLoid(commitRecordLoid);
+		if(_replicationCommitRecord == null){
+			throw new IllegalStateException("Commit record could not be found. loid: " + commitRecordLoid);
+		}
 	}
 
 	private DatabaseSignature databaseSignature(int databaseId) {
@@ -250,6 +269,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
+		_replicationCommitRecord.timestamp(maxVersion);
+		_cobra.store(_replicationCommitRecord);
 		_comm.syncTimestamp(maxVersion);
 	}
 

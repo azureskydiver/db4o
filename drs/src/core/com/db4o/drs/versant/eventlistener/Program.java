@@ -56,7 +56,7 @@ public class Program {
 	    });
 		Object lock = new Object();
 		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
-		new EventProcessor(_eventConfiguration, System.out, cobra, comm, lock).run();
+		new EventProcessor(client, _eventConfiguration, System.out, cobra, comm, lock).run();
 	}
 	
 	private boolean parseArguments(String[] args) {
