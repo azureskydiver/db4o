@@ -19,7 +19,7 @@ public class AllTests extends ComposibleTestSuite {
 									MemoryIoAdapterTestCase.class,
 									NonFlushingStorageTestCase.class,
 									RandomAccessFileStorageFactoryTestCase.class,
-									SaveAsStorageTestCase.class,
+									// SaveAsStorageTestCase.class,  COR-2036
 									StorageTestSuite.class,
 									StackBasedDiskFullTestCase.class,
 							});
