@@ -53,4 +53,6 @@ public interface QLin<T> {
 	
 	public T singleOrDefault(T defaultValue);
 
+	public T single();
+
 }

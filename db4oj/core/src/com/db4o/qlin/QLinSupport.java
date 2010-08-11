@@ -23,7 +23,7 @@ public class QLinSupport {
 	 */
 	public static <T> T prototype(Class<T> clazz){
 		try{
-			return _prototypes.forClass(clazz);
+			return _prototypes.prototypeForClass(clazz);
 		} catch(PrototypesException ex){
 			throw new QLinException(ex);
 		}
@@ -143,9 +143,7 @@ public class QLinSupport {
 	private static final int RECURSION_DEPTH = 4;
 	
 	private static final Prototypes _prototypes = 
-		new Prototypes(new GenericReflector(Platform4.reflectorForType(QLinSupport.class)), 
-		RECURSION_DEPTH, 
-		IGNORE_TRANSIENT_FIELDS);
+		new Prototypes(Prototypes.defaultReflector(),RECURSION_DEPTH, IGNORE_TRANSIENT_FIELDS);
 	
 	private static final DynamicVariable<ReflectClass> _context = DynamicVariable.newInstance();
 	
