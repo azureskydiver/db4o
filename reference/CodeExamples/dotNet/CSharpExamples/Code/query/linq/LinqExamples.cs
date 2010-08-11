@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
-using Db4objects.Db4o.Monitoring;
 
 #region LINQ-Imports
 //#example: Use the LINQ namespace

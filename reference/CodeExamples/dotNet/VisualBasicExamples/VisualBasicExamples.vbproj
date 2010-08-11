@@ -168,10 +168,16 @@
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.vb" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.vb" />
     <Compile Include="Code\query\linq\LinqExamples.vb" />
+    <Compile Include="Code\query\nq\NativeQueriesSorting.vb" />
+    <Compile Include="Code\query\soda\DataModel.vb" />
+    <Compile Include="Code\query\soda\SodaEvaluationExamples.vb" />
+    <Compile Include="Code\query\soda\SodaQueryExamples.vb" />
+    <Compile Include="Code\query\soda\SodaSorting.vb" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.vb" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.vb" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.vb" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.vb" />
+    <Compile Include="Code\strategies\storingstatic\Color.vb" />
     <Compile Include="Code\strategies\storingstatic\StoringStaticFields.vb" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.vb" />
     <Compile Include="Code\tuning\monitoring\CSMonitoring.vb" />

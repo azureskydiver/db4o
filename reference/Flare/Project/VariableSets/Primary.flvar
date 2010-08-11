@@ -74,4 +74,8 @@
     Name="close"
     Comment=""
     Definition="Some text">close</Variable>
+  <Variable
+    Name="Evaluation"
+    Comment=""
+    Definition="Some text">Evaluation</Variable>
 </CatapultVariableSet>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim pilots As IList(Of Pilot) = container.Query( _
+        Function(p As Pilot) p.Age &gt; 18, _
+        Function(p1 As Pilot, p2 As Pilot) p1.Name.CompareTo(p2.Name))</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim pilots As IList(Of Pilot) = container.Query( _
+        Function(p As Pilot) p.Age &gt; 18, _
+        Function(p1 As Pilot, p2 As Pilot) p1.Name.CompareTo(p2.Name))</pre>
+		<div class="codesnippet-meta">
+			NativeQueriesSorting.vb: Native query with sorting
+			<div class="codedownload">
+				<a href="Example-query-nq-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

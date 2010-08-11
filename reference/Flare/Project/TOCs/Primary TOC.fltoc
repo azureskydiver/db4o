@@ -205,6 +205,49 @@
       Title="Querying"
       Link="/Content/object_lifecycle/querying.htm">
       <TocEntry
+        Title="LINQ"
+        Link="/Content/object_lifecycle/querying/linq.htm"
+        conditions="Primary.All languages,Primary..NET">
+        <TocEntry
+          Title="LINQ Examples"
+          Link="/Content/object_lifecycle/querying/linq/linq_examples.htm">
+          <TocEntry
+            Title="Simple LINQ Queries"
+            Link="/Content/object_lifecycle/querying/linq/linq_examples.htm#Simplest" />
+          <TocEntry
+            Title="Sort With LINQ"
+            Link="/Content/object_lifecycle/querying/linq/linq_examples.htm#Sorting" />
+          <TocEntry
+            Title="IQueryable"
+            Link="/Content/object_lifecycle/querying/linq/linq_examples.htm#Get" />
+        </TocEntry>
+        <TocEntry
+          Title="LINQ Optimization"
+          Link="/Content/object_lifecycle/querying/linq/optimization.htm" />
+        <TocEntry
+          Title="LINQ For Compact Framework"
+          Link="/Content/object_lifecycle/querying/linq/linq_for_compact_framework.htm" />
+      </TocEntry>
+      <TocEntry
+        Title="Native Queries"
+        Link="/Content/object_lifecycle/querying/native_queries.htm">
+        <TocEntry
+          Title="Native Query Syntax"
+          Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax.htm">
+          <TocEntry
+            Title=".NET Syntax"
+            Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax/.net_syntax.htm"
+            conditions="Primary..NET,Primary.All languages" />
+          <TocEntry
+            Title="Java Syntax"
+            Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax/java_syntax.htm"
+            conditions="Primary.Java,Primary.All languages" />
+        </TocEntry>
+        <TocEntry
+          Title="Native Query Sorting"
+          Link="/Content/object_lifecycle/querying/sorting_query_results/native_query_sorting.htm" />
+      </TocEntry>
+      <TocEntry
         Title="Query By Example"
         Link="/Content/object_lifecycle/querying/query_by_example.htm">
         <TocEntry
@@ -228,76 +271,81 @@
         </TocEntry>
       </TocEntry>
       <TocEntry
-        Title="Native Queries"
-        Link="/Content/object_lifecycle/querying/native_queries.htm">
-        <TocEntry
-          Title="Native Query Syntax"
-          Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax.htm">
-          <TocEntry
-            Title=".NET Syntax"
-            Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax/.net_syntax.htm"
-            conditions="Primary..NET,Primary.All languages" />
-          <TocEntry
-            Title="Java Syntax"
-            Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax/java_syntax.htm"
-            conditions="Primary.Java,Primary.All languages" />
-        </TocEntry>
-      </TocEntry>
-      <TocEntry
         Title="SODA Query"
         Link="/Content/object_lifecycle/querying/soda_query.htm">
         <TocEntry
-          Title="Building SODA Queries"
-          Link="/Content/object_lifecycle/querying/soda_query/building_soda_queries.htm" />
+          Title="SODA Query Examples"
+          Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm">
+          <TocEntry
+            Title="Type Constraint"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#TypeConstraint"></TocEntry>
+          <TocEntry
+            Title="Field Constraint"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#FieldConstraint" />
+          <TocEntry
+            Title="Comparisons"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#Comparisons"></TocEntry>
+          <TocEntry
+            Title="Combination of Constraints"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#Combination" />
+          <TocEntry
+            Title="String Comparison"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#StringComparison" />
+          <TocEntry
+            Title="Compare Field With Existing Object"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#CheckForObject" />
+          <TocEntry
+            Title="Descend Deeper Into Objects"
+            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#DescendIntoObjects" />
+        </TocEntry>
         <TocEntry
-          Title="SODA Query Graph"
-          Link="/Content/object_lifecycle/querying/soda_query/soda_query_graph.htm" />
+          Title="SODA Special Cases Examples"
+          Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm">
+          <TocEntry
+            Title="Contains on Collections and Arrays"
+            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ContainsOnCollections" />
+          <TocEntry
+            Title="Constrains on Collection Members"
+            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ConstrainsOnCollectionMembers" />
+          <TocEntry
+            Title="Contains Key on Maps"
+            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ContainsKeyOnMaps" />
+          <TocEntry
+            Title="Mixing With Query By Example"
+            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#MixQueryByExample"></TocEntry>
+          <TocEntry
+            Title="Dynamically Typed"
+            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#DynamicTypedNature" />
+        </TocEntry>
         <TocEntry
-          Title="SODA Query API"
-          Link="/Content/object_lifecycle/querying/soda_query/soda_query_api.htm" />
-        <TocEntry
-          Title="SODA Query Engine"
-          Link="/Content/object_lifecycle/querying/soda_query/soda_query_engine.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="LINQ"
-        Link="/Content/object_lifecycle/querying/linq.htm"
-        conditions="Primary.All languages,Primary..NET">
-        <TocEntry
-          Title="LINQ Examples"
-          Link="/Content/object_lifecycle/querying/linq/linq_examples.htm" />
-        <TocEntry
-          Title="LINQ Optimization"
-          Link="/Content/object_lifecycle/querying/linq/optimization.htm" />
-        <TocEntry
-          Title="LINQ For Compact Framework"
-          Link="/Content/object_lifecycle/querying/linq/linq_for_compact_framework.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="SODA Evaluations"
-        Link="/Content/object_lifecycle/querying/soda_evaluations.htm">
-        <TocEntry
-          Title="Evaluation API"
-          Link="/Content/object_lifecycle/querying/soda_evaluations/evaluation_api.htm" />
-        <TocEntry
-          Title="Using Evaluations"
-          Link="/Content/object_lifecycle/querying/soda_evaluations/using_evaluations.htm" />
-        <TocEntry
-          Title="Drawbacks"
-          Link="/Content/object_lifecycle/querying/soda_evaluations/drawbacks.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Sorting Query Results"
-        Link="/Content/object_lifecycle/querying/sorting_query_results.htm">
+          Title="SODA Evaluations"
+          Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm">
+          <TocEntry
+            Title="Simple Evaluation"
+            Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm#SimpleEvaluation" />
+          <TocEntry
+            Title="Evaluation on Field"
+            Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm#EvaluationOnField" />
+          <TocEntry
+            Title="Regex on Fields"
+            Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm#RegexEvaluation" />
+        </TocEntry>
         <TocEntry
           Title="SODA Sorting"
-          Link="/Content/object_lifecycle/querying/sorting_query_results/soda_sorting.htm" />
+          Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm">
+          <TocEntry
+            Title="Sorting by Field"
+            Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#SortByField"></TocEntry>
+          <TocEntry
+            Title="Sort by Multiple Fields"
+            Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#SortByMultipleFields" />
+          <TocEntry
+            Title="Costume Sorting"
+            Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#CostumSorting" />
+        </TocEntry>
         <TocEntry
-          Title="Native Query Sorting"
-          Link="/Content/object_lifecycle/querying/sorting_query_results/native_query_sorting.htm" />
-        <TocEntry
-          Title="Evaluation Results Sorting"
-          Link="/Content/object_lifecycle/querying/sorting_query_results/evaluation_results_sorting.htm" />
+          Title="SODA Processing"
+          Link="/Content/object_lifecycle/querying/soda/soda_processing.htm" />
       </TocEntry>
     </TocEntry>
     <TocEntry
@@ -1274,8 +1322,6 @@
         <TocEntry
           Title="General Info"
           Link="/Content/platform_specific_issues/android/general_info.htm"></TocEntry>
-        <TocEntry
-          Title="Application Structure" />
         <TocEntry
           Title="Opening a Database"
           Link="/Content/platform_specific_issues/android/opening_a_database.htm" />
