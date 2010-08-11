@@ -47,6 +47,8 @@
     <Variable
       Name="Primary/Storage">IStorage</Variable>
     <Variable
+      Name="Primary/Evaluation">IEvaluation</Variable>
+    <Variable
       Name="Primary/Bin">IBin</Variable>
     <Variable
       Name="Primary/EventRegistry">IEventRegistry</Variable>

@@ -4,7 +4,7 @@
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">&lt;path id=&quot;project.classpath&quot;&gt;
     &lt;pathelement path=&quot;${basedir}/bin&quot;/&gt;
-	&lt;!-- The android.plattform points the Android-platform libraries --&gt;
+	&lt;!-- The android.plattform points to the Android-platform libraries --&gt;
     &lt;fileset dir=&quot;${android.platform}/&quot;&gt;
         &lt;include name=&quot;android.jar&quot;/&gt;
     &lt;/fileset&gt;

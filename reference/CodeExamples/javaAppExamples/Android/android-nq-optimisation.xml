@@ -5,7 +5,7 @@
     <!-- #example: Define the task for the enhancement #-->    
     <path id="project.classpath">
         <pathelement path="${basedir}/bin"/>
-    	<!-- The android.plattform points the Android-platform libraries -->
+    	<!-- The android.plattform points to the Android-platform libraries -->
         <fileset dir="${android.platform}/">
             <include name="android.jar"/>
         </fileset>

@@ -1,5 +1,6 @@
 
 using System;
+using Db4oDoc.Code.Query.Soda;
 using Db4oDoc.Code.Strategies.StoringStatic;
 
 namespace Db4oDoc
@@ -8,7 +9,7 @@ namespace Db4oDoc
     {
         public static void Main(string[] args)
         {
-            StoringStaticFields.Main(args);
+            SodaQueryExamples.Main(args);
             Console.Read();
         }
     }

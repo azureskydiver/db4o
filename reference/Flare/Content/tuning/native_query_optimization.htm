@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="2314" MadCap:lastWidth="424">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="2235" MadCap:lastWidth="393">
     <head><title>Native Query Optimization	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>
             <MadCap:keyword term="Optimization" />Native Query Optimization</h1>
-        <p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.htm">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_evaluations.htm">SODA Evaluations</a>. Naturally performance will not be as good in this case.</p><a name="Optimization Theory"></a>
+        <p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.htm">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_query.htm">SODA Evaluations</a>. Naturally performance will not be as good in this case.</p><a name="Optimization Theory"></a>
         <H2>Optimization Theory </H2>
         <p>For Native Query Java bytecode and .NET IL code are analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</p>
         <p>For example:</p>
