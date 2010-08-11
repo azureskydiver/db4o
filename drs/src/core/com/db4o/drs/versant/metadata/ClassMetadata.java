@@ -14,7 +14,7 @@ import com.db4o.internal.*;
  * ReplicationProvider until the monitored boolean is set, so we 
  * don't loose any events for the very first stored objects.
  */
-public class ClassMetadata {
+public class ClassMetadata extends CobraPersistentObject {
 	
 	private String name;
 	

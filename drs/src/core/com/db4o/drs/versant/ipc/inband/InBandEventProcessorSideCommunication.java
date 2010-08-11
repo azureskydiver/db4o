@@ -22,10 +22,9 @@ public class InBandEventProcessorSideCommunication implements EventProcessorSide
 	}
 
 	public void acknowledgeClassMetadataRegistration(String fullyQualifiedName) {
-		Long loid = _cobra.singleInstanceLoid(ClassMetadataAcknowledgement.class);
-		ClassMetadataAcknowledgement acknowledgment = _cobra.objectByLoid(loid);
+		ClassMetadataAcknowledgement acknowledgment = _cobra.singleInstance(ClassMetadataAcknowledgement.class);
 		acknowledgment.acknowledged(true);
-		_cobra.store(loid, acknowledgment);
+		_cobra.store(acknowledgment);
 		_cobra.commit();
 	}
 
@@ -36,8 +35,8 @@ public class InBandEventProcessorSideCommunication implements EventProcessorSide
 	public void registerIsolationRequestListener(Procedure4<IsolationMode> listener) {
 		// TODO 		
 	}
-
-	public void registerSyncRequestListener(final Block4 listener) {
+	
+	public void registerSyncRequestListener(final Procedure4<Long> listener) {
 		EventChannel channel = _client.produceClassChannel(TimestampSyncRequest.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
@@ -58,7 +57,8 @@ public class InBandEventProcessorSideCommunication implements EventProcessorSide
 					if(syncRequest.isAnswered()) {
 						return;
 					}
-					listener.run();
+					long newTimeStamp = syncRequest.forceSync() ? syncRequest.timestamp() : 0;
+					listener.apply(newTimeStamp);
 				}
 			}
 		});
@@ -66,10 +66,10 @@ public class InBandEventProcessorSideCommunication implements EventProcessorSide
 
 	public void sendTimestamp(long timestamp) {
 		synchronized(_lock) {
-			Long loid = _cobra.singleInstanceLoid(TimestampSyncRequest.class);
-			TimestampSyncRequest syncRequest = _cobra.objectByLoid(loid);
+			TimestampSyncRequest syncRequest = _cobra.singleInstance(TimestampSyncRequest.class);
 			syncRequest.timestamp(timestamp);
-			_cobra.store(loid, syncRequest);
+			syncRequest.answered(true);
+			_cobra.store(syncRequest);
 			_cobra.commit();
 		}
 	}

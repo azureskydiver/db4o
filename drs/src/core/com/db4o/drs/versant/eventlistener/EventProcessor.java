@@ -8,7 +8,6 @@ import java.util.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
@@ -56,7 +55,7 @@ public class EventProcessor {
 	
 	private Thread _commitThread = new Thread(_commitTimer);
 	
-	private long _timestampLoid;
+	private CommitTimestamp _commitTimestamp;
 	
 	private EventProcessorSideCommunication _comm;
 	
@@ -99,21 +98,16 @@ public class EventProcessor {
 	}
 
 	private void produceLastTimestamp() throws Exception {
-		Long timestampLoid = _cobra.singleInstanceLoid(CommitTimestamp.class);
-		if(timestampLoid == null) {
-	    	_timestampLoid = _cobra.store(new CommitTimestamp(0));
-	    	_cobra.commit();
-		}
-		else {
-    		_timestampLoid = timestampLoid;
-    		CommitTimestamp timestamp = timestamp();
-    		println("Timestamp read: " + timestamp.value());
-    		_timeStampIdGenerator.setMinimumNext(timestamp.value());
-		}
-	}
-
-	private CommitTimestamp timestamp() {
-		return _cobra.objectByLoid(_timestampLoid);
+		_commitTimestamp = _cobra.singleInstanceOrDefault(CommitTimestamp.class, new CommitTimestamp(0));
+		if(_commitTimestamp.value() == 0){
+			_cobra.store(_commitTimestamp);
+			_cobra.commit();
+			println("No CommitTimestamp found. Initializing.");
+			return;
+			
+		} 
+		println("Timestamp read: " + _commitTimestamp.value());
+		_timeStampIdGenerator.setMinimumNext(_commitTimestamp.value());
 	}
 
 	public static EventClient newEventClient(EventConfiguration config)  {
@@ -193,9 +187,12 @@ public class EventProcessor {
 	}
 
 	private void registerSyncRequestListener() {
-		_comm.registerSyncRequestListener(new Block4() {
-			public void run() {
-				_comm.sendTimestamp(timestamp().value());
+		_comm.registerSyncRequestListener(new Procedure4<Long>() {
+			public void apply(Long newTimeStamp) {
+				if(newTimeStamp > 0){
+					_timeStampIdGenerator.setMinimumNext(newTimeStamp);
+				}
+				_comm.sendTimestamp(_timeStampIdGenerator.last());
 			}
 		});
 	}
@@ -255,7 +252,8 @@ public class EventProcessor {
 	private void commit() {
 		synchronized(_lock){
 			if(_dirty){
-				_cobra.store(_timestampLoid, new CommitTimestamp(_timeStampIdGenerator.last()));
+				_commitTimestamp.value(_timeStampIdGenerator.last());
+				_cobra.store(_commitTimestamp);
 				_cobra.commit();
 				println(COMMIT_MESSAGE);
 				_dirty = false;
@@ -313,35 +311,6 @@ public class EventProcessor {
 		@Override
 		public String toString() {
 			return getClass().getSimpleName()+ ": " + _classLoid + ", " + _objectLoid + ", " + _operation;
-		}
-	}
-	
-	private class TimestampSyncRequestTask implements Block4 {
-		private String _loidString;
-		
-		private TimestampSyncRequestTask(String loidString) {
-			_loidString = loidString;
-		}
-		
-		public void run() {
-			long syncRequestLoid = VodCobra.loidAsLong(_loidString);
-			TimestampSyncRequest syncRequest = _cobra.objectByLoid(syncRequestLoid);
-			if(syncRequest.isAnswered()) {
-				return;
-			}
-			if(syncRequest.forceSync()){
-				_timeStampIdGenerator.setMinimumNext(syncRequest.timestamp());
-			}
-			CommitTimestamp timestamp = timestamp();
-			syncRequest.timestamp(timestamp.value());
-			syncRequest.answered(true);
-			_cobra.store(syncRequestLoid, syncRequest);
-			_cobra.commit();
-		}
-		
-		@Override
-		public String toString() {
-			return getClass().getSimpleName()+ ": " + _loidString;
 		}
 	}
 

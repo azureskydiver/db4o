@@ -2,13 +2,16 @@
 
 package com.db4o.drs.versant.ipc.inband;
 
-public class ClassMetadataAcknowledgement {
+import com.db4o.drs.versant.metadata.*;
+
+public class ClassMetadataAcknowledgement extends CobraPersistentObject{
+	
 	private String _fullyQualifiedName;
+	
 	private boolean _acknowledged;
 
-	public ClassMetadataAcknowledgement(String fullyQualifiedName, boolean acknowledged) {
+	public ClassMetadataAcknowledgement(String fullyQualifiedName) {
 		_fullyQualifiedName = fullyQualifiedName;
-		_acknowledged = acknowledged;
 	}
 	
 	public String fullyQualifiedName() {
