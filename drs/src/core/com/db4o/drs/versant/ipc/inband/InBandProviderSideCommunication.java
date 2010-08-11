@@ -84,7 +84,7 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 		int millisecondsBetweenRetries = 50;
 		boolean changed = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
 			public Boolean run() {
-				peeked.value = _cobra.objectByLoid(peeked.value.loid());
+				peeked.value = _cobra.<T>objectByLoid(peeked.value.loid());
 				return modifiedCheck.apply(peeked.value);
 			}
 		});

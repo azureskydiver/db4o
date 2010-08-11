@@ -227,7 +227,7 @@ public class VodCobra implements QLinable{
 		if(loid == INVALID_LOID){
 			return defaultValue;
 		}
-		return objectByLoid(loid);
+		return this.<T>objectByLoid(loid);
 	}
 	
 	public <T> T singleInstance(Class<T> extent){
@@ -235,7 +235,7 @@ public class VodCobra implements QLinable{
 		if(loid == INVALID_LOID){
 			throw new IllegalStateException("No object of " + extent + " stored" );
 		}
-		return objectByLoid(loid);
+		return this.<T>objectByLoid(loid);
 	}
 	
 	private <T> long singleInstanceLoid(Class<T> extent) {
