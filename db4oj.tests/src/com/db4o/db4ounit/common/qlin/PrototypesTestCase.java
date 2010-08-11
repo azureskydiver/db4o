@@ -3,9 +3,7 @@
 package com.db4o.db4ounit.common.qlin;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.qlin.*;
-import com.db4o.reflect.generic.*;
 
 import db4ounit.*;
 
@@ -19,9 +17,12 @@ public class PrototypesTestCase implements TestLifeCycle {
 	
 	public static class Item {
 		
+		
 		public Item _child;
 		
 		public String _name;
+		
+		public int myInt;
 		
 		public String name(){
 			return _name;
@@ -29,6 +30,15 @@ public class PrototypesTestCase implements TestLifeCycle {
 		
 		public Item child(){
 			return _child;
+		}
+		
+		@Override
+		public String toString() {
+			String str = "Item " + _name;
+			if(_child != null){
+				str += "\n  " + _child.toString();
+			}
+			return str;
 		}
 		
 	}
@@ -89,16 +99,19 @@ public class PrototypesTestCase implements TestLifeCycle {
 	}
 
 	private <T> void assertPath(T t, Object expression, String... expected) {
-		Iterator4Assert.areEqual(expected, _prototypes.backingFieldPath(t.getClass(), expression));
+		Iterator4<String> path = _prototypes.backingFieldPath(t.getClass(), expression);
+		// print(Iterators.join(path, "[", "]", ", "));
+		path.reset();
+		Iterator4Assert.areEqual(expected, path);
 	}
 
 	private <T> T prototype(Class<T> clazz) {
-		return _prototypes.forClass(clazz);
+		return _prototypes.prototypeForClass(clazz);
 	}
 
 
 	public void setUp() throws Exception {
-		_prototypes = new Prototypes(new GenericReflector(Platform4.reflectorForType(Item.class)), RECURSION_DEPTH, IGNORE_TRANSIENT_FIELDS);
+		_prototypes = new Prototypes(Prototypes.defaultReflector(), RECURSION_DEPTH, IGNORE_TRANSIENT_FIELDS);
 	}
 
 	public void tearDown() throws Exception {
@@ -107,6 +120,6 @@ public class PrototypesTestCase implements TestLifeCycle {
 	
 	private static final boolean IGNORE_TRANSIENT_FIELDS = true;
 	
-	private static final int RECURSION_DEPTH = 4;
+	private static final int RECURSION_DEPTH = 10;
 	
 }
