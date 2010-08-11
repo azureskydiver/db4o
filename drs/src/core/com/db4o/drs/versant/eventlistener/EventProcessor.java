@@ -5,6 +5,7 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.util.*;
 
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
@@ -25,9 +26,7 @@ public class EventProcessor {
 
 	private final int COMMIT_INTERVAL = 1000; // 1 sec
 	
-	private final EventConfiguration _eventConfiguration;
-	
-	private final PrintStream _out;
+	private final LinePrinter _out;
 	
 	private final VodEventClient _client;
 	
@@ -59,21 +58,12 @@ public class EventProcessor {
 	
 	private EventProcessorSideCommunication _comm;
 	
-	public EventProcessor(VodEventClient client, EventConfiguration eventConfiguration, PrintStream out, VodCobra cobra, EventProcessorSideCommunication comm, Object lock)  {
-		_lock = lock;
+	public EventProcessor(VodEventClient client, LinePrinter out, VodCobra cobra, EventProcessorSideCommunication comm, Object lock)  {
 		
-		_eventConfiguration = eventConfiguration;
+		_lock = lock;
 		_out = out;
 		_comm = comm;
-		
 		_client = client;
-		
-//		_client = new VodEventClient(eventConfiguration, new ExceptionListener (){
-//	        public void exceptionOccurred (Throwable exception){
-//	        	EventProcessor.unrecoverableExceptionOccurred(exception);
-//	        }
-//	    });
-	    
 	    _cobra = cobra;
 	    
 	    synchronized(_lock){
@@ -123,7 +113,7 @@ public class EventProcessor {
 	public void run() {
 	    registerClassMetadataListener();
 	    registerSyncRequestListener();
-	    println(LISTENING_MESSAGE + _eventConfiguration.databaseName);
+	    println(LISTENING_MESSAGE + _cobra.databaseName());
 	    taskQueueProcessorLoop();
 		shutdown();
 	}
@@ -222,9 +212,6 @@ public class EventProcessor {
 	}
 
 	private synchronized void println(String msg) {
-		if(! _eventConfiguration.verbose){
-			return;
-		}
 		synchronized (_lock) {
 			_out.println(msg);
 			if(DrsDebug.verbose){

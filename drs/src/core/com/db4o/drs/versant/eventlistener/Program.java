@@ -7,10 +7,8 @@ import java.io.*;
 
 import org.apache.commons.cli.*;
 
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
-import com.versant.event.*;
 
 import static com.db4o.drs.versant.eventlistener.Program.Arguments.*;
 
@@ -36,7 +34,6 @@ public class Program {
 		public static final String CLIENT_PORT = "clientport";
 		
 	}
-
 	
 	public static void main(String[] args) throws IOException {
 		new Program(args);
@@ -48,15 +45,8 @@ public class Program {
 		if(! parseArguments(args)){
 			return;
 		}
-		VodCobra cobra = new VodCobra(new VodDatabase(_eventConfiguration.databaseName));
-		VodEventClient client = new VodEventClient(_eventConfiguration, new ExceptionListener (){
-	        public void exceptionOccurred (Throwable exception){
-	        	EventProcessor.unrecoverableExceptionOccurred(exception);
-	        }
-	    });
-		Object lock = new Object();
-		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
-		new EventProcessor(client, _eventConfiguration, System.out, cobra, comm, lock).run();
+		LinePrinter linePrinter = _eventConfiguration.verbose ? LinePrinter.forPrintStream(System.out) : LinePrinter.NULL_PRINTER;
+		EventProcessorFactory.newInstance(_eventConfiguration, linePrinter).run();
 	}
 	
 	private boolean parseArguments(String[] args) {

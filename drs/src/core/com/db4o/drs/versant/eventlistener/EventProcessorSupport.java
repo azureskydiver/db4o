@@ -4,15 +4,11 @@ package com.db4o.drs.versant.eventlistener;
 
 import java.io.*;
 
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.foundation.*;
-import com.versant.event.*;
 
-/**
- * @exclude
- */
+
 public class EventProcessorSupport {
 	
 	private final Thread _eventProcessorThread;
@@ -22,17 +18,15 @@ public class EventProcessorSupport {
 	private final ByteArrayOutputStream _byteOut;
 
 	public EventProcessorSupport(EventConfiguration eventConfiguration) {
+		
+		// TODO: Not sure is the ByteArrayOutputStream approach scales for
+		// large number of objects.
+		// The ByteArrayOutputStream could bloat memory.
+		// So far we only reset on the waitForOutput.
 		_byteOut = new ByteArrayOutputStream();
 		PrintStream printOut = new PrintStream(_byteOut);
-		VodCobra cobra = new VodCobra(new VodDatabase(eventConfiguration.databaseName));
-		VodEventClient client = new VodEventClient(eventConfiguration, new ExceptionListener (){
-	        public void exceptionOccurred (Throwable exception){
-	        	EventProcessor.unrecoverableExceptionOccurred(exception);
-	        }
-	    });
-		Object lock = new Object();
-		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
-		_eventProcessor = new EventProcessor(client, eventConfiguration, printOut, cobra, comm, lock);
+		
+		_eventProcessor = EventProcessorFactory.newInstance(eventConfiguration, LinePrinter.forPrintStream(printOut));
 		_eventProcessorThread = new Thread(new Runnable() {
 			public void run() {
 				_eventProcessor.run();

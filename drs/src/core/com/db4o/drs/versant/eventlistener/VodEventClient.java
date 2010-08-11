@@ -9,8 +9,8 @@ import com.db4o.drs.versant.*;
 import com.versant.event.*;
 
 public class VodEventClient {
+	
 	private final EventClient _client;
-	private boolean _closed = false;
 	
 	public VodEventClient(EventConfiguration eventConfiguration, ExceptionListener exceptionListener) {
 		_client = EventProcessor.newEventClient(eventConfiguration);
@@ -49,9 +49,6 @@ public class VodEventClient {
 	}
 
 	public void shutdown() {
-		if(_closed) {
-			return;
-		}
 		_client.shutdown();
 	}
 
