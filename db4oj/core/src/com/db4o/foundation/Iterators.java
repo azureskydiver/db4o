@@ -157,6 +157,27 @@ public class Iterators {
 		return new ArrayIterator4(array);
 	}
 
+	public static <T> Iterator4 invert(Iterator4<T> iterator) {
+		iterator.reset();
+		List4 tail = null;
+		while(iterator.moveNext()){
+			tail = new List4<T>(tail, iterator.current());
+		}
+		return iterate(tail);
+	}
+	
+	public static <T> Iterator4 iterate(List4 list) {
+		if(list == null){
+			return EMPTY_ITERATOR;
+		}
+		Collection4 collection = new Collection4();
+		while(list != null){
+			collection.add(list._element);
+			list = list._next;
+		}
+		return collection.iterator();
+	}
+
 	public static int size(Iterable4 iterable) {
 		return size(iterable.iterator());
 	}

@@ -29,6 +29,7 @@ public abstract class QLinNode <T> implements QLin<T> {
 	
 	public T singleOrDefault(T defaultValue){
 		ObjectSet<T> collection = select();
+		// TODO: Change to #isEmpty here after decafs, so the size doesn#t need to be calculated
 		if(collection.size() == 0){
 			return defaultValue;
 		}
@@ -42,7 +43,19 @@ public abstract class QLinNode <T> implements QLin<T> {
 		// a collection but for now it won't decaf.
 		// return collection.iterator().next();
 		
-		// This is the ugly old 
+		// This is the ugly old db4o interface, where a Collection is
+		// an iterator directly. For now it's convenient but we don't
+		// really want to use this in the future.
+		
+		// Update #single() in the same way.
+		return collection.next();
+	}
+	
+	public T single(){
+		ObjectSet<T> collection = select();
+		if(collection.size() != 1){
+			throw new QLinException("Expected exactly one. Found: " + collection.size());
+		}
 		return collection.next();
 	}
 
