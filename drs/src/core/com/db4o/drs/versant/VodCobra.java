@@ -17,6 +17,8 @@ import com.versant.odbms.query.*;
 
 public class VodCobra implements QLinable{
 	
+	private static final long INVALID_LOID = 0L;
+	
 	private DatastoreManager _dm;
 
 	public VodCobra(VodDatabase vod) {
@@ -63,7 +65,11 @@ public class VodCobra implements QLinable{
 		DatastoreObject datastoreObject = newDatastoreObject(obj.getClass());
 		writeFields(obj, datastoreObject);
 		write(datastoreObject);
-		return datastoreObject.getLOID();
+		long loid = datastoreObject.getLOID();
+		if(obj instanceof CobraPersistentObject){
+			((CobraPersistentObject)obj).loid(loid);
+		}
+		return loid;
 	}
 
 	private void writeFields(Object obj, DatastoreObject datastoreObject) {
@@ -216,12 +222,27 @@ public class VodCobra implements QLinable{
 		return cobraFields;
 	}
 	
-	public <T> Long singleInstanceLoid(Class<T> extent) {
+	public <T> T singleInstanceOrDefault(Class<T> extent, T defaultValue){
+		long loid = singleInstanceLoid(extent);
+		if(loid == INVALID_LOID){
+			return defaultValue;
+		}
+		return objectByLoid(loid);
+	}
+	
+	public <T> T singleInstance(Class<T> extent){
+		long loid = singleInstanceLoid(extent);
+		if(loid == INVALID_LOID){
+			throw new IllegalStateException("No object of " + extent + " stored" );
+		}
+		return objectByLoid(loid);
+	}
+	
+	private <T> long singleInstanceLoid(Class<T> extent) {
 		Collection<Long> loids = loids(extent);
-	    
 	    switch(loids.size()){
 	    	case 0:
-		    	return null;
+		    	return INVALID_LOID;
 	    	case 1:
 	    		return loids.iterator().next();
 	    	default:
@@ -241,10 +262,15 @@ public class VodCobra implements QLinable{
 		}
 
 		public void write(Object obj, DatastoreObject datastoreObject) {
+			Object fieldValue = Reflection4.getFieldValue(obj, name());
 			if(isCobraPersitentObject()){
-				datastoreObject.writeObject(_datastoreSchemaField, store(obj));
+				if(fieldValue == null){
+					datastoreObject.writeObject(_datastoreSchemaField, 0);
+				} else {
+					datastoreObject.writeObject(_datastoreSchemaField, store(fieldValue));
+				}
 			} else {
-				datastoreObject.writeObject(_datastoreSchemaField, Reflection4.getFieldValue(obj, name()));
+				datastoreObject.writeObject(_datastoreSchemaField, fieldValue);
 			}
 		}
 		
@@ -261,7 +287,14 @@ public class VodCobra implements QLinable{
 				return;
 			}
 			try {
-				_field.set(obj, datastoreObject.readObject(_datastoreSchemaField));
+				Object readObject = datastoreObject.readObject(_datastoreSchemaField);
+				if(isCobraPersitentObject()){
+					Long loid = (Long)readObject;
+					if(loid > 0){
+						readObject = objectByLoid(loid);
+					}
+				}
+				_field.set(obj, readObject);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

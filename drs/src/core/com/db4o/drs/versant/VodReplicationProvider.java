@@ -4,6 +4,8 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
+import static com.db4o.qlin.QLinSupport.*;
+
 import javax.jdo.spi.*;
 
 import com.db4o.*;
@@ -260,7 +262,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private DatabaseSignature databaseSignature(int databaseId) {
-		return _jdo.queryOne(DatabaseSignature.class, "this.databaseId == " + databaseId);
+		DatabaseSignature sig = prototype(DatabaseSignature.class);
+		return _cobra.from(DatabaseSignature.class).where(sig.databaseId()).equal(databaseId).single();
 	}
 
 	public void storeReplica(Object obj) {

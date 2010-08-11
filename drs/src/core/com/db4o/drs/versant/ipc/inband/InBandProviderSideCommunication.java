@@ -19,16 +19,13 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 		if(DISABLE_ISOLATION) {
 			return;
 		}
-		Long loid = _cobra.singleInstanceLoid(IsolationModeRequest.class);
-		IsolationModeRequest isolationRequest;
-		if(loid == null){
-			isolationRequest = new IsolationModeRequest(isolationMode);
-		} else {
-			isolationRequest = (IsolationModeRequest)_cobra.objectByLoid(loid);
-		}
+		IsolationModeRequest isolationRequest = 
+			_cobra.singleInstanceOrDefault(
+					IsolationModeRequest.class, 
+					new IsolationModeRequest(isolationMode));
 		isolationRequest.isolationMode(isolationMode);
 		isolationRequest.isResponse(false);
-		IsolationModeRequest response = ensureStoreChanged(isolationRequest, loid, new Function4<IsolationModeRequest, Boolean>() {
+		IsolationModeRequest response = ensureStoreChanged(isolationRequest, new Function4<IsolationModeRequest, Boolean>() {
 			public Boolean apply(IsolationModeRequest isolationRequest) {
 				return isolationRequest.isResponse();
 			}
@@ -47,18 +44,12 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 	}
 
 	private long sendTimestampSync(boolean forceSync, long myTimeStamp) {
-		Long loid = _cobra.singleInstanceLoid(TimestampSyncRequest.class);
-		TimestampSyncRequest syncRequest;
-		if(loid == null){
-			syncRequest = new TimestampSyncRequest();
-			loid = 0L;
-		} else {
-			syncRequest = (TimestampSyncRequest)_cobra.objectByLoid(loid);
-		}
+		TimestampSyncRequest syncRequest = 
+			_cobra.singleInstanceOrDefault(TimestampSyncRequest.class,new TimestampSyncRequest());
 		syncRequest.resetForRequest();
 		syncRequest.timestamp(myTimeStamp);
-		syncRequest.forceSync(forceSync);
-		TimestampSyncRequest response = ensureStoreChanged(syncRequest, loid, new Function4<TimestampSyncRequest, Boolean>() {
+		syncRequest.forceSync(true);
+		TimestampSyncRequest response = ensureStoreChanged(syncRequest, new Function4<TimestampSyncRequest, Boolean>() {
 			public Boolean apply(TimestampSyncRequest syncRequest) {
 				return syncRequest.isAnswered();
 			}
@@ -70,15 +61,12 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 	}
 
 	public void waitForClassMetadataAcknowledgment(String fullyQualifiedName) {
-		Long loid = _cobra.singleInstanceLoid(ClassMetadataAcknowledgement.class);
-		ClassMetadataAcknowledgement acknowledgement;
-		if(loid == null){
-			acknowledgement = new ClassMetadataAcknowledgement(fullyQualifiedName, false);
-			loid = 0L;
-		} else {
-			acknowledgement = (ClassMetadataAcknowledgement)_cobra.objectByLoid(loid);
-		}
-		ClassMetadataAcknowledgement response = ensureStoreChanged(acknowledgement, loid, new Function4<ClassMetadataAcknowledgement, Boolean>() {
+		ClassMetadataAcknowledgement acknowledgement = 
+			_cobra.singleInstanceOrDefault(
+					ClassMetadataAcknowledgement.class, 
+					new ClassMetadataAcknowledgement(fullyQualifiedName));
+		acknowledgement.acknowledged(false);
+		ClassMetadataAcknowledgement response = ensureStoreChanged(acknowledgement, new Function4<ClassMetadataAcknowledgement, Boolean>() {
 			public Boolean apply(ClassMetadataAcknowledgement acknowledgement) {
 				return acknowledgement.acknowledged();
 			}
@@ -88,20 +76,15 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 		}
 	}
 
-	private <T> T ensureStoreChanged(T obj, long loid, final Function4<T, Boolean> modifiedCheck) {
-		if(loid == 0){
-			loid = _cobra.store(obj);
-		} else {
-			_cobra.store(loid, obj);
-		}
+	private <T extends CobraPersistentObject> T ensureStoreChanged(T obj, final Function4<T, Boolean> modifiedCheck) {
+		_cobra.store(obj);
 		_cobra.commit();
-		final long finalLoid = loid;
 		final ByRef<T> peeked = ByRef.newInstance(obj);
 		int timeoutInMillis = 10000;
 		int millisecondsBetweenRetries = 50;
 		boolean changed = Runtime4.retry(timeoutInMillis, millisecondsBetweenRetries, new Closure4<Boolean>() {
 			public Boolean run() {
-				peeked.value = _cobra.objectByLoid(finalLoid);
+				peeked.value = _cobra.objectByLoid(peeked.value.loid());
 				return modifiedCheck.apply(peeked.value);
 			}
 		});

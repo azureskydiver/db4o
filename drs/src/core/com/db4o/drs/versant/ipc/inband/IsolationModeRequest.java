@@ -4,8 +4,10 @@ package com.db4o.drs.versant.ipc.inband;
 
 import com.db4o.drs.versant.metadata.*;
 
-public class IsolationModeRequest {
+public class IsolationModeRequest extends CobraPersistentObject {
+	
 	private IsolationMode _isolationMode;
+	
 	private boolean _isResponse;
 	
 	public IsolationModeRequest(IsolationMode isolationMode) {

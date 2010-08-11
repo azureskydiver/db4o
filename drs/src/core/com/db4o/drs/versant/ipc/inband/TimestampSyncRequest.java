@@ -2,7 +2,9 @@
 
 package com.db4o.drs.versant.ipc.inband;
 
-public class TimestampSyncRequest {
+import com.db4o.drs.versant.metadata.*;
+
+public class TimestampSyncRequest extends CobraPersistentObject{
 	
 	private long _timestamp;
 	

@@ -2,7 +2,7 @@
 
 package com.db4o.drs.versant.metadata;
 
-public class CommitTimestamp {
+public class CommitTimestamp extends CobraPersistentObject {
 	
 	private long timestamp;
 	
@@ -13,7 +13,6 @@ public class CommitTimestamp {
 	public CommitTimestamp(long timestamp){
 		this.timestamp = timestamp;
 	}
-
 	
 	@Override
 	public String toString() {
@@ -22,6 +21,10 @@ public class CommitTimestamp {
 
 	public long value() {
 		return timestamp;
+	}
+	
+	public void value(long timestamp){
+		this.timestamp = timestamp;
 	}
 
 }

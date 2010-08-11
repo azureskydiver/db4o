@@ -13,5 +13,10 @@ public abstract class CobraPersistentObject {
 	public void loid(long loid){
 		_loid = loid;
 	}
+	
+	@Override
+	public String toString() {
+		return getClass().getName() + " : (" + _loid + ")";
+	}
 
 }
