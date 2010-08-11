@@ -196,7 +196,7 @@ public class Prototypes {
 		}
 		
 		private Iterator4 <String> asIterator(List4 lastElement){
-			return Iterators.invert(
+			return Iterators.revert(
 					Iterators.map(Iterators.iterate(lastElement), 
 							new Function4<ReflectField, String>() {
 								public String apply(ReflectField field) {

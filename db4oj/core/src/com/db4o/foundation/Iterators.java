@@ -157,7 +157,7 @@ public class Iterators {
 		return new ArrayIterator4(array);
 	}
 
-	public static <T> Iterator4 invert(Iterator4<T> iterator) {
+	public static <T> Iterator4 revert(Iterator4<T> iterator) {
 		iterator.reset();
 		List4 tail = null;
 		while(iterator.moveNext()){
