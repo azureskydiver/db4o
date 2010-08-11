@@ -19,9 +19,12 @@ public class VodCobra implements QLinable{
 	
 	private static final long INVALID_LOID = 0L;
 	
+	private final VodDatabase _vod;
+	
 	private DatastoreManager _dm;
 
 	public VodCobra(VodDatabase vod) {
+		_vod = vod;
 		_dm = vod.createDatastoreManager();
 		_dm.beginTransaction();
 	}
@@ -312,6 +315,10 @@ public class VodCobra implements QLinable{
 	
 	public short databaseId(){
 		return _dm.getDefaultDatastore().getDBID();	
+	}
+	
+	public String databaseName(){
+		return _vod.databaseName();
 	}
 
 }
