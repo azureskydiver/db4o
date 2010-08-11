@@ -4,6 +4,8 @@ package com.db4o.db4ounit.common.qlin;
 
 import java.util.*;
 
+import com.db4o.*;
+
 import static com.db4o.qlin.QLinSupport.*;
 
 import db4ounit.*;
@@ -112,6 +114,68 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeC
 		assertQuery(occam(), cat, "Occam");
 	}
 	
+	public void testTwoLevelField(){
+		storeAll(occamZoraAchatAcrobat());
+		
+	}
+	
+	public void testWhereAsNativeQuery(){
+		storeAll(occamAndZora());
+		Cat cat = prototype(Cat.class);
+//		IteratorAssert.sameContent(occam(),
+//			db().from(Cat.class)
+//				.where(cat.name().equals("Occam"))
+//				.select());
+	}
+	
+	public void testUpdate(){
+		storeAll(occamZoraAchatAcrobat());
+		int newAge = 2; 
+		Cat cat = prototype(Cat.class);
+//		db().from(Cat.class)
+//		   .where(cat.father()).equal("Occam")
+//		   .update(cat.age(newAge));
+		
+		ObjectSet<Cat> updated = db().from(Cat.class)
+		.where(cat.name()).equal("Occam")
+		.select();
+		Iterator<Cat> i = updated.iterator();
+//		while(i.hasNext()){
+//			Assert.areEqual(newAge, i.next().age());
+//		}
+	}
+	
+	public void testExecute(){
+		storeAll(occamZoraAchatAcrobat());
+		Cat cat = prototype(Cat.class);
+//		db().from(Cat.class)
+//		  .where(cat.name()).startsWith("Zor")
+//		  .execute(cat.feed());
+	}
+	
+	
+	private List<Cat> occamZoraAchatAcrobat() {
+		return family(
+				new Cat("Occam", 7), 
+				new Cat("Zora", 6), 
+				new Cat("Achat", 1), 
+				new Cat("Acrobat", 1));
+	}
+	
+	private List<Cat> family(Cat father, Cat mother, Cat...children){
+		List<Cat> list = new ArrayList<Cat>();
+		list.add(father);
+		list.add(mother);
+		for (Cat child : children) {
+			child.father = father;
+			child.mother = mother;
+			father.children.add(child);
+			mother.children.add(child);
+		}
+		father.spouse(mother);
+		return list;
+	}
+
 	public void assertQuery(List<? extends Pet> expected, Pet pet, String name){
 		IteratorAssert.sameContent(expected, 
 				db().from(pet.getClass())
@@ -179,6 +243,8 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeC
 		
 		public Cat mother;
 		
+		public List<Cat> children = new ArrayList();
+		
 		public Cat(String name){
 			this.name = name;
 		}
@@ -196,6 +262,14 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeC
 			this.spouse = spouse;
 			spouse.spouse = this;
 		}
+		
+		public Cat father(){
+			return father;
+		}
+		
+		public Cat mother(){
+			return mother;
+		}
 
 		@Override
 		public boolean equals(Object obj) {
@@ -211,6 +285,14 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeC
 		
 		public int age(){
 			return age;
+		}
+		
+		public void age(int newAge){
+			age = newAge;
+		}
+		
+		public void feed(){
+			System.out.println(name + ": 'Thanks for all the fish.'");
 		}
 		
 	}
