@@ -29,10 +29,12 @@ public class AllTests extends ReflectionTestSuite {
 	}
 
 	protected Class[] testCases() {
-		return new Class[] { 
+		return new Class[] {
+			Logger4TestCase.class,
 			ObjectSetCollection4FacadeTestCase.class,
 			Set4Testcase.class,
 			SignatureTestCase.class,
+			StackAnalyzerTestCase.class,
 		};
 	}
 

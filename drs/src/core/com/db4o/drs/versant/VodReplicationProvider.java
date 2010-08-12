@@ -5,6 +5,7 @@ package com.db4o.drs.versant;
 import java.util.*;
 
 import static com.db4o.qlin.QLinSupport.*;
+import static com.db4o.drs.foundation.Logger4Support.*;
 
 import javax.jdo.spi.*;
 
@@ -97,6 +98,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void storeNew(Object obj) {
+		logIdentity(obj, getName());
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
@@ -235,7 +237,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		Signature peerSignature = new Signature(peer.getSignature());
 		int peerId = _signatures.idFor(peerSignature);
 		if(peerId == 0){
-			peerId = _jvi.newDbId(peerSignature.toString());
+			peerId = _jvi.newDbId( peerSignature.toString() );
 			storeSignature(peerId, peerSignature);
 			_signatures.add(peerId, peerSignature);
 		}
@@ -267,6 +269,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void storeReplica(Object obj) {
+		logIdentity(obj, getName());
 		// TODO Auto-generated method stub
 		throw new com.db4o.foundation.NotImplementedException();
 	}

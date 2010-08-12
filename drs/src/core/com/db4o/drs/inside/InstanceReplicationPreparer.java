@@ -20,6 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
+import static com.db4o.drs.foundation.Logger4Support.*;
+
 import com.db4o.drs.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.traversal.*;
@@ -89,6 +91,8 @@ class InstanceReplicationPreparer implements Visitor {
 	
 	private boolean prepareObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) {
 		//TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
+		
+		logIdentity(obj);
 
 		_obj = obj;
 		_referencingObject = referencingObject;

@@ -20,6 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.db4o;
 
+import static com.db4o.drs.foundation.Logger4Support.*;
+
 import java.util.*;
 
 import com.db4o.ObjectContainer;
@@ -175,6 +177,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void storeReplica(Object obj) {
+		logIdentity(obj, getName());
 		synchronized (lock()) {
 			_container.storeByNewReplication(this, obj);
 			_idsReplicatedInThisSession = 
@@ -325,6 +328,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void storeNew(Object o) {
+		logIdentity(o, getName());
 		_container.store(o);
 	}
 

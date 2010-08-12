@@ -57,7 +57,7 @@ public class VodJvi {
 		return (short) dbid;
 	}
 
-	private String ensureAllCharactersArePrintable(String databaseName) {
+	public static String ensureAllCharactersArePrintable(String databaseName) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < databaseName.length(); i++) {
 			char c = databaseName.charAt(i);
