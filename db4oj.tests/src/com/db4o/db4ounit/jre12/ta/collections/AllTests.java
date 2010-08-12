@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
         return new Class[]{
             TAArrayListTestCase.class,
             TAMapTestCase.class,
+            TPCollectionUpdateFieldIndexConsistencyTestCase.class,
         };
     }
 
