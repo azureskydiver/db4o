@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.ta;
 
-import java.util.*;
-
 import com.db4o.*;
 import com.db4o.activation.*;
 import com.db4o.config.*;
@@ -15,9 +13,9 @@ import com.db4o.ta.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class TPFieldIndexConsistencyTestCase extends AbstractDb4oTestCase {
+public abstract class TPFieldIndexConsistencyTestCaseBase extends AbstractDb4oTestCase {
 
-	private static final String ID_FIELD_NAME = "_id";
+	protected static final String ID_FIELD_NAME = "_id";
 
 	public static class Item implements Activatable {
 		public int _id;
@@ -51,51 +49,19 @@ public class TPFieldIndexConsistencyTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	@decaf.Ignore(decaf.Platform.JDK11)
-	public static class Holder {
-		public List<Item> _items = new com.db4o.collections.ActivatableArrayList<Item>();
-		
-		public void add(Item item) {
-			_items.add(item);
-		}
-	}
-	
 	@Override
 	protected void configure(Configuration config) throws Exception {
 		config.add(new TransparentPersistenceSupport());
 		config.objectClass(Item.class).objectField(ID_FIELD_NAME).indexed(true);
 	}
 	
-	@decaf.Ignore(decaf.Platform.JDK11)
-	public void testImplicitStoreThroughCollection() {
-		int id = 42;
-		Item item = new Item(id);
-		Holder holder = new Holder();
-		store(item);
-		store(holder);
-		holder.add(item);
-		assertItemQuery(id);
-		commit();
-		assertFieldIndex(id);
-	}
-	
-	public void testExplicitStore() {
-		int id = 42;
-		Item item = new Item(id);
-		store(item);
-		store(item);
-		assertItemQuery(id);
-		commit();
-		assertFieldIndex(id);
-	}
-
-	private void assertFieldIndex(int id) {
+	protected void assertFieldIndex(int id) {
 		FieldMetadata field = fileSession().classMetadataForName(Item.class.getName()).fieldMetadataForName(ID_FIELD_NAME);
 		BTreeRange indexRange = field.search(trans(), id);
 		Assert.areEqual(1, indexRange.size());
 	}
 
-	private void assertItemQuery(int id) {
+	protected void assertItemQuery(int id) {
 		Query query = newQuery(Item.class);
 		query.descend(ID_FIELD_NAME).constrain(id);
 		ObjectSet<Item> result = query.execute();
