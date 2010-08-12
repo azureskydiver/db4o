@@ -290,10 +290,18 @@ public class MarshallingContext implements MarshallingInfo, WriteContext {
     public void addIndexEntry(FieldMetadata fieldMetadata, Object obj) {
         if(! _currentBuffer.hasParent()){
             Object indexEntry = (obj == _currentMarshalledObject) ? _currentIndexEntry : obj; 
-            fieldMetadata.addIndexEntry(transaction(), objectID(), indexEntry);
+            if(_isNew || !updateDepth().canSkip(_reference)) {
+            	fieldMetadata.addIndexEntry(transaction(), objectID(), indexEntry);
+            }
             return;
         }
         _currentBuffer.requestIndexEntry(fieldMetadata);
+    }
+    
+    public void purgeFieldIndexEntriesOnUpdate(Transaction transaction, ArrayType arrayType) {
+		if(!updateDepth().canSkip(_reference)) {
+			transaction.writeUpdateAdjustIndexes(_reference.getID(), _reference.classMetadata(), arrayType);
+		}
     }
     
     public ObjectReference reference(){
