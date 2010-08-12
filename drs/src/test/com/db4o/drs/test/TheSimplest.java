@@ -40,32 +40,7 @@ public class TheSimplest extends DrsTestCase {
 		modifyInA();
 		replicate3();
 	}
-
-	private void replicate3() {
-		replicateClass(a().provider(), b().provider(), SPCChild.class);
-
-		ensureNames(a(), "c3");
-		ensureNames(b(), "c3");
-	}
-
-	private void modifyInA() {
-		SPCChild child = getTheObject(a());
-
-		child.setName("c3");
-
-		a().provider().update(child);
-		a().provider().commit();
-
-		ensureNames(a(), "c3");
-	}
-
-	private void replicate2() {
-		replicateAll(b().provider(), a().provider());
-
-		ensureNames(a(), "c2");
-		ensureNames(b(), "c2");
-	}
-
+	
 	private void storeInA() {
 		String name = "c1";
 		SPCChild child = createChildObject(name);
@@ -75,11 +50,7 @@ public class TheSimplest extends DrsTestCase {
 		
 		ensureNames(a(), "c1");
 	}
-
-	protected SPCChild createChildObject(String name) {
-		return new SPCChild(name);
-	}
-		
+	
 	private void replicate() {
 		replicateAll(a().provider(), b().provider());
 
@@ -96,13 +67,42 @@ public class TheSimplest extends DrsTestCase {
 
 		ensureNames(b(), "c2");
 	}
+
+	private void replicate2() {
+		replicateAll(b().provider(), a().provider());
+
+		ensureNames(a(), "c2");
+		ensureNames(b(), "c2");
+	}
+
+	private void modifyInA() {
+		SPCChild child = getTheObject(a());
+
+		child.setName("c3");
+
+		a().provider().update(child);
+		a().provider().commit();
+
+		ensureNames(a(), "c3");
+	}
+
+
+	private void replicate3() {
+		replicateClass(a().provider(), b().provider(), SPCChild.class);
+
+		ensureNames(a(), "c3");
+		ensureNames(b(), "c3");
+	}
+
+	protected SPCChild createChildObject(String name) {
+		return new SPCChild(name);
+	}
 	
 	private void ensureNames(DrsFixture fixture, String childName) {
 		ensureOneInstance(fixture, SPCChild.class);
 		SPCChild child = getTheObject(fixture);
 		Assert.areEqual(childName,child.getName());
 	}
-
 
 	private SPCChild getTheObject(DrsFixture fixture) {
 		return (SPCChild) getOneInstance(fixture, SPCChild.class);
