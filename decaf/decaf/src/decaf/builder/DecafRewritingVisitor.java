@@ -5,6 +5,10 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import static sharpen.core.framework.BindingUtils.*;
+
+import static sharpen.core.framework.StaticImports.*;
+
 import sharpen.core.framework.*;
 import decaf.core.*;
 
@@ -351,16 +355,15 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 	}
 
 	private boolean mapNameOfStaticMethodInvocation(SimpleName node) {
-		if (node.getLocationInParent() != MethodInvocation.NAME_PROPERTY)
-			return false;
+		return mapNameOfStaticMethodInvocation(node, builder().compilationUnit().imports());
+	}
+
+	private boolean mapNameOfStaticMethodInvocation(SimpleName node, List imports ) {
 		
-		final MethodInvocation invocation = parentMethodInvocation(node);
-		if (invocation.getExpression() != null)
+		final IMethodBinding method = staticImportMethodBinding(node, imports);
+		if(method == null){
 			return false;
-		
-		final IMethodBinding method = invocation.resolveMethodBinding();
-		if (!isStaticImport(method))
-			return false;
+		}
 		
 		rewrite().replace(node, 
 				builder().newQualifiedName(BindingUtils.qualifiedName(method)));
@@ -368,31 +371,7 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 		return true;
 	}
 
-	private boolean isStaticImport(IMethodBinding method) {
-		if (!isStatic(method))
-			return false;
-		
-		for (Object imp : builder().compilationUnit().imports())
-			if (isStaticMethodImport((ImportDeclaration) imp, method))
-				return true;
-		
-		return false;
-	}
 
-	private boolean isStaticMethodImport(ImportDeclaration imp, IMethodBinding method) {
-		final IBinding binding = imp.resolveBinding();
-		switch (binding.getKind()) {
-		case IBinding.TYPE:
-			return imp.isOnDemand() && method.getDeclaringClass() == binding;
-		case IBinding.METHOD:
-			return binding == method.getMethodDeclaration();
-		}
-		return false;
-	}
-
-	private MethodInvocation parentMethodInvocation(SimpleName node) {
-		return ((MethodInvocation)node.getParent());
-	}
 
 	private boolean mapStaticInvocationClassName(Name node) {
 		// FIXME overcomplicated and fragile, too many unjustified assumptions here - find better way to handle static method invocation type mappings
@@ -412,13 +391,6 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 		return true;
 	}
 
-	private boolean isStatic(MethodInvocation invocation) {
-		return isStatic(invocation.resolveMethodBinding());
-	}
-
-	private boolean isStatic(final IMethodBinding method) {
-		return Modifier.isStatic(method.getModifiers());
-	}
 
 	private boolean isExpressionOfMethodInvocation(Name node) {
 		return node.getLocationInParent() == MethodInvocation.EXPRESSION_PROPERTY;
