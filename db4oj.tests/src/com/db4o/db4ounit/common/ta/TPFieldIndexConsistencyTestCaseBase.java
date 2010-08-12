@@ -66,7 +66,7 @@ public abstract class TPFieldIndexConsistencyTestCaseBase extends AbstractDb4oTe
 		query.descend(ID_FIELD_NAME).constrain(id);
 		ObjectSet<Item> result = query.execute();
 		Assert.areEqual(1, result.size());
-		Assert.areSame(id, result.next().id());
+		Assert.areEqual(id, result.next().id());
 	}
 
 }
