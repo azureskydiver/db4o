@@ -4,8 +4,10 @@
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">public void Init(HttpApplication context)
 {
-    this.context = context;
-    context.Application[DataBaseInstance] = OpenDatabase();
+    if (null == HttpContext.Current.Application[DataBaseInstance])
+    {
+        HttpContext.Current.Application[DataBaseInstance] = OpenDatabase();
+    }
     RegisterSessionCreation(context);
 }
 

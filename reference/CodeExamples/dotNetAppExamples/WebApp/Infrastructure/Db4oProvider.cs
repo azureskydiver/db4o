@@ -7,15 +7,17 @@ namespace Db4oDoc.WebApp.Infrastructure
 {
     public class Db4oProvider : IHttpModule
     {
-        private HttpApplication context;
         private const string DataBaseInstance = "db4o-database-instance";
         private const string SessionKey = "db4o-session";
+        private static readonly object initialisationLock = new object();
 
         // #example: open database when the application starts
         public void Init(HttpApplication context)
         {
-            this.context = context;
-            context.Application[DataBaseInstance] = OpenDatabase();
+            if (null == HttpContext.Current.Application[DataBaseInstance])
+            {
+                HttpContext.Current.Application[DataBaseInstance] = OpenDatabase();
+            }
             RegisterSessionCreation(context);
         }
 
@@ -30,7 +32,7 @@ namespace Db4oDoc.WebApp.Infrastructure
         // #example: close the database when the application shuts down
         public void Dispose()
         {
-            IDisposable toDispose = context.Application[DataBaseInstance] as IDisposable;
+            IDisposable toDispose = HttpContext.Current.Application[DataBaseInstance] as IDisposable;
             if (null != toDispose)
             {
                 toDispose.Dispose();
@@ -55,7 +57,7 @@ namespace Db4oDoc.WebApp.Infrastructure
         private void OpenSession(object sender, EventArgs e)
         {
             IObjectContainer container =
-                (IObjectContainer)context.Application[DataBaseInstance];
+                (IObjectContainer)HttpContext.Current.Application[DataBaseInstance];
             IObjectContainer session = container.Ext().OpenSession();
             HttpContext.Current.Items[SessionKey] = session;
         }

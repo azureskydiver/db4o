@@ -1,6 +1,7 @@
 import System.IO
 import Ionic.Zip
 import System
+import System.Globalization;
 import System.Collections.Generic.IEnumerable
 import System.Linq.Enumerable from 'System.Core'
 import System.Linq from 'System.Core'
@@ -16,6 +17,7 @@ class CodeZip:
 		fileName = directoryToStore.FullName+"/"+ BuildName(directoryToZip)+"-${name}.zip"
 		if allreadyGenerated.Contains(directoryToZip.FullName):
 			return allreadyGenerated[directoryToZip.FullName]
+		File.Delete(fileName)
 		allreadyGenerated.Add(directoryToZip.FullName,Path.GetFileName(fileName));
 		zipFile= ZipFile(fileName)
 		AddFiles(zipFile,directoryToZip)
@@ -37,8 +39,35 @@ class CodeZip:
 	
 	def BuildName(directoryToZip as DirectoryInfo):
 		return "Example-"+directoryToZip.Parent.Name +"-"+ directoryToZip.Name
-	
 
+class TimeStampStorage:
+	public static final TimeStampFile = ".tsInfo"
+	final timesStamps = {}
+	
+	def constructor():
+		if(File.Exists(TimeStampFile)):
+			lines = File.ReadAllLines(TimeStampFile)		
+			for line in lines:
+				splitted = line.Split(char('*'))
+				file = splitted[0]
+				fileDate = long.Parse(splitted[1])
+				timesStamps[file] = fileDate
+			File.Delete(TimeStampFile)
+	
+	def NeedToAdd(file as FileInfo):
+		if not timesStamps.ContainsKey(file.FullName) or cast(long,timesStamps[file.FullName]) < file.LastWriteTime.Ticks:
+			timesStamps[file.FullName] = file.LastWriteTime.Ticks
+			return true
+		else:
+			return false
+			
+	def PersistInfo():
+		tw = StreamWriter(".tsInfo");
+		for keyValue in timesStamps:
+			fileDate = cast(long,keyValue.Value);
+			line = keyValue.Key.ToString() + "*" + fileDate
+			tw.WriteLine(line);
+		tw.Close();
 
 class SnippetGenerator:
 	final SnippetPrefix = "#example:"
@@ -48,17 +77,24 @@ class SnippetGenerator:
 	final Template as string
 	final zipGenerator  as CodeZip
 	
+	final tsCondition as TimeStampStorage
+	
 	final languageToCondition = {"java":"Primary.Java","csharp":"Primary.c#","vb":"Primary.VB.NET"}
 	
-	def constructor(template as string, zipGenerator as CodeZip):
+	def constructor(template as string, zipGenerator as CodeZip,tsCondition as TimeStampStorage):
 		self.Template = template
 		self.zipGenerator = zipGenerator
+		self.tsCondition = tsCondition
 
 	def HandleCodeFile(file as FileInfo, snippetDir as DirectoryInfo, language as string):
+		if tsCondition.NeedToAdd(file):
+				DoHandleCodeFile(file,snippetDir,language)
+
+	def DoHandleCodeFile(file as FileInfo, snippetDir as DirectoryInfo, language as string):
 		allLines = File.ReadAllLines(file.FullName)
 		inRecordingState = false
 		snippetName = ""
-		snippetText = []		
+		snippetText = []
 		for line in allLines:
 			if IsSnippetStart(line):
 				snippetName = ExtractName(line)
@@ -113,8 +149,8 @@ class CodeToSnippets:
 	final _SnippetGeneration as SnippetGenerator
 	final IgnoredFilesWithEnding = (".jar",".dll",".class",".db4o",".dat")
 
-	def constructor(templatePath as string, zipGenerator as CodeZip):
-		_SnippetGeneration = SnippetGenerator(File.ReadAllText(templatePath),zipGenerator)
+	def constructor(templatePath as string, zipGenerator as CodeZip,tsCondition as TimeStampStorage):
+		_SnippetGeneration = SnippetGenerator(File.ReadAllText(templatePath),zipGenerator,tsCondition)
 
 	def HandleSubDirectory(sourceDir as DirectoryInfo, snippetDir as DirectoryInfo, language as string):
 		directoryInSnippets=snippetDir.CreateSubdirectory(sourceDir.Name)
@@ -143,20 +179,36 @@ class CodeToSnippets:
 		
 class SnippetAggregator:
 	final Template as string
+	final tsCondition as TimeStampStorage
+	final Ending = ".all.flsnp" 
 			
-	def constructor(template as string):
+	def constructor(template as string,tsCondition as TimeStampStorage):
 		Template = template	
+		self.tsCondition = tsCondition
 		
 	def CreateAggregateSnippet(name as string, files as List):
+		if NeedNewTemplate(files):
+			GenerateNewAggregateSnippet(name,files)
+	
+	def GenerateNewAggregateSnippet(name as string, files as List):
 		linkString = ""
 		for file as FileInfo in files:
-			fileName = file.Name;
+			fileName = file.Name
 			linkString += 	"""<MadCap:snippetBlock src="${fileName}"/>"""
-		filePath = cast(FileInfo, files[0]).Directory.FullName +"\\${name}.all.flsnp"
+		filePath = cast(FileInfo, files[0]).Directory.FullName +"\\${name}"+Ending
 		content = string.Format(Template,linkString)
 		File.WriteAllText(filePath,content)
-
-			
+	
+	def NeedNewTemplate(files as List):
+		needNewTemplate = false
+		for file as FileInfo in files:
+			if tsCondition.NeedToAdd(file) and IsNotAggretionItsefl(file):
+				needNewTemplate = true
+		return needNewTemplate
+	
+	def IsNotAggretionItsefl(file as FileInfo):
+		return not file.FullName.EndsWith(Ending)
+	
 	def BuildAggregateSnippets(directory as DirectoryInfo):
 		filesToConsider = {}
 		for file in directory.GetFiles("*.flsnp"):
@@ -173,12 +225,22 @@ class SnippetAggregator:
 	def BuildAggregateSnippets(directory as string, snippteTemplate as string):
 		BuildAggregateSnippets(Directory.CreateDirectory(directory))
 	
-Directory.CreateDirectory("../Flare/Content/CodeExamples").Delete(true)
+	
+if(Environment.GetCommandLineArgs().Length == 3 and Environment.GetCommandLineArgs()[2] == '-rebuild'):
+	print "full rebuild"
+	Directory.CreateDirectory("../Flare/Content/CodeExamples").Delete(true)
+	File.Delete(TimeStampStorage.TimeStampFile)
+else:
+	print "Update the snippets. For a full rebuild use the argument -rebuild"
+
+
+
 		
 zipFileGenerator = CodeZip()
+tsCondition = TimeStampStorage()
 
 # regular examples
-snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator)
+snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator,tsCondition)
 snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../Flare/Content/CodeExamples","csharp")
@@ -196,9 +258,11 @@ snippetGenerator.CreateCodeSnippets("crossplatform/src/java/com/db4odoc","../Fla
 snippetGenerator.CreateCodeSnippets("crossplatform/src/csharp/","../Flare/Content/CodeExamples","mixed-languages")
 
 # vb-stuff with other template:
-snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator)
+snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator,tsCondition)
 snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../Flare/Content/CodeExamples","vb")
 snippetGeneratorForVB.CreateCodeSnippets("silverlight/silverlightVB/Code","../Flare/Content/CodeExamples","vb")
 
-aggreatedSnippet = SnippetAggregator(File.ReadAllText("./AggregateSnippetTemplate.flsnp"))
+aggreatedSnippet = SnippetAggregator(File.ReadAllText("./AggregateSnippetTemplate.flsnp"),tsCondition)
 aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../Flare/Content/CodeExamples"))
+
+tsCondition.PersistInfo()

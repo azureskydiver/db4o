@@ -4,7 +4,7 @@
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">public void Dispose()
 {
-    IDisposable toDispose = context.Application[DataBaseInstance] as IDisposable;
+    IDisposable toDispose = HttpContext.Current.Application[DataBaseInstance] as IDisposable;
     if (null != toDispose)
     {
         toDispose.Dispose();
