@@ -33,12 +33,14 @@ public class Signature {
 		}	
 		return hc;
 	}
-
-	/**
-	 * @sharpen.ignore
-	 */
-	public String toString() {
-		return new String(bytes);
+	
+	public String toString(){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < bytes.length; i++) {
+			char c = (char) bytes[i];
+			sb.append(c);
+		}	
+		return sb.toString();
 	}
 	
 }

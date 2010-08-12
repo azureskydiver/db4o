@@ -32,6 +32,7 @@ public class AllTests extends ReflectionTestSuite {
 		return new Class[] { 
 			ObjectSetCollection4FacadeTestCase.class,
 			Set4Testcase.class,
+			SignatureTestCase.class,
 		};
 	}
 
