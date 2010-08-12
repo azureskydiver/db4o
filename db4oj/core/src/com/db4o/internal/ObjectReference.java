@@ -446,9 +446,7 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
 		
 		setStateClean();
 		
-		if(!context.updateDepth().canSkip(this)) {
-			transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj));
-		}
+		context.purgeFieldIndexEntriesOnUpdate(transaction, container._handlers.arrayType(obj));
 		
         Handlers4.write(_class.typeHandler(), context, obj);
         
