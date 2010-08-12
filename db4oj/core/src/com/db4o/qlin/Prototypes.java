@@ -155,14 +155,6 @@ public class Prototypes {
 					}
 				}
 
-				private boolean trySetField(ReflectField field, Object onObject, Object value) {
-					try{
-						field.set(onObject, value);
-					} catch (Throwable t){
-						return false;
-					}
-					return true;
-				}
 			});
 		}
 
@@ -301,4 +293,12 @@ public class Prototypes {
 		return new GenericReflector(Platform4.reflectorForType(Prototypes.class));
 	}
 
+	private static boolean trySetField(ReflectField field, Object onObject, Object value) {
+		try{
+			field.set(onObject, value);
+		} catch (Throwable t){
+			return false;
+		}
+		return true;
+	}
 }

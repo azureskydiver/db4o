@@ -33,8 +33,10 @@ public class Signature {
 		}	
 		return hc;
 	}
-	
-	@Override
+
+	/**
+	 * @sharpen.ignore
+	 */
 	public String toString() {
 		return new String(bytes);
 	}
