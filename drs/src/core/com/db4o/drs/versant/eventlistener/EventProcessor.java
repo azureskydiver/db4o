@@ -380,7 +380,8 @@ public class EventProcessor {
 		}
 	}
 
+	// TODO only used for isolation logging, remove
 	private static void logIsolation(String msg) {
-		System.err.println("*** ISO - " + msg);
+		//System.err.println("*** ISO - " + msg);
 	}
 }
