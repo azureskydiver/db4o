@@ -245,6 +245,9 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeC
 		
 		public List<Cat> children = new ArrayList();
 		
+		public Cat() {			
+		}
+		
 		public Cat(String name){
 			this.name = name;
 		}
@@ -300,6 +303,9 @@ public class BasicQLinTestCase extends AbstractDb4oTestCase implements TestLifeC
 	public static class Dog implements Pet {
 		
 		private String _name;
+		
+		public Dog() {			
+		}
 		
 		public Dog(String name){
 			_name = name;

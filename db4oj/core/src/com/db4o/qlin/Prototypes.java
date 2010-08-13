@@ -45,6 +45,10 @@ public class Prototypes {
 	
 	private final int _recursionDepth;
 	
+	public Prototypes() {
+		this(null, 0, false);
+	}	
+	
 	public Prototypes(Reflector reflector, int recursionDepth, boolean ignoreTransient){
 		_reflector = reflector;
 		_recursionDepth = recursionDepth;
