@@ -28,7 +28,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 {
 	private QueryPresentationModel queryModel;
 	
-	private final String DELETE_MESSAGE = "Perform Cascade on Delete";
+	private final String DELETE_MESSAGE = "Do you want to delete this object ?";
 	private final String SAVE_MESSAGE = "Do you want to save the changes made in this page. Selecting 'No' "+
 	"will discard the changes made?";
 	
@@ -816,22 +816,15 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 					if(row != null)
 					{
 						Object obj = row.getResultObj();
-						switch(showMessageDialog())
+						if(showMessageDialog()==0)
+	
 						{
-							case 0:
-								modifiedObjList.addToDeleteList(obj, Boolean.TRUE);
-								break;
-							case 1:
-								modifiedObjList.addToDeleteList(obj, Boolean.FALSE);
-								break;
-							default:
-								return;
+							modifiedObjList.addToDeleteList(obj);							
+							modifyAssociatedObjectTreeItem(obj);
+							modifiedObjList.deleteFromDB();
+							queryResultList.removeFromList(row.getId() - 1);						
+							tableViewer.getTable().remove(index);tableViewer.refresh();
 						}
-						modifyAssociatedObjectTreeItem(obj);
-						modifiedObjList.deleteFromDB();
-						queryResultList.removeFromList(row.getId() - 1);
-						
-						tableViewer.getTable().remove(index);tableViewer.refresh();
 					}
 				}
 			}
@@ -839,7 +832,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 	}
 
 	private int showMessageDialog() {
-		String [] buttonStr = new String[]{ "Yes", "No", "Cancel"};
+		String [] buttonStr = new String[]{ "Ok","Cancel"};
 		MessageDialog msgDialog = new MessageDialog(parentTab.getShell(), 
 				OMPlusConstants.DIALOG_BOX_TITLE, null, DELETE_MESSAGE, 
 				MessageDialog.QUESTION, buttonStr, 0);

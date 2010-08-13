@@ -12,12 +12,12 @@ public class QueryResultTableModifiedList
 	
 	private HashSet <Object>modifiedObjList;
 	
-	private HashMap <Object, Boolean>deleteObjList;
+	private List <Object>deleteObjList;
 	
 	public QueryResultTableModifiedList()
 	{
 		modifiedObjList = new HashSet<Object>();
-		deleteObjList = new HashMap<Object, Boolean>();
+		deleteObjList = new ArrayList<Object>();
 	}
 	
 	public HashSet<Object> getModifiedObjList()
@@ -67,44 +67,33 @@ public class QueryResultTableModifiedList
 	{
 		ObjectContainer db = getOC();
 		if(db != null){
-			deteleObjects(db);
-		}
-	}
-
-
-	private void deteleObjects(ObjectContainer db) 
-	{
-		Iterator iterator = deleteObjList.keySet().iterator();
-		ModifyObject modify = new ModifyObject();
-		while(iterator.hasNext()) {
-			Object keyObj = iterator.next();
-			Boolean cascadeOnDel = deleteObjList.get(keyObj);
-			if(cascadeOnDel){
-				modify.cascadeOnDelete(keyObj, db);
-			} else {
+			Iterator iterator = deleteObjList.iterator();			
+			while(iterator.hasNext()) 
+			{
+				Object keyObj = iterator.next();
 				db.delete(keyObj);
 				db.ext().purge(keyObj);
 			}
-			
+			db.commit();
+			clearDeletedObjList();
 		}
-		db.commit();
-		clearDeletedObjList();
 	}
+	
 
-	public HashMap<Object, Boolean> getDeleteObjList() 
+	public List<Object> getDeleteObjList() 
 	{
 		return deleteObjList;
 	}
 
-	public void setDeleteObjList(HashMap<Object, Boolean> deleteObjList) 
+	public void setDeleteObjList(List<Object> deleteObjList) 
 	{
 		this.deleteObjList = deleteObjList;
 	}
 
-	public void addToDeleteList(Object obj, Boolean value)
+	public void addToDeleteList(Object obj)
 	{
-		if(obj!=null && value != null)
-			deleteObjList.put(obj, value);
+		if(obj!=null )
+			deleteObjList.add(obj);
 	}
 
 	public void refresh()
