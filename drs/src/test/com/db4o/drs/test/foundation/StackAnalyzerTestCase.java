@@ -12,7 +12,7 @@ import db4ounit.*;
 public class StackAnalyzerTestCase implements TestCase {
 	
 	public void test1(){
-		Assert.areEqual("StackAnalyzerTestCase#test1", StackAnalyzer.methodCallAsString(1));
+		Assert.areEqual("StackAnalyzerTestCase#test1()", StackAnalyzer.methodCallAsString(1));
 	}
 	
 	public void test2(){
@@ -20,8 +20,8 @@ public class StackAnalyzerTestCase implements TestCase {
 	}
 
 	private void assert2() {
-		Assert.areEqual("StackAnalyzerTestCase#assert2", StackAnalyzer.methodCallAsString(1));		
-		Assert.areEqual("StackAnalyzerTestCase#test2", StackAnalyzer.methodCallAsString(2));
+		Assert.areEqual("StackAnalyzerTestCase#assert2()", StackAnalyzer.methodCallAsString(1));		
+		Assert.areEqual("StackAnalyzerTestCase#test2()", StackAnalyzer.methodCallAsString(2));
 	}
 
 }
