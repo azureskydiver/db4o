@@ -6,20 +6,20 @@ import com.db4o.drs.versant.metadata.*;
 
 public class IsolationModeRequest extends CobraPersistentObject {
 	
-	private IsolationMode _isolationMode;
+	private int _isolationMode;
 	
 	private boolean _isResponse;
 	
-	public IsolationModeRequest(IsolationMode isolationMode) {
+	public IsolationModeRequest(int isolationMode) {
 		_isolationMode = isolationMode;
 		_isResponse = false;
 	}
 	
-	public void isolationMode(IsolationMode isolationMode) {
+	public void isolationMode(int isolationMode) {
 		_isolationMode = isolationMode;
 	}
 
-	public IsolationMode isolationMode() {
+	public int isolationMode() {
 		return _isolationMode;
 	}
 	

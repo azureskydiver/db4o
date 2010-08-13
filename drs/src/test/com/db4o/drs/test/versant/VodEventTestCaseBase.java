@@ -36,9 +36,13 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
 	private void withEventProcessorInSameProcess (Closure4<Void> closure, final String expectedOutput) throws Exception {
 		EventProcessorSupport support = new EventProcessorSupport(_vod.eventConfiguration());
-		closure.run();
-		support.waitForOutput(expectedOutput);
-		support.stop();
+		try {
+			closure.run();
+		}
+		finally {
+			support.waitForOutput(expectedOutput);
+			support.stop();
+		}
 	}
 	
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {

@@ -13,9 +13,9 @@ public class InBandProviderSideCommunication implements ProviderSideCommunicatio
 		_cobra = cobra;
 	}
 
-	private static boolean DISABLE_ISOLATION = true;
+	private static boolean DISABLE_ISOLATION = false;
 	
-	public void requestIsolation(IsolationMode isolationMode) {
+	public void requestIsolation(int isolationMode) {
 		if(DISABLE_ISOLATION) {
 			return;
 		}
