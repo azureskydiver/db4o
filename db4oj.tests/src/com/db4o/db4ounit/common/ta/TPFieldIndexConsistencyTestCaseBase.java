@@ -8,6 +8,7 @@ import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
@@ -56,7 +57,9 @@ public abstract class TPFieldIndexConsistencyTestCaseBase extends AbstractDb4oTe
 	}
 	
 	protected void assertFieldIndex(int id) {
-		FieldMetadata field = fileSession().classMetadataForName(ReflectPlatform.fullyQualifiedName(Item.class)).fieldMetadataForName(ID_FIELD_NAME);
+		ReflectClass claxx = reflector().forClass(Item.class);
+		ClassMetadata classMetadata = fileSession().classMetadataForReflectClass(claxx);
+		FieldMetadata field = classMetadata.fieldMetadataForName(ID_FIELD_NAME);
 		BTreeRange indexRange = field.search(trans(), id);
 		Assert.areEqual(1, indexRange.size());
 	}
