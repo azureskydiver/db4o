@@ -56,7 +56,7 @@ public abstract class TPFieldIndexConsistencyTestCaseBase extends AbstractDb4oTe
 	}
 	
 	protected void assertFieldIndex(int id) {
-		FieldMetadata field = fileSession().classMetadataForName(Item.class.getName()).fieldMetadataForName(ID_FIELD_NAME);
+		FieldMetadata field = fileSession().classMetadataForName(ReflectPlatform.fullyQualifiedName(Item.class)).fieldMetadataForName(ID_FIELD_NAME);
 		BTreeRange indexRange = field.search(trans(), id);
 		Assert.areEqual(1, indexRange.size());
 	}
