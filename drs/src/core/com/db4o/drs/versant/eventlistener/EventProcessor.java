@@ -39,6 +39,7 @@ public class EventProcessor {
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
 	private final BlockingQueue<Block4> _queuedTasks = new BlockingQueue<Block4>();
+	private Block4 _pendingTask = null;
 	
 	private volatile boolean _dirty;
 	
@@ -113,6 +114,7 @@ public class EventProcessor {
 	public void run() {
 	    registerClassMetadataListener();
 	    registerSyncRequestListener();
+	    registerIsolationRequestListener();
 	    println(LISTENING_MESSAGE + _cobra.databaseName());
 	    taskQueueProcessorLoop();
 		shutdown();
@@ -134,29 +136,58 @@ public class EventProcessor {
 	private void taskQueueProcessorLoop() {
 		try{
 			while(! _stopped){
-				if(_pausedAt == 0) {
-					try {
-						Block4 task = _queuedTasks.next();
-						synchronized(_lock) {
-							task.run();
-						}
-					} catch(BlockingQueueStoppedException ex){
+				if(isActive()) {
+					if(!processQueuedTask()) {
 						break;
 					}
 				}
 				else {
-					boolean unpaused = Runtime4.retry(PAUSE_TIMEOUT, PAUSE_INTERVAL, new Closure4<Boolean>() {
-						public Boolean run() {
-							return _pausedAt == 0;
-						}
-					});
-					if(!unpaused) {
-						throw new IllegalStateException("Isolated state timed out.");
-					}
+					pauseQueue();
 				}
 			}
 		} catch (Exception ex){
 			unrecoverableExceptionOccurred(ex);
+		}
+	}
+
+	private boolean processQueuedTask() {
+		synchronized(_lock) {
+			if(isActive() && _pendingTask != null) {
+				logIsolation("UNSTASHING " + _pendingTask);
+				_pendingTask.run();
+				logIsolation("PROCESSED " + _pendingTask);
+				_pendingTask = null;
+				return true;
+			}
+		}
+		try {
+			Block4 task = _queuedTasks.next();
+			logIsolation("UNQUEUED " + task);
+			synchronized(_lock) {
+				if(!isActive()) {
+					_pendingTask = task;
+					logIsolation("STASHED " + task);
+					return true;
+				}
+				task.run();
+			}
+			logIsolation("PROCESSED " + task);
+			return true;
+		} catch(BlockingQueueStoppedException ex){
+			return false;
+		}
+	}
+	
+	private void pauseQueue() {
+		logIsolation("PAUSE");
+		boolean unpaused = Runtime4.retry(PAUSE_TIMEOUT, PAUSE_INTERVAL, new Closure4<Boolean>() {
+			public Boolean run() {
+				return isActive();
+			}
+		});
+		logIsolation("UNPAUSE");
+		if(!unpaused) {
+			throw new IllegalStateException("Isolated state timed out.");
 		}
 	}
 	
@@ -179,14 +210,40 @@ public class EventProcessor {
 	private void registerSyncRequestListener() {
 		_comm.registerSyncRequestListener(new Procedure4<Long>() {
 			public void apply(Long newTimeStamp) {
-				if(newTimeStamp > 0){
-					_timeStampIdGenerator.setMinimumNext(newTimeStamp);
+				synchronized (_lock) {
+					if(newTimeStamp > 0){
+						_timeStampIdGenerator.setMinimumNext(newTimeStamp);
+					}
+					_comm.sendTimestamp(_timeStampIdGenerator.last());
 				}
-				_comm.sendTimestamp(_timeStampIdGenerator.last());
 			}
 		});
 	}
 
+	private void registerIsolationRequestListener() {
+		_comm.registerIsolationRequestListener(new Procedure4<Integer>() {
+			public void apply(Integer isolationMode) {
+				synchronized (_lock) {
+					if(isActive() == (isolationMode == IsolationMode.IMMEDIATE)) {
+						return;
+					}
+					switch(isolationMode) {
+						case IsolationMode.DELAYED:
+							_pausedAt = System.currentTimeMillis();
+							break;
+						case IsolationMode.IMMEDIATE:
+							_pausedAt = 0;
+					}
+					_comm.acknowledgeIsolationMode(isolationMode);
+				}
+			}
+		});
+	}
+
+	private boolean isActive() {
+		return _pausedAt == 0;
+	}
+	
 	private void registerClassMetadataListener()  {
 		EventChannel channel = _client.produceClassChannel(ClassMetadata.class.getName());
 		channel.addVersantEventListener (new ClassEventListener() {
@@ -323,4 +380,7 @@ public class EventProcessor {
 		}
 	}
 
+	private static void logIsolation(String msg) {
+		System.err.println("*** ISO - " + msg);
+	}
 }
