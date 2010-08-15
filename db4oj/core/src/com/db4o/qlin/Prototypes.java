@@ -282,7 +282,7 @@ public class Prototypes {
 		
 	}
 	
-	// Strings get prepended the following, so we can also strings 
+	// Strings get prepended the following, so we can also use strings 
 	// without restrictions in queries.
 	private static final String STRING_IDENTIFIER = "QLinIdentity";
 	
@@ -290,7 +290,7 @@ public class Prototypes {
 		return _reflector;
 	}
 	
-	// We could always use this, but we want make users of this class
+	// We could always use this, but we want to make users of this class
 	// aware that they have control over the reflector and that it is
 	// important.
 	public static Reflector defaultReflector(){

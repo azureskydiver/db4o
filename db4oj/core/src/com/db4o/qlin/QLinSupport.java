@@ -3,10 +3,8 @@
 package com.db4o.qlin;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
-import com.db4o.reflect.generic.*;
 
 
 /**
@@ -128,12 +126,9 @@ public class QLinSupport {
 	
 	private static void warnOnce() {
 		if(!warned){
-			System.err.println("\nQLin is a new experimental query interface, that we wrote for the ");
-			System.err.println("db4o replication system (dRS).\n");
-			System.err.println("It is not yet certain that QLin will go into the db4o 8.0 final release.");
-			System.err.println("\nWe would love to have real LINQ for Java instead.\n");
-			System.err.println("Kudos to Thomas Mueller for the inspiration that it is possible to map");
-			System.err.println("expressions to fields: http://www.h2database.com/html/jaqu.html\n");
+			System.err.println("\nWarning: QLin is only a very limited implementation");
+			System.err.println("for the db4o replication system (dRS). ");
+			System.err.println("It may be removed from the db4o 8.0 final release\n");
 			warned = true;
 		}
 	}
