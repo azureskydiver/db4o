@@ -15,8 +15,7 @@ namespace OManager.DataLayer.ObjectsModification
     class ModifyObjects
     {
         private readonly IObjectContainer objectContainer;
-        private List<object> m_listforCascadeDelete;
-        private readonly object m_objectToProcess;
+		private readonly object m_objectToProcess;
 
         public ModifyObjects(object MainObjects)
         {
@@ -117,29 +116,18 @@ namespace OManager.DataLayer.ObjectsModification
             return obj;
         }
 
-    	public void CascadeonDelete( bool checkforCascade)
+    	public void DeleteObject()
         {
             try
             {
-                if (checkforCascade)
-                {
-                    if (m_objectToProcess != null)
-                    {
-                        m_listforCascadeDelete = new List<object>();
-                        CheckForHierarchy(m_objectToProcess);
-                        objectContainer.Delete(m_objectToProcess);
-                        objectContainer.Commit();
-                    }
-
-                }
-                else
-                {
+               
                     if (m_objectToProcess != null)
                     {
                         objectContainer.Delete(m_objectToProcess);
+                    	objectContainer.Ext().Purge();
                         objectContainer.Commit();
                     }
-                }
+                
             }
             catch (Exception oEx)
             {
@@ -149,92 +137,6 @@ namespace OManager.DataLayer.ObjectsModification
             }
         }
 
-        private void CheckForHierarchy(object obj)
-        {
-            try
-            {
-                IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);
-                if (rclass != null)
-                {
-                    IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);
-                    if (fieldArr != null)
-                    {
-                        foreach (IReflectField field in fieldArr)
-                        {
-
-                            object getObject = field.Get(obj);
-                            IType fieldType = Db4oClient.TypeResolver.Resolve(field.GetFieldType().GetName());
-                            
-                            if (getObject != null)
-                            {
-                                if (!fieldType.IsPrimitive)
-                                {
-                                    if (fieldType.IsCollection || getObject is ICollection )
-                                    {
-                                        ICollection coll = (ICollection) field.Get(obj);
-                                        ArrayList arrList = new ArrayList(coll);
-
-                                        for (int i = 0; i < arrList.Count; i++)
-                                        {
-                                            object colObject = arrList[i];
-                                            if (colObject != null)
-                                            {
-                                                if (colObject is GenericObject)
-                                                {
-                                                    if (!m_listforCascadeDelete.Contains(colObject))
-                                                    {
-                                                        m_listforCascadeDelete.Add(colObject);
-                                                        CheckForHierarchy(colObject);
-                                                        objectContainer.Delete(colObject);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else if (fieldType.IsArray || getObject is GenericArray )
-                                    {
-                                        int length = objectContainer.Ext().Reflector().Array().GetLength(field.Get(obj));
-                                        for (int i = 0; i < length; i++)
-                                        {
-                                            object arrObject =
-                                                objectContainer.Ext().Reflector().Array().Get(field.Get(obj), i);
-                                            if (arrObject != null)
-                                            {
-                                                if (arrObject is GenericObject)
-                                                {
-                                                    if (!m_listforCascadeDelete.Contains(arrObject))
-                                                    {
-                                                        m_listforCascadeDelete.Add(arrObject);
-                                                        CheckForHierarchy(arrObject);
-                                                        objectContainer.Delete(arrObject);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                   
-                                    else
-                                    {
-                                        if (!m_listforCascadeDelete.Contains(getObject))
-                                        {
-                                            m_listforCascadeDelete.Add(getObject);
-                                            CheckForHierarchy(getObject);
-                                           
-                                            objectContainer.Delete(getObject);
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception oEx)
-            {
-                objectContainer.Rollback();
-                LoggingHelper.HandleException(oEx);
-            }
-        }
+        
     }
 }

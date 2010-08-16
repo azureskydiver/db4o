@@ -860,66 +860,57 @@ namespace OMControlLibrary
 					DataGridViewRow row = masterView.SelectedRows[0];
                     long deletedId = dbInteraction.GetLocalID(row.Tag);
                     int objectIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
-                    if (deletedId > 0)
-                    {
-                        const string strShowMessage = "Do You want to CascadeonDelete?";
-                        DialogResult dialogRes = MessageBox.Show(strShowMessage,
-                                                                 Helper.GetResourceString(Constants.PRODUCT_CAPTION),
-                                                                 MessageBoxButtons.YesNoCancel,
-                                                                 MessageBoxIcon.Question);
+					if (deletedId > 0)
+					{
+						const string strShowMessage = "Do you want to delete this object ?";
+						DialogResult dialogRes = MessageBox.Show(strShowMessage,
+						                                         Helper.GetResourceString(Constants.PRODUCT_CAPTION),
+						                                         MessageBoxButtons.OKCancel,
+						                                         MessageBoxIcon.Question);
 
 
-                        if (DialogResult.Cancel == dialogRes)
-                            return;
 
-                        if (dialogRes == DialogResult.Yes)
-                        {
-                            CascadeOndeleteobjects(row.Tag);
-                        }
-                        else if (dialogRes == DialogResult.No)
-                        {
-                            dbInteraction.DeleteObject(row.Tag, false);
-                        }
+						if (dialogRes == DialogResult.OK)
+						{
+							dbInteraction.DeleteObject(row.Tag);
 
-                        
-                        RemoveObjectFromDetailsView(row.Tag);
+							RemoveObjectFromDetailsView(row.Tag);
 
-                        UpdateObjectDetailTablCaptions(objectIndex);
+							UpdateObjectDetailTablCaptions(objectIndex);
 
-                        lstObjIdLong.Remove(deletedId);
+							lstObjIdLong.Remove(deletedId);
 
-                        const int pageNumber = m_pagingStartIndex + 1;
+							const int pageNumber = m_pagingStartIndex + 1;
 
-                        PagingData pagData = PagingData.StartingAtPage(pageNumber);
-                        pagData.ObjectId = lstObjIdLong;
+							PagingData pagData = PagingData.StartingAtPage(pageNumber);
+							pagData.ObjectId = lstObjIdLong;
 
-                        lblPageCount.Text = pagData.GetPageCount().ToString();
-                        txtCurrentPage.Text = pageNumber.ToString();
-                        labelNoOfObjects.Text = pagData.ObjectId.Count.ToString();
+							lblPageCount.Text = pagData.GetPageCount().ToString();
+							txtCurrentPage.Text = pageNumber.ToString();
+							labelNoOfObjects.Text = pagData.ObjectId.Count.ToString();
 
-                        masterView.Rows.Clear();
-                        if (lstObjIdLong.Count > 0)
-                        {
-                            List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagData, true,
-                                                                                              omQuery.BaseClass,
-                                                                                              omQuery.AttributeList);
-                            Hashtable hAttributes = (omQuery != null) ? omQuery.AttributeList : null;
-                            masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, pagData.StartIndex + 1);
+							masterView.Rows.Clear();
+							if (lstObjIdLong.Count > 0)
+							{
+								List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagData, true,
+								                                                                  omQuery.BaseClass,
+								                                                                  omQuery.AttributeList);
+								Hashtable hAttributes = (omQuery != null) ? omQuery.AttributeList : null;
+								masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, pagData.StartIndex + 1);
 
-                            SetSelectedObjectInMasterView(Math.Min(objectIndex, lstObjIdLong.Count));
-                        }
-                    }
-
-                    else
-
-                    {
-                        MessageBox.Show(
-                            "Object is already deleted. This window will get closed now. Please fire the query again for refreshed results.",
-                            Helper.GetResourceString(Constants.PRODUCT_CAPTION),MessageBoxButtons.OK ,
-				                         MessageBoxIcon.Information);
+								SetSelectedObjectInMasterView(Math.Min(objectIndex, lstObjIdLong.Count));
+							}
+						}
+					}
+					else
+					{
+						MessageBox.Show(
+							"Object is already deleted. This window will get closed now. Please fire the query again for refreshed results.",
+							Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
+										 MessageBoxIcon.Information);
 						Window queryResult = ViewBase.GetWindow(Helper.GetCaption(ClassName));
 						queryResult.Close(vsSaveChanges.vsSaveChangesYes);
-                    }
+					}
                    
                        
 				    buttonSaveResult.Enabled = false;
@@ -954,32 +945,7 @@ namespace OMControlLibrary
 			}
 		}
 
-		public void CascadeOndeleteobjects(object obj)
-		{
-			Thread t = new Thread(ShowDialogforProgressBar);
-			t.Start();
-			dbInteraction.DeleteObject(obj, true);
-			t.Abort();
-		}
-
-		private static void ShowDialogforProgressBar()
-		{
-			try
-			{
-				ProgressBar p = new ProgressBar();
-				p.Text = "Delete cascading in progress...";
-				p.ShowDialog();
-			}
-			catch (ThreadAbortException)
-			{
-				Thread.ResetAbort();
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
+	
 		private void buttonSaveResult_Click(object sender, EventArgs e)
 		{
 			try
