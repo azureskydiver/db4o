@@ -35,9 +35,9 @@ namespace OManager.BusinessLayer.UIHelper
 			ModifyObjects.EditObjects(parentobjm, attribute, value);
 		}
 
-		public static void DeleteObject(object obj, bool boolcascadeOnDelete)
+		public static void DeleteObject(object obj)
 		{
-			new ModifyObjects(obj).CascadeonDelete(boolcascadeOnDelete);  
+			new ModifyObjects(obj).DeleteObject();  
 		}
 
         public static IType GetFieldType(string declaringClassName, string name)
@@ -301,12 +301,7 @@ namespace OManager.BusinessLayer.UIHelper
 			return RunQuery.ReturnResults(pagData, Refresh, baseclass, attributeList);  
         }
 
-		public static bool Cascadeondelete(object obj, bool checkforCascade)
-		{
-			new ModifyObjects(obj).CascadeonDelete(checkforCascade);
-			return false;
-		}
-        
+
 
 		public static bool BackUpDatabase(string LocationToBackUp)
 		{
