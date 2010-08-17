@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2010  Versant Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.common.qlin;
 
@@ -13,6 +13,10 @@ import db4ounit.extensions.*;
 
 
 /**
+ * 
+ * Syntax and implementation of QLin were inspired by:
+ * http://www.h2database.com/html/jaqu.html 
+ * 
  * @sharpen.if !SILVERLIGHT
  */
 @decaf.Remove(decaf.Platform.JDK11)
