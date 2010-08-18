@@ -200,6 +200,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return reference;
 		}
 		reference = produceNewReference(obj);
+		if(reference == null) {
+			return null;
+		}
 		_replicationReferences.put(reference);
 		return reference; 
 	}
@@ -270,8 +273,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void storeReplica(Object obj) {
 		logIdentity(obj, getName());
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		ReplicationReference ref = _replicationReferences.get(obj);
+		long loid = loidFrom(ref.uuid());
+		logIdentity(obj, String.valueOf(loid));
+		_cobra.store(loid, obj);
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
@@ -284,15 +289,23 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_replicationReferences.visitEntries(visitor);
 	}
 
-	public boolean wasModifiedSinceLastReplication(
-			ReplicationReference reference) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
+		return reference.version() > getLastReplicationVersion();
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
+		return internalObjectsChangedSinceLastReplication("");
+	}
+
+	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
+		ensureClassKnown(clazz);
+		long classMetadataLoid = _knownClasses.get(clazz.getName()).loid();
+		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + classMetadataLoid);
+	}
+
+	private ObjectSet internalObjectsChangedSinceLastReplication(String query) {
 		Set<Long> loids = new HashSet<Long>();
-		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, "");
+		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, query);
 		for (ObjectLifecycleEvent event : allEvents) {
 			loids.add(event.objectLoid());
 		}
@@ -301,15 +314,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			objects.add(_jdo.objectByLoid(loid));
 		}
 		return new ObjectSetCollectionFacade(objects);
-	}
-
-	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		ensureClassKnown(clazz);
-		
-		
-		
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
@@ -329,7 +333,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
-		VodId vodId = _cobra.idFor(_jdo.loid(obj));
+		long loid = _jdo.loid(obj);
+		if(loid == 0) {
+			return null;
+		}
+		VodId vodId = _cobra.idFor(loid);
 		Signature signature = produceSignatureFor(vodId.databaseId);
 		VodUUID vodUUID = new VodUUID(signature, vodId);
 		return new ReplicationReferenceImpl(obj, vodUUID, vodId.timestamp);
