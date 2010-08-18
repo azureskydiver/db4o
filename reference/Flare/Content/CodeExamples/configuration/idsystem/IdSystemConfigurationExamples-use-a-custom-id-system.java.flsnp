@@ -3,9 +3,9 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.idSystem().useCustomSystem(new CostumeIdSystemFactory());</pre>
+configuration.idSystem().useCustomSystem(new CustomIdSystemFactory());</pre>
 		<div class="codesnippet-meta">
-			IdSystemConfigurationExamples.java: use a costume id system
+			IdSystemConfigurationExamples.java: use a custom id system
 			<div class="codedownload">
 				<a href="Example-configuration-idsystem-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>

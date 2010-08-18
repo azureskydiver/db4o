@@ -45,9 +45,9 @@ public class IdSystemConfigurationExamples {
         container.close();
     }
     private static void customIdSystem(){
-        // #example: use a costume id system
+        // #example: use a custom id system
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        configuration.idSystem().useCustomSystem(new CostumeIdSystemFactory());
+        configuration.idSystem().useCustomSystem(new CustomIdSystemFactory());
         // #end example
 
         ObjectContainer container = Db4oEmbedded.openFile(configuration,"database.db4o");

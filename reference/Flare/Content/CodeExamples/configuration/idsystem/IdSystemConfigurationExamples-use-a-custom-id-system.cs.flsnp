@@ -3,9 +3,9 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.IdSystem.UseCustomSystem(new CostumeIdSystemFactory());</pre>
+configuration.IdSystem.UseCustomSystem(new CustomIdSystemFactory());</pre>
 		<div class="codesnippet-meta">
-			IdSystemConfigurationExamples.cs: use a costume id system
+			IdSystemConfigurationExamples.cs: use a custom id system
 			<div class="codedownload">
 				<a href="Example-configuration-idsystem-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>

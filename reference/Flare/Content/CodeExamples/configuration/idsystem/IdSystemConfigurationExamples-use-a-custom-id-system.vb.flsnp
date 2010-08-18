@@ -3,11 +3,11 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.IdSystem.UseCustomSystem(New CostumeIdSystemFactory())</pre>
+configuration.IdSystem.UseCustomSystem(New CustomIdSystemFactory())</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.IdSystem.UseCustomSystem(New CostumeIdSystemFactory())</pre>
+configuration.IdSystem.UseCustomSystem(New CustomIdSystemFactory())</pre>
 		<div class="codesnippet-meta">
-			IdSystemConfigurationExamples.vb: use a costume id system
+			IdSystemConfigurationExamples.vb: use a custom id system
 			<div class="codedownload">
 				<a href="Example-configuration-idsystem-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
