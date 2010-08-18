@@ -213,9 +213,9 @@ class SnippetAggregator:
 		filesToConsider = {}
 		for file in directory.GetFiles("*.flsnp"):
 			name = file.Name.Split(char('.'))[0]
-			if(filesToConsider.Contains(name)):
+			if filesToConsider.Contains(name) and IsNotAggretionItsefl(file):
 				(filesToConsider[name] as List).Add(file)
-			else:
+			elif IsNotAggretionItsefl(file):
 				filesToConsider[name] = [file]
 		for	entry in filesToConsider:
 			CreateAggregateSnippet(entry.Key,entry.Value as List)

@@ -78,4 +78,8 @@
     Name="Evaluation"
     Comment=""
     Definition="Some text">Evaluation</Variable>
+  <Variable
+    Name="ObjectContainer"
+    Comment=""
+    Definition="Some text">ObjectContainer</Variable>
 </CatapultVariableSet>
