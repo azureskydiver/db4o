@@ -44,9 +44,9 @@ Namespace Db4oDoc.Code.Configuration.IdSystem
         End Sub
 
         Private Shared Sub CustomIdSystem()
-            ' #example: use a costume id system
+            ' #example: use a custom id system
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.IdSystem.UseCustomSystem(New CostumeIdSystemFactory())
+            configuration.IdSystem.UseCustomSystem(New CustomIdSystemFactory())
             ' #end example
 
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
@@ -55,7 +55,7 @@ Namespace Db4oDoc.Code.Configuration.IdSystem
 
     End Class
 
-    Class CostumeIdSystemFactory
+    Class CustomIdSystemFactory
         Implements IIdSystemFactory
         Public Function NewInstance(ByVal localObjectContainer As Db4objects.Db4o.Internal.LocalObjectContainer) _
             As IIdSystem Implements IIdSystemFactory.NewInstance

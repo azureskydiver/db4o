@@ -53,9 +53,9 @@ namespace Db4oDoc.Code.Configuration.IdSystem
 
         private static void CustomIdSystem()
         {
-            // #example: use a costume id system
+            // #example: use a custom id system
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.IdSystem.UseCustomSystem(new CostumeIdSystemFactory());
+            configuration.IdSystem.UseCustomSystem(new CustomIdSystemFactory());
             // #end example
 
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
@@ -64,7 +64,7 @@ namespace Db4oDoc.Code.Configuration.IdSystem
     }
 
     
-    class CostumeIdSystemFactory : IIdSystemFactory {
+    class CustomIdSystemFactory : IIdSystemFactory {
         public IIdSystem NewInstance(LocalObjectContainer localObjectContainer) {
             return new InMemoryIdSystem(localObjectContainer);
         }

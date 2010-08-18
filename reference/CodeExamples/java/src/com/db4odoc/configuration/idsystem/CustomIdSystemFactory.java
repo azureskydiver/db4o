@@ -6,7 +6,7 @@ import com.db4o.internal.ids.IdSystem;
 import com.db4o.internal.ids.InMemoryIdSystem;
 
 
-public class CostumeIdSystemFactory implements IdSystemFactory {
+public class CustomIdSystemFactory implements IdSystemFactory {
     public IdSystem newInstance(LocalObjectContainer localObjectContainer) {
         return new InMemoryIdSystem(localObjectContainer);
     }
