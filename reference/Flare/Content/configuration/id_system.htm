@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1976" MadCap:lastWidth="560">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2345" MadCap:lastWidth="560">
     <head>
     </head>
     <body>
@@ -20,7 +20,7 @@
         <p>This id system uses pointers to handle ids. Each id represents a pointer into the database-file. This makes the id-mapping simple. However since it's a pointer, you cannot change the location. Therefore this system leads to more fragmentation and  performance degradation as the database grows.</p>
         <p>This id system is here to ensure backward-compatibility. It's not recommended to use for new databases.</p>
         <MadCap:snippetBlock src="../CodeExamples/configuration/idsystem/IdSystemConfigurationExamples-Use-a-in-memory-id-system.all.flsnp" />
-        <h2>Costume Id-System</h2>
+        <h2>Custom Id-System</h2>
         <p>It's possible to implement your own id system. You can pass an factory which creates your id-system implementation. </p>
         <MadCap:snippetBlock src="../CodeExamples/configuration/idsystem/IdSystemConfigurationExamples-use-a-costume-id-system.all.flsnp" />
     </body>

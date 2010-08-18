@@ -343,7 +343,7 @@
             Title="Sort by Multiple Fields"
             Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#SortByMultipleFields" />
           <TocEntry
-            Title="Costume Sorting"
+            Title="Sorting With A Comperator"
             Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#CostumSorting" />
         </TocEntry>
         <TocEntry
