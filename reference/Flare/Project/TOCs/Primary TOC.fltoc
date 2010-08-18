@@ -311,6 +311,9 @@
             Title="Contains Key on Maps"
             Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ContainsKeyOnMaps" />
           <TocEntry
+            Title="Return the Objects of a Field"
+            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#FieldObjects" />
+          <TocEntry
             Title="Mixing With Query By Example"
             Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#MixQueryByExample"></TocEntry>
           <TocEntry
