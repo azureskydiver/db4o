@@ -31,6 +31,7 @@ namespace Db4oDoc.Code.Query.Soda
                 ContainsOnCollection(container);
                 DescendIntoCollectionMembers(container);
                 ContainsOnMaps(container);
+                FieldObject(container);
 
                 GenericConstrains(container);
                 DescendIntoNotExistingField(container);
@@ -199,6 +200,20 @@ namespace Db4oDoc.Code.Query.Soda
             query.Descend("metaData").Constrain("source");
 
             IObjectSet result = query.Execute();
+            // #end example
+            ListResult(result);
+        }
+
+        private static void FieldObject(IObjectContainer container)
+        {
+            Console.WriteLine("Return the object of a field");
+            // #example: Return the object of a field
+            IQuery query = container.Query();
+            query.Constrain(typeof(Car));
+            query.Descend("name").Constrain("Mercedes");
+
+            // returns the pilot of these cars
+            IObjectSet result = query.Descend("pilot").Execute();
             // #end example
             ListResult(result);
         }

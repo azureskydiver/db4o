@@ -27,6 +27,7 @@ Namespace Db4oDoc.Code.Query.Soda
                 ContainsOnCollection(container)
                 DescendIntoCollectionMembers(container)
                 ContainsOnMaps(container)
+                FieldObject(container)
 
                 GenericConstrains(container)
                 DescendIntoNotExistingField(container)
@@ -181,6 +182,19 @@ Namespace Db4oDoc.Code.Query.Soda
             query.Descend("metaData").Constrain("source")
 
             Dim result As IObjectSet = query.Execute()
+            ' #end example
+            ListResult(result)
+        End Sub
+
+        Private Shared Sub FieldObject(ByVal container As IObjectContainer)
+            Console.WriteLine("Return the object of a field")
+            ' #example: Return the object of a field
+            Dim query As IQuery = container.Query()
+            query.Constrain(GetType(Car))
+            query.Descend("name").Constrain("Mercedes")
+
+            ' returns the pilot of these cars
+            Dim result As IObjectSet = query.Descend("pilot").Execute()
             ' #end example
             ListResult(result)
         End Sub

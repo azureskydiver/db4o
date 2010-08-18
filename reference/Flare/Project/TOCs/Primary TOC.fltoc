@@ -1052,10 +1052,6 @@
         Link="/Content/implementation_strategies/db4o_meta-information/storedclass_and_storedfield_interfaces.htm" />
     </TocEntry>
     <TocEntry
-      Title="LINQ Collection"
-      Link="/Content/implementation_strategies/linq_collection.htm"
-      conditions="Primary..NET,Primary.All languages"></TocEntry>
-    <TocEntry
       Title="Native Query Collection"
       Link="/Content/implementation_strategies/native_query_collection.htm">
       <TocEntry
@@ -1853,9 +1849,6 @@
       <TocEntry
         Title="QBE"
         Link="/Content/client-server/server_without_persistent_classes_deployed/qbe.htm" />
-      <TocEntry
-        Title="SODA"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/soda.htm" />
       <TocEntry
         Title="Native Queries"
         Link="/Content/client-server/server_without_persistent_classes_deployed/native_queries.htm" />

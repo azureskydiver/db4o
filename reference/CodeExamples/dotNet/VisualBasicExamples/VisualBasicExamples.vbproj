@@ -156,6 +156,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\basics\Db4oBasics.vb" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.vb" />
     <Compile Include="Code\clientserver\ssl\SSLExample.vb" />
     <Compile Include="Code\configuration\alias\AliasExamples.vb" />

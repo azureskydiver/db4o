@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="Boot.cs" />
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
+    <Compile Include="Code\basics\Db4oBasics.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.cs" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.cs" />

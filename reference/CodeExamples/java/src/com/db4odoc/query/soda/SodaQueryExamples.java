@@ -32,6 +32,7 @@ public class SodaQueryExamples {
             containsOnCollection(container);
             descendIntoCollectionMembers(container);
             containsOnMaps(container);
+            fieldObject(container);
                          
             genericConstrains(container);
             descendIntoNotExistingField(container);
@@ -193,7 +194,20 @@ public class SodaQueryExamples {
         ObjectSet<Object> result = query.execute();
         // #end example
         listResult(result);
-    }   
+    }
+
+    private static void fieldObject(ObjectContainer container) {
+        System.out.println("Return the object of a field");
+        // #example: Return the object of a field
+        Query query = container.query();
+        query.constrain(Car.class);
+        query.descend("name").constrain("Mercedes");
+
+        // returns the pilot of these cars
+        ObjectSet<Object> result = query.descend("pilot").execute();
+        // #end example
+        listResult(result);
+    }
 
     private static void genericConstrains(ObjectContainer container) {
         System.out.println("Pure field constrains");

@@ -62,5 +62,7 @@
       Name="Primary/close">dispose</Variable>
     <Variable
       Name="Primary/JVM">CLR</Variable>
+    <Variable
+      Name="Primary/ObjectContainer">IObjectContainer</Variable>
   </Variables>
 </CatapultTarget>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">Query query = container.query();
+query.constrain(Car.class);
+query.descend(&quot;name&quot;).constrain(&quot;Mercedes&quot;);
+
+// returns the pilot of these cars
+ObjectSet&lt;Object&gt; result = query.descend(&quot;pilot&quot;).execute();</pre>
+		<div class="codesnippet-meta">
+			SodaQueryExamples.java: Return the object of a field
+			<div class="codedownload">
+				<a href="Example-query-soda-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

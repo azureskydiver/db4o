@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4116" MadCap:lastWidth="534">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4725" MadCap:lastWidth="560">
     <head>
     </head>
     <body>
@@ -18,6 +18,9 @@
         <MadCap:snippetBlock src="../../../Snippets/no_index_therefore_slow.flsnp" />
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Map-contains-a-key-constrain.all.flsnp" />
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Dictionary-contains-a-key-constrain.all.flsnp" />
+        <h2>Return the Objects of a Field</h2>
+        <p>With SODA you can navigate to a field and return the objects of that field. Note that this only works for reference objects and not for value objects like strings and numbers.</p>
+        <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Return-the-object-of-a-field.all.flsnp" />
         <h2><a name="MixQueryByExample"></a>Mixing With Query By Example</h2>
         <p>When you have a reference type field, you can also use a <a href="../query_by_example.htm">query by example</a> constrain for that field. Pass a new object as an example as a constraint for this.</p>
         <p>Note that when you pass a persisted object, it will compare it by object identity and not use it as example. You can force this behavior by adding an explicit by example constrain.</p>
