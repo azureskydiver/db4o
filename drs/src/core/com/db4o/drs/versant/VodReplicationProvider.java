@@ -34,7 +34,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final Signatures _signatures = new Signatures();
 	
-	private final Hashtable<String, ClassMetadata> _knownClasses = new Hashtable<String, ClassMetadata>();
+	private final Map<String, Long> _knownClasses = new HashMap<String, Long>();
 
 	private ReplicationReflector _replicationReflector;
 	
@@ -70,7 +70,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private void loadKnownClasses() {
 		for (ClassMetadata classMetadata : _jdo.query(ClassMetadata.class)) {
-			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata);
+			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata.loid());
 		}
 	}
 
@@ -123,13 +123,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return;
 		}
 		
-		ClassMetadata classMetadata = new ClassMetadata(_jdo.schemaName(clazz), className);
-		_knownClasses.put(className, classMetadata);
+		_knownClasses.put(className, -1L);
 
-		_cobra.store(classMetadata);
-		_cobra.commit();
-
-		_comm.ensureMonitoringEventsOn(classMetadata.name(), classMetadata.fullyQualifiedName(), classMetadata.loid());
+		_comm.ensureMonitoringEventsOn(className, _jdo.schemaName(clazz));
 	}
 
 	public void update(Object obj) {
@@ -301,7 +297,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		ensureClassKnown(clazz);
-		long classMetadataLoid = _knownClasses.get(clazz.getName()).loid();
+		Long classMetadataLoid = _knownClasses.get(clazz.getName());
+		if (classMetadataLoid == null) {
+			ClassMetadata cm = prototype(ClassMetadata.class);
+			classMetadataLoid = _cobra.from(ClassMetadata.class).where(cm.fullyQualifiedName()).equal(clazz.getName()).single().loid();
+			_knownClasses.put(clazz.getName(), classMetadataLoid);
+		}
 		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + classMetadataLoid);
 	}
 
