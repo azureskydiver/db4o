@@ -51,7 +51,7 @@ public class VodEventDriver {
 			return false;
 		}
 		try{
-			_process.checkIfStarted(databaseName(), 10000);
+			_process.waitFor(databaseName(), 10000);
 		} catch (RuntimeException ex){
 			ex.printStackTrace();
 			destroyProcess();

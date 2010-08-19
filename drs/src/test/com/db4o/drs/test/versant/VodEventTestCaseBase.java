@@ -23,11 +23,7 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 		final ProcessRunner eventListenerProcess = _vod.startEventProcessorInSeparateProcess();
 		try{
 			closure.run();
-			boolean result = Runtime4.retry(10000, new Closure4<Boolean>() {
-				public Boolean run() {
-					return eventListenerProcess.outputContains(expectedOutput);
-				}
-			});
+			boolean result = eventListenerProcess.waitFor(expectedOutput, 10000);
 			Assert.isTrue(result, "Output does not contain '" + expectedOutput + "'"); 
 		} finally {
 			eventListenerProcess.destroy();
