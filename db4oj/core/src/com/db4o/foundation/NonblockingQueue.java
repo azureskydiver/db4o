@@ -3,6 +3,7 @@
 package com.db4o.foundation;
 
 /**
+ * Unbounded queue.
  * @exclude
  */
 public class NonblockingQueue<T> implements Queue4<T> {

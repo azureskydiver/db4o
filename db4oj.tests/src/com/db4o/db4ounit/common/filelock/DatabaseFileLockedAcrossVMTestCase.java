@@ -42,7 +42,7 @@ public class DatabaseFileLockedAcrossVMTestCase
 
 	private void waitToFinish(ProcessRunner process) {
 		try {
-			process.checkIfStarted("ready", 3000);
+			process.waitFor("ready", 3000);
 		} catch (Exception ex) {
 			process.destroy();
 			throw new RuntimeException(ex);

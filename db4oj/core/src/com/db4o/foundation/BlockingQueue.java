@@ -4,7 +4,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class BlockingQueue<T> implements Queue4<T> {
+public class BlockingQueue<T> implements BlockingQueue4<T> {
     
 	protected NonblockingQueue<T> _queue = new NonblockingQueue<T>();
 
@@ -41,12 +41,34 @@ public class BlockingQueue<T> implements Queue4<T> {
 		});
 	}
 
+	public T next(final long timeout) throws BlockingQueueStoppedException {
+		return (T) _lock.run(new Closure4<T>() {
+			public T run() {
+				long timeLeft = timeout;
+				long now = System.currentTimeMillis();
+				while (timeLeft > 0) {
+					if (_queue.hasNext()) {
+						return (T) _queue.next();
+					}
+					if(_stopped) {
+						throw new BlockingQueueStoppedException();
+					}
+					_lock.snooze(timeLeft);
+					long l = now;
+					now = System.currentTimeMillis();
+					timeLeft -= now-l;
+				}
+				return null;
+			}
+		});
+	}
+
 	public T next() throws BlockingQueueStoppedException {
-		return _lock.run(new Closure4<T>() {
+		return (T) _lock.run(new Closure4<T>() {
 			public T run() {
 				while(true){
 					if (_queue.hasNext()) {
-						return _queue.next();
+						return (T) _queue.next();
 					}
 					if(_stopped) {
 						throw new BlockingQueueStoppedException();
