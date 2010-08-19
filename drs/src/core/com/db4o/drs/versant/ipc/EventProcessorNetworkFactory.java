@@ -2,6 +2,7 @@ package com.db4o.drs.versant.ipc;
 
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.tcp.*;
 
 public class EventProcessorNetworkFactory {
@@ -14,7 +15,7 @@ public class EventProcessorNetworkFactory {
 		return factory.newClient(cobra, senderId);
 	}
 
-	public static Thread prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
+	public static CommunicationChannelControl prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
 			int senderId) {
 
 		return factory.prepareProviderCommunicationChannel(provider, lock, cobra, client, senderId);

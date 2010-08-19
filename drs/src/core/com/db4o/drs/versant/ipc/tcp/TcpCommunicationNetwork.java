@@ -1,6 +1,8 @@
 package com.db4o.drs.versant.ipc.tcp;
 
 import java.io.*;
+import java.lang.reflect.*;
+import java.lang.reflect.Proxy;
 import java.net.*;
 
 import com.db4o.drs.versant.*;
@@ -10,12 +12,32 @@ import com.db4o.rmi.*;
 
 public class TcpCommunicationNetwork implements EventProcessorNetwork {
 
-	private static final String EVENT_PROCESSOR_HOST = "localhost";
-	private static final int EVENT_PROCESSOR_PORT = 7283;
+	static final String EVENT_PROCESSOR_HOST = "localhost";
+	static final int EVENT_PROCESSOR_PORT = 7283;
 
 	public ProviderSideCommunication newClient(final VodCobra cobra, final int senderId) {
 		
+		// lazy initialization required because the client is created before EventProcessor is up
+		return (ProviderSideCommunication) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{ProviderSideCommunication.class}, new InvocationHandler() {
+			
+			ProviderSideCommunication forward = null;
+			
+			public Object invoke(Object arg0, Method arg1, Object[] arg2)
+					throws Throwable {
 
+				if (forward == null) {
+					forward = newClient0(cobra, senderId);
+				}
+				
+				return arg1.invoke(forward, arg2);
+			}
+		});
+
+	}
+	
+	private ProviderSideCommunication newClient0(final VodCobra cobra, final int senderId) {
+		
+		
 		try {
 			Socket s = connect();
 
@@ -38,8 +60,6 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 
 						feed(in, remotePeer);
 					} catch (IOException e) {
-						e.printStackTrace();
-						// throw new RuntimeException(e);
 					}
 				}
 			});
@@ -51,12 +71,16 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 
 	}
 
-	private void feed(final DataInputStream in, final ByteArrayConsumer consumer) throws IOException {
+	static void feed(final DataInputStream in, final ByteArrayConsumer consumer) throws IOException {
 		int len = in.readInt();
 		int read = 0;
 		byte[] buffer = new byte[len];
 		while (read < len) {
-			in.read(buffer, read, len - read);
+			int ret = in.read(buffer, read, len - read);
+			if (ret == -1) {
+				throw new EOFException();
+			}
+			read += ret;
 		}
 
 		consumer.consume(buffer, 0, len);
@@ -69,7 +93,6 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 				s = new Socket(EVENT_PROCESSOR_HOST, EVENT_PROCESSOR_PORT);
 				break;
 			} catch (ConnectException e) {
-//				e.printStackTrace();
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
@@ -82,48 +105,13 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 		return s;
 	}
 
-	public Thread prepareProviderCommunicationChannel(final ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
+	public CommunicationChannelControl prepareProviderCommunicationChannel(final ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
 			int senderId) {
-
-		Thread t = new Thread("eventprocessor channel") {
-			@Override
-			public void run() {
-
-				try {
-
-					serverServer(provider);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		t.setDaemon(true);
-
-		return t;
+		
+		return new Server(provider);
+		
 	}
 
-	private void serverServer(final ProviderSideCommunication provider) throws IOException, SocketException {
-		ServerSocket server = new ServerSocket(EVENT_PROCESSOR_PORT, 100);
-		server.setReuseAddress(true);
-
-		Socket client = server.accept();
-
-		DataInputStream in = new DataInputStream(new BufferedInputStream(client.getInputStream()));
-		final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(client.getOutputStream()));
-
-		ByteArrayConsumer outgoingConsumer = new ByteArrayConsumer() {
-
-			public void consume(byte[] buffer, int offset, int length) throws IOException {
-				out.writeInt(length);
-				out.write(buffer, offset, length);
-				out.flush();
-			}
-		};
-		SimplePeer<ProviderSideCommunication> localPeer = new SimplePeer<ProviderSideCommunication>(outgoingConsumer, provider);
-		while (true) {
-			feed(in, localPeer);
-		}
-	}
 
 
 }

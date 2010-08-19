@@ -19,7 +19,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
 				final Item item = storeAndCommitItem();
-				Assert.isTrue(checkObjectLifeCycleEventFor(item, 10000), "Timeout: ObjectLifecycleEvent object not stored.");
+				Assert.isTrue(checkObjectLifeCycleEventFor(item, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
 				return null;
 			}
 		});
@@ -32,10 +32,10 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				_provider.runIsolated(new Block4() {
 					public void run() {
 						item.value = storeAndCommitItem();
-						Assert.isFalse(checkObjectLifeCycleEventFor(item.value, 10000), "ObjectLifecycleEvent stored during isolation.");
+						Assert.isFalse(checkObjectLifeCycleEventFor(item.value, 3000), "ObjectLifecycleEvent stored during isolation.");
 					}
 				});
-				Assert.isTrue(checkObjectLifeCycleEventFor(item.value, 10000), "Timeout: ObjectLifecycleEvent object not stored.");
+				Assert.isTrue(checkObjectLifeCycleEventFor(item.value, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
 				return null;
 			}
 		});

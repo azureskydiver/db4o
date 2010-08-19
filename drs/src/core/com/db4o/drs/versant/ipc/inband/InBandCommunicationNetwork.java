@@ -6,7 +6,6 @@ import java.util.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
 import com.versant.event.*;
@@ -62,7 +61,7 @@ public class InBandCommunicationNetwork implements EventProcessorNetwork {
 		}
 	}
 
-	public Thread prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
+	public CommunicationChannelControl prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
 			int senderId) {
 
 		ByteArrayConsumer outgoingConsumer = prepareConsumerForOutgoingMessages(lock, cobra, senderId);
@@ -74,7 +73,7 @@ public class InBandCommunicationNetwork implements EventProcessorNetwork {
 		prepareChannelForIncomingMessages(client, lock, cobra, pendingMessages, senderId);
 
 		
-		Thread t = new Thread("eventprocessor channel") {
+		final Thread t = new Thread("eventprocessor channel") {
 			@Override
 			public void run() {
 				taskQueueProcessorLoop(pendingMessages, lock, cobra, localPeer);
@@ -82,7 +81,20 @@ public class InBandCommunicationNetwork implements EventProcessorNetwork {
 		};
 		t.setDaemon(true);
 		
-		return t;
+		return new CommunicationChannelControl() {
+			
+			public void stop() {
+				pendingMessages.stop();
+			}
+			
+			public void start() {
+				t.start();
+			}
+			
+			public void join() throws InterruptedException {
+				t.join();
+			}
+		};
 	}
 	
 	private static void taskQueueProcessorLoop(BlockingQueue4<RMIMessage> pendingMessages, Object lock, VodCobra _cobra, ByteArrayConsumer _incomingMessages) {

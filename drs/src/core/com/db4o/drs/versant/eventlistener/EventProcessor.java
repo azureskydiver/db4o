@@ -8,10 +8,11 @@ import java.util.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.foundation.*;
 import com.versant.event.*;
 
@@ -41,7 +42,7 @@ public class EventProcessor {
 	
 	private PausableBlockingQueue<Block4> _pausableTasks = new PausableBlockingQueue<Block4>();
 	
-	private Thread _incomingMessages;
+	private CommunicationChannelControl _incomingMessages;
 
 	private volatile boolean _dirty;
 	
@@ -115,6 +116,7 @@ public class EventProcessor {
 		try {
 			_incomingMessages.join();
 		} catch (InterruptedException e) {
+//			e.printStackTrace();
 		}
 		shutdown();
 	}
@@ -199,7 +201,7 @@ public class EventProcessor {
 		try {
 			_commitThread.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		commit();
 		_cobra.close();
@@ -241,10 +243,11 @@ public class EventProcessor {
 	public void stop(){
 		_stopped = true;
 		_pausableTasks.stop();
-		_incomingMessages.interrupt();
+		_incomingMessages.stop();
 		try {
 			_incomingMessages.join();
 		} catch (InterruptedException e) {
+//			e.printStackTrace();
 		}
 	}
 
