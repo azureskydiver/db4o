@@ -6,6 +6,7 @@ import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.threading.*;
 
 import db4ounit.*;
 
@@ -133,7 +134,8 @@ public class NetworkSocketTestCase implements TestLifeCycle {
                         _throwable = t;
                     }
                 }
-            });
+            }, "NetworkSocketTestCase.CatchAllThread");
+	        _thread.setDaemon(true);
 	        _codeBlock = codeBlock;
 	    }
 	    

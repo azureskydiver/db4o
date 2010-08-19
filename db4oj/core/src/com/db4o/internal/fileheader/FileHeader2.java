@@ -91,7 +91,7 @@ public class FileHeader2 extends NewFileHeaderBase {
         	file.syncFiles();
         }
         if(startFileLockingThread){
-        	file.threadPool().start(_timerFileLock);
+        	file.threadPool().start("db4o lock thread", _timerFileLock);
         }
 	}
 

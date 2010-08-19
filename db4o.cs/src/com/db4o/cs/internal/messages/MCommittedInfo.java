@@ -108,7 +108,7 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 		ByteArrayInputStream is = new ByteArrayInputStream(_payLoad._buffer);
 		final int dispatcherID = PrimitiveCodec.readInt(is);
 		final CallbackObjectInfoCollections callbackInfos = decode(is);
-		container().threadPool().start(new Runnable() {
+		container().threadPool().start(getClass().getSimpleName()+": calling commit callbacks thread", new Runnable() {
 			public void run() {
 				if(container().isClosed()){
 					return;

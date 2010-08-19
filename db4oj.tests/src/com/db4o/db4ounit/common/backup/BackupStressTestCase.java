@@ -9,6 +9,7 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
+import com.db4o.internal.threading.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -99,7 +100,7 @@ public class BackupStressTestCase extends Db4oTestWithTempFile  {
 							_inBackup = false;		            
 				        }
 				    }
-				});
+				}, "BackupStressTestCase.startBackupThread");
 		thread.start();
 		return thread;
 	}

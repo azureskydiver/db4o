@@ -62,7 +62,7 @@ public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 				return;
 			}
 		}
-		new Thread(new SodaTestThreadedRegression(classes)).start();
+		new Thread(new SodaTestThreadedRegression(classes), "SodaTestThreadedRegression.startThread").start();
 	}
 	
 	protected String name(){

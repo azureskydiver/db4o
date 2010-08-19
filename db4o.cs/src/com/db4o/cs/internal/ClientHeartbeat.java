@@ -17,7 +17,7 @@ public class ClientHeartbeat implements Runnable {
 
     public ClientHeartbeat(ClientObjectContainer container) {
         _container = container;
-        _timer = new SimpleTimer(this, frequency(container.configImpl()), "db4o client heartbeat");
+        _timer = new SimpleTimer(this, frequency(container.configImpl()));
     }
     
     private int frequency(Config4Impl config){
@@ -29,7 +29,7 @@ public class ClientHeartbeat implements Runnable {
     }
     
     public void start(){
-    	_container.threadPool().start(_timer);
+    	_container.threadPool().start("db4o client heartbeat", _timer);
     }
 
     public void stop() {

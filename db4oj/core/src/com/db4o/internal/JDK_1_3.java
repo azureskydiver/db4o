@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+
 /**
  * @sharpen.ignore
  */
@@ -20,7 +21,7 @@ class JDK_1_3 extends JDK_1_2{
 	}
 
 	Thread addShutdownHook(Runnable runnable){
-		Thread thread = new Thread(runnable);
+		Thread thread = new Thread(runnable, "Shutdown Hook");
 	    Reflection4.invoke(Runtime.getRuntime(), "addShutdownHook", new Object[]{thread});
 		return thread;
 	}

@@ -11,16 +11,13 @@ public final class SimpleTimer implements Runnable {
 
 	private final int _interval;
 
-	private final String _name;
-
 	private Lock4 _lock;
 
 	public volatile boolean stopped = false;
 
-	public SimpleTimer(Runnable runnable, int interval, String name) {
+	public SimpleTimer(Runnable runnable, int interval) {
 		_runnable = runnable;
 		_interval = interval;
-		_name = name;
 		_lock = new Lock4();
 	}
 
@@ -36,26 +33,17 @@ public final class SimpleTimer implements Runnable {
 	}
 
 	public void run() {
-		setThreadName();
-		timerLoop();
-	}
-
-	private void timerLoop() {
-	    while (!stopped) {
+		while (!stopped) {
 			_lock.run(new Closure4() { 
 				public Object run() {
 					_lock.snooze(_interval);
 					return null;
 				}
 			});
-
+		
 			if (!stopped) {
 				_runnable.run();
 			}
 		}
-    }
-
-	private void setThreadName() {
-	    Thread.currentThread().setName(_name);
-    }
+	}
 }

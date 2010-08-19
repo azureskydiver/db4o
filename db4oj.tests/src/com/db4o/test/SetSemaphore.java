@@ -60,7 +60,7 @@ public class SetSemaphore {
     }
     
     private Thread startGetAndReleaseThread(ExtObjectContainer client) {
-    	Thread t = new Thread(new GetAndRelease(client));
+    	Thread t = new Thread(new GetAndRelease(client), "SetSemaphore.startGetAndReleaseThread");
     	t.start();
     	return t;
     }

@@ -76,7 +76,7 @@ public final class ConfigBlock {
         if(! isNew){
             read(address);
         }
-        stream.threadPool().start(timerFileLock());
+        stream.threadPool().start("db4o file lock", timerFileLock());
 	}
     
     private TimerFileLock timerFileLock(){

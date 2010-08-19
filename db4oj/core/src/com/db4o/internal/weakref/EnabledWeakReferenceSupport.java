@@ -38,8 +38,8 @@ class EnabledWeakReferenceSupport implements WeakReferenceSupport {
         	return;
         }
         
-        _timer = new SimpleTimer(new Collector(), _container.configImpl().weakReferenceCollectionInterval(), "db4o WeakReference collector");
-        _container.threadPool().start(_timer);
+        _timer = new SimpleTimer(new Collector(), _container.configImpl().weakReferenceCollectionInterval());
+        _container.threadPool().start("db4o WeakReference collector", _timer);
     }
 
     /* (non-Javadoc)

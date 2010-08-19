@@ -23,7 +23,7 @@ public class ThreadPoolTestCase implements TestCase {
 			}
 		});
 		
-		_subject.start(new Runnable() {
+		_subject.start(getClass().getSimpleName()+" throwing exception thread", new Runnable() {
 			public void run() {
 				throw exception;
 			}
@@ -42,7 +42,7 @@ public class ThreadPoolTestCase implements TestCase {
 		
 		final ByRef<Integer> actualPriority = ByRef.newInstance();
 		
-		_subject.startLowPriority(new Runnable() {
+		_subject.startLowPriority("Priority checker", new Runnable() {
 			public void run() {
 				actualPriority.value = Thread.currentThread().getPriority();
 			}
@@ -56,7 +56,7 @@ public class ThreadPoolTestCase implements TestCase {
 		
 		final ByRef<Boolean> isDaemon = ByRef.newInstance();
 		
-		_subject.startLowPriority(new Runnable() {
+		_subject.startLowPriority("Deamon checker", new Runnable() {
 			public void run() {
 				isDaemon.value = Thread.currentThread().isDaemon();
 			}

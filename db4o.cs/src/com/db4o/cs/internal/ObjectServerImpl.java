@@ -117,7 +117,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private void startServerThread() {
 		_startupLock.run(new Closure4() { public Object run() {
-			threadPool().start(ObjectServerImpl.this);
+			threadPool().start(_name, ObjectServerImpl.this);
 			return null;
 		}});
 	}
@@ -331,7 +331,6 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	}
 
 	public void run() {
-		setThreadName();
 		logListeningOnPort();
 		notifyThreadStarted();
 		listen();
@@ -342,11 +341,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 			return;
 		}
 		_committedCallbacksDispatcher = new CommittedCallbacksDispatcher(this, committedInfosQueue);
-		threadPool().start(_committedCallbacksDispatcher);
-	}
-
-	private void setThreadName() {
-		Thread.currentThread().setName(_name);
+		threadPool().start("Server commit callback dispatcher thread", _committedCallbacksDispatcher);
 	}
 
 	private void listen() {
@@ -367,7 +362,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 					
 					addServerMessageDispatcher(messageDispatcher);
 						
-					threadPool().start(messageDispatcher);
+					threadPool().start("server message dispatcher (still initializing)", messageDispatcher);
 				} catch (Exception e) {
 					
 					// CatchAll because we can get expected timeout exceptions
