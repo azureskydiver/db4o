@@ -65,111 +65,45 @@ public class IOServices {
         
         private final StreamReader _errorReader;
         
+        private final BlockingQueue<String> in = new BlockingQueue<String>();
+        
         private final Process _process;
         
         private int _result;
+        
+        private StringBuilder _inputBuffer = new StringBuilder();
+        private StringBuilder _errorBuffer = new StringBuilder();
 	    
 	    public ProcessRunner(String program, String[] arguments) throws IOException{
 	        _command = generateCommand(program, arguments);
             _process = Runtime.getRuntime().exec(_command);
-            _inputReader = new StreamReader(_process.getInputStream());
-            _errorReader = new StreamReader(_process.getErrorStream());
+            _inputReader = new StreamReader("ProcessRunner Input Thread ["+program+" " + toString(arguments) +"]", _process.getInputStream(), new DelegatingBlockingQueue<String>(in) {
+            	@Override
+            	public void add(String obj) {
+            		_inputBuffer.append(obj);
+            		_inputBuffer.append("\n");
+            		super.add(obj);
+            	}
+            });
+            _errorReader = new StreamReader("ProcessRunner Output Thread ["+program+" " + toString(arguments) +"]", _process.getErrorStream(), new DelegatingBlockingQueue<String>(in) {
+               	@Override
+            	public void add(String obj) {
+               		_errorBuffer.append(obj);
+               		_errorBuffer.append("\n");
+            		super.add(obj);
+            	}
+            });
             _startTime = System.currentTimeMillis();
-	    }
-	    
-	    private String generateCommand (String program, String[] arguments){
-            String command = program;
-            if(arguments != null){
-                for (int i = 0; i < arguments.length; i++) {
-                    command += " " + arguments[i];
-                }
-            }
-            return command;
-	    }
-	    
-	    public int waitFor() throws InterruptedException{
-	        _result = _process.waitFor();
-	        stopReaders();
-	        return _result;
-	    }
-	    
-	    private boolean outputHasStarted(){
-	        return _inputReader.outputHasStarted() || _errorReader.outputHasStarted();
-	    }
-
-	    private boolean outputContains(String str){
-	        return _inputReader.outputContains(str) || _errorReader.outputContains(str);
-	    }
-	    
-	    private void checkTimeOut(long time){
-	        Runtime4.sleep(10);
-	        if(System.currentTimeMillis() - _startTime > time){
-	            throw new DestroyTimeoutException();
-	        }
-	    }
-	    
-	    public void destroy(String expectedOutput, long timeout){
-	        try{
-    	        checkIfStarted(expectedOutput, timeout);
-	        } 
-	        finally {
-	        	destroy();
-	        }
-	    }
-
-	    public void destroy(){
-	        try{
-    	        checkIfTerminated();
-    	        
-    	        // Race condition: If the process is terminated right here , it may
-    	        // terminate successfully before being destroyed.
-    	        
-	        } finally {
-	            _process.destroy();
-	            stopReaders();
-	        }
-	    }
-
-	    public void write(String msg) throws IOException {
-	    	OutputStreamWriter out = new OutputStreamWriter(_process.getOutputStream());
-			out.write(msg + "\n");
-			out.flush();
-	    }
-	    
-        public void checkIfStarted(String expectedOutput, long timeout) {
-            while(! outputHasStarted()){
-	            checkTimeOut(timeout);
-	        }
-	        while(! outputContains(expectedOutput)){
-	            checkTimeOut(timeout);
-	        }
-        }
-
-        private void checkIfTerminated() {
-            boolean ok = false;
-	        try{
-	            _process.exitValue();
-	        }catch (IllegalThreadStateException ex){
-	            ok = true;
-	        }
-	        if(! ok){
-	            throw new ProcessTerminatedBeforeDestroyException();
-	        }
-        }
-	    
-	    private void stopReaders(){
-	        _inputReader.stop();
-	        _errorReader.stop();
 	    }
 	    
 	    public String formattedResult(){
 	        String res = formatOutput("IOServices.exec", _command); 
 	        
-	        if(_inputReader.hasResult()){
-	            res += formatOutput("out", _inputReader.result()); 
+	        if(_inputBuffer.length() > 0){
+	            res += formatOutput("out", _inputBuffer.toString()); 
 	        }
-	        if(_errorReader.hasResult()){
-	            res += formatOutput("err", _errorReader.result()); 
+	        if(_errorBuffer.length() > 0){
+	            res += formatOutput("err", _errorBuffer.toString()); 
 	        }
 	        
 	        res += formatOutput("result", new Integer(_result).toString());
@@ -185,75 +119,125 @@ public class IOServices {
 	    private String headLine(String task){
 	        return "\n" + task + "\n----------------\n";  
 	    }
+
+		private String toString(String[] arguments) {
+	    	String r = "";
+	    	for (String s : arguments) {
+	    		if (r.length() > 0) r += " ";
+				r += "\"" + s + "\"";
+			}
+			return r;
+		}
+
+		private String generateCommand (String program, String[] arguments){
+            String command = program;
+            if(arguments != null){
+                for (int i = 0; i < arguments.length; i++) {
+                    command += " " + arguments[i];
+                }
+            }
+            return command;
+	    }
+	    
+	    public int waitFor() throws InterruptedException{
+	        _result = _process.waitFor();
+	        joinReaders();
+	        return _result;
+	    }
+	    
+	    public void destroy(String expectedOutput, long timeout){
+	        try{
+    	        waitFor(expectedOutput, timeout);
+	        } 
+	        finally {
+	        	destroy();
+	        }
+	    }
+
+	    public void destroy(){
+	        try{
+    	        checkIfTerminated();
+    	        
+    	        // Race condition: If the process is terminated right here , it may
+    	        // terminate successfully before being destroyed.
+    	        
+	        } finally {
+	            _process.destroy();
+	            try {
+					joinReaders();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }
+
+	    public void write(String msg) throws IOException {
+	    	OutputStreamWriter out = new OutputStreamWriter(_process.getOutputStream());
+			out.write(msg + "\n");
+			out.flush();
+	    }
+	    
+        public void waitFor(String expectedOutput, long timeout) {
+			long now = System.currentTimeMillis();
+			while (timeout > 0 && !expectedOutput.equals(in.next(timeout))) {
+				long l = now;
+				now = System.currentTimeMillis();
+				timeout -= now-l;
+			};
+
+        }
+
+        private void checkIfTerminated() {
+            boolean ok = false;
+	        try{
+	            _process.exitValue();
+	        }catch (IllegalThreadStateException ex){
+	            ok = true;
+	        }
+	        if(! ok){
+	            throw new ProcessTerminatedBeforeDestroyException();
+	        }
+        }
+	    
+	    private void joinReaders() throws InterruptedException{
+	        _inputReader.join();
+	        _errorReader.join();
+	    }
 	    
 	}
-	
 
     static class StreamReader implements Runnable {
-        
-        private final Object _lock = new Object();
         
         private final InputStream _stream;
         
         private final Thread _thread;
         
-        private final StringBuffer _stringBuffer = new StringBuffer();
+		private final Queue4<String> _in;
         
-        private boolean _stopped;
-        
-        private String _result;
-        
-        StreamReader(InputStream stream){
+        StreamReader(String threadName, InputStream stream, Queue4<String> in){
             _stream = stream;
-            _thread = new Thread(this);
+			_in = in;
+            _thread = new Thread(this, threadName);
+            _thread.setDaemon(true);
             _thread.start();
         }
         
         public void run() {
-            final InputStream bufferedStream = new BufferedInputStream(_stream);
+        	BufferedReader in = new BufferedReader(new InputStreamReader(_stream));
             try {
-                while(! _stopped){
-                    int i = bufferedStream.read();
-                    if(i >= 0){
-                        synchronized(_lock){
-                            _stringBuffer.append((char)i);
-                        }
-                    }
+            	String line;
+                while((line=in.readLine()) != null){
+                    _in.add(line);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            _result = _stringBuffer.toString();
         }
         
-        public boolean outputHasStarted(){
-            synchronized(_lock){
-                return _stringBuffer.length() > 0;
-            }
+        public void join() throws InterruptedException{
+        	_thread.join();
         }
         
-        public boolean outputContains(String str){
-            synchronized(_lock){
-                return _stringBuffer.toString().indexOf(str) >= 0;
-            }
-        }
-        
-        public void stop(){
-            _stopped = true;
-            try {
-                _thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        public boolean hasResult(){
-            return _result != null && _result.length() > 0;
-        }
-        
-        public String result(){
-            return _result;
-        }
     }
     
     public static String joinArgs(String separator, String[] args, boolean doQuote)

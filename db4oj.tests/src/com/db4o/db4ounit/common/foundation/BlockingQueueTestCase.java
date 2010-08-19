@@ -26,6 +26,50 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 		Assert.areSame(data[1], queue.next());
 		Assert.areSame(data[2], queue.next());
 	}
+	public void testTimeoutNext() {
+		final BlockingQueue<Object> queue = new BlockingQueue<Object>();
+
+		Assert.isNull(assertTakeAtLeast(200, new Closure4<Object>() {
+
+			public Object run() {
+				return queue.next(200);
+			}
+		}));
+		
+		Object obj = new Object();
+		
+		queue.add(obj);
+		
+		Assert.areSame(obj, assertTakeLessThan(50, new Closure4<Object>() {
+
+			public Object run() {
+				return queue.next(200);
+			}
+		}));
+		
+		Assert.isNull(assertTakeAtLeast(200, new Closure4<Object>() {
+
+			public Object run() {
+				return queue.next(200);
+			}
+		}));
+		
+
+	}
+
+	private <T> T assertTakeLessThan(long time, Closure4<T> runnable) {
+		long before = System.currentTimeMillis();
+		T ret = runnable.run();
+		Assert.isSmallerOrEqual(time, System.currentTimeMillis()-before);
+		return ret;
+	}
+
+	private <T> T assertTakeAtLeast(long time, Closure4<T> runnable) {
+		long before = System.currentTimeMillis();
+		T ret = runnable.run();
+		Assert.isGreaterOrEqual(time, System.currentTimeMillis()-before);
+		return ret;
+	}
 
 	public void testBlocking() {
 		Queue4 queue = new BlockingQueue();
