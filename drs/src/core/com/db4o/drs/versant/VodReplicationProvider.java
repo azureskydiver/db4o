@@ -65,7 +65,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				return _myDatabaseId;
 			}
 		};
-		_jdo.deleteAll(RMIMessage.class);
+//		_jdo.deleteAll(RMIMessage.class);
 	}
 
 	private void loadKnownClasses() {
@@ -395,12 +395,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void runIsolated(Block4 block) {
-		_comm.requestIsolation(IsolationMode.DELAYED);
+		_comm.requestIsolation(true);
 		try {
 			block.run();
 		}
 		finally {
-			_comm.requestIsolation(IsolationMode.IMMEDIATE);
+			_comm.requestIsolation(false);
 		}
 	}
 

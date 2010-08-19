@@ -28,7 +28,7 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		_jdo = new VodJdo(_vod);
 		cleanDb();
 		VodCobra cobra = new VodCobra(_vod);
-		ProviderSideCommunication comm = InBandCommunicationFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ProviderSideCommunication comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		_provider = new VodReplicationProvider(_vod, cobra, comm);
 	}
 
@@ -69,7 +69,7 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		}
 		_vod = new VodDatabase(DATABASE_NAME);
 		_vod.produceDb();
-		_vod.enhance();
+//		_vod.enhance();
 		_vod.createEventSchema();
 		_vod.startEventDriver();
 	}

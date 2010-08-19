@@ -1,18 +1,19 @@
-package com.db4o.drs.versant.ipc;
+package com.db4o.drs.versant.ipc.inband;
 
 import java.io.*;
 import java.util.*;
 
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
 import com.versant.event.*;
 
-public class InBandCommunicationFactory {
+public class InBandCommunicationNetwork implements EventProcessorNetwork {
 
-	public static ProviderSideCommunication newClient(final VodCobra cobra, final int senderId) {
+	public ProviderSideCommunication newClient(final VodCobra cobra, final int senderId) {
 
 		final SimplePeer<ProviderSideCommunication> remotePeer = new SimplePeer<ProviderSideCommunication>(new ByteArrayConsumer() {
 
@@ -61,17 +62,50 @@ public class InBandCommunicationFactory {
 		}
 	}
 
-	public static ByteArrayConsumer prepareProviderCommunicationChannel(ProviderSideCommunication provider, Object lock, VodCobra cobra, VodEventClient client,
-			BlockingQueue<RMIMessage> pendingMessages, int senderId) {
+	public Thread prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
+			int senderId) {
 
 		ByteArrayConsumer outgoingConsumer = prepareConsumerForOutgoingMessages(lock, cobra, senderId);
 
-		SimplePeer<ProviderSideCommunication> localPeer = new SimplePeer<ProviderSideCommunication>(outgoingConsumer, provider);
+		final SimplePeer<ProviderSideCommunication> localPeer = new SimplePeer<ProviderSideCommunication>(outgoingConsumer, provider);
+
+		final BlockingQueue4<RMIMessage> pendingMessages = new BlockingQueue<RMIMessage>();
 
 		prepareChannelForIncomingMessages(client, lock, cobra, pendingMessages, senderId);
 
-		return localPeer;
+		
+		Thread t = new Thread("eventprocessor channel") {
+			@Override
+			public void run() {
+				taskQueueProcessorLoop(pendingMessages, lock, cobra, localPeer);
+			}
+		};
+		t.setDaemon(true);
+		
+		return t;
 	}
+	
+	private static void taskQueueProcessorLoop(BlockingQueue4<RMIMessage> pendingMessages, Object lock, VodCobra _cobra, ByteArrayConsumer _incomingMessages) {
+		
+		RMIMessage msg;
+		
+		try {
+			while((msg = pendingMessages.next())!=null) {
+				synchronized (lock) {
+					_cobra.delete(msg.loid());
+					_cobra.commit();
+					byte[] buffer = msg.buffer();
+					try {
+						_incomingMessages.consume(buffer, 0, buffer.length);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		} catch (BlockingQueueStoppedException e){
+		}
+	}
+
 
 	private static ByteArrayConsumer prepareConsumerForOutgoingMessages(final Object lock, final VodCobra cobra, final int senderId) {
 
@@ -90,7 +124,7 @@ public class InBandCommunicationFactory {
 	}
 
 	private static void prepareChannelForIncomingMessages(VodEventClient client, final Object lock, final VodCobra cobra,
-			final BlockingQueue<RMIMessage> pendingMessages, final int senderId) {
+			final BlockingQueue4<RMIMessage> pendingMessages, final int senderId) {
 
 		EventChannel channel = client.produceClassChannel(RMIMessage.class.getName());
 
