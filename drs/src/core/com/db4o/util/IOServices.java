@@ -11,6 +11,9 @@ package com.db4o.util;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
+import com.db4o.foundation.io.Path4;
+
 public class IOServices {
     
 	public static String buildTempPath(String fname) {
@@ -98,22 +101,54 @@ public class IOServices {
         
         private final StreamReader _errorReader;
         
+        private final BlockingQueue<String> in = new BlockingQueue<String>();
+        
         private final Process _process;
         
         private int _result;
         
+        private StringBuilder _inputBuffer = new StringBuilder();
+        private StringBuilder _errorBuffer = new StringBuilder();
+	    
 	    public ProcessRunner(String program, String[] arguments) throws IOException{
 	    	String[] args = new String[arguments.length + 1];
 	    	args[0] = program;
 	    	System.arraycopy(arguments, 0, args, 1, arguments.length);
     		_command = generateCommand(program, arguments);
     		_process = Runtime.getRuntime().exec(args);
-    		_inputReader = new StreamReader(_process.getInputStream());
-    		_errorReader = new StreamReader(_process.getErrorStream());
-    		_startTime = System.currentTimeMillis();
+            _inputReader = new StreamReader("ProcessRunner Input Thread ["+program+" " + toString(arguments) +"]", _process.getInputStream(), new DelegatingBlockingQueue<String>(in) {
+            	@Override
+            	public void add(String obj) {
+            		_inputBuffer.append(obj);
+            		_inputBuffer.append("\n");
+            		super.add(obj);
+            	}
+            });
+            _errorReader = new StreamReader("ProcessRunner Output Thread ["+program+" " + toString(arguments) +"]", _process.getErrorStream(), new DelegatingBlockingQueue<String>(in) {
+               	@Override
+            	public void add(String obj) {
+               		_errorBuffer.append(obj);
+               		_errorBuffer.append("\n");
+            		super.add(obj);
+            	}
+            });
+            _startTime = System.currentTimeMillis();
 	    }
 	    
-	    private String generateCommand (String program, String[] arguments){
+	    public ProcessResult processResult() {
+			return new ProcessResult(_command, _inputBuffer.toString(), _errorBuffer.toString(), _result);
+		}
+
+	    private String toString(String[] arguments) {
+	    	String r = "";
+	    	for (String s : arguments) {
+	    		if (r.length() > 0) r += " ";
+				r += "\"" + s + "\"";
+			}
+			return r;
+		}
+
+		private String generateCommand (String program, String[] arguments){
             String command = program;
             if(arguments != null){
                 for (int i = 0; i < arguments.length; i++) {
@@ -125,32 +160,13 @@ public class IOServices {
 	    
 	    public int waitFor() throws InterruptedException{
 	        _result = _process.waitFor();
-	        stopReaders();
+	        joinReaders();
 	        return _result;
-	    }
-	    
-	    private boolean outputHasStarted(){
-	        return _inputReader.outputHasStarted() || _errorReader.outputHasStarted();
-	    }
-
-	    public boolean outputContains(String str){
-	        return _inputReader.outputContains(str) || _errorReader.outputContains(str);
-	    }
-	    
-	    private void checkTimeOut(long time){
-	    	try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-	        if(System.currentTimeMillis() - _startTime > time){
-	            throw new DestroyTimeoutException();
-	        }
 	    }
 	    
 	    public void destroy(String expectedOutput, long timeout){
 	        try{
-    	        checkIfStarted(expectedOutput, timeout);
+    	        waitFor(expectedOutput, timeout);
 	        } 
 	        finally {
 	        	destroy();
@@ -167,11 +183,10 @@ public class IOServices {
 	        } finally {
 	            _process.destroy();
 	            try {
-					_process.waitFor();
+					joinReaders();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-	            stopReaders();
 	        }
 	    }
 
@@ -181,13 +196,24 @@ public class IOServices {
 			out.flush();
 	    }
 	    
-        public void checkIfStarted(String expectedOutput, long timeout) {
-            while(! outputHasStarted()){
-	            checkTimeOut(timeout);
-	        }
-	        while(! outputContains(expectedOutput)){
-	            checkTimeOut(timeout);
-	        }
+        public boolean waitFor(String expectedOutput, long timeout) {
+			long now = System.currentTimeMillis();
+			while (timeout > 0 && in.next(timeout).indexOf(expectedOutput) == -1) {
+				long l = now;
+				now = System.currentTimeMillis();
+				timeout -= now-l;
+			};
+			return timeout > 0;
+        }
+
+        public boolean waitForLine(String expectedOutput, long timeout) {
+			long now = System.currentTimeMillis();
+			while (timeout > 0 && !expectedOutput.equals(in.next(timeout))) {
+				long l = now;
+				now = System.currentTimeMillis();
+				timeout -= now-l;
+			};
+			return timeout > 0;
         }
 
         private void checkIfTerminated() {
@@ -202,85 +228,45 @@ public class IOServices {
 	        }
         }
 	    
-	    private void stopReaders(){
-	        _inputReader.stop();
-	        _errorReader.stop();
+	    private void joinReaders() throws InterruptedException{
+	        _inputReader.join();
+	        _errorReader.join();
 	    }
-	    
-	    public ProcessResult processResult(){
-	    	return new ProcessResult(_command, _inputReader.result(), _errorReader.result(), _result);
-	    }
-	    
 	    
 	}
-	
 
     static class StreamReader implements Runnable {
-        
-        private final Object _lock = new Object();
         
         private final InputStream _stream;
         
         private final Thread _thread;
         
-        private final StringBuffer _stringBuffer = new StringBuffer();
+		private final Queue4<String> _in;
         
-        private boolean _stopped;
-        
-        private String _result;
-        
-        StreamReader(InputStream stream){
+        StreamReader(String threadName, InputStream stream, Queue4<String> in){
             _stream = stream;
-            _thread = new Thread(this);
+			_in = in;
+            _thread = new Thread(this, threadName);
+            _thread.setDaemon(true);
             _thread.start();
         }
         
         public void run() {
-            final InputStream bufferedStream = new BufferedInputStream(_stream);
+        	BufferedReader in = new BufferedReader(new InputStreamReader(_stream));
             try {
-                while(! _stopped){
-                    int i = bufferedStream.read();
-                    if(i >= 0){
-                        synchronized(_lock){
-                            _stringBuffer.append((char)i);
-                            // System.out.print((char)i);
-                        }
-                    }
+            	String line;
+                while((line=in.readLine()) != null){
+                    _in.add(line);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            _result = _stringBuffer.toString();
         }
         
-        public boolean outputHasStarted(){
-            synchronized(_lock){
-                return _stringBuffer.length() > 0;
-            }
+        public void join() throws InterruptedException{
+        	_thread.join();
         }
         
-        public boolean outputContains(String str){
-            synchronized(_lock){
-                return _stringBuffer.toString().indexOf(str) >= 0;
-            }
-        }
-        
-        public void stop(){
-            _stopped = true;
-            try {
-                _thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        public boolean hasResult(){
-            return _result != null && _result.length() > 0;
-        }
-        
-        public String result(){
-            return _result;
-        }
     }
     
     public static String joinArgs(String separator, String[] args, boolean doQuote)

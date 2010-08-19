@@ -307,7 +307,7 @@ public class VodDatabase {
 		argumentsAsString = arguments.toArray(argumentsAsString);
 		
 		ProcessRunner eventListenerProcess = JavaServices.startJava(Program.class.getName(), argumentsAsString);
-		eventListenerProcess.checkIfStarted(_name, 10000);
+		eventListenerProcess.waitFor(_name, 10000);
 		return eventListenerProcess;
 	}
 	
