@@ -12,7 +12,7 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
- 			AllVodDrsIntegrationTests.class,
+// 			AllVodDrsIntegrationTests.class,
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
 			JdoMetadataGeneratorTestCase.class,
 			VodCobraTestCase.class,

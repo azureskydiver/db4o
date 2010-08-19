@@ -10,8 +10,7 @@
     	<class name="com.db4o.drs.versant.metadata.ReplicationCommitRecord"/>
     </package>    
     <package name="com.db4o.drs.versant.ipc.inband">
-    	<class name="com.db4o.drs.versant.ipc.inband.TimestampSyncRequest"/>
-    	<class name="com.db4o.drs.versant.ipc.inband.RMIMessage"/>
+    	<class name="com.db4o.drs.versant.ipc.inband.MessagePayload"/>
     </package>    
 </jdo>    
 

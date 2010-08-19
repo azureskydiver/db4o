@@ -108,7 +108,7 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 	public CommunicationChannelControl prepareProviderCommunicationChannel(final ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
 			int senderId) {
 		
-		return new Server(provider);
+		return new TcpServer(provider);
 		
 	}
 
