@@ -321,4 +321,8 @@ public class VodCobra implements QLinable{
 		return _vod.databaseName();
 	}
 
+	public void delete(long loid) {
+		_dm.deleteObject(existingDatastoreObject(loid));
+	}
+
 }

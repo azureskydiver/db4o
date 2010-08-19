@@ -96,4 +96,20 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 			}
 		});
 	}
+	
+	public void waitForNext() throws BlockingQueueStoppedException {
+		_lock.run(new Closure4<Boolean>() {
+			public Boolean run() {
+				while (true) {
+					if (_queue.hasNext()) {
+						return null;
+					}
+					if (_stopped) {
+						throw new BlockingQueueStoppedException();
+					}
+					_lock.snooze(Integer.MAX_VALUE);
+				}
+			}
+		});
+	}
 }

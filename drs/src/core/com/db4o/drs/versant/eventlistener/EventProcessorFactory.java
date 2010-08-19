@@ -4,8 +4,6 @@ package com.db4o.drs.versant.eventlistener;
 
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 import com.versant.event.*;
 
 public class EventProcessorFactory {
@@ -18,9 +16,7 @@ public class EventProcessorFactory {
 	        	EventProcessor.unrecoverableExceptionOccurred(exception);
 	        }
 	    });
-		Object lock = new Object();
-		EventProcessorSideCommunication comm = new InBandEventProcessorSideCommunication(cobra, client, lock);
-		EventProcessor eventProcessor = new EventProcessor(client, linePrinter, cobra, comm, lock);
+		EventProcessor eventProcessor = new EventProcessor(client, linePrinter, cobra);
 		return eventProcessor;
 	}
 

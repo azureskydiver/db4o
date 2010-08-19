@@ -31,7 +31,7 @@ public class EventProcessorSupport {
 			public void run() {
 				_eventProcessor.run();
 			}
-		});
+		}, EventProcessor.class.getSimpleName()+" dedicated thread");
 		_eventProcessorThread.start();
 		if(! waitForOutput(EventProcessor.LISTENING_MESSAGE)){
 			throw new IllegalStateException("Event processor does not report '" + EventProcessor.LISTENING_MESSAGE + "'");

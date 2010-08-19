@@ -2,10 +2,10 @@
 
 package com.db4o.drs.versant;
 
-import java.util.*;
-
-import static com.db4o.qlin.QLinSupport.*;
 import static com.db4o.drs.foundation.Logger4Support.*;
+import static com.db4o.qlin.QLinSupport.*;
+
+import java.util.*;
 
 import javax.jdo.spi.*;
 
@@ -13,6 +13,7 @@ import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
@@ -64,6 +65,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				return _myDatabaseId;
 			}
 		};
+		_jdo.deleteAll(RMIMessage.class);
 	}
 
 	private void loadKnownClasses() {
@@ -127,7 +129,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_cobra.store(classMetadata);
 		_cobra.commit();
 
-		_comm.waitForClassMetadataAcknowledgment(classMetadata.fullyQualifiedName());
+		_comm.ensureMonitoringEventsOn(classMetadata.name(), classMetadata.fullyQualifiedName(), classMetadata.loid());
 	}
 
 	public void update(Object obj) {

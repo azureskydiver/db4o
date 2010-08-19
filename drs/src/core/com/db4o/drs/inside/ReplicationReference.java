@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.inside;
 
 import com.db4o.drs.foundation.*;
-import com.db4o.ext.Db4oUUID;
 
 public interface ReplicationReference {
 
