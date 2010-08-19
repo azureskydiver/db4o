@@ -13,7 +13,6 @@ import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
-import com.db4o.rmi.*;
 import com.versant.event.*;
 
 public class EventProcessor {
@@ -42,9 +41,7 @@ public class EventProcessor {
 	
 	private PausableBlockingQueue<Block4> _pausableTasks = new PausableBlockingQueue<Block4>();
 	
-	private BlockingQueue<RMIMessage> _pendingMessages = new BlockingQueue<RMIMessage>();
-
-	private ByteArrayConsumer _incomingMessages;
+	private Thread _incomingMessages;
 
 	private volatile boolean _dirty;
 	
@@ -111,11 +108,14 @@ public class EventProcessor {
 	}
 
 	public void run() {
-		_incomingMessages = InBandCommunicationFactory.prepareProviderCommunicationChannel(createProvider(), _lock, _cobra, _client, _pendingMessages,
-			EVENT_PROCESSOR_ID);
+		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(createProvider(), _lock, _cobra, _client, EVENT_PROCESSOR_ID);
 		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
-		taskQueueProcessorLoop();
+		_incomingMessages.start();
+		try {
+			_incomingMessages.join();
+		} catch (InterruptedException e) {
+		}
 		shutdown();
 	}
 	
@@ -163,15 +163,15 @@ public class EventProcessor {
 				return t == null ? 0 : t.timestamp();
 			}
 			
-			public void requestIsolation(int isolationMode) {
+			public void requestIsolation(boolean isolated) {
 				
-				if(isActive() == (isolationMode == IsolationMode.IMMEDIATE)) {
+				if(_pausableTasks.isPaused() == isolated) {
 					return;
 				}
 		
 				// FIXME: timeout for isolation mode (can rely on new implementation of BlockingQueue#next(long timeout)
 				
-				if (isolationMode == IsolationMode.DELAYED) {
+				if (isolated) {
 					_pausableTasks.pause();
 				} else {
 					_pausableTasks.resume();
@@ -205,27 +205,6 @@ public class EventProcessor {
 		_cobra.close();
 	}
 
-	private void taskQueueProcessorLoop() {
-		
-		RMIMessage msg;
-		
-		try {
-			while((msg = _pendingMessages.next())!=null) {
-				synchronized (_lock) {
-					_cobra.delete(msg.loid());
-					_cobra.commit();
-					byte[] buffer = msg.buffer();
-					try {
-						_incomingMessages.consume(buffer, 0, buffer.length);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			}
-		} catch (BlockingQueueStoppedException e){
-		}
-	}
-
 	private void createChannel(final ClassChannelSpec channelSpec) {
 		EventChannel channel = _client.produceClassChannel(channelSpec._className);
 		channel.addVersantEventListener (new ClassEventListener() {
@@ -242,10 +221,6 @@ public class EventProcessor {
 		println("Listener channel created for class " + channelSpec._className);
 	}
 
-	private boolean isActive() {
-		return !_pausableTasks.isPaused();
-	}
-	
 	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
 		_pausableTasks.add(new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation));
 	}
@@ -266,7 +241,11 @@ public class EventProcessor {
 	public void stop(){
 		_stopped = true;
 		_pausableTasks.stop();
-		_pendingMessages.stop();
+		_incomingMessages.interrupt();
+		try {
+			_incomingMessages.join();
+		} catch (InterruptedException e) {
+		}
 	}
 
 	public static void unrecoverableExceptionOccurred(Throwable t) {
