@@ -53,10 +53,9 @@ public class EventProcessor {
 				public void run() {
 					commit();
 				}}, 
-			COMMIT_INTERVAL, 
-			"EventProcessor Commit");
+			COMMIT_INTERVAL);
 	
-	private Thread _commitThread = new Thread(_commitTimer);
+	private Thread _commitThread = new Thread(_commitTimer, "EventProcessor Commit");
 	
 	private CommitTimestamp _commitTimestamp;
 

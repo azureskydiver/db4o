@@ -50,7 +50,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		failures = new Exception[threadCount];
 		
 		for (int i = 0; i < threadCount; ++i) {
-			threads[i] = new Thread(new RunnableTestMethod(toTest, method, i,hasSequenceParameter));
+			threads[i] = new Thread(new RunnableTestMethod(toTest, method, i,hasSequenceParameter), "ConcurrencyTestMethod.invokeConcurrencyMethod Thread["+i+"]");
 		}
 		// start threads simultaneously
 		for (int i = 0; i < threadCount; ++i) {

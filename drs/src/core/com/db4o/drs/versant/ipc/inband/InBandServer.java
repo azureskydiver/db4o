@@ -88,9 +88,9 @@ public class InBandServer implements CommunicationChannelControl {
 				}
 				;
 			}
-		}, 2000, "EventProcessor Commit");
+		}, 2000);
 
-		purgerThread = new Thread(purger);
+		purgerThread = new Thread(purger, "EventProcessor in-band message payload purger");
 		purgerThread.setDaemon(true);
 		purgerThread.start();
 	}

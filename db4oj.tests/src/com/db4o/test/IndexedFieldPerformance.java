@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.internal.threading.*;
 import com.db4o.query.*;
 
 /**
@@ -26,7 +27,7 @@ public class IndexedFieldPerformance implements Serializable {
                 store();
                 query();
             }
-        }).start();
+        }, "IndexedFieldPerformance").start();
     }
 
     public IndexedFieldPerformance() {

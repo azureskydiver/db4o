@@ -10,7 +10,7 @@ public class UnhandledExceptionInThreadTestCase implements TestCase {
 	
 	public static class ExceptionThrowingTestCase extends AbstractDb4oTestCase {
 		public void test() {
-			container().threadPool().start(new Runnable() {
+			container().threadPool().start(UnhandledExceptionInThreadTestCase.class.getSimpleName()+" Throwing Exception Thread", new Runnable() {
 				public void run() {
 					throw new IllegalStateException();
 				}

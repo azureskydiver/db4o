@@ -96,7 +96,7 @@ public class ConcurrentRenameTestCase implements TestLifeCycle {
 			EmbeddedObjectContainer db = openDatabase();
 			
 			List<Throwable> exceptions = new ArrayList<Throwable>();
-			Thread []threads = {new Thread(new QueryRunner(db, exceptions)), new Thread(new RenameRunner(db, exceptions))};
+			Thread []threads = {new Thread(new QueryRunner(db, exceptions), "ConcurrentRenameTestCase.test Thread[0]"), new Thread(new RenameRunner(db, exceptions), "ConcurrentRenameTestCase.test Thread[1]")};
 			
 			for (Thread thread : threads) {
 				thread.start();

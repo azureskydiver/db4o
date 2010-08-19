@@ -5,11 +5,9 @@ import com.db4o.events.*;
 
 public interface ThreadPool4 {
 	
-	void start(Runnable task);
-
 	void start(String taskName, Runnable task);
 	
-	void startLowPriority(Runnable task);
+	void startLowPriority(String taskName, Runnable task);
 	
 	/**
 	 * @sharpen.event UncaughtExceptionEventArgs

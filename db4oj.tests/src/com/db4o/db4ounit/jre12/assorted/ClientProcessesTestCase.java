@@ -32,7 +32,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
         
         final StringBuffer results = new StringBuffer();
         
-        ThreadServices.spawnAndJoin(CLIENT_COUNT, new CodeBlock() {
+        ThreadServices.spawnAndJoin("ClientProcessesTestCase.testMassiveClientConnect", CLIENT_COUNT, new CodeBlock() {
             public void run() throws Throwable {
                 String result = JavaServices.java(clientRunnerCommand());
                 results.append(result);
@@ -49,7 +49,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
         
         final StringBuffer results = new StringBuffer();
         
-        ThreadServices.spawnAndJoin(CLIENT_COUNT, new CodeBlock() {
+        ThreadServices.spawnAndJoin("ClientProcessesTestCase.testKillingClients", CLIENT_COUNT, new CodeBlock() {
             public void run() throws Throwable {
                 results.append(JavaServices.startAndKillJavaProcess(clientRunnerCommand(), CLIENT_STARTED_OK, 10000));
             }

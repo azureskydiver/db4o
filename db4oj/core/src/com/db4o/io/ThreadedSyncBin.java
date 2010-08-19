@@ -3,6 +3,7 @@
 package com.db4o.io;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.threading.*;
 
 
 public class ThreadedSyncBin extends BinDecorator {
@@ -35,7 +36,7 @@ public class ThreadedSyncBin extends BinDecorator {
 					}
 				}
 			}
-		});
+		}, "ThreadedSyncBin");
 	    _thread.start();
     }
 	

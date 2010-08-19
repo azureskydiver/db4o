@@ -65,7 +65,7 @@ public class DynamicVariableTestCase implements TestCase {
 						}
 					}
 				}
-			});
+			}, "DynamicVariableTestCase.checkVariableBehavior Thread["+i+"]");
 		}
 		return threads;
 	}

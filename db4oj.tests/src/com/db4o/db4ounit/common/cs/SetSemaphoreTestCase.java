@@ -147,7 +147,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
     }
 
     private Thread startGetAndReleaseThread(ExtObjectContainer client) {
-        Thread t = new Thread(new GetAndRelease(client));
+        Thread t = new Thread(new GetAndRelease(client), "SetSemaphoreTestCase.startGetAndReleaseThread");
         t.start();
         return t;
     }

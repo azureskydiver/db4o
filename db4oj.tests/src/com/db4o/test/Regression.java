@@ -84,12 +84,12 @@ public class Regression {
 		if (THREADS) {
 			try {
 				threadsSharp = true;
-				new Thread(new Thread1(this)).start();
+				new Thread(new Thread1(this), "Regression.Thread1").start();
 				Thread.sleep(100);
 				// the server socket neads a little time to come up
-				new Thread(new Thread2(this)).start();
+				new Thread(new Thread2(this), "Regression.Thread2").start();
 				Thread.sleep(100);
-				new Thread(new Thread3(this)).start();
+				new Thread(new Thread3(this), "Regression.Thread3").start();
 
 				// We don't want to run out of main to allow sequential
 				// execution of Ant tasks.

@@ -18,8 +18,8 @@ public class ThreadPool4Impl implements ThreadPool4 {
 		}
 	}
 
-	public void startLowPriority(Runnable task) {
-		final Thread thread = threadFor(task);
+	public void startLowPriority(String taskName, Runnable task) {
+		final Thread thread = threadFor(taskName, task);
 		setLowPriorityOn(thread);
 		activateThread(thread);
 	}
@@ -31,19 +31,13 @@ public class ThreadPool4Impl implements ThreadPool4 {
 	    thread.setPriority(Thread.MIN_PRIORITY);
     }
 
-	public void start(final Runnable task) {
-		final Thread thread = threadFor(task);
-		activateThread(thread);
-    }
-	
 	public void start(String taskName, final Runnable task) {
-		final Thread thread = threadFor(task);
-		thread.setName(taskName);
+		final Thread thread = threadFor(taskName, task);
 		
 		activateThread(thread);
     }
 
-	private Thread threadFor(final Runnable task) {
+	private Thread threadFor(String threadName, final Runnable task) {
 	    final Thread thread = new Thread(new Runnable() {
         	public void run() {
         		try {
@@ -54,7 +48,7 @@ public class ThreadPool4Impl implements ThreadPool4 {
         			dispose(Thread.currentThread());
         		}
             }
-        });
+        }, threadName);
 	    thread.setDaemon(true);
 		return thread;
     }

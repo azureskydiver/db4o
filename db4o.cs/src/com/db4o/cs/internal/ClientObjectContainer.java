@@ -171,7 +171,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private void startAsynchronousMessageProcessor() {
 	    _asynchronousMessageProcessor = new ClientAsynchronousMessageProcessor(_asynchronousMessageQueue);
-	    threadPool().start(_asynchronousMessageProcessor);
+	    threadPool().start("Client Asynchronous Message Processor Thread for: " + toString(), _asynchronousMessageProcessor);
     }
 
 	public void backup(Storage targetStorage, String path) throws NotSupportedException {
@@ -563,7 +563,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			}
 			_blobTask.add(msg);
 			if (needStart) {
-				threadPool().startLowPriority(_blobTask);
+				threadPool().startLowPriority("Blob processor task", _blobTask);
 			}
 		}
 	}
