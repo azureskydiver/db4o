@@ -70,9 +70,6 @@ public class EventProcessor {
 	    _cobra = cobra;
 
 	    produceLastTimestamp();
-	    
-	    _commitThread.start();
-	    
 	    startChannelsFromKnownClasses();
 	}
 
@@ -109,6 +106,7 @@ public class EventProcessor {
 	}
 
 	public void run() {
+	    _commitThread.start();
 		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(createProvider(), _lock, _cobra, _client, EVENT_PROCESSOR_ID);
 		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
@@ -152,17 +150,10 @@ public class EventProcessor {
 				if(newTimeStamp > 0){
 					_timeStampIdGenerator.setMinimumNext(newTimeStamp);
 				}
-				TimestampSyncRequest t = _cobra.singleInstanceOrDefault(TimestampSyncRequest.class, new TimestampSyncRequest());
-				t.timestamp(_timeStampIdGenerator.last());
-				_cobra.store(t);
-				dirty();
 			}
 			
 			public long requestTimestamp() {
-		
-				TimestampSyncRequest t = _cobra.singleInstance(TimestampSyncRequest.class);
-				
-				return t == null ? 0 : t.timestamp();
+				return _timeStampIdGenerator.last();
 			}
 			
 			public void requestIsolation(boolean isolated) {

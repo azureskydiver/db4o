@@ -8,7 +8,7 @@ import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelContro
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
-public class Server implements CommunicationChannelControl {
+public class TcpServer implements CommunicationChannelControl {
 
 	private ServerSocket server;
 	private Set<Dispatcher> dispatchers = new HashSet<Dispatcher>();
@@ -17,7 +17,7 @@ public class Server implements CommunicationChannelControl {
 
 	private Thread serverThread;
 
-	public Server(ProviderSideCommunication provider) {
+	public TcpServer(ProviderSideCommunication provider) {
 
 		this.provider = provider;
 
@@ -94,7 +94,7 @@ public class Server implements CommunicationChannelControl {
 		try {
 			runServer0();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} finally {
 			synchronized (this) {
 				notifyAll();

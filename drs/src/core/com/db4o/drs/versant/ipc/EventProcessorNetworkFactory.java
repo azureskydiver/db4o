@@ -3,12 +3,12 @@ package com.db4o.drs.versant.ipc;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
-import com.db4o.drs.versant.ipc.tcp.*;
+import com.db4o.drs.versant.ipc.inband.*;
 
 public class EventProcessorNetworkFactory {
 	
-	private static final EventProcessorNetwork factory = new TcpCommunicationNetwork();
-//	private static final EventProcessorNetwork factory = new InBandCommunicationNetwork();
+//	private static final EventProcessorNetwork factory = new TcpCommunicationNetwork();
+	private static final EventProcessorNetwork factory = new InBandCommunicationNetwork();
 
 	public static ProviderSideCommunication newClient(final VodCobra cobra, final int senderId) {
 
