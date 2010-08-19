@@ -34,6 +34,18 @@ public class Serializers {
 
 	}, UUID.class);
 
+	public final static Serializer<Boolean> bool = addSerializer(new Serializer<Boolean>() {
+		
+		public Boolean deserialize(DataInput in) throws IOException {
+			return in.readBoolean();
+		}
+
+		public void serialize(DataOutput out, Boolean v) throws IOException {
+			out.writeBoolean(v);
+		}
+
+	}, Boolean.class, boolean.class);
+
 	
 	public final static Serializer<Integer> integer = addSerializer(new Serializer<Integer>() {
 

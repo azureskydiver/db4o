@@ -91,6 +91,9 @@ public class SimplePeer<T> implements Peer<T> {
 				out.writeBoolean(true);
 				@SuppressWarnings("unchecked")
 				Serializer<Object> s = (Serializer<Object>) Serializers.serializerFor(t);
+				if (s == null) {
+					throw new RuntimeException("No serializer registered for: " + t);
+				}
 				s.serialize(out, o);
 			}
 		}
@@ -145,7 +148,7 @@ public class SimplePeer<T> implements Peer<T> {
 		builtInMap.put("long", Long.TYPE );
 		builtInMap.put("double", Double.TYPE );
 		builtInMap.put("float", Float.TYPE );
-		builtInMap.put("bool", Boolean.TYPE );
+		builtInMap.put("boolean", Boolean.TYPE );
 		builtInMap.put("char", Character.TYPE );
 		builtInMap.put("byte", Byte.TYPE );
 		builtInMap.put("void", Void.TYPE );
