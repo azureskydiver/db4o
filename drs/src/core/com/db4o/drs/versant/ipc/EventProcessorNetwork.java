@@ -7,6 +7,12 @@ public interface EventProcessorNetwork {
 
 	ProviderSideCommunication newClient(final VodCobra cobra, final int senderId);
 
-	Thread prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client, int senderId);
+	CommunicationChannelControl prepareProviderCommunicationChannel(ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client, int senderId);
+	
+	public interface CommunicationChannelControl {
+		void stop();
+		void join() throws InterruptedException;
+		void start();
+	}
 
 }
