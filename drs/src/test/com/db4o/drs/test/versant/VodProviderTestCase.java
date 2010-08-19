@@ -11,7 +11,6 @@ import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
@@ -100,7 +99,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
 		VodCobra cobra = new VodCobra(_vod);
-		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		ProviderSideCommunication comm = InBandCommunicationFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider provider = new VodReplicationProvider(_vod, cobra, comm);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
@@ -109,7 +108,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
 		VodCobra cobra = new VodCobra(_vod);
-		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		ProviderSideCommunication comm = InBandCommunicationFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod, cobra, comm);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();

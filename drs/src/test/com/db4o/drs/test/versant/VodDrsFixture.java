@@ -8,7 +8,6 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 
 public class VodDrsFixture implements DrsFixture{
 	
@@ -58,7 +57,7 @@ public class VodDrsFixture implements DrsFixture{
 
 	public void open() {
 		VodCobra cobra = new VodCobra(_vod);
-		ProviderSideCommunication comm = new InBandProviderSideCommunication(_vod, cobra);
+		ProviderSideCommunication comm = InBandCommunicationFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		_provider = new VodReplicationProvider(_vod, cobra, comm);
 	}
 

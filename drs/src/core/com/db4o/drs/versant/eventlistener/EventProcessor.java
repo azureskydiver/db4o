@@ -5,13 +5,17 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.util.*;
 
+
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.foundation.*;
+import com.db4o.rmi.*;
+import com.db4o.rmi.test.*;
 import com.versant.event.*;
 
 public class EventProcessor {
@@ -26,24 +30,27 @@ public class EventProcessor {
 
 	private final int COMMIT_INTERVAL = 1000; // 1 sec
 	
+	private static int EVENT_PROCESSOR_ID = EventProcessor.class.getName().hashCode();
+	
 	private final LinePrinter _out;
 	
 	private final VodEventClient _client;
 	
 	private volatile boolean _stopped;
 
-	private volatile long _pausedAt;
-	
 	private final VodCobra _cobra;
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
-	private final BlockingQueue<Block4> _queuedTasks = new BlockingQueue<Block4>();
-	private Block4 _pendingTask = null;
+	private PausableBlockingQueue<Block4> _pausableTasks = new PausableBlockingQueue<Block4>();
 	
+	private BlockingQueue<RMIMessage> _pendingMessages = new BlockingQueue<RMIMessage>();
+
+	private ByteArrayConsumer _incomingMessages;
+
 	private volatile boolean _dirty;
 	
-	private final Object _lock;
+	private final Object _lock = new Object();
 	
 	SimpleTimer _commitTimer = new SimpleTimer(
 			new Runnable() {
@@ -56,28 +63,19 @@ public class EventProcessor {
 	private Thread _commitThread = new Thread(_commitTimer);
 	
 	private CommitTimestamp _commitTimestamp;
-	
-	private EventProcessorSideCommunication _comm;
-	
-	public EventProcessor(VodEventClient client, LinePrinter out, VodCobra cobra, EventProcessorSideCommunication comm, Object lock)  {
+
+
+	public EventProcessor(VodEventClient client, LinePrinter out, VodCobra cobra)  {
 		
-		_lock = lock;
 		_out = out;
-		_comm = comm;
 		_client = client;
 	    _cobra = cobra;
+
+	    produceLastTimestamp();
 	    
-	    synchronized(_lock){
-		    _commitThread.start();
-		    
-		    try{
-		    	produceLastTimestamp();
-		    } catch (Exception ex){
-		    	unrecoverableExceptionOccurred(ex);
-		    }
-		    
-		    startChannelsFromKnownClasses();
-	    }
+	    _commitThread.start();
+	    
+	    startChannelsFromKnownClasses();
 	}
 
 	private void startChannelsFromKnownClasses() {
@@ -88,7 +86,7 @@ public class EventProcessor {
 		}
 	}
 
-	private void produceLastTimestamp() throws Exception {
+	private void produceLastTimestamp() {
 		_commitTimestamp = _cobra.singleInstanceOrDefault(CommitTimestamp.class, new CommitTimestamp(0));
 		if(_commitTimestamp.value() == 0){
 			_cobra.store(_commitTimestamp);
@@ -112,17 +110,84 @@ public class EventProcessor {
 	}
 
 	public void run() {
-	    registerClassMetadataListener();
-	    registerSyncRequestListener();
-	    registerIsolationRequestListener();
-	    println(LISTENING_MESSAGE + _cobra.databaseName());
-	    taskQueueProcessorLoop();
+		_incomingMessages = InBandCommunicationFactory.prepareProviderCommunicationChannel(createProvider(), _lock, _cobra, _client, _pendingMessages,
+			EVENT_PROCESSOR_ID);
+		println(LISTENING_MESSAGE + _cobra.databaseName());
+		startPausableTasksExecutor();
+		taskQueueProcessorLoop();
 		shutdown();
 	}
+	
+
+	private void startPausableTasksExecutor() {
+
+		Thread t = new Thread("Pausable tasks executor") {
+			@Override
+			public void run() {
+				try {
+					while(!_stopped) {
+						Block4 next = _pausableTasks.next();
+						synchronized (_lock) {
+							next.run();
+						}
+					}
+				} catch (BlockingQueueStoppedException e){
+				}
+			}
+		};
+		t.setDaemon(true);
+		t.start();
+	}
+
+	
+
+	private ProviderSideCommunication createProvider() {
+		
+		return new ProviderSideCommunication() {
+			
+			public void syncTimestamp(long newTimeStamp) {
+				if(newTimeStamp > 0){
+					_timeStampIdGenerator.setMinimumNext(newTimeStamp);
+				}
+				TimestampSyncRequest t = _cobra.singleInstanceOrDefault(TimestampSyncRequest.class, new TimestampSyncRequest());
+				t.timestamp(_timeStampIdGenerator.last());
+				_cobra.store(t);
+				dirty();
+			}
+			
+			public long requestTimestamp() {
+		
+				TimestampSyncRequest t = _cobra.singleInstance(TimestampSyncRequest.class);
+				
+				return t == null ? 0 : t.timestamp();
+			}
+			
+			public void requestIsolation(int isolationMode) {
+				
+				if(isActive() == (isolationMode == IsolationMode.IMMEDIATE)) {
+					return;
+				}
+		
+				// FIXME: timeout for isolation mode (can rely on new implementation of BlockingQueue#next(long timeout)
+				
+				if (isolationMode == IsolationMode.DELAYED) {
+					_pausableTasks.pause();
+				} else {
+					_pausableTasks.resume();
+				}
+			}
+		
+			public void ensureMonitoringEventsOn(String className, String fullyQualifiedName, long classMetadataLoid) {
+				createChannel(new ClassChannelSpec(className,fullyQualifiedName, classMetadataLoid));
+				dirty();
+			}
+	
+		};
+	}
+
 
 	private void shutdown() {
 		_client.shutdown();
-		_comm.shutdown();
 		_commitTimer.stop();
 		try {
 			_commitThread.join();
@@ -134,63 +199,26 @@ public class EventProcessor {
 	}
 
 	private void taskQueueProcessorLoop() {
-		try{
-			while(! _stopped){
-				if(isActive()) {
-					if(!processQueuedTask()) {
-						break;
+		
+		RMIMessage msg;
+		
+		try {
+			while((msg = _pendingMessages.next())!=null) {
+				synchronized (_lock) {
+					_cobra.delete(msg.loid());
+					_cobra.commit();
+					byte[] buffer = msg.buffer();
+					try {
+						_incomingMessages.consume(buffer, 0, buffer.length);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
 					}
 				}
-				else {
-					pauseQueue();
-				}
 			}
-		} catch (Exception ex){
-			unrecoverableExceptionOccurred(ex);
+		} catch (BlockingQueueStoppedException e){
 		}
 	}
 
-	private boolean processQueuedTask() {
-		synchronized(_lock) {
-			if(isActive() && _pendingTask != null) {
-				logIsolation("UNSTASHING " + _pendingTask);
-				_pendingTask.run();
-				logIsolation("PROCESSED " + _pendingTask);
-				_pendingTask = null;
-				return true;
-			}
-		}
-		try {
-			Block4 task = _queuedTasks.next();
-			logIsolation("UNQUEUED " + task);
-			synchronized(_lock) {
-				if(!isActive()) {
-					_pendingTask = task;
-					logIsolation("STASHED " + task);
-					return true;
-				}
-				task.run();
-			}
-			logIsolation("PROCESSED " + task);
-			return true;
-		} catch(BlockingQueueStoppedException ex){
-			return false;
-		}
-	}
-	
-	private void pauseQueue() {
-		logIsolation("PAUSE");
-		boolean unpaused = Runtime4.retry(PAUSE_TIMEOUT, PAUSE_INTERVAL, new Closure4<Boolean>() {
-			public Boolean run() {
-				return isActive();
-			}
-		});
-		logIsolation("UNPAUSE");
-		if(!unpaused) {
-			throw new IllegalStateException("Isolated state timed out.");
-		}
-	}
-	
 	private void createChannel(final ClassChannelSpec channelSpec) {
 		EventChannel channel = _client.produceClassChannel(channelSpec._className);
 		channel.addVersantEventListener (new ClassEventListener() {
@@ -207,61 +235,12 @@ public class EventProcessor {
 		println("Listener channel created for class " + channelSpec._className);
 	}
 
-	private void registerSyncRequestListener() {
-		_comm.registerSyncRequestListener(new Procedure4<Long>() {
-			public void apply(Long newTimeStamp) {
-				synchronized (_lock) {
-					if(newTimeStamp > 0){
-						_timeStampIdGenerator.setMinimumNext(newTimeStamp);
-					}
-					_comm.sendTimestamp(_timeStampIdGenerator.last());
-				}
-			}
-		});
-	}
-
-	private void registerIsolationRequestListener() {
-		_comm.registerIsolationRequestListener(new Procedure4<Integer>() {
-			public void apply(Integer isolationMode) {
-				synchronized (_lock) {
-					if(isActive() == (isolationMode == IsolationMode.IMMEDIATE)) {
-						return;
-					}
-					switch(isolationMode) {
-						case IsolationMode.DELAYED:
-							_pausedAt = System.currentTimeMillis();
-							break;
-						case IsolationMode.IMMEDIATE:
-							_pausedAt = 0;
-					}
-					_comm.acknowledgeIsolationMode(isolationMode);
-				}
-			}
-		});
-	}
-
 	private boolean isActive() {
-		return _pausedAt == 0;
+		return !_pausableTasks.isPaused();
 	}
 	
-	private void registerClassMetadataListener()  {
-		EventChannel channel = _client.produceClassChannel(ClassMetadata.class.getName());
-		channel.addVersantEventListener (new ClassEventListener() {
-			public void instanceCreated (VersantEventObject event) {
-				_queuedTasks.add(new RegisterClassMetadataTask(event.getRaiserLoid()));
-			}
-			public void instanceModified (VersantEventObject event){
-				// do nothing
-			}
-			public void instanceDeleted (VersantEventObject event) {
-				// do nothing
-			}
-		});
-	}
-
 	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
-		ObjectLifeCycleEventStoreTask task = new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation);
-		_queuedTasks.add(task);
+		_pausableTasks.add(new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation));
 	}
 
 	private void persistObjectLifeCycleEvent(ObjectLifecycleEvent objectLifecycleEvent) {
@@ -279,7 +258,8 @@ public class EventProcessor {
 	
 	public void stop(){
 		_stopped = true;
-		_queuedTasks.stop();
+		_pausableTasks.stop();
+		_pendingMessages.stop();
 	}
 
 	public static void unrecoverableExceptionOccurred(Throwable t) {
@@ -305,6 +285,10 @@ public class EventProcessor {
 		}
 	}
 	
+	private void dirty() {
+		_dirty = true;
+	}
+
 	public class ClassChannelSpec {
 
 		public final String _className;
@@ -340,6 +324,7 @@ public class EventProcessor {
 		}
 		
 		public void run() {
+			
 			long loid = VodCobra.loidAsLong(_objectLoid);
 			ObjectLifecycleEvent objectLifecycleEvent = 
 				new ObjectLifecycleEvent(
@@ -349,7 +334,7 @@ public class EventProcessor {
 						_timeStampIdGenerator.generate());
 			persistObjectLifeCycleEvent(objectLifecycleEvent);
 			println("Event stored: " + objectLifecycleEvent);
-			_dirty = true;
+			dirty();
 		}
 		
 		@Override
@@ -358,30 +343,4 @@ public class EventProcessor {
 		}
 	}
 
-	private class RegisterClassMetadataTask implements Block4 {
-
-		private String _classId;
-		
-		public RegisterClassMetadataTask(String classId) {
-			_classId = classId;
-		}
-		
-		public void run() {
-			long classMetadataLoid = VodCobra.loidAsLong(_classId);
-			ClassMetadata classMetadata = _cobra.objectByLoid(classMetadataLoid);
-			_dirty = true;
-			createChannel(new ClassChannelSpec(classMetadata.name(),classMetadata.fullyQualifiedName(), classMetadataLoid));
-			_comm.acknowledgeClassMetadataRegistration(classMetadata.fullyQualifiedName());
-		}		
-		
-		@Override
-		public String toString() {
-			return getClass().getSimpleName()+ ": " + _classId;
-		}
-	}
-
-	// TODO only used for isolation logging, remove
-	private static void logIsolation(String msg) {
-		//System.err.println("*** ISO - " + msg);
-	}
 }
