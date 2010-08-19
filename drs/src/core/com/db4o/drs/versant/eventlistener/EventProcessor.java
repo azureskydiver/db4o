@@ -5,17 +5,15 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.util.*;
 
-
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
-import com.db4o.rmi.test.*;
 import com.versant.event.*;
 
 public class EventProcessor {
@@ -64,6 +62,8 @@ public class EventProcessor {
 	
 	private CommitTimestamp _commitTimestamp;
 
+	private Set<String> _knownClasses = new HashSet<String>();
+
 
 	public EventProcessor(VodEventClient client, LinePrinter out, VodCobra cobra)  {
 		
@@ -83,6 +83,7 @@ public class EventProcessor {
 	    for (Long loid : classMetadataLoids) {
 	    	ClassMetadata classMetadata = _cobra.objectByLoid(loid);
 	    	createChannel(new ClassChannelSpec(classMetadata.name(), classMetadata.fullyQualifiedName(),  loid));
+	    	_knownClasses.add(classMetadata.fullyQualifiedName());
 		}
 	}
 
@@ -177,8 +178,14 @@ public class EventProcessor {
 				}
 			}
 		
-			public void ensureMonitoringEventsOn(String className, String fullyQualifiedName, long classMetadataLoid) {
-				createChannel(new ClassChannelSpec(className,fullyQualifiedName, classMetadataLoid));
+			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName) {
+				if (_knownClasses.contains(fullyQualifiedName)) {
+					return;
+				}
+				ClassMetadata cm = new ClassMetadata(schemaName, fullyQualifiedName);
+				_cobra.store(cm);
+				createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, cm.loid()));
+				_knownClasses.add(fullyQualifiedName);
 				dirty();
 			}
 	
