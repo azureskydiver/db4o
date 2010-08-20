@@ -44,11 +44,20 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 	public T next(final long timeout) throws BlockingQueueStoppedException {
 		return (T) _lock.run(new Closure4<T>() {
 			public T run() {
+				waitForNext(timeout);
+				return _queue.hasNext() ? _queue.next() : null;
+			}
+		});
+	}
+
+	public boolean waitForNext(final long timeout) throws BlockingQueueStoppedException {
+		 return _lock.run(new Closure4<Boolean>() {
+			public Boolean run() {
 				long timeLeft = timeout;
 				long now = System.currentTimeMillis();
 				while (timeLeft > 0) {
 					if (_queue.hasNext()) {
-						return (T) _queue.next();
+						return true;
 					}
 					if(_stopped) {
 						throw new BlockingQueueStoppedException();
@@ -58,7 +67,7 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 					now = System.currentTimeMillis();
 					timeLeft -= now-l;
 				}
-				return null;
+				return false;
 			}
 		});
 	}
@@ -66,15 +75,8 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 	public T next() throws BlockingQueueStoppedException {
 		return (T) _lock.run(new Closure4<T>() {
 			public T run() {
-				while(true){
-					if (_queue.hasNext()) {
-						return (T) _queue.next();
-					}
-					if(_stopped) {
-						throw new BlockingQueueStoppedException();
-					}
-					_lock.snooze(Integer.MAX_VALUE);
-				}
+				waitForNext();
+				return _queue.next();
 			}
 		});
 	}
