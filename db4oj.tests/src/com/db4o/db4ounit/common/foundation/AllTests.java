@@ -20,6 +20,7 @@ public class AllTests extends ReflectionTestSuite {
 			Arrays4TestCase.class,
 			BitMap4TestCase.class,
 			BlockingQueueTestCase.class,
+			PausableBlockingQueueTestCase.class,
 			BufferTestCase.class,
 			CircularBufferTestCase.class,
 			Collection4TestCase.class,
