@@ -33,7 +33,7 @@ public class InBandCommunicationNetwork implements EventProcessorNetwork {
 			}
 		});
 
-		return remotePeer.sync();
+		return remotePeer.sync(); // TODO: should return the peer itself to let the client choose between sync and async
 
 	}
 

@@ -8,11 +8,10 @@ import java.util.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.*;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
 import com.versant.event.*;
 
@@ -170,13 +169,11 @@ public class EventProcessor {
 				}
 			}
 		
-			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName) {
+			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
 				if (_knownClasses.contains(fullyQualifiedName)) {
 					return;
 				}
-				ClassMetadata cm = new ClassMetadata(schemaName, fullyQualifiedName);
-				_cobra.store(cm);
-				createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, cm.loid()));
+				createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid));
 				_knownClasses.add(fullyQualifiedName);
 				dirty();
 			}

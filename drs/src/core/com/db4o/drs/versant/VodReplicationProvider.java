@@ -2,8 +2,8 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.drs.foundation.Logger4Support.*;
-import static com.db4o.qlin.QLinSupport.*;
+import static com.db4o.drs.foundation.Logger4Support.logIdentity;
+import static com.db4o.qlin.QLinSupport.prototype;
 
 import java.util.*;
 
@@ -13,7 +13,6 @@ import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.inband.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
@@ -65,7 +64,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				return _myDatabaseId;
 			}
 		};
-//		_jdo.deleteAll(RMIMessage.class);
 	}
 
 	private void loadKnownClasses() {
@@ -122,13 +120,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private void ensureClassKnown(Class clazz) {
 		String className = clazz.getName();
 		
-		if( _knownClasses.get(className) != null){
+		if(_knownClasses.containsKey(className)){
 			return;
 		}
-		
-		_knownClasses.put(className, -1L);
-
-		_comm.ensureMonitoringEventsOn(className, _jdo.schemaName(clazz));
+		String schemaName = _jdo.schemaName(clazz);
+		ClassMetadata cm = new ClassMetadata(schemaName, className);
+		_cobra.store(cm);
+		_cobra.commit();
+		_knownClasses.put(className, cm.loid());
+		_comm.ensureMonitoringEventsOn(className, schemaName, cm.loid());
 	}
 
 	public void update(Object obj) {
@@ -300,13 +300,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		ensureClassKnown(clazz);
-		Long classMetadataLoid = _knownClasses.get(clazz.getName());
-		if (classMetadataLoid == null) {
-			ClassMetadata cm = prototype(ClassMetadata.class);
-			classMetadataLoid = _cobra.from(ClassMetadata.class).where(cm.fullyQualifiedName()).equal(clazz.getName()).single().loid();
-			_knownClasses.put(clazz.getName(), classMetadataLoid);
-		}
-		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + classMetadataLoid);
+		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + _knownClasses.get(clazz.getName()));
 	}
 
 	private ObjectSet internalObjectsChangedSinceLastReplication(String query) {
