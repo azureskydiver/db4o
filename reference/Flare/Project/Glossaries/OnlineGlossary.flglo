@@ -234,13 +234,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Symbian</Term>
-    </Terms>
-    <Definition
-      Link="/Content/platform_specific_issues/symbian_os.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>OODBMS</Term>
       <Term>ODBMS</Term>
     </Terms>

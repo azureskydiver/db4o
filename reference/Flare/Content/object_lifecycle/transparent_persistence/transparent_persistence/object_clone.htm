@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="811" MadCap:lastWidth="740">
+    <head><title>Object Clone	<link href="../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Object Clone</h1>
+        <p>Platform implementations of #clone is not compatible with TP.
+</p>
+        <p>Both java and .NET object implementations provide
+<code>#clone</code> method for default objects, which is enabled by
+implementing <code>Cloneable/ICloneable</code> interface. This
+implementation is a shallow clone, i.e. only the top-level object
+fields are duplicated, all the referenced(children) objects are only
+copied as references to the same object in the parent clone. But how it
+affects Transparent Persistence?</p>
+        <p>If you remember
+<a href="../transparent_persistence_implementation.htm">Transparent Persistence Implementation</a>you must know that a special <code>Activator</code> field is used to
+bind an object to the object container. Consequently, the default clone
+will copy this <code>Activatable</code> field to the object's
+duplicate, which will produce ambiguity as the object container won't
+know which object should be activated for write.</p>
+        <p>Let's look how it will affect db4o in practice. We will use a usual
+<a href="car.htm">Car</a> class and make it cloneable. Use the following code to store a
+car object and it's clone: </p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/TPCloneExample.java/storeCar.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/TPCloneExample.cs/StoreCar.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/TPCloneExample.vb/StoreCar.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>So it works for the first store, but what if we will clone an object retrieved from the database?</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/TPCloneExample.java/testClone.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/TPCloneExample.cs/TestClone.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/TPCloneExample.vb/TestClone.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>The code above throws an exception when the cloned object is being
+bound to the object container. Luckily we can easily fix it by
+overriding #clone method and setting activator to null: </p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/Car.java/Clone.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/Car.cs/Clone.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../Resources/Snippets/Object Clone/Car.vb/Clone.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="tpclonevb.zip">VB.NET </a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="tpclonecs.zip">c# </a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="tpclonejava.zip">Java </a>
+            </MadCap:conditionalText>
+        </p>
+    </body>
+</html>

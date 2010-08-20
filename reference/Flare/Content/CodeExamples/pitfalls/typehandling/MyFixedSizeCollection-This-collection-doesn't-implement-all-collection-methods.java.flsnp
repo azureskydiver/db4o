@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">class MyFixedSizeCollection&lt;E&gt; extends AbstractCollection&lt;E&gt;{
+    private E[] items;
+
+    public MyFixedSizeCollection(E[] items) {
+        this.items = items;
+    }
+
+    @Override
+    public Iterator&lt;E&gt; iterator() {
+        return Arrays.asList(items).iterator();
+    }
+
+    @Override
+    public int size() {
+        return items.length;
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			MyFixedSizeCollection.java: This collection doesn't implement all collection methods
+			<div class="codedownload">
+				<a href="Example-pitfalls-typehandling-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

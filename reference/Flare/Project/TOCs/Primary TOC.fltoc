@@ -198,10 +198,6 @@
       Title="Simple Persistence"
       Link="/Content/object_lifecycle/simple_persistence.htm" />
     <TocEntry
-      Title="Class Name Format In .NET"
-      Link="/Content/platform_specific_issues/class_name_format_in_.net.htm"
-      conditions="Primary..NET,Primary.All languages" />
-    <TocEntry
       Title="Querying"
       Link="/Content/object_lifecycle/querying.htm">
       <TocEntry
@@ -425,6 +421,13 @@
         <TocEntry
           Title="TA For Public Fields"
           Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_for_public_fields.htm" />
+        <TocEntry
+          Title="Transparent Activation Pitfalls"
+          Link="/Content/object_lifecycle/activation/transparent_activation_framework/transparent_activation_pitfalls.htm">
+          <TocEntry
+            Title="Migrating Between Databases"
+            Link="/Content/object_lifecycle/activation/transparent_activation_framework/transparent_activation/migrating_between_databases.htm"></TocEntry>
+        </TocEntry>
       </TocEntry>
     </TocEntry>
     <TocEntry
@@ -447,6 +450,35 @@
             Title="Sensorpanel"
             Link="/Content/object_lifecycle/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java/sensorpanel.htm" />
         </TocEntry>
+      </TocEntry>
+      <TocEntry
+        Title="Transparent Persistence Pitfalls"
+        Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence.htm">
+        <TocEntry
+          Title="Rollback Strategies"
+          Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies.htm">
+          <TocEntry
+            Title="Rollback And Cache"
+            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/rollback_and_cache.htm" />
+          <TocEntry
+            Title="Automatic Deactivation"
+            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/automatic_deactivation.htm" />
+          <TocEntry
+            Title="car"
+            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/car.htm" />
+          <TocEntry
+            Title="id"
+            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/id.htm" />
+          <TocEntry
+            Title="pilot"
+            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/pilot.htm" />
+        </TocEntry>
+        <TocEntry
+          Title="car"
+          Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/car.htm" />
+        <TocEntry
+          Title="Object Clone"
+          Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/object_clone.htm" />
       </TocEntry>
       <TocEntry
         Title="Collections"
@@ -1111,6 +1143,9 @@
         Title="Field Type Change"
         Link="/Content/implementation_strategies/refactoring_and_schema_evolution/field_type_change.htm" />
       <TocEntry
+        Title="Field Refactoring Limitation"
+        Link="/Content/implementation_strategies/refactoring_and_schema_evolution/field_refactoring_limitation.htm" />
+      <TocEntry
         Title="Refactoring Class Hierarchy"
         Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy.htm">
         <TocEntry
@@ -1373,10 +1408,6 @@
         Title="Limitations Of db4o Cross-Platform Usage"
         Link="/Content/platform_specific_issues/cross-platform_applications/limitations_of_db4o_cross-platform_usage.htm" />
     </TocEntry>
-    <TocEntry
-      Title="Symbian OS"
-      Link="/Content/platform_specific_issues/symbian_os.htm"
-      conditions="Primary.All languages,Primary.Java"></TocEntry>
     <TocEntry
       Title="ASP.NET"
       Link="/Content/platform_specific_issues/asp.net.htm"
@@ -1728,93 +1759,44 @@
     Title="Usage Pitfalls"
     Link="/Content/usage_pitfalls.htm">
     <TocEntry
-      Title="Anonymous Classes"
-      Link="/Content/usage_pitfalls/anonymous_classes.htm"
-      conditions="Primary.All languages,Primary.Java"></TocEntry>
+      Title="Activation Depth Pitfall"
+      Link="/Content/usage_pitfalls/activation_depth.htm" />
     <TocEntry
-      Title="Equality Comparison"
-      Link="/Content/usage_pitfalls/equality_comparison.htm">
-      <TocEntry
-        Title="QBE"
-        Link="/Content/usage_pitfalls/equality_comparison/qbe.htm" />
-      <TocEntry
-        Title="Using Equals"
-        Link="/Content/usage_pitfalls/equality_comparison/using_equals.htm" />
-    </TocEntry>
+      Title="Update Depth Pitfall"
+      Link="/Content/usage_pitfalls/update_depth.htm" />
     <TocEntry
       Title="UUID Hash Code"
       Link="/Content/usage_pitfalls/uuid_hash_code.htm"
       conditions="Primary.Java" />
     <TocEntry
-      Title="Reference Cache In Client-Server Mode"
-      Link="/Content/usage_pitfalls/reference_cache_in_client-server_mode.htm"></TocEntry>
+      Title="Storing BigDecimal And BigInteger"
+      Link="/Content/usage_pitfalls/storing_bigdecimal.htm"
+      conditions="Primary.Java"
+      ReplaceMergeNode="false" />
     <TocEntry
       Title="Storing Marshalbyref Objects"
       Link="/Content/usage_pitfalls/storing_marshalbyref_objects.htm"
       ReplaceMergeNode="false"
       conditions="Primary..NET"></TocEntry>
     <TocEntry
-      Title="Transparent Activation"
-      Link="/Content/usage_pitfalls/transparent_activation.htm">
-      <TocEntry
-        Title="Migrating Between Databases"
-        Link="/Content/usage_pitfalls/transparent_activation/migrating_between_databases.htm"></TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Transparent Persistence"
-      Link="/Content/usage_pitfalls/transparent_persistence.htm">
-      <TocEntry
-        Title="Rollback Strategies"
-        Link="/Content/usage_pitfalls/transparent_persistence/rollback_strategies.htm">
-        <TocEntry
-          Title="Rollback And Cache"
-          Link="/Content/usage_pitfalls/transparent_persistence/rollback_strategies/rollback_and_cache.htm" />
-        <TocEntry
-          Title="Automatic Deactivation"
-          Link="/Content/usage_pitfalls/transparent_persistence/rollback_strategies/automatic_deactivation.htm" />
-        <TocEntry
-          Title="car"
-          Link="/Content/usage_pitfalls/transparent_persistence/rollback_strategies/car.htm" />
-        <TocEntry
-          Title="id"
-          Link="/Content/usage_pitfalls/transparent_persistence/rollback_strategies/id.htm" />
-        <TocEntry
-          Title="pilot"
-          Link="/Content/usage_pitfalls/transparent_persistence/rollback_strategies/pilot.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="car"
-        Link="/Content/usage_pitfalls/transparent_persistence/car.htm" />
-      <TocEntry
-        Title="Object Clone"
-        Link="/Content/usage_pitfalls/transparent_persistence/object_clone.htm" />
-    </TocEntry>
+      Title="Special Type Handling"
+      Link="/Content/usage_pitfalls/special_type_handling.htm"
+      conditions="Primary.Java"
+      ReplaceMergeNode="false" />
     <TocEntry
       Title="Accessing Persistent Classes From Different .NET Applications"
       Link="/Content/usage_pitfalls/accessing_persistent_classes_from_different_.net_applications.htm"
       conditions="Primary..NET" />
     <TocEntry
-      Title="Activation Depth"
-      Link="/Content/usage_pitfalls/activation_depth.htm" />
-    <TocEntry
       Title="Classloader And Generic Classes"
       Link="/Content/usage_pitfalls/classloader_and_generic_classes.htm"
       conditions="Primary.All languages,Primary.Java" />
     <TocEntry
-      Title="Client-Server Timeouts"
-      Link="/Content/usage_pitfalls/client-server_timeouts.htm" />
-    <TocEntry
       Title="Dangerous Practices"
       Link="/Content/usage_pitfalls/dangerous_practices.htm" />
     <TocEntry
-      Title="Native Queries"
-      Link="/Content/usage_pitfalls/native_queries.htm" />
-    <TocEntry
       Title="Persistent Hashtables"
       Link="/Content/usage_pitfalls/persistent_hashtables.htm" />
-    <TocEntry
-      Title="Update Depth"
-      Link="/Content/usage_pitfalls/update_depth.htm" />
     <TocEntry
       Title="Working With Large Amounts Of Data"
       Link="/Content/usage_pitfalls/working_with_large_amounts_of_data.htm" />
@@ -1840,9 +1822,12 @@
         conditions="Primary.TobeReviewed" />
     </TocEntry>
     <TocEntry
-      Title="Native Queries In Client-Server Mode"
-      Link="/Content/client-server/native_queries_in_client-server_mode.htm"
-      conditions="Primary.Java,Primary.All languages" />
+      Title="Native Queries"
+      Link="/Content/client-server/native_queries.htm" />
+    <TocEntry
+      Title="Anonymous Classes In Client Server Mode"
+      Link="/Content/client-server/anonymous_classes.htm"
+      conditions="Primary.Java" />
     <TocEntry
       Title="Server Without Persistent Classes Deployed"
       Link="/Content/client-server/server_without_persistent_classes_deployed.htm">
@@ -1870,6 +1855,9 @@
       Title="Switching Database Files In CS Mode"
       Link="/Content/client-server/switching_database_files_in_cs_mode.htm"
       conditions="Primary.TobeReviewed" />
+    <TocEntry
+      Title="Reference Cache In Client-Server Mode"
+      Link="/Content/client-server/reference_cache_in_client-server_mode.htm"></TocEntry>
     <TocEntry
       Title="Refreshing Objects"
       Link="/Content/client-server/refreshing_objects.htm" />
@@ -1918,6 +1906,9 @@
     <TocEntry
       Title="Using SSL For Client-Server Communication"
       Link="/Content/client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm" />
+    <TocEntry
+      Title="Client-Server Timeouts"
+      Link="/Content/client-server/client-server_timeouts.htm" />
   </TocEntry>
   <TocEntry
     Title="db4o Replication System dRS"

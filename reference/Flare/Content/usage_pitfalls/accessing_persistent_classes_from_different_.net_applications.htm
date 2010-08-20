@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html MadCap:lastBlockDepth="3" MadCap:lastHeight="835" MadCap:lastWidth="625" xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:conditions="Primary..NET">
+<html MadCap:lastBlockDepth="3" MadCap:lastHeight="787" MadCap:lastWidth="625" xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:conditions="Primary..NET">
     <head><title>Accessing Persistent Classes From Different .NET Applications	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <h1>Accessing Persistent Classes From Different .NET Applications</h1><a name="Problem"></a>
+        <h1>Accessing Persistent Classes From Different .NET Applications</h1>
         <h2>Problem</h2>
         <p>Accessing db4o database created and filled in with a .NET
 application or library from another .NET application or library shows an empty
-database.</p><a name="Reason"></a>
+database.</p>
         <h2>Reason</h2>
         <p>db4o class name format in db4o consists of the full class
 name and assembly name:</p>
@@ -16,7 +16,7 @@ name and assembly name:</p>
         <p>Two different .NET applications (libraries) usually have
 different assembly names. If you do not use
 <a href="../configuration/common/alias.htm">aliasing</a>, the class name will be appended
-with the current application assembly name.</p><a name="Solution"></a>
+with the current application assembly name.</p>
         <h2>Solution</h2>
         <p>In order to access db4o persistent classes from different
 applications (libraries) you will need to use an

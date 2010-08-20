@@ -1,59 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-    <head><title>Update Depth	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
-    </head>
-    <body onload="prettyPrint()">
-        <h1>Update Depth</h1>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="841" MadCap:lastWidth="560">
+    <head></head>
+    <body>
+        <h1>Update Depth Pitfall</h1>
         <p>db4o update behavior is regulated by
-<a href="../object_lifecycle/update_depth.htm">Update Depth</a>. Understanding Update Depth
+<a href="../object_lifecycle/update_depth.htm">Update Depth</a>. Understanding update depth
 will help you to improve performance and avoid unnecessary memory
-usage. 
-</p>
-        <p>When Update Depth is set to a big value
+usage. A common pitfall is that the update-depth is to small and that the objects are not updated. In such cases you either need to explicitly store the 
+related objects individually or <a href="../configuration/common/update_depth.htm">increase the update-depth</a>.</p>
+        <p>For example in this code we add a new friend and store the object. Since a collection is also handled like a regular object, it is affected by the update-depth. In this example we only store the person-object, but not the friend-collection-object. Therefore with the default-update depth of one the update isn't store. In order to update this properly, you either need to set the update depth to two or store the friend-list explicitly. </p>
+        <MadCap:snippetBlock src="../CodeExamples/pitfalls/updatedepth/UpdateDepthPitfall-Update-doesn't-work.all.flsnp" />
+        <p>So for this example setting the update-depth to two will fix the issue. For lots of operation a update-depth of two is pretty reasonable. This allows you to update collections without storing them explicitly.</p>
+        <MadCap:snippetBlock src="../CodeExamples/pitfalls/updatedepth/UpdateDepthPitfall-A-higher-update-depth-fixes-the-issue.all.flsnp" />
+        <p>When the update depth is set to a big value
 on objects with a deep reference hierarchy it will cause each update
 on the top-level object to trigger updates on the lower-level
 objects, which can impose a huge performance penalty. 
 </p>
-        <p>The following settings should be used
-with a special care and only with a good reason to do so:</p>
-        <ol>
-            <li>
-                <p>Global deep update depth setting:</p>
-                <p MadCap:conditions="Primary.Java,Primary.All languages">
-                    <p>Java:</p>
-                    <p><code>configuration.updateDepth(Integer.MaxValue);</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET">
-                    <p>.NET:</p>
-                    <p><code>configuration.UpdateDepth(Int32.MAX_VALUE);</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:net" />
-                <p>This setting causes ALL objects in the
-database to be updated to the lowest possible level on each update.</p>
-            </li>
-            <li>
-                <p>Cascade on update:</p>
-                <p MadCap:conditions="Primary.Java,Primary.All languages">
-                    <p>Java:</p>
-                    <p><code>configuration.objectClass(Item.class).cascadeOnUpdateDepth(true);</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:java" />
-                <p MadCap:conditions="Primary..NET">
-                    <p>.NET:</p>
-                    <p><code>configuration.ObjectClass(typeof(Item)).CascadeOnUpdateDepth(true);</code>
-                    </p>
-                </p>
-                <p MadCap:conditions="Primary:net" />
-            </li>
-        </ol>
-        <p>This setting will cause an update to
-the lowest level for Item class only. This can be unnecessary and
-therefore undesired in order to safe system resources.</p>
-        <p>For more detailed information, please,
-refer to  <a href="../object_lifecycle/update_depth.htm">Update Depth</a>.</p>
+        <p>Try <a href="../object_lifecycle/transparent_persistence.htm">transparent persistence</a>, which removes the issue of the update-depth completly. </p>
     </body>
 </html>
