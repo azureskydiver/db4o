@@ -119,6 +119,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void tearDown() throws Exception {
+		clean();
 		closeBoth();
 		cleanBoth();
 	}
