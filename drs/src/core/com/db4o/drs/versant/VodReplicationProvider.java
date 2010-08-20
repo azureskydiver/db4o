@@ -92,6 +92,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void deleteAllInstances(Class clazz) {
+		if(!_jdo.isKnownClass(clazz)) {
+			return;
+		}
 		_jdo.deleteAll(clazz);
 	}
 
