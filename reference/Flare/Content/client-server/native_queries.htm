@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="233" MadCap:lastWidth="586">
+    <head><title>Native Queries	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Native Queries</h1>
+        <p>Native Queries are optimized to SODA under the hood. Therefore they can be normally used in a client-server environment. However, there is a catch: as soon as the Native Query is not optimized there will be 2 things required on the server:</p>
+        <ul>
+            <li>The persistent classes definitions will be required because the objects will need to be instantiated to execute the query code;</li>
+            <li>The NQ predicate class will be required to run on the server to do the actual job.</li>
+        </ul>
+        <p> To meet these requirements you can keep your persistent classes and NQ predicates in separate libraries, which will make it easy to deploy it on both the client and the server side. Otherwise you may try to express the unoptimised query in SODA, this option will make it more performant, but the disadvantage is less robust and maintainable code. </p>
+    </body>
+</html>

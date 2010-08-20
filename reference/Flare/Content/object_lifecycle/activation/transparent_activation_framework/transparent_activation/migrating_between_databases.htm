@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+    <head><title>Migrating Between Databases	<link href="../../../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Migrating Between Databases</h1>
+        <p>Transparent activation and persistence functionality depends
+on an association between an object and an object container, which is created
+when an activator is bound to the object. Each object allows only one
+activator. Typically this limitation won't show up, however there is a valid
+use case for it: </p>
+        <p>1)      suppose
+you need to copy one or more objects from one object container to another;</p>
+        <p>2)      you
+will retrieve the object(s) from the first object container using any suitable
+query syntax;</p>
+        <p>3)      optionally
+you can close the first object container;</p>
+        <p>4)      you
+will now save the object to the second object container.</p>
+        <p>If both object containers were
+using transparent activation or persistence - the 4-th step will throw an
+exception. Let's look at the case in more detail. Typical activatable class
+contains an <code>activator</code> field. When transparent activation
+functionality is used for the first time an object container activator will be
+bound to the object:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/SensorPanelTA.java/bind.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/SensorPanelTA.cs/Bind.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/SensorPanelTA.vb/Bind.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>If <code>bind</code> method will
+be re-called with the same object container, activator parameter will always be
+the same. However, if another object container tries to bind the object (in our
+case with the <code>store</code> call) activator parameter will be different,
+which will cause an exception. (Exception will be thrown even if the first
+object container is already closed, as activator object still exists in the
+memory.) This behaviour is illustrated with the following example
+(<a href="../detailed_example.htm">SensorPanelTA</a> class from Transparent Activation chapter is used):</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/TAExample.java/testSwitchDatabases.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/TAExample.cs/TestSwitchDatabases.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/TAExample.vb/TestSwitchDatabases.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>The solution to this problem is
+simple: activator should be unbound from the object:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:</p>
+            <p><code>sensor.bind(null);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <p>c#:</p>
+            <p><code>sensor.Bind(null);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <p>VB:</p>
+            <p><code>sensor.Bind(Nothing)</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>Note, that the object will quit
+being activatable for the first object container. The following example shows
+the described behaviour:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/TAExample.java/testSwitchDatabasesFixed.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/TAExample.cs/TestSwitchDatabasesFixed.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <MadCap:snippetBlock src="../../../../Resources/Snippets/Migrating Between Databases/TAExample.vb/TestSwitchDatabasesFixed.flsnp" />
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p MadCap:conditions="Primary.Online">Download example code:</p>
+        <p MadCap:conditions="Primary.Online">
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages"><a href="tamigratevb.zip">VB.NET </a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="tamigratecs.zip">c# </a>
+            </MadCap:conditionalText>
+            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="tamigratejava.zip">Java </a>
+            </MadCap:conditionalText>
+        </p>
+    </body>
+</html>

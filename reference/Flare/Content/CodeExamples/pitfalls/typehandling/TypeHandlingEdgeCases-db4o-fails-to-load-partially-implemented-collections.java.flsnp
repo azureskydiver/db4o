@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">try {
+    ObjectSet&lt;CollectionHolder&gt; holders = container.query(CollectionHolder.class);
+    MyFixedSizeCollection&lt;String&gt; collection = holders.get(0).getNames();
+} catch (Exception e) {
+    // this will fail! The db4o collection-storage
+    // assumes that collections support all operations of the collection interface.
+    // db4o uses the regular collection-methods to restore the instance.
+    e.printStackTrace();
+}</pre>
+		<div class="codesnippet-meta">
+			TypeHandlingEdgeCases.java: db4o fails to load partially implemented collections
+			<div class="codedownload">
+				<a href="Example-pitfalls-typehandling-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

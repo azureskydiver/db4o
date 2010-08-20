@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">final Person jodie = queryForJodie(container);
+
+Person julia = jodie.mother().mother().mother().mother().mother();
+
+// This will print null
+// Because julia is not activated
+// and therefore all fields are not set
+System.out.println(julia.getName());
+// This will throw a NullPointerException.
+// Because julia is not activated
+// and therefore all fields are not set
+String joannaName = julia.mother().getName();</pre>
+		<div class="codesnippet-meta">
+			ActivationDepthPitfall.java: run into not activated objects
+			<div class="codedownload">
+				<a href="Example-pitfalls-activation-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

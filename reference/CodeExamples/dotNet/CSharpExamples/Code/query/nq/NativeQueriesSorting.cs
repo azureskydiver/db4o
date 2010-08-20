@@ -18,6 +18,7 @@ namespace Db4oDoc.Code.Query.NativeQueries
                 StoreData(container);
 
                 NativeQuerySorting(container);
+
             }
         }
 

@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="872" MadCap:lastWidth="498">
+    <head>
+    </head>
+    <body>
+        <h1>Transparent Activation Pitfalls</h1>
+        <p><a href="../transparent_activation_framework.htm">Transparent Activation</a> is a powerful feature that can
+make development much faster, easier and error-proof. But as any power it can
+lead to trouble if used in a wrong way. The aim of this chapter is to point you
+out to typical pitfalls, which can lead to unexpected and undesired results.</p>
+        <h2>Not Activate Call Before Field Access</h2>
+        <p>Before accessing any field you need to call the activate-method. This is true for all <MadCap:variable name="Primary.getter/setter" /> and also for other methods like the to string method or the hash code method. The best strategy is to call the activate-method in the <MadCap:variable name="Primary.getter/setter" /> and then access the field through those even in the class itself.</p>
+        <p>Or use the <a href="../../../implementation_strategies/enhancement_tools.htm">enhancement-tools</a> to avoid this issue complete. </p>
+        <h2>Migrating Between Databases</h2>
+        <h3>Problem</h3>
+        <p>Transparent Activation is implemented through <code>Activatable/IActivatable</code> interface, which binds an object to the current object container. In a case when an object is stored to more than one object container, this logic won't work, as only one binding (activator) is allowed per object. </p>
+        <h3>Solution</h3>
+        <p>To allow correct behavior of the object between databases, the object should be unbinded before being stored to the next database. This can be done with the following code:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>myObject.bind(null);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET: </p>
+            <p><code>myObject.Bind(null);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:net" />
+        <p>For more information see an <a href="transparent_activation/migrating_between_databases.htm">example</a>. </p>
+        <p MadCap:conditions="Primary.Java">
+            <h2>Instrumentation Limitations</h2>
+            <h3>Problem</h3>
+            <p>For Java instrumentation <a href="../../../implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.htm">instrumenting classloader</a> must know
+the classes to instrument, i.e. all application classes should be on the
+classpath. </p>
+            <h3>Solution</h3>
+            <p>Make sure that all classes to be instrumented are available
+through the classpath</p>
+        </p>
+        <h2>Debugging Instrumented Classes</h2>
+        <p>Debugging instrumented classes may not work 100% correct. <span>Make sure you use the debug-flag for the <a href="../../../implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.htm">db4otool</a></span></p>
+        <p>You should be able to debug normally anywhere around
+instrumented bytecode. If you still think that the problem occurs in the
+instrumented area, please submit a bug report to <a href="http://tracker.db4o.com/">db4o Jira</a>.</p>
+    </body>
+</html>

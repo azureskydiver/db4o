@@ -1,64 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-    <head><title>Activation Depth	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
-    </head>
-    <body onload="prettyPrint()">
-        <h1>Activation Depth</h1>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1555" MadCap:lastWidth="560">
+    <head></head>
+    <body>
+        <h1>The Activation Pitfall</h1>
         <p>In order to work effectively with db4o
 you must understand the concept of
 <a href="../object_lifecycle/activation.htm">Activation</a>. Activation controls the amount
-of referenced objects loaded into the memory. There are 2 main
-pitfalls that you must be aware about:</p>
-        <ol>
-            <li>
-                <p>An object retrieved from the
-	database is null.</p>
-                <p>This happens if the activation level
-	is lower than needed. For example:</p>
-                <p>class Pilot has field Car:</p>
-                <p><code>Pilot {</code>
-                </p>
-                <p><code>Car car;</code>
-                </p>
-                <p><code>}</code>
-                </p>
-                <p>and is saved to a database. Then
-	<code>pilot</code> object us retrieved from the database with the
-	activation depth is set to 0. In this case <code>pilot.car</code>
-	will be equal to null and can be incorrectly interpreted.</p>
-            </li>
-            <li>
-                <p>Activation depth is set
-	<a href="../object_lifecycle/activation/global_activation_settings.htm">globally</a>
-	to a high value or is set to
-	<a href="../object_lifecycle/activation/object-specific_activation.htm">cascadeOnActivate</a>
-	for a heavily used object with a deep structure. This will result in
-	a huge performance penalty and should be avoided.</p>
-                <p>The automatic solution of the
-	Activation issues is provided by
-	<a href="../object_lifecycle/activation/transparent_activation_framework.htm">Transparent Activation Framework</a>.
-	However, understanding of Activation is still important.</p>
-            </li>
-        </ol>
+of referenced objects loaded into the memory. There are two main
+pitfalls that you must be aware about.</p>
+        <h2>Accessing Not Activated Objects</h2>
+        <p>One common pitfall is to access not activate objects. This usually results in null pointer exceptions or invalid values. This happens when you navigate beyond the activated object-graph-area. For example, we have a complex relationships and follow them the default activation:</p>
+        <MadCap:snippetBlock src="../CodeExamples/pitfalls/activation/ActivationDepthPitfall-run-into-not-activated-objects.all.flsnp" />
+        <p>This will result in a exception. Because by default db4o only activates object up the a depth of 5. This means that when you load a object, that object and all object which are reachable via 4 references are activated. </p>
+        <p>There are multiple solutions to this issue.</p>
         <ul>
-            <p>For more information on activation
-	see:</p>
-            <li>
-                <p><a href="../object_lifecycle/activation/global_activation_settings.htm">Global Activation Settings</a>
-                </p>
-            </li>
-            <li>
-                <p><a href="../object_lifecycle/activation/object-specific_activation.htm">Object-Specific Activation</a>
-                </p>
-            </li>
-            <li>
-                <p><a href="../object_lifecycle/activation/transparent_activation_framework.htm">Transparent Activation Framework</a>
-                </p>
-            </li>
-            <li>
-                <p><a href="../tuning/performance_hints/activation_strategies.htm">Activation strategies</a>
-                </p>
-            </li>
+            <li>Activate the object explicitly as you dive deeper into the object graph.</li>
+            <li>Increase the <a href="../configuration/common/activation_depth.htm">global activation-depth</a>.</li>
+            <li>Increase the activation-depth <a href="../configuration/objectclass/minimum_activation_depth.htm">for certain types</a>.</li>
+            <li>Use clever <a href="../configuration/objectclass/cascade_on-activate.htm">cascading activation</a>.</li>
+            <li>The most elegant solution is <a href="../object_lifecycle/activation/transparent_activation_framework.htm">transparent activation</a>. With transparent activation db4o takes care of activating object as you access them.</li>
+        </ul>
+        <p>&#160;</p>
+        <h2>To High Activation Depth Or Two Many Cascade Activation</h2>
+        <p>Having a high activation-depth makes working with db4o much easier. However activation can take a long time with deeper object graphs and become a serious performance bottleneck. The same applies when using cascade activation on almost all types. To reduce the time spend on activating objects, you need to be more selective about what to activate and what not.</p>
+        <ul>
+            <li>Activate the object explicitly as you dive deeper into the object graph.</li>
+            <li>The most elegant solution is <a href="../object_lifecycle/activation/transparent_activation_framework.htm">transparent activation</a>. With transparent activation db4o takes care of activating object as you access them.</li>
         </ul>
     </body>
 </html>

@@ -122,6 +122,8 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\pitfalls\activation\ActivationDepthPitfall.cs" />
+    <Compile Include="Code\pitfalls\updatedepth\UpdateDepthPitfall.cs" />
     <Compile Include="Code\query\linq\LinqExamples.cs" />
     <Compile Include="Code\query\nq\NativeQueriesSorting.cs" />
     <Compile Include="Code\query\soda\DataModel.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Code\query\soda\SodaQueryExamples.cs" />
     <Compile Include="Code\query\soda\SodaSorting.cs" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.cs" />
+    <Compile Include="Code\strategies\refactoring\arraychange\ChangeArrayType.cs" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.cs" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.cs" />
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.cs" />
