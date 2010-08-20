@@ -5,5 +5,5 @@ public interface ProviderSideCommunication {
 	void requestIsolation(boolean isolated);
 	long requestTimestamp();
 	void syncTimestamp(long timestamp);
-	void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName);
+	void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid);
 }
