@@ -39,7 +39,7 @@ public class EventProcessor {
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
-	private PausableBlockingQueue<Block4> _pausableTasks = new PausableBlockingQueue<Block4>();
+	private PausableBlockingQueue4<Block4> _pausableTasks = new PausableBlockingQueue<Block4>();
 	
 	private CommunicationChannelControl _incomingMessages;
 
