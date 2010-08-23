@@ -29,6 +29,7 @@ public class Logger4 {
 			return;
 		}
 		System.out.println(StackAnalyzer.methodCallAboveAsString(Logger4Support.class) + " " + message);
+		System.out.flush();
 	}
 
 }
