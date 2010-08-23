@@ -55,7 +55,7 @@ public class PausableBlockingQueueTestCase extends Queue4TestCaseBase {
 
 	public static void executeAfter(String threadName, final long timeInMillis, final Runnable runnable) {
 		
-		Thread t = new Thread(threadName) {
+		Thread t = new Thread() {
 			@Override
 			public void run() {
 				try {
@@ -67,6 +67,7 @@ public class PausableBlockingQueueTestCase extends Queue4TestCaseBase {
 				
 			};
 		};
+		t.setName(threadName);
 		t.setDaemon(true);
 		t.start();
 	}
