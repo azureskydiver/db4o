@@ -186,17 +186,17 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 
 		int i = a().provider().objectsChangedSinceLastReplication().size();
-		Assert.areEqual(i, 3);
+		Assert.areEqual(3, i);
 
 		ObjectSet os = a().provider().objectsChangedSinceLastReplication(Pilot.class);
-		Assert.areEqual(os.size(), 2);
+		Assert.areEqual(2, os.size());
 		
 		Iterator pilots = os.iterator();
 //		Assert.isTrue(pilots.contains(findPilot("John Cleese")));
 	//	Assert.isTrue(pilots.contains(findPilot("Terry Gilliam")));
 		
 		Iterator cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();		
-		Assert.areEqual(((Car) next(cars)).getModel(), "Volvo");
+		Assert.areEqual("Volvo", ((Car) next(cars)).getModel());
 		Assert.isFalse(cars.hasNext());
 
 		commitReplication();
@@ -219,14 +219,14 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		startReplication();
 
-		Assert.areEqual(a().provider().objectsChangedSinceLastReplication().size(), 2);
+		Assert.areEqual(2, a().provider().objectsChangedSinceLastReplication().size());
 
 		pilots = a().provider().objectsChangedSinceLastReplication(Pilot.class).iterator();
-		Assert.areEqual(((Pilot) next(pilots))._name, "Terry Jones");
+		Assert.areEqual("Terry Jones", ((Pilot) next(pilots))._name);
 		Assert.isFalse(pilots.hasNext());
 
 		cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();		
-		Assert.areEqual(((Car) next(cars)).getModel(), "McLaren");
+		Assert.areEqual("McLaren", ((Car) next(cars)).getModel());
 		Assert.isFalse(cars.hasNext());
 		commitReplication();
 
@@ -250,11 +250,11 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Pilot object1 = (Pilot) next(a().provider().getStoredObjects(Pilot.class).iterator());
 
 		ReplicationReference reference = a().provider().produceReference(object1, null, null);
-		Assert.areEqual(reference.object(), object1);
+		Assert.areEqual(object1, reference.object());
 
 		DrsUUID uuid = reference.uuid();
 		ReplicationReference ref2 = a().provider().produceReferenceByUUID(uuid, Pilot.class);
-		Assert.areEqual(ref2, reference);
+		Assert.areEqual(reference, ref2);
 
 		a().provider().clearAllReferences();
 		DrsUUID db4oUUID = a().provider().produceReference(object1, null, null).uuid();
@@ -307,8 +307,8 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		a().provider().storeReplica(object1);
 		ReplicationReference reference = a().provider().produceReferenceByUUID(uuid, object1.getClass());
-		Assert.areEqual(a().provider().produceReference(object1, null, null), reference);
-		Assert.areEqual(reference.object(), object1);
+		Assert.areEqual(reference, a().provider().produceReference(object1, null, null));
+		Assert.areEqual(object1, reference.object());
 
 		commitReplication();
 		startReplication();
@@ -319,7 +319,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Assert.isFalse(storedObjects.hasNext());
 		
 		reference = a().provider().produceReferenceByUUID(uuid, object1.getClass());
-		Assert.areEqual(a().provider().produceReference(reloaded, null, null), reference);
+		Assert.areEqual(reference, a().provider().produceReference(reloaded, null, null));
 
 		reloaded._name = "i am updated";
 		a().provider().storeReplica(reloaded);
@@ -331,7 +331,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		startReplication();
 
 		reference = a().provider().produceReferenceByUUID(uuid, reloaded.getClass());
-		Assert.areEqual(((Pilot) reference.object())._name, "i am updated");
+		Assert.areEqual("i am updated", ((Pilot) reference.object())._name);
 
 		commitReplication();
 
