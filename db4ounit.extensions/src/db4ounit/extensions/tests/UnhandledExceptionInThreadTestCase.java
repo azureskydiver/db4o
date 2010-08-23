@@ -2,6 +2,8 @@
 
 package db4ounit.extensions.tests;
 
+import com.db4o.internal.*;
+
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -10,7 +12,7 @@ public class UnhandledExceptionInThreadTestCase implements TestCase {
 	
 	public static class ExceptionThrowingTestCase extends AbstractDb4oTestCase {
 		public void test() {
-			container().threadPool().start(UnhandledExceptionInThreadTestCase.class.getSimpleName()+" Throwing Exception Thread", new Runnable() {
+			container().threadPool().start(ReflectPlatform.simpleName(UnhandledExceptionInThreadTestCase.class)+" Throwing Exception Thread", new Runnable() {
 				public void run() {
 					throw new IllegalStateException();
 				}

@@ -3,6 +3,7 @@ package com.db4o.db4ounit.common.threading;
 
 import com.db4o.events.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.threading.*;
 
 import db4ounit.*;
@@ -23,7 +24,7 @@ public class ThreadPoolTestCase implements TestCase {
 			}
 		});
 		
-		_subject.start(getClass().getSimpleName()+" throwing exception thread", new Runnable() {
+		_subject.start(ReflectPlatform.simpleName(getClass())+" throwing exception thread", new Runnable() {
 			public void run() {
 				throw exception;
 			}
