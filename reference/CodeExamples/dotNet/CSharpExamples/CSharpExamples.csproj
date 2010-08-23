@@ -66,6 +66,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Db4objects.Drs.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -89,6 +93,9 @@
     <Compile Include="Code\basics\Db4oBasics.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.cs" />
+    <Compile Include="Code\clientserver\pooling\ConnectionPool.cs" />
+    <Compile Include="Code\clientserver\pooling\ConnectionPoolExamples.cs" />
+    <Compile Include="Code\clientserver\pooling\TestConnectionPool.cs" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.cs" />
     <Compile Include="Code\clientserver\ssl\SSLExample.cs" />
     <Compile Include="Code\collections\bigset\BigSetExample.cs" />

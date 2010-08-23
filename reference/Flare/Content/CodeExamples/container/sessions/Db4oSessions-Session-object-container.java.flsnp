@@ -6,7 +6,7 @@
 
 // open the db4o-session. For example at the beginning for a web-request
 ObjectContainer session = rootContainer.ext().openSession();
-try{
+try {
     // do the operations on the session-container
     session.store(new Person(&quot;Joe&quot;));
 } finally {
