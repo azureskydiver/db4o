@@ -917,6 +917,9 @@
         Link="/Content/implementation_strategies/typehandlers/typehandler_usages.htm"></TocEntry>
     </TocEntry>
     <TocEntry
+      Title="Session Containers"
+      Link="/Content/implementation_strategies/session_containers.htm" />
+    <TocEntry
       Title="Using Annotations"
       Link="/Content/implementation_strategies/using_annotations.htm"
       conditions="Primary.All languages,Primary.Java" />
@@ -1864,6 +1867,9 @@
     <TocEntry
       Title="Events In Client Server-Mode"
       Link="/Content/client-server/events_in_cs_mode.htm" />
+    <TocEntry
+      Title="Client-Container Pooling"
+      Link="/Content/client-server/pooling.htm" />
     <TocEntry
       Title="Semaphores"
       Link="/Content/client-server/semaphores.htm">
