@@ -1872,10 +1872,6 @@
         Title="Native Queries"
         Link="/Content/client-server/server_without_persistent_classes_deployed/native_queries.htm" />
       <TocEntry
-        Title="LINQ"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/linq.htm"
-        conditions="Primary.All languages,Primary..NET"></TocEntry>
-      <TocEntry
         Title="Evaluations"
         Link="/Content/client-server/server_without_persistent_classes_deployed/evaluations.htm" />
       <TocEntry
