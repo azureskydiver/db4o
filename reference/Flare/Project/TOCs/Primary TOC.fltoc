@@ -828,13 +828,38 @@
           Link="/Content/implementation_strategies/maintenance/defragment/how_to_use_defragmentation.htm" />
         <TocEntry
           Title="Defragmentation Configuration"
-          Link="/Content/implementation_strategies/maintenance/defragment/defragmentation_configuration.htm" />
+          Link="/Content/implementation_strategies/maintenance/defragment/defragmentation_configuration.htm">
+          <TocEntry
+            Title="Original Database And Backup"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/database_files.htm"></TocEntry>
+          <TocEntry
+            Title="Database Configuration"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/database_configuration.htm" />
+          <TocEntry
+            Title="Commit Frequency"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/commit_frequency.htm" />
+          <TocEntry
+            Title="Class Filter"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/class_filter.htm" />
+          <TocEntry
+            Title="Delete The Backup"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/delete_backup.htm" />
+          <TocEntry
+            Title="Upgrade Database File"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/upgrade_db.htm" />
+          <TocEntry
+            Title="Disable Read Only Mode"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/disable_read_only.htm" />
+          <TocEntry
+            Title="Configure Storage for Backup File"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/storage_backupdb.htm" />
+          <TocEntry
+            Title="Configure IDMapping"
+            Link="/Content/implementation_strategies/maintenance/defragment/configuration/id_mapping.htm" />
+        </TocEntry>
         <TocEntry
           Title="Tracking Defragmentation Errors"
           Link="/Content/implementation_strategies/maintenance/defragment/tracking_defragmentation_errors.htm" />
-        <TocEntry
-          Title="Defragmentation Examples"
-          Link="/Content/implementation_strategies/maintenance/defragment/defragmentation_examples.htm" />
       </TocEntry>
       <TocEntry
         Title="System Info"
@@ -919,6 +944,9 @@
     <TocEntry
       Title="Session Containers"
       Link="/Content/implementation_strategies/session_containers.htm" />
+    <TocEntry
+      Title="Paging"
+      Link="/Content/implementation_strategies/paging.htm" />
     <TocEntry
       Title="Using Annotations"
       Link="/Content/implementation_strategies/using_annotations.htm"

@@ -112,6 +112,8 @@
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.cs" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />
+    <Compile Include="Code\deframentation\DefragmentationConfigurationExamples.cs" />
+    <Compile Include="Code\deframentation\DefragmentationExample.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\Db4oInternalIdExample.cs" />
@@ -138,6 +140,8 @@
     <Compile Include="Code\query\soda\SodaQueryExamples.cs" />
     <Compile Include="Code\query\soda\SodaSorting.cs" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.cs" />
+    <Compile Include="Code\strategies\paging\PagingUtility.cs" />
+    <Compile Include="Code\strategies\paging\TestPagingUtility.cs" />
     <Compile Include="Code\strategies\refactoring\arraychange\ChangeArrayType.cs" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.cs" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.cs" />
