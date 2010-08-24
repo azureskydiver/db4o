@@ -11,6 +11,9 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 
 	public Iterator4 iterator() {
 		
+//		return new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-drs-a"),
+//				new Db4oDrsFixture("db4o-drs-b"), VodDrsSuite.class).iterator();
+
 		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
 				new Db4oDrsFixture("db4o-drs-b"), VodDrsSuite.class).iterator();
 		
@@ -31,7 +34,11 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 			if (true) {
 				
 				// This is the one we are heading for for now.
-				return new Class[] { TheSimplest.class };
+				return new Class[] { 
+						TheSimplest.class,
+//						ReplicationProviderTest.class,
+//						ReplicationEventTest.class,
+				};
 			}
 			
 			return super.testCases();
