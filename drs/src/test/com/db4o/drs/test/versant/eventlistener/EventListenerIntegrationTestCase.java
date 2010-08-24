@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.db4o.drs.test.versant.*;
 import com.db4o.drs.test.versant.data.*;
+import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
@@ -93,7 +95,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 	}
 
 	private boolean checkObjectLifeCycleEventFor(final Item item,
-			int timeout) {
+			long timeout) {
 		boolean result = Runtime4.retry(timeout, new Closure4<Boolean>() {
 			public Boolean run() {
 				final long objectLoid = _provider.loid(item);
@@ -110,6 +112,58 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 			}
 		});
 		return result;
+	}
+	
+	public void testIsolationTimeout() {
+		
+		final ProviderSideCommunication original = _provider.eventProcessor();
+		
+		_provider.eventProcessor(new ProviderSideCommunication() {
+
+			public boolean requestIsolation(boolean isolated) {
+				return original.requestIsolation(isolated);
+			}
+
+			public long requestTimestamp() {
+				return original.requestTimestamp();
+			}
+
+			public void syncTimestamp(long timestamp) {
+				original.syncTimestamp(timestamp);
+			}
+
+			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
+				original.ensureMonitoringEventsOn(fullyQualifiedName, schemaName, classLoid);
+			}
+
+			public void ping() {
+				// ignoring ping
+			}
+			
+		});
+		
+		try {
+		
+			EventProcessor ep = _vod.startEventProcessor().eventProcessor();
+			
+			Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), 1000));
+			
+			Assert.isTrue(ep.eventProcessor().requestIsolation(true));
+	
+			long timeout = EventProcessor.ISOLATION_TIMEOUT;
+			Assert.isFalse(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
+			
+			Runtime4.sleepThrowsOnInterrupt(EventProcessor.ISOLATION_TIMEOUT);
+			Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
+			
+			Assert.isTrue(ep.eventProcessor().requestIsolation(true));
+			Assert.isTrue(ep.eventProcessor().requestIsolation(false));
+			
+			ep.stop();
+			
+		} finally {
+			_provider.eventProcessor(original);
+		}
 	}
 
 }

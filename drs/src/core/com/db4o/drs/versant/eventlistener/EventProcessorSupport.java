@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 
 public class EventProcessorSupport {
@@ -27,11 +28,8 @@ public class EventProcessorSupport {
 		PrintStream printOut = new PrintStream(_byteOut);
 		
 		_eventProcessor = EventProcessorFactory.newInstance(eventConfiguration, LinePrinter.forPrintStream(printOut));
-		_eventProcessorThread = new Thread(new Runnable() {
-			public void run() {
-				_eventProcessor.run();
-			}
-		}, EventProcessor.class.getSimpleName()+" dedicated thread");
+		_eventProcessorThread = new Thread(_eventProcessor, ReflectPlatform.simpleName(EventProcessor.class)+" dedicated thread");
+		_eventProcessorThread.setDaemon(true);
 		_eventProcessorThread.start();
 		if(! waitForOutput(EventProcessor.LISTENING_MESSAGE)){
 			throw new IllegalStateException("Event processor does not report '" + EventProcessor.LISTENING_MESSAGE + "'");
@@ -61,6 +59,10 @@ public class EventProcessorSupport {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public EventProcessor eventProcessor() {
+		return _eventProcessor;
 	}
 
 }
