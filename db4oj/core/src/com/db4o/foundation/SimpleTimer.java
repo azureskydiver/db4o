@@ -9,13 +9,13 @@ public final class SimpleTimer implements Runnable {
 
 	private final Runnable _runnable;
 
-	private final int _interval;
+	private final long _interval;
 
 	private Lock4 _lock;
 
 	public volatile boolean stopped = false;
 
-	public SimpleTimer(Runnable runnable, int interval) {
+	public SimpleTimer(Runnable runnable, long interval) {
 		_runnable = runnable;
 		_interval = interval;
 		_lock = new Lock4();

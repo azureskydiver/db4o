@@ -5,13 +5,21 @@ public class PausableBlockingQueue<T> extends BlockingQueue<T> implements Pausab
 
 	private volatile boolean _paused = false;
 
-	public void pause() {
+	public boolean pause() {
+		if (_paused) {
+			return false;
+		}
 		_paused = true;
+		return true;
 	}
 
-	public synchronized void resume() {
+	public synchronized boolean resume() {
+		if (!_paused) {
+			return false;
+		}
 		_paused = false;
 		notify();
+		return true;
 	}
 
 	@Override
