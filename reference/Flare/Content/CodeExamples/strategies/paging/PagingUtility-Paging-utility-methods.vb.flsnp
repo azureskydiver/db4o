@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Shared Function Paging(Of T)(ByVal listToPage As IList(Of T), ByVal limit As Integer) As IList(Of T)
+    Return Paging(listToPage, 0, limit)
+End Function
+
+Public Shared Function Paging(Of T)(ByVal listToPage As IList(Of T), ByVal start As Integer, ByVal limit As Integer) As IList(Of T)
+    If start &gt; listToPage.Count Then
+        Throw New ArgumentException(&quot;You cannot start the paging outside the list.&quot; &amp; &quot; List-size: &quot; &amp; listToPage.Count &amp; &quot; start: &quot; &amp; start)
+    End If
+    Dim endPosition As Integer = calculateEnd(listToPage, start, limit)
+    Dim list As IList(Of T) = New List(Of T)()
+    For i As Integer = start To endPosition - 1
+        list.Add(listToPage(i))
+    Next
+    Return list
+End Function
+
+Private Shared Function calculateEnd(Of T)(ByVal resultList As IList(Of T), _
+         ByVal start As Integer, ByVal limit As Integer) As Integer
+    Dim endPosition As Integer = start + limit
+    If endPosition &gt;= resultList.Count Then
+        Return resultList.Count
+    End If
+    Return endPosition
+End Function
+</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Shared Function Paging(Of T)(ByVal listToPage As IList(Of T), ByVal limit As Integer) As IList(Of T)
+    Return Paging(listToPage, 0, limit)
+End Function
+
+Public Shared Function Paging(Of T)(ByVal listToPage As IList(Of T), ByVal start As Integer, ByVal limit As Integer) As IList(Of T)
+    If start &gt; listToPage.Count Then
+        Throw New ArgumentException(&quot;You cannot start the paging outside the list.&quot; &amp; &quot; List-size: &quot; &amp; listToPage.Count &amp; &quot; start: &quot; &amp; start)
+    End If
+    Dim endPosition As Integer = calculateEnd(listToPage, start, limit)
+    Dim list As IList(Of T) = New List(Of T)()
+    For i As Integer = start To endPosition - 1
+        list.Add(listToPage(i))
+    Next
+    Return list
+End Function
+
+Private Shared Function calculateEnd(Of T)(ByVal resultList As IList(Of T), _
+         ByVal start As Integer, ByVal limit As Integer) As Integer
+    Dim endPosition As Integer = start + limit
+    If endPosition &gt;= resultList.Count Then
+        Return resultList.Count
+    End If
+    Return endPosition
+End Function
+</pre>
+		<div class="codesnippet-meta">
+			PagingUtility.vb: Paging utility methods
+			<div class="codedownload">
+				<a href="Example-strategies-paging-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

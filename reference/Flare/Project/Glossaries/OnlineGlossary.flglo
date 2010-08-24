@@ -118,13 +118,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Defragment</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/maintenance/defragment.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>Refactoring</Term>
       <Term>Schema Evolution</Term>
     </Terms>
@@ -166,13 +159,6 @@
     </Terms>
     <Definition
       Link="/Content/object_lifecycle/activation.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Delete Depth</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/delete_behavior/deleting_collections.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">public static IList&lt;T&gt; Paging&lt;T&gt;(IList&lt;T&gt; listToPage, int limit)
+{
+    return Paging(listToPage, 0, limit);
+}
+
+public static IList&lt;T&gt; Paging&lt;T&gt;(IList&lt;T&gt; listToPage, int start, int limit)
+{
+    if (start &gt; listToPage.Count)
+    {
+        throw new ArgumentException(&quot;You cannot start the paging outside the list.&quot; +
+                                    &quot; List-size: &quot; + listToPage.Count + &quot; start: &quot; + start);
+    }
+    int end = calculateEnd(listToPage, start, limit);
+    IList&lt;T&gt; list = new List&lt;T&gt;();
+    for (int i = start; i &lt; end; i++)
+    {
+        list.Add(listToPage[i]);
+    }
+    return list;
+}
+
+private static int calculateEnd&lt;T&gt;(IList&lt;T&gt; resultList, int start, int limit)
+{
+    int end = start + limit;
+    if (end &gt;= resultList.Count)
+    {
+        return resultList.Count;
+    }
+    return end;
+}
+</pre>
+		<div class="codesnippet-meta">
+			PagingUtility.cs: Paging utility methods
+			<div class="codedownload">
+				<a href="Example-strategies-paging-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

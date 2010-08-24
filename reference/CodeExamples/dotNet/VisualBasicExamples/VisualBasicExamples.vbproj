@@ -163,6 +163,7 @@
     <Compile Include="Code\basics\Db4oBasics.vb" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.vb" />
     <Compile Include="Code\clientserver\pooling\ConnectionPool.vb" />
+    <Compile Include="Code\clientserver\pooling\ConnectionPoolExamples.vb" />
     <Compile Include="Code\clientserver\pooling\TestConnectionPool.vb" />
     <Compile Include="Code\clientserver\ssl\SSLExample.vb" />
     <Compile Include="Code\configuration\alias\AliasExamples.vb" />
@@ -174,6 +175,8 @@
     <Compile Include="Code\configuration\objectconfig\ObjectConfigurationExamples.vb" />
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.vb" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.vb" />
+    <Compile Include="Code\deframentation\DefragmentationConfigurationExamples.vb" />
+    <Compile Include="Code\deframentation\DefragmentationExample.vb" />
     <Compile Include="Code\pitfalls\activation\ActivationDepthPitfall.vb" />
     <Compile Include="Code\pitfalls\updatedepth\UpdateDepthPitfall.vb" />
     <Compile Include="Code\query\linq\LinqExamples.vb" />
@@ -183,6 +186,8 @@
     <Compile Include="Code\query\soda\SodaQueryExamples.vb" />
     <Compile Include="Code\query\soda\SodaSorting.vb" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.vb" />
+    <Compile Include="Code\strategies\paging\PagingUtility.vb" />
+    <Compile Include="Code\strategies\paging\TestPagingUtility.vb" />
     <Compile Include="Code\strategies\refactoring\arraychange\ChangeArrayType.vb" />
     <Compile Include="Code\strategies\refactoring\extendhierarchy\AddClassToHierarchy.vb" />
     <Compile Include="Code\strategies\refactoring\RefactoringExamples.vb" />
