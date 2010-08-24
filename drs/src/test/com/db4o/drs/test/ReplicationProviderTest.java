@@ -132,7 +132,15 @@ public class ReplicationProviderTest extends DrsTestCase {
 	}
 
 	private SPCChild getOneChildFromA() {
-		ObjectSet storedObjects = a().provider().getStoredObjects(SPCChild.class);
+		return getOneChild(a());
+	}
+
+	private SPCChild getOneChildFromB() {
+		return getOneChild(b());
+	}
+
+	private SPCChild getOneChild(DrsFixture fixture) {
+		ObjectSet storedObjects = fixture.provider().getStoredObjects(SPCChild.class);
 		Assert.areEqual(1, storedObjects.size());
 		
 		Iterator iterator = storedObjects.iterator();
@@ -185,8 +193,8 @@ public class ReplicationProviderTest extends DrsTestCase {
 		startReplication();
 
 
-		int i = a().provider().objectsChangedSinceLastReplication().size();
-		Assert.areEqual(3, i);
+		ObjectSet changed = a().provider().objectsChangedSinceLastReplication();
+		Assert.areEqual(3, changed.size());
 
 		ObjectSet os = a().provider().objectsChangedSinceLastReplication(Pilot.class);
 		Assert.areEqual(2, os.size());
@@ -207,7 +215,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		commitReplication();
 
 		Pilot pilot = (Pilot) next(a().provider().getStoredObjects(Pilot.class).iterator());
-		pilot._name = "Terry Jones";
+		pilot.setName("Terry Jones");
 
 		Car car = (Car) next(a().provider().getStoredObjects(Car.class).iterator());
 		car.setModel("McLaren");
@@ -258,7 +266,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		a().provider().clearAllReferences();
 		DrsUUID db4oUUID = a().provider().produceReference(object1, null, null).uuid();
-		Assert.isTrue(db4oUUID.equals(uuid));
+		Assert.areEqual(uuid, db4oUUID);
 		commitReplication();
 
 		a().provider().deleteAllInstances(Pilot.class);

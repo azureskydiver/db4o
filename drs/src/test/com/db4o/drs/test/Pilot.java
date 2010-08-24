@@ -32,4 +32,8 @@ public class Pilot {
 		this._name = name;
 		this._age = age;
 	}
+	
+	public void setName(String name) {
+		this._name = name;
+	}
 }

@@ -34,4 +34,24 @@ public class VodUUID implements DrsUUID {
 		return _signature.bytes;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(this == other) {
+			return true;
+		}
+		if(other == null || getClass() != other.getClass()) {
+			//return false;
+			throw new IllegalStateException(); // TODO REMOVE, return false instead
+		}
+		VodUUID uuid = (VodUUID)other;
+		return _databaseId == uuid._databaseId 
+				&& _objectId1 == uuid._objectId1 
+				&& _objectId2 == uuid._objectId2
+				&& _signature.equals(uuid._signature);
+	}
+	
+	@Override
+	public int hashCode() {
+		return _databaseId ^ _objectId1 ^ (int)_objectId2 ^ _signature.hashCode();
+	}
 }
