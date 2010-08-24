@@ -8,6 +8,6 @@ public class DrsDebug {
 	
 	public static final boolean runEventListenerEmbedded = !production;
 	
-	public static final boolean verbose = !production;
+	public static final boolean verbose = false; //!production;
 
 }
