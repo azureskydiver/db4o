@@ -122,6 +122,7 @@ public class IOServices {
             		_inputBuffer.append(obj);
             		_inputBuffer.append("\n");
             		super.add(obj);
+            		output(obj);
             	}
             });
             _errorReader = new StreamReader("ProcessRunner Output Thread ["+program+" " + toString(arguments) +"]", _process.getErrorStream(), new DelegatingBlockingQueue<String>(in) {
@@ -130,12 +131,16 @@ public class IOServices {
                		_errorBuffer.append(obj);
                		_errorBuffer.append("\n");
             		super.add(obj);
+            		output(obj);
             	}
             });
             _startTime = System.currentTimeMillis();
 	    }
 	    
-	    public ProcessResult processResult() {
+	    protected void output(String line) {
+		}
+
+		public ProcessResult processResult() {
 			return new ProcessResult(_command, _inputBuffer.toString(), _errorBuffer.toString(), _result);
 		}
 

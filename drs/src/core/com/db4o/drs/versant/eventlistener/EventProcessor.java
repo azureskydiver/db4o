@@ -8,24 +8,24 @@ import java.util.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.*;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.foundation.*;
 import com.versant.event.*;
 
-public class EventProcessor {
+public class EventProcessor implements Runnable {
 	
 	public static final String LISTENING_MESSAGE = "Listening for events on ";
 	
 	public static final String COMMIT_MESSAGE = "EventProcessor commit";
 
-	private static final long PAUSE_TIMEOUT = 60000;
+	public static final long ISOLATION_TIMEOUT = 5000;
 
-	private static final int PAUSE_INTERVAL = 50;
+	private static final long ISOLATION_WATCHDOG_INTERVAL = 1000;
 
-	private final int COMMIT_INTERVAL = 1000; // 1 sec
+	private final long COMMIT_INTERVAL = 1000; // 1 sec
 	
 	private static int EVENT_PROCESSOR_ID = EventProcessor.class.getName().hashCode();
 	
@@ -39,7 +39,7 @@ public class EventProcessor {
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
-	private PausableBlockingQueue4<Block4> _pausableTasks = new PausableBlockingQueue<Block4>();
+	private TimeoutBlockingQueue4<Block4> _pausableTasks = new TimeoutBlockingQueue<Block4>(ISOLATION_TIMEOUT);
 	
 	private CommunicationChannelControl _incomingMessages;
 
@@ -56,9 +56,23 @@ public class EventProcessor {
 	
 	private Thread _commitThread = new Thread(_commitTimer, "EventProcessor Commit");
 	
+	SimpleTimer _isolationWatchdogTimer = new SimpleTimer(
+		new Runnable() {
+			public void run() {
+				if (_pausableTasks.isPaused()) {
+					_pausableTasks.check();
+				}
+			}}, 
+		ISOLATION_WATCHDOG_INTERVAL);
+
+	private Thread _isolatinWatchdogThread = new Thread(_isolationWatchdogTimer, "EventProcessor Isolation watchdog");
+
+	
 	private CommitTimestamp _commitTimestamp;
 
 	private Set<String> _knownClasses = new HashSet<String>();
+
+	private ProviderSideCommunication _eventProcessor;
 
 
 	public EventProcessor(VodEventClient client, LinePrinter out, VodCobra cobra)  {
@@ -105,7 +119,8 @@ public class EventProcessor {
 
 	public void run() {
 	    _commitThread.start();
-		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(createProvider(), _lock, _cobra, _client, EVENT_PROCESSOR_ID);
+	    _isolatinWatchdogThread.start();
+		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(eventProcessor(), _lock, _cobra, _client, EVENT_PROCESSOR_ID);
 		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
 		_incomingMessages.start();
@@ -140,9 +155,13 @@ public class EventProcessor {
 
 	
 
-	private ProviderSideCommunication createProvider() {
+	public ProviderSideCommunication eventProcessor() {
 		
-		return new ProviderSideCommunication() {
+		if (_eventProcessor != null) {
+			return _eventProcessor;
+		}
+		
+		_eventProcessor = new ProviderSideCommunication() {
 			
 			public void syncTimestamp(long newTimeStamp) {
 				if(newTimeStamp > 0){
@@ -154,10 +173,10 @@ public class EventProcessor {
 				return _timeStampIdGenerator.last();
 			}
 			
-			public void requestIsolation(boolean isolated) {
+			public boolean requestIsolation(boolean isolated) {
 				
 				if(_pausableTasks.isPaused() == isolated) {
-					return;
+					return false;
 				}
 		
 				// FIXME: timeout for isolation mode (can rely on new implementation of BlockingQueue#next(long timeout)
@@ -167,6 +186,8 @@ public class EventProcessor {
 				} else {
 					_pausableTasks.resume();
 				}
+				
+				return true;
 			}
 		
 			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
@@ -177,8 +198,17 @@ public class EventProcessor {
 				_knownClasses.add(fullyQualifiedName);
 				dirty();
 			}
+
+			public void ping() {
+				if (!_pausableTasks.isPaused()) {
+					return;
+				}
+				_pausableTasks.reset();
+			}
 	
 		};
+		
+		return _eventProcessor;
 	}
 
 
@@ -188,7 +218,11 @@ public class EventProcessor {
 		try {
 			_commitThread.join();
 		} catch (InterruptedException e) {
-//			e.printStackTrace();
+		}
+		_isolationWatchdogTimer.stop();
+		try {
+			_isolatinWatchdogThread.join();
+		} catch (InterruptedException e) {
 		}
 		commit();
 		_cobra.close();

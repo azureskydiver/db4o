@@ -2,8 +2,8 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.drs.foundation.Logger4Support.logIdentity;
-import static com.db4o.qlin.QLinSupport.prototype;
+import static com.db4o.drs.foundation.Logger4Support.*;
+import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
 
@@ -19,6 +19,8 @@ import com.db4o.internal.encoding.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
+	private static final int COMM_HEARTBEAT = 2000;
+
 	private final VodDatabase _vod;
 	
 	private final VodCobra _cobra;
@@ -27,7 +29,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodJvi _jvi;
 
-	private final ProviderSideCommunication _comm;
+	private ProviderSideCommunication _eventProcessor;
 	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
@@ -43,8 +45,18 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final short _myDatabaseId;
 	
+	SimpleTimer _heartbeatTimer = new SimpleTimer(
+		new Runnable() {
+			public void run() {
+				_eventProcessor.ping();
+			}}, 
+		COMM_HEARTBEAT);
+
+	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heatbeat");
+
+	
 	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ProviderSideCommunication comm) {
-		_comm = comm;
+		_eventProcessor = comm;
 		_vod = vod;
 		_cobra = cobra;
 		_jdo = new VodJdo(vod);
@@ -64,6 +76,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				return _myDatabaseId;
 			}
 		};
+		
+		_heartbeatThread.setDaemon(true);
+		_heartbeatThread.start();
+		
+		
 	}
 
 	private void loadKnownClasses() {
@@ -128,7 +145,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_cobra.store(cm);
 		_cobra.commit();
 		_knownClasses.put(className, cm.loid());
-		_comm.ensureMonitoringEventsOn(className, schemaName, cm.loid());
+		_eventProcessor.ensureMonitoringEventsOn(className, schemaName, cm.loid());
 	}
 
 	public void update(Object obj) {
@@ -137,6 +154,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void destroy() {
+		_heartbeatTimer.stop();
+		try {
+			_heartbeatThread.join();
+		} catch (InterruptedException e) {
+		}
 		_jdo.close();
 		_cobra.close();
 	}
@@ -166,7 +188,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		_comm.syncTimestamp(raisedDatabaseVersion);
+		_eventProcessor.syncTimestamp(raisedDatabaseVersion);
 		_jdo.commit();
 		
 		// FileReplicationProvider does this:
@@ -180,7 +202,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getCurrentVersion() {
-		return _comm.requestTimestamp();
+		return _eventProcessor.requestTimestamp();
 	}
 
 	public long getLastReplicationVersion() {
@@ -283,7 +305,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void syncVersionWithPeer(long maxVersion) {
 		_replicationCommitRecord.timestamp(maxVersion);
 		_cobra.store(_replicationCommitRecord);
-		_comm.syncTimestamp(maxVersion);
+		_eventProcessor.syncTimestamp(maxVersion);
 	}
 
 	public void visitCachedReferences(Visitor4 visitor) {
@@ -397,13 +419,21 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void runIsolated(Block4 block) {
-		_comm.requestIsolation(true);
+		_eventProcessor.requestIsolation(true);
 		try {
 			block.run();
 		}
 		finally {
-			_comm.requestIsolation(false);
+			_eventProcessor.requestIsolation(false);
 		}
+	}
+
+	public ProviderSideCommunication eventProcessor() {
+		return _eventProcessor;
+	}
+	
+	public void eventProcessor(ProviderSideCommunication ep) {
+		_eventProcessor = ep;
 	}
 
 }

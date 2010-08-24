@@ -5,7 +5,7 @@ package com.db4o.drs.test.versant;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.foundation.*;
-import com.db4o.util.IOServices.*;
+import com.db4o.util.IOServices.ProcessRunner;
 
 import db4ounit.*;
 
@@ -44,5 +44,5 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
 		withEventProcessor(closure, EventProcessor.LISTENING_MESSAGE);
 	}
-
+	
 }
