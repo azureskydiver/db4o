@@ -21,6 +21,17 @@ public class Runtime4 {
 	}
 	
 	/**
+	 * sleeps with implicit exception
+	 */
+	public static void sleepThrowsOnInterrupt(long millis) throws RuntimeInterruptedException {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new RuntimeInterruptedException(e.toString());
+   		}
+	}
+	
+	/**
 	 * Keeps executing a block of code until it either returns true or millisecondsTimeout
 	 * elapses.
 	 */
