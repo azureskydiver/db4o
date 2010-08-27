@@ -34,17 +34,13 @@ namespace OMControlLibrary.Common
 
 		private static Window loginToolWindow;
 		private static Window queryResultToolWindow;
-
-		public static Window winSalesPage;
+	
 		private static List<Hashtable> m_hashList;
 		private static Hashtable m_hashClassGUID;
 		private static Hashtable m_hashTableBaseClass = new Hashtable();
-		static System.Threading.Thread SessionThread;
-		
-
 		public static AccountManagementService serviceProxy;
 		public static CommandBarButton m_statusLabel;
-
+		static bool _checkIfLoginWindowIsVisible;
 		#endregion
 
 		#region Constant
@@ -102,12 +98,18 @@ namespace OMControlLibrary.Common
 			set { queryResultToolWindow = value; }
 		}
 
-		public static Window LoginToolWindow
+		public static bool CheckIfLoginWindowIsVisible
 		{
-			get { return loginToolWindow; }
-			set { loginToolWindow = value; }
-		}
+			get
+			{
+				return _checkIfLoginWindowIsVisible;
+			}
+			set
+			{
+				_checkIfLoginWindowIsVisible = value;
+			}
 
+		}
 		/// <summary>
 		/// Get the instace of dbInteaction Class
 		/// </summary>
@@ -510,9 +512,6 @@ namespace OMControlLibrary.Common
 
 				if (HashTableBaseClass != null)
 					HashTableBaseClass.Clear();
-
-				LoginToolWindow = null;
-
 				if (OMResultedQuery != null)
 					OMResultedQuery.Clear();
 
@@ -573,21 +572,7 @@ namespace OMControlLibrary.Common
 			return info;
 		}
 
-		public static void AbortSession()
-		{
-			try
-			{
-				if (SessionThread != null)
-				{
-					SessionThread.Abort();
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
+		
 		#endregion
 
 		internal static string GetFullPath(TreeNode treenode)
@@ -678,7 +663,7 @@ namespace OMControlLibrary.Common
         }
 		public static void SetPicture(Assembly assembly, _CommandBarButton button, string resource, string masked)
 		{
-		   using (Stream imageStream = assembly.GetManifestResourceStream(resource))
+			using (Stream imageStream = assembly.GetManifestResourceStream(resource))
 			{
 				button.Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStream));
 #if !NET_4_0
@@ -724,7 +709,7 @@ namespace OMControlLibrary.Common
             dbDataGridAttributes.Rows[index].Cells[0].Selected = true;
         }
 
-        public static void SaveData()
+		public static void SaveDataIfRequired()
         {
            
             try

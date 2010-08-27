@@ -55,6 +55,7 @@ namespace OMControlLibrary.Common
 		public const string LOGIN = "Connection Info";
 		public const string DB4OBROWSER = "db4o Browser";
 		public const string DB4OPROPERTIES = "DataBase Properties";
+		public const string PROPERTIES = "Properties";
 
 		//Toolbar Captions
 		public const string TOOLBAR_DISCONNECT = "Disconnect";

@@ -217,7 +217,7 @@ namespace OMControlLibrary.Common
                     return;
                 }
 
-                IType type = Db4oClient.TypeResolver.Resolve(tNode.Tag.ToString());
+				IType type = dbInteraction.ResolveType(tNode.Tag.ToString());
                 if (tNode.Nodes.Count == 0)
                 {
                     if (!type.IsEditable) 
@@ -319,8 +319,9 @@ namespace OMControlLibrary.Common
                                     string typeOfObject = string.Empty;
                                     if (treenode.Tag != null)
                                     {
-                                        
-                                        IType fieldType = Db4oClient.TypeResolver.Resolve(treenode.Tag.ToString());
+
+										IType fieldType = dbInteraction.ResolveType(treenode.Tag.ToString());
+											
                                         if (fieldType.IsEditable)
                                         {
                                            
@@ -550,7 +551,8 @@ namespace OMControlLibrary.Common
 						continue;
 					}
 
-					IType fieldType = Db4oClient.TypeResolver.Resolve(nodetype);
+					IType fieldType = dbInteraction.ResolveType(nodetype);
+						
                     treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(fieldType);
 
 					treenodeparent.Nodes.Add(treeNodeNew);
@@ -888,9 +890,10 @@ namespace OMControlLibrary.Common
 							AddDummyChildNode(treeNodeNew);
 							continue;
 						}
-						
-						
-                        IType fieldType = Db4oClient.TypeResolver.Resolve(nodetype);
+
+
+						IType fieldType = dbInteraction.ResolveType(nodetype);
+							
                         treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(fieldType);
 
 					    treenodeparent.Nodes.Add(treeNodeNew);

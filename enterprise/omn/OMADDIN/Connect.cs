@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.CommandBars;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
-using System.Drawing;
 using System.ComponentModel;
 using OManager.BusinessLayer.Config;
 using OManager.BusinessLayer.UIHelper;
@@ -19,7 +18,6 @@ using OMControlLibrary;
 using OMControlLibrary.Common;
 using OMControlLibrary.LoginToSalesForce;
 using OManager.BusinessLayer.Login;
-
 using OME.Logging.Common;
 using OME.Logging.ExceptionLogging;
 using OME.Logging.Tracing;
@@ -268,57 +266,69 @@ namespace OMAddin
 
 		}
 
-		
 
-		void DesignDebugModeChanged(vsIDEMode LastMode)
+
+		static void DesignDebugModeChanged(vsIDEMode LastMode)
 		{
+			//TODO:
+			//Since there is no way to kill toolwindows until the IDE closes, sometimes tool windows of other database also appears
+			// to avoid such situation first make all the toolwindows invisible which are not for current db and then 
+			//play around with current databse toolwindow
+			//Find a way if this can be avoided.
 			
-			if (IsConnected())
+			MakeAllQueryResultWindowsInvisibleWhichDoNotBelongToCurrentDatabase();
+
+			if (dbInteraction.CheckIfDbConnected())
 			{
-			
+
 				ForEachOMNWindow(delegate(Window window)
-								{
-									window.Visible = (window.Caption != OMControlLibrary.Common.Constants.LOGIN);
-								});
-				
+				                 	{
+				                 		window.Visible = (window.Caption != Constants.LOGIN);
+				                 	});
+
 			}
 			else
 			{
 				ForEachOMNWindow(delegate(Window window)
+									{
+										window.Visible = (window.Caption == Constants.LOGIN && Helper.CheckIfLoginWindowIsVisible);
+									});
+
+			}
+			DockWindowsIfRequired();
+			
+		}
+
+		private static void MakeAllQueryResultWindowsInvisibleWhichDoNotBelongToCurrentDatabase()
+		{
+			
+			foreach (Window win in ViewBase.ApplicationObject.ToolWindows.DTE.Windows)
+
+			{
+				if (win.Object is QueryResult && !ViewBase.GetAllPluginWindows().Contains(win))
 				{
-					if (window.Caption != OMControlLibrary.Common.Constants.LOGIN)
-						window.Visible = false; 
-				});
-				
-				foreach (KeyValuePair<Window, bool> entry in ViewBase.PluginWindows)
-				{
-					if (entry.Key.Caption == OMControlLibrary.Common.Constants.LOGIN)
-					{
-						entry.Key.Visible = entry.Value;
-					}
+					win.Visible = false;
+					
 				}
 			}
 		}
 
-		private bool IsConnected()
+		private static void DockWindowsIfRequired()
 		{
-			
-			foreach (KeyValuePair<Window, bool> entry in ViewBase.PluginWindows)
+			ForEachOMNWindow(delegate(Window window)
 			{
-				if (entry.Key.Caption.Equals(OMControlLibrary.Common.Constants.DB4OPROPERTIES) 
-					|| entry.Key.Caption.Equals(OMControlLibrary.Common.Constants.DB4OBROWSER) 
-					|| entry.Key.Caption.Equals(OMControlLibrary.Common.Constants.QUERYBUILDER))
+				if (window.Object is QueryResult)
 				{
-					if (entry.Value)
-						return true;
+					window.IsFloating = false;
+					window.Linkable = false;
 				}
-			}
-			return false;
+			});
 		}
 
 		private static void ForEachOMNWindow(Action<Window> action)
 		{
-			foreach (Window w in ViewBase.PluginWindows.Keys)
+			
+			foreach (Window w in ViewBase.GetAllPluginWindows())
 			{
 				action(w);
 			}
@@ -338,7 +348,6 @@ namespace OMAddin
 			{
 				//This function Aborts the current session
 				CloseAllToolWindows();
-				Helper.AbortSession();
 				Helper.ClearAllCachedAttributes();
 			}
 			catch (Exception oEx)
@@ -498,58 +507,31 @@ namespace OMAddin
 			{
 				
 				//TODO: Move this code closer to window instantiation.
-				if (gotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_OBJECTBROWSER.ToUpper()) && omObjectBrowserControl == null)
+				if (oPopup != null)
 				{
-					if (oPopup != null)
+					if (gotFocus.Caption.Equals(Constants.DB4OBROWSER) && omObjectBrowserControl == null)
 					{
-						omObjectBrowserControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
-						                                             Missing.Value,
-						                                             Missing.Value,
-						                                             11, true);
 
-						omObjectBrowserControl.BeginGroup = true;
-						omObjectBrowserControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.DB4O_BROWSER_CAPTION);
-
-						omObjectBrowserControlHandler =
-							(CommandBarEvents) _applicationObject.Events.get_CommandBarEvents(omObjectBrowserControl);
+						omObjectBrowserControlHandler = AddControlToToolbar(ref omObjectBrowserControl, Constants.DB4O_BROWSER_CAPTION);
 						omObjectBrowserControlHandler.Click += omObjectBrowserControlHandler_Click;
+
 					}
-				}
-				else if (gotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_QUERYBUILDER.ToUpper()) && omQueryBuilderControl == null)
-				{
-					if (oPopup != null)
+					else if (gotFocus.Caption.Equals(Constants.QUERYBUILDER) && omQueryBuilderControl == null)
 					{
-						omQueryBuilderControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
-						                                            Missing.Value,
-						                                            Missing.Value,
-						                                            12, true);
 
-						omQueryBuilderControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.QUERY_BUILDER_CAPTION);
-
-						omQueryBuilderControlHandler =
-							(CommandBarEvents) _applicationObject.Events.get_CommandBarEvents(omQueryBuilderControl);
+						omQueryBuilderControlHandler = AddControlToToolbar(ref omQueryBuilderControl, Constants.QUERY_BUILDER_CAPTION);
 						omQueryBuilderControlHandler.Click += omQueryBuilderControlHandler_Click;
+
 					}
-				}
-				else if (gotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_PROPERTIES.ToUpper()) && omPropertiesControl == null)
-				{
-					if (oPopup != null)
+					else if (gotFocus.Caption.Equals(Constants.DB4OPROPERTIES) && omPropertiesControl == null)
 					{
-						omPropertiesControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
-						                                          Missing.Value,
-						                                          Missing.Value,
-						                                          13, true);
-
-						omPropertiesControl.Caption =
-							Helper.GetResourceString(OMControlLibrary.Common.Constants.PROPERTIES_TAB_CAPTION).Trim();
-
-						omPropertiesControlHandler =
-							(CommandBarEvents) _applicationObject.Events.get_CommandBarEvents(omPropertiesControl);
+						omPropertiesControlHandler = AddControlToToolbar(ref omPropertiesControl ,Constants.PROPERTIES_TAB_CAPTION);
 						omPropertiesControlHandler.Click += omPropertiesControlHandler_Click;
+
 					}
 				}
 
-			
+
 			}
 			catch (System.Runtime.InteropServices.COMException)
 			{
@@ -558,6 +540,18 @@ namespace OMAddin
 			{
 				LoggingHelper.HandleException(oEx);
 			}
+		}
+
+		private CommandBarEvents AddControlToToolbar(ref CommandBarControl ctrl, string caption)
+		{
+			ctrl = oPopup.Controls.Add(MsoControlType.msoControlButton,
+			                                             Missing.Value,
+			                                             Missing.Value,
+			                                             11, true);
+
+			ctrl.BeginGroup = true;
+			ctrl.Caption = Helper.GetResourceString(caption);
+			return (CommandBarEvents)_applicationObject.Events.get_CommandBarEvents(ctrl);
 		}
 
 		#endregion
@@ -1160,46 +1154,44 @@ namespace OMAddin
 			try
 			{
 				Assembly assembly = Assembly.GetExecutingAssembly();
-				if (Ctrl.Caption.Equals(CONNECT))
-				{
+                if (Ctrl.Caption.Equals(CONNECT))
+                {
 
-					ViewBase.ApplicationObject = _applicationObject;
-					if (Helper.LoginToolWindow == null || Helper.LoginToolWindow.Visible == false)
-					{
-						Login.CreateLoginToolWindow(connectDatabaseMenu, connectDatabaseButton, assembly, omBackupControl, dbCreateDemoDbControl);
-					}
-				}
-				else
-				{
+                    ViewBase.ApplicationObject = _applicationObject;
+                    Login.CreateLoginToolWindow(connectDatabaseMenu, connectDatabaseButton, assembly, omBackupControl,
+                                                dbCreateDemoDbControl);
+                }
+                else
+                {
 
-					Helper.SaveData();
-					try
-					{
-						Helper.SetPicture(assembly, (CommandBarButton) connectDatabaseMenu.Control, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					}
-					catch (Exception)
-					{
-					}
-					try
-					{
-						Helper.SetPicture(assembly, connectDatabaseButton, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					}
-					catch (Exception)
-					{
-					}
+                    Helper.SaveDataIfRequired();
+                    try
+                    {
+                        Helper.SetPicture(assembly, (CommandBarButton)connectDatabaseMenu.Control, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    try
+                    {
+                        Helper.SetPicture(assembly, connectDatabaseButton, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
+                    }
+                    catch (Exception)
+                    {
+                    }
 
-					connectDatabaseMenu.Caption = connectDatabaseButton.Caption = CONNECT;
-					connectDatabaseMenu.TooltipText = connectDatabaseButton.TooltipText = CONNECT;
+                    connectDatabaseMenu.Caption = connectDatabaseButton.Caption = CONNECT;
+                    connectDatabaseMenu.TooltipText = connectDatabaseButton.TooltipText = CONNECT;
 #if !NET_4_0
-					
-					connectDatabaseButton.State = ((CommandBarButton)connectDatabaseMenu).State = MsoButtonState.msoButtonUp;
-#endif
-					dbCreateDemoDbControl.Enabled = true;
-					omBackupControl.Enabled = false;
 
-					CloseAllToolWindows();
-					dbInteraction.SetCurrentRecentConnection(null);
-				}
+                    connectDatabaseButton.State = ((CommandBarButton)connectDatabaseMenu).State = MsoButtonState.msoButtonUp;
+#endif
+                    dbCreateDemoDbControl.Enabled = true;
+                    omBackupControl.Enabled = false;
+
+                    CloseAllToolWindows();
+                    dbInteraction.SetCurrentRecentConnection(null);
+                }
 			}
 			catch (Exception oEx)
 			{
@@ -1217,62 +1209,37 @@ namespace OMAddin
 		{
 			try
 			{
+
 				
 				RecentQueries recQueries = dbInteraction.GetCurrentRecentConnection();
 				if (recQueries != null)
 				{
 					dbInteraction.Closedb(recQueries);
 				}
+
 				Helper.ClearAllCachedAttributes();
 
-				//FIXME: Remove dependency on Caption being equal to "Closed"
-				//       Consider introducing a field like "_closing"
 				ForEachOMNWindow(delegate(Window window)
 				                 	{
-				                 		//window.Caption = "Closed";
+
 				                 		window.Close(vsSaveChanges.vsSaveChangesNo);
+
 				                 	});
 
-				/*ViewBase.PluginWindows.Clear(); 
-				foreach (KeyValuePair<Window, bool> entry in ViewBase.PluginWindows)
-				{
 
-					ViewBase.PluginWindows.Remove(entry.Key);
-				}*/
-				
-				if (windb4oHome != null)
-					windb4oHome.Close(vsSaveChanges.vsSaveChangesNo);
-				if (windb4oDownloads != null)
-					windb4oDownloads.Close(vsSaveChanges.vsSaveChangesNo);
-				if (winSupportdb4o != null)
-					winSupportdb4o.Close(vsSaveChanges.vsSaveChangesNo);
-				if (winRequestConsultation != null)
-					winRequestConsultation.Close(vsSaveChanges.vsSaveChangesNo);
-				if (winHelp != null)
-					winHelp.Close(vsSaveChanges.vsSaveChangesNo);
-				if (windb4oDeveloper != null)
-					windb4oDeveloper.Close(vsSaveChanges.vsSaveChangesNo);
-				if (Helper.winSalesPage != null)
-					Helper.winSalesPage.Close(vsSaveChanges.vsSaveChangesNo);
-				try
-				{
-					if (oPopup != null)
-					{
-						oPopup.Controls[Helper.GetResourceString(OMControlLibrary.Common.Constants.DB4O_BROWSER_CAPTION)].Delete(null);
-						omObjectBrowserControl = null;
-						oPopup.Controls[Helper.GetResourceString(OMControlLibrary.Common.Constants.QUERY_BUILDER_CAPTION)].Delete(null);
-						omQueryBuilderControl = null;
-						oPopup.Controls[Helper.GetResourceString(OMControlLibrary.Common.Constants.PROPERTIES_TAB_CAPTION).Trim()].Delete(null);
-						omPropertiesControl = null;
-						
-					}
-					
-				}
-				catch (ArgumentException)
-				{
-				}
-                
+				CloseMiscToolwindows();
+
+                if (oPopup != null)
+                {
+                    RemoveMenuControls();
+                    omObjectBrowserControl = null;
+                    omQueryBuilderControl = null;
+                    omPropertiesControl = null;
+                }
+			    RemoveAllQueryResultToolwindows();
+
 			}
+
 			catch (System.Runtime.InteropServices.COMException)
 			{
 			}
@@ -1281,7 +1248,77 @@ namespace OMAddin
 				LoggingHelper.HandleException(oEx);
 			}
 		}
-		#endregion
+
+	    private void CloseMiscToolwindows()
+	    {
+	        CloseWindow(ref windb4oHome);
+	        CloseWindow(ref windb4oDownloads);
+	        CloseWindow(ref winSupportdb4o);
+            CloseWindow(ref winRequestConsultation);
+            CloseWindow(ref winHelp);
+            CloseWindow(ref windb4oDeveloper);
+	        
+	    }
+
+		void CloseWindow(ref Window win)
+		{
+			try
+			{
+				if (win != null)
+				{
+					win.Close(vsSaveChanges.vsSaveChangesNo);
+					win = null;
+				}
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.HandleException(oEx);
+			}
+		}
+
+
+		void RemoveMenuControls()
+		{
+			try
+			{
+				
+				for (int i = 1; i <= oPopup.Controls.Count; i++)
+				{
+					switch (oPopup.Controls[i].Caption)
+					{
+						case Constants.QUERYBUILDER:
+						case Constants.PROPERTIES:
+						case Constants.DB4OBROWSER:
+							{
+								CommandBarControl commandBarControl = oPopup.Controls[i];
+								commandBarControl.Delete(null);
+							}
+							break;
+					}
+				}
+
+			}
+			catch (ArgumentException)
+			{
+			}
+		}
+
+        void RemoveAllQueryResultToolwindows()
+        {
+            Window[] lst = ((List<Window >)ViewBase.GetAllPluginWindows()).ToArray();
+            foreach (Window win in lst)
+            {
+                if (win.Object is QueryResult)
+                {
+
+                    ViewBase.GetAllPluginWindows().Remove(win);
+                }
+
+            }
+        }
+
+
+	    #endregion
 
 		#region OpenOMEAboutBox
 		private static void OpenOMEAboutBox()

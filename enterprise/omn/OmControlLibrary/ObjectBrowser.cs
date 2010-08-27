@@ -211,32 +211,6 @@ namespace OMControlLibrary
 			toolStripButtonAssemblyView.Checked = false;
 		}
 
-		void AttachNecessaryEvents()
-    	{
-			Events2 eventsSource = (Events2)ApplicationObject.Events;
-			WindowVisibilityEvents events = eventsSource.get_WindowVisibilityEvents(null);
-			events.WindowHiding += new _dispWindowVisibilityEvents_WindowHidingEventHandler(events_WindowHiding);
-    	}
-
-		void events_WindowHiding(Window Window)
-		{
-			Window win = ViewBase.GetWindow("db4o Browser");
-			ViewBase.PluginWindows[win] = false;
-		}
-
-    	
-		private static bool GetWindow(string caption)
-		{
-			foreach (KeyValuePair<Window, bool> entry in PluginWindows)
-			{
-				if (caption == entry.Key.Caption)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
 
 		private void PopulateSearchStrings()
 		{
@@ -715,7 +689,7 @@ namespace OMControlLibrary
                 //If field is not selected and Query Group has no clauses then reset the base class.
                 if (datagridAttributeList.Rows.Count == 0)
                 {
-					queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
+					queryBuilder = (GetWindow(Constants.QUERYBUILDER)).Object as QueryBuilder;
                     queryBuilder.CheckForDataGridViewQueryRows();
                 }
 
@@ -724,8 +698,8 @@ namespace OMControlLibrary
                
                 if (tempTreeNode.Parent != null)
                 {
-                    IType type = Db4oClient.TypeResolver.Resolve(tempTreeNode.Parent.Tag.ToString());
-                    className = type != null ? type.FullName : tempTreeNode.Parent.Name;
+                	IType type = dbInteraction.ResolveType(tempTreeNode.Parent.Tag.ToString());
+					className = type != null ? type.FullName : tempTreeNode.Parent.Name;
                     
                 }
 
@@ -758,7 +732,7 @@ namespace OMControlLibrary
                 if (e.Button == MouseButtons.Right)
                 {
                     TreeNode treenode;
-					queryBuilder = ((ViewBase.GetWindow(Constants.QUERYBUILDER)).Object) as QueryBuilder;
+					queryBuilder = (GetWindow(Constants.QUERYBUILDER).Object) as QueryBuilder;
                     List<string> list;
                     if (dbtreeviewObject != null && dbtreeviewObject.Visible)
                     {
