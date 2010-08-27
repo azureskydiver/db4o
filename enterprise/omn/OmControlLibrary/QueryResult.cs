@@ -54,6 +54,7 @@ namespace OMControlLibrary
 
 		private readonly WindowVisibilityEvents windowsVisEvents;
 		private readonly WindowEvents _windowsEvents;
+		private static WindowVisibilityEvents _events;
 
 		#endregion
 
@@ -135,6 +136,11 @@ namespace OMControlLibrary
 				_windowsEvents = events.get_WindowEvents(null);
 				_windowsEvents.WindowActivated += _windowsEvents_WindowActivated;
 				
+
+
+				Events2 eventsSource = (Events2)ApplicationObject.Events;
+				_events = eventsSource.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
+				_events.WindowHiding += WindowHiding;
 				InitializeResultDataGridView();
 				InitializeTabControl();
 			}
@@ -144,24 +150,33 @@ namespace OMControlLibrary
 			}
 		}
 
-		
+		void WindowHiding(Window Window)
+		{
+			if (Window.Object is QueryResult )
+			{
+				Helper.SaveDataIfRequired();
+			      
+			}
+		}
+	
+
+
 
 		#endregion
 
 		#region WindowEvents
 
-		//FIXME: Find a way to get rid of the dependency on Caption being equal to "Close"
+
 		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
-
-
-			if (GotFocus.Caption != Constants.QUERYBUILDER && GotFocus.Caption != Constants.DB4OBROWSER  &&
-				GotFocus.Caption != Constants.DB4OPROPERTIES  && GotFocus.Caption != "")
+			if (GotFocus.Object is QueryResult)
 			{
 				PropertiesTab.Instance.ShowObjectPropertiesTab = false;
 				SelectTreeNodeInObjBrowser(GotFocus.Caption);
 			}
 		}
+
+
 
 
 		private static void SelectTreeNodeInObjBrowser(string winCaptionArg)
@@ -908,7 +923,7 @@ namespace OMControlLibrary
 							"Object is already deleted. This window will get closed now. Please fire the query again for refreshed results.",
 							Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
 										 MessageBoxIcon.Information);
-						Window queryResult = ViewBase.GetWindow(Helper.GetCaption(ClassName));
+						Window queryResult = GetWindow(Helper.GetCaption(ClassName));
 						queryResult.Close(vsSaveChanges.vsSaveChangesYes);
 					}
                    
@@ -945,7 +960,6 @@ namespace OMControlLibrary
 			}
 		}
 
-	
 		private void buttonSaveResult_Click(object sender, EventArgs e)
 		{
 			try

@@ -663,9 +663,10 @@ namespace OMControlLibrary
 						}
 						else
 						{
-                            IType fieldType = Db4oClient.TypeResolver.Resolve(tempTreeNode.Tag.ToString());
+							IType fieldType = dbInteraction.ResolveType(tempTreeNode.Tag.ToString()); 
+								
 
-							//If selected item is not a primitive type than dont allow to drage item
+							//If selected item is not a primitive type than dont allow to drage item)
 							if (!fieldType.IsEditable)
 								return;
 
@@ -685,7 +686,8 @@ namespace OMControlLibrary
 								return;
 							if (tempTreeNode.Parent != null)
 							{
-							    IType type = Db4oClient.TypeResolver.Resolve(tempTreeNode.Parent.Tag.ToString());
+								IType type = dbInteraction.ResolveType(tempTreeNode.Parent.Tag.ToString());
+									
 							    className = type != null ? type.FullName : tempTreeNode.Parent.Name;
 							  
 							}
@@ -717,7 +719,8 @@ namespace OMControlLibrary
 				Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
             
 		    string tempClassName = string.Empty;
-            IType type = Db4oClient.TypeResolver.Resolve(tempTreeNode.Tag.ToString());
+			IType type = dbInteraction.ResolveType(tempTreeNode.Tag.ToString());
+				
 		    tempClassName = type != null
 		                        ? type.FullName
 		                        : (tempTreeNode.Parent != null ? tempTreeNode.Parent.Name : tempTreeNode.Text);
@@ -733,7 +736,8 @@ namespace OMControlLibrary
 			{
 				while (eNum.MoveNext())
 				{
-					IType fieldType = Db4oClient.TypeResolver.Resolve(eNum.Value.ToString());
+					IType fieldType = dbInteraction.ResolveType(eNum.Value.ToString()); 
+						
 					if (!fieldType.IsEditable)
 						continue;
 						
@@ -1365,7 +1369,7 @@ namespace OMControlLibrary
 							dbDataGridView gridQuery = group.DataGridViewQuery;
 							gridQuery.Rows.Add(1);
 
-                            IType fieldType = Db4oClient.TypeResolver.Resolve(omQueryClause.FieldType);
+							IType fieldType = dbInteraction.ResolveType(omQueryClause.FieldType);
                             
                             //Fill the Conditions depending upon the field name
 							gridQuery.FillConditionsCombobox(fieldType, j);

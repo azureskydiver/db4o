@@ -423,5 +423,15 @@ namespace OManager.BusinessLayer.UIHelper
             RecentQueries recentQueries = new RecentQueries(conn);
             recentQueries.deleteRecentQueriesForAConnection();
         }
+
+		public static bool CheckIfDbConnected()
+		{
+			return Db4oClient.IsConnected;  
+		}
+
+		public static IType ResolveType(string typeDetails)
+		{
+			return Db4oClient.TypeResolver.Resolve(typeDetails);
+		}
 	}
 }

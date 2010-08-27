@@ -19,7 +19,7 @@ namespace OMControlLibrary
 		#region Member Variables
 
 		private static DTE2 m_applicationObject;
-
+	
 		#endregion
 
 		#region Properties
@@ -36,7 +36,6 @@ namespace OMControlLibrary
 		public ViewBase()
 		{
 			InitializeComponent();
-			_currentMode = m_applicationObject.DTE.Debugger.CurrentMode;
 		}
 		#endregion
 
@@ -53,24 +52,10 @@ namespace OMControlLibrary
 
 		#endregion
 
-		//TODO: Use the window caption as soon as we fix the dependency on Caption being equal
-		//      to "Closed".
-		private static WindowVisibilityEvents _events;
-		private static readonly IDictionary<Window, bool> _omnWindows = new Dictionary<Window, bool>();
-		private static dbgDebugMode _currentMode;
-		public static Dictionary<Window, bool> PluginWindows
-		{
-
-			get
-			{
-				lock (_omnWindows)
-				{
-					return new Dictionary<Window, bool>(_omnWindows);
-				}
-			}
-
-		}
-
+		//TODO: Use the window caption as soon as we fix the dependency on Caption being equal to "Closed".
+		
+		private static readonly IList<Window> _omnWindows = new List<Window>();
+		
 		public static void ResetToolWindowList()
 		{
 			lock (_omnWindows)
@@ -79,16 +64,24 @@ namespace OMControlLibrary
 			}
 		}
 
+
+		public static IList<Window> GetAllPluginWindows()
+		{
+			lock (_omnWindows)
+			{
+				return _omnWindows; 
+			}
+		}
+
 		internal static Window CreateToolWindow(string toolWindowClass, string caption, string guidpos)
 		{
-			AttachEventHandlerIfNecessary();
-
+			
+			
 			Window found = GetWindow(caption);
 			if (found != null)
 			{
 				found.Activate();
 				LoadDataForAppropriateClass(found);
-				_omnWindows[found] = true;
 				return found;
 			}
 
@@ -104,7 +97,7 @@ namespace OMControlLibrary
 									guidpos,
 									ref ctlobj);
 
-			_omnWindows[window] = true;
+			_omnWindows.Add(window);
 			window.Linkable = true;
 
 			return window;
@@ -112,29 +105,16 @@ namespace OMControlLibrary
 
 		public static Window GetWindow(string caption)
 		{
-			foreach (KeyValuePair<Window, bool> entry in PluginWindows)
+			foreach (Window  entry in _omnWindows)
 			{
-				if (caption == entry.Key.Caption)
+				if (caption == entry.Caption )
 				{
-					_omnWindows[entry.Key] = true;
-					return entry.Key;
+					return entry;
 				}
 			}
 			return null;
 		}
-
-		private static void AttachEventHandlerIfNecessary()
-		{
-			if (null == _events)
-			{
-				Events2 eventsSource = (Events2)ApplicationObject.Events;
-				_events = eventsSource.get_WindowVisibilityEvents(null);
-				_events.WindowHiding += OnWindowHidding;
-
-			}
-		}
-
-
+		
 
 		private static void LoadDataForAppropriateClass(Window win)
 		{
@@ -157,36 +137,10 @@ namespace OMControlLibrary
 				loaddata.LoadAppropriatedata();
 		}
 
-		private static void OnWindowHidding(Window window)
-		{
-			lock (_omnWindows)
-			{
-
-				if (_currentMode == window.DTE.Debugger.CurrentMode)
-				{
-					if (_omnWindows.ContainsKey(window))
-					{
-						_omnWindows[window] = false;
-						switch (window.Caption)
-						{
-							case Constants.LOGIN:
-							case Constants.QUERYBUILDER:
-							case Constants.DB4OPROPERTIES:
-							case Constants.DB4OBROWSER:
-								break;
-							default:
-								Helper.SaveData();
-								break;
-						}
-					}
-				}
-				_currentMode = m_applicationObject.DTE.Debugger.CurrentMode;
-			}
-		}
-
+		
 		public static bool IsOMNWindow(Window window)
 		{
-			return window != null ? _omnWindows.ContainsKey(window) : false;
+			return window != null ? _omnWindows.Contains(window) : false;
 		}
 
 		private static AddIn FindAddin(AddIns addins)

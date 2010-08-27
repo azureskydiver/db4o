@@ -21,7 +21,7 @@ namespace OManager.DataLayer.Connection
 		public static string RecentConnFile;
 		public static string exceptionConnection = "";
 		public static bool boolExceptionForRecentConn;
-
+		private static bool isConnected;
 		public static TypeResolver TypeResolver
 		{
 			get
@@ -43,6 +43,20 @@ namespace OManager.DataLayer.Connection
 			}
 		}
        
+		public static bool IsConnected
+		{
+			get
+			{
+				return isConnected ;
+
+
+			}
+			set
+			{
+				isConnected=value  ;
+			}
+		}
+
 		/// <summary>
 		/// Static property which either returns a new object container for a specific logon identity or returns the object container already 
 		/// allocated to the logon identity.
@@ -52,12 +66,6 @@ namespace OManager.DataLayer.Connection
 			get
 			{
 				exceptionConnection = "";
-				//Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.Lazy);
-				//Db4oFactory.Configure().ActivationDepth(1);
-				//Db4oFactory.Configure().AllowVersionUpdates(true);
-				//Db4oFactory.Configure().BlockSize(8);
-				//Db4oFactory.Configure().Add(new JavaSupport());
-               
 				try
 				{
 					if (objContainer == null)
@@ -90,6 +98,7 @@ namespace OManager.DataLayer.Connection
                                     exceptionConnection = "File does not exist!";
                                 }
 							}
+							isConnected = true;
 						}
 					}
 				}
@@ -130,12 +139,7 @@ namespace OManager.DataLayer.Connection
 			config.AllowVersionUpdates = true ;
 			config.Add(new JavaSupport());
 		}
-
-
-		private static string GetTypeName(Type type)
-        {
-            return type.FullName + ", " + type.Assembly.GetName().Name;
-        }
+		
 		public static IObjectContainer RecentConn
 		{
 			get
@@ -173,6 +177,7 @@ namespace OManager.DataLayer.Connection
 				{
 					objContainer.Close();
 					objContainer = null;
+					isConnected = false;
 				}
 				conn = null;
 

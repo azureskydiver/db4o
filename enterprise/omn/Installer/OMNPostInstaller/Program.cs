@@ -106,8 +106,10 @@ namespace OMNPostInstaller
 			if (addinDoc != null)
 			{
 				XmlNode toBeRemoved = addinDoc.SelectSingleNode(HostApplicationPathForVersion(VSVersionNumberFor(yearVersion)), NameSpaceManagerFor(addinDoc, ""));
-				toBeRemoved.ParentNode.RemoveChild(toBeRemoved);
-
+				if (toBeRemoved != null)
+				{
+					toBeRemoved.ParentNode.RemoveChild(toBeRemoved);
+				}
 				SaveAddinFile(addinDoc, addinFilePath);
 			}
 		}

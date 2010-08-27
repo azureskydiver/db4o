@@ -28,6 +28,7 @@ namespace OMControlLibrary
 		#region Member Variables
 
 		//Private static variables
+	    private static Window loginToolWindow;
 		private static CommandBarControl m_cmdBarCtrlCreateDemoDb;
 		internal static CommandBarControl m_cmdBarCtrlConnect;
 		internal static CommandBarControl m_cmdBarCtrlBackup;
@@ -47,7 +48,7 @@ namespace OMControlLibrary
 		private const char CHAR_COLON = ':';
 
 		static Window queryBuilderToolWindow;
-
+	
 
 		#endregion
 
@@ -65,7 +66,10 @@ namespace OMControlLibrary
 		
 
 		#endregion
+		#region Properties
+		
 
+		#endregion
 		#region Methods
 
 		#region Public
@@ -109,16 +113,16 @@ namespace OMControlLibrary
 				m_cmdBarCtrlBackup = cmdBarCtrlBackup;
 				m_cmdBarCtrlCreateDemoDb = dbCreateDemoDbControl;
 
-				Helper.LoginToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_LOGIN, Common.Constants.LOGIN, NewFormattedGuid());
+                loginToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_LOGIN, Common.Constants.LOGIN, NewFormattedGuid());
 
-				if (Helper.LoginToolWindow.AutoHides)
+                if (loginToolWindow.AutoHides)
 				{
-					Helper.LoginToolWindow.AutoHides = false;
+                    loginToolWindow.AutoHides = false;
 				}
-				Helper.LoginToolWindow.Visible = true;
-				Helper.LoginToolWindow.Width = 425;
-				Helper.LoginToolWindow.Height = 170;
-
+                loginToolWindow.Visible = true;
+                loginToolWindow.Width = 425;
+                loginToolWindow.Height = 170;
+				Helper.CheckIfLoginWindowIsVisible = true;
 				
 			}
 			catch (Exception oEx)
@@ -169,8 +173,14 @@ namespace OMControlLibrary
 
 		 public void LoadAppropriatedata()
 		{
-			
-			
+
+
+
+			//Events2 eventsSource = (Events2)ApplicationObject.Events;
+			//_events = eventsSource.get_WindowVisibilityEvents(null);
+			//_events.WindowHiding += OnWindowHidding;
+			//_events.WindowShowing += OnWindowShowing;
+
 			toolTipForTextBox.RemoveAll();
 			comboBoxFilePath.Items.Clear();
 			textBoxConnection.Text = "";
@@ -201,11 +211,7 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void RegisterEvents()
-		{
-			comboBoxFilePath.DropdownItemSelected += new ToolTipComboBox.DropdownItemSelectedEventHandler(comboBoxFilePath_DropdownItemSelected);
-			comboBoxFilePath.SelectedIndexChanged += new System.EventHandler(comboBoxFilePath_SelectedIndexChanged);
-		}
+		
 
 		private void ShowAppropriatePanel(bool param)
 		{
@@ -340,7 +346,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-
+			
 				LoadAppropriatedata();
 				SetLiterals();
 				textBoxConnection.Clear();
@@ -348,6 +354,7 @@ namespace OMControlLibrary
 				textBoxPassword.Clear();
 				textBoxPort.Clear();
 				textBoxPassword.Clear();
+				
 			}
 			catch (Exception oEx)
 			{
@@ -355,6 +362,7 @@ namespace OMControlLibrary
 			}
 		}
 
+		
 		
 
 		
@@ -506,9 +514,9 @@ namespace OMControlLibrary
 					dbInteraction.SetCurrentRecentConnection(currRecentQueries);
 					dbInteraction.SaveRecentConnection(currRecentQueries);
 					AfterSuccessfullyConnected();
-					
-					Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
 
+                    loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
+					Helper.CheckIfLoginWindowIsVisible = false;
 					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
 					ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;
 
@@ -516,14 +524,6 @@ namespace OMControlLibrary
 					PropertyPaneToolWin.PropWindow.Visible = true;
 
 					CreateQueryBuilderToolWindow();
-
-					
-					
-					
-  					
-					
-					
-					
 					
 				}
 				else
@@ -621,8 +621,8 @@ namespace OMControlLibrary
 				textBoxPassword.Clear();
 				textBoxUserName.Clear();
 
-				Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
-
+                loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
+				Helper.CheckIfLoginWindowIsVisible = false;
 			}
 			catch (Exception oEx)
 			{

@@ -388,18 +388,18 @@ namespace OMControlLibrary
 
 		private void CloseQueryResultToolWindows()
 		{
-			foreach (KeyValuePair<Window, bool> entry in PluginWindows)
+			foreach (Window entry in GetAllPluginWindows())
 			{
-				switch(entry.Key.Caption  )
+				switch(entry.Caption  )
 				{
 					case Constants.QUERYBUILDER:
 					case Constants.DB4OPROPERTIES :
 					case Constants.DB4OBROWSER:
 						break;
 					default:
-						if (entry.Value)
+						if (entry.Visible )
 						{
-							entry.Key.Close(vsSaveChanges.vsSaveChangesNo);
+							entry.Close(vsSaveChanges.vsSaveChangesNo);
 						}
 						break;
 				}

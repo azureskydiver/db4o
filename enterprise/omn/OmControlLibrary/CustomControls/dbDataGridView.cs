@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using Db4objects.Db4o.Reflect.Net;
+
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
 using OManager.BusinessLayer.UIHelper;
@@ -12,7 +12,7 @@ using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
-using Sharpen.Lang;
+
 using Type=System.Type;
 
 namespace OMControlLibrary.Common
@@ -1298,7 +1298,8 @@ namespace OMControlLibrary.Common
 			string className = string.Empty;
 			try
 			{
-			    IType itemType = Db4oClient.TypeResolver.Resolve(tempTreeNode.Tag.ToString());
+				IType itemType = dbInteraction.ResolveType(tempTreeNode.Tag.ToString());
+					
 				if (!itemType.IsEditable)
 					return false;
 
@@ -1334,7 +1335,7 @@ namespace OMControlLibrary.Common
 
         private static string FullyQualifiedClassNameFor(TreeNode node)
         {
-            IType type = Db4oClient.TypeResolver.Resolve(node.Tag.ToString());
+        	IType type = dbInteraction.ResolveType(node.Tag.ToString()); 
             return type == null ? (node.Parent != null ? node.Parent.Name : node.Text) : type.FullName;
         }
 
@@ -1356,7 +1357,7 @@ namespace OMControlLibrary.Common
 					IDictionaryEnumerator eNum = storedfields.GetEnumerator();
 					while (eNum.MoveNext())
 					{
-					    IType itemType = Db4oClient.TypeResolver.Resolve(eNum.Value.ToString());
+						IType itemType = dbInteraction.ResolveType(eNum.Value.ToString());  
 						if (!itemType.IsEditable )
 							continue;
 							
