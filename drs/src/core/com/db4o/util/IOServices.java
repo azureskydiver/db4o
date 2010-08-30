@@ -222,14 +222,10 @@ public class IOServices {
         }
 
         private void checkIfTerminated() {
-            boolean ok = false;
 	        try{
 	            _process.exitValue();
-	        }catch (IllegalThreadStateException ex){
-	            ok = true;
-	        }
-	        if(! ok){
 	            throw new ProcessTerminatedBeforeDestroyException();
+	        }catch (IllegalThreadStateException ex){
 	        }
         }
 	    
