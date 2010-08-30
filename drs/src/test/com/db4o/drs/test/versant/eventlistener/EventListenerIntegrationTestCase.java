@@ -127,68 +127,42 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		return result;
 	}
 	
-	public void testIsolationTimeout() {
+	public void testIsolationTimeout() throws Exception {
 		
-		final ObjectLifecycleMonitor original = _provider.eventProcessor();
-		
-		_provider.eventProcessor(new ObjectLifecycleMonitor() {
-
-			public boolean requestIsolation(boolean isolated) {
-				return original.requestIsolation(isolated);
-			}
-
-			public long requestTimestamp() {
-				return original.requestTimestamp();
-			}
-
-			public void syncTimestamp(long timestamp) {
-				original.syncTimestamp(timestamp);
-			}
-
-			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
-				original.ensureMonitoringEventsOn(fullyQualifiedName, schemaName, classLoid);
-			}
-
-			public void ping() {
-				// ignoring ping
-			}
-
-			public void stop() {
-				original.stop();
-			}
-
-			public void addListener(MonitorListener l) {
-				original.addListener(l);
-			}
-
-			public void ensureChangecount(int expectedChangeCount) {
-				original.ensureChangecount(expectedChangeCount);
-			}
+		withEventProcessor(new Closure4<Void>() {
 			
+			public Void run() {
+		
+				boolean oldState = _provider.pinging();
+				_provider.pinging(false);
+				
+				try {
+		
+					final ObjectLifecycleMonitor ep = _provider.syncEventProcessor();
+					
+					Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), 1000));
+					
+					
+					_provider.runIsolated(new Block4() {
+						
+						public void run() {
+							long timeout = ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT;
+							Assert.isFalse(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
+							
+							Runtime4.sleepThrowsOnInterrupt(ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT);
+							Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
+							
+							Assert.isTrue(ep.requestIsolation(true));
+							Assert.isTrue(ep.requestIsolation(false));
+						}
+					});
+					
+				} finally {
+					_provider.pinging(oldState);
+				}
+				return null;
+			}
 		});
-		
-		try {
-		
-			ObjectLifecycleMonitor ep = _vod.startEventProcessor().eventProcessor();
-			
-			Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), 1000));
-			
-			Assert.isTrue(ep.requestIsolation(true));
-	
-			long timeout = ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT;
-			Assert.isFalse(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
-			
-			Runtime4.sleepThrowsOnInterrupt(ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT);
-			Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
-			
-			Assert.isTrue(ep.requestIsolation(true));
-			Assert.isTrue(ep.requestIsolation(false));
-			
-			ep.stop();
-			
-		} finally {
-			_provider.eventProcessor(original);
-		}
 	}
 
 }
