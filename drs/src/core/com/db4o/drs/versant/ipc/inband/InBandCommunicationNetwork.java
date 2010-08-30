@@ -21,12 +21,36 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 
 			}
 		}, ObjectLifecycleMonitor.class);
+		
+		
+		final Object feederLock = new Object();
+		
+		Thread t = new Thread("In band client feeder") {
+			@Override
+			public void run() {
+				try {
+					while(true) {
+						Thread.sleep(1000);
+						synchronized (feederLock) {
+							feed(cobra, senderId, remotePeer, true);
+						}
+					}
+				} catch (InterruptedException e) {
+				} catch (IOException e) {
+				}
+			}
+		};
+		t.setDaemon(true);
+		t.start();
+		
 
 		remotePeer.setFeeder(new Runnable() {
 
 			public void run() {
 				try {
-					feed(cobra, senderId, remotePeer);
+					synchronized (feederLock) {
+						feed(cobra, senderId, remotePeer, false);
+					}
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
@@ -37,7 +61,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 
 	}
 
-	private static void feed(VodCobra _cobra, int senderId, ByteArrayConsumer consumer) throws IOException {
+	private static void feed(VodCobra _cobra, int senderId, ByteArrayConsumer consumer, boolean runJustOnce) throws IOException {
 		boolean atLeastOne = false;
 		while (!atLeastOne) {
 			Collection<MessagePayload> msgs = _cobra.query(MessagePayload.class);
@@ -50,6 +74,9 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 				msg.consumedAt(System.currentTimeMillis());
 				_cobra.store(msg);
 				_cobra.commit();
+			}
+			if (runJustOnce) {
+				break;
 			}
 			if (!atLeastOne) {
 				try {
