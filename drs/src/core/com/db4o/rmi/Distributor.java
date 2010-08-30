@@ -19,13 +19,13 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 	private Runnable feeder;
 
 	private ByteArrayConsumer consumer;
-	private PeerProxy<T> rootClient;
+	private ProxyObject<T> rootClient;
 	private AtomicLong objectsId = new AtomicLong();
 	
-	private ConcurrentMap<Object, PeerServer> serving = new ConcurrentHashMap<Object, PeerServer>();
-	private ConcurrentMap<Long, PeerServer> servingById = new ConcurrentHashMap<Long, PeerServer>();
+	private ConcurrentMap<Object, ServerObject> serving = new ConcurrentHashMap<Object, ServerObject>();
+	private ConcurrentMap<Long, ServerObject> servingById = new ConcurrentHashMap<Long, ServerObject>();
 	
-	private ConcurrentMap<Long, PeerProxy> proxying = new ConcurrentHashMap<Long, PeerProxy>();
+	private ConcurrentMap<Long, ProxyObject> proxying = new ConcurrentHashMap<Long, ProxyObject>();
 
 	public Distributor(ByteArrayConsumer consumer, Class<T> rootFacade) {
 		this(consumer, null, rootFacade);
@@ -107,7 +107,7 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 
 		long serverId = in.readLong();
 
-		PeerServer server = servingById.get(serverId);
+		ServerObject server = servingById.get(serverId);
 
 		long requestId = in.readLong();
 		Request r = new Request(this, server.getObject());
@@ -186,13 +186,13 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		return feeder;
 	}
 
-	public PeerServer serverFor(Object o) {
+	public ServerObject serverFor(Object o) {
 
-		PeerServer server = serving.get(o);
+		ServerObject server = serving.get(o);
 
 		if (server == null) {
 
-			server = new PeerServer(objectsId.getAndIncrement(), o);
+			server = new ServerObject(objectsId.getAndIncrement(), o);
 
 			serving.put(o, server);
 			servingById.put(server.getId(), server);
@@ -201,13 +201,13 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		return server;
 	}
 
-	public <S> PeerProxy<S> proxyFor(long id, Class<S> clazz) {
+	public <S> ProxyObject<S> proxyFor(long id, Class<S> clazz) {
 
-		PeerProxy<S> proxy = proxying.get(id);
+		ProxyObject<S> proxy = proxying.get(id);
 
 		if (proxy == null) {
 
-			proxy = new PeerProxy<S>(this, id, clazz);
+			proxy = new ProxyObject<S>(this, id, clazz);
 
 			proxying.put(proxy.getId(), proxy);
 		}

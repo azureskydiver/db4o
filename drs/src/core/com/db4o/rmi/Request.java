@@ -5,9 +5,6 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.rmi.test.*;
-import com.db4o.rmi.test.Proxy;
-
 class Request {
 
 	private Object value;
@@ -88,7 +85,7 @@ class Request {
 				
 				out.writeBoolean(hasAnnotation(anns, Async.class));
 
-				PeerServer server = distributor.serverFor(o);
+				ServerObject server = distributor.serverFor(o);
 
 				out.writeLong(server.getId());
 				out.writeUTF(t.getName());
@@ -150,7 +147,7 @@ class Request {
 				long id = in.readLong();
 				Class<?> clazz = classForName(in.readUTF());
 
-				PeerProxy<?> peer = distributor.proxyFor(id, clazz);
+				ProxyObject<?> peer = distributor.proxyFor(id, clazz);
 				args[i] = async ? peer.async() : peer.sync();
 
 			} else {

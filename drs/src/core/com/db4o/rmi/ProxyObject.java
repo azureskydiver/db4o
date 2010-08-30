@@ -2,26 +2,26 @@ package com.db4o.rmi;
 
 import java.lang.reflect.*;
 
-public class PeerProxy<T> implements Peer<T> {
+public class ProxyObject<T> implements Peer<T> {
 
 	private T syncFacade;
 
 	private T asyncFacade;
 
-	private Class<T> rootFacade;
+	private Class<T> facade;
 
 	private final Distributor<?> distributor;
 	private final long id;
 
-	public PeerProxy(Distributor<?> distributor, long id, Class<T> rootFacade) {
+	ProxyObject(Distributor<?> distributor, long id, Class<T> facade) {
 		this.id = id;
-		this.rootFacade = rootFacade;
+		this.facade = facade;
 		this.distributor = distributor;
 	}
 
 	public T sync() {
 		if (syncFacade == null) {
-			syncFacade = (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { rootFacade }, new InvocationHandler() {
+			syncFacade = (T) java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { facade }, new InvocationHandler() {
 
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 					Request r = distributor.request(getId(), method, args, true);
@@ -43,7 +43,7 @@ public class PeerProxy<T> implements Peer<T> {
 	}
 
 	public <R> T async(final Callback<R> callback) {
-		return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { rootFacade }, new InvocationHandler() {
+		return (T) java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { facade }, new InvocationHandler() {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				Request r = distributor.request(getId(), method, args, callback != null);

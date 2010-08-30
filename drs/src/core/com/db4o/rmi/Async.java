@@ -1,4 +1,4 @@
-package com.db4o.rmi.test;
+package com.db4o.rmi;
 
 import java.lang.annotation.*;
 
