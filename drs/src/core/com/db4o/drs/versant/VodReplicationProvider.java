@@ -12,6 +12,7 @@ import javax.jdo.spi.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.versant.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
@@ -23,9 +24,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private final VodDatabase _vod;
 	
-	private final VodCobra _cobra;
+	private final VodCobraFacade _cobra;
 	
-	private final VodJdo _jdo;
+	private final VodJdoFacade _jdo;
 	
 	private final VodJvi _jvi;
 
@@ -55,11 +56,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heatbeat");
 
 	
-	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ObjectLifecycleMonitor comm) {
+	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ObjectLifecycleMonitor comm) {
 		_eventProcessor = comm;
 		_vod = vod;
 		_cobra = cobra;
-		_jdo = new VodJdo(vod);
+		_jdo = VodJdo.createInstance(vod);
 		_jvi = new VodJvi(vod);
 		loadSignatures();
 		loadKnownClasses();

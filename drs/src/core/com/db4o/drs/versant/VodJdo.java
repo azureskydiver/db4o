@@ -2,10 +2,13 @@
 
 package com.db4o.drs.versant;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import javax.jdo.*;
+import javax.jdo.spi.*;
 
+import com.db4o.drs.test.versant.*;
 import com.versant.core.jdo.*;
 import com.versant.core.metadata.*;
 import com.versant.core.storagemanager.*;
@@ -13,13 +16,17 @@ import com.versant.core.vds.*;
 import com.versant.odbms.model.*;
 import com.versant.odbms.model.UserSchemaClass;
 
-public class VodJdo {
+public class VodJdo implements VodJdoFacade {
 	
 	private final VodDatabase _vod;
 	
 	private final PersistenceManager _pm;
 
-	public VodJdo(VodDatabase vod) {
+	public static VodJdoFacade createInstance(VodDatabase vod) {
+		return ProxyUtil.throwOnConcurrentAccess(VodJdoFacade.class, new VodJdo(vod));
+	}
+	
+	private VodJdo(VodDatabase vod) {
 		_vod = vod;
 		_pm = _vod.persistenceManagerFactory().getPersistenceManager();
 		_pm.currentTransaction().begin();

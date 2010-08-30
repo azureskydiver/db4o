@@ -17,7 +17,7 @@ public class InBandServer implements CommunicationChannelControl {
 
 	private final ObjectLifecycleMonitor provider;
 	private final Object lock;
-	private final VodCobra cobra;
+	private final VodCobraFacade cobra;
 	private final VodEventClient client;
 	private final int senderId;
 	private BlockingQueue4<MessagePayload> pendingMessages;
@@ -27,7 +27,7 @@ public class InBandServer implements CommunicationChannelControl {
 	private SimpleTimer purger;
 	private Thread purgerThread;
 
-	public InBandServer(ObjectLifecycleMonitor provider, Object lock, VodCobra cobra, VodEventClient client, int senderId) {
+	public InBandServer(ObjectLifecycleMonitor provider, Object lock, VodCobraFacade cobra, VodEventClient client, int senderId) {
 		this.provider = provider;
 		this.lock = lock;
 		this.cobra = cobra;

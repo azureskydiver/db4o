@@ -7,6 +7,7 @@ import java.util.*;
 import static com.db4o.qlin.QLinSupport.*;
 
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.versant.*;
 import com.db4o.drs.versant.cobra.qlin.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.internal.*;
@@ -15,7 +16,7 @@ import com.versant.odbms.*;
 import com.versant.odbms.model.*;
 import com.versant.odbms.query.*;
 
-public class VodCobra implements QLinable{
+public class VodCobra implements QLinable, VodCobraFacade{
 	
 	private static final long INVALID_LOID = 0L;
 	
@@ -23,7 +24,11 @@ public class VodCobra implements QLinable{
 	
 	private DatastoreManager _dm;
 
-	public VodCobra(VodDatabase vod) {
+	public static VodCobraFacade createInstance(VodDatabase vod) {
+		return ProxyUtil.throwOnConcurrentAccess(VodCobraFacade.class, new VodCobra(vod));
+	}
+
+	private VodCobra(VodDatabase vod) {
 		_vod = vod;
 		_dm = vod.createDatastoreManager();
 		_dm.beginTransaction();

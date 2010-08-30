@@ -12,10 +12,10 @@ import com.db4o.rmi.*;
 
 public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 
-	static final String OBJECT_LIFECYCLE_MONITOR_HOST = "localhost";
-	static final int OBJECT_LIFECYCLE_MONITOR_PORT = 7283;
+	static final String HOST = "localhost";
+	static final int PORT = 7283;
 
-	public ObjectLifecycleMonitor newClient(final VodCobra cobra, final int senderId) {
+	public ObjectLifecycleMonitor newClient(final VodCobraFacade cobra, final int senderId) {
 		
 		// lazy initialization required because the client is created before ObjectLifecycleMonitor is up
 		return (ObjectLifecycleMonitor) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{ObjectLifecycleMonitor.class}, new InvocationHandler() {
@@ -35,7 +35,7 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 
 	}
 	
-	private ObjectLifecycleMonitor newClient0(final VodCobra cobra, final int senderId) {
+	private ObjectLifecycleMonitor newClient0(final VodCobraFacade cobra, final int senderId) {
 		
 		
 		try {
@@ -90,7 +90,7 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 		Socket s;
 		while (true) {
 			try {
-				s = new Socket(OBJECT_LIFECYCLE_MONITOR_HOST, OBJECT_LIFECYCLE_MONITOR_PORT);
+				s = new Socket(HOST, PORT);
 				break;
 			} catch (ConnectException e) {
 				try {
@@ -105,7 +105,7 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 		return s;
 	}
 
-	public CommunicationChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, final Object lock, final VodCobra cobra, VodEventClient client,
+	public CommunicationChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, final Object lock, final VodCobraFacade cobra, VodEventClient client,
 			int senderId) {
 		
 		return new TcpServer(provider);

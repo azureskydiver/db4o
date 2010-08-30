@@ -8,15 +8,13 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.VodCobra.*;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.qlin.*;
 
 import db4ounit.*;
 
 public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLifeCycle {
 	
-	private VodCobra _cobra;
+	private VodCobraFacade _cobra;
 	
 	public void testStore(){
 		long expectedObjectLoid = 2;
@@ -63,11 +61,11 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	}
 	
 	private void ensureSchemaCreated() {
-		new VodJdo(_vod).close();
+		VodJdo.createInstance(_vod).close();
 	}
 
 	public void setUp() throws Exception {
-		_cobra = new VodCobra(_vod);
+		_cobra = VodCobra.createInstance(_vod);
 		ensureSchemaCreated();
 	}
 

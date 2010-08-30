@@ -22,12 +22,12 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	
 	// This is a direct _VodJdo connection that works around our _provider 
 	// so we can see what's committed, using a second reference system.
-	protected VodJdo _jdo;
+	protected VodJdoFacade _jdo;
 	
 	public void setUp() {
-		_jdo = new VodJdo(_vod);
+		_jdo = VodJdo.createInstance(_vod);
 		cleanDb();
-		VodCobra cobra = new VodCobra(_vod);
+		VodCobraFacade cobra = VodCobra.createInstance(_vod);
 		ObjectLifecycleMonitor comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		_provider = new VodReplicationProvider(_vod, cobra, comm);
 	}
