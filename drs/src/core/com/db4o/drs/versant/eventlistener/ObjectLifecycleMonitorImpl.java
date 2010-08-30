@@ -128,7 +128,6 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
 		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
-//		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
 		synchronized (listeners) {
 			_started = true;
@@ -137,7 +136,6 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		try {
 			_incomingMessages.join();
 		} catch (InterruptedException e) {
-//			e.printStackTrace();
 		}
 		shutdown();
 	}
