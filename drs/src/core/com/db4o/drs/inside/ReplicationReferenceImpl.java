@@ -22,7 +22,7 @@ package com.db4o.drs.inside;
 
 import com.db4o.drs.foundation.*;
 
-public final class ReplicationReferenceImpl implements ReplicationReference {
+public class ReplicationReferenceImpl implements ReplicationReference {
 	
 	private boolean _objectIsNew;
 

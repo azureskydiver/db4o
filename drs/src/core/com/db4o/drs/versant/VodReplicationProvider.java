@@ -202,8 +202,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public boolean supportsRollback() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		return true;
 	}
 
 	public void clearAllReferences() {
@@ -260,6 +259,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return 0;
 		}
 		long db4oLongPart = uuid.getLongPart();
+		return loidFrom(databaseId, db4oLongPart);
+	}
+
+	private long loidFrom(long databaseId, long db4oLongPart) {
 		long vodObjectIdPart = 
 			TimeStampIdGenerator.convert64BitIdTo48BitId(db4oLongPart);
 		return (databaseId << 48) | vodObjectIdPart;
@@ -268,29 +271,33 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public ReplicationReference referenceNewObject(Object obj,
 			ReplicationReference counterpartReference,
 			ReplicationReference referencingObjRef, String fieldName) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		
+		DrsUUID uuid = counterpartReference.uuid();
+		long version = counterpartReference.version();
+		
+		ReplicationReference ref = new VodReplicationReference(obj, uuid, version, true);
+		_replicationReferences.put(ref);
+		return ref;
 	}
 
 	public void replicateDeletion(DrsUUID uuid) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		Object object = _jdo.objectByLoid(loidFrom(uuid));
+		if (object == null) {
+			return;
+		}
+		_jdo.delete(object);
 	}
 
 	public void rollbackReplication() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		clearAllReferences();
+		_jdo.rollback();
+		_cobra.rollback();
 	}
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
 		clearAllReferences();
-		Signature peerSignature = new Signature(peer.getSignature());
-		int peerId = _signatures.idFor(peerSignature);
-		if(peerId == 0){
-			peerId = _jvi.newDbId( peerSignature.toString() );
-			storeSignature(peerId, peerSignature);
-			_signatures.add(peerId, peerSignature);
-		}
+		byte[] signature = peer.getSignature();
+		int peerId = dbIdFrom(signature);
 		int lowerId = Math.min(peerId, _myDatabaseId);
 		int higherId = Math.max(peerId, _myDatabaseId);
 		
@@ -314,6 +321,17 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 
+	private int dbIdFrom(byte[] signature) {
+		Signature peerSignature = new Signature(signature);
+		int peerId = _signatures.idFor(peerSignature);
+		if(peerId == 0){
+			peerId = _jvi.newDbId( peerSignature.toString() );
+			storeSignature(peerId, peerSignature);
+			_signatures.add(peerId, peerSignature);
+		}
+		return peerId;
+	}
+
 	private DatabaseSignature databaseSignature(int databaseId) {
 		DatabaseSignature sig = prototype(DatabaseSignature.class);
 		return _cobra.from(DatabaseSignature.class).where(sig.databaseId()).equal(databaseId).single();
@@ -322,9 +340,29 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void storeReplica(Object obj) {
 		logIdentity(obj, getName());
 		ReplicationReference ref = _replicationReferences.get(obj);
-		long loid = loidFrom(ref.uuid());
+		
+		long loid = 0;
+		if (ref instanceof VodReplicationReference) {
+			
+			int otherDb = dbIdFrom(ref.uuid().getSignaturePart());
+			long otherLongPart = ref.uuid().getLongPart();
+			
+			loid = _cobra.store(obj);
+			
+			VodId vodId = _cobra.idFor(loid);
+			Signature signature = produceSignatureFor(vodId.databaseId);
+			VodUUID uuid = new VodUUID(signature, vodId);
+			
+			_cobra.store(new UuidMapping(otherDb, otherLongPart, dbIdFrom(uuid.getSignaturePart()), uuid.getLongPart()));
+				
+		} else {
+
+			loid = loidFrom(ref.uuid());
+			
+			_cobra.store(loid, obj);
+		}
+		
 		logIdentity(obj, String.valueOf(loid));
-		_cobra.store(loid, obj);
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
@@ -363,7 +401,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
 		for (Long loid : loids) {
-//			objects.add(_cobra.objectByLoid(loid));
 			objects.add(_jdo.objectByLoid(loid));
 		}
 		return new ObjectSetCollectionFacade(objects);
@@ -404,7 +441,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(reference != null){
 			return reference;
 		}
-		long loid = loidFrom(uuid);
+
+		
+		long loid;
+		
+		
+		loid = tryMapping(uuid);
+		
+		if (loid == 0) {
+			loid = loidFrom(uuid);
+		}
 		
 		if(loid == 0){
 			return null;
@@ -420,6 +466,21 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return reference; 
 	}
 
+	private long tryMapping(DrsUUID uuid) {
+
+		int otherDb = dbIdFrom(uuid.getSignaturePart());
+		long otherLongPart = uuid.getLongPart();
+
+		UuidMapping p = prototype(UuidMapping.class);
+		ObjectSet<UuidMapping> mapping = _cobra.from(UuidMapping.class).where(p.otherLongPart()).equal(otherLongPart).select();
+		for (UuidMapping uuidMapping : mapping) {
+			if (otherDb == uuidMapping.otherDb()) {
+				return loidFrom(uuidMapping.mineDb(), uuidMapping.mineLongPart());
+			}
+		}
+		return 0;
+	}
+
 	private Signature produceSignatureFor(int databaseId) {
 		Signature signature = _signatures.signatureFor(databaseId);
 		if(signature != null){
@@ -433,7 +494,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private void storeSignature(int databaseId, Signature signature) {
 		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
 		_jdo.store(databaseSignature);
-//		_jdo.commit(); if we commit here, the reflective access to object state wont work
 		_signatures.add(databaseId, signature);
 	}
 	

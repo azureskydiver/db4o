@@ -86,6 +86,8 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		}
 		_vod = new VodDatabase(DATABASE_NAME);
 		_vod.produceDb();
+		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
+		_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.versant.data")));
 		_vod.enhance();
 		_vod.createEventSchema();
 		_vod.startEventDriver();

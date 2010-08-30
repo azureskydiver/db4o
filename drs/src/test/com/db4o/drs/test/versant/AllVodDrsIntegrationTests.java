@@ -36,7 +36,7 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 				// This is the one we are heading for for now.
 				return new Class[] { 
 						TheSimplest.class,
-//						ReplicationProviderTest.class,
+						ReplicationProviderTest.class,
 //						ReplicationEventTest.class,
 				};
 			}

@@ -35,6 +35,10 @@ public class Signature {
 	}
 	
 	public String toString(){
+		return toString(bytes);
+	}
+
+	public static String toString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < bytes.length; i++) {
 			char c = (char) bytes[i];
