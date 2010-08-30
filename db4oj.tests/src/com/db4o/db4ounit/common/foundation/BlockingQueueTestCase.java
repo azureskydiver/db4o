@@ -1,6 +1,8 @@
 /* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.foundation;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -26,6 +28,7 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 		Assert.areSame(data[1], queue.next());
 		Assert.areSame(data[2], queue.next());
 	}
+	
 	public void testTimeoutNext() {
 		final BlockingQueue<Object> queue = new BlockingQueue<Object>();
 
@@ -53,8 +56,19 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 				return queue.next(200);
 			}
 		}));
-		
+	}
+	
+	public void testDrainTo() {
+		final BlockingQueue<Object> queue = new BlockingQueue<Object>();
 
+		queue.add(new Object());
+		queue.add(new Object());
+		
+		List<Object> list = new ArrayList<Object>();
+		
+		Assert.areEqual(2, queue.drainTo(list));
+		Assert.areEqual(2, list.size());
+		Assert.isFalse(queue.hasNext());
 	}
 
 	private <T> T assertTakeLessThan(long time, Closure4<T> runnable) {
