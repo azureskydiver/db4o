@@ -1,8 +1,6 @@
 /* Copyright (C) 2010 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.foundation;
 
-import java.util.*;
-
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -63,24 +61,32 @@ public class PausableBlockingQueueTestCase extends Queue4TestCaseBase {
 		
 		queue.pause();
 		
-		final List<Object> list = Collections.synchronizedList(new ArrayList<Object>());
+		final Collection4<Object> list = new Collection4<Object>();
 		
 		Thread t = executeAfter("Pausable queue drainer", 0, new Runnable() {
 			public void run() {
-				queue.drainTo(list);
+				Collection4<Object> l = new Collection4<Object>();
+				queue.drainTo(l);
+				synchronized (list) {
+					list.addAll(l);
+				}
 			}
 		});
 		
 		Runtime4.sleepThrowsOnInterrupt(200);
-		
-		Assert.areEqual(0, list.size());
+
+		synchronized (list) {
+			Assert.areEqual(0, list.size());
+		}
 		Assert.isTrue(queue.hasNext());
 
 		queue.resume();
 		
 		t.join();
-		
-		Assert.areEqual(2, list.size());
+
+		synchronized (list) {
+			Assert.areEqual(2, list.size());
+		}
 		Assert.isFalse(queue.hasNext());
 	}
 
