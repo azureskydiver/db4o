@@ -260,7 +260,6 @@ public class IOServices {
                     _in.add(line);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         
