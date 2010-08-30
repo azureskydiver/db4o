@@ -66,6 +66,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		loadKnownClasses();
 		_myDatabaseId = _cobra.databaseId();
 		final Signature mySignature = produceSignatureFor(_myDatabaseId);
+		_jdo.commit();
 		_mySignature = new ReadonlyReplicationProviderSignature() {
 			public byte[] getSignature() {
 				return mySignature.bytes;
