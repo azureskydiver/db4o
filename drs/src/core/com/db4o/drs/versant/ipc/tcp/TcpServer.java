@@ -134,7 +134,7 @@ public class TcpServer implements CommunicationChannelControl {
 						out.flush();
 					}
 				};
-				SimplePeer<ObjectLifecycleMonitor> localPeer = new SimplePeer<ObjectLifecycleMonitor>(outgoingConsumer, provider);
+				Distributor<ObjectLifecycleMonitor> localPeer = new Distributor<ObjectLifecycleMonitor>(outgoingConsumer, provider);
 				while (true) {
 					TcpCommunicationNetwork.feed(in, localPeer);
 				}

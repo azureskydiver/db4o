@@ -44,7 +44,7 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 			final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
 			final DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
 
-			final SimplePeer<ObjectLifecycleMonitor> remotePeer = new SimplePeer<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
+			final Distributor<ObjectLifecycleMonitor> remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
 				public void consume(byte[] buffer, int offset, int length) throws IOException {
 					out.writeInt(length);

@@ -23,7 +23,7 @@ public class InBandServer implements CommunicationChannelControl {
 	private BlockingQueue4<MessagePayload> pendingMessages;
 	private ByteArrayConsumer outgoingConsumer;
 	private Thread serverThread;
-	private SimplePeer<ObjectLifecycleMonitor> localPeer;
+	private Distributor<ObjectLifecycleMonitor> localPeer;
 	private SimpleTimer purger;
 	private Thread purgerThread;
 
@@ -38,7 +38,7 @@ public class InBandServer implements CommunicationChannelControl {
 
 		outgoingConsumer = prepareConsumerForOutgoingMessages();
 
-		localPeer = new SimplePeer<ObjectLifecycleMonitor>(this.outgoingConsumer, this.provider);
+		localPeer = new Distributor<ObjectLifecycleMonitor>(this.outgoingConsumer, this.provider);
 
 		pendingMessages = new BlockingQueue<MessagePayload>();
 
