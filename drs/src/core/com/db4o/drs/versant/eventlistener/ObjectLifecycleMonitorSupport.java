@@ -51,8 +51,4 @@ public class ObjectLifecycleMonitorSupport {
 		}
 	}
 
-	public ObjectLifecycleMonitor eventProcessor() {
-		return _monitor;
-	}
-
 }

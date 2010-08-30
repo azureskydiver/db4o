@@ -14,6 +14,7 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.*;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
@@ -30,8 +31,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodJvi _jvi;
 
-	private ObjectLifecycleMonitor _eventProcessor;
-	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
 	private final Signatures _signatures = new Signatures();
@@ -59,9 +58,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private boolean _isolatedMode = false;
 
+	private final ClientChannelControl _control;
+
 	
-	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ObjectLifecycleMonitor comm) {
-		_eventProcessor = comm;
+	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ClientChannelControl control) {
+		_control = control;
 		_vod = vod;
 		_cobra = cobra;
 		_jdo = VodJdo.createInstance(vod);
@@ -156,7 +157,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_cobra.store(cm);
 		_cobra.commit();
 		_knownClasses.put(className, cm.loid());
-		_eventProcessor.ensureMonitoringEventsOn(className, schemaName, cm.loid());
+		syncEventProcessor().ensureMonitoringEventsOn(className, schemaName, cm.loid());
 	}
 
 	public void update(Object obj) {
@@ -173,6 +174,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		_jdo.close();
 		_cobra.close();
+		_control.stop();
+		try {
+			_control.join();
+		} catch (InterruptedException e) {
+		}
 	}
 
 	public void activate(Object object) {
@@ -200,7 +206,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		_eventProcessor.syncTimestamp(raisedDatabaseVersion);
+		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
 		_cobra.commit();
 		_jdo.commit();
 		
@@ -215,7 +221,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getCurrentVersion() {
-		return _eventProcessor.requestTimestamp();
+		return syncEventProcessor().requestTimestamp();
 	}
 
 	public long getLastReplicationVersion() {
@@ -319,7 +325,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void syncVersionWithPeer(long maxVersion) {
 		_replicationCommitRecord.timestamp(maxVersion);
 		_cobra.store(_replicationCommitRecord);
-		_eventProcessor.syncTimestamp(maxVersion);
+		syncEventProcessor().syncTimestamp(maxVersion);
 	}
 
 	public void visitCachedReferences(Visitor4 visitor) {
@@ -436,12 +442,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void runIsolated(Block4 block) {
 		_isolatedMode = true;
-		_eventProcessor.requestIsolation(true);
+		syncEventProcessor().requestIsolation(true);
 		try {
 			block.run();
 		}
 		finally {
-			_eventProcessor.requestIsolation(false);
+			syncEventProcessor().requestIsolation(false);
 			_isolatedMode = false;
 		}
 		ensureChangeCount();
@@ -449,17 +455,17 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private void ensureChangeCount() {
 		if (expectedChangeCount > 0) {
-			_eventProcessor.ensureChangecount(expectedChangeCount);
+			syncEventProcessor().ensureChangecount(expectedChangeCount);
 			expectedChangeCount = 0;
 		}
 	}
 
-	public ObjectLifecycleMonitor eventProcessor() {
-		return _eventProcessor;
+	public ObjectLifecycleMonitor syncEventProcessor() {
+		return _control.sync();
 	}
 	
-	public void eventProcessor(ObjectLifecycleMonitor ep) {
-		_eventProcessor = ep;
+	public ObjectLifecycleMonitor asyncEventProcessor() {
+		return _control.async();
 	}
 
 }

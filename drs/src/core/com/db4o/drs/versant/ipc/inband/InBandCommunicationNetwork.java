@@ -10,7 +10,7 @@ import com.db4o.rmi.*;
 
 public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 
-	public ObjectLifecycleMonitor newClient(final VodCobraFacade cobra, final int senderId) {
+	public ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId) {
 		
 		final Distributor<ObjectLifecycleMonitor> remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
@@ -56,9 +56,28 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 				}
 			}
 		});
+		
+		return new ClientChannelControl() {
+			
+			public ObjectLifecycleMonitor sync() {
+				return remotePeer.sync();
+			}
+			
+			public void stop() {
+				feeder.stop();
+			}
 
-		return remotePeer.sync(); // TODO: should return the peer itself to let the client choose between sync and async
+			public void join() throws InterruptedException {
+				feeder.join();
+			}
 
+			public ObjectLifecycleMonitor async() {
+				return remotePeer.async();
+			}
+		};
+
+
+		
 	}
 
 	private static void feed(VodCobraFacade _cobra, int senderId, ByteArrayConsumer consumer, boolean runJustOnce) throws IOException {
@@ -87,7 +106,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		}
 	}
 
-	public CommunicationChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor provider, Object lock, VodCobraFacade cobra,
+	public ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor provider, Object lock, VodCobraFacade cobra,
 			VodEventClient client, int senderId) {
 
 		return new InBandServer(provider, lock, cobra, client, senderId);

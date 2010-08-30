@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.drs.versant.metadata.ClassMetadata;
@@ -42,7 +42,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	
 	private TimeoutBlockingQueue4<Block4> _pausableTasks = new TimeoutBlockingQueue<Block4>(ISOLATION_TIMEOUT);
 	
-	private CommunicationChannelControl _incomingMessages;
+	private ServerChannelControl _incomingMessages;
 
 	private volatile boolean _dirty;
 	
@@ -130,7 +130,6 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
 //		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
-		_incomingMessages.start();
 		synchronized (listeners) {
 			_started = true;
 			listenerTrigger().ready();

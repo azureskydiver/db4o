@@ -4,12 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
 import com.db4o.internal.*;
 import com.db4o.rmi.*;
 
-public class TcpServer implements CommunicationChannelControl {
+public class TcpServer implements ServerChannelControl {
 
 	private volatile ServerSocket server;
 	private Set<Dispatcher> dispatchers = new HashSet<Dispatcher>();
@@ -17,6 +17,7 @@ public class TcpServer implements CommunicationChannelControl {
 	private final ObjectLifecycleMonitor provider;
 
 	private Thread serverThread;
+	private boolean normalStop;
 
 	public TcpServer(ObjectLifecycleMonitor provider) {
 
@@ -29,10 +30,15 @@ public class TcpServer implements CommunicationChannelControl {
 			}
 		};
 		serverThread.setDaemon(true);
+		
+		serverThread.start();
+		
+		waitForServerReady();
 
 	}
 
 	public void stop() {
+		normalStop = true;
 		stopServer();
 		stopDispatchers();
 	}
@@ -44,8 +50,17 @@ public class TcpServer implements CommunicationChannelControl {
 			try {
 				s.close();
 			} catch (IOException e) {
+				reportException(e);
 			}
 		}
+	}
+
+	private void reportException(Throwable e) {
+		if (normalStop) {
+			return;
+		}
+//		System.err.println("Exception thrown in TcpServer. Thread: " + Thread.currentThread().getName());
+//		e.printStackTrace();
 	}
 
 	private void stopDispatchers() {
@@ -57,13 +72,9 @@ public class TcpServer implements CommunicationChannelControl {
 			try {
 				socket.close();
 			} catch (IOException e) {
+				reportException(e);
 			}
 		}
-	}
-
-	public void start() {
-		serverThread.start();
-		waitForServerReady();
 	}
 
 	private synchronized void waitForServerReady() {
@@ -71,23 +82,34 @@ public class TcpServer implements CommunicationChannelControl {
 			try {
 				wait();
 			} catch (InterruptedException e) {
+				reportException(e);
 			}
 		}
 	}
-
+	
 	public void join() throws InterruptedException {
 		serverThread.join();
+		ArrayList<Dispatcher> d;
+		synchronized (dispatchers) {
+			d = new ArrayList<Dispatcher>(dispatchers);
+		}
+		for (Dispatcher dispatcher : d) {
+			dispatcher.join();
+		}
 	}
 
 	private void runServer0() throws IOException, SocketException {
+		
+		ServerSocket localServer;
 		synchronized (this) {
 			server = new ServerSocket(TcpCommunicationNetwork.PORT, 100);
 			server.setReuseAddress(true);
 			notifyAll();
+			localServer = server;
 		}
 
 		while (true) {
-			Socket socket = server.accept();
+			Socket socket = localServer.accept();
 			synchronized (dispatchers) {
 				if (server == null) {
 					break;
@@ -102,6 +124,7 @@ public class TcpServer implements CommunicationChannelControl {
 		try {
 			runServer0();
 		} catch (IOException e) {
+			reportException(e);
 		} finally {
 			synchronized (this) {
 				notifyAll();
@@ -121,11 +144,16 @@ public class TcpServer implements CommunicationChannelControl {
 			thread.start();
 		}
 
+		public void join() throws InterruptedException {
+			thread.join();
+		}
+
 		public void close() throws IOException {
 			client.close();
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
+				reportException(e);
 			}
 		}
 
@@ -147,6 +175,7 @@ public class TcpServer implements CommunicationChannelControl {
 					TcpCommunicationNetwork.feed(in, localPeer);
 				}
 			} catch (IOException e) {
+				reportException(e);
 			} finally {
 				synchronized (dispatchers) {
 					dispatchers.remove(this);

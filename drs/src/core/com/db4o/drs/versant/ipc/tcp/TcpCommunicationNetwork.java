@@ -15,7 +15,7 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 	static final String HOST = "localhost";
 	static final int PORT = 7283;
 
-	public ObjectLifecycleMonitor newClient(final VodCobraFacade cobra, final int senderId) {
+	public ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId) {
 		
 		// lazy initialization required because the client is created before ObjectLifecycleMonitor is up
 		return (ObjectLifecycleMonitor) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{ObjectLifecycleMonitor.class}, new InvocationHandler() {
@@ -68,7 +68,10 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	public ServerChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, final Object lock, final VodCobraFacade cobra,
+			VodEventClient client, int senderId) {
 
+		return new TcpServer(provider);
 	}
 
 	static void feed(final DataInputStream in, final ByteArrayConsumer consumer) throws IOException {
@@ -107,11 +110,6 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 		return s;
 	}
 
-	public CommunicationChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, final Object lock, final VodCobraFacade cobra, VodEventClient client,
-			int senderId) {
-		
-		return new TcpServer(provider);
-		
 	}
 
 
