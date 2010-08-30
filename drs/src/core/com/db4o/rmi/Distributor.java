@@ -156,7 +156,7 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		Request r = requests.remove(requestId);
 
 		if (r == null) {
-			throw new IllegalStateException("Request " + requestId + " is unknown");
+			throw new IllegalStateException("Request " + requestId + " is unknown (last request generated was "  + nextRequest.get());
 		}
 
 		Object o = null;
