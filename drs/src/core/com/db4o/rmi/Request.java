@@ -5,6 +5,9 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.db4o.rmi.test.*;
+import com.db4o.rmi.test.Proxy;
+
 class Request {
 
 	private Object value;
@@ -76,10 +79,14 @@ class Request {
 			}
 			out.writeBoolean(true);
 
-			boolean proxy = hasProxyAnnotation(method.getParameterAnnotations()[i]);
+			Annotation[] anns = method.getParameterAnnotations()[i];
+			
+			boolean proxy = hasAnnotation(anns, Proxy.class);
 
 			out.writeBoolean(proxy);
 			if (proxy) {
+				
+				out.writeBoolean(hasAnnotation(anns, Async.class));
 
 				PeerServer server = distributor.serverFor(o);
 
@@ -109,9 +116,9 @@ class Request {
 		return s;
 	}
 
-	public static boolean hasProxyAnnotation(Annotation[] anns) {
+	public static boolean hasAnnotation(Annotation[] anns, Class<? extends Annotation> clazz) {
 		for (Annotation ann : anns) {
-			if (com.db4o.rmi.test.Proxy.class == ann.annotationType()) {
+			if (clazz == ann.annotationType()) {
 				return true;
 			}
 		}
@@ -138,10 +145,13 @@ class Request {
 
 			if (proxy) {
 
+				boolean async = in.readBoolean();
+				
 				long id = in.readLong();
 				Class<?> clazz = classForName(in.readUTF());
 
-				args[i] = distributor.proxyFor(id, clazz).sync();
+				PeerProxy<?> peer = distributor.proxyFor(id, clazz);
+				args[i] = async ? peer.async() : peer.sync();
 
 			} else {
 
