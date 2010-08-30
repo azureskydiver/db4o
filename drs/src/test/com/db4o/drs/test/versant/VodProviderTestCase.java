@@ -9,8 +9,6 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.ipc.*;
@@ -24,7 +22,6 @@ import db4ounit.*;
 
 public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
-	private ObjectLifecycleMonitorSupport _eventProcessorSupport;
 	protected BlockingQueue4<Object> commitedBarrier = new BlockingQueue<Object>();
 
 	public static void main(String[] args) {
@@ -34,9 +31,10 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	@Override
 	public void setUp() {
 		super.setUp();
-		_eventProcessorSupport = _vod.startEventProcessor();
 		
-		_eventProcessorSupport.eventProcessor().addListener(new MonitorListener() {
+		_vod.startEventProcessor();
+		
+		_provider.syncEventProcessor().addListener(new MonitorListener() {
 			
 			public void ready() {
 			}
@@ -184,5 +182,4 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.commit();
 		waitForCommitFeedbackFromEventProcessor();
 	}
-	
 }
