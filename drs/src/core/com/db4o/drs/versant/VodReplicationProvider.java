@@ -48,7 +48,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	SimpleTimer _heartbeatTimer = new SimpleTimer(
 		new Runnable() {
 			public void run() {
-				_eventProcessor.ping();
+				if (!pinging()) {
+					return;
+				}
+				asyncEventProcessor().ping();
 			}}, 
 		COMM_HEARTBEAT);
 
@@ -59,6 +62,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private boolean _isolatedMode = false;
 
 	private final ClientChannelControl _control;
+
+	private boolean pinging = true;
 
 	
 	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ClientChannelControl control) {
@@ -468,4 +473,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return _control.async();
 	}
 
+	public void pinging(boolean pinging) {
+		this.pinging = pinging;
+	}
+
+	public boolean pinging() {
+		return pinging;
+	}
+	
 }
