@@ -1,6 +1,8 @@
 /* Copyright (C) 2010 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.foundation;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -52,16 +54,48 @@ public class PausableBlockingQueueTestCase extends Queue4TestCaseBase {
 		
 		
 	}
+	
+	public void testDrainTo() throws InterruptedException {
+		final PausableBlockingQueue4<Object> queue = new PausableBlockingQueue<Object>();
 
-	public static void executeAfter(String threadName, final long timeInMillis, final Runnable runnable) {
+		queue.add(new Object());
+		queue.add(new Object());
+		
+		queue.pause();
+		
+		final List<Object> list = Collections.synchronizedList(new ArrayList<Object>());
+		
+		Thread t = executeAfter("Pausable queue drainer", 0, new Runnable() {
+			public void run() {
+				queue.drainTo(list);
+			}
+		});
+		
+		Runtime4.sleepThrowsOnInterrupt(200);
+		
+		Assert.areEqual(0, list.size());
+		Assert.isTrue(queue.hasNext());
+
+		queue.resume();
+		
+		t.join();
+		
+		Assert.areEqual(2, list.size());
+		Assert.isFalse(queue.hasNext());
+	}
+
+
+	public static Thread executeAfter(String threadName, final long timeInMillis, final Runnable runnable) {
 		
 		Thread t = new Thread() {
 			@Override
 			public void run() {
-				try {
-					Thread.sleep(timeInMillis);
-				} catch (InterruptedException e) {
-					return;
+				if (timeInMillis > 0) {
+					try {
+						Thread.sleep(timeInMillis);
+					} catch (InterruptedException e) {
+						return;
+					}
 				}
 				runnable.run();
 				
@@ -70,6 +104,8 @@ public class PausableBlockingQueueTestCase extends Queue4TestCaseBase {
 		t.setName(threadName);
 		t.setDaemon(true);
 		t.start();
+		
+		return t;
 	}
 
 

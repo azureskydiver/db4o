@@ -1,5 +1,7 @@
 package com.db4o.foundation;
 
+import java.util.*;
+
 public class DelegatingBlockingQueue<T> implements BlockingQueue4<T> {
 	
 	private BlockingQueue4<T> queue;
@@ -34,6 +36,10 @@ public class DelegatingBlockingQueue<T> implements BlockingQueue4<T> {
 
 	public void stop() {
 		queue.stop();
+	}
+
+	public int drainTo(Collection<T> list) {
+		return queue.drainTo(list);
 	}
 
 }

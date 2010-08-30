@@ -13,63 +13,34 @@ public class PausableBlockingQueue<T> extends BlockingQueue<T> implements Pausab
 		return true;
 	}
 
-	public synchronized boolean resume() {
-		if (!_paused) {
-			return false;
-		}
-		_paused = false;
-		notify();
-		return true;
-	}
+	public boolean resume() {
+		return _lock.run(new Closure4<Boolean>() {
 
-	@Override
-	public T next() throws BlockingQueueStoppedException {
-		waitForNext();
-		if (_paused) {
-			synchronized (this) {
-				if (_paused) {
-					try {
-						wait();
-					} catch (InterruptedException e) {
-					}
+			public Boolean run() {
+				if (!_paused) {
+					return false;
 				}
+				_paused = false;
+				_lock.awake();
+				return true;
 			}
-		}
-		return super.next();
+		});
 	}
-
-	@Override
-	public T next(long timeout) throws BlockingQueueStoppedException {
-		if (!waitForNext(timeout)) {
-			return null;
-		}
-		if (_paused) {
-			synchronized (this) {
-				if (_paused) {
-					try {
-						wait();
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}
-		return super.next(timeout);
-	}
-
-	@Override
-	public void stop() {
-		if (_paused) {
-			synchronized (this) {
-				if (_paused) {
-					notifyAll();
-				}
-			}
-		}
-		super.stop();
-	}
-
+	
 	public boolean isPaused() {
 		return _paused;
+	}
+	
+	@Override
+	protected boolean unsafeWaitForNext(final long timeout) throws BlockingQueueStoppedException {
+		boolean hasNext = super.unsafeWaitForNext(timeout);
+		while (_paused && !_stopped) {
+			_lock.snooze(timeout);
+		}
+		if (_stopped) {
+			throw new BlockingQueueStoppedException();
+		}
+		return hasNext;
 	}
 
 	public T tryNext() {

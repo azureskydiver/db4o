@@ -1,6 +1,8 @@
 /* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 package com.db4o.foundation;
 
+import java.util.*;
+
 /**
  * @exclude
  */
@@ -44,8 +46,21 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 	public T next(final long timeout) throws BlockingQueueStoppedException {
 		return (T) _lock.run(new Closure4<T>() {
 			public T run() {
-				waitForNext(timeout);
-				return _queue.hasNext() ? _queue.next() : null;
+				return unsafeWaitForNext(timeout) ? unsafeNext() : null;
+			}
+		});
+	}
+	
+	public int drainTo(final Collection<T> target) {
+		return _lock.run(new Closure4<Integer>() {
+			public Integer run() {
+				unsafeWaitForNext();
+				int i = 0;
+				while(hasNext()) {
+					i++;
+					target.add(unsafeNext());
+				}
+				return i;
 			}
 		});
 	}
@@ -53,21 +68,7 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 	public boolean waitForNext(final long timeout) throws BlockingQueueStoppedException {
 		 return _lock.run(new Closure4<Boolean>() {
 			public Boolean run() {
-				long timeLeft = timeout;
-				long now = System.currentTimeMillis();
-				while (timeLeft > 0) {
-					if (_queue.hasNext()) {
-						return true;
-					}
-					if(_stopped) {
-						throw new BlockingQueueStoppedException();
-					}
-					_lock.snooze(timeLeft);
-					long l = now;
-					now = System.currentTimeMillis();
-					timeLeft -= now-l;
-				}
-				return false;
+				return unsafeWaitForNext(timeout);
 			}
 		});
 	}
@@ -75,8 +76,8 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 	public T next() throws BlockingQueueStoppedException {
 		return (T) _lock.run(new Closure4<T>() {
 			public T run() {
-				waitForNext();
-				return _queue.next();
+				unsafeWaitForNext();
+				return unsafeNext();
 			}
 		});
 	}
@@ -102,16 +103,35 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 	public void waitForNext() throws BlockingQueueStoppedException {
 		_lock.run(new Closure4<Boolean>() {
 			public Boolean run() {
-				while (true) {
-					if (_queue.hasNext()) {
-						return null;
-					}
-					if (_stopped) {
-						throw new BlockingQueueStoppedException();
-					}
-					_lock.snooze(Integer.MAX_VALUE);
-				}
+				unsafeWaitForNext();
+				return null;
 			}
 		});
+	}
+
+	protected void unsafeWaitForNext() throws BlockingQueueStoppedException {
+		unsafeWaitForNext(Long.MAX_VALUE);
+	}
+
+	protected boolean unsafeWaitForNext(final long timeout) throws BlockingQueueStoppedException {
+		long timeLeft = timeout;
+		long now = System.currentTimeMillis();
+		while (timeLeft > 0) {
+			if (_queue.hasNext()) {
+				return true;
+			}
+			if(_stopped) {
+				throw new BlockingQueueStoppedException();
+			}
+			_lock.snooze(timeLeft);
+			long l = now;
+			now = System.currentTimeMillis();
+			timeLeft -= now-l;
+		}
+		return false;
+	}
+
+	private T unsafeNext() {
+		return _queue.next();
 	}
 }
