@@ -35,7 +35,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	
 	private volatile boolean _stopped;
 
-	private final VodCobra _cobra;
+	private final VodCobraFacade _cobra;
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
@@ -76,7 +76,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	private boolean _started;
 
-	public ObjectLifecycleMonitorImpl(VodEventClient client, VodCobra cobra)  {
+	public ObjectLifecycleMonitorImpl(VodEventClient client, VodCobraFacade cobra)  {
 		
 		_client = client;
 	    _cobra = cobra;

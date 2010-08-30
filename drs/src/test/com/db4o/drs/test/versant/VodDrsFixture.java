@@ -40,7 +40,7 @@ public class VodDrsFixture implements DrsFixture{
 		_vod.startEventDriver();
 		
 		
-		new VodJdo(_vod).close();
+		VodJdo.createInstance(_vod).close();
 		
 		_vod.startEventProcessor();
 	}
@@ -56,7 +56,7 @@ public class VodDrsFixture implements DrsFixture{
 	}
 
 	public void open() {
-		VodCobra cobra = new VodCobra(_vod);
+		VodCobraFacade cobra = VodCobra.createInstance(_vod);
 		ObjectLifecycleMonitor comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		_provider = new VodReplicationProvider(_vod, cobra, comm);
 	}

@@ -12,7 +12,7 @@ import com.versant.odbms.query.*;
 
 public class CLinRoot<T> extends CLinCobraNode<T> {
 	
-	private final VodCobra _cobra;
+	private final VodCobraFacade _cobra;
 	
 	private final Class<T> _clazz;
 	
@@ -20,7 +20,7 @@ public class CLinRoot<T> extends CLinCobraNode<T> {
 	
 	private int _limit = -1;
 
-	public CLinRoot(VodCobra cobra, Class<T> clazz) {
+	public CLinRoot(VodCobraFacade cobra, Class<T> clazz) {
 		_cobra = cobra;
 		_clazz = clazz;
 		_query = new DatastoreQuery(clazz.getName());

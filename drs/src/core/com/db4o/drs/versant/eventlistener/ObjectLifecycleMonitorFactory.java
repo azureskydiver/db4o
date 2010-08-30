@@ -8,7 +8,7 @@ import com.versant.event.*;
 public class ObjectLifecycleMonitorFactory {
 	
 	public static ObjectLifecycleMonitorImpl newInstance (EventConfiguration eventConfiguration) {
-		VodCobra cobra = new VodCobra(new VodDatabase(eventConfiguration.databaseName));
+		VodCobraFacade cobra = VodCobra.createInstance(new VodDatabase(eventConfiguration.databaseName));
 		VodEventClient client = new VodEventClient(eventConfiguration, new ExceptionListener (){
 	        public void exceptionOccurred (Throwable exception){
 	        	ObjectLifecycleMonitorImpl.unrecoverableExceptionOccurred(exception);
