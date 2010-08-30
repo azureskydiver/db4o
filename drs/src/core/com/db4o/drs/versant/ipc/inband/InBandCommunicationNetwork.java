@@ -9,6 +9,54 @@ import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
 public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
+	
+	public abstract static class Ticker implements Runnable {
+
+		private Thread thread;
+		private volatile boolean running = true;
+		private final long sleepInMillis;
+
+		public Ticker(String name, long sleepInMillis) {
+			this.sleepInMillis = sleepInMillis;
+			thread = new Thread(this, name);
+			thread.setDaemon(true);
+		}
+
+		public abstract boolean tick();
+
+		public void run() {
+			while(running) {
+				snooze();
+				if (!running) {
+					break;
+				}
+				if (!tick()) {
+					break;
+				}
+			}
+		}
+
+		private synchronized void snooze() {
+			try {
+				wait(sleepInMillis);
+			} catch (InterruptedException e) {
+				running = false;
+			}
+		}
+
+		public void start() {
+			thread.start();
+		}
+
+		public void stop() {
+			running = false;
+		}
+
+		public void join() throws InterruptedException {
+			thread.join();
+		}
+		
+	}
 
 	public ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId) {
 		
@@ -25,23 +73,20 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		
 		final Object feederLock = new Object();
 		
-		Thread t = new Thread("In band client feeder") {
+		final Ticker feeder = new Ticker("In band client feeder", 1000) {
 			@Override
-			public void run() {
-				try {
-					while(true) {
-						Thread.sleep(1000);
-						synchronized (feederLock) {
-							feed(cobra, senderId, remotePeer, true);
-						}
+			public boolean tick() {
+				synchronized (feederLock) {
+					try {
+						feed(cobra, senderId, remotePeer, true);
+					} catch (IOException e) {
+						return false;
 					}
-				} catch (InterruptedException e) {
-				} catch (IOException e) {
 				}
+				return true;
 			}
 		};
-		t.setDaemon(true);
-		t.start();
+		feeder.start();
 		
 
 		remotePeer.setFeeder(new Runnable() {
