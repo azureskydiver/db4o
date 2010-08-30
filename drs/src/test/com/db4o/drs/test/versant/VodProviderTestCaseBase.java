@@ -2,6 +2,7 @@
 
 package com.db4o.drs.test.versant;
 
+import java.io.*;
 import java.util.*;
 
 import com.db4o.drs.test.versant.data.*;
@@ -28,6 +29,13 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	public void setUp() {
 		_jdo = VodJdo.createInstance(_vod);
 		cleanDb();
+		produceProvider();
+	}
+
+	protected void produceProvider() {
+		if (_provider != null) {
+			return;
+		}
 		VodCobraFacade cobra = VodCobra.createInstance(_vod);
 		ClientChannelControl _comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		_provider = new VodReplicationProvider(_vod, cobra, _comm);
@@ -35,8 +43,16 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 
 	public void tearDown() {
 		_jdo.close();
+		destroyProvider();
+	}
+
+	protected void destroyProvider() {
+		if (_provider == null) {
+			return;
+		}
 		_provider.commit();
 		_provider.destroy();
+		_provider = null;
 	}
 	
 	private void cleanDb(){

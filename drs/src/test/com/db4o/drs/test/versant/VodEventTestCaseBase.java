@@ -4,14 +4,11 @@ package com.db4o.drs.test.versant;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.util.IOServices.ProcessRunner;
 
 public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
-	protected ObjectLifecycleMonitor _monitor;
-
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
 		if(DrsDebug.runEventListenerEmbedded){
 			withEventProcessorInSameProcess(closure);
@@ -22,21 +19,23 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
 	private void withEventProcessorInSeparateProcess (Closure4<Void> closure) throws Exception {
 		final ProcessRunner eventListenerProcess = _vod.startEventProcessorInSeparateProcess();
+		produceProvider();
 		try{
 			closure.run();
 		} finally {
+			destroyProvider();
 			eventListenerProcess.destroy();
 		}
 	}
 	
 	private void withEventProcessorInSameProcess (Closure4<Void> closure) throws Exception {
 		ObjectLifecycleMonitorSupport support = new ObjectLifecycleMonitorSupport(_vod.eventConfiguration());
-		_monitor = support.eventProcessor();
+		produceProvider();
 		try {
 			closure.run();
 		}
 		finally {
-			_monitor = null;
+			destroyProvider();
 			support.stop();
 		}
 	}
