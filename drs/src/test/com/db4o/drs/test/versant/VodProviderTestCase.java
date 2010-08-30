@@ -99,7 +99,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
 		VodCobra cobra = new VodCobra(_vod);
-		ProviderSideCommunication comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ObjectLifecycleMonitor comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider provider = new VodReplicationProvider(_vod, cobra, comm);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
@@ -108,7 +108,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
 		VodCobra cobra = new VodCobra(_vod);
-		ProviderSideCommunication comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ObjectLifecycleMonitor comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod, cobra, comm);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();
@@ -160,7 +160,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	}
 
 	private void waitForCommitFeedbackFromEventProcessor() {
-		waitForOutput(EventProcessor.COMMIT_MESSAGE);
+		waitForOutput(ObjectLifecycleMonitorImpl.COMMIT_MESSAGE);
 	}
 	
 	private void update(Item item) {

@@ -6,15 +6,16 @@ import java.io.*;
 
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
 public class EventProcessorSupport {
 	
-	private final Thread _eventProcessorThread;
+	private final Thread _monitorThread;
 	
-	private final EventProcessor _eventProcessor;
+	private final ObjectLifecycleMonitorImpl _monitor;
 
 	private final ByteArrayOutputStream _byteOut;
 
@@ -27,12 +28,12 @@ public class EventProcessorSupport {
 		_byteOut = new ByteArrayOutputStream();
 		PrintStream printOut = new PrintStream(_byteOut);
 		
-		_eventProcessor = EventProcessorFactory.newInstance(eventConfiguration, LinePrinter.forPrintStream(printOut));
-		_eventProcessorThread = new Thread(_eventProcessor, ReflectPlatform.simpleName(EventProcessor.class)+" dedicated thread");
-		_eventProcessorThread.setDaemon(true);
-		_eventProcessorThread.start();
-		if(! waitForOutput(EventProcessor.LISTENING_MESSAGE)){
-			throw new IllegalStateException("Event processor does not report '" + EventProcessor.LISTENING_MESSAGE + "'");
+		_monitor = ObjectLifecycleMonitorFactory.newInstance(eventConfiguration, LinePrinter.forPrintStream(printOut));
+		_monitorThread = new Thread(_monitor, ReflectPlatform.simpleName(ObjectLifecycleMonitorImpl.class)+" dedicated thread");
+		_monitorThread.setDaemon(true);
+		_monitorThread.start();
+		if(! waitForOutput(ObjectLifecycleMonitorImpl.LISTENING_MESSAGE)){
+			throw new IllegalStateException("Event processor does not report '" + ObjectLifecycleMonitorImpl.LISTENING_MESSAGE + "'");
 		}
 	}
 
@@ -53,16 +54,16 @@ public class EventProcessorSupport {
 	}
 	
 	public void stop(){
-		_eventProcessor.stop();
+		_monitor.stop();
 		try {
-			_eventProcessorThread.join();
+			_monitorThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public EventProcessor eventProcessor() {
-		return _eventProcessor;
+	public ObjectLifecycleMonitor eventProcessor() {
+		return _monitor;
 	}
 
 }

@@ -8,11 +8,11 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
-public class InBandCommunicationNetwork implements EventProcessorNetwork {
+public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 
-	public ProviderSideCommunication newClient(final VodCobra cobra, final int senderId) {
+	public ObjectLifecycleMonitor newClient(final VodCobra cobra, final int senderId) {
 
-		final SimplePeer<ProviderSideCommunication> remotePeer = new SimplePeer<ProviderSideCommunication>(new ByteArrayConsumer() {
+		final SimplePeer<ObjectLifecycleMonitor> remotePeer = new SimplePeer<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
 			public void consume(byte[] buffer, int offset, int length) throws IOException {
 				MessagePayload msg = new MessagePayload(senderId, Arrays.copyOfRange(buffer, offset, offset + length));
@@ -20,7 +20,7 @@ public class InBandCommunicationNetwork implements EventProcessorNetwork {
 				cobra.commit();
 
 			}
-		}, ProviderSideCommunication.class);
+		}, ObjectLifecycleMonitor.class);
 
 		remotePeer.setFeeder(new Runnable() {
 
@@ -60,7 +60,7 @@ public class InBandCommunicationNetwork implements EventProcessorNetwork {
 		}
 	}
 
-	public CommunicationChannelControl prepareProviderCommunicationChannel(ProviderSideCommunication provider, Object lock, VodCobra cobra,
+	public CommunicationChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor provider, Object lock, VodCobra cobra,
 			VodEventClient client, int senderId) {
 
 		return new InBandServer(provider, lock, cobra, client, senderId);

@@ -13,7 +13,7 @@ public class VodEventClient {
 	private final EventClient _client;
 	
 	public VodEventClient(EventConfiguration eventConfiguration, ExceptionListener exceptionListener) {
-		_client = EventProcessor.newEventClient(eventConfiguration);
+		_client = ObjectLifecycleMonitorImpl.newEventClient(eventConfiguration);
 	    _client.addExceptionListener(exceptionListener);
 	}
 	
@@ -33,7 +33,7 @@ public class VodEventClient {
 			}
 			return _client.newChannel (channelName, builder);
 		} catch (IOException e) {
-			EventProcessor.unrecoverableExceptionOccurred(e);
+			ObjectLifecycleMonitorImpl.unrecoverableExceptionOccurred(e);
 		}
 		return null;
 	}

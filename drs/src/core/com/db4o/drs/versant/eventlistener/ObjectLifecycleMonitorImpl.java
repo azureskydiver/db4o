@@ -8,18 +8,22 @@ import java.util.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
+import com.db4o.drs.versant.metadata.ClassMetadata;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.versant.event.*;
 
-public class EventProcessor implements Runnable {
+public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMonitor {
 	
 	public static final String LISTENING_MESSAGE = "Listening for events on ";
 	
-	public static final String COMMIT_MESSAGE = "EventProcessor commit";
+	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(ObjectLifecycleMonitor.class);
+	
+	public static final String COMMIT_MESSAGE = SIMPLE_NAME+" commit";
 
 	public static final long ISOLATION_TIMEOUT = 5000;
 
@@ -27,7 +31,7 @@ public class EventProcessor implements Runnable {
 
 	private final long COMMIT_INTERVAL = 1000; // 1 sec
 	
-	private static int EVENT_PROCESSOR_ID = EventProcessor.class.getName().hashCode();
+	private static int SENDER_ID = ObjectLifecycleMonitorImpl.class.getName().hashCode();
 	
 	private final LinePrinter _out;
 	
@@ -54,7 +58,7 @@ public class EventProcessor implements Runnable {
 				}}, 
 			COMMIT_INTERVAL);
 	
-	private Thread _commitThread = new Thread(_commitTimer, "EventProcessor Commit");
+	private Thread _commitThread = new Thread(_commitTimer, SIMPLE_NAME+" Commit");
 	
 	SimpleTimer _isolationWatchdogTimer = new SimpleTimer(
 		new Runnable() {
@@ -65,17 +69,14 @@ public class EventProcessor implements Runnable {
 			}}, 
 		ISOLATION_WATCHDOG_INTERVAL);
 
-	private Thread _isolatinWatchdogThread = new Thread(_isolationWatchdogTimer, "EventProcessor Isolation watchdog");
+	private Thread _isolatinWatchdogThread = new Thread(_isolationWatchdogTimer, SIMPLE_NAME+" Isolation watchdog");
 
 	
 	private CommitTimestamp _commitTimestamp;
 
 	private Set<String> _knownClasses = new HashSet<String>();
 
-	private ProviderSideCommunication _eventProcessor;
-
-
-	public EventProcessor(VodEventClient client, LinePrinter out, VodCobra cobra)  {
+	public ObjectLifecycleMonitorImpl(VodEventClient client, LinePrinter out, VodCobra cobra)  {
 		
 		_out = out;
 		_client = client;
@@ -120,7 +121,7 @@ public class EventProcessor implements Runnable {
 	public void run() {
 	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
-		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(eventProcessor(), _lock, _cobra, _client, EVENT_PROCESSOR_ID);
+		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
 		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
 		_incomingMessages.start();
@@ -153,65 +154,49 @@ public class EventProcessor implements Runnable {
 		t.start();
 	}
 
+	public void syncTimestamp(long newTimeStamp) {
+		if(newTimeStamp > 0){
+			_timeStampIdGenerator.setMinimumNext(newTimeStamp);
+		}
+	}
 	
-
-	public ProviderSideCommunication eventProcessor() {
+	public long requestTimestamp() {
+		return _timeStampIdGenerator.last();
+	}
+	
+	public boolean requestIsolation(boolean isolated) {
 		
-		if (_eventProcessor != null) {
-			return _eventProcessor;
+		if(_pausableTasks.isPaused() == isolated) {
+			return false;
 		}
 		
-		_eventProcessor = new ProviderSideCommunication() {
-			
-			public void syncTimestamp(long newTimeStamp) {
-				if(newTimeStamp > 0){
-					_timeStampIdGenerator.setMinimumNext(newTimeStamp);
-				}
-			}
-			
-			public long requestTimestamp() {
-				return _timeStampIdGenerator.last();
-			}
-			
-			public boolean requestIsolation(boolean isolated) {
-				
-				if(_pausableTasks.isPaused() == isolated) {
-					return false;
-				}
+		// FIXME: timeout for isolation mode (can rely on new implementation of BlockingQueue#next(long timeout)
 		
-				// FIXME: timeout for isolation mode (can rely on new implementation of BlockingQueue#next(long timeout)
-				
-				if (isolated) {
-					_pausableTasks.pause();
-				} else {
-					_pausableTasks.resume();
-				}
-				
-				return true;
-			}
+		if (isolated) {
+			_pausableTasks.pause();
+		} else {
+			_pausableTasks.resume();
+		}
 		
-			public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
-				if (_knownClasses.contains(fullyQualifiedName)) {
-					return;
-				}
-				createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid));
-				_knownClasses.add(fullyQualifiedName);
-				dirty();
-			}
-
-			public void ping() {
-				if (!_pausableTasks.isPaused()) {
-					return;
-				}
-				_pausableTasks.reset();
-			}
-	
-		};
-		
-		return _eventProcessor;
+		return true;
 	}
-
-
+	
+	public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
+		if (_knownClasses.contains(fullyQualifiedName)) {
+			return;
+		}
+		createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid));
+		_knownClasses.add(fullyQualifiedName);
+		dirty();
+	}
+	
+	public void ping() {
+		if (!_pausableTasks.isPaused()) {
+			return;
+		}
+		_pausableTasks.reset();
+	}
+	
 	private void shutdown() {
 		_client.shutdown();
 		_commitTimer.stop();

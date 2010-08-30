@@ -29,7 +29,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodJvi _jvi;
 
-	private ProviderSideCommunication _eventProcessor;
+	private ObjectLifecycleMonitor _eventProcessor;
 	
 	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
 	
@@ -55,7 +55,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heatbeat");
 
 	
-	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ProviderSideCommunication comm) {
+	public VodReplicationProvider(VodDatabase vod, VodCobra cobra, ObjectLifecycleMonitor comm) {
 		_eventProcessor = comm;
 		_vod = vod;
 		_cobra = cobra;
@@ -428,11 +428,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 
-	public ProviderSideCommunication eventProcessor() {
+	public ObjectLifecycleMonitor eventProcessor() {
 		return _eventProcessor;
 	}
 	
-	public void eventProcessor(ProviderSideCommunication ep) {
+	public void eventProcessor(ObjectLifecycleMonitor ep) {
 		_eventProcessor = ep;
 	}
 
