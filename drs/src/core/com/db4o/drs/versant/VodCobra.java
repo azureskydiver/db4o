@@ -39,6 +39,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	public void close() {
+		_dm.rollbackTransaction();
 		_dm.close();
 	}
 
