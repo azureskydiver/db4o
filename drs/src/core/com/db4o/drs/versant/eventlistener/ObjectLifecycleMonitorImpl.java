@@ -147,12 +147,13 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 			@Override
 			public void run() {
 				try {
-					Collection<Block4> list = new ArrayList<Block4>();
+					Collection4<Block4> list = new Collection4<Block4>();
 					while(!_stopped) {
 						_pausableTasks.drainTo(list);
 						synchronized (_lock) {
-							for(Block4 next: list) {
-								next.run();
+							Iterator4<Block4> it = list.iterator();
+							while(it.moveNext()) {
+								it.current().run();
 							}
 							list.clear();
 							if (_dirty) {

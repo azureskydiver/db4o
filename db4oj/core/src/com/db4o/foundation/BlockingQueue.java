@@ -1,7 +1,6 @@
 /* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 package com.db4o.foundation;
 
-import java.util.*;
 
 /**
  * @exclude
@@ -51,7 +50,7 @@ public class BlockingQueue<T> implements BlockingQueue4<T> {
 		});
 	}
 	
-	public int drainTo(final Collection<T> target) {
+	public int drainTo(final Collection4<T> target) {
 		return _lock.run(new Closure4<Integer>() {
 			public Integer run() {
 				unsafeWaitForNext();

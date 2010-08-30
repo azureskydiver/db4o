@@ -9,13 +9,13 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned {
+public class Collection4<T> implements Sequence4<T>, Iterable4<T>, DeepClone, Unversioned {
 	
 	@decaf.Public
-	private List4 _first;
+	private List4<T> _first;
 
 	@decaf.Public
-	private List4 _last;
+	private List4<T> _last;
 
 	@decaf.Public
 	private int _size;
@@ -33,19 +33,19 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	public Collection4(int initialLength) {
 	}
 	
-	public Collection4(Object[] elements) {
+	public Collection4(T[] elements) {
 		addAll(elements);
 	}
 
-	public Collection4(Iterable4 other) {
+	public Collection4(Iterable4<T> other) {
 		addAll(other);
 	}
 	
-	public Collection4(Iterator4 iterator) {
+	public Collection4(Iterator4<T> iterator) {
 		addAll(iterator);
 	}
 
-	public Object singleElement() {
+	public T singleElement() {
 		if (size() != 1) {
 			throw new IllegalStateException();
 		}
@@ -57,50 +57,50 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * 
 	 * @param element
 	 */
-	public final boolean add(Object element) {
+	public final boolean add(T element) {
 		doAdd(element);
 		changed();
 		return true;
 	}	
 	
-	public final void prepend(Object element) {
+	public final void prepend(T element) {
 		doPrepend(element);
 		changed();
 	}
 
-	private void doPrepend(Object element) {
+	private void doPrepend(T element) {
 		if (_first == null) {
 			doAdd(element);
 		} else {
-			_first = new List4(_first, element);
+			_first = new List4<T>(_first, element);
 			_size++;
 		}
 	}
 
-	private void doAdd(Object element) {
+	private void doAdd(T element) {
 		if (_last == null) {
-			_first = new List4(element);
+			_first = new List4<T>(element);
 			_last = _first;
 		} else {
-			_last._next = new List4(element);
+			_last._next = new List4<T>(element);
 			_last = _last._next;
 		}
 		_size++;
 	}
 
-	public final void addAll(Object[] elements) {
+	public final void addAll(T[] elements) {
 		assertNotNull(elements);
 		for (int i = 0; i < elements.length; i++) {
 			add(elements[i]);
 		}
 	}
 
-	public final void addAll(Iterable4 other) {
+	public final void addAll(Iterable4<T> other) {
 		assertNotNull(other);
 		addAll(other.iterator());
 	}
 
-	public final void addAll(Iterator4 iterator) {
+	public final void addAll(Iterator4<T> iterator) {
 		assertNotNull(iterator);
 		while (iterator.moveNext()) {
 			add(iterator.current());
@@ -114,15 +114,15 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 		changed();
 	}
 
-	public final boolean contains(Object element) {		
+	public final boolean contains(T element) {		
 		return find(element) != null;
 	}
 	
-	public boolean containsAll(Iterable4 iter) {
+	public boolean containsAll(Iterable4<T> iter) {
 		return containsAll(iter.iterator());
 	}
 
-	public boolean containsAll(Iterator4 iter) {
+	public boolean containsAll(Iterator4<T> iter) {
 		assertNotNull(iter);
 		while (iter.moveNext()) {
 			if (!contains(iter.current())) {
@@ -135,10 +135,10 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	/**
 	 * tests if the object is in the Collection. == comparison.
 	 */
-	public final boolean containsByIdentity(Object element) {
-		Iterator4 i = internalIterator();
+	public final boolean containsByIdentity(T element) {
+		Iterator4<T> i = internalIterator();
 		while (i.moveNext()) {
-			Object current = i.current();
+			T current = i.current();
 			if (current == element) {
 				return true;
 			}
@@ -146,8 +146,8 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 		return false;
 	}
 	
-    private List4 find(Object obj){
-        List4 current = _first;
+    private List4<T> find(T obj){
+        List4<T> current = _first;
         while (current != null) {
             if (current.holds(obj)) {
                 return current;
@@ -157,8 +157,8 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
         return null;
     }
     
-    private List4 findByIdentity(Object obj){
-        List4 current = _first;
+    private List4<T> findByIdentity(T obj){
+        List4<T> current = _first;
         while (current != null) {
             if (current._element == obj) {
                 return current;
@@ -173,15 +173,15 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * returns the first object found in the Collections that equals() the
 	 * passed object
 	 */
-	public final Object get(Object element) {
-	    List4 holder = find(element);
+	public final T get(T element) {
+	    List4<T> holder = find(element);
 	    return holder == null ? null : holder._element;
 	}
 	
 	public Object deepClone(Object newParent) {
 		Collection4 col = new Collection4();
 		Object element = null;
-		Iterator4 i = internalIterator();
+		Iterator4<T> i = internalIterator();
 		while (i.moveNext()) {
 			element = i.current();
 			if (element instanceof DeepClone) {
@@ -196,8 +196,8 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	/**
 	 * makes sure the passed object is in the Collection. equals() comparison.
 	 */
-	public final Object ensure(Object element) {
-		List4 list = find(element);
+	public final T ensure(T element) {
+		List4<T> list = find(element);
 		if(list == null){
 			add(element);
 			return element;
@@ -211,17 +211,17 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * 
 	 * @return
 	 */
-	public final Iterator4 iterator() {
+	public final Iterator4<T> iterator() {
 		return _first == null
 			? Iterators.EMPTY_ITERATOR
 			: new Collection4Iterator(this, _first);
 	}
 	
-	public Object get(int index) {
+	public T get(int index) {
 		if(index < 0) {
 			throw new IllegalArgumentException();
 		}
-		List4 cur = _first;
+		List4<T> cur = _first;
 		while(index > 0 && cur != null) {
 			cur = cur._next;
 			index--;
@@ -238,7 +238,7 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * 
 	 * @param iterable
 	 */
-	public void removeAll(Iterable4 iterable) {
+	public void removeAll(Iterable4<T> iterable) {
 		removeAll(iterable.iterator());
 	}
 
@@ -246,7 +246,7 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * Removes all the elements from this collection that are returned by
 	 * iterator.
 	 */
-	public void removeAll(Iterator4 iterator) {
+	public void removeAll(Iterator4<T> iterator) {
 		while (iterator.moveNext()) {
 			remove(iterator.current());
 		}
@@ -256,9 +256,9 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * removes an object from the Collection equals() comparison returns the
 	 * removed object or null, if none found
 	 */
-	public boolean remove(Object a_object) {
-		List4 previous = null;
-		List4 current = _first;
+	public boolean remove(T a_object) {
+		List4<T> previous = null;
+		List4<T> current = _first;
 		while (current != null) {
 			if (current.holds(a_object)) {
 				_size--;
@@ -272,21 +272,21 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 		return false;
 	}
 	
-    public void replace(Object oldObject, Object newObject) {
-        List4 list = find(oldObject);
+    public void replace(T oldObject, T newObject) {
+        List4<T> list = find(oldObject);
         if(list != null){
             list._element = newObject;
         }
     }
     
-    public void replaceByIdentity(Object oldObject, Object newObject) {
-        List4 list = findByIdentity(oldObject);
+    public void replaceByIdentity(T oldObject, T newObject) {
+        List4<T> list = findByIdentity(oldObject);
         if(list != null){
             list._element = newObject;
         }
     }
     
-	private void adjustOnRemoval(List4 previous, List4 removed) {
+	private void adjustOnRemoval(List4<T> previous, List4<T> removed) {
 		if (removed == _first) {
 			_first = removed._next;
 		} else {
@@ -301,9 +301,9 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 		return _size;
 	}
 	
-	public int indexOf(Object obj){
+	public int indexOf(T obj){
 		int index = 0;
-		List4 current = _first;
+		List4<T> current = _first;
 		while (current != null) {
 			if (current.holds(obj)) {
 				return index;
@@ -323,18 +323,22 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * the JDK behaviour, the passed array has to be initialized to the right
 	 * length.
 	 */
-	public final Object[] toArray(Object[] a_array) {
+	public final T[] toArray(T[] array) {
 		int j = 0;
-		Iterator4 i = internalIterator();
+		Iterator4<T> i = internalIterator();
 		while (i.moveNext()) {
-			a_array[j++] = i.current();
+			array[j++] = i.current();
 		}
-		return a_array;
+		return array;
 	}
 
 	public final Object[] toArray() {
-		Object[] array = new Object[_size];
-		toArray(array);
+		int j = 0;
+		Object[] array = new Object[size()];
+		Iterator4<T> i = internalIterator();
+		while (i.moveNext()) {
+			array[j++] = i.current();
+		}
 		return array;
 	}
 
@@ -360,7 +364,7 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * Leaner iterator for faster iteration (but unprotected against
 	 * concurrent modifications).
 	 */
-	private Iterator4 internalIterator() {
+	private Iterator4<T> internalIterator() {
 		return new Iterator4Impl(_first);
 	}
 	

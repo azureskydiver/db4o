@@ -5,28 +5,28 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public interface Sequence4 extends Iterable4 {
+public interface Sequence4<T> extends Iterable4<T> {
 	
-	boolean add(Object element);
+	boolean add(T element);
 	
-	void addAll(Iterable4 iterable);
+	void addAll(Iterable4<T> iterable);
 	
 	boolean isEmpty();
 
-	Object get(int index);
+	T get(int index);
 	
 	int size();
 	
 	void clear();
 	
-	boolean remove(Object obj);
+	boolean remove(T obj);
 	
-	boolean contains(Object obj);
+	boolean contains(T obj);
 	
-	boolean containsAll(Iterable4 iter);
+	boolean containsAll(Iterable4<T> iter);
 	
 	Object[] toArray();
 	
-	Object[] toArray(Object[] array);
+	T[] toArray(T[] array);
 	
 }

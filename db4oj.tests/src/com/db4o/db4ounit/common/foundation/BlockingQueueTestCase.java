@@ -64,7 +64,7 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 		queue.add(new Object());
 		queue.add(new Object());
 		
-		List<Object> list = new ArrayList<Object>();
+		Collection4<Object> list = new Collection4<Object>();
 		
 		Assert.areEqual(2, queue.drainTo(list));
 		Assert.areEqual(2, list.size());
