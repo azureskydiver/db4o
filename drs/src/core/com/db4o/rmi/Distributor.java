@@ -62,7 +62,7 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		this.consumer = consumer;
 	}
 
-	protected Request request(long objectId, Method method, Object[] args, boolean expectsResponse) {
+	protected Request request(long objectId, Method method, Object[] args, boolean expectsResponse) throws IOException {
 		Request r = new Request(this, method, args);
 		long requestId = -1;
 		
@@ -118,18 +118,14 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		}
 	}
 
-	private void sendRequest(long objectId, long requestId, Request r) {
-		try {
-			synchronized (out) {
-				out.writeByte(REQUEST);
-				out.writeLong(objectId);
-				out.writeLong(requestId);
-				r.serialize(out);
-				out.writeBoolean(false);
-				out.flush();
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+	private void sendRequest(long objectId, long requestId, Request r) throws IOException {
+		synchronized (out) {
+			out.writeByte(REQUEST);
+			out.writeLong(objectId);
+			out.writeLong(requestId);
+			r.serialize(out);
+			out.writeBoolean(false);
+			out.flush();
 		}
 	}
 
