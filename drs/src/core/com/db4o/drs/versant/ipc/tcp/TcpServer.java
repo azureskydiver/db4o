@@ -11,7 +11,7 @@ import com.db4o.rmi.*;
 
 public class TcpServer implements CommunicationChannelControl {
 
-	private ServerSocket server;
+	private volatile ServerSocket server;
 	private Set<Dispatcher> dispatchers = new HashSet<Dispatcher>();
 
 	private final ObjectLifecycleMonitor provider;
@@ -39,6 +39,7 @@ public class TcpServer implements CommunicationChannelControl {
 
 	private void stopServer() {
 		ServerSocket s = server;
+		server = null;
 		if (s != null) {
 			try {
 				s.close();
@@ -80,13 +81,19 @@ public class TcpServer implements CommunicationChannelControl {
 
 	private void runServer0() throws IOException, SocketException {
 		synchronized (this) {
-			server = new ServerSocket(TcpCommunicationNetwork.OBJECT_LIFECYCLE_MONITOR_PORT, 100);
+			server = new ServerSocket(TcpCommunicationNetwork.PORT, 100);
+			server.setReuseAddress(true);
 			notifyAll();
 		}
-		server.setReuseAddress(true);
 
 		while (true) {
-			new Dispatcher(server.accept());
+			Socket socket = server.accept();
+			synchronized (dispatchers) {
+				if (server == null) {
+					break;
+				}
+				dispatchers.add(new Dispatcher(socket));
+			}
 		}
 
 	}
@@ -95,7 +102,6 @@ public class TcpServer implements CommunicationChannelControl {
 		try {
 			runServer0();
 		} catch (IOException e) {
-//			e.printStackTrace();
 		} finally {
 			synchronized (this) {
 				notifyAll();
@@ -106,19 +112,21 @@ public class TcpServer implements CommunicationChannelControl {
 	public class Dispatcher implements Runnable {
 
 		private final Socket client;
+		private Thread thread;
 
 		public Dispatcher(Socket socket) {
 			this.client = socket;
-			Thread t = new Thread(this, ReflectPlatform.simpleName(ObjectLifecycleMonitor.class)+" dispatcher for socket: " + socket);
-			t.setDaemon(true);
-			t.start();
+			thread = new Thread(this, ReflectPlatform.simpleName(ObjectLifecycleMonitor.class)+" dispatcher for socket: " + socket);
+			thread.setDaemon(true);
+			thread.start();
 		}
 
 		public void close() throws IOException {
-			synchronized (dispatchers) {
-				dispatchers.remove(this);
-			}
 			client.close();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+			}
 		}
 
 		public void run() {

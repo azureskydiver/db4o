@@ -72,18 +72,20 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 	}
 
 	static void feed(final DataInputStream in, final ByteArrayConsumer consumer) throws IOException {
-		int len = in.readInt();
-		int read = 0;
-		byte[] buffer = new byte[len];
-		while (read < len) {
-			int ret = in.read(buffer, read, len - read);
-			if (ret == -1) {
-				throw new EOFException();
+		synchronized (in) {
+			int len = in.readInt();
+			int read = 0;
+			byte[] buffer = new byte[len];
+			while (read < len) {
+				int ret = in.read(buffer, read, len - read);
+				if (ret == -1) {
+					throw new EOFException();
+				}
+				read += ret;
 			}
-			read += ret;
+	
+			consumer.consume(buffer, 0, len);
 		}
-
-		consumer.consume(buffer, 0, len);
 	}
 
 	private Socket connect() throws IOException {
