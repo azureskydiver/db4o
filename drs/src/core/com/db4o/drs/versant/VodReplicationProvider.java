@@ -57,6 +57,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private int expectedChangeCount = 0;
 
+	private boolean _isolatedMode = false;
+
 	
 	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ObjectLifecycleMonitor comm) {
 		_eventProcessor = comm;
@@ -104,9 +106,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void commit() {
 		_jdo.commit();
-		if (expectedChangeCount > 0) {
-			_eventProcessor.ensureChangecount(expectedChangeCount);
-			expectedChangeCount = 0;
+		if (!_isolatedMode) {
+			ensureChangeCount();
 		}
 	}
 
@@ -434,12 +435,22 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void runIsolated(Block4 block) {
+		_isolatedMode = true;
 		_eventProcessor.requestIsolation(true);
 		try {
 			block.run();
 		}
 		finally {
 			_eventProcessor.requestIsolation(false);
+			_isolatedMode = false;
+		}
+		ensureChangeCount();
+	}
+
+	private void ensureChangeCount() {
+		if (expectedChangeCount > 0) {
+			_eventProcessor.ensureChangecount(expectedChangeCount);
+			expectedChangeCount = 0;
 		}
 	}
 
