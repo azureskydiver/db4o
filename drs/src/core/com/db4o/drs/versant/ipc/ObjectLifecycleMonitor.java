@@ -1,6 +1,7 @@
 package com.db4o.drs.versant.ipc;
 
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.rmi.test.*;
 
 public interface ObjectLifecycleMonitor {
 
@@ -31,4 +32,16 @@ public interface ObjectLifecycleMonitor {
 	void ping();
 
 	void stop();
+	
+	void addListener(@Proxy @Async MonitorListener listener);
+	
+	public interface MonitorListener {
+		
+		void ready();
+
+		void commited();
+
+	}
+
+	
 }

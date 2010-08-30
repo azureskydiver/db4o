@@ -42,7 +42,7 @@ public class VodDatabase {
 	
 	private EventConfiguration _eventConfiguration;
 
-	private EventProcessorSupport _eventProcessorSupport;
+	private ObjectLifecycleMonitorSupport _eventProcessorSupport;
 	
 
 	public VodDatabase(String name, Properties properties){
@@ -281,11 +281,11 @@ public class VodDatabase {
 		_eventDriver = null;
 	}
 	
-	public EventProcessorSupport startEventProcessor(){
+	public ObjectLifecycleMonitorSupport startEventProcessor(){
 		if(_eventProcessorSupport != null){
 			throw new IllegalStateException();
 		}
-		_eventProcessorSupport = new EventProcessorSupport(_eventConfiguration);
+		_eventProcessorSupport = new ObjectLifecycleMonitorSupport(_eventConfiguration);
 		return _eventProcessorSupport;
 	}
 	
