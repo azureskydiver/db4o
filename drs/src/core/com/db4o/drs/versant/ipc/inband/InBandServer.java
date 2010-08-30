@@ -20,7 +20,7 @@ public class InBandServer implements ServerChannelControl {
 	private final VodCobraFacade cobra;
 	private final VodEventClient client;
 	private final int senderId;
-	private BlockingQueue4<MessagePayload> pendingMessages;
+	private BlockingQueue4<String> pendingMessages;
 	private ByteArrayConsumer outgoingConsumer;
 	private Thread serverThread;
 	private Distributor<ObjectLifecycleMonitor> localPeer;
@@ -40,7 +40,7 @@ public class InBandServer implements ServerChannelControl {
 
 		localPeer = new Distributor<ObjectLifecycleMonitor>(this.outgoingConsumer, this.provider);
 
-		pendingMessages = new BlockingQueue<MessagePayload>();
+		pendingMessages = new BlockingQueue<String>();
 
 		prepareChannelForIncomingMessages();
 
@@ -97,11 +97,18 @@ public class InBandServer implements ServerChannelControl {
 
 	private void taskQueueProcessorLoop() {
 
-		MessagePayload msg;
 
 		try {
-			while ((msg = pendingMessages.next()) != null) {
+			String raiserLoid;
+			while ((raiserLoid = pendingMessages.next()) != null) {
 				synchronized (lock) {
+					
+					long messageLoid = VodCobra.loidAsLong(raiserLoid);
+					
+					MessagePayload msg = cobra.objectByLoid(messageLoid);
+					if (msg.sender() == senderId || msg.consumed()) {
+						continue;
+					}
 					msg.consumedAt(System.currentTimeMillis());
 					cobra.store(msg);
 					cobra.commit();
@@ -139,16 +146,7 @@ public class InBandServer implements ServerChannelControl {
 
 		channel.addVersantEventListener(new ClassEventListener() {
 			public void instanceCreated(VersantEventObject event) {
-				final String raiserLoid = event.getRaiserLoid();
-				long messageLoid = VodCobra.loidAsLong(raiserLoid);
-				final MessagePayload msg;
-				synchronized (lock) {
-					msg = cobra.objectByLoid(messageLoid);
-				}
-				if (msg.sender() == senderId || msg.consumed()) {
-					return;
-				}
-				pendingMessages.add(msg);
+				pendingMessages.add(event.getRaiserLoid());
 			}
 
 			public void instanceModified(VersantEventObject event) {
