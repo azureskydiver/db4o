@@ -191,6 +191,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		_eventProcessor.syncTimestamp(raisedDatabaseVersion);
+		_cobra.commit();
 		_jdo.commit();
 		
 		// FileReplicationProvider does this:
@@ -281,6 +282,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(replicationCommitRecordByJdo == null){
 			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
 			_cobra.store(_replicationCommitRecord);
+			_cobra.commit();
 			return;
 		}
 		
