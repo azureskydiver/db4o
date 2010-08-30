@@ -3,11 +3,13 @@
 package com.db4o.drs.versant.eventlistener;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.metadata.*;
@@ -18,8 +20,6 @@ import com.db4o.internal.*;
 import com.versant.event.*;
 
 public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMonitor {
-	
-	public static final String LISTENING_MESSAGE = "Listening for events on ";
 	
 	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(ObjectLifecycleMonitor.class);
 	
@@ -32,8 +32,6 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	private final long COMMIT_INTERVAL = 1000; // 1 sec
 	
 	private static int SENDER_ID = ObjectLifecycleMonitorImpl.class.getName().hashCode();
-	
-	private final LinePrinter _out;
 	
 	private final VodEventClient _client;
 	
@@ -76,9 +74,10 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	private Set<String> _knownClasses = new HashSet<String>();
 
-	public ObjectLifecycleMonitorImpl(VodEventClient client, LinePrinter out, VodCobra cobra)  {
+	private List<MonitorListener> listeners = new ArrayList<MonitorListener>();
+
+	public ObjectLifecycleMonitorImpl(VodEventClient client, VodCobra cobra)  {
 		
-		_out = out;
 		_client = client;
 	    _cobra = cobra;
 
@@ -121,8 +120,9 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	public void run() {
 	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
-		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
-		println(LISTENING_MESSAGE + _cobra.databaseName());
+		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
+		listenerTrigger().ready();
+//		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
 		_incomingMessages.start();
 		try {
@@ -237,12 +237,9 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		_cobra.store(objectLifecycleEvent);
 	}
 
-	private synchronized void println(String msg) {
-		synchronized (_lock) {
-			_out.println(msg);
-			if(DrsDebug.verbose){
-				System.out.println(msg);
-			}
+	private void println(String msg) {
+		if(DrsDebug.verbose){
+			System.out.println(msg);
 		}
 	}
 	
@@ -274,6 +271,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 				_commitTimestamp.value(_timeStampIdGenerator.last());
 				_cobra.store(_commitTimestamp);
 				_cobra.commit();
+				listenerTrigger().commited();
 				println(COMMIT_MESSAGE);
 				_dirty = false;
 			}
@@ -336,6 +334,29 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		public String toString() {
 			return getClass().getSimpleName()+ ": " + _classLoid + ", " + _objectLoid + ", " + _operation;
 		}
+	}
+
+
+	public void addListener(MonitorListener l) {
+		synchronized (listeners) {
+			listeners.add(l);
+		}
+	}
+	
+	private MonitorListener listenerTrigger() {
+		return (MonitorListener) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{MonitorListener.class}, new InvocationHandler() {
+			
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				ArrayList<MonitorListener> ls;
+				synchronized (listeners) {
+					ls = new ArrayList<MonitorListener>(listeners);
+				}
+				for(MonitorListener l : ls) {
+					method.invoke(l, args);
+				}
+				return null;
+			}
+		});
 	}
 
 }

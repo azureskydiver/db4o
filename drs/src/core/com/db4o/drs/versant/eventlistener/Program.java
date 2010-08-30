@@ -45,8 +45,7 @@ public class Program {
 		if(! parseArguments(args)){
 			return;
 		}
-		LinePrinter linePrinter = _eventConfiguration.verbose ? LinePrinter.forPrintStream(System.out) : LinePrinter.NULL_PRINTER;
-		ObjectLifecycleMonitorFactory.newInstance(_eventConfiguration, linePrinter).run();
+		ObjectLifecycleMonitorFactory.newInstance(_eventConfiguration).run();
 	}
 	
 	private boolean parseArguments(String[] args) {

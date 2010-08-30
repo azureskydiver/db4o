@@ -4,45 +4,41 @@ package com.db4o.drs.test.versant;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.util.IOServices.ProcessRunner;
 
-import db4ounit.*;
-
 public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
-	protected void withEventProcessor(Closure4<Void> closure, String expectedOutput) throws Exception {
+	protected ObjectLifecycleMonitor _monitor;
+
+	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
 		if(DrsDebug.runEventListenerEmbedded){
-			withEventProcessorInSameProcess(closure, expectedOutput);
+			withEventProcessorInSameProcess(closure);
 		} else {
-			withEventProcessorInSeparateProcess(closure, expectedOutput);	
+			withEventProcessorInSeparateProcess(closure);	
 		}
 	}
 	
-	private void withEventProcessorInSeparateProcess (Closure4<Void> closure, final String expectedOutput) throws Exception {
+	private void withEventProcessorInSeparateProcess (Closure4<Void> closure) throws Exception {
 		final ProcessRunner eventListenerProcess = _vod.startEventProcessorInSeparateProcess();
 		try{
 			closure.run();
-			boolean result = eventListenerProcess.waitFor(expectedOutput, 10000);
-			Assert.isTrue(result, "Output does not contain '" + expectedOutput + "'"); 
 		} finally {
 			eventListenerProcess.destroy();
 		}
 	}
 	
-	private void withEventProcessorInSameProcess (Closure4<Void> closure, final String expectedOutput) throws Exception {
-		EventProcessorSupport support = new EventProcessorSupport(_vod.eventConfiguration());
+	private void withEventProcessorInSameProcess (Closure4<Void> closure) throws Exception {
+		ObjectLifecycleMonitorSupport support = new ObjectLifecycleMonitorSupport(_vod.eventConfiguration());
+		_monitor = support.eventProcessor();
 		try {
 			closure.run();
 		}
 		finally {
-			support.waitForOutput(expectedOutput);
+			_monitor = null;
 			support.stop();
 		}
-	}
-	
-	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
-		withEventProcessor(closure, ObjectLifecycleMonitorImpl.LISTENING_MESSAGE);
 	}
 	
 }

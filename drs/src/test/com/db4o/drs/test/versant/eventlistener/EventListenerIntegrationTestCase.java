@@ -8,8 +8,9 @@ import com.db4o.drs.test.versant.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -43,27 +44,28 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		});
 	}
 
-	public void testStartingEventProcessorTwice() throws Exception {
-		for (int i = 0; i < 2; i++) {
-			withEventProcessor(new Closure4<Void>() {
-				public Void run() {
-					storeAndCommitItem();
-					return null;
-				}
-			}, "Listening");
-		}
-	}
-	
-	public void testEventProcessorReloadsClasses() throws Exception {
-		for (int i = 0; i < 2; i++) {
-			withEventProcessor(new Closure4<Void>() {
-				public Void run() {
-					storeAndCommitItem();
-					return null;
-				}
-			}, "Item");
-		}
-	}
+	// do theses tests make sense at all?
+//	public void testStartingEventProcessorTwice() throws Exception {
+//		for (int i = 0; i < 2; i++) {
+//			withEventProcessor(new Closure4<Void>() {
+//				public Void run() {
+//					storeAndCommitItem();
+//					return null;
+//				}
+//			}, "Listening");
+//		}
+//	}
+//	
+//	public void testEventProcessorReloadsClasses() throws Exception {
+//		for (int i = 0; i < 2; i++) {
+//			withEventProcessor(new Closure4<Void>() {
+//				public Void run() {
+//					storeAndCommitItem();
+//					return null;
+//				}
+//			}, "Item");
+//		}
+//	}
 	
 	public void testEventProcessor10Times() throws Exception {
 		for (int i = 0; i < 10; i++) {
@@ -72,17 +74,28 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 					storeAndCommitItem();
 					return null;
 				}
-			}, "Event stored");
+			});
 		}
 	}
 	
 	public void testPersistentTimestampExistsAfterEvent() throws Exception {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
+				final BlockingQueue4<Object> q = new BlockingQueue<Object>();
+				_monitor.addListener(new MonitorListener() {
+					
+					public void ready() {
+					}
+					
+					public void commited() {
+						q.add(new Object());
+					}
+				});
 				storeAndCommitItem();
+				q.next();
 				return null;
 			}
-		}, "Item");
+		});
 		Collection<CommitTimestamp> timestamps = _jdo.query(CommitTimestamp.class);
 		Assert.areEqual(1, timestamps.size());
 	}
@@ -142,6 +155,10 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 
 			public void stop() {
 				original.stop();
+			}
+
+			public void addListener(MonitorListener l) {
+				original.addListener(l);
 			}
 			
 		});

@@ -11,16 +11,19 @@ import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.foundation.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
-import com.versant.odbms.query.Operator.*;
+import com.versant.odbms.query.Operator.UnaryOperator;
 
 import db4ounit.*;
 
 public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
-	private EventProcessorSupport _eventProcessorSupport;
+	private ObjectLifecycleMonitorSupport _eventProcessorSupport;
+	protected BlockingQueue4<Object> commitedBarrier = new BlockingQueue<Object>();
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(VodProviderTestCase.class).run();
@@ -30,6 +33,16 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	public void setUp() {
 		super.setUp();
 		_eventProcessorSupport = _vod.startEventProcessor();
+		
+		_eventProcessorSupport.eventProcessor().addListener(new MonitorListener() {
+			
+			public void ready() {
+			}
+			
+			public void commited() {
+				commitedBarrier.add(new Object());
+			}
+		});
 	}
 	
 	@Override
@@ -99,7 +112,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
 		VodCobra cobra = new VodCobra(_vod);
-		ObjectLifecycleMonitor comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ObjectLifecycleMonitor comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider provider = new VodReplicationProvider(_vod, cobra, comm);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
@@ -108,7 +121,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
 		VodCobra cobra = new VodCobra(_vod);
-		ObjectLifecycleMonitor comm = EventProcessorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ObjectLifecycleMonitor comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod, cobra, comm);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();
@@ -160,7 +173,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	}
 
 	private void waitForCommitFeedbackFromEventProcessor() {
-		waitForOutput(ObjectLifecycleMonitorImpl.COMMIT_MESSAGE);
+		commitedBarrier.next();
 	}
 	
 	private void update(Item item) {
@@ -168,12 +181,6 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.update(item);
 		_provider.commit();
 		waitForCommitFeedbackFromEventProcessor();
-	}
-	
-	private void waitForOutput(String string){
-		if (! _eventProcessorSupport.waitForOutput(string)){
-			throw new IllegalStateException("Expected output " + string + " never printed by EventProcessor");
-		}
 	}
 	
 }

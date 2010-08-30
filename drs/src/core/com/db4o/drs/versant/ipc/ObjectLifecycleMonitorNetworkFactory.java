@@ -5,9 +5,9 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.inband.*;
 
-public class EventProcessorNetworkFactory {
+public class ObjectLifecycleMonitorNetworkFactory {
 	
-//	private static final EventProcessorNetwork factory = new TcpCommunicationNetwork();
+//	private static final ObjectLifecycleMonitorNetwork factory = new TcpCommunicationNetwork();
 	private static final ObjectLifecycleMonitorNetwork factory = new InBandCommunicationNetwork();
 
 	public static ObjectLifecycleMonitor newClient(final VodCobra cobra, final int senderId) {
