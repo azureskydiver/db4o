@@ -1,6 +1,6 @@
 package com.db4o.rmi;
 
-public interface Peer<T> extends ByteArrayConsumer {
+public interface Peer<T> {
 
 	T sync();
 
@@ -8,6 +8,4 @@ public interface Peer<T> extends ByteArrayConsumer {
 
 	<R> T async(Callback<R> callback);
 	
-	void setConsumer(ByteArrayConsumer constumer);
-
 }

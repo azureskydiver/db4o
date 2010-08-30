@@ -12,7 +12,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 
 	public ObjectLifecycleMonitor newClient(final VodCobra cobra, final int senderId) {
 
-		final SimplePeer<ObjectLifecycleMonitor> remotePeer = new SimplePeer<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
+		final Distributor<ObjectLifecycleMonitor> remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
 			public void consume(byte[] buffer, int offset, int length) throws IOException {
 				MessagePayload msg = new MessagePayload(senderId, Arrays.copyOfRange(buffer, offset, offset + length));
