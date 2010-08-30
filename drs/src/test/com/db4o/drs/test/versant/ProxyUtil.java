@@ -5,17 +5,18 @@ import java.util.*;
 
 public class ProxyUtil {
 
+
 	public static final class InvocationHandlerImplementation<T, E extends T> implements InvocationHandler {
 		private final E object;
-		private final Class<T> iface;
+		private final Class<? extends Object> clazz;
 		volatile boolean in = false;
 		Object lock = new Object();
 		private Set<Thread> threads = new LinkedHashSet<Thread>();
 		private List<StackTraceElement[]> store = new ArrayList<StackTraceElement[]>();
 		
-		private InvocationHandlerImplementation(E object, Class<T> iface) {
+		private InvocationHandlerImplementation(E object) {
 			this.object = object;
-			this.iface = iface;
+			this.clazz = object.getClass();
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -34,7 +35,7 @@ public class ProxyUtil {
 					throw new IllegalStateException();
 				}
 			}
-			System.err.println("---> " + iface.getSimpleName()+"."+method.getName() + " ("+System.identityHashCode(object)+", "+Thread.currentThread().getName()+")");
+			System.err.println("---> " + clazz.getSimpleName()+"."+method.getName() + " ("+System.identityHashCode(object)+", "+Thread.currentThread().getName()+")");
 			synchronized (lock) {
 				accessedFrom(Thread.currentThread());
 				if (in) {
@@ -51,7 +52,7 @@ public class ProxyUtil {
 
 		private void accessedFrom(Thread currentThread) {
 			if (threads.add(currentThread)) {
-				System.err.println("----------> new thread accessing " + iface.getSimpleName());
+				System.err.println("----------> new thread accessing " + clazz.getSimpleName());
 				for (Thread t : threads) {
 					System.err.println("     -> " + t.getName());
 				}
@@ -60,9 +61,10 @@ public class ProxyUtil {
 
 	}
 
-	public static <T, E extends T> T sync(Class<T> iface, final E object) {
+	public static <T, E extends T> T sync(final E object) {
 
-		return (T) Proxy.newProxyInstance(iface.getClassLoader(), new Class<?>[] { iface }, new InvocationHandler() {
+		Class<? extends Object> clazz = object.getClass();
+		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new InvocationHandler() {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				synchronized (object) {
@@ -72,9 +74,38 @@ public class ProxyUtil {
 		});
 	}
 
-	public static <T, E extends T> T throwOnConcurrentAccess(final Class<T> iface, final E object) {
+	public static <T, E extends T> T noop(final E object) {
+		return object;
+	}
 
-		return (T) Proxy.newProxyInstance(iface.getClassLoader(), new Class<?>[] { iface }, new InvocationHandler() {
+	public static <T, E extends T> T trace(final E object) {
+
+		
+		Class<? extends Object> clazz = object.getClass();
+		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new InvocationHandler() {
+
+			private static final String SEP = "    ";
+
+			String ident = "";
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				String m = object.getClass().getSimpleName() + "."+method.getName() +"()";
+//				String m = iface.getSimpleName()+"#"+method.getName();
+				try {
+					System.out.println(ident+m+" {");
+					ident += SEP;
+					return method.invoke(object, args);
+				} finally {
+					ident = ident.substring(0, ident.length()-SEP.length());
+					System.out.println(ident + "}");
+				}
+			}
+		});
+	}
+
+	public static <T, E extends T> T throwOnConcurrentAccess(final E object) {
+
+		Class<? extends Object> clazz = object.getClass();
+		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new InvocationHandler() {
 
 			volatile boolean in = false;
 			Object lock = new Object();
@@ -96,11 +127,12 @@ public class ProxyUtil {
 		});
 	}
 	
-	public static <T, E extends T> T throwOnConcurrentAccess2(final Class<T> iface, final E object) {
+	public static <T, E extends T> T throwOnConcurrentAccess2(final E object) {
 
-		System.err.println("---> " + iface.getSimpleName()+" created ("+System.identityHashCode(object)+", "+Thread.currentThread().getName()+")");
+		Class<? extends Object> clazz = object.getClass();
+		System.err.println("---> " + clazz.getSimpleName()+" created ("+System.identityHashCode(object)+", "+Thread.currentThread().getName()+")");
 		
-		return (T) Proxy.newProxyInstance(iface.getClassLoader(), new Class<?>[] { iface }, new InvocationHandlerImplementation(object, iface));
+		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new InvocationHandlerImplementation(object));
 	}
 
 }

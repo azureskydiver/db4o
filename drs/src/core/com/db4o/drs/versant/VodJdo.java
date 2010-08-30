@@ -23,7 +23,7 @@ public class VodJdo implements VodJdoFacade {
 	private final PersistenceManager _pm;
 
 	public static VodJdoFacade createInstance(VodDatabase vod) {
-		return ProxyUtil.throwOnConcurrentAccess(VodJdoFacade.class, new VodJdo(vod));
+		return ProxyUtil.throwOnConcurrentAccess(new VodJdo(vod));
 	}
 	
 	private VodJdo(VodDatabase vod) {
