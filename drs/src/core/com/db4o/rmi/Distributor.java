@@ -62,10 +62,14 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		this.consumer = consumer;
 	}
 
-	protected Request request(long objectId, Method method, Object[] args) {
+	protected Request request(long objectId, Method method, Object[] args, boolean expectsResponse) {
 		Request r = new Request(this, method, args);
-		long requestId = nextRequest.getAndIncrement();
-		requests.put(requestId, r);
+		long requestId = -1;
+		
+		if (expectsResponse) {
+			requestId = nextRequest.getAndIncrement();
+			requests.put(requestId, r);
+		}
 
 		sendRequest(objectId, requestId, r);
 
@@ -109,7 +113,9 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		Request r = new Request(this, server.getObject());
 		r.deserialize(in);
 		r.invoke();
-		sendResponse(requestId, r.getInternal());
+		if (requestId != -1) {
+			sendResponse(requestId, r.getInternal());
+		}
 	}
 
 	private void sendRequest(long objectId, long requestId, Request r) {

@@ -24,7 +24,7 @@ public class PeerProxy<T> implements Peer<T> {
 			syncFacade = (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { rootFacade }, new InvocationHandler() {
 
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-					Request r = distributor.request(getId(), method, args);
+					Request r = distributor.request(getId(), method, args, true);
 					if (!r.hasValue()) {
 						distributor.feed();
 					}
@@ -46,7 +46,7 @@ public class PeerProxy<T> implements Peer<T> {
 		return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { rootFacade }, new InvocationHandler() {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				Request r = distributor.request(getId(), method, args);
+				Request r = distributor.request(getId(), method, args, callback != null);
 				if (callback != null) {
 					if (!r.hasValue()) {
 						distributor.feed();
