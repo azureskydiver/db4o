@@ -74,6 +74,8 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	private List<MonitorListener> listeners = new ArrayList<MonitorListener>();
 
+	private boolean _started;
+
 	public ObjectLifecycleMonitorImpl(VodEventClient client, VodCobra cobra)  {
 		
 		_client = client;
@@ -116,13 +118,18 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	}
 
 	public void run() {
+		_commitThread.setDaemon(true);
+		_isolatinWatchdogThread.setDaemon(true);
 	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
 		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
-		listenerTrigger().ready();
 //		println(LISTENING_MESSAGE + _cobra.databaseName());
 		startPausableTasksExecutor();
 		_incomingMessages.start();
+		synchronized (listeners) {
+			_started = true;
+			listenerTrigger().ready();
+		}
 		try {
 			_incomingMessages.join();
 		} catch (InterruptedException e) {
@@ -338,6 +345,9 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	public void addListener(MonitorListener l) {
 		synchronized (listeners) {
 			listeners.add(l);
+			if (_started) {
+				l.ready();
+			}
 		}
 	}
 	
