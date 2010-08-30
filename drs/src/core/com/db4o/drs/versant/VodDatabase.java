@@ -160,7 +160,7 @@ public class VodDatabase {
 		return datastoreManagerFactory().getDatastoreManager();
 	}
 	
-	private DatastoreManagerFactory datastoreManagerFactory(){
+	private synchronized DatastoreManagerFactory datastoreManagerFactory(){
 		if(_datastoreManagerFactory == null){
 			ConnectionInfo con = new ConnectionInfo(_name, host(), port(), userName(), passWord());
 			_datastoreManagerFactory = new DatastoreManagerFactory(con, new ConnectionProperties());
