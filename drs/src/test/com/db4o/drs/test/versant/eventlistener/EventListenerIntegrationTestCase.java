@@ -82,7 +82,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
 				final BlockingQueue4<Object> q = new BlockingQueue<Object>();
-				_monitor.addListener(new MonitorListener() {
+				_provider.syncEventProcessor().addListener(new MonitorListener() {
 					
 					public void ready() {
 					}
