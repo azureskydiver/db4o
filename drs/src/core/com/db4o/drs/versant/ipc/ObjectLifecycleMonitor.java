@@ -1,7 +1,7 @@
 package com.db4o.drs.versant.ipc;
 
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.rmi.test.*;
+import com.db4o.rmi.*;
 
 public interface ObjectLifecycleMonitor {
 

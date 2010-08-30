@@ -6,12 +6,10 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.drs.versant.metadata.ClassMetadata;
