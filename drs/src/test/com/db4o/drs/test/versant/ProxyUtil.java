@@ -45,6 +45,8 @@ public class ProxyUtil {
 			}
 			try {
 				return method.invoke(object, args);
+			} catch (InvocationTargetException e) {
+				throw e.getCause();
 			} finally {
 				in = false;
 			}
@@ -68,7 +70,11 @@ public class ProxyUtil {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				synchronized (object) {
-					return method.invoke(object, args);
+					try { 
+						return method.invoke(object, args);
+					} catch (InvocationTargetException e) {
+						throw e.getCause();
+					}
 				}
 			}
 		});
@@ -94,6 +100,8 @@ public class ProxyUtil {
 					System.out.println(ident+m+" {");
 					ident += SEP;
 					return method.invoke(object, args);
+				} catch (InvocationTargetException e) {
+					throw e.getCause();
 				} finally {
 					ident = ident.substring(0, ident.length()-SEP.length());
 					System.out.println(ident + "}");
@@ -119,6 +127,8 @@ public class ProxyUtil {
 				}
 				try {
 					return method.invoke(object, args);
+				} catch (InvocationTargetException e) {
+					throw e.getCause();
 				} finally {
 					in = false;
 				}
@@ -133,6 +143,18 @@ public class ProxyUtil {
 		System.err.println("---> " + clazz.getSimpleName()+" created ("+System.identityHashCode(object)+", "+Thread.currentThread().getName()+")");
 		
 		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), new InvocationHandlerImplementation(object));
+	}
+
+	public static <T> T threadLocal(Class<T> iface, final ThreadLocal<T> local) {
+		return (T) Proxy.newProxyInstance(iface.getClassLoader(), new Class<?>[]{iface}, new InvocationHandler() {
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				try {
+					return method.invoke(local.get(), args);
+				} catch (InvocationTargetException e) {
+					throw e.getCause();
+				}
+			}
+		});
 	}
 
 }
