@@ -36,4 +36,8 @@ public class Pilot {
 	public void setName(String name) {
 		this._name = name;
 	}
+	
+	public String name() {
+		return _name;
+	}
 }

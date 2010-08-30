@@ -126,7 +126,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Iterator pilots = a().provider().getStoredObjects(Pilot.class).iterator();
 		while (pilots.hasNext()) {
 			Pilot candidate = (Pilot) pilots.next();
-			if (candidate._name.equals(name)) return candidate;
+			if (candidate.name().equals(name)) return candidate;
 		}
 		return null;
 	}
