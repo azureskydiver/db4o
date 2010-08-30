@@ -12,6 +12,8 @@ import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.versant.odbms.*;
@@ -112,7 +114,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
 		VodCobraFacade cobra = VodCobra.createInstance(_vod);
-		ObjectLifecycleMonitor comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ClientChannelControl comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider provider = new VodReplicationProvider(_vod, cobra, comm);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
@@ -121,7 +123,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
 		VodCobraFacade cobra = VodCobra.createInstance(_vod);
-		ObjectLifecycleMonitor comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
+		ClientChannelControl comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
 		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod, cobra, comm);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();

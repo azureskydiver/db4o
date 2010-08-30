@@ -5,12 +5,19 @@ import com.db4o.drs.versant.eventlistener.*;
 
 public interface ObjectLifecycleMonitorNetwork {
 
-	ObjectLifecycleMonitor newClient(final VodCobraFacade cobra, final int senderId);
-
-	CommunicationChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor monitor, final Object lock, final VodCobraFacade cobra, VodEventClient client, int senderId);
+	ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId);
 	
-	public interface CommunicationChannelControl {
-		void start();
+
+	ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor monitor, final Object lock, final VodCobraFacade cobra, VodEventClient client, int senderId);
+	
+	public interface ServerChannelControl {
+		void stop();
+		void join() throws InterruptedException;
+	}
+	
+	public interface ClientChannelControl {
+		ObjectLifecycleMonitor sync();
+		ObjectLifecycleMonitor async();
 		void stop();
 		void join() throws InterruptedException;
 	}

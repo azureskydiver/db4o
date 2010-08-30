@@ -6,14 +6,14 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.qlin.*;
 import com.db4o.rmi.*;
 import com.versant.event.*;
 
-public class InBandServer implements CommunicationChannelControl {
+public class InBandServer implements ServerChannelControl {
 
 	private final ObjectLifecycleMonitor provider;
 	private final Object lock;
