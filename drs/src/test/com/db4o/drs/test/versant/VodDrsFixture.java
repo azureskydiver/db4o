@@ -13,32 +13,38 @@ public class VodDrsFixture implements DrsFixture{
 	
 	private static boolean enhanced = false;
 	
-	private final VodDatabase _vod;
+	private VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
 
+	private final String _name;
+
 	public VodDrsFixture(String name){
-		_vod = new VodDatabase(name);
+		_name = name;
+		init();
+	}
+
+	private void init() {
+		_vod = new VodDatabase(_name);
 		_vod.removeDb();
 		_vod.produceDb();
+		File root = new File("bin");
+		
+		JdoMetadataGenerator generator = new JdoMetadataGenerator(root);
+		
+		// TODO: Knowledge about all the persistent classes right
+		// now is in DrsTestCase.mappings
+		// Move to a smarter place and pull all the package names
+		// from there to generate .jdo files for all of them.
+		
+		_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.data")));
 		if(! enhanced ){
-			File root = new File("bin");
-			
-			JdoMetadataGenerator generator = new JdoMetadataGenerator(root);
-			
-			// TODO: Knowledge about all the persistent classes right
-			// now is in DrsTestCase.mappings
-			// Move to a smarter place and pull all the package names
-			// from there to generate .jdo files for all of them.
-			
-			_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.data")));
 			
 			_vod.enhance();
-			_vod.createEventSchema();
 			enhanced = true;
 		}
+		_vod.createEventSchema();
 		_vod.startEventDriver();
-		
 		
 		VodJdo.createInstance(_vod).close();
 		
@@ -46,8 +52,8 @@ public class VodDrsFixture implements DrsFixture{
 	}
 	
 	public void clean() {
-		// TODO: Do we need to delete all persistent instances here?
-		//       It looks like this is already done in DrsTestCase#clean()
+		destroy();
+		init();
 	}
 	
 	public void close() {
