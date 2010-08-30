@@ -95,8 +95,10 @@ public class VodJdo implements VodJdoFacade {
 		return this.<T>objectByLoid(loid);
 	}
 
-	public void deleteAll(Class clazz) {
-		_pm.deletePersistentAll((Collection) _pm.newQuery(clazz).execute());
+	public int deleteAll(Class clazz) {
+		Collection q = (Collection) _pm.newQuery(clazz).execute();
+		_pm.deletePersistentAll(q);
+		return q.size();
 	}
 
 	public void delete(Object obj) {
@@ -130,7 +132,7 @@ public class VodJdo implements VodJdoFacade {
 	public void refresh(Object obj) {
 		_pm.refresh(obj);
 	}
-	
+
 }
 
 

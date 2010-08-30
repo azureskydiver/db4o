@@ -43,5 +43,7 @@ public interface ObjectLifecycleMonitor {
 
 	}
 
+	void ensureChangecount(int expectedChangeCount);
+
 	
 }
