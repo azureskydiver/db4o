@@ -6,17 +6,17 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
 import com.versant.event.*;
 
-public class EventProcessorFactory {
+public class ObjectLifecycleMonitorFactory {
 	
-	public static EventProcessor newInstance (EventConfiguration eventConfiguration,
+	public static ObjectLifecycleMonitorImpl newInstance (EventConfiguration eventConfiguration,
 			LinePrinter linePrinter) {
 		VodCobra cobra = new VodCobra(new VodDatabase(eventConfiguration.databaseName));
 		VodEventClient client = new VodEventClient(eventConfiguration, new ExceptionListener (){
 	        public void exceptionOccurred (Throwable exception){
-	        	EventProcessor.unrecoverableExceptionOccurred(exception);
+	        	ObjectLifecycleMonitorImpl.unrecoverableExceptionOccurred(exception);
 	        }
 	    });
-		EventProcessor eventProcessor = new EventProcessor(client, linePrinter, cobra);
+		ObjectLifecycleMonitorImpl eventProcessor = new ObjectLifecycleMonitorImpl(client, linePrinter, cobra);
 		return eventProcessor;
 	}
 

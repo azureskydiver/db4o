@@ -116,9 +116,9 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 	
 	public void testIsolationTimeout() {
 		
-		final ProviderSideCommunication original = _provider.eventProcessor();
+		final ObjectLifecycleMonitor original = _provider.eventProcessor();
 		
-		_provider.eventProcessor(new ProviderSideCommunication() {
+		_provider.eventProcessor(new ObjectLifecycleMonitor() {
 
 			public boolean requestIsolation(boolean isolated) {
 				return original.requestIsolation(isolated);
@@ -139,25 +139,29 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 			public void ping() {
 				// ignoring ping
 			}
+
+			public void stop() {
+				original.stop();
+			}
 			
 		});
 		
 		try {
 		
-			EventProcessor ep = _vod.startEventProcessor().eventProcessor();
+			ObjectLifecycleMonitor ep = _vod.startEventProcessor().eventProcessor();
 			
 			Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), 1000));
 			
-			Assert.isTrue(ep.eventProcessor().requestIsolation(true));
+			Assert.isTrue(ep.requestIsolation(true));
 	
-			long timeout = EventProcessor.ISOLATION_TIMEOUT;
+			long timeout = ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT;
 			Assert.isFalse(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
 			
-			Runtime4.sleepThrowsOnInterrupt(EventProcessor.ISOLATION_TIMEOUT);
+			Runtime4.sleepThrowsOnInterrupt(ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT);
 			Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
 			
-			Assert.isTrue(ep.eventProcessor().requestIsolation(true));
-			Assert.isTrue(ep.eventProcessor().requestIsolation(false));
+			Assert.isTrue(ep.requestIsolation(true));
+			Assert.isTrue(ep.requestIsolation(false));
 			
 			ep.stop();
 			

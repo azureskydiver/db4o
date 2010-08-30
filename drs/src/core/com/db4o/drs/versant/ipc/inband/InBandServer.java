@@ -6,7 +6,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.qlin.*;
@@ -15,7 +15,7 @@ import com.versant.event.*;
 
 public class InBandServer implements CommunicationChannelControl {
 
-	private final ProviderSideCommunication provider;
+	private final ObjectLifecycleMonitor provider;
 	private final Object lock;
 	private final VodCobra cobra;
 	private final VodEventClient client;
@@ -23,11 +23,11 @@ public class InBandServer implements CommunicationChannelControl {
 	private BlockingQueue4<MessagePayload> pendingMessages;
 	private ByteArrayConsumer outgoingConsumer;
 	private Thread serverThread;
-	private SimplePeer<ProviderSideCommunication> localPeer;
+	private SimplePeer<ObjectLifecycleMonitor> localPeer;
 	private SimpleTimer purger;
 	private Thread purgerThread;
 
-	public InBandServer(ProviderSideCommunication provider, Object lock, VodCobra cobra, VodEventClient client, int senderId) {
+	public InBandServer(ObjectLifecycleMonitor provider, Object lock, VodCobra cobra, VodEventClient client, int senderId) {
 		this.provider = provider;
 		this.lock = lock;
 		this.cobra = cobra;
@@ -38,13 +38,13 @@ public class InBandServer implements CommunicationChannelControl {
 
 		outgoingConsumer = prepareConsumerForOutgoingMessages();
 
-		localPeer = new SimplePeer<ProviderSideCommunication>(this.outgoingConsumer, this.provider);
+		localPeer = new SimplePeer<ObjectLifecycleMonitor>(this.outgoingConsumer, this.provider);
 
 		pendingMessages = new BlockingQueue<MessagePayload>();
 
 		prepareChannelForIncomingMessages();
 
-		serverThread = new Thread("EventProcessor in band communication server") {
+		serverThread = new Thread("In band communication server") {
 			@Override
 			public void run() {
 				taskQueueProcessorLoop();
@@ -90,7 +90,7 @@ public class InBandServer implements CommunicationChannelControl {
 			}
 		}, 2000);
 
-		purgerThread = new Thread(purger, "EventProcessor in-band message payload purger");
+		purgerThread = new Thread(purger, "In-band message payload purger");
 		purgerThread.setDaemon(true);
 		purgerThread.start();
 	}

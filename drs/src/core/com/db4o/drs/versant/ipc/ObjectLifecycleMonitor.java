@@ -2,7 +2,7 @@ package com.db4o.drs.versant.ipc;
 
 import com.db4o.drs.versant.metadata.*;
 
-public interface ProviderSideCommunication {
+public interface ObjectLifecycleMonitor {
 
 	/**
 	 * <p>
@@ -29,4 +29,6 @@ public interface ProviderSideCommunication {
 	void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid);
 
 	void ping();
+
+	void stop();
 }

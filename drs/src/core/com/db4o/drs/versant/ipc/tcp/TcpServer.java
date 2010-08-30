@@ -4,8 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.CommunicationChannelControl;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.CommunicationChannelControl;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.internal.*;
 import com.db4o.rmi.*;
 
 public class TcpServer implements CommunicationChannelControl {
@@ -13,15 +14,15 @@ public class TcpServer implements CommunicationChannelControl {
 	private ServerSocket server;
 	private Set<Dispatcher> dispatchers = new HashSet<Dispatcher>();
 
-	private final ProviderSideCommunication provider;
+	private final ObjectLifecycleMonitor provider;
 
 	private Thread serverThread;
 
-	public TcpServer(ProviderSideCommunication provider) {
+	public TcpServer(ObjectLifecycleMonitor provider) {
 
 		this.provider = provider;
 
-		serverThread = new Thread("EventProcessor channel tcp server") {
+		serverThread = new Thread(ReflectPlatform.simpleName(ObjectLifecycleMonitor.class) + " channel tcp server") {
 			@Override
 			public void run() {
 				runServer();
@@ -79,7 +80,7 @@ public class TcpServer implements CommunicationChannelControl {
 
 	private void runServer0() throws IOException, SocketException {
 		synchronized (this) {
-			server = new ServerSocket(TcpCommunicationNetwork.EVENT_PROCESSOR_PORT, 100);
+			server = new ServerSocket(TcpCommunicationNetwork.OBJECT_LIFECYCLE_MONITOR_PORT, 100);
 			notifyAll();
 		}
 		server.setReuseAddress(true);
@@ -108,7 +109,7 @@ public class TcpServer implements CommunicationChannelControl {
 
 		public Dispatcher(Socket socket) {
 			this.client = socket;
-			Thread t = new Thread(this, "EventProcessor dispatcher for socket: " + socket);
+			Thread t = new Thread(this, ReflectPlatform.simpleName(ObjectLifecycleMonitor.class)+" dispatcher for socket: " + socket);
 			t.setDaemon(true);
 			t.start();
 		}
@@ -122,7 +123,6 @@ public class TcpServer implements CommunicationChannelControl {
 
 		public void run() {
 			try {
-				System.out.println("dispatcher up: "  + client);
 				DataInputStream in = new DataInputStream(new BufferedInputStream(client.getInputStream()));
 				final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(client.getOutputStream()));
 
@@ -134,13 +134,12 @@ public class TcpServer implements CommunicationChannelControl {
 						out.flush();
 					}
 				};
-				SimplePeer<ProviderSideCommunication> localPeer = new SimplePeer<ProviderSideCommunication>(outgoingConsumer, provider);
+				SimplePeer<ObjectLifecycleMonitor> localPeer = new SimplePeer<ObjectLifecycleMonitor>(outgoingConsumer, provider);
 				while (true) {
 					TcpCommunicationNetwork.feed(in, localPeer);
 				}
 			} catch (IOException e) {
 			} finally {
-				System.out.println("dispatcher died: " + client);
 				synchronized (dispatchers) {
 					dispatchers.remove(this);
 				}

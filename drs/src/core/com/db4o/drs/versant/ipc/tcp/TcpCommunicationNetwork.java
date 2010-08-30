@@ -10,17 +10,17 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
-public class TcpCommunicationNetwork implements EventProcessorNetwork {
+public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 
-	static final String EVENT_PROCESSOR_HOST = "localhost";
-	static final int EVENT_PROCESSOR_PORT = 7283;
+	static final String OBJECT_LIFECYCLE_MONITOR_HOST = "localhost";
+	static final int OBJECT_LIFECYCLE_MONITOR_PORT = 7283;
 
-	public ProviderSideCommunication newClient(final VodCobra cobra, final int senderId) {
+	public ObjectLifecycleMonitor newClient(final VodCobra cobra, final int senderId) {
 		
-		// lazy initialization required because the client is created before EventProcessor is up
-		return (ProviderSideCommunication) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{ProviderSideCommunication.class}, new InvocationHandler() {
+		// lazy initialization required because the client is created before ObjectLifecycleMonitor is up
+		return (ObjectLifecycleMonitor) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{ObjectLifecycleMonitor.class}, new InvocationHandler() {
 			
-			ProviderSideCommunication forward = null;
+			ObjectLifecycleMonitor forward = null;
 			
 			public Object invoke(Object arg0, Method arg1, Object[] arg2)
 					throws Throwable {
@@ -35,7 +35,7 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 
 	}
 	
-	private ProviderSideCommunication newClient0(final VodCobra cobra, final int senderId) {
+	private ObjectLifecycleMonitor newClient0(final VodCobra cobra, final int senderId) {
 		
 		
 		try {
@@ -44,14 +44,14 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 			final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
 			final DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
 
-			final SimplePeer<ProviderSideCommunication> remotePeer = new SimplePeer<ProviderSideCommunication>(new ByteArrayConsumer() {
+			final SimplePeer<ObjectLifecycleMonitor> remotePeer = new SimplePeer<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
 				public void consume(byte[] buffer, int offset, int length) throws IOException {
 					out.writeInt(length);
 					out.write(buffer, offset, length);
 					out.flush();
 				}
-			}, ProviderSideCommunication.class);
+			}, ObjectLifecycleMonitor.class);
 
 			remotePeer.setFeeder(new Runnable() {
 
@@ -90,7 +90,7 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 		Socket s;
 		while (true) {
 			try {
-				s = new Socket(EVENT_PROCESSOR_HOST, EVENT_PROCESSOR_PORT);
+				s = new Socket(OBJECT_LIFECYCLE_MONITOR_HOST, OBJECT_LIFECYCLE_MONITOR_PORT);
 				break;
 			} catch (ConnectException e) {
 				try {
@@ -105,7 +105,7 @@ public class TcpCommunicationNetwork implements EventProcessorNetwork {
 		return s;
 	}
 
-	public CommunicationChannelControl prepareProviderCommunicationChannel(final ProviderSideCommunication provider, final Object lock, final VodCobra cobra, VodEventClient client,
+	public CommunicationChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, final Object lock, final VodCobra cobra, VodEventClient client,
 			int senderId) {
 		
 		return new TcpServer(provider);

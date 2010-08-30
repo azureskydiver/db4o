@@ -42,7 +42,7 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	}
 	
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
-		withEventProcessor(closure, EventProcessor.LISTENING_MESSAGE);
+		withEventProcessor(closure, ObjectLifecycleMonitorImpl.LISTENING_MESSAGE);
 	}
 	
 }
