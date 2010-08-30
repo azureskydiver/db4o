@@ -2,6 +2,7 @@
 
 package com.db4o.drs.versant.eventlistener;
 
+import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
@@ -11,7 +12,7 @@ import com.db4o.internal.*;
 
 public class ObjectLifecycleMonitorSupport {
 	
-	private static final int MONITOR_STARTUP_TIMEOUT = 10000;
+	private static final long MONITOR_STARTUP_TIMEOUT = DrsDebug.timeout(10000);
 
 	private final Thread _monitorThread;
 	

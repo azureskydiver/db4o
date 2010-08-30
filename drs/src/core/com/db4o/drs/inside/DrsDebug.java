@@ -10,4 +10,9 @@ public class DrsDebug {
 	
 	public static final boolean verbose = false; //!production;
 
+	
+	public static long timeout(long designed) {
+		return designed;
+	}
+
 }
