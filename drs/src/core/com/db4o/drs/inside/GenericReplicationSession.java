@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.drs.*;
@@ -115,10 +116,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 	public final void commit() {
 		runIsolated(new Block4() {
 			public void run() {
-				long maxVersion = _providerA.getCurrentVersion() > _providerB.getCurrentVersion()
-						? _providerA.getCurrentVersion() 
-						: _providerB.getCurrentVersion();
-
+				
+				long maxVersion = Math.max(_providerA.getCurrentVersion(), _providerB.getCurrentVersion());
+						
 				_providerA.syncVersionWithPeer(maxVersion);
 				_providerB.syncVersionWithPeer(maxVersion);
 		
