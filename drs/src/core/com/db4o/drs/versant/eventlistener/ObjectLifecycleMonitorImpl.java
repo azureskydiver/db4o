@@ -5,6 +5,7 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
@@ -75,6 +76,10 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	private List<MonitorListener> listeners = new ArrayList<MonitorListener>();
 
 	private boolean _started;
+
+	private BlockingQueue4<Object> events = new BlockingQueue<Object>();
+
+	public AtomicInteger eventStoreCount = new AtomicInteger();
 
 	public ObjectLifecycleMonitorImpl(VodEventClient client, VodCobraFacade cobra)  {
 		
@@ -271,11 +276,15 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	}
 	
 	private void commit() {
-		synchronized(_lock){
-			if(_dirty){
+		synchronized (_lock) {
+			if (_dirty) {
 				_commitTimestamp.value(_timeStampIdGenerator.last());
 				_cobra.store(_commitTimestamp);
 				_cobra.commit();
+				int i = eventStoreCount.getAndSet(0);
+				while (i-- > 0) {
+					events.add(new Object());
+				}
 				listenerTrigger().commited();
 				println(COMMIT_MESSAGE);
 				_dirty = false;
@@ -332,6 +341,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 						_timeStampIdGenerator.generate());
 			persistObjectLifeCycleEvent(objectLifecycleEvent);
 			println("Event stored: " + objectLifecycleEvent);
+			eventStoreCount.getAndIncrement();
 			dirty();
 		}
 		
@@ -365,6 +375,12 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 				return null;
 			}
 		});
+	}
+
+	public void ensureChangecount(int expectedChangeCount) {
+		for(int i=0;i<expectedChangeCount;i++) {
+			events.next();
+		}
 	}
 
 }

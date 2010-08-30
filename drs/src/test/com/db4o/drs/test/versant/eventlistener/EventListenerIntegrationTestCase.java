@@ -160,6 +160,10 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 			public void addListener(MonitorListener l) {
 				original.addListener(l);
 			}
+
+			public void ensureChangecount(int expectedChangeCount) {
+				original.ensureChangecount(expectedChangeCount);
+			}
 			
 		});
 		

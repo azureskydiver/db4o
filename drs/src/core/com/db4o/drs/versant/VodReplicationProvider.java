@@ -55,6 +55,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heatbeat");
 
+	private int expectedChangeCount = 0;
+
 	
 	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ObjectLifecycleMonitor comm) {
 		_eventProcessor = comm;
@@ -102,9 +104,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void commit() {
 		_jdo.commit();
+		if (expectedChangeCount > 0) {
+			_eventProcessor.ensureChangecount(expectedChangeCount);
+			expectedChangeCount = 0;
+		}
 	}
 
 	public void delete(Object obj) {
+		expectedChangeCount++;
 		_jdo.delete(obj);
 	}
 
@@ -112,7 +119,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(!_jdo.isKnownClass(clazz)) {
 			return;
 		}
-		_jdo.deleteAll(clazz);
+		expectedChangeCount += _jdo.deleteAll(clazz);
 	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
@@ -129,6 +136,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalStateException(msg);
 		}
 		ensureClassKnown(obj);
+		expectedChangeCount++;
 		_jdo.store(obj);
 	}
 
@@ -153,6 +161,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void update(Object obj) {
 		// do nothing
 		// JDO is transparent persistence
+		expectedChangeCount++;
 	}
 
 	public void destroy() {
@@ -342,6 +351,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
 		for (Long loid : loids) {
+//			objects.add(_cobra.objectByLoid(loid));
 			objects.add(_jdo.objectByLoid(loid));
 		}
 		return new ObjectSetCollectionFacade(objects);
@@ -411,6 +421,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private void storeSignature(int databaseId, Signature signature) {
 		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
 		_jdo.store(databaseSignature);
+//		_jdo.commit(); if we commit here, the reflective access to object state wont work
 		_signatures.add(databaseId, signature);
 	}
 	
