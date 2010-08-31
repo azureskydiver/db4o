@@ -2,28 +2,18 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.qlin.QLinSupport.descending;
-import static com.db4o.qlin.QLinSupport.prototype;
+import static com.db4o.qlin.QLinSupport.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import com.db4o.drs.inside.DrsDebug;
-import com.db4o.drs.versant.cobra.qlin.CLinRoot;
-import com.db4o.drs.versant.metadata.CobraPersistentObject;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
-import com.db4o.internal.Reflection4;
-import com.db4o.qlin.QLin;
-import com.db4o.qlin.QLinable;
-import com.versant.odbms.DataStoreLockMode;
-import com.versant.odbms.DatastoreLoid;
-import com.versant.odbms.DatastoreManager;
-import com.versant.odbms.Options;
-import com.versant.odbms.model.DatastoreObject;
-import com.versant.odbms.model.DatastoreSchemaClass;
-import com.versant.odbms.model.DatastoreSchemaField;
-import com.versant.odbms.query.DatastoreQuery;
+import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.cobra.qlin.*;
+import com.db4o.drs.versant.metadata.*;
+import com.db4o.internal.*;
+import com.db4o.qlin.*;
+import com.versant.odbms.*;
+import com.versant.odbms.model.*;
+import com.versant.odbms.query.*;
 
 public class VodCobra implements QLinable, VodCobraFacade{
 	
@@ -34,7 +24,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	private DatastoreManager _dm;
 
 	public static VodCobraFacade createInstance(VodDatabase vod) {
-		return new VodCobra(vod);
+		return ProxyUtil.throwOnConcurrentAccess(new VodCobra(vod));
 	}
 
 	private VodCobra(VodDatabase vod) {

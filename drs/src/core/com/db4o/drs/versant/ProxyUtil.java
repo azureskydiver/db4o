@@ -1,4 +1,4 @@
-package com.db4o.drs.test.versant;
+package com.db4o.drs.versant;
 
 import java.lang.reflect.*;
 import java.util.*;
