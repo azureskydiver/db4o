@@ -111,18 +111,14 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		ReplicationReference reference = _provider.produceReference(item);
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
-		VodCobraFacade cobra = VodCobra.createInstance(_vod);
-		ClientChannelControl comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
-		VodReplicationProvider provider = new VodReplicationProvider(_vod, cobra, comm);
+		VodReplicationProvider provider = new VodReplicationProvider(_vod);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
 	}
 	
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
-		VodCobraFacade cobra = VodCobra.createInstance(_vod);
-		ClientChannelControl comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
-		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod, cobra, comm);
+		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();
 		assertOnlyOneClassMetadataInstance();

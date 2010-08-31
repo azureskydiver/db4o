@@ -7,8 +7,6 @@ import java.io.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
-import com.db4o.drs.versant.ipc.*;
 
 public class VodDrsFixture implements DrsFixture{
 	
@@ -63,9 +61,7 @@ public class VodDrsFixture implements DrsFixture{
 	}
 
 	public void open() {
-		VodCobraFacade cobra = VodCobra.createInstance(_vod);
-		ClientChannelControl _comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
-		_provider = new VodReplicationProvider(_vod, cobra, _comm);
+		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public TestableReplicationProviderInside provider() {

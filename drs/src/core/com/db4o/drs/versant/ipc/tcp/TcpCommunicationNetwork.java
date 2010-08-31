@@ -12,13 +12,13 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 	static final String HOST = "localhost";
 	static final int PORT = 7283;
 
-	public ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId) {
+	public ClientChannelControl newClient(VodDatabase vod) {
 		
 		return new TcpClient();
 	}
 
-	public ServerChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, final Object lock, final VodCobraFacade cobra,
-			VodEventClient client, int senderId) {
+	public ServerChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, VodDatabase vod,
+			VodEventClient client) {
 
 		return new TcpServer(provider);
 	}

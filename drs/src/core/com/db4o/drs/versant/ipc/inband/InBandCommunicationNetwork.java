@@ -2,6 +2,7 @@ package com.db4o.drs.versant.ipc.inband;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
@@ -10,62 +11,25 @@ import com.db4o.rmi.*;
 
 public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 	
-	public abstract static class Ticker implements Runnable {
-
-		private Thread thread;
-		private volatile boolean running = true;
-		private final long sleepInMillis;
-
-		public Ticker(String name, long sleepInMillis) {
-			this.sleepInMillis = sleepInMillis;
-			thread = new Thread(this, name);
-			thread.setDaemon(true);
-		}
-
-		public abstract boolean tick();
-
-		public void run() {
-			while(running) {
-				snooze();
-				if (!running) {
-					break;
-				}
-				if (!tick()) {
-					break;
-				}
-			}
-		}
-
-		private synchronized void snooze() {
-			try {
-				wait(sleepInMillis);
-			} catch (InterruptedException e) {
-				running = false;
-			}
-		}
-
-		public void start() {
-			thread.start();
-		}
-
-		public void stop() {
-			running = false;
-		}
-
-		public void join() throws InterruptedException {
-			thread.join();
-		}
+	
+	private static AtomicInteger nextSenderId = new AtomicInteger();
+	
+	public ClientChannelControl newClient(VodDatabase vod) {
 		
-	}
-
-	public ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId) {
+		final int senderId = nextSenderId.getAndIncrement();
+		
+		final VodCobraFacade lcobra = VodCobra.createInstance(vod);
+		
+		InBandServer.purgeMessagePayloads(lcobra);
 		
 		final Distributor<ObjectLifecycleMonitor> remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
 			public void consume(byte[] buffer, int offset, int length) throws IOException {
 				MessagePayload msg = new MessagePayload(senderId, Arrays.copyOfRange(buffer, offset, offset + length));
-				cobra.store(msg);
-				cobra.commit();
+				synchronized (lcobra) {
+					lcobra.store(msg);
+					lcobra.commit();
+				}
 
 			}
 		}, ObjectLifecycleMonitor.class);
@@ -73,12 +37,17 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		
 		final Object feederLock = new Object();
 		
-		final Ticker feeder = new Ticker("In band client feeder", 1000) {
+		final Ticker feeder = new Ticker("In band client feeder", 100) {
 			@Override
 			public boolean tick() {
 				synchronized (feederLock) {
 					try {
-						feed(cobra, senderId, remotePeer, true);
+						synchronized (lcobra) {
+							if (!isRunning()) {
+								return false;
+							}
+							feed(lcobra, senderId, remotePeer, true);
+						}
 					} catch (IOException e) {
 						return false;
 					}
@@ -88,20 +57,6 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		};
 		feeder.start();
 		
-
-		remotePeer.setFeeder(new Runnable() {
-
-			public void run() {
-				try {
-					synchronized (feederLock) {
-						feed(cobra, senderId, remotePeer, false);
-					}
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		});
-		
 		return new ClientChannelControl() {
 			
 			public ObjectLifecycleMonitor sync() {
@@ -110,6 +65,9 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 			
 			public void stop() {
 				feeder.stop();
+				synchronized (lcobra) {
+					lcobra.close();
+				}
 			}
 
 			public void join() throws InterruptedException {
@@ -125,19 +83,19 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		
 	}
 
-	private static void feed(VodCobraFacade _cobra, int senderId, ByteArrayConsumer consumer, boolean runJustOnce) throws IOException {
+	private static void feed(VodCobraFacade cobra, int senderId, ByteArrayConsumer consumer, boolean runJustOnce) throws IOException {
 		boolean atLeastOne = false;
 		while (!atLeastOne) {
-			Collection<MessagePayload> msgs = _cobra.query(MessagePayload.class);
+			Collection<MessagePayload> msgs = cobra.query(MessagePayload.class);
 			for (MessagePayload msg : msgs) {
 				if (msg.sender() == senderId || msg.consumed()) {
 					continue;
 				}
 				atLeastOne = true;
-				consumer.consume(msg.buffer(), 0, msg.buffer().length);
 				msg.consumedAt(System.currentTimeMillis());
-				_cobra.store(msg);
-				_cobra.commit();
+				cobra.store(msg);
+				cobra.commit();
+				consumer.consume(msg.buffer(), 0, msg.buffer().length);
 			}
 			if (runJustOnce) {
 				break;
@@ -151,10 +109,12 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		}
 	}
 
-	public ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor provider, Object lock, VodCobraFacade cobra,
-			VodEventClient client, int senderId) {
+	public ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor provider, VodDatabase vod,
+			VodEventClient client) {
 
-		return new InBandServer(provider, lock, cobra, client, senderId);
+		int senderId = nextSenderId.getAndIncrement();
+		
+		return new InBandServer(provider, new Object(), VodCobra.createInstance(vod), client, senderId);
 
 	}
 }

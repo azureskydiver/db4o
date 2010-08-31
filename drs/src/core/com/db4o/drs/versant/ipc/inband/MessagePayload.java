@@ -35,5 +35,10 @@ public class MessagePayload extends CobraPersistentObject {
 	public long consumedAt() {
 		return consumedAt;
 	}
+	
+	@Override
+	public String toString() {
+		return "MessagePayload[sender=" + sender + ";consumedAt=" + consumedAt + ";buffer length=" + (buffer == null ? "(null)" : "" + buffer.length) + "]";
+	}
 
 }

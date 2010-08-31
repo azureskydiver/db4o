@@ -2,31 +2,17 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.drs.foundation.Logger4Support.logIdentity;
-import static com.db4o.qlin.QLinSupport.prototype;
+import static com.db4o.drs.foundation.Logger4Support.*;
+import static com.db4o.qlin.QLinSupport.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import javax.jdo.spi.PersistenceCapable;
+import javax.jdo.spi.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.foundation.DrsUUID;
-import com.db4o.drs.foundation.ObjectReferenceMap;
-import com.db4o.drs.foundation.ObjectSetCollectionFacade;
-import com.db4o.drs.foundation.Signature;
-import com.db4o.drs.foundation.Signatures;
-import com.db4o.drs.inside.DrsDebug;
-import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
-import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.drs.inside.ReplicationReferenceImpl;
-import com.db4o.drs.inside.ReplicationReflector;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor;
+import com.db4o.*;
+import com.db4o.drs.foundation.*;
+import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.ClassMetadata;
 import com.db4o.drs.versant.metadata.DatabaseSignature;
@@ -86,10 +72,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private boolean pinging = true;
 
 	
-	public VodReplicationProvider(VodDatabase vod, VodCobraFacade cobra, ClientChannelControl control) {
-		_control = control;
+	public VodReplicationProvider(VodDatabase vod) {
+		_control = ObjectLifecycleMonitorNetworkFactory.newClient(vod);
 		_vod = vod;
-		_cobra = cobra;
+		_cobra = VodCobra.createInstance(vod);
 		_jdo = VodJdo.createInstance(vod);
 		_jvi = new VodJvi(vod);
 		loadSignatures();
