@@ -2,22 +2,42 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.drs.foundation.Logger4Support.*;
-import static com.db4o.qlin.QLinSupport.*;
+import static com.db4o.drs.foundation.Logger4Support.logIdentity;
+import static com.db4o.qlin.QLinSupport.prototype;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import javax.jdo.spi.*;
+import javax.jdo.spi.PersistenceCapable;
 
-import com.db4o.*;
-import com.db4o.drs.foundation.*;
-import com.db4o.drs.inside.*;
-import com.db4o.drs.test.versant.*;
-import com.db4o.drs.versant.ipc.*;
+import com.db4o.ObjectSet;
+import com.db4o.drs.foundation.DrsUUID;
+import com.db4o.drs.foundation.ObjectReferenceMap;
+import com.db4o.drs.foundation.ObjectSetCollectionFacade;
+import com.db4o.drs.foundation.Signature;
+import com.db4o.drs.foundation.Signatures;
+import com.db4o.drs.inside.DrsDebug;
+import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
+import com.db4o.drs.inside.ReplicationReference;
+import com.db4o.drs.inside.ReplicationReferenceImpl;
+import com.db4o.drs.inside.ReplicationReflector;
+import com.db4o.drs.inside.TestableReplicationProviderInside;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
-import com.db4o.drs.versant.metadata.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.encoding.*;
+import com.db4o.drs.versant.metadata.ClassMetadata;
+import com.db4o.drs.versant.metadata.DatabaseSignature;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
+import com.db4o.drs.versant.metadata.ReplicationCommitRecord;
+import com.db4o.drs.versant.metadata.UuidMapping;
+import com.db4o.foundation.Block4;
+import com.db4o.foundation.SimpleTimer;
+import com.db4o.foundation.TimeStampIdGenerator;
+import com.db4o.foundation.Visitor4;
+import com.db4o.internal.encoding.LatinStringIO;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
