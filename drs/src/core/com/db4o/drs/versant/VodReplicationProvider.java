@@ -14,16 +14,9 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
-import com.db4o.drs.versant.metadata.ClassMetadata;
-import com.db4o.drs.versant.metadata.DatabaseSignature;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
-import com.db4o.drs.versant.metadata.ReplicationCommitRecord;
-import com.db4o.drs.versant.metadata.UuidMapping;
-import com.db4o.foundation.Block4;
-import com.db4o.foundation.SimpleTimer;
-import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.foundation.Visitor4;
-import com.db4o.internal.encoding.LatinStringIO;
+import com.db4o.drs.versant.metadata.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.encoding.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
