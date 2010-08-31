@@ -526,7 +526,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private void ensureChangeCount() {
 		if (expectedChangeCount > 0) {
-			syncEventProcessor().ensureChangecount(expectedChangeCount);
+			
+			// big fat hack. related to DRS-146 and DRS-151
+			if (ObjectLifecycleMonitorNetworkFactory.USE_IN_BAND_COMMUNICATION) {
+				Runtime4.sleepThrowsOnInterrupt(300);
+			} else {
+				syncEventProcessor().ensureChangecount(expectedChangeCount);
+			}
 			expectedChangeCount = 0;
 		}
 	}
