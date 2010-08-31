@@ -375,7 +375,11 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 					ls = new ArrayList<MonitorListener>(listeners);
 				}
 				for(MonitorListener l : ls) {
-					method.invoke(l, args);
+					try {
+						method.invoke(l, args);
+					} catch (InvocationTargetException e) {
+						throw e.getCause();
+					}
 				}
 				return null;
 			}
