@@ -5,10 +5,10 @@ import com.db4o.drs.versant.eventlistener.*;
 
 public interface ObjectLifecycleMonitorNetwork {
 
-	ClientChannelControl newClient(final VodCobraFacade cobra, final int senderId);
+	ClientChannelControl newClient(VodDatabase vod);
 	
 
-	ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor monitor, final Object lock, final VodCobraFacade cobra, VodEventClient client, int senderId);
+	ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor monitor, VodDatabase vod, VodEventClient client);
 	
 	public interface ServerChannelControl {
 		void stop();

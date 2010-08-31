@@ -30,8 +30,6 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	private final long COMMIT_INTERVAL = 1000; // 1 sec
 	
-	private static int SENDER_ID = ObjectLifecycleMonitorImpl.class.getName().hashCode();
-	
 	private final VodEventClient _client;
 	
 	private volatile boolean _stopped;
@@ -81,10 +79,13 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	public AtomicInteger eventStoreCount = new AtomicInteger();
 
-	public ObjectLifecycleMonitorImpl(VodEventClient client, VodCobraFacade cobra)  {
+	private final VodDatabase _vod;
+
+	public ObjectLifecycleMonitorImpl(VodEventClient client, VodDatabase vod)  {
 		
 		_client = client;
-	    _cobra = cobra;
+		this._vod = vod;
+	    _cobra = VodCobra.createInstance(vod);
 
 	    produceLastTimestamp();
 	    startChannelsFromKnownClasses();
@@ -127,7 +128,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		_isolatinWatchdogThread.setDaemon(true);
 	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
-		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _lock, _cobra, _client, SENDER_ID);
+		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _vod, _client);
 		startPausableTasksExecutor();
 		synchronized (listeners) {
 			_started = true;

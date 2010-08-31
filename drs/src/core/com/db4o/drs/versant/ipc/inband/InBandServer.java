@@ -3,13 +3,11 @@ package com.db4o.drs.versant.ipc.inband;
 import java.io.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
 import com.db4o.foundation.*;
-import com.db4o.qlin.*;
 import com.db4o.rmi.*;
 import com.versant.event.*;
 
@@ -24,8 +22,7 @@ public class InBandServer implements ServerChannelControl {
 	private ByteArrayConsumer outgoingConsumer;
 	private Thread serverThread;
 	private Distributor<ObjectLifecycleMonitor> localPeer;
-	private SimpleTimer purger;
-	private Thread purgerThread;
+	private Ticker purger;
 
 	public InBandServer(ObjectLifecycleMonitor provider, Object lock, VodCobraFacade cobra, VodEventClient client, int senderId) {
 		this.provider = provider;
@@ -51,48 +48,56 @@ public class InBandServer implements ServerChannelControl {
 			}
 		};
 		serverThread.setDaemon(true);
-
+		serverThread.start();
 	}
 
 	public void stop() {
 		pendingMessages.stop();
 		purger.stop();
-	}
-
-	public void start() {
-		serverThread.start();
+		cobra.close();
 	}
 
 	public void join() throws InterruptedException {
 		serverThread.join();
-		purgerThread.join();
+		purger.join();
 	}
 
 	private void startMessagePayloadPurger() {
-		purger = new SimpleTimer(new Runnable() {
-			public void run() {
-				synchronized (lock) {
-					MessagePayload prototype = QLinSupport.prototype(MessagePayload.class);
-					ObjectSet<MessagePayload> q = cobra.from(MessagePayload.class).where(prototype.consumedAt()).smaller(System.currentTimeMillis() - 5000).select();
-					if (q.isEmpty()) {
-						return;
-					}
-					while (q.hasNext()) {
-						MessagePayload payload = q.next();
-						if (!payload.consumed()) {
-							continue;
-						}
-						cobra.delete(payload.loid());
-					}
-					cobra.commit();
-				}
-				;
-			}
-		}, 2000);
+		
+		purgeMessagePayloads(cobra);
 
-		purgerThread = new Thread(purger, "In-band message payload purger");
-		purgerThread.setDaemon(true);
-		purgerThread.start();
+		
+		purger = new Ticker("In-band message payload purger", 1000) {
+			
+			@Override
+			public boolean tick() {
+				synchronized (lock) {
+					if (!isRunning()) {
+						return false;
+					}
+//					MessagePayload prototype = QLinSupport.prototype(MessagePayload.class);
+//					ObjectSet<MessagePayload> q = cobra.from(MessagePayload.class).where(prototype.consumedAt()).smaller(expirationDate).select();
+					final long limit = System.currentTimeMillis()-10000;
+					purge(cobra, new Function4<MessagePayload, Boolean>() {
+
+						public Boolean apply(MessagePayload payload) {
+							
+							return payload.consumed() && payload.consumedAt() < limit;
+						}
+					});
+				}
+				return true;
+			}
+		};
+		purger.start();
+	}
+
+	public static void purgeMessagePayloads(VodCobraFacade cobra) {
+		purge(cobra, new Function4<MessagePayload, Boolean>() {
+			public Boolean apply(MessagePayload payload) {
+				return true;
+			}
+		});
 	}
 
 	private void taskQueueProcessorLoop() {
@@ -155,6 +160,24 @@ public class InBandServer implements ServerChannelControl {
 			public void instanceDeleted(VersantEventObject event) {
 			}
 		});
+	}
+
+	public static void purge(VodCobraFacade cobra, Function4<MessagePayload,Boolean> aval) {
+		Collection<MessagePayload> q = cobra.query(MessagePayload.class);
+		if (q.isEmpty()) {
+			return;
+		}
+		boolean atLeastOne = false;
+		for(MessagePayload payload : q) {
+			if (!aval.apply(payload)) {
+				continue;
+			}
+			atLeastOne = true;
+			cobra.delete(payload.loid());
+		}
+		if (atLeastOne) {
+			cobra.commit();
+		}
 	}
 
 }

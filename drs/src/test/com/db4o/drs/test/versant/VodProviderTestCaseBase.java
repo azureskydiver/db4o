@@ -36,9 +36,7 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		if (_provider != null) {
 			return;
 		}
-		VodCobraFacade cobra = VodCobra.createInstance(_vod);
-		ClientChannelControl _comm = ObjectLifecycleMonitorNetworkFactory.newClient(cobra, VodReplicationProvider.class.hashCode());
-		_provider = new VodReplicationProvider(_vod, cobra, _comm);
+		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public void tearDown() {
