@@ -59,8 +59,8 @@ public class TcpServer implements ServerChannelControl {
 		if (normalStop) {
 			return;
 		}
-//		System.err.println("Exception thrown in TcpServer. Thread: " + Thread.currentThread().getName());
-//		e.printStackTrace();
+		System.err.println("Exception thrown in TcpServer. Thread: " + Thread.currentThread().getName());
+		e.printStackTrace();
 	}
 
 	private void stopDispatchers() {
@@ -175,7 +175,6 @@ public class TcpServer implements ServerChannelControl {
 					TcpCommunicationNetwork.feed(in, localPeer);
 				}
 			} catch (IOException e) {
-				reportException(e);
 			} finally {
 				synchronized (dispatchers) {
 					dispatchers.remove(this);
