@@ -114,12 +114,17 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	}
 
 	public static EventClient newEventClient(EventConfiguration config)  {
-		try{
-			return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort(),config.databaseName);
-		} catch (IOException ioException){
-			System.err.println("Connection failed using\n" + config + "\nMake sure that " + VodDatabase.VED_DRIVER + " is running.");
-			unrecoverableExceptionOccurred(ioException);
+		IOException e = null;
+		for(int i=0;i<10;i++) {
+			try{
+				return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort(),config.databaseName);
+			} catch (IOException ioException){
+				System.err.println("Connection failed using\n" + config + "\nMake sure that " + VodDatabase.VED_DRIVER + " is running.");
+				e = ioException;
+				Runtime4.sleepThrowsOnInterrupt(100);
+			}
 		}
+		unrecoverableExceptionOccurred(e);
 		return null;
 	}
 
