@@ -30,7 +30,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodJvi _jvi;
 
-	private ObjectReferenceMap _replicationReferences = new ObjectReferenceMap();
+	private GenericObjectReferenceMap<VodReplicationReference> _replicationReferences = new GenericObjectReferenceMap<VodReplicationReference>();
 	
 	private final Signatures _signatures = new Signatures();
 	
@@ -240,7 +240,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ReplicationReference produceReference(final Object obj, Object referencingObj, String fieldName) {
-		ReplicationReference reference = _replicationReferences.get(obj);
+		VodReplicationReference reference = _replicationReferences.get(obj);
 		if (reference != null){
 			return reference;
 		}
@@ -274,7 +274,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		DrsUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 		
-		ReplicationReference ref = new VodReplicationReference(obj, uuid, version, true);
+		VodReplicationReference ref = new VodReplicationReference(obj, uuid, version, true);
 		_replicationReferences.put(ref);
 		return ref;
 	}
@@ -338,10 +338,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void storeReplica(Object obj) {
 		logIdentity(obj, getName());
-		ReplicationReference ref = _replicationReferences.get(obj);
+		VodReplicationReference ref = _replicationReferences.get(obj);
 		
 		long loid = 0;
-		if (ref instanceof VodReplicationReference) {
+		if (ref.isNew()) {
 			
 			int otherDb = dbIdFrom(ref.uuid().getSignaturePart());
 			long otherLongPart = ref.uuid().getLongPart();
@@ -418,7 +418,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return produceReference(obj, null, null);
 	}
 	
-	private ReplicationReference produceNewReference(final Object obj) {
+	private VodReplicationReference produceNewReference(final Object obj) {
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
@@ -429,14 +429,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		VodId vodId = _cobra.idFor(loid);
 		Signature signature = produceSignatureFor(vodId.databaseId);
 		VodUUID vodUUID = new VodUUID(signature, vodId);
-		return new ReplicationReferenceImpl(obj, vodUUID, vodId.timestamp);
+		return new VodReplicationReference(obj, vodUUID, vodId.timestamp);
 	}
 	
-	public ReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
+	public VodReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
 		if(uuid == null){
 			throw new IllegalArgumentException();
 		}
-		ReplicationReference reference = _replicationReferences.getByUUID(uuid);
+		VodReplicationReference reference = _replicationReferences.getByUUID(uuid);
 		if(reference != null){
 			return reference;
 		}

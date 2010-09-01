@@ -20,62 +20,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.foundation;
 
-import java.util.*;
-
 import com.db4o.drs.inside.*;
-import com.db4o.foundation.*;
 
 /**
  * @sharpen.ignore
  */
-public final class ObjectReferenceMap {
-	
-	private Map<Object, ReplicationReference> _objectToReplicationReference;
-	
-	private Map<DrsUUID, ReplicationReference> _uuidToReplicationReference;
+public final class ObjectReferenceMap extends GenericObjectReferenceMap<ReplicationReference> {
 
-	public ObjectReferenceMap() {
-		init();
-	}
-
-	public final ReplicationReference get(Object obj) {
-		return _objectToReplicationReference.get(obj);
-	}
-
-	public ReplicationReference getByUUID(DrsUUID uuid) {
-		return _uuidToReplicationReference.get(uuid);
-	}
-	
-	public final void put(ReplicationReference replicationReference) {
-		if(replicationReference == null){
-			throw new IllegalArgumentException();
-		}
-		if (_objectToReplicationReference.containsKey(replicationReference.object())){
-			throw new RuntimeException("key already existed");
-		}
-		_objectToReplicationReference.put(replicationReference.object(), replicationReference);
-		_uuidToReplicationReference.put(replicationReference.uuid(), replicationReference);
-	}
-
-	public String toString() {
-		return _objectToReplicationReference.toString();
-	}
-
-	public final void visitEntries(Visitor4 visitor) {
-		Iterator i = _objectToReplicationReference.values().iterator();
-		while (i.hasNext())
-			visitor.visit(i.next());
-	}
-
-	public void init() {
-		_objectToReplicationReference = new IdentityHashMap();
-		_uuidToReplicationReference = new HashMap<DrsUUID, ReplicationReference>();
-	}
-	
-	public void clear(){
-		init();
-	}
-	
 }
-
-
