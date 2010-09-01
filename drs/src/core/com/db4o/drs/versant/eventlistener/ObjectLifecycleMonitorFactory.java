@@ -3,13 +3,11 @@
 package com.db4o.drs.versant.eventlistener;
 
 import com.db4o.drs.versant.*;
-import com.db4o.foundation.*;
 import com.versant.event.*;
 
 public class ObjectLifecycleMonitorFactory {
 	
 	public static ObjectLifecycleMonitorImpl newInstance (EventConfiguration eventConfiguration) {
-		Runtime4.sleepThrowsOnInterrupt(2000);
 		VodEventClient client = new VodEventClient(eventConfiguration, new ExceptionListener (){
 	        public void exceptionOccurred (Throwable exception){
 	        	ObjectLifecycleMonitorImpl.unrecoverableExceptionOccurred(exception);
