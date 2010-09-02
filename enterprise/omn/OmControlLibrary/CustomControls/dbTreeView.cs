@@ -1327,9 +1327,7 @@ namespace OMControlLibrary.Common
 					{
                         if (SelectedNode.Name.LastIndexOf(",") == -1 && SelectedNode.Name.LastIndexOf(".") == -1)
 						{
-							TreeNode parentNode = new TreeNode();
-
-							parentNode = SelectedNode.Parent;
+							TreeNode parentNode = SelectedNode.Parent;
 
 							while (parentNode != null && parentNode.Tag != null && parentNode.Tag.ToString() != "Fav Folder" &&
 							       parentNode.Tag.ToString() != "Assembly View")
@@ -1338,8 +1336,11 @@ namespace OMControlLibrary.Common
 								parentNode = parentNode.Parent;
 							}
 
-							if (Helper.HashTableBaseClass.Count > 0 && !Helper.HashTableBaseClass.Contains(selectedNodeName))
-								e.Cancel = true;
+							if (SelectedNode.Tag.ToString() != "Fav Folder")
+							{
+								if (Helper.HashTableBaseClass.Count > 0 && !Helper.HashTableBaseClass.Contains(selectedNodeName))
+									e.Cancel = true;
+							}
 						}
 					}
 				}
