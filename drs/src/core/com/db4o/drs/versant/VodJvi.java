@@ -49,26 +49,49 @@ public class VodJvi {
 	}
 	
 	public short newDbId(String databaseName){
-		String safeDBName = safeDatabaseName(databaseName);
-		Properties props = new Properties();
-		props.put("-c", "");
-		int dbid = com.versant.util.DBUtility.dbid(safeDBName,props);
+		int dbid = invokeDbId(databaseName, "-c");
 		if(DrsDebug.verbose){
-			System.out.println("dbid " + dbid + " created for '" + safeDBName + "'");
+			System.out.println("dbid " + dbid + " created for '" + databaseName + "'");
 		}
 		return (short) dbid;
 	}
 
+	public void deleteDbId(String databaseName) {
+		int dbid = invokeDbId(databaseName, "-d");
+		if(DrsDebug.verbose){
+			System.out.println("dbid " + dbid + " deleted for '" + databaseName + "'");
+		}
+	}
+
+	private int invokeDbId(String databaseName, String arg) {
+		Properties props = new Properties();
+		props.put(arg, "");
+		int dbid = com.versant.util.DBUtility.dbid(databaseName,props);
+		return dbid;
+	}
+
+	public int dbIdFor(String databaseName) {
+		String node = DBUtility.dbidNode();
+		String fullDatabaseName = databaseName + "@" + node;
+		DBListInfo[] dbList = DBUtility.dbList(node);
+		for (DBListInfo info : dbList) {
+			if(info.getDBName().equals(fullDatabaseName)) {
+				return info.getDBID();
+			}
+		}
+		throw new IllegalArgumentException("Unknown database: " + fullDatabaseName);
+	}
+	
 	public static String safeDatabaseName(String databaseName) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < databaseName.length(); i++) {
-			if(sb.length() >= MAX_DB_NAME_LENGTH) {
-				break;
-			}
 			char c = databaseName.charAt(i);
 			if(Character.isLetterOrDigit(c)){
 				sb.append(c);
 			}
+		}
+		if(sb.length() > MAX_DB_NAME_LENGTH) {
+			sb.delete(0, sb.length() - MAX_DB_NAME_LENGTH);
 		}
 		return sb.toString();
 	}

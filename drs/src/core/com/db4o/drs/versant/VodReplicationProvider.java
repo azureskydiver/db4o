@@ -324,7 +324,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		Signature peerSignature = new Signature(signature);
 		int peerId = _signatures.idFor(peerSignature);
 		if(peerId == 0){
-			peerId = _jvi.newDbId( peerSignature.toString() );
+			peerId = _jvi.newDbId( VodJvi.safeDatabaseName(peerSignature.toString()) );
 			storeSignature(peerId, peerSignature);
 			_signatures.add(peerId, peerSignature);
 		}
