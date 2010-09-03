@@ -80,6 +80,23 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return loid;
 	}
 
+	public void create(long loid, Object obj) {
+		if(DrsDebug.verbose) {
+			System.out.println(String.format("Created loid: %d (%x) for object of type %s" , loid, loid, obj.getClass().getName()));
+		}
+		DatastoreInfo info = _dm.getPrimaryDatastoreInfo();
+		SchemaEditor editor = _dm.getSchemaEditor();
+
+		DatastoreSchemaClass dsc = editor.findClass(obj.getClass().getName(), info);
+		
+		DatastoreObject datastoreObject = new DatastoreObject(loid, dsc, info);
+		datastoreObject.allocate();
+		datastoreObject.setIsNew(true);
+		
+		writeFields(obj, datastoreObject);
+		write(datastoreObject);
+	}
+
 	private void writeFields(Object obj, DatastoreObject datastoreObject) {
 		for (CobraField field : fields(classOf(datastoreObject))) {
 			field.write(obj, datastoreObject);

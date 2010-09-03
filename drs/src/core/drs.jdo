@@ -8,7 +8,6 @@
     	<class name="com.db4o.drs.versant.metadata.DatabaseSignature"/>
     	<class name="com.db4o.drs.versant.metadata.ObjectLifecycleEvent"/>
     	<class name="com.db4o.drs.versant.metadata.ReplicationCommitRecord"/>
-    	<class name="com.db4o.drs.versant.metadata.UuidMapping"/>
     </package>    
     <package name="com.db4o.drs.versant.ipc.inband">
     	<class name="com.db4o.drs.versant.ipc.inband.MessagePayload"/>

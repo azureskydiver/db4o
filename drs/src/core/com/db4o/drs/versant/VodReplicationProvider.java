@@ -343,16 +343,18 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		long loid = 0;
 		if (ref.isNew()) {
 			
-			int otherDb = dbIdFrom(ref.uuid().getSignaturePart());
+			int otherDb = _signatures.idFor(new Signature(ref.uuid().getSignaturePart()));
+			if(otherDb == 0) {
+				throw new IllegalArgumentException("Unknown db id for " + ref.uuid());
+			}
 			long otherLongPart = ref.uuid().getLongPart();
 			
-			loid = _cobra.store(obj);
+			loid = loidFrom(otherDb, otherLongPart);			
+			_cobra.create(loid, obj);
 			
 			VodId vodId = _cobra.idFor(loid);
 			Signature signature = produceSignatureFor(vodId.databaseId);
 			VodUUID uuid = new VodUUID(signature, vodId);
-			
-			_cobra.store(new UuidMapping(otherDb, otherLongPart, dbIdFrom(uuid.getSignaturePart()), uuid.getLongPart()));
 				
 		} else {
 
@@ -442,17 +444,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 
 		
-		long loid;
-		
-		
-		loid = tryMapping(uuid);
-		
-		if (loid == 0) {
-			loid = loidFrom(uuid);
-		}
+		long loid = loidFrom(uuid);
 		
 		if(loid == 0){
-			return null;
+			throw new IllegalStateException("Could not create loid from " + uuid);
 		}
 		
 		Object obj = _jdo.objectByLoid(loid);
@@ -463,21 +458,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		reference = produceNewReference(obj);
 		_replicationReferences.put(reference);
 		return reference; 
-	}
-
-	private long tryMapping(DrsUUID uuid) {
-
-		int otherDb = dbIdFrom(uuid.getSignaturePart());
-		long otherLongPart = uuid.getLongPart();
-
-		UuidMapping p = prototype(UuidMapping.class);
-		ObjectSet<UuidMapping> mapping = _cobra.from(UuidMapping.class).where(p.otherLongPart()).equal(otherLongPart).select();
-		for (UuidMapping uuidMapping : mapping) {
-			if (otherDb == uuidMapping.otherDb()) {
-				return loidFrom(uuidMapping.mineDb(), uuidMapping.mineLongPart());
-			}
-		}
-		return 0;
 	}
 
 	private Signature produceSignatureFor(int databaseId) {
