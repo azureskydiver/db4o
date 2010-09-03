@@ -11,6 +11,8 @@ import com.versant.util.*;
 
 public class VodJvi {
 	
+	private static final int MAX_DB_NAME_LENGTH = 31;
+
 	private static final String VEDSECHN_SCHEMA = "/lib/vedsechn.sch";
 
 	private static final String CHANNEL_SCHEMA = "/lib/channel.sch";
@@ -47,19 +49,22 @@ public class VodJvi {
 	}
 	
 	public short newDbId(String databaseName){
-		databaseName = ensureAllCharactersArePrintable(databaseName);
+		String safeDBName = safeDatabaseName(databaseName);
 		Properties props = new Properties();
 		props.put("-c", "");
-		int dbid = com.versant.util.DBUtility.dbid(databaseName,props);
+		int dbid = com.versant.util.DBUtility.dbid(safeDBName,props);
 		if(DrsDebug.verbose){
-			System.out.println("dbid " + dbid + " created for '" + databaseName + "'");
+			System.out.println("dbid " + dbid + " created for '" + safeDBName + "'");
 		}
 		return (short) dbid;
 	}
 
-	public static String ensureAllCharactersArePrintable(String databaseName) {
+	public static String safeDatabaseName(String databaseName) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < databaseName.length(); i++) {
+			if(sb.length() >= MAX_DB_NAME_LENGTH) {
+				break;
+			}
 			char c = databaseName.charAt(i);
 			if(Character.isLetterOrDigit(c)){
 				sb.append(c);
