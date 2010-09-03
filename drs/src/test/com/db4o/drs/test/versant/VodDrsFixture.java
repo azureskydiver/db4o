@@ -61,7 +61,7 @@ public class VodDrsFixture implements DrsFixture{
 	}
 
 	public void open() {
-		_provider = new VodReplicationProvider(_vod);
+		_provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
 	}
 
 	public TestableReplicationProviderInside provider() {

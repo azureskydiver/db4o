@@ -28,7 +28,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodJdoFacade _jdo;
 	
-	private final VodJvi _jvi;
+	private final VodDatabaseIdFactory _idFactory;
 
 	private GenericObjectReferenceMap<VodReplicationReference> _replicationReferences = new GenericObjectReferenceMap<VodReplicationReference>();
 	
@@ -65,12 +65,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private boolean pinging = true;
 
 	
-	public VodReplicationProvider(VodDatabase vod) {
+	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
 		_control = ObjectLifecycleMonitorNetworkFactory.newClient(vod);
 		_vod = vod;
 		_cobra = VodCobra.createInstance(vod);
 		_jdo = VodJdo.createInstance(vod);
-		_jvi = new VodJvi(vod);
+		_idFactory = idFactory;
 		loadSignatures();
 		loadKnownClasses();
 		_myDatabaseId = _cobra.databaseId();
@@ -324,7 +324,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		Signature peerSignature = new Signature(signature);
 		int peerId = _signatures.idFor(peerSignature);
 		if(peerId == 0){
-			peerId = _jvi.newDbId( VodJvi.safeDatabaseName(peerSignature.toString()) );
+			peerId = _idFactory.createDatabaseIdFor(VodJvi.safeDatabaseName(peerSignature.toString()));
 			storeSignature(peerId, peerSignature);
 			_signatures.add(peerId, peerSignature);
 		}

@@ -9,14 +9,12 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
-import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
-import com.versant.odbms.query.Operator.UnaryOperator;
+import com.versant.odbms.query.Operator.*;
 
 import db4ounit.*;
 
@@ -111,14 +109,14 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		ReplicationReference reference = _provider.produceReference(item);
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
-		VodReplicationProvider provider = new VodReplicationProvider(_vod);
+		VodReplicationProvider provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
 	}
 	
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
-		VodReplicationProvider secondProvider = new VodReplicationProvider(_vod);
+		VodReplicationProvider secondProvider = new VodReplicationProvider( _vod, new JviDatabaseIdFactory(_vod));
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();
 		assertOnlyOneClassMetadataInstance();
