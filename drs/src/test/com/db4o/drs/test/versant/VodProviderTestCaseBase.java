@@ -7,8 +7,6 @@ import java.util.*;
 
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
-import com.db4o.drs.versant.ipc.*;
 
 import db4ounit.*;
 
@@ -36,7 +34,7 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 		if (_provider != null) {
 			return;
 		}
-		_provider = new VodReplicationProvider(_vod);
+		_provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
 	}
 
 	public void tearDown() {
