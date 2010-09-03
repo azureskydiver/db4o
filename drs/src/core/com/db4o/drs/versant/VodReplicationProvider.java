@@ -351,10 +351,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			
 			loid = loidFrom(otherDb, otherLongPart);			
 			_cobra.create(loid, obj);
-			
-			VodId vodId = _cobra.idFor(loid);
-			Signature signature = produceSignatureFor(vodId.databaseId);
-			VodUUID uuid = new VodUUID(signature, vodId);
 				
 		} else {
 
