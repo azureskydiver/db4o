@@ -28,11 +28,11 @@ public class VodJviTestCase extends VodDatabaseTestCaseBase implements TestLifeC
 	}
 	
 	public void testNewDbId(){
-		// using the same name twice will fail
 		String name = VodJvi.safeDatabaseName("VodJviTestCase.test" + System.currentTimeMillis());
 		short id = _jvi.newDbId(name);
 		Assert.isGreater(0, id);
 		Assert.areEqual(id, _jvi.dbIdFor(name));
+		_jvi.deleteDbId(name);
 	}
 
 	public void testDeleteDbId() {

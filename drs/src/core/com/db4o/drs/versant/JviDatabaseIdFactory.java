@@ -2,16 +2,27 @@
 
 package com.db4o.drs.versant;
 
+import java.util.*;
+
 public class JviDatabaseIdFactory implements VodDatabaseIdFactory {
 
 	private final VodJvi _jvi;
+	private final Set<String> _databaseNames = new HashSet<String>();
 
 	public JviDatabaseIdFactory(VodDatabase vod) {
 		_jvi = new VodJvi(vod);
 	}
 	
 	public int createDatabaseIdFor(String databaseName) {
-		return _jvi.newDbId(databaseName);
+		short id = _jvi.newDbId(databaseName);
+		_databaseNames.add(databaseName);
+		return id;
+	}
+
+	public void deleteGeneratedIds() {
+		for (String databaseName : _databaseNames) {
+			_jvi.deleteDbId(databaseName);
+		}
 	}
 
 }
