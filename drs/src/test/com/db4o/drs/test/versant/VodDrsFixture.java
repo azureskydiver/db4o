@@ -15,6 +15,7 @@ public class VodDrsFixture implements DrsFixture{
 	private VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
+	private JviDatabaseIdFactory _idFactory;
 
 	private final String _name;
 
@@ -25,6 +26,7 @@ public class VodDrsFixture implements DrsFixture{
 
 	private void init() {
 		_vod = new VodDatabase(_name);
+		_idFactory = new JviDatabaseIdFactory(_vod);
 		_vod.removeDb();
 		_vod.produceDb();
 		File root = new File("bin");
@@ -61,7 +63,7 @@ public class VodDrsFixture implements DrsFixture{
 	}
 
 	public void open() {
-		_provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
+		_provider = new VodReplicationProvider(_vod, _idFactory);
 	}
 
 	public TestableReplicationProviderInside provider() {
@@ -77,6 +79,7 @@ public class VodDrsFixture implements DrsFixture{
 		_vod.stopEventProcessor();
 		_vod.stopEventDriver();
 		_vod.removeDb();
+		_idFactory.deleteGeneratedIds();
 	}
 
 }
