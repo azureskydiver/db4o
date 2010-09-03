@@ -12,6 +12,8 @@ public interface VodCobraFacade {
 	VodId idFor(long loid);
 
 	long store(Object obj);
+	
+	void create(long loid, Object obj);
 
 	void store(long loid, Object obj);
 

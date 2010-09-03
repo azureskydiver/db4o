@@ -307,7 +307,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		startReplication();
 
 		Pilot object1 = new Pilot("John Cleese", 42);
-		DrsUUID uuid = new DrsUUIDImpl(new Db4oUUID(1234, B_SIGNATURE_BYTES));
+		DrsUUID uuid = new DrsUUIDImpl(new Db4oUUID(15, B_SIGNATURE_BYTES));
 
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
 
