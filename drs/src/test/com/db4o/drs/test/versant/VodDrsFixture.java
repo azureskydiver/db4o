@@ -78,7 +78,7 @@ public class VodDrsFixture implements DrsFixture{
 	public void destroy(){
 		_vod.stopEventProcessor();
 		_vod.stopEventDriver();
-		_vod.removeDb();
+		VodCobra.deleteAll(_vod);
 		_idFactory.deleteGeneratedIds();
 	}
 
