@@ -16,8 +16,10 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>MyTerm</Term>
+      <Term>OME</Term>
+      <Term>OMN</Term>
     </Terms>
-    <Definition></Definition>
+    <Definition
+      Link="">Object Manager, a tool to view and edit a db4o database</Definition>
   </GlossaryEntry>
 </CatapultGlossary>

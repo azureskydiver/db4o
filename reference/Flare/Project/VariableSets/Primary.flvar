@@ -82,4 +82,12 @@
     Name="ObjectContainer"
     Comment=""
     Definition="Some text">ObjectContainer</Variable>
+  <Variable
+    Name="Artefacts"
+    Comment=""
+    Definition="Some text">jars</Variable>
+  <Variable
+    Name="bytecode"
+    Comment=""
+    Definition="Some text">bytecode</Variable>
 </CatapultVariableSet>

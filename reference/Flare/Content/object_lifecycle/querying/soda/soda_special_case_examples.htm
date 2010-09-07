@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4725" MadCap:lastWidth="560">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4806" MadCap:lastWidth="454">
     <head>
     </head>
     <body>
@@ -7,7 +7,7 @@
         <p>This topic contains a examples which demonstrate special behavior for some types in SODA. Take also a look at the other <a href="soda_example_catelog.htm">SODA examples</a>.</p>
         <h2><a name="ContainsOnCollections"></a>
             <MadCap:keyword term="SODA:Collections" />Contains on Collections and Arrays</h2>
-        <p>Collections and arrays have a special behavior in SODA to make them easier to query. For example you can simple use a constrain directly on a collection-field to check if the contains that value.</p>
+        <p>Collections and arrays have a special behavior in SODA to make them easier to query. For example you can simple use a constrain directly on a collection-field to check if it contains that value.</p>
         <MadCap:snippetBlock src="../../../Snippets/no_index_therefore_slow.flsnp" />
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Collection-contains-constrain.all.flsnp" />
         <h2><a name="ConstrainsOnCollectionMembers"></a>Constrains on Collection Members</h2>
@@ -23,14 +23,14 @@
         <p>With SODA you can navigate to a field and return the objects of that field. Note that this only works for reference objects and not for value objects like strings and numbers.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Return-the-object-of-a-field.all.flsnp" />
         <h2><a name="MixQueryByExample"></a>Mixing With Query By Example</h2>
-        <p>When you have a reference type field, you can also use a <a href="../query_by_example.htm">query by example</a> constrain for that field. Pass a new object as an example as a constraint for this.</p>
+        <p>When you have a reference type field, you can also use a <a href="../query_by_example.htm">query by example</a> constrain for that field. Pass a new object as an example  for this.</p>
         <p>Note that when you pass a persisted object, it will compare it by object identity and not use it as example. You can force this behavior by adding an explicit by example constrain.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Mix-with-query-by-example.all.flsnp" />
         <h2><a name="DynamicTypedNature"></a>Dynamically Typed</h2>
         <p>SODA is a dynamically query language. By default SODA acts like a filter on all stored objects. You just add constrains which filters the objects to the desired output. </p>
         <p>An example for this behavior: You just add an field-constraint without any <a href="soda_example_catelog.htm#TypeConstraint">type-constrain</a> on the object. This will return all objects which have such a field and match the constrain.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Pure-field-constrains.all.flsnp" />
-        <p>This also means, that you can query for not existing fields. SODA will not complain if a field doesn't exist. Instead it won't return any object, because no object could satisfy the constrain.</p>
+        <p>This also means that you can query for not existing fields. SODA will not complain if a field doesn't exist. Instead it won't return any object, because no object could satisfy the constrain.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Using-not-existing-fields-excludes-objects.all.flsnp" />
     </body>
 </html>

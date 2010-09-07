@@ -24,15 +24,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>OME</Term>
-      <Term>Object Manager</Term>
-    </Terms>
-    <Definition
-      Link="">Object Manager, a tool for browsing
-and managing db4o databases</Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>OSGi</Term>
       <Term>OSGI</Term>
     </Terms>
