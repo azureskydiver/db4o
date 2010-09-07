@@ -2,7 +2,8 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.qlin.QLinSupport.*;
+import static com.db4o.qlin.QLinSupport.descending;
+import static com.db4o.qlin.QLinSupport.prototype;
 
 import java.util.*;
 
@@ -347,4 +348,26 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		_dm.deleteObject(existingDatastoreObject(loid));
 	}
 
+	public void deleteAll() {
+		rollback();
+		Collection<String> classNames = classNames();
+		String[] classNameArr = classNames.toArray(new String[classNames.size()]);
+		_dm.getSchemaEditor().drop(classNameArr, false, 0);
+	}
+	
+	private Collection<String> classNames() {
+		Set<String> classNames = new HashSet<String>();
+		for (DatastoreSchemaModel model : _dm.getSchemaEditor().getDatastoreSchemaModels()) {
+			for (String className : model.getClassNames()) {
+				classNames.add(className);
+			}
+		} 
+		return classNames;
+	}
+	
+	public static void deleteAll(VodDatabase vod) {
+		VodCobraFacade cobra = VodCobra.createInstance(vod);
+		cobra.deleteAll();
+		cobra.close();
+	}
 }

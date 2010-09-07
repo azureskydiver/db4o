@@ -44,4 +44,6 @@ public interface VodCobraFacade {
 	String databaseName();
 
 	void delete(long loid);
+	
+	void deleteAll();
 }
