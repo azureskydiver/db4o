@@ -64,5 +64,7 @@
       Name="Primary/JVM">CLR</Variable>
     <Variable
       Name="Primary/ObjectContainer">IObjectContainer</Variable>
+    <Variable
+      Name="Primary/Artefacts">assemblies</Variable>
   </Variables>
 </CatapultTarget>

@@ -33,7 +33,7 @@ Namespace Db4oDoc.Code.Deframentation
         Public Sub SetDb4OConfiguration()
             ' #example: Use the database-configuration
             Dim config As New DefragmentConfig("database.db4o")
-            ' Its best to use the very same configuration you use for the regular database
+            ' It's best to use the very same configuration you use for the regular database
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             config.Db4oConfig(configuration)
 
