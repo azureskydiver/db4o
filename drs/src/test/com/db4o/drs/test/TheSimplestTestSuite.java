@@ -73,14 +73,14 @@ public class TheSimplestTestSuite extends FixtureBasedTestSuite {
 			ensureNames(b(), "c2");
 		}
 		
-		private void ensureNames(DrsFixture fixture, String childName) {
+		private void ensureNames(DrsProviderFixture fixture, String childName) {
 			ensureOneInstance(fixture, SPCChild.class);
 			SPCChild child = getTheObject(fixture);
 			Assert.areEqual(childName,child.getName());
 		}
 
 
-		private SPCChild getTheObject(DrsFixture fixture) {
+		private SPCChild getTheObject(DrsProviderFixture fixture) {
 			return (SPCChild) getOneInstance(fixture, SPCChild.class);
 		}
 

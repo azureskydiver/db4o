@@ -26,15 +26,15 @@ import db4ounit.*;
 
 public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
-	private DrsFixturePair _fixtures;
+	private DrsFixture _fixtures;
 	
-	public DrsTestSuiteBuilder(DrsFixture a, DrsFixture b, Class clazz) {
+	public DrsTestSuiteBuilder(DrsProviderFixture a, DrsProviderFixture b, Class clazz) {
 		this(a, b, new Class[] { clazz });
 	}
 	
-	public DrsTestSuiteBuilder(DrsFixture a, DrsFixture b, Class[] classes) {
+	public DrsTestSuiteBuilder(DrsProviderFixture a, DrsProviderFixture b, Class[] classes) {
 		super(appendDestructor(classes));
-		_fixtures = new DrsFixturePair(a, b);
+		_fixtures = new DrsFixture(a, b);
 	}
 	
 	private static Class[] appendDestructor(Class[] classes){
@@ -46,7 +46,7 @@ public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
 	public static class DrsFixtureDestructor implements TestCase {
 		public void testFixtureDestruction(){
-			DrsFixturePair fixturePair = DrsFixtureVariable.value();
+			DrsFixture fixturePair = DrsFixtureVariable.value();
 			fixturePair.a.destroy();
 			fixturePair.b.destroy();
 		}

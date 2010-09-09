@@ -95,13 +95,13 @@ public class ByteArrayTest extends DrsTestCase {
 		ensureNames(b(), modInA);
 	}
 
-	private void ensureNames(DrsFixture fixture, byte[] bs) {
+	private void ensureNames(DrsProviderFixture fixture, byte[] bs) {
 		ensureOneInstance(fixture, IByteArrayHolder.class);
 		IByteArrayHolder c = getTheObject(fixture);
 		ArrayAssert.areEqual(c.getBytes(), bs);
 	}
 
-	private IByteArrayHolder getTheObject(DrsFixture fixture) {
+	private IByteArrayHolder getTheObject(DrsProviderFixture fixture) {
 		return (IByteArrayHolder) getOneInstance(fixture,
 				IByteArrayHolder.class);
 	}

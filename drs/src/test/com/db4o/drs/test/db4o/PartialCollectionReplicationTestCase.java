@@ -119,7 +119,7 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 		});
 	}
 
-	private EventRegistry eventRegistryFor(final DrsFixture fixture) {
+	private EventRegistry eventRegistryFor(final DrsProviderFixture fixture) {
 		return EventRegistryFactory.forObjectContainer(containerFor(fixture));
 	}
 	
@@ -150,7 +150,7 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 		container.commit();
 	}
 
-	private ExtObjectContainer containerFor(final DrsFixture fixture) {
+	private ExtObjectContainer containerFor(final DrsProviderFixture fixture) {
 		return ((Db4oReplicationProvider)fixture.provider()).getObjectContainer();
 	}
 	

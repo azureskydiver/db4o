@@ -125,7 +125,7 @@ public class ListTest extends DrsTestCase {
 		ensureContent(b(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(DrsFixture fixture, String[] holderNames, String[] contentNames) {
+	private void ensureContent(DrsProviderFixture fixture, String[] holderNames, String[] contentNames) {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(fixture, ListHolder.class, holderCount);
 

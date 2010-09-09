@@ -72,7 +72,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNotExist(a().provider(), SPCParent.class);
 	}
 
-	private void ensureNames(DrsFixture fixture, String parentName, String childName) {
+	private void ensureNames(DrsProviderFixture fixture, String parentName, String childName) {
 		ensureOneInstanceOfParentAndChild(fixture);
 		SPCParent parent = (SPCParent) getOneInstance(fixture, SPCParent.class);
 
@@ -89,7 +89,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		Assert.isTrue(! provider.getStoredObjects(type).iterator().hasNext());
 	}
 
-	private void ensureOneInstanceOfParentAndChild(DrsFixture fixture) {
+	private void ensureOneInstanceOfParentAndChild(DrsProviderFixture fixture) {
 		ensureOneInstance(fixture, SPCParent.class);
 		ensureOneInstance(fixture, SPCChild.class);
 	}

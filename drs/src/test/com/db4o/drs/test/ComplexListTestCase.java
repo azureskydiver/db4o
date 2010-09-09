@@ -55,12 +55,12 @@ public class ComplexListTestCase extends DrsTestCase {
 		b().provider().update(simpleListHolder);
 	}
 
-	private void replicateAndTest(DrsFixture source, DrsFixture target) {
+	private void replicateAndTest(DrsProviderFixture source, DrsProviderFixture target) {
 		replicateAll(source.provider(), target.provider());
 		ensureContents(target, (SimpleListHolder) getOneInstance(source, SimpleListHolder.class));
 	}
 
-	private void store(DrsFixture fixture , SimpleListHolder list) {
+	private void store(DrsProviderFixture fixture , SimpleListHolder list) {
 		TestableReplicationProviderInside provider = fixture.provider();
 		
 		provider.storeNew(list);
@@ -73,7 +73,7 @@ public class ComplexListTestCase extends DrsTestCase {
 		ensureContents(fixture, list);
 	}
 
-	private void ensureContents(DrsFixture actualFixture, SimpleListHolder expected) {
+	private void ensureContents(DrsProviderFixture actualFixture, SimpleListHolder expected) {
 		SimpleListHolder actual = (SimpleListHolder) getOneInstance(actualFixture, SimpleListHolder.class);
 		
 		List expectedList = expected.getList();

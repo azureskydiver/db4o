@@ -110,7 +110,7 @@ public class MapTest extends DrsTestCase {
 		ensureContent(b(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(DrsFixture fixture, String[] holderNames, String[] keyNames, String[] valueNames) {
+	private void ensureContent(DrsProviderFixture fixture, String[] holderNames, String[] keyNames, String[] valueNames) {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(fixture, MapHolder.class, holderCount);
 
