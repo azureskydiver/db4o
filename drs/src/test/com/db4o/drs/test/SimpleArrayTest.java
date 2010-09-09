@@ -111,7 +111,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		ensureContent(b(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(DrsFixture fixture, String[] holderNames, String[] contentNames) {
+	private void ensureContent(DrsProviderFixture fixture, String[] holderNames, String[] contentNames) {
 		int holderCount = holderNames.length;
 		int contentCount = contentNames.length;
 		ensureInstanceCount(fixture, SimpleArrayHolder.class, holderCount);

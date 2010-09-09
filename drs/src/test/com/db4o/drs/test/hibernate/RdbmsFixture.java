@@ -29,7 +29,7 @@ import com.db4o.drs.test.*;
 import com.db4o.drs.test.data.*;
 import com.db4o.drs.test.regression.*;
 
-public abstract class RdbmsFixture implements DrsFixture {
+public abstract class RdbmsFixture implements DrsProviderFixture {
 	
 	public static final Class[] mappings;
 	

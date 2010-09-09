@@ -29,7 +29,7 @@ import com.db4o.drs.inside.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
-public class Db4oDrsFixture implements DrsFixture {
+public class Db4oDrsFixture implements DrsProviderFixture {
 	
 	protected String _name;
 	

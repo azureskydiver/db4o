@@ -8,7 +8,7 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.versant.*;
 
-public class VodDrsFixture implements DrsFixture{
+public class VodDrsFixture implements DrsProviderFixture{
 	
 	private static boolean enhanced = false;
 	

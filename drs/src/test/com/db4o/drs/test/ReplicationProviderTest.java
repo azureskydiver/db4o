@@ -139,7 +139,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		return getOneChild(b());
 	}
 
-	private SPCChild getOneChild(DrsFixture fixture) {
+	private SPCChild getOneChild(DrsProviderFixture fixture) {
 		ObjectSet storedObjects = fixture.provider().getStoredObjects(SPCChild.class);
 		Assert.areEqual(1, storedObjects.size());
 		

@@ -41,7 +41,7 @@ public class SimpleParentChild extends DrsTestCase {
 		replicateParentClassStep3();
 	}
 
-	private void ensureNames(DrsFixture fixture, String parentName, String childName) {
+	private void ensureNames(DrsProviderFixture fixture, String parentName, String childName) {
 		ensureOneInstanceOfParentAndChild(fixture);
 		SPCParent parent = (SPCParent) getOneInstance(fixture, SPCParent.class);
 
@@ -54,7 +54,7 @@ public class SimpleParentChild extends DrsTestCase {
 		Assert.areEqual(parent.getChild().getName(), childName);
 	}
 
-	private void ensureOneInstanceOfParentAndChild(DrsFixture fixture) {
+	private void ensureOneInstanceOfParentAndChild(DrsProviderFixture fixture) {
 		ensureOneInstance(fixture, SPCParent.class);
 		ensureOneInstance(fixture, SPCChild.class);
 	}

@@ -28,11 +28,11 @@ public class DrsFixtureVariable {
 	
 	private static final FixtureVariable _variable = new FixtureVariable("drs");
 	
-	public static DrsFixturePair value() {
-		return (DrsFixturePair) _variable.value();
+	public static DrsFixture value() {
+		return (DrsFixture) _variable.value();
 	}
 	
-	public static Object with(DrsFixturePair pair, Closure4 closure) {
+	public static Object with(DrsFixture pair, Closure4 closure) {
 		return _variable.with(pair, closure);
 	}
 

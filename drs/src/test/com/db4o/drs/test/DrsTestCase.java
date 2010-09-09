@@ -47,7 +47,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				R0.class, Pilot.class, Car.class, Student.class, Person.class};
 	}
 
-	private final DrsFixturePair _fixtures = DrsFixtureVariable.value();
+	private final DrsFixture _fixtures = DrsFixtureVariable.value();
 	private ReplicationReflector _reflector;
 	
 	public void setUp() throws Exception {
@@ -85,7 +85,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		configureInitial(_fixtures.b);
 	}
 
-	private void configureInitial(DrsFixture fixture) {
+	private void configureInitial(DrsProviderFixture fixture) {
 		Configuration config = db4oConfiguration(fixture);
 		if(config == null) {
 			return;
@@ -95,7 +95,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		configure(config);
 	}
 
-	private Configuration db4oConfiguration(DrsFixture fixture) {
+	private Configuration db4oConfiguration(DrsProviderFixture fixture) {
 		if(!(fixture instanceof Db4oDrsFixture)) {
 			return null;
 		}
@@ -128,24 +128,24 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		b().close();
 	}
 	
-	public DrsFixture a() {
+	public DrsProviderFixture a() {
 		return _fixtures.a;
 	}
 
-	public DrsFixture b() {
+	public DrsProviderFixture b() {
 		return _fixtures.b;
 	}
 
-	protected void ensureOneInstance(DrsFixture fixture, Class clazz) {
+	protected void ensureOneInstance(DrsProviderFixture fixture, Class clazz) {
 		ensureInstanceCount(fixture, clazz, 1);
 	}
 
-	protected void ensureInstanceCount(DrsFixture fixture, Class clazz, int count) {
+	protected void ensureInstanceCount(DrsProviderFixture fixture, Class clazz, int count) {
 		ObjectSet objectSet = fixture.provider().getStoredObjects(clazz);
 		Assert.areEqual(count, objectSet.size());
 	}
 
-	protected Object getOneInstance(DrsFixture fixture, Class clazz) {
+	protected Object getOneInstance(DrsProviderFixture fixture, Class clazz) {
 		Iterator objectSet = fixture.provider().getStoredObjects(clazz).iterator();
 		
 		Object candidate = null;

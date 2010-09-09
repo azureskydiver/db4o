@@ -172,7 +172,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 			Assert.areSame(expectedInstance.getClass(), actualInstance.getClass());
 		}
 	
-		private boolean isDb4oProvider(final DrsFixture fixture) {
+		private boolean isDb4oProvider(final DrsProviderFixture fixture) {
 			return fixture.provider() instanceof Db4oReplicationProvider;
 		}
 		
