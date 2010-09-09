@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.drs.*;
@@ -58,7 +57,11 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
-		_reflector = new ReplicationReflector(providerA, providerB);
+		this(providerA, providerB, listener, null);
+	}
+
+	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener, Reflector reflector) {
+		_reflector = new ReplicationReflector(providerA, providerB, reflector);
 		_collectionHandler = new CollectionHandlerImpl(_reflector);
 		_traverser = new GenericTraverser(_reflector, _collectionHandler);
 

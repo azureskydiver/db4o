@@ -20,7 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
+import com.db4o.drs.test.versant.*;
 import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 
@@ -29,12 +31,16 @@ public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	private DrsFixture _fixtures;
 	
 	public DrsTestSuiteBuilder(DrsProviderFixture a, DrsProviderFixture b, Class clazz) {
-		this(a, b, new Class[] { clazz });
+		this(a, b, new Class[] { clazz }, null);
 	}
 	
-	public DrsTestSuiteBuilder(DrsProviderFixture a, DrsProviderFixture b, Class[] classes) {
+	public DrsTestSuiteBuilder(DrsProviderFixture a, DrsProviderFixture b, Class clazz, Reflector reflector) {
+		this(a, b, new Class[] { clazz }, reflector);
+	}
+	
+	public DrsTestSuiteBuilder(DrsProviderFixture a, DrsProviderFixture b, Class[] classes, Reflector reflector) {
 		super(appendDestructor(classes));
-		_fixtures = new DrsFixture(a, b);
+		_fixtures = new DrsFixture(a, b, reflector);
 	}
 	
 	private static Class[] appendDestructor(Class[] classes){

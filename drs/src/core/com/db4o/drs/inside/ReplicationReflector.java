@@ -34,14 +34,16 @@ public class ReplicationReflector {
 	
 	private Reflector _reflector;
 
-	public ReplicationReflector(ReplicationProvider providerA, ReplicationProvider providerB) {
-		if((_container = containerFrom(providerA)) != null) {
-			return;
+	public ReplicationReflector(ReplicationProvider providerA, ReplicationProvider providerB, Reflector reflector) {
+		if (reflector == null) {
+			if ((_container = containerFrom(providerA)) != null) {
+				return;
+			}
+			if ((_container = containerFrom(providerB)) != null) {
+				return;
+			}
 		}
-		if((_container = containerFrom(providerB)) != null) {
-			return;
-		}
-		_reflector = new GenericReflector(null, Platform4.reflectorForType(this.getClass()));
+		_reflector = new GenericReflector(null, reflector == null ? Platform4.reflectorForType(ReplicationReflector.class) : reflector);
 	}
 
 	public Object[] arrayContents(Object array) {
@@ -112,7 +114,8 @@ public class ReplicationReflector {
 	}
 	
 	private ReflectArray arrayReflector() {
-		return _container.reflector().array();
+		return reflector().array();
+//		return _container.reflector().array();
 	}
 	
 	private Reflector reflector(){

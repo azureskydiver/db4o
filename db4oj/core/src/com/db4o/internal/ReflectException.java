@@ -12,6 +12,10 @@ import com.db4o.ext.*;
  */
 public class ReflectException extends Db4oRecoverableException {
 
+	public ReflectException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
 	/**
 	 * Constructor with the cause exception 
 	 * @param cause cause exception

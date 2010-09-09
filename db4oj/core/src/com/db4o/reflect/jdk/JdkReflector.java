@@ -212,7 +212,7 @@ public class JdkReflector implements Reflector {
 		return Platform4.nullValue(toNative(clazz));
 	}
 	
-	private Reflector parent() {
+	protected Reflector parent() {
 		if(_parent == null){
 			return this;
 		}

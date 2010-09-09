@@ -47,7 +47,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				R0.class, Pilot.class, Car.class, Student.class, Person.class};
 	}
 
-	private final DrsFixture _fixtures = DrsFixtureVariable.value();
+	protected final DrsFixture _fixtures = DrsFixtureVariable.value();
 	private ReplicationReflector _reflector;
 	
 	public void setUp() throws Exception {
@@ -113,7 +113,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	private void openBoth() throws Exception {
 		a().open();
 		b().open();
-		_reflector = new ReplicationReflector(a().provider(), b().provider());
+		_reflector = new ReplicationReflector(a().provider(), b().provider(), _fixtures.reflector);
 		a().provider().replicationReflector(_reflector);
 		b().provider().replicationReflector(_reflector);
 	}
@@ -161,7 +161,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
 		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
-		final ReplicationSession replication = Replication.begin(providerFrom, providerTo);
+		final ReplicationSession replication = Replication.begin(providerFrom, providerTo, _fixtures.reflector);
 		final ObjectSet changedSet = providerFrom.objectsChangedSinceLastReplication();
 		if (changedSet.size() == 0)
 			throw new RuntimeException("Can't find any objects to replicate");

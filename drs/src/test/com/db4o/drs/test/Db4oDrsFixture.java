@@ -28,6 +28,7 @@ import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 public class Db4oDrsFixture implements DrsProviderFixture {
 	
@@ -66,6 +67,10 @@ public class Db4oDrsFixture implements DrsProviderFixture {
 	
 	
 	public Db4oDrsFixture(String name) {
+		this(name, null);
+	}
+	
+	public Db4oDrsFixture(String name, Reflector reflector) {
 		_name = name;
 		
 		File folder = new File(PATH);
@@ -75,6 +80,10 @@ public class Db4oDrsFixture implements DrsProviderFixture {
 			folder = new File(".");
 		}
 		testFile = new File(folder.getPath() + "/drs_cs_" + _name + ".db4o");
+		
+		if (reflector != null) {
+			config().reflectWith(reflector);
+		}
 	}
 	
 	public TestableReplicationProviderInside provider() {
