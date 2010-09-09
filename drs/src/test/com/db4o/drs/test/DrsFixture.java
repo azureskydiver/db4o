@@ -20,17 +20,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
+import com.db4o.reflect.*;
+
 
 public class DrsFixture { 
 	
 	public final DrsProviderFixture a;
 	public final DrsProviderFixture b;
+	public final Reflector reflector;
 	
 	public DrsFixture(DrsProviderFixture fixtureA, DrsProviderFixture fixtureB) {
+		this(fixtureA, fixtureB, null);
+	}
+
+	public DrsFixture(DrsProviderFixture fixtureA, DrsProviderFixture fixtureB, Reflector reflector) {
 		if (null == fixtureA) throw new IllegalArgumentException("fixtureA");
 		if (null == fixtureB) throw new IllegalArgumentException("fixtureB");
 		
 		a = fixtureA;
 		b = fixtureB;
+		this.reflector = reflector;
 	}
 }

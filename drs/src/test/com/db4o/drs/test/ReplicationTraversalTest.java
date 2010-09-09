@@ -34,7 +34,7 @@ public class ReplicationTraversalTest implements TestLifeCycle {
 	public void setUp() throws Exception {
 		_peerA = new TransientReplicationProvider(new byte[]{0}, "A");
 		_peerB = new TransientReplicationProvider(new byte[]{1}, "B");
-		ReplicationReflector reflector = new ReplicationReflector(_peerA, _peerB);
+		ReplicationReflector reflector = new ReplicationReflector(_peerA, _peerB, null);
 		_peerA.replicationReflector(reflector);
 		_peerB.replicationReflector(reflector);
 	}
