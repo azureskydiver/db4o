@@ -176,4 +176,9 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_provider.commit();
 		waitForCommitFeedbackFromEventProcessor();
 	}
+
+	@Override
+	protected Class[] persistedClasses() {
+		return new Class[] { Item.class };		
+	}
 }

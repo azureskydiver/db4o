@@ -2,17 +2,21 @@
 
 package com.db4o.drs.test.versant;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
 
-import com.db4o.drs.test.versant.data.*;
-import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.JdoMetadataGenerator;
+import com.db4o.drs.versant.JviDatabaseIdFactory;
+import com.db4o.drs.versant.VodDatabase;
+import com.db4o.drs.versant.VodJdo;
+import com.db4o.drs.versant.VodJdoFacade;
+import com.db4o.drs.versant.VodReplicationProvider;
+import com.db4o.drs.versant.metadata.CobraPersistentObject;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
 
-import db4ounit.*;
+import db4ounit.ClassLevelFixtureTest;
+import db4ounit.TestLifeCycle;
 
-public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest  {
-	
-	private boolean EXPOSE_OBJECT_DELETE_BUG = false;
+public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest  {
 	
 	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
@@ -23,6 +27,8 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	// This is a direct _VodJdo connection that works around our _provider 
 	// so we can see what's committed, using a second reference system.
 	protected VodJdoFacade _jdo;
+	
+	protected abstract Class[] persistedClasses();
 	
 	public void setUp() {
 		_jdo = VodJdo.createInstance(_vod);
@@ -52,28 +58,12 @@ public class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtur
 	}
 	
 	private void cleanDb(){
-		
-		Collection allObjects = _jdo.query(Object.class);
-		for (Object object : allObjects) {
-			_jdo.delete(object);
+		for(Class c : persistedClasses()) {
+			_jdo.deleteAll(c);
 		}
+		_jdo.deleteAll(CobraPersistentObject.class);
+		_jdo.deleteAll(ObjectLifecycleEvent.class);
 		_jdo.commit();
-		
-		if(EXPOSE_OBJECT_DELETE_BUG){
-			return;
-		}
-		
-		// TODO: The code below shouldn't be needed but somehow
-		//       querying for Object.class doesn't always work.
-		
-		Class[] deleteClasses = new Class[]{
-				Item.class,
-		};
-		
-		for (int i = 0; i < deleteClasses.length; i++) {
-			_jdo.deleteAll(deleteClasses[i]);
-			_jdo.commit();
-		}
 	}
 	
 	public static void classSetUp() {

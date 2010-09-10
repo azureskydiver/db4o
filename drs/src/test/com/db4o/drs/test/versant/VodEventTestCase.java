@@ -14,9 +14,7 @@ import com.versant.odbms.model.*;
 
 import db4ounit.*;
 
-public class VodEventTestCase extends VodEventTestCaseBase {
-	
-	
+public class VodEventTestCase extends VodEventTestCaseBase {	
 	
 	private final class LoggingExceptionListener implements ExceptionListener {
 		public void exceptionOccurred (Throwable exception){
@@ -85,6 +83,11 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 		EventClient client = ObjectLifecycleMonitorImpl.newEventClient(_vod.eventConfiguration());
 		client.addExceptionListener (new LoggingExceptionListener());
 		return client;
+	}
+
+	@Override
+	protected Class[] persistedClasses() {
+		return new Class[] {Item.class};
 	}
 
 }

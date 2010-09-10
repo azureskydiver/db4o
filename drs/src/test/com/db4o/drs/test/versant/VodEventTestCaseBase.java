@@ -2,12 +2,14 @@
 
 package com.db4o.drs.test.versant;
 
+import java.util.Set;
+
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.foundation.*;
 import com.db4o.util.IOServices.ProcessRunner;
 
-public class VodEventTestCaseBase extends VodProviderTestCaseBase{
+public abstract class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
 		if(DrsDebug.runEventListenerEmbedded){
@@ -39,5 +41,4 @@ public class VodEventTestCaseBase extends VodProviderTestCaseBase{
 			support.stop();
 		}
 	}
-	
 }
