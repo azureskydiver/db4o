@@ -60,5 +60,7 @@
       Name="Primary/ObjectContainer">IObjectContainer</Variable>
     <Variable
       Name="Primary/Artefacts">assemblies</Variable>
+    <Variable
+      Name="Primary/Packages">namespace</Variable>
   </Variables>
 </CatapultTarget>
