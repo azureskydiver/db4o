@@ -90,4 +90,8 @@
     Name="bytecode"
     Comment=""
     Definition="Some text">bytecode</Variable>
+  <Variable
+    Name="Packages"
+    Comment=""
+    Definition="Some text">packages</Variable>
 </CatapultVariableSet>

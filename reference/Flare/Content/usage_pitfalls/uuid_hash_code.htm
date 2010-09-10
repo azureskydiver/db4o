@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="250" MadCap:lastWidth="560" MadCap:conditionTagExpression="include[Primary.Java] ">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="298" MadCap:lastWidth="483" MadCap:conditionTagExpression="include[Primary.Java] " MadCap:conditions="Primary.Java">
     <head>
     </head>
     <body>
         <h1>UUID Hash Code</h1>
         <p>The Java UUID class caches its hash code for better performance. With the default configuration, db4o doesn't call constructors on object retrieval. When now a UUID is retrieved, the constructor is not called. This breaks the UUID hash code implementation. The hash code of a retrieved UUID is always 0. </p>
-        <p>This can cause different effects. First, the comparison in hash maps and hash sets is much slower, because these data structures rely on a correct hash code. Furthermore it might cause some other problems.</p>
+        <p>This can cause different effects. First, the comparison in hash maps and hash sets is much slower, because those data structures rely on a correct hash code. Furthermore it might cause some other problems.</p>
         <p>You can work around this issue by configure db4o to call constructors on the UUID class:</p>
         <MadCap:snippetBlock src="../CodeExamples/pitfall/uuidhashcode/UUIDHashCode-call-the-constructor-on-UUIDs-to-fix-its-hashCode.all.flsnp" />
     </body>
