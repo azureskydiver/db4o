@@ -1,3 +1,4 @@
+/* Copyright (C) 2010  Versant Inc.  http://www.db4o.com */
 package com.db4o.drs.test.versant.jdo.reflect;
 
 import static db4ounit.Assert.*;
@@ -8,7 +9,7 @@ import com.db4o.reflect.*;
 
 import db4ounit.*;
 
-public class BasicTests implements TestLifeCycle {
+public class JdoClassTestCase implements TestLifeCycle {
 	
 	JdoReflector reflector;
 
