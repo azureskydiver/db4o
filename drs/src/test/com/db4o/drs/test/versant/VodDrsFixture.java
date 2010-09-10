@@ -53,12 +53,13 @@ public class VodDrsFixture implements DrsProviderFixture{
 	}
 	
 	public void clean() {
-		destroy();
+		internalClean();
+		VodCobra.deleteAll(_vod);
 		init();
 	}
 	
 	public void close() {
-		_provider.destroy();
+		_provider.destroy();		
 		_provider = null;
 	}
 
@@ -76,9 +77,13 @@ public class VodDrsFixture implements DrsProviderFixture{
 	}
 	
 	public void destroy(){
+		internalClean();
+		_vod.removeDb();
+	}
+
+	private void internalClean() {
 		_vod.stopEventProcessor();
 		_vod.stopEventDriver();
-		VodCobra.deleteAll(_vod);
 		_idFactory.deleteGeneratedIds();
 	}
 
