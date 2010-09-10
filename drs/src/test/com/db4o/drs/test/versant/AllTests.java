@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant;
 
+import com.db4o.drs.test.versant.jdo.reflect.JdoClassTestCase;
+
 import db4ounit.*;
 
 public class AllTests extends ReflectionTestSuite {
@@ -15,6 +17,7 @@ public class AllTests extends ReflectionTestSuite {
  			AllVodDrsIntegrationTests.class,
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
 			JdoMetadataGeneratorTestCase.class,
+			JdoClassTestCase.class,
 			VodCobraTestCase.class,
 			VodDatabaseLifecycleTestCase.class,
 			VodDatabaseTestCase.class,
