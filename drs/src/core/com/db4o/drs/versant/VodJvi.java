@@ -75,7 +75,7 @@ public class VodJvi {
 		String fullDatabaseName = databaseName + "@" + node;
 		DBListInfo[] dbList = DBUtility.dbList(node);
 		for (DBListInfo info : dbList) {
-			if(info.getDBName().equals(fullDatabaseName)) {
+			if(info.getDBName().startsWith(databaseName + "@")) {
 				return info.getDBID();
 			}
 		}
