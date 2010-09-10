@@ -23,6 +23,7 @@
 	<classpathentry kind="lib" path="lib/derby/derby.jar"/>
 	<classpathentry kind="lib" path="lib/versant/jvi80.jar"/>
 	<classpathentry kind="lib" path="lib/jdo/jdo-api-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/versant/vodjdo_patch.jar"/>
 	<classpathentry kind="lib" path="lib/versant/vodjdo.jar"/>
 	<classpathentry kind="lib" path="lib/versant/pizza.jar"/>
 	<classpathentry kind="lib" path="lib/asm/asm-all-3.1.jar"/>
