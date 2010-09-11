@@ -20,11 +20,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import com.db4o.drs.test.versant.*;
-import com.db4o.foundation.*;
-import com.db4o.reflect.*;
+import com.db4o.foundation.Closure4;
+import com.db4o.reflect.Reflector;
 
-import db4ounit.*;
+import db4ounit.ReflectionTestSuiteBuilder;
+import db4ounit.TestCase;
 
 public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
