@@ -64,8 +64,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public long store(Object obj) {
-		if(obj instanceof CobraPersistentObject){
-			long loid = ((CobraPersistentObject)obj).loid();
+		if(obj instanceof VodLoidAwareObject){
+			long loid = ((VodLoidAwareObject)obj).loid();
 			if(loid > 0){
 				store(loid, obj);
 				return loid;
@@ -75,8 +75,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		writeFields(obj, datastoreObject);
 		write(datastoreObject);
 		long loid = datastoreObject.getLOID();
-		if(obj instanceof CobraPersistentObject){
-			((CobraPersistentObject)obj).loid(loid);
+		if(obj instanceof VodLoidAwareObject){
+			((VodLoidAwareObject)obj).loid(loid);
 		}
 		return loid;
 	}
@@ -97,8 +97,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		writeFields(obj, datastoreObject);
 		write(datastoreObject);
 		
-		if (obj instanceof CobraPersistentObject) {
-			((CobraPersistentObject)obj).loid(loid);
+		if (obj instanceof VodLoidAwareObject) {
+			((VodLoidAwareObject)obj).loid(loid);
 		}
 	}
 
@@ -201,8 +201,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	private <T> void ensureLoidSet(T obj, long loid) {
-		if(obj instanceof CobraPersistentObject){
-			((CobraPersistentObject)obj).loid(loid);
+		if(obj instanceof VodLoidAwareObject){
+			((VodLoidAwareObject)obj).loid(loid);
 		}
 	}
 	
@@ -309,7 +309,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		}
 		
 		public boolean isCobraPersitentObject(){
-			return CobraPersistentObject.class.isAssignableFrom(_field.getType());
+			return VodLoidAwareObject.class.isAssignableFrom(_field.getType());
 		}
 		
 		public void read(Object obj, DatastoreObject datastoreObject) {

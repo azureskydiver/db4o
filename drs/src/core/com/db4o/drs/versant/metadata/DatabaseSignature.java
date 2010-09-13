@@ -4,7 +4,7 @@ package com.db4o.drs.versant.metadata;
 
 import com.db4o.internal.encoding.*;
 
-public class DatabaseSignature extends CobraPersistentObject {
+public class DatabaseSignature extends VodLoidAwareObject {
 	
 	private int databaseId;
 	

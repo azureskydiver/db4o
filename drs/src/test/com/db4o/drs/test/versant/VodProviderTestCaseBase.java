@@ -10,7 +10,7 @@ import com.db4o.drs.versant.VodDatabase;
 import com.db4o.drs.versant.VodJdo;
 import com.db4o.drs.versant.VodJdoFacade;
 import com.db4o.drs.versant.VodReplicationProvider;
-import com.db4o.drs.versant.metadata.CobraPersistentObject;
+import com.db4o.drs.versant.metadata.VodLoidAwareObject;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
 
 import db4ounit.ClassLevelFixtureTest;
@@ -61,7 +61,7 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 		for(Class c : persistedClasses()) {
 			_jdo.deleteAll(c);
 		}
-		_jdo.deleteAll(CobraPersistentObject.class);
+		_jdo.deleteAll(VodLoidAwareObject.class);
 		_jdo.deleteAll(ObjectLifecycleEvent.class);
 		_jdo.commit();
 	}

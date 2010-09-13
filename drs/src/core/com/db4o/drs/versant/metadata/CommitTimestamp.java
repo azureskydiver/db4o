@@ -2,7 +2,7 @@
 
 package com.db4o.drs.versant.metadata;
 
-public class CommitTimestamp extends CobraPersistentObject {
+public class CommitTimestamp extends VodLoidAwareObject {
 	
 	private long timestamp;
 	
