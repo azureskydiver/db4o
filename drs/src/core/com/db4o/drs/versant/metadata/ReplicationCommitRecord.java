@@ -3,7 +3,7 @@
 package com.db4o.drs.versant.metadata;
 
 
-public class ReplicationCommitRecord extends CobraPersistentObject {
+public class ReplicationCommitRecord extends VodLoidAwareObject {
 	
 	private DatabaseSignature higherPeer;
 	

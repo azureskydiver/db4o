@@ -4,7 +4,7 @@ package com.db4o.drs.versant.ipc.inband;
 
 import com.db4o.drs.versant.metadata.*;
 
-public class MessagePayload extends CobraPersistentObject {
+public class MessagePayload extends VodLoidAwareObject {
 	
 	private int sender;
 	private byte[] buffer;

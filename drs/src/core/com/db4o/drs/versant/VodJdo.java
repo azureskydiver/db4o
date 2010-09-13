@@ -35,8 +35,8 @@ public class VodJdo implements VodJdoFacade {
 	}
 
 	public long loid(Object obj) {
-		if (obj instanceof CobraPersistentObject) {
-			CobraPersistentObject co = (CobraPersistentObject) obj;
+		if (obj instanceof VodLoidAwareObject) {
+			VodLoidAwareObject co = (VodLoidAwareObject) obj;
 			if (co.loid() != 0) {
 				return co.loid();
 			}
@@ -91,8 +91,8 @@ public class VodJdo implements VodJdoFacade {
 
 	public void store(Object obj) {
 		_pm.makePersistent(obj);
-		if (obj instanceof CobraPersistentObject) {
-			CobraPersistentObject co = (CobraPersistentObject) obj;
+		if (obj instanceof VodLoidAwareObject) {
+			VodLoidAwareObject co = (VodLoidAwareObject) obj;
 			if (co.loid() == 0) {
 				co.loid(loid(co));
 			}
