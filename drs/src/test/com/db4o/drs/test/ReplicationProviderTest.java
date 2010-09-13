@@ -230,7 +230,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Assert.areEqual(2, a().provider().objectsChangedSinceLastReplication().size());
 
 		pilots = a().provider().objectsChangedSinceLastReplication(Pilot.class).iterator();
-		Assert.areEqual("Terry Jones", ((Pilot) next(pilots))._name);
+		Assert.areEqual("Terry Jones", ((Pilot) next(pilots)).name());
 		Assert.isFalse(pilots.hasNext());
 
 		cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();		
@@ -329,7 +329,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		reference = a().provider().produceReferenceByUUID(uuid, object1.getClass());
 		Assert.areEqual(reference, a().provider().produceReference(reloaded, null, null));
 
-		reloaded._name = "i am updated";
+		reloaded.setName("i am updated");
 		a().provider().storeReplica(reloaded);
 
 		a().provider().clearAllReferences();
@@ -339,7 +339,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		startReplication();
 
 		reference = a().provider().produceReferenceByUUID(uuid, reloaded.getClass());
-		Assert.areEqual("i am updated", ((Pilot) reference.object())._name);
+		Assert.areEqual("i am updated", ((Pilot) reference.object()).name());
 
 		commitReplication();
 

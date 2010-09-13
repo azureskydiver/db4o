@@ -22,6 +22,7 @@ package com.db4o.drs.inside;
 
 import com.db4o.drs.*;
 import com.db4o.drs.db4o.*;
+import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
@@ -120,5 +121,18 @@ public class ReplicationReflector {
 	
 	private Reflector reflector(){
 		return _container == null ? _reflector : _container.reflector();
+	}
+
+	public void copyState(Object to, Object from) {
+		
+		ReflectClass fromClass = reflector().forObject(from);
+
+		for (ReflectField f : fromClass.getDeclaredFields()) {
+			if (f.isStatic()) {
+				continue;
+			}
+			f.set(to, f.get(from));
+		}
+		
 	}
 }
