@@ -96,6 +96,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		
 		writeFields(obj, datastoreObject);
 		write(datastoreObject);
+		
+		if (obj instanceof CobraPersistentObject) {
+			((CobraPersistentObject)obj).loid(loid);
+		}
 	}
 
 	private void writeFields(Object obj, DatastoreObject datastoreObject) {

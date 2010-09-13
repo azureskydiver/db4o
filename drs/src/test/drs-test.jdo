@@ -4,6 +4,7 @@
     <package name="com.db4o.drs.test">
     	<class name="com.db4o.drs.test.Pilot"/>
     	<class name="com.db4o.drs.test.Car"/>
+    	<class name="com.db4o.drs.test.SPCParent"/>
     </package>    
 </jdo>    
 

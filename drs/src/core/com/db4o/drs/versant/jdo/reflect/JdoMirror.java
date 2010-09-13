@@ -39,6 +39,11 @@ public class JdoMirror {
 		public String jdoFieldNames[];
 		public Class jdoFieldTypes[];
 		
+		/*
+		 * we are using transient here to mark fields we want to know are
+		 * injected by JDO, but are not required by our JDO reflection
+		 * functionality.
+		 */
 		public transient byte jdoFieldFlags[];
 		public transient int jdoInheritedFieldCount;
 		public transient Class jdoPersistenceCapableSuperclass;
@@ -73,6 +78,9 @@ public class JdoMirror {
 		Field[] fs = Image.class.getDeclaredFields();
 		for (Field f : fs) {
 			try {
+				if (Modifier.isTransient(f.getModifiers())) {
+					continue;
+				}
 				Field src = clazz.getDeclaredField(f.getName());
 				src.setAccessible(true);
 				f.set(image(), src.get(null));

@@ -3,19 +3,23 @@
 package com.db4o.drs.test.versant;
 
 import com.db4o.drs.test.*;
+import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 
 public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 
+	Reflector reflector = new JdoReflector(getClass().getClassLoader());
+	
 	public Iterator4 iterator() {
 		
 //		return new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-drs-a"),
 //				new Db4oDrsFixture("db4o-drs-b"), VodDrsSuite.class).iterator();
 
 		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
-				new Db4oDrsFixture("db4o-drs-b"), VodDrsSuite.class).iterator();
+				new Db4oDrsFixture("db4o-drs-b", reflector), VodDrsSuite.class, reflector).iterator();
 		
 //		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
 //				new VodDrsFixture("vod-drs-b"), VodDrsSuite.class).iterator();

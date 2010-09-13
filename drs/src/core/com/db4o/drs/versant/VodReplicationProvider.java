@@ -14,9 +14,11 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
+import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
+import com.db4o.reflect.*;
 
 public class VodReplicationProvider implements TestableReplicationProviderInside{
 	
@@ -158,8 +160,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		String schemaName = _jdo.schemaName(clazz);
 		ClassMetadata cm = new ClassMetadata(schemaName, className);
-		_cobra.store(cm);
-		_cobra.commit();
+		_jdo.store(cm);
+		_jdo.commit();
 		_knownClasses.put(className, cm.loid());
 		syncEventProcessor().ensureMonitoringEventsOn(className, schemaName, cm.loid());
 	}
@@ -210,7 +212,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
-		_cobra.commit();
 		_jdo.commit();
 		
 		// FileReplicationProvider does this:
@@ -290,7 +291,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void rollbackReplication() {
 		clearAllReferences();
 		_jdo.rollback();
-		_cobra.rollback();
 	}
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
@@ -304,19 +304,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		// TODO: Enhance QLin for deep queries. Retrieve from Cobra directly here.
 		
 		String filter = "this.lowerPeer.databaseId == " + lowerId + " & this.higherPeer.databaseId == " + higherId;
-		ReplicationCommitRecord replicationCommitRecordByJdo = _jdo.queryOneOrNone(ReplicationCommitRecord.class, filter);
+		_replicationCommitRecord = _jdo.queryOneOrNone(ReplicationCommitRecord.class, filter);
 		
-		if(replicationCommitRecordByJdo == null){
-			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
-			_cobra.store(_replicationCommitRecord);
-			_cobra.commit();
-			return;
-		}
-		
-		long commitRecordLoid = _jdo.loid(replicationCommitRecordByJdo);
-		_replicationCommitRecord = _cobra.objectByLoid(commitRecordLoid);
 		if(_replicationCommitRecord == null){
-			throw new IllegalStateException("Commit record could not be found. loid: " + commitRecordLoid);
+			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
+			_jdo.store(_replicationCommitRecord);
+			_jdo.commit();
+			return;
 		}
 	}
 
@@ -338,6 +332,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void storeReplica(Object obj) {
 		logIdentity(obj, getName());
+		
+		if (!(obj instanceof PersistenceCapable)) {
+			throw new IllegalArgumentException(VodReplicationProvider.class.getSimpleName()+" can only handle " + PersistenceCapable.class.getSimpleName() + " objects");
+		}
+		
 		VodReplicationReference ref = _replicationReferences.get(obj);
 		
 		long loid = 0;
@@ -351,12 +350,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			
 			loid = loidFrom(otherDb, otherLongPart);			
 			_cobra.create(loid, obj);
+			_cobra.commit();
+			_replicationReflector.copyState(_jdo.objectByLoid(loid), obj);
 				
 		} else {
 
 			loid = loidFrom(ref.uuid());
 			
-			_cobra.store(loid, obj);
+			_jdo.store(obj);
 		}
 		
 		logIdentity(obj, String.valueOf(loid));
@@ -364,7 +365,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void syncVersionWithPeer(long maxVersion) {
 		_replicationCommitRecord.timestamp(maxVersion);
-		_cobra.store(_replicationCommitRecord);
+		_jdo.store(_replicationCommitRecord);
 		syncEventProcessor().syncTimestamp(maxVersion);
 	}
 

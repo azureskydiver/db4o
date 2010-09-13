@@ -6,6 +6,7 @@ import java.util.*;
 
 import javax.jdo.*;
 
+import com.db4o.drs.versant.metadata.*;
 import com.versant.core.jdo.*;
 import com.versant.core.metadata.*;
 import com.versant.core.storagemanager.*;
@@ -34,6 +35,12 @@ public class VodJdo implements VodJdoFacade {
 	}
 
 	public long loid(Object obj) {
+		if (obj instanceof CobraPersistentObject) {
+			CobraPersistentObject co = (CobraPersistentObject) obj;
+			if (co.loid() != 0) {
+				return co.loid();
+			}
+		}
 		return VdsUtils.getLOID(obj, _pm);
 	}
 
@@ -84,6 +91,12 @@ public class VodJdo implements VodJdoFacade {
 
 	public void store(Object obj) {
 		_pm.makePersistent(obj);
+		if (obj instanceof CobraPersistentObject) {
+			CobraPersistentObject co = (CobraPersistentObject) obj;
+			if (co.loid() == 0) {
+				co.loid(loid(co));
+			}
+		}
 	}
 
 	public <T> T peek (T obj) {

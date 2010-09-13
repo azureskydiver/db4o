@@ -22,8 +22,8 @@ package com.db4o.drs.test;
 
 
 public class Pilot {
-	public String _name;
-	public int _age;
+	private String _name;
+	private int _age;
 
 	public Pilot() {
 	}
