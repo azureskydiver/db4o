@@ -36,7 +36,6 @@ namespace Db4oDoc.Code.Query.Soda
         private Pilot pilot;
         private string name;
 
-
         public Car(Pilot pilot, string name)
         {
             this.pilot = pilot;
@@ -78,6 +77,7 @@ namespace Db4oDoc.Code.Query.Soda
         private readonly IList<string> tags = new List<string>();
         private readonly IList<Author> authors = new List<Author>();
         private readonly IDictionary<string, object> metaData = new Dictionary<string, object>();
+
 
         public BlogPost(string title, string content)
         {

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(DatabaseFile))
+{
+    Person jodie = QueryForJodie(container);
+    jodie.Add(new Person(&quot;Jamie&quot;));
+    // Remember that a collection is also a regular object
+    // so with the default-update depth of one, only the changes
+    // on the person-object are stored, but not the changes on
+    // the friend-list.
+    container.Store(jodie);
+}
+using (IObjectContainer container = Db4oEmbedded.OpenFile(DatabaseFile))
+{
+    Person jodie = QueryForJodie(container);
+    foreach (Person person in jodie.Friends)
+    {
+        // the added friend is gone, because the update-depth is to low
+        Console.WriteLine(&quot;Friend=&quot; + person.Name);
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			UpdateDepthPitfall.cs: Update doesn't work on collection
+			<div class="codedownload">
+				<a href="Example-pitfalls-updatedepth-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

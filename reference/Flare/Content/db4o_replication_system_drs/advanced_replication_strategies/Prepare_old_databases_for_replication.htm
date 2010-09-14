@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="746" MadCap:lastWidth="651">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2140" MadCap:lastWidth="658">
     <head>
     </head>
     <body>
@@ -9,7 +9,7 @@
         <MadCap:snippetBlock src="../../CodeExamples/drs/db4o/Db4oReplicationExamples-Configure-db4o-to-generate-UUIDs-and-Version-Numbers.all.flsnp" />
         <p>The next issue is that the all objects stored don't have a UUID nor a version numbers. The easiest way to have such a number is to load and update each object in the database. Because when you update a object the new configuration takes effect. </p>
         <MadCap:snippetBlock src="../../CodeExamples/drs/advanced/AdvancedReplicationExamples-Updating-all-objects-ensures-that-it-has-a-UUID-and-version.all.flsnp" />
-        <p>Updating all object is maybe not an option. It's also possible to do this during the first replication. First query the objects which are target of the replication. Then do the replication. When a object doesn't have a UUID yet, update the object to ensure it has an UUID. Make also sure that the <a href="../../object_lifecycle/update_depth.htm">update-depth</a> is high enough so that child objects also have an UUID.</p>
+        <p>Updating all object is maybe not an option. It's also possible to do this during the first replication. First query the objects which are target of the replication. Then do the replication. When a object doesn't have a UUID yet, update the object to ensure it has an UUID. Make also sure that the <a href="../../basics/update_concept.htm">update-depth</a> is high enough so that child objects also have an UUID.</p>
         <MadCap:snippetBlock src="../../CodeExamples/drs/advanced/AdvancedReplicationExamples-Migrate-on-the-fly.all.flsnp" />
     </body>
 </html>

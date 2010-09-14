@@ -2,7 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">container.Delete(pilot);</pre>
+        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;))
+{
+    var pilot = (from Pilot p in container
+                 where p.Name == &quot;Joe&quot;
+                 select p).First();
+    container.Delete(pilot);
+}</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.cs: Delete a object
 			<div class="codedownload">

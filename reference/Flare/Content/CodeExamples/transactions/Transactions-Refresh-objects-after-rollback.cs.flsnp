@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">Pilot pilot = container.Query&lt;Pilot&gt;()[0];
+pilot.Name = &quot;New Name&quot;;
+container.Store(pilot);
+container.Rollback();
+
+// use refresh to return the in memory objects back
+// to the state in the database.
+container.Ext().Refresh(pilot, int.MaxValue);</pre>
+		<div class="codesnippet-meta">
+			Transactions.cs: Refresh objects after rollback
+			<div class="codedownload">
+				<a href="Example-Code-transactions-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

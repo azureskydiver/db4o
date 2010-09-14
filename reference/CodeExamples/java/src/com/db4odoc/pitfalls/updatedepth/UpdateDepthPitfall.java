@@ -11,16 +11,43 @@ public class UpdateDepthPitfall {
     public static final String DATABASE_FILE = "database.db4o";
 
     public static void main(String[] args) {
-        cleanUp();
-        prepareDeepObjGraph();
+        cleanUpAndPrepare();
 
+        toLowUpdateDepthOnObject();
+        toLowUpdateDepthOnCollection();
 
-        toLowUpdateDeph();
-        updateDepth();
+        explicitlyUpdateObjects();
+        explicitlyStateUpdateDepth();
+        updateDepthForCollection();
     }
 
-    private static void toLowUpdateDeph() {
-        // #example: Update doesn't work
+    private static void toLowUpdateDepthOnObject() {
+        // #example: Update depth limits what is store when updating objects
+        ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
+        try {
+            Car car = queryForCar(container);
+            car.setCarName("New Mercedes");
+            car.getDriver().setName("New Driver Name");
+
+            // With the default-update depth of one, only the changes
+            // on the car-object are stored, but not the changes on
+            // the person
+            container.store(car);
+        } finally {
+            container.close();
+        }
+        container = Db4oEmbedded.openFile(DATABASE_FILE);
+        try {
+            Car car = queryForCar(container);
+            System.out.println("Car-Name:"+car.getCarName());
+            System.out.println("Driver-Name:"+car.getDriver().getName());
+        } finally {
+            container.close();
+        }
+        // #end example
+    }
+    private static void toLowUpdateDepthOnCollection() {
+        // #example: Update doesn't work on collection
         ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
         try {
             Person jodie = queryForJodie(container);
@@ -45,7 +72,44 @@ public class UpdateDepthPitfall {
         }
         // #end example
     }
-    private static void updateDepth() {
+
+    private static void explicitlyUpdateObjects() {
+        cleanUp();
+        ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
+        try {
+            // #example: Explicitly store changes on the driver
+            Car car = queryForCar(container);
+            car.setCarName("New Mercedes");
+            car.getDriver().setName("New Driver Name");
+
+            // Explicitly store the driver to ensure that those changes are also in the database
+            container.store(car);
+            container.store(car.getDriver());
+            // #end example
+        } finally {
+            container.close();
+        }
+        printCar();
+    }
+    private static void explicitlyStateUpdateDepth() {
+        cleanUp();
+        ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
+        try {
+            // #example: Explicitly use the update depth
+            Car car = queryForCar(container);
+            car.setCarName("New Mercedes");
+            car.getDriver().setName("New Driver Name");
+
+            // Explicitly state the update depth
+            container.ext().store(car,2);
+            // #end example
+        } finally {
+            container.close();
+        }
+        printCar();
+    }
+
+    private static void updateDepthForCollection() {
         // #example: A higher update depth fixes the issue
         EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
         config.common().updateDepth(2);
@@ -72,6 +136,28 @@ public class UpdateDepthPitfall {
         }
     }
 
+    private static void printCar() {
+        ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
+        try {
+            Car car = queryForCar(container);
+            System.out.println("Car-Name:"+car.getCarName());
+            System.out.println("Driver-Name:"+car.getDriver().getName());
+        } finally {
+            container.close();
+        }
+    }
+
+
+    private static Car queryForCar(ObjectContainer container) {
+        return container.query(Car.class).get(0);
+    }
+
+    private static void cleanUpAndPrepare() {
+        cleanUp();
+        prepareDeepObjGraph();
+    }
+
+
     private static void cleanUp() {
         new File(DATABASE_FILE).delete();
     }
@@ -92,7 +178,10 @@ public class UpdateDepthPitfall {
 
             jodie.add(new Person("Joanna"));
             jodie.add(new Person("Julia"));
+
             container.store(jodie);
+
+            container.store(new Car(new Person("Janette"),"Mercedes" ));
         } finally {
             container.close();
         }

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PersistentExample.cs: RetrievePilotByName
-public static void RetrievePilotByName(IObjectContainer db)
-     {
-      Pilot proto = new Pilot(&quot;Michael Schumacher&quot;, 0);
-      IObjectSet result = db.QueryByExample(proto);
-      ListResult(result);
-    }</pre>    </body></html>

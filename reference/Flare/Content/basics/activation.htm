@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1403" MadCap:lastWidth="586">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="Activation" />Activation Concept</h1>
+        <P>Activation is a db4o mechanism which controls object instantiation. Why is it necessary? Let's look at an example of a database that has a tree structure. There's one Root object, which has a bunch nodes, each node has again a few subnodes and so on and so forth. What happens when you run a query, retrieving the root object? All the sub-objects will have to be created in the memory! If the tree is very large, you fill up your memory. </P>
+        <P>
+            <img src="activation_concept/without_activation.png" />
+        </P>
+        <P>Luckily db4o does not behave like this.When a query retrieves objects, their fields are loaded into memory (activated in db4o terms) only to a certain activation depth. In this case depth means "number of member references away from the original object". All the fields at lower levels, below activation depth are set to null or to default values. So db4o doesn't load the whole object graph from the database. Instead, db4o loads only parts of the object graph you're interested in. </P>
+        <P>
+            <img src="activation_concept/with_activation.png" />
+        </P>
+        <P>Activation occurs in the following cases:</P>
+        <OL>
+            <LI>When you iterate over query results.</LI>
+            <LI>Object is activated explicitly with the object containers activate method. </LI>
+            <LI><![CDATA[ ]]>Collections  members are activated automatically, when the collection is activated, using at least depth 1 for lists and depth 2 for maps.</LI>
+        </OL>
+    </body>
+</html>

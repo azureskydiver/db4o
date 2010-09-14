@@ -12,7 +12,7 @@
   TargetLanguage="en"
   MasterStylesheet="/Content/Resources/Stylesheets/PrintStyle.css"
   OutputFile="db4o-reference-java.pdf"
-  OutputFolder="e:/db4o-dist/java/temp"
+  OutputFolder=""
   MasterToc="/Project/TOCs/Primary TOC.fltoc">
   <DocumentProperties
     Subject="db4o"

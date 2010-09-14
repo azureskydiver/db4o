@@ -11,7 +11,7 @@
   PatchHeadingLevels="true"
   TargetLanguage="en"
   MasterStylesheet="/Content/Resources/Stylesheets/PrintStyle.css"
-  OutputFolder="e:/db4o-dist/flare"
+  OutputFolder=""
   OutputFile="db4o-reference-net.pdf">
   <DocumentProperties
     Subject="db4o"

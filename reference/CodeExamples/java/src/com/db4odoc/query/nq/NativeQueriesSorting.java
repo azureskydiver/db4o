@@ -60,11 +60,14 @@ public class NativeQueriesSorting {
         Pilot joanna = new Pilot("Joanna",45);
         Pilot jenny = new Pilot("Jenny",21);
         Pilot rick = new Pilot("Rick",33);
+        Pilot juliette = new Pilot("Juliette",33);
 
         container.store(new Car(john,"Ferrari"));
         container.store(new Car(joanna,"Mercedes"));
         container.store(new Car(jenny,"Volvo"));
         container.store(new Car(rick,"Fiat"));
+        container.store(new Car(juliette,"Suzuki"));
 
     }
+
 }

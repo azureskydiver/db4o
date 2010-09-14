@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = Db4oEmbedded.openFile(&quot;databaseFile.db4o&quot;);
+try {
+    // store a new pilot
+    Pilot pilot = new Pilot(&quot;Joe&quot;);
+    container.store(pilot);
+
+    // query for pilots
+    List&lt;Pilot&gt; pilots = container.query(new Predicate&lt;Pilot&gt;() {
+        @Override
+        public boolean match(Pilot pilot) {
+            return pilot.getName().startsWith(&quot;Jo&quot;);
+        }
+    });
+
+    // update pilot
+    Pilot toUpdate = pilots.get(0);
+    toUpdate.setName(&quot;New Name&quot;);
+    container.store(toUpdate);
+
+    // delete pilot
+    container.delete(toUpdate);
+} finally {
+    container.close();
+}</pre>
+		<div class="codesnippet-meta">
+			Db4oBasics.java: The basic operations
+			<div class="codedownload">
+				<a href="Example-db4odoc-basics-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

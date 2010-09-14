@@ -2,8 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">container.Delete(pilot)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">container.Delete(pilot)</pre>
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using container As IObjectContainer = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;)
+    Dim pilot = (From p As Pilot In container Where p.Name = &quot;Joe&quot;).First()
+    container.Delete(pilot)
+End Using</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using container As IObjectContainer = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;)
+    Dim pilot = (From p As Pilot In container Where p.Name = &quot;Joe&quot;).First()
+    container.Delete(pilot)
+End Using</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.vb: Delete a object
 			<div class="codedownload">

@@ -2,8 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">Pilot pilot = new Pilot(&quot;Joe&quot;);
-container.Store(pilot);</pre>
+        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;))
+{
+    Pilot pilot = new Pilot(&quot;Joe&quot;);
+    container.Store(pilot);
+}</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.cs: Store a object
 			<div class="codedownload">

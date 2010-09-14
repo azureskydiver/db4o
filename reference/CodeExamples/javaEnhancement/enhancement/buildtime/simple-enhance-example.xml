@@ -36,5 +36,27 @@
     </target>
     
     <!-- #end example -->
+	
+	
+    <!-- #example: Only enhance native queries #-->
+    <target name="enhance-nq">
+        <db4o-enhance classtargetdir="${basedir}/bin"
+                      jartargetdir="${basedir}/lib"
+                      nq="true" ta="false"
+                      collections="false">
+            <classpath refid="project.classpath"/>
+            <sources dir="${basedir}/bin">
+                      <include name="**/*.class"/>
+            </sources>
+            <jars dir="${basedir}/lib">
+                <include name="*.jar"/>
+                <exclude name="db4o-*.jar"/>
+                <exclude name="ant.jar"/>
+                <exclude name="bloat-1.0.jar"/>
+            </jars>
+        </db4o-enhance>
+    </target>
+    
+    <!-- #end example -->
     
 </project>

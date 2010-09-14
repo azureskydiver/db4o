@@ -73,4 +73,9 @@
     <Db4oEnhancerMSBuildTask Assemblies="@(Db4oEnhance)" />
   </Target>
   <!-- #end example -->
+  <!-- #example: Only enhance native queries #-->
+  <Target Name="AfterBuild">
+    <Db4oEnhancerMSBuildTask Assemblies="@(Db4oEnhance)" CommandLine="-nq" />
+  </Target>
+  <!-- #end example -->
 </Project>
