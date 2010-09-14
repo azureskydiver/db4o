@@ -32,20 +32,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>TP</Term>
-    </Terms>
-    <Definition
-      Link="">Transparent Persistence</Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>TA</Term>
-    </Terms>
-    <Definition
-      Link="">Transparent Activation</Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>C/S</Term>
     </Terms>
     <Definition

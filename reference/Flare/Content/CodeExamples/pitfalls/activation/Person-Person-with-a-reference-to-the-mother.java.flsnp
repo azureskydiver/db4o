@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">class Person {
+    private Person mother;
+    private String name;
+    public Person(String name) {
+        this.mother = mother;
+        this.name = name;
+    }
+
+    public Person(Person mother, String name) {
+        this.mother = mother;
+        this.name = name;
+    }
+
+    public Person mother() {
+        return mother;
+    }
+
+    public String getName() {
+        return name;
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			Person.java: Person with a reference to the mother
+			<div class="codedownload">
+				<a href="Example-pitfalls-activation-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

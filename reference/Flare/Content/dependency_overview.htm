@@ -35,11 +35,11 @@
         </p>
         <div MadCap:conditions="Primary.Java">
             <h2><a name="db4o-core"></a>db4o-X.XX-core-javaX.jar</h2>
-            <p>This jar contains the <a href="object_lifecycle.htm">core functionality</a> of db4o. It doesn't have any dependencies to other jars.</p>
+            <p>This jar contains the <a href="basics.htm">core functionality</a> of db4o. It doesn't have any dependencies to other jars.</p>
             <h2><a name="db4o-cs"></a>db4o-X.XX-cs-javaX.jar</h2>
             <p>This jar contains the <a href="client-server.htm">client server mode</a> of db4o. It only depends on the db4o-core jar.</p>
             <h2><a name="db4o-nq"></a>db4o-X.XX-nqopt-javax.jar</h2>
-            <p>This jar contains the <a href="object_lifecycle/querying/native_queries.htm">native query optimizations</a> for db4o. Make sure that you include this jar when you use native queries. It depends on the db4o-core, db4o-instrumentation and the bloat jar for the runtime optimization. </p>
+            <p>This jar contains the <a href="basics/querying/native_queries.htm">native query optimizations</a> for db4o. Make sure that you include this jar when you use native queries. It depends on the db4o-core, db4o-instrumentation and the bloat jar for the runtime optimization. </p>
             <p>When you use the <a href="implementation_strategies/enhancement_tools.htm">compile-time optimization</a> instead of the runtime optimization, it also requires the Ant library. However when you do compile-time optimization, you don't need this jar and its dependencies at runtime.</p>
             <p>Note that the native queries work also without this jar in the classpath. However the queries cannot be optimized without this jar and will run a lot slower.</p>
             <h2><a name="db4o-optional"></a>db4o-X.XX-optional-javaX.jar</h2>
@@ -57,9 +57,9 @@
         </div>
         <div MadCap:conditions="Primary..NET">
             <h2><a name="net-db4o"></a>Db4objects.Db4o.dll</h2>
-            <p>This assembly contains the <a href="object_lifecycle.htm">core functionality</a> of db4o. It doesn't have any dependencies to other assemblies</p>
+            <p>This assembly contains the <a href="basics/object_container.htm">core functionality</a> of db4o. It doesn't have any dependencies to other assemblies</p>
             <h2><a name="net-linq"></a>Db4objects.Db4o.Linq.dll</h2>
-            <p>This assembly contains the <a href="object_lifecycle/querying/linq.htm">LINQ-support</a> for db4o. It has a dependency to Db4object.Db4o.dll and Mono.Reflection.dll. </p>
+            <p>This assembly contains the <a href="basics/querying/linq.htm">LINQ-support</a> for db4o. It has a dependency to Db4object.Db4o.dll and Mono.Reflection.dll. </p>
             <p>In Visual Studio, you don't need to add the Mono.Reflection.dll as a reference, Visual Studio will include this dependency automatically.</p>
             <p>On the .NET compact framework, this assembly depends on Cecil.FlowAnalysis.dll and Mono.Cecil.dll instead of Mono.Reflection.dll.</p>
             <h2><a name="net-cs"></a>Db4objects.Db4o.CS.dll</h2>
@@ -71,7 +71,7 @@
             <h2><a name="net-cs-optional"></a>Db4objects.Db4o.CS.Optional.dll</h2>
             <p>This assembly contains some additional features and functionality for the db4o client server support. Like <a href="client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm">SSL</a> and monitoring capabilities. It depends on the Db4objects.Db4o.dll, Db4objects.Db4o.CS.dll, Db4objects.Db4o.Optional.dll and the Db4objects.Db4o.LINQ.dll assembly. </p>
             <h2><a name="net-nq"></a>Db4objects.Db4o.NativeQueries.dll</h2>
-            <p>This assembly contains the <a href="object_lifecycle/querying/native_queries.htm">native query optimization</a>. It depends on Db4object.Db4o.dll, Db4object.Db4o.Instrumentation.dll, Cecil.FlowAnalysis.dll and Mono.Cecil.dll.</p>
+            <p>This assembly contains the <a href="basics/querying/native_queries.htm">native query optimization</a>. It depends on Db4object.Db4o.dll, Db4object.Db4o.Instrumentation.dll, Cecil.FlowAnalysis.dll and Mono.Cecil.dll.</p>
             <p>In Visual Studio, you don't need to add Db4object.Db4o.Instrumentation.dll, Cecil.FlowAnalysis.dll and Mono.Cecil.dll as a reference. Visual Studio will include this dependency automatically.</p>
             <p>Note that native queries work also without this assembly. However the queries cannot be optimized without this assembly and will run a lot slower.</p>
             <h2><a name="net-tool"></a>Db4oTool.exe</h2>

@@ -1,4 +1,5 @@
 Imports System.IO
+Imports System.Linq
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Linq
@@ -18,6 +19,7 @@ Namespace Db4oDoc.Code.Pitfalls.Activation
             End Try
 
             FixItWithHigherActivationDepth()
+            FixItWithExplicitlyActivating()
         End Sub
 
         Private Shared Sub FixItWithHigherActivationDepth()
@@ -33,10 +35,24 @@ Namespace Db4oDoc.Code.Pitfalls.Activation
                 Console.WriteLine(joannaName)
             End Using
         End Sub
+        Private Shared Sub FixItWithExplicitlyActivating()
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("database.db4o")
+                Dim jodie As Person = QueryForJodie(container)
+
+                ' #example: Fix with explicit activation
+                Dim julia As Person = jodie.Mother.Mother.Mother.Mother.Mother
+                container.Activate(julia, 5)
+
+                Console.WriteLine(julia.Name)
+                Dim joannaName As String = julia.Mother.Name
+                ' #end example
+                Console.WriteLine(joannaName)
+            End Using
+        End Sub
 
         Private Shared Sub RunIntoActivationIssue()
             Using container As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFile)
-                ' #example: run into not activated objects
+                ' #example: Run into not activated objects
                 Dim jodie As Person = QueryForJodie(container)
 
                 Dim julia As Person = jodie.Mother.Mother.Mother.Mother.Mother
@@ -76,30 +92,4 @@ Namespace Db4oDoc.Code.Pitfalls.Activation
     End Class
 
 
-    Friend Class Person
-        Private m_mother As Person
-        Private m_name As String
-
-        Public Sub New(ByVal name As String)
-            m_mother = m_mother
-            Me.m_name = name
-        End Sub
-
-        Public Sub New(ByVal mother As Person, ByVal name As String)
-            Me.m_mother = mother
-            Me.m_name = name
-        End Sub
-
-        Public ReadOnly Property Mother() As Person
-            Get
-                Return m_mother
-            End Get
-        End Property
-
-        Public ReadOnly Property Name() As String
-            Get
-                Return m_name
-            End Get
-        End Property
-    End Class
 End Namespace

@@ -27,14 +27,7 @@
       <Term>ACID</Term>
     </Terms>
     <Definition
-      Link="/Content/Basic_Concepts/acid_model.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Concurrency Control</Term>
-    </Terms>
-    <Definition
-      Link="/Content/Basic_Concepts/concurrency_control_and_locking.htm"></Definition>
+      Link="/Content/basics/acid_and_transactions.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -42,14 +35,12 @@
       <Term>NQ</Term>
     </Terms>
     <Definition
-      Link="/Content/Basic_Concepts/native_query_concepts.htm"></Definition>
+      Link="/Content/basics/querying/native_queries.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
       <Term>Transaction</Term>
     </Terms>
-    <Definition
-      Link="/Content/Basic_Concepts/transaction.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -150,29 +141,7 @@
       <Term>Activation</Term>
     </Terms>
     <Definition
-      Link="/Content/object_lifecycle/activation.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Constructor</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/object_construction.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Transparent Persistence</Term>
-      <Term>TP</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/transparent_persistence.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Update Depth</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/update_depth.htm"></Definition>
+      Link="/Content/basics/activation.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -227,18 +196,10 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Transparent Activation</Term>
-      <Term>TA</Term>
-    </Terms>
-    <Definition
-      Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>QBE</Term>
       <Term>QbE</Term>
     </Terms>
     <Definition
-      Link="/Content/object_lifecycle/querying/query_by_example.htm"></Definition>
+      Link="/Content/basics/querying/query_by_example.htm"></Definition>
   </GlossaryEntry>
 </CatapultGlossary>

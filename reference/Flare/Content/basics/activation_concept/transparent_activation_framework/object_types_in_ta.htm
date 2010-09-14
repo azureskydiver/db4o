@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="839" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
+    <head><title>Object Types In TA	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Object Types In TA</h1>
+        <p>When working in TA enabled environment you must remember that db4o treats Activatable (TA Aware) and non Activatable (other) types differently. </p>
+        <p>In general we can distinguish the following types:</p>
+        <ul>
+            <li>Value types with no identity (char, boolean, integer etc). These types are handled internally by db4o engine and behave the same in TA enabled and disabled modes.</li>
+            <li>Activatable types, as it is clear from the name, implement Activatable interface and are responsible for their own activation.</li>
+            <li>Non Activatable type - all the other types, including user types or third-party classes.</li>
+        </ul>
+        <p>As it was mentioned  <a href="ta_implementation.htm">before</a> in TA enabled mode non-Activatable types are fully activated whereas Activatable types have 0 activation depth and are getting activated as requested. </p>
+        <p>Let's look at an example model below, which includes Activatable and non-Activatable classes:</p>
+        <p>
+            <img src="../../../basics/activation_concept/transparent_activation_framework/Object_Types_In_TA/TA.Gif" />
+        </p>
+        <p>Querying and traversing in TA enabled mode:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>Customer c =
+container.queryByExample(Customer.class).next();</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <p>c#: </p>
+            <p><code>Customer c =
+container.QueryByExample(typeof(Customer)).Next();</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <p>VB: </p>
+            <p><code>Dim c as Customer =
+container.QueryByExample(GetType(Customer)).Next();</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>At this point the following paths should be already activated (Customer is not Activatable):</p>
+        <p><code>c.name</code><code>c.addresses</code><code>.addresses[N].firstLine</code>
+        </p>
+        <p>&#160;</p>
+        <p><code>c.addresses[N].country</code> - available but not activated (Activatable type).</p>
+        <p>&#160;</p>
+        <p>Country.getState would cause the Country object to be activated</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java: </p>
+            <p><code>State state = c.getAddress(0).country().getState(someZipCode);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
+            <p>c#: </p>
+            <p><code>State state = c.Address[0].Country.GetState(someZipCode);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:cs" />
+        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
+            <p>VB:</p>
+            <p><code>Dim state As State = <br />c.Address(0).Country.GetState(someZipCode);</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:vb" />
+        <p>At this point the following paths become activated 
+</p>
+        <p><code>c.addresses[0].country.states</code><code>.addresses[0]<br />.country.states[N].name</code>
+        </p>
+        <p><code>c.addresses[0].country.states[N].city</code><code>.addresses[0]<br />.country.states[N].cities[N]</code>
+        </p>
+        <p>- available but not
+activated (Activatable type)</p>
+        <p>&#160;</p>The following general rules apply: 
+<ol><li>Arrays of Arrays of non Activatable types: non Activatable behavior</li><li>Arrays of Arrays of Activatable types: non Activatable behavior except for leaves</li><li>JDK collections: non Activatable behavior</li><li>Value types with references to non Activatable reference types and to Activatable
+reference types: the non Activatable path should be activated fully; Activatable
+path stops activation.</li></ol></body>
+</html>

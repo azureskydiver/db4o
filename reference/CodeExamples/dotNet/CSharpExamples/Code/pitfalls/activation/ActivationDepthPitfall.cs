@@ -26,6 +26,7 @@ namespace Db4oDoc.Code.Pitfalls.Activation
             }
 
             FixItWithHigherActivationDepth();
+            FixItWithExplicitlyActivating();
         }
 
         private static void FixItWithHigherActivationDepth()
@@ -39,8 +40,24 @@ namespace Db4oDoc.Code.Pitfalls.Activation
                 Person julia = jodie.Mother.Mother.Mother.Mother.Mother;
 
                 Console.WriteLine(julia.Name);
-                String joannaName = julia.Mother.Name;
+                string joannaName = julia.Mother.Name;
                 Console.WriteLine(joannaName);
+            }
+        }
+        private static void FixItWithExplicitlyActivating()
+        {
+            using (IObjectContainer container = Db4oEmbedded.OpenFile("database.db4o"))
+            {
+                Person jodie = QueryForJodie(container);
+
+                // #example: Fix with explicit activation
+                Person julia = jodie.Mother.Mother.Mother.Mother.Mother;
+                container.Activate(julia,5);
+
+                Console.WriteLine(julia.Name);
+                string joannaName = julia.Mother.Name;
+                Console.WriteLine(joannaName);
+                // #end example
             }
         }
 
@@ -48,7 +65,7 @@ namespace Db4oDoc.Code.Pitfalls.Activation
         {
             using (IObjectContainer container = Db4oEmbedded.OpenFile(DatabaseFile))
             {
-                // #example: run into not activated objects
+                // #example: Run into not activated objects
                 Person jodie = QueryForJodie(container);
 
                 Person julia = jodie.Mother.Mother.Mother.Mother.Mother;
@@ -60,7 +77,7 @@ namespace Db4oDoc.Code.Pitfalls.Activation
                 // This will throw a NullPointerException.
                 // Because julia is not activated
                 // and therefore all fields are not set
-                String joannaName = julia.Mother.Name;
+                string joannaName = julia.Mother.Name;
                 // #end example
             }
         }
@@ -94,31 +111,4 @@ namespace Db4oDoc.Code.Pitfalls.Activation
     }
 
 
-    internal class Person
-    {
-        private Person mother;
-        private string name;
-
-        public Person(string name)
-        {
-            mother = mother;
-            this.name = name;
-        }
-
-        public Person(Person mother, string name)
-        {
-            this.mother = mother;
-            this.name = name;
-        }
-
-        public Person Mother
-        {
-            get { return mother; }
-        }
-
-        public string Name
-        {
-            get { return name; }
-        }
-    }
 }

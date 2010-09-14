@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="853" MadCap:lastWidth="623" >
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="903" MadCap:lastWidth="560">
     <head><title>NonFlushingStorage</title>
     </head>
     <body>
         <h1>NonFlushingStorage</h1>
         <p>NonFlushingStorage is a special IO Storage, which can be used to
-improve commit performance. Commit is a complex operation and requires
-<a href="../../../basic_concepts/acid_model/acid_properties_for_db4o.htm">flushing
-to the hard drive</a> after each stage of commit. This is necessary as
+improve commit performance. Committing is a complex operation and requires
+flushing
+to the hard drive after each stage of commit. This is necessary as
 most operating system try to avoid the overhead of disk access by
 caching disk write data and only flushing the resulting changes to the
 disk. In the case of db4o commit it would mean that the physical write

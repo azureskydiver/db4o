@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">using(IObjectContainer container = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;))
+{
+    // store a new pilot
+    Pilot pilot = new Pilot(&quot;Joe&quot;);
+    container.Store(pilot);
+
+    // query for pilots
+    var pilots = from Pilot p in container
+                 where p.Name.StartsWith(&quot;Jo&quot;)
+                 select p;
+
+    // update pilot
+    Pilot toUpdate = pilots.First();
+    toUpdate.Name = &quot;New Name&quot;;
+    container.Store(toUpdate);
+
+    // delete pilot
+    container.Delete(toUpdate);
+} </pre>
+		<div class="codesnippet-meta">
+			Db4oBasics.cs: The basic operations
+			<div class="codedownload">
+				<a href="Example-Code-basics-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

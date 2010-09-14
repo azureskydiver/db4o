@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">internal class Person
+{
+    private Person mother;
+    private string name;
+
+    public Person(string name)
+    {
+        mother = mother;
+        this.name = name;
+    }
+
+    public Person(Person mother, string name)
+    {
+        this.mother = mother;
+        this.name = name;
+    }
+
+    public Person Mother
+    {
+        get { return mother; }
+    }
+
+    public string Name
+    {
+        get { return name; }
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			Person.cs: Person with a reference to the mother
+			<div class="codedownload">
+				<a href="Example-pitfalls-activation-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

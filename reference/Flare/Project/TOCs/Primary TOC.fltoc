@@ -15,520 +15,413 @@
       Link="/Content/product_philosophy/oodbms.htm" />
     <TocEntry
       Title="db4o Position"
-      Link="/Content/product_philosophy/db4o_position.htm" />
+      Link="/Content/product_philosophy/db4o_position.htm">
+      <TocEntry
+        Title="db4o Applications"
+        Link="/Content/product_philosophy/db4o_applications.htm" />
+      <TocEntry
+        Title="Scalability"
+        Link="/Content/product_philosophy/scalability.htm" />
+    </TocEntry>
     <TocEntry
       Title="Why Choose db4o"
       Link="/Content/product_philosophy/why_choose_db4o.htm" />
   </TocEntry>
   <TocEntry
-    Title="Getting Started"
-    Link="/Content/getting_started.htm" />
-  <TocEntry
-    Title="Basic Concepts"
-    StartSection="false"
-    StartChapter="false"
-    Link="/Content/Basic_Concepts.htm">
+    Title="Basics Operations &amp; Concepts"
+    Link="/Content/basics.htm">
     <TocEntry
-      Title="Evaluation Guide"
-      Link="/Content/Basic_Concepts/evaluation_guide.htm">
+      Title="Getting Started"
+      Link="/Content/basics/getting_started.htm" />
+    <TocEntry
+      Title="The Basic Operations"
+      Link="/Content/basics/object_container.htm">
       <TocEntry
-        Title="db4o Applications"
-        Link="/Content/Basic_Concepts/evaluation_guide/db4o_applications.htm" />
+        Title="Access The Database"
+        Link="/Content/basics/object_container.htm#AccessingDB" />
       <TocEntry
-        Title="Common Beginner Pitfalls"
-        Link="/Content/Basic_Concepts/evaluation_guide/common_beginner_pitfalls.htm" />
+        Title="Store Objects"
+        Link="/Content/basics/object_container.htm#StoringObject" />
       <TocEntry
-        Title="Performance Benchmarks"
-        Link="/Content/Basic_Concepts/evaluation_guide/performance_benchmarks.htm" />
+        Title="Query The Database"
+        Link="/Content/basics/object_container.htm#Queries"></TocEntry>
       <TocEntry
-        Title="Scalability"
-        Link="/Content/Basic_Concepts/evaluation_guide/scalability.htm" />
+        Title="Update Objects"
+        Link="/Content/basics/object_container.htm#UpdateObjects" />
+      <TocEntry
+        Title="Delete Objects"
+        Link="/Content/basics/object_container.htm#DeleteObjects" />
     </TocEntry>
-    <TocEntry
-      Title="ACID model"
-      Link="/Content/Basic_Concepts/acid_model.htm">
-      <TocEntry
-        Title="Atomicity"
-        Link="/Content/Basic_Concepts/acid_model/atomicity.htm" />
-      <TocEntry
-        Title="Consistency"
-        Link="/Content/Basic_Concepts/acid_model/consistency.htm"
-        VolumeNumberReset="same"
-        SectionNumberReset="continue"
-        ChapterNumberReset="continue" />
-      <TocEntry
-        Title="Isolation"
-        Link="/Content/Basic_Concepts/acid_model/isolation.htm" />
-      <TocEntry
-        Title="Durability"
-        Link="/Content/Basic_Concepts/acid_model/durability.htm" />
-      <TocEntry
-        Title="ACID Properties For db4o"
-        Link="/Content/Basic_Concepts/acid_model/acid_properties_for_db4o.htm"></TocEntry>
-      <TocEntry
-        Title="Isolation Level  For db4o"
-        Link="/Content/Basic_Concepts/acid_model/isolation_level_for_db4o.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Concurrency Control And Locking"
-      Link="/Content/Basic_Concepts/concurrency_control_and_locking.htm">
-      <TocEntry
-        Title="Pessimistic Locking"
-        Link="/Content/Basic_Concepts/concurrency_control_and_locking/pessimistic_locking.htm" />
-      <TocEntry
-        Title="Optimistic Locking"
-        Link="/Content/Basic_Concepts/concurrency_control_and_locking/optimistic_locking.htm"></TocEntry>
-      <TocEntry
-        Title="Overly Optimistic Locking"
-        Link="/Content/Basic_Concepts/concurrency_control_and_locking/overly_optimistic_locking.htm" />
-      <TocEntry
-        Title="Concurrency Control In db4o"
-        Link="/Content/Basic_Concepts/concurrency_control_and_locking/concurrency_control_in_db4o.htm" />
-      <TocEntry
-        Title="Types Of Locks"
-        Link="/Content/Basic_Concepts/concurrency_control_and_locking/types_of_locks.htm" />
-      <TocEntry
-        Title="Locks In db4o"
-        Link="/Content/Basic_Concepts/concurrency_control_and_locking/locks_in_db4o.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Object Identity"
-      Link="/Content/Basic_Concepts/object_identity.htm">
-      <TocEntry
-        Title="Unique Identity Concept"
-        Link="/Content/Basic_Concepts/object_identity/unique_identity_concept.htm" />
-      <TocEntry
-        Title="Identity vs Equals"
-        Link="/Content/Basic_Concepts/object_identity/identity_vs_equals.htm" />
-      <TocEntry
-        Title="Binding Objects"
-        Link="/Content/Basic_Concepts/object_identity/binding_objects.htm" />
-      <TocEntry
-        Title="Weak References"
-        Link="/Content/Basic_Concepts/object_identity/weak_references.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Transaction"
-      Link="/Content/Basic_Concepts/transaction.htm"></TocEntry>
-    <TocEntry
-      Title="Database Models"
-      Link="/Content/Basic_Concepts/database_models.htm">
-      <TocEntry
-        Title="Object Database Model"
-        Link="/Content/Basic_Concepts/database_models/object_database_model.htm">
-        <TocEntry
-          Title="Data Abstraction"
-          Link="/Content/Basic_Concepts/database_models/object_database_model/data_abstraction.htm" />
-        <TocEntry
-          Title="Encapsulation"
-          Link="/Content/Basic_Concepts/database_models/object_database_model/encapsulation.htm" />
-        <TocEntry
-          Title="Inheritance"
-          Link="/Content/Basic_Concepts/database_models/object_database_model/inheritance.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Relational Database Model"
-        Link="/Content/Basic_Concepts/database_models/relational_database_model.htm"></TocEntry>
-      <TocEntry
-        Title="Object And Relational Model Comparison"
-        Link="/Content/Basic_Concepts/database_models/object_and_relational_model_comparison.htm">
-        <TocEntry
-          Title="Basic Terms"
-          Link="/Content/Basic_Concepts/database_models/object_and_relational_model_comparison/basic_terms.htm" />
-        <TocEntry
-          Title="RDBMS And  OODBMS Application"
-          Link="/Content/Basic_Concepts/database_models/object_and_relational_model_comparison/rdbms_and_oodbms_application.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Object-Relational How To"
-        Link="/Content/Basic_Concepts/database_models/object-relational_how_to.htm">
-        <TocEntry
-          Title="Identity And Primary Keys"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/identity_and_primary_keys.htm" />
-        <TocEntry
-          Title="Foreign Keys"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/foreign_keys.htm" />
-        <TocEntry
-          Title="Referential Integrity"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/referential_integrity.htm" />
-        <TocEntry
-          Title="Triggers"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/triggers.htm" />
-        <TocEntry
-          Title="Unique Constraints"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/unique_constraints.htm" />
-        <TocEntry
-          Title="Indexes"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/indexes.htm" />
-        <TocEntry
-          Title="Concurrency Control"
-          Link="/Content/Basic_Concepts/database_models/object-relational_how_to/concurrency_control.htm" />
-      </TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Native Query Concepts"
-      Link="/Content/Basic_Concepts/native_query_concepts.htm">
-      <TocEntry
-        Title="Problems Of String Based Query Languages"
-        Link="/Content/Basic_Concepts/native_query_concepts/problems_of_string_based_query_languages.htm" />
-      <TocEntry
-        Title="Native Query Characteristics"
-        Link="/Content/Basic_Concepts/native_query_concepts/native_query_characteristics.htm" />
-      <TocEntry
-        Title="Native Query Implementation"
-        Link="/Content/Basic_Concepts/native_query_concepts/native_query_implementation.htm" />
-      <TocEntry
-        Title="Native Query Optimization"
-        Link="/Content/Basic_Concepts/native_query_concepts/native_query_optimization.htm" />
-      <TocEntry
-        Title="Code Inside"
-        Link="/Content/Basic_Concepts/native_query_concepts/code_inside.htm" />
-      <TocEntry
-        Title="Sorting Results"
-        Link="/Content/Basic_Concepts/native_query_concepts/sorting_results.htm" />
-    </TocEntry>
-  </TocEntry>
-  <TocEntry
-    Title="Object Lifecycle"
-    Link="/Content/object_lifecycle.htm">
-    <TocEntry
-      Title="Object Container"
-      Link="/Content/object_lifecycle/object_container.htm" />
-    <TocEntry
-      Title="Simple Persistence"
-      Link="/Content/object_lifecycle/simple_persistence.htm" />
     <TocEntry
       Title="Querying"
-      Link="/Content/object_lifecycle/querying.htm">
+      Link="/Content/basics/querying.htm">
       <TocEntry
         Title="LINQ"
-        Link="/Content/object_lifecycle/querying/linq.htm"
+        Link="/Content/basics/querying/linq.htm"
         conditions="Primary.All languages,Primary..NET">
         <TocEntry
           Title="LINQ Examples"
-          Link="/Content/object_lifecycle/querying/linq/linq_examples.htm">
+          Link="/Content/basics/querying/linq/linq_examples.htm">
           <TocEntry
             Title="Simple LINQ Queries"
-            Link="/Content/object_lifecycle/querying/linq/linq_examples.htm#Simplest" />
+            Link="/Content/basics/querying/linq/linq_examples.htm#Simplest" />
           <TocEntry
             Title="Sort With LINQ"
-            Link="/Content/object_lifecycle/querying/linq/linq_examples.htm#Sorting" />
+            Link="/Content/basics/querying/linq/linq_examples.htm#Sorting" />
           <TocEntry
             Title="IQueryable"
-            Link="/Content/object_lifecycle/querying/linq/linq_examples.htm#Get" />
+            Link="/Content/basics/querying/linq/linq_examples.htm#Get" />
         </TocEntry>
         <TocEntry
           Title="LINQ Optimization"
-          Link="/Content/object_lifecycle/querying/linq/optimization.htm" />
+          Link="/Content/basics/querying/linq/optimization.htm" />
         <TocEntry
           Title="LINQ For Compact Framework"
-          Link="/Content/object_lifecycle/querying/linq/linq_for_compact_framework.htm" />
+          Link="/Content/basics/querying/linq/linq_for_compact_framework.htm" />
       </TocEntry>
       <TocEntry
         Title="Native Queries"
-        Link="/Content/object_lifecycle/querying/native_queries.htm">
+        Link="/Content/basics/querying/native_queries.htm">
         <TocEntry
-          Title="Native Query Syntax"
-          Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax.htm">
+          Title="Native Query Examples"
+          Link="/Content/basics/querying/native_queries/native_query_examples.htm">
           <TocEntry
-            Title=".NET Syntax"
-            Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax/.net_syntax.htm"
-            conditions="Primary..NET,Primary.All languages" />
+            Title="New entry"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#Equality" />
           <TocEntry
-            Title="Java Syntax"
-            Link="/Content/object_lifecycle/querying/native_queries/native_query_syntax/java_syntax.htm"
-            conditions="Primary.Java,Primary.All languages" />
+            Title="Comparison"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#Comparison" />
+          <TocEntry
+            Title="Query For Value Range"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#ValueRange" />
+          <TocEntry
+            Title="Combine Check With Logical Operators"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#LogicalOperators" />
+          <TocEntry
+            Title="Query In Separate Class"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#SeperateQueryUnit"
+            conditions="Primary.Java"></TocEntry>
+          <TocEntry
+            Title="Query In Separate Method"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#SeperateQueryUnit"
+            conditions="Primary..NET"></TocEntry>
+          <TocEntry
+            Title="Arbitrary Code"
+            Link="/Content/basics/querying/native_queries/native_query_examples.htm#ArbitraryCode" />
         </TocEntry>
         <TocEntry
+          Title="Native Queries Without Generics"
+          Link="/Content/basics/querying/native_queries/native_queries_old_java.htm"
+          conditions="Primary.Java" />
+        <TocEntry
           Title="Native Query Sorting"
-          Link="/Content/object_lifecycle/querying/sorting_query_results/native_query_sorting.htm" />
+          Link="/Content/basics/querying/native_queries/native_query_sorting.htm" />
+        <TocEntry
+          Title="Native Query Optimization"
+          Link="/Content/basics/querying/native_queries/native_query_optimization.htm">
+          <TocEntry
+            Title="Monitoring Optimization"
+            Link="/Content/basics/querying/native_queries/native_query_optimization/monitoring_optimization.htm" />
+          <TocEntry
+            Title="Native Query Optimization At Build Time"
+            Link="/Content/basics/querying/native_queries/native_query_optimization/nq_build_time_optimisation.htm" />
+          <TocEntry
+            Title="NQ Optimization On CF2.0"
+            Link="/Content/basics/querying/native_queries/native_query_optimization/nq_optimization_on_cf2.0.htm"
+            conditions="Primary..NET" />
+        </TocEntry>
       </TocEntry>
       <TocEntry
         Title="Query By Example"
-        Link="/Content/object_lifecycle/querying/query_by_example.htm">
+        Link="/Content/basics/querying/query_by_example.htm">
         <TocEntry
-          Title="Pilot2"
-          Link="/Content/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2.htm" />
+          Title="Query By Example Examples"
+          Link="/Content/basics/querying/query_by_example/qby_examples.htm">
+          <TocEntry
+            Title="Query By Example Basics"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#Basics" />
+          <TocEntry
+            Title="Combine Values"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#Combine" />
+          <TocEntry
+            Title="All Objects Of A Type"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#AllOfAType" />
+          <TocEntry
+            Title="All Objects"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#AllObjects" />
+          <TocEntry
+            Title="Nested Objects"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#NestedObjects"></TocEntry>
+          <TocEntry
+            Title="Contains Example"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#Contains" />
+          <TocEntry
+            Title="Structured Contains"
+            Link="/Content/basics/querying/query_by_example/qby_examples.htm#StructuredCombine" />
+        </TocEntry>
         <TocEntry
           Title="QBE Limitations"
-          Link="/Content/object_lifecycle/querying/query_by_example/qbe_limitations.htm">
-          <TocEntry
-            Title="Pilot2"
-            Link="/Content/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2.htm" />
-          <TocEntry
-            Title="Pilot2Derived"
-            Link="/Content/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2derived.htm" />
-          <TocEntry
-            Title="Pilot1Derived"
-            Link="/Content/object_lifecycle/querying/query_by_example/qbe_limitations/pilot1derived.htm" />
-          <TocEntry
-            Title="Pilot1"
-            Link="/Content/object_lifecycle/querying/query_by_example/qbe_limitations/pilot1.htm" />
-        </TocEntry>
+          Link="/Content/basics/querying/query_by_example/qbe_limitations.htm"></TocEntry>
       </TocEntry>
       <TocEntry
         Title="SODA Query"
-        Link="/Content/object_lifecycle/querying/soda_query.htm">
+        Link="/Content/basics/querying/soda_query.htm">
         <TocEntry
           Title="SODA Query Examples"
-          Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm">
+          Link="/Content/basics/querying/soda/soda_example_catelog.htm">
           <TocEntry
             Title="Type Constraint"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#TypeConstraint"></TocEntry>
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#TypeConstraint"></TocEntry>
           <TocEntry
             Title="Field Constraint"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#FieldConstraint" />
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#FieldConstraint" />
           <TocEntry
             Title="Comparisons"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#Comparisons"></TocEntry>
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#Comparisons"></TocEntry>
           <TocEntry
             Title="Combination of Constraints"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#Combination" />
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#Combination" />
           <TocEntry
             Title="String Comparison"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#StringComparison" />
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#StringComparison" />
           <TocEntry
             Title="Compare Field With Existing Object"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#CheckForObject" />
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#CheckForObject" />
           <TocEntry
             Title="Descend Deeper Into Objects"
-            Link="/Content/object_lifecycle/querying/soda/soda_example_catelog.htm#DescendIntoObjects" />
+            Link="/Content/basics/querying/soda/soda_example_catelog.htm#DescendIntoObjects" />
         </TocEntry>
         <TocEntry
           Title="SODA Special Cases Examples"
-          Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm">
+          Link="/Content/basics/querying/soda/soda_special_case_examples.htm">
           <TocEntry
             Title="Contains on Collections and Arrays"
-            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ContainsOnCollections" />
+            Link="/Content/basics/querying/soda/soda_special_case_examples.htm#ContainsOnCollections" />
           <TocEntry
             Title="Constrains on Collection Members"
-            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ConstrainsOnCollectionMembers" />
+            Link="/Content/basics/querying/soda/soda_special_case_examples.htm#ConstrainsOnCollectionMembers" />
           <TocEntry
             Title="Contains Key on Maps"
-            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#ContainsKeyOnMaps" />
+            Link="/Content/basics/querying/soda/soda_special_case_examples.htm#ContainsKeyOnMaps" />
           <TocEntry
             Title="Return the Objects of a Field"
-            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#FieldObjects" />
+            Link="/Content/basics/querying/soda/soda_special_case_examples.htm#FieldObjects" />
           <TocEntry
             Title="Mixing With Query By Example"
-            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#MixQueryByExample"></TocEntry>
+            Link="/Content/basics/querying/soda/soda_special_case_examples.htm#MixQueryByExample"></TocEntry>
           <TocEntry
             Title="Dynamically Typed"
-            Link="/Content/object_lifecycle/querying/soda/soda_special_case_examples.htm#DynamicTypedNature" />
+            Link="/Content/basics/querying/soda/soda_special_case_examples.htm#DynamicTypedNature" />
         </TocEntry>
         <TocEntry
           Title="SODA Evaluations"
-          Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm">
+          Link="/Content/basics/querying/soda/soda_evaluations.htm">
           <TocEntry
             Title="Simple Evaluation"
-            Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm#SimpleEvaluation" />
+            Link="/Content/basics/querying/soda/soda_evaluations.htm#SimpleEvaluation" />
           <TocEntry
             Title="Evaluation on Field"
-            Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm#EvaluationOnField" />
+            Link="/Content/basics/querying/soda/soda_evaluations.htm#EvaluationOnField" />
           <TocEntry
             Title="Regex on Fields"
-            Link="/Content/object_lifecycle/querying/soda/soda_evaluations.htm#RegexEvaluation" />
+            Link="/Content/basics/querying/soda/soda_evaluations.htm#RegexEvaluation" />
         </TocEntry>
         <TocEntry
           Title="SODA Sorting"
-          Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm">
+          Link="/Content/basics/querying/soda/soda_sorting.htm">
           <TocEntry
             Title="Sorting by Field"
-            Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#SortByField"></TocEntry>
+            Link="/Content/basics/querying/soda/soda_sorting.htm#SortByField"></TocEntry>
           <TocEntry
             Title="Sort by Multiple Fields"
-            Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#SortByMultipleFields" />
+            Link="/Content/basics/querying/soda/soda_sorting.htm#SortByMultipleFields" />
           <TocEntry
             Title="Sorting With A Comperator"
-            Link="/Content/object_lifecycle/querying/soda/soda_sorting.htm#CostumSorting" />
+            Link="/Content/basics/querying/soda/soda_sorting.htm#CostumSorting" />
         </TocEntry>
         <TocEntry
           Title="SODA Processing"
-          Link="/Content/object_lifecycle/querying/soda/soda_processing.htm" />
+          Link="/Content/basics/querying/soda/soda_processing.htm" />
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Working With Structured Objects"
-      Link="/Content/object_lifecycle/working_with_structured_objects.htm">
+      Title="ACID Properties And Transactions"
+      Link="/Content/basics/acid_and_transactions.htm">
       <TocEntry
-        Title="Retrieving Structured Objects"
-        Link="/Content/object_lifecycle/working_with_structured_objects/retrieving_structured_objects.htm" />
+        Title="db4o Transactions"
+        Link="/Content/basics/acid_and_transactions/db4o_tx_basics.htm" />
       <TocEntry
-        Title="Updating Structured Objects"
-        Link="/Content/object_lifecycle/working_with_structured_objects/updating_structured_objects.htm" />
+        Title="Isolation"
+        Link="/Content/basics/acid_and_transactions/isolation.htm" />
       <TocEntry
-        Title="Deleting Structured Objects"
-        Link="/Content/object_lifecycle/working_with_structured_objects/deleting_structured_objects.htm" />
+        Title="Dangerous Practices"
+        Link="/Content/basics/acid_and_transactions/dangerous_practises.htm" />
+      <TocEntry
+        Title="db4o's Commit Process"
+        Link="/Content/basics/acid_and_transactions/commit_process_db4o.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Identity Concept"
+      Link="/Content/basics/identity_concept.htm">
+      <TocEntry
+        Title="Identity Vs Equality"
+        Link="/Content/basics/indentity_concept/identity_vs_equals.htm" />
+      <TocEntry
+        Title="The Reference Cache"
+        Link="/Content/basics/indentity_concept/reference_cache.htm" />
     </TocEntry>
     <TocEntry
       Title="Activation"
-      Link="/Content/object_lifecycle/activation.htm">
+      Link="/Content/basics/activation.htm">
       <TocEntry
-        Title="Global Activation Settings"
-        Link="/Content/object_lifecycle/activation/global_activation_settings.htm" />
+        Title="Activation In Action"
+        Link="/Content/basics/activation_concept/hitting_activation_depth_wall.htm" />
       <TocEntry
-        Title="Object-Specific Activation"
-        Link="/Content/object_lifecycle/activation/object-specific_activation.htm" />
-      <TocEntry
-        Title="Transparent Activation Framework"
-        Link="/Content/object_lifecycle/activation/transparent_activation_framework.htm">
+        Title="Transparent Activation"
+        Link="/Content/basics/activation_concept/transparent_activation_framework.htm">
         <TocEntry
           Title="Example"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/detailed_example.htm" />
+          Link="/Content/basics/activation_concept/transparent_activation_framework/detailed_example.htm" />
         <TocEntry
           Title="TA Implementation"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_implementation.htm" />
+          Link="/Content/basics/activation_concept/transparent_activation_framework/ta_implementation.htm" />
         <TocEntry
           Title="TA Enhanced Example"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example.htm">
+          Link="/Content/basics/activation_concept/transparent_activation_framework/ta_enhanced_example.htm">
           <TocEntry
             Title="TA Enhancement At Load Time"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.htm"
+            Link="/Content/basics/activation_concept/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.htm"
             conditions="Primary.All languages,Primary.Java" />
           <TocEntry
             Title="TA Enhancement At Build Time"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.htm"
+            Link="/Content/basics/activation_concept/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.htm"
             conditions="Primary.All languages,Primary.Java"></TocEntry>
           <TocEntry
             Title="Transparent Persistence For Java Collections"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/transparent_persistence_for_java_collections.htm"
+            Link="/Content/basics/activation_concept/transparent_activation_framework/transparent_persistence_for_java_collections.htm"
             conditions="Primary.Java" />
           <TocEntry
             Title="TA Enhancement With db4otool"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_with_db4otool.htm"
+            Link="/Content/basics/activation_concept/transparent_activation_framework/ta_enhanced_example/ta_enhancement_with_db4otool.htm"
             conditions="Primary..NET,Primary.All languages" />
           <TocEntry
             Title="Sensorpanel"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/sensorpanel.htm"
+            Link="/Content/basics/activation_concept/transparent_activation_framework/ta_enhanced_example/sensorpanel.htm"
             conditions="Primary.All languages,Primary.Java" />
         </TocEntry>
         <TocEntry
           Title="Collections"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/Collections.htm">
+          Link="/Content/basics/activation_concept/transparent_activation_framework/Collections.htm">
           <TocEntry
             Title="Using TA Collections Directly"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/collections/use_ta_collections.htm" />
+            Link="/Content/basics/activation_concept/transparent_activation_framework/collections/use_ta_collections.htm" />
           <TocEntry
             Title="Enhance Collections"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/collections/enhance_collections.htm" />
+            Link="/Content/basics/activation_concept/transparent_activation_framework/collections/enhance_collections.htm" />
         </TocEntry>
         <TocEntry
           Title="Object Types In TA"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/object_types_in_ta.htm"></TocEntry>
+          Link="/Content/basics/activation_concept/transparent_activation_framework/object_types_in_ta.htm"></TocEntry>
         <TocEntry
           Title="TADiagnostics"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_diagnostics.htm" />
+          Link="/Content/basics/activation_concept/transparent_activation_framework/ta_diagnostics.htm" />
         <TocEntry
           Title="TA For Public Fields"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/ta_for_public_fields.htm" />
+          Link="/Content/basics/activation_concept/transparent_activation_framework/ta_for_public_fields.htm" />
         <TocEntry
           Title="Transparent Activation Pitfalls"
-          Link="/Content/object_lifecycle/activation/transparent_activation_framework/transparent_activation_pitfalls.htm">
+          Link="/Content/basics/activation_concept/transparent_activation_framework/transparent_activation_pitfalls.htm">
           <TocEntry
             Title="Migrating Between Databases"
-            Link="/Content/object_lifecycle/activation/transparent_activation_framework/transparent_activation/migrating_between_databases.htm"></TocEntry>
+            Link="/Content/basics/activation_concept/transparent_activation_framework/transparent_activation/migrating_between_databases.htm"></TocEntry>
         </TocEntry>
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Transparent Persistence"
-      Link="/Content/object_lifecycle/transparent_persistence.htm">
+      Title="Update Concept"
+      Link="/Content/basics/update_concept.htm">
       <TocEntry
-        Title="Example"
-        Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence_example.htm" />
+        Title="Update Depth In Action"
+        Link="/Content/basics/update_concept/update_depth_in_action.htm" />
       <TocEntry
-        Title="Implementation"
-        Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence_implementation.htm" />
+        Title="Updating Collections"
+        Link="/Content/basics/update_concept/updating_collections.htm" />
       <TocEntry
-        Title="TP Enhanced Example"
-        Link="/Content/object_lifecycle/transparent_persistence/tp_enhanced_example.htm">
+        Title="Transparent Persistence"
+        Link="/Content/basics/update_concept/transparent_persistence.htm">
         <TocEntry
-          Title="TP Enhancement On Java"
-          Link="/Content/object_lifecycle/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java.htm"
-          conditions="Primary.Java,Primary.All languages">
-          <TocEntry
-            Title="Sensorpanel"
-            Link="/Content/object_lifecycle/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java/sensorpanel.htm" />
-        </TocEntry>
-      </TocEntry>
-      <TocEntry
-        Title="Transparent Persistence Pitfalls"
-        Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence.htm">
+          Title="Transparent Persistence Example"
+          Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence_example.htm" />
         <TocEntry
-          Title="Rollback Strategies"
-          Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies.htm">
+          Title="Transparent Persistence Implementation"
+          Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence_implementation.htm" />
+        <TocEntry
+          Title="TP Enhanced Example"
+          Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example.htm">
           <TocEntry
-            Title="Rollback And Cache"
-            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/rollback_and_cache.htm" />
-          <TocEntry
-            Title="Automatic Deactivation"
-            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/automatic_deactivation.htm" />
-          <TocEntry
-            Title="car"
-            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/car.htm" />
-          <TocEntry
-            Title="id"
-            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/id.htm" />
-          <TocEntry
-            Title="pilot"
-            Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/rollback_strategies/pilot.htm" />
+            Title="TP Enhancement On Java"
+            Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java.htm">
+            <TocEntry
+              Title="SensorPanel"
+              Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java/sensorpanel.htm" />
+          </TocEntry>
         </TocEntry>
         <TocEntry
-          Title="car"
-          Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/car.htm" />
+          Title="Transparent Persistence Pitfalls"
+          Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence.htm">
+          <TocEntry
+            Title="Rollback Strategies"
+            Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies.htm">
+            <TocEntry
+              Title="Rollback And Cache"
+              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/rollback_and_cache.htm" />
+            <TocEntry
+              Title="Automatic Deactivation"
+              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/automatic_deactivation.htm" />
+            <TocEntry
+              Title="Car"
+              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/car.htm" />
+            <TocEntry
+              Title="Id"
+              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/id.htm" />
+            <TocEntry
+              Title="Pilot"
+              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/pilot.htm" />
+          </TocEntry>
+          <TocEntry
+            Title="Car"
+            Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/car.htm" />
+          <TocEntry
+            Title="Object Clone"
+            Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/object_clone.htm" />
+        </TocEntry>
         <TocEntry
-          Title="Object Clone"
-          Link="/Content/object_lifecycle/transparent_persistence/transparent_persistence/object_clone.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Collections"
-        Link="/Content/object_lifecycle/transparent_persistence/collection_example.htm"></TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Update Depth"
-      Link="/Content/object_lifecycle/update_depth.htm">
-      <TocEntry
-        Title="Collections Update Depth"
-        Link="/Content/object_lifecycle/update_depth/collections_update_depth.htm">
-        <TocEntry
-          Title="Insert And Remove"
-          Link="/Content/object_lifecycle/update_depth/collections_update_depth/insert_and_remove.htm" />
-        <TocEntry
-          Title="Updating List Objects"
-          Link="/Content/object_lifecycle/update_depth/collections_update_depth/updating_list_objects.htm" />
+          Title="Collections"
+          Link="/Content/basics/update_concept/transparent_persistence/collection_example.htm" />
       </TocEntry>
     </TocEntry>
     <TocEntry
       Title="Delete Behavior"
-      Link="/Content/object_lifecycle/delete_behavior.htm">
+      Link="/Content/basics/delete_behavior.htm">
       <TocEntry
-        Title="Filling The Database"
-        Link="/Content/object_lifecycle/delete_behavior/filling_the_database.htm" />
+        Title="Cascading Deletion"
+        Link="/Content/basics/delete_behavior/cascading_deletion.htm" />
       <TocEntry
-        Title="Deleting Collections"
-        Link="/Content/object_lifecycle/delete_behavior/deleting_collections.htm" />
-      <TocEntry
-        Title="Deleting Collection Members"
-        Link="/Content/object_lifecycle/delete_behavior/deleting_collection_members.htm" />
-      <TocEntry
-        Title="Example Classes"
-        Link="/Content/object_lifecycle/delete_behavior/example_classes.htm" />
+        Title="Collections And Arrays"
+        Link="/Content/basics/delete_behavior/collections.htm" />
     </TocEntry>
     <TocEntry
-      Title="Object Construction"
-      Link="/Content/object_lifecycle/object_construction.htm">
+      Title="Indexing"
+      Link="/Content/basics/indexing.htm">
       <TocEntry
-        Title="Creating Objects"
-        Link="/Content/object_lifecycle/object_construction/creating_objects.htm" />
+        Title="When And Where"
+        Link="/Content/basics/indexing/when_and_where.htm" />
       <TocEntry
-        Title="Configuration"
-        Link="/Content/object_lifecycle/object_construction/configuration.htm" />
+        Title="Costs And Benefits"
+        Link="/Content/basics/indexing/costs_and_benefits.htm" />
       <TocEntry
-        Title="Troubleshooting"
-        Link="/Content/object_lifecycle/object_construction/troubleshooting.htm" />
-      <TocEntry
-        Title="Examples"
-        Link="/Content/object_lifecycle/object_construction/examples.htm" />
+        Title="Types And Limitations"
+        Link="/Content/basics/indexing/types_and_limitations.htm" />
     </TocEntry>
   </TocEntry>
   <TocEntry
@@ -1118,46 +1011,6 @@
         Link="/Content/implementation_strategies/db4o_meta-information/storedclass_and_storedfield_interfaces.htm" />
     </TocEntry>
     <TocEntry
-      Title="Native Query Collection"
-      Link="/Content/implementation_strategies/native_query_collection.htm">
-      <TocEntry
-        Title="Calculation Examples"
-        Link="/Content/implementation_strategies/native_query_collection/calculation_examples.htm" />
-      <TocEntry
-        Title="Combined Result Sets"
-        Link="/Content/implementation_strategies/native_query_collection/combined_result_sets.htm" />
-      <TocEntry
-        Title="Parameterized NQ"
-        Link="/Content/implementation_strategies/native_query_collection/parameterized_nq.htm" />
-      <TocEntry
-        Title="Persistent Classes"
-        Link="/Content/implementation_strategies/native_query_collection/persistent_classes.htm" />
-      <TocEntry
-        Title="Result Representation"
-        Link="/Content/implementation_strategies/native_query_collection/result_representation.htm" />
-      <TocEntry
-        Title="Selecting Ranges"
-        Link="/Content/implementation_strategies/native_query_collection/selecting_ranges.htm" />
-      <TocEntry
-        Title="Simple Selection"
-        Link="/Content/implementation_strategies/native_query_collection/simple_selection.htm" />
-      <TocEntry
-        Title="Sorting"
-        Link="/Content/implementation_strategies/native_query_collection/sorting.htm" />
-      <TocEntry
-        Title="Store Cars"
-        Link="/Content/implementation_strategies/native_query_collection/store_cars.htm" />
-      <TocEntry
-        Title="Store Persons"
-        Link="/Content/implementation_strategies/native_query_collection/store_persons.htm" />
-      <TocEntry
-        Title="Store Pilots"
-        Link="/Content/implementation_strategies/native_query_collection/store_pilots.htm" />
-      <TocEntry
-        Title="Using Selection Criterias"
-        Link="/Content/implementation_strategies/native_query_collection/using_selection_criterias.htm" />
-    </TocEntry>
-    <TocEntry
       Title="Data Binding"
       Link="/Content/implementation_strategies/data_binding.htm"
       conditions="Primary..NET,Primary.All languages" />
@@ -1652,14 +1505,8 @@
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Indexing"
-      Link="/Content/tuning/indexing.htm" />
-    <TocEntry
       Title="Performance Hints"
       Link="/Content/tuning/performance_hints.htm">
-      <TocEntry
-        Title="Enable Field Indexes"
-        Link="/Content/tuning/performance_hints/enable_field_indexes.htm" />
       <TocEntry
         Title="Discarding Free Space"
         Link="/Content/tuning/performance_hints/discarding_free_space.htm" />
@@ -1733,41 +1580,6 @@
       <TocEntry
         Title="Diagnostic Messages Filter"
         Link="/Content/tuning/diagnostics/diagnostic_messages_filter.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Native Query Optimization"
-      Link="/Content/tuning/native_query_optimization.htm">
-      <TocEntry
-        Title="Optimization At Query Execution Time"
-        Link="/Content/tuning/native_query_optimization/optimization_at_query_execution_time.htm" />
-      <TocEntry
-        Title="NQ Optimization At Load Time"
-        Link="/Content/tuning/native_query_optimization/nq_optimization_at_load_time.htm"
-        conditions="Primary.All languages,Primary.Java">
-        <TocEntry
-          Title="pilot"
-          Link="/Content/tuning/native_query_optimization/nq_optimization_at_load_time/pilot.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="NQ Optimization At Build Time"
-        Link="/Content/tuning/native_query_optimization/nq_optimization_at_build_time.htm"
-        conditions="Primary.All languages,Primary.Java">
-        <TocEntry
-          Title="build"
-          Link="/Content/tuning/native_query_optimization/nq_optimization_at_build_time/build.xml" />
-      </TocEntry>
-      <TocEntry
-        Title="NQ Optimization On CF2.0"
-        Link="/Content/tuning/native_query_optimization/nq_optimization_on_cf2.0.htm"
-        conditions="Primary..NET,Primary.All languages" />
-      <TocEntry
-        Title="Build-time Optimization For .NET"
-        Link="/Content/tuning/native_query_optimization/build-time_optimization_for_.net.htm"
-        conditions="Primary..NET,Primary.All languages" />
-      <TocEntry
-        Title="Monitoring Optimization"
-        Link="/Content/tuning/native_query_optimization/monitoring_optimization.htm"
-        conditions="Primary.All languages,Primary.Java" />
     </TocEntry>
     <TocEntry
       Title="Utility Methods"
@@ -1878,10 +1690,6 @@
         Title="Multidimensional Arrays"
         Link="/Content/client-server/server_without_persistent_classes_deployed/multidimensional_arrays.htm" />
     </TocEntry>
-    <TocEntry
-      Title="Switching Database Files In CS Mode"
-      Link="/Content/client-server/switching_database_files_in_cs_mode.htm"
-      conditions="Primary.TobeReviewed" />
     <TocEntry
       Title="Reference Cache In Client-Server Mode"
       Link="/Content/client-server/reference_cache_in_client-server_mode.htm"></TocEntry>

@@ -1,34 +1,84 @@
+Imports System.Linq
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Code.Basics
     Public Class Db4oBasics
         Public Shared Sub Main(ByVal args As String())
             OpenAndCloseTheContainer()
+            StoreObject()
+            Query()
+            UpdateDatabase()
+            DeleteObject()
 
-            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
-                StoreObject(container)
-                DeleteObject(container)
-            End Using
+            AllOperationsInOnGo()
         End Sub
 
-        Private Shared Sub StoreObject(ByVal container As IObjectContainer)
+        Private Shared Sub StoreObject()
             ' #example: Store a object
-            Dim pilot As New Pilot("Joe")
-            container.Store(pilot)
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
+                Dim pilot As New Pilot("Joe")
+                container.Store(pilot)
+            End Using
             ' #end example
         End Sub
 
-        Private Shared Sub DeleteObject(ByVal container As IObjectContainer)
-            Dim pilot As Pilot = container.Query(Of Pilot)()(0)
+        Private Shared Sub Query()
+            ' #example: Query for objects
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
+                Dim pilots = From p As Pilot In container Where p.Name = "Joe"
+                For Each pilot As Pilot In pilots
+                    Console.Out.WriteLine(pilot.Name)
+                Next
+            End Using
+            ' #end example
+        End Sub
+
+        Private Shared Sub UpdateDatabase()
+            ' #example: Update a pilot
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
+                Dim pilot = (From p As Pilot In container Where p.Name = "Joe").First()
+                pilot.Name = "New Name"
+                ' update the pilot
+                container.Store(pilot)
+            End Using
+            ' #end example
+        End Sub
+
+        Private Shared Sub DeleteObject()
             ' #example: Delete a object
-            container.Delete(pilot)
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
+                Dim pilot = (From p As Pilot In container Where p.Name = "Joe").First()
+                container.Delete(pilot)
+            End Using
             ' #end example
         End Sub
 
         Private Shared Sub OpenAndCloseTheContainer()
             ' #example: Open the object container to use the database
-            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")               
-                ' use the object container
+            ' use the object container
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
+            End Using
+            ' #end example
+        End Sub
+
+        Private Shared Sub AllOperationsInOnGo()
+            ' #example: The basic operations
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
+                ' store a new pilot
+                Dim pilot As New Pilot("Joe")
+                container.Store(pilot)
+
+                ' query for pilots
+                Dim pilots = From p As Pilot In container Where p.Name.StartsWith("Jo")
+
+                ' update pilot
+                Dim toUpdate As Pilot = pilots.First()
+                toUpdate.Name = "New Name"
+                container.Store(toUpdate)
+
+                ' delete pilot
+                container.Delete(toUpdate)
             End Using
             ' #end example
         End Sub

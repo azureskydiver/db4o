@@ -24,4 +24,8 @@ class Person {
     public boolean add(Person person) {
         return friends.add(person);
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="4166" MadCap:lastWidth="602">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="3679" MadCap:lastWidth="573">
     <head><title>Reference Cache In Client-Server Mode	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
-        <h1>
-            <MadCap:keyword term="Cache" />Reference Cache In Client-Server Mode</h1>
-        <p>Db4o uses an object <a href="../basic_concepts/object_identity/weak_references.htm">reference
-cache</a> for easy access to persistent objects during one transaction. In
+        <h1>Reference Cache In Client-Server Mode</h1>
+        <p>Db4o uses an <a href="../basics/indentity_concept/reference_cache.htm">object reference cache</a> for easy access to persistent objects during one transaction. In
 client/server mode each client has its own reference cache, which helps to
 achieve good performance. However it gets complicated, when different clients
 work on the same object, as this object's cached value is used on each side. It

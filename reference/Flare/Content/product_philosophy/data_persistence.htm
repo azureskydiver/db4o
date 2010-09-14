@@ -1,28 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-    <head><title>Data Persistence	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="865" MadCap:lastWidth="605">
+    <head>
     </head>
-    <body onload="prettyPrint()">
+    <body>
         <h1>Data Persistence</h1>
         <p>Software programs using different data
 persistence technologies are an integral part of contemporary informational
 space. More than often such systems are implemented with the help of
-object-oriented programming language (Java, c#, etc.) and a relational database
+object-oriented programming language (Java, C#, etc.) and a relational database
 management system (Oracle, MySQL, etc.). This implementation originally
 contains a mismatch between relational and object worlds, which is often called
-"object/relational impedance mismatch" (OR mismatch shortly). The
+object/relational impedance mismatch. The
 essence of the problem is in the way the systems are designed. Object systems
 consist of objects and are characterized by identity, state, behavior,
 encapsulation. The relational model consists of tables, columns, rows and
-foreign keys and is described by relation, attribute, tuple, relation value and
-relation variable.</p>
+foreign keys and is described by relations, attributes and tuples.</p>
         <p>The object-relational mismatch has become
 enormously significant with the total adoption of OO technology. This resulted
-in the rapid development of so-called object-relational mappers (ORM), such as
-Hibernate or Toplink. This solution "cures" the symptoms of the OR
+in the rapid development of object-relational mappers (ORM), such as
+Hibernate, EclipseLink or Entity Framework. This solution "cures" the symptoms of the object relational
 mismatch by adding a layer into the software stack that automates the tedious
 task of linking objects to tables. However, this approach creates a huge drain
-on system performance, drives up software complexity, and increases the burden
+on system performance, drives up software complexity and increases the burden
 on software maintenance, thus resulting in higher cost of ownership. While the
 mapper solution may be feasible in large, administered datacenter environments,
 it is prohibitive in distributed and zero-administration architectures such as

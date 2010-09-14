@@ -87,7 +87,7 @@
     Comment=""
     Definition="Some text">jars</Variable>
   <Variable
-    Name="bytecode"
+    Name="ByteCode"
     Comment=""
     Definition="Some text">bytecode</Variable>
   <Variable

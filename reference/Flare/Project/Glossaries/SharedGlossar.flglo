@@ -22,4 +22,18 @@
     <Definition
       Link="">Object Manager, a tool to view and edit a db4o database</Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>TA</Term>
+    </Terms>
+    <Definition
+      Link="">Transparent Activation</Definition>
+  </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>TP</Term>
+    </Terms>
+    <Definition
+      Link="">Transparent Persistence</Definition>
+  </GlossaryEntry>
 </CatapultGlossary>

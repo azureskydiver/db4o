@@ -1,6 +1,6 @@
 package com.db4odoc.pitfalls.activation;
 
-
+// #example: Person with a reference to the mother
 class Person {
     private Person mother;
     private String name;
@@ -22,3 +22,4 @@ class Person {
         return name;
     }
 }
+// #end example

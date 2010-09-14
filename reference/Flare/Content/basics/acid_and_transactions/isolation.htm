@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="660" MadCap:lastWidth="586" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="Isolation" />Isolation</h1>
+        <p>Isolation
+imposes rules which ensure that transactions do not interfere with each other
+even if they are executed at the same time. If two or more transactions are
+executed at the same time, they must be executed in a way so that transaction A
+won't be impacted by the intermediate data of transaction B. Note that
+isolation does not dictate the order of the transactions. Another important
+thing to understand about isolation is serializability of transactions. If the
+effect on the database is the same when transactions are executed concurrently
+or when their execution is interleaved, these transactions are called
+serializable.</p>
+        <p>There are
+several degrees of isolation to be distinguished:</p>
+        <ul>
+            <li>Degree 0: A
+transaction does not overwrite data updated by another user or process
+("dirty data") of other transactions.</li>
+            <li>Degree 1:
+Degree 0 plus a transaction does not commit any writes until it completes all
+its writes (until the end of transaction).</li>
+            <li>Degree 2:
+Degree 1 plus a transaction does not read dirty data from other transactions.</li>
+            <li>Degree 3:
+Degree 2 plus other transactions do not dirty data read by a transaction before
+the transaction commits.</li>
+        </ul>
+        <p>The more
+common classification is by isolation levels:</p>
+        <ol>
+            <li><strong>Serializable</strong>: In this
+case, transactions are executed serially so that there is no concurrent data
+access. Transactions can also be executed concurrently but only when the
+illusion of serial transactions is maintained (i.e. no concurrent access to
+data occurs).  If the system uses locks,
+a lock should be obtained over the whole range of selected data. If the system does not use locks, no lock is acquired; however,
+if the system detects a concurrent transaction in progress, which would violate
+the serializability illusion, it must force that transaction to rollback, and
+the application will have to restart the transaction.</li>
+            <li><strong>Repeatable Read</strong>: In this case, a lock is acquired
+over all the data retrieved from a database. Phantom reads can occur (i.e. new
+data from the other committed transactions included in the result)</li>
+            <li><strong>Read Committed</strong>: In this case, read locks are
+acquired on the result set, but released immediately. Write locks are acquired
+and released only at the end of the transaction. Non-repeatable reads can occur, i.e. deletions or modifications from the other committed transactions will be visible by the current transaction. Phantom
+reads are also possible. This is the model db4o uses.</li>
+            <li><strong>Read Uncommitted</strong>: With this isolation level dirty reads are
+allowed.  Uncommitted modifications from
+the other transactions are visible. Both phantom and nonrepeatable reads can
+occur.</li>
+        </ol>
+    </body>
+</html>

@@ -21,9 +21,27 @@ public class ActivationDepthPitfall {
             e.printStackTrace();
         }
 
+        fixItWithExplicitlyActivating();
         fixItWithHigherActivationDepth();
     }
 
+    private static void fixItWithExplicitlyActivating() {
+        ObjectContainer container = Db4oEmbedded.openFile("database.db4o");
+        try {
+            final Person jodie = queryForJodie(container);
+
+            // #example: Fix with explicit activation
+            Person julia = jodie.mother().mother().mother().mother().mother();
+            container.activate(julia,5);
+
+            System.out.println(julia.getName());
+            String joannaName = julia.mother().getName();
+            System.out.println(joannaName);
+            // #end example
+        } finally {
+            container.close();
+        }
+    }
     private static void fixItWithHigherActivationDepth() {
 
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
@@ -45,11 +63,9 @@ public class ActivationDepthPitfall {
     private static void runIntoActivationIssue() {
         ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
         try {
-            // #example: run into not activated objects
+            // #example: Run into not activated objects
             final Person jodie = queryForJodie(container);
-
             Person julia = jodie.mother().mother().mother().mother().mother();
-
             // This will print null
             // Because julia is not activated
             // and therefore all fields are not set

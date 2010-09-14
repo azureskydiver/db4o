@@ -10,8 +10,8 @@
   MasterStylesheet="/Content/Resources/Stylesheets/OnlineStyle.css"
   MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
   UseCustomTopicFileExtension="false"
-  OutputFolder="e:/db4o-dist/java/temp"
   OutputFile="index.html"
+  OutputFolder=""
   Skin="/Project/Skins/RedVersant.flskn">
   <Glossaries>
     <Glossary

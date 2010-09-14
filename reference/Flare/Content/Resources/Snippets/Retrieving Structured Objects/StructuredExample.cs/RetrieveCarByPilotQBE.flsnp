@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveCarByPilotQBE
-private static void RetrieveCarByPilotQBE(IObjectContainer db)
-     {
-      Pilot pilotproto = new Pilot(&quot;Rubens Barrichello&quot;,0);
-      Car carproto = new Car(null);
-      carproto.Pilot = pilotproto;
-      IObjectSet result = db.QueryByExample(carproto);
-      ListResult(result);
-    }</pre>    </body></html>

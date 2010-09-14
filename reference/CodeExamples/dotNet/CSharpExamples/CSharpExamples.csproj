@@ -114,6 +114,7 @@
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />
     <Compile Include="Code\deframentation\DefragmentationConfigurationExamples.cs" />
     <Compile Include="Code\deframentation\DefragmentationExample.cs" />
+    <Compile Include="Code\deletion\DeletionExamples.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrementExample.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.cs" />
     <Compile Include="Code\disconnectedobj\idexamples\Db4oInternalIdExample.cs" />
@@ -131,10 +132,19 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\identiy\DataModel.cs" />
+    <Compile Include="Code\identiy\IdentityConcepts.cs" />
+    <Compile Include="Code\indexing\where\WhereToIndexExample.cs" />
     <Compile Include="Code\pitfalls\activation\ActivationDepthPitfall.cs" />
+    <Compile Include="Code\pitfalls\activation\Person.cs" />
     <Compile Include="Code\pitfalls\updatedepth\UpdateDepthPitfall.cs" />
     <Compile Include="Code\query\linq\LinqExamples.cs" />
+    <Compile Include="Code\query\nq\DataModel.cs" />
     <Compile Include="Code\query\nq\NativeQueriesSorting.cs" />
+    <Compile Include="Code\query\nq\NativeQueryDiagnostics.cs" />
+    <Compile Include="Code\query\nq\NativeQueryExamples.cs" />
+    <Compile Include="Code\query\qbe\DataModel.cs" />
+    <Compile Include="Code\query\qbe\QueryByExamples.cs" />
     <Compile Include="Code\query\soda\DataModel.cs" />
     <Compile Include="Code\query\soda\SodaEvaluationExamples.cs" />
     <Compile Include="Code\query\soda\SodaQueryExamples.cs" />
@@ -153,6 +163,7 @@
     <Compile Include="Code\ta\collections\Team.cs" />
     <Compile Include="Code\ta\example\Person.cs" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
+    <Compile Include="Code\transactions\Transactions.cs" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
     <Compile Include="Code\tuning\monitoring\IOMonitoring.cs" />
     <Compile Include="Code\tuning\monitoring\CSMonitoring.cs" />
