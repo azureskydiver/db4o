@@ -96,7 +96,7 @@ public class JdoMirror {
 		fieldNameToIndex = new HashMap<String, Integer>();
 		
 		for(int i = 0;i<image().jdoFieldNames.length;i++) {
-			fieldNameToIndex().put(image().jdoFieldNames[i], i++);
+			fieldNameToIndex.put(image().jdoFieldNames[i], i);
 		}
 	}
 
