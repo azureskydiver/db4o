@@ -48,7 +48,13 @@ public class Replication {
 	}
 	
 	public static ReplicationSession begin(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo, Reflector reflector) {
-		DefaultReplicationEventListener listener = new DefaultReplicationEventListener();
+		return begin(providerFrom, providerTo, null, reflector);
+	}
+
+	public static ReplicationSession begin(ReplicationProvider providerFrom, ReplicationProvider providerTo, ReplicationEventListener listener, Reflector reflector) {
+		if (listener == null) {
+			listener = new DefaultReplicationEventListener();
+		}
 		ReplicationReflector rr = new ReplicationReflector(providerFrom, providerTo, reflector);
 		providerFrom.replicationReflector(rr);
 		providerTo.replicationReflector(rr);
@@ -70,13 +76,7 @@ public class Replication {
 	 */
 	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB,
 			ReplicationEventListener listener) {
-		if (listener == null) {
-			listener = new DefaultReplicationEventListener();
-		}
-		ReplicationReflector reflector = new ReplicationReflector(providerA, providerB, null);
-		providerA.replicationReflector(reflector);
-		providerB.replicationReflector(reflector);
-		return new GenericReplicationSession(providerA, providerB, listener);
+		return begin(providerA, providerB, listener, null);
 	}
 
 	/**
