@@ -181,7 +181,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	
 	protected void replicateAll(
 			TestableReplicationProviderInside from, TestableReplicationProviderInside to, ReplicationEventListener listener) {
-		ReplicationSession replication = Replication.begin(from, to, listener);
+		ReplicationSession replication = Replication.begin(from, to, listener, _fixtures.reflector);
 
 		replicateAll(replication, from.objectsChangedSinceLastReplication().iterator());
 	}
