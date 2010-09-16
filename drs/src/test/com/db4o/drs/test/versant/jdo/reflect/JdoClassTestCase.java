@@ -28,9 +28,10 @@ public class JdoClassTestCase implements TestLifeCycle {
 		
 		ReflectField[] declaredFields = c.getDeclaredFields();
 		isNotNull(declaredFields);
-		areEqual(3, declaredFields.length);
+		areEqual(4, declaredFields.length);
 		
 		assertDeclaredField(c, "name", String.class);
+		assertDeclaredField(c, "age", int.class);
 		assertDeclaredField(c, "staticField", int.class);
 		assertDeclaredField(c, "transientField", int.class);
 	}
@@ -42,13 +43,20 @@ public class JdoClassTestCase implements TestLifeCycle {
 	
 	public void testGet() {
 		
-		JdoAwareItem item = new JdoAwareItem("42");
+		JdoAwareItem item = new JdoAwareItem("42", 42);
 
+		assertFieldValue("42", "name", item);
+		Meta.invocations.clear();
+		assertFieldValue(42, "age", item);
+		Meta.invocations.clear();
+	}
+
+	private void assertFieldValue(Object value, String fieldName, JdoAwareItem item) {
 		ReflectClass c = reflector.forObject(item);
 		
 		isTrue(Meta.invocations.isEmpty());
-		areEqual("42", c.getDeclaredField("name").get(item));
-		IteratorAssert.areEqual(new String[]{"jdoGetname"}, Meta.invocations.iterator());
+		areEqual(value, c.getDeclaredField(fieldName).get(item));
+		IteratorAssert.areEqual(new String[]{"jdoGet"+fieldName}, Meta.invocations.iterator());
 	}
 	
 	public void testSet() {

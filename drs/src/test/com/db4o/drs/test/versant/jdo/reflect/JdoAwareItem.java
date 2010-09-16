@@ -17,12 +17,18 @@ public class JdoAwareItem extends NotImplementedPersistenceCapable {
 		this.name = name;
 	}
 
+	public JdoAwareItem(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
+
 	private String name;
+	private int age;
 	private static int staticField;
 	private transient int transientField;
 
-	private static String jdoFieldNames[] = { "name" };
-	private static Class jdoFieldTypes[] = { String.class };
+	private static String jdoFieldNames[] = { "name", "age" };
+	private static Class jdoFieldTypes[] = { String.class, Integer.TYPE };
 
 	private static String jdoGetname(JdoAwareItem obj) {
 		Meta.invocations.add("jdoGetname");
@@ -32,6 +38,16 @@ public class JdoAwareItem extends NotImplementedPersistenceCapable {
 	private static void jdoSetname(JdoAwareItem obj, String name) {
 		Meta.invocations.add("jdoSetname");
 		obj.name = name;
+	}
+
+	private static int jdoGetage(JdoAwareItem obj) {
+		Meta.invocations.add("jdoGetage");
+		return obj.age;
+	}
+
+	private static void jdoSetage(JdoAwareItem obj, int age) {
+		Meta.invocations.add("jdoSetage");
+		obj.age = age;
 	}
 
 }
