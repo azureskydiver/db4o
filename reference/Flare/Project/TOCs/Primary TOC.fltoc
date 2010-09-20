@@ -708,6 +708,52 @@
       Link="/Content/configuration/server_configuration.htm" />
   </TocEntry>
   <TocEntry
+    Title="Client-Server"
+    Link="/Content/client-server.htm">
+    <TocEntry
+      Title="Reference Cache In Client-Server Mode"
+      Link="/Content/client-server/reference_cache_in_client-server_mode.htm">
+      <TocEntry
+        Title="Refreshing Objects"
+        Link="/Content/client-server/refreshing_objects.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Embedded Clients"
+      Link="/Content/client-server/embedded.htm" />
+    <TocEntry
+      Title="Native Queries"
+      Link="/Content/client-server/native_queries.htm" />
+    <TocEntry
+      Title="Anonymous Classes In Client Server Mode"
+      Link="/Content/client-server/anonymous_classes.htm"
+      conditions="Primary.Java" />
+    <TocEntry
+      Title="Server Without Persistent Classes Deployed"
+      Link="/Content/client-server/server_without_persistent_classes_deployed.htm"></TocEntry>
+    <TocEntry
+      Title="Events In Client Server-Mode"
+      Link="/Content/client-server/events_in_cs_mode.htm" />
+    <TocEntry
+      Title="Client-Container Pooling"
+      Link="/Content/client-server/pooling.htm" />
+    <TocEntry
+      Title="Concurrency Control"
+      Link="/Content/client-server/concurrency_control.htm">
+      <TocEntry
+        Title="Semaphores"
+        Link="/Content/client-server/semaphores.htm"></TocEntry>
+    </TocEntry>
+    <TocEntry
+      Title="Messaging"
+      Link="/Content/client-server/messaging.htm" />
+    <TocEntry
+      Title="Using SSL For Client-Server Communication"
+      Link="/Content/client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm" />
+    <TocEntry
+      Title="Client-Server Timeouts"
+      Link="/Content/client-server/client-server_timeouts.htm" />
+  </TocEntry>
+  <TocEntry
     Title="Implementation Strategies"
     Link="/Content/implementation_strategies.htm">
     <TocEntry
@@ -1643,110 +1689,6 @@
     <TocEntry
       Title="Working With Large Amounts Of Data"
       Link="/Content/usage_pitfalls/working_with_large_amounts_of_data.htm" />
-  </TocEntry>
-  <TocEntry
-    Title="Client-Server"
-    Link="/Content/client-server.htm">
-    <TocEntry
-      Title="Embedded"
-      Link="/Content/client-server/embedded.htm" />
-    <TocEntry
-      Title="Networked"
-      Link="/Content/client-server/networked.htm">
-      <TocEntry
-        Title="Network Server"
-        Link="/Content/client-server/networked/network_server.htm" />
-      <TocEntry
-        Title="Simple db4o Server"
-        Link="/Content/client-server/networked/simple_db4o_server.htm" />
-      <TocEntry
-        Title="Communication Timeouts"
-        Link="/Content/client-server/networked/communication_timeouts.htm"
-        conditions="Primary.TobeReviewed" />
-    </TocEntry>
-    <TocEntry
-      Title="Native Queries"
-      Link="/Content/client-server/native_queries.htm" />
-    <TocEntry
-      Title="Anonymous Classes In Client Server Mode"
-      Link="/Content/client-server/anonymous_classes.htm"
-      conditions="Primary.Java" />
-    <TocEntry
-      Title="Server Without Persistent Classes Deployed"
-      Link="/Content/client-server/server_without_persistent_classes_deployed.htm">
-      <TocEntry
-        Title="Saving Objects"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/saving_objects.htm" />
-      <TocEntry
-        Title="QBE"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/qbe.htm" />
-      <TocEntry
-        Title="Native Queries"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/native_queries.htm" />
-      <TocEntry
-        Title="Evaluations"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/evaluations.htm" />
-      <TocEntry
-        Title="Multidimensional Arrays"
-        Link="/Content/client-server/server_without_persistent_classes_deployed/multidimensional_arrays.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Reference Cache In Client-Server Mode"
-      Link="/Content/client-server/reference_cache_in_client-server_mode.htm"></TocEntry>
-    <TocEntry
-      Title="Refreshing Objects"
-      Link="/Content/client-server/refreshing_objects.htm" />
-    <TocEntry
-      Title="Events In Client Server-Mode"
-      Link="/Content/client-server/events_in_cs_mode.htm" />
-    <TocEntry
-      Title="Client-Container Pooling"
-      Link="/Content/client-server/pooling.htm" />
-    <TocEntry
-      Title="Semaphores"
-      Link="/Content/client-server/semaphores.htm">
-      <TocEntry
-        Title="Locking Objects"
-        Link="/Content/client-server/semaphores/locking_objects.htm" />
-      <TocEntry
-        Title="Ensuring Singletons"
-        Link="/Content/client-server/semaphores/ensuring_singletons.htm" />
-      <TocEntry
-        Title="Limiting The Number Of Users"
-        Link="/Content/client-server/semaphores/limiting_the_number_of_users.htm" />
-      <TocEntry
-        Title="Controlling Login Information"
-        Link="/Content/client-server/semaphores/controlling_login_information.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Remote Code Execution"
-      Link="/Content/client-server/remote_code_execution.htm">
-      <TocEntry
-        Title="Remote Execution Through Evaluation API"
-        Link="/Content/client-server/remote_code_execution/remote_execution_through_evaluation_api.htm" />
-      <TocEntry
-        Title="Using Messaging API For Remote Code Execution"
-        Link="/Content/client-server/remote_code_execution/using_messaging_api_for_remote_code_execution.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Concurrency Control"
-      Link="/Content/client-server/concurrency_control.htm">
-      <TocEntry
-        Title="Optimistic Locking"
-        Link="/Content/client-server/concurrency_control/optimistic_locking.htm" />
-      <TocEntry
-        Title="Pessimistic Locking"
-        Link="/Content/client-server/concurrency_control/pessimistic_locking.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Messaging"
-      Link="/Content/client-server/messaging.htm" />
-    <TocEntry
-      Title="Using SSL For Client-Server Communication"
-      Link="/Content/client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm" />
-    <TocEntry
-      Title="Client-Server Timeouts"
-      Link="/Content/client-server/client-server_timeouts.htm" />
   </TocEntry>
   <TocEntry
     Title="db4o Replication System dRS"

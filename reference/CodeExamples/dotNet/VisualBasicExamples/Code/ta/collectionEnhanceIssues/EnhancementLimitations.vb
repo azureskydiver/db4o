@@ -1,4 +1,5 @@
 Imports System.Collections.Generic
+Imports Db4objects.Db4o.Collections
 
 Namespace Db4oDoc.Code.TA.CollectionEnhanceIssues
     ' #example: Can be enhanced by the db4o-tools
@@ -17,7 +18,7 @@ Namespace Db4oDoc.Code.TA.CollectionEnhanceIssues
     Namespace AfterEnhancement
         ' #example: Is enhanced to
         Public Class CanBeEnhanced
-            Private _names As IList(Of String) = New List(Of String)()
+            Private _names As IList(Of String) = New ActivatableList(Of String)()
 
             Public Function ContainsName(ByVal item As String) As Boolean
                 Return _names.Contains(item)

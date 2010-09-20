@@ -161,10 +161,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\basics\Db4oBasics.vb" />
+    <Compile Include="Code\clientserver\basics\Db4oClientExample.vb" />
+    <Compile Include="Code\clientserver\basics\ServerExample.vb" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.vb" />
     <Compile Include="Code\clientserver\pooling\ConnectionPool.vb" />
     <Compile Include="Code\clientserver\pooling\ConnectionPoolExamples.vb" />
     <Compile Include="Code\clientserver\pooling\TestConnectionPool.vb" />
+    <Compile Include="Code\clientserver\referencecache\ReferenceCacheExamples.vb" />
     <Compile Include="Code\clientserver\ssl\SSLExample.vb" />
     <Compile Include="Code\configuration\alias\AliasExamples.vb" />
     <Compile Include="Code\configuration\client\ClientConfigurationExamples.vb" />
@@ -195,6 +198,7 @@
     <Compile Include="Code\query\soda\SodaEvaluationExamples.vb" />
     <Compile Include="Code\query\soda\SodaQueryExamples.vb" />
     <Compile Include="Code\query\soda\SodaSorting.vb" />
+    <Compile Include="Code\semaphores\SemaphoreExamples.vb" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.vb" />
     <Compile Include="Code\strategies\paging\PagingUtility.vb" />
     <Compile Include="Code\strategies\paging\TestPagingUtility.vb" />

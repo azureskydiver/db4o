@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">' Grab the lock. Specify the name and a timeout in milliseconds
+Dim hasLock As Boolean = container.Ext().SetSemaphore(&quot;LockName&quot;, 1000)
+Try
+    ' you need to check the lock
+    If hasLock Then
+        Console.WriteLine(&quot;Could get lock&quot;)
+    Else
+        Console.WriteLine(&quot;Couldn't get lock&quot;)
+    End If
+Finally
+    ' release the lock
+    container.Ext().ReleaseSemaphore(&quot;LockName&quot;)
+End Try</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">' Grab the lock. Specify the name and a timeout in milliseconds
+Dim hasLock As Boolean = container.Ext().SetSemaphore(&quot;LockName&quot;, 1000)
+Try
+    ' you need to check the lock
+    If hasLock Then
+        Console.WriteLine(&quot;Could get lock&quot;)
+    Else
+        Console.WriteLine(&quot;Couldn't get lock&quot;)
+    End If
+Finally
+    ' release the lock
+    container.Ext().ReleaseSemaphore(&quot;LockName&quot;)
+End Try</pre>
+		<div class="codesnippet-meta">
+			SemaphoreExamples.vb: Grab a semaphore
+			<div class="codedownload">
+				<a href="Example-Code-semaphores-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

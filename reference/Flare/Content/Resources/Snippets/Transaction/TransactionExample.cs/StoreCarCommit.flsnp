@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.cs: StoreCarCommit
-private static void StoreCarCommit(IObjectContainer db)
-         {
-            Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
-            Car car = new Car(&quot;BMW&quot;);
-            car.Pilot = pilot;
-            db.Store(car);
-            db.Commit();
-        }</pre>    </body></html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim personOnClient1 As Person = QueryForPerson(client1)
+Dim personOnClient2 As Person = QueryForPerson(client2)
+Console.Write(QueryForPerson(client2).Name)
+
+personOnClient1.Name = (&quot;New Name&quot;)
+client1.Store(personOnClient1)
+client1.Commit()
+
+' The other client still has the old data in the cache
+Console.Write(QueryForPerson(client2).Name)
+
+client2.Ext().Refresh(personOnClient2, Integer.MaxValue)
+
+' After refreshing the date is visible
+Console.Write(QueryForPerson(client2).Name)</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim personOnClient1 As Person = QueryForPerson(client1)
+Dim personOnClient2 As Person = QueryForPerson(client2)
+Console.Write(QueryForPerson(client2).Name)
+
+personOnClient1.Name = (&quot;New Name&quot;)
+client1.Store(personOnClient1)
+client1.Commit()
+
+' The other client still has the old data in the cache
+Console.Write(QueryForPerson(client2).Name)
+
+client2.Ext().Refresh(personOnClient2, Integer.MaxValue)
+
+' After refreshing the date is visible
+Console.Write(QueryForPerson(client2).Name)</pre>
+		<div class="codesnippet-meta">
+			ReferenceCacheExamples.vb: Reference cache in client server
+			<div class="codedownload">
+				<a href="Example-clientserver-referencecache-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

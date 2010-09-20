@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.java: storeCarCommit
-private static void storeCarCommit(ObjectContainer container)  {
-        Pilot pilot=new Pilot(&quot;Rubens Barrichello&quot;,99);
-        Car car=new Car(&quot;BMW&quot;);
-        car.setPilot(pilot);
-        container.store(car);
-        container.commit();
-    }</pre>    </body></html>
