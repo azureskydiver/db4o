@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">// Grab the lock. Specify the name and a timeout in milliseconds
+boolean hasLock = container.ext().setSemaphore(&quot;LockName&quot;, 1000);
+try {
+    // you need to check the lock
+    if (hasLock) {
+        System.out.println(&quot;Could get lock&quot;);
+    } else{
+        System.out.println(&quot;Couldn't get lock&quot;);
+    }
+} finally {
+    // release the lock
+    container.ext().releaseSemaphore(&quot;LockName&quot;);
+}</pre>
+		<div class="codesnippet-meta">
+			SemaphoreExamples.java: Grab a semaphore
+			<div class="codedownload">
+				<a href="Example-db4odoc-semaphores-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

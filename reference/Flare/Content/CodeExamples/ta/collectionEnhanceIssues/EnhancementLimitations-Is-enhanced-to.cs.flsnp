@@ -4,7 +4,7 @@
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
         <pre class="prettyprint" xml:space="preserve">public class CanBeEnhanced
 {
-    private IList&lt;string&gt; _names = new List&lt;string&gt;();
+    private IList&lt;string&gt; _names = new ActivatableList&lt;string&gt;();
 
     public bool ContainsName(string item)
     {

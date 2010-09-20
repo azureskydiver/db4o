@@ -31,14 +31,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Native Query</Term>
-      <Term>NQ</Term>
-    </Terms>
-    <Definition
-      Link="/Content/basics/querying/native_queries.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>Transaction</Term>
     </Terms>
   </GlossaryEntry>

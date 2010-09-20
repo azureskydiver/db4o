@@ -3,7 +3,7 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class CanBeEnhanced
-    Private _names As IList(Of String) = New List(Of String)()
+    Private _names As IList(Of String) = New ActivatableList(Of String)()
 
     Public Function ContainsName(ByVal item As String) As Boolean
         Return _names.Contains(item)
@@ -14,7 +14,7 @@
     End Sub
 End Class</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class CanBeEnhanced
-    Private _names As IList(Of String) = New List(Of String)()
+    Private _names As IList(Of String) = New ActivatableList(Of String)()
 
     Public Function ContainsName(ByVal item As String) As Boolean
         Return _names.Contains(item)

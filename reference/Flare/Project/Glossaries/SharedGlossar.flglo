@@ -36,4 +36,11 @@
     <Definition
       Link="">Transparent Persistence</Definition>
   </GlossaryEntry>
+  <GlossaryEntry>
+    <Terms>
+      <Term>NQ</Term>
+    </Terms>
+    <Definition
+      Link="">Native Query</Definition>
+  </GlossaryEntry>
 </CatapultGlossary>

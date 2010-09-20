@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="308" MadCap:lastWidth="586" MadCap:conditions="Primary.Java">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="306" MadCap:lastWidth="581" MadCap:conditions="Primary.Java">
     <head>
     </head>
     <body>
@@ -12,7 +12,7 @@ contain a reference to their parent class, meaning that the parent class will
 be marshalled as well!</p>
         <p>This has two issues:</p>
         <ul>
-            <li>All the stuff referenced by the parent class will be marshaled and sent to. This means additional traffic between the server and the client.</li>
+            <li>All the stuff referenced by the parent class will be marshaled and sent too. This means additional traffic between the server and the client.</li>
             <li>The parent class maybe contains stuff which cannot be serialized.</li>
             <li>You can only use anonymous classes when the client and the server have all classes available refered by the anonymous class. This means in fact that the server should have the same classes available as the client. </li>
         </ul>

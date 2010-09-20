@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Db4objects.Db4o.Collections;
 
 namespace Db4oDoc.Code.TA.CollectionEnhanceIssues
 {
@@ -23,7 +24,7 @@ namespace Db4oDoc.Code.TA.CollectionEnhanceIssues
         // #example: Is enhanced to
         public class CanBeEnhanced
         {
-            private IList<string> _names = new List<string>();
+            private IList<string> _names = new ActivatableList<string>();
 
             public bool ContainsName(string item)
             {
