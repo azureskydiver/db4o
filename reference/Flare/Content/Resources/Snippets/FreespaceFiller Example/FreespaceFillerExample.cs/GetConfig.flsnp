@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">FreespaceFillerExample.cs: GetConfig
-private static IEmbeddedConfiguration GetConfig()  {
-    IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
-    config.File.Freespace.FreespaceFiller(new RandomFreespaceFiller());
-    return config;
-  }</pre>    </body></html>

@@ -538,12 +538,20 @@
         Title="Freespace Configuration"
         Link="/Content/configuration/file/freespace_configuration.htm">
         <TocEntry
-          Title="Freespacefiller Example"
-          Link="/Content/configuration/file/freespace_configuration/freespacefiller_example.htm"></TocEntry>
+          Title="Discarding Threshold"
+          Link="/Content/configuration/file/freespace_configuration.htm#Discard" />
+        <TocEntry
+          Title="Memory Freespace System"
+          Link="/Content/configuration/file/freespace_configuration.htm#MemorySystem" />
+        <TocEntry
+          Title="BTree Freespace System"
+          Link="/Content/configuration/file/freespace_configuration.htm#BTreeSystem" />
+        <TocEntry
+          Title="Freespace Filler"
+          Link="/Content/configuration/file/freespace_configuration.htm#Filler" />
       </TocEntry>
       <TocEntry
-        Title="Freespace Filler"
-        Link="/Content/configuration/file/freespace_filler.htm" />
+        Title="Freespace Filler" />
       <TocEntry
         Title="Generate UUIDs"
         Link="/Content/configuration/file/generate_uuids.htm" />
@@ -699,7 +707,23 @@
     </TocEntry>
     <TocEntry
       Title="Field Specific Configuration"
-      Link="/Content/configuration/objectfield_configuration.htm" />
+      Link="/Content/configuration/objectfield_configuration.htm">
+      <TocEntry
+        Title="Adding a Field Index"
+        Link="/Content/configuration/objectfield_configuration.htm#Adding" />
+      <TocEntry
+        Title="Cascade On Activate"
+        Link="/Content/configuration/objectfield_configuration.htm#CascadeActivate" />
+      <TocEntry
+        Title="Cascade On Update"
+        Link="/Content/configuration/objectfield_configuration.htm#CascadeUpdate" />
+      <TocEntry
+        Title="Cascade On Delete"
+        Link="/Content/configuration/objectfield_configuration.htm#CascadeDelete" />
+      <TocEntry
+        Title="Rename Field"
+        Link="/Content/configuration/objectfield_configuration.htm#Rename" />
+    </TocEntry>
     <TocEntry
       Title="Id System"
       Link="/Content/configuration/id_system.htm" />
@@ -1107,12 +1131,6 @@
       Title="Freespace Management System"
       Link="/Content/implementation_strategies/freespace_management_system.htm">
       <TocEntry
-        Title="Two Freespace Systems"
-        Link="/Content/implementation_strategies/freespace_management_system/two_freespace_systems.htm" />
-      <TocEntry
-        Title="How To Use FreeSpacemanager"
-        Link="/Content/implementation_strategies/freespace_management_system/how_to_use_freespacemanager.htm" />
-      <TocEntry
         Title="Defragmentation Role"
         Link="/Content/implementation_strategies/freespace_management_system/defragmentation_role.htm" />
     </TocEntry>
@@ -1252,6 +1270,9 @@
         Link="/Content/platform_specific_issues/web/asp.net_mvc_example.htm" />
     </TocEntry>
     <TocEntry
+      Title="Automatic Properties"
+      Link="/Content/platform_specific_issues/automatic_properties.htm" />
+    <TocEntry
       Title="WCF Data Services (aka ADO.NET Data Services)"
       Link="/Content/platform_specific_issues/wcf_data_services.htm"
       conditions="Primary..NET"
@@ -1390,17 +1411,6 @@
       <TocEntry
         Title="Memoplugin"
         Link="/Content/platform_specific_issues/database_for_osgi/memoplugin.jpg" />
-    </TocEntry>
-    <TocEntry
-      Title="Automatic Properties"
-      Link="/Content/platform_specific_issues/automatic_properties.htm"
-      conditions="Primary..NET,Primary.All languages">
-      <TocEntry
-        Title="Using Automatic Properties"
-        Link="/Content/platform_specific_issues/automatic_properties/using_automatic_properties.htm" />
-      <TocEntry
-        Title="Automatic Properties Explained"
-        Link="/Content/platform_specific_issues/automatic_properties/automatic_properties_explained.htm" />
     </TocEntry>
   </TocEntry>
   <TocEntry
