@@ -41,7 +41,7 @@ namespace OME.AdvancedDataGridView
         private bool _showLines = true;
         private bool _virtualNodes = false;
 
-        private ContextMenuStrip m_deleteContextMenuStrip;
+        public ContextMenuStrip m_deleteContextMenuStrip;
         private const string CONTEXTMENU_CAPTION_SETTONULL = "Set to Null";
         private const string CONTEXTMENU_NAME_DELETE = "MenuDelete";
 
@@ -690,6 +690,7 @@ namespace OME.AdvancedDataGridView
 
                     if (hitTestType == DataGridViewHitTestType.Cell)
                     {
+						
                         if (this.ContextMenuStrip == null)
                             BuildContextMenu();
 

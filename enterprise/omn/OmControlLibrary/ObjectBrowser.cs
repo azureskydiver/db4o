@@ -874,6 +874,7 @@ namespace OMControlLibrary
 
 			try
 			{
+				objectid = null;
 				Instance.Enabled = false;
 				PropertiesTab.Instance.Enabled = false;
 				QueryBuilder.Instance.Enabled = false;

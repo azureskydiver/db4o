@@ -39,7 +39,9 @@ namespace OMNUnitTest
 		private void GenerateDatabase()
 		{
 			string databaseFile = Path.GetTempFileName();
-			Db4oClient.conn = new ConnParams(databaseFile);
+			Db4oClient.conn = new ConnParams(databaseFile,false);
+			RecentQueries currRecentQueries = new RecentQueries(Db4oClient.conn);
+			Db4oClient.CurrentRecentConnection = currRecentQueries;
 
 			Store();
 		}
@@ -48,7 +50,7 @@ namespace OMNUnitTest
 		{
 			string connection = Db4oClient.conn.Connection;
 			Db4oClient.CloseConnection();
-			Db4oClient.conn = new ConnParams(connection);
+			Db4oClient.conn = new ConnParams(connection,false);
 		}
 		
 		protected static void Store(object obj)

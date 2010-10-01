@@ -5,6 +5,7 @@ using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Internal;
 using OManager.BusinessLayer.Login;
 using System.IO;
 using OManager.DataLayer.Reflection;
@@ -70,35 +71,28 @@ namespace OManager.DataLayer.Connection
 				{
 					if (objContainer == null)
 					{
-						// Prior to opening the objectContainer set all required Db4o configurations.
-						// Db4oConfiguration.SetConfiguration();
 						if (conn != null)
 						{
-							// Retrieve an objectContainer for this client. 
 							if (conn.Host != null)
 							{
-								IClientConfiguration config = Db4oClientServer.NewClientConfiguration();
-								ConfigureCommon(config.Common);
-
-								objContainer = Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord);
-								typeResolver = new TypeResolver(objContainer.Ext().Reflector());
+								objContainer=ConnectClient();
 							}
 							else
 							{
-                                if (File.Exists(conn.Connection))
+							   if (File.Exists(conn.Connection))
                                 {
-									IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
-									ConfigureCommon(config.Common);
-
-									objContainer = Db4oEmbedded.OpenFile(config,conn.Connection);
-                                    typeResolver = new TypeResolver(objContainer.Ext().Reflector());
+									objContainer=ConnectEmbedded();
                                 }
                                 else
                                 {
                                     exceptionConnection = "File does not exist!";
                                 }
 							}
-							isConnected = true;
+							if (objContainer != null)
+							{
+								typeResolver = new TypeResolver(objContainer.Ext().Reflector());
+								isConnected = true;
+							}
 						}
 					}
 				}
@@ -130,6 +124,22 @@ namespace OManager.DataLayer.Connection
 				return objContainer;
 			}
 
+		}
+
+		private static IObjectContainer  ConnectEmbedded()
+		{
+			IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
+			ConfigureCommon(config.Common);
+			config.File.ReadOnly = conn.ConnectionReadOnly;
+			return  Db4oEmbedded.OpenFile(config,conn.Connection);
+		}
+
+		private static IObjectContainer  ConnectClient()
+		{
+			IClientConfiguration config = Db4oClientServer.NewClientConfiguration();
+			ConfigureCommon(config.Common);
+			return  Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord);
+			
 		}
 
 		protected static void ConfigureCommon(ICommonConfiguration config)

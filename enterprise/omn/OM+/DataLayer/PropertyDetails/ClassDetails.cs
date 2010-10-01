@@ -46,6 +46,7 @@ namespace OManager.DataLayer.Modal
                 {
                     if (!FieldList.ContainsKey(field.GetName()))
                     {
+						
                     	FieldList.Add(
 							field.GetName(), 
 							field.GetFieldType().GetName());

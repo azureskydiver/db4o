@@ -16,7 +16,7 @@ namespace OManager.DataLayer.DemoDBCreation
         public void CreateDemoDb(string filepath)
         {
 
-            ConnParams conParams = new ConnParams(filepath);
+            ConnParams conParams = new ConnParams(filepath,false);
             RecentQueries recQueries = new RecentQueries(conParams);
             recQueries = recQueries.ChkIfRecentConnIsInDb();
 

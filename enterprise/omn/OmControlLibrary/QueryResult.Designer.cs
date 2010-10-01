@@ -137,7 +137,7 @@ namespace OMControlLibrary
 			this.labelNoOfObjects.Name = "labelNoOfObjects";
 			this.labelNoOfObjects.Size = new System.Drawing.Size(13, 13);
 			this.labelNoOfObjects.TabIndex = 25;
-			this.labelNoOfObjects.Text = "1";
+			this.labelNoOfObjects.Text = "0";
 			// 
 			// lblFechedObjects
 			// 
@@ -157,7 +157,7 @@ namespace OMControlLibrary
 			this.lblPageCount.Name = "lblPageCount";
 			this.lblPageCount.Size = new System.Drawing.Size(13, 13);
 			this.lblPageCount.TabIndex = 23;
-			this.lblPageCount.Text = "1";
+			this.lblPageCount.Text = "0";
 			// 
 			// btnLast
 			// 

@@ -66,15 +66,15 @@ namespace OMControlLibrary
 
 		private void LoadData()
 		{
-			
-			masterView.Rows.Clear(); 
+
+			masterView.Rows.Clear();
 			detailsTabs.Items.Clear();
-			detailsTabs.SelectedItem=null;
-			
+			detailsTabs.SelectedItem = null;
+
 			Hashtable hAttributes = new Hashtable();
 			try
 			{
-				omQuery = (OMQuery)Helper.OMResultedQuery[ClassName];
+				omQuery = (OMQuery) Helper.OMResultedQuery[ClassName];
 				if (omQuery != null)
 				{
 					hAttributes = omQuery.AttributeList;
@@ -92,7 +92,8 @@ namespace OMControlLibrary
 					labelNoOfObjects.Text = pagingData.ObjectId.Count.ToString();
 					if (lstObjIdLong.Count > 0)
 					{
-						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass, omQuery.AttributeList);
+						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass,
+						                                                                  omQuery.AttributeList);
 						masterView.SetDataGridColumnHeader(hashListResult, ClassName, omQuery.AttributeList);
 						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
 						ListofModifiedObjects.AddDatagrid(ClassName, masterView);
@@ -109,17 +110,20 @@ namespace OMControlLibrary
 					{
 						btnPrevious.Enabled = false;
 						btnFirst.Enabled = false;
-						btnNext.Enabled = true ;
-						btnLast.Enabled = true ;
+						btnNext.Enabled = true;
+						btnLast.Enabled = true;
 					}
 
 				}
+				ApplyReadonlyCondition(dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly);
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
+	
 
 		#region Constructor
 
@@ -166,6 +170,14 @@ namespace OMControlLibrary
 
 		#region WindowEvents
 
+			
+			private void ApplyReadonlyCondition(bool setValue)
+			{
+				masterView.ReadOnly = setValue;
+				btnSave.Enabled = !setValue;
+				btnDelete.Enabled = !setValue;
+				buttonSaveResult.Enabled=!setValue;
+			}
 
 		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
@@ -375,6 +387,7 @@ namespace OMControlLibrary
 					{
 						detailsTabs.SelectedItem = tabPage;
 					}
+					
 				}
 				else
 					row.Selected = false;
@@ -563,6 +576,11 @@ namespace OMControlLibrary
 				treeview.EndEdit();
 
 				CancelEventArgs args = e.CancelEventArguments;
+				if(dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly)
+				{
+					args.Cancel = true;
+					return;
+				}
 				if (treeview.SelectedRows.Count > 0)
 				{
 					DataGridViewRow selectedRow = treeview.SelectedCells[0].OwningRow;

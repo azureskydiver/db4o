@@ -37,30 +37,18 @@ namespace OManager.BusinessLayer.Config
 			try
 			{
 				recentQueries.Timestamp = DateTime.Now;
-				RecentQueries r = new RecentQueries(recentQueries.ConnParam);
-				RecentQueries temprc = r.ChkIfRecentConnIsInDb();
+				RecentQueries temprc = recentQueries.ChkIfRecentConnIsInDb();
                 if (temprc != null)
                 {
                     temprc.Timestamp = DateTime.Now;
                     temprc.QueryList = recentQueries.QueryList;
+                	temprc.ConnParam.ConnectionReadOnly = recentQueries.ConnParam.ConnectionReadOnly;
                 }
                 else
                 {
                     temprc = recentQueries;
                     temprc.TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
                 }
-                // long TimeForRecentQueriesCreation =
-                //    dbInteraction.GetTimeforRecentQueriesCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
-                //dbInteraction dbI = new dbInteraction();
-                //long TimeforDbCreation = dbI.dbCreationTime();
-                  
-                //if (TimeForRecentQueriesCreation != 0)
-                //{
-                //    if (TimeForRecentQueriesCreation < TimeforDbCreation)
-                //    {
-                //        temprc.TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
-                //    }
-                //}
 			    IObjectContainer dbrecentConn = Db4oClient.RecentConn;
 				dbrecentConn.Store(temprc);
 				dbrecentConn.Commit();
@@ -77,28 +65,39 @@ namespace OManager.BusinessLayer.Config
 		}
 
 
-		public List<RecentQueries> GetRecentQueries()
+
+
+		public List<RecentQueries> GetRecentQueries(bool remote)
 		{
-			List<RecentQueries> recConnections;
+			List<RecentQueries> recConnections=null;
 			try
 			{
 #if DEBUG
-				string omnConfigFolderPath = Path.GetDirectoryName(OMNConfigDatabasePath());
-				if (!Directory.Exists(omnConfigFolderPath))
-				{
-					Directory.CreateDirectory(omnConfigFolderPath);
-				}
+				CreateOMNDirectory();
 #endif
 				Db4oClient.RecentConnFile = OMNConfigDatabasePath();
 				IObjectContainer dbrecentConn = Db4oClient.RecentConn;
 				IQuery query = dbrecentConn.Query();
 				query.Constrain(typeof(RecentQueries));
+				if (remote)
+				{
+					query.Descend("m_connParam").Descend("m_host").Constrain(null).Not();
+					query.Descend("m_connParam").Descend("m_port").Constrain(0).Not();
+				}
+				else
+				{
+					query.Descend("m_connParam").Descend("m_host").Constrain(null);
+					query.Descend("m_connParam").Descend("m_port").Constrain(0);
+				}
 				IObjectSet os = query.Execute();
 
-				recConnections = new List<RecentQueries>();
-				while (os.HasNext())
+				if (os.Count > 0)
 				{
-					recConnections.Add((RecentQueries)os.Next());
+					recConnections = new List<RecentQueries>();
+					while (os.HasNext())
+					{
+						recConnections.Add((RecentQueries) os.Next());
+					}
 				}
 				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
 			}
@@ -109,6 +108,16 @@ namespace OManager.BusinessLayer.Config
 				return null;
 			}
 			return recConnections;
+			
+		}
+
+		private void CreateOMNDirectory()
+		{
+			string omnConfigFolderPath = Path.GetDirectoryName(OMNConfigDatabasePath());
+			if (!Directory.Exists(omnConfigFolderPath))
+			{
+				Directory.CreateDirectory(omnConfigFolderPath);
+			}
 		}
 
 		public void SaveAssemblySearchPath()
@@ -150,4 +159,5 @@ namespace OManager.BusinessLayer.Config
 		private ISearchPath _searchPath;
 		private static readonly Config _config = new Config();
 	}
+	
 }
