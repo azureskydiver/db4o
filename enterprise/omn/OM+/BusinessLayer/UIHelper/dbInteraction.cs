@@ -299,6 +299,8 @@ namespace OManager.BusinessLayer.UIHelper
 		public static List<Hashtable> ReturnQueryResults(PagingData pagData, bool Refresh, string baseclass, Hashtable attributeList)
 		{
 			return RunQuery.ReturnResults(pagData, Refresh, baseclass, attributeList);  
+
+			
         }
 
 
@@ -321,9 +323,9 @@ namespace OManager.BusinessLayer.UIHelper
 			return check;            
 		}
 
-		public static List<RecentQueries> FetchRecentQueries()
+		public static List<RecentQueries> FetchRecentQueries(bool checkRemote)
 		{
-			return Config.Config.Instance.GetRecentQueries();
+			return Config.Config.Instance.GetRecentQueries(checkRemote);
 		}
 
 		public static int GetFieldCount(string classname)

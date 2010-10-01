@@ -32,7 +32,7 @@ namespace OMAddin
 
 		private DTE2 _applicationObject;
 		private AddIn _addInInstance;
-		private Command cmd;
+		//private Command cmd;
 		private CommandBar omToolbar;
 		private CommandBarPopup oPopup;
 		private CommandBarEvents dbConnectControlHandler;
@@ -214,9 +214,9 @@ namespace OMAddin
 						{
 							omToolbar = toolBarCommandBars[toolbarName];
 						}
-						omToolbar.Visible = true;
-
 						CreateToolBar();
+						omToolbar.Visible = true;
+					
 					}
 					catch (Exception oEx)
 					{
@@ -355,19 +355,7 @@ namespace OMAddin
 				LoggingHelper.HandleException(oEx);
 			}
 
-			try
-			{
-				if (cmd != null)
-					cmd.Delete();
-			}
-			catch (System.Runtime.InteropServices.InvalidComObjectException oEx)
-			{
-				oEx.ToString(); // Ignore
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.HandleException(oEx);
-			}
+			
 			try
 			{
 				if (oPopup != null)
@@ -416,6 +404,10 @@ namespace OMAddin
 		/// <seealso class='IDTExtensibility2' />
 		public void OnStartupComplete(ref Array custom)
 		{
+			if (omToolbar != null)
+			{
+				omToolbar.Visible = true;
+			}
 		}
 		#endregion
 
@@ -1104,21 +1096,28 @@ namespace OMAddin
 		{
 			try
 			{
-				if (cmd == null)
+				/*if (cmd == null)
 				{
-					object[] contextGUIDS = new object[] { };
+				    object[] contextGUIDS = new object[] { };
 
 					 
-					Commands2 cmds = (Commands2)_applicationObject.Commands;
-					try
-					{
-						cmd = cmds.AddNamedCommand2(_addInInstance, Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), true, 2073, ref contextGUIDS, (int)vsCommandStatus.vsCommandStatusEnabled | (int)vsCommandStatus.vsCommandStatusSupported, (int)vsCommandStyle.vsCommandStylePict, vsCommandControlType.vsCommandControlTypeButton);
-					}
-					catch (Exception oEx)
-					{
+				    Commands2 cmds = (Commands2)_applicationObject.Commands;
+				    try
+				    {
+				    	cmd = cmds.AddNamedCommand2(_addInInstance,
+				    	                            Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
+				    	                            Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
+				    	                            "Test",
+				    	                            true, 59, ref contextGUIDS,
+				    	                            (int) vsCommandStatus.vsCommandStatusEnabled +
+				    	                            (int) vsCommandStatus.vsCommandStatusSupported,
+				    	                            (int) vsCommandStyle.vsCommandStylePict);
+				    }
+				    catch (Exception oEx)
+				    {
 						
-						oEx.ToString();
-					}
+				        oEx.ToString();
+				    }*/
 					
 
                     AddToolBarButton(ref connectDatabaseButton, MsoButtonStyle.msoButtonIcon, CONNECT, CONNECT, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
@@ -1137,7 +1136,7 @@ namespace OMAddin
 					db4oHelpControlButton.Click += db4oHelpControlButton_Click;
 					db4oHelpControlButton.BeginGroup = true;
 
-				}
+				//}
 			}
 			catch (Exception oEx)
 			{

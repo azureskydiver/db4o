@@ -279,6 +279,7 @@ namespace OMControlLibrary
 			else if (Helper.Tab_index.Equals(1))
 			{
 				DisplayClassProperties();
+				buttonSaveIndex.Enabled = !dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly;  
 			}
 			else if (Helper.Tab_index.Equals(2))
 			{
@@ -323,6 +324,7 @@ namespace OMControlLibrary
 					tabStripProperties.SelectedItem.Equals(tabItemClassProperties))
 				{
 					DisplayClassProperties();
+					buttonSaveIndex.Enabled = !dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly;  
 				}
 				else if (tabItemObjectProperties.Visible &&
 					tabStripProperties.SelectedItem.Equals(tabItemObjectProperties))

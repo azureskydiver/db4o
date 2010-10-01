@@ -1,18 +1,15 @@
 /* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using System.Reflection;
-using EnvDTE80;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using Microsoft.VisualStudio.CommandBars;
 using OME.Logging.Common;
-using stdole;
 using Constants = OMControlLibrary.Common.Constants;
 
 
@@ -52,32 +49,13 @@ namespace OMControlLibrary
 
 		#endregion
 
-		#region Constructor
-
-		/// <summary>
-		/// Constructor for Login
-		/// </summary>
+	
 		public Login()
 		{
 			InitializeComponent();
 		
 		}
 
-		
-
-		#endregion
-		#region Properties
-		
-
-		#endregion
-		#region Methods
-
-		#region Public
-
-		#region SetLiterals()
-		/// <summary>
-		/// A method from ViewBase class overriden for setting the text to all the labels.
-		/// </summary>
 		public override void SetLiterals()
 		{
 			try
@@ -95,12 +73,7 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
-
-		#region CreateLoginToolWindow()
-		/// <summary>
-		/// Creates the login tool window.
-		/// </summary>
+		
 		public static void CreateLoginToolWindow(CommandBarControl cmdBarCtrl,
 			CommandBarButton cmdBarBtn, Assembly addIn_Assembly,
 			CommandBarControl cmdBarCtrlBackup, CommandBarControl dbCreateDemoDbControl)
@@ -135,17 +108,12 @@ namespace OMControlLibrary
 		{
 			return Guid.NewGuid().ToString(Helper.GetResourceString(Common.Constants.GUID_FORMATTER_STRING));
 		}
-
-		#endregion
-
-
-
+	
 		public static void CreateQueryBuilderToolWindow()
 		{
 			try
 			{
 				string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
-
 				queryBuilderToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER );
 				
 				if (queryBuilderToolWindow.AutoHides)
@@ -162,57 +130,31 @@ namespace OMControlLibrary
 				LoggingHelper.HandleException(e); 
 			}
 		}
-		
 
-
-		#endregion
-
-
-
-		#region Private
-
-		 public void LoadAppropriatedata()
+		public void LoadAppropriatedata()
 		{
-
-
-
-			//Events2 eventsSource = (Events2)ApplicationObject.Events;
-			//_events = eventsSource.get_WindowVisibilityEvents(null);
-			//_events.WindowHiding += OnWindowHidding;
-			//_events.WindowShowing += OnWindowShowing;
-
-			toolTipForTextBox.RemoveAll();
-			comboBoxFilePath.Items.Clear();
-			textBoxConnection.Text = "";
-			m_recentConnections = GetAllRecentConnections();
+			ClearPanelControls();
+			ShowAppropriatePanel(true);
+			m_recentConnections = dbInteraction.FetchRecentQueries(false);
 			if (m_recentConnections != null)
 			{
-				foreach (RecentQueries recentQuery in m_recentConnections)
-				{
-					if (recentQuery.ConnParam.Host != null)
-					{
-						ShowAppropriatePanel(false);
-						PopulateRemoteRecentConnections();
-
-					}
-					else
-					{
-						m_cmdBarCtrlBackup.Enabled = false;
-					    m_cmdBarCtrlCreateDemoDb.Enabled = true;
-						ShowAppropriatePanel(true);
-						PopulateLocalRecentConnections();
-					}
-					break;
-				}
-				if (comboBoxFilePath.Items.Count > 1)
-				{
-					comboBoxFilePath.SelectedIndex = 1;
-				}
+				PopulateConnections(m_recentConnections);
+				m_cmdBarCtrlBackup.Enabled = false;
+				m_cmdBarCtrlCreateDemoDb.Enabled = true;
 			}
 		}
 
-		
-
+		private void ClearPanelControls()
+		{
+			toolTipForTextBox.RemoveAll();
+			comboBoxFilePath.Items.Clear();
+			textBoxConnection.Clear();
+			textBoxHost.Clear();
+			textBoxPassword.Clear();
+			textBoxPort.Clear();
+			textBoxPassword.Clear();
+			chkReadOnly.Checked = false;
+		}
 		private void ShowAppropriatePanel(bool param)
 		{
 			panelLocal.Visible = param;
@@ -220,14 +162,11 @@ namespace OMControlLibrary
 			radioButtonLocal.Checked = param;
 			radioButtonRemote.Checked = !param;
 		}
-
-		#region AfterSuccessfullyConnected()
 		private void AfterSuccessfullyConnected()
 		{
 			try
 			{
-				m_cmdBarCtrlConnect.Caption = Common.Constants.TOOLBAR_DISCONNECT;		
-
+				m_cmdBarCtrlConnect.Caption = Common.Constants.TOOLBAR_DISCONNECT;
 				m_cmdBarBtnConnect.Caption = Common.Constants.TOOLBAR_DISCONNECT;
 				m_cmdBarBtnConnect.TooltipText = Common.Constants.TOOLBAR_DISCONNECT;
 				
@@ -251,26 +190,35 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
-
-		#region PopulateLocalRecentConnections()
-		private void PopulateLocalRecentConnections()
+		private void PopulateConnections(IList<RecentQueries> listConnections)
 		{
 			try
 			{
-				if (m_recentConnections == null)
-					m_recentConnections = GetAllRecentConnections();
-
-				if (m_recentConnections.Count > 0)
+				if (listConnections != null && listConnections.Count > 0)
 				{
+
+					CompareTimestamps comparator = new CompareTimestamps();
+					((List< RecentQueries >)listConnections).Sort(comparator);
+
 					comboBoxFilePath.Items.Clear();
 					comboBoxFilePath.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
-					foreach (RecentQueries recentQuery in m_recentConnections)
+					foreach (RecentQueries recentQuery in listConnections)
 					{
 						if (recentQuery.ConnParam.Host == null)
+							comboBoxFilePath.Items.Add(new ComboItem(recentQuery.ConnParam.Connection, recentQuery.ConnParam.ConnectionReadOnly));
+						else
+						{
 							comboBoxFilePath.Items.Add(recentQuery.ConnParam.Connection);
+							textBoxHost.Text = recentQuery.ConnParam.Host;
+							textBoxPort.Text = recentQuery.ConnParam.Port.ToString();
+							textBoxUserName.Text = recentQuery.ConnParam.UserName;
+							textBoxPassword.Focus();
+						}
 					}
-					comboBoxFilePath.SelectedIndex = 0;
+					if (comboBoxFilePath.Items.Count > 1)
+					{
+						comboBoxFilePath.SelectedIndex = 1;
+					}
 				}
 			}
 			catch (Exception oEx)
@@ -278,82 +226,13 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
-
-		#region PopulateRemoteRecentConnections()
-		private void PopulateRemoteRecentConnections()
-		{
-			try
-			{
-				if (m_recentConnections == null)
-					m_recentConnections = GetAllRecentConnections();
-                if (m_recentConnections != null)
-                {
-                    if (m_recentConnections.Count > 0)
-                    {
-                        comboBoxFilePath.Items.Clear();
-                        comboBoxFilePath.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
-                        foreach (RecentQueries recentQuery in m_recentConnections)
-                        {
-                            if (recentQuery.ConnParam.Host != null)
-                                comboBoxFilePath.Items.Add(recentQuery.ConnParam.Connection);
-                        }
-                        comboBoxFilePath.SelectedIndex = 0;
-                    }
-                }
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-		#endregion
-
-		#region GetAllRecentConnections()
-		private static List<RecentQueries> GetAllRecentConnections()
-		{
-			List<RecentQueries> recentConnections = new List<RecentQueries>();
-			try
-			{
-				recentConnections = dbInteraction.FetchRecentQueries();
-				if (recentConnections != null)
-				{
-					CompareTimestamps comparator = new CompareTimestamps();
-					recentConnections.Sort(comparator);
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-			return recentConnections;
-		}
-		#endregion
-
-		#endregion
-
-		#endregion
-
-		#region Event Handlers
-
-		#region Login_Load
-		/// <summary>
-		/// Sets the label text.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Login_Load(object sender, EventArgs e)
+	private void Login_Load(object sender, EventArgs e)
 		{
 			try
 			{
 			
 				LoadAppropriatedata();
 				SetLiterals();
-				textBoxConnection.Clear();
-				textBoxHost.Clear();
-				textBoxPassword.Clear();
-				textBoxPort.Clear();
-				textBoxPassword.Clear();
 				
 			}
 			catch (Exception oEx)
@@ -362,52 +241,30 @@ namespace OMControlLibrary
 			}
 		}
 
-		
-		
-
-		
-
-		
-		#endregion
-
-		#region radioButton_Click
-		/// <summary>
-		/// Event handler for toggling between Local Connection & Remote Connection.
-		/// </summary>
-		/// <param name="sender">The event can be invoked by either Local or remote radio button</param>
-		/// <param name="e"></param>
-		private void radioButton_Click(object sender, EventArgs e)
+	private void radioButton_Click(object sender, EventArgs e)
 		{
 			try
 			{
 
-				comboBoxFilePath.Items.Clear();
-				toolTipForTextBox.RemoveAll();
+				ClearPanelControls();
 				if (radioButtonLocal.Checked)
 				{
-					textBoxConnection.Clear();
+					PopulateConnections(dbInteraction.FetchRecentQueries(false));
 					panelLocal.Visible = true;
 					panelRemote.Visible = false;
-					buttonConnect.Text = Helper.GetResourceString(Common.Constants.LOGIN_CAPTION_OPEN);
-					PopulateLocalRecentConnections();
 				}
 				else
 				{
-					textBoxHost.Clear();
-					textBoxPort.Clear();
-					textBoxUserName.Clear();
-					textBoxPassword.Clear();
+					
+					PopulateConnections(dbInteraction.FetchRecentQueries(true));
 					panelLocal.Visible = false;
 					panelRemote.Visible = true;
-					buttonConnect.Text = Helper.GetResourceString(Common.Constants.LOGIN_CAPTION_CONNECT);
-					PopulateRemoteRecentConnections();
+					
+					
 					m_cmdBarCtrlBackup.Enabled = false;
 					m_cmdBarCtrlCreateDemoDb.Enabled = true;
 				}
-				if (comboBoxFilePath.Items.Count > 1)
-				{
-					comboBoxFilePath.SelectedIndex = 1;
-				}
+				
 				
 			}
 			catch (Exception oEx)
@@ -415,25 +272,14 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
-
-		#region buttonBrowse_Click
-		/// <summary>
-		/// Event handler for browsing. This is used for Local Connection to select the database file. 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
+		
 		private void buttonBrowse_Click(object sender, EventArgs e)
 		{
 			try
 			{
-				if (comboBoxFilePath.Items.Count > 0)
-				{
-					comboBoxFilePath.SelectedIndex = 0;
-					textBoxConnection.Clear();
-				}
+				
 				openFileDialog.Filter = OPEN_FILE_DIALOG_FILTER;
-				openFileDialog.Title = Helper.GetResourceString(Common.Constants.LOGIN_OPEN_FILE_DIALOG_CAPTION);  //OPEN_FILE_DIALOG_TITLE;
+				openFileDialog.Title = Helper.GetResourceString(Common.Constants.LOGIN_OPEN_FILE_DIALOG_CAPTION);
 				if (openFileDialog.ShowDialog() != DialogResult.Cancel)
 				{
 					textBoxConnection.Text = openFileDialog.FileName;
@@ -442,80 +288,49 @@ namespace OMControlLibrary
 						comboBoxFilePath.SelectedItem = textBoxConnection.Text;
 					buttonConnect.Focus();
 				}
-				else
-				{
-					if (comboBoxFilePath.Items.Count > 0)
-					{
-						comboBoxFilePath.SelectedText = Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT);  
-						//comboBoxFilePath.SelectedIndex = 1;
-					}
-				}
+
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
-
-		#region buttonConnect_Click
+		
 		private void buttonConnect_Click(object sender, EventArgs e)
 		{
-			ConnParams conparam = null;
-			RecentQueries currRecentQueries = null;
-			string exceptionString = string.Empty;
 			try
 			{
-				
-				if(radioButtonLocal.Checked )
+				ConnParams conparam = null;
+				if (radioButtonLocal.Checked)
 				{
-
 					if (!(Validations.ValidateLocalLoginParams(ref comboBoxFilePath, ref textBoxConnection)))
 						return;
-					try
-					{
-						conparam = new ConnParams(textBoxConnection.Text.Trim());
-					}
-					catch (Exception oEx)
-					{
-						LoggingHelper.ShowMessage(oEx);
-					}
+					conparam = new ConnParams(textBoxConnection.Text.Trim(), chkReadOnly.Checked);
+
 				}
-				else // Remote Connection
+				else
 				{
-					if (!(Validations.ValidateRemoteLoginParams(ref comboBoxFilePath, ref textBoxHost, ref textBoxPort, ref textBoxUserName, ref textBoxPassword)))
+					if (!(Validations.ValidateRemoteLoginParams(ref comboBoxFilePath, ref textBoxHost, ref textBoxPort,
+						                                        ref textBoxUserName, ref textBoxPassword)))
 						return;
-					try
-					{
-						string connection = STRING_SERVER + textBoxHost.Text.Trim() + STRING_COLON + textBoxPort.Text.Trim() + STRING_COLON + textBoxUserName.Text.Trim();
-						conparam = new ConnParams(connection, textBoxHost.Text.Trim(), textBoxUserName.Text.Trim(), textBoxPassword.Text.Trim(), Convert.ToInt32(textBoxPort.Text.Trim()));
-					}
-					catch (Exception oEx)
-					{
-						LoggingHelper.ShowMessage(oEx);
-					}
-				}
-				try
-				{
-					currRecentQueries = new RecentQueries(conparam);
-					RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
-					if (tempRecentQueries != null)
-						currRecentQueries = tempRecentQueries;
- 
-					exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
-				}
-				catch (Exception oEx)
-				{
-					LoggingHelper.ShowMessage(oEx);
+
+					string connection = STRING_SERVER + textBoxHost.Text.Trim() + STRING_COLON + textBoxPort.Text.Trim() + STRING_COLON +
+					                    textBoxUserName.Text.Trim();
+					conparam = new ConnParams(connection, textBoxHost.Text.Trim(), textBoxUserName.Text.Trim(),
+					                          textBoxPassword.Text.Trim(), Convert.ToInt32(textBoxPort.Text.Trim()));
+
 				}
 				
+				 RecentQueries currRecentQueries = new RecentQueries(conparam);
+				 string  exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
+
 				if (exceptionString == string.Empty)
 				{
 					dbInteraction.SetCurrentRecentConnection(currRecentQueries);
 					dbInteraction.SaveRecentConnection(currRecentQueries);
 					AfterSuccessfullyConnected();
 
-                    loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
+					loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
 					Helper.CheckIfLoginWindowIsVisible = false;
 					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
 					ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;
@@ -524,16 +339,16 @@ namespace OMControlLibrary
 					PropertyPaneToolWin.PropWindow.Visible = true;
 
 					CreateQueryBuilderToolWindow();
-					
+
 				}
 				else
 				{
-					//buttonConnect.Enabled = true;
+					
 					textBoxConnection.Clear();
 					MessageBox.Show(exceptionString,
-						Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Error);
+					                Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
+					                MessageBoxButtons.OK,
+					                MessageBoxIcon.Error);
 					return;
 				}
 
@@ -543,9 +358,7 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
 
-		#region comboBoxFilePath_SelectedIndexChanged
 		private void comboBoxFilePath_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			try
@@ -573,13 +386,15 @@ namespace OMControlLibrary
 				{
 					if (!comboBoxFilePath.Text.Equals(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT)))
 					{
-						textBoxConnection.Text = comboBoxFilePath.Text.Trim();
-						toolTipForTextBox.SetToolTip(textBoxConnection, textBoxConnection.Text);
+						ComboItem comboItem = comboBoxFilePath.SelectedItem as ComboItem;
+						textBoxConnection.Text = comboItem.ToString();
+						chkReadOnly.Checked = comboItem.ReadonlyParam;
 						toolTipForTextBox.SetToolTip(comboBoxFilePath, comboBoxFilePath.SelectedItem.ToString());
 					}
 					else
 					{
 						textBoxConnection.Clear();
+						chkReadOnly.Checked = false;
 					}
 					
 				}
@@ -590,11 +405,6 @@ namespace OMControlLibrary
 			}
 		}
 
-		
-
-		#endregion
-
-		#region comboBoxFilePath_DropdownItemSelected
 		private void comboBoxFilePath_DropdownItemSelected(object sender, ToolTipComboBox.DropdownItemSelectedEventArgs e)
 		{
 			try
@@ -608,9 +418,7 @@ namespace OMControlLibrary
 				LoggingHelper.HandleException(ex);
 			}
 		}
-		#endregion
-
-		#region buttonCancel_Click
+	
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
 			try
@@ -629,8 +437,7 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-		#endregion
-
+		
 		private void textBoxPort_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			try
@@ -647,8 +454,6 @@ namespace OMControlLibrary
 			}
 		}
 
-		#endregion
-
 		private void textBoxPort_TextChanged(object sender, EventArgs e)
 		{
 			int result;
@@ -664,6 +469,27 @@ namespace OMControlLibrary
 				e.Handled = true;
 		}
 
-		
+		class ComboItem
+		{
+			private string m_Name;
+			private bool m_Value;
+
+			public ComboItem(string name, bool in_value)
+			{
+				m_Name = name;
+				m_Value = in_value;
+			}
+
+			public bool ReadonlyParam
+			{
+				get { return m_Value; }
+			}
+
+			public override string ToString()
+			{
+				return m_Name;
+			}
+
+		}
 	}
 }

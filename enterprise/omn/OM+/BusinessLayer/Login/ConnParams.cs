@@ -7,9 +7,11 @@ namespace OManager.BusinessLayer.Login
         private readonly int m_port;
         private readonly string m_userName;
         private readonly string m_passWord;
+		private bool m_readonly;
 
-		public ConnParams(string connection) : this(connection, null, null, null, 0)
+		public ConnParams(string connection,bool readOnly) : this(connection, null, null, null, 0)
 		{
+			m_readonly = readOnly;
 		}
 
         public ConnParams(string connection, string host, string username, string password, int port)
@@ -21,6 +23,11 @@ namespace OManager.BusinessLayer.Login
             m_port = port; 
 
         }
+		public bool ConnectionReadOnly
+		{
+			get { return m_readonly; }
+			set { m_readonly = value; }
+		}
         public string Connection
         {
             get { return m_connection; }
