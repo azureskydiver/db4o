@@ -8,6 +8,7 @@ import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
+import com.db4o.util.*;
 
 public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 	
@@ -25,7 +26,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		final Distributor<ObjectLifecycleMonitor> remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
 
 			public void consume(byte[] buffer, int offset, int length) throws IOException {
-				MessagePayload msg = new MessagePayload(senderId, Arrays.copyOfRange(buffer, offset, offset + length));
+				MessagePayload msg = new MessagePayload(senderId, ArrayUtil.copy(buffer, offset, offset + length));
 				synchronized (lcobra) {
 					lcobra.store(msg);
 					lcobra.commit();
