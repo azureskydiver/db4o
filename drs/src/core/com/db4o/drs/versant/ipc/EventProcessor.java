@@ -3,7 +3,7 @@ package com.db4o.drs.versant.ipc;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.rmi.*;
 
-public interface ObjectLifecycleMonitor {
+public interface EventProcessor {
 
 	/**
 	 * <p>
@@ -33,9 +33,9 @@ public interface ObjectLifecycleMonitor {
 
 	void stop();
 	
-	void addListener(@Proxy @Async MonitorListener listener);
+	void addListener(@Proxy @Async EventProcessorListener listener);
 	
-	public interface MonitorListener {
+	public interface EventProcessorListener {
 		
 		void ready();
 

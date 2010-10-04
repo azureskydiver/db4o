@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.ServerChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.drs.versant.metadata.ClassMetadata;
@@ -18,9 +18,9 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.versant.event.*;
 
-public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMonitor {
+public class EventProcessorImpl implements Runnable, EventProcessor {
 	
-	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(ObjectLifecycleMonitor.class);
+	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(EventProcessor.class);
 	
 	public static final String COMMIT_MESSAGE = SIMPLE_NAME+" commit";
 
@@ -71,7 +71,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	private Set<String> _knownClasses = new HashSet<String>();
 
-	private List<MonitorListener> listeners = new ArrayList<MonitorListener>();
+	private List<EventProcessorListener> listeners = new ArrayList<EventProcessorListener>();
 
 	private boolean _started;
 
@@ -81,7 +81,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 
 	private final VodDatabase _vod;
 
-	public ObjectLifecycleMonitorImpl(VodEventClient client, VodDatabase vod)  {
+	public EventProcessorImpl(VodEventClient client, VodDatabase vod)  {
 		
 		_client = client;
 		this._vod = vod;
@@ -133,7 +133,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		_isolatinWatchdogThread.setDaemon(true);
 	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
-		_incomingMessages = ObjectLifecycleMonitorNetworkFactory.prepareProviderCommunicationChannel(this, _vod, _client);
+		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(this, _vod, _client);
 		startPausableTasksExecutor();
 		synchronized (listeners) {
 			_started = true;
@@ -363,7 +363,7 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 	}
 
 
-	public void addListener(MonitorListener l) {
+	public void addListener(EventProcessorListener l) {
 		synchronized (listeners) {
 			listeners.add(l);
 			if (_started) {
@@ -372,15 +372,15 @@ public class ObjectLifecycleMonitorImpl implements Runnable, ObjectLifecycleMoni
 		}
 	}
 	
-	private MonitorListener listenerTrigger() {
-		return (MonitorListener) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{MonitorListener.class}, new InvocationHandler() {
+	private EventProcessorListener listenerTrigger() {
+		return (EventProcessorListener) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{EventProcessorListener.class}, new InvocationHandler() {
 			
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				ArrayList<MonitorListener> ls;
+				ArrayList<EventProcessorListener> ls;
 				synchronized (listeners) {
-					ls = new ArrayList<MonitorListener>(listeners);
+					ls = new ArrayList<EventProcessorListener>(listeners);
 				}
-				for(MonitorListener l : ls) {
+				for(EventProcessorListener l : ls) {
 					try {
 						method.invoke(l, args);
 					} catch (InvocationTargetException e) {

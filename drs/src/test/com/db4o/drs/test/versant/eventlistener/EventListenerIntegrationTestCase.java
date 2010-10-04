@@ -8,7 +8,7 @@ import com.db4o.drs.test.versant.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.MonitorListener;
+import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
 import com.db4o.foundation.*;
@@ -82,7 +82,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
 				final BlockingQueue4<Object> q = new BlockingQueue<Object>();
-				_provider.syncEventProcessor().addListener(new MonitorListener() {
+				_provider.syncEventProcessor().addListener(new EventProcessorListener() {
 					
 					public void ready() {
 					}
@@ -138,7 +138,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				
 				try {
 		
-					final ObjectLifecycleMonitor ep = _provider.syncEventProcessor();
+					final EventProcessor ep = _provider.syncEventProcessor();
 					
 					Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), 1000));
 					
@@ -146,10 +146,10 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 					_provider.runIsolated(new Block4() {
 						
 						public void run() {
-							long timeout = ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT;
+							long timeout = EventProcessorImpl.ISOLATION_TIMEOUT;
 							Assert.isFalse(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
 							
-							Runtime4.sleepThrowsOnInterrupt(ObjectLifecycleMonitorImpl.ISOLATION_TIMEOUT);
+							Runtime4.sleepThrowsOnInterrupt(EventProcessorImpl.ISOLATION_TIMEOUT);
 							Assert.isTrue(checkObjectLifeCycleEventFor(storeAndCommitItem(), timeout/2));
 							
 							Assert.isTrue(ep.requestIsolation(true));

@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.rmi.*;
 
 public class TcpClient implements ClientChannelControl {
@@ -15,14 +15,14 @@ public class TcpClient implements ClientChannelControl {
 
 	private Socket socket;
 
-	private Distributor<ObjectLifecycleMonitor> remotePeer;
+	private Distributor<EventProcessor> remotePeer;
 
-	public ObjectLifecycleMonitor sync() {
+	public EventProcessor sync() {
 		ensureInited();
 		return remotePeer.sync();
 	}
 
-	public ObjectLifecycleMonitor async() {
+	public EventProcessor async() {
 		ensureInited();
 		return remotePeer.async();
 	}
@@ -66,14 +66,14 @@ public class TcpClient implements ClientChannelControl {
 			final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			final DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
-			remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
+			remotePeer = new Distributor<EventProcessor>(new ByteArrayConsumer() {
 
 				public void consume(byte[] buffer, int offset, int length) throws IOException {
 					out.writeInt(length);
 					out.write(buffer, offset, length);
 					out.flush();
 				}
-			}, ObjectLifecycleMonitor.class);
+			}, EventProcessor.class);
 			
 			thread = new Thread("TcpClient receiver thread") {
 				@Override

@@ -5,16 +5,16 @@ package com.db4o.drs.versant.eventlistener;
 import com.db4o.drs.versant.*;
 import com.versant.event.*;
 
-public class ObjectLifecycleMonitorFactory {
+public class EventProcessorFactory {
 	
-	public static ObjectLifecycleMonitorImpl newInstance (EventConfiguration eventConfiguration) {
+	public static EventProcessorImpl newInstance (EventConfiguration eventConfiguration) {
 		VodEventClient client = new VodEventClient(eventConfiguration, new ExceptionListener (){
 	        public void exceptionOccurred (Throwable exception){
-	        	ObjectLifecycleMonitorImpl.unrecoverableExceptionOccurred(exception);
+	        	EventProcessorImpl.unrecoverableExceptionOccurred(exception);
 	        }
 	    });
 		VodDatabase vod = new VodDatabase(eventConfiguration.databaseName);
-		ObjectLifecycleMonitorImpl eventProcessor = new ObjectLifecycleMonitorImpl(client, vod);
+		EventProcessorImpl eventProcessor = new EventProcessorImpl(client, vod);
 		return eventProcessor;
 	}
 

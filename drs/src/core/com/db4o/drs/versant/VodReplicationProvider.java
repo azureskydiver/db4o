@@ -13,7 +13,7 @@ import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ClientChannelControl;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
@@ -68,7 +68,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
-		_control = ObjectLifecycleMonitorNetworkFactory.newClient(vod);
+		_control = EventProcessorNetworkFactory.newClient(vod);
 		_vod = vod;
 		_cobra = VodCobra.createInstance(vod);
 		_jdo = VodJdo.createInstance(vod);
@@ -498,7 +498,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if (expectedChangeCount > 0) {
 			
 			// big fat hack. related to DRS-146 and DRS-151
-			if (ObjectLifecycleMonitorNetworkFactory.USE_IN_BAND_COMMUNICATION) {
+			if (EventProcessorNetworkFactory.USE_IN_BAND_COMMUNICATION) {
 				Runtime4.sleepThrowsOnInterrupt(300);
 			} else {
 				syncEventProcessor().ensureChangecount(expectedChangeCount);
@@ -507,11 +507,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 
-	public ObjectLifecycleMonitor syncEventProcessor() {
+	public EventProcessor syncEventProcessor() {
 		return _control.sync();
 	}
 	
-	public ObjectLifecycleMonitor asyncEventProcessor() {
+	public EventProcessor asyncEventProcessor() {
 		return _control.async();
 	}
 

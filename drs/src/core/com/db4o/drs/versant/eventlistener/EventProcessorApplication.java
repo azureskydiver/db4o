@@ -10,10 +10,10 @@ import org.apache.commons.cli.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
 
-import static com.db4o.drs.versant.eventlistener.Program.Arguments.*;
+import static com.db4o.drs.versant.eventlistener.EventProcessorApplication.Arguments.*;
 
 
-public class Program {
+public class EventProcessorApplication {
 	
 	private static final String LOCALHOST = "localhost";
 
@@ -36,16 +36,16 @@ public class Program {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		new Program(args);
+		new EventProcessorApplication(args);
 	}
 	
 	private EventConfiguration _eventConfiguration;
 
-	public Program(String[] args) throws IOException {
+	public EventProcessorApplication(String[] args) throws IOException {
 		if(! parseArguments(args)){
 			return;
 		}
-		ObjectLifecycleMonitorFactory.newInstance(_eventConfiguration).run();
+		EventProcessorFactory.newInstance(_eventConfiguration).run();
 	}
 	
 	private boolean parseArguments(String[] args) {
@@ -121,7 +121,7 @@ public class Program {
 		} catch(MissingOptionException moex){
 			System.out.println(moex.getMessage());
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( Program.class.getName(), options );
+			formatter.printHelp( EventProcessorApplication.class.getName(), options );
 			return false;
 		} catch(ParseException pex){
 			pex.printStackTrace();

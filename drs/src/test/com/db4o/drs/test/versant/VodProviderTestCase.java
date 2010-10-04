@@ -9,7 +9,7 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitor.*;
+import com.db4o.drs.versant.ipc.EventProcessor.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.versant.odbms.*;
@@ -32,7 +32,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		
 		_vod.startEventProcessor();
 		
-		_provider.syncEventProcessor().addListener(new MonitorListener() {
+		_provider.syncEventProcessor().addListener(new EventProcessorListener() {
 			
 			public void ready() {
 			}
