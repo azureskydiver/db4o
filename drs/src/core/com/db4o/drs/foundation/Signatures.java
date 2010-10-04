@@ -27,7 +27,7 @@ public class Signatures {
 		_bySignature.put(signature, databaseId);
 	}
 
-	public long idFor(DrsUUID uuid) {
+	public int idFor(DrsUUID uuid) {
 		return idFor(new Signature(uuid.getSignaturePart()));
 	}
 

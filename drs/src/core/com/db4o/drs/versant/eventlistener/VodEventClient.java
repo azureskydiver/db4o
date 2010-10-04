@@ -17,7 +17,7 @@ public class VodEventClient {
 	    _client.addExceptionListener(exceptionListener);
 	}
 	
-	public EventChannel produceClassChannel(String className) {
+	public EventChannel produceClassChannel(String className, boolean registerTransactionEvents) {
 		String channelName = channelName(className);
 		try {
 			EventChannel channel = _client.getChannel (channelName);
@@ -27,9 +27,13 @@ public class VodEventClient {
 				}
 				return channel;
 			}
-			ClassChannelBuilder builder = new ClassChannelBuilder (className);
 			if(DrsDebug.verbose){
 				System.out.println("Creating new channel " + channelName);
+			}
+			ClassChannelBuilder builder = new ClassChannelBuilder (className);
+			if(registerTransactionEvents){
+				builder.addEventType(EventTypes.BEGIN_TRANSACTION);
+				builder.addEventType(EventTypes.END_TRANSACTION);
 			}
 			return _client.newChannel (channelName, builder);
 		} catch (IOException e) {
@@ -37,6 +41,7 @@ public class VodEventClient {
 		}
 		return null;
 	}
+	
 	
 	private String channelName(final String className) {
 		String name =  "dRS_Channel_For_" + className;

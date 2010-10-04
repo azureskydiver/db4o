@@ -20,6 +20,8 @@ import com.versant.event.*;
 
 public class EventProcessorImpl implements Runnable, EventProcessor {
 	
+	private static final String TRANSACTION_CHANNEL_CLASSNAME = "o_genericobj";
+	
 	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(EventProcessor.class);
 	
 	public static final String COMMIT_MESSAGE = SIMPLE_NAME+" commit";
@@ -88,6 +90,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	    _cobra = VodCobra.createInstance(vod);
 
 	    produceLastTimestamp();
+	    createTransactionChannel();
 	    startChannelsFromKnownClasses();
 	}
 
@@ -95,7 +98,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		Collection<Long> classMetadataLoids = _cobra.loids(ClassMetadata.class);
 	    for (Long loid : classMetadataLoids) {
 	    	ClassMetadata classMetadata = _cobra.objectByLoid(loid);
-	    	createChannel(new ClassChannelSpec(classMetadata.name(), classMetadata.fullyQualifiedName(),  loid));
+	    	createChannel(new ClassChannelSpec(classMetadata.name(), classMetadata.fullyQualifiedName(),  loid), false);
 	    	_knownClasses.add(classMetadata.fullyQualifiedName());
 		}
 	}
@@ -206,7 +209,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		if (_knownClasses.contains(fullyQualifiedName)) {
 			return;
 		}
-		createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid));
+		createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid), false);
 		_knownClasses.add(fullyQualifiedName);
 		dirty();
 	}
@@ -234,8 +237,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		_cobra.close();
 	}
 
-	private void createChannel(final ClassChannelSpec channelSpec) {
-		EventChannel channel = _client.produceClassChannel(channelSpec._className);
+	private void createChannel(final ClassChannelSpec channelSpec, boolean registerTransactionEvents) {
+		EventChannel channel = _client.produceClassChannel(channelSpec._className, registerTransactionEvents);
 		channel.addVersantEventListener (new ClassEventListener() {
 			public void instanceModified (VersantEventObject event){
 				queueObjectLifeCycleEvent(event, Operations.UPDATE, channelSpec);
@@ -248,6 +251,21 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			}
 		});
 		println("Listener channel created for class " + channelSpec._className);
+	}
+	
+	private void createTransactionChannel() {
+		EventChannel channel = _client.produceClassChannel(TRANSACTION_CHANNEL_CLASSNAME, true);
+		channel.addVersantEventListener (new TransactionMarkerEventListener() {
+			public void endTransaction(VersantEventObject event) {
+				println("Committing  " + event.getTransactionID());
+			}
+			
+			public void beginTransaction(VersantEventObject event) {
+				
+			}
+		});
+		
+		println("Transaction channel listener created for class " + TRANSACTION_CHANNEL_CLASSNAME);
 	}
 
 	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {

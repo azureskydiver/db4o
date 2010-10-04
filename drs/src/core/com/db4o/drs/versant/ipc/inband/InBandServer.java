@@ -148,7 +148,7 @@ public class InBandServer implements ServerChannelControl {
 
 	private void prepareChannelForIncomingMessages() {
 
-		EventChannel channel = client.produceClassChannel(MessagePayload.class.getName());
+		EventChannel channel = client.produceClassChannel(MessagePayload.class.getName(), false);
 
 		channel.addVersantEventListener(new ClassEventListener() {
 			public void instanceCreated(VersantEventObject event) {

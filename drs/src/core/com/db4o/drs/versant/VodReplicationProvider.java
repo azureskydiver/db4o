@@ -112,6 +112,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commit() {
+		
 		_jdo.commit();
 		if (!_isolatedMode) {
 			ensureChangeCount();
