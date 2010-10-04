@@ -97,13 +97,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private void loadKnownClasses() {
-		for (ClassMetadata classMetadata : _jdo.query(ClassMetadata.class)) {
+		for (ClassMetadata classMetadata : _cobra.query(ClassMetadata.class)) {
 			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata.loid());
 		}
 	}
 
 	private void loadSignatures() {
-		for (DatabaseSignature entry : _jdo.query(DatabaseSignature.class)) {
+		for (DatabaseSignature entry : _cobra.query(DatabaseSignature.class)) {
 			if(DrsDebug.verbose){
 				System.out.println(entry);
 			}
@@ -161,8 +161,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		String schemaName = _vod.schemaName(clazz);
 		ClassMetadata cm = new ClassMetadata(schemaName, className);
-		_jdo.store(cm);
-		_jdo.commit();
+		_cobra.store(cm);
+		_cobra.commit();
 		_knownClasses.put(className, cm.loid());
 		syncEventProcessor().ensureMonitoringEventsOn(className, schemaName, cm.loid());
 	}
@@ -301,18 +301,27 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		int lowerId = Math.min(peerId, _myDatabaseId);
 		int higherId = Math.max(peerId, _myDatabaseId);
 		
-		
-		// TODO: Enhance QLin for deep queries. Retrieve from Cobra directly here.
-		
-		String filter = "this.lowerPeer.databaseId == " + lowerId + " & this.higherPeer.databaseId == " + higherId;
-		_replicationCommitRecord = _jdo.queryOneOrNone(ReplicationCommitRecord.class, filter);
+		produceCommitRecord(lowerId, higherId);
+	}
+
+	private void produceCommitRecord(int lowerId, int higherId) {
+		_replicationCommitRecord = commitRecordFor(lowerId, higherId);
 		
 		if(_replicationCommitRecord == null){
 			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
-			_jdo.store(_replicationCommitRecord);
-			_jdo.commit();
-			return;
+			_cobra.store(_replicationCommitRecord);
+			_cobra.commit();
 		}
+	}
+
+	private ReplicationCommitRecord commitRecordFor(int lowerId, int higherId) {
+		Collection<ReplicationCommitRecord> q = _cobra.query(ReplicationCommitRecord.class);
+		for (ReplicationCommitRecord r : q) {
+			if (r.lowerPeer().databaseId() == lowerId && r.higherPeer().databaseId() == higherId) {
+				return r;
+			}
+		}
+		return null;
 	}
 
 	private int dbIdFrom(byte[] signature) {
@@ -366,7 +375,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void syncVersionWithPeer(long maxVersion) {
 		_replicationCommitRecord.timestamp(maxVersion);
-		_jdo.store(_replicationCommitRecord);
+		_cobra.store(_replicationCommitRecord);
+		_cobra.commit();
 		syncEventProcessor().syncTimestamp(maxVersion);
 	}
 
@@ -470,7 +480,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private void storeSignature(int databaseId, Signature signature) {
 		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
-		_jdo.store(databaseSignature);
+		_cobra.store(databaseSignature);
+		_cobra.commit();
 		_signatures.add(databaseId, signature);
 	}
 	
