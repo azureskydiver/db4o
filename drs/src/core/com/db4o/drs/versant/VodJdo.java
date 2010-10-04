@@ -48,28 +48,6 @@ public class VodJdo implements VodJdoFacade {
 		return (T) VdsUtils.getObjectByLOID(loid, true, _pm);
 	}
 	
-	private ModelMetaData modelMetadata() {
-		VersantPMFInternal internalPersistenceManagerFactory = (VersantPMFInternal) _vod.persistenceManagerFactory();
-		StorageManagerFactory storageManagerFactory = internalPersistenceManagerFactory.getStorageManagerFactory();
-		return storageManagerFactory.getModelMetaData();
-	}
-	
-	public String schemaName(Class clazz) {
-		return userSchemaClass(clazz).getName();
-	}
-
-	public boolean isKnownClass(Class clazz) {
-		return userSchemaClass(clazz) != null;
-	}
-
-	private UserSchemaClass userSchemaClass(Class clazz) {
-		ModelMetaData modelMetadata = modelMetadata();
-		UserSchemaModel userModel = (UserSchemaModel)modelMetadata.vdsModel;
-		ClassMetaData classMetaData = modelMetadata.getClassMetaData(clazz);
-		UserSchemaClass userSchemaClass = userModel.getAssociatedSchemaClass(classMetaData);
-		return userSchemaClass;
-	}
-	
 	public void close() {
 		_pm.currentTransaction().rollback();
 		_pm.close();

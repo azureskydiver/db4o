@@ -125,7 +125,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void deleteAllInstances(Class clazz) {
-		if(!_jdo.isKnownClass(clazz)) {
+		if(!_vod.isKnownClass(clazz)) {
 			return;
 		}
 		expectedChangeCount += _jdo.deleteAll(clazz);
@@ -159,7 +159,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(_knownClasses.containsKey(className)){
 			return;
 		}
-		String schemaName = _jdo.schemaName(clazz);
+		String schemaName = _vod.schemaName(clazz);
 		ClassMetadata cm = new ClassMetadata(schemaName, className);
 		_jdo.store(cm);
 		_jdo.commit();
