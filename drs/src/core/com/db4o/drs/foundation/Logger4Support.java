@@ -35,6 +35,10 @@ public class Logger4Support {
 		logIdentity(obj, "");
 	}
 	
+	public static void log(String str){
+		_logger.log(str);
+	}
+	
 	
 
 }
