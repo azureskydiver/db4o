@@ -6,7 +6,7 @@ import java.util.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.ServerChannelControl;
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
 import com.db4o.util.*;
@@ -14,7 +14,7 @@ import com.versant.event.*;
 
 public class InBandServer implements ServerChannelControl {
 
-	private final ObjectLifecycleMonitor provider;
+	private final EventProcessor provider;
 	private final Object lock;
 	private final VodCobraFacade cobra;
 	private final VodEventClient client;
@@ -22,10 +22,10 @@ public class InBandServer implements ServerChannelControl {
 	private BlockingQueue4<String> pendingMessages;
 	private ByteArrayConsumer outgoingConsumer;
 	private Thread serverThread;
-	private Distributor<ObjectLifecycleMonitor> localPeer;
+	private Distributor<EventProcessor> localPeer;
 	private Ticker purger;
 
-	public InBandServer(ObjectLifecycleMonitor provider, Object lock, VodCobraFacade cobra, VodEventClient client, int senderId) {
+	public InBandServer(EventProcessor provider, Object lock, VodCobraFacade cobra, VodEventClient client, int senderId) {
 		this.provider = provider;
 		this.lock = lock;
 		this.cobra = cobra;
@@ -36,7 +36,7 @@ public class InBandServer implements ServerChannelControl {
 
 		outgoingConsumer = prepareConsumerForOutgoingMessages();
 
-		localPeer = new Distributor<ObjectLifecycleMonitor>(this.outgoingConsumer, this.provider);
+		localPeer = new Distributor<EventProcessor>(this.outgoingConsumer, this.provider);
 
 		pendingMessages = new BlockingQueue<String>();
 

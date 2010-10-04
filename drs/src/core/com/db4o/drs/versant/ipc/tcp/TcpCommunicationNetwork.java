@@ -7,7 +7,7 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
-public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
+public class TcpCommunicationNetwork implements EventProcessorNetwork {
 
 	static final String HOST = "localhost";
 	static final int PORT = 7283;
@@ -17,7 +17,7 @@ public class TcpCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
 		return new TcpClient();
 	}
 
-	public ServerChannelControl prepareCommunicationChannel(final ObjectLifecycleMonitor provider, VodDatabase vod,
+	public ServerChannelControl prepareCommunicationChannel(final EventProcessor provider, VodDatabase vod,
 			VodEventClient client) {
 
 		return new TcpServer(provider);

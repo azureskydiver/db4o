@@ -10,7 +10,7 @@ import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 import com.db4o.util.*;
 
-public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork {
+public class InBandCommunicationNetwork implements EventProcessorNetwork {
 	
 	
 	private static AtomicInteger nextSenderId = new AtomicInteger();
@@ -23,7 +23,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		
 		InBandServer.purgeMessagePayloads(lcobra);
 		
-		final Distributor<ObjectLifecycleMonitor> remotePeer = new Distributor<ObjectLifecycleMonitor>(new ByteArrayConsumer() {
+		final Distributor<EventProcessor> remotePeer = new Distributor<EventProcessor>(new ByteArrayConsumer() {
 
 			public void consume(byte[] buffer, int offset, int length) throws IOException {
 				MessagePayload msg = new MessagePayload(senderId, ArrayUtil.copy(buffer, offset, offset + length));
@@ -33,7 +33,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 				}
 
 			}
-		}, ObjectLifecycleMonitor.class);
+		}, EventProcessor.class);
 		
 		
 		final Object feederLock = new Object();
@@ -60,7 +60,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		
 		return new ClientChannelControl() {
 			
-			public ObjectLifecycleMonitor sync() {
+			public EventProcessor sync() {
 				return remotePeer.sync();
 			}
 			
@@ -75,7 +75,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 				feeder.join();
 			}
 
-			public ObjectLifecycleMonitor async() {
+			public EventProcessor async() {
 				return remotePeer.async();
 			}
 		};
@@ -110,7 +110,7 @@ public class InBandCommunicationNetwork implements ObjectLifecycleMonitorNetwork
 		}
 	}
 
-	public ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor provider, VodDatabase vod,
+	public ServerChannelControl prepareCommunicationChannel(EventProcessor provider, VodDatabase vod,
 			VodEventClient client) {
 
 		int senderId = nextSenderId.getAndIncrement();

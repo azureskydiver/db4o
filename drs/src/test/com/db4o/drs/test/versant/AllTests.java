@@ -2,7 +2,7 @@
 
 package com.db4o.drs.test.versant;
 
-import com.db4o.drs.test.versant.jdo.reflect.JdoClassTestCase;
+import com.db4o.drs.test.versant.jdo.reflect.*;
 
 import db4ounit.*;
 

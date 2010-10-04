@@ -3,12 +3,12 @@ package com.db4o.drs.versant.ipc;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
 
-public interface ObjectLifecycleMonitorNetwork {
+public interface EventProcessorNetwork {
 
 	ClientChannelControl newClient(VodDatabase vod);
 	
 
-	ServerChannelControl prepareCommunicationChannel(ObjectLifecycleMonitor monitor, VodDatabase vod, VodEventClient client);
+	ServerChannelControl prepareCommunicationChannel(EventProcessor eventProcessor, VodDatabase vod, VodEventClient client);
 	
 	public interface ServerChannelControl {
 		void stop();
@@ -16,8 +16,8 @@ public interface ObjectLifecycleMonitorNetwork {
 	}
 	
 	public interface ClientChannelControl {
-		ObjectLifecycleMonitor sync();
-		ObjectLifecycleMonitor async();
+		EventProcessor sync();
+		EventProcessor async();
 		void stop();
 		void join() throws InterruptedException;
 	}

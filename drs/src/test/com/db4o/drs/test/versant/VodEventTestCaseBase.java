@@ -31,7 +31,7 @@ public abstract class VodEventTestCaseBase extends VodProviderTestCaseBase{
 	}
 	
 	private void withEventProcessorInSameProcess (Closure4<Void> closure) throws Exception {
-		ObjectLifecycleMonitorSupport support = new ObjectLifecycleMonitorSupport(_vod.eventConfiguration());
+		EventProcessorEmbedded support = new EventProcessorEmbedded(_vod.eventConfiguration());
 		produceProvider();
 		try {
 			closure.run();

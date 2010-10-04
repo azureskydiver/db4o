@@ -10,7 +10,7 @@ import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.eventlistener.Program.*;
+import com.db4o.drs.versant.eventlistener.EventProcessorApplication.*;
 import com.db4o.util.*;
 import com.db4o.util.IOServices.*;
 import com.versant.odbms.*;
@@ -42,7 +42,7 @@ public class VodDatabase {
 	
 	private EventConfiguration _eventConfiguration;
 
-	private ObjectLifecycleMonitorSupport _eventProcessorSupport;
+	private EventProcessorEmbedded _eventProcessorSupport;
 	
 
 	public VodDatabase(String name, Properties properties){
@@ -281,11 +281,11 @@ public class VodDatabase {
 		_eventDriver = null;
 	}
 	
-	public ObjectLifecycleMonitorSupport startEventProcessor(){
+	public EventProcessorEmbedded startEventProcessor(){
 		if(_eventProcessorSupport != null){
 			throw new IllegalStateException();
 		}
-		_eventProcessorSupport = new ObjectLifecycleMonitorSupport(_eventConfiguration);
+		_eventProcessorSupport = new EventProcessorEmbedded(_eventConfiguration);
 		return _eventProcessorSupport;
 	}
 	
@@ -306,7 +306,7 @@ public class VodDatabase {
 		String[] argumentsAsString = new String[arguments.size()];
 		argumentsAsString = arguments.toArray(argumentsAsString);
 		
-		ProcessRunner eventListenerProcess = JavaServices.startJava(Program.class.getName(), argumentsAsString);
+		ProcessRunner eventListenerProcess = JavaServices.startJava(EventProcessorApplication.class.getName(), argumentsAsString);
 		eventListenerProcess.waitFor(_name, 10000);
 		return eventListenerProcess;
 	}

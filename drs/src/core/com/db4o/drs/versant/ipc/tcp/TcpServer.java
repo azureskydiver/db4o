@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
+import com.db4o.drs.versant.ipc.EventProcessorNetwork.ServerChannelControl;
 import com.db4o.internal.*;
 import com.db4o.rmi.*;
 
@@ -14,16 +14,16 @@ public class TcpServer implements ServerChannelControl {
 	private volatile ServerSocket server;
 	private Set<Dispatcher> dispatchers = new HashSet<Dispatcher>();
 
-	private final ObjectLifecycleMonitor provider;
+	private final EventProcessor provider;
 
 	private Thread serverThread;
 	private boolean normalStop;
 
-	public TcpServer(ObjectLifecycleMonitor provider) {
+	public TcpServer(EventProcessor provider) {
 
 		this.provider = provider;
 
-		serverThread = new Thread(ReflectPlatform.simpleName(ObjectLifecycleMonitor.class) + " channel tcp server") {
+		serverThread = new Thread(ReflectPlatform.simpleName(EventProcessor.class) + " channel tcp server") {
 			@Override
 			public void run() {
 				runServer();
@@ -139,7 +139,7 @@ public class TcpServer implements ServerChannelControl {
 
 		public Dispatcher(Socket socket) {
 			this.client = socket;
-			thread = new Thread(this, ReflectPlatform.simpleName(ObjectLifecycleMonitor.class)+" dispatcher for socket: " + socket);
+			thread = new Thread(this, ReflectPlatform.simpleName(EventProcessor.class)+" dispatcher for socket: " + socket);
 			thread.setDaemon(true);
 			thread.start();
 		}
@@ -170,7 +170,7 @@ public class TcpServer implements ServerChannelControl {
 						out.flush();
 					}
 				};
-				Distributor<ObjectLifecycleMonitor> localPeer = new Distributor<ObjectLifecycleMonitor>(outgoingConsumer, provider);
+				Distributor<EventProcessor> localPeer = new Distributor<EventProcessor>(outgoingConsumer, provider);
 				while (true) {
 					TcpCommunicationNetwork.feed(in, localPeer);
 				}
