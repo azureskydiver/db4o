@@ -7,6 +7,14 @@ public class ReplicationCommitRecord extends VodLoidAwareObject {
 	
 	private DatabaseSignature higherPeer;
 	
+	public DatabaseSignature higherPeer() {
+		return higherPeer;
+	}
+
+	public DatabaseSignature lowerPeer() {
+		return lowerPeer;
+	}
+
 	private DatabaseSignature lowerPeer;
 	
 	private long timestamp;
