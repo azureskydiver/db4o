@@ -134,12 +134,12 @@ public class VodDatabase {
 		String tempFileName = Path4.getTempFileName();
 		File tempFile = new File(tempFileName);
 		try{
-			FileWriter writer = new FileWriter(tempFile);
-			if(DrsDebug.verbose){
+			FileOutputStream out = new FileOutputStream(tempFile);
+			if(true || DrsDebug.verbose){
 				_properties.store(System.err, null);
 			}
-			_properties.store(writer, null);
-			writer.close();
+			_properties.store(out, null);
+			out.close();
 			
 			String[] args = new String[]{tempFile.getAbsolutePath()};
 			

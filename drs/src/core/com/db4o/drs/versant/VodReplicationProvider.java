@@ -389,7 +389,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private ObjectSet internalObjectsChangedSinceLastReplication(String query) {
 		long lastReplicationVersion = getLastReplicationVersion();
 		String fullQuery = "this.timestamp > " + lastReplicationVersion;
-		if(!query.isEmpty()) {
+		if(query.length() > 0) {
 			fullQuery += " && " + query;
 		}
 		Set<Long> loids = new HashSet<Long>();

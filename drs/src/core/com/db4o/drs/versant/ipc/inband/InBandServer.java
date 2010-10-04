@@ -9,6 +9,7 @@ import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.ObjectLifecycleMonitorNetwork.ServerChannelControl;
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
+import com.db4o.util.*;
 import com.versant.event.*;
 
 public class InBandServer implements ServerChannelControl {
@@ -136,7 +137,7 @@ public class InBandServer implements ServerChannelControl {
 			public void consume(byte[] buffer, int offset, int length) throws IOException {
 
 				synchronized (lock) {
-					byte[] copy = Arrays.copyOfRange(buffer, offset, length + offset);
+					byte[] copy = ArrayUtil.copy(buffer, offset, length + offset);
 					MessagePayload msg = new MessagePayload(senderId, copy);
 					cobra.store(msg);
 					cobra.commit();

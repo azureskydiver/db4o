@@ -1,10 +1,10 @@
 package com.db4o.rmi.test;
 
 import java.io.*;
-import java.util.*;
 
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
+import com.db4o.util.*;
 
 public class Decoupled extends TheSimplest {
 
@@ -34,7 +34,7 @@ public class Decoupled extends TheSimplest {
 		}
 
 		public void consume(byte[] buffer, int offset, int length) throws IOException {
-			q.add(Arrays.copyOfRange(buffer, offset, offset+length));
+			q.add(ArrayUtil.copy(buffer, offset, offset+length));
 		}
 
 		public void dispose() {
