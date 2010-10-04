@@ -12,10 +12,6 @@ public interface VodJdoFacade {
 
 	<T> T objectByLoid(long loid);
 
-	String schemaName(Class clazz);
-
-	boolean isKnownClass(Class clazz);
-
 	void close();
 
 	void commit();
