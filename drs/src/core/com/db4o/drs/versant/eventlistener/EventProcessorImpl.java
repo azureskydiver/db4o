@@ -5,7 +5,6 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.atomic.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
@@ -20,8 +19,6 @@ import com.versant.event.*;
 
 public class EventProcessorImpl implements Runnable, EventProcessor {
 	
-	private static final String TRANSACTION_CHANNEL_CLASSNAME = "o_genericobj";
-	
 	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(EventProcessor.class);
 	
 	public static final String COMMIT_MESSAGE = SIMPLE_NAME+" commit";
@@ -30,8 +27,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 
 	private static final long ISOLATION_WATCHDOG_INTERVAL = 1000;
 
-	private final long COMMIT_INTERVAL = 1000; // 1 sec
-	
 	private final VodEventClient _client;
 	
 	private volatile boolean _stopped;
@@ -44,18 +39,10 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private ServerChannelControl _incomingMessages;
 
-	private volatile boolean _dirty;
-	
 	private final Object _lock = new Object();
 	
-	SimpleTimer _commitTimer = new SimpleTimer(
-			new Runnable() {
-				public void run() {
-					commit();
-				}}, 
-			COMMIT_INTERVAL);
-	
-	private Thread _commitThread = new Thread(_commitTimer, SIMPLE_NAME+" Commit");
+	private final Map<String, List<ObjectLifecycleEvent>> _objectLifecycleEvents = new HashMap<String, List<ObjectLifecycleEvent>>();
+
 	
 	SimpleTimer _isolationWatchdogTimer = new SimpleTimer(
 		new Runnable() {
@@ -67,7 +54,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		ISOLATION_WATCHDOG_INTERVAL);
 
 	private Thread _isolatinWatchdogThread = new Thread(_isolationWatchdogTimer, SIMPLE_NAME+" Isolation watchdog");
-
 	
 	private CommitTimestamp _commitTimestamp;
 
@@ -77,9 +63,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 
 	private boolean _started;
 
-	private BlockingQueue4<Object> events = new BlockingQueue<Object>();
-
-	public AtomicInteger eventStoreCount = new AtomicInteger();
+	private BlockingQueue4<Object> _changeCountQueue = new BlockingQueue<Object>();
 
 	private final VodDatabase _vod;
 
@@ -90,7 +74,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	    _cobra = VodCobra.createInstance(vod);
 
 	    produceLastTimestamp();
-	    createTransactionChannel();
 	    startChannelsFromKnownClasses();
 	}
 
@@ -132,9 +115,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	public void run() {
-		_commitThread.setDaemon(true);
 		_isolatinWatchdogThread.setDaemon(true);
-	    _commitThread.start();
 	    _isolatinWatchdogThread.start();
 		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(this, _vod, _client);
 		startPausableTasksExecutor();
@@ -165,9 +146,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 								it.current().run();
 							}
 							list.clear();
-							if (_dirty) {
-								commit();
-							}
 						}
 					}
 				} catch (BlockingQueueStoppedException e){
@@ -211,7 +189,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 		createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid), false);
 		_knownClasses.add(fullyQualifiedName);
-		dirty();
 	}
 	
 	public void ping() {
@@ -223,18 +200,14 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private void shutdown() {
 		_client.shutdown();
-		_commitTimer.stop();
-		try {
-			_commitThread.join();
-		} catch (InterruptedException e) {
-		}
 		_isolationWatchdogTimer.stop();
 		try {
 			_isolatinWatchdogThread.join();
 		} catch (InterruptedException e) {
 		}
-		commit();
-		_cobra.close();
+		synchronized (_lock) {
+			_cobra.close();
+		}
 	}
 
 	private void createChannel(final ClassChannelSpec channelSpec, boolean registerTransactionEvents) {
@@ -250,30 +223,31 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 				queueObjectLifeCycleEvent(event, Operations.DELETE, channelSpec);				
 			}
 		});
-		println("Listener channel created for class " + channelSpec._className);
-	}
-	
-	private void createTransactionChannel() {
-		EventChannel channel = _client.produceClassChannel(TRANSACTION_CHANNEL_CLASSNAME, true);
+		
 		channel.addVersantEventListener (new TransactionMarkerEventListener() {
-			public void endTransaction(VersantEventObject event) {
-				println("Committing  " + event.getTransactionID());
-			}
-			
-			public void beginTransaction(VersantEventObject event) {
+			public void endTransaction(final VersantEventObject event) {
+				_pausableTasks.add(new Block4() {
+					public void run() {
+						commit(event.getTransactionID());
+					}
+					
+					@Override
+					public String toString() {
+						return "pausable commit";
+					}
+				});
 				
+			}
+			public void beginTransaction(VersantEventObject event) {
+				// do nothing
 			}
 		});
 		
-		println("Transaction channel listener created for class " + TRANSACTION_CHANNEL_CLASSNAME);
+		println("Listener channel created for class " + channelSpec._className);
 	}
-
+	
 	private void queueObjectLifeCycleEvent(VersantEventObject event, Operations operation, ClassChannelSpec channelSpec) {
-		_pausableTasks.add(new ObjectLifeCycleEventStoreTask(channelSpec._classMetadataLoid, event.getRaiserLoid(), operation));
-	}
-
-	private void persistObjectLifeCycleEvent(ObjectLifecycleEvent objectLifecycleEvent) {
-		_cobra.store(objectLifecycleEvent);
+		_pausableTasks.add(new ObjectLifeCycleEventStoreTask(event.getTransactionID(), channelSpec._classMetadataLoid, event.getRaiserLoid(), operation));
 	}
 
 	private void println(String msg) {
@@ -304,27 +278,31 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
     	// and react to it from some daemon code in the app?
 	}
 	
-	private void commit() {
+	private void commit(String transactionId) {
 		synchronized (_lock) {
-			if (_dirty) {
-				_commitTimestamp.value(_timeStampIdGenerator.last());
-				_cobra.store(_commitTimestamp);
-				_cobra.commit();
-				int i = eventStoreCount.getAndSet(0);
-				while (i-- > 0) {
-					events.add(new Object());
-				}
-				listenerTrigger().commited();
-				println(COMMIT_MESSAGE);
-				_dirty = false;
+			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(transactionId);
+			if(events == null){
+				return; 
 			}
+			for(ObjectLifecycleEvent event: events){
+				_cobra.store(event);
+				incrementChangedCount();
+			}
+			_objectLifecycleEvents.remove(transactionId);
+			
+			_commitTimestamp.value(_timeStampIdGenerator.last());
+			_cobra.store(_commitTimestamp);
+			_cobra.commit();
+			
+			listenerTrigger().commited();
+			println(COMMIT_MESSAGE);
 		}
 	}
-	
-	private void dirty() {
-		_dirty = true;
-	}
 
+	private void incrementChangedCount() {
+		_changeCountQueue.add(new Object());
+	}
+	
 	public class ClassChannelSpec {
 
 		public final String _className;
@@ -349,11 +327,13 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private class ObjectLifeCycleEventStoreTask implements Block4 {
 
-		private long _classLoid;
-		private String _objectLoid;
-		private Operations _operation;
+		private final String _transactionId;
+		private final long _classLoid;
+		private final String _objectLoid;
+		private final Operations _operation;
 		
-		public ObjectLifeCycleEventStoreTask(long classLoid, String objectLoid, Operations operation) {
+		public ObjectLifeCycleEventStoreTask(String transactionId, long classLoid, String objectLoid, Operations operation) {
+			_transactionId = transactionId;
 			_classLoid = classLoid;
 			_objectLoid = objectLoid;
 			_operation = operation;
@@ -368,10 +348,13 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						loid,
 						_operation.value,
 						_timeStampIdGenerator.generate());
-			persistObjectLifeCycleEvent(objectLifecycleEvent);
-			println("Event stored: " + objectLifecycleEvent);
-			eventStoreCount.getAndIncrement();
-			dirty();
+			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(_transactionId);
+			if(events == null){
+				events = new java.util.LinkedList<ObjectLifecycleEvent>();
+				_objectLifecycleEvents.put(_transactionId, events);
+			}
+			events.add(objectLifecycleEvent);
+			println("Event registered: " + objectLifecycleEvent);
 		}
 		
 		@Override
@@ -411,8 +394,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	public void ensureChangecount(int expectedChangeCount) {
-		for(int i=0;i<expectedChangeCount;i++) {
-			events.next();
+		for( int i=0; i < expectedChangeCount ; i++) {
+			_changeCountQueue.next();
 		}
 	}
 
