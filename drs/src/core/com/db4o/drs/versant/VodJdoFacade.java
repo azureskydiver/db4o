@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.jdo.*;
 
+import com.db4o.drs.versant.VodJdo.PreStoreListener;
+
 public interface VodJdoFacade {
 
 	PersistenceManager persistenceManager();
@@ -35,5 +37,7 @@ public interface VodJdoFacade {
 	<T> T queryOne(Class<T> clazz, String filter);
 
 	void refresh(Object obj);
+
+	void addPreStoreListener(PreStoreListener preStoreListener);
 
 }

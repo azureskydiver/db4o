@@ -5,6 +5,8 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
@@ -20,9 +22,9 @@ import com.versant.event.*;
 public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(EventProcessor.class);
-	
-	public static final String COMMIT_MESSAGE = SIMPLE_NAME+" commit";
 
+	private static final String INTERNAL_TRANSACTION = "internalTransaction";
+	
 	public static final long ISOLATION_TIMEOUT = 5000;
 
 	private static final long ISOLATION_WATCHDOG_INTERVAL = 1000;
@@ -57,7 +59,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private CommitTimestamp _commitTimestamp;
 
-	private Set<String> _knownClasses = new HashSet<String>();
+	private Map<String, Long> _knownClasses = new HashMap<String, Long>();
 
 	private List<EventProcessorListener> listeners = new ArrayList<EventProcessorListener>();
 
@@ -82,7 +84,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	    for (Long loid : classMetadataLoids) {
 	    	ClassMetadata classMetadata = _cobra.objectByLoid(loid);
 	    	createChannel(new ClassChannelSpec(classMetadata.name(), classMetadata.fullyQualifiedName(),  loid), false);
-	    	_knownClasses.add(classMetadata.fullyQualifiedName());
+	    	_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata.loid());
 		}
 	}
 
@@ -181,14 +183,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 		
 		return true;
-	}
-	
-	public void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid) {
-		if (_knownClasses.contains(fullyQualifiedName)) {
-			return;
-		}
-		createChannel(new ClassChannelSpec(schemaName,fullyQualifiedName, classLoid), false);
-		_knownClasses.add(fullyQualifiedName);
 	}
 	
 	public void ping() {
@@ -295,7 +289,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			_cobra.commit();
 			
 			listenerTrigger().commited();
-			println(COMMIT_MESSAGE);
+			println(SIMPLE_NAME+" commit");
 		}
 	}
 
@@ -397,6 +391,72 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		for( int i=0; i < expectedChangeCount ; i++) {
 			_changeCountQueue.next();
 		}
+	}
+
+	public Map<String, Long> ensureMonitoringEventsOn(Map<String, List<Long>> map) {
+		
+		Map<String, Long> classIds = new HashMap<String, Long>();
+
+		synchronized (_lock) {
+			
+			if (map.isEmpty()) {
+				return classIds;
+			}
+			
+			for (Entry<String, List<Long>> entry : map.entrySet()) {
+				
+				String fullyQualifiedName = entry.getKey();
+				
+				long cmLoid = produceChannel(fullyQualifiedName);
+				classIds.put(fullyQualifiedName, cmLoid);
+	
+				for (Long loid : entry.getValue()) {
+					_pausableTasks.add(new ObjectLifeCycleEventStoreTask(INTERNAL_TRANSACTION, cmLoid, VodCobra.loidAsString(loid), Operations.CREATE));
+				}
+			}
+			
+			_pausableTasks.add(new Block4() {
+				public void run() {
+					commit(INTERNAL_TRANSACTION);
+				};
+			});
+			
+		}
+		return classIds;
+	}
+
+	private long produceChannel(String fullyQualifiedName) {
+		
+		Long cmLoid = _knownClasses.get(fullyQualifiedName);
+		
+		if (cmLoid != null) {
+			return cmLoid;
+		}
+		
+		String schemaName = schemaFor(fullyQualifiedName);
+		
+		ClassMetadata cm = createClassMetadata(fullyQualifiedName, schemaName);
+
+		createChannel(new ClassChannelSpec(schemaName, fullyQualifiedName, cm.loid()), false);
+		
+		_knownClasses.put(fullyQualifiedName, cm.loid());
+		
+		return cm.loid();
+	}
+
+	private ClassMetadata createClassMetadata(String fullyQualifiedName, String schemaName) {
+		ClassMetadata cm = new ClassMetadata(schemaName, fullyQualifiedName);
+		_cobra.store(cm);
+		return cm;
+	}
+
+	private String schemaFor(String fullyQualifiedName) {
+		return fullyQualifiedName;
+//		try {
+//			return _vod.schemaName(Class.forName(fullyQualifiedName));
+//		} catch (ClassNotFoundException e) {
+//			throw new RuntimeException(e);
+//		}
 	}
 
 }
