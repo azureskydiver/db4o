@@ -92,14 +92,31 @@ public class ProxyUtil {
 
 			private static final String SEP = "    ";
 
+			volatile boolean in = false;
+			Object lock = new Object();
+			
+
 			String ident = "";
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				String m = object.getClass().getSimpleName() + "."+method.getName() +"()";
 //				String m = iface.getSimpleName()+"#"+method.getName();
 				try {
-					System.out.println(ident+m+" {");
+					System.out.println(ident+m+" { # " + Thread.currentThread().getName());
 					ident += SEP;
-					return method.invoke(object, args);
+					
+					synchronized (lock) {
+						if (in) {
+							throw new IllegalStateException("ha!");
+						}
+						in = true;
+					}
+
+					try {
+					
+						return method.invoke(object, args);
+					} finally {
+						in = false;
+					}
 				} catch (InvocationTargetException e) {
 					throw e.getCause();
 				} finally {
