@@ -2,6 +2,7 @@ package com.db4o.rmi;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 public class Serializers {
@@ -93,6 +94,99 @@ public class Serializers {
 			return in.readUTF();
 		}
 	}, String.class);
+
+	public final static Serializer<HashSet> hashset = addSerializer(new Serializer<HashSet>() {
+
+		public void serialize(DataOutput out, HashSet item) throws IOException {
+			out.writeInt(item.size());
+			for (Object object : item) {
+				out.writeUTF(object.getClass().getName());
+				Serializer<Object> s = (Serializer<Object>) serializerFor(object.getClass());
+				s.serialize(out, object);
+			}
+		}
+
+		public HashSet deserialize(DataInput in) throws IOException {
+			HashSet<Object> ret = new HashSet<Object>();
+			int len = in.readInt();
+			for(int i=0;i<len;i++) {
+				Serializer<Object> s = (Serializer<Object>) serializerFor(classFor(in.readUTF()));
+				ret.add(s.deserialize(in));
+			}
+			return ret;
+		}
+	}, HashSet.class, Set.class);
+
+	public final static Serializer<ArrayList> arraylist = addSerializer(new Serializer<ArrayList>() {
+
+		public void serialize(DataOutput out, ArrayList item) throws IOException {
+			out.writeInt(item.size());
+			for (Object object : item) {
+				out.writeUTF(object.getClass().getName());
+				Serializer<Object> s = (Serializer<Object>) serializerFor(object.getClass());
+				s.serialize(out, object);
+			}
+		}
+
+		public ArrayList deserialize(DataInput in) throws IOException {
+			ArrayList<Object> ret = new ArrayList<Object>();
+			int len = in.readInt();
+			for(int i=0;i<len;i++) {
+				Serializer<Object> s = (Serializer<Object>) serializerFor(classFor(in.readUTF()));
+				ret.add(s.deserialize(in));
+			}
+			return ret;
+		}
+	}, ArrayList.class, List.class);
+
+	public final static Serializer<HashMap> hashmap = addSerializer(new Serializer<HashMap>() {
+
+		public void serialize(DataOutput out, HashMap item) throws IOException {
+			out.writeInt(item.size());
+			Set<Entry> e = item.entrySet();
+			for (Entry entry : e) {
+				
+				Class<? extends Object> keyClass = entry.getKey().getClass();
+				Class<? extends Object> valueClass = entry.getValue().getClass();
+
+				out.writeUTF(keyClass.getName());
+				out.writeUTF(valueClass.getName());
+				
+				Serializer keySerializer = serializerFor(keyClass);
+				Serializer valueSerializer = serializerFor(valueClass);
+				
+				keySerializer.serialize(out, entry.getKey());
+				valueSerializer.serialize(out, entry.getValue());
+				
+			}
+		}
+
+		public HashMap deserialize(DataInput in) throws IOException {
+			HashMap ret = new HashMap();
+			
+			int len = in.readInt();
+			for(int i=0;i<len;i++) {
+				
+				Class<? extends Object> keyClass = classFor(in.readUTF());
+				Class<? extends Object> valueClass = classFor(in.readUTF());
+				
+				Serializer keySerializer = serializerFor(keyClass);
+				Serializer valueSerializer = serializerFor(valueClass);
+				
+				ret.put(keySerializer.deserialize(in), valueSerializer.deserialize(in));
+			}
+			
+			return ret;
+		}
+	}, HashMap.class, Map.class);
+
+	protected static Class<? extends Object> classFor(String className) throws IOException {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new IOException(e);
+		}
+	}
 
 	
 }
