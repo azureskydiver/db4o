@@ -39,6 +39,9 @@ public class ReplicationEventTest extends DrsTestCase {
 		tstNoAction();
 		clean();
 
+		tstNoAction();
+		clean();
+
 		tstNewObject();
 		clean();
 
@@ -61,6 +64,12 @@ public class ReplicationEventTest extends DrsTestCase {
 
 	}
 	
+	@Override
+	protected void clean() {
+		super.clean();
+		ensureNeitherParentOrChild(a().provider());
+		ensureNeitherParentOrChild(b().provider());
+	}
 
 	private void deleteInProviderA() {
 		a().provider().deleteAllInstances(SPCParent.class);
@@ -83,6 +92,11 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		Assert.areEqual(parent.getName(), parentName);
 		Assert.areEqual(childName, parent.getChild().getName());
+	}
+
+	private void ensureNeitherParentOrChild(TestableReplicationProviderInside provider) {
+		ensureNotExist(provider, SPCParent.class);
+		ensureNotExist(provider, SPCChild.class);
 	}
 
 	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {

@@ -38,6 +38,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return DatastoreLoid.asValue(loidAsString);
 	}
 	
+	public static String loidAsString(long loid){
+		return DatastoreLoid.asString(loid);
+	}
+	
 	public void close() {
 		_dm.rollbackTransaction();
 		_dm.close();

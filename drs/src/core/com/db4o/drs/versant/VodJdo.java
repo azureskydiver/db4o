@@ -5,6 +5,7 @@ package com.db4o.drs.versant;
 import java.util.*;
 
 import javax.jdo.*;
+import javax.jdo.listener.*;
 
 import com.db4o.drs.versant.metadata.*;
 import com.versant.core.jdo.*;
@@ -16,6 +17,10 @@ import com.versant.odbms.model.UserSchemaClass;
 
 public class VodJdo implements VodJdoFacade {
 	
+	public interface PreStoreListener {
+		void preStore(Object object);
+	}
+
 	private final VodDatabase _vod;
 	
 	private final PersistenceManager _pm;
@@ -119,6 +124,31 @@ public class VodJdo implements VodJdoFacade {
 
 	public void refresh(Object obj) {
 		_pm.refresh(obj);
+	}
+	
+	private static class PreStoreListenerWrapper implements StoreLifecycleListener, CreateLifecycleListener {
+
+		private PreStoreListener preStoreListener;
+
+		public PreStoreListenerWrapper(PreStoreListener preStoreListener) {
+			super();
+			this.preStoreListener = preStoreListener;
+		}
+
+		public void postCreate(InstanceLifecycleEvent arg0) {
+		}
+
+		public void postStore(InstanceLifecycleEvent arg0) {
+		}
+
+		public void preStore(InstanceLifecycleEvent arg0) {
+			preStoreListener.preStore(arg0.getSource());
+		}
+		
+	}
+
+	public void addPreStoreListener(final PreStoreListener preStoreListener) {
+		_pm.addInstanceLifecycleListener(new PreStoreListenerWrapper(preStoreListener), null);
 	}
 
 }

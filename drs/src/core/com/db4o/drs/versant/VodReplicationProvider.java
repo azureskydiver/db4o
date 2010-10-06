@@ -6,12 +6,14 @@ import static com.db4o.drs.foundation.Logger4Support.*;
 import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.jdo.spi.*;
 
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.versant.VodJdo.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.jdo.reflect.*;
@@ -66,6 +68,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private boolean pinging = true;
 
+	protected Map<String, List<Object>> jdoStoredObjects = new HashMap<String, List<Object>>();
+
 	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
 		_control = EventProcessorNetworkFactory.newClient(vod);
@@ -78,6 +82,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_myDatabaseId = _cobra.databaseId();
 		final Signature mySignature = produceSignatureFor(_myDatabaseId);
 		_jdo.commit();
+		prepareJdoListener();
 		_mySignature = new ReadonlyReplicationProviderSignature() {
 			public byte[] getSignature() {
 				return mySignature.bytes;
@@ -96,6 +101,28 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 	}
 
+	private void prepareJdoListener() {
+		_jdo.addPreStoreListener(new PreStoreListener() {
+			public void preStore(Object object) {
+				enqueueObjectStoreNotification(object);
+			}
+
+		});
+	}
+
+	private void enqueueObjectStoreNotification(Object object) {
+		String className = object.getClass().getName();
+		if (_knownClasses.containsKey(className)) {
+			return;
+		}
+		List<Object> list = jdoStoredObjects.get(className);
+		if (list == null) {
+			list = new ArrayList<Object>();
+			jdoStoredObjects.put(className, list);
+		}
+		list.add(object);
+	}
+	
 	private void loadKnownClasses() {
 		for (ClassMetadata classMetadata : _cobra.query(ClassMetadata.class)) {
 			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata.loid());
@@ -114,9 +141,29 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void commit() {
 		
 		_jdo.commit();
+		processJdoStoredClasses();
 		if (!_isolatedMode) {
 			ensureChangeCount();
 		}
+	}
+
+	private void processJdoStoredClasses() {
+		if (jdoStoredObjects.isEmpty()) {
+			return;
+		}
+		Map<String, List<Long>> arg = new HashMap<String, List<Long>>();
+		for (Entry<String, List<Object>> entry : jdoStoredObjects.entrySet()) {
+			List<Long> list = new ArrayList<Long>();
+			for (Object object : entry.getValue()) {
+				list.add(_jdo.loid(object));
+			}
+			arg.put(entry.getKey(), list);
+		}
+		Map<String, Long> classIds = syncEventProcessor().ensureMonitoringEventsOn(arg);
+		for (Entry<String, Long> entry : classIds.entrySet()) {
+			_knownClasses.put(entry.getKey(), entry.getValue());
+		}
+		jdoStoredObjects.clear();
 	}
 
 	public void delete(Object obj) {
@@ -144,27 +191,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			String msg = "Object of " + obj.getClass() + " does not implement PersistenceCapable. Recommended action: Enhance all persistent classes for JDO using an enhancer.";
 			throw new IllegalStateException(msg);
 		}
-		ensureClassKnown(obj);
 		expectedChangeCount++;
 		_jdo.store(obj);
-	}
-
-	private void ensureClassKnown(Object obj) {
-		ensureClassKnown(obj.getClass());
-	}
-
-	private void ensureClassKnown(Class clazz) {
-		String className = clazz.getName();
-		
-		if(_knownClasses.containsKey(className)){
-			return;
-		}
-		String schemaName = _vod.schemaName(clazz);
-		ClassMetadata cm = new ClassMetadata(schemaName, className);
-		_cobra.store(cm);
-		_cobra.commit();
-		_knownClasses.put(className, cm.loid());
-		syncEventProcessor().ensureMonitoringEventsOn(className, schemaName, cm.loid());
 	}
 
 	public void update(Object obj) {
@@ -214,6 +242,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
 		_jdo.commit();
+		processJdoStoredClasses();
 		
 		// FileReplicationProvider does this:
 		// _idsReplicatedInThisSession = null;
@@ -292,6 +321,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void rollbackReplication() {
 		clearAllReferences();
 		_jdo.rollback();
+		jdoStoredObjects.clear();
 	}
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
@@ -393,7 +423,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		ensureClassKnown(clazz);
+		if (!_knownClasses.containsKey(clazz.getName())) {
+			enqueueObjectStoreNotification(clazz);
+			processJdoStoredClasses();
+		}
 		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + _knownClasses.get(clazz.getName()));
 	}
 
@@ -510,7 +543,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if (expectedChangeCount > 0) {
 			
 			// big fat hack. related to DRS-146 and DRS-151
-			if (EventProcessorNetworkFactory.USE_IN_BAND_COMMUNICATION) {
+			if (true || EventProcessorNetworkFactory.USE_IN_BAND_COMMUNICATION) {
 				Runtime4.sleepThrowsOnInterrupt(300);
 			} else {
 				syncEventProcessor().ensureChangecount(expectedChangeCount);

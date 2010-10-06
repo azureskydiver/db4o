@@ -1,5 +1,7 @@
 package com.db4o.drs.versant.ipc;
 
+import java.util.*;
+
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.rmi.*;
 
@@ -27,8 +29,6 @@ public interface EventProcessor {
 
 	void syncTimestamp(long timestamp);
 
-	void ensureMonitoringEventsOn(String fullyQualifiedName, String schemaName, long classLoid);
-
 	void ping();
 
 	void stop();
@@ -44,6 +44,8 @@ public interface EventProcessor {
 	}
 
 	void ensureChangecount(int expectedChangeCount);
+
+	Map<String, Long> ensureMonitoringEventsOn(Map<String, List<Long>> map);
 
 	
 }
