@@ -1,6 +1,7 @@
 package com.db4o.rmi.test;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
@@ -15,6 +16,9 @@ public class TheSimplest implements TestCase, TestLifeCycle {
 		void voidCall();
 
 		void addListener(@Proxy Runnable r);
+		
+		Map<String, Set<Integer>> collections(Map<String, List<Integer>> map);
+
 	}
 
 	public static class FacadeImpl implements Facade {
@@ -42,6 +46,18 @@ public class TheSimplest implements TestCase, TestLifeCycle {
 			for (Runnable runnable : l) {
 				runnable.run();
 			}
+		}
+
+		public Map<String, Set<Integer>> collections(Map<String, List<Integer>> map) {
+			Map<String, Set<Integer>> ret = new HashMap<String, Set<Integer>>();
+			for (Entry<String, List<Integer>> entry : map.entrySet()) {
+				Set<Integer> set = new HashSet<Integer>();
+				for (Integer integer : entry.getValue()) {
+					set.add(integer);
+				}
+				ret.put(entry.getKey(), set);
+			}
+			return ret;
 		}
 	}
 
@@ -103,6 +119,18 @@ public class TheSimplest implements TestCase, TestLifeCycle {
 		concreteFacade.triggerListeners();
 
 		Assert.isNotNull(q.next());
+	}
+	
+	public void testCollections() {
+		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+		
+		map.put("1", new ArrayList<Integer>(Arrays.asList(new Integer[]{1,1,2})));
+		
+		Map<String, Set<Integer>> ret = client.sync().collections(map);
+		
+		Assert.areEqual(1, ret.size());
+		Assert.areEqual(2, ret.values().iterator().next().size());
+		
 	}
 
 }
