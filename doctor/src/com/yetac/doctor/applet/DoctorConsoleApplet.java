@@ -46,7 +46,7 @@ public class DoctorConsoleApplet extends Applet {
         
         text=new TextArea();
         text.setFont(UIConfig.CONSOLE_FONT);
-        text.setForeground(UIConfig.DB4O_GREEN);
+        text.setForeground(UIConfig.DB4O_RED);
         text.setBackground(UIConfig.DB4O_GREY);
         
         resetbutton=new Button("Reset Database");
@@ -58,7 +58,7 @@ public class DoctorConsoleApplet extends Applet {
         });
         
         resetbutton.setFont(UIConfig.BUTTON_FONT);
-        resetbutton.setBackground(UIConfig.DB4O_GREEN);
+        resetbutton.setBackground(UIConfig.DB4O_RED);
         resetbutton.setForeground(UIConfig.DB4O_GREY);
         
         clearbutton=new Button("Clear");
@@ -68,7 +68,7 @@ public class DoctorConsoleApplet extends Applet {
             }
         });
         clearbutton.setFont(UIConfig.BUTTON_FONT);
-        clearbutton.setBackground(UIConfig.DB4O_GREEN);
+        clearbutton.setBackground(UIConfig.DB4O_RED);
         clearbutton.setForeground(UIConfig.DB4O_GREY);
         
         add(resetbutton);
