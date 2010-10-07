@@ -6,46 +6,52 @@ body, p, td
 }
 H1
 {
-	color: #447744;
+	font-family: "Segoe UI","Lucida Grande",Arial,Helvetica,Sans-Serif;
+	color: #BB0000;
 	font-size: 180%;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 H2
 {
-	color: #447744;
+	font-family: "Segoe UI","Lucida Grande",Arial,Helvetica,Sans-Serif;
+	color: #BB0000;
 	font-size: 160%;
-	font-weight: bold;
+	font-weight: normal;
 	border-bottom: double #CCC 3px;
 }
 
 H3
 {
-	color: #447744;
+	font-family: "Segoe UI","Lucida Grande",Arial,Helvetica,Sans-Serif;
+	color: #BB0000;
 	font-size: 140%;
-	font-weight: bold;
+	font-weight: normal;
 	border-bottom: solid #CCC 1px;
 }
 
 H4
 {
-	color: #447744;
+	font-family: "Segoe UI","Lucida Grande",Arial,Helvetica,Sans-Serif;
+	color: #BB0000;
 	font-size: 130%;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 H5
 {
-	color: #447744;
+	font-family: "Segoe UI","Lucida Grande",Arial,Helvetica,Sans-Serif;
+	color: #BB0000;
 	font-size: 120%;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 H6
 {
-	color: #447744;
+	font-family: "Segoe UI","Lucida Grande",Arial,Helvetica,Sans-Serif;
+	color: #BB0000;
 	font-size: 100%;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 small
@@ -64,7 +70,15 @@ code
 	background-color: #F4F4F4;
 }
 
-
+a, a:link, a:active {
+  color:#698DB6;
+  font-weight:normal;
+  text-decoration:none;
+}
+a:visited{
+  color: #394DB6;
+  text-decoration:none;
+}
 
 .lg{background-color:#F4F4F4} 
 .co{background-color:#a0a0a0} 
@@ -79,6 +93,6 @@ code
 	overflow: hidden;
 }
 .button {
-	background-color: #ADD65C;
+	background-color: #BB0000;
 	color: #666177;
 }
