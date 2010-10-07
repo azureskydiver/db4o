@@ -77,7 +77,7 @@ public class HtmlWriter extends AbstractWriter {
         String outlineImage = files.task.getOutlineImage();
         if(outlineImage != null){
         	
-            outlineImage = "<img src=\"" + outlineImage + "\" border=\"0\" />";
+            outlineImage = "<img src=\"" + outlineImage + "\" border=\"0\" class=\"outLineImg\"/>";
             String linkHome = files.task.getLinkHome();
             if(linkHome != null){
                 outlineImage = "<a href=\"" + linkHome + "\" target=\"_blank\">" + outlineImage + "</a>";

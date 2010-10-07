@@ -19,7 +19,7 @@ public class DoctorRunExampleApplet extends Applet {
         setBackground(new Color(0xef,0xef,0xef));
         
         Button runbutton=new Button("Run");
-        runbutton.setBackground(UIConfig.DB4O_GREEN);
+        runbutton.setBackground(UIConfig.DB4O_RED);
         runbutton.setForeground(UIConfig.DB4O_GREY);
         runbutton.setFont(UIConfig.BUTTON_FONT);
         runbutton.addActionListener(new ActionListener() {
