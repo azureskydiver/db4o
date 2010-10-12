@@ -33,8 +33,8 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		_vod.startEventProcessor();
 		
 		_provider.syncEventProcessor().addListener(new EventProcessorListener() {
-			
 			public void ready() {
+				
 			}
 			
 			public void commited() {
@@ -122,9 +122,14 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		assertOnlyOneClassMetadataInstance();
 	}
 
-	private void assertOnlyOneClassMetadataInstance() {
+	public void assertOnlyOneClassMetadataInstance() {
 		String className = Item.class.getName();
-		Collection result = _jdo.query(ClassMetadata.class, "this.fullyQualifiedName == '" + className + "'");
+		
+		Collection<ClassMetadata> result = _jdo.query(ClassMetadata.class, "this.fullyQualifiedName == '" + className + "'");
+		for (ClassMetadata classMetadata : result) {
+			// make sure classmetadata is transparently activated
+			classMetadata.fullyQualifiedName();
+		}
 		Assert.areEqual(1, result.size());
 		Assert.isTrue(result.contains(new ClassMetadata(null, className)));
 	}

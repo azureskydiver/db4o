@@ -2,7 +2,7 @@
 
 package com.db4o.drs.versant.metadata;
 
-public class ObjectLifecycleEvent {
+public class ObjectLifecycleEvent extends VodLoidAwareObject {
 	
 	public static class Operations {
 		

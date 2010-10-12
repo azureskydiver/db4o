@@ -25,7 +25,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	private DatastoreManager _dm;
 
 	public static VodCobraFacade createInstance(VodDatabase vod) {
-		return ProxyUtil.throwOnConcurrentAccess(new VodCobra(vod));
+		return new VodCobra(vod);
+		// return ProxyUtil.throwOnConcurrentAccess(new VodCobra(vod));
 	}
 
 	private VodCobra(VodDatabase vod) {
