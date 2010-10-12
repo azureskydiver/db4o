@@ -4,12 +4,7 @@ package com.db4o.drs.test.versant;
 
 import java.io.File;
 
-import com.db4o.drs.versant.JdoMetadataGenerator;
-import com.db4o.drs.versant.JviDatabaseIdFactory;
-import com.db4o.drs.versant.VodDatabase;
-import com.db4o.drs.versant.VodJdo;
-import com.db4o.drs.versant.VodJdoFacade;
-import com.db4o.drs.versant.VodReplicationProvider;
+import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.metadata.VodLoidAwareObject;
 import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
 
@@ -28,22 +23,26 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 	// so we can see what's committed, using a second reference system.
 	protected VodJdoFacade _jdo;
 	
+	protected VodCobraFacade _cobra;
+	
 	protected abstract Class[] persistedClasses();
 	
 	public void setUp() {
 		_jdo = VodJdo.createInstance(_vod);
+		_cobra = VodCobra.createInstance(_vod);
 		cleanDb();
 		produceProvider();
 	}
 
 	protected void produceProvider() {
 		if (_provider != null) {
-			return;
+			_provider.destroy();
 		}
 		_provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
 	}
 
 	public void tearDown() {
+		_cobra.close();
 		_jdo.close();
 		destroyProvider();
 	}
@@ -52,7 +51,6 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 		if (_provider == null) {
 			return;
 		}
-		_provider.commit();
 		_provider.destroy();
 		_provider = null;
 	}

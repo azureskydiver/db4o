@@ -94,6 +94,26 @@ public class Serializers {
 			return in.readUTF();
 		}
 	}, String.class);
+	
+	public final static Serializer<String[]> stringArray = addSerializer(new Serializer<String[]>() {
+
+		public void serialize(DataOutput out, String[] item) throws IOException {
+			out.writeInt(item.length);
+			for (int i = 0; i < item.length; i++) {
+				out.writeUTF(item[i]);	
+			}
+		}
+
+		public String[] deserialize(DataInput in) throws IOException {
+			int length = in.readInt();
+			String[] result = new String[length];
+			for (int i = 0; i < result.length; i++) {
+				result[i] = in.readUTF();	
+			}
+			return result;
+		}
+	}, String[].class);
+
 
 	public final static Serializer<HashSet> hashset = addSerializer(new Serializer<HashSet>() {
 

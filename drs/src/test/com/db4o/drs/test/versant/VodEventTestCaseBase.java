@@ -2,8 +2,6 @@
 
 package com.db4o.drs.test.versant;
 
-import java.util.Set;
-
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.foundation.*;

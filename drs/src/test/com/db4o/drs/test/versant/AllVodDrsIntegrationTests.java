@@ -18,8 +18,24 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 //		return new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-drs-a"),
 //				new Db4oDrsFixture("db4o-drs-b"), VodDrsSuite.class).iterator();
 
-		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
-				new Db4oDrsFixture("db4o-drs-b", reflector), VodDrsSuite.class, reflector).iterator();
+//		 new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
+//				new Db4oDrsFixture("db4o-drs-b", reflector), VodDrsSuite.class, reflector).iterator();
+		
+		 return new DrsTestSuiteBuilder( 
+				 new VodDrsFixture("vod-drs-a"), 
+				 new Db4oDrsFixture("db4o-drs-b", reflector), 
+				 VodDrsSuite.class, 
+				 reflector
+		 ).iterator();
+
+		 
+//		 return new DrsTestSuiteBuilder(
+//				 new Db4oDrsFixture("db4o-drs-a", reflector), 
+//				 new VodDrsFixture("vod-drs-b"), 
+//				 VodDrsSuite.class, 
+//				 reflector
+//		 ).iterator();
+
 		
 //		return new DrsTestSuiteBuilder(new VodDrsFixture("vod-drs-a"),
 //				new VodDrsFixture("vod-drs-b"), VodDrsSuite.class).iterator();

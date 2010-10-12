@@ -9,11 +9,8 @@ import javax.jdo.listener.*;
 
 import com.db4o.drs.versant.metadata.*;
 import com.versant.core.jdo.*;
-import com.versant.core.metadata.*;
-import com.versant.core.storagemanager.*;
 import com.versant.core.vds.*;
-import com.versant.odbms.model.*;
-import com.versant.odbms.model.UserSchemaClass;
+
 
 public class VodJdo implements VodJdoFacade {
 	
@@ -26,7 +23,8 @@ public class VodJdo implements VodJdoFacade {
 	private final PersistenceManager _pm;
 
 	public static VodJdoFacade createInstance(VodDatabase vod) {
-		return ProxyUtil.throwOnConcurrentAccess(new VodJdo(vod));
+		return new VodJdo(vod);
+		// return ProxyUtil.throwOnConcurrentAccess(new VodJdo(vod));
 	}
 	
 	private VodJdo(VodDatabase vod) {
@@ -150,6 +148,18 @@ public class VodJdo implements VodJdoFacade {
 	public void addPreStoreListener(final PreStoreListener preStoreListener) {
 		_pm.addInstanceLifecycleListener(new PreStoreListenerWrapper(preStoreListener), null);
 	}
+
+	
+//	public String[] transactionIds(){
+//		VersantPersistenceManager vpm = (VersantPersistenceManager) _pm;
+//		ActivityInfo activityInfo = vpm.getActivityInfo(null, null, null);
+//		TransactionInfo[] transactionInfos = activityInfo.getTransactionInfo();
+//		String[] result = new String[transactionInfos.length];
+//		for (int i = 0; i < transactionInfos.length; i++) {
+//			result[i] = transactionInfos[i].getTransactionId();
+//		}
+//		return result;
+//	}
 
 }
 

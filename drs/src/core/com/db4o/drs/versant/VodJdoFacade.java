@@ -6,11 +6,9 @@ import javax.jdo.*;
 
 import com.db4o.drs.versant.VodJdo.PreStoreListener;
 
-public interface VodJdoFacade {
-
+public interface VodJdoFacade extends LoidProvider {
+	
 	PersistenceManager persistenceManager();
-
-	long loid(Object obj);
 
 	<T> T objectByLoid(long loid);
 
@@ -39,5 +37,7 @@ public interface VodJdoFacade {
 	void refresh(Object obj);
 
 	void addPreStoreListener(PreStoreListener preStoreListener);
+	
+	// String[] transactionIds();
 
 }

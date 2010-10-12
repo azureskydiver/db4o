@@ -24,8 +24,10 @@ public interface EventProcessor {
 	 * @return whether or not the isolation mode was affected by the request.
 	 */
 	boolean requestIsolation(boolean isolated);
+	
+	long generateTimestamp();
 
-	long requestTimestamp();
+	long lastTimestamp();
 
 	void syncTimestamp(long timestamp);
 
@@ -45,7 +47,11 @@ public interface EventProcessor {
 
 	void ensureChangecount(int expectedChangeCount);
 
-	Map<String, Long> ensureMonitoringEventsOn(Map<String, List<Long>> map);
+	Map<String, Long> ensureMonitoringEventsOn(String className);
+	
+	void ensureCommit();
+
+	void forceTimestamp(long raisedDatabaseVersion);
 
 	
 }

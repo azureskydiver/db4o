@@ -16,13 +16,13 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.VodJdo.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
-import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
-import com.db4o.reflect.*;
 
-public class VodReplicationProvider implements TestableReplicationProviderInside{
+
+public class VodReplicationProvider implements TestableReplicationProviderInside, LoidProvider {
 	
 	private static final int COMM_HEARTBEAT = 2000;
 
@@ -48,6 +48,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final short _myDatabaseId;
 	
+	private volatile long _timeStamp;
+	
 	SimpleTimer _heartbeatTimer = new SimpleTimer(
 		new Runnable() {
 			public void run() {
@@ -67,8 +69,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private final ClientChannelControl _control;
 
 	private boolean pinging = true;
-
-	protected Map<String, List<Object>> jdoStoredObjects = new HashMap<String, List<Object>>();
 
 	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
@@ -99,28 +99,65 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_heartbeatThread.start();
 		
 		
+
 	}
+	
+	
+	private static final Class[] IGNORED_CLASSES = {ObjectLifecycleEvent.class};
 
 	private void prepareJdoListener() {
 		_jdo.addPreStoreListener(new PreStoreListener() {
 			public void preStore(Object object) {
-				enqueueObjectStoreNotification(object);
+				Class clazz = object.getClass();
+				for (int i = 0; i < IGNORED_CLASSES.length; i++) {
+					if(clazz == IGNORED_CLASSES[i]){
+						return;
+					}
+				}
+				String className = clazz.getName();
+				Long classMetadataLoid = _knownClasses.get(className);
+				if(classMetadataLoid == null) {
+					 classMetadataLoid = ensureClassKnown(clazz);
+				}
+				long loid = loid(object);
+				log("ObjectLifecycleEvent stored timestamp:" + timeStamp());
+				
+				boolean isUpdate = false;
+				ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
+				ObjectSet<ObjectLifecycleEvent> oldEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(loid).select();
+				for (ObjectLifecycleEvent oldEvent : oldEvents) {
+					_cobra.delete(oldEvent.loid());
+					isUpdate = true;
+				}
+				ObjectLifecycleEvent event = 
+					new ObjectLifecycleEvent(
+							classMetadataLoid, 
+							loid, 
+							isUpdate ? Operations.UPDATE.value : Operations.CREATE.value, 
+							timeStamp());
+				_cobra.store(event);
+				_cobra.commit();
 			}
 
 		});
+
 	}
 
-	private void enqueueObjectStoreNotification(Object object) {
-		String className = object.getClass().getName();
-		if (_knownClasses.containsKey(className)) {
-			return;
+	private long ensureClassKnown(Class clazz) {
+		String className = clazz.getName();
+		Long loid = _knownClasses.get(className);
+		if (loid != null) {
+			return loid;
 		}
-		List<Object> list = jdoStoredObjects.get(className);
-		if (list == null) {
-			list = new ArrayList<Object>();
-			jdoStoredObjects.put(className, list);
-		}
-		list.add(object);
+		String schemaName = _vod.schemaName(clazz);
+		ClassMetadata cm = new ClassMetadata(schemaName, className);
+		_cobra.store(cm);
+		log("Classmetadata stored " + className);
+		_cobra.commit();
+		loid = cm.loid();
+		_knownClasses.put(className, loid);
+		syncEventProcessor().ensureMonitoringEventsOn(className);
+		return loid; 
 	}
 	
 	private void loadKnownClasses() {
@@ -137,33 +174,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			_signatures.add( entry.databaseId(),new Signature(entry.signature()));
 		}
 	}
-
+	
 	public void commit() {
-		
+		timeStamp(syncEventProcessor().generateTimestamp());
 		_jdo.commit();
-		processJdoStoredClasses();
+		syncEventProcessor().ensureCommit();
+
 		if (!_isolatedMode) {
 			ensureChangeCount();
 		}
-	}
-
-	private void processJdoStoredClasses() {
-		if (jdoStoredObjects.isEmpty()) {
-			return;
-		}
-		Map<String, List<Long>> arg = new HashMap<String, List<Long>>();
-		for (Entry<String, List<Object>> entry : jdoStoredObjects.entrySet()) {
-			List<Long> list = new ArrayList<Long>();
-			for (Object object : entry.getValue()) {
-				list.add(_jdo.loid(object));
-			}
-			arg.put(entry.getKey(), list);
-		}
-		Map<String, Long> classIds = syncEventProcessor().ensureMonitoringEventsOn(arg);
-		for (Entry<String, Long> entry : classIds.entrySet()) {
-			_knownClasses.put(entry.getKey(), entry.getValue());
-		}
-		jdoStoredObjects.clear();
+		
 	}
 
 	public void delete(Object obj) {
@@ -191,6 +211,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			String msg = "Object of " + obj.getClass() + " does not implement PersistenceCapable. Recommended action: Enhance all persistent classes for JDO using an enhancer.";
 			throw new IllegalStateException(msg);
 		}
+		ensureClassKnown(obj.getClass());
 		expectedChangeCount++;
 		_jdo.store(obj);
 	}
@@ -240,9 +261,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
+	
+	    timeStamp(raisedDatabaseVersion - 1);
+		syncEventProcessor().forceTimestamp(timeStamp());
 		_jdo.commit();
-		processJdoStoredClasses();
+		syncEventProcessor().ensureCommit();
+		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
+		timeStamp(raisedDatabaseVersion);
+
+		
+		// _timeStamp  = UNDEFINED;
 		
 		// FileReplicationProvider does this:
 		// _idsReplicatedInThisSession = null;
@@ -255,7 +283,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getCurrentVersion() {
-		return syncEventProcessor().requestTimestamp();
+		return syncEventProcessor().lastTimestamp();
 	}
 
 	public long getLastReplicationVersion() {
@@ -321,7 +349,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void rollbackReplication() {
 		clearAllReferences();
 		_jdo.rollback();
-		jdoStoredObjects.clear();
 	}
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
@@ -379,6 +406,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		VodReplicationReference ref = _replicationReferences.get(obj);
 		
+		ensureClassKnown(obj.getClass());
+		
 		long loid = 0;
 		if (ref.isNew()) {
 			
@@ -391,12 +420,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			loid = loidFrom(otherDb, otherLongPart);			
 			_cobra.create(loid, obj);
 			_cobra.commit();
+			
 			_replicationReflector.copyState(_jdo.objectByLoid(loid), obj);
 				
 		} else {
 
 			loid = loidFrom(ref.uuid());
 			
+			// TODO: Why do we need to store here? Don't we have Transparent Persistence?
 			_jdo.store(obj);
 		}
 		
@@ -404,6 +435,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
+		log(" version synced to " + maxVersion);
 		_replicationCommitRecord.timestamp(maxVersion);
 		_cobra.store(_replicationCommitRecord);
 		_cobra.commit();
@@ -415,6 +447,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
+		log("comparing versions reference.version()=" + reference.version() + " getLastReplicationVersion()=" + getLastReplicationVersion());
 		return reference.version() > getLastReplicationVersion();
 	}
 
@@ -424,8 +457,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		if (!_knownClasses.containsKey(clazz.getName())) {
-			enqueueObjectStoreNotification(clazz);
-			processJdoStoredClasses();
+			// TODO: Is this necessary at all? It stayed here from a refactoring.
+			syncEventProcessor().ensureCommit();
 		}
 		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + _knownClasses.get(clazz.getName()));
 	}
@@ -490,9 +523,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(loid == 0){
 			throw new IllegalStateException("Could not create loid from " + uuid);
 		}
-		
-		Object obj = _jdo.objectByLoid(loid);
-		if(obj == null){
+		Object obj = null;
+		try{
+			obj = _jdo.objectByLoid(loid);
+			if(obj == null){
+				return null;
+			}
+		} catch (RuntimeException rex){
 			return null;
 		}
 		
@@ -566,6 +603,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public boolean pinging() {
 		return pinging;
+	}
+
+	private void timeStamp(long timeStamp) {
+		_timeStamp = timeStamp;
+	}
+
+	private long timeStamp() {
+		return _timeStamp;
 	}
 	
 }
