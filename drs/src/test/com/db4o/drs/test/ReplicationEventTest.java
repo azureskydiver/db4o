@@ -35,52 +35,6 @@ public class ReplicationEventTest extends DrsTestCase {
 	private static final String MODIFIED_IN_A = "modified in A";
 	private static final String MODIFIED_IN_B = "modified in B";
 
-	public void test() {
-		tstNoAction();
-		clean();
-
-		tstNoAction();
-		clean();
-
-		tstNewObject();
-		clean();
-
-		tstOverrideWhenNoConflicts();
-		clean();
-
-		tstOverrideWhenConflicts();
-		clean();
-
-		tstStopTraversal();
-
-//		tstDeletionDefaultPrevail();
-//		clean();
-//
-//		tstDeletionOverrideToPrevail();
-//		clean();
-//
-//		tstDeletionNotPrevail();
-//		clean();
-
-	}
-	
-	@Override
-	protected void clean() {
-		super.clean();
-		ensureNeitherParentOrChild(a().provider());
-		ensureNeitherParentOrChild(b().provider());
-	}
-
-	private void deleteInProviderA() {
-		a().provider().deleteAllInstances(SPCParent.class);
-		a().provider().deleteAllInstances(SPCChild.class);
-
-		a().provider().commit();
-
-		ensureNotExist(a().provider(), SPCChild.class);
-		ensureNotExist(a().provider(), SPCParent.class);
-	}
-
 	private void ensureNames(DrsProviderFixture fixture, String parentName, String childName) {
 		ensureOneInstanceOfParentAndChild(fixture);
 		SPCParent parent = (SPCParent) getOneInstance(fixture, SPCParent.class);
@@ -92,11 +46,6 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		Assert.areEqual(parent.getName(), parentName);
 		Assert.areEqual(childName, parent.getChild().getName());
-	}
-
-	private void ensureNeitherParentOrChild(TestableReplicationProviderInside provider) {
-		ensureNotExist(provider, SPCParent.class);
-		ensureNotExist(provider, SPCChild.class);
 	}
 
 	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {
@@ -246,7 +195,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNotExist(b().provider(), SPCChild.class);
 	}
 */
-	private void tstNewObject() {
+	public void testNewObject() {
 		storeParentAndChildToProviderA();
 
 		final BooleanClosure invoked = new BooleanClosure(false);
@@ -277,7 +226,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNotExist(b().provider(), SPCChild.class);
 	}
 
-	private void tstNoAction() {
+	public void testNoAction() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
 		modifyInProviderB();
@@ -294,7 +243,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
-	private void tstOverrideWhenConflicts() {
+	public void testOverrideWhenConflicts() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
 
@@ -317,7 +266,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
-	private void tstOverrideWhenNoConflicts() {
+	public void testOverrideWhenNoConflicts() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
 		modifyInProviderB();
@@ -335,7 +284,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNames(b(), IN_A, IN_A);
 	}
 
-	private void tstStopTraversal() {
+	public void testStopTraversal() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
 
