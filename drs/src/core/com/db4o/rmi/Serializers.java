@@ -204,7 +204,7 @@ public class Serializers {
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			throw new IOException(e);
+			throw new IOException(e.toString());
 		}
 	}
 
