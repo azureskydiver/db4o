@@ -2,13 +2,6 @@
 <CatapultGlossary>
   <GlossaryEntry>
     <Terms>
-      <Term>NQ</Term>
-    </Terms>
-    <Definition
-      Link="">Native Query</Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>OODBMS</Term>
       <Term>ODBMS</Term>
     </Terms>
