@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;hibernate-configuration&gt;
+	&lt;session-factory&gt;
+        &lt;!-- Specify the database driver --&gt;
+        &lt;property name=&quot;hibernate.connection.driver_class&quot;&gt;org.hsqldb.jdbcDriver&lt;/property&gt;
+
+        &lt;!-- The JDBC connection string --&gt;
+        &lt;property name=&quot;hibernate.connection.url&quot;&gt;jdbc:hsqldb:mem:database.hsql&lt;/property&gt;
+
+        &lt;!-- User name an password for the database --&gt;
+        &lt;property name=&quot;hibernate.connection.username&quot;&gt;sa&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.password&quot;&gt;&lt;/property&gt;
+
+        &lt;!-- Specify the SQl-dialect --&gt;
+        &lt;property name=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.HSQLDialect&lt;/property&gt;
+
+        &lt;property name=&quot;hibernate.show_sql&quot;&gt;true&lt;/property&gt;
+        &lt;!-- Update the database schema if out of date --&gt;
+        &lt;property name=&quot;hibernate.hbm2ddl.auto&quot;&gt;update&lt;/property&gt;
+
+        &lt;!-- Add the mapping files for your classes --&gt;
+        &lt;mapping resource=&quot;com/db4odoc/drs/rdms/Car.cfg.xml&quot;/&gt;
+        &lt;mapping resource=&quot;com/db4odoc/drs/rdms/Pilot.cfg.xml&quot;/&gt;
+        &lt;mapping resource=&quot;com/db4odoc/drs/rdms/PilotGroup.cfg.xml&quot;/&gt;
+
+	&lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;</pre>
+		<div class="codesnippet-meta">
+			hibernate.cfg.xml: Example Hibernate Configuration 
+			<div class="codedownload">
+				<a href="Example-drs-rdms-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

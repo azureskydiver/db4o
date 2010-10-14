@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="272" MadCap:lastWidth="638">
+    <head>
+    </head>
+    <body>
+        <h1>Limitations</h1>
+        <h2>Concurrency Limitations</h2>
+        <p>The dRS system has currently a lot of restrictions. One major restriction is the concurrency model. While a replication is running you shouldn't change the database. Otherwise updates are lost.
+		 <MadCap:xref href="../advanced_replication_strategies/Concurrency.htm" target="" title="" alt="">See "Concurrency-Limitations".</MadCap:xref> This mean that no other transaction can be running while the replication takes place.</p>
+        <h2>Collections Limitation</h2>
+        <p>Collections are treated differently by Hibernate and db4o. In db4o a collection is a regular object. In Hibernate collections are representation of join-operations. This means that collections in Hibernate don't have a identity. That why dRS currently doesn't not track updates on collections when replicating against Hibernate. You only can replicate a collection initially, but cannot replicate updates.</p>
+        <p>&#160;</p>
+    </body>
+</html>

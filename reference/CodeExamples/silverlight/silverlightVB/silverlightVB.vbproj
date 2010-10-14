@@ -80,6 +80,9 @@
     <Reference Include="Db4objects.Db4o">
       <HintPath>..\lib\Db4objects.Db4o.dll</HintPath>
     </Reference>
+    <Reference Include="Db4objects.Db4o.Linq">
+      <HintPath>..\lib\Db4objects.Db4o.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />

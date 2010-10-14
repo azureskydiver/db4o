@@ -1,6 +1,7 @@
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.IO
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Silverlight.Model
     Public Class QueriesInSilverlight
@@ -10,13 +11,11 @@ Namespace Db4oDoc.Silverlight.Model
 
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
             ' #example: Queries in Silverlight
-            Dim query = container.Query()
-            query.Constrain(GetType(Person))
-            query.Descend("FirstName").Constrain("Roman").Contains()
-
-            Dim queryResult As IObjectSet = query.Execute()
-            ' do something with the persons
-            For Each person As Person In queryResult
+            Dim persons = From p As Person In container _
+                          Where p.FirstName.Contains("Roman") _
+                          Select p
+            For Each p As Person In persons
+                ' do something with the person
             Next
             ' #end example
 

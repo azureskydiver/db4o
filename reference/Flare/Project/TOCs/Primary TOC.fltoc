@@ -551,8 +551,6 @@
           Link="/Content/configuration/file/freespace_configuration.htm#Filler" />
       </TocEntry>
       <TocEntry
-        Title="Freespace Filler" />
-      <TocEntry
         Title="Generate UUIDs"
         Link="/Content/configuration/file/generate_uuids.htm" />
       <TocEntry
@@ -1353,13 +1351,6 @@
       Title="Deployment Instructions"
       Link="/Content/platform_specific_issues/deployment_instructions.htm" />
     <TocEntry
-      Title="Cross-Platform Applications"
-      Link="/Content/platform_specific_issues/cross-platform_applications.htm">
-      <TocEntry
-        Title="Limitations Of db4o Cross-Platform Usage"
-        Link="/Content/platform_specific_issues/cross-platform_applications/limitations_of_db4o_cross-platform_usage.htm" />
-    </TocEntry>
-    <TocEntry
       Title="ASP.NET"
       Link="/Content/platform_specific_issues/asp.net.htm"
       conditions="Primary..NET,Primary.All languages" />
@@ -1725,42 +1716,22 @@
     <TocEntry
       Title="Replication With RDBMS"
       Link="/Content/db4o_replication_system_drs/replication_with_rdbms.htm"
-      conditions="Primary.Java,Primary.All languages">
+      conditions="Primary.Java">
       <TocEntry
-        Title="Configuration"
-        Link="/Content/db4o_replication_system_drs/replication_with_rdbms/configuration.htm" />
+        Title="Getting Started"
+        Link="/Content/db4o_replication_system_drs/db4o_rdbms/getting_started.htm" />
       <TocEntry
-        Title="Running dRS"
-        Link="/Content/db4o_replication_system_drs/replication_with_rdbms/running_drs.htm" />
+        Title="Replicate From db4o To Hibernate"
+        Link="/Content/db4o_replication_system_drs/db4o_rdbms/db4o_to_rdbms.htm" />
       <TocEntry
-        Title="Replication Examples"
-        Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples.htm">
-        <TocEntry
-          Title="Collections"
-          Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections.htm">
-          <TocEntry
-            Title="Array"
-            Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/array.htm" />
-          <TocEntry
-            Title="List"
-            Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/list.htm" />
-          <TocEntry
-            Title="Map"
-            Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/map.htm" />
-          <TocEntry
-            Title="Set"
-            Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/set.htm" />
-        </TocEntry>
-        <TocEntry
-          Title="Simple Example"
-          Link="/Content/db4o_replication_system_drs/replication_with_rdbms/replication_examples/simple_example.htm" />
-      </TocEntry>
+        Title="Bidirectional Replication"
+        Link="/Content/db4o_replication_system_drs/db4o_rdbms/bi_directional.htm" />
       <TocEntry
-        Title="Hibernate Replication Internals"
-        Link="/Content/db4o_replication_system_drs/replication_with_rdbms/hibernate_replication_internals.htm" />
+        Title="dRS Internals"
+        Link="/Content/db4o_replication_system_drs/db4o_rdbms/drs_internals.htm" />
       <TocEntry
-        Title="Hibernate"
-        Link="/Content/db4o_replication_system_drs/replication_with_rdbms/hibernate.zip" />
+        Title="Limitations"
+        Link="/Content/db4o_replication_system_drs/db4o_rdbms/limitations.htm" />
     </TocEntry>
     <TocEntry
       Title="Advanced Replication Strategies"
