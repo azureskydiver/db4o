@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;hibernate-mapping default-access=&quot;field&quot; default-lazy=&quot;false&quot; default-cascade=&quot;save-update&quot;&gt;
+	&lt;class name=&quot;com.db4odoc.drs.rdms.PilotGroup&quot; table=&quot;pilot_groups&quot;&gt;
+		&lt;id column=&quot;typed_id&quot; type=&quot;long&quot;&gt;
+			&lt;generator class=&quot;native&quot;/&gt;
+		&lt;/id&gt;
+
+        &lt;list name=&quot;pilots&quot; table=&quot;pilots&quot;&gt;
+              &lt;key column=&quot;group_id&quot;/&gt;
+              &lt;list-index column=&quot;sortOrder&quot;/&gt;
+              &lt;one-to-many class=&quot;com.db4odoc.drs.rdms.Pilot&quot;/&gt;
+        &lt;/list&gt;
+
+	&lt;/class&gt;
+&lt;/hibernate-mapping&gt;</pre>
+		<div class="codesnippet-meta">
+			PilotGroup.cfg.xml: Mapping the Pilot class 
+			<div class="codedownload">
+				<a href="Example-drs-rdms-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

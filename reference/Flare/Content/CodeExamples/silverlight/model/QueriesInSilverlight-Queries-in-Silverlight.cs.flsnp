@@ -2,14 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">var query = container.Query();
-query.Constrain(typeof(Person));
-query.Descend(&quot;FirstName&quot;).Constrain(&quot;Roman&quot;).Contains();
+        <pre class="prettyprint" xml:space="preserve">var persons = from Person p in container
+              where p.FirstName.Contains(&quot;Roman&quot;)
+              select p;
 
-IObjectSet queryResult = query.Execute();
-foreach (Person person in queryResult)
+foreach (Person person in persons)
 {
-    // do something with the persons
+    // do something with the person
 }</pre>
 		<div class="codesnippet-meta">
 			QueriesInSilverlight.cs: Queries in Silverlight

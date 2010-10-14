@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Linq;
 using Db4oDoc.Silverlight.Model;
 
 namespace silverlight
@@ -39,10 +40,10 @@ namespace silverlight
         private void queryData(object sender, RoutedEventArgs e)
         {
             persons.Clear();
-            var query = container.Query();
-            query.Constrain(typeof (Person));
-            query.Descend("SirName").Constrain("Sto").Contains();
-            foreach (Person person in query.Execute())
+            var personResult = from Person p in container
+                          where p.FirstName.Contains("Roman")
+                          select p;
+            foreach (Person person in personResult)
             {
                 persons.Add(person);    
             }
