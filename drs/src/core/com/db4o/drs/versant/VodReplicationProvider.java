@@ -6,7 +6,6 @@ import static com.db4o.drs.foundation.Logger4Support.*;
 import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import javax.jdo.spi.*;
 
@@ -17,7 +16,6 @@ import com.db4o.drs.versant.VodJdo.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.encoding.*;
 
@@ -50,6 +48,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private volatile long _timeStamp;
 	
+	private List<Pair<Long, Long>> _loidTimeStamps = new ArrayList<Pair<Long, Long>>(); 
+	
+	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
+	
 	SimpleTimer _heartbeatTimer = new SimpleTimer(
 		new Runnable() {
 			public void run() {
@@ -61,10 +63,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		COMM_HEARTBEAT);
 
 	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heatbeat");
-
-	private int expectedChangeCount = 0;
-
-	private boolean _isolatedMode = false;
 
 	private final ClientChannelControl _control;
 
@@ -120,27 +118,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 					 classMetadataLoid = ensureClassKnown(clazz);
 				}
 				long loid = loid(object);
-				log("ObjectLifecycleEvent stored timestamp:" + timeStamp());
+				log("ObjectLifecycleEvent added:" + timeStamp());
 				
-				boolean isUpdate = false;
-				ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-				ObjectSet<ObjectLifecycleEvent> oldEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(loid).select();
-				for (ObjectLifecycleEvent oldEvent : oldEvents) {
-					_cobra.delete(oldEvent.loid());
-					isUpdate = true;
-				}
-				ObjectLifecycleEvent event = 
-					new ObjectLifecycleEvent(
-							classMetadataLoid, 
-							loid, 
-							isUpdate ? Operations.UPDATE.value : Operations.CREATE.value, 
-							timeStamp());
-				_cobra.store(event);
-				_cobra.commit();
+				_loidTimeStamps.add(new Pair(loid, timeStamp()));
 			}
-
 		});
-
 	}
 
 	private long ensureClassKnown(Class clazz) {
@@ -175,19 +157,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 	
+	
 	public void commit() {
 		timeStamp(syncEventProcessor().generateTimestamp());
 		_jdo.commit();
-		syncEventProcessor().ensureCommit();
-
-		if (!_isolatedMode) {
-			ensureChangeCount();
-		}
-		
+		syncEventProcessor().forceTimestamps(_loidTimeStamps);
+		_loidTimeStamps.clear();
 	}
 
 	public void delete(Object obj) {
-		expectedChangeCount++;
 		_jdo.delete(obj);
 	}
 
@@ -195,7 +173,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(!_vod.isKnownClass(clazz)) {
 			return;
 		}
-		expectedChangeCount += _jdo.deleteAll(clazz);
+		_jdo.deleteAll(clazz);
 	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
@@ -212,14 +190,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalStateException(msg);
 		}
 		ensureClassKnown(obj.getClass());
-		expectedChangeCount++;
 		_jdo.store(obj);
 	}
 
 	public void update(Object obj) {
 		// do nothing
 		// JDO is transparent persistence
-		expectedChangeCount++;
 	}
 
 	public void destroy() {
@@ -261,14 +237,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-	
-	    timeStamp(raisedDatabaseVersion - 1);
-		syncEventProcessor().forceTimestamp(timeStamp());
+		timeStamp(syncEventProcessor().generateTimestamp());
+		timeStamp(raisedDatabaseVersion - 1);
+		
 		_jdo.commit();
-		syncEventProcessor().ensureCommit();
-		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
+		syncEventProcessor().forceTimestamps(_loidTimeStamps);
+		_loidTimeStamps.clear();
+		
+		syncEventProcessor().syncTimestamp(raisedDatabaseVersion -1);
 		timeStamp(raisedDatabaseVersion);
-
 		
 		// _timeStamp  = UNDEFINED;
 		
@@ -452,18 +429,25 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
-		return internalObjectsChangedSinceLastReplication("");
+		long lastReplicationVersion = getLastReplicationVersion();
+		String fullQuery = "this.timestamp > " + lastReplicationVersion;
+		if("".length() > 0) {
+			fullQuery += " && " + "";
+		}
+		Set<Long> loids = new HashSet<Long>();
+		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, fullQuery);
+		for (ObjectLifecycleEvent event : allEvents) {
+			loids.add(event.objectLoid());
+		}
+		Collection<Object> objects = new ArrayList<Object>(loids.size());
+		for (Long loid : loids) {
+			objects.add(_jdo.objectByLoid(loid));
+		}
+		return new ObjectSetCollectionFacade(objects);
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		if (!_knownClasses.containsKey(clazz.getName())) {
-			// TODO: Is this necessary at all? It stayed here from a refactoring.
-			syncEventProcessor().ensureCommit();
-		}
-		return internalObjectsChangedSinceLastReplication("this.classMetadataLoid == " + _knownClasses.get(clazz.getName()));
-	}
-
-	private ObjectSet internalObjectsChangedSinceLastReplication(String query) {
+		String query = "this.classMetadataLoid == " + _knownClasses.get(clazz.getName());
 		long lastReplicationVersion = getLastReplicationVersion();
 		String fullQuery = "this.timestamp > " + lastReplicationVersion;
 		if(query.length() > 0) {
@@ -564,28 +548,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void runIsolated(Block4 block) {
-		_isolatedMode = true;
 		syncEventProcessor().requestIsolation(true);
 		try {
 			block.run();
 		}
 		finally {
 			syncEventProcessor().requestIsolation(false);
-			_isolatedMode = false;
-		}
-		ensureChangeCount();
-	}
-
-	private void ensureChangeCount() {
-		if (expectedChangeCount > 0) {
-			
-			// big fat hack. related to DRS-146 and DRS-151
-			if (true || EventProcessorNetworkFactory.USE_IN_BAND_COMMUNICATION) {
-				Runtime4.sleepThrowsOnInterrupt(300);
-			} else {
-				syncEventProcessor().ensureChangecount(expectedChangeCount);
-			}
-			expectedChangeCount = 0;
 		}
 	}
 
@@ -612,5 +580,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private long timeStamp() {
 		return _timeStamp;
 	}
+
+	public String transactionId() {
+		return _jdo.transactionId();
+	}
+	
 	
 }

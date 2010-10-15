@@ -64,6 +64,8 @@ public class VodDatabase {
 		
 		addPropertyIfNotExists("versant.l2CacheEnabled", "false");
 		
+		// addPropertyIfNotExists("versant.retainConnectionInOptTx", "true");
+		
 		/**
 		 * Setting the following property produces fully qualified classnames.
 		 * VOD also uses fully qualified classnames, if they are fully qualified

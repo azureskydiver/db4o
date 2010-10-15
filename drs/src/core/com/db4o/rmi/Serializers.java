@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.db4o.foundation.*;
+
 
 public class Serializers {
 
@@ -113,7 +115,18 @@ public class Serializers {
 			return result;
 		}
 	}, String[].class);
+	
+	public final static Serializer<Pair<Long, Long>> pairOfLong = addSerializer(new Serializer<Pair<Long, Long>>() {
 
+		public void serialize(DataOutput out, Pair<Long, Long> pair) throws IOException {
+			out.writeLong(pair.first);
+			out.writeLong(pair.second);
+		}
+
+		public Pair<Long, Long> deserialize(DataInput in) throws IOException {
+			return new Pair(in.readLong(), in.readLong());
+		}
+	}, Pair.class);
 
 	public final static Serializer<HashSet> hashset = addSerializer(new Serializer<HashSet>() {
 
