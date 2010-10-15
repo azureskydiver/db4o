@@ -3,6 +3,7 @@ package com.db4o.drs.versant.ipc;
 import java.util.*;
 
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.foundation.*;
 import com.db4o.rmi.*;
 
 public interface EventProcessor {
@@ -41,17 +42,12 @@ public interface EventProcessor {
 		
 		void ready();
 
-		void commited();
+		void commited(String transactionId);
 
 	}
 
-	void ensureChangecount(int expectedChangeCount);
-
 	Map<String, Long> ensureMonitoringEventsOn(String className);
 	
-	void ensureCommit();
+	void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps);
 
-	void forceTimestamp(long raisedDatabaseVersion);
-
-	
 }

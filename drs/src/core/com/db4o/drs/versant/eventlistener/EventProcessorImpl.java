@@ -5,7 +5,6 @@ package com.db4o.drs.versant.eventlistener;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.Map.Entry;
 
 import com.db4o.*;
 import com.db4o.drs.inside.*;
@@ -25,8 +24,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(EventProcessor.class);
 
-	private static final String INTERNAL_TRANSACTION = "internalTransaction";
-	
 	public static final long ISOLATION_TIMEOUT = 5000;
 
 	private static final long ISOLATION_WATCHDOG_INTERVAL = 1000;
@@ -39,10 +36,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
-	private static final int UNDEFINED = -1;
-	
-	private volatile long _forcedTimestamp = UNDEFINED;
-	
 	private TimeoutBlockingQueue4<Block4> _pausableTasks = new TimeoutBlockingQueue<Block4>(ISOLATION_TIMEOUT);
 	
 	private ServerChannelControl _incomingMessages;
@@ -50,7 +43,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private final Object _lock = new Object();
 	
 	private final Map<String, List<ObjectLifecycleEvent>> _objectLifecycleEvents = new HashMap<String, List<ObjectLifecycleEvent>>();
-
+	
+	private Map<Long, Long> _loidTimeStamps = new HashMap<Long, Long>();
 	
 	SimpleTimer _isolationWatchdogTimer = new SimpleTimer(
 		new Runnable() {
@@ -70,8 +64,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private List<EventProcessorListener> _listeners = new ArrayList<EventProcessorListener>();
 
 	private boolean _started;
-
-	private BlockingQueue4<Object> _changeCountQueue = new BlockingQueue<Object>();
 
 	private final VodDatabase _vod;
 
@@ -169,21 +161,13 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 	}
 	
-	public void forceTimestamp(long timeStamp) {
-		_forcedTimestamp = timeStamp;
-	}
-
 	public void syncTimestamp(long newTimeStamp) {
-		_forcedTimestamp = UNDEFINED;
 		if(newTimeStamp > 0){
 			_timeStampIdGenerator.setMinimumNext(newTimeStamp);
 		}
 	}
 	
 	public long lastTimestamp() {
-		if(_forcedTimestamp != UNDEFINED){
-			return _forcedTimestamp;
-		}
 		long timestamp = _timeStampIdGenerator.last();
 		if(timestamp != 0){
 			return timestamp;
@@ -300,30 +284,30 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(transactionId);
 			if(events != null){
 				for(ObjectLifecycleEvent event: events){
-					println("stored: " + event);
 					ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
 					ObjectSet<ObjectLifecycleEvent> oldEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(event.objectLoid()).select();
 					for (ObjectLifecycleEvent oldEvent : oldEvents) {
 						_cobra.delete(oldEvent.loid());
 					}
+					Long timestamp = _loidTimeStamps.get(event.objectLoid());
+					if(timestamp != null){
+						event.timestamp(timestamp);
+						_loidTimeStamps.remove(timestamp);
+					}
 					_cobra.store(event);
-					incrementChangedCount();
+					println("stored: " + event);
 				}
-				_objectLifecycleEvents.remove(transactionId);
 			}
+			_objectLifecycleEvents.remove(transactionId);
 			_commitTimestamp.value(lastTimestamp());
 			_cobra.store(_commitTimestamp);
 			_cobra.commit();
 			
-			listenerTrigger().commited();
+			listenerTrigger().commited(transactionId);
 			println(SIMPLE_NAME+" commit");
 		}
 	}
 
-	private void incrementChangedCount() {
-		_changeCountQueue.add(new Object());
-	}
-	
 	private final class TransactionCommitTask implements Block4 {
 		private final VersantEventObject _event;
 
@@ -362,7 +346,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 
 	}
-
 	
 	private class ObjectLifeCycleEventStoreTask implements Block4 {
 
@@ -377,7 +360,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			_classLoid = classLoid;
 			_objectLoid = objectLoid;
 			_operation = operation;
-			_timeStamp = generateTimestamp();
+			generateTimestamp();
+			_timeStamp = lastTimestamp();
 		}
 		
 		public void run() {
@@ -389,7 +373,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						_classLoid,
 						loid,
 						_operation.value,
-						_timeStamp);
+						_timeStamp,
+						_transactionId);
 			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(_transactionId);
 			if(events == null){
 				events = new java.util.LinkedList<ObjectLifecycleEvent>();
@@ -435,24 +420,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		});
 	}
 
-	public void ensureChangecount(int expectedChangeCount) {
-		for( int i=0; i < expectedChangeCount ; i++) {
-			_changeCountQueue.next();
-		}
-	}
-	
-	public void ensureCommit(){
-		synchronized (_lock) {
-			// just monkey see, monkey for now, check if necessary.
-		}
-		_pausableTasks.add(new Block4() {
-			public void run() {
-				commit(INTERNAL_TRANSACTION);
-			};
-		});
-
-	}
-
 	public Map<String, Long> ensureMonitoringEventsOn(final String className) {
 
 		Map<String, Long> classIds = new HashMap<String, Long>();
@@ -471,12 +438,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 				classIds.put(className, classMetadataLoid);
 			}
 		}
-
-		_pausableTasks.add(new Block4() {
-			public void run() {
-				commit(INTERNAL_TRANSACTION);
-			};
-		});
 
 		return classIds;
 	}
@@ -512,12 +473,19 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	private String schemaFor(String fullyQualifiedName) {
-		return fullyQualifiedName;
-//		try {
-//			return _vod.schemaName(Class.forName(fullyQualifiedName));
-//		} catch (ClassNotFoundException e) {
-//			throw new RuntimeException(e);
-//		}
+		try {
+			return _vod.schemaName(Class.forName(fullyQualifiedName));
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps) {
+		synchronized (_lock) {
+			for (Pair<Long, Long> pair : loidTimeStamps) {
+				_loidTimeStamps.put(pair.first, pair.second);
+			}
+		}
 	}
 
 }

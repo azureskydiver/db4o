@@ -24,15 +24,16 @@ public class EventProcessorEmbedded {
 		_eventProcessorThread.setDaemon(true);
 		_eventProcessorThread.start();
 		
-		final BlockingQueue4<Object> barrier = new BlockingQueue<Object>();
+		final BlockingQueue4<String> barrier = new BlockingQueue<String>();
 		_eventProcessor.addListener(new EventProcessorListener() {
 			
 			public void ready() {
-				barrier.add(new Object());
+				barrier.add("ready");
 				
 			}
 
-			public void commited() {				
+			public void commited(String transactionId) {
+				
 			}
 		});
 

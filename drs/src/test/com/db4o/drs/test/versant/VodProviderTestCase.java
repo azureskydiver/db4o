@@ -37,10 +37,11 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 				
 			}
 			
-			public void commited() {
-				commitedBarrier.add(new Object());
+			public void commited(String transactionId) {
+				commitedBarrier.add(transactionId);
 			}
 		});
+		
 	}
 	
 	@Override
@@ -57,7 +58,8 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	}
 
 	public void testReferenceHasVersion(){
-		ReplicationReference reference = _provider.produceReference(storeAndCommitSingleItem());
+		Item item = storeAndCommitSingleItem();
+		ReplicationReference reference = _provider.produceReference(item);
 		Assert.isGreater(0, reference.version());
 	}
 	
