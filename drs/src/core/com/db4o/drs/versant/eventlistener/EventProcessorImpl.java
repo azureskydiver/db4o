@@ -473,6 +473,9 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	private String schemaFor(String fullyQualifiedName) {
+		if(true){
+			return fullyQualifiedName;
+		}
 		try {
 			return _vod.schemaName(Class.forName(fullyQualifiedName));
 		} catch (ClassNotFoundException e) {
