@@ -38,6 +38,4 @@ public interface VodJdoFacade extends LoidProvider {
 
 	void addPreStoreListener(PreStoreListener preStoreListener);
 	
-	String transactionId();
-
 }

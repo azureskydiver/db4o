@@ -154,45 +154,6 @@ public class VodJdo implements VodJdoFacade {
 	public void addPreStoreListener(final PreStoreListener preStoreListener) {
 		_pm.addInstanceLifecycleListener(new PreStoreListenerWrapper(preStoreListener), null);
 	}
-	
-	public String transactionIdNew(){
-		UnsynchronizedPMProxy proxy = (UnsynchronizedPMProxy) _pm;
-		VersantPersistenceManagerImp realPM = proxy.getRealPM();
-		LoggingStorageManager storageManager = (LoggingStorageManager) Reflection4.getFieldValue(realPM, "sm");
-		VdsStorageManager vdsStorageManager = (VdsStorageManager) Reflection4.getFieldValue(storageManager, "sm");
-		VdsConnection vdsConnection = (VdsConnection) Reflection4.getFieldValue(vdsStorageManager, "conx");
-		DatastoreManager datastoreManager = (DatastoreManagerImp) vdsConnection.getCon();
-		Object coordinator = Reflection4.getFieldValue(datastoreManager, "_coordinator");
-		Object connection = Reflection4.getFieldValue(coordinator, "_primaryConnection");
-		long transactionId = (Long) Reflection4.invoke(connection, "getTransactionId");
-		
-		// UnsychronizedPMProxy
-		
-		int xxx = 1;
-		
-		return null;
-
-		
-	}
-	
-	public String transactionId(){
-		VersantTransaction vtxn = (VersantTransaction) _pm.currentTransaction();
-		String oldName = vtxn.getName();
-		String ourTransactionName = "ourTransaction";
-		vtxn.setName(ourTransactionName);
-		VersantPersistenceManager vpm = (VersantPersistenceManager) _pm;
-		ActivityInfo activityInfo = vpm.getActivityInfo(null, null, null);
-		TransactionInfo[] tinfos = activityInfo.getTransactionInfo();
-		for (TransactionInfo transactionInfo : tinfos) {
-			System.err.println("transactionInfo.getName() " + transactionInfo.getName());
-		      if(ourTransactionName.equals(transactionInfo.getName())){
-		    	  System.err.println("Transaction ID detected " + transactionInfo.getTransactionId());
-		    	  vtxn.setName(oldName);
-		    	  return transactionInfo.getTransactionId();
-		      }
-		}
-		throw new IllegalStateException("Transaction Id not found");
-	}
 
 }
 

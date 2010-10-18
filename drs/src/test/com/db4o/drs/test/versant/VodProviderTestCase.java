@@ -5,7 +5,6 @@ package com.db4o.drs.test.versant;
 
 import java.util.*;
 
-import com.db4o.drs.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
@@ -39,6 +38,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 			}
 			
 			public void commited(String transactionId) {
+				System.err.println("Committed " + transactionId);
 				commitedBarrier.add(transactionId);
 			}
 		});

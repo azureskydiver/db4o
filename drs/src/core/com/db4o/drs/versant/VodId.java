@@ -4,21 +4,13 @@ package com.db4o.drs.versant;
 
 public class VodId {
 	
-	public final int databaseId;
-	
-	public final int objectId1;
-	
-	public final long objectId2;
+	public final long loid;
 	
 	public final long timestamp;
 
-	public VodId(int databaseId, int objectId1, long objectId2, long timestamp) {
-		this.databaseId = databaseId;
-		this.objectId1 = objectId1;
-		this.objectId2 = objectId2;
+	public VodId(long loid, long timestamp) {
+		this.loid = loid;
 		this.timestamp = timestamp;
 	}
 	
-
-
 }
