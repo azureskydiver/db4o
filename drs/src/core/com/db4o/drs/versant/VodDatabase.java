@@ -13,12 +13,7 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.eventlistener.EventProcessorApplication.*;
 import com.db4o.util.*;
 import com.db4o.util.IOServices.*;
-import com.versant.core.jdo.*;
-import com.versant.core.metadata.*;
-import com.versant.core.storagemanager.*;
 import com.versant.odbms.*;
-import com.versant.odbms.model.*;
-import com.versant.odbms.model.UserSchemaClass;
 import com.versant.util.*;
 
 public class VodDatabase {
@@ -133,6 +128,7 @@ public class VodDatabase {
 	public PersistenceManagerFactory persistenceManagerFactory(){
 		if(_persistenceManagerFactory == null){
 			_persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(_properties);
+			
 		}
 		return _persistenceManagerFactory;
 	}
@@ -142,7 +138,7 @@ public class VodDatabase {
 		File tempFile = new File(tempFileName);
 		try{
 			FileOutputStream out = new FileOutputStream(tempFile);
-			if(true || DrsDebug.verbose){
+			if(DrsDebug.verbose){
 				_properties.store(System.err, null);
 			}
 			_properties.store(out, null);
@@ -333,28 +329,6 @@ public class VodDatabase {
 	
 	public EventConfiguration eventConfiguration(){
 		return _eventConfiguration;
-	}
-	
-	public String schemaName(Class clazz) {
-		return userSchemaClass(clazz).getName();
-	}
-
-	public boolean isKnownClass(Class clazz) {
-		return userSchemaClass(clazz) != null;
-	}
-
-	private UserSchemaClass userSchemaClass(Class clazz) {
-		ModelMetaData modelMetadata = modelMetadata();
-		UserSchemaModel userModel = (UserSchemaModel)modelMetadata.vdsModel;
-		ClassMetaData classMetaData = modelMetadata.getClassMetaData(clazz);
-		UserSchemaClass userSchemaClass = userModel.getAssociatedSchemaClass(classMetaData);
-		return userSchemaClass;
-	}
-	
-	private ModelMetaData modelMetadata() {
-		VersantPMFInternal internalPersistenceManagerFactory = (VersantPMFInternal) persistenceManagerFactory();
-		StorageManagerFactory storageManagerFactory = internalPersistenceManagerFactory.getStorageManagerFactory();
-		return storageManagerFactory.getModelMetaData();
 	}
 	
 }
