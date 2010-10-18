@@ -4,6 +4,22 @@ package com.db4o.drs.versant;
 
 import com.db4o.foundation.*;
 
+/**
+ * Db4oUuid long part format:
+ * 
+ * | 1    |  6         | 42        | 9        | 6      | 
+ * |unused| timestamp              | counter           |  
+ * |      | zeroes     | used      | zeroes   | used   |    
+ * 
+ * Vod loid:
+ * 
+ * | 16   | 42         | 6          |
+ * | dbid | timestamp  | counter    |
+ * 
+ * 
+ * Conversion idea: Take the 6 bit from the timestamp and the 9 bits from the counter that are assumed to be unused in db4o and use them for the dbid on vod side. 
+ * 
+ */
 public class UuidConverter {
 	
 	public static long vodLoidFrom(long databaseId, long db4oLongPart) {
@@ -12,21 +28,17 @@ public class UuidConverter {
 	}
 	
 	public static long longPartFromVod(long vodId){
-		return longPartFromVod(databaseId(vodId), objectId1(vodId), objectId2(vodId));
+		return longPartFromVod(objectId1(vodId), objectId2(vodId));
 	}
 	
-	public static long longPartFromVod(long databaseId, long objectId1, long objectId2){
-		long vodObjectId = (long)objectId1 << 32  | objectId2;
-		System.err.println(Long.toHexString(vodObjectId));
-		long shifted = vodObjectId << 9;
-		shifted = shifted >>> 9;
-		System.err.println(Long.toHexString(shifted));
-	    
-		return TimeStampIdGenerator.convert48BitIdTo64BitId(shifted);
+	public static long longPartFromVod(long objectId1, long objectId2){
+		long vodObjectId = ((long)objectId1 << 32  | objectId2)  & 0x0000FFFFFFFFFFFFL;
+		
+		return TimeStampIdGenerator.convert48BitIdTo64BitId(vodObjectId);
 	}
 	
     public static int databaseId(long value) {
-        return (int)(value >> 48);
+        return (int)(value >>> 48);
     }
 
     public static int objectId1(long value) {
@@ -34,10 +46,7 @@ public class UuidConverter {
     }
 
     public static long objectId2(long value) {
-        return (long)((value << 32) >> 32);
+    	return value & 0x00000000FFFFFFFFL;
     }
-
-	
-
 
 }

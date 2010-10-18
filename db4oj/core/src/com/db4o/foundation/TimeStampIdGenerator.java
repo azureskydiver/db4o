@@ -94,7 +94,7 @@ public class TimeStampIdGenerator {
 	}
 
 	private static long convert(long id, int shiftBitsFrom, int shiftBitsTo) {
-		final long creationTimeInMillis = id >> shiftBitsFrom;
+		final long creationTimeInMillis = id >>> shiftBitsFrom;
 		final long timeStampPart = creationTimeInMillis << shiftBitsFrom;
 		final long counterPerMillisecond = id - timeStampPart;
 		if(counterPerMillisecond >= COUNTER_LIMIT){
