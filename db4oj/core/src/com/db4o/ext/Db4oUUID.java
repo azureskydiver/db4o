@@ -77,11 +77,16 @@ public class Db4oUUID {
 	}
 
 	public String toString() {
-        String sig = "";
-        for (int i = 0; i < signaturePart.length; i++) {
-            sig += signaturePart[i] + " ";
-        }
-		return "long " + longPart + " ,  signature " + sig;
+		StringBuffer sb = new StringBuffer();
+		sb.append(getClass().getName());
+		sb.append(" sig: ");
+		for (int i = 0; i < signaturePart.length; i++) {
+			char c = (char) signaturePart[i];
+			sb.append(c);
+		}
+		sb.append(" long: ");
+		sb.append(longPart);
+		return sb.toString();
 	}
 
 }

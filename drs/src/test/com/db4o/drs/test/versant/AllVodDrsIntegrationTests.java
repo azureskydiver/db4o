@@ -54,8 +54,9 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 			if (true) {
 				
 				// This is the one we are heading for for now.
-				return new Class[] { 
-						TheSimplest.class,
+				return new Class[] {
+						UuidConversionTestCase.class,
+ 						TheSimplest.class,
 						ReplicationProviderTest.class,
 //						ReplicationEventTest.class,
 				};

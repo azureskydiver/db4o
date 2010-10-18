@@ -114,10 +114,11 @@ class InstanceReplicationPreparer implements Visitor {
 		DrsUUID uuid = ownerRef.uuid();
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, _obj.getClass());
 
-		if (refA == null)
+		if (refA == null){
 			refA = otherRef;
-		else
+		}else{
 			refB = otherRef;
+		}
 
 		//TODO for circular referenced object, otherRef should not be null in the subsequent pass.
 		//But db4o always return null. A bug. check!
