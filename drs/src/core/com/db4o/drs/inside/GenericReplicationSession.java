@@ -119,9 +119,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 	public final void commit() {
 		runIsolated(new Block4() {
 			public void run() {
-				
-				System.out.println("**** sync 1 begin ");
-				
 				long maxVersion = Math.max(_providerA.getCurrentVersion(), _providerB.getCurrentVersion());
 						
 				_providerA.syncVersionWithPeer(maxVersion);
@@ -131,8 +128,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 		
 				_providerA.commitReplicationTransaction(maxVersion);
 				_providerB.commitReplicationTransaction(maxVersion);
-
-				System.out.println("**** sync 1 completed ");
 			}
 		});
 	}
