@@ -2,6 +2,7 @@
 
 package com.db4o.drs.test.objectid;
 
+import com.db4o.drs.versant.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -85,7 +86,7 @@ public class VodObjectIdConversionTestCase implements TestCase {
 		
 		Assert.expect(IllegalStateException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				TimeStampIdGenerator.convert64BitIdTo48BitId(invalidId);
+				UuidConverter.convert64BitIdTo48BitId(invalidId);
 			}
 		});
 	}
@@ -99,11 +100,11 @@ public class VodObjectIdConversionTestCase implements TestCase {
 	}
 
 	long db4oIdToVodId(long id){
-		return TimeStampIdGenerator.convert64BitIdTo48BitId(id);
+		return UuidConverter.convert64BitIdTo48BitId(id);
 	}
 	
 	long vodIdTodb4oId(long id){
-		return TimeStampIdGenerator.convert48BitIdTo64BitId(id);
+		return UuidConverter.convert48BitIdTo64BitId(id);
 	}
 
 }

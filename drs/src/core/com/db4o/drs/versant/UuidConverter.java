@@ -22,31 +22,44 @@ import com.db4o.foundation.*;
  */
 public class UuidConverter {
 	
+	public static final int BITS_RESERVED_FOR_COUNTER_IN_48BIT_ID = 6;
+	
+
 	public static long vodLoidFrom(long databaseId, long db4oLongPart) {
-		long vodObjectIdPart = TimeStampIdGenerator.convert64BitIdTo48BitId(db4oLongPart);
+		long vodObjectIdPart = convert64BitIdTo48BitId(db4oLongPart);
 		return (databaseId << 48) | vodObjectIdPart;
 	}
 	
 	public static long longPartFromVod(long vodId){
-		return longPartFromVod(objectId1(vodId), objectId2(vodId));
+		return convert48BitIdTo64BitId(vodId & 0xFFFFFFFFFFFFL);
 	}
 	
-	public static long longPartFromVod(long objectId1, long objectId2){
-		long vodObjectId = ((long)objectId1 << 32  | objectId2)  & 0x0000FFFFFFFFFFFFL;
-		
-		return TimeStampIdGenerator.convert48BitIdTo64BitId(vodObjectId);
+	public static int databaseId(long value) {
+		return (int)(value >>> 48);
+	}
+
+	public static long convert64BitIdTo48BitId(long id){
+		return convert(
+				id, 
+				TimeStampIdGenerator.BITS_RESERVED_FOR_COUNTER, 
+				BITS_RESERVED_FOR_COUNTER_IN_48BIT_ID);
 	}
 	
-    public static int databaseId(long value) {
-        return (int)(value >>> 48);
-    }
+	public static long convert48BitIdTo64BitId(long id){
+		return convert(
+				id, 
+				BITS_RESERVED_FOR_COUNTER_IN_48BIT_ID, 
+				TimeStampIdGenerator.BITS_RESERVED_FOR_COUNTER);
+	}
 
-    public static int objectId1(long value) {
-        return (int)(value >> 32) & 0xFFFF;
-    }
-
-    public static long objectId2(long value) {
-    	return value & 0x00000000FFFFFFFFL;
-    }
+	private static long convert(long id, int shiftBitsFrom, int shiftBitsTo) {
+		final long creationTimeInMillis = id >>> shiftBitsFrom;
+		final long timeStampPart = creationTimeInMillis << shiftBitsFrom;
+		final long counterPerMillisecond = id - timeStampPart;
+		if(counterPerMillisecond >= TimeStampIdGenerator.COUNTER_LIMIT){
+			throw new IllegalStateException("ID can't be converted");
+		}
+		return (creationTimeInMillis << shiftBitsTo) + counterPerMillisecond;
+	}
 
 }

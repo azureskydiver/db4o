@@ -8,11 +8,9 @@ package com.db4o.foundation;
  */
 public class TimeStampIdGenerator {
 	
-	private static final int BITS_RESERVED_FOR_COUNTER = 15;
+	public static final int BITS_RESERVED_FOR_COUNTER = 15;
 	
-	private static final int BITS_RESERVED_FOR_COUNTER_IN_48BIT_ID = 6;
-	
-	private static final int COUNTER_LIMIT = 64;
+	public static final int COUNTER_LIMIT = 64;
     
 	private long _counter;
 	
@@ -77,30 +75,6 @@ public class TimeStampIdGenerator {
 		long timePart = millisecondsToId(_lastTime);
 		_counter = newNext - timePart;
 		updateTimeOnCounterLimitOverflow();
-	}
-	
-	public static long convert64BitIdTo48BitId(long id){
-		return convert(
-				id, 
-				BITS_RESERVED_FOR_COUNTER, 
-				BITS_RESERVED_FOR_COUNTER_IN_48BIT_ID);
-	}
-	
-	public static long convert48BitIdTo64BitId(long id){
-		return convert(
-				id, 
-				BITS_RESERVED_FOR_COUNTER_IN_48BIT_ID, 
-				BITS_RESERVED_FOR_COUNTER);
-	}
-
-	private static long convert(long id, int shiftBitsFrom, int shiftBitsTo) {
-		final long creationTimeInMillis = id >>> shiftBitsFrom;
-		final long timeStampPart = creationTimeInMillis << shiftBitsFrom;
-		final long counterPerMillisecond = id - timeStampPart;
-		if(counterPerMillisecond >= COUNTER_LIMIT){
-			throw new IllegalStateException("ID can't be converted");
-		}
-		return (creationTimeInMillis << shiftBitsTo) + counterPerMillisecond;
 	}
 	
 }
