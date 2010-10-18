@@ -3,7 +3,6 @@
 package com.db4o.drs.versant;
 
 import com.db4o.drs.foundation.*;
-import com.db4o.foundation.*;
 
 public class VodUUID implements DrsUUID {
 	
@@ -26,8 +25,11 @@ public class VodUUID implements DrsUUID {
 		this(signature, vodId.databaseId, vodId.objectId1, vodId.objectId2);
 	}
 
+	/**
+	 * db4o format without database ID !!!
+	 */
 	public long getLongPart() {
-		return TimeStampIdGenerator.convert48BitIdTo64BitId(_objectId1 << 32  | _objectId2);
+		return UuidConverter.longPartFromVod(_objectId1, _objectId2);
 	}
 
 	public byte[] getSignaturePart() {
@@ -54,4 +56,17 @@ public class VodUUID implements DrsUUID {
 	public int hashCode() {
 		return _databaseId ^ _objectId1 ^ (int)_objectId2 ^ _signature.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		
+		// VOD style
+		return this.getClass().getSimpleName() + " _databaseId:" + _databaseId + " _objectId2:" + _objectId2 + "_signature:" + _signature;
+		
+		// db4o style
+		// return this.getClass().getSimpleName() + " sig: " + _signature.toString() + " long: " + getLongPart(); 
+		
+	}
+
+	
 }

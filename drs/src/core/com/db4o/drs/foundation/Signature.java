@@ -39,12 +39,20 @@ public class Signature {
 	}
 
 	public static String toString(byte[] bytes) {
+		return bytesToString(bytes);
+	}
+
+	private static String bytesToString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < bytes.length; i++) {
 			char c = (char) bytes[i];
 			sb.append(c);
 		}	
 		return sb.toString();
+	}
+	
+	public String asString(){
+		return bytesToString(bytes);
 	}
 	
 }

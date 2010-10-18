@@ -294,13 +294,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return 0;
 		}
 		long db4oLongPart = uuid.getLongPart();
-		return loidFrom(databaseId, db4oLongPart);
-	}
-
-	private long loidFrom(long databaseId, long db4oLongPart) {
-		long vodObjectIdPart = 
-			TimeStampIdGenerator.convert64BitIdTo48BitId(db4oLongPart);
-		return (databaseId << 48) | vodObjectIdPart;
+		return UuidConverter.vodLoidFrom(databaseId, db4oLongPart);
 	}
 
 	public ReplicationReference referenceNewObject(Object obj,
@@ -362,7 +356,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		Signature peerSignature = new Signature(signature);
 		int peerId = _signatures.idFor(peerSignature);
 		if(peerId == 0){
-			peerId = _idFactory.createDatabaseIdFor(VodJvi.safeDatabaseName(peerSignature.toString()));
+			peerId = _idFactory.createDatabaseIdFor(VodJvi.safeDatabaseName(peerSignature.asString()));
 			storeSignature(peerId, peerSignature);
 			_signatures.add(peerId, peerSignature);
 		}
@@ -394,7 +388,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			}
 			long otherLongPart = ref.uuid().getLongPart();
 			
-			loid = loidFrom(otherDb, otherLongPart);			
+			loid = UuidConverter.vodLoidFrom(otherDb, otherLongPart);
+			
+			System.err.println("loid in storeREplica " + loid);
+			
 			_cobra.create(loid, obj);
 			_cobra.commit();
 			
@@ -500,9 +497,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(reference != null){
 			return reference;
 		}
-
 		
 		long loid = loidFrom(uuid);
+		System.err.println("loid in procude " + loid);
 		
 		if(loid == 0){
 			throw new IllegalStateException("Could not create loid from " + uuid);
@@ -583,6 +580,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public String transactionId() {
 		return _jdo.transactionId();
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
 	}
 	
 	

@@ -49,7 +49,6 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public VodId idFor(long loid) {
-		
 		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
 		Collection<ObjectLifecycleEvent> events = 
 			from(ObjectLifecycleEvent.class)
