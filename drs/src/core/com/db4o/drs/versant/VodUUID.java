@@ -8,28 +8,22 @@ public class VodUUID implements DrsUUID {
 	
 	private final Signature _signature;
 	
-	private final int _databaseId;
+	private final long _loid;
 	
-	private final int _objectId1;
-	
-	private final long _objectId2;
-	
-	public VodUUID(Signature signature, int dbId, int id1, long id2){
+	public VodUUID(Signature signature, long loid){
 		_signature = signature;
-		_databaseId = dbId;
-		_objectId1 = id1;
-		_objectId2 = id2;
+		_loid = loid;
 	}
 	
 	public VodUUID(Signature signature, VodId vodId){
-		this(signature, vodId.databaseId, vodId.objectId1, vodId.objectId2);
+		this(signature, vodId.loid);
 	}
 
 	/**
 	 * db4o format without database ID !!!
 	 */
 	public long getLongPart() {
-		return UuidConverter.longPartFromVod(_objectId1, _objectId2);
+		return UuidConverter.longPartFromVod(_loid);
 	}
 
 	public byte[] getSignaturePart() {
@@ -46,24 +40,22 @@ public class VodUUID implements DrsUUID {
 			throw new IllegalStateException(); // TODO REMOVE, return false instead
 		}
 		VodUUID uuid = (VodUUID)other;
-		return _databaseId == uuid._databaseId 
-				&& _objectId1 == uuid._objectId1 
-				&& _objectId2 == uuid._objectId2
+		return _loid == uuid._loid 
 				&& _signature.equals(uuid._signature);
 	}
 	
 	@Override
 	public int hashCode() {
-		return _databaseId ^ _objectId1 ^ (int)_objectId2 ^ _signature.hashCode();
+		return (int) (_loid ^ _signature.hashCode());
 	}
 	
 	@Override
 	public String toString() {
 		
-		// VOD style
-		return this.getClass().getSimpleName() + " _databaseId:" + _databaseId + " _objectId2:" + _objectId2 + "_signature:" + _signature;
+		// VOD format
+		return this.getClass().getSimpleName() + " _loid:" + _loid + " _signature:" + _signature;
 		
-		// db4o style
+		// db4o format
 		// return this.getClass().getSimpleName() + " sig: " + _signature.toString() + " long: " + getLongPart(); 
 		
 	}

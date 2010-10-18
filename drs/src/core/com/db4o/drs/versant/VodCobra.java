@@ -63,8 +63,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 			}
 		}
 		long timestamp = events.isEmpty() ? 0 : events.iterator().next().timestamp();
-		DatastoreLoid datastoreLoid = new DatastoreLoid(loid);
-		return new VodId(datastoreLoid.getDatabaseId(), datastoreLoid.getObjectId1(), datastoreLoid.getObjectId2(), timestamp);
+		return new VodId(loid, timestamp);
 	}
 
 	public long store(Object obj) {
