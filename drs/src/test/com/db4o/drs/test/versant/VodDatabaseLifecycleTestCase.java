@@ -10,7 +10,8 @@ import db4ounit.*;
 
 public class VodDatabaseLifecycleTestCase implements TestCase {
 	
-	private static final String DATABASE_NAME = "VodDatabaseLifecycleTestCase"; 
+	
+	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
 	public void testLifeCycle(){
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
@@ -26,7 +27,7 @@ public class VodDatabaseLifecycleTestCase implements TestCase {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
 		vod.enhance();
 		
-		// TODO: Test is some known class is PersistenceCapable
+		// TODO: Test if some known class is PersistenceCapable
 		
 	}
 

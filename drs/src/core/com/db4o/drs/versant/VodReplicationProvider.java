@@ -131,7 +131,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if (loid != null) {
 			return loid;
 		}
-		String schemaName = _vod.schemaName(clazz);
+		String schemaName = _cobra.schemaName(clazz);
 		ClassMetadata cm = new ClassMetadata(schemaName, className);
 		_cobra.store(cm);
 		log("Classmetadata stored " + className);
@@ -170,7 +170,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void deleteAllInstances(Class clazz) {
-		if(!_vod.isKnownClass(clazz)) {
+		if(!_cobra.isKnownClass(clazz)) {
 			return;
 		}
 		_jdo.deleteAll(clazz);

@@ -232,9 +232,36 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return executeQuery(new DatastoreQuery(extent.getName()));
 	}
 	
-	private DatastoreSchemaClass datastoreSchemaClass(Class clazz) {
-		// Using clazz.getName here, assuming fully qualified name
-		return _dm.getSchemaEditor().findClass(clazz.getName(), _dm.getDefaultDatastore());
+	public DatastoreSchemaClass datastoreSchemaClass(Class clazz) {
+		return datastoreSchemaClass(schemaName(clazz));
+	}
+	
+	public DatastoreSchemaClass datastoreSchemaClass(String name) {
+		return _dm.getSchemaEditor().findClass(name, _dm.getDefaultDatastore());
+	}
+	
+	public boolean isKnownClass(Class clazz) {
+		return internalSchemaName(clazz) != null;
+	}
+	
+	public String schemaName(Class clazz) {
+		String name = internalSchemaName(clazz);
+		if(name != null){
+			return name;
+		}
+		throw new IllegalStateException("Class " + clazz.getName() + " not found in schema.");
+	}
+
+	private String internalSchemaName(Class clazz) {
+		String fullyQualifiedName = clazz.getName();
+		if(datastoreSchemaClass(fullyQualifiedName) != null){
+			return fullyQualifiedName;
+		}
+		String simpleName = clazz.getSimpleName(); 
+		if(datastoreSchemaClass(simpleName) != null){
+			return simpleName;
+		}
+		return null;
 	}
 	
 	public void commit(){

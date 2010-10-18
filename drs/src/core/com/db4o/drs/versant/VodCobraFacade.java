@@ -46,4 +46,9 @@ public interface VodCobraFacade {
 	void delete(long loid);
 	
 	void deleteAll();
+	
+	String schemaName(Class clazz);
+	
+	boolean isKnownClass(Class clazz);
+	
 }
