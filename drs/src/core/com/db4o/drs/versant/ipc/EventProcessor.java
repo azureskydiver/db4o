@@ -52,4 +52,6 @@ public interface EventProcessor {
 	
 	void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps);
 
+	void removeListener(EventProcessorListener listener);
+
 }

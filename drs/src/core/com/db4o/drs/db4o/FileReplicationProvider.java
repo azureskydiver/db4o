@@ -419,4 +419,8 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 			block.run();
 		}
 	}
+
+	public void waitForCommit(Object obj) {
+		commit();
+	}
 }

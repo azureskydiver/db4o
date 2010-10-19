@@ -296,7 +296,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						_loidTimeStamps.remove(timestamp);
 					}
 					_cobra.store(event);
-					listenerTrigger().onEvent(objectLoid);
 					println("stored: " + event);
 				}
 			}
@@ -304,6 +303,13 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			_commitTimestamp.value(lastTimestamp());
 			_cobra.store(_commitTimestamp);
 			_cobra.commit();
+			
+			if(events != null){
+				for(ObjectLifecycleEvent event: events){
+					long objectLoid = event.objectLoid();
+					listenerTrigger().onEvent(objectLoid);
+				}
+			}
 			
 			listenerTrigger().committed(transactionId);
 			println(SIMPLE_NAME+" commit");
@@ -487,6 +493,12 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			for (Pair<Long, Long> pair : loidTimeStamps) {
 				_loidTimeStamps.put(pair.first, pair.second);
 			}
+		}
+	}
+
+	public void removeListener(EventProcessorListener listener) {
+		synchronized (_listeners) {
+			_listeners.remove(listener);
 		}
 	}
 

@@ -64,7 +64,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		child.setName(MODIFIED_IN_A);
 		a().provider().update(parent);
 		a().provider().update(child);
-		a().provider().commit();
+		a().provider().waitForCommit(parent);
 
 		ensureNames(a(), MODIFIED_IN_A, MODIFIED_IN_A);
 	}
@@ -76,7 +76,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		child.setName(MODIFIED_IN_B);
 		b().provider().update(parent);
 		b().provider().update(child);
-		b().provider().commit();
+		a().provider().waitForCommit(parent);
 
 		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
@@ -92,7 +92,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		SPCChild child = new SPCChild(IN_A);
 		SPCParent parent = new SPCParent(child, IN_A);
 		a().provider().storeNew(parent);
-		a().provider().commit();
+		a().provider().waitForCommit(parent);
 
 		ensureNames(a(), IN_A, IN_A);
 	}

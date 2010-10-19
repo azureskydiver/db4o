@@ -14,6 +14,7 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.VodJdo.*;
 import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.EventProcessor.*;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
@@ -579,6 +580,30 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public String toString() {
 		return getName();
 	}
-	
+
+	public void waitForCommit(Object modifiedObject) {
+		long expectedLoid = loid(modifiedObject);
+		final BlockingQueue<Long> events = new BlockingQueue<Long>();
+		EventProcessorListener listener = new EventProcessorListener() {
+			public void ready() {
+				
+			}
+			
+			public void onEvent(long loid) {
+				events.add(loid);
+			}
+			
+			public void committed(String transactionId) {
+				
+			}
+		};
+		syncEventProcessor().addListener(listener);
+		commit();
+		long actualLoid = events.next();
+		while(expectedLoid != actualLoid){
+			actualLoid = events.next();
+		}
+		syncEventProcessor().removeListener(listener);
+	}
 	
 }

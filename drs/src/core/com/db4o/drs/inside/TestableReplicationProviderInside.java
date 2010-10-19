@@ -27,5 +27,7 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 	boolean supportsHybridCollection();
 
 	boolean supportsRollback();
+	
+	void waitForCommit(Object obj);
 
 }
