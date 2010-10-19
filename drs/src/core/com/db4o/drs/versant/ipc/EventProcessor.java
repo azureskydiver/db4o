@@ -42,7 +42,9 @@ public interface EventProcessor {
 		
 		void ready();
 
-		void commited(String transactionId);
+		void committed(String transactionId);
+		
+		void onEvent(long loid);
 
 	}
 

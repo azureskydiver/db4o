@@ -32,7 +32,11 @@ public class EventProcessorEmbedded {
 				
 			}
 
-			public void commited(String transactionId) {
+			public void committed(String transactionId) {
+				
+			}
+
+			public void onEvent(long loid) {
 				
 			}
 		});
