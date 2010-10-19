@@ -35,16 +35,6 @@ public class TimeStampIdGeneratorTestCase implements TestCase {
 		return ids;
 	}
 	
-	public void testConversion(){
-		long[] ids = generateIds();
-		for (int i = 1; i < ids.length; i++) {
-			long converted = TimeStampIdGenerator.convert64BitIdTo48BitId(ids[i]);
-			Assert.isSmallerOrEqual(48, numberOfBits(converted));
-			long roundTrip = TimeStampIdGenerator.convert48BitIdTo64BitId(converted);
-			Assert.areEqual(ids[i], roundTrip);
-		}
-	}
-	
 	public void testContinousIncrement(){
 		TimeStampIdGenerator generator = new TimeStampIdGenerator();
 		assertContinousIncrement(generator);
@@ -67,9 +57,5 @@ public class TimeStampIdGeneratorTestCase implements TestCase {
 		};
 		assertContinousIncrement(generatorWithSameTime);
 	}
-	
-	
-	
-
 
 }

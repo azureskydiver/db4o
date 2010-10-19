@@ -1,7 +1,10 @@
 /* Copyright (C) 2010 Versant Inc. http://www.db4o.com */
 package com.db4o.drs.test.versant;
 
+import static db4ounit.extensions.util.Binary.*;
+
 import com.db4o.drs.versant.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -25,7 +28,17 @@ public class UuidConverterTestCase implements TestCase {
 		assertConversionVodDb4oVod(-1L);
 		assertConversionVodDb4oVod(Long.MAX_VALUE);
 		assertConversionVodDb4oVod(Long.MIN_VALUE);
-	}
+	}	
+	
+	public void testConversionRoundTrips(){
+		long[] ids = generateIds();
+		for (int i = 1; i < ids.length; i++) {
+			long converted = UuidConverter.convert64BitIdTo48BitId(ids[i]);
+			Assert.isSmallerOrEqual(48, numberOfBits(converted));
+			long roundTrip = UuidConverter.convert48BitIdTo64BitId(converted);
+			Assert.areEqual(ids[i], roundTrip);
+		}
+	}	
 	
 	public void assertConversionDb4oVodDb4o(long uuid, long dbId) {
 		long converted = UuidConverter.vodLoidFrom(dbId, uuid);
@@ -41,4 +54,13 @@ public class UuidConverterTestCase implements TestCase {
 		Assert.areEqual(loid, reconverted);
 	}
 	
+	private long[] generateIds() {
+		int count = 500;
+		TimeStampIdGenerator generator = new TimeStampIdGenerator();
+		long[] ids = new long[count];
+		for (int i = 0; i < ids.length; i++) {
+			ids[i] = generator.generate(); 
+		}
+		return ids;
+	}	
 }
