@@ -687,5 +687,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			block.run();
 		}
 	}
+	
+	public void waitForCommit(Object obj) {
+		commit();
+	}
 
 }

@@ -54,8 +54,7 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						ReplicationProviderTest.class,
  						TheSimplest.class,
 						UuidConversionTestCase.class,
-						
-
+	
 						
 						/*  Failing Tests */ 
 //						ReplicationEventTest.class,
