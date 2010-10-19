@@ -76,7 +76,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		child.setName(MODIFIED_IN_B);
 		b().provider().update(parent);
 		b().provider().update(child);
-		a().provider().waitForCommit(parent);
+		b().provider().waitForCommit(parent);
 
 		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
