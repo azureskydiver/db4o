@@ -22,13 +22,18 @@ public class ProxyObject<T> implements Peer<T> {
 	public T sync() {
 		if (syncFacade == null) {
 			syncFacade = (T) java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { facade }, new InvocationHandler() {
-
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-					Request r = distributor.request(getId(), method, args, true);
-					if (!r.hasValue()) {
-						distributor.feed();
+					// TODO: Consider implementing #hashCode() in the same way.
+					if(method.getName().equals("equals")){
+						Object other = args[0];
+						return other == syncFacade || other == asyncFacade;
+					}else{
+						Request r = distributor.request(getId(), method, args, true);
+						if (!r.hasValue()) {
+							distributor.feed();
+						}
+						return r.get();
 					}
-					return r.get();
 				}
 			});
 		}

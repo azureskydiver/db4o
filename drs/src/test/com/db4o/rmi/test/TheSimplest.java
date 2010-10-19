@@ -17,12 +17,14 @@ public class TheSimplest implements TestCase, TestLifeCycle {
 
 		void addListener(@Proxy Runnable r);
 		
+		boolean removeListener(@Proxy Runnable runnable);
+		
 		Map<String, Set<Integer>> collections(Map<String, List<Integer>> map);
 
 	}
 
 	public static class FacadeImpl implements Facade {
-
+		
 		private List<Runnable> listeners = new ArrayList<Runnable>();
 
 		public int intCall() {
@@ -58,6 +60,12 @@ public class TheSimplest implements TestCase, TestLifeCycle {
 				ret.put(entry.getKey(), set);
 			}
 			return ret;
+		}
+
+		public boolean removeListener(Runnable runnable) {
+			synchronized (listeners) {
+				return listeners.remove(runnable);
+			}
 		}
 	}
 
@@ -108,17 +116,21 @@ public class TheSimplest implements TestCase, TestLifeCycle {
 	public void testProxy() {
 		final BlockingQueue4<Object> q = new BlockingQueue<Object>();
 
-		client.sync().addListener(new Runnable() {
+		Runnable runnable = new Runnable() {
 			public void run() {
 				q.add(new Object());
 			}
-		});
+		};
+		
+		client.sync().addListener(runnable);
 
 		Assert.isFalse(q.hasNext());
 
 		concreteFacade.triggerListeners();
 
 		Assert.isNotNull(q.next());
+		
+		Assert.isTrue(client.sync().removeListener(runnable));
 	}
 	
 	public void testCollections() {
