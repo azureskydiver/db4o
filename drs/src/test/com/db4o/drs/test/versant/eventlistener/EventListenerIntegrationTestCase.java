@@ -64,11 +64,15 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 					public void ready() {
 					}
 					
-					public void commited(String transactionId) {
+					public void committed(String transactionId) {
 						synchronized(transactionQueue){
 							System.err.println("transactionId in committed " +  transactionId);
 							transactionQueue.add(transactionId);
 						}
+					}
+
+					public void onEvent(long loid) {
+						
 					}
 				});
 
@@ -154,15 +158,20 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 	public void testPersistentTimestampExistsAfterEvent() throws Exception {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
-				final BlockingQueue4<String> q = new BlockingQueue<String>();
+				final BlockingQueue4<Long> q = new BlockingQueue<Long>();
 				_provider.syncEventProcessor().addListener(new EventProcessorListener() {
 					
 					public void ready() {
 					}
 					
-					public void commited(String transactionId) {
-						q.add(transactionId);
+					public void committed(String transactionId) {
+						
 					}
+
+					public void onEvent(long loid) {
+						q.add(loid);
+					}
+					
 				});
 				storeAndCommitItem();
 				q.next();

@@ -284,17 +284,19 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(transactionId);
 			if(events != null){
 				for(ObjectLifecycleEvent event: events){
+					long objectLoid = event.objectLoid();
 					ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-					ObjectSet<ObjectLifecycleEvent> oldEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(event.objectLoid()).select();
+					ObjectSet<ObjectLifecycleEvent> oldEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(objectLoid).select();
 					for (ObjectLifecycleEvent oldEvent : oldEvents) {
 						_cobra.delete(oldEvent.loid());
 					}
-					Long timestamp = _loidTimeStamps.get(event.objectLoid());
+					Long timestamp = _loidTimeStamps.get(objectLoid);
 					if(timestamp != null){
 						event.timestamp(timestamp);
 						_loidTimeStamps.remove(timestamp);
 					}
 					_cobra.store(event);
+					listenerTrigger().onEvent(objectLoid);
 					println("stored: " + event);
 				}
 			}
@@ -303,7 +305,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			_cobra.store(_commitTimestamp);
 			_cobra.commit();
 			
-			listenerTrigger().commited(transactionId);
+			listenerTrigger().committed(transactionId);
 			println(SIMPLE_NAME+" commit");
 		}
 	}

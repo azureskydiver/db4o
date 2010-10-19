@@ -20,7 +20,7 @@ import db4ounit.*;
 
 public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
-	protected BlockingQueue4<Object> commitedBarrier = new BlockingQueue<Object>();
+	protected BlockingQueue4<Long> events = new BlockingQueue<Long>();
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(VodProviderTestCase.class).run();
@@ -37,9 +37,12 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 				
 			}
 			
-			public void commited(String transactionId) {
-				System.err.println("Committed " + transactionId);
-				commitedBarrier.add(transactionId);
+			public void committed(String transactionId) {
+				
+			}
+
+			public void onEvent(long loid) {
+				events.add(loid);
 			}
 		});
 		
@@ -170,19 +173,22 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		Item item = new Item("one");
 		provider.storeNew(item);
 		provider.commit();
-		waitForCommitFeedbackFromEventProcessor();
+		waitForStoredEventFromEventProcessor(provider.loid(item));
 		return item;
 	}
 
-	private void waitForCommitFeedbackFromEventProcessor() {
-		commitedBarrier.next();
+	private void waitForStoredEventFromEventProcessor(long expectedLoid) {
+		long actualLoid = events.next();
+		while(actualLoid != expectedLoid){
+			actualLoid = events.next();
+		}
 	}
 	
 	private void update(Item item) {
 		item.name("modified");
 		_provider.update(item);
 		_provider.commit();
-		waitForCommitFeedbackFromEventProcessor();
+		waitForStoredEventFromEventProcessor(_provider.loid(item));
 	}
 
 	@Override
