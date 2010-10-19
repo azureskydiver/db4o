@@ -377,6 +377,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		
 		VodReplicationReference ref = _replicationReferences.get(obj);
+		if (ref == null) {
+			throw new RuntimeException("Reference should always be available before storeReplica");
+		}
 		
 		ensureClassKnown(obj.getClass());
 		
