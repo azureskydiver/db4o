@@ -3,6 +3,7 @@
 package com.db4o.drs.test.versant;
 
 import com.db4o.drs.test.*;
+import com.db4o.drs.test.regression.*;
 import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
@@ -45,10 +46,54 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 				
 				// This is the one we are heading for for now.
 				return new Class[] {
-						UuidConversionTestCase.class,
- 						TheSimplest.class,
+						
+						/*  Passing  Tests */
+						
+						com.db4o.drs.test.foundation.AllTests.class,
+						com.db4o.drs.test.objectid.AllTests.class,
 						ReplicationProviderTest.class,
+ 						TheSimplest.class,
+						UuidConversionTestCase.class,
+						
+
+						
+						/*  Failing Tests */ 
 //						ReplicationEventTest.class,
+						
+						
+						/* Tests that haven't been checked yet */
+						
+						// Simple
+//						ReplicationAfterDeletionTest.class,
+//						SimpleArrayTest.class,
+//						SimpleParentChild.class,
+//						ByteArrayTest.class,
+//						
+//						// Collection
+//						ComplexListTestCase.class,
+//						ListTest.class, 
+//
+//						// Complex
+//						R0to4Runner.class, 	
+//						ReplicationFeaturesMain.class,
+//
+//						// General
+//						CollectionHandlerImplTest.class,  
+//						ReplicationTraversalTest.class,
+//				
+//						MapTest.class,
+//						ArrayReplicationTest.class,
+//						SingleTypeCollectionReplicationTest.class,
+//						MixedTypesCollectionReplicationTest.class,
+//						TransparentActivationTestCase.class,
+//		                
+//		                //regression
+//		                DRS42Test.class,
+//		                
+//		                SameHashCodeTestCase.class,
+
+						
+						
 				};
 			}
 			
