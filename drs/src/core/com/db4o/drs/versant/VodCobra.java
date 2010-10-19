@@ -97,7 +97,6 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		datastoreObject.allocate();
 		datastoreObject.setIsNew(true);
 		
-		writeFields(obj, datastoreObject);
 		write(datastoreObject);
 		
 		if (obj instanceof VodLoidAwareObject) {
