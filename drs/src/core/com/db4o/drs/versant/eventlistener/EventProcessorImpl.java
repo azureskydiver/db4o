@@ -408,6 +408,12 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 	}
 	
+	public void removeListener(EventProcessorListener listener) {
+		synchronized (_listeners) {
+			_listeners.remove(listener);
+		}
+	}
+	
 	private EventProcessorListener listenerTrigger() {
 		return (EventProcessorListener) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{EventProcessorListener.class}, new InvocationHandler() {
 			
@@ -496,10 +502,5 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 	}
 
-	public void removeListener(EventProcessorListener listener) {
-		synchronized (_listeners) {
-			_listeners.remove(listener);
-		}
-	}
 
 }

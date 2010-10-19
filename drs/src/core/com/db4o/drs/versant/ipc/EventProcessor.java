@@ -38,6 +38,8 @@ public interface EventProcessor {
 	
 	void addListener(@Proxy @Async EventProcessorListener listener);
 	
+	void removeListener(@Proxy EventProcessorListener listener);
+	
 	public interface EventProcessorListener {
 		
 		void ready();
@@ -52,6 +54,5 @@ public interface EventProcessor {
 	
 	void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps);
 
-	void removeListener(EventProcessorListener listener);
 
 }
