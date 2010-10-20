@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.vb" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.vb" />
+    <Compile Include="Code\callbacks\examples\CallbackExamples.vb" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.vb" />
     <Compile Include="Code\collections\bigset\BigSetExample.vb" />
     <Compile Include="Code\configuration\basics\ConfigurationBasics.vb" />

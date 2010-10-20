@@ -32,7 +32,7 @@ namespace Db4oDoc.Code.DisconnectedObj.IdExamples
             {
                 if (null != state)
                 {
-                    container.Store(state);
+                    container.Ext().Store(state,2);
                 }
             }
         }

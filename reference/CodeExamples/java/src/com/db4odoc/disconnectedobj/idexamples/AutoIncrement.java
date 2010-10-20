@@ -24,7 +24,7 @@ public class AutoIncrement {
 
     public synchronized void storeState(){
         if(null!=state){
-            container.store(state);            
+            container.ext().store(state,2);            
         }
     }
     // #end example

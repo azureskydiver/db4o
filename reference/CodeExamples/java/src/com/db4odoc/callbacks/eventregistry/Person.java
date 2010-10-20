@@ -1,7 +1,7 @@
 package com.db4odoc.callbacks.eventregistry;
 
 
-public class Person {
+class Person {
     private String name;
 
     public Person(String name) {

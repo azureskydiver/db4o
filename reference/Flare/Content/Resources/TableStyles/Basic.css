@@ -35,6 +35,8 @@ mcTableHeadStyle {
 	separator-style: solid; 
 	separator-width: 1px; 
 	separator-color: #a9a9a9; 
+	font-weight: bold; 
+	text-align: left; 
 }
 
 mcTableBodyStyle {
@@ -78,6 +80,8 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0
 {
+	font-weight: bold;
+	text-align: left;
 	padding-left: 0.1em;
 	padding-right: 0.1em;
 	padding-top: 0.1em;
@@ -86,11 +90,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0 p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_RowSep_ColSep
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	border-bottom-width: 1px;
 	border-bottom-color: #a9a9a9;
 	border-bottom-style: solid;
@@ -105,11 +113,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_RowSep_ColSep p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_RowSep
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	border-bottom-width: 1px;
 	border-bottom-color: #a9a9a9;
 	border-bottom-style: solid;
@@ -121,11 +133,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_RowSep p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_ColSep
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	padding-left: 0.1em;
 	padding-right: 0.1em;
 	padding-top: 0.1em;
@@ -137,11 +153,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_ColSep p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_RowSep_ColEnd
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	border-bottom-width: 1px;
 	border-bottom-color: #a9a9a9;
 	border-bottom-style: solid;
@@ -153,11 +173,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_RowSep_ColEnd p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_RowEnd
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	padding-left: 0.1em;
 	padding-right: 0.1em;
 	padding-top: 0.1em;
@@ -166,11 +190,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_RowEnd p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_RowEnd_ColSep
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	padding-left: 0.1em;
 	padding-right: 0.1em;
 	padding-top: 0.1em;
@@ -182,11 +210,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_RowEnd_ColSep p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_RowEnd_ColEnd
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	padding-left: 0.1em;
 	padding-right: 0.1em;
 	padding-top: 0.1em;
@@ -195,11 +227,15 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_RowEnd_ColEnd p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Head_0_0_ColEnd
 {
+	font-weight: bold;
+	font-style: normal;
+	text-align: left;
 	padding-left: 0.1em;
 	padding-right: 0.1em;
 	padding-top: 0.1em;
@@ -208,7 +244,8 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Head_0_0_ColEnd p
 {
-	
+	font-weight: bold;
+	font-style: normal;
 }
 
 .TableStyle_Basic_Body_0_0
@@ -228,7 +265,6 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Body_0_0_RowSep_ColSep
 {
-	font-weight: normal;
 	vertical-align: top;
 	border-bottom-width: 1px;
 	border-bottom-color: #a9a9a9;
@@ -285,7 +321,6 @@ mcTableFootStyle {
 
 .TableStyle_Basic_Body_0_0_RowSep_ColEnd
 {
-	font-weight: normal;
 	vertical-align: top;
 	border-bottom-width: 1px;
 	border-bottom-color: #a9a9a9;
@@ -296,10 +331,7 @@ mcTableFootStyle {
 	padding-bottom: 0.1em;
 }
 
-.TableStyle_Basic_Body_0_0_RowSep_ColEnd p
-{
-	font-weight: normal;
-}
+
 
 .TableStyle_Basic_Body_0_0_RowEnd
 {

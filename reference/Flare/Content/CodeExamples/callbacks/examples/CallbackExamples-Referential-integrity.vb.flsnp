@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Sub ReferentialIntegrityCheck(ByVal sender As Object, ByVal eventArguments As CancellableObjectEventArgs)
+    Dim toDelete As Object = eventArguments.Object
+    If TypeOf toDelete Is Pilot Then
+        Dim container As IObjectContainer = eventArguments.ObjectContainer()
+        Dim cars As IEnumerable(Of Car) = From c As Car In container _
+                                          Where c.Pilot Is toDelete
+        If cars.Count() &gt; 0 Then
+            eventArguments.Cancel()
+        End If
+    End If
+End Sub</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Sub ReferentialIntegrityCheck(ByVal sender As Object, ByVal eventArguments As CancellableObjectEventArgs)
+    Dim toDelete As Object = eventArguments.Object
+    If TypeOf toDelete Is Pilot Then
+        Dim container As IObjectContainer = eventArguments.ObjectContainer()
+        Dim cars As IEnumerable(Of Car) = From c As Car In container _
+                                          Where c.Pilot Is toDelete
+        If cars.Count() &gt; 0 Then
+            eventArguments.Cancel()
+        End If
+    End If
+End Sub</pre>
+		<div class="codesnippet-meta">
+			CallbackExamples.vb: Referential integrity
+			<div class="codedownload">
+				<a href="Example-callbacks-examples-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

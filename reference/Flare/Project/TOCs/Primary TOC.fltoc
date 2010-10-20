@@ -2,9 +2,6 @@
 <CatapultToc
   Version="1">
   <TocEntry
-    Title="Introduction"
-    Link="/Content/welcome.htm" />
-  <TocEntry
     Title="Product Philosophy"
     Link="/Content/product_philosophy.htm">
     <TocEntry
@@ -27,6 +24,9 @@
       Title="Why Choose db4o"
       Link="/Content/product_philosophy/why_choose_db4o.htm" />
   </TocEntry>
+  <TocEntry
+    Title="Introduction"
+    Link="/Content/welcome.htm" />
   <TocEntry
     Title="Basics Operations &amp; Concepts"
     Link="/Content/basics.htm">
@@ -484,6 +484,9 @@
       <TocEntry
         Title="Disable Optimize Native Queries"
         Link="/Content/configuration/common/disable_optimize_nq.htm" />
+      <TocEntry
+        Title="Register Type Handler"
+        Link="/Content/configuration/common/register_type_handler.htm" />
       <TocEntry
         Title="Changing the Output Stream"
         Link="/Content/configuration/common/out_stream.htm" />
@@ -985,20 +988,20 @@
         Link="/Content/implementation_strategies/unique_constraints/unique_constraints_example.htm" />
     </TocEntry>
     <TocEntry
-      Title="Object Callbacks"
-      Link="/Content/implementation_strategies/object_callbacks.htm" />
-    <TocEntry
       Title="Callbacks"
       Link="/Content/implementation_strategies/callbacks.htm">
+      <TocEntry
+        Title="Object Callbacks"
+        Link="/Content/implementation_strategies/object_callbacks.htm" />
       <TocEntry
         Title="Event Registry API"
         Link="/Content/implementation_strategies/callbacks/event_registry_api.htm" />
       <TocEntry
+        Title="Events Overview"
+        Link="/Content/implementation_strategies/callbacks/events_overview.htm" />
+      <TocEntry
         Title="Possible Usecases"
         Link="/Content/implementation_strategies/callbacks/possible_usecases.htm">
-        <TocEntry
-          Title="Cascaded Behavior"
-          Link="/Content/implementation_strategies/callbacks/possible_usecases/cascaded_behavior.htm" />
         <TocEntry
           Title="Autoincrement"
           Link="/Content/implementation_strategies/callbacks/possible_usecases/autoincrement.htm" />
@@ -1006,28 +1009,12 @@
           Title="Referential Integrity"
           Link="/Content/implementation_strategies/callbacks/possible_usecases/referential_integrity.htm" />
         <TocEntry
-          Title="Query Statistics"
-          Link="/Content/implementation_strategies/callbacks/possible_usecases/query_statistics.htm" />
+          Title="Committed Event Example"
+          Link="/Content/implementation_strategies/callbacks/possible_usecases/committed_event_example.htm" />
       </TocEntry>
-      <TocEntry
-        Title="Benefits"
-        Link="/Content/implementation_strategies/callbacks/benefits.htm" />
       <TocEntry
         Title="Commit-Time Callbacks"
-        Link="/Content/implementation_strategies/callbacks/commit-time_callbacks.htm">
-        <TocEntry
-          Title="How To Use Commit-Time Callbacks"
-          Link="/Content/implementation_strategies/callbacks/commit-time_callbacks/how_to_use_commit-time_callbacks.htm" />
-        <TocEntry
-          Title="Committed Event Example"
-          Link="/Content/implementation_strategies/callbacks/commit-time_callbacks/committed_event_example.htm" />
-        <TocEntry
-          Title="Committing Event Example"
-          Link="/Content/implementation_strategies/callbacks/commit-time_callbacks/committing_event_example.htm" />
-        <TocEntry
-          Title="Car"
-          Link="/Content/implementation_strategies/callbacks/commit-time_callbacks/car.htm" />
-      </TocEntry>
+        Link="/Content/implementation_strategies/callbacks/commit-time_callbacks.htm"></TocEntry>
     </TocEntry>
     <TocEntry
       Title="Translators"
@@ -1347,9 +1334,6 @@
       Title="Security Requirements On .NET Platform"
       Link="/Content/platform_specific_issues/security_requirements_on_.net_platform.htm"
       conditions="Primary..NET,Primary.All languages"></TocEntry>
-    <TocEntry
-      Title="Deployment Instructions"
-      Link="/Content/platform_specific_issues/deployment_instructions.htm" />
     <TocEntry
       Title="ASP.NET"
       Link="/Content/platform_specific_issues/asp.net.htm"
@@ -1757,6 +1741,42 @@
       Link="/Content/db4o_replication_system_drs/license.htm" />
   </TocEntry>
   <TocEntry
+    Title="Object Manager Enterprise"
+    Link="/Content/object_manager_enterprise.htm">
+    <TocEntry
+      Title="OME Interface"
+      Link="/Content/object_manager_enterprise/ome_for_eclipse/ome_interface.htm"
+      conditions="Primary.Java" />
+    <TocEntry
+      Title="Browsing a Database"
+      Link="/Content/object_manager_enterprise/ome_for_eclipse/browsing_a_database.htm"
+      conditions="Primary.Java" />
+    <TocEntry
+      Title="Querying"
+      Link="/Content/object_manager_enterprise/ome_for_eclipse/querying.htm"
+      conditions="Primary.Java" />
+    <TocEntry
+      Title="OME Interface"
+      Link="/Content/object_manager_enterprise/ome_for_visual_studio/ome_interface.htm"
+      conditions="Primary..NET" />
+    <TocEntry
+      Title="Browsing a Database"
+      Link="/Content/object_manager_enterprise/ome_for_visual_studio/browsing_a_database.htm"
+      conditions="Primary..NET" />
+    <TocEntry
+      Title="Querying"
+      Link="/Content/object_manager_enterprise/ome_for_visual_studio/querying.htm"
+      conditions="Primary..NET"></TocEntry>
+    <TocEntry
+      Title="Viewing Collections"
+      Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_collections.htm"
+      conditions="Primary..NET" />
+    <TocEntry
+      Title="Viewing enum Values In OME"
+      Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_enum_values_in_ome.htm"
+      conditions="Primary..NET"></TocEntry>
+  </TocEntry>
+  <TocEntry
     Title="db4o Testing Framework"
     Link="/Content/db4o_testing_framework.htm">
     <TocEntry
@@ -1768,44 +1788,6 @@
     <TocEntry
       Title="Running The Tests"
       Link="/Content/db4o_testing_framework/running_the_tests.htm" />
-  </TocEntry>
-  <TocEntry
-    Title="Object Manager Enterprise"
-    Link="/Content/object_manager_enterprise.htm">
-    <TocEntry
-      Title="OME For Eclipse"
-      Link="/Content/object_manager_enterprise/ome_for_eclipse.htm"
-      conditions="Primary.Java,Primary.All languages">
-      <TocEntry
-        Title="OME Interface"
-        Link="/Content/object_manager_enterprise/ome_for_eclipse/ome_interface.htm" />
-      <TocEntry
-        Title="Browsing a Database"
-        Link="/Content/object_manager_enterprise/ome_for_eclipse/browsing_a_database.htm" />
-      <TocEntry
-        Title="Querying"
-        Link="/Content/object_manager_enterprise/ome_for_eclipse/querying.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Ome For Visual Studio"
-      Link="/Content/object_manager_enterprise/ome_for_visual_studio.htm"
-      conditions="Primary..NET,Primary.All languages">
-      <TocEntry
-        Title="OME Interface"
-        Link="/Content/object_manager_enterprise/ome_for_visual_studio/ome_interface.htm" />
-      <TocEntry
-        Title="Browsing a Database"
-        Link="/Content/object_manager_enterprise/ome_for_visual_studio/browsing_a_database.htm" />
-      <TocEntry
-        Title="Querying"
-        Link="/Content/object_manager_enterprise/ome_for_visual_studio/querying.htm"></TocEntry>
-      <TocEntry
-        Title="Viewing Collections"
-        Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_collections.htm" />
-      <TocEntry
-        Title="Viewing enum Values In OME"
-        Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_enum_values_in_ome.htm"></TocEntry>
-    </TocEntry>
   </TocEntry>
   <TocEntry
     Title="Sharpen"

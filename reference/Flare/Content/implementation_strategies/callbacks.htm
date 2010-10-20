@@ -1,43 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="794" MadCap:lastWidth="539" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs">
-    <head><title>Callbacks	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="177" MadCap:lastWidth="586">
+    <head>
     </head>
-    <body onload="prettyPrint()">
+    <body>
         <h1>
-            <MadCap:keyword term="Callbacks;Triggers" />Callbacks</h1>
-        <p>External
-Callbacks enable you to add Listeners to an <MadCap:snippetText src="../Resources/Snippets/ObjectContainer.flsnp" /> for the following
-db4o events</p>
-        <ul>
-            <li>QueryStarted </li>
-            <li>QueryFinished </li>
-            <li>Creating (first time an object is about to be saved) </li>
-            <li>Created (after the object is saved)</li>
-            <li>Activating </li>
-            <li>Activated </li>
-            <li>Deactivating </li>
-            <li>Deactivated</li>
-            <li>Updating </li>
-            <li>Updated</li>
-            <li>Deleting (not available in networked client/server mode) </li>
-            <li>Deleted (not available in networked client/server mode)</li>
-            <li>Committing</li>
-            <li>Committed </li>
-        </ul>
-        <p>QueryStarted
-and QueryFinished events accept QueryEventArgs as a parameter and can be used
-to gather query statistics information.</p>
-        <p>Created,
-Activated, Deactivated, Updated and Deleted events accept ObjectEventArgs and
-can be used to gather statistics information or to initiate some special
-behavior after the action has been taken.</p>
-        <p>Creating,
-Activating, Deactivating, Updating and Deleting events accept
-CancellableObjectEventArgs. Their primary usage is to perform action validity check
-and to stop the execution if necessary.</p>
-        <p>Committing event can be used to check some application-specific conditions before commit. For example it can</p>
-        <p> be used to check unique constraints. Committing event accepts CommitEventArgs as a parameter.</p>
-        <p>Committed event is raised when the container has completely finished the commit operation. Event subscribers get the notification in a separate thread. Committed event accepts CommitEventArgs. </p>
-        <p> More Reading:<ul><li><p><a href="callbacks/event_registry_api.htm">Event Registry API</a></p></li><li><p><a href="callbacks/possible_usecases.htm">Possible Usecases</a></p></li><li><p><a href="callbacks/benefits.htm">Benefits</a></p></li><li><p><a href="callbacks/commit-time_callbacks.htm">Commit-Time Callbacks</a></p></li></ul></p>
+            <MadCap:keyword term="Callbacks;Triggers;Events" />Callbacks</h1>
+        <p>Callbacks, also known as events, allow you to be notified on certain database operations. This is useful to trigger additional operations during a database operation. There are two kind of callbacks. First you can certain methods to your objects. When the method matches certain signature it will be called by db4o. <MadCap:xref href="object_callbacks.htm" target="" title="" alt="">See "Object Callbacks"</MadCap:xref></p>
+        <p>Additionally you can register event listener to a object-container which will be called on certain operations. <MadCap:xref href="callbacks/event_registry_api.htm" target="" title="" alt="">See "Event Registry API"</MadCap:xref></p>
+        <p>&#160;</p>
     </body>
 </html>

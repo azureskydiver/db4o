@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">private static void ReferentialIntegrityCheck(object sender,
+                                              CancellableObjectEventArgs eventArguments)
+{
+    Object toDelete = eventArguments.Object;
+    if (toDelete is Pilot)
+    {
+        IObjectContainer container = eventArguments.ObjectContainer();
+        IEnumerable&lt;Car&gt; cars = from Car c in container
+                                where c.Pilot == toDelete
+                                select c;
+        if (cars.Count() &gt; 0)
+        {
+            eventArguments.Cancel();
+        }
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			CallbackExamples.cs: Referential integrity
+			<div class="codedownload">
+				<a href="Example-callbacks-examples-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

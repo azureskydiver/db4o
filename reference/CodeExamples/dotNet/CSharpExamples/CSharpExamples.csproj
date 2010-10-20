@@ -111,6 +111,7 @@
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
     <Compile Include="Code\basics\Db4oBasics.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
+    <Compile Include="Code\callbacks\examples\CallbackExamples.cs" />
     <Compile Include="Code\clientserver\basics\Db4oClientExample.cs" />
     <Compile Include="Code\clientserver\basics\ServerExample.cs" />
     <Compile Include="Code\clientserver\messaging\MessagingExample.cs" />
