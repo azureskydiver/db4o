@@ -17,7 +17,7 @@ public void StoreState()
     {
         if (null != state)
         {
-            container.Store(state);
+            container.Ext().Store(state,2);
         }
     }
 }

@@ -25,7 +25,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
         Public Sub StoreState()
             SyncLock dataLock
                 If state IsNot Nothing Then
-                    container.Store(state)
+                    container.Ext().Store(state, 2)
                 End If
             End SyncLock
         End Sub

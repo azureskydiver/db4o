@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">final EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+events.deleting().addListener(new EventListener4&lt;CancellableObjectEventArgs&gt;() {
+    @Override
+    public void onEvent(Event4&lt;CancellableObjectEventArgs&gt; events,
+                        CancellableObjectEventArgs eventArgs) {
+        final Object toDelete = eventArgs.object();
+        if(toDelete instanceof Pilot){
+            final ObjectContainer container = eventArgs.objectContainer();
+            final ObjectSet&lt;Car&gt; cars = container.query(new Predicate&lt;Car&gt;() {
+                @Override
+                public boolean match(Car car) {
+                    return car.getPilot() == toDelete;
+                }
+            });
+            if(cars.size()&gt;0){
+                eventArgs.cancel();
+            }
+        }
+    }
+});</pre>
+		<div class="codesnippet-meta">
+			CallbackExamples.java: Referential integrity
+			<div class="codedownload">
+				<a href="Example-callbacks-examples-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

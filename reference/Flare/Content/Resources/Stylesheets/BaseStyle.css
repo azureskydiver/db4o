@@ -212,6 +212,10 @@ td
 	border-top-width: .5em;
 }
 
+th{
+	font-style: bold;	
+}
+
 img
 {
 	border: none;
