@@ -438,7 +438,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 	}
 
-	public void waitForCommit(Object obj) {
+	public void commitAndWaitFor(Object obj) {
 		// do nothing
 	}
 }

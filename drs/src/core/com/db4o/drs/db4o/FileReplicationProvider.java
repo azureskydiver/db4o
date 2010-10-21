@@ -420,7 +420,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		}
 	}
 
-	public void waitForCommit(Object obj) {
+	public void commitAndWaitFor(Object obj) {
 		commit();
 	}
 }
