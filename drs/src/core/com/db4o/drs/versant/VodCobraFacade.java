@@ -26,6 +26,8 @@ public interface VodCobraFacade {
 	<T> Collection<T> readObjects(Class<T> extent, Object[] loids, int limit);
 
 	<T> T objectByLoid(long loid);
+	
+	boolean containsLoid(long loid);
 
 	void commit();
 
