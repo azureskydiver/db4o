@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="4" MadCap:lastHeight="863" MadCap:lastWidth="714" MadCap:conditions="Primary..NET">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="4" MadCap:lastHeight="881" MadCap:lastWidth="612" MadCap:conditions="Primary..NET">
     <head>
         <link href="../Resources/TableStyles/Basic.css" rel="stylesheet" MadCap:stylesheetType="table" />
     </head>
     <body>
         <h1>
             <MadCap:keyword term="Mono" />db4o On Mono</h1>
-        <p>Currently db4o is only build for .NET and tested on .NET. However its possible to use db4o also on Mono. Some features are supported on Mono: The <a href="wcf_data_services.htm">data services</a> and the <a href="../tuning/runtime_statistics.htm">monitoring-support</a>.</p>
+        <p>Currently db4o is only build for .NET and tested on .NET. However it's possible to use db4o on Mono. Some features are not supported on Mono: The <a href="wcf_data_services.htm">data services</a> and the <a href="../tuning/runtime_statistics.htm">monitoring-support</a>.</p>
         <p>In the regular build, db4o also uses some API's which are not available on Mono. To avoid that, you need to build db4o from source and define the build constant 'Mono'. The source is in the 'src'-folder of the db4o distribution. </p>
         <h2>Build For Mono With Regular .NET</h2>
         <p>The easiest way to build db4o for Mono is actually to use the regular MSBuild and just define the 'Mono' built-time constant. Open the Windows console and navigate to the db4o source folder. Then you can run the MSBuild command:</p>
@@ -51,19 +51,19 @@
                 </tr>
             </tbody>
         </table>
-        <p>Note that you should use the MSBuild-tool for the right version. So use the MSBuild from the 3.5 version to build the Db4o-2008.sln Solution.</p>
+        <p>Note that you should use the MSBuild-tool for the right version. Use the MSBuild  3.5 version to build the Db4o-2008.sln Solution.</p>
         <p>The result of the builds are in the bin/Release-folders of the different subprojects.</p>
         <h2>Build With Mono</h2>
-        <p>In Mono you can use the xbuild-command instead of the MSBuild. The xbuild is part of the mono distribution. If you're using a Mono-versions which was packaged with your Linux-distribution, you maybe need to install is separately.</p>
+        <p>In Mono you can use the xbuild-command instead of the MSBuild. The xbuild is part of the mono distribution. If you're using a Mono version which was packaged with your Linux-distribution, you maybe need to install is separately.</p>
         <p>In principal the command is exactly the same as with MSBuild and the same rules apply. The different solution-files represent the different db4o versions. See on the table above.</p>
         <pre xml:space="preserve">xbuild /property:Configuration=Release /property:DefineConstants="Mono" /target:Rebuild Db4o-2008.sln</pre>
         <p>When you build with Mono and xbuild, you probably get some errors.This errors should be only in following projects. </p>
         <ul>
-            <li>Db4o-Data-Services: This is not (yes) available in Mono</li>
+            <li>Db4o-Data-Services: This is not available in Mono</li>
             <li>Db4o-Test-Projects: The db4o Test-Suite is not ported to Mono. For example it doesn't exclude TestCases which only apply on Windows.</li>
         </ul>
         <p>The rest of db4o can be built on Mono. The result of the builds are in the bin/Release-folders of the different subproject's.</p>
-        <p style="font-weight: bold;"> </p>
+        <p style="font-weight: bold;">&#160;</p>
         <p>&#160;</p>
     </body>
 </html>
