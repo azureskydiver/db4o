@@ -20,17 +20,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import java.util.Iterator;
+import java.util.*;
 
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.drs.foundation.*;
-import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
-import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.drs.inside.ReplicationReferenceImpl;
+import com.db4o.drs.inside.*;
 import com.db4o.drs.test.data.*;
-import com.db4o.ext.Db4oUUID;
+import com.db4o.ext.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 
 public class ReplicationProviderTest extends DrsTestCase {
@@ -75,7 +73,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		car._pilot = findPilot("Pilot2");
 		a().provider().storeNew(car);
 
-		a().provider().commit();
+		a().provider().commitAndWaitFor(car);
 
 		startReplication();
 
