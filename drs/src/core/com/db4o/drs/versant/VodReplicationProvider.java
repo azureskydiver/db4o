@@ -12,9 +12,9 @@ import javax.jdo.spi.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
-import com.db4o.drs.versant.VodJdo.*;
+import com.db4o.drs.versant.VodJdo.PreStoreListener;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.EventProcessor.*;
+import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
@@ -505,17 +505,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(loid == 0){
 			throw new IllegalStateException("Could not create loid from " + uuid);
 		}
-		Object obj = null;
-		try{
-			obj = _jdo.objectByLoid(loid);
-			if(obj == null){
-				return null;
-			}
-		} catch (RuntimeException rex){
+		
+		// TODO: remove this checking after VdsUtils#getObjectByLOID is fixed
+		if (!_cobra.containsLoid(loid)) {
 			return null;
 		}
-		
-		reference = produceNewReference(obj);
+		reference = produceNewReference(_jdo.objectByLoid(loid));
 		_replicationReferences.put(reference);
 		return reference; 
 	}

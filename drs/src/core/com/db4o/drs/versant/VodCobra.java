@@ -208,6 +208,11 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		}
 	}
 	
+	public boolean containsLoid(long loid) {
+		DatastoreObject datastoreObject = new DatastoreObject(new DatastoreLoid(loid));
+		return _dm.readObject(datastoreObject, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+	}
+	
 	public <T> T objectByLoid(long loid){
 		DatastoreObject datastoreObject = existingDatastoreObject(loid);
 		Class<T> clazz = classOf(datastoreObject);
