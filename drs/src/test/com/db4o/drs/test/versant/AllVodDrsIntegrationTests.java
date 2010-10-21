@@ -70,7 +70,7 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						/*  Passing  Tests */
 						
 						com.db4o.drs.test.foundation.AllTests.class,
-						com.db4o.drs.test.objectid.AllTests.class,
+						com.db4o.drs.test.versant.objectid.AllTests.class,
 						ReplicationProviderTest.class,
  						TheSimplest.class,
 						UuidConversionTestCase.class,

@@ -46,7 +46,6 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		return new Class[] {
 				
 				com.db4o.drs.test.foundation.AllTests.class,
-				com.db4o.drs.test.objectid.AllTests.class,
 				
 				// Simple
 				TheSimplest.class, 
