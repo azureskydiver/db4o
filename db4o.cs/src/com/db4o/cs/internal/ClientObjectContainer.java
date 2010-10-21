@@ -874,11 +874,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	public boolean isAlive() {
 		try {
-			if(isClosed()) {
-				return false;
+			synchronized (lock()) {
+				if(isClosed()) {
+					return false;
+				}
+				
+				write(Msg.IS_ALIVE);
+				return expectedResponse(Msg.IS_ALIVE) != null;				
 			}
-			write(Msg.IS_ALIVE);
-			return expectedResponse(Msg.IS_ALIVE) != null;
 		} catch (Db4oException exc) {
 			return false;
 		}
