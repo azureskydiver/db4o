@@ -188,10 +188,9 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().storeNew(object2);
 		a().provider().storeNew(object3);
 
-		a().provider().commit();
+		a().provider().commitAndWaitFor(object3);
 
 		startReplication();
-
 
 		ObjectSet changed = a().provider().objectsChangedSinceLastReplication();
 		Assert.areEqual(3, changed.size());

@@ -584,7 +584,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return getName();
 	}
 
-	public void waitForCommit(Object modifiedObject) {
+	public void commitAndWaitFor(Object modifiedObject) {
 		long expectedLoid = loid(modifiedObject);
 		final BlockingQueue<Long> events = new BlockingQueue<Long>();
 		EventProcessorListener listener = new EventProcessorListener() {
