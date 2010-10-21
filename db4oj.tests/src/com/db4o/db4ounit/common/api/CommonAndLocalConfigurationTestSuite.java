@@ -1,3 +1,4 @@
+/* Copyright (C) 2010 Versant Inc. http://www.db4o.com */
 /**
  * @sharpen.if !SILVERLIGHT
  */
@@ -13,7 +14,6 @@ import com.db4o.cs.config.*;
 import com.db4o.diagnostic.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.config.*;
 import com.db4o.internal.ids.*;
 import com.db4o.io.*;
