@@ -62,8 +62,6 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private Db4oSignatureMap _signatureMap;
 
-	private Tree _idsReplicatedInThisSession;
-
 	private final String _name;
 
 	private final Procedure4 _activationStrategy;
@@ -159,13 +157,11 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		_container.raiseVersion(raisedDatabaseVersion);
 		_container.commit();
-		_idsReplicatedInThisSession = null;
 	}
 
 	public void rollbackReplication() {
 		_container.rollback();
 		_referencesByObject = null;
-		_idsReplicatedInThisSession = null;
 	}
 
 	public long getCurrentVersion() {
@@ -180,8 +176,6 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		logIdentity(obj, getName());
 		synchronized (lock()) {
 			_container.storeByNewReplication(this, obj);
-			_idsReplicatedInThisSession = 
-				Tree.add(_idsReplicatedInThisSession, new TreeInt((int) _container.getID(obj)));
 		}
 	}
 
