@@ -3,11 +3,11 @@
 <jdo>
     <package name="com.db4o.drs.versant.metadata">
     	<class name="com.db4o.drs.versant.metadata.ClassMetadata"/>
-    	<class name="com.db4o.drs.versant.metadata.VodLoidAwareObject"/>
     	<class name="com.db4o.drs.versant.metadata.CommitTimestamp"/>
     	<class name="com.db4o.drs.versant.metadata.DatabaseSignature"/>
     	<class name="com.db4o.drs.versant.metadata.ObjectLifecycleEvent"/>
     	<class name="com.db4o.drs.versant.metadata.ReplicationCommitRecord"/>
+    	<class name="com.db4o.drs.versant.metadata.VodLoidAwareObject"/>
     </package>    
     <package name="com.db4o.drs.versant.ipc.inband">
     	<class name="com.db4o.drs.versant.ipc.inband.MessagePayload"/>
