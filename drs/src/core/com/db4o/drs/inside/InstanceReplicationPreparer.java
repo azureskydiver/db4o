@@ -36,7 +36,8 @@ class InstanceReplicationPreparer implements Visitor {
 	private final ReplicationEventListener _listener;
 	private final boolean _isReplicatingOnlyDeletions;
 	private final long _lastReplicationVersion;
-	private final Hashtable4 _uuidsProcessedInSession;
+	
+	private final HashSet4 _uuidsProcessedInSession;
 	private final Traverser _traverser;
 	private final ReplicationReflector _reflector;
 	private final CollectionHandler _collectionHandler;
@@ -60,7 +61,7 @@ class InstanceReplicationPreparer implements Visitor {
 	private Object _referencingObject;
 	private String _fieldName;	
 	
-	InstanceReplicationPreparer(ReplicationProviderInside providerA, ReplicationProviderInside providerB, ReplicationProvider directionTo, ReplicationEventListener listener, boolean isReplicatingOnlyDeletions, long lastReplicationVersion, Hashtable4 uuidsProcessedInSession, Traverser traverser, ReplicationReflector reflector, CollectionHandler collectionHandler) {
+	InstanceReplicationPreparer(ReplicationProviderInside providerA, ReplicationProviderInside providerB, ReplicationProvider directionTo, ReplicationEventListener listener, boolean isReplicatingOnlyDeletions, long lastReplicationVersion, HashSet4 uuidsProcessedInSession, Traverser traverser, ReplicationReflector reflector, CollectionHandler collectionHandler) {
 		_event = new ReplicationEventImpl();
 		_stateInA = _event._stateInProviderA;
 		_stateInB = _event._stateInProviderB;
@@ -211,14 +212,15 @@ class InstanceReplicationPreparer implements Visitor {
 
 
 	private void markAsProcessed(DrsUUID uuid) {
-		if (_uuidsProcessedInSession.get(uuid) != null) throw new RuntimeException("illegal state");
-
-		_uuidsProcessedInSession.put(uuid, uuid); //Using this Hashtable4 as a Set.
+		if (_uuidsProcessedInSession.contains(uuid)){
+			throw new RuntimeException("illegal state");
+		}
+		_uuidsProcessedInSession.add(uuid);
 	}
 
 
 	private boolean wasProcessed(DrsUUID uuid) {
-		return _uuidsProcessedInSession.get(uuid) != null;
+		return _uuidsProcessedInSession.contains(uuid);
 	}
 
 
