@@ -7,7 +7,7 @@ import java.util.*;
 public class JviDatabaseIdFactory implements VodDatabaseIdFactory {
 
 	private final VodJvi _jvi;
-	private final Set<String> _databaseNames = new HashSet<String>();
+	private Set<String> _databaseNames = new HashSet<String>();
 
 	public JviDatabaseIdFactory(VodDatabase vod) {
 		_jvi = new VodJvi(vod);
@@ -23,6 +23,7 @@ public class JviDatabaseIdFactory implements VodDatabaseIdFactory {
 		for (String databaseName : _databaseNames) {
 			_jvi.deleteDbId(databaseName);
 		}
+		_databaseNames = new HashSet<String>();
 	}
 
 }

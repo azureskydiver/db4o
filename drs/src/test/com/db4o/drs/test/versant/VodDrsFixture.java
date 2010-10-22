@@ -18,6 +18,8 @@ public class VodDrsFixture implements DrsProviderFixture{
 	private JviDatabaseIdFactory _idFactory;
 
 	private final String _name;
+	
+	private boolean _eventProcessingActive = false;
 
 	public VodDrsFixture(String name){
 		_name = name;
@@ -29,9 +31,7 @@ public class VodDrsFixture implements DrsProviderFixture{
 		_idFactory = new JviDatabaseIdFactory(_vod);
 		_vod.removeDb();
 		_vod.produceDb();
-		File root = new File("bin");
-		
-		JdoMetadataGenerator generator = new JdoMetadataGenerator(root);
+		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
 		
 		// TODO: Knowledge about all the persistent classes right
 		// now is in DrsTestCase.mappings
@@ -40,22 +40,15 @@ public class VodDrsFixture implements DrsProviderFixture{
 		
 		_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.data")));
 		if(! enhanced ){
-			
 			_vod.enhance();
 			enhanced = true;
 		}
 		_vod.createEventSchema();
-		_vod.startEventDriver();
-		
-		VodJdo.createInstance(_vod).close();
-		
-		_vod.startEventProcessor();
+		ensureJdoMetadataCreated();
 	}
-	
-	public void clean() {
-		internalClean();
-		VodCobra.deleteAll(_vod);
-		init();
+
+	private void ensureJdoMetadataCreated() {
+		VodJdo.createInstance(_vod).close();
 	}
 	
 	public void close() {
@@ -64,6 +57,7 @@ public class VodDrsFixture implements DrsProviderFixture{
 	}
 
 	public void open() {
+		ensureEventProcessing();
 		_provider = new VodReplicationProvider(_vod, _idFactory);
 	}
 
@@ -76,15 +70,35 @@ public class VodDrsFixture implements DrsProviderFixture{
 		return this.getClass().getSimpleName() + " " + _vod;
 	}
 	
-	public void destroy(){
-		internalClean();
-		_vod.removeDb();
+	public void clean() {
+		internalClean(true);
 	}
 
-	private void internalClean() {
-		_vod.stopEventProcessor();
-		_vod.stopEventDriver();
+	private void internalClean(boolean deleteAll) {
 		_idFactory.deleteGeneratedIds();
+		if(_eventProcessingActive){
+			_vod.stopEventProcessor();
+			_eventProcessingActive = false;
+		}
+		if(deleteAll){
+			VodCobra.deleteAll(_vod);
+		}
 	}
+	
+	public void destroy(){
+		internalClean(false);
+		_vod.stopEventDriver();
+		_vod.removeDb();
+	}
+	
+	public void ensureEventProcessing(){
+		if(_eventProcessingActive){
+			return;
+		}
+		_vod.startEventDriver();
+		_vod.startEventProcessor();
+		_eventProcessingActive = true;
+	}
+	
 
 }

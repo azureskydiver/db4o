@@ -38,7 +38,7 @@ public class VodDatabase {
 	
 	private static int nextPort = 4100;
 	
-	private VodEventDriver _eventDriver;
+	private static VodEventDriver _eventDriver;
 	
 	private EventConfiguration _eventConfiguration;
 
@@ -246,7 +246,7 @@ public class VodDatabase {
 	
 	public void startEventDriver() {
 		if(_eventDriver != null){
-			throw new IllegalStateException("Event driver can only be started once.");
+			return;
 		}
 		int serverPort = nextPort();
 		EventClientPortSelectionStrategy clientPortStrategy = new IncrementingEventClientPortSelectionStrategy(nextPort());
@@ -280,6 +280,9 @@ public class VodDatabase {
 	}
 
 	public void stopEventDriver() {
+		if(_eventDriver == null){
+			return;
+		}
 		_eventDriver.stop();
 		_eventDriver = null;
 	}
@@ -293,6 +296,9 @@ public class VodDatabase {
 	}
 	
 	public void stopEventProcessor(){
+		if(_eventProcessorSupport == null){
+			return;
+		}
 		_eventProcessorSupport.stop();
 		_eventProcessorSupport = null;
 	}

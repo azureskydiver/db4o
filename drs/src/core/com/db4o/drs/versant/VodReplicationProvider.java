@@ -430,9 +430,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public ObjectSet objectsChangedSinceLastReplication() {
 		long lastReplicationVersion = getLastReplicationVersion();
 		String fullQuery = "this.timestamp > " + lastReplicationVersion;
-		if("".length() > 0) {
-			fullQuery += " && " + "";
-		}
 		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, fullQuery);
 		for (ObjectLifecycleEvent event : allEvents) {

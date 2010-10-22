@@ -16,6 +16,23 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 	
 	public Iterator4 iterator() {
 		
+		// both directions
+		if(true){
+			return Iterators.concat(
+				 new DrsTestSuiteBuilder( 
+						 new VodDrsFixture("vod-drs-a"), 
+						 new Db4oDrsFixture("db4o-drs-b", reflector), 
+						 VodDrsSuite.class, 
+						 reflector
+				 ),
+				 new DrsTestSuiteBuilder(
+						 new Db4oDrsFixture("db4o-drs-a", reflector), 
+						 new VodDrsFixture("vod-drs-b"), 
+						 VodDrsSuite.class, 
+						 reflector
+				 )).iterator();
+		}
+		
 		// Vod to db4o only
 		if(false){
 			 return new DrsTestSuiteBuilder( 
@@ -35,21 +52,19 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 					 reflector
 			 ).iterator();
 		}
-
-		// both directions
-		return Iterators.concat(
-			 new DrsTestSuiteBuilder( 
-					 new VodDrsFixture("vod-drs-a"), 
+		
+		// db4o to db4o
+		if(false){
+			 return new DrsTestSuiteBuilder( 
+					 new Db4oDrsFixture("db4o-drs-a", reflector), 
 					 new Db4oDrsFixture("db4o-drs-b", reflector), 
 					 VodDrsSuite.class, 
 					 reflector
-			 ),
-			 new DrsTestSuiteBuilder(
-					 new Db4oDrsFixture("db4o-drs-a", reflector), 
-					 new VodDrsFixture("vod-drs-b"), 
-					 VodDrsSuite.class, 
-					 reflector
-			 )).iterator();
+			 ).iterator();
+		}
+		
+		return null;
+		
 		
 	}
 	
