@@ -191,8 +191,4 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		waitForStoredEventFromEventProcessor(_provider.loid(item));
 	}
 
-	@Override
-	protected Class[] persistedClasses() {
-		return new Class[] { Item.class };		
-	}
 }

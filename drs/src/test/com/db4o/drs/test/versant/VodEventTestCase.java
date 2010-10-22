@@ -85,9 +85,4 @@ public class VodEventTestCase extends VodEventTestCaseBase {
 		return client;
 	}
 
-	@Override
-	protected Class[] persistedClasses() {
-		return new Class[] {Item.class};
-	}
-
 }
