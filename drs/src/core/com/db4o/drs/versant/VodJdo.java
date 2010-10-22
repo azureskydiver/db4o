@@ -8,11 +8,7 @@ import javax.jdo.*;
 import javax.jdo.listener.*;
 
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.internal.*;
-import com.versant.core.jdo.*;
-import com.versant.core.storagemanager.logging.*;
 import com.versant.core.vds.*;
-import com.versant.odbms.*;
 
 
 public class VodJdo implements VodJdoFacade {

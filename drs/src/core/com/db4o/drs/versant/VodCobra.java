@@ -18,6 +18,10 @@ import com.versant.odbms.query.*;
 
 public class VodCobra implements QLinable, VodCobraFacade{
 	
+	private static final String CLASS_NAME_FIELD_NAME = "name";
+
+	private static final String CLASS_CLASS_NAME = "class";
+
 	private static final long INVALID_LOID = 0L;
 	
 	private final VodDatabase _vod;
@@ -230,10 +234,6 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return result;
 	}
 
-	private Object[] datastoreLoids(Class<?> extent) {
-		return executeQuery(new DatastoreQuery(extent.getName()));
-	}
-	
 	public DatastoreSchemaClass datastoreSchemaClass(Class clazz) {
 		return datastoreSchemaClass(schemaName(clazz));
 	}
@@ -369,11 +369,6 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return new CLinRoot<T>(this, clazz);
 	}
 
-	public Object[] executeQuery(DatastoreQuery query) {
-		return _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
-				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
-	}
-	
 	public short databaseId(){
 		return _dm.getDefaultDatastore().getDBID();	
 	}
@@ -383,6 +378,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public void delete(long loid) {
+		
+		// TODO this needs an RPC call to read the object
+		//      Find out if Cobra has a nicer asynchronous delete 
+		//      that just takes a long
 		_dm.deleteObject(existingDatastoreObject(loid));
 	}
 
@@ -390,22 +389,66 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		rollback();
 		Collection<String> classNames = classNames();
 		String[] classNameArr = classNames.toArray(new String[classNames.size()]);
-		_dm.getSchemaEditor().drop(classNameArr, false, 0);
+		for (int i = 0; i < classNameArr.length; i++) {
+		    DatastoreQuery qry = new DatastoreQuery(classNameArr[i]);
+		    Object[] loids = executeQuery(qry);
+		    for (int j = 0; j < loids.length; j++) {
+		    	DatastoreLoid datastoreLoid = (DatastoreLoid) loids[j];
+		    	delete(datastoreLoid.value());
+			}
+		}
 	}
 	
 	private Collection<String> classNames() {
-		Set<String> classNames = new HashSet<String>();
-		for (DatastoreSchemaModel model : _dm.getSchemaEditor().getDatastoreSchemaModels()) {
-			for (String className : model.getClassNames()) {
-				classNames.add(className);
-			}
-		} 
-		return classNames;
+	      Set<String> classNames = new HashSet<String>();
+	      String classclazzNam = CLASS_CLASS_NAME;
+	      DatastoreObject[] dsos = datastoreObjects(classclazzNam);
+	      DatastoreSchemaClass dsc = _dm.getSchemaEditor().findClass(classclazzNam, _dm.getDefaultDatastore());
+	      DatastoreSchemaField dsf = dsc.findField(CLASS_NAME_FIELD_NAME);
+	      for(int i = 0; i < dsos.length;i++){
+	    	  String className = dsos[i].readObject(dsf).toString();
+	    	  if(isUserClassName(className)){
+	    		  classNames.add(className);
+	    	  }
+	      }
+	      
+	      return classNames;
+	}
+
+	private boolean isUserClassName(String className) {
+		
+  	  // For now we distinguish user classes from internal 
+  	  // classes by determining if they have a package name.
+
+		return className.contains(".");
 	}
 	
 	public static void deleteAll(VodDatabase vod) {
 		VodCobraFacade cobra = VodCobra.createInstance(vod);
 		cobra.deleteAll();
+		cobra.commit();
 		cobra.close();
 	}
+	
+	private DatastoreObject[] datastoreObjects(String className) {
+		Object[] loids = executeQuery(new DatastoreQuery(className));
+	    DatastoreObject[] dsos = _dm.getLoidsAsDSO(loids);
+	    _dm.groupReadObjects(dsos, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		return dsos;
+	}
+
+	
+	public Object[] executeQuery(DatastoreQuery query) {
+		return _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
+				DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+	}
+	
+	private Object[] datastoreLoids(Class<?> extent) {
+		return datastoreLoids(extent.getName());
+	}
+	
+	private Object[] datastoreLoids(String className) {
+		return executeQuery(new DatastoreQuery(className));
+	}
+
 }
