@@ -25,8 +25,6 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 	
 	protected VodCobraFacade _cobra;
 	
-	protected abstract Class[] persistedClasses();
-	
 	public void setUp() {
 		_jdo = VodJdo.createInstance(_vod);
 		_cobra = VodCobra.createInstance(_vod);
@@ -56,12 +54,7 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 	}
 	
 	private void cleanDb(){
-		for(Class c : persistedClasses()) {
-			_jdo.deleteAll(c);
-		}
-		_jdo.deleteAll(VodLoidAwareObject.class);
-		_jdo.deleteAll(ObjectLifecycleEvent.class);
-		_jdo.commit();
+		VodCobra.deleteAll(_vod);
 	}
 	
 	public static void classSetUp() {

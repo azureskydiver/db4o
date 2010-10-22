@@ -266,9 +266,4 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		});
 	}
 
-	@Override
-	protected Class[] persistedClasses() {
-		return new Class[] {Item.class};
-	}
-
 }

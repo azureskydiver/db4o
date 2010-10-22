@@ -133,9 +133,4 @@ public class VodSimpleObjectContainerTestCase extends VodProviderTestCaseBase im
 		dm.close();
 	}
 
-	@Override
-	protected Class[] persistedClasses() {
-		return new Class[] { Item.class} ;
-	}
-
 }
