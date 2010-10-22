@@ -47,7 +47,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	private long _lastReplicationVersion;
 
-	private Hashtable4 _processedUuids;
+	private HashSet4 _processedUuids;
 
 	private boolean _isReplicatingOnlyDeletions;
 
@@ -288,7 +288,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void resetProcessedUuids(){
-		_processedUuids = new Hashtable4(SIZE);
+		_processedUuids = new HashSet4(SIZE);
 	}
 
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {

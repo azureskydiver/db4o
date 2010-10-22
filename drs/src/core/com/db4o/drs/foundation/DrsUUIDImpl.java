@@ -6,18 +6,29 @@ import com.db4o.ext.*;
 
 public class DrsUUIDImpl implements DrsUUID {
 	
-	private final Db4oUUID _db4oUUID;
+	private final Signature _signature;
+	
+	private final long _longPart;
+	
+	public DrsUUIDImpl(Signature signature, long longPart){
+		_signature = signature;
+		_longPart = longPart;  
+	}
+	
+	public DrsUUIDImpl(byte[] signature, long longPart){
+		this(new Signature(signature), longPart);  
+	}
 	
 	public DrsUUIDImpl(Db4oUUID db4oUUID){
-		_db4oUUID = db4oUUID;
+		this(db4oUUID.getSignaturePart(), db4oUUID.getLongPart());
 	}
 
 	public long getLongPart() {
-		return _db4oUUID.getLongPart();
+		return _longPart;
 	}
 
 	public byte[] getSignaturePart() {
-		return _db4oUUID.getSignaturePart();
+		return _signature.bytes;
 	}
 
 	@Override
@@ -26,12 +37,12 @@ public class DrsUUIDImpl implements DrsUUID {
 			return false;
 		}
 		DrsUUIDImpl other = (DrsUUIDImpl) obj;
-		return _db4oUUID.equals(other._db4oUUID);
+		return _longPart == other._longPart && _signature.equals(other._signature);
 	}
 	
 	@Override
 	public int hashCode() {
-		return _db4oUUID.hashCode();
+		return ((int)_longPart) ^ _signature.hashCode() ;
 	}
 	
 }
