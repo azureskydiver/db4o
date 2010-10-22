@@ -150,6 +150,9 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			while(!_stopped) {
 				_pausableTasks.drainTo(list);
 				synchronized (_lock) {
+					if(_stopped){
+						return;
+					}
 					Iterator4<Block4> it = list.iterator();
 					while(it.moveNext()) {
 						it.current().run();
