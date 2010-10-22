@@ -360,14 +360,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		_container.delete(obj);
 	}
 
-	public boolean wasModifiedSinceLastReplication(
-			ReplicationReference reference) {
-		if (_idsReplicatedInThisSession != null) {
-			int id = (int) _container.getID(reference.object());
-			if (_idsReplicatedInThisSession.find(new TreeInt(id)) != null)
-				return false;
-		}
-
+	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
 		return reference.version() > getLastReplicationVersion();
 	}
 
