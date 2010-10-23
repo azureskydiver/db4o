@@ -24,6 +24,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 
 	private static final long INVALID_LOID = 0L;
 	
+	public static final long INVALID_TIMESTAMP = 0L;
+	
 	private final VodDatabase _vod;
 	
 	private DatastoreManager _dm;
@@ -52,7 +54,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		_dm.close();
 	}
 
-	public VodId idFor(long loid) {
+	public long timestampFor(long loid) {
 		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
 		Collection<ObjectLifecycleEvent> events = 
 			from(ObjectLifecycleEvent.class)
@@ -66,8 +68,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 				System.out.println("#idFor() found: " + objectLifecycleEvent);
 			}
 		}
-		long timestamp = events.isEmpty() ? 0 : events.iterator().next().timestamp();
-		return new VodId(loid, timestamp);
+		if(events.isEmpty()){
+			return INVALID_TIMESTAMP;
+		}
+		return events.iterator().next().timestamp();
 	}
 
 	public long store(Object obj) {
