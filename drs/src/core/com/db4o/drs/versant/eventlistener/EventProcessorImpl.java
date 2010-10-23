@@ -384,8 +384,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						_classLoid,
 						loid,
 						_operation.value,
-						_timeStamp,
-						_transactionId);
+						_timeStamp);
 			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(_transactionId);
 			if(events == null){
 				events = new java.util.LinkedList<ObjectLifecycleEvent>();
