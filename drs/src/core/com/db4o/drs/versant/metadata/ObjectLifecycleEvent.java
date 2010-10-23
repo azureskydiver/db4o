@@ -49,14 +49,11 @@ public class ObjectLifecycleEvent extends VodLoidAwareObject {
 	
 	private long timestamp;
 	
-	private String transactionId;
-	
-	public ObjectLifecycleEvent(long classMetadataLoid, long objectLoid, int operation, long timestamp, String transactionId) {
+	public ObjectLifecycleEvent(long classMetadataLoid, long objectLoid, int operation, long timestamp) {
 		this.classMetadataLoid = classMetadataLoid;
 		this.objectLoid = objectLoid;
 		this.operation = operation;
 		this.timestamp = timestamp;
-		this.transactionId = transactionId;
 	}
 
 	public ObjectLifecycleEvent(){
@@ -86,10 +83,6 @@ public class ObjectLifecycleEvent extends VodLoidAwareObject {
 	
 	public void timestamp(long newTimestamp){
 		timestamp = newTimestamp;
-	}
-	
-	public String transactionId(){
-		return transactionId;
 	}
 
 	@Override

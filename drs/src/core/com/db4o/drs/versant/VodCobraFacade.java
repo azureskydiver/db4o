@@ -9,7 +9,7 @@ public interface VodCobraFacade {
 
 	void close();
 
-	VodId idFor(long loid);
+	long timestampFor(long loid);
 
 	long store(Object obj);
 	

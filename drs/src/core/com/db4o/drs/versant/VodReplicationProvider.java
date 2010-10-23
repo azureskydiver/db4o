@@ -482,10 +482,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(loid == 0) {
 			return null;
 		}
-		VodId vodId = _cobra.idFor(loid);
-		Signature signature = produceSignatureFor(UuidConverter.databaseId(vodId.loid));
-		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, UuidConverter.longPartFromVod(vodId.loid));
-		return new VodReplicationReference(obj, uuid, vodId.timestamp);
+		long timestamp = _cobra.timestampFor(loid);
+		if(timestamp == VodCobra.INVALID_TIMESTAMP){
+			timestamp = timeStamp();
+		}
+		Signature signature = produceSignatureFor(UuidConverter.databaseId(loid));
+		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, UuidConverter.longPartFromVod(loid));
+		return new VodReplicationReference(obj, uuid, timestamp);
 	}
 	
 	public VodReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
