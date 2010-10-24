@@ -141,20 +141,14 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public final void replicate(Object root) {
-		try {
-			prepareGraphToBeReplicated(root);
+		prepareGraphToBeReplicated(root);
 
-			copyStateAcross(_providerA);
-			copyStateAcross(_providerB);
+		copyStateAcross(_providerA);
+		copyStateAcross(_providerB);
 
-			storeChangedObjectsIn(_providerA);
-			storeChangedObjectsIn(_providerB);
-		} finally {
-			_providerA.clearAllReferences();
-			_providerB.clearAllReferences();
-		}
+		storeChangedObjectsIn(_providerA);
+		storeChangedObjectsIn(_providerB);
 	}
-
 	
 	public void replicateDeletions(Class extent) {
 		replicateDeletions(extent, _providerA);
