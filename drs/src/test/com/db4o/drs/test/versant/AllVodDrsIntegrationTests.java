@@ -93,12 +93,12 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						ReplicationAfterDeletionTest.class,
 						
 						/*  Failing Tests */
-						// none for now
+// 						SimpleArrayTest.class,
 						
 						/* Tests that haven't been checked yet */
 						
 						// Simple
-//						SimpleArrayTest.class,
+						
 //						SimpleParentChild.class,
 //						ByteArrayTest.class,
 //						
