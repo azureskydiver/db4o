@@ -90,6 +90,7 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
  						TheSimplest.class,
 						UuidConversionTestCase.class,
 						ReplicationEventTest.class,
+						ReplicationAfterDeletionTest.class,
 						
 						/*  Failing Tests */
 						// none for now
@@ -97,7 +98,6 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						/* Tests that haven't been checked yet */
 						
 						// Simple
-//						ReplicationAfterDeletionTest.class,
 //						SimpleArrayTest.class,
 //						SimpleParentChild.class,
 //						ByteArrayTest.class,

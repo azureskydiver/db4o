@@ -17,6 +17,7 @@ import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
 import com.db4o.foundation.*;
 
 
@@ -435,7 +436,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, filter);
 		for (ObjectLifecycleEvent event : allEvents) {
-			loids.add(event.objectLoid());
+			if(Operations.forValue(event.operation()) != Operations.DELETE){
+				loids.add(event.objectLoid());
+			}
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
 		for (Long loid : loids) {
@@ -454,7 +457,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, fullQuery);
 		for (ObjectLifecycleEvent event : allEvents) {
-			loids.add(event.objectLoid());
+			if(Operations.forValue(event.operation()) != Operations.DELETE){
+				loids.add(event.objectLoid());
+			}
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
 		for (Long loid : loids) {
