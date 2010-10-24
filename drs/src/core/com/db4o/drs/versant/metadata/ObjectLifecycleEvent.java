@@ -4,6 +4,93 @@ package com.db4o.drs.versant.metadata;
 
 public class ObjectLifecycleEvent extends VodLoidAwareObject {
 	
+	private long signatureLoid;
+	
+	private long classMetadataLoid;
+	
+	private long objectLoid;
+	
+	private int operation;
+	
+	private long uuidLongPart; 
+	
+	private long modificationVersion;
+	
+	public ObjectLifecycleEvent(long signatureLoid, long classMetadataLoid, long objectLoid, int operation, long version) {
+		this.signatureLoid = signatureLoid; 
+		this.classMetadataLoid = classMetadataLoid;
+		this.objectLoid = objectLoid;
+		this.operation = operation;
+		uuidLongPart = version;
+		modificationVersion = version;
+	}
+
+	public ObjectLifecycleEvent(){
+		
+	}
+	
+	public void activate(){
+		// just access one field
+		classMetadataLoid();
+	}
+	
+	public long classMetadataLoid() {
+		return classMetadataLoid;
+	}
+
+	public long objectLoid() {
+		return objectLoid;
+	}
+
+	public int operation() {
+		return operation;
+	}
+	
+	public long uuidLongPart(){
+		return uuidLongPart;
+	}
+	
+	public void uuidLongPart(long newValue){
+		uuidLongPart = newValue;
+	}
+	
+	public long signatureLoid(){
+		return signatureLoid;
+	}
+	
+	public void signatureLoid(long loid) {
+		this.signatureLoid = loid;
+	}
+	
+	public long modificationVersion() {
+		return modificationVersion;
+	}
+
+	
+	public void modificationVersion(long version) {
+		modificationVersion = version;
+	}
+
+
+	@Override
+	public String toString() {
+		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,creation:" + uuidLongPart + ")";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof ObjectLifecycleEvent) ){
+			return false;
+		}
+		ObjectLifecycleEvent other = (ObjectLifecycleEvent) obj;
+		return objectLoid == other.objectLoid;
+	}
+
+	public void copyStateFrom(ObjectLifecycleEvent other) {
+		operation = other.operation;
+		modificationVersion = other.modificationVersion;
+	}
+	
 	public static class Operations {
 		
 		public final int value;
@@ -40,63 +127,8 @@ public class ObjectLifecycleEvent extends VodLoidAwareObject {
 		}
 		
 	}
-	
-	private long classMetadataLoid;
-	
-	private long objectLoid;
-	
-	private int operation;
-	
-	private long timestamp;
-	
-	public ObjectLifecycleEvent(long classMetadataLoid, long objectLoid, int operation, long timestamp) {
-		this.classMetadataLoid = classMetadataLoid;
-		this.objectLoid = objectLoid;
-		this.operation = operation;
-		this.timestamp = timestamp;
-	}
 
-	public ObjectLifecycleEvent(){
-		
-	}
-	
-	public void activate(){
-		// just access one field
-		timestamp();
-	}
-	
-	public long classMetadataLoid() {
-		return classMetadataLoid;
-	}
 
-	public long objectLoid() {
-		return objectLoid;
-	}
-
-	public int operation() {
-		return operation;
-	}
-	
-	public long timestamp(){
-		return timestamp;
-	}
-	
-	public void timestamp(long newTimestamp){
-		timestamp = newTimestamp;
-	}
-
-	@Override
-	public String toString() {
-		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,time:" + timestamp + ")";
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(! (obj instanceof ObjectLifecycleEvent) ){
-			return false;
-		}
-		ObjectLifecycleEvent other = (ObjectLifecycleEvent) obj;
-		return objectLoid == other.objectLoid && timestamp == other.timestamp && operation == other.operation;
-	}
 
 }
+		

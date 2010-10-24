@@ -124,7 +124,10 @@ public class ReplicationReflector {
 
 	public void copyState(Object to, Object from) {
 		
+		
 		ReflectClass fromClass = reflector().forObject(from);
+		
+		// FIXME: We need to get the classes parents fields copied too.
 
 		for (ReflectField f : fromClass.getDeclaredFields()) {
 			if (f.isStatic()) {

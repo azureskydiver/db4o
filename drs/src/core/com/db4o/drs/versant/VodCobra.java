@@ -2,7 +2,6 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.qlin.QLinSupport.descending;
 import static com.db4o.qlin.QLinSupport.prototype;
 
 import java.util.*;
@@ -11,6 +10,7 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.cobra.qlin.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.internal.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.qlin.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
@@ -54,24 +54,20 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		_dm.close();
 	}
 
-	public long timestampFor(long loid) {
+	public long uuidLongPart(long loid) {
 		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
-		Collection<ObjectLifecycleEvent> events = 
+		ObjectLifecycleEvent storedEvent = 
 			from(ObjectLifecycleEvent.class)
 				.where(event.objectLoid())
 				.equal(loid)
-				.orderBy(event.timestamp(), descending())
-				.limit(1)
-				.select();
+				.singleOrDefault(null);
 		if(DrsDebug.verbose){
-			for (ObjectLifecycleEvent objectLifecycleEvent : events) {
-				System.out.println("#idFor() found: " + objectLifecycleEvent);
-			}
+			System.out.println("#creationVersion() found: " + storedEvent);
 		}
-		if(events.isEmpty()){
+		if(storedEvent == null){
 			return INVALID_TIMESTAMP;
 		}
-		return events.iterator().next().timestamp();
+		return storedEvent.uuidLongPart();
 	}
 
 	public long store(Object obj) {
@@ -453,6 +449,22 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	
 	private Object[] datastoreLoids(String className) {
 		return executeQuery(new DatastoreQuery(className));
+	}
+	
+	public long queryForMySignatureLoid(){
+		DatabaseSignature databaseSignature = prototype(DatabaseSignature.class);
+		DatabaseSignature entry = from(DatabaseSignature.class)
+			.where(databaseSignature.databaseId())
+			.equal(databaseId())
+			.singleOrDefault(null);
+		if(entry == null){
+			return 0;
+		}
+		return entry.loid();
+	}
+	
+	public byte[] signatureBytes(int databaseId){
+		return new LatinStringIO().write("vod-" + databaseId);
 	}
 
 }

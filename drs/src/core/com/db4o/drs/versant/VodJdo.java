@@ -150,6 +150,7 @@ public class VodJdo implements VodJdoFacade {
 	public void addPreStoreListener(final PreStoreListener preStoreListener) {
 		_pm.addInstanceLifecycleListener(new PreStoreListenerWrapper(preStoreListener), null);
 	}
+	
 
 }
 
