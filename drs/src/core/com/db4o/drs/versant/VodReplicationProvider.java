@@ -32,7 +32,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodDatabaseIdFactory _idFactory;
 
-	private GenericObjectReferenceMap<VodReplicationReference> _replicationReferences = new GenericObjectReferenceMap<VodReplicationReference>();
+	private GenericObjectReferenceMap<ReplicationReferenceImpl> _replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	
 	private final Signatures _signatures = new Signatures();
 	
@@ -277,7 +277,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ReplicationReference produceReference(final Object obj, Object referencingObj, String fieldName) {
-		VodReplicationReference reference = _replicationReferences.get(obj);
+		ReplicationReferenceImpl reference = _replicationReferences.get(obj);
 		if (reference != null){
 			return reference;
 		}
@@ -310,7 +310,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		long version = counterpartReference.version();
 		
-		VodReplicationReference ref = new VodReplicationReference(obj, uuid, version, true);
+		ReplicationReferenceImpl ref = new ReplicationReferenceImpl(obj, uuid, version);
 		_replicationReferences.put(ref);
 		return ref;
 	}
@@ -380,19 +380,21 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalArgumentException(VodReplicationProvider.class.getSimpleName()+" can only handle " + PersistenceCapable.class.getSimpleName() + " objects");
 		}
 		
-		VodReplicationReference ref = _replicationReferences.get(obj);
+		ReplicationReferenceImpl ref = _replicationReferences.get(obj);
 		if (ref == null) {
 			throw new RuntimeException("Reference should always be available before storeReplica");
 		}
 		
 		ensureClassKnown(obj.getClass());
 		
+		long loid = _jdo.loid(obj);
 		
+		boolean isNew = loid == 0;
 		
 		_jdo.store(obj);
-		long loid = _jdo.loid(obj);
+		loid = _jdo.loid(obj);
 
-		if (ref.isNew()) {
+		if (isNew) {
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			int otherDb = _signatures.idFor(signature);
 			if(otherDb == 0) {
@@ -474,7 +476,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return produceReference(obj, null, null);
 	}
 	
-	private VodReplicationReference produceNewReference(final Object obj) {
+	private ReplicationReferenceImpl produceNewReference(final Object obj) {
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
@@ -499,14 +501,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalStateException("signature not expected to be null ");
 		}
 		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, info.uuidLongPart());
-		return new VodReplicationReference(obj, uuid, info.modificationVersion());
+		return new ReplicationReferenceImpl(obj, uuid, info.modificationVersion());
 	}
 	
-	public VodReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
+	public ReplicationReferenceImpl produceReferenceByUUID(DrsUUID uuid, Class hint) {
 		if(uuid == null){
 			throw new IllegalArgumentException();
 		}
-		VodReplicationReference reference = _replicationReferences.getByUUID(uuid);
+		ReplicationReferenceImpl reference = _replicationReferences.getByUUID(uuid);
 		if(reference != null){
 			return reference;
 		}
