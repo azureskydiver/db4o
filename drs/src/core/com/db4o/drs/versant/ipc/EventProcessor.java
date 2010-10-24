@@ -2,6 +2,7 @@ package com.db4o.drs.versant.ipc;
 
 import java.util.*;
 
+import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.rmi.*;
@@ -52,7 +53,9 @@ public interface EventProcessor {
 
 	Map<String, Long> ensureMonitoringEventsOn(String className);
 	
-	void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps);
+	void forceTimestampsAndSignatures(List<Pair<Long, Long>> loidTimeStamps, List<LoidSignatureLongPart> loidSignatureLongParts);
+	
+	long defaultSignatureLoid();
 
 
 }

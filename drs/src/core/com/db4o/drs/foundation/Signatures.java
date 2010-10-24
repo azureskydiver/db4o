@@ -8,27 +8,41 @@ public class Signatures {
 	
 	private final Map<Integer, Signature> _byId = new HashMap<Integer, Signature>();
 	
-	private final Map<Signature, Integer> _bySignature = new HashMap<Signature, Integer>();
+	private final Map<Signature, Integer> _idBySignature = new HashMap<Signature, Integer>();
+	
+	private final Map<Signature, Long> _loidBySignature = new HashMap<Signature, Long>();
 
-	public Signature signatureFor(int databaseId) {
+	private final Map<Long, Signature> _signatureByLoid = new HashMap<Long, Signature>();
+
+	public Signature signatureForDatabaseId(int databaseId) {
 		return _byId.get(databaseId);
 	}
 	
 	public int idFor(Signature signature) {
-		Integer id = _bySignature.get(signature);
+		Integer id = _idBySignature.get(signature);
 		if(id == null){
 			return 0;
 		}
 		return id;
 	}
 
-	public void add(int databaseId, Signature signature) {
+	public void add(int databaseId, Signature signature, long signatureLoid) {
 		_byId.put(databaseId, signature);
-		_bySignature.put(signature, databaseId);
+		_idBySignature.put(signature, databaseId);
+		_loidBySignature.put(signature, signatureLoid);
+		_signatureByLoid.put(signatureLoid, signature);
 	}
 
 	public int idFor(DrsUUID uuid) {
 		return idFor(new Signature(uuid.getSignaturePart()));
+	}
+	
+	public Long loidFor(Signature signature){
+		return _loidBySignature.get(signature);
+	}
+	
+	public Signature signatureForLoid(long signatureLoid){
+		return _signatureByLoid.get(signatureLoid);
 	}
 
 }

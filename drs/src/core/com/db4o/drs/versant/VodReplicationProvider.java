@@ -18,7 +18,6 @@ import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.encoding.*;
 
 
 public class VodReplicationProvider implements TestableReplicationProviderInside, LoidProvider {
@@ -51,6 +50,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private List<Pair<Long, Long>> _loidTimeStamps = new ArrayList<Pair<Long, Long>>(); 
 	
+	private List<LoidSignatureLongPart> _loidSignatures = new ArrayList<LoidSignatureLongPart>();
+	
 	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
 	
 	SimpleTimer _heartbeatTimer = new SimpleTimer(
@@ -79,7 +80,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		loadSignatures();
 		loadKnownClasses();
 		_myDatabaseId = _cobra.databaseId();
-		final Signature mySignature = produceSignatureFor(_myDatabaseId);
+		
+		final Signature mySignature = produceSignatureForDatabaseId(_myDatabaseId);
 		_jdo.commit();
 		prepareJdoListener();
 		_mySignature = new ReadonlyReplicationProviderSignature() {
@@ -97,8 +99,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_heartbeatThread.setDaemon(true);
 		_heartbeatThread.start();
 		
-		
-
 	}
 	
 	
@@ -119,8 +119,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 					 classMetadataLoid = ensureClassKnown(clazz);
 				}
 				long loid = loid(object);
-				log("ObjectLifecycleEvent added:" + timeStamp());
-				
+				log("Timestamp for " + loid + " preset to " + timeStamp());
 				_loidTimeStamps.add(new Pair(loid, timeStamp()));
 			}
 		});
@@ -154,7 +153,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			if(DrsDebug.verbose){
 				System.out.println(entry);
 			}
-			_signatures.add( entry.databaseId(),new Signature(entry.signature()));
+			_signatures.add( entry.databaseId(),new Signature(entry.signature()), entry.loid());
 		}
 	}
 	
@@ -162,8 +161,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void commit() {
 		timeStamp(syncEventProcessor().generateTimestamp());
 		_jdo.commit();
-		syncEventProcessor().forceTimestamps(_loidTimeStamps);
+		syncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
 		_loidTimeStamps.clear();
+		_loidSignatures.clear();
 	}
 
 	public void delete(Object obj) {
@@ -242,8 +242,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		timeStamp(raisedDatabaseVersion - 1);
 		
 		_jdo.commit();
-		syncEventProcessor().forceTimestamps(_loidTimeStamps);
+		syncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
 		_loidTimeStamps.clear();
+		_loidSignatures.clear();
 		
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion -1);
 		timeStamp(raisedDatabaseVersion);
@@ -252,7 +253,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		// FileReplicationProvider does this:
 		// _idsReplicatedInThisSession = null;
-		
 		
 		// HibernateReplicationProvider does this:
 		// _dirtyRefs.clear();
@@ -290,12 +290,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 	
 	private long loidFrom(DrsUUID uuid) {
-		long databaseId = _signatures.idFor(uuid);
-		if(databaseId == 0){
-			return 0;
+		Signature signature = new Signature(uuid.getSignaturePart()); 
+		ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
+		ObjectSet<ObjectLifecycleEvent> infos = _cobra.from(ObjectLifecycleEvent.class)
+			.where(objectLifecycleEvent.uuidLongPart()).equal(uuid.getLongPart()).select();
+		for (ObjectLifecycleEvent entry : infos) {
+			if(signature.equals(_signatures.signatureForLoid(entry.signatureLoid()))){
+				return entry.objectLoid();
+			}
 		}
-		long db4oLongPart = uuid.getLongPart();
-		return UuidConverter.vodLoidFrom(databaseId, db4oLongPart);
+		return 0;
 	}
 
 	public ReplicationReference referenceNewObject(Object obj,
@@ -303,6 +307,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			ReplicationReference referencingObjRef, String fieldName) {
 		
 		DrsUUID uuid = counterpartReference.uuid();
+		
 		long version = counterpartReference.version();
 		
 		VodReplicationReference ref = new VodReplicationReference(obj, uuid, version, true);
@@ -359,7 +364,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(peerId == 0){
 			peerId = _idFactory.createDatabaseIdFor(VodJvi.safeDatabaseName(peerSignature.asString()));
 			storeSignature(peerId, peerSignature);
-			_signatures.add(peerId, peerSignature);
 		}
 		return peerId;
 	}
@@ -383,28 +387,24 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		ensureClassKnown(obj.getClass());
 		
-		long loid = 0;
+		
+		
+		_jdo.store(obj);
+		long loid = _jdo.loid(obj);
+
 		if (ref.isNew()) {
-			
-			int otherDb = _signatures.idFor(new Signature(ref.uuid().getSignaturePart()));
+			Signature signature = new Signature(ref.uuid().getSignaturePart());
+			int otherDb = _signatures.idFor(signature);
 			if(otherDb == 0) {
 				throw new IllegalArgumentException("Unknown db id for " + ref.uuid());
 			}
 			long otherLongPart = ref.uuid().getLongPart();
 			
-			loid = UuidConverter.vodLoidFrom(otherDb, otherLongPart);
-			
-			_cobra.create(loid, obj);
-			_cobra.commit();
-			
-			_replicationReflector.copyState(_jdo.objectByLoid(loid), obj);
-				
-		} else {
-
-			loid = loidFrom(ref.uuid());
-			
-			// TODO: Why do we need to store here? Don't we have Transparent Persistence?
-			_jdo.store(obj);
+			_loidSignatures.add(
+					new LoidSignatureLongPart(
+							loid, 
+							_signatures.loidFor(signature), 
+							otherLongPart));
 		}
 		
 		logIdentity(obj, String.valueOf(loid));
@@ -429,9 +429,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public ObjectSet objectsChangedSinceLastReplication() {
 		long lastReplicationVersion = getLastReplicationVersion();
-		String fullQuery = "this.timestamp > " + lastReplicationVersion;
+		String filter = "this.modificationVersion > " + lastReplicationVersion;
 		Set<Long> loids = new HashSet<Long>();
-		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, fullQuery);
+		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, filter);
 		for (ObjectLifecycleEvent event : allEvents) {
 			loids.add(event.objectLoid());
 		}
@@ -445,7 +445,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		String query = "this.classMetadataLoid == " + _knownClasses.get(clazz.getName());
 		long lastReplicationVersion = getLastReplicationVersion();
-		String fullQuery = "this.timestamp > " + lastReplicationVersion;
+		String fullQuery = "this.modificationVersion > " + lastReplicationVersion;
 		if(query.length() > 0) {
 			fullQuery += " && " + query;
 		}
@@ -482,13 +482,24 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(loid == 0) {
 			return null;
 		}
-		long timestamp = _cobra.timestampFor(loid);
-		if(timestamp == VodCobra.INVALID_TIMESTAMP){
-			timestamp = timeStamp();
+		ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
+		ObjectLifecycleEvent info = 
+			_cobra.from(ObjectLifecycleEvent.class)
+				.where(objectLifecycleEvent.objectLoid())
+				.equal(loid)
+				.singleOrDefault(null);
+		if(DrsDebug.verbose){
+			System.out.println("#creationVersion() found: " + info);
 		}
-		Signature signature = produceSignatureFor(UuidConverter.databaseId(loid));
-		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, UuidConverter.longPartFromVod(loid));
-		return new VodReplicationReference(obj, uuid, timestamp);
+		if(info == null){
+			throw new IllegalStateException("no ObjectLifecycleEvent found");
+		}
+		Signature signature = _signatures.signatureForLoid(info.signatureLoid());
+		if(signature == null){
+			throw new IllegalStateException("signature not expected to be null ");
+		}
+		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, info.uuidLongPart());
+		return new VodReplicationReference(obj, uuid, info.modificationVersion());
 	}
 	
 	public VodReplicationReference produceReferenceByUUID(DrsUUID uuid, Class hint) {
@@ -499,8 +510,24 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(reference != null){
 			return reference;
 		}
+		ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
+		ObjectSet<ObjectLifecycleEvent> infos = _cobra
+			.from(ObjectLifecycleEvent.class)
+			.where(objectLifecycleEvent.uuidLongPart())
+			.equal(uuid.getLongPart())
+			.select();
+		if(infos.size() == 0){
+			return null;
+		}
 		
-		long loid = loidFrom(uuid);
+		long signatureLoid = _signatures.loidFor(new Signature(uuid.getSignaturePart()));
+		long loid = 0;
+		for (ObjectLifecycleEvent entry : infos) {
+			if(entry.signatureLoid() == signatureLoid){
+				loid = entry.objectLoid();
+				break;
+			}
+		}
 		
 		if(loid == 0){
 			throw new IllegalStateException("Could not create loid from " + uuid);
@@ -515,12 +542,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return reference; 
 	}
 
-	private Signature produceSignatureFor(int databaseId) {
-		Signature signature = _signatures.signatureFor(databaseId);
+	private Signature produceSignatureForDatabaseId(int databaseId) {
+		Signature signature = _signatures.signatureForDatabaseId(databaseId);
 		if(signature != null){
 			return signature;
 		}
-		signature = new Signature(signatureBytes(databaseId));
+		signature = new Signature(_cobra.signatureBytes(databaseId));
 		storeSignature(databaseId, signature);
 		return signature;
 	}
@@ -529,12 +556,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
 		_cobra.store(databaseSignature);
 		_cobra.commit();
-		_signatures.add(databaseId, signature);
+		_signatures.add(databaseId, signature, databaseSignature.loid());
 	}
 	
-	private byte[] signatureBytes(int databaseId){
-		return new LatinStringIO().write("vod-" + databaseId);
-	}
 
 	public long loid(Object obj) {
 		return _jdo.loid(obj);

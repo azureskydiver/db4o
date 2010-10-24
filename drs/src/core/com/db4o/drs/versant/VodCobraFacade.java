@@ -9,8 +9,6 @@ public interface VodCobraFacade {
 
 	void close();
 
-	long timestampFor(long loid);
-
 	long store(Object obj);
 	
 	void create(long loid, Object obj);
@@ -52,5 +50,10 @@ public interface VodCobraFacade {
 	String schemaName(Class clazz);
 	
 	boolean isKnownClass(Class clazz);
+	
+	long queryForMySignatureLoid();
+	
+	byte[] signatureBytes(int databaseId);
+
 	
 }

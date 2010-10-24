@@ -18,7 +18,7 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	
 	public void testStore(){
 		long expectedObjectLoid = 2;
-		ObjectLifecycleEvent objectLifecycleEvent = new ObjectLifecycleEvent(1, expectedObjectLoid, 3, 4);
+		ObjectLifecycleEvent objectLifecycleEvent = new ObjectLifecycleEvent(1, 1, expectedObjectLoid, 3, 4);
 		long loid = _cobra.store(objectLifecycleEvent);
 		Assert.isGreater(0, loid);
 		ObjectLifecycleEvent storedObjectLifecycleEvent = _cobra.objectByLoid(loid);
@@ -26,7 +26,7 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	}
 	
 	public void testQueryForExtent() {
-		ObjectLifecycleEvent original = new ObjectLifecycleEvent(1, 2, 3, 4);
+		ObjectLifecycleEvent original = new ObjectLifecycleEvent(1, 1, 2, 3, 4);
 		_cobra.store(original);
 		
 		Collection<ObjectLifecycleEvent> result = _cobra.query(ObjectLifecycleEvent.class);
@@ -50,7 +50,7 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		
 		Assert.areEqual(0, events.size());
 		
-		_cobra.store(new ObjectLifecycleEvent(1, objectLoid, 3, 4));
+		_cobra.store(new ObjectLifecycleEvent(1, 1, objectLoid, 3, 4));
 		
 		events = _cobra.from(ObjectLifecycleEvent.class)
 			  .where(event.objectLoid())

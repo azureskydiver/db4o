@@ -6,7 +6,6 @@ import com.db4o.drs.versant.eventlistener.*;
 public interface EventProcessorNetwork {
 
 	ClientChannelControl newClient(VodDatabase vod);
-	
 
 	ServerChannelControl prepareCommunicationChannel(EventProcessor eventProcessor, VodDatabase vod, VodEventClient client);
 	
@@ -16,9 +15,13 @@ public interface EventProcessorNetwork {
 	}
 	
 	public interface ClientChannelControl {
+		
 		EventProcessor sync();
+		
 		EventProcessor async();
+		
 		void stop();
+		
 		void join() throws InterruptedException;
 	}
 

@@ -6,7 +6,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
@@ -46,6 +45,11 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private Map<Long, Long> _loidTimeStamps = new HashMap<Long, Long>();
 	
+	private Map<Long, LoidSignatureLongPart> _loidUuids = new HashMap<Long, LoidSignatureLongPart>();
+	
+	private long _defaultSignatureLoid;
+	
+	
 	SimpleTimer _isolationWatchdogTimer = new SimpleTimer(
 		new Runnable() {
 			public void run() {
@@ -68,14 +72,14 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private final VodDatabase _vod;
 
 	public EventProcessorImpl(VodEventClient client, VodDatabase vod)  {
-		
 		_client = client;
 		this._vod = vod;
 	    _cobra = VodCobra.createInstance(vod);
-
 	    produceLastTimestamp();
 	    startChannelsFromKnownClasses();
+	    defaultSignatureLoid();
 	}
+
 
 	private void startChannelsFromKnownClasses() {
 		Collection<Long> classMetadataLoids = _cobra.loids(ClassMetadata.class);
@@ -289,16 +293,24 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 				for(ObjectLifecycleEvent event: events){
 					long objectLoid = event.objectLoid();
 					ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-					ObjectSet<ObjectLifecycleEvent> oldEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(objectLoid).select();
-					for (ObjectLifecycleEvent oldEvent : oldEvents) {
-						_cobra.delete(oldEvent.loid());
+					ObjectLifecycleEvent eventToStore = _cobra
+						.from(ObjectLifecycleEvent.class)
+						.where(objectLifecycleEvent.objectLoid())
+						.equal(objectLoid)
+						.singleOrDefault(event);
+					if(eventToStore != event){
+						eventToStore.copyStateFrom(event);
 					}
-					Long timestamp = _loidTimeStamps.get(objectLoid);
+					Long timestamp = _loidTimeStamps.remove(objectLoid);
 					if(timestamp != null){
-						event.timestamp(timestamp);
-						_loidTimeStamps.remove(timestamp);
+						eventToStore.modificationVersion(timestamp);
 					}
-					_cobra.store(event);
+					LoidSignatureLongPart loidSignatureLongPart = _loidUuids.remove(objectLoid);
+					if(loidSignatureLongPart!= null){
+						eventToStore.signatureLoid(loidSignatureLongPart.signatureLoid);
+						eventToStore.uuidLongPart(loidSignatureLongPart.longPart);
+					}
+					_cobra.store(eventToStore);
 					println("stored: " + event);
 				}
 			}
@@ -381,6 +393,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			
 			ObjectLifecycleEvent objectLifecycleEvent = 
 				new ObjectLifecycleEvent(
+						defaultSignatureLoid(),
 						_classLoid,
 						loid,
 						_operation.value,
@@ -393,13 +406,28 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			events.add(objectLifecycleEvent);
 			println("Event registered: " + objectLifecycleEvent);
 		}
-		
+
 		@Override
 		public String toString() {
 			return getClass().getSimpleName()+ ": " + _classLoid + ", " + _objectLoid + ", " + _operation;
 		}
 	}
-
+	
+	public long defaultSignatureLoid() {
+		if (_defaultSignatureLoid > 0) {
+			return _defaultSignatureLoid;
+		}
+		_defaultSignatureLoid = _cobra.queryForMySignatureLoid();
+		if (_defaultSignatureLoid != 0) {
+			return _defaultSignatureLoid;
+		}
+		DatabaseSignature databaseSignature = 
+			new DatabaseSignature(_cobra.databaseId(), _cobra.signatureBytes(_cobra.databaseId()));
+		_cobra.store(databaseSignature);
+		_cobra.commit();
+		_defaultSignatureLoid = databaseSignature.loid();
+		return _defaultSignatureLoid;
+	}
 
 	public void addListener(EventProcessorListener l) {
 		synchronized (_listeners) {
@@ -496,13 +524,16 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 	}
 	
-	public void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps) {
+	
+	public void forceTimestampsAndSignatures(List<Pair<Long, Long>> loidTimeStamps, List<LoidSignatureLongPart> loidUuids) {
 		synchronized (_lock) {
 			for (Pair<Long, Long> pair : loidTimeStamps) {
 				_loidTimeStamps.put(pair.first, pair.second);
 			}
+			for (LoidSignatureLongPart entry : loidUuids ) {
+				_loidUuids.put(entry.loid, entry);
+			}
 		}
 	}
-
 
 }

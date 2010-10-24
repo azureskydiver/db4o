@@ -216,7 +216,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				}
 				ObjectLifecycleEvent queriedEvent = objectLifecycleEvents.iterator().next();
 				Assert.areEqual(Operations.CREATE.value, queriedEvent.operation());
-				Assert.isGreater(1, queriedEvent.timestamp());
+				Assert.isGreater(1, queriedEvent.uuidLongPart());
 				Assert.isGreater(1, queriedEvent.classMetadataLoid());
 				return true;
 			}

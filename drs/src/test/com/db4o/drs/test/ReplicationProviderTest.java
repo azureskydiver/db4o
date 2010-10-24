@@ -220,7 +220,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().update(pilot);
 		a().provider().update(car);
 
-		a().provider().commit();
+		a().provider().commitAndWaitFor(pilot);
 
 		startReplication();
 
@@ -247,8 +247,9 @@ public class ReplicationProviderTest extends DrsTestCase {
 	}
 
 	private void tstReferences() {
-		a().provider().storeNew(new Pilot("tst References", 42));
-		a().provider().commit();
+		Pilot pilot = new Pilot("tst References", 42);
+		a().provider().storeNew(pilot);
+		a().provider().commitAndWaitFor(pilot);
 
 		startReplication();
 

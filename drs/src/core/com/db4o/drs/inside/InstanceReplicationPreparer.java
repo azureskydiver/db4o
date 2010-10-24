@@ -46,12 +46,12 @@ class InstanceReplicationPreparer implements Visitor {
 	 * Purpose: handle circular references
 	 * TODO Big Refactoring: Evolve this to handle ALL reference logic (!) and remove it from the providers. 
 	 */
-	private final IdentitySet4 _objectsPreparedToReplicate = new IdentitySet4(1000);
+	private final IdentitySet4 _objectsPreparedToReplicate = new IdentitySet4(100);
 	/**
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
-	private Map4 _counterpartRefsByOriginal = new IdentityHashtable4(10000);
+	private Map4 _counterpartRefsByOriginal = new IdentityHashtable4(100);
 	
 	private final ReplicationEventImpl _event;
 	private final ObjectStateImpl _stateInA;
