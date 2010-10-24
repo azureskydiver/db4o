@@ -6,7 +6,7 @@ import java.io.File;
 
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.metadata.VodLoidAwareObject;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent;
+import com.db4o.drs.versant.metadata.ObjectInfo;
 
 import db4ounit.ClassLevelFixtureTest;
 import db4ounit.TestLifeCycle;

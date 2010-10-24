@@ -18,21 +18,21 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	
 	public void testStore(){
 		long expectedObjectLoid = 2;
-		ObjectLifecycleEvent objectLifecycleEvent = new ObjectLifecycleEvent(1, 1, expectedObjectLoid, 3, 4);
-		long loid = _cobra.store(objectLifecycleEvent);
+		ObjectInfo objectInfo = new ObjectInfo(1, 1, expectedObjectLoid, 3, 4);
+		long loid = _cobra.store(objectInfo);
 		Assert.isGreater(0, loid);
-		ObjectLifecycleEvent storedObjectLifecycleEvent = _cobra.objectByLoid(loid);
-		Assert.areEqual(expectedObjectLoid, storedObjectLifecycleEvent.objectLoid());
+		ObjectInfo storedObjectInfo = _cobra.objectByLoid(loid);
+		Assert.areEqual(expectedObjectLoid, storedObjectInfo.objectLoid());
 	}
 	
 	public void testQueryForExtent() {
-		ObjectLifecycleEvent original = new ObjectLifecycleEvent(1, 1, 2, 3, 4);
+		ObjectInfo original = new ObjectInfo(1, 1, 2, 3, 4);
 		_cobra.store(original);
 		
-		Collection<ObjectLifecycleEvent> result = _cobra.query(ObjectLifecycleEvent.class);
+		Collection<ObjectInfo> result = _cobra.query(ObjectInfo.class);
 		
 		Assert.areEqual(1, result.size());
-		ObjectLifecycleEvent retrieved = result.iterator().next();
+		ObjectInfo retrieved = result.iterator().next();
 		Assert.areEqual(original, retrieved);
 	}
 	
@@ -40,20 +40,20 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		
 		long objectLoid = 42;
 		
-		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
+		ObjectInfo info = prototype(ObjectInfo.class);
 		
-		ObjectSet<ObjectLifecycleEvent> events = _cobra.from(ObjectLifecycleEvent.class)
-			  .where(event.objectLoid())
+		ObjectSet<ObjectInfo> events = _cobra.from(ObjectInfo.class)
+			  .where(info.objectLoid())
 			  .equal(objectLoid)
 			  .limit(1)
 			  .select();
 		
 		Assert.areEqual(0, events.size());
 		
-		_cobra.store(new ObjectLifecycleEvent(1, 1, objectLoid, 3, 4));
+		_cobra.store(new ObjectInfo(1, 1, objectLoid, 3, 4));
 		
-		events = _cobra.from(ObjectLifecycleEvent.class)
-			  .where(event.objectLoid())
+		events = _cobra.from(ObjectInfo.class)
+			  .where(info.objectLoid())
 			  .equal(objectLoid)
 			  .limit(1)
 			  .select();

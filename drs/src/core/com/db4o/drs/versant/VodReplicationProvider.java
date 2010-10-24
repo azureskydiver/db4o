@@ -17,7 +17,7 @@ import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.*;
+import com.db4o.drs.versant.metadata.ObjectInfo.*;
 import com.db4o.foundation.*;
 
 
@@ -103,7 +103,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 	
 	
-	private static final Class[] IGNORED_CLASSES = {ObjectLifecycleEvent.class};
+	private static final Class[] IGNORED_CLASSES = {ObjectInfo.class};
 
 	private void prepareJdoListener() {
 		_jdo.addPreStoreListener(new PreStoreListener() {
@@ -292,12 +292,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private long loidFrom(DrsUUID uuid) {
 		Signature signature = new Signature(uuid.getSignaturePart()); 
-		ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-		ObjectSet<ObjectLifecycleEvent> infos = _cobra.from(ObjectLifecycleEvent.class)
-			.where(objectLifecycleEvent.uuidLongPart()).equal(uuid.getLongPart()).select();
-		for (ObjectLifecycleEvent entry : infos) {
-			if(signature.equals(_signatures.signatureForLoid(entry.signatureLoid()))){
-				return entry.objectLoid();
+		ObjectInfo objectInfo = prototype(ObjectInfo.class);
+		ObjectSet<ObjectInfo> infos = _cobra.from(ObjectInfo.class)
+			.where(objectInfo.uuidLongPart()).equal(uuid.getLongPart()).select();
+		for (ObjectInfo info : infos) {
+			if(signature.equals(_signatures.signatureForLoid(info.signatureLoid()))){
+				return info.objectLoid();
 			}
 		}
 		return 0;
@@ -434,10 +434,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		long lastReplicationVersion = getLastReplicationVersion();
 		String filter = "this.modificationVersion > " + lastReplicationVersion;
 		Set<Long> loids = new HashSet<Long>();
-		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, filter);
-		for (ObjectLifecycleEvent event : allEvents) {
-			if(Operations.forValue(event.operation()) != Operations.DELETE){
-				loids.add(event.objectLoid());
+		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
+		for (ObjectInfo info : infos) {
+			if(Operations.forValue(info.operation()) != Operations.DELETE){
+				loids.add(info.objectLoid());
 			}
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
@@ -455,10 +455,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			fullQuery += " && " + query;
 		}
 		Set<Long> loids = new HashSet<Long>();
-		Collection<ObjectLifecycleEvent> allEvents = _jdo.query(ObjectLifecycleEvent.class, fullQuery);
-		for (ObjectLifecycleEvent event : allEvents) {
-			if(Operations.forValue(event.operation()) != Operations.DELETE){
-				loids.add(event.objectLoid());
+		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, fullQuery);
+		for (ObjectInfo info : infos) {
+			if(Operations.forValue(info.operation()) != Operations.DELETE){
+				loids.add(info.objectLoid());
 			}
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
@@ -489,10 +489,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(loid == 0) {
 			return null;
 		}
-		ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-		ObjectLifecycleEvent info = 
-			_cobra.from(ObjectLifecycleEvent.class)
-				.where(objectLifecycleEvent.objectLoid())
+		ObjectInfo objectInfo = prototype(ObjectInfo.class);
+		ObjectInfo info = 
+			_cobra.from(ObjectInfo.class)
+				.where(objectInfo.objectLoid())
 				.equal(loid)
 				.singleOrDefault(null);
 		if(DrsDebug.verbose){
@@ -517,10 +517,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(reference != null){
 			return reference;
 		}
-		ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-		ObjectSet<ObjectLifecycleEvent> infos = _cobra
-			.from(ObjectLifecycleEvent.class)
-			.where(objectLifecycleEvent.uuidLongPart())
+		ObjectInfo objectInfo = prototype(ObjectInfo.class);
+		ObjectSet<ObjectInfo> infos = _cobra
+			.from(ObjectInfo.class)
+			.where(objectInfo.uuidLongPart())
 			.equal(uuid.getLongPart())
 			.select();
 		if(infos.size() == 0){
@@ -529,9 +529,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		long signatureLoid = _signatures.loidFor(new Signature(uuid.getSignaturePart()));
 		long loid = 0;
-		for (ObjectLifecycleEvent entry : infos) {
-			if(entry.signatureLoid() == signatureLoid){
-				loid = entry.objectLoid();
+		for (ObjectInfo info : infos) {
+			if(info.signatureLoid() == signatureLoid){
+				loid = info.objectLoid();
 				break;
 			}
 		}

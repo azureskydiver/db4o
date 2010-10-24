@@ -55,19 +55,19 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public long uuidLongPart(long loid) {
-		ObjectLifecycleEvent event = prototype(ObjectLifecycleEvent.class);
-		ObjectLifecycleEvent storedEvent = 
-			from(ObjectLifecycleEvent.class)
-				.where(event.objectLoid())
+		ObjectInfo objectInfo = prototype(ObjectInfo.class);
+		ObjectInfo storedInfo = 
+			from(ObjectInfo.class)
+				.where(objectInfo.objectLoid())
 				.equal(loid)
 				.singleOrDefault(null);
 		if(DrsDebug.verbose){
-			System.out.println("#creationVersion() found: " + storedEvent);
+			System.out.println("#creationVersion() found: " + storedInfo);
 		}
-		if(storedEvent == null){
+		if(storedInfo == null){
 			return INVALID_TIMESTAMP;
 		}
-		return storedEvent.uuidLongPart();
+		return storedInfo.uuidLongPart();
 	}
 
 	public long store(Object obj) {

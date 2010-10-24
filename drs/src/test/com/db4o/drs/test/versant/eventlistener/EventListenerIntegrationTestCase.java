@@ -12,7 +12,7 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
+import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.foundation.*;
 
 import static com.db4o.qlin.QLinSupport.*;
@@ -26,7 +26,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
 				final Item item = storeAndCommitItem();
-				Assert.isTrue(checkObjectLifeCycleEventFor(item, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
+				Assert.isTrue(checkObjectInfoFor(item, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
 				return null;
 			}
 		});
@@ -46,7 +46,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				// TODO: check we only have one commit in the event processor
 
 				final Item item = storeAndCommitItem();
-				Assert.isTrue(checkObjectLifeCycleEventFor(item, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
+				Assert.isTrue(checkObjectInfoFor(item, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
 				return null;
 			}
 		});
@@ -84,7 +84,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				_provider.runIsolated(new Block4() {
 					public void run() {
 						pair.value = storeAndCommitItemByOtherUser();
-						Assert.isFalse(checkObjectLifeCycleEventFor(pair.value.first, pair.value.second, 3000), "ObjectLifecycleEvent stored during isolation.");
+						Assert.isFalse(checkObjectInfoFor(pair.value.first, pair.value.second, 3000), "ObjectLifecycleEvent stored during isolation.");
 					}
 				});
 				
@@ -114,7 +114,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				transactionQueue.next();
 				
 				// Runtime4.sleep(10000);
-				Assert.isTrue(checkObjectLifeCycleEventFor(pair.value.first, pair.value.second, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
+				Assert.isTrue(checkObjectInfoFor(pair.value.first, pair.value.second, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
 				pair.value.first.close();
 
 				return null;
@@ -197,24 +197,24 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		return new Pair(jdo, item);
 	}
 	
-	private boolean checkObjectLifeCycleEventFor(final Item item,long timeout) {
-		return checkObjectLifeCycleEventFor(_provider, item, timeout);
+	private boolean checkObjectInfoFor(final Item item,long timeout) {
+		return checkObjectInfoFor(_provider, item, timeout);
 	}
 
-	private boolean checkObjectLifeCycleEventFor(final LoidProvider jdo, final Item item,
+	private boolean checkObjectInfoFor(final LoidProvider jdo, final Item item,
 			long timeout) {
 		boolean result = Runtime4.retry(timeout, new Closure4<Boolean>() {
 			public Boolean run() {
 				
 				final long objectLoid = jdo.loid(item);
 				
-				ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-				ObjectSet<ObjectLifecycleEvent> objectLifecycleEvents = _cobra.from(ObjectLifecycleEvent.class).where(objectLifecycleEvent.objectLoid()).equal(objectLoid).select();
+				ObjectInfo objectInfo = prototype(ObjectInfo.class);
+				ObjectSet<ObjectInfo> objectInfos = _cobra.from(ObjectInfo.class).where(objectInfo.objectLoid()).equal(objectLoid).select();
 				// System.err.println("objectLifecycleEvents.size() " + objectLifecycleEvents.size());
-				if(objectLifecycleEvents.size() != 1){
+				if(objectInfos.size() != 1){
 					return false;
 				}
-				ObjectLifecycleEvent queriedEvent = objectLifecycleEvents.iterator().next();
+				ObjectInfo queriedEvent = objectInfos.iterator().next();
 				Assert.areEqual(Operations.CREATE.value, queriedEvent.operation());
 				Assert.isGreater(1, queriedEvent.uuidLongPart());
 				Assert.isGreater(1, queriedEvent.classMetadataLoid());
@@ -237,7 +237,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		
 					final EventProcessor ep = _provider.syncEventProcessor();
 					
-					Assert.isTrue(checkObjectLifeCycleEventFor(_provider, storeAndCommitItem(), 1000));
+					Assert.isTrue(checkObjectInfoFor(_provider, storeAndCommitItem(), 1000));
 					
 					_provider.runIsolated(new Block4() {
 						
@@ -245,12 +245,12 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 							long timeout = EventProcessorImpl.ISOLATION_TIMEOUT;
 							Pair<VodJdoFacade,Item> pair = storeAndCommitItemByOtherUser();
 							
-							Assert.isFalse(checkObjectLifeCycleEventFor(pair.first, pair.second, timeout/2));
+							Assert.isFalse(checkObjectInfoFor(pair.first, pair.second, timeout/2));
 							pair.first.close();
 							
 							Runtime4.sleepThrowsOnInterrupt(EventProcessorImpl.ISOLATION_TIMEOUT);
 							pair = storeAndCommitItemByOtherUser();
-							Assert.isTrue(checkObjectLifeCycleEventFor(pair.first, pair.second, timeout/2));
+							Assert.isTrue(checkObjectInfoFor(pair.first, pair.second, timeout/2));
 							pair.first.close();
 							
 							Assert.isTrue(ep.requestIsolation(true));
