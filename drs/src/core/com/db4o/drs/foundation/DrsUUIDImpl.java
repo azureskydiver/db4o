@@ -45,4 +45,9 @@ public class DrsUUIDImpl implements DrsUUID {
 		return ((int)_longPart) ^ _signature.hashCode() ;
 	}
 	
+	@Override
+	public String toString() {
+		return "longpart " + _longPart + " signature " + _signature.asString();
+	}
+	
 }
