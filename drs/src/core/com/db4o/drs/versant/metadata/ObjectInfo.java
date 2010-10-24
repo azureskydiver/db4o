@@ -2,7 +2,7 @@
 
 package com.db4o.drs.versant.metadata;
 
-public class ObjectLifecycleEvent extends VodLoidAwareObject {
+public class ObjectInfo extends VodLoidAwareObject {
 	
 	private long signatureLoid;
 	
@@ -16,7 +16,7 @@ public class ObjectLifecycleEvent extends VodLoidAwareObject {
 	
 	private long modificationVersion;
 	
-	public ObjectLifecycleEvent(long signatureLoid, long classMetadataLoid, long objectLoid, int operation, long version) {
+	public ObjectInfo(long signatureLoid, long classMetadataLoid, long objectLoid, int operation, long version) {
 		this.signatureLoid = signatureLoid; 
 		this.classMetadataLoid = classMetadataLoid;
 		this.objectLoid = objectLoid;
@@ -25,7 +25,7 @@ public class ObjectLifecycleEvent extends VodLoidAwareObject {
 		modificationVersion = version;
 	}
 
-	public ObjectLifecycleEvent(){
+	public ObjectInfo(){
 		
 	}
 	
@@ -79,14 +79,14 @@ public class ObjectLifecycleEvent extends VodLoidAwareObject {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(! (obj instanceof ObjectLifecycleEvent) ){
+		if(! (obj instanceof ObjectInfo) ){
 			return false;
 		}
-		ObjectLifecycleEvent other = (ObjectLifecycleEvent) obj;
+		ObjectInfo other = (ObjectInfo) obj;
 		return objectLoid == other.objectLoid;
 	}
 
-	public void copyStateFrom(ObjectLifecycleEvent other) {
+	public void copyStateFrom(ObjectInfo other) {
 		operation = other.operation;
 		modificationVersion = other.modificationVersion;
 	}

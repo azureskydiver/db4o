@@ -11,7 +11,7 @@ import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ServerChannelControl;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectLifecycleEvent.Operations;
+import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.drs.versant.metadata.ClassMetadata;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -41,7 +41,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 
 	private final Object _lock = new Object();
 	
-	private final Map<String, List<ObjectLifecycleEvent>> _objectLifecycleEvents = new HashMap<String, List<ObjectLifecycleEvent>>();
+	private final Map<String, List<ObjectInfo>> _objectInfos = new HashMap<String, List<ObjectInfo>>();
 	
 	private Map<Long, Long> _loidTimeStamps = new HashMap<Long, Long>();
 	
@@ -288,40 +288,40 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private void commit(String transactionId) {
 		synchronized (_lock) {
-			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(transactionId);
-			if(events != null){
-				for(ObjectLifecycleEvent event: events){
+			List<ObjectInfo> infos = _objectInfos.get(transactionId);
+			if(infos != null){
+				for(ObjectInfo event: infos){
 					long objectLoid = event.objectLoid();
-					ObjectLifecycleEvent objectLifecycleEvent = prototype(ObjectLifecycleEvent.class);
-					ObjectLifecycleEvent eventToStore = _cobra
-						.from(ObjectLifecycleEvent.class)
-						.where(objectLifecycleEvent.objectLoid())
+					ObjectInfo objectInfo = prototype(ObjectInfo.class);
+					ObjectInfo infoToStore = _cobra
+						.from(ObjectInfo.class)
+						.where(objectInfo.objectLoid())
 						.equal(objectLoid)
 						.singleOrDefault(event);
-					if(eventToStore != event){
-						eventToStore.copyStateFrom(event);
+					if(infoToStore != event){
+						infoToStore.copyStateFrom(event);
 					}
 					Long timestamp = _loidTimeStamps.remove(objectLoid);
 					if(timestamp != null){
-						eventToStore.modificationVersion(timestamp);
+						infoToStore.modificationVersion(timestamp);
 					}
 					LoidSignatureLongPart loidSignatureLongPart = _loidUuids.remove(objectLoid);
 					if(loidSignatureLongPart!= null){
-						eventToStore.signatureLoid(loidSignatureLongPart.signatureLoid);
-						eventToStore.uuidLongPart(loidSignatureLongPart.longPart);
+						infoToStore.signatureLoid(loidSignatureLongPart.signatureLoid);
+						infoToStore.uuidLongPart(loidSignatureLongPart.longPart);
 					}
-					_cobra.store(eventToStore);
+					_cobra.store(infoToStore);
 					println("stored: " + event);
 				}
 			}
-			_objectLifecycleEvents.remove(transactionId);
+			_objectInfos.remove(transactionId);
 			_commitTimestamp.value(lastTimestamp());
 			_cobra.store(_commitTimestamp);
 			_cobra.commit();
 			
-			if(events != null){
-				for(ObjectLifecycleEvent event: events){
-					long objectLoid = event.objectLoid();
+			if(infos != null){
+				for(ObjectInfo info: infos){
+					long objectLoid = info.objectLoid();
 					listenerTrigger().onEvent(objectLoid);
 				}
 			}
@@ -391,20 +391,20 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			
 			long loid = VodCobra.loidAsLong(_objectLoid);
 			
-			ObjectLifecycleEvent objectLifecycleEvent = 
-				new ObjectLifecycleEvent(
+			ObjectInfo objectInfo = 
+				new ObjectInfo(
 						defaultSignatureLoid(),
 						_classLoid,
 						loid,
 						_operation.value,
 						_timeStamp);
-			List<ObjectLifecycleEvent> events = _objectLifecycleEvents.get(_transactionId);
-			if(events == null){
-				events = new java.util.LinkedList<ObjectLifecycleEvent>();
-				_objectLifecycleEvents.put(_transactionId, events);
+			List<ObjectInfo> infos = _objectInfos.get(_transactionId);
+			if(infos == null){
+				infos = new java.util.LinkedList<ObjectInfo>();
+				_objectInfos.put(_transactionId, infos);
 			}
-			events.add(objectLifecycleEvent);
-			println("Event registered: " + objectLifecycleEvent);
+			infos.add(objectInfo);
+			println("Event registered: " + objectInfo);
 		}
 
 		@Override

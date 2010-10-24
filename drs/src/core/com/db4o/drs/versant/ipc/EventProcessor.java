@@ -12,7 +12,7 @@ public interface EventProcessor {
 	/**
 	 * <p>
 	 * Requires the EventProcessor to stop processing
-	 * {@link ObjectLifecycleEvent}s in order to replicate state between the two
+	 * {@link ObjectInfo}s in order to replicate state between the two
 	 * peers.
 	 * <p>
 	 * It will returns <code>true</code> if the this call actually changed the
@@ -21,7 +21,7 @@ public interface EventProcessor {
 	 * 
 	 * @param isolated
 	 *            <code>true</code> to start queueing
-	 *            {@link ObjectLifecycleEvent}, <code>false</code> to resume
+	 *            {@link ObjectInfo}, <code>false</code> to resume
 	 *            processing them.
 	 * @return whether or not the isolation mode was affected by the request.
 	 */
