@@ -4,6 +4,11 @@
     <package name="com.db4o.drs.test">
     	<class name="com.db4o.drs.test.Car"/>
     	<class name="com.db4o.drs.test.Pilot"/>
+    	<class name="com.db4o.drs.test.R0"/>
+    	<class name="com.db4o.drs.test.R1"/>
+    	<class name="com.db4o.drs.test.R2"/>
+    	<class name="com.db4o.drs.test.R3"/>
+    	<class name="com.db4o.drs.test.R4"/>
     	<class name="com.db4o.drs.test.SimpleArrayContent"/>
    		<class name="com.db4o.drs.test.SimpleArrayHolder"/>
     	<class name="com.db4o.drs.test.SPCParent"/>
