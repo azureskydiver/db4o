@@ -164,9 +164,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		syncEventProcessor().requestIsolation(true);
 		try {
 			_jdo.commit();
-			syncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
+			asyncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
 		} finally {
-			syncEventProcessor().requestIsolation(false);
+			asyncEventProcessor().requestIsolation(false);
 		}
 		_loidTimeStamps.clear();
 		_loidSignatures.clear();

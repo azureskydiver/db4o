@@ -58,8 +58,9 @@ public class ProxyObject<T> implements Peer<T> {
 					}
 					r.addCallback(callback);
 				}
-				if (method.getReturnType().isPrimitive()) {
-					return 0;
+				Class<?> type = method.getReturnType();
+				if (type.isPrimitive()) {
+					return (type == Boolean.class || type == Boolean.TYPE) ? false : 0;
 				}
 				return null;
 			}
