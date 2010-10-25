@@ -53,9 +53,7 @@ public class IsAliveConcurrencyTestCase extends Db4oClientServerTestCase impleme
 		}
 	}
 
-	class Item {
-		public Item() {
-		}
+	public static class Item {
 	}
 	
 	private static ClientObjectContainer client;
