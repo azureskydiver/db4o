@@ -290,16 +290,16 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		synchronized (_lock) {
 			List<ObjectInfo> infos = _objectInfos.get(transactionId);
 			if(infos != null){
-				for(ObjectInfo event: infos){
-					long objectLoid = event.objectLoid();
+				for(ObjectInfo info: infos){
+					long objectLoid = info.objectLoid();
 					ObjectInfo objectInfo = prototype(ObjectInfo.class);
 					ObjectInfo infoToStore = _cobra
 						.from(ObjectInfo.class)
 						.where(objectInfo.objectLoid())
 						.equal(objectLoid)
-						.singleOrDefault(event);
-					if(infoToStore != event){
-						infoToStore.copyStateFrom(event);
+						.singleOrDefault(info);
+					if(infoToStore != info){
+						infoToStore.copyStateFrom(info);
 					}
 					Long timestamp = _loidTimeStamps.remove(objectLoid);
 					if(timestamp != null){
@@ -311,7 +311,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						infoToStore.uuidLongPart(loidSignatureLongPart.longPart);
 					}
 					_cobra.store(infoToStore);
-					println("stored: " + event);
+					println("stored: " + info);
 				}
 			}
 			_objectInfos.remove(transactionId);
