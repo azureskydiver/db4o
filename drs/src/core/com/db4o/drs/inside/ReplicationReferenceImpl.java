@@ -50,20 +50,13 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 
 	public final boolean equals(Object o) {
 		if (this == o) return true;
-
-		if (o == null || o.getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
-
-		final ReplicationReference that = (ReplicationReferenceImpl) o;
-
-		if (_version != that.version()) return false;
-		return _uuid.equals(that.uuid());
+		if (o == null || o.getClass() != getClass()) return false;
+		final ReplicationReferenceImpl other = (ReplicationReferenceImpl) o;
+		return _version == other._version && _uuid.equals(other._uuid);
 	}
 
 	public final int hashCode() {
-		int result;
-		result = _uuid.hashCode();
-		result = 29 * result + (int) (_version ^ (_version >>> 32));
-		return result;
+		return 29 * _uuid.hashCode() + (int) (_version ^ (_version >>> 32));
 	}
 
 	public boolean isCounterpartNew() {
