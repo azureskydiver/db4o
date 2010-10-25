@@ -52,7 +52,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		sah.add(sac1);
 		sah.add(sac2);
 		a().provider().storeNew(sah);
-		a().provider().commit();
+		a().provider().commitAndWaitFor(sah);
 
 		ensureContent(a(), new String[]{"h1"}, new String[]{"c1", "c2"});
 	}
@@ -78,7 +78,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		b().provider().update(sac2);
 		b().provider().update(sah);
 
-		b().provider().commit();
+		b().provider().commitAndWaitFor(sah);
 
 		ensureContent(b(), new String[]{"h2"}, new String[]{"co1", "co2"});
 	}
@@ -99,7 +99,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		sah.add(lc3);
 
 		a().provider().update(sah);
-		a().provider().commit();
+		a().provider().commitAndWaitFor(sah);
 
 		ensureContent(a(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
@@ -123,12 +123,10 @@ public class SimpleArrayTest extends DrsTestCase {
 		while (iterator.hasNext()) {
 			SimpleArrayHolder lh = (SimpleArrayHolder) iterator.next();
 			Assert.areEqual(holderNames[i], lh.getName());
-			//Test.ensure(holderNames[i].equals(lh.getName()));
 
 			SimpleArrayContent[] sacs = lh.getArr();
 			for (int j = 0; j < contentNames.length; j++) {
 				Assert.areEqual(contentNames[j], sacs[j].getName());
-				//Test.ensure(contentNames[j].equals(sacs[j].getName()));
 			}
 		}
 	}

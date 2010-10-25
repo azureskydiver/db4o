@@ -108,8 +108,8 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 		_counterPart = obj;
 	}
 
-	public void markForReplicating() {
-		_markedForReplicating = true;
+	public void markForReplicating(boolean flag) {
+		_markedForReplicating = flag;
 	}
 
 	public boolean isMarkedForReplicating() {

@@ -4,7 +4,6 @@ package com.db4o.drs.foundation;
 
 public interface DrsUUID {
 	
-	// might become: 64-Bit id (db4o format)
 	long getLongPart();
 	
 	byte[] getSignaturePart();

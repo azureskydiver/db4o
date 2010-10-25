@@ -29,6 +29,7 @@ import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 public final class GenericReplicationSession implements ReplicationSession {
+	
 	private static final int SIZE = 10000;
 
 	private final ReplicationReflector _reflector;
@@ -47,7 +48,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	private long _lastReplicationVersion;
 
-	private HashSet4 _processedUuids;
+	private HashSet4 _processedUuids = new HashSet4(SIZE);
 
 	private boolean _isReplicatingOnlyDeletions;
 
@@ -82,8 +83,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 				_lastReplicationVersion = _providerA.getLastReplicationVersion();
 			}
 		});
-
-		resetProcessedUuids();
+		
 	}
 
 	public final void checkConflict(Object root) {
@@ -141,13 +141,17 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public final void replicate(Object root) {
-		prepareGraphToBeReplicated(root);
+		try {
+			prepareGraphToBeReplicated(root);
+			copyStateAcross(_providerA, _providerB);
+			copyStateAcross(_providerB, _providerA);
 
-		copyStateAcross(_providerA);
-		copyStateAcross(_providerB);
-
-		storeChangedObjectsIn(_providerA);
-		storeChangedObjectsIn(_providerB);
+			storeChangedObjectsIn(_providerA);
+			storeChangedObjectsIn(_providerB);
+		} finally {
+			_providerA.clearAllReferences();
+			_providerB.clearAllReferences();
+		}
 	}
 	
 	public void replicateDeletions(Class extent) {
@@ -183,49 +187,49 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_traverser.traverseGraph(root, new InstanceReplicationPreparer(_providerA, _providerB, _directionTo, _listener, _isReplicatingOnlyDeletions, _lastReplicationVersion, _processedUuids, _traverser, _reflector, _collectionHandler));
 	}
 
-	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
+	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
 		ReflectClass componentType = _reflector.getComponentType(claxx);
 		int[] dimensions = _reflector.arrayDimensions(original);
 		Object result = _reflector.newArrayInstance(componentType, dimensions);
 		Object[] flatContents = _reflector.arrayContents(original); //TODO Optimize: Copy the structure without flattening. Do this in ReflectArray.
 		if (!(_reflector.isValueType(claxx)||_reflector.isValueType(componentType)))
-			replaceWithCounterparts(flatContents, sourceProvider);
+			replaceWithCounterparts(flatContents, sourceProvider, targetProvider);
 		_reflector.arrayShape(flatContents, 0, result, dimensions, 0);
 		return result;
 	}
 
 
-	private void copyFieldValuesAcross(Object src, Object dest, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
+	private void copyFieldValuesAcross(Object src, Object dest, ReflectClass claxx, ReplicationProviderInside sourceProvider, ReplicationProviderInside targetProvider) {
 		final Iterator4 fields = FieldIterators.persistentFields(claxx);
 		while (fields.moveNext()) {
 			ReflectField field = (ReflectField) fields.current();
 			Object value = field.get(src);
-			field.set(dest, findCounterpart(value, sourceProvider));
+			field.set(dest, findCounterpart(value, sourceProvider, targetProvider));
 		}
 
 		ReflectClass superclass = claxx.getSuperclass();
 		if (superclass == null) return;
-		copyFieldValuesAcross(src, dest, superclass, sourceProvider);
+		copyFieldValuesAcross(src, dest, superclass, sourceProvider, targetProvider);
 	}
 
-	private void copyStateAcross(final ReplicationProviderInside sourceProvider) {
+	private void copyStateAcross(final ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
 		if (_directionTo == sourceProvider) return;
 		sourceProvider.visitCachedReferences(new Visitor4() {
 			public void visit(Object obj) {
-				copyStateAcross((ReplicationReference) obj, sourceProvider);
+				copyStateAcross((ReplicationReference) obj, sourceProvider, targetProvider);
 			}
 		});
 	}
 
-	private void copyStateAcross(ReplicationReference sourceRef, ReplicationProviderInside sourceProvider) {
+	private void copyStateAcross(ReplicationReference sourceRef, ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
 		if (!sourceRef.isMarkedForReplicating()) return;
-		copyStateAcross(sourceRef.object(), sourceRef.counterpart(), sourceProvider);
+		copyStateAcross(sourceRef.object(), sourceRef.counterpart(), sourceProvider, targetProvider);
 	}
 
-	private void copyStateAcross(Object source, Object dest, final ReplicationProviderInside sourceProvider) {
+	private void copyStateAcross(Object source, Object dest, final ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
 		ReflectClass claxx = _reflector.forObject(source);
 		
-		copyFieldValuesAcross(source, dest, claxx, sourceProvider);
+		copyFieldValuesAcross(source, dest, claxx, sourceProvider, targetProvider);
 	}
 
 	private void deleteInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
@@ -233,7 +237,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		destination.replicateDeletion(reference.uuid());
 	}
 
-	private Object findCounterpart(Object value, ReplicationProviderInside sourceProvider) {
+	private Object findCounterpart(Object value, ReplicationProviderInside sourceProvider, ReplicationProviderInside targetProvider) {
 		if (value == null) return null;
 		
 		// TODO: need to clone and findCounterpart of each reference object in the
@@ -241,29 +245,34 @@ public final class GenericReplicationSession implements ReplicationSession {
 		if (ReplicationPlatform.isValueType(value)) return value;
 		
 		ReflectClass claxx = _reflector.forObject(value);
-		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
+		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider, targetProvider);
 		if (Platform4.isTransient(claxx)) return null; // TODO: make it a warning
 		if (_reflector.isValueType(claxx)) return value;
 		
 		if (_collectionHandler.canHandle(value)){
-			return collectionClone(value, claxx, sourceProvider);
+			return collectionClone(value, claxx, sourceProvider, targetProvider);
 		}
-
+		
 		//if value is a Collection, result should be found by passing in just the value
 		ReplicationReference ref = sourceProvider.produceReference(value, null, null);
-		if (ref == null)
-			throw new NullPointerException("unable to find the ref of " + value + " of class " + value.getClass());
-		
+		if (ref == null){
+			throw new IllegalStateException("unable to find the ref of " + value + " of class " + value.getClass());
+		}
 		Object result = ref.counterpart();
-		if (result == null)
-			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
-		return result;
+		if (result != null){
+			return result;
+		}
+		ReplicationReference targetRef = targetProvider.produceReferenceByUUID(ref.uuid(), value.getClass());
+		if(targetRef == null){
+			throw new IllegalStateException("unable to find the counterpart of " + value + " of class " + value.getClass());
+		}
+		return targetRef.object();
 	}
 
-	private  Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
+	private  Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
 		return _collectionHandler.cloneWithCounterparts(sourceProvider, original, claxx, new CounterpartFinder() {
 			public Object findCounterpart(Object original) {
-				return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
+				return GenericReplicationSession.this.findCounterpart(original, sourceProvider, targetProvider);
 			}
 		});
 	}
@@ -272,17 +281,13 @@ public final class GenericReplicationSession implements ReplicationSession {
 		return peer == _providerA ? _providerB : _providerA;
 	}
 
-	private void replaceWithCounterparts(Object[] objects, ReplicationProviderInside sourceProvider) {
+	private void replaceWithCounterparts(Object[] objects, ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
 			if (object == null) continue;
 
-			objects[i] = findCounterpart(object, sourceProvider);
+			objects[i] = findCounterpart(object, sourceProvider, targetProvider);
 		}
-	}
-
-	private void resetProcessedUuids(){
-		_processedUuids = new HashSet4(SIZE);
 	}
 
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {

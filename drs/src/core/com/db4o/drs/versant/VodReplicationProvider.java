@@ -386,8 +386,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new RuntimeException("Reference should always be available before storeReplica");
 		}
 		
-		ensureClassKnown(obj.getClass());
-		
+		long classMetadataLoid = ensureClassKnown(obj.getClass());
 		long loid = _jdo.loid(obj);
 		
 		boolean isNew = loid == 0;
@@ -396,6 +395,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		loid = _jdo.loid(obj);
 
 		if (isNew) {
+			
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			int otherDb = _signatures.idFor(signature);
 			if(otherDb == 0) {
@@ -403,11 +403,17 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			}
 			long otherLongPart = ref.uuid().getLongPart();
 			
+			long signatureLoid = _signatures.loidFor(signature);
 			_loidSignatures.add(
 					new LoidSignatureLongPart(
 							loid, 
-							_signatures.loidFor(signature), 
+							signatureLoid, 
 							otherLongPart));
+			
+			ObjectInfo objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid, Operations.CREATE.value, otherLongPart);
+			_cobra.store(objectInfo);
+			_cobra.commit();
+
 		}
 		
 		logIdentity(obj, String.valueOf(loid));
@@ -540,10 +546,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalStateException("Could not create loid from " + uuid);
 		}
 		
-		// TODO: remove this checking after VdsUtils#getObjectByLOID is fixed
-		if (!_cobra.containsLoid(loid)) {
-			return null;
-		}
 		reference = produceNewReference(_jdo.objectByLoid(loid));
 		_replicationReferences.put(reference);
 		return reference; 

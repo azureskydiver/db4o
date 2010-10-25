@@ -362,8 +362,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_counterpart = obj;
 		}
 
-		public void markForReplicating() {
-			_isMarkedForReplicating = true;
+		public void markForReplicating(boolean flag) {
+			_isMarkedForReplicating = flag;
 		}
 
 		public boolean isMarkedForReplicating() {

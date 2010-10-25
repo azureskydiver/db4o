@@ -124,7 +124,13 @@ class InstanceReplicationPreparer implements Visitor {
 		//TODO for circular referenced object, otherRef should not be null in the subsequent pass.
 		//But db4o always return null. A bug. check!
 		if (otherRef == null) { //Object is only present in one ReplicationProvider. Missing in the other. Could have been deleted or never replicated.
-			if (wasProcessed(uuid)) return false;
+			if (wasProcessed(uuid)){
+				ReplicationReference otherProcessedRef = other.produceReferenceByUUID(uuid, _obj.getClass());
+				if(otherProcessedRef != null){
+					ownerRef.setCounterpart(otherProcessedRef.object());
+				}
+				return false;
+			}
 			markAsProcessed(uuid);
 
 			long creationTime = ownerRef.uuid().getLongPart();
@@ -139,6 +145,8 @@ class InstanceReplicationPreparer implements Visitor {
 		if (_isReplicatingOnlyDeletions) return false;
 
 		ownerRef.setCounterpart(otherRef.object());
+		otherRef.setCounterpart(ownerRef.object());
+		
 		if (wasProcessed(uuid)) return false;  //Has to be done AFTER the counterpart is set because object yet to be replicated might reference the current one, replicated previously.
 		markAsProcessed(uuid);
 
@@ -195,11 +203,11 @@ class InstanceReplicationPreparer implements Visitor {
 
 		if (prevailing != _obj) {
 			otherRef.setCounterpart(_obj);
-			otherRef.markForReplicating();
+			otherRef.markForReplicating(true);
 			markAsNotProcessed(uuid);
 			_traverser.extendTraversalTo(prevailing); //Now we start traversing objects on the other peer! Is that cool or what? ;)
 		} else {
-			ownerRef.markForReplicating();
+			ownerRef.markForReplicating(true);
 		}
 
 		return !_event._actionShouldStopTraversal;
@@ -305,9 +313,10 @@ class InstanceReplicationPreparer implements Visitor {
 		Object counterpart = emptyClone(owner, obj);
 	
 		ownerRef.setCounterpart(counterpart);
-		ownerRef.markForReplicating();
+		ownerRef.markForReplicating(true);
 	
 		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
+		otherRef.setCounterpart(obj);
 	
 		putCounterpartRef(obj, otherRef);
 	

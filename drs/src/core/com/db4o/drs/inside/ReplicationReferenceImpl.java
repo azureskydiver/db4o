@@ -86,8 +86,8 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 		_markedForDeleting = true;
 	}
 
-	public final void markForReplicating() {
-		_markedForReplicating = true;
+	public final void markForReplicating(boolean flag) {
+		_markedForReplicating = flag;
 	}
 
 	public final Object object() {
