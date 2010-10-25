@@ -169,8 +169,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		replicateAll(replication, changedSet.iterator());
 	}
 
-	private void replicateAll(final ReplicationSession replication,
-			final Iterator allObjects) {
+	private void replicateAll(final ReplicationSession replication, final Iterator allObjects) {
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
 			//System.out.println("changed = " + changed);
@@ -197,8 +196,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
-		//System.out.println("ReplicationTestcase.replicateClass");
-		ReplicationSession replication = Replication.begin(providerA, providerB);
+		ReplicationSession replication = Replication.begin(providerA, providerB, null, _fixtures.reflector);
 		Iterator allObjects = providerA.objectsChangedSinceLastReplication(clazz).iterator();
 		replicateAll(replication, allObjects);
 	}

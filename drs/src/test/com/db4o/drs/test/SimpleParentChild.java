@@ -50,8 +50,8 @@ public class SimpleParentChild extends DrsTestCase {
 			System.out.println("actual = " + parent.getName());
 		}
 
-		Assert.areEqual(parent.getName(), parentName);
-		Assert.areEqual(parent.getChild().getName(), childName);
+		Assert.areEqual(parentName, parent.getName());
+		Assert.areEqual(childName, parent.getChild().getName());
 	}
 
 	private void ensureOneInstanceOfParentAndChild(DrsProviderFixture fixture) {
@@ -66,7 +66,7 @@ public class SimpleParentChild extends DrsTestCase {
 		child.setName("c3");
 		a().provider().update(parent);
 		a().provider().update(child);
-		a().provider().commit();
+		a().provider().commitAndWaitFor(parent);
 
 		ensureNames(a(), "p3", "c3");
 	}
@@ -75,7 +75,7 @@ public class SimpleParentChild extends DrsTestCase {
 		SPCParent parent = (SPCParent) getOneInstance(b(), SPCParent.class);
 		parent.setName("p2");
 		b().provider().update(parent);
-		b().provider().commit();
+		b().provider().commitAndWaitFor(parent);
 
 		ensureNames(b(), "p2", "c1");
 	}
@@ -105,7 +105,7 @@ public class SimpleParentChild extends DrsTestCase {
 		SPCChild child = new SPCChild("c1");
 		SPCParent parent = new SPCParent(child, "p1");
 		a().provider().storeNew(parent);
-		a().provider().commit();
+		a().provider().commitAndWaitFor(parent);
 
 		ensureNames(a(), "p1", "c1");
 	}
