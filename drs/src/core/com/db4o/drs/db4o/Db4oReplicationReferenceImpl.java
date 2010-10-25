@@ -146,19 +146,12 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 
 	public final boolean equals(Object o) {
 		if (this == o) return true;
-
-		if (o == null || o.getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
-
-		final ReplicationReference that = (ReplicationReference) o;
-
-		if (version() != that.version()) return false;
-		return uuid().equals(that.uuid());
+		if (o == null || o.getClass() != getClass()) return false;
+		final Db4oReplicationReferenceImpl other = (Db4oReplicationReferenceImpl) o;
+		return version() == other.version() && uuid().equals(other.uuid());
 	}
 
 	public final int hashCode() {
-		int result;
-		result = uuid().hashCode();
-		result = 29 * result + (int) (version() ^ (version() >>> 32));
-		return result;
+		return 29 * uuid().hashCode() + (int) (version() ^ (version() >>> 32));
 	}
 }
