@@ -288,7 +288,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private void commit(String transactionId) {
 		synchronized (_lock) {
-			List<ObjectInfo> infos = _objectInfos.get(transactionId);
+			List<ObjectInfo> infos = _objectInfos.remove(transactionId);
 			if(infos != null){
 				for(ObjectInfo info: infos){
 					long objectLoid = info.objectLoid();
@@ -314,7 +314,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 					println("stored: " + info);
 				}
 			}
-			_objectInfos.remove(transactionId);
 			_commitTimestamp.value(lastTimestamp());
 			_cobra.store(_commitTimestamp);
 			_cobra.commit();

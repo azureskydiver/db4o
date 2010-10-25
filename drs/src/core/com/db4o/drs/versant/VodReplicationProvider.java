@@ -6,6 +6,7 @@ import static com.db4o.drs.foundation.Logger4Support.*;
 import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import javax.jdo.spi.*;
 
@@ -17,7 +18,7 @@ import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.drs.versant.metadata.*;
-import com.db4o.drs.versant.metadata.ObjectInfo.*;
+import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.foundation.*;
 
 
@@ -71,7 +72,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private boolean pinging = true;
 
-	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
 		_control = EventProcessorNetworkFactory.newClient(vod);
 		_vod = vod;
@@ -161,8 +161,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	public void commit() {
 		timeStamp(syncEventProcessor().generateTimestamp());
-		_jdo.commit();
-		syncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
+		syncEventProcessor().requestIsolation(true);
+		try {
+			_jdo.commit();
+			syncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
+		} finally {
+			syncEventProcessor().requestIsolation(false);
+		}
 		_loidTimeStamps.clear();
 		_loidSignatures.clear();
 	}
