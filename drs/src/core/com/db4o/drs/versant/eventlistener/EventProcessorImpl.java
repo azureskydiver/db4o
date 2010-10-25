@@ -2,6 +2,8 @@
 
 package com.db4o.drs.versant.eventlistener;
 
+import static com.db4o.qlin.QLinSupport.*;
+
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -16,8 +18,6 @@ import com.db4o.drs.versant.metadata.ClassMetadata;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.versant.event.*;
-
-import static com.db4o.qlin.QLinSupport.*;
 
 public class EventProcessorImpl implements Runnable, EventProcessor {
 	

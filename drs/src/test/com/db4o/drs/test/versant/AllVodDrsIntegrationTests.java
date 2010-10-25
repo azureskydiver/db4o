@@ -3,7 +3,6 @@
 package com.db4o.drs.test.versant;
 
 import com.db4o.drs.test.*;
-import com.db4o.drs.test.regression.*;
 import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;

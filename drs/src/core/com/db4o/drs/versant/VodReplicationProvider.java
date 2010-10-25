@@ -6,7 +6,6 @@ import static com.db4o.drs.foundation.Logger4Support.*;
 import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.*;
 
 import javax.jdo.spi.*;
 
@@ -40,8 +39,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final Map<String, Long> _knownClasses = new HashMap<String, Long>();
 
-	private ReplicationReflector _replicationReflector;
-	
 	private ReplicationCommitRecord _replicationCommitRecord;
 	
 	private final ReadonlyReplicationProviderSignature _mySignature;
@@ -480,7 +477,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
-		_replicationReflector = replicationReflector;
 	}
 
 	public boolean isProviderSpecific(Object original) {
