@@ -74,7 +74,7 @@ public class ObjectInfo extends VodLoidAwareObject {
 
 	@Override
 	public String toString() {
-		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,creation:" + uuidLongPart + ")";
+		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,longPart:" + uuidLongPart + ", modified: " + modificationVersion +  ")";
 	}
 	
 	@Override
