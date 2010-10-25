@@ -109,7 +109,6 @@ public class TheSimplest extends DrsTestCase {
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
-		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB, _fixtures.reflector);
 		Iterator allObjects = providerA.objectsChangedSinceLastReplication(clazz).iterator();
 		while (allObjects.hasNext()) {
