@@ -59,26 +59,33 @@ public class R0to4Runner extends DrsTestCase {
 			setFieldsToNull(o, claxx);
 			toDelete.add(o);
 		}
+		
+		Object commitObject = null;
 
 		for (Iterator iterator = toDelete.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 
 			//System.out.println("o = " + o);
 			provider.delete(o);
+			commitObject = o;
 		}
-
-		provider.commit();
+		
+		if(commitObject != null){
+			provider.commitAndWaitFor(commitObject);
+		} else {
+			provider.commit();
+		}
 	}
 
 	private void compareR4(TestableReplicationProviderInside a, TestableReplicationProviderInside b, boolean isSameExpected) {
 		Iterator it = a.getStoredObjects(R4.class).iterator();
 		while (it.hasNext()) {
-			String name = ((R4) it.next()).name;
+			String name = ((R4) it.next()).getName();
 
 			Iterator it2 = b.getStoredObjects(R4.class).iterator();
 			boolean found = false;
 			while (it2.hasNext()) {
-				String name2 = ((R4) it2.next()).name;
+				String name2 = ((R4) it2.next()).getName();
 				if (name.equals(name2)) found = true;
 			}
 			Assert.isTrue(found == isSameExpected);
@@ -86,7 +93,7 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	private void copyAllToB(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
-		Assert.isTrue(replicateAll(peerA, peerB, false) == LINKERS * 5);
+		Assert.areEqual(LINKERS * 5, replicateAll(peerA, peerB, false));
 	}
 
 	private void ensureCount(TestableReplicationProviderInside provider, int linkers) {
@@ -141,13 +148,15 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	private void modifyR4(TestableReplicationProviderInside provider) {
+		Object commitObject = null;
 		Iterator it = provider.getStoredObjects(R4.class).iterator();
 		while (it.hasNext()) {
 			R4 r4 = (R4) it.next();
-			r4.name = r4.name + "_";
+			r4.setName(r4.getName() + "_");
 			provider.update(r4);
+			commitObject = r4;
 		}
-		provider.commit();
+		provider.commitAndWaitFor(commitObject);
 	}
 
 	private int replicate(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
@@ -155,7 +164,7 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB, boolean modifiedOnly) {
-		ReplicationSession replication = Replication.begin(peerA, peerB);
+		ReplicationSession replication = Replication.begin(peerA, peerB, null, _fixtures.reflector);
 
 		Iterator it = modifiedOnly
 				? peerA.objectsChangedSinceLastReplication(R0.class).iterator()
@@ -180,7 +189,7 @@ public class R0to4Runner extends DrsTestCase {
 
 	private void replicateR4(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		int replicatedObjectsCount = replicateAll(peerA, peerB, true);
-		Assert.isTrue(replicatedObjectsCount == LINKERS);
+		Assert.areEqual(LINKERS, replicatedObjectsCount);
 	}
 
 	private void setFieldsToNull(Object object, ReflectClass claxx) {
@@ -200,10 +209,6 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	public void test() {
-		actualTest();
-	}
-
-	protected void actualTest() {
 
 		init(a().provider());
 

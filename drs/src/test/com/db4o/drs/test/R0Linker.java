@@ -40,41 +40,41 @@ class R0Linker {
 	}
 
 	void setNames(String name) {
-		r0.name = "0" + name;
-		r1.name = "1" + name;
-		r2.name = "2" + name;
-		r3.name = "3" + name;
-		r4.name = "4" + name;
+		r0.setName("0" + name);
+		r1.setName("1" + name);
+		r2.setName("2" + name);
+		r3.setName("3" + name);
+		r4.setName("4" + name);
 	}
 
 	void linkCircles() {
 		linkList();
-		r1.circle1 = r0;
-		r2.circle2 = r0;
-		r3.circle3 = r0;
-		r4.circle4 = r0;
+		r1.setCircle1(r0);
+		r2.setCircle2(r0);
+		r3.setCircle3(r0);
+		r4.setCircle4(r0);
 	}
 
 	void linkList() {
-		r0.r1 = r1;
-		r1.r2 = r2;
-		r2.r3 = r3;
-		r3.r4 = r4;
+		r0.setR1(r1);
+		r1.setR2(r2);
+		r2.setR3(r3);
+		r3.setR4(r4);
 	}
 
 	void linkThis() {
-		r0.r0 = r0;
-		r1.r1 = r1;
-		r2.r2 = r2;
-		r3.r3 = r3;
-		r4.r4 = r4;
+		r0.setR0(r0);
+		r1.setR1(r1);
+		r2.setR2(r2);
+		r3.setR3(r3);
+		r4.setR4(r4);
 	}
 
 	void linkBack() {
-		r1.r0 = r0;
-		r2.r1 = r1;
-		r3.r2 = r2;
-		r4.r3 = r3;
+		r1.setR0(r0);
+		r2.setR1(r1);
+		r3.setR2(r2);
+		r4.setR3(r3);
 	}
 
 	public void store(TestableReplicationProviderInside provider) {
