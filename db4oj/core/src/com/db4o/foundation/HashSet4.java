@@ -3,7 +3,7 @@ package com.db4o.foundation;
 
 public class HashSet4 implements Set4 {
 
-	private Map4 _map;
+	private Hashtable4 _map;
 	
 	public HashSet4() {
 		this(1);
@@ -44,5 +44,14 @@ public class HashSet4 implements Set4 {
 	public int size() {
 		return _map.size();
 	}
+	
+	public String toString() {
+		return Iterators.join(Iterators.map(_map.hashtableIterator(), new Function4<HashtableIntEntry, Object>() {
+			public Object apply(HashtableIntEntry arg) {
+				return arg.value();
+			}
+		}) , "{", "}", ", ");
+	}
+
 
 }
