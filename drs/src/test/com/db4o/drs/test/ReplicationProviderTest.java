@@ -61,9 +61,10 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 	protected void tstDeletion() {
 		a().provider().storeNew(new Pilot("Pilot1", 42));
-		a().provider().storeNew(new Pilot("Pilot2", 43));
+		Pilot o = new Pilot("Pilot2", 43);
+		a().provider().storeNew(o);
 
-		a().provider().commit();
+		a().provider().commitAndWaitFor(o);
 
 		a().provider().storeNew(new Pilot("Pilot3", 44));
 
@@ -154,7 +155,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 	private void tstObjectUpdate() {
 		SPCChild child = new SPCChild("c1");
 		a().provider().storeNew(child);
-		a().provider().commit();
+		a().provider().commitAndWaitFor(child);
 
 		startReplication();
 		SPCChild reloaded = getOneChildFromA();
@@ -166,7 +167,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		//System.out.println("==============BEGIN DEBUG");
 		a().provider().update(reloaded2);
-		a().provider().commit();
+		a().provider().commitAndWaitFor(reloaded2);
 		//System.out.println("==============END DEBUG");
 
 		startReplication();
@@ -174,7 +175,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		long newVer = a().provider().produceReference(reloaded3, null, null).version();
 		commitReplication();
 
-		Assert.isTrue(newVer > oldVer);
+		Assert.isGreater(oldVer, newVer);
 	}
 
 	private void tstObjectsChangedSinceLastReplication() {
