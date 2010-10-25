@@ -41,7 +41,7 @@ public interface ReplicationReference {
 
 	void setCounterpart(Object obj);
 
-	void markForReplicating();
+	void markForReplicating(boolean flag);
 
 	boolean isMarkedForReplicating();
 
