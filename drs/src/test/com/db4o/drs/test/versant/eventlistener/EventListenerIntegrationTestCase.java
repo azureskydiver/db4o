@@ -59,7 +59,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				
 				
 				final BlockingQueue<String> transactionQueue = new BlockingQueue<String>();
-				_provider.syncEventProcessor().addListener(new EventProcessorListener() {
+				EventProcessorListener listener = new EventProcessorListener() {
 					
 					public void ready() {
 					}
@@ -74,7 +74,8 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 					public void onEvent(long loid) {
 						
 					}
-				});
+				};
+				_provider.syncEventProcessor().addListener(listener);
 
 				// make sure event listener is on for the Item class.
 				storeAndCommitItem();
@@ -116,6 +117,8 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				// Runtime4.sleep(10000);
 				Assert.isTrue(checkObjectInfoFor(pair.value.first, pair.value.second, 3000), "Timeout: ObjectLifecycleEvent object not stored.");
 				pair.value.first.close();
+				
+				_provider.syncEventProcessor().removeListener(listener);
 
 				return null;
 			}
@@ -159,7 +162,7 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
 				final BlockingQueue4<Long> q = new BlockingQueue<Long>();
-				_provider.syncEventProcessor().addListener(new EventProcessorListener() {
+				EventProcessorListener listener = new EventProcessorListener() {
 					
 					public void ready() {
 					}
@@ -172,9 +175,11 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 						q.add(loid);
 					}
 					
-				});
+				};
+				_provider.syncEventProcessor().addListener(listener);
 				storeAndCommitItem();
 				q.next();
+				_provider.syncEventProcessor().removeListener(listener);
 				return null;
 			}
 		});

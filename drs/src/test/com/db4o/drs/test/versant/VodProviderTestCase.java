@@ -21,6 +21,7 @@ import db4ounit.*;
 public class VodProviderTestCase extends VodProviderTestCaseBase implements TestLifeCycle, ClassLevelFixtureTest {
 	
 	protected BlockingQueue4<Long> events = new BlockingQueue<Long>();
+	private EventProcessorListener _eventProcessorListener;
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(VodProviderTestCase.class).run();
@@ -32,7 +33,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		
 		_vod.startEventProcessor();
 		
-		_provider.syncEventProcessor().addListener(new EventProcessorListener() {
+		_eventProcessorListener = new EventProcessorListener() {
 			public void ready() {
 				
 			}
@@ -44,12 +45,14 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 			public void onEvent(long loid) {
 				events.add(loid);
 			}
-		});
+		};
+		_provider.syncEventProcessor().addListener(_eventProcessorListener);
 		
 	}
 	
 	@Override
 	public void tearDown() {
+		_provider.syncEventProcessor().removeListener(_eventProcessorListener);
 		super.tearDown();
 		_vod.stopEventProcessor();
 	}
