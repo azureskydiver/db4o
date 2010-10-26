@@ -18,7 +18,7 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	
 	public void testStore(){
 		long expectedObjectLoid = 2;
-		ObjectInfo objectInfo = new ObjectInfo(1, 1, expectedObjectLoid, 3, 4);
+		ObjectInfo objectInfo = new ObjectInfo(1, 1, expectedObjectLoid, 3, 4, 5);
 		long loid = _cobra.store(objectInfo);
 		Assert.isGreater(0, loid);
 		ObjectInfo storedObjectInfo = _cobra.objectByLoid(loid);
@@ -26,7 +26,7 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 	}
 	
 	public void testQueryForExtent() {
-		ObjectInfo original = new ObjectInfo(1, 1, 2, 3, 4);
+		ObjectInfo original = new ObjectInfo(1, 1, 2, 3, 4, 5);
 		_cobra.store(original);
 		
 		Collection<ObjectInfo> result = _cobra.query(ObjectInfo.class);
@@ -50,7 +50,7 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		
 		Assert.areEqual(0, events.size());
 		
-		_cobra.store(new ObjectInfo(1, 1, objectLoid, 3, 4));
+		_cobra.store(new ObjectInfo(1, 1, objectLoid, 3, 4, 5));
 		
 		events = _cobra.from(ObjectInfo.class)
 			  .where(info.objectLoid())

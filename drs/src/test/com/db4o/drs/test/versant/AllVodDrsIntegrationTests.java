@@ -92,6 +92,8 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						ReplicationAfterDeletionTest.class,
 						SimpleParentChild.class,
  						SimpleArrayTest.class,
+						ReplicatingTwiceTestCase.class,
+ 						R0to4Runner.class, 	
 						
 						/* Tests that haven't been checked yet */
 						
@@ -103,7 +105,6 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 //						ListTest.class, 
 //
 //						// Complex
-//						R0to4Runner.class, 	
 //						ReplicationFeaturesMain.class,
 //
 //						// General

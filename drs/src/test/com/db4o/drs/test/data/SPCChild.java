@@ -42,7 +42,7 @@ public class SPCChild {
 
 
 	public String toString() {
-		return "#############################3SPCChild{" +
+		return "SPCChild{" +
 				"name='" + name + '\'' +
 				'}';
 	}
