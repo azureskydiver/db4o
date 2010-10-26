@@ -128,20 +128,6 @@ public class Serializers {
 			return new Pair(in.readLong(), in.readLong());
 		}
 	}, Pair.class);
-	
-	public final static Serializer<LoidSignatureLongPart> loidSignatureLongPart = addSerializer(new Serializer<LoidSignatureLongPart>() {
-
-		public void serialize(DataOutput out, LoidSignatureLongPart entry) throws IOException {
-			out.writeLong(entry.loid);
-			out.writeLong(entry.signatureLoid);
-			out.writeLong(entry.longPart);
-		}
-
-		public LoidSignatureLongPart deserialize(DataInput in) throws IOException {
-			return new LoidSignatureLongPart(in.readLong(), in.readLong(), in.readLong());
-		}
-	}, LoidSignatureLongPart.class);
-
 
 	public final static Serializer<HashSet> hashset = addSerializer(new Serializer<HashSet>() {
 

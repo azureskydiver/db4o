@@ -45,8 +45,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private Map<Long, Long> _loidTimeStamps = new HashMap<Long, Long>();
 	
-	private Map<Long, LoidSignatureLongPart> _loidUuids = new HashMap<Long, LoidSignatureLongPart>();
-	
 	private long _defaultSignatureLoid;
 	
 	
@@ -305,11 +303,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 					if(timestamp != null){
 						infoToStore.modificationVersion(timestamp);
 					}
-					LoidSignatureLongPart loidSignatureLongPart = _loidUuids.remove(objectLoid);
-					if(loidSignatureLongPart!= null){
-						infoToStore.signatureLoid(loidSignatureLongPart.signatureLoid);
-						infoToStore.uuidLongPart(loidSignatureLongPart.longPart);
-					}
 					_cobra.store(infoToStore);
 					println("stored: " + info);
 				}
@@ -524,13 +517,10 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 	
 	
-	public void forceTimestampsAndSignatures(List<Pair<Long, Long>> loidTimeStamps, List<LoidSignatureLongPart> loidUuids) {
+	public void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps) {
 		synchronized (_lock) {
 			for (Pair<Long, Long> pair : loidTimeStamps) {
 				_loidTimeStamps.put(pair.first, pair.second);
-			}
-			for (LoidSignatureLongPart entry : loidUuids ) {
-				_loidUuids.put(entry.loid, entry);
 			}
 		}
 	}
