@@ -49,8 +49,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private List<Pair<Long, Long>> _loidTimeStamps = new ArrayList<Pair<Long, Long>>(); 
 	
-	private List<LoidSignatureLongPart> _loidSignatures = new ArrayList<LoidSignatureLongPart>();
-	
 	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
 	
 	private final Map<Class, List<Class>> _classHierarchy = new HashMap<Class, List<Class>>();
@@ -189,12 +187,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		syncEventProcessor().requestIsolation(true);
 		try {
 			_jdo.commit();
-			asyncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
+			asyncEventProcessor().forceTimestamps(_loidTimeStamps);
 		} finally {
 			asyncEventProcessor().requestIsolation(false);
 		}
 		_loidTimeStamps.clear();
-		_loidSignatures.clear();
 	}
 
 	public void delete(Object obj) {
@@ -273,9 +270,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		timeStamp(raisedDatabaseVersion - 1);
 		
 		_jdo.commit();
-		syncEventProcessor().forceTimestampsAndSignatures(_loidTimeStamps, _loidSignatures);
+		syncEventProcessor().forceTimestamps(_loidTimeStamps);
 		_loidTimeStamps.clear();
-		_loidSignatures.clear();
 		
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion -1);
 		timeStamp(raisedDatabaseVersion);
@@ -434,11 +430,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			long otherLongPart = ref.uuid().getLongPart();
 			
 			long signatureLoid = _signatures.loidFor(signature);
-			_loidSignatures.add(
-					new LoidSignatureLongPart(
-							loid, 
-							signatureLoid, 
-							otherLongPart));
 			
 			ObjectInfo objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid, Operations.CREATE.value, otherLongPart);
 			_cobra.store(objectInfo);
