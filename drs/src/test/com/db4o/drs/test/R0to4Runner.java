@@ -111,7 +111,7 @@ public class R0to4Runner extends DrsTestCase {
 			Object o = instances.next();
 			i--;
 		}
-		Assert.isTrue(i == 0);
+		Assert.areEqual(0 , i);
 	}
 
 	private void ensureR4Different(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
