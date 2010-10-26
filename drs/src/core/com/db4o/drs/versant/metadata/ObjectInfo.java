@@ -14,15 +14,15 @@ public class ObjectInfo extends VodLoidAwareObject {
 	
 	private long uuidLongPart; 
 	
-	private long modificationVersion;
+	private long version;
 	
-	public ObjectInfo(long signatureLoid, long classMetadataLoid, long objectLoid, int operation, long version) {
+	public ObjectInfo(long signatureLoid, long classMetadataLoid, long objectLoid,  long longPart, long version, int operation) {
 		this.signatureLoid = signatureLoid; 
 		this.classMetadataLoid = classMetadataLoid;
 		this.objectLoid = objectLoid;
+		uuidLongPart = longPart;
+		this.version = version;
 		this.operation = operation;
-		uuidLongPart = version;
-		modificationVersion = version;
 	}
 
 	public ObjectInfo(){
@@ -63,18 +63,18 @@ public class ObjectInfo extends VodLoidAwareObject {
 	}
 	
 	public long modificationVersion() {
-		return modificationVersion;
+		return version;
 	}
 
 	
 	public void modificationVersion(long version) {
-		modificationVersion = version;
+		this.version = version;
 	}
 
 
 	@Override
 	public String toString() {
-		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,longPart:" + uuidLongPart + ", modified: " + modificationVersion +  ")";
+		return "(obj:" + objectLoid + ", " + Operations.forValue(operation) + " ,longPart:" + uuidLongPart + ", modified: " + version +  ")";
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class ObjectInfo extends VodLoidAwareObject {
 
 	public void copyStateFrom(ObjectInfo other) {
 		operation = other.operation;
-		modificationVersion = other.modificationVersion;
+		version = other.version;
 	}
 	
 	public static class Operations {

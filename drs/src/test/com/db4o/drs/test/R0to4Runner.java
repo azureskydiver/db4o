@@ -20,11 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import java.util.Iterator;
 import java.util.*;
 
-import com.db4o.drs.Replication;
-import com.db4o.drs.ReplicationSession;
+import com.db4o.drs.*;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -92,7 +90,7 @@ public class R0to4Runner extends DrsTestCase {
 		}
 	}
 
-	private void copyAllToB(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
+	private void replicateAllToB(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		Assert.areEqual(LINKERS * 5, replicateAll(peerA, peerB, false));
 	}
 
@@ -214,7 +212,7 @@ public class R0to4Runner extends DrsTestCase {
 
 		ensureCount(a().provider(), LINKERS);
 
-		copyAllToB(a().provider(), b().provider());
+		replicateAllToB(a().provider(), b().provider());
 
 		replicateNoneModified(a().provider(), b().provider());
 

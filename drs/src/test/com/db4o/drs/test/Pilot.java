@@ -40,4 +40,9 @@ public class Pilot {
 	public String name() {
 		return _name;
 	}
+	
+	@Override
+	public String toString() {
+		return "Pilot name:" + name();
+	}
 }

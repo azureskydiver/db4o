@@ -20,9 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test.hibernate;
 
-import com.db4o.drs.test.Db4oClientServerDrsFixture;
-import com.db4o.drs.test.DrsTestSuite;
-import com.db4o.drs.test.DrsTestSuiteBuilder;
+import com.db4o.drs.test.*;
 
 import db4ounit.ConsoleTestRunner;
 
@@ -43,7 +41,11 @@ public class RdbmsTests extends DrsTestSuite {
 
 //		failureCount += new RdbmsTests().runHsqlHsql();
 		
-		failureCount += new RdbmsTests().runHsqldb4oCS();
+		failureCount += new RdbmsTests().runHsqldb4o();
+//		failureCount += new RdbmsTests().rundb4oHsql();
+		
+//		failureCount += new RdbmsTests().runHsqldb4oCS();
+//		failureCount += new RdbmsTests().rundb4oCSHsql();
 		
 //		failureCount += new RdbmsTests().runOracledb4oCS();
 //		failureCount += new RdbmsTests().runMySQLdb4oCS();
@@ -59,6 +61,32 @@ public class RdbmsTests extends DrsTestSuite {
 		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
 				new HsqlMemoryFixture("hsql-b"), getClass())).run();
 	}
+	
+	public int rundb4oHsql() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(
+				new Db4oDrsFixture("db4o-drs-a"),
+				new HsqlMemoryFixture("hsql-b"),
+				getClass()))
+				.run();
+	}
+
+
+	public int runHsqldb4o() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new 
+				HsqlMemoryFixture("hsql-a"),
+				new Db4oDrsFixture("db4o-cs-b"), getClass()))
+				.run();
+	}
+
+	
+	public int rundb4oCSHsql() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(
+				new Db4oClientServerDrsFixture("db4o-cs-a", 9587),
+				new HsqlMemoryFixture("hsql-b"),
+				getClass()))
+				.run();
+	}
+
 
 	public int runHsqldb4oCS() {
 		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),

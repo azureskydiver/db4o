@@ -304,7 +304,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						infoToStore.modificationVersion(timestamp);
 					}
 					_cobra.store(infoToStore);
-					println("stored: " + info);
+					println("stored: " + infoToStore);
 				}
 			}
 			_commitTimestamp.value(lastTimestamp());
@@ -388,8 +388,9 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						defaultSignatureLoid(),
 						_classLoid,
 						loid,
-						_operation.value,
-						_timeStamp);
+						_timeStamp,
+						_timeStamp,
+						_operation.value);
 			List<ObjectInfo> infos = _objectInfos.get(_transactionId);
 			if(infos == null){
 				infos = new java.util.LinkedList<ObjectInfo>();

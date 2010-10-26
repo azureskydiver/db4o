@@ -276,19 +276,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion -1);
 		timeStamp(raisedDatabaseVersion);
 		
-		// _timeStamp  = UNDEFINED;
-		
-		// FileReplicationProvider does this:
-		// _idsReplicatedInThisSession = null;
-		
-		// HibernateReplicationProvider does this:
-		// _dirtyRefs.clear();
-		// _inReplication = false;
-		
+		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	}
 
 	public long getCurrentVersion() {
-		return syncEventProcessor().lastTimestamp();
+		_timeStamp = syncEventProcessor().lastTimestamp(); 
+		return _timeStamp;
 	}
 
 	public long getLastReplicationVersion() {
@@ -417,27 +410,33 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		boolean isNew = loid == 0;
 		
-		_jdo.store(obj);
-		loid = _jdo.loid(obj);
+		if(isNew){
+			_jdo.store(obj);
+			loid = _jdo.loid(obj);
+		} else {
+			isNew = ! objectInfoFoundFor(loid);
+		}
 
 		if (isNew) {
-			
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			int otherDb = _signatures.idFor(signature);
 			if(otherDb == 0) {
 				throw new IllegalArgumentException("Unknown db id for " + ref.uuid());
 			}
 			long otherLongPart = ref.uuid().getLongPart();
-			
 			long signatureLoid = _signatures.loidFor(signature);
-			
-			ObjectInfo objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid, Operations.CREATE.value, otherLongPart);
+			ObjectInfo objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, timeStamp(), Operations.CREATE.value);
 			_cobra.store(objectInfo);
 			_cobra.commit();
-
 		}
 		
 		logIdentity(obj, String.valueOf(loid));
+	}
+
+	private boolean objectInfoFoundFor(long loid) {
+		ObjectInfo objectInfo = prototype(ObjectInfo.class);
+		ObjectInfo foundInfo = _cobra.from(ObjectInfo.class).where(objectInfo.objectLoid()).equal(loid).singleOrDefault(null);
+		return foundInfo != null;
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
@@ -446,6 +445,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_cobra.store(_replicationCommitRecord);
 		_cobra.commit();
 		syncEventProcessor().syncTimestamp(maxVersion);
+		_timeStamp = maxVersion;
 	}
 
 	public void visitCachedReferences(Visitor4 visitor) {
@@ -459,7 +459,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public ObjectSet objectsChangedSinceLastReplication() {
 		long lastReplicationVersion = getLastReplicationVersion();
-		String filter = "this.modificationVersion > " + lastReplicationVersion;
+		String filter = "this.version > " + lastReplicationVersion;
 		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
 		for (ObjectInfo info : infos) {
@@ -473,7 +473,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		return new ObjectSetCollectionFacade(objects);
 	}
-
+	
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		long lastReplicationVersion = getLastReplicationVersion();
 		Set<Long> loids = queryForModifiedObjects(clazz, lastReplicationVersion, true);
@@ -485,7 +485,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private Set<Long> queryForModifiedObjects(Class clazz, long lastReplicationVersion, boolean withClassMetadataLoid) {
-		String filter = "this.modificationVersion > " + lastReplicationVersion;
+		String filter = "this.version > " + lastReplicationVersion;
 		if(withClassMetadataLoid){
 			filter += " && (" + classMetadataLoidFilter(clazz) + ")";
 		}
@@ -507,6 +507,27 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			filter += " || " + classMetadataLoidFilter(childClass);
 		}
 		return filter;
+	}
+	
+	public void debug(){
+		// useful debug code left here, 
+		// just set the class to print all ObjectInfos for a class 
+		logObjectInfo(null);
+	}
+	
+	private Set<Long> logObjectInfo(Class clazz) {
+		System.err.println("JDO");
+		_jdo.rollback();
+		String filter = classMetadataLoidFilter(clazz);
+		Set<Long> loids = new HashSet<Long>();
+		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
+		for (ObjectInfo info : infos) {
+			if(Operations.forValue(info.operation()) != Operations.DELETE){
+				_jdo.refresh(info);
+				System.err.println(info);
+			}
+		}
+		return loids;
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
