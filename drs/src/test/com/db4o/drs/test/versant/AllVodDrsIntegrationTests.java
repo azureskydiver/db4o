@@ -53,7 +53,7 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 		}
 		
 		// db4o to db4o
-		if(false){
+		if(true){
 			 return new DrsTestSuiteBuilder( 
 					 new Db4oDrsFixture("db4o-drs-a", reflector), 
 					 new Db4oDrsFixture("db4o-drs-b", reflector), 

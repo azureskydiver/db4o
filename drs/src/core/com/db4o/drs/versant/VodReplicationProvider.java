@@ -53,6 +53,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
 	
+	private final Map<Class, List<Class>> _classHierarchy = new HashMap<Class, List<Class>>();
+	
 	SimpleTimer _heartbeatTimer = new SimpleTimer(
 		new Runnable() {
 			public void run() {
@@ -124,6 +126,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private long ensureClassKnown(Class clazz) {
+		ensureClassHierarchyKnown(clazz);
 		String className = clazz.getName();
 		Long loid = _knownClasses.get(className);
 		if (loid != null) {
@@ -143,7 +146,32 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private void loadKnownClasses() {
 		for (ClassMetadata classMetadata : _cobra.query(ClassMetadata.class)) {
 			_knownClasses.put(classMetadata.fullyQualifiedName(), classMetadata.loid());
+			try {
+				ensureClassHierarchyKnown(Class.forName(classMetadata.fullyQualifiedName()));
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
+	}
+	
+	private void ensureClassHierarchyKnown(Class clazz) {
+		if(clazz == Object.class){
+			return;
+		}
+		if (_classHierarchy.containsKey(clazz)){
+			return;
+		}
+		addToHierarchy(clazz);
+	}
+
+	private void addToHierarchy(Class clazz) {
+		Class superclass = clazz.getSuperclass();
+		ensureClassHierarchyKnown(superclass);
+		if(superclass != Object.class){
+			List<Class> children = _classHierarchy.get(superclass);
+			children.add(clazz);
+		}
+		_classHierarchy.put(clazz, new ArrayList<Class>());
 	}
 
 	private void loadSignatures() {
@@ -456,24 +484,38 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		String query = "this.classMetadataLoid == " + _knownClasses.get(clazz.getName());
 		long lastReplicationVersion = getLastReplicationVersion();
-		String fullQuery = "this.modificationVersion > " + lastReplicationVersion;
-		if(query.length() > 0) {
-			fullQuery += " && " + query;
-		}
-		Set<Long> loids = new HashSet<Long>();
-		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, fullQuery);
-		for (ObjectInfo info : infos) {
-			if(Operations.forValue(info.operation()) != Operations.DELETE){
-				loids.add(info.objectLoid());
-			}
-		}
+		Set<Long> loids = queryForModifiedObjects(clazz, lastReplicationVersion, true);
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
 		for (Long loid : loids) {
 			objects.add(_jdo.objectByLoid(loid));
 		}
 		return new ObjectSetCollectionFacade(objects);
+	}
+
+	private Set<Long> queryForModifiedObjects(Class clazz, long lastReplicationVersion, boolean withClassMetadataLoid) {
+		String filter = "this.modificationVersion > " + lastReplicationVersion;
+		if(withClassMetadataLoid){
+			filter += " && (" + classMetadataLoidFilter(clazz) + ")";
+		}
+		Set<Long> loids = new HashSet<Long>();
+		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
+		for (ObjectInfo info : infos) {
+			_jdo.refresh(info);
+			if(Operations.forValue(info.operation()) != Operations.DELETE){
+				loids.add(info.objectLoid());
+			}
+		}
+		return loids;
+	}
+
+	private String classMetadataLoidFilter(Class clazz) {
+		String filter = "this.classMetadataLoid == " + _knownClasses.get(clazz.getName());
+		List<Class> children = _classHierarchy.get(clazz);
+		for (Class childClass : children) {
+			filter += " || " + classMetadataLoidFilter(childClass);
+		}
+		return filter;
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
