@@ -46,11 +46,7 @@ public class HashSet4 implements Set4 {
 	}
 	
 	public String toString() {
-		return Iterators.join(Iterators.map(_map.hashtableIterator(), new Function4<HashtableIntEntry, Object>() {
-			public Object apply(HashtableIntEntry arg) {
-				return arg.value();
-			}
-		}) , "{", "}", ", ");
+		return Iterators.join(_map.keys() , "{", "}", ", ");
 	}
 
 
