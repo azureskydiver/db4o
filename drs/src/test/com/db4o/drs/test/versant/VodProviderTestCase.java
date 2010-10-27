@@ -175,7 +175,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	private Item storeAndCommitSingleItem(VodReplicationProvider provider) {
 		Item item = new Item("one");
 		provider.storeNew(item);
-		provider.commitAndWaitFor(item);
+		provider.commit();
 		waitForStoredEventFromEventProcessor(provider.loid(item));
 		return item;
 	}
@@ -190,7 +190,7 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	private void update(Item item) {
 		item.name("modified");
 		_provider.update(item);
-		_provider.commitAndWaitFor(item);
+		_provider.commit();
 		waitForStoredEventFromEventProcessor(_provider.loid(item));
 	}
 

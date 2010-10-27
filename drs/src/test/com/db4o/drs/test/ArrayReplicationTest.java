@@ -46,7 +46,7 @@ public class ArrayReplicationTest extends DrsTestCase {
 
 		b().provider().storeNew(h2);
 		b().provider().storeNew(h1);
-		b().provider().commitAndWaitFor(h1);
+		b().provider().commit();
 
 		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider(), null, _fixtures.reflector);
 

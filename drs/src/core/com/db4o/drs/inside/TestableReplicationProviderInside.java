@@ -28,6 +28,6 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 
 	boolean supportsRollback();
 	
-	void commitAndWaitFor(Object obj);
+	void commit();
 
 }

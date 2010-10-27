@@ -465,8 +465,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			_cobra.commit();
 		}
 		
-		_waitForCommitLoid = true;
-		
 		logIdentity(obj, String.valueOf(loid));
 	}
 
@@ -702,10 +700,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	public void commitAndWaitFor(Object modifiedObject) {
-		commit();
 	}
 	
 }

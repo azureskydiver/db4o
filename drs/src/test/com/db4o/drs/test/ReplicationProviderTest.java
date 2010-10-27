@@ -64,7 +64,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Pilot o = new Pilot("Pilot2", 43);
 		a().provider().storeNew(o);
 
-		a().provider().commitAndWaitFor(o);
+		a().provider().commit();
 
 		a().provider().storeNew(new Pilot("Pilot3", 44));
 
@@ -74,7 +74,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		car._pilot = findPilot("Pilot2");
 		a().provider().storeNew(car);
 
-		a().provider().commitAndWaitFor(car);
+		a().provider().commit();
 
 		startReplication();
 
@@ -151,7 +151,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 	private void tstObjectUpdate() {
 		SPCChild child = new SPCChild("c1");
 		a().provider().storeNew(child);
-		a().provider().commitAndWaitFor(child);
+		a().provider().commit();
 
 		startReplication();
 		SPCChild reloaded = getOneChildFromA();
@@ -163,7 +163,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 
 		//System.out.println("==============BEGIN DEBUG");
 		a().provider().update(reloaded2);
-		a().provider().commitAndWaitFor(reloaded2);
+		a().provider().commit();
 		//System.out.println("==============END DEBUG");
 
 		startReplication();
@@ -183,7 +183,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().storeNew(object2);
 		a().provider().storeNew(object3);
 
-		a().provider().commitAndWaitFor(object3);
+		a().provider().commit();
 
 		startReplication();
 
@@ -217,7 +217,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().update(pilot);
 		a().provider().update(car);
 
-		a().provider().commitAndWaitFor(pilot);
+		a().provider().commit();
 
 		startReplication();
 
@@ -246,7 +246,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 	private void tstReferences() {
 		Pilot pilot = new Pilot("tst References", 42);
 		a().provider().storeNew(pilot);
-		a().provider().commitAndWaitFor(pilot);
+		a().provider().commit();
 
 		startReplication();
 

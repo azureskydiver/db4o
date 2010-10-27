@@ -28,7 +28,7 @@ public class UuidConversionTestCase extends DrsTestCase{
 		SPCChild child = createChildObject(name);
 		
 		a().provider().storeNew(child);
-		a().provider().commitAndWaitFor(child);
+		a().provider().commit();
 		return child;
 	}
 	

@@ -66,7 +66,7 @@ public class SimpleParentChild extends DrsTestCase {
 		child.setName("c3");
 		a().provider().update(parent);
 		a().provider().update(child);
-		a().provider().commitAndWaitFor(parent);
+		a().provider().commit();
 
 		ensureNames(a(), "p3", "c3");
 	}
@@ -75,7 +75,7 @@ public class SimpleParentChild extends DrsTestCase {
 		SPCParent parent = (SPCParent) getOneInstance(b(), SPCParent.class);
 		parent.setName("p2");
 		b().provider().update(parent);
-		b().provider().commitAndWaitFor(parent);
+		b().provider().commit();
 
 		ensureNames(b(), "p2", "c1");
 	}
@@ -105,7 +105,7 @@ public class SimpleParentChild extends DrsTestCase {
 		SPCChild child = new SPCChild("c1");
 		SPCParent parent = new SPCParent(child, "p1");
 		a().provider().storeNew(parent);
-		a().provider().commitAndWaitFor(parent);
+		a().provider().commit();
 
 		ensureNames(a(), "p1", "c1");
 	}
