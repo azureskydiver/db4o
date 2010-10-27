@@ -13,13 +13,15 @@ import com.versant.core.vds.*;
 
 public class VodJdo implements VodJdoFacade {
 	
-	public interface PreStoreListener {
-		void preStore(Object object);
+	public interface ObjectCommittedListener {
+		void committed(Object object);
 	}
 
 	private final VodDatabase _vod;
 	
 	private final PersistenceManager _pm;
+
+	private Map<ObjectCommittedListener, PreStoreListenerWrapper> listeners = new HashMap<ObjectCommittedListener, PreStoreListenerWrapper>();
 
 	public static VodJdoFacade createInstance(VodDatabase vod) {
 		return new VodJdo(vod);
@@ -126,11 +128,11 @@ public class VodJdo implements VodJdoFacade {
 		_pm.refresh(obj);
 	}
 	
-	private static class PreStoreListenerWrapper implements StoreLifecycleListener, CreateLifecycleListener {
+	private static class PreStoreListenerWrapper implements StoreLifecycleListener, CreateLifecycleListener, DeleteLifecycleListener {
 
-		private PreStoreListener preStoreListener;
+		private ObjectCommittedListener preStoreListener;
 
-		public PreStoreListenerWrapper(PreStoreListener preStoreListener) {
+		public PreStoreListenerWrapper(ObjectCommittedListener preStoreListener) {
 			super();
 			this.preStoreListener = preStoreListener;
 		}
@@ -142,13 +144,27 @@ public class VodJdo implements VodJdoFacade {
 		}
 
 		public void preStore(InstanceLifecycleEvent arg0) {
-			preStoreListener.preStore(arg0.getSource());
+			preStoreListener.committed(arg0.getSource());
+		}
+
+		public void postDelete(InstanceLifecycleEvent arg0) {
+			
+		}
+
+		public void preDelete(InstanceLifecycleEvent arg0) {
+			preStoreListener.committed(arg0.getSource());
 		}
 		
 	}
 
-	public void addPreStoreListener(final PreStoreListener preStoreListener) {
-		_pm.addInstanceLifecycleListener(new PreStoreListenerWrapper(preStoreListener), null);
+	public void addObjectCommittedListener(final ObjectCommittedListener preStoreListener) {
+		PreStoreListenerWrapper wrapper = new PreStoreListenerWrapper(preStoreListener);
+		_pm.addInstanceLifecycleListener(wrapper, (Class[])null);
+		listeners.put(preStoreListener, wrapper);
+	}
+
+	public void removeObjectCommitedListener(ObjectCommittedListener preStoreListener) {
+		_pm.removeInstanceLifecycleListener(listeners.remove(preStoreListener));
 	}
 	
 
