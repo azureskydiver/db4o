@@ -15,6 +15,13 @@
     	<class name="com.db4o.drs.test.SimpleArrayContent"/>
    		<class name="com.db4o.drs.test.SimpleArrayHolder"/>
     	<class name="com.db4o.drs.test.SPCParent"/>
+    	<class name="com.db4o.drs.test.SimpleListHolder"/>
+    	<class name="com.db4o.drs.test.ListHolder"/>
+    	<class name="com.db4o.drs.test.ListContent"/>
+    	<class name="com.db4o.drs.test.MapHolder"/>
+    	<class name="com.db4o.drs.test.MapContent"/>
+    	<class name="com.db4o.drs.test.CollectionHolder"/>
+    	<class name="com.db4o.drs.test.SimpleItem"/>
     </package>    
 </jdo>    
 
