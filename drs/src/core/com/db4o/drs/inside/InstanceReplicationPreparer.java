@@ -301,12 +301,14 @@ class InstanceReplicationPreparer implements Visitor {
 				_stateInA.setAll(null, false, false, -1);
 				_stateInB.setAll(obj, true, false, -1);
 			}
-	
-			_listener.onReplicate(_event);
-	
-			if (_event._actionWasChosen) {
-				if (_event._actionChosenState == null) return false;
-				if (_event._actionChosenState.getObject() != obj) return false;
+			
+			if(_listener != null){
+				_listener.onReplicate(_event);
+		
+				if (_event._actionWasChosen) {
+					if (_event._actionChosenState == null) return false;
+					if (_event._actionChosenState.getObject() != obj) return false;
+				}
 			}
 		}
 		
