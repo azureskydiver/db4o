@@ -92,8 +92,9 @@ public class VodJdo implements VodJdoFacade {
 
 	public int deleteAll(Class clazz) {
 		Collection q = (Collection) _pm.newQuery(clazz).execute();
+		int size = q.size();
 		_pm.deletePersistentAll(q);
-		return q.size();
+		return size;
 	}
 
 	public void delete(Object obj) {
