@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com
+/* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -37,6 +37,18 @@ public class ArrayHolder {
 
 	public String toString() {
 		return _name + ", hashcode = " + hashCode();
+	}
+	
+	public String getName(){
+		return _name;
+	}
+	
+	public ArrayHolder[] array(){
+		return _array;
+	}
+	
+	public ArrayHolder[][] arrayN(){
+		return _arrayN;
 	}
 
 }
