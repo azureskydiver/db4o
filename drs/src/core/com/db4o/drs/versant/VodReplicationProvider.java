@@ -253,8 +253,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public boolean supportsMultiDimensionalArrays() {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		return true;
 	}
 
 	public boolean supportsRollback() {
@@ -560,7 +559,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			System.out.println("#creationVersion() found: " + info);
 		}
 		if(info == null){
-			throw new IllegalStateException("no ObjectLifecycleEvent found");
+			return null;
 		}
 		Signature signature = _signatures.signatureForLoid(info.signatureLoid());
 		if(signature == null){
