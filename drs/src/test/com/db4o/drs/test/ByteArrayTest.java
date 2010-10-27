@@ -96,14 +96,14 @@ public class ByteArrayTest extends DrsTestCase {
 	}
 
 	private void ensureNames(DrsProviderFixture fixture, byte[] bs) {
-		ensureOneInstance(fixture, IByteArrayHolder.class);
+		ensureOneInstance(fixture, ByteArrayHolder.class);
 		IByteArrayHolder c = getTheObject(fixture);
 		ArrayAssert.areEqual(c.getBytes(), bs);
 	}
 
 	private IByteArrayHolder getTheObject(DrsProviderFixture fixture) {
-		return (IByteArrayHolder) getOneInstance(fixture,
-				IByteArrayHolder.class);
+		return (ByteArrayHolder) getOneInstance(fixture,
+				ByteArrayHolder.class);
 	}
 
 	static byte[] createByteArray() {
