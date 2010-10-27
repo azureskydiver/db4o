@@ -43,7 +43,9 @@ public class ReplicationReflector {
 				return;
 			}
 		}
-		_reflector = new GenericReflector(null, reflector == null ? Platform4.reflectorForType(ReplicationReflector.class) : reflector);
+		GenericReflector genericReflector = new GenericReflector(null, reflector == null ? Platform4.reflectorForType(ReplicationReflector.class) : reflector);
+		Platform4.registerCollections(genericReflector);
+		_reflector = genericReflector;
 	}
 
 	public Object[] arrayContents(Object array) {
