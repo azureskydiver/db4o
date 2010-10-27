@@ -60,22 +60,22 @@ public class ReplicationConfiguratorTest implements TestCase {
 		Uuid uuid = getUuid(session, ch);
 		Assert.isNotNull(uuid );
 
-		ch.set.add("8");
+		ch.set().add("8");
 		session.flush();
 
-		ch.list.add("88");
+		ch.list().add("88");
 		session.flush();
 
-		ch.map.put("88", "88");
+		ch.map().put("88", "88");
 		session.flush();
 
-		ch.set = null;
+		ch.set(null);
 		session.flush();
 
-		ch.list = null;
+		ch.list(null);
 		session.flush();
 
-		ch.map = null;
+		ch.map(null);
 		session.flush();
 
 		session.delete(ch);
@@ -100,13 +100,13 @@ public class ReplicationConfiguratorTest implements TestCase {
 		Uuid uuid = getUuid(session, ch);
 		Assert.isNotNull(uuid);
 
-		ch.set.add("8");
+		ch.set().add("8");
 		session.flush();
 
-		ch.list.add("88");
+		ch.list().add("88");
 		session.flush();
 
-		ch.map.put("88", "88");
+		ch.map().put("88", "88");
 		session.flush();
 		tx.commit();
 
@@ -133,7 +133,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 		Uuid uuid = getUuid(session, ch);
 		Assert.isNotNull(uuid);
 
-		ch.name = "changed";
+		ch.name("changed");
 		tx.commit();
 
 		tx = session.beginTransaction();

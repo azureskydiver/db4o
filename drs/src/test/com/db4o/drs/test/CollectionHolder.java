@@ -23,10 +23,10 @@ package com.db4o.drs.test;
 import java.util.*;
 
 public class CollectionHolder {
-	public String name;
-	public Map map;
-	public List list;
-	public Set set;
+	private String name;
+	private Map map;
+	private List list;
+	private Set set;
 	
 	public CollectionHolder(String name, Map theMap, Set theSet, List theList) {
 		this.name = name;
@@ -47,6 +47,38 @@ public class CollectionHolder {
 
 	public String toString() {
 		return name + ", hashcode = " + hashCode();
+	}
+
+	public void map(Map map) {
+		this.map = map;
+	}
+
+	public Map map() {
+		return map;
+	}
+
+	public void list(List list) {
+		this.list = list;
+	}
+
+	public List list() {
+		return list;
+	}
+
+	public void set(Set set) {
+		this.set = set;
+	}
+
+	public Set set() {
+		return set;
+	}
+
+	public void name(String name) {
+		this.name = name;
+	}
+
+	public String name() {
+		return name;
 	}
 
 }

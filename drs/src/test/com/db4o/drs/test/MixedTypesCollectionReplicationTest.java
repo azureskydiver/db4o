@@ -36,26 +36,26 @@ public class MixedTypesCollectionReplicationTest extends DrsTestCase {
 		CollectionHolder h1 = new CollectionHolder("h1");
 		CollectionHolder h2 = new CollectionHolder("h2");
 
-		h1.map.put("key", "value");
-		h1.map.put("key2", h1);
-		h1.map.put(h1, "value2");
+		h1.map().put("key", "value");
+		h1.map().put("key2", h1);
+		h1.map().put(h1, "value2");
 
-		h2.map.put("key", h1);
-		h2.map.put(h2, h1);
+		h2.map().put("key", h1);
+		h2.map().put(h2, h1);
 
-		h1.list.add("one");
-		h1.list.add(h1);
+		h1.list().add("one");
+		h1.list().add(h1);
 
-		h2.list.add("two");
-		h2.list.add(h1);
-		h2.list.add(h2);
+		h2.list().add("two");
+		h2.list().add(h1);
+		h2.list().add(h2);
 
-		h1.set.add("one");
-		h1.set.add(h1);
+		h1.set().add("one");
+		h1.set().add(h1);
 
-		h2.set.add("two");
-		h2.set.add(h1);
-		h2.set.add(h2);
+		h2.set().add("two");
+		h2.set().add(h1);
+		h2.set().add(h2);
 
 
 		b().provider().storeNew(h2);
@@ -81,36 +81,36 @@ public class MixedTypesCollectionReplicationTest extends DrsTestCase {
 		Assert.isTrue(holder != original1);
 		Assert.isTrue(holder != original2);
 
-		if (holder.name.equals("h1"))
+		if (holder.name().equals("h1"))
 			checkH1(holder);
 		else
 			checkH2(holder);
 	}
 
 	private void checkH1(CollectionHolder holder) {
-		Assert.areEqual("value", holder.map.get("key"));
-		Assert.areEqual(holder, holder.map.get("key2"));
-		Assert.areEqual("value2", holder.map.get(holder));
+		Assert.areEqual("value", holder.map().get("key"));
+		Assert.areEqual(holder, holder.map().get("key2"));
+		Assert.areEqual("value2", holder.map().get(holder));
 
-		Assert.areEqual("one", holder.list.get(0));
-		Assert.areEqual(holder, holder.list.get(1));
+		Assert.areEqual("one", holder.list().get(0));
+		Assert.areEqual(holder, holder.list().get(1));
 
-		Assert.isTrue(holder.set.contains("one"));
-		Assert.isTrue(holder.set.contains(holder));
+		Assert.isTrue(holder.set().contains("one"));
+		Assert.isTrue(holder.set().contains(holder));
 	}
 
 	private void checkH2(CollectionHolder holder) {
-		Assert.areEqual("h1", ((CollectionHolder) holder.map.get("key")).name);
-		Assert.areEqual("h1", ((CollectionHolder) holder.map.get(holder)).name);
+		Assert.areEqual("h1", ((CollectionHolder) holder.map().get("key")).name());
+		Assert.areEqual("h1", ((CollectionHolder) holder.map().get(holder)).name());
 
-		Assert.areEqual("two", holder.list.get(0));
-		Assert.areEqual("h1", ((CollectionHolder) holder.list.get(1)).name);
-		Assert.areEqual(holder, holder.list.get(2));
+		Assert.areEqual("two", holder.list().get(0));
+		Assert.areEqual("h1", ((CollectionHolder) holder.list().get(1)).name());
+		Assert.areEqual(holder, holder.list().get(2));
 
-		Assert.isTrue(holder.set.remove("two"));
-		Assert.isTrue(holder.set.remove(holder));
-		CollectionHolder remaining = nextCollectionHolder(holder.set.iterator());
-		Assert.areEqual("h1", remaining.name);
+		Assert.isTrue(holder.set().remove("two"));
+		Assert.isTrue(holder.set().remove(holder));
+		CollectionHolder remaining = nextCollectionHolder(holder.set().iterator());
+		Assert.areEqual("h1", remaining.name());
 	}
 
 	public void test() {
