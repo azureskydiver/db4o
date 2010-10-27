@@ -569,8 +569,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public boolean isProviderSpecific(Object original) {
-		// TODO Auto-generated method stub
-		throw new com.db4o.foundation.NotImplementedException();
+		return original.getClass().getName().startsWith("com.versant.");
 	}
 	
 	public ReplicationReference produceReference(Object obj) {
