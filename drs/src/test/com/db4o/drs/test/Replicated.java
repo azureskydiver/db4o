@@ -21,7 +21,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.test;
 
 public class Replicated {
+	
 	private String name;
+	
 	private Replicated link;
 
 	public Replicated() {
