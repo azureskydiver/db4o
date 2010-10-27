@@ -46,8 +46,9 @@ public class ArrayReplicationTest extends DrsTestCase {
 
 		b().provider().storeNew(h2);
 		b().provider().storeNew(h1);
+		b().provider().commitAndWaitFor(h1);
 
-		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider());
+		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider(), null, _fixtures.reflector);
 
 		replication.replicate(h2); //Traverses to h1.
 
@@ -65,26 +66,26 @@ public class ArrayReplicationTest extends DrsTestCase {
 	}
 	
 	private void check(ArrayHolder holder) {
-		if (holder._name.equals("h1"))
+		if (holder.getName().equals("h1"))
 			checkH1(holder);
 		else
 			checkH2(holder);
 	}
 
 	protected void checkH1(ArrayHolder holder) {
-		Assert.areEqual(holder._array[0], holder);
-		Assert.areEqual(holder._arrayN[0][0], holder);
+		Assert.areEqual(holder.array()[0], holder);
+		Assert.areEqual(holder.arrayN()[0][0], holder);
 	}
 
 	protected void checkH2(ArrayHolder holder) {
-		Assert.areEqual(holder._array[0]._name, "h1");
-		Assert.areEqual(holder._array[1], holder);
-		Assert.areEqual(holder._array[2], null);
+		Assert.areEqual(holder.array()[0].getName(), "h1");
+		Assert.areEqual(holder.array()[1], holder);
+		Assert.areEqual(holder.array()[2], null);
 
-		Assert.areEqual(holder._arrayN[0][0]._name, "h1");
-		Assert.areEqual(holder._arrayN[1][0], null);
-		Assert.areEqual(holder._arrayN[1][1], holder);
-		Assert.areEqual(holder._arrayN[2][0], null);
+		Assert.areEqual(holder.arrayN()[0][0].getName(), "h1");
+		Assert.areEqual(holder.arrayN()[1][0], null);
+		Assert.areEqual(holder.arrayN()[1][1], holder);
+		Assert.areEqual(holder.arrayN()[2][0], null);
 	}
 
 }
