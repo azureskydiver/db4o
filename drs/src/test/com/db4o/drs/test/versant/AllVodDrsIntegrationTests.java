@@ -98,6 +98,10 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						// Collection
 						ListTest.class, 
 						ComplexListTestCase.class,
+						CollectionHandlerImplTest.class,  
+						MapTest.class,
+						SingleTypeCollectionReplicationTest.class,
+						MixedTypesCollectionReplicationTest.class,
 
 						/* Tests that haven't been checked yet */
 						
@@ -105,12 +109,8 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 //						ReplicationFeaturesMain.class,
 //
 //						// General
-//						CollectionHandlerImplTest.class,  
 //						ReplicationTraversalTest.class,
 //				
-//						MapTest.class,
-//						SingleTypeCollectionReplicationTest.class,
-//						MixedTypesCollectionReplicationTest.class,
 //						TransparentActivationTestCase.class,
 //		                
 //		                //regression
