@@ -94,15 +94,13 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
  						R0to4Runner.class, 	
 						ByteArrayTest.class,
 						ArrayReplicationTest.class,
-						
+
+						// Collection
+						ListTest.class, 
+						ComplexListTestCase.class,
+
 						/* Tests that haven't been checked yet */
 						
-						// Simple
-//						
-//						// Collection
-//						ComplexListTestCase.class,
-//						ListTest.class, 
-//
 //						// Complex
 //						ReplicationFeaturesMain.class,
 //

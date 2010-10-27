@@ -40,6 +40,7 @@ public class ComplexListTestCase extends DrsTestCase {
 	private void roundTripTest() {
 		changeInProviderB();
 		
+		b().provider().commit();
 		replicateAndTest(b(), a());
 	}
 
