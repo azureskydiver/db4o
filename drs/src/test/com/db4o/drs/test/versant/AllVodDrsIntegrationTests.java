@@ -69,8 +69,6 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 	
 	public static class VodDrsSuite extends DrsTestSuite {
 		
-		
-		
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Class[] testCases() {
@@ -94,11 +92,12 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
  						SimpleArrayTest.class,
 						ReplicatingTwiceTestCase.class,
  						R0to4Runner.class, 	
+						ByteArrayTest.class,
+						ArrayReplicationTest.class,
 						
 						/* Tests that haven't been checked yet */
 						
 						// Simple
-//						ByteArrayTest.class,
 //						
 //						// Collection
 //						ComplexListTestCase.class,
@@ -112,7 +111,6 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 //						ReplicationTraversalTest.class,
 //				
 //						MapTest.class,
-//						ArrayReplicationTest.class,
 //						SingleTypeCollectionReplicationTest.class,
 //						MixedTypesCollectionReplicationTest.class,
 //						TransparentActivationTestCase.class,
