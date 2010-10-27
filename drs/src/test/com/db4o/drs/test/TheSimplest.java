@@ -46,7 +46,7 @@ public class TheSimplest extends DrsTestCase {
 		SPCChild child = createChildObject(name);
 		
 		a().provider().storeNew(child);
-		a().provider().commitAndWaitFor(child);
+		a().provider().commit();
 		
 		ensureNames(a(), "c1");
 	}
@@ -63,7 +63,7 @@ public class TheSimplest extends DrsTestCase {
 
 		child.setName("c2");
 		b().provider().update(child);
-		b().provider().commitAndWaitFor(child);
+		b().provider().commit();
 
 		ensureNames(b(), "c2");
 	}
@@ -81,7 +81,7 @@ public class TheSimplest extends DrsTestCase {
 		child.setName("c3");
 
 		a().provider().update(child);
-		a().provider().commitAndWaitFor(child);
+		a().provider().commit();
 
 		ensureNames(a(), "c3");
 	}

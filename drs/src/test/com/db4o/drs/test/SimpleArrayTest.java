@@ -52,7 +52,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		sah.add(sac1);
 		sah.add(sac2);
 		a().provider().storeNew(sah);
-		a().provider().commitAndWaitFor(sah);
+		a().provider().commit();
 
 		ensureContent(a(), new String[]{"h1"}, new String[]{"c1", "c2"});
 	}
@@ -78,7 +78,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		b().provider().update(sac2);
 		b().provider().update(sah);
 
-		b().provider().commitAndWaitFor(sah);
+		b().provider().commit();
 
 		ensureContent(b(), new String[]{"h2"}, new String[]{"co1", "co2"});
 	}
@@ -99,7 +99,7 @@ public class SimpleArrayTest extends DrsTestCase {
 		sah.add(lc3);
 
 		a().provider().update(sah);
-		a().provider().commitAndWaitFor(sah);
+		a().provider().commit();
 
 		ensureContent(a(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}

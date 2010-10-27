@@ -688,8 +688,5 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 	
-	public void commitAndWaitFor(Object obj) {
-		commit();
-	}
 
 }

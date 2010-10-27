@@ -69,7 +69,7 @@ public class R0to4Runner extends DrsTestCase {
 		}
 		
 		if(commitObject != null){
-			provider.commitAndWaitFor(commitObject);
+			provider.commit();
 		} else {
 			provider.commit();
 		}
@@ -154,7 +154,7 @@ public class R0to4Runner extends DrsTestCase {
 			provider.update(r4);
 			commitObject = r4;
 		}
-		provider.commitAndWaitFor(commitObject);
+		provider.commit();
 	}
 
 	private int replicate(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {

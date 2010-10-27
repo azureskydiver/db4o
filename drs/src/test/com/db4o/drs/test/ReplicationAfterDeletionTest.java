@@ -40,7 +40,7 @@ public class ReplicationAfterDeletionTest extends DrsTestCase {
 		SPCChild child = new SPCChild("c1");
 		SPCParent parent = new SPCParent(child, "p1");
 		a().provider().storeNew(parent);
-		a().provider().commitAndWaitFor(parent);
+		a().provider().commit();
 
 		replicateAll(a().provider(), b().provider());
 	}
