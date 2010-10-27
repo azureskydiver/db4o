@@ -4,7 +4,7 @@ import java.util.*;
 
 import javax.jdo.*;
 
-import com.db4o.drs.versant.VodJdo.PreStoreListener;
+import com.db4o.drs.versant.VodJdo.ObjectCommittedListener;
 
 public interface VodJdoFacade extends LoidProvider {
 	
@@ -36,6 +36,8 @@ public interface VodJdoFacade extends LoidProvider {
 
 	void refresh(Object obj);
 
-	void addPreStoreListener(PreStoreListener preStoreListener);
+	void addObjectCommittedListener(ObjectCommittedListener preStoreListener);
+	
+	void removeObjectCommitedListener(ObjectCommittedListener preStoreListener);
 	
 }

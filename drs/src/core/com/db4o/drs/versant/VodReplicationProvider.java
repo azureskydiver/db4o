@@ -12,7 +12,7 @@ import javax.jdo.spi.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
-import com.db4o.drs.versant.VodJdo.PreStoreListener;
+import com.db4o.drs.versant.VodJdo.ObjectCommittedListener;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
@@ -69,6 +69,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private boolean pinging = true;
 
+	private long _sampleCommitLoid = 0;
+	
+	private boolean _waitForCommitLoid = false;
+	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
 		_control = EventProcessorNetworkFactory.newClient(vod);
 		_vod = vod;
@@ -103,8 +107,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private static final Class[] IGNORED_CLASSES = {ObjectInfo.class};
 
 	private void prepareJdoListener() {
-		_jdo.addPreStoreListener(new PreStoreListener() {
-			public void preStore(Object object) {
+		_jdo.addObjectCommittedListener(new ObjectCommittedListener() {
+			public void committed(Object object) {
 				Class clazz = object.getClass();
 				for (int i = 0; i < IGNORED_CLASSES.length; i++) {
 					if(clazz == IGNORED_CLASSES[i]){
@@ -119,6 +123,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				long loid = loid(object);
 				log("Timestamp for " + loid + " preset to " + timeStamp());
 				_loidTimeStamps.add(new Pair(loid, timeStamp()));
+				_sampleCommitLoid = loid;
 			}
 		});
 	}
@@ -183,6 +188,34 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	
 	public void commit() {
+		
+		if(! _waitForCommitLoid){
+			internalCommit();
+			return;
+		}
+		
+		final BlockingQueue<Long> processedObjects = new BlockingQueue<Long>();
+		EventProcessorListener listener = new AbstractEventProcessorListener() {
+			@Override
+			public void onEvent(long loid) {
+				processedObjects.add(loid);
+			}
+		};
+		syncEventProcessor().addListener(listener);
+		
+		internalCommit();
+		
+		while(true) {
+			if (_sampleCommitLoid == (long)processedObjects.next()) {
+				break;
+			}
+		}
+		_sampleCommitLoid = 0;
+		_waitForCommitLoid = false;
+		syncEventProcessor().removeListener(listener);
+	}
+
+	private void internalCommit() {
 		timeStamp(syncEventProcessor().generateTimestamp());
 		syncEventProcessor().requestIsolation(true);
 		try {
@@ -196,13 +229,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void delete(Object obj) {
 		_jdo.delete(obj);
+		_waitForCommitLoid = true;
 	}
 
 	public void deleteAllInstances(Class clazz) {
 		if(!_cobra.isKnownClass(clazz)) {
 			return;
 		}
-		_jdo.deleteAll(clazz);
+		if(_jdo.deleteAll(clazz) > 0){
+			_waitForCommitLoid = true;
+		}
 	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
@@ -220,11 +256,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		ensureClassKnown(obj.getClass());
 		_jdo.store(obj);
+		_waitForCommitLoid = true;
 	}
 
 	public void update(Object obj) {
-		// do nothing
-		// JDO is transparent persistence
+		_waitForCommitLoid = true;
 	}
 
 	public void destroy() {
@@ -428,6 +464,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			_cobra.store(objectInfo);
 			_cobra.commit();
 		}
+		
+		_waitForCommitLoid = true;
 		
 		logIdentity(obj, String.valueOf(loid));
 	}
@@ -667,28 +705,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitAndWaitFor(Object modifiedObject) {
-		long expectedLoid = loid(modifiedObject);
-		final BlockingQueue<Long> events = new BlockingQueue<Long>();
-		EventProcessorListener listener = new EventProcessorListener() {
-			public void ready() {
-				
-			}
-			
-			public void onEvent(long loid) {
-				events.add(loid);
-			}
-			
-			public void committed(String transactionId) {
-				
-			}
-		};
-		syncEventProcessor().addListener(listener);
 		commit();
-		long actualLoid = events.next();
-		while(expectedLoid != actualLoid){
-			actualLoid = events.next();
-		}
-		syncEventProcessor().removeListener(listener);
 	}
 	
 }
