@@ -33,18 +33,31 @@ import db4ounit.*;
 public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	
 	public static final Class[] mappings;
-	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class, List.class};
+	public static final Class[] extraMappingsForCleaning = 
+		new Class[]{
+			List.class,
+			Map.class,
+		};
 
 	static {
 		mappings = new Class[]{
-				Replicated.class,
-				SPCParent.class, SPCChild.class,
-				ListHolder.class, ListContent.class,
-				SimpleListHolder.class, SimpleItem.class,
+				Car.class, 
 				CollectionHolder.class,
+				ListContent.class,
+				ListHolder.class, 
 				MapContent.class,
-				SimpleArrayContent.class, SimpleArrayHolder.class,
-				R0.class, Pilot.class, Car.class, Student.class, Person.class};
+				Person.class,
+				Pilot.class, 
+				R0.class,
+				Replicated.class,
+				SimpleArrayContent.class, 
+				SimpleArrayHolder.class,
+				SimpleItem.class,
+				SimpleListHolder.class, 
+				SPCChild.class,
+				SPCParent.class,
+				Student.class,
+		};
 	}
 
 	protected final DrsFixture _fixtures = DrsFixtureVariable.value();
