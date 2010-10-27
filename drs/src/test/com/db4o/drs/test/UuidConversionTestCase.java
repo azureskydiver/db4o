@@ -34,7 +34,6 @@ public class UuidConversionTestCase extends DrsTestCase{
 	
 	private void replicate() {
 		replicateAll(a().provider(), b().provider());
-		b().provider().commit();
 	}
 	
 	protected SPCChild createChildObject(String name) {
