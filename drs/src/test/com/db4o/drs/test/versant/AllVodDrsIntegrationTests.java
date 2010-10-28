@@ -72,70 +72,18 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Class[] testCases() {
-			
 			if(false){
 				return new Class[]{
-						ReplicationFeaturesMain.class
+					ComplexListTestCase.class
 				};
 			}
-			
-			
-			if (true) {
-				
-				// This is the one we are heading for for now.
-				return new Class[] {
-						
-						/*  Passing  Tests */
-						
-						com.db4o.drs.test.foundation.AllTests.class,
-						com.db4o.drs.test.versant.objectid.AllTests.class,
-						ReplicationProviderTest.class,
- 						TheSimplest.class,
-						UuidConversionTestCase.class,
-						ReplicationEventTest.class,
-						ReplicationAfterDeletionTest.class,
-						SimpleParentChild.class,
- 						SimpleArrayTest.class,
-						ReplicatingTwiceTestCase.class,
- 						R0to4Runner.class, 	
-						ByteArrayTest.class,
-						ArrayReplicationTest.class,
-
-						// Collection
-						ListTest.class, 
-						ComplexListTestCase.class,
-						CollectionHandlerImplTest.class,  
-						MapTest.class,
-						SingleTypeCollectionReplicationTest.class,
-						MixedTypesCollectionReplicationTest.class,
-						ReplicationFeaturesMain.class,
-
-						/* Tests that haven't been checked yet */
-						
-//						// Complex
-//
-//						// General
-//						ReplicationTraversalTest.class,
-//				
-//						TransparentActivationTestCase.class,
-//		                
-//		                //regression
-//		                DRS42Test.class,
-//		                
-//		                SameHashCodeTestCase.class,
-
-						
-						
-				};
-			}
-			
 			return super.testCases();
 		}
 
 
 		@Override
 		protected Class[] specificTestCases() {
-			return null;
+			return new Class[]{};
 		}
 
 	}
