@@ -47,7 +47,7 @@ public interface EventProcessor {
 
 		void committed(String transactionId);
 		
-		void onEvent(long loid);
+		void onEvent(long loid, long version);
 
 	}
 

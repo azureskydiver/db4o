@@ -9,6 +9,7 @@ import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
@@ -33,16 +34,9 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		
 		_vod.startEventProcessor();
 		
-		_eventProcessorListener = new EventProcessorListener() {
-			public void ready() {
-				
-			}
-			
-			public void committed(String transactionId) {
-				
-			}
-
-			public void onEvent(long loid) {
+		_eventProcessorListener = new AbstractEventProcessorListener() {
+			@Override
+			public void onEvent(long loid, long version) {
 				events.add(loid);
 			}
 		};

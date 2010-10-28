@@ -59,20 +59,13 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 				
 				
 				final BlockingQueue<String> transactionQueue = new BlockingQueue<String>();
-				EventProcessorListener listener = new EventProcessorListener() {
-					
-					public void ready() {
-					}
-					
+				EventProcessorListener listener = new AbstractEventProcessorListener() {
+					@Override
 					public void committed(String transactionId) {
 						synchronized(transactionQueue){
 							System.err.println("transactionId in committed " +  transactionId);
 							transactionQueue.add(transactionId);
 						}
-					}
-
-					public void onEvent(long loid) {
-						
 					}
 				};
 				_provider.syncEventProcessor().addListener(listener);
@@ -162,16 +155,9 @@ public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
 		withEventProcessor(new Closure4<Void>() {
 			public Void run() {
 				final BlockingQueue4<Long> q = new BlockingQueue<Long>();
-				EventProcessorListener listener = new EventProcessorListener() {
-					
-					public void ready() {
-					}
-					
-					public void committed(String transactionId) {
-						
-					}
-
-					public void onEvent(long loid) {
+				EventProcessorListener listener = new AbstractEventProcessorListener() {
+					@Override
+					public void onEvent(long loid, long version) {
 						q.add(loid);
 					}
 					

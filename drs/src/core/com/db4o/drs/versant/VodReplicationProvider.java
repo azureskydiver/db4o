@@ -193,12 +193,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			internalCommit();
 			return;
 		}
-		
+		final long timeStampToCompare = timeStamp();
 		final BlockingQueue<Long> processedObjects = new BlockingQueue<Long>();
 		EventProcessorListener listener = new AbstractEventProcessorListener() {
 			@Override
-			public void onEvent(long loid) {
-				processedObjects.add(loid);
+			public void onEvent(long loid, long version) {
+				if(version >= timeStampToCompare){
+					processedObjects.add(loid);
+				}
 			}
 		};
 		syncEventProcessor().addListener(listener);
@@ -220,9 +222,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		syncEventProcessor().requestIsolation(true);
 		try {
 			_jdo.commit();
-			asyncEventProcessor().forceTimestamps(_loidTimeStamps);
+			syncEventProcessor().forceTimestamps(_loidTimeStamps);
 		} finally {
-			asyncEventProcessor().requestIsolation(false);
+			syncEventProcessor().requestIsolation(false);
 		}
 		_loidTimeStamps.clear();
 	}
@@ -300,14 +302,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		timeStamp(syncEventProcessor().generateTimestamp());
 		timeStamp(raisedDatabaseVersion - 1);
 		
 		_jdo.commit();
 		syncEventProcessor().forceTimestamps(_loidTimeStamps);
 		_loidTimeStamps.clear();
 		
-		syncEventProcessor().syncTimestamp(raisedDatabaseVersion -1);
+		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
 		timeStamp(raisedDatabaseVersion);
 		
 		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
@@ -537,31 +538,42 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private String classMetadataLoidFilter(Class clazz) {
 		String filter = "this.classMetadataLoid == " + _knownClasses.get(clazz.getName());
 		List<Class> children = _classHierarchy.get(clazz);
-		for (Class childClass : children) {
-			filter += " || " + classMetadataLoidFilter(childClass);
+		if(children != null){
+			for (Class childClass : children) {
+				filter += " || " + classMetadataLoidFilter(childClass);
+			}
 		}
 		return filter;
 	}
 	
 	public void debug(){
 		// useful debug code left here, 
-		// just set the class to print all ObjectInfos for a class 
-		logObjectInfo(null);
+		// just set the class to print all ObjectInfos for a class
+		Class clazz = null;
+		logObjectInfoJdo(clazz);
+		logObjectInfoCobra(clazz);
 	}
 	
-	private Set<Long> logObjectInfo(Class clazz) {
+	private void logObjectInfoJdo(Class clazz) {
 		System.err.println("JDO");
-		_jdo.rollback();
 		String filter = classMetadataLoidFilter(clazz);
-		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
 		for (ObjectInfo info : infos) {
 			if(Operations.forValue(info.operation()) != Operations.DELETE){
-				_jdo.refresh(info);
 				System.err.println(info);
 			}
 		}
-		return loids;
+	}
+	
+	private void logObjectInfoCobra(Class clazz) {
+		System.err.println("Cobra");
+		ObjectInfo objectInfo = prototype(ObjectInfo.class);
+		ObjectSet<ObjectInfo> infos = _cobra.from(ObjectInfo.class).where(objectInfo.classMetadataLoid()).equal(_knownClasses.get(clazz.getName())).select();
+		for (ObjectInfo info : infos) {
+			if(Operations.forValue(info.operation()) != Operations.DELETE){
+				System.err.println(info);
+			}
+		}
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {

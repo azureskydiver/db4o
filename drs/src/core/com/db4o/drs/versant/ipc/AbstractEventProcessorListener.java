@@ -10,7 +10,7 @@ public class AbstractEventProcessorListener implements EventProcessorListener{
 		// do nothing
 	}
 
-	public void onEvent(long loid) {
+	public void onEvent(long loid, long version) {
 		// do nothing
 	}
 
