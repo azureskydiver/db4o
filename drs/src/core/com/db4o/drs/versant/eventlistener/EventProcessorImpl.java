@@ -301,9 +301,9 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 					}
 					Long timestamp = _loidTimeStamps.remove(objectLoid);
 					if(timestamp != null){
-						infoToStore.modificationVersion(timestamp);
+						infoToStore.version(timestamp);
 					}
-					info.modificationVersion(infoToStore.modificationVersion());
+					info.version(infoToStore.version());
 					_cobra.store(infoToStore);
 					println("stored: " + infoToStore);
 				}
@@ -315,7 +315,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			if(infos != null){
 				for(ObjectInfo info: infos){
 					long objectLoid = info.objectLoid();
-					long version = info.modificationVersion();
+					long version = info.version();
 					listenerTrigger().onEvent(objectLoid, version);
 				}
 			}

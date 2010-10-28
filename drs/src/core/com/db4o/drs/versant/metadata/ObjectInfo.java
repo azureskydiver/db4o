@@ -62,13 +62,12 @@ public class ObjectInfo extends VodLoidAwareObject {
 		this.signatureLoid = loid;
 	}
 	
-	// FIXME: rename to version
-	public long modificationVersion() {
+	public long version() {
 		return version;
 	}
 
 	
-	public void modificationVersion(long version) {
+	public void version(long version) {
 		this.version = version;
 	}
 
