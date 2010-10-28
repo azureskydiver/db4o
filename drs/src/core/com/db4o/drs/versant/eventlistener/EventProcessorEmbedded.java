@@ -4,7 +4,7 @@ package com.db4o.drs.versant.eventlistener;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
+import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
@@ -25,19 +25,10 @@ public class EventProcessorEmbedded {
 		_eventProcessorThread.start();
 		
 		final BlockingQueue4<String> barrier = new BlockingQueue<String>();
-		_eventProcessor.addListener(new EventProcessorListener() {
-			
+		_eventProcessor.addListener(new AbstractEventProcessorListener() {
+			@Override
 			public void ready() {
 				barrier.add("ready");
-				
-			}
-
-			public void committed(String transactionId) {
-				
-			}
-
-			public void onEvent(long loid) {
-				
 			}
 		});
 
