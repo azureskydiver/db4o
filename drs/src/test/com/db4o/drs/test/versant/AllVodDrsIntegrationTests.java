@@ -73,6 +73,12 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 		@Override
 		protected Class[] testCases() {
 			
+			if(false){
+				return new Class[]{
+						ReplicationFeaturesMain.class
+				};
+			}
+			
 			
 			if (true) {
 				
