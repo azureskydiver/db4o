@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-import com.db4o.drs.versant.*;
 import com.db4o.foundation.*;
 
 
