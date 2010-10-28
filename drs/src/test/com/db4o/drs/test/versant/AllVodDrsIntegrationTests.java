@@ -108,11 +108,11 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 						MapTest.class,
 						SingleTypeCollectionReplicationTest.class,
 						MixedTypesCollectionReplicationTest.class,
+						ReplicationFeaturesMain.class,
 
 						/* Tests that haven't been checked yet */
 						
 //						// Complex
-//						ReplicationFeaturesMain.class,
 //
 //						// General
 //						ReplicationTraversalTest.class,
