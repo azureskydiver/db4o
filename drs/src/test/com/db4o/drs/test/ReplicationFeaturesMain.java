@@ -22,6 +22,7 @@ package com.db4o.drs.test;
 
 import java.util.Iterator;
 
+import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.foundation.Set4;
@@ -95,30 +96,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		return _containerStateToPrevail != null && _containerStateToPrevail.isEmpty();
 	}
 
-	protected void actualTest() {
-		clean();
-		_setA.add(AStuff);
-		_setB.add(BStuff);
-
-		_setBoth.addAll(_setA);
-		_setBoth.addAll(_setB);
-
-		_testCombination = 0;
-
-		tstWithDeletedObjectsIn(_NONE);
-		tstWithDeletedObjectsIn(_setA);
-		tstWithDeletedObjectsIn(_setB);
-		tstWithDeletedObjectsIn(_setBoth);
-
-		if (_intermittentErrors.length() > 0) {
-			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
-			Assert.isTrue(false);
-		}
-	}
-
-//	protected void clean() {
-//		delete(new Class[]{Replicated.class});
-//	}
 
 	private void changeObject(TestableReplicationProviderInside container, String name, String newName) {
 		Replicated obj = find(container, name);
@@ -189,7 +166,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 		printProvidersContent("after changes");
 
-		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider(), new ReplicationEventListener() {
+		ReplicationEventListener listener = new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent e) {
 				if (_containerStateToPrevail == null) {
 					e.overrideWith(null);
@@ -203,7 +180,9 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 						: e.stateInProviderB();
 				e.overrideWith(override);
 			}
-		});
+		};
+		
+		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider(), listener, _fixtures.reflector);
 
 		if (_direction.size() == 1) {
 			if (_direction.contains(AStuff))	replication.setDirection(b().provider(), a().provider());
@@ -224,19 +203,21 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private void printProvidersContent(String msg) {
-//		System.out.println("*** "+msg);
-//		printProviderContent(a().provider());
-//		printProviderContent(b().provider());
+		if(true){
+			return;
+		}
+		System.out.println("*** "+msg);
+		printProviderContent(a().provider());
+		printProviderContent(b().provider());
 	}
 	
-//	private void printProviderContent(TestableReplicationProviderInside provider) {
-//		ObjectContainer db=((Db4oReplicationProvider)provider).objectContainer();
-//		ObjectSet result=db.query(Replicated.class);
-//		System.out.println("PROVIDER: "+provider);
-//		while(result.hasNext()) {
-//			System.out.println(result.next());
-//		}
-//	}
+	private void printProviderContent(TestableReplicationProviderInside provider) {
+		ObjectSet storedObjects = provider.getStoredObjects(Replicated.class);
+		System.out.println("PROVIDER: "+provider);
+		while(storedObjects.hasNext()) {
+			System.out.println(storedObjects.next());
+		}
+	}
 
 	private boolean tryToReplicate(final ReplicationSession replication) {
 
@@ -458,16 +439,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		return (String)Iterators.next(iterator);
 	}
 
-	private void printCombination() {
-		out("" + _testCombination + " =================================");
-		out("New Objects In: " + print(_containersWithNewObjects));
-		out("Changed Objects In: " + print(_containersWithChangedObjects));
-		out("Deleted Objects In: " + print(_containersWithDeletedObjects));
-		out("Querying From: " + print(_containersToQueryFrom));
-		out("Direction: To " + print(_direction));
-		out("Prevailing State: " + print(_containerStateToPrevail));
-	}
-
 	private void runCurrentCombination() {
 		_testCombination++;
 		out("" + _testCombination + " =================================");
@@ -493,11 +464,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		if (_errors > 0)
 			_intermittentErrors += "\n\t Combination: " + _testCombination + " (" + _errors + " errors)";
 	}
-
-	private static void out(String string) {
-		// System.out.println(string);
-	}
-
+	
 	public void test() {
 		long start = System.currentTimeMillis();
 		actualTest();
@@ -505,6 +472,50 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		long duration = stop - start;
 		System.out.println("ReplicationFeaturesMain takes " + duration + "ms");
 		System.out.println("Run combinations " + _testCombination);
+	}
+
+
+	private static void out(String string) {
+		// System.out.println(string);
+	}
+	
+	private void printCombination() {
+		out("" + _testCombination + " =================================");
+		out("Deleted Objects In: " + print(_containersWithDeletedObjects));
+		out("Direction: To " + print(_direction));
+		out("Querying From: " + print(_containersToQueryFrom));
+		out("New Objects In: " + print(_containersWithNewObjects));
+		out("Changed Objects In: " + print(_containersWithChangedObjects));
+		out("Prevailing State: " + print(_containerStateToPrevail));
+	}
+	
+	protected void actualTest() {
+		clean();
+		_setA.add(AStuff);
+		_setB.add(BStuff);
+
+		_setBoth.addAll(_setA);
+		_setBoth.addAll(_setB);
+
+		_testCombination = 0;
+
+		tstWithDeletedObjectsIn(_NONE);
+		tstWithDeletedObjectsIn(_setA);
+		tstWithDeletedObjectsIn(_setB);
+		tstWithDeletedObjectsIn(_setBoth);
+
+		if (_intermittentErrors.length() > 0) {
+			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
+			Assert.isTrue(false);
+		}
+	}
+	
+	private void tstWithDeletedObjectsIn(Set4 containers) {
+		_containersWithDeletedObjects = containers;
+
+		tstDirection(_setA);
+		tstDirection(_setB);
+		tstDirection(_setBoth);
 	}
 
 	private void tstDirection(Set4 direction) {
@@ -524,23 +535,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		tstWithNewObjectsIn(_setBoth);
 	}
 
-	private void tstWithChangedObjectsIn(Set4 containers) {
-		_containersWithChangedObjects = containers;
-
-		tstWithContainerStateToPrevail(_NONE);
-		tstWithContainerStateToPrevail(_setA);
-		tstWithContainerStateToPrevail(_setB);
-		tstWithContainerStateToPrevail(null);
-	}
-
-	private void tstWithDeletedObjectsIn(Set4 containers) {
-		_containersWithDeletedObjects = containers;
-
-		tstDirection(_setA);
-		tstDirection(_setB);
-		tstDirection(_setBoth);
-	}
-
 	private void tstWithNewObjectsIn(Set4 containersWithNewObjects) {
 		_containersWithNewObjects = containersWithNewObjects;
 
@@ -548,6 +542,15 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		tstWithChangedObjectsIn(_setA);
 		tstWithChangedObjectsIn(_setB);
 		tstWithChangedObjectsIn(_setBoth);
+	}
+	
+	private void tstWithChangedObjectsIn(Set4 containers) {
+		_containersWithChangedObjects = containers;
+
+		tstWithContainerStateToPrevail(_NONE);
+		tstWithContainerStateToPrevail(_setA);
+		tstWithContainerStateToPrevail(_setB);
+		tstWithContainerStateToPrevail(null);
 	}
 
 	private void tstWithContainerStateToPrevail(Set4 containers) {

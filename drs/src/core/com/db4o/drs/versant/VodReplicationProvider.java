@@ -634,19 +634,20 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		
 		long signatureLoid = _signatures.loidFor(new Signature(uuid.getSignaturePart()));
-		long loid = 0;
+		
+		ObjectInfo foundInfo = null;
 		for (ObjectInfo info : infos) {
 			if(info.signatureLoid() == signatureLoid){
-				loid = info.objectLoid();
+				foundInfo = info;
 				break;
 			}
 		}
 		
-		if(loid == 0){
-			throw new IllegalStateException("Could not create loid from " + uuid);
+		if(foundInfo == null || foundInfo.operation() == Operations.DELETE.value){
+			return null;	
 		}
 		
-		reference = produceNewReference(_jdo.objectByLoid(loid));
+		reference = produceNewReference(_jdo.objectByLoid(foundInfo.objectLoid()));
 		_replicationReferences.put(reference);
 		return reference; 
 	}
