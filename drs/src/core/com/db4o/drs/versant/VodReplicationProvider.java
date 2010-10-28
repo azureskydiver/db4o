@@ -612,7 +612,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			throw new IllegalStateException("signature not expected to be null ");
 		}
 		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, info.uuidLongPart());
-		return new ReplicationReferenceImpl(obj, uuid, info.modificationVersion());
+		return new ReplicationReferenceImpl(obj, uuid, info.version());
 	}
 	
 	public ReplicationReferenceImpl produceReferenceByUUID(DrsUUID uuid, Class hint) {
