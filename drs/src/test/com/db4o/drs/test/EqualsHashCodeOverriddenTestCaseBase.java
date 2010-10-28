@@ -11,6 +11,7 @@ import db4ounit.*;
 public class EqualsHashCodeOverriddenTestCaseBase implements TestCase {
 
 	public static class Item {
+		
 		public String _name;
 		
 		public Item(String name) {
@@ -30,7 +31,6 @@ public class EqualsHashCodeOverriddenTestCaseBase implements TestCase {
 		
 		@Override
 		public int hashCode() {
-			System.err.println(getClass() + " " + _name + " HC!");
 			return _name.hashCode();
 		}
 	}
