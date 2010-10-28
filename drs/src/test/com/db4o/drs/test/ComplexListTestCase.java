@@ -27,14 +27,11 @@ import db4ounit.Assert;
 
 @SuppressWarnings("unchecked")
 public class ComplexListTestCase extends DrsTestCase {
+
 	public void test() {
-		
 		store(a(), createList());
-		
 		replicateAndTest(a(), b());
-		
 		roundTripTest();
-		
 	}
 	
 	private void roundTripTest() {
@@ -53,6 +50,7 @@ public class ComplexListTestCase extends DrsTestCase {
 		SimpleItem foo = getItem(simpleListHolder, "foo");
 		foo.setChild(fooBaby);
 		b().provider().update(foo);
+		b().provider().update(simpleListHolder.getList());
 		b().provider().update(simpleListHolder);
 	}
 
