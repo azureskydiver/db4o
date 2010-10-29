@@ -11,6 +11,10 @@ import javax.jdo.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.eventlistener.EventProcessorApplication.*;
+import com.db4o.drs.versant.ipc.*;
+import com.db4o.drs.versant.ipc.tcp.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.util.*;
 import com.db4o.util.IOServices.*;
 import com.versant.odbms.*;
@@ -18,7 +22,8 @@ import com.versant.util.*;
 
 public class VodDatabase {
 	
-	
+	private static final long STARTUP_TIMEOUT = DrsDebug.timeout(10000);
+
 	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
 	
 	private static final String JDO_METADATA_KEY = "versant.metadata."; 
@@ -43,6 +48,10 @@ public class VodDatabase {
 	private EventConfiguration _eventConfiguration;
 
 	private EventProcessorEmbedded _eventProcessorSupport;
+
+	private String _eventProcessorHost = "localhost";
+
+	private int _eventProcessorPort = 7232;
 	
 
 	public VodDatabase(String name, Properties properties){
@@ -53,6 +62,13 @@ public class VodDatabase {
 	
 	public VodDatabase(String name){
 		this(name, new Properties());
+	}
+	
+	// TODO add the other ports and hosts as parameters too
+	public VodDatabase(String name, String eventProcessorHost, int eventProcessorPort){
+		this(name, new Properties());
+		_eventProcessorHost = eventProcessorHost;
+		_eventProcessorPort = eventProcessorPort;
 	}
 	
 	private void addDefaultProperties(){
@@ -250,7 +266,7 @@ public class VodDatabase {
 		}
 		int serverPort = nextPort();
 		EventClientPortSelectionStrategy clientPortStrategy = new IncrementingEventClientPortSelectionStrategy(nextPort());
-		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, true);
+		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, _eventProcessorHost, _eventProcessorPort, true);
 		_eventDriver = new VodEventDriver(_eventConfiguration);
 		boolean started = _eventDriver.start();
 		if(! started ){
@@ -311,12 +327,34 @@ public class VodDatabase {
 		addArgument(arguments, Arguments.LOGFILE, _eventConfiguration.logFileName);
 		addArgument(arguments, Arguments.SERVER_PORT, _eventConfiguration.serverPort);
 		addArgument(arguments, Arguments.CLIENT_PORT, _eventConfiguration.clientPort());
+		addArgument(arguments, Arguments.EVENTPROCESSOR_PORT, _eventConfiguration.eventProcessorPort);
+		if (DrsDebug.verbose) {
+			addArgument(arguments, Arguments.VERBOSE);
+		}
 		
 		String[] argumentsAsString = new String[arguments.size()];
 		argumentsAsString = arguments.toArray(argumentsAsString);
 		
 		ProcessRunner eventListenerProcess = JavaServices.startJava(EventProcessorApplication.class.getName(), argumentsAsString);
-		eventListenerProcess.waitFor(_name, 10000);
+//		eventListenerProcess.waitFor(_name, 10000);
+		
+		ClientChannelControl control = TcpCommunicationNetwork.newClient(this);
+		final BlockingQueue<String> barrier = new BlockingQueue<String>();
+		AbstractEventProcessorListener listener = new AbstractEventProcessorListener() {
+			@Override
+			public void ready() {
+				barrier.add("ready!!!");
+			}
+			
+		};
+		control.async().addListener(listener);
+		
+		if (barrier.next(STARTUP_TIMEOUT) == null) {;
+			throw new IllegalStateException(ReflectPlatform.simpleName(EventProcessorImpl.class) + " still not running after "+STARTUP_TIMEOUT+"ms");
+		}
+		
+		control.async().removeListener(listener);
+
 		return eventListenerProcess;
 	}
 	
@@ -335,6 +373,14 @@ public class VodDatabase {
 	
 	public EventConfiguration eventConfiguration(){
 		return _eventConfiguration;
+	}
+	
+	public String eventProcessorHost() {
+		return _eventProcessorHost;
+	}
+	
+	public int eventProcessorPort() {
+		return _eventProcessorPort;
 	}
 	
 }

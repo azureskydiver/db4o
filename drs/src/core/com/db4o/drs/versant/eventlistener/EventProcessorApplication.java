@@ -33,6 +33,9 @@ public class EventProcessorApplication {
 		
 		public static final String CLIENT_PORT = "clientport";
 		
+		public static final String EVENTPROCESSOR_HOST = "eventProcessorHost";
+		
+		public static final String EVENTPROCESSOR_PORT = "eventProcessorPort";
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -87,13 +90,27 @@ public class EventProcessorApplication {
 	        	.create(CLIENT));
 
 		options.addOption(OptionBuilder
-				.withArgName( "port" )
-	        	.hasArg()
-	        	.isRequired()
-	        	.withDescription(  "client port to connect to veddriver" )
-	        	.withType(Integer.class)
-	        	.create(CLIENT_PORT));
-		
+			.withArgName( "port" )
+        	.hasArg()
+        	.isRequired()
+        	.withDescription(  "client port to connect to veddriver" )
+        	.withType(Integer.class)
+        	.create(CLIENT_PORT));
+	
+		options.addOption(OptionBuilder
+			.withArgName( "hostname" )
+        	.hasArg()
+        	.withDescription(  "host for the replication provider to connect" )
+        	.create(EVENTPROCESSOR_HOST));
+
+		options.addOption(OptionBuilder
+			.withArgName( "port" )
+        	.hasArg()
+        	.isRequired()
+        	.withDescription(  "port for the replication provider to connect" )
+        	.withType(Integer.class)
+        	.create(EVENTPROCESSOR_PORT));
+	
 		options.addOption(OptionBuilder
 				.withDescription(  "prints events to the console" )
 				.create(VERBOSE ));
@@ -116,7 +133,7 @@ public class EventProcessorApplication {
 					optionAsInt(line, SERVER_PORT),
 					client,
 					new FixedEventClientPortSelectionStrategy(optionAsInt(line, CLIENT_PORT)),
-					line.hasOption(VERBOSE));
+					line.getOptionValue(EVENTPROCESSOR_HOST), optionAsInt(line, EVENTPROCESSOR_PORT), line.hasOption(VERBOSE));
 			
 		} catch(MissingOptionException moex){
 			System.out.println(moex.getMessage());
