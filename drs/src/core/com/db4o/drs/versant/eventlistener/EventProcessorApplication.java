@@ -3,14 +3,13 @@
 package com.db4o.drs.versant.eventlistener;
 
 
+import static com.db4o.drs.versant.eventlistener.EventProcessorApplication.Arguments.*;
+
 import java.io.*;
 
 import org.apache.commons.cli.*;
 
-import com.db4o.drs.foundation.*;
 import com.db4o.drs.versant.*;
-
-import static com.db4o.drs.versant.eventlistener.EventProcessorApplication.Arguments.*;
 
 
 public class EventProcessorApplication {

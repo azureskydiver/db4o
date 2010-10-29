@@ -46,8 +46,8 @@ public class VodDatabase {
 	private static VodEventDriver _eventDriver;
 	
 	private EventConfiguration _eventConfiguration;
-
-	private EventProcessorEmbedded _eventProcessorSupport;
+	
+	private Stoppable _eventProcessor;
 
 	private String _eventProcessorHost = "localhost";
 
@@ -303,23 +303,45 @@ public class VodDatabase {
 		_eventDriver = null;
 	}
 	
-	public EventProcessorEmbedded startEventProcessor(){
-		if(_eventProcessorSupport != null){
+	public void startEventProcessor(){
+		startEventProcessor(DrsDebug.runEventListenerEmbedded);
+	
+	}
+	
+	public void startEventProcessor(boolean embedded){
+		if(_eventProcessor != null){
 			throw new IllegalStateException();
 		}
-		_eventProcessorSupport = new EventProcessorEmbedded(_eventConfiguration);
-		return _eventProcessorSupport;
+		
+		if (embedded) {
+			startEventProcessorInSameProcess();
+			return;
+		}
+		
+		try {
+			startEventProcessorInSeparateProcess();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void startEventProcessorInSameProcess() {
+		_eventProcessor = new EventProcessorEmbedded(_eventConfiguration);
 	}
 	
 	public void stopEventProcessor(){
-		if(_eventProcessorSupport == null){
+		if(_eventProcessor == null){
 			return;
 		}
-		_eventProcessorSupport.stop();
-		_eventProcessorSupport = null;
+		_eventProcessor.stop();
+		_eventProcessor = null;
 	}
 	
-	public ProcessRunner startEventProcessorInSeparateProcess() throws IOException {
+	private void startEventProcessorInSeparateProcess() throws IOException {
+		
+		if (_eventProcessor != null) {
+			throw new IllegalStateException();
+		}
 		
 		List<String> arguments = new ArrayList<String>();
 		
@@ -335,10 +357,11 @@ public class VodDatabase {
 		String[] argumentsAsString = new String[arguments.size()];
 		argumentsAsString = arguments.toArray(argumentsAsString);
 		
-		ProcessRunner eventListenerProcess = JavaServices.startJava(EventProcessorApplication.class.getName(), argumentsAsString);
+		final ProcessRunner eventListenerProcess = JavaServices.startJava(EventProcessorApplication.class.getName(), argumentsAsString);
+//		final ProcessRunner eventListenerProcess = JavaServices.startJavaInDebug(9898, EventProcessorApplication.class.getName(), argumentsAsString);
 //		eventListenerProcess.waitFor(_name, 10000);
 		
-		ClientChannelControl control = TcpCommunicationNetwork.newClient(this);
+		final ClientChannelControl control = TcpCommunicationNetwork.newClient(this);
 		final BlockingQueue<String> barrier = new BlockingQueue<String>();
 		AbstractEventProcessorListener listener = new AbstractEventProcessorListener() {
 			@Override
@@ -347,15 +370,28 @@ public class VodDatabase {
 			}
 			
 		};
-		control.async().addListener(listener);
+		control.sync().addListener(listener);
 		
 		if (barrier.next(STARTUP_TIMEOUT) == null) {;
 			throw new IllegalStateException(ReflectPlatform.simpleName(EventProcessorImpl.class) + " still not running after "+STARTUP_TIMEOUT+"ms");
 		}
 		
 		control.async().removeListener(listener);
-
-		return eventListenerProcess;
+		
+		_eventProcessor = new Stoppable() {
+			
+			public void stop() {
+				
+				control.async().stop();
+				control.stop();
+				
+				try {
+					eventListenerProcess.waitFor();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
 	}
 	
 	private static void addArgument(List<String> arguments, String argumentName, int argumentValue) {

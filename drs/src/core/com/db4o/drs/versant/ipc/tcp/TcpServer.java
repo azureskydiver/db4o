@@ -146,13 +146,15 @@ public class TcpServer implements ServerChannelControl {
 		}
 
 		public void join() throws InterruptedException {
-			thread.join();
+			if (Thread.currentThread() != thread) {
+				thread.join();
+			}
 		}
 
 		public void close() throws IOException {
 			client.close();
 			try {
-				thread.join();
+				join();
 			} catch (InterruptedException e) {
 				reportException(e);
 			}

@@ -4,7 +4,6 @@ package com.db4o.drs.test.versant;
 
 import java.io.*;
 
-
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.eventlistener.*;
@@ -14,7 +13,7 @@ import com.versant.odbms.model.*;
 
 import db4ounit.*;
 
-public class VodEventTestCase extends VodEventTestCaseBase {	
+public class VodEventTestCase extends VodProviderTestCaseBase {	
 	
 	private final class LoggingExceptionListener implements ExceptionListener {
 		public void exceptionOccurred (Throwable exception){

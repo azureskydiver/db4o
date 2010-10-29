@@ -5,6 +5,7 @@ package com.db4o.drs.test.versant;
 import java.io.*;
 
 import com.db4o.drs.versant.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -71,6 +72,17 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 		_vod.stopEventDriver();
 		_vod.removeDb();
 		_vod = null;
+	}
+	
+	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
+		_vod.startEventProcessor();
+		produceProvider();
+		try {
+			closure.run();
+		} finally {
+			destroyProvider();
+			_vod.stopEventProcessor();
+		}
 	}
 
 }

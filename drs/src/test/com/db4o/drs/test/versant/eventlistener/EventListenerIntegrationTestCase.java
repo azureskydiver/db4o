@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant.eventlistener;
 
+import static com.db4o.qlin.QLinSupport.*;
+
 import java.util.*;
 
 import com.db4o.*;
@@ -15,12 +17,10 @@ import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.foundation.*;
 
-import static com.db4o.qlin.QLinSupport.*;
-
 import db4ounit.*;
 
 
-public class EventListenerIntegrationTestCase extends VodEventTestCaseBase {
+public class EventListenerIntegrationTestCase extends VodProviderTestCaseBase {
 	
 	public void testStoreSingleObject() throws Exception {
 		withEventProcessor(new Closure4<Void>() {
