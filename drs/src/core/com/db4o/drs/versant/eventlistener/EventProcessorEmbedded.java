@@ -7,9 +7,10 @@ import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.util.*;
 
 
-public class EventProcessorEmbedded {
+public class EventProcessorEmbedded implements Stoppable {
 	
 	private static final long STARTUP_TIMEOUT = DrsDebug.timeout(10000);
 
