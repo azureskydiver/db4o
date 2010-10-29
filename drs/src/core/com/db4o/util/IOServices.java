@@ -203,7 +203,11 @@ public class IOServices {
 	    
         public boolean waitFor(String expectedOutput, long timeout) {
 			long now = System.currentTimeMillis();
-			while (timeout > 0 && in.next(timeout).indexOf(expectedOutput) == -1) {
+			while (timeout > 0 ){
+				String nextInput = in.next(timeout);
+				if(nextInput != null && nextInput.indexOf(expectedOutput) != -1){
+					return true;
+				}
 				long l = now;
 				now = System.currentTimeMillis();
 				timeout -= now-l;
