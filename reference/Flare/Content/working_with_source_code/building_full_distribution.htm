@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1527" MadCap:lastWidth="582">
     <head><title>Building Full Distribution	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -50,7 +50,7 @@ JDK 5 or JDK 6 to build db4o for Java 1.1, you will need this line:</p>
 1.3</code>
         </p>
         <p>An example of the minimum machine.properties file:</p>
-        <p>dir.workspace=c:/workspaces/db4obuild file.compiler.jdk1.3=c:/java/jdk/jdk1.6.0/bin/javac.exe file.jvm.jdk1.5=C:/java/jdk1.6.0/bin/java dir.compactframework=C:/Program Files/Microsoft.NET/SDK/CompactFramework eclipse.home=c:/java/eclipse-3.3.1 file.compiler.jdk1.3.args.optional=-source 1.3 eclipse.startup.jar=c:/java/eclipse-3.3.1/plugins/org.eclipse.equinox.launcher_1.0.1.R33x_v20070828.jar font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF no.ftp=true  </p><a name="Build Preparation"></a>
+        <p>dir.workspace=c:/workspaces/db4obuild <br />file.compiler.jdk1.3=c:/java/jdk/jdk1.6.0/bin/javac.exe<br />file.jvm.jdk1.5=C:/java/jdk1.6.0/bin/java <br />dir.compactframework=C:/Program Files/Microsoft.NET/SDK/CompactFramework eclipse.home=c:/java/eclipse-3.3.1 <br />file.compiler.jdk1.3.args.optional=-source 1.3<br /> eclipse.startup.jar=c:/java/eclipse-3.3.1/plugins/org.eclipse.equinox.launcher_1.0.1.R33x_v20070828.jar <br />font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF no.ftp=true  </p><a name="Build Preparation"></a>
         <h2>Build Preparation</h2>
         <p>First you will need to run some preparation scripts. This is done only once per workspace and should not be repeated in the future.</p>
         <p>Run build-db4obuild.xml, this will compile some of the tools used in the build process.</p>
@@ -62,8 +62,16 @@ JDK 5 or JDK 6 to build db4o for Java 1.1, you will need this line:</p>
         <p>If you've already generated db4objects key pair before, you will need to delete it before re-generating:</p>
         <p>keytool -delete -alias db4objects </p>
         <p>You will need to add ant-contrib.jar to your eclipse ant. You can download ant-contib.jar at:</p>
-        <p>http://sourceforge.net/projects/ant-contrib</p>
-        <p>Add ant-contib jar to ant folder in eclipse/plugins. After this is done go to Window-&gt;Preferences menu in Eclipse. Select Ant-&gt;Runtime in the list. Then select "Ant Home Entries", press "Add External Jar" and select ant-contib.jar location in the plugins folder. </p><a name="Running The Build"></a>
+        <p><a href="http://sourceforge.net/projects/ant-contrib/">http://sourceforge.net/projects/ant-contrib</a>
+        </p>
+        <ul>
+            <li>Add ant-contib jar to ant folder in eclipse/plugins.</li>
+            <li>After this is done go to Window-&gt;Preferences menu in Eclipse.</li>
+            <li>Select Ant-&gt;Runtime in the list. </li>
+            <li>Then select "Ant Home Entries".</li>
+            <li>Press "Add External Jar"
+and select ant-contib.jar location in the plugins folder.</li>
+        </ul><a name="Running The Build"></a>
         <h2>Running The Build</h2>
         <p>Now everything is ready to run db4o build. Right-click build.xml file and
 select "Run As/Ant Build". You will need to run "buildall" target to generate java and .NET distribution.   </p>
