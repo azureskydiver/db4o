@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
 import com.db4o.rmi.*;
 
 public class TcpClient implements ClientChannelControl {
@@ -17,6 +16,16 @@ public class TcpClient implements ClientChannelControl {
 
 	private Distributor<EventProcessor> remotePeer;
 
+	private int port;
+
+	private String host;
+	
+
+	public TcpClient(String host, int port) {
+		this.host = host;
+		this.port = port;
+	}
+	
 	public EventProcessor sync() {
 		ensureInited();
 		return remotePeer.sync();
@@ -100,7 +109,7 @@ public class TcpClient implements ClientChannelControl {
 		Socket s = null;
 		while (running) {
 			try {
-				s = new Socket(TcpCommunicationNetwork.HOST, TcpCommunicationNetwork.PORT);
+				s = new Socket(host, port);
 				break;
 			} catch (ConnectException e) {
 				try {

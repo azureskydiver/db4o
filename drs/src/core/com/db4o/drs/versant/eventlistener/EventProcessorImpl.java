@@ -11,7 +11,7 @@ import java.util.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.ServerChannelControl;
+import com.db4o.drs.versant.ipc.tcp.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.drs.versant.metadata.ClassMetadata;
@@ -119,7 +119,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	public void run() {
 		_isolatinWatchdogThread.setDaemon(true);
 	    _isolatinWatchdogThread.start();
-		_incomingMessages = EventProcessorNetworkFactory.prepareProviderCommunicationChannel(this, _vod, _client);
+		_incomingMessages = TcpCommunicationNetwork.prepareCommunicationChannel(this, _vod, _client);
 		startPausableTasksExecutor();
 		synchronized (_listeners) {
 			_started = true;
