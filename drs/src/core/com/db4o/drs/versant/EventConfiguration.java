@@ -23,14 +23,19 @@ public class EventConfiguration {
 	
 	private final int clientPort;
 	
+	public final String eventProcessorHost;
+	public final int eventProcessorPort;
+	
 	public final boolean verbose;
 	
-	public EventConfiguration(String databaseName, String logFileName, String serverHost, int serverPort, String clientHost, EventClientPortSelectionStrategy clientPortStrategy, boolean verbose) {
+	public EventConfiguration(String databaseName, String logFileName, String serverHost, int serverPort, String clientHost, EventClientPortSelectionStrategy clientPortStrategy, String eventProcessorHost, int eventProcessorPort, boolean verbose) {
 		this.databaseName = databaseName;
 		this.logFileName = logFileName;
 		this.serverHost = serverHost;
 		this.serverPort = serverPort;
 		this.clientHost = clientHost;
+		this.eventProcessorHost = eventProcessorHost;
+		this.eventProcessorPort = eventProcessorPort;
 		this.clientPort = clientPortStrategy.clientPort();
 		this.verbose = verbose;
 	}
