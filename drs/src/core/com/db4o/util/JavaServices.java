@@ -28,6 +28,11 @@ public class JavaServices {
         return IOServices.start(javaExecutable(), javaRunArguments(className, args));
     }
 
+    public static ProcessRunner startJavaInDebug(int debuggerPort, String className, String[] args) throws IOException {
+    	String[] debugArgs = {"-Xdebug", "-Xrunjdwp:transport=dt_socket,address="+debuggerPort+",server=y,suspend=y"};
+        return IOServices.start(javaExecutable(), javaRunArguments(debugArgs, className, args));
+    }
+
     private static String javaExecutable() {
         for (int i = 0; i < vmTypes.length; i++) {
             if(vmTypes[i].identified()){
@@ -38,21 +43,30 @@ public class JavaServices {
     }
     
     private static String[] javaRunArguments(String className) {
-    	return javaRunArguments(className, new String[0]);
+    	return javaRunArguments(new String[0], className, new String[0]);
     }
 
     private static String[] javaRunArguments(String className, String[] args) {
-    	String[] allArgs = new String[args.length + 3];
-    	allArgs[0] = "-classpath";
-    	allArgs[1] = IOServices.joinArgs(
+    	return javaRunArguments(new String[0], className, args);
+    }
+    
+    private static String[] javaRunArguments(String[] vmargs, String className, String[] args) {
+    	String[] allArgs = new String[args.length + 3 + vmargs.length];
+    	int i = 0;
+    	for(;i<vmargs.length;i++) {
+    		allArgs[i] = vmargs[i];
+    	}
+
+    	allArgs[i++] = "-classpath";
+    	allArgs[i++] = IOServices.joinArgs(
 						File.pathSeparator,
 						new String[] {
 						JavaServices.javaTempPath(), 
 						currentClassPath(),
 						
 				}, DrsRuntime4.runningOnWindows());
-        allArgs[2] = className;
-        System.arraycopy(args, 0, allArgs, 3, args.length);
+        allArgs[i++] = className;
+        System.arraycopy(args, 0, allArgs, i, args.length);
         return allArgs;
         
     }
