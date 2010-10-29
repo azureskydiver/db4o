@@ -15,7 +15,7 @@ import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.VodJdo.ObjectCommittedListener;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.ClientChannelControl;
+import com.db4o.drs.versant.ipc.tcp.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.foundation.*;
@@ -74,7 +74,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	private boolean _waitForCommitLoid = false;
 	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
-		_control = EventProcessorNetworkFactory.newClient(vod);
+		_control = TcpCommunicationNetwork.newClient(vod);
 		_vod = vod;
 		_cobra = VodCobra.createInstance(vod);
 		_jdo = VodJdo.createInstance(vod);

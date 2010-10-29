@@ -5,7 +5,6 @@ import java.net.*;
 import java.util.*;
 
 import com.db4o.drs.versant.ipc.*;
-import com.db4o.drs.versant.ipc.EventProcessorNetwork.ServerChannelControl;
 import com.db4o.internal.*;
 import com.db4o.rmi.*;
 
@@ -18,10 +17,12 @@ public class TcpServer implements ServerChannelControl {
 
 	private Thread serverThread;
 	private boolean normalStop;
+	private int port;
 
-	public TcpServer(EventProcessor provider) {
+	public TcpServer(EventProcessor provider, int port) {
 
 		this.provider = provider;
+		this.port = port;
 
 		serverThread = new Thread(ReflectPlatform.simpleName(EventProcessor.class) + " channel tcp server") {
 			@Override
@@ -102,7 +103,7 @@ public class TcpServer implements ServerChannelControl {
 		
 		ServerSocket localServer;
 		synchronized (this) {
-			server = new ServerSocket(TcpCommunicationNetwork.PORT, 100);
+			server = new ServerSocket(port, 100);
 			server.setReuseAddress(true);
 			notifyAll();
 			localServer = server;

@@ -7,23 +7,18 @@ import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
-public class TcpCommunicationNetwork implements EventProcessorNetwork {
-
-	static final String HOST = "localhost";
-	static final int PORT = 7283;
-
-	public ClientChannelControl newClient(VodDatabase vod) {
+public class TcpCommunicationNetwork {
+	
+	public static ClientChannelControl newClient(VodDatabase vod) {
 		
-		return new TcpClient();
+		return new TcpClient(vod.eventProcessorHost(), vod.eventProcessorPort());
 	}
 
-	public ServerChannelControl prepareCommunicationChannel(final EventProcessor provider, VodDatabase vod,
+	public static ServerChannelControl prepareCommunicationChannel(final EventProcessor provider, VodDatabase vod,
 			VodEventClient client) {
 
-		return new TcpServer(provider);
+		return new TcpServer(provider, vod.eventProcessorPort());
 	}
-	
-	
 
 	public static void feed(final DataInputStream in, final ByteArrayConsumer consumer) throws IOException {
 		int len = in.readInt();

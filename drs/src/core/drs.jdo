@@ -9,8 +9,5 @@
     	<class name="com.db4o.drs.versant.metadata.ReplicationCommitRecord"/>
     	<class name="com.db4o.drs.versant.metadata.VodLoidAwareObject"/>
     </package>    
-    <package name="com.db4o.drs.versant.ipc.inband">
-    	<class name="com.db4o.drs.versant.ipc.inband.MessagePayload"/>
-    </package>    
 </jdo>    
 
