@@ -322,6 +322,9 @@ namespace OMControlLibrary
 				}
 				
 				 RecentQueries currRecentQueries = new RecentQueries(conparam);
+				 RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
+				 if (tempRecentQueries != null)
+					 currRecentQueries = tempRecentQueries;
 				 string  exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
 
 				if (exceptionString == string.Empty)

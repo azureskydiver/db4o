@@ -191,8 +191,7 @@ namespace OMAddin
 			_applicationObject = (DTE2)application;
 			_addInInstance = (AddIn)addInInst;
 			ViewBase.ResetToolWindowList();
- 
-			OutputWindow.Initialize(_applicationObject);
+			//OutputWindow.Initialize(_applicationObject);
 
 			try
 			{
@@ -348,7 +347,7 @@ namespace OMAddin
 			{
 				//This function Aborts the current session
 				CloseAllToolWindows();
-				Helper.ClearAllCachedAttributes();
+				//Helper.ClearAllCachedAttributes();
 			}
 			catch (Exception oEx)
 			{
