@@ -40,10 +40,12 @@
 	<property name="file.apk.resources" value="${dir.dist.android}/resources.apk" />
 	<property name="file.apk.unsigned" value="${dir.dist.android}/db4otests.unsigned.apk" />
 	<property name="file.apk" value="${dir.dist.android}/db4otests.apk" />
+	
+	<tempfile property="file.android.sdcard" prefix="db4o-sdcard-" suffix=".fat32"/>
 
 	<target name="run-tests" depends="start-emu, sign-apk, run-emu" />
 	
-	<target name="run-emu" depends="start-emu, uninstall-package, install-package, run-tests-on-emulator, stop-emu, check-failure" />
+	<target name="run-emu" depends="start-emu, uninstall-package, install-package, run-tests-on-emulator, stop-emu, check-failure, delete-avd" />
 
 	<target name="clean">
 		<delete failonerror="false">
@@ -115,9 +117,19 @@
 	</target>
 	
 	<target name="create-avd" unless="emulator-available">
-		<exec executable="${dir.android.tools}/${android.tool.android}" inputstring="no">
-			<arg line="-s create avd -t ${android.apilevel} -n ${emulator.device} -f -c 64M" />
+		<exec executable="${dir.android.tools}/${android.tool.mksdcard}">
+			<arg line="-l db4otest 64M ${file.android.sdcard}" />
 		</exec>
+		<exec executable="${dir.android.tools}/${android.tool.android}" inputstring="no">
+			<arg line="-s create avd -t ${android.apilevel} -n ${emulator.device} -f -c ${file.android.sdcard}" />
+		</exec>
+	</target>
+	
+	<target name="delete-avd" unless="emulator-available">
+		<exec executable="${dir.android.tools}/${android.tool.android}">
+			<arg line="-s delete avd -n ${emulator.device}" />
+		</exec>
+		<delete file="${file.android.sdcard}" failonerror="false" />
 	</target>
 	
 	<target name="start-emu" unless="emulator-available" depends="create-avd">
