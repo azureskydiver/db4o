@@ -41,7 +41,7 @@ public class VodDatabase {
 	
 	private DatastoreManagerFactory _datastoreManagerFactory;
 	
-	private static int nextPort = 4100;
+	private static int nextPort = 4102;
 	
 	private static VodEventDriver _eventDriver;
 	
@@ -51,7 +51,7 @@ public class VodDatabase {
 
 	private String _eventProcessorHost = "localhost";
 
-	private int _eventProcessorPort = 7232;
+	private int _eventProcessorPort = 4088;
 	
 
 	public VodDatabase(String name, Properties properties){
