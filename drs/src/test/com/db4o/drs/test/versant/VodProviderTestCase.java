@@ -46,7 +46,9 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 	
 	@Override
 	public void tearDown() {
-		_provider.syncEventProcessor().removeListener(_eventProcessorListener);
+		if(_provider != null){
+			_provider.syncEventProcessor().removeListener(_eventProcessorListener);
+		}
 		super.tearDown();
 		_vod.stopEventProcessor();
 	}
