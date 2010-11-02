@@ -173,7 +173,6 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
-		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
 		final ReplicationSession replication = Replication.begin(providerFrom, providerTo, _fixtures.reflector);
 		final ObjectSet changedSet = providerFrom.objectsChangedSinceLastReplication();
 		if (changedSet.size() == 0)
