@@ -36,12 +36,12 @@
 	<property name="keystore.password" value="kistoa" />
 	<property name="keystore.alias" value="db4objects" />
 	
-	<property name="file.dex.classes" value="${dir.dist.android}/classes.dex" />
-	<property name="file.apk.resources" value="${dir.dist.android}/resources.apk" />
+	<property name="dir.android.artifacts" value="${dir.dist.android}/artifacts" />
+	<property name="file.dex.classes" value="${dir.android.artifacts}/classes.dex" />
 	<property name="file.apk.unsigned" value="${dir.dist.android}/db4otests.unsigned.apk" />
 	<property name="file.apk" value="${dir.dist.android}/db4otests.apk" />
 	
-	<tempfile property="file.android.sdcard" prefix="db4o-sdcard-" suffix=".fat32"/>
+	<tempfile property="file.android.sdcard" prefix="db4o-sdcard-" suffix=".fat32" deleteonexit="true"/>
 
 	<target name="run-tests" depends="start-emu, sign-apk, run-emu" />
 	
@@ -76,6 +76,7 @@
 		<property name="android.dependencies" value="${file.jdk1.5.nodep.jar} ${file.jdk1.5.db4ounit.jar} ${dir.dist.classes.test.jdk1.5} ${file.easymock.jar}" />
 		
 		<mkdir dir="${dir.dist.android}" />
+		<mkdir dir="${dir.android.artifacts}" />
 	
 	</target>
 	
@@ -91,23 +92,15 @@
 		<exec executable="${dir.android.platform.tools}/${android.tool.aapt}">
 			<arg value="p" />
 			<arg line="-M ${dir.config}/android/AndroidManifest.xml" />
-			<arg line="-F ${file.apk.resources}" />
+			<arg line="-F ${file.apk.unsigned}" />
 			<arg line="-I ${file.jar.android}" />
 			<arg value="-f" />
+			<arg line="${dir.android.artifacts}" />
 			<arg line="${dir.db4ojunit}/res" />
 		</exec>
 	</target>
 	
-	<target name="merge-apk" depends="dex, package-resources">
-		<exec executable="${dir.android.tools}/${android.tool.apkbuilder}">
-			<arg value="${file.apk.unsigned}" />
-			<arg value="-u" />
-			<arg line="-f ${file.dex.classes}" />
-			<arg line="-z ${file.apk.resources}" />
-		</exec>
-	</target>
-	
-	<target name="sign-apk" depends="merge-apk">
+	<target name="sign-apk" depends="dex, package-resources">
 		<signjar
 			keystore="${file.keystore}"
 			alias="${keystore.alias}" 
