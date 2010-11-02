@@ -60,6 +60,7 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 			throw new IllegalStateException();
 		}
 		_vod = new VodDatabase(DATABASE_NAME);
+		_vod.removeDb();
 		_vod.produceDb();
 		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
 		_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.versant.data")));
