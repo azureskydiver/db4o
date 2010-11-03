@@ -172,6 +172,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	
 	
 	public final void rollback() {
+		// TODO: Write tests for rollback.
 		_providerA.rollbackReplication();
 		_providerB.rollbackReplication();
 	}
