@@ -9,6 +9,8 @@ public class DrsDebug {
 	public static final boolean runEventListenerEmbedded = !production;
 	
 	public static final boolean verbose = false;
+	
+	public static final boolean fastReplicationFeaturesMain = true;
 
 	
 	public static long timeout(long designed) {

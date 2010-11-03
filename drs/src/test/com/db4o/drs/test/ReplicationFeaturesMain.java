@@ -546,6 +546,10 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	
 	private void tstWithChangedObjectsIn(Set4 containers) {
 		_containersWithChangedObjects = containers;
+		if(DrsDebug.fastReplicationFeaturesMain){
+			tstWithContainerStateToPrevail(_setA);
+			return;
+		}
 
 		tstWithContainerStateToPrevail(_NONE);
 		tstWithContainerStateToPrevail(_setA);

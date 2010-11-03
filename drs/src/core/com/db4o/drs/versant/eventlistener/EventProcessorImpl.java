@@ -69,6 +69,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 
 	private final VodDatabase _vod;
 
+	private long _commitTokenClassMetadataLoid;
+
 	public EventProcessorImpl(VodEventClient client, VodDatabase vod)  {
 		_client = client;
 		this._vod = vod;
@@ -287,42 +289,58 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private void commit(String transactionId) {
 		synchronized (_lock) {
 			List<ObjectInfo> infos = _objectInfos.remove(transactionId);
-			if(infos != null){
-				for(ObjectInfo info: infos){
-					long objectLoid = info.objectLoid();
-					ObjectInfo objectInfo = prototype(ObjectInfo.class);
-					ObjectInfo infoToStore = _cobra
-						.from(ObjectInfo.class)
-						.where(objectInfo.objectLoid())
-						.equal(objectLoid)
-						.singleOrDefault(info);
-					if(infoToStore != info){
-						infoToStore.copyStateFrom(info);
-					}
-					Long timestamp = _loidTimeStamps.remove(objectLoid);
-					if(timestamp != null){
-						infoToStore.version(timestamp);
-					}
-					info.version(infoToStore.version());
-					_cobra.store(infoToStore);
-					println("stored: " + infoToStore);
+			if(infos == null){
+				return;
+			}
+			for(ObjectInfo info: infos){
+				if(info.classMetadataLoid() == commitTokenClassMetadataLoid()){
+					return;
 				}
 			}
+			for(ObjectInfo info: infos){
+				long objectLoid = info.objectLoid();
+				ObjectInfo objectInfo = prototype(ObjectInfo.class);
+				ObjectInfo infoToStore = _cobra
+					.from(ObjectInfo.class)
+					.where(objectInfo.objectLoid())
+					.equal(objectLoid)
+					.singleOrDefault(info);
+				if(infoToStore != info){
+					infoToStore.copyStateFrom(info);
+				}
+				info.version(infoToStore.version());
+				_cobra.store(infoToStore);
+				println("stored: " + infoToStore);
+			}
+					
 			_commitTimestamp.value(lastTimestamp());
 			_cobra.store(_commitTimestamp);
 			_cobra.commit();
 			
-			if(infos != null){
-				for(ObjectInfo info: infos){
-					long objectLoid = info.objectLoid();
-					long version = info.version();
-					listenerTrigger().onEvent(objectLoid, version);
-				}
+			
+			for(ObjectInfo info: infos){
+				long objectLoid = info.objectLoid();
+				long version = info.version();
+				listenerTrigger().onEvent(objectLoid, version);
 			}
+			
 			
 			listenerTrigger().committed(transactionId);
 			println(SIMPLE_NAME+" commit");
 		}
+		
+	}
+
+	private long commitTokenClassMetadataLoid() {
+		ClassMetadata classMetadata = prototype(ClassMetadata.class);
+		if(_commitTokenClassMetadataLoid > 0) {
+			return _commitTokenClassMetadataLoid;
+		}
+		ClassMetadata storedClassMetadata = _cobra.from(ClassMetadata.class).where(classMetadata.fullyQualifiedName()).equal(CommitToken.class.getName()).singleOrDefault(null);
+		if(storedClassMetadata != null){
+			_commitTokenClassMetadataLoid = storedClassMetadata.loid();
+		}
+		return _commitTokenClassMetadataLoid;
 	}
 
 	private final class TransactionCommitTask implements Block4 {
@@ -377,8 +395,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 			_classLoid = classLoid;
 			_objectLoid = objectLoid;
 			_operation = operation;
-			generateTimestamp();
-			_timeStamp = lastTimestamp();
+			_timeStamp = generateTimestamp();
 		}
 		
 		public void run() {

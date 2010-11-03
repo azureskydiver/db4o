@@ -46,6 +46,10 @@ public class ObjectInfo extends VodLoidAwareObject {
 		return operation;
 	}
 	
+	public void operation(int operation) {
+		this.operation = operation;
+	}
+	
 	public long uuidLongPart(){
 		return uuidLongPart;
 	}
