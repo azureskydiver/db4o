@@ -4,6 +4,7 @@
     <package name="com.db4o.drs.versant.metadata">
     	<class name="com.db4o.drs.versant.metadata.ClassMetadata"/>
     	<class name="com.db4o.drs.versant.metadata.CommitTimestamp"/>
+    	<class name="com.db4o.drs.versant.metadata.CommitToken"/>
     	<class name="com.db4o.drs.versant.metadata.DatabaseSignature"/>
     	<class name="com.db4o.drs.versant.metadata.ObjectInfo"/>
     	<class name="com.db4o.drs.versant.metadata.ReplicationCommitRecord"/>

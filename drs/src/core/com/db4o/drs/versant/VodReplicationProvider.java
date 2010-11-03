@@ -303,7 +303,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		timeStamp(raisedDatabaseVersion - 1);
-		
+		updateCommitToken();
 		_jdo.commit();
 		syncEventProcessor().forceTimestamps(_loidTimeStamps);
 		_loidTimeStamps.clear();
@@ -312,6 +312,17 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		timeStamp(raisedDatabaseVersion);
 		
 		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
+	}
+
+	private void updateCommitToken() {
+		ensureClassKnown(CommitToken.class);
+		Collection<CommitToken> commitTokens = _jdo.query(CommitToken.class);
+		if(commitTokens.isEmpty()){
+			_jdo.store(new CommitToken());
+			return;
+		}
+		CommitToken commitToken = commitTokens.iterator().next();
+		commitToken.incrementCounter();
 	}
 
 	public long getCurrentVersion() {
@@ -390,16 +401,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		int lowerId = Math.min(peerId, _myDatabaseId);
 		int higherId = Math.max(peerId, _myDatabaseId);
 		
-		produceCommitRecord(lowerId, higherId);
-	}
-
-	private void produceCommitRecord(int lowerId, int higherId) {
 		_replicationCommitRecord = commitRecordFor(lowerId, higherId);
 		
 		if(_replicationCommitRecord == null){
 			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
 			_cobra.store(_replicationCommitRecord);
 			_cobra.commit();
+			_timeStamp = syncEventProcessor().generateTimestamp();
+		} else {
+			_timeStamp = Math.max(syncEventProcessor().generateTimestamp(), _replicationCommitRecord.timestamp() + 1);
 		}
 	}
 
@@ -439,17 +449,19 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if (ref == null) {
 			throw new RuntimeException("Reference should always be available before storeReplica");
 		}
-		
 		long classMetadataLoid = ensureClassKnown(obj.getClass());
 		long loid = _jdo.loid(obj);
 		
 		boolean isNew = loid == 0;
 		
+		ObjectInfo objectInfo = null;
+		
 		if(isNew){
 			_jdo.store(obj);
 			loid = _jdo.loid(obj);
 		} else {
-			isNew = ! objectInfoFoundFor(loid);
+			objectInfo = objectInfoForLoid(loid);
+			isNew = objectInfo == null; 
 		}
 
 		if (isNew) {
@@ -460,18 +472,20 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			}
 			long otherLongPart = ref.uuid().getLongPart();
 			long signatureLoid = _signatures.loidFor(signature);
-			ObjectInfo objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, timeStamp(), Operations.CREATE.value);
-			_cobra.store(objectInfo);
-			_cobra.commit();
+			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, timeStamp(), Operations.CREATE.value);
+		} else{
+			objectInfo.version(timeStamp());
+			objectInfo.operation(Operations.UPDATE.value);
 		}
+		_cobra.store(objectInfo);
+		_cobra.commit();
 		
 		logIdentity(obj, String.valueOf(loid));
 	}
 
-	private boolean objectInfoFoundFor(long loid) {
+	private ObjectInfo objectInfoForLoid(long objectLoid) {
 		ObjectInfo objectInfo = prototype(ObjectInfo.class);
-		ObjectInfo foundInfo = _cobra.from(ObjectInfo.class).where(objectInfo.objectLoid()).equal(loid).singleOrDefault(null);
-		return foundInfo != null;
+		return _cobra.from(ObjectInfo.class).where(objectInfo.objectLoid()).equal(objectLoid).singleOrDefault(null);
 	}
 
 	public void syncVersionWithPeer(long maxVersion) {
