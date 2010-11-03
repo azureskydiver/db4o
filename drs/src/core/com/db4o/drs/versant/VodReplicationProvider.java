@@ -67,10 +67,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private boolean pinging = true;
 
-	private long _sampleCommitLoid = 0;
-	
-	private boolean _waitForCommitLoid = false;
-	
 	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
 		_control = TcpCommunicationNetwork.newClient(vod);
 		_vod = vod;
@@ -120,7 +116,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				}
 				long loid = loid(object);
 				log("Timestamp for " + loid + " preset to " + timeStamp());
-				_sampleCommitLoid = loid;
 			}
 		});
 	}
@@ -185,33 +180,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	
 	public void commit() {
-		
-		if(! _waitForCommitLoid){
-			internalCommit();
-			return;
-		}
-		final long timeStampToCompare = timeStamp();
-		final BlockingQueue<Long> processedObjects = new BlockingQueue<Long>();
-		EventProcessorListener listener = new AbstractEventProcessorListener() {
-			@Override
-			public void onEvent(long loid, long version) {
-				if(version >= timeStampToCompare){
-					processedObjects.add(loid);
-				}
-			}
-		};
-		syncEventProcessor().addListener(listener);
-		
 		internalCommit();
-		
-		while(true) {
-			if (_sampleCommitLoid == (long)processedObjects.next()) {
-				break;
-			}
-		}
-		_sampleCommitLoid = 0;
-		_waitForCommitLoid = false;
-		syncEventProcessor().removeListener(listener);
 	}
 
 	private void internalCommit() {
@@ -226,16 +195,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void delete(Object obj) {
 		_jdo.delete(obj);
-		_waitForCommitLoid = true;
 	}
 
 	public void deleteAllInstances(Class clazz) {
 		if(!_cobra.isKnownClass(clazz)) {
 			return;
 		}
-		if(_jdo.deleteAll(clazz) > 0){
-			_waitForCommitLoid = true;
-		}
+		_jdo.deleteAll(clazz);
 	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
@@ -253,11 +219,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		ensureClassKnown(obj.getClass());
 		_jdo.store(obj);
-		_waitForCommitLoid = true;
 	}
 
 	public void update(Object obj) {
-		_waitForCommitLoid = true;
+		// do nothing, Transparent Persistence
 	}
 
 	public void destroy() {
