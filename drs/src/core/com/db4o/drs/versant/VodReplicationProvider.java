@@ -298,7 +298,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		timeStamp(raisedDatabaseVersion - 1);
-		updateCommitToken();
+		updateReplicationCommitToken();
 		_jdo.commit();
 		
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
@@ -307,17 +307,30 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	}
 
-	private void updateCommitToken() {
-		ensureClassKnown(CommitToken.class);
-		Collection<CommitToken> commitTokens = _jdo.query(CommitToken.class);
+	private void updateReplicationCommitToken() {
+		ensureClassKnown(ReplicationCommitToken.class);
+		Collection<ReplicationCommitToken> commitTokens = _jdo.query(ReplicationCommitToken.class);
 		if(commitTokens.isEmpty()){
-			_jdo.store(new CommitToken());
+			_jdo.store(new ReplicationCommitToken());
 			return;
 		}
-		CommitToken commitToken = commitTokens.iterator().next();
+		ReplicationCommitToken commitToken = commitTokens.iterator().next();
 		commitToken.incrementCounter();
 	}
-
+	
+	private long updateBarrierCommitToken() {
+		ensureClassKnown(BarrierCommitToken.class);
+		Collection<BarrierCommitToken> commitTokens = _jdo.query(BarrierCommitToken.class);
+		if(commitTokens.isEmpty()){
+			BarrierCommitToken barrierCommitToken = new BarrierCommitToken();
+			_jdo.store(barrierCommitToken);
+			return _jdo.loid(barrierCommitToken);
+		}
+		BarrierCommitToken commitToken = commitTokens.iterator().next();
+		commitToken.incrementCounter();
+		return _jdo.loid(commitToken);
+	}
+	
 	public long getCurrentVersion() {
 		_timeStamp = syncEventProcessor().lastTimestamp(); 
 		return _timeStamp;
@@ -386,8 +399,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		clearAllReferences();
 		_jdo.rollback();
 	}
+	
+	boolean inReplicationTransaction = false;
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
+		inReplicationTransaction = true;
 		clearAllReferences();
 		byte[] signature = peer.getSignature();
 		int peerId = dbIdFrom(signature);
@@ -395,6 +411,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		int higherId = Math.max(peerId, _myDatabaseId);
 		
 		_replicationCommitRecord = commitRecordFor(lowerId, higherId);
+		
+		waitForPreviousCommits();
 		
 		if(_replicationCommitRecord == null){
 			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
@@ -404,6 +422,27 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		} else {
 			_timeStamp = Math.max(syncEventProcessor().generateTimestamp(), _replicationCommitRecord.timestamp() + 1);
 		}
+	}
+
+	private void waitForPreviousCommits() {
+		final long barrierLoid = updateBarrierCommitToken();
+		final BlockingQueue<Long> barrierQueue = new BlockingQueue<Long>();
+		
+		EventProcessorListener listener = new AbstractEventProcessorListener() {
+			@Override
+			public void onEvent(long loid, long version) {
+				if(loid == barrierLoid){
+					barrierQueue.add(loid);
+				}
+			}
+		};
+		syncEventProcessor().addListener(listener);
+		
+		internalCommit();
+		
+		barrierQueue.next();
+		
+		syncEventProcessor().removeListener(listener);
 	}
 
 	private ReplicationCommitRecord commitRecordFor(int lowerId, int higherId) {

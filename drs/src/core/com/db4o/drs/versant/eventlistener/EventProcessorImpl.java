@@ -69,6 +69,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 
 	private long _commitTokenClassMetadataLoid;
 
+	private long _barrierTokenClassMetadataLoid;
+
 	public EventProcessorImpl(VodEventClient client, VodDatabase vod)  {
 		_client = client;
 		this._vod = vod;
@@ -294,6 +296,12 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 				if(info.classMetadataLoid() == commitTokenClassMetadataLoid()){
 					return;
 				}
+				
+				if(info.classMetadataLoid() == barrierTokenClassMetadataLoid()){
+					listenerTrigger().onEvent(info.objectLoid(), info.version());
+					return;
+				}
+
 			}
 			for(ObjectInfo info: infos){
 				long objectLoid = info.objectLoid();
@@ -334,11 +342,29 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		if(_commitTokenClassMetadataLoid > 0) {
 			return _commitTokenClassMetadataLoid;
 		}
-		ClassMetadata storedClassMetadata = _cobra.from(ClassMetadata.class).where(classMetadata.fullyQualifiedName()).equal(CommitToken.class.getName()).singleOrDefault(null);
+		ClassMetadata storedClassMetadata = 
+			_cobra.from(ClassMetadata.class)
+			.where(classMetadata.fullyQualifiedName())
+			.equal(ReplicationCommitToken.class.getName()).singleOrDefault(null);
 		if(storedClassMetadata != null){
 			_commitTokenClassMetadataLoid = storedClassMetadata.loid();
 		}
 		return _commitTokenClassMetadataLoid;
+	}
+	
+	private long barrierTokenClassMetadataLoid() {
+		ClassMetadata classMetadata = prototype(ClassMetadata.class);
+		if(_barrierTokenClassMetadataLoid > 0) {
+			return _barrierTokenClassMetadataLoid;
+		}
+		ClassMetadata storedClassMetadata = 
+			_cobra.from(ClassMetadata.class)
+			.where(classMetadata.fullyQualifiedName())
+			.equal(BarrierCommitToken.class.getName()).singleOrDefault(null);
+		if(storedClassMetadata != null){
+			_barrierTokenClassMetadataLoid = storedClassMetadata.loid();
+		}
+		return _barrierTokenClassMetadataLoid;
 	}
 
 	private final class TransactionCommitTask implements Block4 {
