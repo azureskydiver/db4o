@@ -43,8 +43,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private final Map<String, List<ObjectInfo>> _objectInfos = new HashMap<String, List<ObjectInfo>>();
 	
-	private Map<Long, Long> _loidTimeStamps = new HashMap<Long, Long>();
-	
 	private long _defaultSignatureLoid;
 	
 	
@@ -536,13 +534,5 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		}
 	}
 	
-	
-	public void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps) {
-		synchronized (_lock) {
-			for (Pair<Long, Long> pair : loidTimeStamps) {
-				_loidTimeStamps.put(pair.first, pair.second);
-			}
-		}
-	}
 
 }
