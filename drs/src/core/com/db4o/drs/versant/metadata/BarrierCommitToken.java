@@ -3,7 +3,7 @@
 package com.db4o.drs.versant.metadata;
 
 
-public class CommitToken extends VodLoidAwareObject {
+public class BarrierCommitToken extends VodLoidAwareObject {
 	
 	private int counter;
 	
