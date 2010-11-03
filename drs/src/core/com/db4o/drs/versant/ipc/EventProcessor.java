@@ -53,8 +53,6 @@ public interface EventProcessor {
 
 	Map<String, Long> ensureMonitoringEventsOn(String className);
 	
-	void forceTimestamps(List<Pair<Long, Long>> loidTimeStamps);
-	
 	long defaultSignatureLoid();
 
 

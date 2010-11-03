@@ -47,8 +47,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private volatile long _timeStamp;
 	
-	private List<Pair<Long, Long>> _loidTimeStamps = new ArrayList<Pair<Long, Long>>(); 
-	
 	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
 	
 	private final Map<Class, List<Class>> _classHierarchy = new HashMap<Class, List<Class>>();
@@ -122,7 +120,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				}
 				long loid = loid(object);
 				log("Timestamp for " + loid + " preset to " + timeStamp());
-				_loidTimeStamps.add(new Pair(loid, timeStamp()));
 				_sampleCommitLoid = loid;
 			}
 		});
@@ -222,11 +219,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		syncEventProcessor().requestIsolation(true);
 		try {
 			_jdo.commit();
-			syncEventProcessor().forceTimestamps(_loidTimeStamps);
 		} finally {
 			syncEventProcessor().requestIsolation(false);
 		}
-		_loidTimeStamps.clear();
 	}
 
 	public void delete(Object obj) {
@@ -305,8 +300,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		timeStamp(raisedDatabaseVersion - 1);
 		updateCommitToken();
 		_jdo.commit();
-		syncEventProcessor().forceTimestamps(_loidTimeStamps);
-		_loidTimeStamps.clear();
 		
 		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
 		timeStamp(raisedDatabaseVersion);
