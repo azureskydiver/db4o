@@ -151,6 +151,10 @@ public final class Assert {
 		return (customMessage==null ? "" : customMessage+": ")+"Expected " + cmpOper + "'"+ expected + "' but was '" + actual + "'";
 	}
 
+	private static String failureMessage(long expected, long actual, final String cmpOper, String customMessage) {
+		return String.format("%sExpected %s0x%016x but was 0x%016x", customMessage==null ? "" : customMessage+": ", cmpOper, expected, actual);
+	}
+
 	public static void isFalse(boolean condition) {
 		isTrue(!condition);
 	}
@@ -165,7 +169,7 @@ public final class Assert {
 
 	public static void isGreater(long expected, long actual) {
 		if (actual > expected) return;
-		fail(failureMessage(new Long(expected), new Long(actual), "greater than ", null));
+		fail(failureMessage(expected, actual, "greater than ", null));
 	}			
 	
 	public static void isGreaterOrEqual(long expected, long actual) {
