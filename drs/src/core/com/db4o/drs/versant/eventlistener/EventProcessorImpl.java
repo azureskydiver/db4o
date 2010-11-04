@@ -457,8 +457,10 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		if (_defaultSignatureLoid != 0) {
 			return _defaultSignatureLoid;
 		}
-		DatabaseSignature databaseSignature = 
-			new DatabaseSignature(_cobra.databaseId(), _cobra.signatureBytes(_cobra.databaseId()));
+		DatabaseSignature databaseSignature = new DatabaseSignature(_cobra.signatureBytes(_cobra.databaseId()));
+		// TODO: There may be a race condition if the replication
+		// provider creates the same signature at the same time.
+	
 		_cobra.store(databaseSignature);
 		_cobra.commit();
 		_defaultSignatureLoid = databaseSignature.loid();

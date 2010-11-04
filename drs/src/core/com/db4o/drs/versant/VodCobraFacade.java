@@ -53,7 +53,7 @@ public interface VodCobraFacade {
 	
 	long queryForMySignatureLoid();
 	
-	byte[] signatureBytes(int databaseId);
+	byte[] signatureBytes(long databaseId);
 
 	
 }
