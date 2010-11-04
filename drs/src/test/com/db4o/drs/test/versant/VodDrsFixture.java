@@ -15,7 +15,6 @@ public class VodDrsFixture implements DrsProviderFixture{
 	private VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
-	private JviDatabaseIdFactory _idFactory;
 
 	private final String _name;
 	
@@ -28,7 +27,6 @@ public class VodDrsFixture implements DrsProviderFixture{
 
 	private void init() {
 		_vod = new VodDatabase(_name);
-		_idFactory = new JviDatabaseIdFactory(_vod);
 		_vod.removeDb();
 		_vod.produceDb();
 		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
@@ -58,7 +56,7 @@ public class VodDrsFixture implements DrsProviderFixture{
 
 	public void open() {
 		ensureEventProcessing();
-		_provider = new VodReplicationProvider(_vod, _idFactory);
+		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public TestableReplicationProviderInside provider() {
@@ -75,7 +73,6 @@ public class VodDrsFixture implements DrsProviderFixture{
 	}
 
 	private void internalClean(boolean deleteAll) {
-		_idFactory.deleteGeneratedIds();
 		if(_eventProcessingActive){
 			_vod.stopEventProcessor();
 			_eventProcessingActive = false;

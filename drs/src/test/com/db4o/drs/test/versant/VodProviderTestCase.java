@@ -114,14 +114,14 @@ public class VodProviderTestCase extends VodProviderTestCaseBase implements Test
 		ReplicationReference reference = _provider.produceReference(item);
 		_provider.commit();
 		DrsUUID uuid = reference.uuid();
-		VodReplicationProvider provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
+		VodReplicationProvider provider = new VodReplicationProvider(_vod);
 		Assert.areEqual(item, provider.produceReferenceByUUID(uuid, null).object());
 		provider.destroy();
 	}
 	
 	public void testClassMetadataIsLoaded(){
 		storeAndCommitSingleItem();
-		VodReplicationProvider secondProvider = new VodReplicationProvider( _vod, new JviDatabaseIdFactory(_vod));
+		VodReplicationProvider secondProvider = new VodReplicationProvider( _vod);
 		storeAndCommitSingleItem(secondProvider);
 		secondProvider.destroy();
 		assertOnlyOneClassMetadataInstance();

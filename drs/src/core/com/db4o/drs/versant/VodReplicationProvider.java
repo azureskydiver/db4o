@@ -65,7 +65,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private boolean pinging = true;
 
-	public VodReplicationProvider(VodDatabase vod, VodDatabaseIdFactory idFactory) {
+	public VodReplicationProvider(VodDatabase vod) {
 		_control = TcpCommunicationNetwork.newClient(vod);
 		_vod = vod;
 		_cobra = VodCobra.createInstance(vod);
