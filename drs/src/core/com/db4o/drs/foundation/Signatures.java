@@ -6,38 +6,16 @@ import java.util.*;
 
 public class Signatures {
 	
-	private final Map<Integer, Signature> _byId = new HashMap<Integer, Signature>();
-	
-	private final Map<Signature, Integer> _idBySignature = new HashMap<Signature, Integer>();
-	
 	private final Map<Signature, Long> _loidBySignature = new HashMap<Signature, Long>();
 
 	private final Map<Long, Signature> _signatureByLoid = new HashMap<Long, Signature>();
 
-	public Signature signatureForDatabaseId(int databaseId) {
-		return _byId.get(databaseId);
-	}
-	
-	public int idFor(Signature signature) {
-		Integer id = _idBySignature.get(signature);
-		if(id == null){
-			return 0;
-		}
-		return id;
-	}
-
-	public void add(int databaseId, Signature signature, long signatureLoid) {
-		_byId.put(databaseId, signature);
-		_idBySignature.put(signature, databaseId);
+	public void add(Signature signature, long signatureLoid) {
 		_loidBySignature.put(signature, signatureLoid);
 		_signatureByLoid.put(signatureLoid, signature);
 	}
-
-	public int idFor(DrsUUID uuid) {
-		return idFor(new Signature(uuid.getSignaturePart()));
-	}
 	
-	public Long loidFor(Signature signature){
+	public Long loidForSignature(Signature signature){
 		return _loidBySignature.get(signature);
 	}
 	

@@ -6,6 +6,7 @@ import static com.db4o.qlin.QLinSupport.prototype;
 
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.cobra.qlin.*;
 import com.db4o.drs.versant.metadata.*;
@@ -452,18 +453,18 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	public long queryForMySignatureLoid(){
-		DatabaseSignature databaseSignature = prototype(DatabaseSignature.class);
-		DatabaseSignature entry = from(DatabaseSignature.class)
-			.where(databaseSignature.databaseId())
-			.equal(databaseId())
-			.singleOrDefault(null);
-		if(entry == null){
-			return 0;
+		byte[] signatureBytes = signatureBytes(databaseId());
+		// TODO: add direct querying for byte[]
+		ObjectSet<DatabaseSignature> signatures = from(DatabaseSignature.class).select();
+		for (DatabaseSignature signature : signatures) {
+			if( Arrays.equals(signatureBytes, signature.signature())){
+				return signature.loid();
+			}
 		}
-		return entry.loid();
+		return 0;
 	}
 	
-	public byte[] signatureBytes(int databaseId){
+	public byte[] signatureBytes(long databaseId){
 		return new LatinStringIO().write("vod-" + databaseId);
 	}
 

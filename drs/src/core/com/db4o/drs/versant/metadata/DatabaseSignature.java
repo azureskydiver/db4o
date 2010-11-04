@@ -6,17 +6,10 @@ import com.db4o.internal.encoding.*;
 
 public class DatabaseSignature extends VodLoidAwareObject {
 	
-	private int databaseId;
-	
 	private byte[] signature;
 	
-	public DatabaseSignature(int databaseId, byte[] signature){
-		this.databaseId = databaseId;
+	public DatabaseSignature(byte[] signature){
 		this.signature = signature;
-	}
-	
-	public int databaseId(){
-		return databaseId;
 	}
 	
 	public byte[] signature(){
@@ -25,8 +18,7 @@ public class DatabaseSignature extends VodLoidAwareObject {
 	
 	@Override
 	public String toString() {
-		return "DatabaseSignature databaseId:" 
-			+ databaseId 
+		return "DatabaseSignature " 
 			+ " signature:" 
 			+ new LatinStringIO().read(signature);
 	}

@@ -31,8 +31,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final VodJdoFacade _jdo;
 	
-	private final VodDatabaseIdFactory _idFactory;
-
 	private GenericObjectReferenceMap<ReplicationReferenceImpl> _replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	
 	private final Signatures _signatures = new Signatures();
@@ -43,7 +41,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final ReadonlyReplicationProviderSignature _mySignature;
 	
-	private final short _myDatabaseId;
+	private final long _mySignatureLoid;
 	
 	private volatile long _timeStamp;
 	
@@ -72,23 +70,23 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_vod = vod;
 		_cobra = VodCobra.createInstance(vod);
 		_jdo = VodJdo.createInstance(vod);
-		_idFactory = idFactory;
 		loadSignatures();
 		loadKnownClasses();
-		_myDatabaseId = _cobra.databaseId();
 		
-		final Signature mySignature = produceSignatureForDatabaseId(_myDatabaseId);
+		final byte[] signatureBytes = _cobra.signatureBytes(_cobra.databaseId());
+		_mySignatureLoid = produceSignature(new Signature(signatureBytes));
+		
 		_jdo.commit();
 		prepareJdoListener();
 		_mySignature = new ReadonlyReplicationProviderSignature() {
 			public byte[] getSignature() {
-				return mySignature.bytes;
+				return signatureBytes;
 			}
 			public long getId() {
-				return 0;
+				return _mySignatureLoid;
 			}
 			public long getCreated() {
-				return _myDatabaseId;
+				return _mySignatureLoid;
 			}
 		};
 		
@@ -174,7 +172,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			if(DrsDebug.verbose){
 				System.out.println(entry);
 			}
-			_signatures.add( entry.databaseId(),new Signature(entry.signature()), entry.loid());
+			_signatures.add(new Signature(entry.signature()), entry.loid());
 		}
 	}
 	
@@ -371,9 +369,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		inReplicationTransaction = true;
 		clearAllReferences();
 		byte[] signature = peer.getSignature();
-		int peerId = dbIdFrom(signature);
-		int lowerId = Math.min(peerId, _myDatabaseId);
-		int higherId = Math.max(peerId, _myDatabaseId);
+		long peerId = signatureLoidFrom(signature);
+		long lowerId = Math.min(peerId, _mySignatureLoid);
+		long higherId = Math.max(peerId, _mySignatureLoid);
 		
 		_replicationCommitRecord = commitRecordFor(lowerId, higherId);
 		
@@ -410,29 +408,27 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		syncEventProcessor().removeListener(listener);
 	}
 
-	private ReplicationCommitRecord commitRecordFor(int lowerId, int higherId) {
+	private ReplicationCommitRecord commitRecordFor(long lowerId, long higherId) {
 		Collection<ReplicationCommitRecord> q = _cobra.query(ReplicationCommitRecord.class);
 		for (ReplicationCommitRecord r : q) {
-			if (r.lowerPeer().databaseId() == lowerId && r.higherPeer().databaseId() == higherId) {
+			if (r.lowerPeer().loid() == lowerId && r.higherPeer().loid() == higherId) {
 				return r;
 			}
 		}
 		return null;
 	}
 
-	private int dbIdFrom(byte[] signature) {
+	private long signatureLoidFrom(byte[] signature) {
 		Signature peerSignature = new Signature(signature);
-		int peerId = _signatures.idFor(peerSignature);
-		if(peerId == 0){
-			peerId = _idFactory.createDatabaseIdFor(VodJvi.safeDatabaseName(peerSignature.asString()));
-			storeSignature(peerId, peerSignature);
+		Long peerId = _signatures.loidForSignature(peerSignature);
+		if(peerId != null){
+			return peerId;
 		}
-		return peerId;
+		return storeSignature(peerSignature);
 	}
 
-	private DatabaseSignature databaseSignature(int databaseId) {
-		DatabaseSignature sig = prototype(DatabaseSignature.class);
-		return _cobra.from(DatabaseSignature.class).where(sig.databaseId()).equal(databaseId).single();
+	private DatabaseSignature databaseSignature(long signatureLoid) {
+		return _cobra.objectByLoid(signatureLoid);
 	}
 
 	public void storeReplica(Object obj) {
@@ -463,12 +459,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 		if (isNew) {
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
-			int otherDb = _signatures.idFor(signature);
+			long otherDb = _signatures.loidForSignature(signature);
 			if(otherDb == 0) {
 				throw new IllegalArgumentException("Unknown db id for " + ref.uuid());
 			}
 			long otherLongPart = ref.uuid().getLongPart();
-			long signatureLoid = _signatures.loidFor(signature);
+			long signatureLoid = _signatures.loidForSignature(signature);
 			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, timeStamp(), Operations.CREATE.value);
 		} else{
 			objectInfo.version(timeStamp());
@@ -644,7 +640,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			return null;
 		}
 		
-		long signatureLoid = _signatures.loidFor(new Signature(uuid.getSignaturePart()));
+		long signatureLoid = _signatures.loidForSignature(new Signature(uuid.getSignaturePart()));
 		
 		ObjectInfo foundInfo = null;
 		for (ObjectInfo info : infos) {
@@ -662,24 +658,22 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_replicationReferences.put(reference);
 		return reference; 
 	}
-
-	private Signature produceSignatureForDatabaseId(int databaseId) {
-		Signature signature = _signatures.signatureForDatabaseId(databaseId);
-		if(signature != null){
-			return signature;
+	
+	private long produceSignature(Signature signature) {
+		Long loid = _signatures.loidForSignature(signature);
+		if(loid != null){
+			return loid;
 		}
-		signature = new Signature(_cobra.signatureBytes(databaseId));
-		storeSignature(databaseId, signature);
-		return signature;
-	}
-
-	private void storeSignature(int databaseId, Signature signature) {
-		DatabaseSignature databaseSignature = new DatabaseSignature(databaseId, signature.bytes);
-		_cobra.store(databaseSignature);
-		_cobra.commit();
-		_signatures.add(databaseId, signature, databaseSignature.loid());
+		return storeSignature(signature);
 	}
 	
+	private long storeSignature(Signature signature) {
+		DatabaseSignature databaseSignature = new DatabaseSignature(signature.bytes);
+		_cobra.store(databaseSignature);
+		_cobra.commit();
+		_signatures.add(signature, databaseSignature.loid());
+		return databaseSignature.loid();
+	}
 
 	public long loid(Object obj) {
 		return _jdo.loid(obj);
