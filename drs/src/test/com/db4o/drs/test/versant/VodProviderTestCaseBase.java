@@ -34,7 +34,7 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 		if (_provider != null) {
 			_provider.destroy();
 		}
-		_provider = new VodReplicationProvider(_vod, new JviDatabaseIdFactory(_vod));
+		_provider = new VodReplicationProvider(_vod);
 	}
 
 	public void tearDown() {
