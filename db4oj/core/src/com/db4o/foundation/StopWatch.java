@@ -25,4 +25,12 @@ public class StopWatch {
 	public long elapsed() {
 		return _elapsed;
 	}
+	
+	public static long time(Block4 block){
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		block.run();
+		stopWatch.stop();
+		return stopWatch.elapsed();
+	}
 }
