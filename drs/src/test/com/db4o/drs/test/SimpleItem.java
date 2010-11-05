@@ -9,22 +9,27 @@ public class SimpleItem {
 	private SimpleListHolder parent;
 	
 	public SimpleItem() {
+		
 	}
 
-	public SimpleItem(String value_) {
-		this(null, value_);
-	}
-	
-	public SimpleItem(SimpleListHolder parent_, String value_) {
-		this(parent_, value_, null);
-	}
-
-	public SimpleItem(SimpleListHolder parent_, String value_, SimpleItem child_) {
+	public SimpleItem(SimpleListHolder parent_, SimpleItem child_, String value_) {
 		parent = parent_;
 		value = value_;
 		child = child_;
 	}
-
+	
+	public SimpleItem(String value_) {
+		this(null, null, value_);
+	}
+	
+	public SimpleItem(SimpleItem child, String value_) {
+		this(null, child, value_);
+	}
+	
+	public SimpleItem(SimpleListHolder parent_, String value_) {
+		this(parent_, null, value_);
+	}
+	
 	public String getValue() {
 		return value;
 	}

@@ -5,9 +5,16 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class SimpleListHolder {
+	
+	private String _name;
+	
+	public SimpleListHolder(String name){
+		_name = name;
+	}
+	
 	private List list = new ArrayList();
 
-	public List getList() {
+	public List list() {
 		return list;
 	}
 
@@ -17,5 +24,9 @@ public class SimpleListHolder {
 	
 	public void add(SimpleItem item) {
 		list.add(item);
+	}
+
+	public void name(String name) {
+		_name = name;
 	}
 }
