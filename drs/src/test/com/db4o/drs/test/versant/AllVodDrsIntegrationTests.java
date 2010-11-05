@@ -74,7 +74,7 @@ public class AllVodDrsIntegrationTests implements TestSuiteBuilder {
 		protected Class[] testCases() {
 			if(false){
 				return new Class[]{
-						ReplicationEventTest.class,
+					PerformanceTestCase.class,
 				};
 			}
 			return super.testCases();

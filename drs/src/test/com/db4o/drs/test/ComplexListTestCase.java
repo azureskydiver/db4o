@@ -50,7 +50,7 @@ public class ComplexListTestCase extends DrsTestCase {
 		SimpleItem foo = getItem(simpleListHolder, "foo");
 		foo.setChild(fooBaby);
 		b().provider().update(foo);
-		b().provider().update(simpleListHolder.getList());
+		b().provider().update(simpleListHolder.list());
 		b().provider().update(simpleListHolder);
 	}
 
@@ -59,24 +59,24 @@ public class ComplexListTestCase extends DrsTestCase {
 		ensureContents(target, (SimpleListHolder) getOneInstance(source, SimpleListHolder.class));
 	}
 
-	private void store(DrsProviderFixture fixture , SimpleListHolder list) {
+	private void store(DrsProviderFixture fixture , SimpleListHolder listHolder) {
 		TestableReplicationProviderInside provider = fixture.provider();
 		
-		provider.storeNew(list);
+		provider.storeNew(listHolder);
 		
-		provider.storeNew(getItem(list, "foo"));
-		provider.storeNew(getItem(list, "foobar"));		
+		provider.storeNew(getItem(listHolder, "foo"));
+		provider.storeNew(getItem(listHolder, "foobar"));		
 		
 		provider.commit();
 		
-		ensureContents(fixture, list);
+		ensureContents(fixture, listHolder);
 	}
 
 	private void ensureContents(DrsProviderFixture actualFixture, SimpleListHolder expected) {
 		SimpleListHolder actual = (SimpleListHolder) getOneInstance(actualFixture, SimpleListHolder.class);
 		
-		List expectedList = expected.getList();
-		List actualList = actual.getList();
+		List expectedList = expected.list();
+		List actualList = actual.list();
 		
 		assertListWithCycles(expectedList, actualList);
 	}
@@ -118,7 +118,7 @@ public class ComplexListTestCase extends DrsTestCase {
 	}
 
 	private SimpleItem getItem(SimpleListHolder holder, String tbf) {
-		return getItem(holder.getList(), tbf);
+		return getItem(holder.list(), tbf);
 	}
 	
 	private SimpleItem getItem(List list, String tbf) {
@@ -137,14 +137,14 @@ public class ComplexListTestCase extends DrsTestCase {
 		//                  |
 		// foobar ----------+
 		
-		SimpleListHolder listHolder = new SimpleListHolder();
+		SimpleListHolder listHolder = new SimpleListHolder("root");
 		
 		SimpleItem foo = new SimpleItem(listHolder, "foo");
-		SimpleItem bar = new SimpleItem(listHolder, "bar", foo);
+		SimpleItem bar = new SimpleItem(listHolder, foo, "bar");
 		listHolder.add(foo);
 		listHolder.add(bar);
-		listHolder.add(new SimpleItem(listHolder, "baz", bar));
-		listHolder.add(new SimpleItem(listHolder, "foobar", foo));
+		listHolder.add(new SimpleItem(listHolder, bar, "baz"));
+		listHolder.add(new SimpleItem(listHolder, foo, "foobar"));
 		
 		return listHolder;
 	}
