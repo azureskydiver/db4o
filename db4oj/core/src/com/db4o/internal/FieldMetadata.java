@@ -553,10 +553,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		return null;
 	}
 
-    /**
-	 * dirty hack for com.db4o.types some of them need to be set automatically
-	 * TODO: Derive from YapField for Db4oTypes
-	 */
     public Object getOrCreate(Transaction trans, Object onObject) {
 		if (!alive()) {
 			return null;
