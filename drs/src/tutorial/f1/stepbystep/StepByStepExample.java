@@ -20,23 +20,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.stepbystep;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
-import com.db4o.drs.hibernate.ReplicationConfigurator;
-import com.db4o.query.Predicate;
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+import org.hibernate.criterion.*;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
+import com.db4o.*;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.hibernate.*;
+import com.db4o.drs.hibernate.impl.*;
+import com.db4o.query.*;
 
-import java.io.File;
+import f1.*;
 
-public class StepByStepExample {
+public class StepByStepExample extends ExampleBase {
+	
 	protected String db4oFileName = "StepByStepExample.db4o";
 	protected final String hibernateConfigurationFileName = "f1/stepbystep/hibernate.cfg.xml";
 
@@ -45,13 +43,9 @@ public class StepByStepExample {
 	}
 
 	public void run() {
-		new File(db4oFileName).delete();
+		deleteDb4oDatabaseFile();
 
 		System.out.println("Running StepByStep Example.");
-
-		System.out.println("Configuring db4o to generate uuids and version numbers for objects.");
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
 		storePilotAndCarToDb4o();
 
@@ -67,7 +61,7 @@ public class StepByStepExample {
 
 		System.out.println("StepByStep Example completed");
 
-		new File(db4oFileName).delete();
+		deleteDb4oDatabaseFile();
 	}
 
 	private void storePilotAndCarToDb4o() {
@@ -79,7 +73,8 @@ public class StepByStepExample {
 		Pilot pilot = new Pilot("John", car);
 
 		System.out.println("Opening the db4o database");
-		ObjectContainer db4o = Db4o.openFile(db4oFileName);
+		ObjectContainer db4o = openObjectContainer(db4oFileName());
+		
 		System.out.println("Saving pilot and car to db4o");
 		db4o.store(pilot);
 		db4o.commit();
@@ -89,13 +84,15 @@ public class StepByStepExample {
 
 	private void replicateAllToHibernate() {
 		System.out.println("Re-opening db4o");
-		ObjectContainer db4o = Db4o.openFile(db4oFileName);
+		ObjectContainer db4o = openObjectContainer(db4oFileName());
 
 		System.out.println("Reading the Hibernate configuration file");
-		Configuration hibernate = new Configuration().configure(hibernateConfigurationFileName);
+		Configuration config = new Configuration().configure(hibernateConfigurationFileName);
 
 		System.out.println("Starting the first round of replication between db4o and Hibernate");
-		ReplicationSession replication = HibernateReplication.begin(db4o, hibernate);
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(db4o);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(config);
+		ReplicationSession replication = Replication.begin(providerA, providerB);
 
 		ObjectSet allObjects = replication.providerA().objectsChangedSinceLastReplication();
 		System.out.println("Iterating all objects changed in db4o, replicating them to Hibernate");
@@ -145,13 +142,16 @@ public class StepByStepExample {
 
 	private void replicateChangesToDb4o() {
 		System.out.println("Re-opening db4o");
-		ObjectContainer db4o = Db4o.openFile(db4oFileName);
+		ObjectContainer db4o = openObjectContainer(db4oFileName());
 
 		System.out.println("Reading the Hibernate configuration file");
-		Configuration hibernate = new Configuration().configure(hibernateConfigurationFileName);
+		Configuration config = new Configuration().configure(hibernateConfigurationFileName);
 
 		System.out.println("Starting the second round of replication between db4o and Hibernate");
-		ReplicationSession replication = HibernateReplication.begin(db4o, hibernate);
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(db4o);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(config);
+		ReplicationSession replication = Replication.begin(providerA, providerB);
+
 
 		ObjectSet allObjects = replication.providerB().objectsChangedSinceLastReplication();
 		System.out.println("Iterating all objects changed in Hibernate, replicating them to db4o");
@@ -167,7 +167,7 @@ public class StepByStepExample {
 
 	private void modifyPilotAndCarInDb4o() {
 		System.out.println("Re-opening the db4o database");
-		ObjectContainer db4o = Db4o.openFile(db4oFileName);
+		ObjectContainer db4o = openObjectContainer(db4oFileName());
 
 		System.out.println("Finding Pilot 'Anna' in Db4o.");
 
@@ -191,13 +191,16 @@ public class StepByStepExample {
 
 	private void replicatePilotToHibernate() {
 		System.out.println("Re-opening db4o");
-		ObjectContainer db4o = Db4o.openFile(db4oFileName);
+		ObjectContainer db4o = openObjectContainer(db4oFileName());
 
 		System.out.println("Reading the Hibernate configuration file");
-		Configuration hibernate = new Configuration().configure(hibernateConfigurationFileName);
+		Configuration config = new Configuration().configure(hibernateConfigurationFileName);
 
 		System.out.println("Starting the final round of replication between db4o and Hibernate");
-		ReplicationSession replication = HibernateReplication.begin(db4o, hibernate);
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(db4o);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(config);
+		ReplicationSession replication = Replication.begin(providerA, providerB);
+
 
 		ObjectSet allObjects = replication.providerA().objectsChangedSinceLastReplication(Pilot.class);
 		System.out.println("Iterating all Pilots changed in db4o, replicating them to Hibernate");

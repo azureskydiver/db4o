@@ -20,28 +20,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.collection.list;
 
-import com.db4o.Db4o;
+
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.hibernate.impl.*;
 
+import f1.*;
 import f1.collection.Car;
 import org.hibernate.cfg.Configuration;
 
-import java.io.File;
 import java.util.ArrayList;
 
-public class ListExample {
+public class ListExample extends ExampleBase {
+	
 	public static void main(String[] args) {
-		new File("ListExample.db4o").delete();
+		new ListExample().run();
+	}
+
+	public void run() {
+		deleteDb4oDatabaseFile();
 
 		System.out.println("Running List example.");
-
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-
-		ObjectContainer objectContainer = Db4o.openFile("ListExample.db4o");
+		
+		ObjectContainer objectContainer = openObjectContainer(db4oFileName());
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -60,10 +63,15 @@ public class ListExample {
 
 		objectContainer.store(pilot);
 		objectContainer.commit();
+		
 
-		Configuration config = new Configuration().configure("f1/collection/list/hibernate.cfg.xml");
-
-		ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
+		String string = "f1/collection/list/hibernate.cfg.xml";
+		Configuration config = new Configuration().configure(string);
+		
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(objectContainer);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(config);
+		
+		ReplicationSession replication = Replication.begin(providerA, providerB);
 
 		ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
@@ -74,6 +82,6 @@ public class ListExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("ListExample.db4o").delete();
+		deleteDb4oDatabaseFile();
 	}
 }

@@ -20,26 +20,33 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.one_to_one;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
+import java.io.*;
 
-import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.*;
 
-import java.io.File;
+import com.db4o.*;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.hibernate.*;
+import com.db4o.drs.hibernate.impl.*;
 
-public class OneToOneExample {
+import f1.*;
+
+public class OneToOneExample extends ExampleBase {
+	
 	public static void main(String[] args) {
+		
+		new OneToOneExample().run();
+		
+	}
+
+	public void run() {
+		deleteDb4oDatabaseFile();
 		new File("OneToOneExample.db4o").delete();
 
 		System.out.println("Running OneToOneExample example.");
 
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-
-		ObjectContainer objectContainer = Db4o.openFile("OneToOneExample.db4o");
+		ObjectContainer objectContainer = openObjectContainer(db4oFileName());
 
 		Helmet helmet = new Helmet();
 		helmet.model = "Robuster";
@@ -50,10 +57,16 @@ public class OneToOneExample {
 
 		objectContainer.store(pilot);
 		objectContainer.commit();
+		
+		
+		String string = "f1/one_to_one/hibernate.cfg.xml";
+		Configuration config = new Configuration().configure(string);
+		
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(objectContainer);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(config);
+		
+		ReplicationSession replication = Replication.begin(providerA, providerB);
 
-		Configuration config = new Configuration().configure("f1/one_to_one/hibernate.cfg.xml");
-
-		ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 		ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
 		while (changed.hasNext())
@@ -63,6 +76,6 @@ public class OneToOneExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("OneToOneExample.db4o").delete();
+		deleteDb4oDatabaseFile();
 	}
 }

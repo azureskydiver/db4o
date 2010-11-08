@@ -20,30 +20,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.collection.array;
 
+import org.hibernate.cfg.*;
+
 import com.db4o.*;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.hibernate.impl.*;
 
-import f1.collection.Car;
-import org.hibernate.cfg.Configuration;
+import f1.*;
+import f1.collection.*;
 
-import java.io.File;
-
-public class ArrayExample {
+public class ArrayExample extends ExampleBase {
 	
 	public static void main(String[] args) {
 		new ArrayExample().run();
 	}
 
-	private void run() {
-		new File("ArrayExample.db4o").delete();
+	public void run() {
+		
+		deleteDb4oDatabaseFile();
 
 		System.out.println("Running Array example.");
 
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-
-		ObjectContainer objectContainer = Db4o.openFile("ArrayExample.db4o");
+		ObjectContainer objectContainer = openObjectContainer(db4oFileName());
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -60,21 +59,30 @@ public class ArrayExample {
 
 		objectContainer.store(pilot);
 		objectContainer.commit();
+		
 
-		Configuration config = new Configuration().configure("f1/collection/array/hibernate.cfg.xml");
-
-		ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
+		String string = "f1/collection/array/hibernate.cfg.xml";
+		Configuration config = new Configuration().configure(string);
+		
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(objectContainer);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(config);
+		
+		ReplicationSession replication = Replication.begin(providerA, providerB);
 
 		ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
-		while (changed.hasNext())
+		while (changed.hasNext()){
 			replication.replicate(changed.next());
+		}
 
 		replication.commit();
 		replication.close();
+		
 		objectContainer.close();
 
-		new File("ArrayExample.db4o").delete();
+		deleteDb4oDatabaseFile();
 		
 	}
+
+
 }

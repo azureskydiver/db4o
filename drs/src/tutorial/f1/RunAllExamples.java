@@ -20,27 +20,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1;
 
-import f1.collection.array.ArrayExample;
-import f1.collection.list.ListExample;
-import f1.collection.map.MapExample;
-import f1.collection.set.SetExample;
-import f1.one_to_one.OneToOneExample;
-import f1.singleobject.SingleObjectExample;
-import f1.stepbystep.StepByStepExample;
-import f1.updateevent.UpdateEventExample;
+import f1.collection.array.*;
+import f1.collection.list.*;
+import f1.collection.map.*;
+import f1.collection.set.*;
+import f1.one_to_one.*;
+import f1.stepbystep.*;
+import f1.updateevent.*;
 
 public class RunAllExamples {
 	public static void main(String[] args) {
 		System.out.println("Running all Examples");
-		ArrayExample.main(null);
-		ListExample.main(null);
-		MapExample.main(null);
-		SetExample.main(null);
-		OneToOneExample.main(null);
-		SingleObjectExample.main(null);
-		StepByStepExample.main(null);
+		new ArrayExample().run();
+		new ListExample().run();
+		new MapExample().run();
+		new SetExample().run();
+		new OneToOneExample().run();
+		new StepByStepExample().run();
 		UpdateEventExample.main(null);
-
 		System.out.println("All Examples Done!");
 	}
 }
