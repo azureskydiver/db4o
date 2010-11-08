@@ -25,7 +25,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
 
-import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.drs.hibernate.impl.HibernateReplicationProvider;
 
 public class HsqlMemoryFixture extends RdbmsFixture {
 	private static final String HSQL_CFG_XML = "com/db4o/drs/test/hibernate/Hsql.cfg.xml";
@@ -60,6 +60,6 @@ public class HsqlMemoryFixture extends RdbmsFixture {
 		config = createConfig().configure(HSQL_CFG_XML);
 		jdbcUrlCounter =jdbcUrlCounter+1;
 		dbUrl = JDBC_URL_HEAD + jdbcUrlCounter;
-		_provider = new HibernateReplicationProviderImpl(config.setProperty(Environment.URL, dbUrl), _name);
+		_provider = new HibernateReplicationProvider(config.setProperty(Environment.URL, dbUrl), _name);
 	}
 }

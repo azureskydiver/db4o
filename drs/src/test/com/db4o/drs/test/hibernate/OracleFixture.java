@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test.hibernate;
 
-import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.drs.hibernate.impl.HibernateReplicationProvider;
 
 public class OracleFixture extends RdbmsFixture {
 	public OracleFixture(String name) {
@@ -29,6 +29,6 @@ public class OracleFixture extends RdbmsFixture {
 
 	public void open()  {
 		config = createConfig().configure("com/db4o/drs/test/hibernate/Oracle.cfg.xml");
-		_provider = new HibernateReplicationProviderImpl(config, _name);
+		_provider = new HibernateReplicationProvider(config, _name);
 	}
 }

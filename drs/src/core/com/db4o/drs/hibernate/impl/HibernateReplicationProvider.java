@@ -40,7 +40,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 
-public final class HibernateReplicationProviderImpl implements TestableReplicationProviderInside {
+public final class HibernateReplicationProvider implements TestableReplicationProviderInside {
 	
 	private static final boolean SHOW_SQL = false;
 	
@@ -85,11 +85,11 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	private final TimeStampIdGenerator _generator;
 
-	public HibernateReplicationProviderImpl(Configuration cfg) {
+	public HibernateReplicationProvider(Configuration cfg) {
 		this(cfg, null);
 	}
 
-	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
+	public HibernateReplicationProvider(Configuration cfg, String name) {
 		_name = name;
 		_cfg = ReplicationConfiguration.decorate(cfg);
 		
