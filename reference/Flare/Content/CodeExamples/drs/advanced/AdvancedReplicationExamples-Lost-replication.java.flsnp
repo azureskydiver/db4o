@@ -15,8 +15,11 @@ ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
     // The replication starts here
     ObjectContainer connectionForReplication
             = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-    ReplicationSession replicationSession
-            = Replication.begin(connectionForReplication, mobileDatabase);
+    
+    Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(connectionForReplication);
+    Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+    
+    ReplicationSession replicationSession = Replication.begin(providerA, providerB);
     ObjectSet changesOnDesktop
             = replicationSession.providerA().objectsChangedSinceLastReplication();
 
@@ -42,8 +45,11 @@ printPilots(mobileDatabase);
 {
     ObjectContainer connectionForReplication
             = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-    ReplicationSession replicationSession
-            = Replication.begin(connectionForReplication, mobileDatabase);
+    
+    Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(connectionForReplication);
+    Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+    
+    ReplicationSession replicationSession= Replication.begin(providerA, providerB);
     ObjectSet changesOnDesktop
             = replicationSession.providerA().objectsChangedSinceLastReplication();
     for (Object changedOnDesktop : changesOnDesktop) {

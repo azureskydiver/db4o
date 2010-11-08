@@ -2,7 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        <pre class="prettyprint" xml:space="preserve">
+Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(desktopDatabase);
+Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 ObjectSet initialReplication = desktopDatabase.query(Car.class);
 
 for (Object changedObjectOnDesktop : initialReplication) {

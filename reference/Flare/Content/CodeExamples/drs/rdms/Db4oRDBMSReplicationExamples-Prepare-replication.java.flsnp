@@ -3,8 +3,11 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">ObjectContainer container = openDB();
-ReplicationSession replicationSession
-        = HibernateReplication.begin(container, hibernateConfig);
+
+Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(container);
+HibernateReplicationProvider providerB = new HibernateReplicationProvider(hibernateConfig);
+
+ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 replicationSession.setDirection(replicationSession.providerA(),replicationSession.providerB());</pre>
 		<div class="codesnippet-meta">
 			Db4oRDBMSReplicationExamples.java: Prepare replication

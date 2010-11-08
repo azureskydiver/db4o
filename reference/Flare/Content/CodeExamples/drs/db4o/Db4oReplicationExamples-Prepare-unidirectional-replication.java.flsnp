@@ -4,7 +4,12 @@
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
 ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+
+Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+ReplicationSession replicationSession = Replication.begin(providerA, providerB);
+
 // set the replication-direction from the desktop database to the mobile database. 
 replicationSession.setDirection(replicationSession.providerA(), replicationSession.providerB());</pre>
 		<div class="codesnippet-meta">
