@@ -32,6 +32,10 @@ import java.io.File;
 public class ArrayExample {
 	
 	public static void main(String[] args) {
+		new ArrayExample().run();
+	}
+
+	private void run() {
 		new File("ArrayExample.db4o").delete();
 
 		System.out.println("Running Array example.");
@@ -71,5 +75,6 @@ public class ArrayExample {
 		objectContainer.close();
 
 		new File("ArrayExample.db4o").delete();
+		
 	}
 }

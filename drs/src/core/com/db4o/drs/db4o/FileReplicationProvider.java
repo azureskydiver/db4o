@@ -48,7 +48,7 @@ import com.db4o.types.*;
 
 // TODO: Add additional query methods (whereModified )
 
-class FileReplicationProvider implements Db4oReplicationProvider {
+public class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private ReadonlyReplicationProviderSignature _mySignature;
 
