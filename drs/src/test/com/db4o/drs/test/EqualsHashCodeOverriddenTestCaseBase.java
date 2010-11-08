@@ -4,6 +4,7 @@ package com.db4o.drs.test;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -47,7 +48,9 @@ public class EqualsHashCodeOverriddenTestCaseBase implements TestCase {
 		sourceDb.commit();
 		EmbeddedObjectContainer targetDb = openContainer("target");
 		try {
-			final ReplicationSession replication = Replication.begin(sourceDb, targetDb);
+			Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(sourceDb);
+			Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(targetDb);
+			final ReplicationSession replication = Replication.begin(providerA, providerB);
 			final ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 			while (changed.hasNext()) {
 				final Object o = changed.next();
