@@ -50,7 +50,7 @@ public class ComplexListTestCase extends DrsTestCase {
 		SimpleItem foo = getItem(simpleListHolder, "foo");
 		foo.setChild(fooBaby);
 		b().provider().update(foo);
-		b().provider().update(simpleListHolder.list());
+		b().provider().update(simpleListHolder.getList());
 		b().provider().update(simpleListHolder);
 	}
 
@@ -75,8 +75,8 @@ public class ComplexListTestCase extends DrsTestCase {
 	private void ensureContents(DrsProviderFixture actualFixture, SimpleListHolder expected) {
 		SimpleListHolder actual = (SimpleListHolder) getOneInstance(actualFixture, SimpleListHolder.class);
 		
-		List expectedList = expected.list();
-		List actualList = actual.list();
+		List expectedList = expected.getList();
+		List actualList = actual.getList();
 		
 		assertListWithCycles(expectedList, actualList);
 	}
@@ -118,7 +118,7 @@ public class ComplexListTestCase extends DrsTestCase {
 	}
 
 	private SimpleItem getItem(SimpleListHolder holder, String tbf) {
-		return getItem(holder.list(), tbf);
+		return getItem(holder.getList(), tbf);
 	}
 	
 	private SimpleItem getItem(List list, String tbf) {

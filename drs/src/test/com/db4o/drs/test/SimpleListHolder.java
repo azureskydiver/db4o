@@ -8,13 +8,18 @@ public class SimpleListHolder {
 	
 	private String _name;
 	
+	private List list = new ArrayList();
+	
+	public SimpleListHolder(){
+		
+	}
+	
 	public SimpleListHolder(String name){
 		_name = name;
 	}
 	
-	private List list = new ArrayList();
 
-	public List list() {
+	public List getList() {
 		return list;
 	}
 
@@ -26,7 +31,12 @@ public class SimpleListHolder {
 		list.add(item);
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		_name = name;
 	}
+	
+	public String getName() {
+		return _name;
+	}
+
 }

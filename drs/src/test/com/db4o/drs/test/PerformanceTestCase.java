@@ -70,9 +70,9 @@ public class PerformanceTestCase extends DrsTestCase {
 				ObjectSet<SimpleListHolder> storedObjects = b().provider().getStoredObjects(SimpleListHolder.class);
 				while(storedObjects.hasNext()){
 					SimpleListHolder listHolder = storedObjects.next();
-					listHolder.name("modifiedHolder");
+					listHolder.setName("modifiedHolder");
 					
-					Iterator i = listHolder.list().iterator();
+					Iterator i = listHolder.getList().iterator();
 					while(i.hasNext()){
 						SimpleItem parent = (SimpleItem) i.next();
 						parent.setValue("ModifiedParent");
@@ -83,7 +83,7 @@ public class PerformanceTestCase extends DrsTestCase {
 						b().provider().commit();
 					}
 					b().provider().update(listHolder);
-					b().provider().update(listHolder.list());
+					b().provider().update(listHolder.getList());
 				}
 			}
 		});
