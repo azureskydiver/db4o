@@ -7,6 +7,7 @@ import org.apache.tools.ant.*;
 
 public class ListPackagesTask extends Task {
 
+	private String _version;
 	private String _property;
 	private List<PackagesBaseDir> _baseDirs = new ArrayList<PackagesBaseDir>();
 	private String _extension;
@@ -15,6 +16,10 @@ public class ListPackagesTask extends Task {
 		_property = property;
 	}
 
+	public void setVersion(String version) {
+		_version = version;
+	}
+	
 	public void setExtension(String extension) {
 		_extension = extension;
 	}
@@ -30,7 +35,7 @@ public class ListPackagesTask extends Task {
 			for (PackagesBaseDir curDir : _baseDirs) {
 				collectPackages(curDir.getPath(), _extension, packages);
 			}
-			getProject().setProperty(_property, joinPackages(packages));
+			getProject().setProperty(_property, joinPackages(packages, _version));
 		} 
 		catch (IOException exc) {
 			throw new BuildException(exc);
@@ -61,7 +66,7 @@ public class ListPackagesTask extends Task {
 		}
 	}
 
-	private static String joinPackages(List<String> packages) {
+	private static String joinPackages(List<String> packages, String version) {
 		StringBuilder builder = new StringBuilder();
 		boolean isFirst = true;
 		for (String pkg : packages) {
@@ -69,6 +74,9 @@ public class ListPackagesTask extends Task {
 				builder.append(",\n");
 			}
 			builder.append(' ').append(pkg);
+			if(version != null) {
+				builder.append("; version=\"" + version +"\"");
+			}
 			isFirst = false;
 		}
 		return builder.toString();

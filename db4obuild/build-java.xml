@@ -723,7 +723,7 @@
 			</classpath>
 			<src path="${dir.osgi.src}"/>
 		</javac>
-		<listPackages property="db4o.osgi.exported.packages" extension=".class">
+		<listPackages property="db4o.osgi.exported.packages" extension=".class" version="${db4o.version.iteration.revision}">
 			<dir path="${dir.dist.classes.jdk1.2}" />
 			<dir path="${dir.dist.classes.jdk1.2.cs}" />
 			<dir path="${dir.dist.classes.jdk1.2.cs.optional}" />
@@ -767,7 +767,7 @@
 			</classpath>
 			<src path="${dir.osgi.src}"/>
 		</javac>
-		<listPackages property="db4o.osgi.exported.packages" extension=".class">
+		<listPackages property="db4o.osgi.exported.packages" extension=".class" version="${db4o.version.iteration.revision}">
 			<dir path="${dir.dist.classes.jdk1.5}" />
 			<dir path="${dir.dist.classes.jdk1.5.cs}" />
 			<dir path="${dir.dist.classes.jdk1.5.cs.optional}" />
