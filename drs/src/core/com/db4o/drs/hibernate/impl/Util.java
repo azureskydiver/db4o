@@ -61,7 +61,7 @@ public final class Util {
 		return false;
 	}
 
-	public static void dumpTable(HibernateReplicationProviderImpl p, String s) {
+	public static void dumpTable(HibernateReplicationProvider p, String s) {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 

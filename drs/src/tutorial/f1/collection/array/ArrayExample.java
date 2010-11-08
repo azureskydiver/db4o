@@ -20,9 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.collection.array;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.hibernate.HibernateReplication;
 
@@ -32,6 +30,7 @@ import org.hibernate.cfg.Configuration;
 import java.io.File;
 
 public class ArrayExample {
+	
 	public static void main(String[] args) {
 		new File("ArrayExample.db4o").delete();
 

@@ -27,13 +27,13 @@ import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationEvent;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.drs.hibernate.impl.HibernateReplicationProvider;
 import com.db4o.drs.test.DrsTestCase;
 import com.db4o.drs.test.Pilot;
 
 public class RoundRobinWithManyProviders extends DrsTestCase {
 	
-	HibernateReplicationProviderImpl providerC;
+	HibernateReplicationProvider providerC;
 
 	public void test() {
 		initProviderC();
@@ -46,7 +46,7 @@ public class RoundRobinWithManyProviders extends DrsTestCase {
 	private void initProviderC() {
 		Configuration configC = HibernateUtil.createNewDbConfig();
 		configC.addClass(Pilot.class);
-		providerC = new HibernateReplicationProviderImpl(configC);
+		providerC = new HibernateReplicationProvider(configC);
 	}
 
 	private void replicateAB() {
