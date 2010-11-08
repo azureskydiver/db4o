@@ -28,9 +28,7 @@ import com.db4o.reflect.*;
 /**
  * Factory to create ReplicationSessions.
  *
- * @author Albert Kwan
- * @author Klaus Wuestefeld
- * @version 1.2
+ * @version 1.3
  * @see com.db4o.drs.hibernate.HibernateReplication
  * @see ReplicationProvider
  * @see ReplicationEventListener
@@ -43,15 +41,39 @@ public class Replication {
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
 	 */
-	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB) {
-		return begin(providerA, providerB, null);
+	public static ReplicationSession begin(
+			ReplicationProvider providerA, 
+			ReplicationProvider providerB) {
+		
+		return begin(providerA, providerB, null, null);
 	}
 	
-	public static ReplicationSession begin(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo, Reflector reflector) {
+	/**
+	 * Begins a replication session between two ReplicatoinProviders.
+	 */
+	public static ReplicationSession begin(
+			ReplicationProvider providerA, 
+			ReplicationProvider providerB, 
+			ReplicationEventListener listener) {
+		
+		return begin(providerA, providerB, listener, null);
+	}
+
+	
+	public static ReplicationSession begin(
+			ReplicationProvider providerFrom, 
+			ReplicationProvider providerTo, 
+			Reflector reflector) {
+		
 		return begin(providerFrom, providerTo, null, reflector);
 	}
 
-	public static ReplicationSession begin(ReplicationProvider providerFrom, ReplicationProvider providerTo, ReplicationEventListener listener, Reflector reflector) {
+	public static ReplicationSession begin(
+			ReplicationProvider providerFrom, 
+			ReplicationProvider providerTo, 
+			ReplicationEventListener listener, 
+			Reflector reflector) {
+		
 		if (listener == null) {
 			listener = new DefaultReplicationEventListener();
 		}
@@ -71,13 +93,6 @@ public class Replication {
 		return begin(oc1, oc2, null);
 	}
 
-	/**
-	 * Begins a replication session between two ReplicatoinProviders.
-	 */
-	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB,
-			ReplicationEventListener listener) {
-		return begin(providerA, providerB, listener, null);
-	}
 
 	/**
 	 * Begins a replication session between db4o and db4o.
