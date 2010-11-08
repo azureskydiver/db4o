@@ -5,8 +5,11 @@
         <pre class="prettyprint" xml:space="preserve">Configuration hibernateConfig
         = new Configuration().configure(&quot;com/db4odoc/drs/rdms/hibernate.cfg.xml&quot;);
 ObjectContainer container = openDB();
-ReplicationSession replicationSession =
-        HibernateReplication.begin(container, hibernateConfig);
+
+Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(container);
+HibernateReplicationProvider providerB = new HibernateReplicationProvider(hibernateConfig);
+
+ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
 final ObjectSet changesInDb4o = replicationSession.providerA()
         .objectsChangedSinceLastReplication();
