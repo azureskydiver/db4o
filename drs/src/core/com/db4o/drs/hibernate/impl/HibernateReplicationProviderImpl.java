@@ -40,7 +40,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 
-public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
+public final class HibernateReplicationProviderImpl implements TestableReplicationProviderInside {
 	
 	private static final boolean SHOW_SQL = false;
 	
