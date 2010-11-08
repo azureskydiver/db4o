@@ -20,31 +20,36 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package f1.firststeps;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
+import java.io.*;
 
 import org.hibernate.cfg.Configuration;
 
-import java.io.File;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.hibernate.impl.*;
 
 public class Db4oWithHibernateExample {
+	
 	public static void main(String[] args) {
+		
+		new File("handheld.db4o").delete();
+		
 		Pilot pilot1 = new Pilot("Scott Felton", 200);
 		Pilot pilot2 = new Pilot("Frank Green", 120);
 
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-
-		ObjectContainer handheld = Db4o.openFile("handheld.db4o");
+		ObjectContainer handheld = Db4oEmbedded.openFile(newEmbeddedConfiguration(), "handheld.db4o");
 
 		handheld.store(pilot1);
 		handheld.store(pilot2);
+		
+		Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(handheld);
 
 		Configuration cfg = new Configuration().configure("f1/firststeps/hibernate.cfg.xml");
-		ReplicationSession session = HibernateReplication.begin(handheld, cfg);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(cfg);
+		
+		ReplicationSession session = Replication.begin(providerA, providerB);
 
 		ObjectSet changedInA = session.providerA().objectsChangedSinceLastReplication();
 		while (changedInA.hasNext())
@@ -61,4 +66,12 @@ public class Db4oWithHibernateExample {
 
 		new File("handheld.db4o").delete();
 	}
+	
+	private static EmbeddedConfiguration newEmbeddedConfiguration() {
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.file().generateUUIDs(ConfigScope.GLOBALLY);
+		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		return config;
+	}
+
 }

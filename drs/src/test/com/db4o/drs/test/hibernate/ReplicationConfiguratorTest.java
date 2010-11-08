@@ -20,22 +20,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test.hibernate;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
+import org.hibernate.*;
+import org.hibernate.cfg.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
-import com.db4o.drs.hibernate.ReplicationConfigurator;
-import com.db4o.drs.hibernate.impl.Util;
-import com.db4o.drs.hibernate.metadata.Uuid;
-import com.db4o.drs.test.CollectionHolder;
+import com.db4o.*;
+import com.db4o.drs.*;
+import com.db4o.drs.hibernate.*;
+import com.db4o.drs.hibernate.impl.*;
+import com.db4o.drs.hibernate.metadata.*;
+import com.db4o.drs.test.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
+import db4ounit.*;
 
 public class ReplicationConfiguratorTest implements TestCase {
 	protected SessionFactory sessionFactory;
@@ -155,10 +150,13 @@ public class ReplicationConfiguratorTest implements TestCase {
 
 	/**
 	 * Simulate real life application. Do a round of replication.
-	 *
 	 */
 	private void doDummyReplication() {
-		final ReplicationSession r = HibernateReplication.begin(cfg, HibernateUtil.createNewDbConfig());
+		
+		
+		HibernateReplicationProvider providerA = new HibernateReplicationProvider(cfg);
+		HibernateReplicationProvider providerB = new HibernateReplicationProvider(HibernateUtil.createNewDbConfig());
+		final ReplicationSession r = Replication.begin(providerA, providerB);
 		
 		final ObjectSet changed = r.providerA().objectsChangedSinceLastReplication();
 		while (changed.hasNext())
