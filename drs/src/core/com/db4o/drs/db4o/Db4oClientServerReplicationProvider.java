@@ -22,12 +22,12 @@ package com.db4o.drs.db4o;
 
 import com.db4o.ObjectContainer;
 
-class ClientServerReplicationProvider extends FileReplicationProvider {
-	public ClientServerReplicationProvider(ObjectContainer objectContainer) {		 
+class Db4oClientServerReplicationProvider extends Db4oEmbeddedReplicationProvider {
+	public Db4oClientServerReplicationProvider(ObjectContainer objectContainer) {		 
 		super(objectContainer, "null");
 	}
 
-	public ClientServerReplicationProvider(ObjectContainer objectContainer, String name) {
+	public Db4oClientServerReplicationProvider(ObjectContainer objectContainer, String name) {
 		super(objectContainer, name);
 	}
 	

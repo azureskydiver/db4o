@@ -48,7 +48,7 @@ import com.db4o.types.*;
 
 // TODO: Add additional query methods (whereModified )
 
-public class FileReplicationProvider implements Db4oReplicationProvider {
+public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider {
 
 	private ReadonlyReplicationProviderSignature _mySignature;
 
@@ -66,7 +66,7 @@ public class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private final Procedure4 _activationStrategy;
 	
-	public FileReplicationProvider(ObjectContainer objectContainer, String name) {
+	public Db4oEmbeddedReplicationProvider(ObjectContainer objectContainer, String name) {
 		Configuration cfg = objectContainer.ext().configure();
 		cfg.callbacks(false);
 
@@ -75,6 +75,10 @@ public class FileReplicationProvider implements Db4oReplicationProvider {
 		_reflector = _container.reflector();
 		_signatureMap = new Db4oSignatureMap(_container);
 		_activationStrategy = createActivationStrategy();
+	}
+	
+	public Db4oEmbeddedReplicationProvider(ObjectContainer objectContainer) {
+		this(objectContainer, objectContainer.toString());
 	}
 
 	private Procedure4 createActivationStrategy() {
