@@ -29,9 +29,9 @@ import com.db4o.internal.*;
 public class Db4oProviderFactory {
 	public static Db4oReplicationProvider newInstance(ObjectContainer oc, String name) {
 		if (isClient(oc))
-			return new ClientServerReplicationProvider(oc, name);
+			return new Db4oClientServerReplicationProvider(oc, name);
 		else
-			return new FileReplicationProvider(oc, name);
+			return new Db4oEmbeddedReplicationProvider(oc, name);
 	}
 	
 	public static Db4oReplicationProvider newInstance(ObjectContainer oc) {
