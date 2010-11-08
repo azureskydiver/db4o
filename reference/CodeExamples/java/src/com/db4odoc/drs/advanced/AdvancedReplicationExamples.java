@@ -6,6 +6,7 @@ import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
 import com.db4o.ext.ObjectInfo;
 
 import java.io.File;
@@ -38,9 +39,12 @@ public class AdvancedReplicationExamples {
 
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
         // #example: Register a listener for information about the replication process
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase,
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB,
                 new ReplicationEventListener() {
                     public void onReplicate(ReplicationEvent replicationEvent) {
                         ObjectState stateInDesktop = replicationEvent.stateInProviderA();
@@ -72,12 +76,14 @@ public class AdvancedReplicationExamples {
 
         replicateBidirectional(desktopDatabase, mobileDatabase);
 
-
         updateObject(desktopDatabase);
         updateObject(mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
 
         // #example: Deal with conflicts
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase,
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB,
                 new ReplicationEventListener() {
                     public void onReplicate(ReplicationEvent replicationEvent) {
                         if (replicationEvent.isConflict()) {
@@ -106,9 +112,12 @@ public class AdvancedReplicationExamples {
 
         updateObject(desktopDatabase);
         updateObject(mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
 
         // #example: Take latest change
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase,
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB,
                 new ReplicationEventListener() {
                     public void onReplicate(ReplicationEvent replicationEvent) {
                         if (replicationEvent.isConflict()) {
@@ -149,8 +158,11 @@ public class AdvancedReplicationExamples {
             // The replication starts here
             ObjectContainer connectionForReplication
                     = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-            ReplicationSession replicationSession
-                    = Replication.begin(connectionForReplication, mobileDatabase);
+            
+            Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(connectionForReplication);
+            Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+            
+            ReplicationSession replicationSession = Replication.begin(providerA, providerB);
             ObjectSet changesOnDesktop
                     = replicationSession.providerA().objectsChangedSinceLastReplication();
 
@@ -176,8 +188,11 @@ public class AdvancedReplicationExamples {
         {
             ObjectContainer connectionForReplication
                     = Db4oClientServer.openClient(HOST, PORT, USER_NAME, USER_NAME);
-            ReplicationSession replicationSession
-                    = Replication.begin(connectionForReplication, mobileDatabase);
+            
+            Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(connectionForReplication);
+            Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+            
+            ReplicationSession replicationSession= Replication.begin(providerA, providerB);
             ObjectSet changesOnDesktop
                     = replicationSession.providerA().objectsChangedSinceLastReplication();
             for (Object changedOnDesktop : changesOnDesktop) {
@@ -237,7 +252,11 @@ public class AdvancedReplicationExamples {
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
 
         // #example: Migrate on the fly
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         ObjectSet initialReplication = desktopDatabase.query(Car.class);
 
         for (Object changedObjectOnDesktop : initialReplication) {
@@ -266,7 +285,9 @@ public class AdvancedReplicationExamples {
 
 
     private static void replicateBidirectional(ObjectContainer desktopDatabase, ObjectContainer mobileDatabase) {
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         replicateBidirectional(replicationSession);
         replicationSession.commit();
     }

@@ -1,22 +1,23 @@
 package com.db4odoc.drs.rdms;
 
-import com.db4o.Db4oEmbedded;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.ConfigScope;
-import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.hibernate.HibernateReplication;
-import com.db4o.drs.hibernate.ReplicationConfigurator;
-import org.hibernate.SessionFactory;
+import java.io.*;
+
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 
-import java.io.File;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.hibernate.*;
+import com.db4o.drs.hibernate.impl.*;
 
 
 public class Db4oRDBMSReplicationExamples {
+	
     static final String DB4O_DATABASE_FILE = "database.db4o";
+    
     public static void main(String[] args) throws Exception {
         fromDb4oToHibernate();
         bidirectionalReplication();
@@ -34,8 +35,11 @@ public class Db4oRDBMSReplicationExamples {
 
         // #example: Prepare replication
         ObjectContainer container = openDB();
-        ReplicationSession replicationSession
-                = HibernateReplication.begin(container, hibernateConfig);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(container);
+        HibernateReplicationProvider providerB = new HibernateReplicationProvider(hibernateConfig);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         replicationSession.setDirection(replicationSession.providerA(),replicationSession.providerB());
         // #end example
         
@@ -58,8 +62,11 @@ public class Db4oRDBMSReplicationExamples {
         Configuration hibernateConfig
                 = new Configuration().configure("com/db4odoc/drs/rdms/hibernate.cfg.xml");
         ObjectContainer container = openDB();
-        ReplicationSession replicationSession =
-                HibernateReplication.begin(container, hibernateConfig);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(container);
+        HibernateReplicationProvider providerB = new HibernateReplicationProvider(hibernateConfig);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
         final ObjectSet changesInDb4o = replicationSession.providerA()
                 .objectsChangedSinceLastReplication();
@@ -84,8 +91,11 @@ public class Db4oRDBMSReplicationExamples {
         Configuration hibernateConfig
                 = new Configuration().configure("com/db4odoc/drs/rdms/hibernate.cfg.xml");
         ObjectContainer container = openDB();
-        ReplicationSession replicationSession =
-                HibernateReplication.begin(container, hibernateConfig);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(container);
+        HibernateReplicationProvider providerB = new HibernateReplicationProvider(hibernateConfig);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
         final ObjectSet changesInDb4o = replicationSession.providerA()
                 .objectsChangedSinceLastReplication();

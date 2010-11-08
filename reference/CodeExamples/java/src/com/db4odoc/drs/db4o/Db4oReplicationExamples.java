@@ -6,6 +6,7 @@ import com.db4o.ObjectSet;
 import com.db4o.config.ConfigScope;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
 import com.db4o.query.Predicate;
 
 import java.io.File;
@@ -33,7 +34,12 @@ public class Db4oReplicationExamples {
         //#example: Prepare unidirectional replication
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
+        
         // set the replication-direction from the desktop database to the mobile database. 
         replicationSession.setDirection(replicationSession.providerA(), replicationSession.providerB());
         //#end example:
@@ -59,7 +65,11 @@ public class Db4oReplicationExamples {
         // #example: Prepare bidirectional replication
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         // #end example
 
         //#example: Bidirectional replication
@@ -91,7 +101,11 @@ public class Db4oReplicationExamples {
 
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
         // #example: Selective replication by class
         ObjectSet changesOnDesktop =
@@ -117,7 +131,11 @@ public class Db4oReplicationExamples {
 
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
         // #example: Selective replication with a condition
         ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
@@ -145,7 +163,11 @@ public class Db4oReplicationExamples {
 
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
         // #example: Selective replication with a query
         ObjectSet<Car> changesOnDesktop = desktopDatabase.query(new Predicate<Car>() {
@@ -182,7 +204,10 @@ public class Db4oReplicationExamples {
         printCars(mobileDatabase);
 
         // #example: Replicate deletions
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         replicationSession.replicateDeletions(Car.class);
         replicationSession.commit();
         // #end example
@@ -194,7 +219,10 @@ public class Db4oReplicationExamples {
     }
 
     private static void replicate(ObjectContainer desktopDatabase, ObjectContainer mobileDatabase) {
-        ReplicationSession replicationSession = Replication.begin(desktopDatabase, mobileDatabase);
+        Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+        Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        
+        ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         replicateChanges(replicationSession, replicationSession.providerA());
         replicateChanges(replicationSession, replicationSession.providerB());
         replicationSession.commit();
