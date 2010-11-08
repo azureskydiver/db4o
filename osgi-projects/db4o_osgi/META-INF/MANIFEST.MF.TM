@@ -7,7 +7,7 @@ Bundle-Activator: com.db4o.osgi.Db4oActivator
 Bundle-Vendor: db4objects, Inc.
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-ClassPath: .,
- lib/db4o-@db4o.version.iteration.revision@-all-java1.2.jar
+ lib/db4o-@db4o.version.iteration.revision@-all-java@db4o.java.version@.jar
 Bundle-ActivationPolicy: lazy 
 Export-Package: EDU.purdue.cs.bloat.benchmark,
  EDU.purdue.cs.bloat.cfg,

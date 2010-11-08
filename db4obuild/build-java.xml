@@ -738,6 +738,7 @@
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="db4o.osgi.exported.packages" value="${db4o.osgi.exported.packages}"/>
+				<filter token="db4o.java.version" value="1.2"/>
 			</filterset>
 		</copy>
 		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
@@ -748,7 +749,51 @@
 		</jar>
 
 	</target>
-	
+
+	<target name="build.osgi1.5" depends="build.nqopt1.5, build.db4otools1.5, build.nodep1.5">
+		<delete dir="${dir.dist.classes.osgi}"/>
+		<delete dir="${dir.dist.classes.osgi.lib}"/>
+		<mkdir dir="${dir.dist.classes.osgi}"/>
+		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.5.nodep.jar}"/>
+		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.5" source="1.5">
+			<classpath>
+				<fileset dir="${dir.build.lib}">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement location="${file.jdk1.5.jar}"/>
+				<pathelement location="${file.jdk1.5.cs.jar}"/>
+				<pathelement location="${file.jdk1.5.optional.jar}"/>
+			</classpath>
+			<src path="${dir.osgi.src}"/>
+		</javac>
+		<listPackages property="db4o.osgi.exported.packages" extension=".class">
+			<dir path="${dir.dist.classes.jdk1.5}" />
+			<dir path="${dir.dist.classes.jdk1.5.cs}" />
+			<dir path="${dir.dist.classes.jdk1.5.cs.optional}" />
+			<dir path="${dir.dist.classes.jdk1.5.optional}" />
+			<dir path="${dir.dist.classes.jdk1.5.instrumentation}" />
+			<dir path="${dir.dist.classes.jdk1.5.nqopt}" />
+			<dir path="${dir.dist.classes.jdk1.5.db4otools}" />
+			<dir path="${dir.dist.classes.osgi}" />
+			<!-- bloat packages are hardwired in template --> 
+		</listPackages>
+		<copy tofile="${file.osgi.manifest.filtered}" file="${file.osgi.manifest}.TM" overwrite="true">
+			<filterset>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+				<filter token="db4o.osgi.exported.packages" value="${db4o.osgi.exported.packages}"/>
+				<filter token="db4o.java.version" value="5"/>
+			</filterset>
+		</copy>
+		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
+			<fileset dir="${dir.dist.classes.osgi}" />
+			<fileset dir="${dir.osgi}">
+				<include name="src/**/*.java" />
+			</fileset>
+		</jar>
+
+	</target>
+
 	<target name="run.tests.android.jdk1.5" depends="build.nodep1.5,build.db4ojdk1.5.tests" if="dir.android.home">
 		<mkdir dir="${dir.dist.android}"/>
 		<antcall target="db4oandroid-tests.run-tests"></antcall>
