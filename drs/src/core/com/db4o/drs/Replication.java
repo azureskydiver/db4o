@@ -20,8 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs;
 
-import com.db4o.ObjectContainer;
-import com.db4o.drs.db4o.Db4oProviderFactory;
 import com.db4o.drs.inside.*;
 import com.db4o.reflect.*;
 
@@ -35,8 +33,10 @@ import com.db4o.reflect.*;
  * @since dRS 1.0
  */
 public class Replication {
+	
 	/**
-	 * Begins a replication session between two ReplicationProviders without ReplicationEventListener.
+	 * Begins a replication session between two ReplicationProviders without a 
+	 * ReplicationEventListener and with no Reflector provided.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
@@ -49,7 +49,11 @@ public class Replication {
 	}
 	
 	/**
-	 * Begins a replication session between two ReplicatoinProviders.
+	 * Begins a replication session between two ReplicationProviders using a 
+	 * ReplicationEventListener and with no Reflector provided.
+	 *
+	 * @throws ReplicationConflictException when conflicts occur
+	 * @see ReplicationEventListener
 	 */
 	public static ReplicationSession begin(
 			ReplicationProvider providerA, 
@@ -60,6 +64,13 @@ public class Replication {
 	}
 
 	
+	/**
+	 * Begins a replication session between two ReplicationProviders without a 
+	 * ReplicationEventListener and with a Reflector provided.
+	 *
+	 * @throws ReplicationConflictException when conflicts occur
+	 * @see ReplicationEventListener
+	 */
 	public static ReplicationSession begin(
 			ReplicationProvider providerFrom, 
 			ReplicationProvider providerTo, 
@@ -68,6 +79,13 @@ public class Replication {
 		return begin(providerFrom, providerTo, null, reflector);
 	}
 
+	/**
+	 * Begins a replication session between two ReplicationProviders using a 
+	 * ReplicationEventListener and with a Reflector provided.
+	 *
+	 * @throws ReplicationConflictException when conflicts occur
+	 * @see ReplicationEventListener
+	 */
 	public static ReplicationSession begin(
 			ReplicationProvider providerFrom, 
 			ReplicationProvider providerTo, 
@@ -83,22 +101,5 @@ public class Replication {
 		return new GenericReplicationSession(providerFrom, providerTo, listener, reflector);
 	}
 
-	/**
-	 * Begins a replication session between db4o and db4o without ReplicationEventListener.
-	 *
-	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ReplicationEventListener
-	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2) {
-		return begin(oc1, oc2, null);
-	}
 
-
-	/**
-	 * Begins a replication session between db4o and db4o.
-	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2,
-			ReplicationEventListener listener) {
-		return begin(Db4oProviderFactory.newInstance(oc1), Db4oProviderFactory.newInstance(oc2), listener);
-	}
 }
