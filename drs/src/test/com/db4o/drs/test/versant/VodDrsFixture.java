@@ -10,8 +10,6 @@ import com.db4o.drs.versant.*;
 
 public class VodDrsFixture implements DrsProviderFixture{
 	
-	private static boolean enhanced = false;
-	
 	private VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
@@ -29,18 +27,12 @@ public class VodDrsFixture implements DrsProviderFixture{
 		_vod = new VodDatabase(_name);
 		_vod.removeDb();
 		_vod.produceDb();
-		JdoMetadataGenerator generator = new JdoMetadataGenerator(new File("bin"));
 		
 		// TODO: Knowledge about all the persistent classes right
 		// now is in DrsTestCase.mappings
 		// Move to a smarter place and pull all the package names
 		// from there to generate .jdo files for all of them.
 		
-		_vod.addJdoMetaDataFile(generator.resourcePath(generator.generate("com.db4o.drs.test.data")));
-		if(! enhanced ){
-			_vod.enhance();
-			enhanced = true;
-		}
 		_vod.createEventSchema();
 		ensureJdoMetadataCreated();
 	}

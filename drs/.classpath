@@ -35,5 +35,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4o.cs"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
+	<classpathentry kind="lib" path="lib/datanucleus/datanucleus-core-2.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

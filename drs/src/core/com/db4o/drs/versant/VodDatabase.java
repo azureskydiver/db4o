@@ -9,10 +9,12 @@ import java.util.*;
 import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.data.*;
 import com.db4o.drs.versant.eventlistener.*;
 import com.db4o.drs.versant.eventlistener.EventProcessorApplication.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.tcp.*;
+import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.util.*;
@@ -149,32 +151,6 @@ public class VodDatabase {
 		return _persistenceManagerFactory;
 	}
 	
-	public void enhance() {
-		String tempFileName = Path4.getTempFileName();
-		File tempFile = new File(tempFileName);
-		try{
-			FileOutputStream out = new FileOutputStream(tempFile);
-			if(DrsDebug.verbose){
-				_properties.store(System.err, null);
-			}
-			_properties.store(out, null);
-			out.close();
-			
-			String[] args = new String[]{tempFile.getAbsolutePath()};
-			
-			ProcessResult processResult = JavaServices.java("com.db4o.drs.versant.VodEnhancer", args);
-			if(DrsDebug.verbose){
-				System.out.println(processResult);
-			}
-		} catch(IOException ioe){
-			throw new RuntimeException(ioe);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		} finally {
-			tempFile.delete();
-		}
-	}
-
 	public DatastoreManager createDatastoreManager() {
 		return datastoreManagerFactory().getDatastoreManager();
 	}
@@ -225,13 +201,18 @@ public class VodDatabase {
 	}
 	
 	private void addJdoMetaDataFiles() {
-		for (File file : new File("bin").listFiles()) {
-			if(! file.isDirectory()  && file.getName().endsWith(".jdo")){
-				addJdoMetaDataFile(file.getName());
-			}
-		}
+		addJdoMetaDataFile(CommitTimestamp.class.getPackage());
+		addJdoMetaDataFile(SPCParent.class.getPackage());
 	}
 
+	private String jdoDefinitionsForPackage(Package p) {
+		return p.getName().replace('.', '/')+"/package.jdo";
+	}
+
+	public void addJdoMetaDataFile(Package p) {
+		addJdoMetaDataFile(jdoDefinitionsForPackage(p));
+	}
+	
 	public void addJdoMetaDataFile(String fileName) {
 		
 		final int maxMetadataEntries = 1000;
