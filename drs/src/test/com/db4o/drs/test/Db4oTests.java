@@ -33,12 +33,9 @@ public class Db4oTests extends DrsTestSuite implements Db4oTestCase {
 	}
 	
 	public int run(){
-		//if (true) return new Db4oTests().runDb4oDb4o();
 		int failureCount = new Db4oTests().runDb4oDb4o();
 		failureCount += new Db4oTests().rundb4oCS();
-		//new Db4oTests().runCSdb4o();
 		failureCount += new Db4oTests().runCSCS();
-		//new Db4oTests().runDb4oDb4o();
 		return failureCount;
 	}
 

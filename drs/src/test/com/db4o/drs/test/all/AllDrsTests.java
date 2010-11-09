@@ -22,15 +22,26 @@ package com.db4o.drs.test.all;
 
 import com.db4o.drs.test.*;
 import com.db4o.drs.test.hibernate.*;
+import com.db4o.drs.test.versant.*;
+
+import db4ounit.*;
 
 public class AllDrsTests {
 	public static void main(String[] args) {
-		int failureCount = new Db4oTests().run();
-		if (failureCount != 0) {
-			System.exit(failureCount);
+		runTests(new Db4oTests());
+		runTests(new RdbmsTests());
+		if ("true".equals(System.getProperty("runVodTests", "false"))) {
+			runTests(new VodTests());
 		}
-		failureCount = new RdbmsTests().run();
-		if(failureCount != 0){
+	}
+
+	private static void runTests(ReflectionTestSuite suite) {
+		System.err.println("------------------------ Running " + suite.getClass().getSimpleName() +" ------------------------");
+		assertRun(suite.run());
+	}
+
+	private static void assertRun(int failureCount) {
+		if (failureCount != 0) {
 			System.exit(failureCount);
 		}
 	}
