@@ -18,71 +18,50 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-package com.db4o.drs.test;
+package com.db4o.drs.test.data;
 
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.test.data.*;
+public class SPCParent {
 
+	private SPCChild child;
 
-class R0Linker {
+	private String name;
 
-	R0 r0;
-	R1 r1;
-	R2 r2;
-	R3 r3;
-	R4 r4;
+	public SPCParent() {
 
-	R0Linker() {
-		r0 = new R0();
-		r1 = new R1();
-		r2 = new R2();
-		r3 = new R3();
-		r4 = new R4();
 	}
 
-	void setNames(String name) {
-		r0.setName("0" + name);
-		r1.setName("1" + name);
-		r2.setName("2" + name);
-		r3.setName("3" + name);
-		r4.setName("4" + name);
+	public SPCParent(String name) {
+		this.name = name;
 	}
 
-	void linkCircles() {
-		linkList();
-		r1.setCircle1(r0);
-		r2.setCircle2(r0);
-		r3.setCircle3(r0);
-		r4.setCircle4(r0);
+	public SPCParent(SPCChild child, String name) {
+		this.child = child;
+		this.name = name;
 	}
 
-	void linkList() {
-		r0.setR1(r1);
-		r1.setR2(r2);
-		r2.setR3(r3);
-		r3.setR4(r4);
+	public SPCChild getChild() {
+		return child;
 	}
 
-	void linkThis() {
-		r0.setR0(r0);
-		r1.setR1(r1);
-		r2.setR2(r2);
-		r3.setR3(r3);
-		r4.setR4(r4);
+	public void setChild(SPCChild child) {
+		this.child = child;
 	}
 
-	void linkBack() {
-		r1.setR0(r0);
-		r2.setR1(r1);
-		r3.setR2(r2);
-		r4.setR3(r3);
+
+	public String getName() {
+		return name;
 	}
 
-	public void store(TestableReplicationProviderInside provider) {
-		provider.storeNew(r4);
-		provider.storeNew(r3);
-		provider.storeNew(r2);
-		provider.storeNew(r1);
-		provider.storeNew(r0);
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String toString() {
+		return "SPCParent{" +
+				"child=" + child +
+				", name='" + name + '\'' +
+				'}';
 	}
 }

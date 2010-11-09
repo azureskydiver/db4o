@@ -25,6 +25,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
 

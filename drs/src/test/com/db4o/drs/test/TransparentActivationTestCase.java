@@ -5,6 +5,7 @@ package com.db4o.drs.test;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.drs.db4o.*;
+import com.db4o.drs.test.data.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;

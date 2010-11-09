@@ -25,6 +25,8 @@ import java.util.*;
 import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.GenericReplicationSession;
+import com.db4o.drs.test.data.*;
+
 import db4ounit.Assert;
 
 public class MixedTypesCollectionReplicationTest extends DrsTestCase {

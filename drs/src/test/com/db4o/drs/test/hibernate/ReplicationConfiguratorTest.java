@@ -28,7 +28,7 @@ import com.db4o.drs.*;
 import com.db4o.drs.hibernate.*;
 import com.db4o.drs.hibernate.impl.*;
 import com.db4o.drs.hibernate.metadata.*;
-import com.db4o.drs.test.*;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
 

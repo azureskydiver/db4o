@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.data.*;
 import com.db4o.foundation.*;
 
 

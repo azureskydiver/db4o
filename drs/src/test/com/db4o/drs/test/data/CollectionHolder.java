@@ -18,71 +18,67 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-package com.db4o.drs.test;
+package com.db4o.drs.test.data;
 
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.test.data.*;
+import java.util.*;
 
-
-class R0Linker {
-
-	R0 r0;
-	R1 r1;
-	R2 r2;
-	R3 r3;
-	R4 r4;
-
-	R0Linker() {
-		r0 = new R0();
-		r1 = new R1();
-		r2 = new R2();
-		r3 = new R3();
-		r4 = new R4();
+public class CollectionHolder {
+	private String name;
+	private Map map;
+	private List list;
+	private Set set;
+	
+	public CollectionHolder(String name, Map theMap, Set theSet, List theList) {
+		this.name = name;
+		map = theMap;
+		set = theSet;
+		list = theList;
+	}
+	
+	public CollectionHolder() {
+		this("HashMap", new HashMap(), new HashSet(), new ArrayList());
 	}
 
-	void setNames(String name) {
-		r0.setName("0" + name);
-		r1.setName("1" + name);
-		r2.setName("2" + name);
-		r3.setName("3" + name);
-		r4.setName("4" + name);
+	public CollectionHolder(String name) {
+		this();
+		this.name = name;
 	}
 
-	void linkCircles() {
-		linkList();
-		r1.setCircle1(r0);
-		r2.setCircle2(r0);
-		r3.setCircle3(r0);
-		r4.setCircle4(r0);
+
+	public String toString() {
+		return name + ", hashcode = " + hashCode();
 	}
 
-	void linkList() {
-		r0.setR1(r1);
-		r1.setR2(r2);
-		r2.setR3(r3);
-		r3.setR4(r4);
+	public void map(Map map) {
+		this.map = map;
 	}
 
-	void linkThis() {
-		r0.setR0(r0);
-		r1.setR1(r1);
-		r2.setR2(r2);
-		r3.setR3(r3);
-		r4.setR4(r4);
+	public Map map() {
+		return map;
 	}
 
-	void linkBack() {
-		r1.setR0(r0);
-		r2.setR1(r1);
-		r3.setR2(r2);
-		r4.setR3(r3);
+	public void list(List list) {
+		this.list = list;
 	}
 
-	public void store(TestableReplicationProviderInside provider) {
-		provider.storeNew(r4);
-		provider.storeNew(r3);
-		provider.storeNew(r2);
-		provider.storeNew(r1);
-		provider.storeNew(r0);
+	public List list() {
+		return list;
 	}
+
+	public void set(Set set) {
+		this.set = set;
+	}
+
+	public Set set() {
+		return set;
+	}
+
+	public void name(String name) {
+		this.name = name;
+	}
+
+	public String name() {
+		return name;
+	}
+
 }

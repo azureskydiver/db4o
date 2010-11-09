@@ -46,7 +46,6 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				ListContent.class,
 				ListHolder.class, 
 				MapContent.class,
-				Person.class,
 				Pilot.class, 
 				R0.class,
 				Replicated.class,
@@ -56,7 +55,6 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				SimpleListHolder.class, 
 				SPCChild.class,
 				SPCParent.class,
-				Student.class,
 		};
 	}
 

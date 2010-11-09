@@ -22,6 +22,7 @@ package com.db4o.drs.test;
 
 import java.util.List;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.Assert;
 
