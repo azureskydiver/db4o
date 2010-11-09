@@ -201,10 +201,6 @@ public class VodDatabase {
 	
 	private void addJdoMetaDataFiles() {
 		addJdoMetaDataFile(CommitTimestamp.class.getPackage());
-		try {
-			addJdoMetaDataFile(Class.forName("com.db4o.drs.test.data.SPCParent").getPackage());
-		} catch (ClassNotFoundException e) {
-		}
 	}
 
 	private String jdoDefinitionsForPackage(Package p) {
