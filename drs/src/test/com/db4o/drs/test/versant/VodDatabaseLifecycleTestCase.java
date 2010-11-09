@@ -25,7 +25,6 @@ public class VodDatabaseLifecycleTestCase implements TestCase {
 	
 	public void testEnhancer() {
 		VodDatabase vod = new VodDatabase(DATABASE_NAME);
-		vod.enhance();
 		
 		// TODO: Test if some known class is PersistenceCapable
 		

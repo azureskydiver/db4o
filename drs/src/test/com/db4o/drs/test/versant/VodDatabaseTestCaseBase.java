@@ -13,7 +13,6 @@ public abstract class VodDatabaseTestCaseBase implements TestCase, ClassLevelFix
 	public static void classSetUp() {
 		_vod = new VodDatabase(DATABASE_NAME);
 		_vod.produceDb();
-		_vod.enhance();
 	}
 
 	public static void classTearDown() {
