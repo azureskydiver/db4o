@@ -25,6 +25,7 @@ import java.util.Iterator;
 import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
+import com.db4o.drs.test.data.*;
 import com.db4o.drs.test.foundation.Set4;
 import com.db4o.foundation.*;
 

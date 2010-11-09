@@ -71,7 +71,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().delete(findPilot("Pilot1"));
 
 		Car car = new Car("Car1");
-		car._pilot = findPilot("Pilot2");
+		car.setPilot(findPilot("Pilot2"));
 		a().provider().storeNew(car);
 
 		a().provider().commit();

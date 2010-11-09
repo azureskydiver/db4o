@@ -22,7 +22,7 @@ package com.db4o.drs.test;
 
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.*;
-import com.db4o.drs.test.Replicated;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
 

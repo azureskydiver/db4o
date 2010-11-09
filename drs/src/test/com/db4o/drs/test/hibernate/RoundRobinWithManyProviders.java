@@ -29,7 +29,7 @@ import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.hibernate.impl.HibernateReplicationProvider;
 import com.db4o.drs.test.DrsTestCase;
-import com.db4o.drs.test.Pilot;
+import com.db4o.drs.test.data.*;
 
 public class RoundRobinWithManyProviders extends DrsTestCase {
 	

@@ -23,6 +23,8 @@ package com.db4o.drs.test;
 import java.util.Iterator;
 
 import com.db4o.ObjectSet;
+import com.db4o.drs.test.data.*;
+
 import db4ounit.Assert;
 
 public class SimpleArrayTest extends DrsTestCase {
