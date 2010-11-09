@@ -2,7 +2,7 @@
 
 package com.db4o.drs.test.versant;
 
-import java.io.*;
+import java.util.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
@@ -28,10 +28,14 @@ public class VodDrsFixture implements DrsProviderFixture{
 		_vod.removeDb();
 		_vod.produceDb();
 		
-		// TODO: Knowledge about all the persistent classes right
-		// now is in DrsTestCase.mappings
-		// Move to a smarter place and pull all the package names
-		// from there to generate .jdo files for all of them.
+		Set<Package> packages = new HashSet<Package>();
+		for (Class clazz : DrsTestCase.mappings) {
+			Package p = clazz.getPackage();
+			if (!packages.add(p)) {
+				continue;
+			}
+			_vod.addJdoMetaDataFile(p);
+		}
 		
 		_vod.createEventSchema();
 		ensureJdoMetadataCreated();
