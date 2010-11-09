@@ -68,9 +68,9 @@ public class PerformanceTestCase extends DrsTestCase {
 	private void modifyInB() {
 		long duration = StopWatch.time(new Block4() {
 			public void run() {
-				ObjectSet<SimpleListHolder> storedObjects = b().provider().getStoredObjects(SimpleListHolder.class);
+				ObjectSet storedObjects = b().provider().getStoredObjects(SimpleListHolder.class);
 				while(storedObjects.hasNext()){
-					SimpleListHolder listHolder = storedObjects.next();
+					SimpleListHolder listHolder = (SimpleListHolder) storedObjects.next();
 					listHolder.setName("modifiedHolder");
 					
 					Iterator i = listHolder.getList().iterator();
