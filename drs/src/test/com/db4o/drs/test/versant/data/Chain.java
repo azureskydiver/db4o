@@ -8,6 +8,9 @@ public class Chain {
 	
 	private Chain _next;
 	
+	public Chain() {
+	}
+	
 	public Chain(int id, Chain chain) {
 		_id = id;
 		_next = chain;

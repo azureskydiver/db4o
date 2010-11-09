@@ -8,6 +8,9 @@ public class DatabaseSignature extends VodLoidAwareObject {
 	
 	private byte[] signature;
 	
+	public DatabaseSignature() {
+	}
+	
 	public DatabaseSignature(byte[] signature){
 		this.signature = signature;
 	}
