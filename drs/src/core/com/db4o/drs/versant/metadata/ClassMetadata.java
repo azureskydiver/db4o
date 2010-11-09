@@ -20,6 +20,9 @@ public class ClassMetadata extends VodLoidAwareObject {
 	
 	private String fullyQualifiedName;
 	
+	public ClassMetadata() {
+	}
+	
 	public ClassMetadata(String name, String fullyQualifiedName, boolean monitored){
 		this.name = name;
 		this.fullyQualifiedName = fullyQualifiedName;

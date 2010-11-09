@@ -10,6 +10,9 @@ public class Holder {
 	
 	private List<Item> _items;
 	
+	public Holder() {
+	}
+	
 	public Holder(Item item, Item...items){
 		_item = item;
 		_items = new ArrayList<Item>();
