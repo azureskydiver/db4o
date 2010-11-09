@@ -9,16 +9,15 @@ import java.util.*;
 import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
-import com.db4o.drs.test.data.*;
 import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.eventlistener.EventProcessorApplication.*;
+import com.db4o.drs.versant.eventlistener.EventProcessorApplication.Arguments;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.tcp.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.util.IOServices.ProcessRunner;
 import com.db4o.util.*;
-import com.db4o.util.IOServices.*;
 import com.versant.odbms.*;
 import com.versant.util.*;
 
@@ -202,7 +201,10 @@ public class VodDatabase {
 	
 	private void addJdoMetaDataFiles() {
 		addJdoMetaDataFile(CommitTimestamp.class.getPackage());
-		addJdoMetaDataFile(SPCParent.class.getPackage());
+		try {
+			addJdoMetaDataFile(Class.forName("com.db4o.drs.test.data.SPCParent").getPackage());
+		} catch (ClassNotFoundException e) {
+		}
 	}
 
 	private String jdoDefinitionsForPackage(Package p) {
