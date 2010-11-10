@@ -6,7 +6,7 @@ import java.io.*;
 
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.eventprocessor.*;
 import com.versant.event.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;

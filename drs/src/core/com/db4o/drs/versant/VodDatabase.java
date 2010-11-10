@@ -9,8 +9,8 @@ import java.util.*;
 import javax.jdo.*;
 
 import com.db4o.drs.inside.*;
-import com.db4o.drs.versant.eventlistener.*;
-import com.db4o.drs.versant.eventlistener.EventProcessorApplication.Arguments;
+import com.db4o.drs.versant.eventprocessor.*;
+import com.db4o.drs.versant.eventprocessor.EventProcessorApplication.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.tcp.*;
 import com.db4o.drs.versant.metadata.*;

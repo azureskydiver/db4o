@@ -3,7 +3,7 @@ package com.db4o.drs.versant.ipc.tcp;
 import java.io.*;
 
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.eventprocessor.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.rmi.*;
 
