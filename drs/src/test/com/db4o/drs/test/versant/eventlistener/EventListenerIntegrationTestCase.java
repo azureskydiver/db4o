@@ -10,7 +10,7 @@ import com.db4o.*;
 import com.db4o.drs.test.versant.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
-import com.db4o.drs.versant.eventlistener.*;
+import com.db4o.drs.versant.eventprocessor.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.EventProcessor.EventProcessorListener;
 import com.db4o.drs.versant.metadata.*;
