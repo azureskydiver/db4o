@@ -19,5 +19,12 @@ public class Contract {
 		_customer = customer;
 		_amount = amount;
 	}
+	
+	@Override
+	public String toString() {
+		return "Contract [_amount=" + _amount + ", _customer=" + _customer
+		+ ", _name=" + _name + "]";
+	}
+	
 
 }
