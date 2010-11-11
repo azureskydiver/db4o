@@ -36,7 +36,7 @@ public class VodDatabase {
 
 	private final String _name;
 	
-	private final Properties _properties;
+	private final Properties _properties = new Properties();
 	
 	private PersistenceManagerFactory _persistenceManagerFactory;
 	
@@ -53,23 +53,10 @@ public class VodDatabase {
 	private String _eventProcessorHost = "localhost";
 
 	private int _eventProcessorPort = 4088;
-	
 
-	public VodDatabase(String name, Properties properties){
-		_name = name;
-		_properties = properties;
-		addDefaultProperties();
-	}
-	
 	public VodDatabase(String name){
-		this(name, new Properties());
-	}
-	
-	// TODO add the other ports and hosts as parameters too
-	public VodDatabase(String name, String eventProcessorHost, int eventProcessorPort){
-		this(name, new Properties());
-		_eventProcessorHost = eventProcessorHost;
-		_eventProcessorPort = eventProcessorPort;
+		_name = name;
+		addDefaultProperties();
 	}
 	
 	private void addDefaultProperties(){
