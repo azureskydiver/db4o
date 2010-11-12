@@ -77,9 +77,6 @@ namespace OMControlLibrary
 				}
 
 				const bool languageStatus = true;
-				Thread.CurrentThread.CurrentCulture = new CultureInfo(languageCulture, true);
-				Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageCulture, true);
-
 				m_SelectedLanguage = lngCode;
 				return languageStatus;
 			}
