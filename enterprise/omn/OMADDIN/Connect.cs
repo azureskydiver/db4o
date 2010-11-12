@@ -191,7 +191,7 @@ namespace OMAddin
 			_applicationObject = (DTE2)application;
 			_addInInstance = (AddIn)addInInst;
 			ViewBase.ResetToolWindowList();
-			//OutputWindow.Initialize(_applicationObject);
+			OutputWindow.Initialize(_applicationObject);
 
 			try
 			{
