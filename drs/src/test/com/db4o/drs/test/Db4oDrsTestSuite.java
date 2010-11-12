@@ -25,10 +25,15 @@ import db4ounit.extensions.*;
 /**
  * @sharpen.partial
  */
-public class Db4oDrsTestSuite extends DrsTestSuite implements Db4oTestCase {
+public class Db4oDrsTestSuite extends VersantDrsTestSuite implements Db4oTestCase {
 	
 	
-	protected Class[] specificTestCases() {
+	@Override
+	protected Class[] testCases() {
+		return concat(super.testCases(), specificTestCases());
+	}
+	
+	private Class[] specificTestCases() {
 		return new Class[] {
 			com.db4o.drs.test.ArrayTestSuite.class,
 			com.db4o.drs.test.CustomArrayListTestCase.class,
