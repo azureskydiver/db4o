@@ -25,36 +25,9 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
-
-class Container {
-	public Value value;
-	
-	public Container(Value value) {
-		this.value = value;
-	}
-}
-
-/**
- * @sharpen.struct
- */
-class Value
-{
-	public int value;
-	
-	public Value(int value) {
-		this.value = value;
-	}
-	
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Value)) {
-			return false;
-		}
-		Value other = (Value)obj;
-		return other.value == value;
-	}
-}
 
 public class StructTestCase extends DrsTestCase {
 	
@@ -83,7 +56,7 @@ public class StructTestCase extends DrsTestCase {
         Assert.areEqual(1, result.size());
 
         Container c = next(result);
-        Assert.areEqual(template.value, c.value);
+        Assert.areEqual(template.getValue(), c.getValue());
     }
 
 	private Container next(ObjectSet result) {

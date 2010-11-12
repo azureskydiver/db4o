@@ -4,6 +4,7 @@ package com.db4o.drs.test;
 
 import java.util.*;
 
+import com.db4o.drs.test.data.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.array.*;
@@ -16,26 +17,18 @@ import db4ounit.fixtures.*;
 
 public class ArrayTestSuite extends FixtureBasedTestSuite {
 	
-	public static class Item {
-		public Object array;
-		
-		public Item(Object array_) {
-			array = array_;
-		}
-	}
-	
 	public static class TestUnit extends DrsTestCase {
 		
 		public void test() {
-			Item item = new Item(subject());
+			ItemWithUntypedField item = new ItemWithUntypedField(subject());
 			storeToProviderA(item);
 			
 			replicatedAllToB();
 			
-			Item replicated = replicatedItem();
-			Assert.isNotNull(replicated.array);
+			ItemWithUntypedField replicated = replicatedItem();
+			Assert.isNotNull(replicated.array());
 			
-			Iterator4Assert.areEqual(arrayIterator(item.array), arrayIterator(replicated.array));
+			Iterator4Assert.areEqual(arrayIterator(item.array()), arrayIterator(replicated.array()));
 		}
 
 		private Iterator4 arrayIterator(Object array) {
@@ -54,15 +47,15 @@ public class ArrayTestSuite extends FixtureBasedTestSuite {
 			replicateAll(a().provider(), b().provider());
 		}
 
-		private void storeToProviderA(Item item) {
+		private void storeToProviderA(ItemWithUntypedField item) {
 			a().provider().storeNew(item);
 			a().provider().commit();
 		}
 
-		private Item replicatedItem() {
-			final Iterator iterator = b().provider().getStoredObjects(Item.class).iterator();
+		private ItemWithUntypedField replicatedItem() {
+			final Iterator iterator = b().provider().getStoredObjects(ItemWithUntypedField.class).iterator();
 			if (iterator.hasNext()) {
-				return (Item) iterator.next();
+				return (ItemWithUntypedField) iterator.next();
 			}
 			return null;
 		}
