@@ -42,6 +42,10 @@
     	
     	<class name="com.db4o.drs.test.data.NewPilot"/>
     	
+    	<class name="com.db4o.drs.test.data.ItemWithUntypedField"/>
+    	<class name="com.db4o.drs.test.data.ItemDates"/>
+    	<class name="com.db4o.drs.test.data.NamedList"/>
+    	<class name="com.db4o.drs.test.data.ItemWithCloneable"/>
     </package>    
 </jdo>    
 

@@ -61,6 +61,7 @@ public abstract class RdbmsFixture implements DrsProviderFixture {
 				SPCParent.class, 
 				SPCChild.class,
                 NewPilot.class,
+                ItemDates.class
                 };
 	}
 	
