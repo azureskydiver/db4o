@@ -437,4 +437,13 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			block.run();
 		}
 	}
+	
+	public Object replaceIfSpecific(Object value) {
+		return value;
+	}
+	
+	public boolean isSecondClassObject(Object obj) {
+		return false;
+	}
+
 }

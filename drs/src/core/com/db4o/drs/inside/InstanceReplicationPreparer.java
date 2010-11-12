@@ -77,9 +77,14 @@ class InstanceReplicationPreparer implements Visitor {
 		_reflector = reflector;
 		_collectionHandler = collectionHandler;
 	}
+	
+	private ReplicationProviderInside directionFrom() {
+		return _providerA == _directionTo ? _providerB : _providerA;
+	}
 
 
 	public final boolean visit(Object obj) {
+		if (directionFrom().isSecondClassObject(obj)) return false;
 		if (isValueType(obj)) return true;
 		if (_objectsPreparedToReplicate.contains(obj)) return false;
 		_objectsPreparedToReplicate.add(obj);

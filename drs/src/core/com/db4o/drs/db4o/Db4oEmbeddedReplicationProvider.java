@@ -411,4 +411,12 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 		}
 	}
 	
+	public Object replaceIfSpecific(Object value) {
+		return value;
+	}
+	
+	public boolean isSecondClassObject(Object obj) {
+		return false;
+	}
+	
 }

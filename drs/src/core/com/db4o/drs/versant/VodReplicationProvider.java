@@ -717,5 +717,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public String toString() {
 		return getName();
 	}
+
+	public Object replaceIfSpecific(Object value) {
+		if (value instanceof com.versant.core.jdo.sco.Date) {
+			return new Date(((com.versant.core.jdo.sco.Date) value).getTime());
+		}
+		return value;
+	}
+
+	public boolean isSecondClassObject(Object obj) {
+		return obj instanceof com.versant.core.jdo.sco.Date;
+	}
 	
 }
