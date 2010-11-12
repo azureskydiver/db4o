@@ -34,7 +34,6 @@ public class Db4oDrsTestSuite extends DrsTestSuite implements Db4oTestCase {
 			com.db4o.drs.test.CustomArrayListTestCase.class,
 			com.db4o.drs.test.DateReplicationTestCase.class,
 			com.db4o.drs.test.dotnet.StructTestCase.class,
-			com.db4o.drs.test.DeepListGraphTestCase.class,
 			com.db4o.drs.test.UntypedFieldTestCase.class,
 			com.db4o.drs.test.db4o.PartialCollectionReplicationTestCase.class,
 			TheSimplestWithCallConstructors.class,
