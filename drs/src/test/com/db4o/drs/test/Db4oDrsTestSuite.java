@@ -35,9 +35,6 @@ public class Db4oDrsTestSuite extends VersantDrsTestSuite implements Db4oTestCas
 	
 	private Class[] specificTestCases() {
 		return new Class[] {
-			com.db4o.drs.test.ArrayTestSuite.class,
-			com.db4o.drs.test.CustomArrayListTestCase.class,
-			com.db4o.drs.test.DateReplicationTestCase.class,
 			com.db4o.drs.test.dotnet.StructTestCase.class,
 			com.db4o.drs.test.UntypedFieldTestCase.class,
 			com.db4o.drs.test.db4o.PartialCollectionReplicationTestCase.class,

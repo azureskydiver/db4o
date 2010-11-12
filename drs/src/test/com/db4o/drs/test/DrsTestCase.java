@@ -55,6 +55,10 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				SimpleListHolder.class, 
 				SPCChild.class,
 				SPCParent.class,
+				ItemWithUntypedField.class,
+		    	com.db4o.drs.test.data.ItemDates.class,
+		    	com.db4o.drs.test.data.NamedList.class,
+		    	com.db4o.drs.test.data.ItemWithCloneable.class,
 		};
 	}
 

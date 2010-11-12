@@ -34,6 +34,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 				
+				com.db4o.drs.test.DateReplicationTestCase.class,
 				com.db4o.drs.test.foundation.AllTests.class,
 				
 				// Simple
