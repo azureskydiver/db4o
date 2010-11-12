@@ -20,8 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test.all;
 
-import java.util.*;
-
 import com.db4o.drs.test.*;
 import com.db4o.drs.test.hibernate.*;
 import com.db4o.drs.test.versant.*;
@@ -37,16 +35,24 @@ public class AllDrsTests implements TestSuiteBuilder {
 
 	public Iterator4 iterator() {
 		
-		List<TestSuiteBuilder> list = new ArrayList<TestSuiteBuilder>();
+		boolean runVodTests = "true".equals(System.getProperty("runVodTests", "false"));
+
+		Collection4<TestSuiteBuilder> list = new Collection4<TestSuiteBuilder>();
 		
 		list.add(new Db4oDrsTestSuiteBuilder());
 		
 		list.add(new RdbmsDrsTestSuiteBuilder());
 
-		if ("true".equals(System.getProperty("runVodTests", "false"))) {
-			list.add(new VodDrsTestSuiteBuilder());
+		if (runVodTests) {
+			list.add(new VersantDrsTestSuiteBuilder());
 		}
 		
-		return new CompositeIterable4(Iterators.iterable(list.toArray())).iterator();
+		Iterator4 tests = Iterators.concat(list).iterator();
+
+		if (runVodTests) {
+			tests = Iterators.concat(tests, new VodStandaloneTests().iterator());
+		}
+		
+		return tests;
 	}
 }

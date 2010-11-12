@@ -24,115 +24,16 @@ import com.db4o.drs.test.*;
 
 public class RdbmsDrsTestSuite extends DrsTestSuite {
 	
-//	public static void main(String[] args) {
-//		new RdbmsDrsTestSuite().run();
-//	}
-//	
-//	public int run(){
-//		
-//		int failureCount = 0;
-//		
-//		/*
-//		 * The db4ounit forbids the reuse of provider by design Do not run two
-//		 * HSql combinations at the same time, otherwise out of memory.
-//		 */
-//
-////		failureCount += new RdbmsTests().runHsqlHsql();
-//		
-//		failureCount += new RdbmsDrsTestSuite().runHsqldb4o();
-////		failureCount += new RdbmsTests().rundb4oHsql();
-//		
-////		failureCount += new RdbmsTests().runHsqldb4oCS();
-////		failureCount += new RdbmsTests().rundb4oCSHsql();
-//		
-////		failureCount += new RdbmsTests().runOracledb4oCS();
-////		failureCount += new RdbmsTests().runMySQLdb4oCS();
-////		failureCount += new RdbmsTests().runPostgreSQLdb4oCS();
-////		failureCount += new RdbmsTests().runMsSqldb4oCS();
-////		failureCount += new RdbmsTests().runDb2db4oCS();
-////		failureCount += new RdbmsTests().runDerbydb4oCS();
-//		
-//		return failureCount;
-//	}
-//
-//	public int runHsqlHsql() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
-//				new HsqlMemoryFixture("hsql-b"), getClass())).run();
-//	}
-//	
-//	public int rundb4oHsql() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(
-//				new Db4oDrsFixture("db4o-drs-a"),
-//				new HsqlMemoryFixture("hsql-b"),
-//				getClass()))
-//				.run();
-//	}
-//
-//
-//	public int runHsqldb4o() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new 
-//				HsqlMemoryFixture("hsql-a"),
-//				new Db4oDrsFixture("db4o-cs-b"), getClass()))
-//				.run();
-//	}
-//
-//	
-//	public int rundb4oCSHsql() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(
-//				new Db4oClientServerDrsFixture("db4o-cs-a", 9587),
-//				new HsqlMemoryFixture("hsql-b"),
-//				getClass()))
-//				.run();
-//	}
-//
-//
-//	public int runHsqldb4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
-//				.run();
-//	}
-//
-//	public int runOracledb4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new OracleFixture("Oracle-a"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
-//				.run();
-//	}
-//
-//	public int runMySQLdb4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new MySQLFixture("MySQL-a"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
-//				.run();
-//	}
-//
-//	public int runPostgreSQLdb4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new PostgreSQLFixture(
-//				"PostgreSQL-a"), new Db4oClientServerDrsFixture("db4o-cs-b",
-//				9587), getClass())).run();
-//	}
-//
-//	public int runMsSqldb4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new MsSqlFixture("MsSql"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
-//				.run();
-//	}
-//	
-//	public int runDb2db4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db2Fixture("Db2"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
-//				.run();
-//	}
-//	
-//	public int runDerbydb4oCS() {
-//		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new DerbyFixture("Derby"),
-//				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
-//				.run();
-//	}
-
-	protected Class[] specificTestCases() {
+	@Override
+	protected Class[] testCases() {
+		return concat(super.testCases(), specificTestCases());
+	}
+	
+	private Class[] specificTestCases() {
 		return new Class[] {
-			TablesCreatorTest.class,
-			ReplicationConfiguratorTest.class,
-			RoundRobinWithManyProviders.class,
+				TablesCreatorTest.class,
+				ReplicationConfiguratorTest.class,
+				RoundRobinWithManyProviders.class,
 		};
 	}
 }

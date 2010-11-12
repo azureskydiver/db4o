@@ -9,33 +9,35 @@ import com.db4o.reflect.*;
 
 import db4ounit.*;
 
-public class VodDrsTestSuiteBuilder implements TestSuiteBuilder {
+public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 
 	Reflector reflector = new JdoReflector(getClass().getClassLoader());
 	
 	public static void main(String[] args) {
-		new ConsoleTestRunner(new VodDrsTestSuiteBuilder()).run();
+		new ConsoleTestRunner(
+			Iterators.concat(
+				new VersantDrsTestSuiteBuilder().iterator(), 
+				new VodStandaloneTests().iterator()
+			)).run();
 	}
 
 	public Iterator4 iterator() {
 		
 		return Iterators.concat(
-
+			
 			new DrsTestSuiteBuilder(
 				new VodDrsFixture("vod-drs-a"), 
 				new Db4oDrsFixture("db4o-drs-b", reflector), 
-				VodDrsTestSuite.class, 
+				VersantDrsTestSuite.class, 
 				reflector),
 				
 			new DrsTestSuiteBuilder(
 				new Db4oDrsFixture("db4o-drs-a", reflector),
 				new VodDrsFixture("vod-drs-b"), 
-				VodDrsTestSuite.class, 
-				reflector),
+				VersantDrsTestSuite.class, 
+				reflector)
 
-			new VodStandaloneTests()
-			
-		).iterator();
+		)
+		.iterator();
 	}
-
 }

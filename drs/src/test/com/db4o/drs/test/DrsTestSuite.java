@@ -32,20 +32,6 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	@SuppressWarnings("unchecked")
 	protected Class[] testCases() {
-		if (false) return specificTestCases();
-		if (false) return new Class[] { ReplicatingTwiceTestCase.class };
-		if (false) return new Class[] { TheSimplest.class };
-		return concat(shared(), specificTestCases());
-
-	}
-
-	@SuppressWarnings("unchecked")
-	protected Class[] specificTestCases() {
-		return new Class[] {};
-	}
-
-	@SuppressWarnings("unchecked")
-	private Class[] shared() {
 		return new Class[] {
 				
 				com.db4o.drs.test.foundation.AllTests.class,
