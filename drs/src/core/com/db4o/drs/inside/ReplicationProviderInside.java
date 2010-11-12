@@ -114,4 +114,8 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
 
 	void replicateDeletion(DrsUUID uuid);
+
+	Object replaceIfSpecific(Object value);
+
+	boolean isSecondClassObject(Object obj);
 }

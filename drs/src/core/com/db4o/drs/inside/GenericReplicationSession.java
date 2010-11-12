@@ -241,6 +241,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 	private Object findCounterpart(Object value, ReplicationProviderInside sourceProvider, ReplicationProviderInside targetProvider) {
 		if (value == null) return null;
 		
+		value = sourceProvider.replaceIfSpecific(value);
+		
 		// TODO: need to clone and findCounterpart of each reference object in the
 		// struct
 		if (ReplicationPlatform.isValueType(value)) return value;

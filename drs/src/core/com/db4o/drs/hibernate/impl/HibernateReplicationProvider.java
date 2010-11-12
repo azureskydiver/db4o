@@ -21,8 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.hibernate.impl;
 
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -687,6 +689,18 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 			block.run();
 		}
 	}
+	
+	public Object replaceIfSpecific(Object value) {
+		if (value instanceof Timestamp) {
+			return new Date(((Timestamp)value).getTime());
+		}
+		return value;
+	}
+
+	public boolean isSecondClassObject(Object obj) {
+		return obj instanceof Timestamp;
+	}
+
 	
 
 }
