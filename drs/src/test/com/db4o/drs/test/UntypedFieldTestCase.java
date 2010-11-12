@@ -3,41 +3,11 @@ package com.db4o.drs.test;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
 
 public class UntypedFieldTestCase extends DrsTestCase {
-	
-	public static final class Item {
-		
-		public Object untyped;
-
-		public Item(Object value) {
-			untyped = value;
-		}
-	}
-	
-	public static final class ItemWithCloneable {
-		public Cloneable value;
-		
-		public ItemWithCloneable(Cloneable c) {
-			value = c;
-		}
-	}
-	
-	public static final class Data {
-		
-		public int id;
-		
-		public Data(int value) {
-			id = value;
-		}
-		
-		public boolean equals(Object obj) {
-			Data other = (Data)obj;
-			return id == other.id;
-		}
-	}
 	
 	public void testUntypedString() {
 		assertUntypedReplication("42");
@@ -52,7 +22,7 @@ public class UntypedFieldTestCase extends DrsTestCase {
 	}
 	
 	public void testUntypedReferenceTypeJaggedArray() {
-		assertJaggedArray(new Data(42));
+		assertJaggedArray(new UntypedFieldData(42));
 	}
 	
 	public void testUntypedDate() {
@@ -64,23 +34,23 @@ public class UntypedFieldTestCase extends DrsTestCase {
 	}
 	
 	public void testUntypedMixedArray() {
-		assertUntypedReplication(new Object[] { "42", new Data(42) });
-		Assert.areEqual(42, ((Data)singleReplicatedInstance(Data.class)).id);
+		assertUntypedReplication(new Object[] { "42", new UntypedFieldData(42) });
+		Assert.areEqual(42, ((UntypedFieldData)singleReplicatedInstance(UntypedFieldData.class)).getId());
 	}
 	
 	public void testArrayAsCloneable() {
-		Object[] array = new Object[] { "42", new Data(42) };
+		Object[] array = new Object[] { "42", new UntypedFieldData(42) };
 		ItemWithCloneable replicated = (ItemWithCloneable)replicate(new ItemWithCloneable(array));
 		assertEquals(array, replicated.value);
 	}
 
 	private void assertUntypedReplication(Object data) {
-		assertEquals(data, replicateItem(data).untyped);
+		assertEquals(data, replicateItem(data).getUntyped());
 	}
 	
 	private void assertJaggedArray(Object data) {
 		Object[] expected = new Object[] { new Object[] { data } };
-		Object[] actual = (Object[])replicateItem(expected).untyped;
+		Object[] actual = (Object[])replicateItem(expected).getUntyped();
 		Assert.areEqual(expected.length, actual.length);
 		
 		Object[] nested = (Object[])actual[0];
@@ -119,8 +89,8 @@ public class UntypedFieldTestCase extends DrsTestCase {
 		}
 	}
 
-	private Item replicateItem(Object data) {
-		return (Item) replicate(new Item(data));
+	private UntypedFieldItem replicateItem(Object data) {
+		return (UntypedFieldItem) replicate(new UntypedFieldItem(data));
 	}
 
 	private Object replicate(Object item) {
@@ -135,7 +105,7 @@ public class UntypedFieldTestCase extends DrsTestCase {
 	private Object singleReplicatedInstance(Class klass) {
 		ObjectSet found = b().provider().getStoredObjects(klass);
 		Assert.areEqual(1, found.size());
-		return found.get(0);
+		return found.iterator().next();
 	}
 
 }
