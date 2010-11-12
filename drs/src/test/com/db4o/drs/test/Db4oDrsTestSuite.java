@@ -18,35 +18,26 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-package com.db4o.drs.test.all;
+package com.db4o.drs.test;
 
-import java.util.*;
+import db4ounit.extensions.*;
 
-import com.db4o.drs.test.*;
-import com.db4o.drs.test.hibernate.*;
-import com.db4o.drs.test.versant.*;
-import com.db4o.foundation.*;
-
-import db4ounit.*;
-
-public class AllDrsTests implements TestSuiteBuilder {
+/**
+ * @sharpen.partial
+ */
+public class Db4oDrsTestSuite extends DrsTestSuite implements Db4oTestCase {
 	
-	public static void main(String[] args) {
-		new ConsoleTestRunner(new AllDrsTests()).run();
-	}
-
-	public Iterator4 iterator() {
-		
-		List<TestSuiteBuilder> list = new ArrayList<TestSuiteBuilder>();
-		
-		list.add(new Db4oDrsTestSuiteBuilder());
-		
-		list.add(new RdbmsDrsTestSuiteBuilder());
-
-		if ("true".equals(System.getProperty("runVodTests", "false"))) {
-			list.add(new VodDrsTestSuiteBuilder());
-		}
-		
-		return new CompositeIterable4(Iterators.iterable(list.toArray())).iterator();
+	
+	protected Class[] specificTestCases() {
+		return new Class[] {
+			com.db4o.drs.test.ArrayTestSuite.class,
+			com.db4o.drs.test.CustomArrayListTestCase.class,
+			com.db4o.drs.test.DateReplicationTestCase.class,
+			com.db4o.drs.test.dotnet.StructTestCase.class,
+			com.db4o.drs.test.DeepListGraphTestCase.class,
+			com.db4o.drs.test.UntypedFieldTestCase.class,
+			com.db4o.drs.test.db4o.PartialCollectionReplicationTestCase.class,
+			TheSimplestWithCallConstructors.class,
+		};
 	}
 }

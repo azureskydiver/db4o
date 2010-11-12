@@ -6,15 +6,14 @@ import com.db4o.drs.test.versant.jdo.reflect.*;
 
 import db4ounit.*;
 
-public class VodTests extends ReflectionTestSuite {
+public class VodStandaloneTests extends ReflectionTestSuite {
 	
 	public static void main(String[] args) {
-		new VodTests().run();
+		new VodStandaloneTests().run();
 	}
 
 	protected Class[] testCases() {
 		return new Class[] {
- 			AllVodDrsIntegrationTests.class,
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
 			JdoClassTestCase.class,
 			UuidConverterTestCase.class,

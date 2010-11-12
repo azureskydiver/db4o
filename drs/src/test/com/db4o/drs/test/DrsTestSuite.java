@@ -40,7 +40,9 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected abstract Class[] specificTestCases();
+	protected Class[] specificTestCases() {
+		return new Class[] {};
+	}
 
 	@SuppressWarnings("unchecked")
 	private Class[] shared() {
