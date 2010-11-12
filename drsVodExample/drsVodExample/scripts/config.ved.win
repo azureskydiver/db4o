@@ -1,7 +1,0 @@
-ChannelServicePort	4000
-LogFile eventdb.log
-LogLevel 2
-
-<EngineLibs>
-vedse.dll
-</EngineLibs>
