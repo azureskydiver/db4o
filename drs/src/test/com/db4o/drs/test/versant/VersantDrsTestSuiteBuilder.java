@@ -14,6 +14,11 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 	Reflector reflector = new JdoReflector(getClass().getClassLoader());
 	
 	public static void main(String[] args) {
+		
+		if(false){
+			new ConsoleTestRunner(new VodStandaloneTests().iterator()).run();
+		}
+		
 		new ConsoleTestRunner(
 			Iterators.concat(
 				new VersantDrsTestSuiteBuilder().iterator(), 
