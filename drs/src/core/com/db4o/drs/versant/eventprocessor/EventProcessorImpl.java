@@ -27,6 +27,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 
 	private static final long ISOLATION_WATCHDOG_INTERVAL = 1000;
 
+	private static final long OBJECT_VERSION_FOR_PREEXISTING = 1; 	// can't use 0 because we query for > 0   
+
 	private final VodEventClient _client;
 	
 	private volatile boolean _stopped;
@@ -515,12 +517,28 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 				classMetadataLoid = produceChannel(className);
 				_knownClasses.put(className, classMetadataLoid);
 				classIds.put(className, classMetadataLoid);
+				createObjectInfosForPreexistingObjects(className, classMetadataLoid);
 			} else {
 				classIds.put(className, classMetadataLoid);
 			}
 		}
 
 		return classIds;
+	}
+
+	private void createObjectInfosForPreexistingObjects(final String className, long classMetadataLoid) {
+		long[] loids = _cobra.loidsForStoredObjectsOfClass(className);
+		for (int i = 0; i < loids.length; i++) {
+			ObjectInfo objectInfo = new ObjectInfo(
+					_defaultSignatureLoid, 
+					classMetadataLoid, 
+					loids[i],
+					_timeStampIdGenerator.generate(),
+					OBJECT_VERSION_FOR_PREEXISTING,
+					Operations.CREATE.value  );
+			_cobra.store(objectInfo);
+		}
+		_cobra.commit();
 	}
 
 	private long produceChannel(String fullyQualifiedName) {

@@ -4,6 +4,9 @@ package com.db4o.drs.test.versant.eventlistener;
 
 import javax.jdo.*;
 
+import com.db4o.*;
+import com.db4o.drs.*;
+import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
@@ -29,29 +32,29 @@ public class PreExistingObjectTestCase implements TestCase {
 			pm.currentTransaction().commit();
 			pm.close();
 			
-			VodReplicationProvider vodReplicationProvider = new VodReplicationProvider(vod);
-			TransientReplicationProvider transientReplicationProvider = new TransientReplicationProvider(new byte[] {(byte)'T'}, "transient");
+			vod.startEventDriver();
+			vod.startEventProcessor();
 			
-			// Replication.begin(vodReplicationProvider, transientReplicationProvider);
-			
-			
-			// ObjectSet replicationSet = vodReplicationProvider.objectsChangedSinceLastReplication(Item.class);
-			
-			// Assert.areEqual(1, replicationSet.size());
-			
-			
+			try{
+				VodReplicationProvider vodReplicationProvider = new VodReplicationProvider(vod);
+				try {
+					TransientReplicationProvider transientReplicationProvider = new TransientReplicationProvider(new byte[] {(byte)'T'}, "transient");
+					Replication.begin(vodReplicationProvider, transientReplicationProvider);
+					ObjectSet replicationSet = vodReplicationProvider.objectsChangedSinceLastReplication(Item.class);
+					Assert.areEqual(1, replicationSet.size());
+					Item item = (Item) replicationSet.next();
+					ReplicationReference ref = vodReplicationProvider.produceReference(item);
+					Assert.isNotNull(ref);
+				}finally {
+					vodReplicationProvider.destroy();
+				}
+			}finally {
+				vod.stopEventProcessor();
+				vod.stopEventDriver();
+			}
 		} finally {
 			vod.removeDb();
 		}
-		
-		
-		
-		
-
-		
-		
-		
-		
 	}
 
 }

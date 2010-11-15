@@ -55,5 +55,7 @@ public interface VodCobraFacade {
 	
 	byte[] signatureBytes(long databaseId);
 
+	long[] loidsForStoredObjectsOfClass(String className);
+
 	
 }

@@ -467,5 +467,15 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	public byte[] signatureBytes(long databaseId){
 		return new LatinStringIO().write("vod-" + databaseId);
 	}
+	
+	public long[] loidsForStoredObjectsOfClass(String className){
+		Object[] datastoreLoids = datastoreLoids(className);
+		long[] result = new long[datastoreLoids.length];
+		for (int i = 0; i < datastoreLoids.length; i++) {
+			DatastoreLoid datastoreLoid = (DatastoreLoid) datastoreLoids[i];
+			result[i] = datastoreLoid.value();
+		}
+		return result;
+	}
 
 }
