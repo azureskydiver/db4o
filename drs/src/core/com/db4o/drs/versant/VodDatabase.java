@@ -21,6 +21,9 @@ import com.db4o.util.*;
 import com.versant.odbms.*;
 import com.versant.util.*;
 
+/**
+ * Helper class for VOD database. 
+ */
 public class VodDatabase {
 	
 	private static final long STARTUP_TIMEOUT = DrsDebug.timeout(10000);
@@ -36,13 +39,13 @@ public class VodDatabase {
 
 	private final String _name;
 	
-	private final Properties _properties = new Properties();
+	private final Properties _properties;
 	
 	private PersistenceManagerFactory _persistenceManagerFactory;
 	
 	private DatastoreManagerFactory _datastoreManagerFactory;
 	
-	private static int nextPort = 4102;
+	private static int nextPort = 4120;
 	
 	private static VodEventDriver _eventDriver;
 	
@@ -54,9 +57,14 @@ public class VodDatabase {
 
 	private int _eventProcessorPort = 4088;
 
-	public VodDatabase(String name){
+	public VodDatabase(String name, Properties properties){
 		_name = name;
+		_properties = properties;
 		addDefaultProperties();
+	}
+	
+	public VodDatabase(String name){
+		this(name, new Properties());
 	}
 	
 	private void addDefaultProperties(){
@@ -137,6 +145,32 @@ public class VodDatabase {
 		return _persistenceManagerFactory;
 	}
 	
+	public void enhance() {
+		String tempFileName = Path4.getTempFileName();
+		File tempFile = new File(tempFileName);
+		try{
+			FileOutputStream out = new FileOutputStream(tempFile);
+			if(DrsDebug.verbose){
+				_properties.store(System.err, null);
+			}
+			_properties.store(out, null);
+			out.close();
+			
+			String[] args = new String[]{tempFile.getAbsolutePath()};
+			
+			ProcessResult processResult = JavaServices.java("com.db4o.drs.versant.VodEnhancer", args);
+			if(DrsDebug.verbose){
+				System.out.println(processResult);
+			}
+		} catch(IOException ioe){
+			throw new RuntimeException(ioe);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		} finally {
+			tempFile.delete();
+		}
+	}
+
 	public DatastoreManager createDatastoreManager() {
 		return datastoreManagerFactory().getDatastoreManager();
 	}
@@ -271,7 +305,6 @@ public class VodDatabase {
 	
 	public void startEventProcessor(){
 		startEventProcessor(DrsDebug.runEventListenerEmbedded);
-	
 	}
 	
 	public void startEventProcessor(boolean embedded){
