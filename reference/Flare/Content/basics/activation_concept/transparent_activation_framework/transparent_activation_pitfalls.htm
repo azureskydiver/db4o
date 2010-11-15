@@ -10,7 +10,7 @@ lead to trouble if used in a wrong way. The aim of this chapter is to point you
 out to typical pitfalls, which can lead to unexpected and undesired results.</p>
         <h2>Not Activate Call Before Field Access</h2>
         <p>Before accessing any field you need to call the activate-method. This is true for all <MadCap:variable name="Primary.getter/setter" /> and also for other methods like the to string method or the hash code method. The best strategy is to call the activate-method in the <MadCap:variable name="Primary.getter/setter" /> and then access the field through those even in the class itself.</p>
-        <p>Or use the <a href="../../../implementation_strategies/enhancement_tools.htm">enhancement-tools</a> to avoid this issue complete. </p>
+        <p>Or use the <a href="../../../advanced_topics/enhancement_tools.htm">enhancement-tools</a> to avoid this issue complete. </p>
         <h2>Migrating Between Databases</h2>
         <h3>Problem</h3>
         <p>Transparent Activation is implemented through <code>Activatable/IActivatable</code> interface, which binds an object to the current object container. In a case when an object is stored to more than one object container, this logic won't work, as only one binding (activator) is allowed per object. </p>
@@ -32,7 +32,7 @@ out to typical pitfalls, which can lead to unexpected and undesired results.</p>
         <p MadCap:conditions="Primary.Java">
             <h2>Instrumentation Limitations</h2>
             <h3>Problem</h3>
-            <p>For Java instrumentation <a href="../../../implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.htm">instrumenting classloader</a> must know
+            <p>For Java instrumentation <a href="../../../advanced_topics/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.htm">instrumenting classloader</a> must know
 the classes to instrument, i.e. all application classes should be on the
 classpath. </p>
             <h3>Solution</h3>
@@ -40,7 +40,7 @@ classpath. </p>
 through the classpath</p>
         </p>
         <h2>Debugging Instrumented Classes</h2>
-        <p>Debugging instrumented classes may not work 100% correct. <span>Make sure you use the debug-flag for the <a href="../../../implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.htm">db4otool</a></span></p>
+        <p>Debugging instrumented classes may not work 100% correct. <span>Make sure you use the debug-flag for the <a href="../../../advanced_topics/enhancement_tools/enhancement_for_.net/db4otool.htm">db4otool</a></span></p>
         <p>You should be able to debug normally anywhere around
 instrumented bytecode. If you still think that the problem occurs in the
 instrumented area, please submit a bug report to <a href="http://tracker.db4o.com/">db4o Jira</a>.</p>

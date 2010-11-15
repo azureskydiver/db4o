@@ -2,6 +2,9 @@
 <CatapultToc
   Version="1">
   <TocEntry
+    Title="Introduction"
+    Link="/Content/welcome.htm" />
+  <TocEntry
     Title="Product Philosophy"
     Link="/Content/product_philosophy.htm">
     <TocEntry
@@ -24,9 +27,6 @@
       Title="Why Choose db4o"
       Link="/Content/product_philosophy/why_choose_db4o.htm" />
   </TocEntry>
-  <TocEntry
-    Title="Introduction"
-    Link="/Content/welcome.htm" />
   <TocEntry
     Title="Basics Operations &amp; Concepts"
     Link="/Content/basics.htm">
@@ -86,7 +86,7 @@
           Title="Native Query Examples"
           Link="/Content/basics/querying/native_queries/native_query_examples.htm">
           <TocEntry
-            Title="New entry"
+            Title="Equality"
             Link="/Content/basics/querying/native_queries/native_query_examples.htm#Equality" />
           <TocEntry
             Title="Comparison"
@@ -422,6 +422,9 @@
       <TocEntry
         Title="Types And Limitations"
         Link="/Content/basics/indexing/types_and_limitations.htm" />
+      <TocEntry
+        Title="Check For Existing Indexes"
+        Link="/Content/basics/indexing/check_for_index.htm" />
     </TocEntry>
   </TocEntry>
   <TocEntry
@@ -580,9 +583,6 @@
         <TocEntry
           Title="Memory Storage"
           Link="/Content/configuration/file/storage/memory_storage.htm">
-          <TocEntry
-            Title="Simple Example"
-            Link="/Content/configuration/file/storage/memory_storage/simple_example.htm" />
           <TocEntry
             Title="Storing MemoryBin Data"
             Link="/Content/configuration/file/storage/memory_storage/storing_memorybin_data.htm" />
@@ -779,420 +779,254 @@
       Link="/Content/client-server/client-server_timeouts.htm" />
   </TocEntry>
   <TocEntry
-    Title="Implementation Strategies"
-    Link="/Content/implementation_strategies.htm">
-    <TocEntry
-      Title="Maintenance"
-      Link="/Content/implementation_strategies/maintenance.htm">
-      <TocEntry
-        Title="Defragment"
-        Link="/Content/implementation_strategies/maintenance/defragment.htm">
-        <TocEntry
-          Title="How To Use Defragmentation"
-          Link="/Content/implementation_strategies/maintenance/defragment/how_to_use_defragmentation.htm" />
-        <TocEntry
-          Title="Defragmentation Configuration"
-          Link="/Content/implementation_strategies/maintenance/defragment/defragmentation_configuration.htm">
-          <TocEntry
-            Title="Original Database And Backup"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/database_files.htm"></TocEntry>
-          <TocEntry
-            Title="Database Configuration"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/database_configuration.htm" />
-          <TocEntry
-            Title="Commit Frequency"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/commit_frequency.htm" />
-          <TocEntry
-            Title="Class Filter"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/class_filter.htm" />
-          <TocEntry
-            Title="Delete The Backup"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/delete_backup.htm" />
-          <TocEntry
-            Title="Upgrade Database File"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/upgrade_db.htm" />
-          <TocEntry
-            Title="Disable Read Only Mode"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/disable_read_only.htm" />
-          <TocEntry
-            Title="Configure Storage for Backup File"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/storage_backupdb.htm" />
-          <TocEntry
-            Title="Configure IDMapping"
-            Link="/Content/implementation_strategies/maintenance/defragment/configuration/id_mapping.htm" />
-        </TocEntry>
-        <TocEntry
-          Title="Tracking Defragmentation Errors"
-          Link="/Content/implementation_strategies/maintenance/defragment/tracking_defragmentation_errors.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="System Info"
-        Link="/Content/implementation_strategies/maintenance/system_info.htm" />
-      <TocEntry
-        Title="Backup"
-        Link="/Content/implementation_strategies/maintenance/backup.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Type Handling"
-      Link="/Content/implementation_strategies/type_handling.htm">
-      <TocEntry
-        Title="Bigmath"
-        Link="/Content/implementation_strategies/type_handling/bigmath.htm" />
-      <TocEntry
-        Title="Blobs"
-        Link="/Content/implementation_strategies/type_handling/blobs.htm">
-        <TocEntry
-          Title="Db4o Blob Implementation"
-          Link="/Content/implementation_strategies/type_handling/blobs/db4o_blob_implementation.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Collections"
-        Link="/Content/implementation_strategies/type_handling/collections.htm">
-        <TocEntry
-          Title="Collections Or Arrays"
-          Link="/Content/implementation_strategies/type_handling/collections/collections_or_arrays.htm" />
-        <TocEntry
-          Title="Big Set"
-          Link="/Content/implementation_strategies/type_handling/collections/big_set.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Final Fields"
-        Link="/Content/implementation_strategies/type_handling/final_fields.htm"
-        conditions="Primary.All languages,Primary.Java">
-        <TocEntry
-          Title="Final Fields Specifics"
-          Link="/Content/implementation_strategies/type_handling/final_fields/final_fields_specifics.htm" />
-        <TocEntry
-          Title="Possible Solutions"
-          Link="/Content/implementation_strategies/type_handling/final_fields/possible_solutions.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Static Fields And Enums"
-        Link="/Content/implementation_strategies/type_handling/static_fields_and_enums.htm">
-        <TocEntry
-          Title=".NET Enumerations"
-          Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/.net_enumerations.htm"
-          conditions="Primary.All languages,Primary..NET">
-          <TocEntry
-            Title="Enums Example"
-            Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/.net_enumerations/enums_example.htm" />
-        </TocEntry>
-        <TocEntry
-          Title="Java Enumerations"
-          Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/java_enumerations.htm"
-          conditions="Primary.Java,Primary.All languages" />
-        <TocEntry
-          Title="Storing Static Fields"
-          Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/static_fields_api.htm" />
-        <TocEntry
-          Title="Usage of Static Fields"
-          Link="/Content/implementation_strategies/type_handling/static_fields_and_enums/usage_of_static_fields.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Delegates And Events"
-        Link="/Content/implementation_strategies/type_handling/delegates_and_events.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Typehandlers"
-      Link="/Content/implementation_strategies/typehandlers.htm">
-      <TocEntry
-        Title="Pluggable Typehandler Benefits"
-        Link="/Content/implementation_strategies/typehandlers/pluggable_typehandler_benefits.htm" />
-      <TocEntry
-        Title="Custom Typehandler Example"
-        Link="/Content/implementation_strategies/typehandlers/custom_typehandler_example.htm" />
-      <TocEntry
-        Title="Typehandler Usages"
-        Link="/Content/implementation_strategies/typehandlers/typehandler_usages.htm"></TocEntry>
-    </TocEntry>
+    Title="Advanced Features"
+    Link="/Content/advanced_topics.htm">
     <TocEntry
       Title="Session Containers"
-      Link="/Content/implementation_strategies/session_containers.htm" />
+      Link="/Content/advanced_topics/session_containers.htm" />
     <TocEntry
-      Title="Paging"
-      Link="/Content/implementation_strategies/paging.htm" />
+      Title="Unique Constraints"
+      Link="/Content/advanced_topics/unique_constraints.htm"></TocEntry>
     <TocEntry
-      Title="Using Annotations"
-      Link="/Content/implementation_strategies/using_annotations.htm"
-      conditions="Primary.All languages,Primary.Java" />
+      Title="Backup"
+      Link="/Content/advanced_topics/backup.htm" />
     <TocEntry
-      Title="Using Attributes"
-      Link="/Content/implementation_strategies/using_attributes.htm"
-      conditions="Primary.All languages,Primary..NET" />
+      Title="IDs And UUIDs"
+      Link="/Content/advanced_topics/ids_and_uuids.htm"></TocEntry>
     <TocEntry
-      Title="Enhancement Tools"
-      Link="/Content/implementation_strategies/enhancement_tools.htm">
+      Title="db4o Meta-Information"
+      Link="/Content/advanced_topics/db4o_meta-information.htm"></TocEntry>
+    <TocEntry
+      Title="System Info"
+      Link="/Content/advanced_topics/system_info.htm" />
+    <TocEntry
+      Title="Defragment"
+      Link="/Content/advanced_topics/defragment.htm">
       <TocEntry
-        Title="Example Built Time Enhancement"
-        Link="/Content/implementation_strategies/enhancement_tools/build_time_enhancement.htm" />
+        Title="How To Use Defragmentation"
+        Link="/Content/advanced_topics/defragment/how_to_use_defragmentation.htm" />
       <TocEntry
-        Title="Enhancement For Java"
-        Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_java.htm"
-        conditions="Primary.Java,Primary.All languages"></TocEntry>
-      <TocEntry
-        Title="Build Time Enhancement"
-        Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.htm"
-        conditions="Primary..NET">
+        Title="Defragmentation Configuration"
+        Link="/Content/advanced_topics/defragment/defragmentation_configuration.htm">
         <TocEntry
-          Title="TA and NQ Example Code"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/ta_and_nq_example_code.htm" />
+          Title="Original Database And Backup"
+          Link="/Content/advanced_topics/defragment/configuration/database_files.htm"></TocEntry>
         <TocEntry
-          Title="TP Example Code"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/tp_example_code.htm" />
+          Title="Database Configuration"
+          Link="/Content/advanced_topics/defragment/configuration/database_configuration.htm" />
         <TocEntry
-          Title="Example Enhancement"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/example_enhancement.htm" />
+          Title="Commit Frequency"
+          Link="/Content/advanced_topics/defragment/configuration/commit_frequency.htm" />
         <TocEntry
-          Title="SensorPanel"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/sensorpanel.htm" />
+          Title="Class Filter"
+          Link="/Content/advanced_topics/defragment/configuration/class_filter.htm" />
+        <TocEntry
+          Title="Delete The Backup"
+          Link="/Content/advanced_topics/defragment/configuration/delete_backup.htm" />
+        <TocEntry
+          Title="Upgrade Database File"
+          Link="/Content/advanced_topics/defragment/configuration/upgrade_db.htm" />
+        <TocEntry
+          Title="Disable Read Only Mode"
+          Link="/Content/advanced_topics/defragment/configuration/disable_read_only.htm" />
+        <TocEntry
+          Title="Configure Storage for Backup File"
+          Link="/Content/advanced_topics/defragment/configuration/storage_backupdb.htm" />
+        <TocEntry
+          Title="Configure IDMapping"
+          Link="/Content/advanced_topics/defragment/configuration/id_mapping.htm" />
       </TocEntry>
       <TocEntry
+        Title="Tracking Defragmentation Errors"
+        Link="/Content/advanced_topics/defragment/tracking_defragmentation_errors.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Enhancement Tools"
+      Link="/Content/advanced_topics/enhancement_tools.htm">
+      <TocEntry
+        Title="Example Built Time Enhancement"
+        Link="/Content/advanced_topics/enhancement_tools/build_time_enhancement.htm" />
+      <TocEntry
+        Title="Enhancement For Java"
+        Link="/Content/advanced_topics/enhancement_tools/enhancement_for_java.htm"
+        conditions="Primary.Java,Primary.All languages"></TocEntry>
+      <TocEntry
+        Title="Load Time Enhancement"
+        Link="/Content/advanced_topics/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.htm" />
+      <TocEntry
         Title="Db4otool"
-        Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.htm"
+        Link="/Content/advanced_topics/enhancement_tools/enhancement_for_.net/db4otool.htm"
         conditions="Primary..NET"
         ReplaceMergeNode="false">
         <TocEntry
           Title="Db4oTool Usage"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool/db4otool_usage.htm" />
+          Link="/Content/advanced_topics/enhancement_tools/enhancement_for_.net/db4otool/db4otool_usage.htm" />
         <TocEntry
           Title="Including Db4oTool In The Build"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool/including_db4otool_in_the_build.htm" />
+          Link="/Content/advanced_topics/enhancement_tools/enhancement_for_.net/db4otool/including_db4otool_in_the_build.htm" />
       </TocEntry>
-      <TocEntry
-        Title="Complex Example"
-        Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example.htm"
-        conditions="Primary.Java">
-        <TocEntry
-          Title="Model Classes"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/model_classes.htm" />
-        <TocEntry
-          Title="Load Time Enhancement"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.htm" />
-        <TocEntry
-          Title="Build Time Enhancement"
-          Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/build_time_enhancement.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Simplest Enhancement Script"
-        Link="/Content/implementation_strategies/enhancement_tools/enhancement_for_java/simplest_enhancement_script.htm"
-        conditions="Primary.Java"></TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Unique Constraints"
-      Link="/Content/implementation_strategies/unique_constraints.htm">
-      <TocEntry
-        Title="How To Use Unique Constraints"
-        Link="/Content/implementation_strategies/unique_constraints/how_to_use_unique_constraints.htm" />
-      <TocEntry
-        Title="Unique Constraints Example"
-        Link="/Content/implementation_strategies/unique_constraints/unique_constraints_example.htm" />
     </TocEntry>
     <TocEntry
       Title="Callbacks"
-      Link="/Content/implementation_strategies/callbacks.htm">
+      Link="/Content/advanced_topics/callbacks.htm">
       <TocEntry
         Title="Object Callbacks"
-        Link="/Content/implementation_strategies/object_callbacks.htm" />
+        Link="/Content/advanced_topics/callbacks/object_callbacks.htm" />
       <TocEntry
         Title="Event Registry API"
-        Link="/Content/implementation_strategies/callbacks/event_registry_api.htm" />
+        Link="/Content/advanced_topics/callbacks/event_registry_api.htm" />
       <TocEntry
         Title="Events Overview"
-        Link="/Content/implementation_strategies/callbacks/events_overview.htm" />
+        Link="/Content/advanced_topics/callbacks/events_overview.htm" />
       <TocEntry
         Title="Possible Usecases"
-        Link="/Content/implementation_strategies/callbacks/possible_usecases.htm">
+        Link="/Content/advanced_topics/callbacks/possible_usecases.htm">
         <TocEntry
           Title="Autoincrement"
-          Link="/Content/implementation_strategies/callbacks/possible_usecases/autoincrement.htm" />
+          Link="/Content/advanced_topics/callbacks/possible_usecases/autoincrement.htm" />
         <TocEntry
           Title="Referential Integrity"
-          Link="/Content/implementation_strategies/callbacks/possible_usecases/referential_integrity.htm" />
+          Link="/Content/advanced_topics/callbacks/possible_usecases/referential_integrity.htm" />
         <TocEntry
           Title="Committed Event Example"
-          Link="/Content/implementation_strategies/callbacks/possible_usecases/committed_event_example.htm" />
+          Link="/Content/advanced_topics/callbacks/possible_usecases/committed_event_example.htm" />
       </TocEntry>
       <TocEntry
         Title="Commit-Time Callbacks"
-        Link="/Content/implementation_strategies/callbacks/commit-time_callbacks.htm"></TocEntry>
+        Link="/Content/advanced_topics/callbacks/commit-time_callbacks.htm"></TocEntry>
     </TocEntry>
     <TocEntry
-      Title="Translators"
-      Link="/Content/implementation_strategies/translators.htm">
+      Title="Type Handling"
+      Link="/Content/advanced_topics/type_handling.htm">
       <TocEntry
-        Title=".NET Example Class"
-        Link="/Content/implementation_strategies/translators/.net_example_class.htm"
-        conditions="Primary..NET,Primary.All languages" />
+        Title="Big Math"
+        Link="/Content/advanced_topics/type_handling/bigmath.htm" />
       <TocEntry
-        Title="Java Example Class"
-        Link="/Content/implementation_strategies/translators/java_example_class.htm"
-        conditions="Primary.All languages,Primary.Java" />
+        Title="Blobs"
+        Link="/Content/advanced_topics/type_handling/blobs.htm">
+        <TocEntry
+          Title="Db4o Blob Implementation"
+          Link="/Content/advanced_topics/type_handling/blobs/db4o_blob_implementation.htm" />
+      </TocEntry>
       <TocEntry
-        Title="The Translator API"
-        Link="/Content/implementation_strategies/translators/the_translator_api.htm"></TocEntry>
+        Title="Collections"
+        Link="/Content/advanced_topics/type_handling/collections.htm">
+        <TocEntry
+          Title="Collections Or Arrays"
+          Link="/Content/advanced_topics/type_handling/collections/collections_or_arrays.htm" />
+        <TocEntry
+          Title="Big Set"
+          Link="/Content/advanced_topics/type_handling/collections/big_set.htm" />
+      </TocEntry>
       <TocEntry
-        Title=".NET Translator Implementation"
-        Link="/Content/implementation_strategies/translators/.net_translator_implementation.htm"
-        conditions="Primary.All languages,Primary..NET" />
+        Title="Final Fields"
+        Link="/Content/advanced_topics/type_handling/final_fields.htm"
+        conditions="Primary.All languages,Primary.Java">
+        <TocEntry
+          Title="Final Fields Specifics"
+          Link="/Content/advanced_topics/type_handling/final_fields/final_fields_specifics.htm" />
+        <TocEntry
+          Title="Possible Solutions"
+          Link="/Content/advanced_topics/type_handling/final_fields/possible_solutions.htm" />
+      </TocEntry>
       <TocEntry
-        Title="Java Translator Implementation"
-        Link="/Content/implementation_strategies/translators/java_translator_implementation.htm"
-        conditions="Primary.All languages,Primary.Java" />
+        Title="Static Fields And Enums"
+        Link="/Content/advanced_topics/type_handling/static_fields_and_enums.htm">
+        <TocEntry
+          Title=".NET Enumerations"
+          Link="/Content/advanced_topics/type_handling/static_fields_and_enums/.net_enumerations.htm"
+          conditions="Primary.All languages,Primary..NET"></TocEntry>
+        <TocEntry
+          Title="Storing Static Fields"
+          Link="/Content/advanced_topics/type_handling/static_fields_and_enums/static_fields_api.htm" />
+      </TocEntry>
       <TocEntry
-        Title="Built-In Translators"
-        Link="/Content/implementation_strategies/translators/built-in_translators.htm" />
+        Title="Delegates And Events"
+        Link="/Content/advanced_topics/type_handling/delegates_and_events.htm"
+        conditions="Primary..NET"
+        StartSection="false"
+        StartChapter="false"
+        ReplaceMergeNode="false" />
+      <TocEntry
+        Title="Translators"
+        Link="/Content/advanced_topics/type_handling/translators.htm">
+        <TocEntry
+          Title="Built-In Translators"
+          Link="/Content/advanced_topics/type_handling/translators/built-in_translators.htm" />
+      </TocEntry>
+      <TocEntry
+        Title="Typehandlers"
+        Link="/Content/advanced_topics/type_handling/typehandlers.htm">
+        <TocEntry
+          Title="Pluggable Typehandler Benefits"
+          Link="/Content/advanced_topics/type_handling/typehandlers/pluggable_typehandler_benefits.htm" />
+        <TocEntry
+          Title="Custom Typehandler Example"
+          Link="/Content/advanced_topics/type_handling/typehandlers/custom_typehandler_example.htm" />
+      </TocEntry>
     </TocEntry>
-    <TocEntry
-      Title="db4o Reflection API"
-      Link="/Content/implementation_strategies/db4o_reflection_api.htm">
-      <TocEntry
-        Title="GenericReflector"
-        Link="/Content/implementation_strategies/db4o_reflection_api/genericreflector.htm" />
-      <TocEntry
-        Title="Using db4o reflection API"
-        Link="/Content/implementation_strategies/db4o_reflection_api/using_db4o_reflection_api.htm" />
-      <TocEntry
-        Title="Creating your own reflector"
-        Link="/Content/implementation_strategies/db4o_reflection_api/creating_your_own_reflector.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="db4o Meta-Information"
-      Link="/Content/implementation_strategies/db4o_meta-information.htm">
-      <TocEntry
-        Title="Accessing db4o meta-information"
-        Link="/Content/implementation_strategies/db4o_meta-information/accessing_db4o_meta-information.htm" />
-      <TocEntry
-        Title="StoredClass and StoredField interfaces"
-        Link="/Content/implementation_strategies/db4o_meta-information/storedclass_and_storedfield_interfaces.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Data Binding"
-      Link="/Content/implementation_strategies/data_binding.htm"
-      conditions="Primary..NET,Primary.All languages" />
     <TocEntry
       Title="Refactoring And Schema Evolution"
-      Link="/Content/implementation_strategies/refactoring_and_schema_evolution.htm">
+      Link="/Content/advanced_topics/refactoring_and_schema_evolution.htm">
       <TocEntry
         Title="Automatic Refactoring"
-        Link="/Content/implementation_strategies/refactoring_and_schema_evolution/automatic_refactoring.htm" />
+        Link="/Content/advanced_topics/refactoring_and_schema_evolution/automatic_refactoring.htm" />
       <TocEntry
         Title="Renaming API"
-        Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_api.htm" />
+        Link="/Content/advanced_topics/refactoring_and_schema_evolution/refactoring_api.htm" />
       <TocEntry
         Title="Field Type Change"
-        Link="/Content/implementation_strategies/refactoring_and_schema_evolution/field_type_change.htm" />
+        Link="/Content/advanced_topics/refactoring_and_schema_evolution/field_type_change.htm" />
       <TocEntry
         Title="Field Refactoring Limitation"
-        Link="/Content/implementation_strategies/refactoring_and_schema_evolution/field_refactoring_limitation.htm" />
+        Link="/Content/advanced_topics/refactoring_and_schema_evolution/field_refactoring_limitation.htm" />
       <TocEntry
         Title="Refactoring Class Hierarchy"
-        Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy.htm">
+        Link="/Content/advanced_topics/refactoring_and_schema_evolution/refactoring_class_hierarchy.htm">
         <TocEntry
           Title="Removing Class From A Hierarchy"
-          Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/removing_class_from_a_hierarchy.htm" />
+          Link="/Content/advanced_topics/refactoring_and_schema_evolution/refactoring_class_hierarchy/removing_class_from_a_hierarchy.htm" />
         <TocEntry
           Title="Inserting Class Into a Hierarchy"
-          Link="/Content/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/inserting_class_into_a_hierarchy.htm" />
-      </TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Encryption"
-      Link="/Content/implementation_strategies/encryption.htm">
-      <TocEntry
-        Title="Custom Encryption Adapters"
-        Link="/Content/implementation_strategies/encryption/custom_encryption_adapters.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="IDs And UUIDs"
-      Link="/Content/implementation_strategies/ids_and_uuids.htm">
-      <TocEntry
-        Title="Internal IDs"
-        Link="/Content/implementation_strategies/ids_and_uuids/internal_ids.htm" />
-      <TocEntry
-        Title="Unique Universal IDs"
-        Link="/Content/implementation_strategies/ids_and_uuids/unique_universal_ids.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Freespace Management System"
-      Link="/Content/implementation_strategies/freespace_management_system.htm">
-      <TocEntry
-        Title="Defragmentation Role"
-        Link="/Content/implementation_strategies/freespace_management_system/defragmentation_role.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Reporting"
-      Link="/Content/implementation_strategies/reporting.htm">
-      <TocEntry
-        Title="Reporting With JasperReports"
-        Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports.htm"
-        conditions="Primary.All languages,Primary.Java">
-        <TocEntry
-          Title="Report Structure"
-          Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports/report_structure.htm" />
-        <TocEntry
-          Title="Data Source"
-          Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports/data_source.htm" />
-        <TocEntry
-          Title="Data Preparation"
-          Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports/data_preparation.htm" />
-        <TocEntry
-          Title="Report Design"
-          Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports/report_design.htm" />
-        <TocEntry
-          Title="Report Generation"
-          Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports/report_generation.htm" />
-        <TocEntry
-          Title="ObjectDataSource"
-          Link="/Content/implementation_strategies/reporting/reporting_with_jasperreports/objectdatasource.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Reporting With BIRT"
-        Link="/Content/implementation_strategies/reporting/reporting_with_birt.htm"
-        conditions="Primary.All languages,Primary.Java">
-        <TocEntry
-          Title="Data Preparation"
-          Link="/Content/implementation_strategies/reporting/reporting_with_birt/data_preparation.htm" />
-        <TocEntry
-          Title="Report Design"
-          Link="/Content/implementation_strategies/reporting/reporting_with_birt/report_design.htm" />
-        <TocEntry
-          Title="Scripted Data Source"
-          Link="/Content/implementation_strategies/reporting/reporting_with_birt/scripted_data_source.htm" />
-        <TocEntry
-          Title="Application-Report Integration"
-          Link="/Content/implementation_strategies/reporting/reporting_with_birt/application-report_integration.htm" />
-      </TocEntry>
-      <TocEntry
-        Title=".NET Reporting"
-        Link="/Content/implementation_strategies/reporting/.net_reporting.htm"
-        conditions="Primary.All languages,Primary..NET">
-        <TocEntry
-          Title="Persistent Class"
-          Link="/Content/implementation_strategies/reporting/.net_reporting/persistent_class.htm" />
-        <TocEntry
-          Title="Adding a report"
-          Link="/Content/implementation_strategies/reporting/.net_reporting/adding_a_report.htm" />
-        <TocEntry
-          Title="Db4o Integration"
-          Link="/Content/implementation_strategies/reporting/.net_reporting/db4o_integration.htm" />
-        <TocEntry
-          Title="Report Integration"
-          Link="/Content/implementation_strategies/reporting/.net_reporting/report_integration.htm" />
-        <TocEntry
-          Title="Db4oManager"
-          Link="/Content/implementation_strategies/reporting/.net_reporting/Db4oManager.htm" />
+          Link="/Content/advanced_topics/refactoring_and_schema_evolution/refactoring_class_hierarchy/inserting_class_into_a_hierarchy.htm" />
       </TocEntry>
     </TocEntry>
     <TocEntry
       Title="Exception Handling"
-      Link="/Content/implementation_strategies/exceptions.htm">
+      Link="/Content/advanced_topics/exceptions.htm">
       <TocEntry
         Title="Exception Types"
-        Link="/Content/implementation_strategies/exceptions/exception_types.htm" />
+        Link="/Content/advanced_topics/exceptions/exception_types.htm" />
       <TocEntry
-        Title="How To Work With Db4o Exceptions"
-        Link="/Content/implementation_strategies/exceptions/how_to_work_with_db4o_exceptions.htm" />
+        Title="How To Work With db4o Exceptions"
+        Link="/Content/advanced_topics/exceptions/how_to_work_with_db4o_exceptions.htm" />
     </TocEntry>
+    <TocEntry
+      Title="db4o Reflection API"
+      Link="/Content/advanced_topics/db4o_reflection_api.htm">
+      <TocEntry
+        Title="Creating your own reflector"
+        Link="/Content/advanced_topics/db4o_reflection_api/creating_your_own_reflector.htm" />
+      <TocEntry
+        Title="GenericReflector"
+        Link="/Content/advanced_topics/db4o_reflection_api/genericreflector.htm" />
+    </TocEntry>
+  </TocEntry>
+  <TocEntry
+    Title="Best Practices"
+    Link="/Content/best_practises.htm">
+    <TocEntry
+      Title="Paging"
+      Link="/Content/best_practises/paging.htm" />
+    <TocEntry
+      Title="Upgrade db4o Version"
+      Link="/Content/best_practises/updating_db4o_version.htm" />
+    <TocEntry
+      Title="Lifetime Of An Object Container"
+      Link="/Content/best_practises/lifetime_of_a_objectcontainer.htm" />
+    <TocEntry
+      Title="Deleting Objects"
+      Link="/Content/best_practises/deleting_objects.htm" />
   </TocEntry>
   <TocEntry
     Title="Platform Specific Issues"
@@ -1323,6 +1157,10 @@
       Link="/Content/platform_specific_issues/db4o_on_java_platforms.htm"
       conditions="Primary.All languages,Primary.Java" />
     <TocEntry
+      Title="db4o On Mono"
+      Link="/Content/platform_specific_issues/db4o_on_mono.htm"
+      conditions="Primary..NET" />
+    <TocEntry
       Title="Security Requirements On Java Platform"
       Link="/Content/platform_specific_issues/security_requirements_on_java_platform.htm"
       conditions="Primary.All languages,Primary.Java"></TocEntry>
@@ -1387,9 +1225,6 @@
         Title="Memoplugin"
         Link="/Content/platform_specific_issues/database_for_osgi/memoplugin.jpg" />
     </TocEntry>
-    <TocEntry
-      Title="db4o On Mono"
-      Link="/Content/platform_specific_issues/db4o_on_mono.htm" />
   </TocEntry>
   <TocEntry
     Title="Tuning"
@@ -1873,5 +1708,5 @@
     Link="/Content/license.htm" />
   <TocEntry
     Title="Contacts"
-    Link="/Content/contacts.htm" />
+    Link="/Content/contacts.htm"></TocEntry>
 </CatapultToc>

@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Boot.cs" />
     <Compile Include="Code\acidproperties\DangerousPractises.cs" />
+    <Compile Include="Code\backup\BackupExample.cs" />
     <Compile Include="Code\basics\Db4oBasics.cs" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.cs" />
     <Compile Include="Code\callbacks\examples\CallbackExamples.cs" />
@@ -156,13 +157,17 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.cs" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.cs" />
+    <Compile Include="Code\features\uniqueconstrain\UniqueConstrainExample.cs" />
     <Compile Include="Code\identiy\DataModel.cs" />
     <Compile Include="Code\identiy\IdentityConcepts.cs" />
+    <Compile Include="Code\indexing\check\CheckForAndIndex.cs" />
     <Compile Include="Code\indexing\where\WhereToIndexExample.cs" />
+    <Compile Include="Code\metainfo\MetaInfoExample.cs" />
     <Compile Include="Code\pitfalls\activation\ActivationDepthPitfall.cs" />
     <Compile Include="Code\pitfalls\activation\Person.cs" />
     <Compile Include="Code\pitfalls\updatedepth\UpdateDepthPitfall.cs" />
     <Compile Include="Code\platform\autoproperties\AutoProperties.cs" />
+    <Compile Include="Code\practises\deletion\DeletionStrategies.cs" />
     <Compile Include="Code\query\linq\LinqExamples.cs" />
     <Compile Include="Code\query\nq\DataModel.cs" />
     <Compile Include="Code\query\nq\NativeQueriesSorting.cs" />
@@ -174,6 +179,7 @@
     <Compile Include="Code\query\soda\SodaEvaluationExamples.cs" />
     <Compile Include="Code\query\soda\SodaQueryExamples.cs" />
     <Compile Include="Code\query\soda\SodaSorting.cs" />
+    <Compile Include="Code\reflection\ReflectorExamples.cs" />
     <Compile Include="Code\semaphores\SemaphoreExamples.cs" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.cs" />
     <Compile Include="Code\strategies\paging\PagingUtility.cs" />
@@ -184,6 +190,7 @@
     <Compile Include="Code\strategies\refactoring\removehierarchy\RemoveClassFromHierarchy.cs" />
     <Compile Include="Code\strategies\storingstatic\Color.cs" />
     <Compile Include="Code\strategies\storingstatic\StoringStaticFields.cs" />
+    <Compile Include="Code\systeminfo\SystemInfoExamples.cs" />
     <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.cs" />
     <Compile Include="Code\ta\collections\CollectionsExample.cs" />
     <Compile Include="Code\ta\collections\Team.cs" />
@@ -199,6 +206,10 @@
     <Compile Include="Code\tuning\monitoring\ObjectLifecycleMonitoring.cs" />
     <Compile Include="Code\tuning\monitoring\QueryMonitoring.cs" />
     <Compile Include="Code\tuning\monitoring\ReferenceSystemMonitoring.cs" />
+    <Compile Include="Code\typehandling\blob\BlobStorage.cs" />
+    <Compile Include="Code\typehandling\translator\ExampleTranslator.cs" />
+    <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.cs" />
+    <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

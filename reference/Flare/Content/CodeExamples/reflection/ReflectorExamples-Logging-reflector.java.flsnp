@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">class LoggerReflector implements Reflector{
+    private final Reflector readReflector;
+
+    public LoggerReflector() {
+        this(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+    }
+
+    public LoggerReflector(Reflector readReflector) {
+        this.readReflector = readReflector;
+    }
+
+    @Override
+    public void configuration(ReflectorConfiguration reflectorConfiguration) {
+        readReflector.configuration(reflectorConfiguration);
+    }
+
+    @Override
+    public ReflectArray array() {
+        return readReflector.array();
+    }
+
+    @Override
+    public ReflectClass forClass(Class aClass) {
+        System.out.println(&quot;Reflector.forClass(&quot;+aClass+&quot;)&quot;);
+        return readReflector.forClass(aClass);
+    }
+
+    @Override
+    public ReflectClass forName(String className) {
+        System.out.println(&quot;Reflector.forName(&quot;+className+&quot;)&quot;);
+        return readReflector.forName(className);
+    }
+
+    @Override
+    public ReflectClass forObject(Object o) {
+        System.out.println(&quot;Reflector.forObject(&quot;+o+&quot;)&quot;);
+        return readReflector.forObject(o);
+    }
+
+    @Override
+    public boolean isCollection(ReflectClass reflectClass) {
+        return readReflector.isCollection(reflectClass);
+    }
+
+    @Override
+    public void setParent(Reflector reflector) {
+        readReflector.setParent(reflector);
+    }
+
+    @Override
+    public Object deepClone(Object o) {
+        return new LoggerReflector((Reflector) readReflector.deepClone(o));
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			ReflectorExamples.java: Logging reflector
+			<div class="codedownload">
+				<a href="Example-db4odoc-reflection-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

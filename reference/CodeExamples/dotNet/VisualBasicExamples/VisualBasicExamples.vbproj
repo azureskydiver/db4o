@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\acidproperties\DangerousPractises.vb" />
+    <Compile Include="Code\backup\BackupExample.vb" />
     <Compile Include="Code\callbacks\eventregistry\EventRegistryExamples.vb" />
     <Compile Include="Code\callbacks\examples\CallbackExamples.vb" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.vb" />
@@ -141,11 +142,21 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.vb" />
     <Compile Include="Code\drs\advanced\AdvancedReplicationExamples.vb" />
     <Compile Include="Code\drs\db4o\Db4oReplicationExamples.vb" />
+    <Compile Include="Code\features\uniqueconstrain\UniqueConstrainExample.vb" />
+    <Compile Include="Code\indexing\check\CheckForAndIndex.vb" />
+    <Compile Include="Code\metainfo\MetaInfoExample.vb" />
+    <Compile Include="Code\practises\deletion\DeletionStrategies.vb" />
+    <Compile Include="Code\reflection\ReflectorExamples.vb" />
+    <Compile Include="Code\systeminfo\SystemInfoExamples.vb" />
     <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.vb" />
     <Compile Include="Code\ta\collections\CollectionsExample.vb" />
     <Compile Include="Code\ta\collections\Team.vb" />
     <Compile Include="Code\ta\example\Person.vb" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.vb" />
+    <Compile Include="Code\typehandling\blob\BlobStorage.vb" />
+    <Compile Include="Code\typehandling\translator\ExampleTranslator.vb" />
+    <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.vb" />
+    <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -259,6 +270,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

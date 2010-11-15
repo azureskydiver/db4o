@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="783" MadCap:lastWidth="658">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="TypeHandlers" />TypeHandlers</h1>
+        <p>One of the most important and convenient things that db4o provides is the
+ability to store any object just as it is: no interfaces to be implemented, no
+custom fields, no attributes/annotations - nothing, just a plain object.
+However, it is not as simple as it may seem - objects are getting more and more
+complex and sometimes the generic solution is not good enough for specific
+objects. </p>
+        <p>This problem was recognized by db4o team long ago, and various solutions
+were provided to customize the way an object is stored: <a href="translators.htm">Translators</a>, transient <a href="../../tuning/selective_persistence/transient_fields_in_java.htm">fields in Java</a> and <a href="../../tuning/selective_persistence/transient_fields_in_.net.htm">.NET</a> <![CDATA[ ]]>etc. However all these means were rather fixing the symptoms but
+not the disease itself. And the fact is that there is no single generic way to
+store just any available or future object in the best possible way. But luckily
+we don't even need it - all we need is a way to write a specific
+persistence solution for any custom object, and now db4o provides this way
+though a pluggable <span MadCap:conditions="Primary..NET">I</span>TypeHandler4 interface. You can register any number of type handlers to the configuration. Additionally you need to register a predicate which decides which classes are handled by the type handler. </p>
+        <MadCap:snippetBlock src="../../CodeExamples/typehandling/typehandler/TypeHandlerExample-Register-type-handler.all.flsnp" />
+        <p>Note that type handler are a low level API which doesn't protect you from any mistakes. If you make a mistake in a typehandler you can loose data.</p>
+        <p>Type handler functionality is best explained on a <a href="typehandlers/custom_typehandler_example.htm">working example</a>.</p>
+        <p>Usecases and other benefits of the pluggable typehandler interface are
+reviewed <a href="typehandlers/pluggable_typehandler_benefits.htm">here</a>.</p>
+        <p>&#160;</p>
+        <p>&#160;</p>
+    </body>
+</html>

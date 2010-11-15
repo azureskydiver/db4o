@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="632" MadCap:lastWidth="560" MadCap:conditions="Primary.Java">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="617" MadCap:lastWidth="532" MadCap:conditions="Primary.Java">
     <head>
     </head>
     <body>
         <h1>Native Queries Without Generics</h1>
-        <p>Older Java versions before Java 5 don't have generics. Native queries also work on these releases. Instead of using a generics, it relies on conversions.</p>
+        <p>Older Java versions before Java 5 don't have generics. Native queries also work on these releases. Instead of using a generics, it relies on conventions.</p>
         <h2>Java 1.2-1.4</h2>
         <p>On Java 1.2-1.4 you can use a instance of the Predicate-class. Instead of using generics you create a method called match which accepts the type and returns a boolean. db4o will look for a match-method and will use it as the query-method. Otherwise everything is the same as in newer Java releases. <MadCap:xref href="native_query_examples.htm" target="" title="" alt="">See "Native Query Examples"</MadCap:xref></p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/nq/oldjava/NativeQueryExamples-Query-on-Java-1.4.java.flsnp" />

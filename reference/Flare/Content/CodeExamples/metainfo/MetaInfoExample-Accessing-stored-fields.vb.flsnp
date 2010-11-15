@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim metaInfoForPerson As IStoredClass = container.Ext().StoredClass(GetType(Person))
+' Access all existing fields
+For Each field As IStoredField In metaInfoForPerson.GetStoredFields()
+    Console.WriteLine(&quot;Field: &quot; &amp; field.GetName())
+Next
+' Accessing the field 'name' of any type.
+Dim nameField As IStoredField = metaInfoForPerson.StoredField(&quot;name&quot;, Nothing)
+' Accessing the string field 'name'. Important if this field had another time in previous
+' versions of the class model
+Dim ageField As IStoredField = metaInfoForPerson.StoredField(&quot;age&quot;, GetType(Integer))
+
+' Check if the field is indexed
+Dim isAgeFieldIndexed As Boolean = ageField.HasIndex()
+
+' Get the type of the field
+Dim fieldType As String = ageField.GetStoredType().GetName()</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim metaInfoForPerson As IStoredClass = container.Ext().StoredClass(GetType(Person))
+' Access all existing fields
+For Each field As IStoredField In metaInfoForPerson.GetStoredFields()
+    Console.WriteLine(&quot;Field: &quot; &amp; field.GetName())
+Next
+' Accessing the field 'name' of any type.
+Dim nameField As IStoredField = metaInfoForPerson.StoredField(&quot;name&quot;, Nothing)
+' Accessing the string field 'name'. Important if this field had another time in previous
+' versions of the class model
+Dim ageField As IStoredField = metaInfoForPerson.StoredField(&quot;age&quot;, GetType(Integer))
+
+' Check if the field is indexed
+Dim isAgeFieldIndexed As Boolean = ageField.HasIndex()
+
+' Get the type of the field
+Dim fieldType As String = ageField.GetStoredType().GetName()</pre>
+		<div class="codesnippet-meta">
+			MetaInfoExample.vb: Accessing stored fields
+			<div class="codedownload">
+				<a href="Example-Code-metainfo-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

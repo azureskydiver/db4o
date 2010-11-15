@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">IStoredClass metaInfoForPerson = container.Ext().StoredClass(typeof (Person));
+// Access all existing fields
+foreach (IStoredField field in metaInfoForPerson.GetStoredFields())
+{
+    Console.WriteLine(&quot;Field: &quot; + field.GetName());
+}
+// Accessing the field 'name' of any type.
+IStoredField nameField = metaInfoForPerson.StoredField(&quot;name&quot;, null);
+// Accessing the string field 'name'. Important if this field had another time in previous
+// versions of the class model
+IStoredField ageField = metaInfoForPerson.StoredField(&quot;age&quot;, typeof (int));
+
+// Check if the field is indexed
+bool isAgeFieldIndexed = ageField.HasIndex();
+
+// Get the type of the field
+String fieldType = ageField.GetStoredType().GetName();</pre>
+		<div class="codesnippet-meta">
+			MetaInfoExample.cs: Accessing stored fields
+			<div class="codedownload">
+				<a href="Example-Code-metainfo-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

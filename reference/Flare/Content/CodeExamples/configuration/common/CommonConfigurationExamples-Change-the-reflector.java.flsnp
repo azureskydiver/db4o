@@ -3,7 +3,8 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));</pre>
+configuration.common().reflectWith(
+        new JdkReflector(Thread.currentThread().getContextClassLoader()));</pre>
 		<div class="codesnippet-meta">
 			CommonConfigurationExamples.java: Change the reflector
 			<div class="codedownload">
