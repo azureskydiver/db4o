@@ -300,6 +300,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public long getLastReplicationVersion() {
+		ensureReplicationSessionActive();
 		return _replicationCommitRecord.timestamp();
 	}
 
@@ -526,6 +527,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return new ObjectSetCollectionFacade(objects);
 	}
 
+	private void ensureReplicationSessionActive() {
+		if(_replicationCommitRecord == null){
+			throw new IllegalStateException("No active replication session. Call Replication.begin() to start a replication session.");
+		}
+	}
+
 	private Set<Long> queryForModifiedObjects(Class clazz, long lastReplicationVersion, boolean withClassMetadataLoid) {
 		String filter = "this.version > " + lastReplicationVersion;
 		if(withClassMetadataLoid){
@@ -609,7 +616,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				.equal(loid)
 				.singleOrDefault(null);
 		if(DrsDebug.verbose){
-			System.out.println("#creationVersion() found: " + info);
+			if(info != null){
+				System.out.println("#creationVersion() found: " + info);
+			} else {
+				System.out.println("No Objectinfo found for loid: " + loid);
+			}
 		}
 		if(info == null){
 			return null;

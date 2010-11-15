@@ -30,9 +30,6 @@ import com.db4o.drs.inside.*;
  * <p/>
  * <p/> To create an instance of this class, use the methods of {@link Replication}.
  *
- * @author Albert Kwan
- * @author Klaus Wuestefeld
- * @version 1.2
  * @see ReplicationSession
  * @see Replication
  * @since dRS 1.0
