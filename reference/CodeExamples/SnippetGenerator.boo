@@ -254,9 +254,6 @@ snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeE
 snippetGenerator.CreateCodeSnippets("javaAppExamples/","../Flare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../Flare/Content/CodeExamples","csharp")
 
-# crossplattform
-snippetGenerator.CreateCodeSnippets("crossplatform/src/java/com/db4odoc","../Flare/Content/CodeExamples","mixed-languages")
-snippetGenerator.CreateCodeSnippets("crossplatform/src/csharp/","../Flare/Content/CodeExamples","mixed-languages")
 
 # vb-stuff with other template:
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator,tsCondition)

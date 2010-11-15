@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">public class ClassLoaderLookup implements JdkLoader {
+    private final List&lt;ClassLoader&gt; classLoaders;
+
+
+    ClassLoaderLookup(ClassLoader...classLoaders) {
+        this.classLoaders = Arrays.asList(classLoaders);
+    }
+
+    ClassLoaderLookup(Collection&lt;ClassLoader&gt; classLoaders) {
+        this.classLoaders = new ArrayList&lt;ClassLoader&gt;(classLoaders);
+    }
+
+    @Override
+    public Class loadClass(String className) {
+        for (ClassLoader loader : classLoaders) {
+            Class&lt;?&gt; theClass = null;
+            try {
+                theClass = loader.loadClass(className);
+                return theClass;
+            } catch (ClassNotFoundException e) {
+                // first check the other loaders
+            }
+        }
+        throw new RuntimeException(new ClassNotFoundException(className));
+    }
+
+    @Override
+    public Object deepClone(Object o) {
+        return new ClassLoaderLookup(classLoaders);
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			ClassLoaderLookup.java: Complex class loader scenario
+			<div class="codedownload">
+				<a href="Example-configuration-common-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

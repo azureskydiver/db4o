@@ -4,7 +4,7 @@
     </head>
     <body>
         <h1>Events In Client Server-Mode</h1>
-        <p>Events of course also work in client server mode. This topic only applies to the networked client/server mode. Embedded client/server-mode isn't affected. There the events work the same way as in the embedded-mode. <MadCap:xref href="../implementation_strategies/callbacks/event_registry_api.htm" target="" title="" alt="">See "Event Registry API"</MadCap:xref></p>
+        <p>Events of course also work in client server mode. This topic only applies to the networked client/server mode. Embedded client/server-mode isn't affected. There the events work the same way as in the embedded-mode. <MadCap:xref href="../advanced_topics/callbacks/event_registry_api.htm" target="" title="" alt="">See "Event Registry API"</MadCap:xref></p>
         <h2>Separate Event Registry For Each Client</h2>
         <p>Each client has its own event registry. When you register to a event on the client-event-registry, events will be fired for actions on the client. You won't receive events for actions on other clients.</p>
         <p>Furthermore you cannot register for the delete-events, the delete events is only on the server available.</p>

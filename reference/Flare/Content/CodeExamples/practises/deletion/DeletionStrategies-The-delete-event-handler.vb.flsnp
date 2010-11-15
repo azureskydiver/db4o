@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Sub HandleDeleteEvent(ByVal sender As Object, ByVal args As CancellableObjectEventArgs)
+    Dim obj As Object = args.Object
+    ' if the object has a deletion-flag:
+    ' set the flag instead of deleting the object
+    If TypeOf obj Is Deletable Then
+        DirectCast(obj, Deletable).Delete()
+        args.ObjectContainer().Store(obj)
+        args.Cancel()
+    End If
+End Sub</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Sub HandleDeleteEvent(ByVal sender As Object, ByVal args As CancellableObjectEventArgs)
+    Dim obj As Object = args.Object
+    ' if the object has a deletion-flag:
+    ' set the flag instead of deleting the object
+    If TypeOf obj Is Deletable Then
+        DirectCast(obj, Deletable).Delete()
+        args.ObjectContainer().Store(obj)
+        args.Cancel()
+    End If
+End Sub</pre>
+		<div class="codesnippet-meta">
+			DeletionStrategies.vb: The delete event handler
+			<div class="codedownload">
+				<a href="Example-practises-deletion-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

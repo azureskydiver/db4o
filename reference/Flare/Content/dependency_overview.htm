@@ -40,16 +40,16 @@
             <p>This jar contains the <a href="client-server.htm">client server mode</a> of db4o. It only depends on the db4o-core jar.</p>
             <h2><a name="db4o-nq"></a>db4o-X.XX-nqopt-javax.jar</h2>
             <p>This jar contains the <a href="basics/querying/native_queries.htm">native query optimizations</a> for db4o. Make sure that you include this jar when you use native queries. It depends on the db4o-core, db4o-instrumentation and the bloat jar for the runtime optimization. </p>
-            <p>When you use the <a href="implementation_strategies/enhancement_tools.htm">compile-time optimization</a> instead of the runtime optimization, it also requires the Ant library. However when you do compile-time optimization, you don't need this jar and its dependencies at runtime.</p>
+            <p>When you use the <a href="advanced_topics/enhancement_tools.htm">compile-time optimization</a> instead of the runtime optimization, it also requires the Ant library. However when you do compile-time optimization, you don't need this jar and its dependencies at runtime.</p>
             <p>Note that the native queries work also without this jar in the classpath. However the queries cannot be optimized without this jar and will run a lot slower.</p>
             <h2><a name="db4o-optional"></a>db4o-X.XX-optional-javaX.jar</h2>
-            <p>This jar contains some additional features and functionality for db4o, like <a href="tuning/runtime_statistics.htm">monitoring capabilities</a>, <a href="implementation_strategies/type_handling/bigmath.htm">BigMath-support</a> and .NET support. It depends on the db4o-core jar.</p>
+            <p>This jar contains some additional features and functionality for db4o, like <a href="tuning/runtime_statistics.htm">monitoring capabilities</a>, <a href="advanced_topics/type_handling/bigmath.htm">BigMath-support</a> and .NET support. It depends on the db4o-core jar.</p>
             <h2><a name="db4o-cs-optional"></a>db4o-X.XX-cs.optional-javaX.jar</h2>
             <p>This jar contains additional features for the client-server-mode, like <a href="client-server/pluggable_sockets/using_ssl_for_client-server_communication.htm">SSL</a> and monitoring support. It depends on the db4o-cs, db4o-optional and the db4o-core jar.</p>
             <h2><a name="db4o-ta"></a>db4o-X.XX-taj-javaX.jar</h2>
-            <p>This jar contains the utilities to enhance your classes with <a href="implementation_strategies/enhancement_tools.htm">transparent activation</a>. It is normally used at compile time, but its possible to use it also at runtime. It depends on the db4o-core, db4o-instrumentation and the bloat-jar. Since the enhancement is usually done with Ant, it also requires the Ant-library.</p>
+            <p>This jar contains the utilities to enhance your classes with <a href="advanced_topics/enhancement_tools.htm">transparent activation</a>. It is normally used at compile time, but its possible to use it also at runtime. It depends on the db4o-core, db4o-instrumentation and the bloat-jar. Since the enhancement is usually done with Ant, it also requires the Ant-library.</p>
             <h2><a name="db4o-tools"></a>db4o-X.XX-tools-javaX.jar</h2>
-            <p>This jar contains the <a href="implementation_strategies/enhancement_tools.htm">high level functionality for enhancing your classes</a>. It requires the db4o-core, db4o-instrumentation, db4o-taj, db4o-nqopt and the bloat-jar. Additionally it needs the Ant-library.&#160;</p>
+            <p>This jar contains the <a href="advanced_topics/enhancement_tools.htm">high level functionality for enhancing your classes</a>. It requires the db4o-core, db4o-instrumentation, db4o-taj, db4o-nqopt and the bloat-jar. Additionally it needs the Ant-library.&#160;</p>
             <h2><a name="db4o-osgi"></a>db4o-X.XX-osgi.jar</h2>
             <p>This jar contains a db4o OSGI service. It depends on the db4o-core and the db4o-cs jars.</p>
             <h2><a name="db4o-all"></a>db4o-X.XX-all-javaX.jar</h2>
@@ -75,9 +75,9 @@
             <p>In Visual Studio, you don't need to add Db4object.Db4o.Instrumentation.dll, Cecil.FlowAnalysis.dll and Mono.Cecil.dll as a reference. Visual Studio will include this dependency automatically.</p>
             <p>Note that native queries work also without this assembly. However the queries cannot be optimized without this assembly and will run a lot slower.</p>
             <h2><a name="net-tool"></a>Db4oTool.exe</h2>
-            <p>This is a <a href="implementation_strategies/enhancement_tools.htm">command line tool for doing various enhancement</a> to your classes. It depends on  Db4object.Db4o.dll, Db4object.Db4o.Linq.dll, Db4object.Db4o.Optional.dll, Db4object.Db4o.NativeQueries.dll, Db4object.Db4o.Instrumentation.dll, Cecil.FlowAnalysis.dll and Mono.Cecil.dll</p>
+            <p>This is a <a href="advanced_topics/enhancement_tools.htm">command line tool for doing various enhancement</a> to your classes. It depends on  Db4object.Db4o.dll, Db4object.Db4o.Linq.dll, Db4object.Db4o.Optional.dll, Db4object.Db4o.NativeQueries.dll, Db4object.Db4o.Instrumentation.dll, Cecil.FlowAnalysis.dll and Mono.Cecil.dll</p>
             <h2><a name="net-tool-msbuild"></a>Db4oTool.MSBuild.dll</h2>
-            <p>This is the MSBuild fronted for <a href="implementation_strategies/enhancement_tools/build_time_enhancement.htm">built time enhancement.</a> It has the same dependencies as Db4oTool.exe and Db4oTool.exe itself.</p>
+            <p>This is the MSBuild fronted for <a href="advanced_topics/enhancement_tools/build_time_enhancement.htm">built time enhancement.</a> It has the same dependencies as Db4oTool.exe and Db4oTool.exe itself.</p>
         </div>
     </body>
 </html>

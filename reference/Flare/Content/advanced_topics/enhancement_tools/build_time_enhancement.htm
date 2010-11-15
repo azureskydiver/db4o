@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1386" MadCap:lastWidth="749">
+    <head>
+    </head>
+    <body>
+        <h1>
+            <MadCap:keyword term="Enhancement:Build Time" />Build Time Enhancement Example</h1>
+        <p>It possible to integrate the db4o enhancements into the build process,  using a special <MadCap:variable name="Primary.Ant" />-Task. </p>
+        <h2>Preparation</h2>
+        <p MadCap:conditions="Primary..NET">The enhance-functionality resides in the Db4oTool.exe, Db4oTool.MSBuild.dll and its dependencies. All these files are in the db4o-distribution. Ensure that all dll-files are in the same directory. Then ensure that the build-script has configured the right location for the Db4oTool.exe etc. For this example in the Db4oTool and dependencies are in the 'lib'-folder of the project</p>
+        <p MadCap:conditions="Primary.Java">The enhance-functionality is implemented in the db4o-<MadCap:variable name="Primary.CurrentVersion" />-instrumentation and db4o-<MadCap:variable name="Primary.CurrentVersion" />-tools-jar and its dependencies. This files are in the db4o-distribution. Take a look a the detailed documentation for detailed infos. <MadCap:xref href="enhancement_for_java.htm" target="" title="" alt="">See "Enhancement For Java"</MadCap:xref><br />Or you can take the db4o-<MadCap:variable name="Primary.CurrentVersion" />-all-jar which includes all db4o-functionality and all dependencies. For this example the db4o-<MadCap:variable name="Primary.CurrentVersion"></MadCap:variable>-all-jar is in the 'lib'-folder of the project.</p>
+        <h2>Create the Enhancement Task</h2>
+        <p>First we define the enhancement-task. This task will process the <MadCap:variable name="Primary.Artefact" /> and enhance it. </p>
+        <p MadCap:conditions="Primary.Java">If you haven't used Ant yet, read more on the <a href="http://ant.apache.org/">official Ant website</a>. </p>
+        <p MadCap:conditions="Primary..NET">You can add this to the existing project-files. The .csproj or .vbproj are actually MSBuild-files. Open them with a XML-Editor and add the needed parts.<br /></p>
+        <MadCap:snippetBlock src="../../CodeExamples/enhancement/buildtime/simple-enhance-example-Define-a-task-for-the-enhancement-.all.flsnp" />
+        <p>And the execute the task after the compilation.</p>
+        <MadCap:snippetBlock src="../../CodeExamples/enhancement/buildtime/simple-enhance-example-Define-a-target-which-runs-the-task-.all.flsnp" />
+        <p MadCap:conditions="Primary..NET">Now Visual Studio will automatically run the tasks for each build. You don't need to change anything else.</p>
+        <p MadCap:conditions="Primary.Java">You can configure Eclipse to run the Ant build with each compile step. Right click on your project and choose 'Properties'. Then switch to 'Builders' and add a new one. Choose the 'Ant Builder'. On the new window choose the build-file which contains the example-code. Switch to the 'Targets'-Tab. There choose the enhance-target for the 'Auto-Build'. Now the enhancer-task will be run by Eclipse automatically. The example project above is configured this way.</p>
+        <p>Often it's practical to have all persistent classes in a separate project or compile unit. Then the enhancement script runs only for this project. This makes it easy to enhance only the classes for the persistent objects.</p>
+        <p>There are lot of possibilities to tweak and configure the build-time enhancement so that it fits your requirements. <MadCap:xref href="enhancement_for_java.htm" target="" title="" alt="" MadCap:conditions="Primary.Java">See "Enhancement For Java"</MadCap:xref><MadCap:xref target="" title="" alt="" MadCap:conditions="Primary..NET"> See "Build Time Enhancement"</MadCap:xref></p>
+    </body>
+</html>

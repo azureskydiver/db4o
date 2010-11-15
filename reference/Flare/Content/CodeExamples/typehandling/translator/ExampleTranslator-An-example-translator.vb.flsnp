@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Friend Class ExampleTranslator
+    Implements IObjectConstructor
+    ' This is called to store the object
+    Public Function OnStore(ByVal objectContainer As IObjectContainer, _
+                            ByVal objToStore As Object) As Object _
+                        Implements IObjectConstructor.OnStore
+
+        Dim notStorable As NonStorableType = DirectCast(objToStore, NonStorableType)
+        Return notStorable.Data
+    End Function
+
+    ' This is called when the object is activated
+    Public Sub OnActivate(ByVal objectContainer As IObjectContainer, _
+                          ByVal targetObject As Object, ByVal storedObject As Object) _
+                      Implements IObjectConstructor.OnActivate
+
+        Dim notStorable As NonStorableType = DirectCast(targetObject, NonStorableType)
+        notStorable.Data = DirectCast(storedObject, String)
+    End Sub
+
+    ' Tell db4o which type we use to store the data
+    Public Function StoredClass() As Type _
+        Implements IObjectConstructor.StoredClass
+        
+        Return GetType(String)
+    End Function
+
+    ' This method is called when a new instance is needed
+    Public Function OnInstantiate(ByVal objectContainer As IObjectContainer, _
+                                  ByVal storedObject As Object) As Object _
+        Implements IObjectConstructor.OnInstantiate
+        Return New NonStorableType(&quot;&quot;)
+    End Function
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Friend Class ExampleTranslator
+    Implements IObjectConstructor
+    ' This is called to store the object
+    Public Function OnStore(ByVal objectContainer As IObjectContainer, _
+                            ByVal objToStore As Object) As Object _
+                        Implements IObjectConstructor.OnStore
+
+        Dim notStorable As NonStorableType = DirectCast(objToStore, NonStorableType)
+        Return notStorable.Data
+    End Function
+
+    ' This is called when the object is activated
+    Public Sub OnActivate(ByVal objectContainer As IObjectContainer, _
+                          ByVal targetObject As Object, ByVal storedObject As Object) _
+                      Implements IObjectConstructor.OnActivate
+
+        Dim notStorable As NonStorableType = DirectCast(targetObject, NonStorableType)
+        notStorable.Data = DirectCast(storedObject, String)
+    End Sub
+
+    ' Tell db4o which type we use to store the data
+    Public Function StoredClass() As Type _
+        Implements IObjectConstructor.StoredClass
+        
+        Return GetType(String)
+    End Function
+
+    ' This method is called when a new instance is needed
+    Public Function OnInstantiate(ByVal objectContainer As IObjectContainer, _
+                                  ByVal storedObject As Object) As Object _
+        Implements IObjectConstructor.OnInstantiate
+        Return New NonStorableType(&quot;&quot;)
+    End Function
+End Class</pre>
+		<div class="codesnippet-meta">
+			ExampleTranslator.vb: An example translator
+			<div class="codedownload">
+				<a href="Example-typehandling-translator-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

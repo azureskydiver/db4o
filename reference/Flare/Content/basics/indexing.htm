@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="762" MadCap:lastWidth="588">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1125" MadCap:lastWidth="588">
     <head>
     </head>
     <body>
@@ -9,6 +9,8 @@
         <p>You can create a index by enabling it on a field. <MadCap:xref href="../configuration/objectfield_configuration.htm#Adding" target="" title="" alt="">See "Adding a Field Index"</MadCap:xref></p>
         <p MadCap:conditions="Primary..NET">Note that you need to set the index on a field, not a property. This is also true for auto-properties. </p>
         <MadCap:snippetBlock src="../CodeExamples/configuration/objectfield/ObjectFieldConfigurations-Index-a-certain-field.all.flsnp" />
+        <p>As an alternative you also can use the appropriate <MadCap:variable name="Primary.Annotation" /> on the field which you want to index.</p>
+        <MadCap:snippetBlock src="../CodeExamples/configuration/objectfield/ObjectFieldConfigurations-Index-a-field.all.flsnp" />
         <h2>When And Where Do I&#160;Need An Index</h2>
         <p>When do you need an index? As a rule of thumb: Add an index all fields which are used in queries. <MadCap:xref href="indexing/when_and_where.htm" target="" title="" alt="">See "When And Where"</MadCap:xref></p>
         <p>There are different factors which need to be fulfilled to profit from an index.</p>

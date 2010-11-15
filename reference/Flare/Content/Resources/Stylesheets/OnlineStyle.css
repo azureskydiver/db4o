@@ -47,24 +47,6 @@ a:hover
 	color: #4444EE;
 }
 
-MadCap|xref.TOCPageNumber
-{
-	color: #0000EE;
-	mc-format: 'See {quote}{paraxml}{quote} ';
-}
-
-MadCap|xref.TOCPageNumber:visited
-{
-	color: #551A8B;
-	mc-format: 'See {quote}{paraxml}{quote} ';
-}
-
-MadCap|xref.TOCPageNumber:hover
-{
-	color: #4444EE;
-	mc-format: 'See {quote}{paraxml}{quote} ';
-}
-
 /* Code Snippet */
 pre.prettyprint
 {
@@ -87,3 +69,22 @@ div.codedownload{
 	float:right;
 	margin-left:1pt;
 }
+
+MadCap|xref.TOCPageNumber
+{
+	color: #0000EE;
+	mc-format: 'See {quote}{paraxml}{quote} ';
+}
+
+MadCap|xref.TOCPageNumber:visited
+{
+	color: #551A8B;
+	mc-format: 'See {quote}{paraxml}{quote} ';
+}
+
+MadCap|xref.TOCPageNumber:hover
+{
+	color: #4444EE;
+	mc-format: 'See {quote}{paraxml}{quote} ';
+}
+

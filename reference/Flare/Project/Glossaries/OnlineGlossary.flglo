@@ -2,21 +2,6 @@
 <CatapultGlossary>
   <GlossaryEntry>
     <Terms>
-      <Term>Object ID</Term>
-      <Term>Internal ID</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/ids_and_uuids/internal_ids.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>UUID</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/ids_and_uuids/unique_universal_ids.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>dRS</Term>
     </Terms>
     <Definition
@@ -28,11 +13,6 @@
     </Terms>
     <Definition
       Link="/Content/basics/acid_and_transactions.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Transaction</Term>
-    </Terms>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -68,36 +48,7 @@
       <Term>Callback</Term>
     </Terms>
     <Definition
-      Link="/Content/implementation_strategies/callbacks.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Attribute</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/using_attributes.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Encryption</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/encryption.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Freespace</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/freespace_management_system.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Refactoring</Term>
-      <Term>Schema Evolution</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/refactoring_and_schema_evolution.htm"></Definition>
+      Link="/Content/advanced_topics/callbacks.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
@@ -111,22 +62,14 @@
       <Term>Translator</Term>
     </Terms>
     <Definition
-      Link="/Content/implementation_strategies/translators.htm"></Definition>
+      Link="/Content/advanced_topics/type_handling/translators.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
       <Term>Typehandler</Term>
     </Terms>
     <Definition
-      Link="/Content/implementation_strategies/typehandlers.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
-      <Term>Constraints</Term>
-      <Term>Unique Constraints</Term>
-    </Terms>
-    <Definition
-      Link="/Content/implementation_strategies/unique_constraints.htm"></Definition>
+      Link="/Content/advanced_topics/type_handling/typehandlers.htm"></Definition>
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>

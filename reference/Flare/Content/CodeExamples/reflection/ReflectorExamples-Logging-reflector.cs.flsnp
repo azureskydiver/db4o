@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">internal class LoggerReflector : IReflector
+{
+    private readonly IReflector readReflector;
+
+    public LoggerReflector()
+    {
+        this.readReflector = new NetReflector();
+    }
+
+    public LoggerReflector(IReflector readReflector)
+    {
+        this.readReflector = readReflector;
+    }
+
+    public void Configuration(IReflectorConfiguration reflectorConfiguration)
+    {
+        readReflector.Configuration(reflectorConfiguration);
+    }
+
+    public IReflectArray Array()
+    {
+        return readReflector.Array();
+    }
+
+    public IReflectClass ForClass(Type type)
+    {
+        Console.WriteLine(&quot;Reflector.forClass({0})&quot;, type);
+        return readReflector.ForClass(type);
+    }
+
+    public IReflectClass ForName(string className)
+    {
+        Console.WriteLine(&quot;Reflector.forName({0})&quot;, className);
+        return readReflector.ForName(className);
+    }
+
+    public IReflectClass ForObject(object o)
+    {
+        Console.WriteLine(&quot;Reflector.forObject(&quot; + o + &quot;)&quot;);
+        return readReflector.ForObject(o);
+    }
+
+    public bool IsCollection(IReflectClass reflectClass)
+    {
+        return readReflector.IsCollection(reflectClass);
+    }
+
+    public void SetParent(IReflector reflector)
+    {
+        readReflector.SetParent(reflector);
+    }
+
+    public object DeepClone(object o)
+    {
+        return new LoggerReflector((IReflector) readReflector.DeepClone(o));
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			ReflectorExamples.cs: Logging reflector
+			<div class="codedownload">
+				<a href="Example-Code-reflection-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

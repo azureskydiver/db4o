@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">internal class ExampleTranslator : IObjectConstructor
+{
+    // This is called to store the object
+    public Object OnStore(IObjectContainer objectContainer, Object objToStore)
+    {
+        NonStorableType notStorable = (NonStorableType) objToStore;
+        return notStorable.Data;
+    }
+
+    // This is called when the object is activated
+    public void OnActivate(IObjectContainer objectContainer, Object targetObject, Object storedObject)
+    {
+        NonStorableType notStorable = (NonStorableType) targetObject;
+        notStorable.Data = (String) storedObject;
+    }
+
+    // Tell db4o which type we use to store the data
+    public Type StoredClass()
+    {
+        return typeof (String);
+    }
+
+    // This method is called when a new instance is needed
+    public Object OnInstantiate(IObjectContainer objectContainer, Object storedObject)
+    {
+        return new NonStorableType(&quot;&quot;);
+    }
+}
+</pre>
+		<div class="codesnippet-meta">
+			ExampleTranslator.cs: An example translator
+			<div class="codedownload">
+				<a href="Example-typehandling-translator-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

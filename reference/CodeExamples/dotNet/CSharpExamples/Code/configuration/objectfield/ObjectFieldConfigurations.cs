@@ -1,5 +1,6 @@
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Config.Attributes;
 
 namespace Db4oDoc.Code.Configuration.Objectfield
 {
@@ -67,5 +68,29 @@ namespace Db4oDoc.Code.Configuration.Objectfield
     {
         private string name;
         private Person father;
+    }
+
+    public class City
+    {
+        // #example: Index a field
+        [Indexed]
+        private string zipCode;
+        // #end example
+        private string name;
+
+        public City(string zipCode)
+        {
+            this.zipCode = zipCode;
+        }
+
+        public string ZipCode
+        {
+            get { return zipCode; }
+        }
+
+        public string Name
+        {
+            get { return name; }
+        }
     }
 }

@@ -18,7 +18,7 @@
         <h2>Implicit Commits</h2>
         <p>db4o commits implicitly when you close the object-container. The assumption is that normally you want to make the changes persistent when you close the object container. That's why it commits automatically. When you want to prevent this you should rollback the transaction before closing the container,</p>
         <h2>Multiple Concurrent Transactions</h2>
-        <p>db4o transactions are always bound to their object container. When you want multiple concurrent transactions, you need to open multiple object containers. You can easily do this with the open session method. <MadCap:xref href="../../implementation_strategies/session_containers.htm" target="" title="" alt="">See "Session Containers"</MadCap:xref></p>
+        <p>db4o transactions are always bound to their object container. When you want multiple concurrent transactions, you need to open multiple object containers. You can easily do this with the open session method. <MadCap:xref href="../../advanced_topics/session_containers.htm" target="" title="" alt="">See "Session Containers"</MadCap:xref></p>
         <p>Note that in this mode, db4o uses the read committed isolation. <MadCap:xref href="isolation.htm" target="" title="" alt="">See "Isolation"</MadCap:xref></p>
         <MadCap:snippetBlock src="../../CodeExamples/container/sessions/Db4oSessions-Session-object-container.all.flsnp" />
     </body>

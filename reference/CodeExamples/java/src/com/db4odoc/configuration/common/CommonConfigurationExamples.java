@@ -7,10 +7,14 @@ import com.db4o.config.QueryEvaluationMode;
 import com.db4o.config.SimpleNameProvider;
 import com.db4o.config.encoding.StringEncodings;
 import com.db4o.diagnostic.DiagnosticToConsole;
+import com.db4o.reflect.jdk.JdkLoader;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.db4o.ta.TransparentPersistenceSupport;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 
 public class CommonConfigurationExamples {
@@ -170,10 +174,25 @@ public class CommonConfigurationExamples {
     private static void changeReflector() {
         // #example: Change the reflector
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        configuration.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+        configuration.common().reflectWith(
+                new JdkReflector(Thread.currentThread().getContextClassLoader()));
         // #end example
 
         ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        container.close();
+    }
+
+    private static void multipleClassLookUps() throws MalformedURLException {
+        // #example: Complex class loader scenario
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        
+        JdkLoader classLookUp = new ClassLoaderLookup(
+                Thread.currentThread().getContextClassLoader(),
+                new URLClassLoader(new URL[]{new URL("file://./some/other/location")}));
+        configuration.common().reflectWith(new JdkReflector(classLookUp));
+
+        ObjectContainer container = Db4oEmbedded.openFile("database.db4o");
+        // #end example
         container.close();
     }
 

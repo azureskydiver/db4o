@@ -5,7 +5,7 @@
     <body>
         <h1>Id System</h1>
         <p>The id-system configuration  applies to the embedded- and the server-mode of db4o. There are tree different id-systems-available. All the id system configuration is accessible via the id-system-<MadCap:variable name="Primary.getter" /> on the configuration-object.</p>
-        <p>Note that you cannot change the id-system for an existing database. You need to <a href="../implementation_strategies/maintenance/defragment.htm">defragment</a> the database in order to change the id-system.</p>
+        <p>Note that you cannot change the id-system for an existing database. You need to <a href="../advanced_topics/defragment.htm">defragment</a> the database in order to change the id-system.</p>
         <p>The id-system is responsible to mapping a object id to the physical location of an object. This mapping can have significant impact on the performance.</p>
         <h2>Stacked BTree Id-System</h2>
         <p>This setting uses a stack of two BTree's on top of an InMemoryIdSystem. This system is scalable for a large number of ids.</p>

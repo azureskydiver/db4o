@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Friend Class LoggerReflector
+    Implements IReflector
+    Private ReadOnly readReflector As IReflector
+
+    Public Sub New()
+        Me.readReflector = New NetReflector()
+    End Sub
+
+    Public Sub New(ByVal readReflector As IReflector) 
+        Me.readReflector = readReflector
+    End Sub
+
+    Public Sub Configuration(ByVal reflectorConfiguration As IReflectorConfiguration) _
+        Implements IReflector.Configuration
+        readReflector.Configuration(reflectorConfiguration)
+    End Sub
+
+    Public Function Array() As IReflectArray _
+        Implements IReflector.Array
+        Return readReflector.Array()
+    End Function
+
+    Public Function ForClass(ByVal type As Type) As IReflectClass _
+        Implements IReflector.ForClass
+        Console.WriteLine(&quot;Reflector.forClass({0})&quot;, type)
+        Return readReflector.ForClass(type)
+    End Function
+
+    Public Function ForName(ByVal className As String) As IReflectClass _
+        Implements IReflector.ForName
+        Console.WriteLine(&quot;Reflector.forName({0})&quot;, className)
+        Return readReflector.ForName(className)
+    End Function
+
+    Public Function ForObject(ByVal o As Object) As IReflectClass _
+        Implements IReflector.ForObject
+        Console.WriteLine(&quot;Reflector.forObject(&quot; &amp; Convert.ToString(o) &amp; &quot;)&quot;)
+        Return readReflector.ForObject(o)
+    End Function
+
+    Public Function IsCollection(ByVal reflectClass As IReflectClass) As Boolean _
+        Implements IReflector.IsCollection
+        Return readReflector.IsCollection(reflectClass)
+    End Function
+
+    Public Sub SetParent(ByVal reflector As IReflector) _
+        Implements IReflector.SetParent
+        readReflector.SetParent(reflector)
+    End Sub
+
+    Public Function DeepClone(ByVal o As Object) As Object _
+        Implements IReflector.DeepClone
+        Return New LoggerReflector(DirectCast(readReflector.DeepClone(o), IReflector))
+    End Function
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Friend Class LoggerReflector
+    Implements IReflector
+    Private ReadOnly readReflector As IReflector
+
+    Public Sub New()
+        Me.readReflector = New NetReflector()
+    End Sub
+
+    Public Sub New(ByVal readReflector As IReflector) 
+        Me.readReflector = readReflector
+    End Sub
+
+    Public Sub Configuration(ByVal reflectorConfiguration As IReflectorConfiguration) _
+        Implements IReflector.Configuration
+        readReflector.Configuration(reflectorConfiguration)
+    End Sub
+
+    Public Function Array() As IReflectArray _
+        Implements IReflector.Array
+        Return readReflector.Array()
+    End Function
+
+    Public Function ForClass(ByVal type As Type) As IReflectClass _
+        Implements IReflector.ForClass
+        Console.WriteLine(&quot;Reflector.forClass({0})&quot;, type)
+        Return readReflector.ForClass(type)
+    End Function
+
+    Public Function ForName(ByVal className As String) As IReflectClass _
+        Implements IReflector.ForName
+        Console.WriteLine(&quot;Reflector.forName({0})&quot;, className)
+        Return readReflector.ForName(className)
+    End Function
+
+    Public Function ForObject(ByVal o As Object) As IReflectClass _
+        Implements IReflector.ForObject
+        Console.WriteLine(&quot;Reflector.forObject(&quot; &amp; Convert.ToString(o) &amp; &quot;)&quot;)
+        Return readReflector.ForObject(o)
+    End Function
+
+    Public Function IsCollection(ByVal reflectClass As IReflectClass) As Boolean _
+        Implements IReflector.IsCollection
+        Return readReflector.IsCollection(reflectClass)
+    End Function
+
+    Public Sub SetParent(ByVal reflector As IReflector) _
+        Implements IReflector.SetParent
+        readReflector.SetParent(reflector)
+    End Sub
+
+    Public Function DeepClone(ByVal o As Object) As Object _
+        Implements IReflector.DeepClone
+        Return New LoggerReflector(DirectCast(readReflector.DeepClone(o), IReflector))
+    End Function
+End Class</pre>
+		<div class="codesnippet-meta">
+			ReflectorExamples.vb: Logging reflector
+			<div class="codedownload">
+				<a href="Example-Code-reflection-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>
