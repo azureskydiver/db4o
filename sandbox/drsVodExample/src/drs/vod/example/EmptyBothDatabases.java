@@ -20,6 +20,7 @@ public class EmptyBothDatabases {
 	}
 
 	private static void cleanDb4o() {
+		System.out.println("Deleting db4o database file: dRSVodExample.db4o");
 		new File("dRSVodExample.db4o").delete();
 	}
 
@@ -39,6 +40,7 @@ public class EmptyBothDatabases {
 	}
 
 	private static void deleteAll(PersistenceManager pm, Class clazz) {
+		System.out.println("Deleting from VOD, class: " + clazz.getName());
 		Collection collection = (Collection) pm.newQuery(clazz).execute();
 		for (Object object : collection) {
 			pm.deletePersistent(object);
