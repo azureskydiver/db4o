@@ -66,13 +66,10 @@ public class GenericClass implements ReflectClass, DeepClone {
     }
     
     public boolean equals(Object obj) {
-        if(obj == null){
-            return false;
-        }
         if(this == obj){
             return true;
         }
-        if(! (obj instanceof GenericClass)){
+        if(obj == null || getClass() != obj.getClass() ){
             return false;
         }
         GenericClass otherGC = (GenericClass)obj;

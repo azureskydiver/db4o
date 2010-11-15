@@ -29,13 +29,6 @@ public class GenericArrayClass extends GenericClass {
         return isAssignableFrom(((GenericArray)candidate)._clazz);
     }
     
-    public boolean equals(Object obj) {
-        if( ! (obj instanceof GenericArrayClass)){
-            return false;
-        }
-        return super.equals(obj);
-    }
-    
     public String toString(Object obj) {
     	if(_converter == null) {
     		return "(GA) " + getName();
