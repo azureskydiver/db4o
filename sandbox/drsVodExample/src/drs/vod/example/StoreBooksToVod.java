@@ -21,7 +21,7 @@ public class StoreBooksToVod {
 		Book programmingInScala = new Book("Programming in Scala", 31.49f);
 		pm.makePersistent(programmingInScala);
 		
-		System.out.println("Stored Books to VOD");
+		System.out.println("Stored Books to VOD:");
 		System.out.println(cSharpInDepth);
 		System.out.println(programmingInScala);
 		

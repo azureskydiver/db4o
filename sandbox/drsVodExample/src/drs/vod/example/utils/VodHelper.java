@@ -21,6 +21,7 @@ public class VodHelper {
 		properties.setProperty("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 		properties.setProperty("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 		properties.setProperty("versant.metadata.0", "drs/vod/example/model/package.jdo");
+		properties.setProperty("versant.metadata.1", "com/db4o/drs/versant/metadata/package.jdo");
 		return properties;
 	}
 	

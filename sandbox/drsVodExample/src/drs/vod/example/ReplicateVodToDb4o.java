@@ -2,10 +2,6 @@
 
 package drs.vod.example;
 
-import java.util.*;
-
-import javax.jdo.*;
-
 import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.db4o.*;
