@@ -236,7 +236,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public DatastoreSchemaClass datastoreSchemaClass(Class clazz) {
-		return datastoreSchemaClass(schemaName(clazz));
+		return datastoreSchemaClass(schemaName(clazz.getName()));
 	}
 	
 	public DatastoreSchemaClass datastoreSchemaClass(String name) {
@@ -244,23 +244,19 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	public boolean isKnownClass(Class clazz) {
-		return internalSchemaName(clazz) != null;
+		return internalSchemaName(clazz.getName()) != null;
 	}
 	
-	public String schemaName(Class clazz) {
-		String name = internalSchemaName(clazz);
-		if(name != null){
-			return name;
-		}
-		throw new IllegalStateException("Class " + clazz.getName() + " not found in schema.");
+	public String schemaName(String fullyQualifiedName) {
+		return internalSchemaName(fullyQualifiedName);
 	}
 
-	private String internalSchemaName(Class clazz) {
-		String fullyQualifiedName = clazz.getName();
+	private String internalSchemaName(String fullyQualifiedName) {
+		int pos = fullyQualifiedName.lastIndexOf(".");
+		String simpleName = fullyQualifiedName.substring(pos + 1);
 		if(datastoreSchemaClass(fullyQualifiedName) != null){
 			return fullyQualifiedName;
 		}
-		String simpleName = clazz.getSimpleName(); 
 		if(datastoreSchemaClass(simpleName) != null){
 			return simpleName;
 		}

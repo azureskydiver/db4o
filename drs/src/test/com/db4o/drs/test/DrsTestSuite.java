@@ -32,6 +32,13 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	@SuppressWarnings("unchecked")
 	protected Class[] testCases() {
+		
+		if(false){
+			return new Class[]{
+					ListTest.class
+			};
+		}
+		
 		return new Class[] {
 				
 				com.db4o.drs.test.DateReplicationTestCase.class,

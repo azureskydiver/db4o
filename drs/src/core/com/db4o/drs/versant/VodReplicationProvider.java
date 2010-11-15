@@ -117,15 +117,21 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			}
 		});
 	}
-
-	private long ensureClassKnown(Class clazz) {
+	
+	public long ensureClassKnown(Class clazz) {
 		ensureClassHierarchyKnown(clazz);
 		String className = clazz.getName();
 		Long loid = _knownClasses.get(className);
 		if (loid != null) {
 			return loid;
 		}
-		String schemaName = _cobra.schemaName(clazz);
+		
+		String schemaName = _cobra.schemaName(clazz.getName());
+		if(schemaName == null){
+			// This is expected for built-in Java classes
+			// like List. 
+			return 0;
+		}
 		ClassMetadata cm = new ClassMetadata(schemaName, className);
 		
 		_cobra.store(cm);
@@ -314,6 +320,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ReplicationReference produceReference(final Object obj, Object referencingObj, String fieldName) {
+		ensureClassKnown(obj.getClass());
 		ReplicationReferenceImpl reference = _replicationReferences.get(obj);
 		if (reference != null){
 			return reference;

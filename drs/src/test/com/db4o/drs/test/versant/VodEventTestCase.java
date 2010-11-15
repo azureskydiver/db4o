@@ -53,7 +53,7 @@ public class VodEventTestCase extends VodProviderTestCaseBase {
 	public void testSimpleEvent() throws Exception {
 		EventClient client = newEventClient();
 		try{
-	        ClassChannelBuilder builder = new ClassChannelBuilder (_cobra.schemaName(Item.class));
+	        ClassChannelBuilder builder = new ClassChannelBuilder (_cobra.schemaName(Item.class.getName()));
 	        EventChannel channel = client.newChannel ("item", builder);
 		    RecordingEventListener eventListener = new RecordingEventListener(VodEvent.CREATED, VodEvent.MODIFIED);
 		    channel.addVersantEventListener (eventListener);

@@ -572,11 +572,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	private String schemaFor(String fullyQualifiedName) {
-		try {
-			return _cobra.schemaName(Class.forName(fullyQualifiedName));
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+		return _cobra.schemaName(fullyQualifiedName);
 	}
 	
 
