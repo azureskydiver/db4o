@@ -13,8 +13,8 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-				EventListenerIntegrationTestCase.class,
-				PreExistingObjectTestCase.class,
+			EventListenerIntegrationTestCase.class,
+			// PreExistingObjectTestCase.class,
 		};
 	}
 
