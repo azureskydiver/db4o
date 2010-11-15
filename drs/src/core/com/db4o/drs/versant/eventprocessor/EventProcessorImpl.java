@@ -80,7 +80,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	    defaultSignatureLoid();
 	}
 
-
 	private void startChannelsFromKnownClasses() {
 		Collection<Long> classMetadataLoids = _cobra.loids(ClassMetadata.class);
 	    for (Long loid : classMetadataLoids) {
