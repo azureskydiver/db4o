@@ -17,6 +17,7 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 		
 		if(false){
 			new ConsoleTestRunner(new VodStandaloneTests().iterator()).run();
+			return;
 		}
 		
 		new ConsoleTestRunner(
