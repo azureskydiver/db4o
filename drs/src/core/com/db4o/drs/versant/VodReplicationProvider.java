@@ -127,6 +127,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		String schemaName = _cobra.schemaName(clazz);
 		ClassMetadata cm = new ClassMetadata(schemaName, className);
+		
 		_cobra.store(cm);
 		log("Classmetadata stored " + className);
 		_cobra.commit();
@@ -534,6 +535,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private Set<Long> queryForModifiedObjects(Class clazz, long lastReplicationVersion, boolean withClassMetadataLoid) {
+		ensureClassKnown(clazz);
+		
 		String filter = "this.version > " + lastReplicationVersion;
 		if(withClassMetadataLoid){
 			filter += " && (" + classMetadataLoidFilter(clazz) + ")";
