@@ -10,7 +10,7 @@ import com.db4o.drs.versant.*;
 import drs.vod.example.model.*;
 import drs.vod.example.utils.*;
 
-public class ReplicateVodToDb4o {
+public class ReplicateAllBooksOrdersCustomersFromVodToDb4o {
 	
 	
 	public static void main(String[] args) {
@@ -46,6 +46,7 @@ public class ReplicateVodToDb4o {
 		}
 		
 		replicationSession.commit();
+		replicationSession.close();
 		
 		objectContainer.close();
 	}

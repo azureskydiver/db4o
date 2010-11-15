@@ -2,7 +2,6 @@
 
 package drs.vod.example;
 
-import java.io.*;
 import java.util.*;
 
 import javax.jdo.*;
@@ -12,19 +11,9 @@ import com.db4o.drs.versant.metadata.*;
 import drs.vod.example.model.*;
 import drs.vod.example.utils.*;
 
-public class EmptyBothDatabases {
+public class DeleteAllFromVod {
 	
 	public static void main(String[] args) {
-		cleanVOD();
-		cleanDb4o();
-	}
-
-	private static void cleanDb4o() {
-		System.out.println("Deleting db4o database file: dRSVodExample.db4o");
-		new File("dRSVodExample.db4o").delete();
-	}
-
-	private static void cleanVOD() {
 		PersistenceManager pm = VodHelper.getPersistenceManager();
 		pm.currentTransaction().begin();
 		deleteAll(pm, Book.class);
@@ -38,7 +27,7 @@ public class EmptyBothDatabases {
 		pm.currentTransaction().commit();
 		pm.close();
 	}
-
+	
 	private static void deleteAll(PersistenceManager pm, Class clazz) {
 		System.out.println("Deleting from VOD, class: " + clazz.getName());
 		Collection collection = (Collection) pm.newQuery(clazz).execute();
