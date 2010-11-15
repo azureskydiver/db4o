@@ -116,20 +116,8 @@ public class QLinSupport {
 	}
 	
 	private static void checkForNull(Object expression) {
-		warnOnce();
 		if(expression == null){
 			throw new QLinException("expression can not be null");
-		}
-	}
-	
-	private static volatile boolean warned = false;
-	
-	private static void warnOnce() {
-		if(!warned){
-			System.err.println("\nWarning: QLin is only a very limited implementation");
-			System.err.println("for the db4o replication system (dRS). ");
-			System.err.println("It may be removed from the db4o 8.0 final release\n");
-			warned = true;
 		}
 	}
 	
