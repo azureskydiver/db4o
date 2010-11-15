@@ -47,7 +47,7 @@ public interface VodCobraFacade {
 	
 	void deleteAll();
 	
-	String schemaName(Class clazz);
+	public String schemaName(String fullyQualifiedName);
 	
 	boolean isKnownClass(Class clazz);
 	
