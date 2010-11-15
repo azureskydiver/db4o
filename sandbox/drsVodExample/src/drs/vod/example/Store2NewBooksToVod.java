@@ -7,7 +7,7 @@ import javax.jdo.*;
 import drs.vod.example.model.*;
 import drs.vod.example.utils.*;
 
-public class StoreBooksToVod {
+public class Store2NewBooksToVod {
 	
 	public static void main(String[] args) {
 		

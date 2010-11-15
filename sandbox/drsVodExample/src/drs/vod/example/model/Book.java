@@ -21,5 +21,14 @@ public class Book {
 	public String toString() {
 		return "Book [title=" + title + ", price=" + price + "]";
 	}
+	
+	public float price(){
+		return price;
+	}
+	
+	public void price(float price){
+		this.price = price;
+	}
+	
 
 }
