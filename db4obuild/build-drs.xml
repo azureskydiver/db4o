@@ -12,9 +12,10 @@
 	-->	
 	<property file="machine.properties" />
 	<property file="ant.properties" />
-
+	<property environment="env" />
+	
 	<import file="common.xml" />
-
+	
 	<property name="drs.dir.base" value="${dir.base}/drs" />
 	<property name="drs.dir.src" value="${drs.dir.base}/src" />
 	<property name="drs.dir.src.core" value="${drs.dir.src}/core" />
@@ -61,6 +62,47 @@
 		<mkdir dir="${drs.dir.dist.lib}" />
 		<mkdir dir="${drs.dir.dist.api}" />
 		<mkdir dir="${drs.dir.dist.temp}" />
+		
+		<if>
+			<os family="windows" />
+			<then>
+				<property name="key.drs.vod.regression.bin" value="Path" />
+			</then>
+			<else>
+				<property name="key.drs.vod.regression.bin" value="PATH" />
+			</else>
+		</if>
+		<if>
+			<equals arg1="${run.vod.drs.tests}" arg2="true" />
+			<then>
+				<property name="jvmarg.drs.vod.regression.enhancer" value="-javaagent:${drs.dir.base}/lib/datanucleus/datanucleus-enhancer-2.1.1.jar=com.db4o.drs.test.data,com.db4o.drs.versant.metadata,com.db4o.drs.test.versant.data" />
+				<if>
+					<os family="windows" />
+					<then>
+						<property name="path.drs.vod.regression.bin" value="${path.vod.bin};${path.vod.lib};${env.Path}" />
+						<property name="path.drs.vod.regression.lib" value="" />
+					</then>
+					<else>
+						<property name="path.drs.vod.regression.bin" value="${path.vod.bin}:${env.PATH}" />
+						<property name="path.drs.vod.regression.lib" value="${path.vod.lib}:${env.LD_LIBRARY_PATH}" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<property name="jvmarg.drs.vod.regression.enhancer" value="" />
+				<if>
+					<os family="windows" />
+					<then>
+						<property name="path.drs.vod.regression.bin" value="${env.Path}" />
+						<property name="path.drs.vod.regression.lib" value="" />
+					</then>
+					<else>
+						<property name="path.drs.vod.regression.bin" value="${env.PATH}" />
+						<property name="path.drs.vod.regression.lib" value="${env.LD_LIBRARY_PATH}" />
+					</else>
+				</if>
+			</else>
+		</if>
 	</target>
     
 	<macrodef name="buildjar" description="compile, jar classes for various src folders">
@@ -80,6 +122,7 @@
 			</javac>
 			<copy todir="${temp.dir}">
 				<fileset dir="@{srcdir}">
+					<include name="**/*.jdo" />
 					<exclude name="@{exclude}" />
 					<include name="@{include}" />
 				</fileset>
@@ -175,8 +218,17 @@
 	</target>
 	
 	<target name="run-regression" depends="init">
-		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
-			<classpath refid="class.path" />
+		<java jvm="${file.jvm.jdk1.6}" fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
+			<classpath>
+				<fileset dir="${dir.vod.drs.patch}">
+					<include name="**/*.jar" />
+				</fileset>
+				<path refid="class.path" />
+			</classpath>
+			<jvmarg line="-DrunVodTests=${run.vod.drs.tests}" />
+			<jvmarg line="${jvmarg.drs.vod.regression.enhancer}" />
+			<env key="${key.drs.vod.regression.bin}" path="${path.drs.vod.regression.bin}" />
+			<env key="LD_LIBRARY_PATH" path="${path.drs.vod.regression.lib}" />
 		</java>
 	</target>
 
