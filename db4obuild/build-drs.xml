@@ -75,7 +75,7 @@
 		<if>
 			<equals arg1="${run.vod.drs.tests}" arg2="true" />
 			<then>
-				<property name="jvmarg.drs.vod.regression.enhancer" value="-javaagent:${drs.dir.base}/lib/datanucleus/datanucleus-enhancer-2.1.1.jar=com.db4o.drs.test.data,com.db4o.drs.versant.metadata,com.db4o.drs.test.versant.data" />
+				<property name="jvmarg.drs.vod.regression.enhancer" value="-javaagent:${drs.dir.base}/lib/datanucleus/datanucleus-enhancer-2.1.1.jar=com.db4o.drs.test.data,com.db4o.drs.test.versant.data" />
 				<if>
 					<os family="windows" />
 					<then>
@@ -108,8 +108,6 @@
 	<macrodef name="buildjar" description="compile, jar classes for various src folders">
 		<attribute name="srcdir" />
 		<attribute name="classpathrefid" />
-		<attribute name="include" />
-		<attribute name="exclude" />
 		<attribute name="jar" />
 
 		<sequential>
@@ -122,9 +120,9 @@
 			</javac>
 			<copy todir="${temp.dir}">
 				<fileset dir="@{srcdir}">
+					<exclude name="log4j.xml" />
 					<include name="**/*.jdo" />
-					<exclude name="@{exclude}" />
-					<include name="@{include}" />
+					<include name="**/*.xml" />
 				</fileset>
 			</copy>
 			<jar jarfile="@{jar}" basedir="${temp.dir}" />
@@ -133,15 +131,49 @@
 	</macrodef>
 
 	<target name="build-core" description="jar the core src of drs">
-		<buildjar srcdir="${drs.dir.src.core}" classpathrefid="class.path" jar="${file.drs.core.jar}" exclude="log4j.xml" include="**/*.xml" />
-	</target>
+		<property name="temp.dir" value="${drs.dir.dist.classes}" />
+		<delete dir="${temp.dir}" />
+		<mkdir dir="${temp.dir}" />
+		
 
+		<javac srcdir="${drs.dir.src.core}" destdir="${temp.dir}" target="1.5" source="1.5" failonerror="true">
+			<classpath refid="class.path" />
+		</javac>
+		
+		<copy todir="${temp.dir}">
+			<fileset dir="${drs.dir.src.core}">
+				<exclude name="log4j.xml" />
+				<include name="**/*.jdo" />
+				<include name="**/*.xml" />
+				<include name="versant.properties" />
+			</fileset>
+		</copy>
+		
+		<taskdef resource="versant.tasks">
+			<classpath>
+				<fileset dir="${dir.vod.lib}" includes="**/*.jar"/>
+				<fileset dir="${drs.dir.base}/lib" includes="**/*.jar"/>
+				<pathelement location="${temp.dir}"/>
+				<pathelement location="${dir.dist.classes.jdk1.5}"/>
+				<pathelement location="${dir.dist.classes.db4ounit.jdk1.5}"/>
+				
+			</classpath>
+		</taskdef>
+		
+		<jdo-enhance  project="versant.properties" outputdir="${temp.dir}" >
+			<persistentaware dir="${temp.dir}"/>
+		</jdo-enhance>
+		
+		<jar jarfile="${file.drs.core.jar}" basedir="${temp.dir}" />
+		<delete dir="${temp.dir}" />
+	</target>
+	
 	<target name="build-example" description="jar the example src of drs">
-		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" exclude="log4j.xml" include="**/*.xml" />
+		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" />
 	</target>
 
 	<target name="build-regression" description="jar the test src of drs">
-		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" exclude="log4j.xml" include="**/*.xml" />
+		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" />
 	</target>
 
 	<target name="build-all" depends="clean, init">
