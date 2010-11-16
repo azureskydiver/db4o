@@ -36,7 +36,8 @@ public class StoreNewOrderInDb4o {
 		Order order = new Order(book, customer);
 		objectContainer.store(order);
 		
-		System.out.println("Order stored to db4o: " + order);
+		System.out.println("Order stored to db4o:");
+		System.out.println(order);
 		
 		objectContainer.commit();
 		objectContainer.close();
