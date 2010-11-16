@@ -16,7 +16,7 @@ public class ChangeBookPricesInVod {
 		pm.currentTransaction().begin();
 		Collection result = (Collection) pm.newQuery(Book.class).execute();
 		if(result.size() == 0){
-			System.out.println("No books stored to VOD");
+			System.out.println("No books stored to VOD yet.");
 		} else{
 			Iterator i = result.iterator();
 			while(i.hasNext()){
