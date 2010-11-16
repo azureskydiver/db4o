@@ -30,12 +30,8 @@ SET DRS_PATH=%EXAMPLE_HOME%\lib\dRS-%DB4O_VERSION%-core.jar
 REM for debugging:
 REM SET DRS_PATH=D:/workspaces/trunk/drs/bin
 
-REM delete the following 4 before releasing
-SET PMC=C:\TEMP
-SET COBRA=%PMC%\cobra\bin
-SET ENGINE=%PMC%\oa4engine/bin
-SET PRODUCT=%PMC%\oa4product\bin
-SET VDS=%PMC%\vds\bin
+REM delete the following before releasing
+SET PATCH_JAR=%EXAMPLE_HOME%\lib\vod8.drs.patch.jar
 
-SET LOCAL_CLASSPATH=%COBRA%;%ENGINE%;%PRODUCT%;%VDS%;%VOD_JDO%;%JVI%;%DRS_PATH%;%CLI%;%PIZZA%;%JDO_JAR%;%ASM%;%DB4O_JAR%;
+SET LOCAL_CLASSPATH=%PATCH_JAR%;%VOD_JDO%;%JVI%;%DRS_PATH%;%CLI%;%PIZZA%;%JDO_JAR%;%ASM%;%DB4O_JAR%;
 
