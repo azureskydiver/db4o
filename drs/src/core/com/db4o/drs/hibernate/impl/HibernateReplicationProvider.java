@@ -172,6 +172,12 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 			throw new RuntimeException("Provider has already been destroyed.");
 		
 		_alive = false;
+		
+		try {
+			_session.connection().createStatement().execute("SHUTDOWN IMMEDIATELY");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
 		_session.close();
 		_sessionFactory.close();
