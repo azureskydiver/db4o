@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/db4o-8.0.173.15095-all-java5.jar"/>
 	<classpathentry kind="lib" path="lib/dRS-8.0.173.15095-core.jar"/>
+	<classpathentry kind="lib" path="lib/vod8.drs.patch.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
