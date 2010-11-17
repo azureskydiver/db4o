@@ -23,9 +23,6 @@ package com.db4o.drs;
 /**
  * Defines an event class for the replication of an entity.
  *
- * @author Albert Kwan
- * @author Klaus Wuestefeld
- * @version 1.2
  * @since dRS 1.2
  */
 public interface ReplicationEvent {
@@ -68,4 +65,5 @@ public interface ReplicationEvent {
 	 * The replication process will not traverse to objects referenced by the current one.
 	 */
 	void stopTraversal();
+	
 }
