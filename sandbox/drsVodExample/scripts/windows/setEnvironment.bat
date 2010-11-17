@@ -1,5 +1,5 @@
 
-SET EXAMPLE_HOME=%CD%\..
+SET EXAMPLE_HOME=%CD%\..\..
 
 SET JAVA=java
 REM SET JAVA="C:\Program Files (x86)\Java\jdk1.6.0_17\bin\java.exe"
