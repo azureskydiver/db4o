@@ -80,6 +80,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	    produceLastTimestamp();
 	    startChannelsFromKnownClasses();
 	    defaultSignatureLoid();
+	    System.out.println("VOD EventProcessor for dRS is listening for events.");
 	}
 
 	private void startChannelsFromKnownClasses() {
