@@ -1,12 +1,12 @@
 /* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.drs.versant;
+package com.db4o.drs.versant.enhancer;
 
 import java.io.*;
 
 import com.versant.core.jdo.tools.enhancer.*;
 
-public class VodEnhancer {
+public class EnhancerMain {
 	
 	public static void main(String[] args) throws Exception {
 		
