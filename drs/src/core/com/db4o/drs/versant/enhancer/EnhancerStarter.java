@@ -6,7 +6,6 @@ import java.util.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.Path4;
 import com.db4o.util.*;
-import com.db4o.util.File4;
 
 /**
  * @sharpen.ignore
@@ -114,9 +113,7 @@ public class EnhancerStarter {
 		enhance(tempPath);
 		
 		final Map<String, byte[]> cache = new HashMap<String, byte[]>();
-		
-		Path4.forEachFile(tempPath, new Procedure4<Pair<String, File>>() {
-
+		forEachFile(tempPath, new Procedure4<Pair<String, File>>() {
 			public void apply(Pair<String, File> value) {
 				try {
 					if (value.second.isFile()) {
@@ -139,5 +136,21 @@ public class EnhancerStarter {
 		return cache;
 		
 	}
+	
+	public static void forEachFile(String tempPath, Procedure4<Pair<String, File>> visitor) {
+		forEachFile(new File(tempPath), "", visitor);
+	}	
+
+	public static void forEachFile(File root, String relative, Procedure4<Pair<String, File>> visitor) {
+		File[] fs = new File(root, relative).listFiles();
+		for (File file : fs) {
+			String relativePath = relative+file.getName();
+			if (file.isDirectory()) {
+				forEachFile(root, relativePath+"/", visitor);
+			}
+			visitor.apply(new Pair<String, File>(relativePath, file));
+		}
+	}	
+
 	
 }
