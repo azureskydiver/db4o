@@ -31,7 +31,7 @@ public final class ItemDates {
 
 	@Override
 	public String toString() {
-		return "ItemDates [_date1=" + getDate1() + ", _date2=" + getDate2() + ", _dateArray=" + Arrays.toString(getDateArray()) + "]";
+		return "ItemDates [_date1=" + getDate1() + ", _date2=" + getDate2();
 	}
 
 	public void setDate1(Date date1) {

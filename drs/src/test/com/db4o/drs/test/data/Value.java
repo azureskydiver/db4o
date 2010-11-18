@@ -5,10 +5,10 @@ package com.db4o.drs.test.data;
  */
 public class Value
 {
-	private int value;
+	public int value;
 	
 	public Value(int value) {
-		this.setValue(value);
+		this.value = value;
 	}
 	
 	public boolean equals(Object obj) {
@@ -16,14 +16,6 @@ public class Value
 			return false;
 		}
 		Value other = (Value)obj;
-		return other.getValue() == getValue();
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public int getValue() {
-		return value;
+		return other.value == value;
 	}
 }

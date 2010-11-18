@@ -27,7 +27,9 @@ import db4ounit.extensions.*;
  */
 public class Db4oDrsTestSuite extends VersantDrsTestSuite implements Db4oTestCase {
 	
-	
+	/**
+	 * @sharpen.remove
+	 */
 	@Override
 	protected Class[] testCases() {
 		return concat(super.testCases(), specificTestCases());

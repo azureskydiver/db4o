@@ -10,10 +10,8 @@ public class VersantDrsTestSuite extends DrsTestSuite {
 	private Class[] specificTestcases() {
 		
 		return new Class[] {
-		
-				com.db4o.drs.test.ArrayTestSuite.class,
-				com.db4o.drs.test.CustomArrayListTestCase.class,
-
+			com.db4o.drs.test.ArrayTestSuite.class,
+			com.db4o.drs.test.CustomArrayListTestCase.class,
 		};
 	}
 
