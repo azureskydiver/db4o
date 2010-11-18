@@ -68,7 +68,7 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 	}
 
 	private void assertCount(SafeCounter actual, int expected, String name) throws InterruptedException {
-		Assert.isTrue(actual.isEqual(expected, MAX_CHECKS));
+		actual.assertEquals(expected, MAX_CHECKS);
 	}
 	
 	private void reopenAndRegister() throws Exception {
@@ -134,20 +134,18 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 			}});
 		}
 
-		public boolean isEqual(final int expected, int maxChecks) {
-			final BooleanByRef ret = new BooleanByRef();
-			for(int checkCount = 0; checkCount < MAX_CHECKS && ret.value == false; checkCount++) {
+		public void assertEquals(final int expected, int maxChecks) {
+			final IntByRef ret = new IntByRef();
+			for(int checkCount = 0; checkCount < MAX_CHECKS && ret.value != expected; checkCount++) {
 				_lock.run(new Closure4() { public Object run() {
-					if(_value == expected) {
-						ret.value = true;
-						return null;
+					if(_value != expected) {
+						_lock.snooze(WAIT_TIME);
 					}
-					_lock.snooze(WAIT_TIME);
+					ret.value = _value;
 					return null;
 				}});
 			}
-			
-			return ret.value;
+			Assert.areEqual(expected, ret.value);
 		}
 	}	
 	
