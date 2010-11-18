@@ -30,7 +30,7 @@ public class AboutDialog
 		
 	private Composite bottomComposite;
 	private Label copyrightLabel;
-	private final String COPYRIGHT_STRING = "(c) Copyright 2007 db4objects, Inc.";
+	private final String COPYRIGHT_STRING = "(c) Copyright 2010 Versant, Inc.";
 	private Button okButton;
 
 	
@@ -145,14 +145,14 @@ public class AboutDialog
 		bottomComposite.setLayout(new FormLayout());
 		
 		FormData data = new FormData();
-		data.top = new FormAttachment(5,5);
-		data.left = new FormAttachment(0,5);
+		data.top = new FormAttachment(2, 0);
+		data.left = new FormAttachment(2, 0);
 		copyrightLabel.setLayoutData(data);
 		
 		data = new FormData();
-		data.top = new FormAttachment(5,5);
-		data.left = new FormAttachment(copyrightLabel,150);
-		data.width = 45;
+		data.top = new FormAttachment(2, 0);
+		data.left = new FormAttachment(copyrightLabel, 5);
+		data.right = new FormAttachment(98, 0);
 		okButton.setLayoutData(data);
 		
 		bottomComposite.layout(true);
