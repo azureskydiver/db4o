@@ -2,6 +2,7 @@ package com.db4o.drs.test.data;
 
 
 public class Container {
+	
 	private Value value;
 	
 	public Container() {
