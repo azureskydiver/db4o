@@ -75,7 +75,7 @@
 		<if>
 			<equals arg1="${run.vod.drs.tests}" arg2="true" />
 			<then>
-				<property name="jvmarg.drs.vod.regression.enhancer" value="-javaagent:${drs.dir.base}/lib/datanucleus/datanucleus-enhancer-2.1.1.jar=com.db4o.drs.test.data,com.db4o.drs.test.versant.data" />
+				<property name="jvmarg.drs.vod.regression.enhancer" value="-javaagent:${drs.dir.base}/lib/jdo-enhancer/dRS-jdo-enhancer.jar=com.db4o.drs.test.data,com.db4o.drs.test.versant.data" />
 				<if>
 					<os family="windows" />
 					<then>
