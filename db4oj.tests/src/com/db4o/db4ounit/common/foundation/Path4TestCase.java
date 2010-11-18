@@ -62,10 +62,11 @@ public class Path4TestCase implements TestCase{
 		File dir = new File(root, "dir");
 		dir.mkdir();
 		File f = new File(dir, "file.txt");
-		PrintWriter out = new PrintWriter(f);
-		out.println("some text");
-		out.flush();
-		out.close();
+		try {
+			f.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return dir;
 	}
 	
