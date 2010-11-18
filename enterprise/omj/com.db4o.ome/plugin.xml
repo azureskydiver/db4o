@@ -236,7 +236,7 @@
    		 	
    			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadWriteAction" 
 				 enablesFor="1"
-   				 icon="icons/DBconnect.gif"
+   				 icon="icons/DBConnect.png"
    				 id="com.db4o.omplus.ui.actions.OpenDb4oReadWriteAction" 
    				 label="Open db4o file (r/w)" 
    				 menubarPath="com.db4o.eclipse.menu.db4o/com.db4o.eclipse.menu.db4o.group" 
@@ -244,7 +244,7 @@
    				 
    			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadOnlyAction" 
 				 enablesFor="1"
-   				 icon="icons/DBconnect.gif"
+   				 icon="icons/DBConnect.png"
    				 id="com.db4o.omplus.ui.actions.OpenDb4oReadOnlyAction" 
    				 label="Open db4o file (r/o)" 
    				 menubarPath="com.db4o.eclipse.menu.db4o/com.db4o.eclipse.menu.db4o.group" 
@@ -266,7 +266,7 @@
  			 
   			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadWriteAction" 
   				enablesFor="1"
-  				icon="icons/DBconnect.gif" 
+  				icon="icons/DBConnect.png" 
   				id="com.db4o.omplus.ui.actions.OpenYapReadWriteAction" 
   				label="Open db4o file (r/w)"
   				menubarPath="com.db4o.eclipse.menu.yap/com.db4o.eclipse.menu.yap.group"
@@ -274,7 +274,7 @@
 
   			<action class="com.db4o.omplus.ui.actions.OpenDb4oReadOnlyAction" 
   				enablesFor="1"
-  				icon="icons/DBconnect.gif" 
+  				icon="icons/DBConnect.png" 
   				id="com.db4o.omplus.ui.actions.OpenYapReadOnlyAction" 
   				label="Open db4o file (r/o)"
   				menubarPath="com.db4o.eclipse.menu.yap/com.db4o.eclipse.menu.yap.group"
