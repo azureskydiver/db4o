@@ -7,9 +7,6 @@ public class Value
 {
 	private int value;
 	
-	public Value() {
-	}
-	
 	public Value(int value) {
 		this.setValue(value);
 	}
