@@ -3,8 +3,14 @@ package com.db4o.drs.versant.enhancer;
 import java.io.*;
 import java.util.*;
 
+import com.db4o.foundation.*;
+import com.db4o.foundation.io.Path4;
 import com.db4o.util.*;
+import com.db4o.util.File4;
 
+/**
+ * @sharpen.ignore
+ */
 public class EnhancerStarter {
 	
 	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
@@ -70,7 +76,7 @@ public class EnhancerStarter {
 		_properties.setProperty(JDO_METADATA_KEY + freeEntry, fileName);
 	}
 
-	public void enhance() {
+	public void enhance(String outputPath) {
 		
 		String tempFileName = Path4.getTempFileName();
 		File tempFile = new File(tempFileName);
@@ -82,7 +88,7 @@ public class EnhancerStarter {
 			_properties.store(out, null);
 			out.close();
 			
-			String[] args = new String[]{tempFile.getAbsolutePath()};
+			String[] args = new String[]{tempFile.getAbsolutePath(), outputPath};
 			
 			ProcessResult processResult = JavaServices.java("com.db4o.drs.versant.enhancer.EnhancerMain", args);
 			if(EnhancerDebug.verbose){
@@ -97,4 +103,41 @@ public class EnhancerStarter {
 		}
 
 	}
+
+	public Map<String, byte[]> enhance() {
+		
+		String tempPath = Path4.getTempFileName();
+		File root = new File(tempPath);
+		root.delete();
+		root.mkdirs();
+		
+		enhance(tempPath);
+		
+		final Map<String, byte[]> cache = new HashMap<String, byte[]>();
+		
+		Path4.forEachFile(tempPath, new Procedure4<Pair<String, File>>() {
+
+			public void apply(Pair<String, File> value) {
+				try {
+					if (value.second.isFile()) {
+						String fileName = value.first;
+						fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+						cache.put(fileName, File4.readAllBytes(value.second));
+					}
+					value.second.delete();
+				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		
+		if (!new File(tempPath).delete()) {
+			System.err.println("Could not delete temporary path '"+tempPath+"'.");
+		}
+		
+		return cache;
+		
+	}
+	
 }

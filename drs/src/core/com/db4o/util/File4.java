@@ -16,7 +16,10 @@ public class File4 {
 	public static byte[] readAllBytes(final String fname) 
 		throws FileNotFoundException, IOException {
 			
-		final File file = new File(fname);
+		return readAllBytes(new File(fname));
+	}
+
+	public static byte[] readAllBytes(final File file) throws FileNotFoundException, IOException {
 		byte[] bytes = new byte[(int)file.length()];
 		final FileInputStream fis = new FileInputStream(file);
 		try {

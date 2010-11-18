@@ -9,6 +9,8 @@ package com.db4o.util;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
+
 
 public class Path4 { 
 	
@@ -50,5 +52,25 @@ public class Path4 {
 
 	private static String nextRandom() {
 		return Integer.toHexString(_random.nextInt());
+	}
+
+	public static void forEachFile(String tempPath, Procedure4<Pair<String, File>> visitor) {
+		
+		forEachFile(new File(tempPath), "", visitor);
+		
+	}	
+
+	public static void forEachFile(File root, String relative, Procedure4<Pair<String, File>> visitor) {
+		
+		
+		File[] fs = new File(root, relative).listFiles();
+		for (File file : fs) {
+			String relativePath = relative+file.getName();
+			if (file.isDirectory()) {
+				forEachFile(root, relativePath+"/", visitor);
+			}
+			visitor.apply(new Pair<String, File>(relativePath, file));
+		}
+		
 	}	
 }
