@@ -2,14 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/cobra"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/oa4 engine"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/oa4 product"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/vds"/>
+	<classpathentry kind="lib" path="lib/vod8.drs.patch.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/VERSANT"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/db4o-8.0.173.15095-all-java5.jar"/>
 	<classpathentry kind="lib" path="lib/dRS-8.0.173.15095-core.jar"/>
-	<classpathentry kind="lib" path="lib/vod8.drs.patch.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
