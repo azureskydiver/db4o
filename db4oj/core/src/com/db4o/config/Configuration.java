@@ -709,21 +709,6 @@ public interface Configuration {
      * @param flag the desired setting
      */
     public void testConstructors(boolean flag);
-        
-    /**
-     * configures the storage format of Strings.
-     * <br><br>This method needs to be called <b>before</b> a database file
-     * is created with the first 
-     * {@link com.db4o.Db4o#openFile} or  {@link com.db4o.Db4o#openServer}.
-     * db4o database files keep their string format after creation.<br><br>
-     * Turning Unicode support off reduces the file storage space for strings 
-     * by factor 2 and improves performance.<br><br>
-     * Default setting: <b>true</b><br><br>
-     * @param flag <code>true</code> for turning Unicode support on, <code>false</code> for turning
-     * Unicode support off.
-     * @deprecated use {@link #stringEncoding(StringEncoding)}
-     */
-    public void unicode(boolean flag);
 
     /**
      * specifies the global updateDepth.
