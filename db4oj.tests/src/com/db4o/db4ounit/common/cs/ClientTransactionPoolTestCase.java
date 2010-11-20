@@ -15,20 +15,20 @@ public class ClientTransactionPoolTestCase implements TestLifeCycle {
 	public void testPool() {
 		Configuration config = Db4o.newConfiguration();
 		config.storage(new MemoryStorage());
-		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
+		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, ClientTransactionTestUtil.MAINFILE_NAME);
 		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
 			Assert.areEqual(0, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
-			Transaction trans1 = pool.acquire(SwitchingFilesFromClientUtil.MAINFILE_NAME);
+			Transaction trans1 = pool.acquire(ClientTransactionTestUtil.MAINFILE_NAME);
 			Assert.areEqual(db, trans1.container());			
 			Assert.areEqual(1, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
-			Transaction trans2 = pool.acquire(SwitchingFilesFromClientUtil.FILENAME_A);
+			Transaction trans2 = pool.acquire(ClientTransactionTestUtil.FILENAME_A);
 			Assert.areNotEqual(db, trans2.container());			
 			Assert.areEqual(2, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
-			Transaction trans3 = pool.acquire(SwitchingFilesFromClientUtil.FILENAME_A);
+			Transaction trans3 = pool.acquire(ClientTransactionTestUtil.FILENAME_A);
 			Assert.areEqual(trans2.container(), trans3.container());
 			Assert.areEqual(3, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
@@ -52,10 +52,10 @@ public class ClientTransactionPoolTestCase implements TestLifeCycle {
 	}
 
 	public void setUp() throws Exception {
-		SwitchingFilesFromClientUtil.deleteFiles();
+		ClientTransactionTestUtil.deleteFiles();
 	}
 
 	public void tearDown() throws Exception {
-		SwitchingFilesFromClientUtil.deleteFiles();
+		ClientTransactionTestUtil.deleteFiles();
 	}
 }

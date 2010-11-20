@@ -11,11 +11,11 @@ import com.db4o.io.*;
 import db4ounit.*;
 
 public class ClientTransactionHandleTestCase implements TestLifeCycle {
-
+		
 	public void testHandles() {
 		Configuration config = Db4o.newConfiguration();
 		config.storage(new MemoryStorage());
-		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
+		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, ClientTransactionTestUtil.MAINFILE_NAME);
 		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
 			ClientTransactionHandle handleA = new ClientTransactionHandle(pool);
@@ -26,11 +26,11 @@ public class ClientTransactionHandleTestCase implements TestLifeCycle {
 			Assert.areEqual(2, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
 			
-			handleA.acquireTransactionForFile(SwitchingFilesFromClientUtil.FILENAME_A);
+			handleA.acquireTransactionForFile(ClientTransactionTestUtil.FILENAME_A);
 			Assert.areEqual(3, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
 			Assert.areNotEqual(db, handleA.transaction().container());
-			handleB.acquireTransactionForFile(SwitchingFilesFromClientUtil.FILENAME_A);
+			handleB.acquireTransactionForFile(ClientTransactionTestUtil.FILENAME_A);
 			Assert.areEqual(4, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
 			Assert.areNotEqual(handleA.transaction(), handleB.transaction());
@@ -59,11 +59,11 @@ public class ClientTransactionHandleTestCase implements TestLifeCycle {
 	}
 
 	public void setUp() throws Exception {
-		SwitchingFilesFromClientUtil.deleteFiles();
+		ClientTransactionTestUtil.deleteFiles();
 	}
 
 	public void tearDown() throws Exception {
-		SwitchingFilesFromClientUtil.deleteFiles();
+		ClientTransactionTestUtil.deleteFiles();
 	}
 
 }

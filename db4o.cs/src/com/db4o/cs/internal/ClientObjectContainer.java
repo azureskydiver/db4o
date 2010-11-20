@@ -780,37 +780,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return setSemaphore(_transaction, name, timeout);
 	}
 
-    /**
-     * @deprecated
-     */
-	 public void switchToFile(String fileName) {
-		synchronized (_lock) {
-			if(! _config.isReadOnly()){
-				commit();
-			}
-			MsgD msg = Msg.SWITCH_TO_FILE.getWriterForString(_transaction, fileName);
-			write(msg);
-			expectedResponse(Msg.OK);
-			reReadAll((Configuration) _config.deepClone(_config));
-			switchedToFile = fileName;
-		}
-	}
-
-    /**
-     * @deprecated
-     */
-	 public void switchToMainFile() {
-		synchronized (_lock) {
-			if(! _config.isReadOnly()){
-				commit();
-			}
-			write(Msg.SWITCH_TO_MAIN_FILE);
-			expectedResponse(Msg.OK);
-			reReadAll((Configuration) _config.deepClone(_config));
-			switchedToFile = null;
-		}
-	}
-
 	protected String defaultToString() {
 		return "Client connection " + _userName + "(" +  _socket + ")";
 	}
