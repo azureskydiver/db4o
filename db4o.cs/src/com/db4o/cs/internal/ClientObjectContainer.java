@@ -738,8 +738,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         initializeClassMetadataRepository();
         initalizeWeakReferenceSupport();
 		readThis();
-		// FIXME: remove this comments after the build is green
-//		classCollection().refreshClasses();
 	}
 
 	public final void rollback1(Transaction trans) {
