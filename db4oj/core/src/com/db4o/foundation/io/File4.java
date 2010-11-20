@@ -90,7 +90,7 @@ public class File4 {
 
 	static void translateDeleteFailureToException(final File file) {
 		if (!file.delete()) {
-			throw new Db4oIOException("Could not delete '" + file.getName() + "'.");
+			throw new Db4oIOException("Could not delete '" + file.getAbsolutePath() + "'.");
 		}
 	}
     
