@@ -42,9 +42,7 @@ public final class Platform4 {
     
     static final String UTIL = "java.util.";
     static final String DB4O_PACKAGE = "com.db4o.";
-    static final String DB4O_CONFIG = DB4O_PACKAGE + "config.";
-    static final String DB4O_ASSEMBLY = ", db4o";
-    
+    static final String DB4O_CONFIG = DB4O_PACKAGE + "config.";  
     
     // static private int cCreateNewFile;
     static private TernaryBool weakReferenceCheck=TernaryBool.UNSPECIFIED;
@@ -250,10 +248,6 @@ public final class Platform4 {
         } else {
 			translateCollection(config, "Vector", "TVector", false);
         }
-        netReadAsJava(config, "ext.Db4oDatabase");
-        netReadAsJava(config, "P1Object");
-        netReadAsJava(config, "StaticClass");
-        netReadAsJava(config, "StaticField");
         
         config.objectClass(ActivatableBase.class).indexed(false);
         
@@ -470,23 +464,7 @@ public final class Platform4 {
             callConstructorCheck = TernaryBool.YES;
         }
         return callConstructorCheck.definiteYes();
-    }
-    
-    /**
-     * @deprecated
-     */
-    private static final void netReadAsJava(Config4Impl config, String className){
-        Config4Class classConfig = (Config4Class)config.objectClass(db4oClass(className) + DB4O_ASSEMBLY);
-        if(classConfig == null){
-            return;
-        }
-        classConfig.maintainMetaClass(false);
-        classConfig.readAs(db4oClass(className));
-    }
-
-	private static String db4oClass(String className) {
-		return DB4O_PACKAGE + className;
-	}
+    }    
 
     private static final boolean noNIO() {
         try {
