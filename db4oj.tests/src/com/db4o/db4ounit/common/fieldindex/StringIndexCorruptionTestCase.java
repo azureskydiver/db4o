@@ -21,7 +21,6 @@ public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
 	protected void configure(Configuration config) {
 		super.configure(config);
 		config.bTreeNodeSize(4);
-	    config.flushFileBuffers(false); // this just make the test faster
 	}
 	
 	public void testStressSet() {		

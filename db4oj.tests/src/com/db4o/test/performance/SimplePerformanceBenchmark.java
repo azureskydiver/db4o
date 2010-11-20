@@ -72,7 +72,6 @@ public class SimplePerformanceBenchmark {
         config.lockDatabaseFile(false);
         config.weakReferences(false);
         config.storage(new MemoryStorage());
-        config.flushFileBuffers(false);
         config.bTreeCacheHeight(BTREE_CACHE_HEIGHT);
         config.bTreeNodeSize(BTREE_NODE_SIZE);
         if(INDEXED_FIELD){
