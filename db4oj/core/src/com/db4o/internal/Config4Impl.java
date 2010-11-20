@@ -351,9 +351,6 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return false;
 	}
 
-	/**
-	 * @sharpen.ignore 
-	 */
 	private Class[] ignoredClasses() {
 		return new Class[] {
 				StaticClass.class, 
