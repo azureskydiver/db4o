@@ -93,7 +93,6 @@ public class AllTestsConfAll extends TestSuite{
 	    	StoredFieldValue.class,
 	    	//StoreObject.class,
             StorePrimitiveDirectly.class,
-			SwitchingFilesFromClient.class,
 			TestDescend.class,
 	        TestHashTable.class,
 	        TwoClients.class,
