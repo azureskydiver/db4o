@@ -391,7 +391,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	}
 
 	public boolean isProviderSpecific(Object original) {
-		return original instanceof Db4oCollection;
+		return false;
 	}
 
 	public void replicationReflector(ReplicationReflector replicationReflector) {
