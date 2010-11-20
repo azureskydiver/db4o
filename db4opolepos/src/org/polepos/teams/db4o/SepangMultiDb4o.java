@@ -47,7 +47,7 @@ public class SepangMultiDb4o extends Db4oDriver implements SepangMultiDriver{
         begin();
         treeRootIDs = new long[setup().getObjectCount()];
         for (int treeIdx = 0; treeIdx < setup().getObjectCount(); treeIdx++) {
-        	Tree tree = Tree.createTree(setup().getTreeDepth());
+        	Tree tree = Tree.createTree(setup().getDepth());
         	store(tree);
         	treeRootIDs[treeIdx] = db().getID(tree);
         	commit();
