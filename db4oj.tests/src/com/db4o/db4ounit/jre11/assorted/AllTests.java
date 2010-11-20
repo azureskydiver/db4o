@@ -20,7 +20,6 @@ public class AllTests extends Db4oTestSuite {
             ObjectNotStorableTestCase.class,
             StoreNumberTestCase.class,
             SyntheticStaticClassFieldTestCase.class,
-            UUIDMigrationTestCase.class,
 		};
 	}
 }

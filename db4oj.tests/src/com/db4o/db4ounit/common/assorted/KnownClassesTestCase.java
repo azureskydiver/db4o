@@ -18,10 +18,7 @@ public class KnownClassesTestCase extends AbstractDb4oTestCase {
     
     public static final Class[] INTERNAL_CLASSES = new Class[] {
         Db4oDatabase.class,
-        PBootRecord.class,
         StaticClass.class,
-        MetaClass.class,
-        MetaField.class
     };
     
     public static class Item {

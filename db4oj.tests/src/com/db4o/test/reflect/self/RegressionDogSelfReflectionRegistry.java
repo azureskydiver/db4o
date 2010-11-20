@@ -25,7 +25,6 @@ public class RegressionDogSelfReflectionRegistry extends SelfReflectionRegistry 
 								new FieldInfo("_prices", int[].class, true,
 										false, false),
 				}));
-		// FIELDINFO.put(P1Object.class, new FieldInfo[]{});
 	}
 
 	public ClassInfo infoFor(Class clazz) {

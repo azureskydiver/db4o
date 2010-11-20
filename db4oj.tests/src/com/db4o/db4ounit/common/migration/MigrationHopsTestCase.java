@@ -65,10 +65,10 @@ public class MigrationHopsTestCase extends TestWithTempFile implements OptOutWor
 
 	public void test() throws Exception {
 		
-		final Db4oLibraryEnvironment originalEnv = environmentForVersion("5.7");
+		final Db4oLibraryEnvironment originalEnv = environmentForVersion("6.0");
 		originalEnv.invokeInstanceMethod(Tester.class, "createDatabase", tempFile());
 		
-		for (String hop : new String[] { "6.4", "7.4", "7.7" }) {
+		for (String hop : new String[] { "6.4", "7.4", currentVersion()}) {
 			final Db4oLibraryEnvironment hopEnvironment = environmentForVersion(hop);
 			Assert.areEqual(originalEnv.version(), invokeTesterMethodOn(hopEnvironment, "currentVersion"));
 		}
@@ -86,6 +86,10 @@ public class MigrationHopsTestCase extends TestWithTempFile implements OptOutWor
 		} finally {
 			container.close();
 		}
+	}
+
+	private String currentVersion() {
+		return Db4oVersion.MAJOR + "." + Db4oVersion.MINOR;
 	}
 
 	private Object invokeTesterMethodOn(final Db4oLibraryEnvironment env74, final String methodName) throws Exception {

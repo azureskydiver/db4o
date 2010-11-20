@@ -122,13 +122,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
             
         BTree index = getIndex(trans);
-        
-        // Although we checked hasIndex() already, we have to check
-        // again here since index creation in YapFieldUUID can be
-        // unsuccessful if it's called too early for PBootRecord.
-        if(index == null){
-            return;
-        }
         index.add(trans, createFieldIndexKey(parentID, indexEntry));
     }
 
@@ -553,6 +546,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		return null;
 	}
 
+    /**
+	 * dirty hack for com.db4o.types some of them (BlobImpl) need to be set automatically
+	 * TODO: Derive from FieldMetadata for Db4oTypes
+	 */
     public Object getOrCreate(Transaction trans, Object onObject) {
 		if (!alive()) {
 			return null;
@@ -682,7 +679,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     public boolean isArray() {
         return _isArray;
     }
-
     
     public int linkLength() {
         alive();
