@@ -206,7 +206,7 @@ public interface Configuration {
      * <br><br>Default setting: 0
      * <br>Possible settings: 1, 2 or 3
      * <br><br> The potential number of cached BTree nodes can be
-     * calculated with the following forumula:<br>
+     * calculated with the following formula:<br>
      * maxCachedNodes = bTreeNodeSize ^ bTreeCacheHeight<br><br>    
      * This setting should be used on both client and server in
      * client-server environment. 
