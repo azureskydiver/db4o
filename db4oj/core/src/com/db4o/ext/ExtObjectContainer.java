@@ -8,7 +8,6 @@ import com.db4o.foundation.*;
 import com.db4o.io.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.replication.*;
 import com.db4o.ta.*;
 
 /**
@@ -333,28 +332,6 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @param name the name of the semaphore to be released.
      */
     public void releaseSemaphore(String name);
-    
-    /**
-     * @deprecated Since db4o-5.2. Use db4o Replication System (dRS)
-     * instead.<br><br>
-     * prepares for replication with another {@link ObjectContainer}.
-     * <br><br>An {@link ObjectContainer} can only be involved in a replication 
-     * process with one other {@link ObjectContainer} at the same time.<br><br>
-     * The returned {@link ReplicationProcess} interface provides methods to commit
-     * and to cancel the replication process.
-     * <br><br>This ObjectContainer will be "peerA" for the
-     * returned ReplicationProcess. The other ObjectContainer will be "peerB".
-     * @param peerB the {@link ObjectContainer} to replicate with.
-     * @param conflictHandler the conflict handler for this ReplicationProcess. 
-     * Conflicts occur
-     * whenever {@link ReplicationProcess#replicate(Object)} is called with an 
-     * object that was modified in both ObjectContainers since the last 
-     * replication run between the two. Upon a conflict the 
-     * {@link ReplicationConflictHandler#resolveConflict(ReplicationProcess, Object, Object)}
-     * method will be called in the conflict handler.
-     * @return the {@link ReplicationProcess} interface for this replication process.
-     */
-    public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler);
 
 	/**
      * deep update interface to store or update objects.

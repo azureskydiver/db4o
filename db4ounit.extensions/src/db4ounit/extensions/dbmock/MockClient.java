@@ -12,8 +12,6 @@ import com.db4o.qlin.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.replication.*;
-
 /**
  * @sharpen.partial
  */
@@ -124,13 +122,6 @@ public class MockClient implements ExtClient {
 	}
 
 	public void releaseSemaphore(String name) {
-		throw new NotImplementedException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
 		throw new NotImplementedException();
 	}
 
