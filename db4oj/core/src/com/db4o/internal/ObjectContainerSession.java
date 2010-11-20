@@ -19,9 +19,7 @@ import com.db4o.qlin.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.replication.*;
 import com.db4o.types.*;
-
 
 /**
  * @exclude
@@ -206,16 +204,6 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
         _server.releaseSemaphore(_transaction, name);
     }
 
-    /**
-     * @param peerB
-     * @param conflictHandler
-     * @deprecated
-     */
-    public ReplicationProcess replicationBegin(ObjectContainer peerB,
-        ReplicationConflictHandler conflictHandler) {
-        throw new NotSupportedException();
-    }
-
 	public void store(Object obj, int depth) {
         synchronized(lock()){
             checkClosed();
@@ -321,13 +309,6 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
     public ExtObjectContainer ext() {
         return (ExtObjectContainer)this;
     }
-
-    /**
-	 * @deprecated Use {@link #queryByExample(Object)} instead
-	 */
-	public ObjectSet get(Object template) throws Db4oIOException, DatabaseClosedException {
-		return queryByExample(template);
-	}
 
 	public ObjectSet queryByExample(Object template) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){
