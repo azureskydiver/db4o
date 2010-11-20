@@ -7,7 +7,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
-import com.db4o.reflect.*;
 
 /**
  * 
@@ -303,10 +302,6 @@ public class Db4o {
 		return ((Config4Impl)config).clientServerFactory().openServer(config, databaseFileName, port);
 	}
 
-	static Reflector reflector(){
-		return i_config.reflector();
-	}
-	
 	/**
      * returns the version name of the used db4o version.
      * <br><br>
