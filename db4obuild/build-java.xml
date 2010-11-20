@@ -1415,6 +1415,7 @@
 			timeout="3600000">
 			<classpath refid="tests.jdk1.2.cp" />
 			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}"/>
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<arg value="-withExceptions" />
 		</java>
 		
