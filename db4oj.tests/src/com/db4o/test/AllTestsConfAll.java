@@ -78,7 +78,6 @@ public class AllTestsConfAll extends TestSuite{
 			QueryDeleted.class,
             QueryForUnknownField.class,
 	        QueryNonExistant.class,
-            ReadAs.class,
             ReferenceThis.class,
 	        Refresh.class,
 	        Rename.class,

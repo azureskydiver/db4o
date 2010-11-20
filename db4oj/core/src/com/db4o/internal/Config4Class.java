@@ -223,19 +223,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         _config.put(PERSIST_STATIC_FIELD_VALUES_KEY, true);
     }
 
-    /**
-     * @deprecated
-     */
-    public void readAs(Object clazz) {
-	   Config4Impl configRef=config();
-       ReflectClass claxx = configRef.reflectorFor(clazz);
-       if (claxx == null) {
-           return;
-       }
-       _config.put(WRITE_AS_KEY,getName());
-       configRef.readAs().put(getName(), claxx.getName());
-   }
-
     public void rename(String newName) {
         config().rename(Renames.forClass(getName(), newName));
         setName(newName);
