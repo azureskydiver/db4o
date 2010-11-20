@@ -11,11 +11,8 @@ import db4ounit.extensions.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	
-	/**
-	 * @deprecated using deprecated api
-	 */
 	protected void configure(Configuration config) {
-		config.generateUUIDs(Integer.MAX_VALUE);
+		config.generateUUIDs(ConfigScope.GLOBALLY);
 	}
 
 	public static void main(String[] args) {

@@ -410,34 +410,10 @@ public interface Configuration {
     /**
      * configures db4o to generate UUIDs for stored objects.
      * 
-     * @param setting one of the following values:<br>
-     * -1 - off<br>
-     * 1 - configure classes individually<br>
-     * Integer.MAX_Value - on for all classes<br><br>
-     * This setting should be used when the database is first created.
-     * @deprecated Use {@link #generateUUIDs(ConfigScope)} instead.
-     */
-    public void generateUUIDs(int setting);
-
-    /**
-     * configures db4o to generate UUIDs for stored objects.
-     * 
      * This setting should be used when the database is first created.<br><br>
      * @param setting the scope for UUID generation: disabled, generate for all classes, or configure individually
      */
     public void generateUUIDs(ConfigScope setting);
-
-    /**
-     * configures db4o to generate version numbers for stored objects.
-     * 
-     * @param setting one of the following values:<br>
-     * -1 - off<br>
-     * 1 - configure classes individually<br>
-     * Integer.MAX_Value - on for all classes<br><br>
-     * This setting should be used when the database is first created.
-     * @deprecated Use {@link #generateVersionNumbers(ConfigScope)} instead.
-     */
-    public void generateVersionNumbers(int setting);
 
     /**
      * configures db4o to generate version numbers for stored objects.

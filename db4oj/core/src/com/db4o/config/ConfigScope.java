@@ -65,19 +65,6 @@ public final class ConfigScope implements Serializable {
 				return defaultValue.definiteYes();
 		}
 	}
-
-	/**
-	 * @deprecated
-	 */
-	public static ConfigScope forID(int id) {
-		switch(id) {
-			case DISABLED_ID:
-				return DISABLED;
-			case INDIVIDUALLY_ID:
-				return INDIVIDUALLY;
-		}
-		return GLOBALLY;
-	}
 	
 	public boolean equals(Object obj) {
 		if(this==obj) {

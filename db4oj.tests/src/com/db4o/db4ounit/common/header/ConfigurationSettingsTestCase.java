@@ -17,17 +17,17 @@ public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase
 	 */
 	public void testChangingUuidSettings() throws Exception {
 
-		fixture().config().generateUUIDs(0);
+		fixture().config().generateUUIDs(ConfigScope.GLOBALLY);
 
 		reopen();
 
 		Assert.areEqual(ConfigScope.GLOBALLY, generateUUIDs());
 
-		db().configure().generateUUIDs(-1);
+		db().configure().generateUUIDs(ConfigScope.DISABLED);
 
 		Assert.areEqual(ConfigScope.DISABLED, generateUUIDs());
 
-		fixture().config().generateUUIDs(0);
+		fixture().config().generateUUIDs(ConfigScope.GLOBALLY);
 
 		reopen();
 

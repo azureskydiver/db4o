@@ -3,13 +3,14 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 
 public class ExtMethods {
 	
     public void configure(){
-        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+        Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY);
+        Db4o.configure().generateVersionNumbers(ConfigScope.GLOBALLY);
     }
 
 	public void test(){

@@ -5,6 +5,7 @@ package com.db4o.test.jdk5;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 
@@ -16,8 +17,8 @@ public class Jdk5EnumTest {
 	private final static int NUMRUNS=1;
     
     public void configure(){
-        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+        Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY);
+        Db4o.configure().generateVersionNumbers(ConfigScope.GLOBALLY);
     }
 
     public void testSingleStoreRetrieve() {     	

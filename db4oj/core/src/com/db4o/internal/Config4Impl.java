@@ -457,22 +457,8 @@ public final class Config4Impl implements Configuration, DeepClone,
     	return (FreespaceFiller) _config.get(FREESPACE_FILLER_KEY);
     }
     
-    /**
-     * @deprecated Use {@link #generateUUIDs(ConfigScope)} instead.
-     */
-    public void generateUUIDs(int setting) {
-        generateUUIDs(ConfigScope.forID(setting));
-    }
-
 	public void generateUUIDs(ConfigScope scope) {
         _config.put(GENERATE_UUIDS_KEY,scope);
-    }
-
-    /**
-     * @deprecated Use {@link #generateVersionNumbers(ConfigScope)} instead.
-     */
-    public void generateVersionNumbers(int setting) {
-        generateVersionNumbers(ConfigScope.forID(setting));
     }
 
     public void generateVersionNumbers(ConfigScope scope) {
