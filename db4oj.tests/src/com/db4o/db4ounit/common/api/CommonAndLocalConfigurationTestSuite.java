@@ -105,8 +105,6 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			
 			// TODO: test reflectWith()
 			
-			// TODO: test refreshClasses()
-			
 			// TODO: this probably won't sharpen :/
 			PrintStream outStream = System.out;
 			common.outStream(outStream);

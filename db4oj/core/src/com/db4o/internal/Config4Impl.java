@@ -626,13 +626,6 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(BLOB_PATH_KEY,path);
     }
 
-    /**
-     * @deprecated
-     */
-    public void setClassLoader(Object classLoader) {
-        reflectWith(Platform4.createReflector(classLoader));
-    }
-
     public void setMessageRecipient(MessageRecipient messageRecipient) {
     	_config.put(MESSAGE_RECIPIENT_KEY,messageRecipient);
     }

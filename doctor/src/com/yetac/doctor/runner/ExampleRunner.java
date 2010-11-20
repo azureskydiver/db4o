@@ -16,6 +16,7 @@ public class ExampleRunner {
     private final Class db4oClientServerClass;
     private final Class objectContainerClass;
     private final Class objectServerClass;
+    private final Class platform4Class;
     
     private Map sig2exec;
     
@@ -25,7 +26,9 @@ public class ExampleRunner {
         this.db4oClass = classLoader.loadClass("com.db4o.Db4o");
         this.db4oClientServerClass = classLoader.loadClass("com.db4o.cs.Db4oClientServer");
         this.objectContainerClass = classLoader.loadClass("com.db4o.ObjectContainer");
-        this.objectServerClass = classLoader.loadClass("com.db4o.ObjectServer");
+        this.objectServerClass = classLoader.loadClass("com.db4o.ObjectServer");        
+        this.platform4Class = classLoader.loadClass("com.db4o.internal.Platform4");
+        
         setupExecutors();
     }
 
@@ -120,26 +123,39 @@ public class ExampleRunner {
     }
 
     private abstract class Executor {
-        public void execute(Method exampleMethod) throws Exception{
+		public void execute(Method exampleMethod) throws Exception{
             configure();
             executeInternal(exampleMethod);
         }
         
-        // TODO: setCL() is deprecated, replace with reflectWith() call
         private void configure() throws Exception {
             try {
 				Object configuration = applyMethod(db4oClass, "configure", db4oClass, new Class[] {}, new Object[]{});
 				Class configurationClass = classLoader.loadClass("com.db4o.config.Configuration");
-                applyMethod(configurationClass, "setClassLoader", configuration, new Class[] { Object.class }, new Object[] { classLoader });
+				
+				configureReflector(configurationClass, configuration, classLoader);
+				
                 applyMethod(configurationClass, "allowVersionUpdates", configuration, new Class[] { boolean.class }, new Object[] { new Boolean(true)});
 			} catch (Exception exc) {
 				exc.printStackTrace();
 				throw exc;
 			}
         }
+        
+		public void configureReflector(Class configClass, Object config, Object classLoader) throws Exception {
+			Object reflector = callStaticMethod(platform4Class, "createReflector", new Class[] {Object.class}, new Object[] { classLoader } );
+			Class reflectorClass = Class.forName("com.db4o.reflect.Reflector");
+			applyMethod(configClass, "reflectWith", config, new Class[] { reflectorClass }, new Object[] { reflector });
+		}
 
-        protected Object applyMethod(Class clazz,String methodName,Object target,Class[] argtypes,Object[] params) throws Exception {
-            Method method = clazz.getMethod(methodName,argtypes);
+        private Object callStaticMethod(Class classClass, String methodName, Class[] argTypes, Object[] params) throws Exception  {
+			Method method = classClass.getDeclaredMethod(methodName, argTypes);
+			method.setAccessible(true);
+        	return method.invoke(null, params);
+		}
+
+		protected Object applyMethod(Class clazz,String methodName,Object target,Class[] argtypes,Object[] params) throws Exception {
+            Method method = clazz.getMethod(methodName, argtypes);
             return method.invoke(target,params);
         }
         
