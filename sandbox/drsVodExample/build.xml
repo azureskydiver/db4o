@@ -4,7 +4,7 @@
 	<property file="machine.properties" />
 	
 	<target name="init" >
-		<copy file="src/versant.properties" todir="bin" />
+		<copy file="src/versant.properties" todir="bin" overwrite="true" />
 		<taskdef resource="versant.tasks">
 			<classpath>
 				<fileset dir="${dir.versant.lib}" includes="**/*.jar"/>
