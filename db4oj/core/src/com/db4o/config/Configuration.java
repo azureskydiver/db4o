@@ -390,18 +390,6 @@ public interface Configuration {
      */
     public void exceptionsOnNotStorable(boolean flag);
     
-    
-    /**
-     * configuration setting to turn file buffer flushing off.
-     * <br><br>
-     * This configuration setting is no longer in use.
-     * To tune db4o performance at the cost of a higher risc of database
-     * file corruption in case of abnormal session terminations, please 
-     * use a {@link NonFlushingStorage}.
-     * @deprecated Please use a {@link NonFlushingStorage} instead.
-     */
-    public void flushFileBuffers(boolean flag);
-    
     /**
      * returns the freespace configuration interface.
      */

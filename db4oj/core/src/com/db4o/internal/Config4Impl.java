@@ -438,13 +438,6 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(EXCEPTIONS_ON_NOT_STORABLE_KEY,flag);
     }
     
-    /**  
-     * @deprecated Please use a {@link NonFlushingStorage} instead.
-     */
-    public void flushFileBuffers(boolean flag){
-        // ignore
-    }
-
     public FreespaceConfiguration freespace() {
         return this;
     }
