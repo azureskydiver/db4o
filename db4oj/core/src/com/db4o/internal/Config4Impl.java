@@ -667,13 +667,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_config.put(TIMEOUT_SERVER_SOCKET_KEY,milliseconds);
     }
 
-    /**
-     * @deprecated
-     */
-    public void unicode(boolean unicodeOn) {
-    	// do nothing
-    }
-
     public void updateDepth(int depth) {
     	if(depth < 0) {
     		throw new IllegalArgumentException("update depth must not be negative");
