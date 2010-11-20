@@ -78,10 +78,6 @@ public class MockEmbedded implements EmbeddedObjectContainer {
 		throw new NotImplementedException();
 	}
 
-	public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
-		throw new NotImplementedException();
-	}
-
 	public void store(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
 		throw new NotImplementedException();
 	}

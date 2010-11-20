@@ -355,19 +355,6 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @return the {@link ReplicationProcess} interface for this replication process.
      */
     public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler);
-    
-    
-    /**
-	 * deep update interface to store or update objects.
-	 * <br><br>In addition to the normal storage interface, 
-	 * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
-	 * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
-	 * @param obj the object to be stored or updated.
-	 * @param depth the depth to which the object is to be updated
-	 * @see com.db4o.ObjectContainer#set
-	 * @deprecated Use {@link #store(Object,int)} instead
-	 */
-	public void set (Object obj, int depth);
 
 	/**
      * deep update interface to store or update objects.

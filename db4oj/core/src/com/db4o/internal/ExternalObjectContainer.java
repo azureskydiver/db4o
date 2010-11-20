@@ -57,13 +57,6 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
         return this;
     }
     
-    /**
-	 * @deprecated Use {@link #queryByExample(Object)} instead
-	 */
-	public final ObjectSet get(Object template) throws DatabaseClosedException {
-		return queryByExample(template);
-	}
-
 	public final ObjectSet queryByExample(Object template) throws DatabaseClosedException {
         return queryByExample(null, template);
     }
@@ -128,26 +121,10 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
         rollback(null);
     }
     
-    /**
-	 * @deprecated Use {@link #store(Object)} instead
-	 */
-	public final void set(Object obj) 
-	    throws DatabaseClosedException, DatabaseReadOnlyException {
-			store(obj);
-		}
-
 	public final void store(Object obj) 
         throws DatabaseClosedException, DatabaseReadOnlyException {
         store(obj, Const4.UNSPECIFIED);
     }
-
-    /**
-	 * @deprecated Use {@link #store(Object,int)} instead
-	 */
-	public final void set(Object obj, int depth) 
-	    throws DatabaseClosedException, DatabaseReadOnlyException {
-			store(obj, depth);
-		}
 
 	public final void store(Object obj, int depth) 
         throws DatabaseClosedException, DatabaseReadOnlyException {

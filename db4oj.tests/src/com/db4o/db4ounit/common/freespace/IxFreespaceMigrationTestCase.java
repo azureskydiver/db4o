@@ -15,11 +15,11 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 		config.freespace().useIndexSystem();
 	}
 	
-	protected void store(ExtObjectContainer objectContainer) {
+	protected void store(ObjectContainerAdapter objectContainer) {
 		Item nextItem = null;
 		for (int i = 9; i >= 0; i--) {
 			Item storedItem = new Item("item" + i, nextItem);
-			storeObject(objectContainer, storedItem);
+			objectContainer.store(storedItem);
 			nextItem = storedItem;
 		}
 		objectContainer.commit();
@@ -31,8 +31,11 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 		objectContainer.commit();
 	}
 
-	private Item queryForItem(ExtObjectContainer objectContainer, int n) {
-		Query q = objectContainer.query();
+	private Item queryForItem(ObjectContainerAdapter objectContainer, int n) {
+		return queryForItem(objectContainer.query(), n);
+	}
+
+	private Item queryForItem(Query q, int n) {
 		q.constrain(Item.class);
 		q.descend("_name").constrain("item" + n);
 		return (Item)q.execute().next();
@@ -40,7 +43,7 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 	
 	protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {
 		assertItemCount(objectContainer, 5);
-		Item item = queryForItem(objectContainer, 5);
+		Item item = queryForItem(objectContainer.query(), 5);
 		for (int i = 5; i < 10; i++) {
 			Assert.areEqual("item" + i, item._name);
 			item = item._next;

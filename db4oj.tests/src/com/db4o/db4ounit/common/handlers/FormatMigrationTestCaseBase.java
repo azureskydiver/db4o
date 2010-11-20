@@ -94,7 +94,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		if(! File4.exists(testFileName)){
 		    System.out.println("Version upgrade check failed. File not found:" + testFileName);
 		    
-		    
 		    // FIXME: The following fails the CC build since not all files are there on .NET.
 		    //        Change back when we have all files.
 		    // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
@@ -200,8 +199,11 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
             File4.delete(file);
         }
         ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
+        
+        ObjectContainerAdapter adapter = ObjectContainerAdapterFactory.forVersion(db4oMajorVersion(), db4oMinorVersion()).forContainer(objectContainer);
+        
         try {
-            store(objectContainer);
+            store(adapter);
         } finally {
             objectContainer.close();
         }
@@ -333,14 +335,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         return Path4.combine(databasePath(), fileNamePrefix() + versionName.replace(' ', '_'));
     }
 
-    protected abstract void store(ExtObjectContainer objectContainer);
-    
-    protected void storeObject(ExtObjectContainer objectContainer, Object obj){
-    	// code MUST use the deprecated ObjectContainer#set() API here
-    	// instead of ObjectContainer#store()
-    	// because it will be run against old db4o versions
-    	objectContainer.set(obj);
-    }
+    protected abstract void store(ObjectContainerAdapter objectContainer);   
     
     protected void update(ExtObjectContainer objectContainer) {
         // Override to do updates also
@@ -349,5 +344,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     protected String[] versionNames(){
         return new String[] { Db4o.version().substring(5) };
     }
-    
+
 }
+

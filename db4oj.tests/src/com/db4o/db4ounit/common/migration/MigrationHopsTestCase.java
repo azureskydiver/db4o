@@ -5,7 +5,10 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
+import com.db4o.db4ounit.common.handlers.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.query.*;
 import com.db4o.reflect.generic.*;
 
 import db4ounit.*;
@@ -30,9 +33,12 @@ public class MigrationHopsTestCase extends TestWithTempFile implements OptOutWor
 	
 	public static class Tester {
 		
-		public void createDatabase(String filename) {
+		public void createDatabase(final String filename) {
 			withContainer(filename, new Function4<ObjectContainer, Object>() { public Object apply(ObjectContainer container) {
-				container.set(new Item(Db4o.version().substring(5)));
+				ObjectContainerAdapter adapter = ObjectContainerAdapterFactory.forVersion(1, 1);
+				adapter.forContainer((ExtObjectContainer) container);
+				adapter.store(new Item(Db4o.version().substring(5)));
+				
 				return null;
 			}});
 		}
@@ -44,7 +50,7 @@ public class MigrationHopsTestCase extends TestWithTempFile implements OptOutWor
 		}
 
 		public String currentVersion(ObjectContainer container) {
-	        return ((Item)container.get(Item.class).next()).version;
+	        return ((Item)container.query(Item.class).next()).version;
         }
 
 		private static <T> T withContainer(String filename, final Function4<ObjectContainer, T> block) {
@@ -72,7 +78,11 @@ public class MigrationHopsTestCase extends TestWithTempFile implements OptOutWor
 		
 		final EmbeddedObjectContainer container = Db4oEmbedded.openFile(config, tempFile());
 		try {
-			Assert.areEqual(originalEnv.version(), ((GenericObject)container.get(Item.class).next()).get(0));
+			Query query = container.query();
+			query.constrain(Item.class);
+			
+			Object item = query.execute().get(0);
+			Assert.areEqual(originalEnv.version(), ((GenericObject)item).get(0));
 		} finally {
 			container.close();
 		}

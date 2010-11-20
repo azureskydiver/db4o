@@ -28,7 +28,6 @@ import com.db4o.types.*;
  * @sharpen.partial
  */
 public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec, QLinable   {
-
     
     protected final ObjectContainerBase _server;
     
@@ -217,13 +216,6 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
         throw new NotSupportedException();
     }
 
-    /**
-	 * @deprecated Use {@link #store(Object,int)} instead
-	 */
-	public void set(Object obj, int depth) {
-		store(obj, depth);
-	}
-
 	public void store(Object obj, int depth) {
         synchronized(lock()){
             checkClosed();
@@ -380,13 +372,6 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
             _server.rollback(_transaction);
         }
     }
-
-    /**
-	 * @deprecated Use {@link #store(Object)} instead
-	 */
-	public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
-		store(obj);
-	}
 
 	public void store(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
         synchronized(lock()){

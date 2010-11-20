@@ -7,6 +7,7 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 import db4ounit.*;
@@ -40,10 +41,9 @@ public class KnownClassesMigrationTestCase extends FormatMigrationTestCaseBase {
 		return "KnownClasses";
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	protected void store(ExtObjectContainer objectContainer) {
-		objectContainer.set(new Item(new LinkedList()));
+	protected void store(ObjectContainerAdapter objectContainer) {
+		objectContainer.store(new Item(new LinkedList()));
 	}
 	
 	private static class Item {

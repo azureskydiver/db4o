@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 
 public class DeactivateTestCase extends AbstractDb4oTestCase  {
 	protected void store() throws Exception {
-		db().set(new Item("foo", new Item("bar", null)));
+		db().store(new Item("foo", new Item("bar", null)));
 	}
 	
 	public void test() {		
