@@ -628,13 +628,6 @@ public interface Configuration {
      * (reflector class must be available)<br><br>
      */
     public void reflectWith(Reflector reflector);
-
-    /**
-     * This method is no longer supported and will be removed.
-     * 
-     * @deprecated 
-     */
-    public void refreshClasses();
     
     /**
      * tuning feature only: reserves a number of bytes in database files.
@@ -668,15 +661,6 @@ public interface Configuration {
      * @param path the path to be used
      */
     public void setBlobPath(String path) throws IOException;
-
-    /**
-     * configures db4o to use a custom ClassLoader.
-     * <br><br>
-     * @param classLoader the ClassLoader to be used
-     * @deprecated use reflectWith(new JdkReflector(classLoader)) instead
-     */
-    public void setClassLoader(Object classLoader);
-
 
     /**
      * Assigns a {@link java.io.PrintStream PrintStream} where db4o is to print its event messages.
