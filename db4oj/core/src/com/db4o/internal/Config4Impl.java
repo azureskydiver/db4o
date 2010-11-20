@@ -391,18 +391,11 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(DISABLE_COMMIT_RECOVERY_KEY,true);
     }
 
-    /**
-     * @deprecated
-     */
-    public void discardFreeSpace(int bytes) {
-    	if(bytes < 0){
-    		throw new IllegalArgumentException();
-    	}
-        _config.put(DISCARD_FREESPACE_KEY,bytes);
-    }
-    
     public void discardSmallerThan(int byteCount) {
-        discardFreeSpace(byteCount);
+        if(byteCount < 0){
+			throw new IllegalArgumentException();
+		}
+		_config.put(DISCARD_FREESPACE_KEY,byteCount);
     }
 
     /**
