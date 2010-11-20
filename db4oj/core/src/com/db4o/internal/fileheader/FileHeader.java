@@ -15,7 +15,6 @@ public abstract class FileHeader {
     public static final int TRANSACTION_POINTER_LENGTH = Const4.INT_LENGTH * 2;
     
 	private static final FileHeader[] AVAILABLE_FILE_HEADERS = new FileHeader[]{
-        new FileHeader0(null),
         new FileHeader1(),
         new FileHeader2(),
     };
