@@ -333,25 +333,6 @@ public interface Configuration {
     public void disableCommitRecovery();
     
     /**
-     * tuning feature: configures the minimum size of free space slots in the database file 
-     * that are to be reused.
-     * <br><br>When objects are updated or deleted, the space previously occupied in the
-     * database file is marked as "free", so it can be reused. db4o maintains two lists
-     * in RAM, sorted by address and by size. Adjacent entries are merged. After a large
-     * number of updates or deletes have been executed, the lists can become large, causing
-     * RAM consumption and performance loss for maintenance. With this method you can 
-     * specify an upper bound for the byte slot size to discard. 
-     * <br><br>Pass <code>Integer.MAX_VALUE</code> to this method to discard all free slots for
-     * the best possible startup time.<br><br>
-     * The downside of setting this value: Database files will necessarily grow faster. 
-     * <br><br>Default value:<br>
-     * <code>0</code> all space is reused
-     * @param byteCount Slots with this size or smaller will be lost.
-     * @deprecated please call Db4o.configure().freespace().discardSmallerThan()
-     */
-    public void discardFreeSpace(int byteCount);
-
-    /**
      * configures the use of encryption.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
@@ -367,7 +348,6 @@ public interface Configuration {
      * @see #password
      */
     public void encrypt(boolean flag) throws GlobalOnlyConfigException;
-    
     
     /**
      * configures whether Exceptions are to be thrown, if objects can not be stored.
