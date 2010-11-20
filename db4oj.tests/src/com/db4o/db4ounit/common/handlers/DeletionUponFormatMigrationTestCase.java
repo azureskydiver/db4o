@@ -132,12 +132,12 @@ public class DeletionUponFormatMigrationTestCase extends FormatMigrationTestCase
 	}
 
 	@Override
-	protected void store(ExtObjectContainer objectContainer) {
+	protected void store(ObjectContainerAdapter objectContainer) {
 		Item item1 = new Item(ID_TO_BE_DELETED, new ChildItem(CHILD_TO_BE_DELETE), itemsToKeep());
-		objectContainer.set(item1, 10);
+		objectContainer.store(item1, 10);
 		
 		Item item2 = new Item(ID_TO_BE_KEPT, new ChildItem(CHILD_TO_BE_KEPT), item1);
-		objectContainer.set(item2, 10);
+		objectContainer.store(item2, 10);
 	}
 
 	private Item[] itemsToKeep() {

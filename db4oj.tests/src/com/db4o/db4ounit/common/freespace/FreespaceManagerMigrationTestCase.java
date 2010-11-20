@@ -103,7 +103,7 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
         return "freespace";
     }
 
-    protected void store(ExtObjectContainer objectContainer) {
+    protected void store(ObjectContainerAdapter objectContainer) {
        for( int i=0; i< 10; i++){
             StClass cls = new StClass();
             Vector v = new Vector(10);
@@ -111,7 +111,8 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
             v.add(STRING_ARRAY_DATA);
             cls.setId(i);
             cls.setVect(v);
-            objectContainer.set(cls);
+            
+            objectContainer.store(cls);
         }
     }
 

@@ -61,11 +61,11 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 		Assert.isNotNull(parentItem._children[1]);
 		objectContainer.delete(parentItem);
 		Assert.isFalse(_failed);
-		store(objectContainer);
+		
+		objectContainer.store(ParentItem.newTestInstance());
 	}
 
-	private Object retrieveInstance(ExtObjectContainer objectContainer,
-			Class clazz) {
+	private Object retrieveInstance(ExtObjectContainer objectContainer, Class clazz) {
 		return objectContainer.query(clazz).next();
 	}
 
@@ -73,8 +73,8 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 		return "migrate_cascadedelete_" ;
 	}
 
-	protected void store(ExtObjectContainer objectContainer) {
-		storeObject(objectContainer, ParentItem.newTestInstance());
+	protected void store(ObjectContainerAdapter objectContainer) {
+		objectContainer.store(ParentItem.newTestInstance());
 	}
 
 }

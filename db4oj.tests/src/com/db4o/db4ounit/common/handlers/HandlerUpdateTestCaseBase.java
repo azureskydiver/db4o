@@ -27,11 +27,11 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         return "migrate_" + typeName() + "_" ;
     }
     
-    protected void store(ExtObjectContainer objectContainer) {
+    protected void store(ObjectContainerAdapter objectContainer) {
         Holder holder = new Holder();
         holder._values = createValues();
         holder._arrays = createArrays();
-        storeObject(objectContainer, holder);
+        objectContainer.store(holder);
     }
     
     protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {

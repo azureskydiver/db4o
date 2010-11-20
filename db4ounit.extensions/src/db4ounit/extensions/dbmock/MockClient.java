@@ -134,10 +134,6 @@ public class MockClient implements ExtClient {
 		throw new NotImplementedException();
 	}
 
-	public void set(Object obj, int depth) {
-		throw new NotImplementedException();
-	}
-
 	public boolean setSemaphore(String name, int waitForAvailability) {
 		throw new NotImplementedException();
 	}
@@ -215,10 +211,6 @@ public class MockClient implements ExtClient {
 	}
 
 	public void rollback() throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException {
-		throw new NotImplementedException();
-	}
-
-	public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
 		throw new NotImplementedException();
 	}
 
