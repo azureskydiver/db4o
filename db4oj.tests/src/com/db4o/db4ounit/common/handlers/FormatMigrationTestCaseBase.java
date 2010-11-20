@@ -22,12 +22,9 @@ import db4ounit.extensions.fixtures.*;
  */
 public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData, OptOutMultiSession, OptOutWorkspaceIssue {
 	
-    private static final String HOST = "127.0.0.1";
-
     private static final String USERNAME = "db4o";
 
     private static final String PASSWORD = USERNAME;
-
     
     private String _db4oVersion;
     
