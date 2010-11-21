@@ -184,7 +184,7 @@ namespace OManager.BusinessLayer.Login
 						temprc = this;
 						temprc.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
 					}
-					container.Ext().Set(temprc, 5);
+					container.Ext().Store(temprc, 5);
 					container.Commit();
 					container = null;
 					Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
@@ -348,7 +348,7 @@ namespace OManager.BusinessLayer.Login
                     }
                     recQueries.m_queryList.Clear();
                     recQueries.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
-                    container.Ext().Set(recQueries, 5);   
+                    container.Ext().Store(recQueries, 5);   
                     container.Commit();
                 }
             }

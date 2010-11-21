@@ -94,7 +94,7 @@ namespace OManager.DataLayer.DemoDBCreation
                     c1.Character = '!';
                     c1.DecimalProp = 0.7M;
 
-                    objContainer.Set(c1);
+                    objContainer.Store(c1);
                     objContainer.Commit();
                 }
 
@@ -150,7 +150,7 @@ namespace OManager.DataLayer.DemoDBCreation
                     c1.Character = '(';
                     c1.DecimalProp = 0.4M;
 
-                    objContainer.Set(c1);
+                    objContainer.Store(c1);
                     objContainer.Commit();
                 }
                 catch { }

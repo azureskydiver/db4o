@@ -59,7 +59,7 @@ namespace OManager.DataLayer.Connection
                         l.Add(strToAdd);
                         groupSearchString.m_SearchStringList = l;
                         groupSearchString.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
-                        container.Set(groupSearchString);
+                        container.Store(groupSearchString);
                         container.Commit();
                         return; 
                     }
@@ -99,7 +99,7 @@ namespace OManager.DataLayer.Connection
                         CompareSearchStringTimestamps cmp = new CompareSearchStringTimestamps();
                         searchStringForConnection.Sort(cmp);
                         groupSearchString.m_SearchStringList = searchStringForConnection;
-                        container.Ext().Set(groupSearchString, 5);
+                        container.Ext().Store(groupSearchString, 5);
                         container.Commit();
 
                     }
@@ -134,7 +134,7 @@ namespace OManager.DataLayer.Connection
                         CompareSearchStringTimestamps cmp = new CompareSearchStringTimestamps();
                         searchStringForConnection.Sort(cmp);
                         groupSearchString.m_SearchStringList = searchStringForConnection;
-                        container.Ext().Set(groupSearchString, 5);
+                        container.Ext().Store(groupSearchString, 5);
                         container.Commit();
 
                     }
@@ -236,7 +236,7 @@ namespace OManager.DataLayer.Connection
                     }
                     grpSearchString.m_SearchStringList.Clear();
                     grpSearchString.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
-                    container.Ext().Set(grpSearchString, 5);  
+                    container.Ext().Store(grpSearchString, 5);  
                     container.Commit();
                 }
             }

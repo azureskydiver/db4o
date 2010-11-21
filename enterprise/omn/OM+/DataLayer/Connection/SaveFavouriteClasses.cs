@@ -57,7 +57,7 @@ namespace OManager.DataLayer.Connection
                         List<FavouriteFolder> lstFavfolder = new List<FavouriteFolder>();
                         favList.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();   
                         lstFavfolder.Add(favFolder);
-                        container.Set(favList);
+                        container.Store(favList);
                         container.Commit();
                         return;
                     }
@@ -92,7 +92,7 @@ namespace OManager.DataLayer.Connection
 
 
                     favList.lstFavFolder = lstFavFolder;
-                    container.Ext().Set(favList, 5);
+                    container.Ext().Store(favList, 5);
                     container.Commit();
 
 
@@ -130,7 +130,7 @@ namespace OManager.DataLayer.Connection
                     lstFavFolder.Remove(temp);
                     favList.lstFavFolder = lstFavFolder;
                     container.Delete(temp);
-                    container.Ext().Set(favList, 5);
+                    container.Ext().Store(favList, 5);
                     container.Commit();
                 }
             }
@@ -173,7 +173,7 @@ namespace OManager.DataLayer.Connection
                     temp.FolderName = newFavFolder.FolderName;
                     lstFavFolder.Add(temp);
                     favList.lstFavFolder = lstFavFolder;
-                    container.Ext().Set(favList, 5);
+                    container.Ext().Store(favList, 5);
                     container.Commit();
                 }
             }
@@ -294,7 +294,7 @@ namespace OManager.DataLayer.Connection
                     Fav.lstFavFolder.Clear();
                     Fav.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
                     container.Delete(Fav);
-                    container.Ext().Set(Fav, 5);
+                    container.Ext().Store(Fav, 5);
                     container.Commit();
                 }
             }
