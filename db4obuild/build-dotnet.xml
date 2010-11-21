@@ -481,6 +481,13 @@
 		</ant>
 	</target>
 	
+	<target name="build-omn35-standalone" depends="properties, configure-net35" unless="mono">
+			<ant antfile="build-omn.xml" target="build-omn" dir="${dir.build}">
+				<property name="svn.revision" value="${db4oj.svn.revision}" />
+				<property name="dir.base" value="${dir.working}" />
+			</ant>
+	</target>			
+	
 	<target name="prepare-csproject-optional" unless="skip.sharpen" >
         <copy-sharpened-sources dir="${dir.n.v6.optional}/Db4objects.Db4o/">
             <files>
