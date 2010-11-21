@@ -126,7 +126,7 @@ public interface FileConfiguration {
      * db4o uses an additional thread per open database file to prohibit
      * concurrent access to the same database file by different db4o
      * sessions in different VMs.<br><br>
-     * To improve performance and to lower ressource consumption, this
+     * To improve performance and to lower resource consumption, this
      * method provides the possibility to prevent the locking thread
      * from being started.<br><br><b>Caution!</b><br>If database file
      * locking is turned off, concurrent write access to the same
