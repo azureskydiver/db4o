@@ -2,6 +2,7 @@ package com.db4o.filestats;
 
 import java.util.*;
 
+@decaf.Ignore
 public class FileUsageStats {
 	private Map<String, ClassUsageStats> _classUsageStats = 
 		new TreeMap<String, ClassUsageStats>();

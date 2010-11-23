@@ -14,8 +14,8 @@ import com.db4o.internal.collections.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
-import com.db4o.internal.slots.*;
 
+@decaf.Ignore
 public class FileUsageStatsCollector {
 
 	private static interface MiscCollector {
