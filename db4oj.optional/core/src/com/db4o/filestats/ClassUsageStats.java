@@ -1,5 +1,6 @@
 package com.db4o.filestats;
 
+@decaf.Ignore
 public class ClassUsageStats {
 	private final String _className;
 	private final long _slotUsage;
