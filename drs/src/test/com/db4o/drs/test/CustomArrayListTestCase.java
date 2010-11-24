@@ -16,7 +16,7 @@ public class CustomArrayListTestCase extends DrsTestCase {
 		
 		replicateAll(a().provider(), b().provider());
 		
-		NamedList replicated = (NamedList)b().provider().getStoredObjects(NamedList.class).iterator().next();
+		NamedList replicated = (NamedList)b().provider().getStoredObjects(NamedList.class).get(0);
 		Assert.areEqual(original.name(), replicated.name());
 		CollectionAssert.areEqual(original, replicated);
 	}
