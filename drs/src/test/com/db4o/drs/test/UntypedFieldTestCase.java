@@ -105,7 +105,7 @@ public class UntypedFieldTestCase extends DrsTestCase {
 	private Object singleReplicatedInstance(Class klass) {
 		ObjectSet found = b().provider().getStoredObjects(klass);
 		Assert.areEqual(1, found.size());
-		return found.iterator().next();
+		return found.get(0);
 	}
 
 }
