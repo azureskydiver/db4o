@@ -79,7 +79,7 @@ public class VodEventTestCase extends VodProviderTestCaseBase {
 	}
 
 	private EventClient newEventClient() throws IOException {
-		EventClient client = EventProcessorImpl.newEventClient(_vod.eventConfiguration());
+		EventClient client = VodEventClient.newEventClient(_vod.eventConfiguration());
 		client.addExceptionListener (new LoggingExceptionListener());
 		return client;
 	}
