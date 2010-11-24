@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
+import com.db4o.foundation.*;
 import com.versant.event.*;
 
 public class VodEventClient {
@@ -13,7 +14,7 @@ public class VodEventClient {
 	private final EventClient _client;
 	
 	public VodEventClient(EventConfiguration eventConfiguration, ExceptionListener exceptionListener) {
-		_client = EventProcessorImpl.newEventClient(eventConfiguration);
+		_client = VodEventClient.newEventClient(eventConfiguration);
 	    _client.addExceptionListener(exceptionListener);
 	}
 	
@@ -55,6 +56,21 @@ public class VodEventClient {
 
 	public void shutdown() {
 		_client.shutdown();
+	}
+
+	public static EventClient newEventClient(EventConfiguration config)  {
+		IOException e = null;
+		for(int i=0;i<10;i++) {
+			try{
+				return new EventClient(config.serverHost,config.serverPort,config.clientHost,config.clientPort(),config.databaseName);
+			} catch (IOException ioException){
+				e = ioException;
+				Runtime4.sleepThrowsOnInterrupt(100);
+			}
+		}
+		System.err.println("Connection failed using\n" + config + "\nMake sure that " + VodDatabase.VED_DRIVER + " is running.");
+		EventProcessorImpl.unrecoverableExceptionOccurred(e);
+		return null;
 	}
 
 }
