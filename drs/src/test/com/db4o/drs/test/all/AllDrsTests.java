@@ -30,7 +30,10 @@ import db4ounit.*;
 public class AllDrsTests implements TestSuiteBuilder {
 	
 	public static void main(String[] args) {
-		new ConsoleTestRunner(new AllDrsTests()).run();
+		int errors = new ConsoleTestRunner(new AllDrsTests()).run();
+		if (errors != 0) {
+			System.exit(errors);
+		}
 	}
 
 	public Iterator4 iterator() {
