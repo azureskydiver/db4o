@@ -13,6 +13,8 @@ public class FileUsageStats {
 	private final long _classMetadata;
 	private final long _freespaceUsage;
 	
+	MergingSlotMap _slots;
+	
 	public FileUsageStats(long fileSize, long fileHeader, long idSystem, long freespace, long classMetadata, long freespaceUsage) {
 		_fileSize = fileSize;
 		_fileHeader = fileHeader;
