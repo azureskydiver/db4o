@@ -82,7 +82,7 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 	}
 
 	public int totalFreespace() {
-		return _delegate.totalFreespace();
+		return _blockConverter.blocksToBytes(_delegate.totalFreespace());
 	}
 
 	public void traverse(final Visitor4 visitor) {
