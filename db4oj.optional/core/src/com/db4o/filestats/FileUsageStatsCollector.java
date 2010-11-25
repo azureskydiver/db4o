@@ -53,10 +53,13 @@ public class FileUsageStatsCollector {
 	
 	private final LocalObjectContainer _db;
 	private MergingSlotMap _slots;
+	private BlockConverter _blockConverter;
 	
 	public FileUsageStatsCollector(ObjectContainer db) {
 		_db = (LocalObjectContainer) db;
 		_slots = new MergingSlotMap();
+		byte blockSize = _db.blockSize();
+		_blockConverter = blockSize > 1 ? new BlockSizeBlockConverter(blockSize) : new DisabledBlockConverter();
 	}
 
 	public FileUsageStats collectStats() {
@@ -98,7 +101,6 @@ public class FileUsageStatsCollector {
 		long fieldIndexUsage = fieldIndexUsage(clazz);
 		InstanceUsage instanceUsage = classSlotUsage(clazz);
 		long totalSlotUsage = instanceUsage.slotUsage;
-		System.err.println(clazz.getName() + ": " + totalSlotUsage +", addr: " + slot(clazz.getID()));
 		long ownSlotUsage = totalSlotUsage - subClassSlotUsage;
 		ClassUsageStats classStats = new ClassUsageStats(clazz.getName(), ownSlotUsage, classIndexUsage, fieldIndexUsage, instanceUsage.miscUsage);
 		stats.addClassStats(classStats);
@@ -226,9 +228,9 @@ public class FileUsageStatsCollector {
 	
 	private long fileHeaderUsage() {
 		int headerLength = _db.getFileHeader().length();
-		int usage = headerLength;
+		int usage = _blockConverter.blockAlignedBytes(headerLength);
 		FileHeaderVariablePart2 variablePart = (FileHeaderVariablePart2)fieldValue(_db.getFileHeader(), "_variablePart");
-		usage += variablePart.marshalledLength();
+		usage += _blockConverter.blockAlignedBytes(variablePart.marshalledLength());
 		_slots.add(new Slot(0, headerLength));
 		_slots.add(new Slot(variablePart.address(), variablePart.marshalledLength()));
 		return usage;
