@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.db4o.internal.slots.*;
 
+@decaf.Ignore
 public class MergingSlotMap {
 
 	private TreeSet<Slot> _slots = new TreeSet<Slot>(new Comparator<Slot>() {
