@@ -3,10 +3,12 @@ package com.db4o.devtools.ant;
 import java.io.*;
 
 import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
 import javax.xml.xpath.*;
 
 import org.w3c.dom.*;
-import org.w3c.dom.ls.*;
 import org.xml.sax.*;
 
 public abstract class CSharpProject {
@@ -86,7 +88,7 @@ public abstract class CSharpProject {
 		// write to temp file first to avoid problem with file
 		// being locked
 		final File tempFile = File.createTempFile("vsp", null);
-		writeToURI(tempFile.toURI().normalize().toString());
+		writeTo(tempFile.getAbsolutePath());
 		copyFile(tempFile, file);
 	}
 
@@ -109,9 +111,18 @@ public abstract class CSharpProject {
 		}
 	}
 
-	private void writeToURI(String uri) {
-		LSSerializer serializer = ((DOMImplementationLS)_document.getImplementation()).createLSSerializer();		
-		serializer.writeToURI(_document, uri);
+	private void writeTo(String uri) throws IOException {
+		try {
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+			StreamResult result = new StreamResult(new FileWriter(new File(uri)));
+			transformer.transform(new DOMSource(_document), result);
+			result.getWriter().close();
+			
+		} catch (TransformerException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	protected abstract Element resetFilesContainerElement() throws Exception;
