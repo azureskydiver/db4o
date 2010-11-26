@@ -4,6 +4,7 @@ using System.IO;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Drs;
+using Db4objects.Drs.Db4o;
 
 namespace Db4oDoc.Drs.Db4o
 {
@@ -33,7 +34,14 @@ namespace Db4oDoc.Drs.Db4o
             //#example: Prepare unidirectional replication
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession 
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
             // set the replication-direction from the desktop database to the mobile database. 
             replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB());
             //#end example
@@ -61,7 +69,14 @@ namespace Db4oDoc.Drs.Db4o
             // #example: Prepare bidirectional replication
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
             // #end example
 
             //#example: Bidirectional replication
@@ -96,7 +111,14 @@ namespace Db4oDoc.Drs.Db4o
 
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
 
             // #example: Selective replication by class
             IObjectSet changesOnDesktop = 
@@ -124,7 +146,14 @@ namespace Db4oDoc.Drs.Db4o
 
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
 
             // #example: Selective replication with a condition
             IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
@@ -156,7 +185,14 @@ namespace Db4oDoc.Drs.Db4o
 
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
 
             // #example: Selective replication with a query
             IList<Car> changesOnDesktop = 
@@ -191,8 +227,15 @@ namespace Db4oDoc.Drs.Db4o
 
             PrintCars(mobileDatabase);
 
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
             // #example: Replicate deletions
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+            IReplicationSession replicationSession
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
+
             replicationSession.ReplicateDeletions(typeof (Car));
             replicationSession.Commit();
             // #end example
@@ -204,7 +247,13 @@ namespace Db4oDoc.Drs.Db4o
 
         private static void Replicate(IObjectContainer desktopDatabase, IObjectContainer mobileDatabase)
         {
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+            IReplicationProvider dektopReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileReplicationProvider
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
             ReplicateChanges(replicationSession, replicationSession.ProviderA());
             ReplicateChanges(replicationSession, replicationSession.ProviderB());
             replicationSession.Commit();

@@ -1,6 +1,7 @@
 Imports System
 Imports System.Collections.Generic
 Imports System.IO
+Imports Db4objects.Drs.Db4o
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Drs
@@ -29,7 +30,14 @@ Namespace Db4oDoc.Drs.Db4o
             '#example: Prepare unidirectional replication
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-            Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
             ' set the replication-direction from the desktop database to the mobile database. 
             replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB())
             '#end example
@@ -55,7 +63,14 @@ Namespace Db4oDoc.Drs.Db4o
             ' #example: Prepare bidirectional replication
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-            Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
             ' #end example
 
             '#example: Bidirectional replication
@@ -89,7 +104,14 @@ Namespace Db4oDoc.Drs.Db4o
 
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-            Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
 
             ' #example: Selective replication by class
             Dim changesOnDesktop As IObjectSet = _
@@ -115,7 +137,14 @@ Namespace Db4oDoc.Drs.Db4o
 
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-            Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
 
             ' #example: Selective replication with a condition
             Dim changesOnDesktop As IObjectSet = _
@@ -144,7 +173,14 @@ Namespace Db4oDoc.Drs.Db4o
 
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-            Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
 
             ' #example: Selective replication with a query
             Dim changesOnDesktop As IList(Of Car) = _
@@ -190,7 +226,13 @@ Namespace Db4oDoc.Drs.Db4o
         End Sub
 
         Private Shared Sub Replicate(ByVal desktopDatabase As IObjectContainer, ByVal mobileDatabase As IObjectContainer)
-            Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
             ReplicateChanges(replicationSession, replicationSession.ProviderA())
             ReplicateChanges(replicationSession, replicationSession.ProviderB())
             replicationSession.Commit()

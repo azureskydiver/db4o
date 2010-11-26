@@ -4,12 +4,26 @@
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
 Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+Dim dektopReplicationProvider As IReplicationProvider _
+    = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+Dim mobileReplicationProvider As IReplicationProvider _
+    = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+Dim replicationSession As IReplicationSession _
+    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
 ' set the replication-direction from the desktop database to the mobile database. 
 replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB())</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
 Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-Dim replicationSession As IReplicationSession = Replication.Begin(desktopDatabase, mobileDatabase)
+
+Dim dektopReplicationProvider As IReplicationProvider _
+    = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+Dim mobileReplicationProvider As IReplicationProvider _
+    = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
+Dim replicationSession As IReplicationSession _
+    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider)
 ' set the replication-direction from the desktop database to the mobile database. 
 replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB())</pre>
 		<div class="codesnippet-meta">
