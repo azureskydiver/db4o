@@ -1,5 +1,7 @@
 package com.db4o.drs.test;
 
+import java.util.*;
+
 import com.db4o.drs.test.data.*;
 
 import db4ounit.*;
@@ -16,7 +18,9 @@ public class CustomArrayListTestCase extends DrsTestCase {
 		
 		replicateAll(a().provider(), b().provider());
 		
-		NamedList replicated = (NamedList)b().provider().getStoredObjects(NamedList.class).get(0);
+		Iterator iterator = b().provider().getStoredObjects(NamedList.class).iterator();
+		Assert.isTrue(iterator.hasNext());
+		NamedList replicated = (NamedList)iterator.next();
 		Assert.areEqual(original.name(), replicated.name());
 		CollectionAssert.areEqual(original, replicated);
 	}
