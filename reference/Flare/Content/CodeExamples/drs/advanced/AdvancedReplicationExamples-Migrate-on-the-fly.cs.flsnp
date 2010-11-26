@@ -2,7 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+        <pre class="prettyprint" xml:space="preserve">IReplicationSession replicationSession = Replication.Begin(desktopRelicationPartner, mobileRelicationPartner);
 IList&lt;Car&gt; initialReplication = desktopDatabase.Query&lt;Car&gt;();
 
 foreach (Car changedObjectOnDesktop in initialReplication)

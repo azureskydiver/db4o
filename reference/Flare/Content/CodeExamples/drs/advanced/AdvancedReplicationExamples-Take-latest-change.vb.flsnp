@@ -4,12 +4,14 @@
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim replicationListener As IReplicationEventListener = _
     New TakeLatestModificationOnConflictListener()
-Dim replicationSession As IReplicationSession = _
-    Replication.Begin(desktopDatabase, mobileDatabase, replicationListener)</pre>
+
+Dim replicationSession As IReplicationSession _
+    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, replicationListener)</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim replicationListener As IReplicationEventListener = _
     New TakeLatestModificationOnConflictListener()
-Dim replicationSession As IReplicationSession = _
-    Replication.Begin(desktopDatabase, mobileDatabase, replicationListener)</pre>
+
+Dim replicationSession As IReplicationSession _
+    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, replicationListener)</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.vb: Take latest change
 			<div class="codedownload">

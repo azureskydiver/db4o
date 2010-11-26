@@ -1,6 +1,7 @@
 Imports System
 Imports System.Collections.Generic
 Imports System.IO
+Imports Db4objects.Drs.Db4o
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.CS
@@ -37,10 +38,16 @@ Namespace Db4oDoc.Drs.Advanced
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
 
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
             ' #example: Register a listener for information about the replication process
             Dim logReplicationListener As IReplicationEventListener = New LogReplicationListener()
-            Dim replicationSession As IReplicationSession = _
-                Replication.Begin(desktopDatabase, mobileDatabase, logReplicationListener)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, logReplicationListener)
             ' #end example
             ReplicateBidirectional(replicationSession)
 
@@ -61,10 +68,16 @@ Namespace Db4oDoc.Drs.Advanced
             UpdateObject(desktopDatabase)
             UpdateObject(mobileDatabase)
 
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
             ' #example: Deal with conflicts
             Dim replicationListener As IReplicationEventListener = New SimpleConflictResolvingListener()
-            Dim replicationSession As IReplicationSession = _
-                Replication.Begin(desktopDatabase, mobileDatabase, replicationListener)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, replicationListener)
             ' #end example
 
             ReplicateBidirectional(replicationSession)
@@ -86,11 +99,17 @@ Namespace Db4oDoc.Drs.Advanced
             UpdateObject(desktopDatabase)
             UpdateObject(mobileDatabase)
 
+            Dim dektopReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(desktopDatabase)
+            Dim mobileReplicationProvider As IReplicationProvider _
+                = New Db4oEmbeddedReplicationProvider(mobileDatabase)
+
             ' #example: Take latest change
             Dim replicationListener As IReplicationEventListener = _
                 New TakeLatestModificationOnConflictListener()
-            Dim replicationSession As IReplicationSession = _
-                Replication.Begin(desktopDatabase, mobileDatabase, replicationListener)
+
+            Dim replicationSession As IReplicationSession _
+                = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, replicationListener)
             ' #end example
 
             ReplicateBidirectional(replicationSession)

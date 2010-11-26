@@ -14,8 +14,14 @@ IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
     // The replication starts here
     IObjectContainer connectionForReplication = 
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
-    IReplicationSession replicationSession = 
-        Replication.Begin(connectionForReplication, mobileDatabase);
+
+    IReplicationProvider clientReplication
+        = new Db4oEmbeddedReplicationProvider(connectionForReplication);
+    IReplicationProvider mobileRelicationPartner
+        = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+    IReplicationSession replicationSession =
+        Replication.Begin(clientReplication, mobileRelicationPartner);
     IObjectSet changesOnDesktop = 
         replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
 
@@ -41,8 +47,14 @@ PrintPilots(mobileDatabase);
 {
     IObjectContainer connectionForReplication =
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
+
+    IReplicationProvider clientRelicationPartner
+        = new Db4oEmbeddedReplicationProvider(connectionForReplication);
+    IReplicationProvider mobileRelicationPartner
+        = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
     IReplicationSession replicationSession =
-        Replication.Begin(connectionForReplication, mobileDatabase);
+        Replication.Begin(clientRelicationPartner, mobileRelicationPartner);
     IObjectSet changesOnDesktop = 
         replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
     foreach (object changedOnDesktop in changesOnDesktop)

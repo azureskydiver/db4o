@@ -7,6 +7,7 @@ using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Ext;
 using Db4objects.Drs;
+using Db4objects.Drs.Db4o;
 
 namespace Db4oDoc.Drs.Advanced
 {
@@ -41,9 +42,14 @@ namespace Db4oDoc.Drs.Advanced
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
+            IReplicationProvider desktopRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
             // #example: Register a listener for information about the replication process
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase,
-                                                                new LogReplicationListener());
+            IReplicationSession replicationSession 
+                = Replication.Begin(desktopRelicationPartner,mobileRelicationPartner,new LogReplicationListener());
             // #end example
             ReplicateBidirectional(replicationSession);
 
@@ -65,9 +71,13 @@ namespace Db4oDoc.Drs.Advanced
             UpdateObject(desktopDatabase);
             UpdateObject(mobileDatabase);
 
+            IReplicationProvider desktopRelicationPartner = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileRelicationPartner = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
             // #example: Deal with conflicts
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase,
-                                                                new SimpleConflictResolvingListener());
+            IReplicationSession replicationSession =
+                Replication.Begin(desktopRelicationPartner, mobileRelicationPartner,
+                                    new SimpleConflictResolvingListener());
             // #end example
 
             ReplicateBidirectional(replicationSession);
@@ -90,9 +100,14 @@ namespace Db4oDoc.Drs.Advanced
             UpdateObject(desktopDatabase);
             UpdateObject(mobileDatabase);
 
+            IReplicationProvider desktopRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
             // #example: Take latest change
-            IReplicationSession replicationSession = 
-                Replication.Begin(desktopDatabase, mobileDatabase,
+            IReplicationSession replicationSession =
+                Replication.Begin(desktopRelicationPartner, mobileRelicationPartner,
                                    new TakeLatestModificationOnConflictListener());
             // #end example
 
@@ -120,8 +135,14 @@ namespace Db4oDoc.Drs.Advanced
                 // The replication starts here
                 IObjectContainer connectionForReplication = 
                     Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
-                IReplicationSession replicationSession = 
-                    Replication.Begin(connectionForReplication, mobileDatabase);
+
+                IReplicationProvider clientReplication
+                    = new Db4oEmbeddedReplicationProvider(connectionForReplication);
+                IReplicationProvider mobileRelicationPartner
+                    = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+                IReplicationSession replicationSession =
+                    Replication.Begin(clientReplication, mobileRelicationPartner);
                 IObjectSet changesOnDesktop = 
                     replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
 
@@ -147,8 +168,14 @@ namespace Db4oDoc.Drs.Advanced
             {
                 IObjectContainer connectionForReplication =
                     Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
+
+                IReplicationProvider clientRelicationPartner
+                    = new Db4oEmbeddedReplicationProvider(connectionForReplication);
+                IReplicationProvider mobileRelicationPartner
+                    = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
                 IReplicationSession replicationSession =
-                    Replication.Begin(connectionForReplication, mobileDatabase);
+                    Replication.Begin(clientRelicationPartner, mobileRelicationPartner);
                 IObjectSet changesOnDesktop = 
                     replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
                 foreach (object changedOnDesktop in changesOnDesktop)
@@ -210,8 +237,13 @@ namespace Db4oDoc.Drs.Advanced
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
+            IReplicationProvider desktopRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
             // #example: Migrate on the fly
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+            IReplicationSession replicationSession = Replication.Begin(desktopRelicationPartner, mobileRelicationPartner);
             IList<Car> initialReplication = desktopDatabase.Query<Car>();
 
             foreach (Car changedObjectOnDesktop in initialReplication)
@@ -243,7 +275,13 @@ namespace Db4oDoc.Drs.Advanced
 
         private static void ReplicateBidirectional(IObjectContainer desktopDatabase, IObjectContainer mobileDatabase)
         {
-            IReplicationSession replicationSession = Replication.Begin(desktopDatabase, mobileDatabase);
+            IReplicationProvider desktopRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+            IReplicationProvider mobileRelicationPartner
+                = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+            IReplicationSession replicationSession 
+                = Replication.Begin(desktopRelicationPartner,mobileRelicationPartner);
             ReplicateBidirectional(replicationSession);
             replicationSession.Commit();
         }
