@@ -114,6 +114,14 @@
     path.vod.bin=C:/Versant/8/bin
 	path.vod.lib=C:/Versant/8/lib;C:/Versant/8/sdk/lib
 	
+	##################################
+ 	#              DRS BBC           # 
+    ##################################
+    
+	skip.drs.net.tests = true # if you do not have a .NET build environment set this to true 
+	                          # and build-drs-beforen-checkin target will build and run drs 
+	                          # and tests for java and also run sharpen. 
+ 
 -->
 	<import file="common.xml" />
 	
@@ -162,6 +170,10 @@
     <target name="clean.java">
         <delete dir="${dir.dist.java}" />
     	<delete dir="${dir.dist.decaf}" />
+    </target>
+    
+	<target name="clean.drs">
+        <delete dir="${dir.dist.java}" />
     </target>
 
 	<target name="cleanomscripttempdir">
@@ -387,6 +399,27 @@
 	<target name="prepare-test-environment" depends="clean.java">
 		<ant antfile="build-java.xml" target="build.db4ojava.tests" />
 	</target>
+
+	<target name="prepare-drs-test-environment" depends="clean.drs">
+		<ant antfile="build-java.xml" target="build.db4ounitjdk1.5" />
+		<ant antfile="build-drs.xml" target="build-all" />
+	</target>
+	
+	<target name="run-drs-tests" depends="prepare-drs-test-environment">
+		<ant antfile="build-drs.xml" target="run-regression" />
+	</target>
+		
+    <target name="run-drs-net-tests" unless="skip.drs.net.tests">
+    	<ant antfile="build-drs-net.xml" target="clean" />
+    	<ant antfile="build-drs-net.xml" target="run-tests"/>
+    </target>
+	
+	<target name="sharpen-drs-net" if="skip.drs.net.tests">
+    	<ant antfile="build-drs-net.xml" target="clean" />
+    	<ant antfile="build-drs-net.xml" target="prepare-dotnet-solution"/>    	
+	</target>
+	
+	<target name="build-drs-before-checkin" depends="run-drs-tests, sharpen-drs-net, run-drs-net-tests" />
 	
     <target name="build-before-checkin" depends="prepare-test-environment,build-net-before-checkin" />
 	
