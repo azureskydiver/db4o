@@ -30,13 +30,13 @@ public class FileStorage implements Storage {
 		return file.exists() && file.length() > 0;
     }
 	
-	static class FileBin implements Bin {
+	public static class FileBin implements Bin {
 
 		private final String _path;
 
 		private RandomAccessFile _file;
 		
-		FileBin(BinConfiguration config) throws Db4oIOException {
+		public FileBin(BinConfiguration config) throws Db4oIOException {
 			boolean ok = false;
 			try {
 				_path = new File(config.uri()).getCanonicalPath();
@@ -84,6 +84,9 @@ public class FileStorage implements Storage {
 		public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
 			try {
 				seek(pos);
+				if(DTrace.enabled){
+					DTrace.FILE_READ.logLength(pos, length);
+				}
 				return _file.read(bytes, 0, length);
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
@@ -113,6 +116,9 @@ public class FileStorage implements Storage {
 			checkClosed();
 			try {
 				seek(pos);
+				if(DTrace.enabled){
+					DTrace.FILE_WRITE.logLength(pos, length);
+				}
 				_file.write(buffer, 0, length);
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
