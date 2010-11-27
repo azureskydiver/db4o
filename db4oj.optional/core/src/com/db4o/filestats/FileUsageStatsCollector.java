@@ -130,8 +130,9 @@ public class FileUsageStatsCollector {
 		_slots.add(idSystem.committedSlot(btree.getID()));
 		while(nodeIter.moveNext()) {
 			Integer curNodeId = nodeIter.current();
-			_slots.add(idSystem.committedSlot(curNodeId));
-			usage += idSystem.committedSlot(curNodeId).length();
+			Slot slot = idSystem.committedSlot(curNodeId);
+			_slots.add(slot);
+			usage += slot.length();
 		}
 		return usage;
 	}
