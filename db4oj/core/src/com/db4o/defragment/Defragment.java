@@ -126,33 +126,17 @@ public class Defragment {
 			upgradeFile(config);
 		}
 		
-		DefragmentServicesImpl context = new DefragmentServicesImpl(config, listener);
-		int newClassCollectionID = 0;
-		int targetIdentityID = 0;
-		int targetUuidIndexID = 0;
+		DefragmentServicesImpl services = new DefragmentServicesImpl(config, listener);
 		try {
-			firstPass(context, config);
-			secondPass(context, config);
-			defragUnindexed(context);
-			context.commitIds();
-			newClassCollectionID = context.strictMappedID(context
-					.sourceClassCollectionID());
-			context.targetClassCollectionID(newClassCollectionID);
-			int sourceIdentityID = context
-					.databaseIdentityID(DefragmentServicesImpl.SOURCEDB);
-			targetIdentityID = context.mappedID(sourceIdentityID,0);
-			targetUuidIndexID = context
-					.mappedID(context.sourceUuidIndexID(), 0);
+			firstPass(services, config);
+			secondPass(services, config);
+			defragUnindexed(services);
+			services.commitIds();
+			services.replaceClassMetadataRepository();
 		} catch (CorruptionException exc) {
 			exc.printStackTrace();
 		} finally {
-			context.close();
-		}
-		if(targetIdentityID>0) {
-			setIdentity(config, targetIdentityID, targetUuidIndexID);
-		}
-		else {
-			listener.notifyDefragmentInfo(new DefragmentInfo("No database identity found in original file."));
+			services.close();
 		}
 	}
 

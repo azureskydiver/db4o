@@ -60,7 +60,7 @@ public class FreespaceManagerForDebug implements FreespaceManager {
         return AbstractFreespaceManager.FM_DEBUG;
     }
 
-	public void traverse(Visitor4 visitor) {
+	public void traverse(Visitor4<Slot> visitor) {
 		
 	}
 	

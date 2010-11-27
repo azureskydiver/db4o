@@ -29,7 +29,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 	private final PendingClassInits _classInits; 
 
 
-    ClassMetadataRepository(Transaction systemTransaction) {
+    public ClassMetadataRepository(Transaction systemTransaction) {
         _systemTransaction = systemTransaction;
         _initClassMetadataOnUp = new NonblockingQueue();
 		_classInits = new PendingClassInits(_systemTransaction);
@@ -309,7 +309,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 		return container().configImpl().resolveAliasRuntimeName(name);
 	}
 
-    void initOnUp(Transaction systemTrans) {
+    public void initOnUp(Transaction systemTrans) {
         _classMetadataCreationDepth++;
         systemTrans.container().showInternalClasses(true);
         try {
@@ -592,5 +592,5 @@ public final class ClassMetadataRepository extends PersistentBase {
 	private LocalTransaction localSystemTransaction() {
 		return ((LocalTransaction)_systemTransaction);
 	}
-
+	
 }

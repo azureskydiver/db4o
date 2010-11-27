@@ -47,12 +47,11 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		}
 	};
 
-	public final LocalObjectContainer _sourceDb;
-	final LocalObjectContainer _targetDb;
+	private final LocalObjectContainer _sourceDb;
+	private final LocalObjectContainer _targetDb;
 	private final IdMapping _mapping;
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new NonblockingQueue();
-	private final Hashtable4 _hasFieldIndexCache = new Hashtable4();
 
 	private DefragmentConfig _defragConfig;
 	
@@ -60,21 +59,30 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	public DefragmentServicesImpl(DefragmentConfig defragConfig,DefragmentListener listener) throws IOException {
 		_listener=listener;
 		Config4Impl originalConfig =  (Config4Impl) defragConfig.db4oConfig();
-		Config4Impl sourceConfig=(Config4Impl) originalConfig.deepClone(null);
-		sourceConfig.weakReferences(false);
+		
 		Storage storage = defragConfig.backupStorage();
 		if(defragConfig.readOnly()){
 			storage = new NonFlushingStorage(storage); 
 		}
-		sourceConfig.storage(storage);
-		sourceConfig.readOnly(defragConfig.readOnly());
-		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
+		
+		Config4Impl sourceConfig = prepareConfig(originalConfig, storage, defragConfig.readOnly());
+		_sourceDb = (LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
+		
 		_sourceDb.showInternalClasses(true);
 		defragConfig.db4oConfig().blockSize(_sourceDb.blockSize());
+		
 		_targetDb = freshTargetFile(defragConfig);
 		_mapping=defragConfig.mapping();
 		_mapping.open();
 		_defragConfig = defragConfig;
+	}
+
+	private Config4Impl prepareConfig(Config4Impl originalConfig, Storage storage, boolean readOnly) {
+		Config4Impl sourceConfig=(Config4Impl) originalConfig.deepClone(null);
+		sourceConfig.weakReferences(false);
+		sourceConfig.storage(storage);
+		sourceConfig.readOnly(readOnly);
+		return sourceConfig;
 	}
 	
 	static LocalObjectContainer freshTempFile(String fileName,int blockSize) throws IOException {
@@ -88,7 +96,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	
 	static LocalObjectContainer freshTargetFile(DefragmentConfig  config) throws IOException {
 		config.db4oConfig().storage().delete(config.origPath());
-		return (LocalObjectContainer)Db4o.openFile(config.clonedDb4oConfig(),config.origPath()).ext();
+		return (LocalObjectContainer) Db4o.openFile(config.clonedDb4oConfig(),config.origPath());
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
@@ -120,10 +128,11 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		if(oldID==0) {
 			return 0;
 		}
-		if(_sourceDb.handlers().isSystemHandler(oldID)) {
+		int mappedId = _mapping.mappedId(oldID);
+		if(mappedId == 0 && _sourceDb.handlers().isSystemHandler(oldID)){
 			return oldID;
 		}
-		return _mapping.mappedId(oldID);
+		return mappedId;
 	}
 
 	public void mapIDs(int oldID,int newID, boolean isClassID) {
@@ -263,8 +272,49 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		_targetDb.setIdentity(_sourceDb.identity());
 	}
 
-	public void targetClassCollectionID(int newClassCollectionID) {
-		_targetDb.systemData().classCollectionID(newClassCollectionID);
+	public void replaceClassMetadataRepository() {
+		
+		Transaction systemTransaction = _targetDb.systemTransaction();
+		
+		// Can't use strictMappedID because the repository ID can
+		// be lower than HandlerRegisrtry _highestBuiltinTypeID and
+		// the ClassRepository ID would be treated as a system handler
+		// and the unmapped ID would be returned.
+		int newRepositoryId = _mapping.mappedId(sourceClassCollectionID());
+		int sourceIdentityID = databaseIdentityID(DefragmentServicesImpl.SOURCEDB);
+		int targetIdentityID = _mapping.mappedId(sourceIdentityID);
+		int targetUuidIndexID = _mapping.mappedId(sourceUuidIndexID());
+		int oldIdentityId = _targetDb.systemData().identity().getID(systemTransaction);
+		int oldRepositoryId = _targetDb.classCollection().getID();
+		
+		ClassMetadataRepository oldRepository = _targetDb.classCollection();
+		
+		ClassMetadataRepository newRepository = new ClassMetadataRepository(systemTransaction);
+		newRepository.setID(newRepositoryId);
+		newRepository.read(systemTransaction);
+		newRepository.initOnUp(systemTransaction);
+		
+		_targetDb.systemData().classCollectionID(newRepositoryId);
+		_targetDb.replaceClassMetadataRepository(newRepository);
+		
+		_targetDb.systemData().uuidIndexId(targetUuidIndexID);
+		Db4oDatabase identity = (Db4oDatabase) _targetDb.getByID(systemTransaction, targetIdentityID);
+		_targetDb.setIdentity(identity);
+
+		
+		ClassMetadataIterator iterator = oldRepository.iterator();
+		while(iterator.moveNext()){
+			ClassMetadata classMetadata = iterator.currentClass();
+			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) classMetadata.index();
+			index.btree().free(_targetDb.localSystemTransaction());
+			freeById(classMetadata.getID());
+		}
+		freeById(oldIdentityId);
+		freeById(oldRepositoryId);
+	}
+	
+	private void freeById(int id){
+		_targetDb.systemTransaction().idSystem().notifySlotDeleted(id, SlotChangeFactory.SYSTEM_OBJECTS);
 	}
 
 	public ByteArrayBuffer sourceBufferByID(int sourceID)  {
@@ -327,7 +377,9 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public void commitIds(){
-		_targetDb.idSystem().commit(mapping().slotChanges(), FreespaceCommitter.DO_NOTHING);
+		FreespaceCommitter freespaceCommitter = new FreespaceCommitter(_targetDb.freespaceManager());
+		_targetDb.idSystem().commit(mapping().slotChanges(), freespaceCommitter);
+		freespaceCommitter.commit();
 	}
 	
 }
