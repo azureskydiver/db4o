@@ -75,6 +75,7 @@ public class StaticFieldUpdateTestCase extends AbstractDb4oTestCase {
 		ConsistencyReport consistencyReport = new ConsistencyChecker(fileSession()).checkSlotConsistency();
 		if(! consistencyReport.consistent()){
 			System.err.println(consistencyReport);
+			throw new IllegalStateException("Inconsistency found");
 		}
 		Query query = newQuery(Item.class);
 		query.descend("_value").constrain(value);
