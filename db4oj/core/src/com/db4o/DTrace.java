@@ -43,30 +43,16 @@ public class DTrace {
     private static final void configure(){
         if(enabled){
         
-//        	addRange(19);
+        	// addRange(15);
+        	
+        	// breakOnEvent(540);
 //        	
 //        	addRangeWithEnd(448, 460);
         	
-        	// addRange(13061);
+//        	addRangeWithLength(770,53);
         	
-        	// addRangeWithEnd(390, 402);
-        	
-        	// addRangeWithLength(3840, 1);
             
-            // addRangeWithLength(180, 1);
-            
-            // addRange(4874);
-            
-            // addRangeWithEnd(3835808, 3836267);
-            
-            // breakOnEvent(226);
-            
-            
-            // addRangeWithLength(1068, 1);
-            
-            // addRangeWithLength(1722, 1);
-            
-            
+            // breakOnEvent(125);
             
             
 //            trackEventsWithoutRange();
@@ -84,7 +70,7 @@ public class DTrace {
 //                });
         	
          
-          // turnAllOffExceptFor(new DTrace[] {FREESPACEMANAGER_BTREE_FREE, FREESPACEMANAGER_RAM_FREE });
+          // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
           
           
           
@@ -121,6 +107,8 @@ public class DTrace {
 			FATAL_EXCEPTION = new DTrace(true, true, "fatal exception", true);
 			FREE = new DTrace(true, true, "free", true);
 			FILE_FREE = new DTrace(true, true, "fileFree", true);
+			FILE_READ = new DTrace(true, true, "fileRead", true);
+			FILE_WRITE = new DTrace(true, true, "fileWrite", true);
             FREESPACEMANAGER_GET_SLOT = new DTrace(true, true, "FreespaceManager getSlot", true);
             FREESPACEMANAGER_RAM_FREE = new DTrace(true, true, "InMemoryfreespaceManager free", true);
             FREESPACEMANAGER_BTREE_FREE = new DTrace(true, true, "BTreeFreeSpaceManager free", true);
@@ -235,6 +223,8 @@ public class DTrace {
     public static DTrace EVALUATE_SELF;
     public static DTrace FATAL_EXCEPTION;
     public static DTrace FILE_FREE;
+    public static DTrace FILE_READ;
+    public static DTrace FILE_WRITE;
     public static DTrace FREE;
     public static DTrace FREESPACEMANAGER_GET_SLOT;
     public static DTrace FREESPACEMANAGER_RAM_FREE;
