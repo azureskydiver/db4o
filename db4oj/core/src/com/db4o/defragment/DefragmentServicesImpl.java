@@ -378,6 +378,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	
 	public void commitIds(){
 		FreespaceCommitter freespaceCommitter = new FreespaceCommitter(_targetDb.freespaceManager());
+		freespaceCommitter.transactionalIdSystem(systemTrans().idSystem());
 		_targetDb.idSystem().commit(mapping().slotChanges(), freespaceCommitter);
 		freespaceCommitter.commit();
 	}
