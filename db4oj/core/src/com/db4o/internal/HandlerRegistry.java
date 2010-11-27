@@ -48,7 +48,7 @@ public final class HandlerRegistry {
     
     private Hashtable4 _mapReflectorToClassMetadata = newHashtable();
 
-    private int                     _highestBuiltinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
+    private int _highestBuiltinTypeID = Handlers4.ANY_ARRAY_N_ID + 1;
 
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
