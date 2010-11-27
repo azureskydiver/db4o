@@ -47,8 +47,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         return _btreeIndex.getID();
 	}
 	
-	public void traverseAll(Transaction ta,Visitor4 command) {
-		// better alternatives for this null check? (has been moved as is from YapFile)
+	public void traverseAll(Transaction ta, Visitor4 command) {
 		if(_btreeIndex!=null) {
 			_btreeIndex.traverseKeys(ta,command);
 		}
