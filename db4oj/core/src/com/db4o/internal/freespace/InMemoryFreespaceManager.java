@@ -229,7 +229,7 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
         return sb.toString();
     }
     
-    public void traverse(final Visitor4 visitor) {
+    public void traverse(final Visitor4<Slot> visitor) {
         if (_freeByAddress == null) {
             return;
         }

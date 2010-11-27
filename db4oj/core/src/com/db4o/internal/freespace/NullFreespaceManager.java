@@ -77,7 +77,7 @@ public class NullFreespaceManager implements FreespaceManager {
 		return 0;
 	}
 
-	public void traverse(Visitor4 visitor) {
+	public void traverse(Visitor4<Slot> visitor) {
 		
 	}
 

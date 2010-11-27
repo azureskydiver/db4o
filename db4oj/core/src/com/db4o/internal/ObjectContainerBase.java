@@ -2153,5 +2153,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	public UpdateDepthProvider updateDepthProvider() {
 		return configImpl().updateDepthProvider();
 	}
+	
+	public void replaceClassMetadataRepository(ClassMetadataRepository repository){
+		_classCollection = repository;
+	}
 
 }

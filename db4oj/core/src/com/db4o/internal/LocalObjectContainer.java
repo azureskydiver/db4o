@@ -27,7 +27,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
 	protected FileHeader       _fileHeader;
     
-    private final Collection4         _dirtyClassMetadata = new Collection4();
+    private final Collection4  _dirtyClassMetadata = new Collection4();
     
     private FreespaceManager _freespaceManager;
     
@@ -811,7 +811,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	return queryResult;
     }
 
-	public LocalTransaction getLocalSystemTransaction() {
+	public LocalTransaction localSystemTransaction() {
 		return (LocalTransaction)systemTransaction();
 	}
 	

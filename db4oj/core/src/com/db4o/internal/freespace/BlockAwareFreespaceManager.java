@@ -85,7 +85,7 @@ public class BlockAwareFreespaceManager implements FreespaceManager {
 		return _blockConverter.blocksToBytes(_delegate.totalFreespace());
 	}
 
-	public void traverse(final Visitor4 visitor) {
+	public void traverse(final Visitor4<Slot> visitor) {
 		_delegate.traverse(new Visitor4<Slot>() {
 			public void visit(Slot slot) {
 				visitor.visit(_blockConverter.toNonBlockedLength(slot));

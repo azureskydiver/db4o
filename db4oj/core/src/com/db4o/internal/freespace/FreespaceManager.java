@@ -35,7 +35,7 @@ public interface FreespaceManager {
 
 	public byte systemType();
 	
-	public void traverse(Visitor4 visitor);
+	public void traverse(Visitor4<Slot> visitor);
 
 	public void write(LocalObjectContainer container);
 
