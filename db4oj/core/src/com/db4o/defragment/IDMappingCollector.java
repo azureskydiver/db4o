@@ -4,7 +4,6 @@ package com.db4o.defragment;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.slots.*;
 
 public class IDMappingCollector {
 	
@@ -45,6 +44,7 @@ public class IDMappingCollector {
 			}
 			context.mapIDs(objectID,context.targetNewId(), isClassID);
 		}
+		context.mapping().commit();
 		_ids=null;
 	}
 }

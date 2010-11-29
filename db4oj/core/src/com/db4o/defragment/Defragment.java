@@ -129,7 +129,9 @@ public class Defragment {
 		DefragmentServicesImpl services = new DefragmentServicesImpl(config, listener);
 		try {
 			firstPass(services, config);
+			services.commitIds();
 			secondPass(services, config);
+			services.commitIds();
 			defragUnindexed(services);
 			services.commitIds();
 			services.replaceClassMetadataRepository();
@@ -207,23 +209,6 @@ public class Defragment {
 					ClassMetadata.defragObject(context);
 				}
 			});
-		}
-	}
-
-	private static void setIdentity(DefragmentConfig config, int targetIdentityID,
-			int targetUuidIndexID) {
-		Configuration db4oConfig = config.clonedDb4oConfig();
-		// required because reading of old identity fails
-		// and we don't want to see an invalid ID exception
-		db4oConfig.recoveryMode(true);  
-		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(db4oConfig, config.origPath());
-		try {
-			Db4oDatabase identity = (Db4oDatabase) targetDB
-					.getByID(targetDB.systemTransaction(), targetIdentityID);
-			targetDB.systemData().uuidIndexId(targetUuidIndexID);
-			targetDB.setIdentity(identity);
-		} finally {
-			targetDB.close();
 		}
 	}
 

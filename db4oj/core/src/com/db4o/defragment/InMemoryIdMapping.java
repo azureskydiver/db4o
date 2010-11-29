@@ -71,4 +71,7 @@ public class InMemoryIdMapping extends AbstractIdMapping {
 			}
 		};
 	}
+
+	public void commit() {
+	}
 }
