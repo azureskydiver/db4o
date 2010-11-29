@@ -59,6 +59,8 @@ public interface IdMapping {
 	/**
 	 * returns the slot address for an ID 
 	 */
-	public int addressForId(int id);
+	int addressForId(int id);
+	
+	void commit();
 	
 }

@@ -47,6 +47,7 @@ final class SecondPassCommand implements PassCommand {
 					_objectCount++;
 					if(_objectCount==_objectCommitFrequency) {
 						services.targetCommit();
+						services.mapping().commit();
 						_objectCount=0;
 					}
 				}
