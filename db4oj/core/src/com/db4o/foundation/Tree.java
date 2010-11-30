@@ -163,7 +163,7 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 		return this;
 	}
 	
-	public static final Tree find(Tree inTree, Tree template){
+	public static final <T> Tree<T> find(Tree<T> inTree, Tree<T> template){
 		if(inTree == null){
 			return null;
 		}
@@ -171,7 +171,7 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 	}
 	
 	
-	public final Tree find(final Tree template){
+	public final Tree<T> find(final Tree<T> template){
 		Tree current = this;
 		while(true){
 			int comparisonResult = current.compare(template);

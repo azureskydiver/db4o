@@ -9,7 +9,8 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.optional.handlers.AllTests.class,
 			com.db4o.db4ounit.optional.monitoring.AllTests.class,
-			BigMathSupportTestCase.class
+			BigMathSupportTestCase.class,
+			FileUsageStatsTestCase.class,
 		};
 	}
 

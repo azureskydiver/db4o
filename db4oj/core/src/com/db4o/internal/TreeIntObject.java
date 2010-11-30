@@ -8,15 +8,15 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class TreeIntObject extends TreeInt {
+public class TreeIntObject<T> extends TreeInt {
 
-	public Object _object;
+	public T _object;
 
 	public TreeIntObject(int a_key) {
 		super(a_key);
 	}
 
-	public TreeIntObject(int a_key, Object a_object) {
+	public TreeIntObject(int a_key, T a_object) {
 		super(a_key);
 		_object = a_object;
 	}
@@ -35,7 +35,7 @@ public class TreeIntObject extends TreeInt {
         return _object;
     }
     
-    public void setObject(Object obj) {
+    public void setObject(T obj) {
         _object = obj;
     }
 
@@ -74,7 +74,7 @@ public class TreeIntObject extends TreeInt {
 		return true;
 	}
 
-	public static TreeIntObject add(TreeIntObject tree, int key, Object value) {
-		return Tree.add(tree, new TreeIntObject(key, value));
+	public static <T> TreeIntObject<T> add(TreeIntObject<T> tree, int key, T value) {
+		return Tree.add(tree, new TreeIntObject<T>(key, value));
 	}
 }
