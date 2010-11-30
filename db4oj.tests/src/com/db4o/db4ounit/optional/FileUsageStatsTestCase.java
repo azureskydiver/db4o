@@ -16,8 +16,7 @@ import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
-@decaf.Ignore
-//@decaf.Remove(decaf.Platform.JDK11)
+@decaf.Remove
 public class FileUsageStatsTestCase extends TestWithTempFile {
 
 	private static class Child {
