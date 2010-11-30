@@ -7,7 +7,6 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 
 /**
  * prints statistics about a database file to System.out.
@@ -108,7 +107,7 @@ public class Statistics {
 			all.traverse(new Visitor4() {
 				public void visit(Object obj) {
 					TreeStringObject node = (TreeStringObject) obj;
-					long[] newIDs = ((StoredClass)node._object).getIDs();
+					long[] newIDs = ((StoredClass)node._value).getIDs();
 					for (int j = 0; j < newIDs.length; j++) {
 						if (ids.value.find(new TreeInt((int) newIDs[j])) == null) {
 							ids.value = ids.value.add(new TreeInt((int) newIDs[j]));
@@ -146,51 +145,5 @@ public class Statistics {
 	}
 
 	private static final String REMOVE = "XXxxREMOVExxXX";
-	
-	private static class TreeString extends Tree {
-		
-		public String _key;
-		
-		public TreeString(String a_key) {
-			this._key = a_key;
-		}
-		
-		protected Tree shallowCloneInternal(Tree tree) {
-			TreeString ts = (TreeString) super.shallowCloneInternal(tree);
-			ts._key = _key;
-			return ts;
-		}
-		
-		public Object shallowClone() {
-			return shallowCloneInternal(new TreeString(_key));
-		}
-		
-		public int compare(Tree a_to) {
-			return StringHandler
-				.compare(
-					Const4.stringIO.write(_key),
-					Const4.stringIO.write(((TreeString) a_to)._key));
-		}
-		
-		public Object key(){
-			return _key;
-		}
-		
-	}
-
-	private static class TreeStringObject extends TreeString {
-
-		public final Object _object;
-
-		public TreeStringObject(String a_key, Object a_object) {
-			super(a_key);
-			this._object = a_object;
-		}
-
-		public Object shallowClone() {
-			TreeStringObject tso = new TreeStringObject(_key, _object);
-			return shallowCloneInternal(tso);
-		}
-	}
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2010   Versant Inc.   http://www.db4o.com */
 
 package com.db4o.filestats;
 
@@ -29,22 +29,28 @@ public class FileUsageStatsCollector {
 	
 	{
 		MISC_COLLECTORS = new HashMap<String, MiscCollector>();
+		registerBigSetCollector();
+	}
+
+	@decaf.RemoveFirst(decaf.Platform.JDK11)
+	private void registerBigSetCollector() {
 		MISC_COLLECTORS.put(BigSet.class.getName(), new BigSetMiscCollector());
 	}
 	
 	public static void main(String[] args) {
 		String dbPath = args[0];
+		boolean collectSlots = args.length > 1 && "true".equals(args[1]);
 		System.out.println(dbPath + ": " + new File(dbPath).length());
-		FileUsageStats stats = runStats(dbPath);
+		FileUsageStats stats = runStats(dbPath, collectSlots);
 		System.out.println(stats);
 	}
 
-	static FileUsageStats runStats(String dbPath) {
+	public static FileUsageStats runStats(String dbPath, boolean collectSlots) {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(new FileStorage());
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config, dbPath);
 		try {
-			return new FileUsageStatsCollector(db).collectStats();
+			return new FileUsageStatsCollector(db, collectSlots).collectStats();
 		}
 		finally {
 			db.close();
@@ -52,46 +58,31 @@ public class FileUsageStatsCollector {
 	}
 	
 	private final LocalObjectContainer _db;
-	private MergingSlotMap _slots;
+	private FileUsageStats _stats;
 	private BlockConverter _blockConverter;
-	
-	public FileUsageStatsCollector(ObjectContainer db) {
+	private final SlotMap _slots;
+
+	public FileUsageStatsCollector(ObjectContainer db, boolean collectSlots) {
 		_db = (LocalObjectContainer) db;
-		_slots = new MergingSlotMap();
 		byte blockSize = _db.blockSize();
-		_blockConverter = blockSize > 1 ? new BlockSizeBlockConverter(blockSize) : new DisabledBlockConverter();
+		_blockConverter = blockSize > 1 ? (BlockConverter)new BlockSizeBlockConverter(blockSize) : (BlockConverter)new DisabledBlockConverter();
+		_slots = collectSlots ? (SlotMap)new SlotMapImpl(_db.fileLength()) : (SlotMap)new NullSlotMap();
 	}
 
 	public FileUsageStats collectStats() {
-		final FileUsageStats stats = new FileUsageStats(_db.fileLength(), fileHeaderUsage(), idSystemUsage(), freespace(), classMetadataUsage(), freespaceUsage());
+		_stats = new FileUsageStats(_db.fileLength(), fileHeaderUsage(), idSystemUsage(), freespace(), classMetadataUsage(), freespaceUsage(), _slots);
 		Set<ClassNode> classRoots = ClassNode.buildHierarchy(_db.classCollection());
 		for (ClassNode classRoot : classRoots) {
 			collectClassSlots(classRoot.classMetadata());
-			collectClassStats(stats, classRoot);
+			collectClassStats(_stats, classRoot);
 		}
-		stats._slots = _slots;
-		System.out.println("SLOTS:");
-		logSlots(_slots.merged());
-		System.out.println("GAPS:");
-		logSlots(_slots.gaps(_db.fileLength()));
-		return stats;
+		return _stats;
 	}
 
-	private void logSlots(Iterable<Slot> slots) {
-		int totalLength = 0;
-		for (Slot gap : slots) {
-			totalLength += gap.length();
-			System.out.println(gap);
-		}
-		System.out.println("TOTAL: " + totalLength);
-		System.out.println();
-	}
-	
 	private long collectClassStats(FileUsageStats stats, ClassNode classNode) {
-		Iterator<ClassNode> subClassIter = classNode.subClasses();
 		long subClassSlotUsage = 0;
-		while(subClassIter.hasNext()) {
-			subClassSlotUsage += collectClassStats(stats, subClassIter.next());
+		for(ClassNode curSubClass : classNode.subClasses()) {
+			subClassSlotUsage += collectClassStats(stats, curSubClass);
 		}
 		ClassMetadata clazz = classNode.classMetadata();
 		long classIndexUsage = 0;
@@ -126,8 +117,9 @@ public class FileUsageStatsCollector {
 
 	private long bTreeUsage(IdSystem idSystem, BTree btree) {
 		Iterator4<Integer> nodeIter = btree.allNodeIds(_db.systemTransaction());
-		long usage = idSystem.committedSlot(btree.getID()).length();
-		_slots.add(idSystem.committedSlot(btree.getID()));
+		Slot btreeSlot = idSystem.committedSlot(btree.getID());
+		_slots.add(btreeSlot);
+		long usage = btreeSlot.length();
 		while(nodeIter.moveNext()) {
 			Integer curNodeId = nodeIter.current();
 			Slot slot = idSystem.committedSlot(curNodeId);
@@ -216,13 +208,15 @@ public class FileUsageStatsCollector {
 	}
 	
 	private long classMetadataUsage() {
-		long usage = slotSizeForId(_db.classCollection().getID());
-		_slots.add(slot(_db.classCollection().getID()));
+		Slot classRepositorySlot = slot(_db.classCollection().getID());
+		_slots.add(classRepositorySlot);
+		long usage = classRepositorySlot.length();
 		Iterator4<Integer> classIdIter = _db.classCollection().ids();
 		while(classIdIter.moveNext()) {
 			int curClassId = classIdIter.current();
-			usage += slotSizeForId(curClassId);
-			_slots.add(slot(curClassId));
+			Slot classSlot = slot(curClassId);
+			_slots.add(classSlot);
+			usage += classSlot.length();
 		}
 		return usage;
 	}
@@ -255,6 +249,7 @@ public class FileUsageStatsCollector {
 		}
 	}
 	
+	@decaf.Ignore(decaf.Platform.JDK11)
 	private class BigSetMiscCollector implements MiscCollector {
 		public long collectFor(int id) {
 			BigSet bigSet = (BigSet) _db.getByID(id);

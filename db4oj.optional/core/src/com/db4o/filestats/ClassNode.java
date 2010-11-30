@@ -1,3 +1,5 @@
+/* Copyright (C) 2010   Versant Inc.   http://www.db4o.com */
+
 package com.db4o.filestats;
 
 import java.util.*;
@@ -59,7 +61,7 @@ public class ClassNode {
 		return _clazz.getName().hashCode();
 	}
 
-	public Iterator<ClassNode> subClasses() {
-		return _subClasses.iterator();
+	public Iterable<ClassNode> subClasses() {
+		return _subClasses;
 	}
 }
