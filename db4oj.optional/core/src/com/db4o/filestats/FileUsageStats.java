@@ -7,7 +7,9 @@ import static com.db4o.filestats.FileUsageStatsUtil.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.slots.*;
 
-@decaf.Ignore
+/**
+* @exclude
+*/
 public class FileUsageStats {
 	private TreeStringObject<ClassUsageStats> _classUsageStats = null;
 	private long _fileSize;

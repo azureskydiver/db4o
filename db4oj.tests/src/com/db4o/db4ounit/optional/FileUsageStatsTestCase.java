@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.defragment.*;
@@ -16,7 +15,6 @@ import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
-@decaf.Remove
 public class FileUsageStatsTestCase extends TestWithTempFile {
 
 	private static class Child {

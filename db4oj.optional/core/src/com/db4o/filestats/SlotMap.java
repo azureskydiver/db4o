@@ -6,7 +6,9 @@ import java.util.*;
 
 import com.db4o.internal.slots.*;
 
-@decaf.Ignore
+/**
+* @exclude
+*/
 public interface SlotMap {
 
 	void add(Slot slot);

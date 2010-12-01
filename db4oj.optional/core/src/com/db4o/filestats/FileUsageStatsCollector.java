@@ -18,25 +18,26 @@ import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 
-@decaf.Ignore
+/**
+ * Collects database file usage statistics and prints them
+ * to the console.
+ * @sharpen.partial
+ */
 public class FileUsageStatsCollector {
 	
-	private static interface MiscCollector {
-		long collectFor(int id);
-	}
+	private final Map<String, MiscCollector> MISC_COLLECTORS;
 	
-	private Map<String, MiscCollector> MISC_COLLECTORS;
-	
-	{
-		MISC_COLLECTORS = new HashMap<String, MiscCollector>();
-		registerBigSetCollector();
-	}
-
+	/**
+	 * @sharpen.ignore
+	 */
 	@decaf.RemoveFirst(decaf.Platform.JDK11)
 	private void registerBigSetCollector() {
 		MISC_COLLECTORS.put(BigSet.class.getName(), new BigSetMiscCollector());
 	}
 	
+	/**
+	 * Usage: FileUsageStatsCollector <db path> [<collect gaps (true|false)>]
+	 */
 	public static void main(String[] args) {
 		String dbPath = args[0];
 		boolean collectSlots = args.length > 1 && "true".equals(args[1]);
@@ -63,6 +64,8 @@ public class FileUsageStatsCollector {
 	private final SlotMap _slots;
 
 	public FileUsageStatsCollector(ObjectContainer db, boolean collectSlots) {
+		MISC_COLLECTORS = new HashMap<String, MiscCollector>();
+		registerBigSetCollector();
 		_db = (LocalObjectContainer) db;
 		byte blockSize = _db.blockSize();
 		_blockConverter = blockSize > 1 ? (BlockConverter)new BlockSizeBlockConverter(blockSize) : (BlockConverter)new DisabledBlockConverter();
@@ -112,18 +115,22 @@ public class FileUsageStatsCollector {
 	}
 	
 	private long bTreeUsage(BTree btree) {
-		return bTreeUsage(_db.idSystem(), btree);
+		return bTreeUsage(_db, btree, _slots);
+	}
+	
+	static long bTreeUsage(LocalObjectContainer db, BTree btree, SlotMap slotMap) {
+		return bTreeUsage(db.systemTransaction(), db.idSystem(), btree, slotMap);
 	}
 
-	private long bTreeUsage(IdSystem idSystem, BTree btree) {
-		Iterator4<Integer> nodeIter = btree.allNodeIds(_db.systemTransaction());
+	private static long bTreeUsage(Transaction transaction, IdSystem idSystem, BTree btree, SlotMap slotMap) {
+		Iterator4<Integer> nodeIter = btree.allNodeIds(transaction);
 		Slot btreeSlot = idSystem.committedSlot(btree.getID());
-		_slots.add(btreeSlot);
+		slotMap.add(btreeSlot);
 		long usage = btreeSlot.length();
 		while(nodeIter.moveNext()) {
 			Integer curNodeId = nodeIter.current();
 			Slot slot = idSystem.committedSlot(curNodeId);
-			_slots.add(slot);
+			slotMap.add(slot);
 			usage += slot.length();
 		}
 		return usage;
@@ -141,7 +148,7 @@ public class FileUsageStatsCollector {
 			public void visit(Integer id) {
 				slotUsage.value += slotSizeForId(id);
 				if(miscCollector != null) {
-					miscUsage.value += miscCollector.collectFor(id);
+					miscUsage.value += miscCollector.collectFor(_db, id, _slots);
 				}
 			}
 		});
@@ -191,7 +198,7 @@ public class FileUsageStatsCollector {
 		long usage = 0;
 		while(idSystem instanceof BTreeIdSystem) {
 			IdSystem parentIdSystem = fieldValue(idSystem, "_parentIdSystem");
-			usage += bTreeUsage(parentIdSystem, (BTree)fieldValue(idSystem, "_bTree"));
+			usage += bTreeUsage(_db.systemTransaction(), parentIdSystem, (BTree)fieldValue(idSystem, "_bTree"), _slots);
 			PersistentIntegerArray persistentState = (PersistentIntegerArray)fieldValue(idSystem, "_persistentState");
 			int persistentStateId = persistentState.getID();
 			Slot persistentStateSlot = parentIdSystem.committedSlot(persistentStateId);
@@ -249,16 +256,6 @@ public class FileUsageStatsCollector {
 		}
 	}
 	
-	@decaf.Ignore(decaf.Platform.JDK11)
-	private class BigSetMiscCollector implements MiscCollector {
-		public long collectFor(int id) {
-			BigSet bigSet = (BigSet) _db.getByID(id);
-			_db.activate(bigSet, 1);
-			BTree btree = fieldValue(bigSet, "_bTree");
-			return bTreeUsage(btree);
-		}
-	}
-
 	private Slot slot(int id) {
 		return _db.idSystem().committedSlot(id);
 	}

@@ -6,7 +6,9 @@ import java.util.*;
 
 import com.db4o.internal.*;
 
-@decaf.Ignore
+/**
+* @exclude
+*/
 public class ClassNode {
 	
 	public static Set<ClassNode> buildHierarchy(ClassMetadataRepository repository) {
