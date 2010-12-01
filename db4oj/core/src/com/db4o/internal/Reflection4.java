@@ -102,7 +102,9 @@ public class Reflection4 {
 			try {
 				Field field=curclazz.getDeclaredField(name);
 				Platform4.setAccessible(field);
-				return field;
+				if(field != null){
+					return field;
+				}
 			} catch (Exception e) {
 				
 			}

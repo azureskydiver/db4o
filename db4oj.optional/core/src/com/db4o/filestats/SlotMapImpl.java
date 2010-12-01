@@ -8,7 +8,9 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
-@decaf.Ignore
+/**
+* @exclude
+*/
 public class SlotMapImpl implements SlotMap {
 
 	private TreeIntObject<Slot> _slots = null;
