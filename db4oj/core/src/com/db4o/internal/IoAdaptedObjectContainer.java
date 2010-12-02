@@ -50,11 +50,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 		boolean lockFile = Debug4.lockFile && configImpl.lockFile()
 				&& (!readOnly);
 		if (needsLockFileThread()) {
-			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false));
+			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false, configImpl.blockSize()));
 			Bin synchronizedBin = new SynchronizedBin(fileBin);
 			_file = new BlockAwareBin(synchronizedBin);
 		} else {
-			Bin bin = storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly));
+			Bin bin = storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly, configImpl.blockSize()));
 			if(configImpl.asynchronousSync()){
 				bin = new ThreadedSyncBin(bin);
 			}
@@ -80,7 +80,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 				if (_backupFile != null) {
 					throw new BackupInProgressException();
 				}
-				_backupFile = new BlockAwareBin(targetStorage.open(new BinConfiguration(path, true,_file.length(), false)));
+				_backupFile = new BlockAwareBin(targetStorage.open(new BinConfiguration(path, true,_file.length(), false, _blockConverter.blocksToBytes(1))));
 			}
 	        long pos = 0;
 	        byte[] buffer = new byte[8192];

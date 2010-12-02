@@ -16,11 +16,18 @@ public class BinConfiguration {
 	
 	private final boolean _readOnly;
 	
+	private final int _blockSize;
+
 	public BinConfiguration(String uri, boolean lockFile, long initialLength, boolean readOnly) {
+		this(uri, lockFile, initialLength, readOnly, 1);
+	}
+
+	public BinConfiguration(String uri, boolean lockFile, long initialLength, boolean readOnly, int blockSize) {
 		_uri = uri;
 		_lockFile = lockFile;
 		_initialLength = initialLength;
 		_readOnly = readOnly;
+		_blockSize = blockSize;
 	}
 	
 	public String uri(){
@@ -39,8 +46,12 @@ public class BinConfiguration {
 		return _readOnly;
 	}
 	
+	public int blockSize() {
+		return _blockSize;
+	}
+	
 	@Override
 	public String toString() {
-		return "BinConfiguration(Uri: " + _uri + ", Locked: " + _lockFile + ", ReadOnly: " + _readOnly + ")";
+		return "BinConfiguration(Uri: " + _uri + ", Locked: " + _lockFile + ", ReadOnly: " + _readOnly + ", BlockSize: " + _blockSize + ")";
 	}
 }
