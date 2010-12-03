@@ -15,12 +15,13 @@ import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
+@decaf.Remove(decaf.Platform.JDK11)
 public class FileUsageStatsTestCase extends TestWithTempFile {
 
-	private static class Child {
+	public static class Child {
 	}
 	
-	private static class Item {
+	public static class Item {
 		public int _id;
 		public String _name;
 		public int[] _arr;

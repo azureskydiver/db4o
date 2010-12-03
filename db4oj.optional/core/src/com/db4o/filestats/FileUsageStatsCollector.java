@@ -23,6 +23,7 @@ import com.db4o.io.*;
  * to the console.
  * @sharpen.partial
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class FileUsageStatsCollector {
 	
 	private final Map<String, MiscCollector> MISC_COLLECTORS;

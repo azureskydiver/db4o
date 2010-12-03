@@ -9,6 +9,7 @@ import com.db4o.internal.slots.*;
 /**
 * @exclude
 */
+@decaf.Ignore(decaf.Platform.JDK11)
 public interface SlotMap {
 
 	void add(Slot slot);

@@ -10,6 +10,7 @@ import com.db4o.internal.*;
 /**
 * @exclude
 */
+@decaf.Ignore(decaf.Platform.JDK11)
 interface MiscCollector {
 	long collectFor(LocalObjectContainer db, int id, SlotMap slotMap);
 }
