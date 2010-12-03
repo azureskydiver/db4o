@@ -185,10 +185,20 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 
     @decaf.RemoveFirst(decaf.Platform.JDK11)
 	private PreparedComparison platformComparisonFor(final Object source) {
-		//TODO: Move the comparable wrapping to a .Net specific StandardStructHandler
+    	if(source == null) {
+    		return new PreparedComparison() {
+				public int compareTo(Object obj) {
+					return obj == null ? 0 : -1;
+				}
+			};
+    	}
+    	//TODO: Move the comparable wrapping to a .Net specific StandardStructHandler
     	if (source instanceof Comparable) {
         	return new PreparedComparison(){
 				public int compareTo(Object obj) {
+					if(obj == null) {
+						return 1;
+					}
 					Comparable self = (Comparable) source;
 					return self.compareTo(obj);
 				}        		
