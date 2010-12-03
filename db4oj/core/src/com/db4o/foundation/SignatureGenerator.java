@@ -19,9 +19,15 @@ public class SignatureGenerator {
 	public static String generateSignature() {
 		StringBuffer sb = new StringBuffer();
 		try {
-			sb.append(java.net.InetAddress.getLocalHost().getHostName());
+			String hostName = java.net.InetAddress.getLocalHost().getHostName() + "_";
+			if(hostName.length() > 15){
+				hostName = hostName.substring(0,15);
+			}
+			sb.append(hostName);
 		} catch (UnknownHostException e) {
 		}
+		sb.append(Long.toHexString(System.currentTimeMillis()));
+		sb.append(Integer.toHexString(_counter++));
 		int hostAddress = 0;
 		byte[] addressBytes;
 		try {
@@ -33,19 +39,14 @@ public class SignatureGenerator {
 		} catch (UnknownHostException e) {
 		}
 		sb.append(Integer.toHexString(hostAddress));
-		sb.append(Long.toHexString(System.currentTimeMillis()));
-		sb.append(pad(Integer.toHexString(randomInt())));
-		sb.append(Integer.toHexString(_counter++));
-		return sb.toString();
+		for (int i = 0; i < 4; i++) {
+			sb.append(Integer.toHexString(randomInt()));
+		}
+		return sb.toString().substring(0, 31);
 	}
 
 	private static int randomInt() {
 		return _random.nextInt();
 	}
-	
-	private static String pad(String str){
-		return (str + "XXXXXXXX").substring(0, 8);
-	}
-
 
 }
