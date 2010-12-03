@@ -9,6 +9,7 @@ import com.db4o.internal.*;
 /**
 * @exclude
 */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ClassNode {
 	
 	public static Set<ClassNode> buildHierarchy(ClassMetadataRepository repository) {

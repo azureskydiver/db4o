@@ -10,6 +10,7 @@ import com.db4o.internal.slots.*;
 /**
 * @exclude
 */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class FileUsageStats {
 	private TreeStringObject<ClassUsageStats> _classUsageStats = null;
 	private long _fileSize;

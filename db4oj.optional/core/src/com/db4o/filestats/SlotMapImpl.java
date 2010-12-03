@@ -11,6 +11,7 @@ import com.db4o.internal.slots.*;
 /**
 * @exclude
 */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class SlotMapImpl implements SlotMap {
 
 	private TreeIntObject<Slot> _slots = null;

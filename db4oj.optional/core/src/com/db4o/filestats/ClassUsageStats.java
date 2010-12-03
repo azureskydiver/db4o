@@ -6,6 +6,7 @@ package com.db4o.filestats;
 /**
 * @exclude
 */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ClassUsageStats {
 	private final String _className;
 	private final long _slotUsage;
