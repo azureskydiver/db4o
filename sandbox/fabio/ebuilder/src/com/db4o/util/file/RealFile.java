@@ -50,10 +50,26 @@ public class RealFile implements IFile {
 	}
 
 	public InputStream openInputStream() {
+		mkParents();
 		try {
 			return new FileInputStream(realFile());
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	private void mkParents() {
+		if (parent != null) {
+			parent.mkdir();
+		}
+	}
+
+	private void mkdir() {
+		if (parent != null) {
+			parent.mkdir();
+		}
+		if (!realFile().exists()) {
+			realFile().mkdirs();
 		}
 	}
 
@@ -93,6 +109,28 @@ public class RealFile implements IFile {
 		} else if (!realFile.equals(other.realFile))
 			return false;
 		return true;
+	}
+
+	@Override
+	public OutputStream openOutputStream(boolean append) {
+		mkParents();
+
+		try {
+			return new FileOutputStream(realFile(), append);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public RandomAccessBuffer asBuffer() {
+		mkParents();
+
+		try {
+			return new RandomAccessRealFile(realFile());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	
