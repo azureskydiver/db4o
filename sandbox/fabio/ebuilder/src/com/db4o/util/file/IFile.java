@@ -9,9 +9,12 @@ public interface IFile {
 	XMLParser xml();
 
 	InputStream openInputStream();
+	OutputStream openOutputStream(boolean append);
 
 	String getAbsolutePath();
 
 	String name();
+
+	RandomAccessBuffer asBuffer();
 
 }

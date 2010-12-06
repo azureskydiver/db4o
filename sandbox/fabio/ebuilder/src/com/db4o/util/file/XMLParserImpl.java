@@ -8,9 +8,9 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 final class XMLParserImpl implements XMLParser {
-	private final RealFile realFile;
+	private final IFile realFile;
 
-	XMLParserImpl(RealFile realFile) {
+	XMLParserImpl(IFile realFile) {
 		this.realFile = realFile;
 	}
 
