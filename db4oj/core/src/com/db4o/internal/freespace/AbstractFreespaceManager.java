@@ -19,7 +19,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     private static final int INTS_IN_SLOT = 12;
     
-	private static final int REMAINDER_SIZE_LIMIT = 20; 
+	public static final int REMAINDER_SIZE_LIMIT = 20; 
     
     public static byte checkType(byte systemType){
         if(systemType == FM_DEFAULT){

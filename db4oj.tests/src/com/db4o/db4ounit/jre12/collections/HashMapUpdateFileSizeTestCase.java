@@ -5,6 +5,9 @@ package com.db4o.db4ounit.jre12.collections;
 import java.io.*;
 import java.util.*;
 
+import com.db4o.filestats.*;
+import com.db4o.internal.freespace.*;
+
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -42,11 +45,7 @@ public class HashMapUpdateFileSizeTestCase extends AbstractDb4oTestCase implemen
 		}
 		defragment();
 		long afterUpdate = dbSize();
-		/*
-		 * FIXME: the database file size is uncertain? 
-		 * We met similar problem before.
-		 */
-		Assert.isTrue(afterUpdate - beforeUpdate < 2);
+		Assert.isTrue(afterUpdate - beforeUpdate < AbstractFreespaceManager.REMAINDER_SIZE_LIMIT);
 	}
 
 	private void warmUp() throws Exception, IOException {
@@ -63,7 +62,8 @@ public class HashMapUpdateFileSizeTestCase extends AbstractDb4oTestCase implemen
 	}
 	
 	private long dbSize() {
-		return db().systemInfo().totalSize();
+		FileUsageStats stats = new FileUsageStatsCollector(db(), false).collectStats();
+		return stats.totalUsage()-stats.freespace();
 	}
 
 }
