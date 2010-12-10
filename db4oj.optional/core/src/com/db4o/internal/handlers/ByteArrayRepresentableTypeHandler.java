@@ -14,7 +14,7 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  * @exclude
  */
-public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, IndexableTypeHandler {
+public abstract class ByteArrayRepresentableTypeHandler<T> implements ValueTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, IndexableTypeHandler {
 
 	public void defragment(DefragmentContext context) {
 		skip(context);
@@ -29,15 +29,15 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 	}
 	
 	public void write(WriteContext context, Object obj) {
-		byte[] data = toByteArray((TBigNumber)obj);
+		byte[] data = toByteArray((T)obj);
 		context.writeInt(data.length);
 		context.writeBytes(data);
 	}
 
 	public PreparedComparison<Object> prepareComparison(final Context context, Object obj) {
-		final TBigNumber value = obj instanceof TransactionContext
-			? bigNumberFrom(((TransactionContext)obj)._object, context)
-			: bigNumberFrom(obj, context);
+		final T value = obj instanceof TransactionContext
+			? valueFrom(((TransactionContext)obj)._object, context)
+			: valueFrom(obj, context);
 			
 		return new PreparedComparison<Object>() {
 			public int compareTo(Object other) {
@@ -47,7 +47,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 				if(value == null) {
 					return -1;
 				}
-			    return compare(value, bigNumberFrom(other, context));
+			    return compare(value, valueFrom(other, context));
 			}
 		};
 	}
@@ -120,17 +120,17 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
         return buffer.readPayloadWriter(payLoadOffSet, length);
 	}
 
-	protected abstract TBigNumber fromByteArray(byte[] data);
+	protected abstract T fromByteArray(byte[] data);
 	
-	protected abstract byte[] toByteArray(TBigNumber obj);
+	protected abstract byte[] toByteArray(T obj);
 	
-	protected abstract int compare(TBigNumber x, TBigNumber y);
+	protected abstract int compare(T x, T y);
 
 	private ByteArrayBuffer bufferFromSlot(Context context, Slot slot) {
 		return context.transaction().container().decryptedBufferByAddress(slot.address(), slot.length());
 	}
 
-	private TBigNumber bigNumberFrom(Object obj, Context context) {
+	private T valueFrom(Object obj, Context context) {
 		if(obj instanceof Slot) {
 			obj = bufferFromSlot(context, (Slot)obj);
 		}
@@ -138,11 +138,11 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 			ReadBuffer buffer = (ReadBuffer)obj;
 			int offset = buffer.offset();
 			buffer.seek(0);
-			TBigNumber number = unmarshall(buffer);
+			T number = unmarshall(buffer);
 			buffer.seek(offset);
 			return number;
 		}
-		return (TBigNumber)obj;
+		return (T)obj;
     }
 	
 	private void skip(ReadBuffer context) {
@@ -154,7 +154,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 		return slot.isNull();
 	}
 
-	private TBigNumber unmarshall(final ReadBuffer buffer) {
+	private T unmarshall(final ReadBuffer buffer) {
 	    byte[] data = new byte[buffer.readInt()];
 		buffer.readBytes(data);
 		return fromByteArray(data);
