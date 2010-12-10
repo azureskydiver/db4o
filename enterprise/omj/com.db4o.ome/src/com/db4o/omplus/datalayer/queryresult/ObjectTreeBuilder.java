@@ -23,8 +23,7 @@ public class ObjectTreeBuilder {
 	
 	public ObjectTreeBuilder(){
 		db  = Activator.getDefault().getDatabaseInterface(); 
-		if( reflector == null)
-			reflector = db.reflector();
+		reflector=db.reflector();		
 	}
 	
 	private ArrayList<Object> modifiedObjList = new ArrayList<Object>();
@@ -55,12 +54,12 @@ public class ObjectTreeBuilder {
 			else
 			{
 				ReflectClass clazz = getReflectClazz(className);
-
-				if(clazz.isArray())
+				ReflectClass refClass = getReflectClazz(resultObj); 
+				if(clazz.isArray() || refClass.isArray())
 				{
 					nodes = makeArrayNode(resultObj, parent);
 				} 
-				else if (clazz.isCollection())
+				else if (clazz.isCollection() || refClass.isCollection())
 				{
 					nodes = makeCollectionNode(resultObj, parent);
 				} 
