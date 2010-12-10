@@ -11,6 +11,7 @@ public class AllTests extends Db4oTestSuite {
 			com.db4o.db4ounit.optional.monitoring.AllTests.class,
 			BigMathSupportTestCase.class,
 			FileUsageStatsTestCase.class,
+			UuidSupportTestCase.class,
 		};
 	}
 
