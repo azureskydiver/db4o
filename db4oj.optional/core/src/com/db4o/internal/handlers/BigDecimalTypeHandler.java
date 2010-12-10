@@ -6,7 +6,7 @@ import java.math.*;
  * @sharpen.ignore
  * @exclude
  */
-public class BigDecimalTypeHandler extends BigNumberTypeHandler<BigDecimal> {
+public class BigDecimalTypeHandler extends ByteArrayRepresentableTypeHandler<BigDecimal> {
 
 	@Override
 	protected BigDecimal fromByteArray(byte[] data) {
