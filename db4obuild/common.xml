@@ -374,8 +374,10 @@
 				
 		<property name="filename.jdk1.2.taj.jar" value="${db4o.file}taj-java1.2.jar" />
 		<property name="filename.jdk1.5.taj.jar" value="${db4o.file}taj-java5.jar" />
-		<property name="filename.osgi.jar" value="${db4o.file}osgi.jar" />
-		<property name="filename.osgi.test.jar" value="${db4o.file}osgi-test.jar" />
+		<property name="filename.osgi1.2.jar" value="${db4o.file}osgi-java1.2.jar" />
+		<property name="filename.osgi1.2.test.jar" value="${db4o.file}osgi-test-java1.2.jar" />
+		<property name="filename.osgi1.5.jar" value="${db4o.file}osgi-java5.jar" />
+		<property name="filename.osgi1.5.test.jar" value="${db4o.file}osgi-test-java5.jar" />
 		<property name="filename.jdk1.1.nodep.jar" value="${db4o.file}all-java1.1.jar" />
 		<property name="filename.jdk1.2.nodep.jar" value="${db4o.file}all-java1.2.jar" />
 		<property name="filename.jdk1.5.nodep.jar" value="${db4o.file}all-java5.jar" />
@@ -406,8 +408,10 @@
 				
 		<property name="file.jdk1.2.taj.jar" value="${dir.dist.jars}/${filename.jdk1.2.taj.jar}" />
 		<property name="file.jdk1.5.taj.jar" value="${dir.dist.jars}/${filename.jdk1.5.taj.jar}" />
-		<property name="file.osgi.jar" value="${dir.dist.jars}/${filename.osgi.jar}" />
-		<property name="file.osgi.test.jar" value="${dir.dist.jars}/${filename.osgi.test.jar}" />
+		<property name="file.osgi1.2.jar" value="${dir.dist.jars}/${filename.osgi1.2.jar}" />
+		<property name="file.osgi1.2.test.jar" value="${dir.dist.jars}/${filename.osgi1.2.test.jar}" />
+		<property name="file.osgi1.5.jar" value="${dir.dist.jars}/${filename.osgi1.5.jar}" />
+		<property name="file.osgi1.5.test.jar" value="${dir.dist.jars}/${filename.osgi1.5.test.jar}" />
 		<property name="file.sharp.jar" value="${dir.dist.jars}/${db4o.file}sharp.jar" />
 		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.file}test.zip" />
 		<property name="file.dist.java" value="${dir.dist}/${db4o.file}java.zip" />
