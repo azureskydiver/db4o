@@ -47,6 +47,10 @@ public class FileUsageStatsCollector {
 		System.out.println(stats);
 	}
 
+	public static FileUsageStats runStats(String dbPath) {
+		return runStats(dbPath, false);
+	}
+
 	public static FileUsageStats runStats(String dbPath, boolean collectSlots) {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(new FileStorage());
