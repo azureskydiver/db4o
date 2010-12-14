@@ -80,7 +80,7 @@
 		<property name="installer.package.guid" value="${installer.package.guid.net40}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net40}" />
 		
-		<property name="silverlight.version" value="3.0" />
+		<property name="silverlight.version" value="4.0" />
 		<property name="cf.not.supported" value="true" />
 	</target>
 	
