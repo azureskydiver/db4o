@@ -53,13 +53,12 @@ public class ObjectTreeBuilder {
 				nodes = makeArrayNode(resultObj, parent);
 			else
 			{
-				ReflectClass clazz = getReflectClazz(className);
-				ReflectClass refClass = getReflectClazz(resultObj); 
-				if(clazz.isArray() || refClass.isArray())
+				ReflectClass clazz = getReflectClazz(resultObj);
+				if(clazz.isArray())
 				{
 					nodes = makeArrayNode(resultObj, parent);
 				} 
-				else if (clazz.isCollection() || refClass.isCollection())
+				else if (clazz.isCollection())
 				{
 					nodes = makeCollectionNode(resultObj, parent);
 				} 
