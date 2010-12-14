@@ -5,7 +5,7 @@
 	<version>@VERSION@</version>
 	<packaging>jar</packaging>
 	<name>db4o for OSGi</name>
-	<description>db4o for OSGi for JDK 1.2 and above</description>
+	<description>db4o for OSGi for JDK 1.5 and above</description>
 	<url>http://www.db4o.com</url>
 	<licenses>
 		<license>

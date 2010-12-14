@@ -303,7 +303,7 @@
     </target>
 
 	<target name="runosgitests">
-		<ant antfile="build-java.xml" target="run.tests.osgi" />
+		<ant antfile="build-java.xml" target="run.tests.osgi1.5" />
 	</target>
 
 	<target name="runtestsjava">

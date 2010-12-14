@@ -56,7 +56,7 @@
 		    build.db4otools1.5,
 		    build.db4otools.bench,
 			build.nodep,
-			build.osgi" 
+			build.osgi1.5" 
 	/>
 	
 	<target name="decaf.all" depends="decaf.workspace, install-decaf-plugin">
@@ -706,7 +706,7 @@
 		</jar>
 	</target>
 
-	<target name="build.osgi" depends="build.nqopt1.2, build.db4otools1.2, build.nodep1.2">
+	<target name="build.osgi1.2" depends="build.nqopt1.2, build.db4otools1.2, build.nodep1.2">
 		<delete dir="${dir.dist.classes.osgi}"/>
 		<delete dir="${dir.dist.classes.osgi.lib}"/>
 		<mkdir dir="${dir.dist.classes.osgi}"/>
@@ -741,7 +741,7 @@
 				<filter token="db4o.java.version" value="1.2"/>
 			</filterset>
 		</copy>
-		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
+		<jar destfile="${file.osgi1.2.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
 			<fileset dir="${dir.dist.classes.osgi}" />
 			<fileset dir="${dir.osgi}">
 				<include name="src/**/*.java" />
@@ -785,7 +785,7 @@
 				<filter token="db4o.java.version" value="5"/>
 			</filterset>
 		</copy>
-		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
+		<jar destfile="${file.osgi1.5.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
 			<fileset dir="${dir.dist.classes.osgi}" />
 			<fileset dir="${dir.osgi}">
 				<include name="src/**/*.java" />
@@ -897,7 +897,7 @@
 			build.db4ojdk1.2.tests,
 			build.db4ojdk1.5.tests,
 			build.nqopt.tests,
-			build.osgi.tests,
+			build.osgi.tests1.5,
 			build.taj.tests"
 	/>
 	
@@ -1128,7 +1128,7 @@
 		</javac>
 	</target>
 	
-	<target name="build.osgi.tests" depends="build.osgi, build.db4ojdk1.2.tests, build.nqopt.tests">
+	<target name="build.osgi.tests1.2" depends="build.osgi1.2, build.db4ojdk1.2.tests, build.nqopt.tests">
 		<delete dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
@@ -1149,7 +1149,7 @@
 				<pathelement path="${file.jdk1.2.cs.jar}" />
 				<pathelement path="${file.jdk1.2.optional.jar}" />
 				<pathelement path="${file.jdk1.2.cs.optional.jar}" />
-				<pathelement path="${file.osgi.jar}" />
+				<pathelement path="${file.osgi1.2.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}" />
 				<fileset dir="${dir.build.lib}">
@@ -1167,13 +1167,61 @@
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oTestActivator"/>
+				<filter token="db4o.java.version" value="1.2"/>
 			</filterset>
 		</copy>
-		<jar destfile="${file.osgi.test.jar}" manifest="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF">
+		<jar destfile="${file.osgi1.2.test.jar}" manifest="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF">
 			<fileset dir="${dir.dist.classes.osgi.test}"></fileset>
 		</jar>
 	</target>
+
+	<target name="build.osgi.tests1.5" depends="build.osgi1.5, build.db4ojdk1.5.tests, build.nqopt.tests">
+		<delete dir="${dir.dist.classes.osgi.test}"/>
+		<mkdir dir="${dir.dist.classes.osgi.test}"/>
+		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
+		<copy todir="${dir.dist.classes.osgi.test.lib}" file="${file.jdk1.5.db4ounit.jar}"/>
+		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}">
+			<fileset dir="${dir.dist.classes.test.jdk1.2}">
+				<include name="**/*" />
+			</fileset>
+		</jar>
+		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}">
+			<fileset dir="${dir.dist.classes.test.nq.jdk1.5}"></fileset>
+		</jar>
 	
+		<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8" target="1.5" source="1.5">
+			<classpath>
+				<pathelement path="${file.jdk1.5.db4ounit.jar}" />
+				<pathelement path="${file.jdk1.5.jar}" />
+				<pathelement path="${file.jdk1.5.cs.jar}" />
+				<pathelement path="${file.jdk1.5.optional.jar}" />
+				<pathelement path="${file.jdk1.5.cs.optional.jar}" />
+				<pathelement path="${file.osgi1.5.jar}" />
+				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}" />
+				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}" />
+				<fileset dir="${dir.build.lib}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<src path="${dir.osgi.test.src}"/>
+		</javac>
+		<copy tofile="${dir.dist.classes.osgi.test}/build.properties" file="${dir.osgi.test}/build.properties.TM" overwrite="true">
+			<filterset>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+			</filterset>
+		</copy>
+		<copy tofile="${file.osgi.test.manifest.filtered}" file="${file.osgi.test.manifest}.TM" overwrite="true">
+			<filterset>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oTestActivator"/>
+				<filter token="db4o.java.version" value="5"/>
+			</filterset>
+		</copy>
+		<jar destfile="${file.osgi1.5.test.jar}" manifest="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF">
+			<fileset dir="${dir.dist.classes.osgi.test}"></fileset>
+		</jar>
+	</target>
+
 	<target name="build.taj.tests" depends="build.taj1.2, build.taj1.5, build.db4ojdk1.2.tests, build.db4ojdk1.5.tests">
 		<mkdir dir="${dir.dist.classes.jdk1.2.test.taj}" />
 		<javac fork="true" 
@@ -1301,7 +1349,7 @@
 			run.tests.nqopt,
 			run.tests.taj,
 			run.tests.concurrency,
-			run.tests.osgi,
+			run.tests.osgi1.5,
 			run.tests.nodep.jdk1.1"
 	/>
 	
@@ -1601,13 +1649,45 @@
 		</java>
     </target>
 	
-	<target name="run.tests.osgi" depends="build.osgi.tests" unless="ignore.run.tests.osgi">
+	<target name="run.tests.osgi1.2" depends="build.osgi.tests1.2" unless="ignore.run.tests.osgi1.2">
 		<delete dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi.conf}"/>
 		<copy tofile="${file.test.osgi.conf}" file="${file.osgi}"/>
-		<copy tofile="${dir.test.osgi}/db4o-osgi-test.jar" file="${file.osgi.test.jar}"/>
-		<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi.jar}"/>
+		<copy tofile="${dir.test.osgi}/db4o-osgi-test.jar" file="${file.osgi1.2.test.jar}"/>
+		<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi1.2.jar}"/>
+		
+		<java 
+			taskname="osgi/cdc"
+			classname="com.db4o.osgi.test.launch.TestLauncher" 
+			fork="true" 
+			jvm="${file.jvm.cdc_fp}" 
+			jvmargs="${java.vmargs}"
+			failonerror="true" 
+			timeout="3600000">
+			<!-- TODO extract reference to build classpath in common.xml -->
+			<classpath>
+				<dirset dir="${dir.build.bin}"/>
+				<fileset dir="${dir.build.lib}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<jvmarg value="-Xmx64m"/>
+			<jvmarg value="-Dosgi.configuration.area=${dir.test.osgi.conf}"/>
+			<jvmarg value="-Dosgi.instance.area=${dir.test.osgi}/data"/>
+			<sysproperty key="dir.workspace" value="${dir.base}" />
+			<arg value="${dir.test.osgi}/db4o-osgi-edition.jar" />
+			<arg value="${dir.test.osgi}/db4o-osgi-test.jar" />
+		</java>
+	</target>
+
+	<target name="run.tests.osgi1.5" depends="build.osgi.tests1.5" unless="ignore.run.tests.osgi">
+		<delete dir="${dir.test.osgi}"/>
+		<mkdir dir="${dir.test.osgi}"/>
+		<mkdir dir="${dir.test.osgi.conf}"/>
+		<copy tofile="${file.test.osgi.conf}" file="${file.osgi}"/>
+		<copy tofile="${dir.test.osgi}/db4o-osgi-test.jar" file="${file.osgi1.5.test.jar}"/>
+		<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi1.5.jar}"/>
 		
 		<java 
 			taskname="osgi/cdc"
@@ -1822,7 +1902,7 @@
         <copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.osgi}" overwrite="true" />
 	</target>
 	
-	<target name="prepare.java.src" depends="build.osgi, build.osgi.tests">
+	<target name="prepare.java.src" depends="build.osgi1.5, build.osgi.tests1.5">
 		<copy todir="${dir.dist.java.src}/${name.project.db4ounit}">
 			<fileset dir="${dir.db4ounit}">
 				<include name=".project" />
@@ -2082,7 +2162,7 @@
 				run.tests.taj,
 				run.tests.ant.instrumentation,
 				run.tests.concurrency, 
-				run.tests.osgi,
+				run.tests.osgi1.5,
 				run.tests.jdk1.5.instrumented,
 				package.java" />
 	

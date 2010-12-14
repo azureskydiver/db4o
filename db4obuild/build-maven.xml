@@ -80,7 +80,7 @@
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.nqopt.jar}" pom="db4o-nqopt-java1.2.xml" />
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.nqopt.jar}" pom="db4o-nqopt-java5.xml" />
 		
-		<deployArtifact repositoryId="${repositoryId}" file="${file.osgi.jar}" pom="db4o-osgi.xml" />
+		<deployArtifact repositoryId="${repositoryId}" file="${file.osgi1.5.jar}" pom="db4o-osgi.xml" />
 		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.taj.jar}" pom="db4o-taj-java1.2.xml" />
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.taj.jar}" pom="db4o-taj-java5.xml" />
