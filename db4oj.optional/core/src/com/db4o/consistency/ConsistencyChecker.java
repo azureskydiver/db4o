@@ -107,6 +107,16 @@ public class ConsistencyChecker {
 		}
 	}
 	
+	public static void main(String[] args) {
+		EmbeddedObjectContainer db = Db4oEmbedded.openFile(args[0]);
+		try {
+			System.out.println(new ConsistencyChecker(db).checkSlotConsistency());
+		}
+		finally {
+			db.close();
+		}
+	}
+	
 	public ConsistencyChecker(ObjectContainer db) {
 		_db = (LocalObjectContainer) db;
 		
@@ -222,6 +232,19 @@ public class ConsistencyChecker {
 	}
 
 	private void addMapping(Slot slot, SlotSource source) {
-		mappings = TreeIntObject.add(mappings, slot.address(), new SlotWithSource(slot, source));
+		mappings = Tree.add(mappings, new MappingTree(slot, source));
+	}
+	
+	private static class MappingTree extends TreeIntObject<SlotWithSource> {
+
+		public MappingTree(Slot slot, SlotSource source) {
+			super(slot.address(), new SlotWithSource(slot, source));
+		}
+		
+		@Override
+		public boolean duplicates() {
+			return true;
+		}
+		
 	}
 }
