@@ -1180,8 +1180,9 @@
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
 		<copy todir="${dir.dist.classes.osgi.test.lib}" file="${file.jdk1.5.db4ounit.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.test.lib}" file="${file.easymock.jar}"/>
 		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}">
-			<fileset dir="${dir.dist.classes.test.jdk1.2}">
+			<fileset dir="${dir.dist.classes.test.jdk1.5}">
 				<include name="**/*" />
 			</fileset>
 		</jar>
