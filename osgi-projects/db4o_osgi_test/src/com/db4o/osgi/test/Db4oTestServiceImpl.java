@@ -4,6 +4,9 @@ package com.db4o.osgi.test;
 
 import org.osgi.framework.*;
 
+import com.db4o.db4ounit.common.filelock.*;
+import com.db4o.db4ounit.jre5.*;
+import com.db4o.db4ounit.optional.monitoring.cs.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.nativequery.analysis.*;
 import com.db4o.test.nativequery.cats.*;
@@ -31,7 +34,7 @@ class Db4oTestServiceImpl implements Db4oTestService {
 				BooleanReturnValueTestCase.class,
 				NQRegressionTestCase.class,
 				NQCatConsistencyTestCase.class,
-				com.db4o.db4ounit.jre12.AllTestsJdk1_2.class
+				AllTestsDb4oUnitJdk5.class
 			});
 		return new ConsoleTestRunner(suite).run();
 	}
