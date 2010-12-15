@@ -15,7 +15,7 @@ import db4ounit.extensions.util.IOServices.ProcessRunner;
 @decaf.Remove
 public class DatabaseFileLockedAcrossVMTestCase
 	extends TestWithTempFile
-	implements OptOutInMemory, OptOutWorkspaceIssue {
+	implements OptOutInMemory, OptOutNoInheritedClassPath, OptOutWorkspaceIssue {
 	
 	
 	public void testLockedFile() throws Exception {

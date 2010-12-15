@@ -52,7 +52,17 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 		return "OSGi/bundle";
 	}
 
+	private final static Class[] OPT_OUT = { OptOutNoFileSystemData.class, OptOutCustomContainerInstantiation.class, OptOutNoInheritedClassPath.class };
+
 	public boolean accept(Class clazz) {
-		return super.accept(clazz)&&(!(OptOutNoFileSystemData.class.isAssignableFrom(clazz)));
+		if(!super.accept(clazz)) {
+			return false;
+		}
+		for (int optOutIdx = 0; optOutIdx < OPT_OUT.length; optOutIdx++) {
+			if(OPT_OUT[optOutIdx].isAssignableFrom(clazz)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
