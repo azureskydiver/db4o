@@ -896,7 +896,8 @@
 		depends="build.db4ojdk1.1.tests, 
 			build.db4ojdk1.2.tests,
 			build.db4ojdk1.5.tests,
-			build.nqopt.tests,
+			build.nqopt.tests1.2,
+			build.nqopt.tests1.5,
 			build.osgi.tests1.5,
 			build.taj.tests"
 	/>
@@ -1094,9 +1095,8 @@
 -->
 
 	
-	<target name="build.nqopt.tests" depends="build.nqopt1.2, build.nqopt1.5, build.db4ojdk1.2.tests, build.db4ojdk1.5.tests">
+	<target name="build.nqopt.tests1.2" depends="build.nqopt1.2, build.db4ojdk1.2.tests">
 		<mkdir dir="${dir.dist.classes.test.nq.jdk1.2}" />
-		<mkdir dir="${dir.dist.classes.test.nq.jdk1.5}" />
 		<javac
 			destdir="${dir.dist.classes.test.nq.jdk1.2}"
 			fork="true" debug="on" target="1.2" source="1.2" encoding="UTF-8">
@@ -1111,6 +1111,10 @@
 			</classpath>
 			<src path="${dir.dist.decaf.jdk1.2.nqopt.test.src}" />
 		</javac>
+	</target>
+
+	<target name="build.nqopt.tests1.5" depends="build.nqopt1.5, build.db4ojdk1.5.tests">
+		<mkdir dir="${dir.dist.classes.test.nq.jdk1.5}" />
 		<javac
 			destdir="${dir.dist.classes.test.nq.jdk1.5}"
 			fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
@@ -1127,8 +1131,8 @@
 			<src path="${dir.j.nqopt.test.src}" />
 		</javac>
 	</target>
-	
-	<target name="build.osgi.tests1.2" depends="build.osgi1.2, build.db4ojdk1.2.tests, build.nqopt.tests">
+
+	<target name="build.osgi.tests1.2" depends="build.osgi1.2, build.db4ojdk1.2.tests, build.nqopt.tests1.2">
 		<delete dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
@@ -1175,7 +1179,7 @@
 		</jar>
 	</target>
 
-	<target name="build.osgi.tests1.5" depends="build.osgi1.5, build.db4ojdk1.5.tests, build.nqopt.tests">
+	<target name="build.osgi.tests1.5" depends="build.osgi1.5, build.db4ojdk1.5.tests, build.nqopt.tests1.5">
 		<delete dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
@@ -1347,7 +1351,8 @@
 			run.tests.jdk1.5,
 			run.tests.android.jdk1.5,
 			run.tests.instrumentation,
-			run.tests.nqopt,
+			run.tests.nqopt1.2,
+			run.tests.nqopt1.5,
 			run.tests.taj,
 			run.tests.concurrency,
 			run.tests.osgi1.5,
@@ -1562,7 +1567,7 @@
 		</java>
 	</target>
 	
-	<target name="run.tests.nqopt" depends="build.nqopt.tests">
+	<target name="run.tests.nqopt1.2" depends="build.nqopt.tests1.2">
         <path id="tests.nqopt.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
             <pathelement location="${file.jdk1.2.jar}" />
@@ -1572,6 +1577,24 @@
 			<pathelement location="${file.jdk1.2.db4ounit.jar}" />
 			<pathelement location="${file.ant.jar}" />
         </path>
+
+		<java taskname="nqopt/j12" jvm="${file.jvm.jdk1.2}"
+				jvmargs="${java.vmargs}"
+				fork="true"
+				classname="com.db4o.test.nativequery.AllTestsNQ"
+				failonerror="true"
+				timeout="320000">
+			<classpath>
+				<pathelement location="${dir.dist.classes.test.nq.jdk1.2}" />
+                <pathelement location="${file.jdk1.2.nqopt.jar}" />
+				<pathelement location="${file.bloat.jar}" />
+				<pathelement location="${file.jdk1.2.instrumentation.jar}" />
+                <path refid="tests.nqopt.jdk1.2.cp" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="run.tests.nqopt1.5" depends="build.nqopt.tests1.5">
         <path id="tests.nqopt.jdk1.5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
         	<pathelement location="${file.jdk1.5.jar}" />
@@ -1596,23 +1619,8 @@
                 <path refid="tests.nqopt.jdk1.5.cp" />
 			</classpath>
 		</java>
-
-		<java taskname="nqopt/j12" jvm="${file.jvm.jdk1.2}"
-				jvmargs="${java.vmargs}"
-				fork="true"
-				classname="com.db4o.test.nativequery.AllTestsNQ"
-				failonerror="true"
-				timeout="320000">
-			<classpath>
-				<pathelement location="${dir.dist.classes.test.nq.jdk1.2}" />
-                <pathelement location="${file.jdk1.2.nqopt.jar}" />
-				<pathelement location="${file.bloat.jar}" />
-				<pathelement location="${file.jdk1.2.instrumentation.jar}" />
-                <path refid="tests.nqopt.jdk1.2.cp" />
-			</classpath>
-		</java>
 	</target>
-	
+
     <target name="run.tests.concurrency" depends="build.db4ojdk1.1.tests, build.db4ojdk1.5.tests">
         <java taskname="conc/j11" jvm="${file.jvm.jdk1.1}" 
 			jvmargs="${java.vmargs}"
@@ -2159,7 +2167,8 @@
 		depends="run.tests.jdk1.1, 
 				run.tests.jdk1.2,
 				run.tests.instrumentation,
-				run.tests.nqopt,
+				run.tests.nqopt1.2,
+				run.tests.nqopt1.5,
 				run.tests.taj,
 				run.tests.ant.instrumentation,
 				run.tests.concurrency, 
