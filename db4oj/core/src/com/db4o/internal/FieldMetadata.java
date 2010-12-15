@@ -631,7 +631,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public void activate(UnmarshallingContext context) {
-        if(! checkAlive(context) || !shouldStoreField()) {
+        if(! checkAlive(context)) {
+            return;
+        }
+        if(!shouldStoreField()) {
+            incrementOffset(context);
             return;
         }
         Object toSet = read(context);
