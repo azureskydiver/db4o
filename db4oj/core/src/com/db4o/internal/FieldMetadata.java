@@ -1022,7 +1022,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }    
     
     public void defragAspect(final DefragmentContext context) {
-    	if (!alive() && !updating()) {
+    	if(!canDefragment()){
     		throw new IllegalStateException("Field '" + toString() + "' cannot be defragmented at this time.");
     	}
     	final TypeHandler4 correctTypeHandlerVersion = HandlerRegistry.correctHandlerVersion(context, getHandler(), _fieldType);
@@ -1033,6 +1033,16 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             }
         });
     }
+
+	private boolean canDefragment() {
+		if (alive() || updating() ) {
+			return true;
+		}
+    	if(_fieldType == null || getHandler() == null){
+    		return false;
+    	}
+    	return ! _fieldType.stateDead();
+	}
     
 	public void createIndex() {
 	    

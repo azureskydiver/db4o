@@ -4,6 +4,7 @@
  */
 package com.db4o.db4ounit.common.ext;
 
+import java.io.*;
 import java.util.Stack;
 
 import com.db4o.Db4oEmbedded;
@@ -16,7 +17,6 @@ import com.db4o.defragment.DefragmentConfig;
 import com.db4o.reflect.Reflector;
 
 import db4ounit.Assert;
-import db4ounit.CodeBlock;
 import db4ounit.extensions.ExcludingReflector;
 import db4ounit.extensions.OptOutExcludingClassLoaderIssue;
 import db4ounit.extensions.fixtures.OptOutNetworkingCS;
@@ -35,13 +35,10 @@ public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile 
 	 * @sharpen.ignore
 	 */
 	@decaf.Ignore(decaf.Platform.JDK11)
-	public void testDefrag() {
-		final Throwable e = Assert.expect(IllegalStateException.class, new CodeBlock() { public void run() throws Throwable {
-			final DefragmentConfig config = new DefragmentConfig(tempFile());
-			config.db4oConfig(configWith(new com.db4o.reflect.jdk.JdkReflector(new db4ounit.extensions.util.ExcludingClassLoader(getClass().getClassLoader(), Stack.class))));
-			Defragment.defrag(config);
-		}});
-		Assert.isTrue(e.getMessage().indexOf("_fieldWithTypeHandler") >= 0, "Message should contain the offending field.");
+	public void testDefrag() throws IOException {
+		final DefragmentConfig config = new DefragmentConfig(tempFile());
+		config.db4oConfig(configWith(new com.db4o.reflect.jdk.JdkReflector(new db4ounit.extensions.util.ExcludingClassLoader(getClass().getClassLoader(), Stack.class))));
+		Defragment.defrag(config);
 	}
 
 	public void testStoredClasses() {		
