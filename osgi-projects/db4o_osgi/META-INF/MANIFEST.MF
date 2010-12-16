@@ -8,7 +8,6 @@ Bundle-Vendor: db4objects, Inc.
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-ClassPath: .,
  lib/db4o-8.0.178.15299-all-java5.jar
-Bundle-ActivationPolicy: lazy  
 Export-Package: EDU.purdue.cs.bloat.benchmark;uses:="EDU.purdue.cs.bloat.editor",
  EDU.purdue.cs.bloat.cfg;
   uses:="EDU.purdue.cs.bloat.util,
