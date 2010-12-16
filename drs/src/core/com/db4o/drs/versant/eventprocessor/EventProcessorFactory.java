@@ -14,7 +14,7 @@ public class EventProcessorFactory {
 	        }
 	    });
 		VodDatabase vod = new VodDatabase(eventConfiguration.databaseName);
-		EventProcessorImpl eventProcessor = new EventProcessorImpl(client, vod);
+		EventProcessorImpl eventProcessor = new EventProcessorImpl(client, vod, eventConfiguration.verbose);
 		return eventProcessor;
 	}
 

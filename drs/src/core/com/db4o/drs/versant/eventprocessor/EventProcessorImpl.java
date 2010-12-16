@@ -4,11 +4,9 @@ package com.db4o.drs.versant.eventprocessor;
 
 import static com.db4o.qlin.QLinSupport.*;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.ipc.*;
 import com.db4o.drs.versant.ipc.tcp.*;
@@ -72,8 +70,10 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private long _commitTokenClassMetadataLoid;
 
 	private long _barrierTokenClassMetadataLoid;
+	
+	private boolean _verbose;
 
-	public EventProcessorImpl(VodEventClient client, VodDatabase vod)  {
+	public EventProcessorImpl(VodEventClient client, VodDatabase vod, boolean verbose)  {
 		_client = client;
 		this._vod = vod;
 	    _cobra = VodCobra.createInstance(vod);
@@ -81,6 +81,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	    startChannelsFromKnownClasses();
 	    defaultSignatureLoid();
 	    System.out.println("VOD EventProcessor for dRS is listening for events.");
+	    _verbose = verbose;
 	}
 
 	private void startChannelsFromKnownClasses() {
@@ -246,7 +247,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	private void println(String msg) {
-		if(DrsDebug.verbose){
+		if(_verbose){
 			System.out.println(msg);
 		}
 	}

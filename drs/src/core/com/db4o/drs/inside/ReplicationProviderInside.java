@@ -27,9 +27,6 @@ import com.db4o.foundation.*;
 
 public interface ReplicationProviderInside extends ReplicationProvider, CollectionSource, SimpleObjectContainer{
 	
-
-	
-	
 	/** 
 	 * Clear the  ReplicationReference cache
 	 */
