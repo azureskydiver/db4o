@@ -78,7 +78,7 @@ public class FileUsageStatsCollector {
 	}
 
 	public FileUsageStats collectStats() {
-		_stats = new FileUsageStats(_db.fileLength(), fileHeaderUsage(), idSystemUsage(), freespace(), classMetadataUsage(), freespaceUsage(), _slots);
+		_stats = new FileUsageStats(_db.fileLength(), fileHeaderUsage(), idSystemUsage(), freespace(), classMetadataUsage(), freespaceUsage(), uuidUsage(), _slots);
 		Set<ClassNode> classRoots = ClassNode.buildHierarchy(_db.classCollection());
 		for (ClassNode classRoot : classRoots) {
 			collectClassSlots(classRoot.classMetadata());
@@ -110,7 +110,7 @@ public class FileUsageStatsCollector {
 		final LongByRef usage = new LongByRef(); 
 		classMetadata.traverseDeclaredFields(new Procedure4<FieldMetadata>() {
 			public void apply(FieldMetadata field) {
-				if(!field.hasIndex()) {
+				if(field.isVirtual() || !field.hasIndex()) {
 					return;
 				}
 				usage.value += bTreeUsage(field.getIndex(_db.systemTransaction()));
@@ -243,6 +243,11 @@ public class FileUsageStatsCollector {
 		return usage;
 	}
 	
+	private long uuidUsage() {
+		BTree index = _db.uUIDIndex().getIndex(_db.systemTransaction());
+		return index == null ? 0 : bTreeUsage(index);
+	}
+
 	private int slotSizeForId(int id) {
 		return slot(id).length();
 	}
