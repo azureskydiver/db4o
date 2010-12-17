@@ -45,7 +45,7 @@ public class HashMapUpdateFileSizeTestCase extends AbstractDb4oTestCase implemen
 		}
 		defragment();
 		long afterUpdate = dbSize();
-		Assert.isTrue(afterUpdate - beforeUpdate < AbstractFreespaceManager.REMAINDER_SIZE_LIMIT);
+		Assert.isSmallerOrEqual(beforeUpdate + AbstractFreespaceManager.REMAINDER_SIZE_LIMIT, afterUpdate);
 	}
 
 	private void warmUp() throws Exception, IOException {
