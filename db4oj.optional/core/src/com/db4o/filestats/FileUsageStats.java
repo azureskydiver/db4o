@@ -21,15 +21,17 @@ public class FileUsageStats {
 	private final long _idSystem;
 	private final long _classMetadata;
 	private final long _freespaceUsage;
+	private final long _uuidUsage;
 	private final SlotMap _slots;
 	
-	FileUsageStats(long fileSize, long fileHeader, long idSystem, long freespace, long classMetadata, long freespaceUsage, SlotMap slots) {
+	FileUsageStats(long fileSize, long fileHeader, long idSystem, long freespace, long classMetadata, long freespaceUsage, long uuidUsage, SlotMap slots) {
 		_fileSize = fileSize;
 		_fileHeader = fileHeader;
 		_idSystem = idSystem;
 		_freespace = freespace;
 		_classMetadata = classMetadata;
 		_freespaceUsage = freespaceUsage;
+		_uuidUsage = uuidUsage;
 		_slots = slots;
 	}
 	
@@ -67,7 +69,14 @@ public class FileUsageStats {
 	public long freespaceUsage() {
 		return _freespaceUsage;
 	}
-	
+
+	/**
+	 * @return number of bytes used for the uuid index
+	 */
+	public long uuidUsage() {
+		return _uuidUsage;
+	}
+
 	/**
 	 * @return total file size in bytes
 	 */
@@ -79,7 +88,7 @@ public class FileUsageStats {
 	 * @return number of bytes used aggregated from all categories - should always be equal to {@link #fileSize()}
 	 */
 	public long totalUsage() {
-		final LongByRef total = new LongByRef(_fileHeader + _freespace + _idSystem + _classMetadata + _freespaceUsage);
+		final LongByRef total = new LongByRef(_fileHeader + _freespace + _idSystem + _classMetadata + _freespaceUsage + _uuidUsage);
 		Tree.traverse(_classUsageStats, new Visitor4<TreeStringObject<ClassUsageStats>>() {
 			public void visit(TreeStringObject<ClassUsageStats> node) {
 				total.value += node._value.totalUsage();
@@ -118,6 +127,7 @@ public class FileUsageStats {
 		str.append(formatLine("ID system", idSystem()));
 		str.append(formatLine("Class metadata", classMetadata()));
 		str.append(formatLine("Freespace usage", freespaceUsage()));
+		str.append(formatLine("UUID usage", uuidUsage()));
 		str.append("\n");
 		long totalUsage = totalUsage();
 		str.append(formatLine("Total", totalUsage));

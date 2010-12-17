@@ -44,7 +44,7 @@ public class FileUsageStatsTestCase extends TestWithTempFile {
 
 	private void assertFileStats() {
 		FileUsageStats stats = FileUsageStatsCollector.runStats(tempFile(), true);
-		Assert.areEqual(stats.fileSize(), stats.totalUsage());
+		Assert.areEqual(stats.fileSize(), stats.totalUsage(), stats.toString());
 	}
 
 	private void defrag() throws IOException {
@@ -60,6 +60,8 @@ public class FileUsageStatsTestCase extends TestWithTempFile {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
 		config.common().objectClass(Item.class).objectField("_name").indexed(true);
+		config.file().generateUUIDs(ConfigScope.GLOBALLY);
+		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config, tempFile());
 		List<Child> list = new ArrayList<Child>();
 		list.add(new Child());
