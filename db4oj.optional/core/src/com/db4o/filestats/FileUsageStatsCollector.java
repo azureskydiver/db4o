@@ -244,6 +244,9 @@ public class FileUsageStatsCollector {
 	}
 	
 	private long uuidUsage() {
+		if(_db.systemData().uuidIndexId() <= 0) {
+			return 0;
+		}
 		BTree index = _db.uUIDIndex().getIndex(_db.systemTransaction());
 		return index == null ? 0 : bTreeUsage(index);
 	}
