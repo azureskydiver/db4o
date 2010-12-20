@@ -67,6 +67,33 @@ public class VodDatabase {
 		this(name, new Properties());
 	}
 	
+    public VodDatabase (PersistenceManagerFactory pmf){
+    	this(extractName(pmf), pmf.getProperties());
+    	_persistenceManagerFactory = pmf;
+    }
+    
+    private static String extractName(PersistenceManagerFactory pmf){
+    	Properties properties = pmf.getProperties();
+    	String connectionURL = properties.getProperty("javax.jdo.option.ConnectionURL");
+    	if(isEmpty(connectionURL) || notVersantDBConnection(connectionURL)){
+    		throw new IllegalArgumentException("Requires a valid database connection URL for VOD");
+    	}
+    	return extractName(connectionURL);
+    }
+
+    private static String extractName(String connectionURL) {
+        return connectionURL.substring("versant:".length()).split("@")[0];
+    }
+
+    private static boolean notVersantDBConnection(String connectionURL) {
+        return !connectionURL.startsWith("versant");
+    }
+
+    private static boolean isEmpty(String connectionURL) {
+        return null==connectionURL || 0==connectionURL.trim().length();
+    }
+
+
 	private void addDefaultProperties(){
 		
 		addPropertyIfNotExists("versant.l2CacheEnabled", "false");
