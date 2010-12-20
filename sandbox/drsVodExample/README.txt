@@ -28,14 +28,41 @@ It should come up in a separate console stay up and print:
 It should come up in a separate console stay up and print:
 'VOD EventProcessor for dRS is listening for events.'
 
+Once you have done the above you can play with all the classes
+in the drs.vod.example package to store, replicate and print
+the content of a VOD and a db4o database.
+
 **************************************************************
                        * Important *
 **************************************************************
 If you want to use dRS replication in productive use, both the
 EventDriver and the EventProcessor always need to run against
 the VOD database to track changes.
- **************************************************************
- 
-Once you have done the above you can play with all the classes
-in the drs.vod.example package to store, replicate and print
-the content of a VOD and a db4o database.
+**************************************************************
+
+
+In a production environment it is recommended to adjust the
+profile.be configuration file of the database to automate
+starting the event driver and the event processor.
+
+To set this up (after creating the database and the event schema):
+- Stop the database with stopdb [databaseName] -f
+
+- Copy the setEnvironment and the startEventProcessor scripts and
+the config.ved file ( config.ved.win  or config.ved.linux)
+to the database folder  (e.g.:  C:\Versant\db\dRSVodExample )
+
+- Edit EXAMPLE_HOME in the setEnvironment script to point to
+the full path of your project
+(e.g.:  SET EXAMPLE_HOME=C:\Workspace\drsVodExample )
+
+- Add two lines like the following to the profile.be configuration
+of your database file:
+--------------------------------------------------------------
+event_daemon C:\Versant\8\bin\veddriver.exe  C:\Versant\db\drsVodExample\config.ved.win
+
+startup_script startEventProcessor.bat
+--------------------------------------------------------------
+
+- Start the database with startdb  
+

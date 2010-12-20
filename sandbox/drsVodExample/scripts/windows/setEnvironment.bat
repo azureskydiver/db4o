@@ -2,6 +2,11 @@
 SET EXAMPLE_HOME=%CD%\..\..
 
 SET JAVA=java
+
+REM To bring the eventprocessor up without a window.
+REM SET JAVA=javaw
+
+REM Use full path if needed
 REM SET JAVA="C:\Program Files (x86)\Java\jdk1.6.0_17\bin\java.exe"
 
 SET DB4O_VERSION=8.0.173.15095
