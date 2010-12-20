@@ -266,7 +266,7 @@ public class VodDatabase {
 		}
 		int serverPort = nextPort();
 		EventClientPortSelectionStrategy clientPortStrategy = new IncrementingEventClientPortSelectionStrategy(nextPort());
-		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, _eventProcessorHost, _eventProcessorPort, true);
+		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, _eventProcessorHost, _eventProcessorPort, DrsDebug.verbose);
 		_eventDriver = new VodEventDriver(_eventConfiguration);
 		boolean started = _eventDriver.start();
 		if(! started ){

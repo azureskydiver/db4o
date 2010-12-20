@@ -16,6 +16,7 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 		return new Class[] {
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
 			EnsureReplicationActiveTestCase.class,
+			ExplicitListenTestCase.class,
 			JdoClassTestCase.class,
 			UuidConverterTestCase.class,
 			VodCobraTestCase.class,
