@@ -59,7 +59,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			}}, 
 		COMM_HEARTBEAT);
 
-	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heatbeat");
+	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heartbeat");
 
 	private final ClientChannelControl _control;
 
@@ -749,5 +749,14 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public boolean isSecondClassObject(Object obj) {
 		return obj instanceof com.versant.core.jdo.sco.Date;
 	}
-	
+
+	/**
+	 * ensures that the EventProcessor is listening for changes
+	 * on the specified classes.
+	 */
+	public void listenForReplicationEvents(Class...classes) {
+		for (Class clazz : classes) {
+			ensureClassKnown(clazz);
+		}
+	}
 }
