@@ -192,8 +192,11 @@ public class HtmlWriter extends AbstractWriter {
 
     private void endCurrent() throws Exception {
         if (current != null) {
-            write("<br><br><br>");
-            write("<p align=\"center\"><a href=\"http://www.db4o.com/\" target=_top><small>www.db4o.com</small></a></p>");
+            write("<br><br>");
+            write("<div id=\"footer\"><p align=\"center\">");
+            write("Do you have any questions, suggestions or feedback? Ask your questions in the <a href=\"http://developer.db4o.com/Forums.aspx\" target=_top>db4o forums</a>. Join the <a href=\"http://developer.db4o.com\" target=_top>db4o community</a> for addional resources and news.");
+            write("<br><br><a href=\"http://www.db4o.com/\" target=_top><small>www.db4o.com</small></a></p>.");
+            write("</div>");
             // helps scrolling jump anchors to the top of the browser
             for (int i = 0; i < 50; i++) {
                 write("<br>");
