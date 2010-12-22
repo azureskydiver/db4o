@@ -34,7 +34,7 @@ public class SaveAsStorage extends StorageDecorator {
 	 * @param oldUri the path to the old open database file
 	 * @param newUri the path to the new database file
 	 */
-	public void saveAs(String oldUri, String newUri) {
+	public void saveAs(final String oldUri, final String newUri) {
 		if(File4.exists(newUri)){
 			throw new IllegalStateException(newUri + " already exists");
 		}
@@ -43,27 +43,33 @@ public class SaveAsStorage extends StorageDecorator {
 			throw new IllegalStateException(oldUri + " was never opened or was closed.");
 		}
 		
-		BinConfiguration oldConfiguration = binRecord._binConfiguration;
-		SaveAsBin saveAsBin = binRecord._bin;
-		saveAsBin.sync();
-		saveAsBin.close();
+		final BinConfiguration oldConfiguration = binRecord._binConfiguration;
+		final SaveAsBin saveAsBin = binRecord._bin;
 		
-		try {
-			File4.copy(oldUri, newUri);
-		} catch (Exception e) {
-			reopenOldConfiguration(saveAsBin, oldConfiguration, newUri, e);
-		}
-		
-		BinConfiguration newConfiguration = pointToNewUri(oldConfiguration,newUri);
-		
-		try{
-			Bin newBin = _storage.open(newConfiguration);
-			saveAsBin.delegateTo(newBin);
-			_binRecords.remove(oldUri);
-			_binRecords.put(newUri, new BinRecord(newConfiguration, saveAsBin));
-		} catch(Exception e){
-			reopenOldConfiguration(saveAsBin, oldConfiguration, newUri, e);
-		}
+		Runnable closure = new Runnable() {
+			public void run() {
+				saveAsBin.sync();
+				saveAsBin.close();
+				
+				try {
+					File4.copy(oldUri, newUri);
+				} catch (Exception e) {
+					reopenOldConfiguration(saveAsBin, oldConfiguration, newUri, e);
+				}
+				
+				BinConfiguration newConfiguration = pointToNewUri(oldConfiguration,newUri);
+				
+				try{
+					Bin newBin = _storage.open(newConfiguration);
+					saveAsBin.delegateTo(newBin);
+					_binRecords.remove(oldUri);
+					_binRecords.put(newUri, new BinRecord(newConfiguration, saveAsBin));
+				} catch(Exception e){
+					reopenOldConfiguration(saveAsBin, oldConfiguration, newUri, e);
+				}				
+			}};
+			
+		saveAsBin.exchangeUnderlyingBin(closure);
 	}
 
 	private BinConfiguration pointToNewUri(BinConfiguration oldConfig, String newUri) {
@@ -113,34 +119,46 @@ public class SaveAsStorage extends StorageDecorator {
 			_bin = delegate_;
 		}
 
+		public void exchangeUnderlyingBin(Runnable closure) {
+			synchronized (this) {
+				closure.run();
+			}
+		}
+
 		public void close() {
-			_bin.close();
+			synchronized (this) {
+				_bin.close();
+			}
 		}
 
 		public long length() {
-			return _bin.length();
+			synchronized (this) {
+				return _bin.length();
+			}
 		}
 
 		public int read(long position, byte[] bytes, int bytesToRead) {
-			return _bin.read(position, bytes, bytesToRead);
+			synchronized (this) {
+				return _bin.read(position, bytes, bytesToRead);
+			}
 		}
 
 		public void sync() {
-			_bin.sync();
-		}
-
-		public void sync(Runnable runnable) {
-			sync();
-			runnable.run();
-			sync();
+			synchronized (this) {
+				_bin.sync();
+			}
 		}
 
 		public int syncRead(long position, byte[] bytes, int bytesToRead) {
-			return _bin.syncRead(position, bytes, bytesToRead);
+			synchronized (this) {
+				return _bin.syncRead(position, bytes, bytesToRead);
+			}
 		}
 
 		public void write(long position, byte[] bytes, int bytesToWrite) {
-			_bin.write(position, bytes, bytesToWrite);
+			synchronized (this) {
+				_bin.write(position, bytes, bytesToWrite);
+			}
 		}
 		
 		public void delegateTo(Bin bin){
