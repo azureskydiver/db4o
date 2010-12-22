@@ -149,6 +149,14 @@ public class SaveAsStorage extends StorageDecorator {
 			}
 		}
 
+		public void sync(Runnable runnable) {
+			synchronized (this) {
+				sync();
+				runnable.run();
+				sync();				
+			}
+		}
+		
 		public int syncRead(long position, byte[] bytes, int bytesToRead) {
 			synchronized (this) {
 				return _bin.syncRead(position, bytes, bytesToRead);
@@ -164,7 +172,7 @@ public class SaveAsStorage extends StorageDecorator {
 		public void delegateTo(Bin bin){
 			_bin = bin;
 		}
-		
+
 	}
 
 }
