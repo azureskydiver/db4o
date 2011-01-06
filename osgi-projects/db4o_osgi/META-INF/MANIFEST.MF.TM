@@ -4,7 +4,7 @@ Bundle-Name: db4o OSGI
 Bundle-SymbolicName: db4o_osgi
 Bundle-Version: @db4o.version.iteration.revision@
 Bundle-Activator: com.db4o.osgi.Db4oActivator
-Bundle-Vendor: db4objects, Inc.
+Bundle-Vendor: Versant, Inc.
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-ClassPath: .,
  lib/db4o-@db4o.version.iteration.revision@-all-java@db4o.java.version@.jar
