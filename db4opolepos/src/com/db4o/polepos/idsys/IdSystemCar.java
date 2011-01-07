@@ -9,7 +9,7 @@ import com.db4o.internal.ids.*;
 public abstract class IdSystemCar extends Car implements IdSystemConfigurator {
 	
 	public IdSystemCar(Team team){
-		super(team);
+		super(team, "555555");
 	}
 
 	public IdSystem idSystem(LocalObjectContainer container) {
