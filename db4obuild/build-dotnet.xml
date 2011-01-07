@@ -1045,13 +1045,11 @@
 	
 		<antcall target="prepare-sandcastle-output" />
 		
-		<!--
 		<copy todir="${dir.lib.sandcastle}/Presentation">
 			<fileset dir="config/sandcastle/Presentation">
 				<include name="**/*.xml" />
 			</fileset>
 		</copy>
-		-->
 
 		<exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
