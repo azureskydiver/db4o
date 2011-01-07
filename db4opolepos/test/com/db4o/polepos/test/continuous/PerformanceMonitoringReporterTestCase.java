@@ -319,7 +319,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		private String _name;
 		
 		public MockCar(Team team, String name) {
-			super(team);
+			super(team, "555555");
 			_name = name;
 		}
 		
