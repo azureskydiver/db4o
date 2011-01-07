@@ -187,7 +187,7 @@
 	<target name="package-net40" depends="build-net40, meta-package" description="Builds the complete set of .net 4.0 distros">
 	</target>
 	
-	<target name="package-net35-standalone" depends="init, configure-net35, meta-package" />
+	<target name="package-net35-standalone" depends="properties, configure-net35, meta-package" />
 	
 	<target name="package-net40-standalone" depends="init, configure-net40, meta-package" />
 	
