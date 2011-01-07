@@ -152,7 +152,7 @@ public final class Assert {
 	}
 
 	private static String failureMessage(long expected, long actual, final String cmpOper, String customMessage) {
-		return String.format("%sExpected %s0x%016x but was 0x%016x", customMessage==null ? "" : customMessage+": ", cmpOper, expected, actual);
+		return (customMessage==null ? "" : customMessage+": ")+"Expected " + cmpOper + "'"+ expected + "' but was '" + actual + "'";
 	}
 
 	public static void isFalse(boolean condition) {
