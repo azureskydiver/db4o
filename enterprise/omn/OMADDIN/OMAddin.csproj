@@ -106,8 +106,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\Login.gif" />
-    <EmbeddedResource Include="Images\Logout.gif" />
     <EmbeddedResource Include="Images\support1.gif" />
     <Content Include="ContactSales\ContactSales.htm" />
     <Content Include="ContactSales\ContactSales_files\filelist.xml" />
@@ -149,12 +147,8 @@
     <Content Include="ReadMe_vs2008\ReadMe_vs2008_files\image001.jpg" />
     <Content Include="ReadMe_vs2008\ReadMe_vs2008_files\image002.jpg" />
     <EmbeddedResource Include="Images\DBconnect_Masked.bmp" />
-    <EmbeddedResource Include="Images\Login_Masked.bmp" />
-    <EmbeddedResource Include="Images\Logout_Masked.bmp" />
-    <EmbeddedResource Include="Images\DBdisconnect_Masked.bmp" />
     <EmbeddedResource Include="Images\SupportCases_Masked.bmp" />
     <EmbeddedResource Include="Images\support1_Masked.bmp" />
-    <EmbeddedResource Include="Images\DBdisconnect.gif" />
     <EmbeddedResource Include="Images\XtremeConnct_2_Masked.bmp" />
     <EmbeddedResource Include="Images\DB_DISCONNECT2_b.BMP" />
   </ItemGroup>
