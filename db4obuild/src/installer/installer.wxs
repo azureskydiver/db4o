@@ -385,7 +385,7 @@
 		<Control Id="StatusLabel" Type="Text" X="35" Y="100" Width="35" Height="10" Text="Status:" />
 	  </Dialog>
 
-	  <Dialog Id="SetupTypeDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
+	  <Dialog Id="SetupTypeDlg" Width="370" Height="270" Title="[ProductName] [Setup] - Choose the setup type that best suits your needs" NoMinimize="yes">
 		<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
 		<Control Id="TypicalLabel" Type="Text" X="105" Y="65" Width="100" Height="10" TabSkip="no">
 		  <Text>[DlgTitleFont]&amp;Typical</Text>
@@ -420,12 +420,14 @@
 		</Control>
 		<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 		<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-		<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
+		<!--
+		<Control Id="Description" Type="Text" X="100" Y="30" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
 		  <Text>Choose the setup type that best suits your needs</Text>
 		</Control>
 		<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
 		  <Text>[DlgTitleFont]Choose Setup Type</Text>
 		</Control>
+		-->
 		<Control Id="CompleteText" Type="Text" X="105" Y="184" Width="230" Height="20">
 		  <Text>All program features will be installed.  (Requires most disk space)</Text>
 		</Control>
