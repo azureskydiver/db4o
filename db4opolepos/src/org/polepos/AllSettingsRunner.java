@@ -47,7 +47,6 @@ public class AllSettingsRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 		return new Team[] {
                 db4oTeam(),
-                db4oTeam(new int[] {Db4oOptions.NO_FLUSH}),
                 db4oTeam(new int[] {Db4oOptions.BTREE_FREESPACE}),
                 db4oTeam(new int[] {Db4oOptions.MEMORY_IO}),
                 db4oTeam(new int[] {Db4oOptions.SNAPSHOT_QUERIES}),
