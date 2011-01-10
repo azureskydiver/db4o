@@ -92,8 +92,6 @@
     <Content Include="ReadMe_vs2010\ReadMe_vs2010_files\filelist.xml" />
     <Content Include="ReadMe_vs2010\ReadMe_vs2010_files\image001.jpg" />
     <Content Include="ReadMe_vs2010\ReadMe_vs2010_files\image002.jpg" />
-    <EmbeddedResource Include="Images\Login.gif" />
-    <EmbeddedResource Include="Images\Logout.gif" />
     <EmbeddedResource Include="Images\support1.gif" />
     <Content Include="ContactSales\ContactSales.htm" />
     <Content Include="ContactSales\ContactSales_files\filelist.xml" />
@@ -114,12 +112,8 @@
     <Content Include="FAQ\FAQ_files\image001.gif" />
     <Content Include="FAQ\FAQ_files\image002.gif" />
     <EmbeddedResource Include="Images\DBconnect_Masked.bmp" />
-    <EmbeddedResource Include="Images\Login_Masked.bmp" />
-    <EmbeddedResource Include="Images\Logout_Masked.bmp" />
-    <EmbeddedResource Include="Images\DBdisconnect_Masked.bmp" />
     <EmbeddedResource Include="Images\SupportCases_Masked.bmp" />
     <EmbeddedResource Include="Images\support1_Masked.bmp" />
-    <EmbeddedResource Include="Images\DBdisconnect.gif" />
     <EmbeddedResource Include="Images\XtremeConnct_2_Masked.bmp" />
     <EmbeddedResource Include="Images\DB_DISCONNECT2_b.BMP" />
   </ItemGroup>
