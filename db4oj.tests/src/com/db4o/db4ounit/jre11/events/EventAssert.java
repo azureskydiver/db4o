@@ -55,7 +55,7 @@ public class EventAssert {
 			ObjectInfo info = (ObjectInfo)iterator.current();
 			if (expectedInfo.getInternalID() == info.getInternalID()) {
 				Assert.areEqual(expectedInfo.getUUID(), info.getUUID());
-				Assert.areEqual(expectedInfo.getVersion(), info.getVersion());
+				Assert.areEqual(expectedInfo.getCommitTimestamp(), info.getCommitTimestamp());
 				return;
 			}
 		}

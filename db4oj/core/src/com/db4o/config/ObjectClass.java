@@ -127,6 +127,7 @@ public interface ObjectClass {
      * for objects of this class, which is required for using replication.
      * 
      * @param setting 
+     * @deprecated As of version 8.0 please use {@link #generateUUIDs(boolean)} and {@link FileConfiguration#generateCommitTimestamps(boolean)} instead
      */
     public void enableReplication(boolean setting);
 
@@ -143,6 +144,7 @@ public interface ObjectClass {
      * generate version numbers for stored objects of this class.
      * This setting should be used before the database is first created.<br><br>
      * @param setting
+     * @deprecated As of version 8.0 please use {@link FileConfiguration#generateCommitTimestamps(boolean)} instead
      */
     public void generateVersionNumbers(boolean setting);
 

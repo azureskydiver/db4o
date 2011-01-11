@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 public class QueryingVersionFieldTestCase extends AbstractDb4oTestCase {
     
     public static void main(String[] arguments) {
-        new QueryingVersionFieldTestCase().runSolo();
+        new QueryingVersionFieldTestCase().runAll();
     }
     
     public static class Item {
@@ -28,7 +28,7 @@ public class QueryingVersionFieldTestCase extends AbstractDb4oTestCase {
     }
     
     protected void configure(Configuration config) throws Exception {
-        config.objectClass(Item.class).generateVersionNumbers(true);
+        config.generateCommitTimestamps(true);
     }
     
     public void test(){
@@ -43,11 +43,11 @@ public class QueryingVersionFieldTestCase extends AbstractDb4oTestCase {
         
         Query q = db().query();
         q.constrain(Item.class);
-        q.descend(VirtualField.VERSION).constrain(new Long(initialTransactionVersionNumber)).greater();
+        q.descend(VirtualField.COMMIT_TIMESTAMP).constrain(new Long(initialTransactionVersionNumber)).greater();
         
         // This part really isn't needed for this test case, but it shows, how changes
         // between two specific transaction commits can be queried.
-        q.descend(VirtualField.VERSION).constrain(new Long(updatedTransactionVersionNumber)).smaller().equal();
+        q.descend(VirtualField.COMMIT_TIMESTAMP).constrain(new Long(updatedTransactionVersionNumber)).smaller().equal();
         
         ObjectSet objectSet = q.execute();
         Assert.areEqual(1, objectSet.size());

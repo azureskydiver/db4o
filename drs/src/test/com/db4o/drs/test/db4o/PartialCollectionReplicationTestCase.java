@@ -157,7 +157,7 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 	}
 	
 	private long versionFor(final Data c1) {
-		return objectInfoFor(c1).getVersion();
+		return objectInfoFor(c1).getCommitTimestamp();
 	}
 
 	private ObjectInfo objectInfoFor(final Data c1) {

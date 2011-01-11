@@ -33,7 +33,7 @@ public class FieldIndexKeyHandler implements Indexable4{
             objPart = null;
             parentID = - parentID;
         }
-        return new FieldIndexKey(parentID, objPart);
+        return new FieldIndexKeyImpl(parentID, objPart);
     }
 
 	private int readParentID(Context context, ByteArrayBuffer a_reader) {

@@ -22,9 +22,10 @@ public class FileUsageStats {
 	private final long _classMetadata;
 	private final long _freespaceUsage;
 	private final long _uuidUsage;
+	private final long _commitTimestampUsage;
 	private final SlotMap _slots;
 	
-	FileUsageStats(long fileSize, long fileHeader, long idSystem, long freespace, long classMetadata, long freespaceUsage, long uuidUsage, SlotMap slots) {
+	FileUsageStats(long fileSize, long fileHeader, long idSystem, long freespace, long classMetadata, long freespaceUsage, long uuidUsage, SlotMap slots, long commitTimestampUsage) {
 		_fileSize = fileSize;
 		_fileHeader = fileHeader;
 		_idSystem = idSystem;
@@ -33,6 +34,7 @@ public class FileUsageStats {
 		_freespaceUsage = freespaceUsage;
 		_uuidUsage = uuidUsage;
 		_slots = slots;
+		_commitTimestampUsage = commitTimestampUsage;
 	}
 	
 	/**
@@ -78,6 +80,13 @@ public class FileUsageStats {
 	}
 
 	/**
+	 * @return number of bytes used for the commit timestamp indexes
+	 */
+	public long commitTimestampUsage() {
+		return _commitTimestampUsage;
+	}
+
+	/**
 	 * @return total file size in bytes
 	 */
 	public long fileSize() {
@@ -88,7 +97,7 @@ public class FileUsageStats {
 	 * @return number of bytes used aggregated from all categories - should always be equal to {@link #fileSize()}
 	 */
 	public long totalUsage() {
-		final LongByRef total = new LongByRef(_fileHeader + _freespace + _idSystem + _classMetadata + _freespaceUsage + _uuidUsage);
+		final LongByRef total = new LongByRef(_fileHeader + _freespace + _idSystem + _classMetadata + _freespaceUsage + _uuidUsage + _commitTimestampUsage);
 		Tree.traverse(_classUsageStats, new Visitor4<TreeStringObject<ClassUsageStats>>() {
 			public void visit(TreeStringObject<ClassUsageStats> node) {
 				total.value += node._value.totalUsage();
@@ -128,6 +137,7 @@ public class FileUsageStats {
 		str.append(formatLine("Class metadata", classMetadata()));
 		str.append(formatLine("Freespace usage", freespaceUsage()));
 		str.append(formatLine("UUID usage", uuidUsage()));
+		str.append(formatLine("Version usage", commitTimestampUsage()));
 		str.append("\n");
 		long totalUsage = totalUsage();
 		str.append(formatLine("Total", totalUsage));

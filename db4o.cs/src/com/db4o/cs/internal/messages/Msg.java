@@ -78,6 +78,7 @@ public abstract class Msg implements Cloneable, Message {
 	public static final MSwitchToMainFile SWITCH_TO_MAIN_FILE = new MSwitchToMainFile();
 	public static final MTaDelete TA_DELETE = new MTaDelete();
 	public static final MTaIsDeleted TA_IS_DELETED = new MTaIsDeleted();
+	public static final MVersionForId VERSION_FOR_ID = new MVersionForId();
 	public static final MUserMessage USER_MESSAGE = new MUserMessage();
 	public static final MUseTransaction USE_TRANSACTION = new MUseTransaction();
 	public static final MWriteBlob WRITE_BLOB = new MWriteBlob();

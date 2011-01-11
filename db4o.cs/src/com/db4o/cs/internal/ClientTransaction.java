@@ -85,4 +85,12 @@ public final class ClientTransaction extends Transaction {
 		return null;
 	}
 
+	@Override
+	public long versionForId(int id) {
+        MsgD msg = Msg.VERSION_FOR_ID.getWriterForInt(systemTransaction(), id);
+		_client.write(msg);
+        return _client.expectedByteResponse(Msg.VERSION_FOR_ID).readLong();
+	}
+
+
 }

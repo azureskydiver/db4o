@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import java.util.Iterator;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.drs.*;
@@ -32,6 +32,8 @@ import com.db4o.foundation.*;
 import db4ounit.Assert;
 
 public class ReplicationFeaturesMain extends DrsTestCase {
+	
+	private static final boolean DEBUG = false;
 
 	private static final String AStuff = "A";
 	private static final String BStuff = "B";
@@ -204,7 +206,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 
 	private void printProvidersContent(String msg) {
-		if(true){
+		if(!DEBUG){
 			return;
 		}
 		System.out.println("*** "+msg);
@@ -216,8 +218,13 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		ObjectSet storedObjects = provider.getStoredObjects(Replicated.class);
 		System.out.println("PROVIDER: "+provider);
 		while(storedObjects.hasNext()) {
-			System.out.println(storedObjects.next());
+			Object next = storedObjects.next();
+			System.out.println("---> " + next + " - " + version(provider, next));
 		}
+	}
+
+	private long version(TestableReplicationProviderInside provider, Object obj) {
+		return provider.objectVersion(obj);
 	}
 
 	private boolean tryToReplicate(final ReplicationSession replication) {
@@ -477,10 +484,16 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 
 	private static void out(String string) {
-		// System.out.println(string);
+		if (DEBUG) {
+			System.out.println(string);
+		}
 	}
 	
 	private void printCombination() {
+		if (!DEBUG) {
+			return;
+		}
+
 		out("" + _testCombination + " =================================");
 		out("Deleted Objects In: " + print(_containersWithDeletedObjects));
 		out("Direction: To " + print(_direction));

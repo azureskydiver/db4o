@@ -145,7 +145,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public long currentVersion() {
-        return _timeStampIdGenerator.lastTimeStampId();
+        return _timeStampIdGenerator.last();
     }
 
     void initNewClassCollection() {
@@ -361,7 +361,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	        // The dirty TimeStampIdGenerator triggers writing of
 	        // the variable part of the systemdata. We need to
 	        // make it dirty here, so the new identity is persisted:
-	        _timeStampIdGenerator.next();
+	        _timeStampIdGenerator.generate();
 	        
 	        _fileHeader.writeVariablePart(this);
     	}
@@ -469,6 +469,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         blockSizeReadFromFile(1);
         
         _fileHeader = FileHeader.read(this);
+        
+        if (config().generateCommitTimestamps().isUnspecified()) {
+        	config().generateCommitTimestamps(_systemData.idToTimestampIndexId() != 0);
+        }
         
         createStringIO(_systemData.stringEncoding());
         
@@ -766,7 +770,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public void setNextTimeStampId(long val) {
         _timeStampIdGenerator.setMinimumNext(val);
-        _timeStampIdGenerator.setClean();
     }
     
     public SystemInfo systemInfo() {
@@ -914,8 +917,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	}
 
 	public Runnable commitHook() {
-        _systemData.lastTimeStampID(_timeStampIdGenerator.lastTimeStampId());
-        _timeStampIdGenerator.setClean();
+        _systemData.lastTimeStampID(_timeStampIdGenerator.last());
         return _fileHeader.commit(false);
 	}
 	

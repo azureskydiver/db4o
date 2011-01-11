@@ -446,4 +446,11 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return false;
 	}
 
+	public long objectVersion(Object next) {
+		return getInfo(next)._version;
+	}
+
+	public void ensureVersionsAreGenerated() {
+	}
+
 }

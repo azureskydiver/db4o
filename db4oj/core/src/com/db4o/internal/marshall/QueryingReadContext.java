@@ -12,7 +12,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class QueryingReadContext extends AbstractReadContext implements HandlerVersionContext, AspectVersionContext{
+public class QueryingReadContext extends AbstractReadContext implements HandlerVersionContext, AspectVersionContext, ObjectIdContext {
     
     private final QCandidates _candidates;
     
@@ -24,6 +24,7 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     
 	private int _declaredAspectCount;
 
+	private int _id;
     
     private QueryingReadContext(Transaction transaction, QCandidates candidates, int handlerVersion, ReadBuffer buffer, int collectionID, IdObjectCollector collector) {
         super(transaction, buffer);
@@ -38,8 +39,9 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
         this(transaction, candidates, handlerVersion, buffer, collectionID, new IdObjectCollector());
     }
     
-    public QueryingReadContext(Transaction transaction, int handlerVersion, ReadBuffer buffer) {
+    public QueryingReadContext(Transaction transaction, int handlerVersion, ReadBuffer buffer, int id) {
         this(transaction, null, handlerVersion, buffer, 0);
+		_id = id;
     }
     
     public QueryingReadContext(Transaction transaction, int handlerVersion, ReadBuffer buffer,
@@ -140,5 +142,9 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
 	public IdObjectCollector collector(){
 		return _collector;
 	}
-    
+
+	public int objectId() {
+		return _id;
+	}
+
 }

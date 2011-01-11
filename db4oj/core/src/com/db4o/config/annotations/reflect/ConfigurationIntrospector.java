@@ -44,8 +44,6 @@ public class ConfigurationIntrospector {
 		_configurators.put(CalledConstructor.class, new CalledConstructorFactory());
 		_configurators.put(GeneratedUUIDs.class,
 				new GeneratedUUIDsFactory());
-		_configurators.put(GeneratedVersionNumbers.class,
-				new GeneratedVersionNumbersFactory());
 		_configurators.put(StoredTransientFields.class,
 				new StoredTransientFieldsFactory());
 		_configurators.put(PersistedStaticFieldValues.class,

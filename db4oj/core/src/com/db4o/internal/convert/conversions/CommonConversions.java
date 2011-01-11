@@ -17,5 +17,6 @@ public class CommonConversions {
         converter.register(DropEnumClassIndexes_7_10.VERSION, new DropEnumClassIndexes_7_10());
         converter.register(DropGuidClassIndexes_7_12.VERSION, new DropGuidClassIndexes_7_12());
         converter.register(DropDateTimeOffsetClassIndexes_7_12.VERSION, new DropDateTimeOffsetClassIndexes_7_12());
+        converter.register(VersionNumberToCommitTimestamp_8_0.VERSION, new VersionNumberToCommitTimestamp_8_0());
     }   
 }

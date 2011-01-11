@@ -11,7 +11,7 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 	
 	protected void configure(Configuration config) {
 		config.generateUUIDs(ConfigScope.GLOBALLY);
-		config.generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.generateCommitTimestamps(true);
 	}
 
 	public void test() {
@@ -21,14 +21,14 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 		oc.store(object);
 		
 		ObjectInfo objectInfo1 = oc.getObjectInfo(object);
-		long oldVer = objectInfo1.getVersion();
+		long oldVer = objectInfo1.getCommitTimestamp();
 
 		//Update
 		object.setName("c3");
 		oc.store(object);
 
 		ObjectInfo objectInfo2 = oc.getObjectInfo(object);
-		long newVer = objectInfo2.getVersion();
+		long newVer = objectInfo2.getCommitTimestamp();
 
 		Assert.isNotNull(objectInfo1.getUUID());
 		Assert.isNotNull(objectInfo2.getUUID());

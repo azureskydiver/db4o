@@ -214,7 +214,7 @@ public class ExplicitListenTestCase extends VodProviderTestCaseBase{
     private static ObjectContainer newContainer() {
         EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
         config.file().generateUUIDs(ConfigScope.GLOBALLY);
-        config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+        config.file().generateCommitTimestamps(true);
         config.common().reflectWith(
                 new JdoReflector(Thread.currentThread().getContextClassLoader()));
         config.file().storage(new MemoryStorage());

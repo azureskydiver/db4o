@@ -92,6 +92,11 @@ public class LongHandler extends PrimitiveHandler {
         context.writeLong(((Long) obj).longValue());
     }
     
+    public static int compare(long first, long second) {
+		if (first == second) return 0;
+		return first > second ? 1 : -1;
+	}
+
     public PreparedComparison internalPrepareComparison(Object source) {
     	final long sourceLong = ((Long)source).longValue();
     	return new PreparedComparison() {
@@ -100,7 +105,7 @@ public class LongHandler extends PrimitiveHandler {
 					return 1;
 				}
 				long targetLong = ((Long)target).longValue();
-				return sourceLong == targetLong ? 0 : (sourceLong < targetLong ? - 1 : 1); 
+				return compare(sourceLong, targetLong); 
 			}
 		};
     }

@@ -28,7 +28,7 @@ public class CsDeleteReaddTestCase extends Db4oClientServerTestCase {
     @Override
     protected void configure(Configuration config) throws Exception {
     	config.generateUUIDs(ConfigScope.GLOBALLY);
-    	config.generateVersionNumbers(ConfigScope.GLOBALLY);
+    	config.generateCommitTimestamps(true);
     	config.objectClass(Item.class).objectField("name").indexed(true);
     }
     

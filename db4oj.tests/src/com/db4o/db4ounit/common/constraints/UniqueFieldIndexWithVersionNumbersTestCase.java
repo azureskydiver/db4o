@@ -7,6 +7,6 @@ public class UniqueFieldIndexWithVersionNumbersTestCase extends
 
 	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
-		config.generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.generateCommitTimestamps(true);
 	}
 }

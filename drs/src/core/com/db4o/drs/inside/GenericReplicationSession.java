@@ -119,6 +119,10 @@ public final class GenericReplicationSession implements ReplicationSession {
 	public final void commit() {
 		runIsolated(new Block4() {
 			public void run() {
+
+				_providerA.ensureVersionsAreGenerated();
+				_providerB.ensureVersionsAreGenerated();
+				
 				long maxVersion = Math.max(_providerA.getCurrentVersion(), _providerB.getCurrentVersion());
 						
 				_providerA.syncVersionWithPeer(maxVersion);

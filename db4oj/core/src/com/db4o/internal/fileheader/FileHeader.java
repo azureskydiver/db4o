@@ -17,10 +17,11 @@ public abstract class FileHeader {
 	private static final FileHeader[] AVAILABLE_FILE_HEADERS = new FileHeader[]{
         new FileHeader1(),
         new FileHeader2(),
+        new FileHeader3(),
     };
 	
 	public static NewFileHeaderBase newCurrentFileHeader(){
-		return new FileHeader2();
+		return new FileHeader3();
 	}
     
     private static int readerLength(){
@@ -43,7 +44,7 @@ public abstract class FileHeader {
     }
 
 	public FileHeader convert(LocalObjectContainer file){
-		FileHeader2 fileHeader = new FileHeader2();
+		FileHeader3 fileHeader = new FileHeader3();
 		fileHeader.initNew(file);
 		return fileHeader;
 	}

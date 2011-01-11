@@ -118,7 +118,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
+	private final static KeySpec GENERATE_COMMIT_TIMESTAMPS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
 	
 	private final static KeySpec ID_SYSTEM_KEY=new KeySpec(StandardIdSystemFactory.DEFAULT);
 	
@@ -447,8 +447,16 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(GENERATE_UUIDS_KEY,scope);
     }
 
+	@Deprecated
     public void generateVersionNumbers(ConfigScope scope) {
-        _config.put(GENERATE_VERSION_NUMBERS_KEY,scope);
+        if (scope == ConfigScope.INDIVIDUALLY) {
+        	throw new UnsupportedOperationException();
+        }
+        generateCommitTimestamps(scope == ConfigScope.GLOBALLY);
+    }
+
+    public void generateCommitTimestamps(boolean flag) {
+        _config.put(GENERATE_COMMIT_TIMESTAMPS_KEY,TernaryBool.forBoolean(flag));
     }
 
     public MessageSender getMessageSender() {
@@ -831,8 +839,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return (ConfigScope) _config.get(GENERATE_UUIDS_KEY);
 	}
 
-	public ConfigScope generateVersionNumbers() {
-		return (ConfigScope) _config.get(GENERATE_VERSION_NUMBERS_KEY);
+	public TernaryBool generateCommitTimestamps() {
+		return (TernaryBool) _config.get(GENERATE_COMMIT_TIMESTAMPS_KEY);
 	}
 
 	public boolean internStrings() {

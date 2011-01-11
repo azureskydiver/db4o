@@ -43,13 +43,6 @@ public class ObjectHeaderContext extends AbstractReadContext implements Marshall
         seek(state._offset);
     }
 
-	public Object readFieldValue(ClassMetadata classMetadata, FieldMetadata field) {
-		if(! classMetadata.seekToField(this, field)){
-	        return null;
-	    }
-	   	return field.read(this);
-	}
-
 	public ClassMetadata classMetadata(){
 	    return _objectHeader.classMetadata(); 
 	}

@@ -17,5 +17,7 @@ public class VirtualField {
 	 * for querying.
 	 */
 	public static final String VERSION = Const4.VIRTUAL_FIELD_PREFIX + "version"; 
+	
+	public static final String COMMIT_TIMESTAMP = Const4.VIRTUAL_FIELD_PREFIX + "commitTimestamp"; 
 
 }

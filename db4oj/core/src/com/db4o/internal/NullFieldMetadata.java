@@ -21,7 +21,7 @@ public class NullFieldMetadata extends FieldMetadata {
     	return Null.INSTANCE;
     }
 	
-	public final Object read(InternalReadContext context) {
+	public final Object read(ObjectIdContext context) {
 	    return null;
 	}
 	

@@ -41,7 +41,7 @@ public class InvalidOffsetInDeleteTestCase extends Db4oTestWithTempFile implemen
 
 	private void configure(EmbeddedConfiguration config) {
 		config.common().diagnostic().addListener(this);
-		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.file().generateCommitTimestamps(true);
 		config.file().generateUUIDs(ConfigScope.GLOBALLY);
 		config.common().objectClass(Item.class).objectField("_itemName").indexed(true);
 		config.common().objectClass(Parent.class).objectField("_parentName").indexed(true);

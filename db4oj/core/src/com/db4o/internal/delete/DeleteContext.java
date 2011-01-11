@@ -27,6 +27,6 @@ public interface DeleteContext extends Context, ReadBuffer, HandlerVersionContex
 
 	Slot readSlot();
 
-	public int id();
+	public int objectId();
 	
 }

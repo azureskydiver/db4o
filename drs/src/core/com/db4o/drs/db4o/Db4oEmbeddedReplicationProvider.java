@@ -315,7 +315,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	 *            the Query to be constrained
 	 */
 	public void whereModified(Query query) {
-		query.descend(VirtualField.VERSION).constrain(
+		query.descend(VirtualField.COMMIT_TIMESTAMP).constrain(
 				new Long(getLastReplicationVersion())).greater();
 	}
 
@@ -417,6 +417,14 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	
 	public boolean isSecondClassObject(Object obj) {
 		return false;
+	}
+
+	public long objectVersion(Object next) {
+		return _container.getObjectInfo(next).getCommitTimestamp();
+	}
+
+	public void ensureVersionsAreGenerated() {
+		commit();
 	}
 	
 }

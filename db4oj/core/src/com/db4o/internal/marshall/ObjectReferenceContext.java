@@ -8,7 +8,7 @@ package com.db4o.internal.marshall;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
-public class ObjectReferenceContext extends ObjectHeaderContext{
+public class ObjectReferenceContext extends ObjectHeaderContext implements ObjectIdContext{
 
     protected final ObjectReference _reference;
 
@@ -18,7 +18,7 @@ public class ObjectReferenceContext extends ObjectHeaderContext{
         _reference = reference;
     }
 
-    public int objectID() {
+    public int objectId() {
         return _reference.getID();
     }
 

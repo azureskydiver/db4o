@@ -36,8 +36,12 @@ public class LazyObjectReference implements ObjectInfo{
 	}
 
 	public long getVersion() {
+		return getCommitTimestamp();
+	}
+	
+	public long getCommitTimestamp() {
 		synchronized(containerLock()){
-			return reference().getVersion();
+			return reference().getCommitTimestamp();
 		}
 	}
 	

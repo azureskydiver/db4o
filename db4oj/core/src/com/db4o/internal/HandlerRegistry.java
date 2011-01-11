@@ -50,7 +50,7 @@ public final class HandlerRegistry {
 
     private int _highestBuiltinTypeID = Handlers4.ANY_ARRAY_N_ID + 1;
 
-    private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
+    private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[3]; 
 
     private final Hashtable4        _mapReflectorToTypeHandler  = newHashtable();
     
@@ -103,6 +103,7 @@ public final class HandlerRegistry {
         
         _virtualFields[0] = _indexes._version;
         _virtualFields[1] = _indexes._uUID;
+        _virtualFields[2] = _indexes._commitTimestamp;
 
         registerBuiltinHandlers();
         

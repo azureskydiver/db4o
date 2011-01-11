@@ -176,7 +176,7 @@ class InstanceReplicationPreparer implements Visitor {
 		_providerB.activate(objectB);
 
 		_event.resetAction();
-		_event._isConflict = conflict;
+		_event.conflict(conflict);
 
 		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(uuid.getLongPart());
 
@@ -254,7 +254,7 @@ class InstanceReplicationPreparer implements Visitor {
 		if (isConflict) owner.activate(obj);
 
 		_event.resetAction();
-		_event._isConflict = isConflict;
+		_event.conflict(isConflict);
 
 		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
 		long modificationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.version());
@@ -296,7 +296,7 @@ class InstanceReplicationPreparer implements Visitor {
 	
 		if (!listenerAlreadyNotified) {
 			_event.resetAction();
-			_event._isConflict = false;
+			_event.conflict(false);
 			_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
 	
 			if (owner == _providerA) {

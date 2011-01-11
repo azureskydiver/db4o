@@ -27,7 +27,7 @@ public abstract class ExampleBase {
 		// for db4o replication to work:
 		
 		config.file().generateUUIDs(ConfigScope.GLOBALLY);
-		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.file().generateCommitTimestamps(true);
 		
 		
 		return config;

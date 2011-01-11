@@ -39,6 +39,9 @@ public class SystemData {
     
     private Slot _idSystemSlot;
     
+    private int _idToTimestampIndexId;
+    private int _timestampToIdIndexId;
+    
     public Slot idSystemSlot() {
 		return _idSystemSlot;
 	}
@@ -160,6 +163,22 @@ public class SystemData {
 
 	public TransactionalIdSystem freespaceIdSystem() {
 		return _freespaceIdSystem;
+	}
+
+	public void idToTimestampIndexId(int idToTimestampIndexId) {
+		_idToTimestampIndexId = idToTimestampIndexId;
+	}
+
+	public int idToTimestampIndexId() {
+		return _idToTimestampIndexId;
+	}
+
+	public void timestampToIdIndexId(int timestampToIdIndexId) {
+		_timestampToIdIndexId = timestampToIdIndexId;
+	}
+
+	public int timestampToIdIndexId() {
+		return _timestampToIdIndexId;
 	}
 
 	

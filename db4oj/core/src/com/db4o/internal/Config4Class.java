@@ -24,8 +24,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
 	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
-    
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
      * object, if we maintain MetaClass information there 
@@ -119,17 +117,16 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
 	public void enableReplication(boolean setting) {
-		generateUUIDs(setting);
-		generateVersionNumbers(setting);
+		throw new UnsupportedOperationException("See documentation");
 	}
-    
-    public void generateUUIDs(boolean setting) {
+
+	public void generateUUIDs(boolean setting) {
     	_config.put(GENERATE_UUIDS_KEY, TernaryBool.forBoolean(setting));
     }
 
     public void generateVersionNumbers(boolean setting) {
-    	_config.put(GENERATE_VERSION_NUMBERS_KEY, TernaryBool.forBoolean(setting));
-    }
+		throw new UnsupportedOperationException("See documentation");
+	}
     
     public ObjectTranslator getTranslator() {
     	ObjectTranslator translator = (ObjectTranslator) _config
@@ -259,7 +256,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
 
 	TernaryBool generateVersionNumbers() {
-		return (TernaryBool) _config.get(GENERATE_VERSION_NUMBERS_KEY);
+		return TernaryBool.NO;
 	}
 
 	void maintainMetaClass(boolean flag){

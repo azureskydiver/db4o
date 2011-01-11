@@ -31,7 +31,7 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
 	protected void configure(Configuration config) {
 		ObjectClass objectClass = config.objectClass(STSItem.class);
 		objectClass.generateUUIDs(true);
-		objectClass.generateVersionNumbers(true);
+		config.generateCommitTimestamps(true);
 	}
 
 	protected void store() {
@@ -41,7 +41,7 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
 	public void test() throws Exception {
 		STSItem item = (STSItem) db().queryByExample(STSItem.class).next();
 
-		long version = db().getObjectInfo(item).getVersion();
+		long version = db().getObjectInfo(item).getCommitTimestamp();
 		Assert.isGreater(0, version);
 		Assert.isGreaterOrEqual(version, currentVersion());
 
@@ -49,8 +49,9 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
 
 		STSItem item2 = new STSItem("two");
 		db().store(item2);
+		db().commit();
 
-		long secondVersion = db().getObjectInfo(item2).getVersion();
+		long secondVersion = db().getObjectInfo(item2).getCommitTimestamp();
 
 		Assert.isGreater(version, secondVersion);
 		Assert.isGreaterOrEqual(secondVersion, currentVersion());

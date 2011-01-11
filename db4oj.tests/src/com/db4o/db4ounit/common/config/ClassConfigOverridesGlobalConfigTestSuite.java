@@ -30,10 +30,8 @@ public class ClassConfigOverridesGlobalConfigTestSuite extends FixtureTestSuiteD
 		@Override
 		protected void configure(Configuration config) {
 			config.generateUUIDs(GLOBAL_CONFIG.value());
-			config.generateVersionNumbers(GLOBAL_CONFIG.value());
 			if(!CLASS_CONFIG.value().isUnspecified()) {
 				config.objectClass(Item.class).generateUUIDs(CLASS_CONFIG.value().booleanValue(true));
-				config.objectClass(Item.class).generateVersionNumbers(CLASS_CONFIG.value().booleanValue(true));
 			}
 		}
 	
@@ -59,7 +57,7 @@ public class ClassConfigOverridesGlobalConfigTestSuite extends FixtureTestSuiteD
 			}
 			else {
 				Assert.isNull(objectInfo.getUUID());
-				Assert.areEqual(0L, objectInfo.getVersion());
+				Assert.areEqual(0L, objectInfo.getCommitTimestamp());
 			}
 		}
 	}

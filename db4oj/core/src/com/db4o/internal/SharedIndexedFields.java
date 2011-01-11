@@ -8,8 +8,11 @@ package com.db4o.internal;
  */
 public class SharedIndexedFields {
     
-    final VersionFieldMetadata _version = new VersionFieldMetadata();
+	public final VersionFieldMetadata _version = new VersionFieldMetadata();
     
-    final UUIDFieldMetadata _uUID = new UUIDFieldMetadata();
+    public final UUIDFieldMetadata _uUID = new UUIDFieldMetadata();
+    
+    public final CommitTimestampFieldMetadata _commitTimestamp = new CommitTimestampFieldMetadata();
+
     
 }

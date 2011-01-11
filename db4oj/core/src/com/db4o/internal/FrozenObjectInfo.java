@@ -9,14 +9,14 @@ public class FrozenObjectInfo implements ObjectInfo {
     private final Db4oDatabase _sourceDatabase;
     private final long _uuidLongPart;
 	private final long _id;
-	private final long _version;
+	private final long _commitTimestamp;
 	private final Object _object;
 	
-    public FrozenObjectInfo(Object object, long id, Db4oDatabase sourceDatabase, long uuidLongPart, long version) {
+    public FrozenObjectInfo(Object object, long id, Db4oDatabase sourceDatabase, long uuidLongPart, long commitTimestamp) {
         _sourceDatabase = sourceDatabase;
         _uuidLongPart = uuidLongPart;
         _id = id;
-        _version = version;
+        _commitTimestamp = commitTimestamp;
         _object = object;
     }
 
@@ -53,7 +53,11 @@ public class FrozenObjectInfo implements ObjectInfo {
 	}
 
 	public long getVersion() {
-		return _version;
+		return getCommitTimestamp();
+	}
+	
+	public long getCommitTimestamp() {
+		return _commitTimestamp;
 	}
 
     public long sourceDatabaseId(Transaction trans) {

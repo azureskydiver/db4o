@@ -2,14 +2,13 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.marshall.*;
 
 
 /**
  * @exclude
  */
-public interface ObjectIdContext extends HandlerVersionContext, MarshallingInfo, ReadContext {
+public interface ObjectIdContext extends HandlerVersionContext, InternalReadContext {
     
-    public int id();
+    public int objectId();
 
 }
