@@ -60,14 +60,8 @@
     <Content Include="FAQ\FAQ_files\image002.gif" />
     <EmbeddedResource Include="Images\DBconnect.gif" />
     <EmbeddedResource Include="Images\DBconnect_Masked.bmp" />
-    <EmbeddedResource Include="Images\DBdisconnect.gif" />
-    <EmbeddedResource Include="Images\DBdisconnect_Masked.bmp" />
     <EmbeddedResource Include="Images\DB_DISCONNECT2_a.GIF" />
     <EmbeddedResource Include="Images\DB_DISCONNECT2_b.BMP" />
-    <EmbeddedResource Include="Images\Login.gif" />
-    <EmbeddedResource Include="Images\Login_Masked.bmp" />
-    <EmbeddedResource Include="Images\Logout.gif" />
-    <EmbeddedResource Include="Images\Logout_Masked.bmp" />
     <EmbeddedResource Include="Images\support1.gif" />
     <EmbeddedResource Include="Images\support1_Masked.bmp" />
     <EmbeddedResource Include="Images\SupportCases.gif" />
