@@ -25,6 +25,8 @@ public class LocalTransaction extends Transaction {
 	
 	private final TransactionalIdSystem _idSystem;
 	
+	private CommitTimestampSupport _commitTimestampSupport = null;
+	
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalIdSystem idSystem, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
@@ -48,6 +50,10 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void commit() {
+    	if (isSystemTransaction()) {
+    		commitTimestampSupport().ensureInitialized();
+    	}
+
     	commit(_committedCallbackDispatcher);
     }
     
@@ -363,4 +369,21 @@ public class LocalTransaction extends Transaction {
 		return new LazyObjectReference(LocalTransaction.this, id);
 	}
 	
+	public long versionForId(int id) {
+		return commitTimestampSupport().versionForId(id);
+	}
+
+	public CommitTimestampSupport commitTimestampSupport() {
+		
+		if (!isSystemTransaction()) {
+			throw new IllegalStateException();
+		}
+		
+		if (_commitTimestampSupport == null) {
+			_commitTimestampSupport = new CommitTimestampSupport(localContainer());
+		}
+		
+		return _commitTimestampSupport;
+	}
+
 }

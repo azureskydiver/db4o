@@ -38,8 +38,13 @@ class FileConfigurationImpl implements FileConfiguration {
 		_config.generateUUIDs(setting);
 	}
 
+	@Deprecated
 	public void generateVersionNumbers(ConfigScope setting) {
 		_config.generateVersionNumbers(setting);
+	}
+
+	public void generateCommitTimestamps(boolean setting) {
+		_config.generateCommitTimestamps(setting);
 	}
 
 	public void storage(Storage factory) throws GlobalOnlyConfigException {

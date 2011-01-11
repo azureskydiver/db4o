@@ -35,7 +35,7 @@ public class CascadeToHashMapTestCase extends AbstractDb4oTestCase {
 	@Override
 	protected void configure(Configuration config) throws Exception {
         config.generateUUIDs(ConfigScope.GLOBALLY);
-        config.generateVersionNumbers(ConfigScope.GLOBALLY);
+        config.generateCommitTimestamps(true);
         config.objectClass(Item.class).cascadeOnUpdate(true);
         config.objectClass(Item.class).cascadeOnDelete(true);
 	}

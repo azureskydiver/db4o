@@ -8,7 +8,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class ObjectIdContextImpl extends ObjectHeaderContext implements ObjectIdContext{
+public class ObjectIdContextImpl extends ObjectHeaderContext implements ObjectIdContext {
     
     private final int _id;
 
@@ -17,7 +17,7 @@ public class ObjectIdContextImpl extends ObjectHeaderContext implements ObjectId
         _id = id;
     }
     
-    public int id(){
+    public int objectId(){
         return _id;
     }
 

@@ -91,7 +91,7 @@ public class DeleteContextImpl extends ObjectHeaderContext implements DeleteCont
 	    return cascadeDeleteDepth();
 	}
 
-	public int id() {
+	public int objectId() {
 		return statefulBuffer().getID();
 	}
 

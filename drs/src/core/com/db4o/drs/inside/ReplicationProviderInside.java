@@ -115,4 +115,6 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	Object replaceIfSpecific(Object value);
 
 	boolean isSecondClassObject(Object obj);
+
+	void ensureVersionsAreGenerated();
 }

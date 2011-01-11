@@ -431,7 +431,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
             	if(aspect instanceof FieldMetadata){
 	                FieldMetadata field = (FieldMetadata)aspect;
 	                if (isNull) {
-	                    field.addIndexEntry(context.transaction(), context.id(), null);
+	                    field.addIndexEntry(context.transaction(), context.objectId(), null);
 	                } else {
 	                    field.addFieldIndex(context);
 	                }
@@ -439,6 +439,12 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
             		aspect.incrementOffset(context.buffer());
             	}
             }
+        	
+            @Override
+            public boolean accept(ClassAspect aspect) {
+            	return aspect.isEnabledOn(context);
+            }
+        	
         };
         traverseAllAspects(context, command);
     }
@@ -451,7 +457,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                 if(isNull){
                 	if(aspect instanceof FieldMetadata){
                 		FieldMetadata field = (FieldMetadata)aspect;
-                        field.removeIndexEntry(context.transaction(), context.id(), null);
+                        field.removeIndexEntry(context.transaction(), context.objectId(), null);
                 	}
                 	return;
                 }

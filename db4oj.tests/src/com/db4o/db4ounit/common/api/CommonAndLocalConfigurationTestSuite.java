@@ -184,8 +184,8 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			fileConfig.generateUUIDs(ConfigScope.GLOBALLY);
 			Assert.areEqual(ConfigScope.GLOBALLY, legacyConfig.generateUUIDs());
 
-			fileConfig.generateVersionNumbers(ConfigScope.GLOBALLY);
-			Assert.areEqual(ConfigScope.GLOBALLY, legacyConfig.generateVersionNumbers());
+			fileConfig.generateCommitTimestamps(true);
+			Assert.isTrue(legacyConfig.generateCommitTimestamps().definiteYes());
 			
 			Storage storageFactory = new FileStorage();
 			fileConfig.storage(storageFactory);

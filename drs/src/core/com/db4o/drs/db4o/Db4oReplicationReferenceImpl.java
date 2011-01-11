@@ -47,17 +47,19 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 	private boolean _markedForReplicating;
 	private boolean _markedForDeleting;
 
+	private final long _version;
+
 	Db4oReplicationReferenceImpl(ObjectInfo objectInfo) {
-		ObjectReference yo = (ObjectReference) objectInfo;
-		Transaction trans = yo.transaction();
-		VirtualAttributes va = yo.virtualAttributes(trans);
+		_version = objectInfo.getCommitTimestamp();
+		ObjectReference ref = (ObjectReference) objectInfo;
+		Transaction trans = ref.transaction();
+		VirtualAttributes va = ref.virtualAttributes(trans);
 		if (va != null) {
 			setVirtualAttributes((VirtualAttributes) va.shallowClone());
 		} else {
-			// No virtu
 			setVirtualAttributes(new VirtualAttributes());
 		}
-		Object obj = yo.getObject();
+		Object obj = ref.getObject();
 		setObject(obj);
 		ref_init();
 	}
@@ -69,6 +71,7 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 		va.i_database = db;
 		va.i_uuid = longPart;
 		va.i_version = version;
+		_version = version;
 		setVirtualAttributes(va);
 	}
 
@@ -93,7 +96,7 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 	}
 
 	public long version() {
-		return virtualAttributes().i_version;
+		return _version;
 	}
 
 	public Object object() {

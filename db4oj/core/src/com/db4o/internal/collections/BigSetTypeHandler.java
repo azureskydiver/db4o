@@ -38,7 +38,7 @@ public class BigSetTypeHandler implements ReferenceTypeHandler, CascadingTypeHan
 	}
 
 	private void invalidBigSet(DeleteContext context) {
-	    BigSetPersistence bigSet = (BigSetPersistence) context.transaction().objectForIdFromCache(context.id());
+	    BigSetPersistence bigSet = (BigSetPersistence) context.transaction().objectForIdFromCache(context.objectId());
 		if(bigSet != null){
 			bigSet.invalidate();
 		}

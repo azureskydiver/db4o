@@ -72,7 +72,7 @@ public class EqualsHashCodeOverriddenTestCaseBase implements TestCase {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(_storage);
 		config.file().generateUUIDs(ConfigScope.GLOBALLY);
-		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.file().generateCommitTimestamps(true);
 		return Db4oEmbedded.openFile(config, filePath);
 	}
 

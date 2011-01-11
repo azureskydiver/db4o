@@ -28,7 +28,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	
     	LocalTransaction transaction = (LocalTransaction) context.transaction();
 		LocalObjectContainer localContainer = (LocalObjectContainer)transaction.container();
-    	Slot oldSlot = transaction.idSystem().committedSlot(context.id());
+    	Slot oldSlot = transaction.idSystem().committedSlot(context.objectId());
     	
         int savedOffset = context.offset();
         int db4oDatabaseIdentityID = context.readInt();
@@ -37,7 +37,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         
         boolean isnew = (oldSlot.isNull());
         
-        if ((uuid == 0 || db4oDatabaseIdentityID == 0) && context.id() > 0
+        if ((uuid == 0 || db4oDatabaseIdentityID == 0) && context.objectId() > 0
                 && !isnew) {
             DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(
                     localContainer, context.classMetadata(), oldSlot, false);
@@ -100,7 +100,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         long longPart = context.readLong();
         if(longPart > 0){
             if (context.container().maintainsIndices()){
-                removeIndexEntry(context.transaction(), context.id(), new Long(longPart));
+                removeIndexEntry(context.transaction(), context.objectId(), new Long(longPart));
             }
         }
     }

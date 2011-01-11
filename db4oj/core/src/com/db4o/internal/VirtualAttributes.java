@@ -14,6 +14,7 @@ public class VirtualAttributes implements ShallowClone{
     
     public Db4oDatabase i_database;
     
+    @Deprecated
     public long i_version;
     
     // FIXME: should be named "uuidLongPart" or even better "creationTime" 

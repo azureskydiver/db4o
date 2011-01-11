@@ -94,7 +94,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
 	private Callbacks _callbacks = new com.db4o.internal.callbacks.NullCallbacks();
     
-    protected final PersistentTimeStampIdGenerator _timeStampIdGenerator = new PersistentTimeStampIdGenerator();
+    protected final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
     
     private int _topLevelCallId = 1;
     
@@ -1259,7 +1259,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
     
     public long generateTimeStampId() {
-        return _timeStampIdGenerator.next();
+        return _timeStampIdGenerator.generate();
     }
 
     public abstract int idForNewUserObject(Transaction trans);
@@ -2024,6 +2024,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	
 	public VersionFieldMetadata versionIndex() {
 		return _handlers.indexes()._version;
+	}
+
+	public CommitTimestampFieldMetadata commitTimestampIndex() {
+		return _handlers.indexes()._commitTimestamp;
 	}
 
     public ClassMetadataRepository classCollection() {

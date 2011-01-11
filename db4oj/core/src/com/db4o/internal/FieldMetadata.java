@@ -106,7 +106,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return;
         }
         try {
-            addIndexEntry(context.transaction(), context.id(), readIndexEntry(context));
+            addIndexEntry(context.transaction(), context.objectId(), readIndexEntry(context));
         } catch (CorruptionException exc) {
             throw new FieldIndexException(exc,this);
         } 
@@ -116,7 +116,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         addIndexEntry(a_bytes.transaction(), a_bytes.getID(), indexEntry);
     }
 
-    public final void addIndexEntry(Transaction trans, int parentID, Object indexEntry) {
+    public void addIndexEntry(Transaction trans, int parentID, Object indexEntry) {
         if (! hasIndex()) {
             return;
         }
@@ -125,9 +125,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         index.add(trans, createFieldIndexKey(parentID, indexEntry));
     }
 
-	private FieldIndexKey createFieldIndexKey(int parentID, Object indexEntry) {
+	protected FieldIndexKey createFieldIndexKey(int parentID, Object indexEntry) {
 		Object convertedIndexEntry = indexEntryFor(indexEntry);
-		return new FieldIndexKey(parentID,  convertedIndexEntry);
+		return new FieldIndexKeyImpl(parentID,  convertedIndexEntry);
 	}
 
 	protected Object indexEntryFor(Object indexEntry) {
@@ -459,7 +459,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         int offset = context.offset();
         Object obj = readIndexEntry(context);
-        removeIndexEntry(context.transaction(), context.id(), obj);
+        removeIndexEntry(context.transaction(), context.objectId(), obj);
         context.seek(offset);
     }
 
@@ -790,7 +790,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return new QField(a_trans, _name, this, classMetadataID, _handle);
     }
 
-    public Object read(InternalReadContext context) {
+    public Object read(ObjectIdContext context) {
         if(!canReadFromSlot((AspectVersionContext) context)) {
 			incrementOffset(context);
             return null;

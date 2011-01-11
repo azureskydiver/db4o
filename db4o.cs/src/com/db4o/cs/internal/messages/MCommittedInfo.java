@@ -37,7 +37,7 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 	        long sourceDatabaseId = ((FrozenObjectInfo)info).sourceDatabaseId(transaction());
 	        PrimitiveCodec.writeLong(os, sourceDatabaseId);
 	        PrimitiveCodec.writeLong(os, ((FrozenObjectInfo)info).uuidLongPart());
-	        PrimitiveCodec.writeLong(os, info.getVersion());
+	        PrimitiveCodec.writeLong(os, info.getCommitTimestamp());
 		}
 
 		public ObjectInfo decode(ByteArrayInputStream is) {

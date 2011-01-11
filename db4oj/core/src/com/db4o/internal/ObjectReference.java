@@ -8,9 +8,9 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.slots.Pointer4;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.typehandlers.ActivationContext;
+import com.db4o.internal.slots.*;
+import com.db4o.reflect.*;
+import com.db4o.typehandlers.*;
 
 /**
  * A weak reference to an known object.
@@ -248,11 +248,13 @@ public class ObjectReference extends Identifiable implements ObjectInfo, Activat
     }
 	
     public long getVersion(){
-        VirtualAttributes va = virtualAttributes(transaction());
-        if(va == null) {
-			return 0;
-        }
-		return va.i_version;
+    	return getCommitTimestamp();
+    }
+    
+    public long getCommitTimestamp() {
+    	synchronized (container().lock()) {
+    		return container().systemTransaction().versionForId(getID());
+    	}
     }
 
 	public final ClassMetadata classMetadata() {

@@ -89,7 +89,12 @@ public class IntHandler extends PrimitiveHandler {
 		return new PreparedIntComparison(i);
 	}
 	
-    public final class PreparedIntComparison implements PreparedComparison {
+    public static int compare(int first, int second) {
+		if (first == second) return 0;
+		return first > second ? 1 : -1;
+	}
+
+	public final class PreparedIntComparison implements PreparedComparison {
     	
 		private final int _sourceInt;
 
@@ -102,7 +107,7 @@ public class IntHandler extends PrimitiveHandler {
 				return 1;
 			}
 			int targetInt = ((Integer)target).intValue();
-			return _sourceInt == targetInt ? 0 : (_sourceInt < targetInt ? - 1 : 1); 
+			return compare(_sourceInt, targetInt);
 		}
 	}
 	

@@ -321,4 +321,7 @@ public abstract class Transaction {
 	}
 	
 	public abstract TransactionalIdSystem idSystem();
+
+	public abstract long versionForId(int id);
+	
 }

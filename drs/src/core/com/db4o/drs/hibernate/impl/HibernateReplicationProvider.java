@@ -707,6 +707,13 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		return obj instanceof Timestamp;
 	}
 
+	public long objectVersion(Object next) {
+		throw new java.lang.UnsupportedOperationException();
+	}
+
+	public void ensureVersionsAreGenerated() {
+	}
+
 	
 
 }

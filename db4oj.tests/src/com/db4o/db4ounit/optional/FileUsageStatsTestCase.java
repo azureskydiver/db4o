@@ -43,7 +43,7 @@ public class FileUsageStatsTestCase extends TestWithTempFile {
 	}
 
 	private void assertFileStats() {
-		FileUsageStats stats = FileUsageStatsCollector.runStats(tempFile(), true);
+		FileUsageStats stats = FileUsageStatsCollector.runStats(tempFile(), true, newConfiguration());
 		Assert.areEqual(stats.fileSize(), stats.totalUsage(), stats.toString());
 	}
 
@@ -57,11 +57,7 @@ public class FileUsageStatsTestCase extends TestWithTempFile {
 
 	private void createDatabase(final List<Slot> gaps) {
 		File4.delete(tempFile());
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.common().objectClass(Item.class).objectField("_id").indexed(true);
-		config.common().objectClass(Item.class).objectField("_name").indexed(true);
-		config.file().generateUUIDs(ConfigScope.GLOBALLY);
-		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		EmbeddedConfiguration config = newConfiguration();
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config, tempFile());
 		List<Child> list = new ArrayList<Child>();
 		list.add(new Child());
@@ -69,6 +65,15 @@ public class FileUsageStatsTestCase extends TestWithTempFile {
 		db.store(item);
 		db.commit();
 		db.close();
+	}
+
+	private static EmbeddedConfiguration newConfiguration() {
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.common().objectClass(Item.class).objectField("_id").indexed(true);
+		config.common().objectClass(Item.class).objectField("_name").indexed(true);
+		config.file().generateUUIDs(ConfigScope.GLOBALLY);
+		config.file().generateCommitTimestamps(true);
+		return config;
 	}
 	
 }

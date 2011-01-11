@@ -72,7 +72,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     }
     
     private FieldIndexKey fieldIndexKey(int integerPart, Object composite){
-        return new FieldIndexKey(integerPart, composite);
+        return new FieldIndexKeyImpl(integerPart, composite);
     }
     
     private BTreeRange fieldIndexKeySearch(Transaction trans, BTree btree, Object key) {

@@ -2,6 +2,8 @@
 
 package com.db4o.ext;
 
+import com.db4o.config.*;
+
 
 /**
  * interface to the internal reference that an ObjectContainer
@@ -31,15 +33,35 @@ public interface ObjectInfo {
      * @return the UUID of the referenced object.
      */
     public Db4oUUID getUUID();
+
+	/**
+	 * returns the transaction serial number ("version") the referenced object
+	 * was stored with last. Version number generation has to be turned on, in
+	 * order to be able to use this feature:
+	 * {@link com.db4o.config.Configuration#generateVersionNumbers(int)} <br>
+	 * This feature was replaced by {@link #getCommitTimestamp()}. The main
+	 * difference is that the old version mechamism used to assign a serial
+	 * timestamp to the object upon storing time, and the new commiTimestamp
+	 * approach, assigns it upon commit time.<br>
+	 * 
+	 * @return the version number.
+	 * @deprecated As of version 8.0 please use {@link #getCommitTimestamp()} instead.
+	 */
+	@Deprecated
+    public long getVersion();
 	
 	/**
-	 * returns the transaction serial number ("version") the 
-	 * referenced object was stored with last.
-	 * Version number generation has to be turned on, in order to
-	 * be able to use this feature: 
-	 * {@link com.db4o.config.Configuration#generateVersionNumbers(int)}
-	 * @return the version number.
+	 * The serial timestamp the object is assigned to when it is commited.<br>
+	 * <br>
+	 * You need to enable this feature before using it in {@link FileConfiguration#generateCommitTimestamps(boolean)}.<br>
+	 * <br>
+	 * All the objects commited within the same transaction will receive the same commitTimestamp.<br>
+	 * <br>
+	 * db4o replication system (dRS) relies on this feature.<br>
+	 * @return the serial timestamp that was given to the object upon commit.
+	 * @see FileConfiguration#generateCommitTimestamps(boolean)
+	 * @since 8.0
 	 */
-	public long getVersion();
+	public long getCommitTimestamp();
 	
 }

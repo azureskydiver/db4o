@@ -71,7 +71,7 @@ public class Db4oWithDb4oExample {
 	private static EmbeddedConfiguration newEmbeddedConfiguration() {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().generateUUIDs(ConfigScope.GLOBALLY);
-		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.file().generateCommitTimestamps(true);
 		return config;
 	}
 }

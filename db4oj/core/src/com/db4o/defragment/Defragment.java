@@ -134,6 +134,7 @@ public class Defragment {
 			services.commitIds();
 			defragUnindexed(services);
 			services.commitIds();
+			services.defragIdToTimestampBtree();
 			services.replaceClassMetadataRepository();
 		} catch (CorruptionException exc) {
 			exc.printStackTrace();

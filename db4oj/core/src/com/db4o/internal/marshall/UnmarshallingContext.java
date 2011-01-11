@@ -37,7 +37,7 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
             return _object;
         }
         
-        readBuffer(objectID());
+        readBuffer(objectId());
         
         if(buffer() == null){
             endProcessing();
@@ -56,7 +56,7 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
         adjustActivationDepth();
         
         if(_checkIDTree){
-            Object objectInCacheFromClassCreation = transaction().objectForIdFromCache(objectID());
+            Object objectInCacheFromClassCreation = transaction().objectForIdFromCache(objectId());
             if(objectInCacheFromClassCreation != null){
                 _object = objectInCacheFromClassCreation;
                 endProcessing();
@@ -78,7 +78,7 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
 		if(container().config().recoveryMode()){
 			return;
 		}
-		throw new InvalidSlotException("id: " + objectID());
+		throw new InvalidSlotException("id: " + objectId());
 	}
 
 	private void adjustActivationDepth() {
@@ -102,7 +102,7 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
 	}
 
 	public Object readFieldValue (FieldMetadata field){
-        readBuffer(objectID());
+        readBuffer(objectId());
         if(buffer() == null){
             return null;
         }
@@ -112,6 +112,13 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
         }
         return readFieldValue(classMetadata, field);
     }
+	
+	private Object readFieldValue(ClassMetadata classMetadata, FieldMetadata field) {
+		if(! classMetadata.seekToField(this, field)){
+	        return null;
+	    }
+	   	return field.read(this);
+	}
 
 	private ClassMetadata readObjectHeader() {
         _objectHeader = new ObjectHeader(container(), byteArrayBuffer());

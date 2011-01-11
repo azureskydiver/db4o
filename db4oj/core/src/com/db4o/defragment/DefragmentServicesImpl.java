@@ -9,6 +9,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.CommitTimestampSupport.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.encoding.*;
@@ -70,6 +71,9 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		
 		_sourceDb.showInternalClasses(true);
 		defragConfig.db4oConfig().blockSize(_sourceDb.blockSize());
+		if (!originalConfig.generateCommitTimestamps().definiteNo()) {
+			defragConfig.db4oConfig().generateCommitTimestamps(_sourceDb.config().generateCommitTimestamps().definiteYes());
+		}
 		
 		_targetDb = freshTargetFile(defragConfig);
 		_mapping=defragConfig.mapping();
@@ -312,6 +316,30 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		freeById(oldIdentityId);
 		freeById(oldRepositoryId);
 	}
+
+	public void defragIdToTimestampBtree() {
+		
+		if (_sourceDb.systemData().idToTimestampIndexId() == 0) {
+			return;
+		}
+		
+		final LocalTransaction targetTransaction = (LocalTransaction)_targetDb.systemTransaction();
+		final LocalTransaction sourceTransaction = (LocalTransaction)_sourceDb.systemTransaction();
+		
+		final CommitTimestampSupport target = targetTransaction.commitTimestampSupport();
+		final CommitTimestampSupport source = sourceTransaction.commitTimestampSupport();
+		
+		if (source.idToTimestamp() == null) {
+			return;
+		}
+		
+		source.idToTimestamp().traverseKeys(sourceTransaction, new Visitor4<TimestampEntry>() {
+			public void visit(TimestampEntry te) {
+				int mappedID = mappedID(te.parentID());
+				target.put(targetTransaction, mappedID, te.getCommitTimestamp());
+			}
+		});
+	}
 	
 	private void freeById(int id){
 		_targetDb.systemTransaction().idSystem().notifySlotDeleted(id, SlotChangeFactory.SYSTEM_OBJECTS);
@@ -334,6 +362,10 @@ public class DefragmentServicesImpl implements DefragmentServices {
 
 	public int sourceUuidIndexID() {
 		return _sourceDb.systemData().uuidIndexId();
+	}
+	
+	public int sourceIdToTimestampIndexID() {
+		return _sourceDb.systemData().idToTimestampIndexId();
 	}
 	
 	public ClassMetadata classMetadataForId(int id) {

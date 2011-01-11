@@ -120,9 +120,4 @@ public class FileHeader2 extends NewFileHeaderBase {
     	return new FileHeaderVariablePart2(file);
     }
     
-    @Override
-	public FileHeader convert(LocalObjectContainer file) {
-    	return this;
-    }
-
 }

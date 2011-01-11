@@ -5,8 +5,8 @@ package com.db4o.drs.versant;
 import java.io.*;
 
 import com.db4o.drs.inside.*;
+import com.db4o.util.IOServices.ProcessRunner;
 import com.db4o.util.*;
-import com.db4o.util.IOServices.*;
 
 
 public class VodEventDriver {
@@ -42,9 +42,16 @@ public class VodEventDriver {
 			throw new IllegalStateException();
 		}
 		try {		
-			_process = IOServices.start(VodDatabase.VED_DRIVER, new String[]{
+			_process = new ProcessRunner(VodDatabase.VED_DRIVER, (new String[]{
 					databaseName(), configFilePath 
-			});
+			})) {
+				@Override
+				protected void output(String line) {
+					if (DrsDebug.verbose) {
+						System.out.println("[VEDDRIVER OUTPUT] " + line);
+					}
+				};
+			};
 		} catch (IOException e) {
 			e.printStackTrace();
 			destroyProcess();

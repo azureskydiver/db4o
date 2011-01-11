@@ -212,9 +212,9 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
 		if (container().detectSchemaChanges()) {
 
-			if (generateVersionNumbers()) {
-				if (!hasVersionField()) {
-					aspects.add(container().versionIndex());
+			if (generateCommitTimestamps()) {
+				if (!hasCommitTimestampField()) {
+					aspects.add(container().commitTimestampIndex());
 					dirty = true;
 				}
 			}
@@ -844,6 +844,9 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     public final boolean seekToField(ObjectHeaderContext context, ClassAspect field){
+		if(! standardReferenceTypeHandlerIsUsed()){
+		    return false;
+		}
         return Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).seekToField(context, field);
     }
 
@@ -855,12 +858,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return generate1(_container.config().generateUUIDs(), configValue); 
     }
 
-    private boolean generateVersionNumbers() {
-        if(! generateVirtual()){
-            return false;
-        }
-        TernaryBool configValue = (_config == null) ? TernaryBool.UNSPECIFIED : _config.generateVersionNumbers();
-        return generate1(_container.config().generateVersionNumbers(), configValue); 
+    public boolean generateCommitTimestamps() {
+    	return _container.config().generateCommitTimestamps().definiteYes();
     }
     
     private boolean generateVirtual(){
@@ -976,11 +975,25 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return _ancestor.hasVersionField();
     }
     
-    private boolean hasVersionField() {
+    private boolean ancestorHasCommitTimestampField(){
+        if(_ancestor == null){
+            return false;
+        }
+        return _ancestor.hasCommitTimestampField();
+    }
+    
+    public boolean hasVersionField() {
         if(ancestorHasVersionField()){
             return true;
         }
         return Arrays4.containsInstanceOf(_aspects, VersionFieldMetadata.class);
+    }
+
+    private boolean hasCommitTimestampField() {
+        if(ancestorHasCommitTimestampField()){
+            return true;
+        }
+        return Arrays4.containsInstanceOf(_aspects, CommitTimestampFieldMetadata.class);
     }
 
     public ClassIndexStrategy index() {
@@ -1211,7 +1224,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (obj == null) {
             return null;
         }
-        context.container().peeked(context.objectID(), obj);
+        context.container().peeked(context.objectId(), obj);
         
         if(context.activationDepth().requiresActivation()){
             instantiateFields(context);

@@ -27,7 +27,7 @@ final class ReplicationEventImpl implements ReplicationEvent {
 
 	final ObjectStateImpl _stateInProviderA = new ObjectStateImpl();
 	final ObjectStateImpl _stateInProviderB = new ObjectStateImpl();
-	boolean _isConflict;
+	private boolean _isConflict;
 
 	ObjectState _actionChosenState;
 	boolean _actionWasChosen;
@@ -65,6 +65,10 @@ final class ReplicationEventImpl implements ReplicationEvent {
 		_actionWasChosen = false;
 		_actionShouldStopTraversal = false;
 		_creationDate = -1;
+	}
+
+	void conflict(boolean isConflict) {
+		_isConflict = isConflict;
 	}
 
 }

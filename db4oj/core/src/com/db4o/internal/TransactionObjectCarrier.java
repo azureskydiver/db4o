@@ -26,5 +26,13 @@ class TransactionObjectCarrier extends LocalTransaction{
         return false;
     }
     
+    @Override
+    public long versionForId(int id) {
+    	return 0;
+    }
 
+    @Override
+    public CommitTimestampSupport commitTimestampSupport() {
+    	return null;
+    }
 }

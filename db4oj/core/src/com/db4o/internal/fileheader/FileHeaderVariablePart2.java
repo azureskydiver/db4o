@@ -100,6 +100,10 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
     	
     	// TODO: Diagnostic message if versions aren't consistent.
     	
+		readBuffer(buffer, versionsAreConsistent);
+	}
+
+	protected void readBuffer(ByteArrayBuffer buffer, boolean versionsAreConsistent) {
 		if (Deploy.debug) {
 		    buffer.readBegin(getIdentifier());
 		}
@@ -130,6 +134,17 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
 		int checkSumOffset = buffer.offset();
 		buffer.incrementOffset(CHECKSUM_LENGTH);
 		int checkSumBeginOffset = buffer.offset();
+		writeBuffer(buffer, shuttingDown);
+        int checkSumEndOffSet = buffer.offset();
+        byte[] bytes = buffer._buffer;
+        int length = checkSumEndOffSet - checkSumBeginOffset;
+        long checkSum = CRC32.checkSum(bytes, checkSumBeginOffset, length);
+        buffer.seek(checkSumOffset);
+        buffer.writeLong(checkSum);
+        buffer.seek(checkSumEndOffSet);
+    }
+
+	protected void writeBuffer(ByteArrayBuffer buffer, boolean shuttingDown) {
 		SystemData systemData = systemData();
 		writeSlot(buffer,systemData.idSystemSlot(),false);
 		writeSlot(buffer, systemData.inMemoryFreespaceSlot(), ! shuttingDown);
@@ -140,14 +155,7 @@ public class FileHeaderVariablePart2 extends FileHeaderVariablePart {
         buffer.writeInt(identity == null ? 0 : identity.getID(_container.systemTransaction()));
         buffer.writeLong(systemData.lastTimeStampID());
         buffer.writeByte(systemData.freespaceSystem());
-        int checkSumEndOffSet = buffer.offset();
-        byte[] bytes = buffer._buffer;
-        int length = checkSumEndOffSet - checkSumBeginOffset;
-        long checkSum = CRC32.checkSum(bytes, checkSumBeginOffset, length);
-        buffer.seek(checkSumOffset);
-        buffer.writeLong(checkSum);
-        buffer.seek(checkSumEndOffSet);
-    }
+	}
 
 	
     private void writeSlot(ByteArrayBuffer buffer, Slot slot, boolean writeZero) {

@@ -42,6 +42,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	protected Class[] testCases() {
+		
 	    final Class[] classes = new Class[] {
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
@@ -69,6 +70,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             
             IxFreespaceMigrationTestCase.class,
             FreespaceManagerMigrationTestCase.class,
+            CommitTimestampMigrationTestCase.class,
 
 		};
 	    return addJavaTestCases(classes);

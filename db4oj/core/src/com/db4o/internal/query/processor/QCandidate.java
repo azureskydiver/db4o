@@ -115,7 +115,7 @@ public class QCandidate extends TreeInt implements Candidate {
 		if (_fieldMetadata != null) {
 			TypeHandler4 handler = _fieldMetadata.getHandler();
 			if (handler != null) {
-			    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes); 
+			    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes, _key); 
 				final TypeHandler4 arrayElementHandler = Handlers4.arrayElementHandler(handler, queryingReadContext);
 				if (arrayElementHandler != null) {
 
@@ -548,7 +548,7 @@ public class QCandidate extends TreeInt implements Candidate {
 	}
 
     private QueryingReadContext newQueryingReadContext() {
-        return new QueryingReadContext(transaction(), _handlerVersion, _bytes);
+        return new QueryingReadContext(transaction(), _handlerVersion, _bytes, _key);
     }
 
 	private void readThis(boolean a_activate) {

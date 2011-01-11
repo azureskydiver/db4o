@@ -18,7 +18,7 @@ public class Jdk5EnumTest {
     
     public void configure(){
         Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY);
-        Db4o.configure().generateVersionNumbers(ConfigScope.GLOBALLY);
+        Db4o.configure().generateCommitTimestamps(true);
     }
 
     public void testSingleStoreRetrieve() {     	

@@ -52,7 +52,10 @@ public class FileUsageStatsCollector {
 	}
 
 	public static FileUsageStats runStats(String dbPath, boolean collectSlots) {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		return runStats(dbPath, collectSlots, Db4oEmbedded.newConfiguration());
+	}
+
+	public static FileUsageStats runStats(String dbPath, boolean collectSlots, EmbeddedConfiguration config) {
 		config.file().storage(new FileStorage());
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config, dbPath);
 		try {
@@ -78,7 +81,18 @@ public class FileUsageStatsCollector {
 	}
 
 	public FileUsageStats collectStats() {
-		_stats = new FileUsageStats(_db.fileLength(), fileHeaderUsage(), idSystemUsage(), freespace(), classMetadataUsage(), freespaceUsage(), uuidUsage(), _slots);
+		
+		_stats = new FileUsageStats(
+			_db.fileLength(), 
+			fileHeaderUsage(), 
+			idSystemUsage(), 
+			freespace(), 
+			classMetadataUsage(), 
+			freespaceUsage(), 
+			uuidUsage(), 
+			_slots, 
+			commitTimestampUsage());
+		
 		Set<ClassNode> classRoots = ClassNode.buildHierarchy(_db.classCollection());
 		for (ClassNode classRoot : classRoots) {
 			collectClassSlots(classRoot.classMetadata());
@@ -249,6 +263,21 @@ public class FileUsageStatsCollector {
 		}
 		BTree index = _db.uUIDIndex().getIndex(_db.systemTransaction());
 		return index == null ? 0 : bTreeUsage(index);
+	}
+
+	private long commitTimestampUsage() {
+		LocalTransaction st = (LocalTransaction) _db.systemTransaction();
+		CommitTimestampSupport commitTimestampSupport = st.commitTimestampSupport();
+		if(commitTimestampSupport == null){
+			return 0;
+		}
+		BTree idToTimestampBtree = commitTimestampSupport.idToTimestamp();
+		long idToTimestampBTreeSize = idToTimestampBtree == null ? 0 : bTreeUsage(idToTimestampBtree);
+
+		BTree timestampToIdBtree = commitTimestampSupport.timestampToId();
+		long timestampToIdBTreeSize = timestampToIdBtree == null ? 0 : bTreeUsage(timestampToIdBtree);
+		
+		return idToTimestampBTreeSize + timestampToIdBTreeSize;
 	}
 
 	private int slotSizeForId(int id) {

@@ -18,7 +18,7 @@ public class CascadeToHashMap {
 
 	public void configure() {
         Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY);
-        Db4o.configure().generateVersionNumbers(ConfigScope.GLOBALLY);
+        Db4o.configure().generateCommitTimestamps(true);
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);
 		Db4o.configure().objectClass(this).cascadeOnDelete(true);
 	}

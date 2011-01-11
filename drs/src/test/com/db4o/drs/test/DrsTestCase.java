@@ -106,7 +106,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 			return;
 		}
 		config.generateUUIDs(ConfigScope.GLOBALLY);
-		config.generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.generateCommitTimestamps(true);
 		configure(config);
 	}
 

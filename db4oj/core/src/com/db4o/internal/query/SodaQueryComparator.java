@@ -194,7 +194,7 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 			return null;
 		}
 		
-		QueryingReadContext context = new QueryingReadContext(_transaction, handlerVersion._number, buffer);
+		QueryingReadContext context = new QueryingReadContext(_transaction, handlerVersion._number, buffer, id);
 		return field.read(context);
 	}
 

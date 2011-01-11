@@ -759,4 +759,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			ensureClassKnown(clazz);
 		}
 	}
+
+	public long objectVersion(Object next) {
+		ObjectInfo objInfo = objectInfoForLoid(loid(next));
+		return objInfo == null ? 0 : objInfo.version();
+	}
+
+	public void ensureVersionsAreGenerated() {
+	}
 }
