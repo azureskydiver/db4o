@@ -84,8 +84,10 @@ public class CommitTimestampSupport {
 				while (it.moveNext()) {
 					ObjectInfo objInfo = (ObjectInfo) it.current();
 					TimestampEntry te = new TimestampEntry((int) objInfo.getInternalID(), commitTimestamp);
-					_idToTimestamp.remove(trans, te);
-					_timestampToId.remove(trans, te);
+					TimestampEntry oldEntry = (TimestampEntry) _idToTimestamp.remove(trans, te);
+					if(oldEntry != null){
+						_timestampToId.remove(trans, oldEntry);
+					}
 					if (commitTimestamp != 0) {
 						_idToTimestamp.add(trans, te);
 						_timestampToId.add(trans, te);
