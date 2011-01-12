@@ -8,6 +8,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
+@decaf.Remove(decaf.Platform.JDK11)
 public class OrderByWithComparableTestCase extends AbstractDb4oTestCase {
 
 	public static class ItemComparable implements Comparable {
