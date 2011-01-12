@@ -63,9 +63,8 @@ public class CommitTimestampFieldMetadata extends VirtualFieldMetadata {
     
     @Override
     public boolean hasIndex() {
-    	return false;
+    	return true;
     }
-    
     
     @Override
     protected FieldIndexKey createFieldIndexKey(int parentID, Object indexEntry) {

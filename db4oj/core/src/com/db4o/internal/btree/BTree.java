@@ -126,16 +126,18 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
         convertCacheEvictedNodesToReadMode();
     }
 
-	public void remove(Transaction trans, Object key){
+	public Object remove(Transaction trans, Object key){
 		BTreePointer bTreePointer = searchPointer(trans, key);
 		if(bTreePointer == null){
-			return;
+			return null;
 		}
+		Object result = bTreePointer.key();
 		enlist(trans);
 		PreparedComparison preparedComparison = keyHandler().prepareComparison(trans.context(), key);
 		BTreeNode node = bTreePointer.node();
 		node.remove(trans, preparedComparison, key, bTreePointer.index());
         convertCacheEvictedNodesToReadMode();
+        return result;
     }
     
     public BTreeRange searchRange(Transaction trans, Object key) {
