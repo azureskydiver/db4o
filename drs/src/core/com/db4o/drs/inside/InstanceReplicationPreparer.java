@@ -143,7 +143,9 @@ class InstanceReplicationPreparer implements Visitor {
 			if (creationTime > _lastReplicationVersion) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
 				if (_isReplicatingOnlyDeletions) return false;
 				return handleNewObject(_obj, ownerRef, owner, other, _referencingObject, _fieldName, true, false);
-			} else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
+			} else 
+				// If it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
+				// No, not always, in a three-way replication setup it can also be new.
 				return handleMissingObjectInOther(_obj, ownerRef, owner, other, _referencingObject, _fieldName);
 		}
 
@@ -261,9 +263,9 @@ class InstanceReplicationPreparer implements Visitor {
 
 		if (owner == _providerA) {
 			_stateInA.setAll(obj, false, wasModified, modificationDate);
-			_stateInB.setAll(null, false, false, -1);
+			_stateInB.setAll(null, false, false, ObjectStateImpl.UNKNOWN);
 		} else { //owner == _providerB
-			_stateInA.setAll(null, false, false, -1);
+			_stateInA.setAll(null, false, false, ObjectStateImpl.UNKNOWN);
 			_stateInB.setAll(obj, false, wasModified, modificationDate);
 		}
 
@@ -300,11 +302,11 @@ class InstanceReplicationPreparer implements Visitor {
 			_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
 	
 			if (owner == _providerA) {
-				_stateInA.setAll(obj, true, false, -1);
-				_stateInB.setAll(null, false, false, -1);
+				_stateInA.setAll(obj, true, false, ObjectStateImpl.UNKNOWN);
+				_stateInB.setAll(null, false, false, ObjectStateImpl.UNKNOWN);
 			} else {
-				_stateInA.setAll(null, false, false, -1);
-				_stateInB.setAll(obj, true, false, -1);
+				_stateInA.setAll(null, false, false, ObjectStateImpl.UNKNOWN);
+				_stateInB.setAll(obj, true, false, ObjectStateImpl.UNKNOWN);
 			}
 			
 			if(_listener != null){

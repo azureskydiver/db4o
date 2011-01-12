@@ -22,8 +22,10 @@ package com.db4o.drs.inside;
 
 import com.db4o.drs.ObjectState;
 
-class ObjectStateImpl implements ObjectState {
+public class ObjectStateImpl implements ObjectState {
 
+	public static final long UNKNOWN = -1;
+	
 	private Object _object;
 	private boolean _isNew;
 	private boolean _wasModified;
@@ -60,5 +62,9 @@ class ObjectStateImpl implements ObjectState {
 				", _wasModified=" + _wasModified +
 				", _modificationDate=" + _modificationDate +
 				'}';
+	}
+
+	public boolean isKnown() {
+		return _modificationDate != UNKNOWN;
 	}
 }

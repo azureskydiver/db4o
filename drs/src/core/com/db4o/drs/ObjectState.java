@@ -56,4 +56,9 @@ public interface ObjectState {
 	 * @return time when the object is modified in a provider.
 	 */
 	long modificationDate();
+	
+	/**
+	 * whether or not the object is known to the ReplicationProvider.
+	 */
+	boolean isKnown();
 }

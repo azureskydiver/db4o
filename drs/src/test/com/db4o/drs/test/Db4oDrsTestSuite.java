@@ -32,6 +32,9 @@ public class Db4oDrsTestSuite extends VersantDrsTestSuite implements Db4oTestCas
 	 */
 	@Override
 	protected Class[] testCases() {
+		if(false){
+			return super.testCases();
+		}
 		return concat(super.testCases(), specificTestCases());
 	}
 	

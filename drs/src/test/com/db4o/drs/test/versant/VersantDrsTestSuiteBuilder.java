@@ -16,7 +16,7 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 	public static void main(String[] args) {
 		
 		if(false){
-			new ConsoleTestRunner(new VodStandaloneTests().iterator()).run();
+			new ConsoleTestRunner(new VersantDrsTestSuiteBuilder().iterator()).run();
 			return;
 		}
 		

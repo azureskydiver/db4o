@@ -24,6 +24,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 public class ExplicitListenTestCase extends VodProviderTestCaseBase{
+	
     private ObjectContainer rootContainer;
 
     public static void main(String[] args) {
@@ -272,11 +273,4 @@ public class ExplicitListenTestCase extends VodProviderTestCaseBase{
         	vodReplicationPeer.destroy();
         }
     }
-}
-
-interface JDOTransactionClosure {
-    void invoke(PersistenceManager transaction);
-}
-interface DB4OTransactionClosure {
-    void invoke(ObjectContainer transaction);
 }
