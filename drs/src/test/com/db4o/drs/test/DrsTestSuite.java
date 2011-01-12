@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.test;
 
 import com.db4o.drs.test.regression.*;
+import com.db4o.drs.test.versant.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -35,7 +36,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		
 		if(false){
 			return new Class[]{
-					ListTest.class
+					TriangleReplicationTestCase.class
 			};
 		}
 		

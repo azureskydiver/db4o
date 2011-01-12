@@ -27,13 +27,18 @@ import com.db4o.drs.*;
  a {@link com.db4o.drs.ReplicationConflictException}
  is thrown.
  
- @author Albert Kwan
- @author Carl Rosenberger
- @author Klaus Wuestefeld
- @version 1.0
+ @version 1.1
  @since dRS 1.0 */
 public class DefaultReplicationEventListener implements ReplicationEventListener {
 
-	public void onReplicate(ReplicationEvent e) {}
+	public void onReplicate(ReplicationEvent e) {
+		if(e.isConflict()){
+			if(! e.stateInProviderA().isKnown()){
+				e.overrideWith(e.stateInProviderB());
+			} else if(! e.stateInProviderB().isKnown()){
+				e.overrideWith(e.stateInProviderA());
+			}
+		}
+	}
 	
 }
