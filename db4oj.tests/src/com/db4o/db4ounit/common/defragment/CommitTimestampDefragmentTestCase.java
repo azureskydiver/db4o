@@ -7,6 +7,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
+import com.db4o.reflect.jdk.*;
 
 import db4ounit.*;
 
@@ -96,6 +97,10 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 	}
 
 	private EmbeddedObjectContainer openContainer(EmbeddedConfiguration config) {
+		if(config == null) {
+			config = Db4oEmbedded.newConfiguration();
+		}
+		config.common().reflectWith(new JdkReflector(Item.class.getClassLoader()));
 		return config == null ? Db4oEmbedded.openFile(sourceFile()) : Db4oEmbedded.openFile(config, sourceFile());
 	}
 
