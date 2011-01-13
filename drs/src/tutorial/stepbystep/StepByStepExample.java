@@ -24,7 +24,6 @@ import java.io.*;
 import java.util.*;
 
 import org.hibernate.*;
-import org.hibernate.cfg.*;
 import org.hibernate.criterion.*;
 
 import com.db4o.*;
@@ -34,8 +33,6 @@ import com.db4o.drs.db4o.*;
 import com.db4o.drs.hibernate.*;
 import com.db4o.drs.hibernate.impl.*;
 import com.db4o.query.*;
-
-import f1.*;
 
 public class StepByStepExample  {
 	
