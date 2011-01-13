@@ -23,7 +23,9 @@ package com.db4o.drs.inside;
 import com.db4o.drs.*;
 
 /**
- A default implementation of ConflictResolver. In case of a conflict
+ A default implementation of ConflictResolver. In case of a conflict,
+ if the object is known to only one database the object is copied
+ to the other database. If the object is known in both databases
  a {@link com.db4o.drs.ReplicationConflictException}
  is thrown.
  
