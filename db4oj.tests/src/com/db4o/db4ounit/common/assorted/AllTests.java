@@ -19,6 +19,7 @@ public class AllTests extends ComposibleTestSuite {
 			            CascadeDeleteDeletedTestCase.class,
 			            CascadedDeleteReadTestCase.class,
 			            ChangeIdentity.class,
+			            CommitTimestampTestCase.class,
 			            CloseUnlocksFileTestCase.class,
 			            ComparatorSortTestCase.class,
 			            DatabaseGrowthSizeTestCase.class,
