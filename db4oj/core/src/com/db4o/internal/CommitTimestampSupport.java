@@ -165,7 +165,11 @@ public class CommitTimestampSupport {
 		public PreparedComparison prepareComparison(Context context, final TimestampEntry first) {
 			return new PreparedComparison<TimestampEntry>() {
 				public int compareTo(TimestampEntry second) {
-					return LongHandler.compare(first.commitTimestamp, second.commitTimestamp);
+					int result = LongHandler.compare(first.commitTimestamp, second.commitTimestamp);
+					if(result != 0){
+						return result;
+					}
+					return IntHandler.compare(first.objectId, second.objectId);
 				}
 			};
 		}
