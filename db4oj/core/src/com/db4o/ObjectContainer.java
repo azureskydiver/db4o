@@ -26,7 +26,7 @@ import com.db4o.query.*;
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
  * @sharpen.ignore
  */
-public interface ObjectContainer extends QLinable {
+public interface ObjectContainer {
 	
     /**
      * activates all members on a stored object to the specified depth.

@@ -25,7 +25,7 @@ import com.db4o.types.*;
  * @exclude
  * @sharpen.partial
  */
-public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec, QLinable   {
+public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec   {
     
     protected final ObjectContainerBase _server;
     

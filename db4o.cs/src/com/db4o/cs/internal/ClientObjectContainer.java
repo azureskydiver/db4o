@@ -1174,4 +1174,5 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return new QLinRoot<T>(query(), clazz);
 	}
 
+
 }
