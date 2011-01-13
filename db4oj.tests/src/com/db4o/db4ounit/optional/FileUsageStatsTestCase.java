@@ -16,7 +16,7 @@ import com.db4o.internal.slots.*;
 import db4ounit.*;
 
 @decaf.Remove(decaf.Platform.JDK11)
-public class FileUsageStatsTestCase extends TestWithTempFile {
+public class FileUsageStatsTestCase extends Db4oTestWithTempFile {
 
 	public static class Child {
 	}
@@ -67,8 +67,9 @@ public class FileUsageStatsTestCase extends TestWithTempFile {
 		db.close();
 	}
 
-	private static EmbeddedConfiguration newConfiguration() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+	protected EmbeddedConfiguration newConfiguration() {
+		EmbeddedConfiguration config = super.newConfiguration();
+		
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
 		config.common().objectClass(Item.class).objectField("_name").indexed(true);
 		config.file().generateUUIDs(ConfigScope.GLOBALLY);
