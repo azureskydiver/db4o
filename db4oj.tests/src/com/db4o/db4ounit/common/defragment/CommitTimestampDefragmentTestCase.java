@@ -88,6 +88,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 
 	private void defrag(TernaryBool generateCommitTimestamp) throws IOException {
 		DefragmentConfig config = new DefragmentConfig(sourceFile(), backupFile());
+		config.forceBackupDelete(true);
 
 		if (!generateCommitTimestamp.isUnspecified()) {
 			config.db4oConfig().generateCommitTimestamps(generateCommitTimestamp.definiteYes());
