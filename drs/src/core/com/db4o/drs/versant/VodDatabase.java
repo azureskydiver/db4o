@@ -72,6 +72,11 @@ public class VodDatabase {
     	_persistenceManagerFactory = pmf;
     }
     
+    public void configureEventProcessor(String host, int port){
+    	_eventProcessorHost = host;
+    	_eventProcessorPort = port;
+    }
+    
     private static String extractName(PersistenceManagerFactory pmf){
     	Properties properties = pmf.getProperties();
     	String connectionURL = properties.getProperty("javax.jdo.option.ConnectionURL");
