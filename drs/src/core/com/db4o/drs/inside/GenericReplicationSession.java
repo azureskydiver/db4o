@@ -86,15 +86,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 		
 	}
 
-	public final void checkConflict(Object root) {
-		try {
-			prepareGraphToBeReplicated(root);
-		} finally {
-			_providerA.clearAllReferences();
-			_providerB.clearAllReferences();
-		}
-	}
-
 	public final void close() {
 		_providerA.destroy();
 		_providerB.destroy();

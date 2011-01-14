@@ -31,22 +31,13 @@ package com.db4o.drs;
  * session.close();
  * </pre>
  *
- * @author Albert Kwan
- * @author Klaus Wuestefeld
  * @version 1.2
  * @see Replication
  * @since dRS 1.0
  */
 public interface ReplicationSession {
-	/**
-	 * checks if an object has been modified in both replication providers
-	 * since the last time the two replication providers were replicated.
-	 *
-	 * @param obj - the object to check for a conflict.
-	 */
-	public void checkConflict(Object obj);
-
-
+	
+	
 	/**
 	 * Closes this session and frees used resources. Sessions that were opened
 	 * during the creation of ReplicationProviders will be closed as well.
