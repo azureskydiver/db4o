@@ -7,8 +7,7 @@ import java.util.*;
 import com.db4o.ext.*;
 
 /**
- * query resultset.
- * <br><br>An ObjectSet is a representation for a set of objects returned 
+ * An ObjectSet is a representation for a set of objects returned 
  * by a query.
  * <br><br>ObjectSet extends the system collection interfaces 
  * java.util.List/System.Collections.IList where they are available. It is
@@ -23,7 +22,7 @@ import com.db4o.ext.*;
  * 
  */
 @decaf.IgnoreImplements(value=decaf.Platform.JDK11, interfaces={List.class})
-public interface ObjectSet<Item> extends List<Item>, Iterable<Item> {
+public interface ObjectSet<T> extends List<T>, Iterable<T> {
 	
 	
 	/**
@@ -55,7 +54,7 @@ public interface ObjectSet<Item> extends List<Item>, Iterable<Item> {
 	 * setting.<br><br>
      * @return the next object in the <code>ObjectSet</code>.
      */
-    public Item next ();
+    public T next ();
 
     /**
 	 * resets the <code>ObjectSet</code> cursor before the first element.
