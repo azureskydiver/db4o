@@ -38,13 +38,11 @@ import com.db4o.ext.VirtualField;
 import com.db4o.foundation.*;
 import com.db4o.internal.ExternalObjectContainer;
 import com.db4o.internal.Transaction;
-import com.db4o.internal.TreeInt;
 import com.db4o.internal.replication.Db4oReplicationReference;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 import com.db4o.ta.*;
-import com.db4o.types.*;
 
 // TODO: Add additional query methods (whereModified )
 
