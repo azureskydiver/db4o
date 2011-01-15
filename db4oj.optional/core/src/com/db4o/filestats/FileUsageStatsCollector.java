@@ -16,7 +16,6 @@ import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.ids.*;
 import com.db4o.internal.slots.*;
-import com.db4o.io.*;
 
 /**
  * Collects database file usage statistics and prints them
@@ -56,7 +55,6 @@ public class FileUsageStatsCollector {
 	}
 
 	public static FileUsageStats runStats(String dbPath, boolean collectSlots, EmbeddedConfiguration config) {
-		config.file().storage(new FileStorage());
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config, dbPath);
 		try {
 			return new FileUsageStatsCollector(db, collectSlots).collectStats();

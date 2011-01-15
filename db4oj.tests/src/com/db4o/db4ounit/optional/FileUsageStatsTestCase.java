@@ -15,6 +15,7 @@ import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
+/** @sharpen.if !SILVERLIGHT */
 @decaf.Remove(decaf.Platform.JDK11)
 public class FileUsageStatsTestCase extends Db4oTestWithTempFile {
 
@@ -52,12 +53,13 @@ public class FileUsageStatsTestCase extends Db4oTestWithTempFile {
 		DefragmentConfig config = new DefragmentConfig(tempFile(), backupPath);
 		config.forceBackupDelete(true);
 		Defragment.defrag(config);
-		File4.delete(backupPath);
+		delete(backupPath);
 	}
 
-	private void createDatabase(final List<Slot> gaps) {
-		File4.delete(tempFile());
-		EmbeddedConfiguration config = newConfiguration();
+	private void createDatabase(final List<Slot> gaps) throws IOException {
+		delete(tempFile());
+		
+		EmbeddedConfiguration config = newConfiguration();		
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(config, tempFile());
 		List<Child> list = new ArrayList<Child>();
 		list.add(new Child());
@@ -65,6 +67,11 @@ public class FileUsageStatsTestCase extends Db4oTestWithTempFile {
 		db.store(item);
 		db.commit();
 		db.close();
+	}
+
+	private void delete(String file) throws IOException {
+		EmbeddedConfiguration config = newConfiguration();
+		config.file().storage().delete(file);
 	}
 
 	protected EmbeddedConfiguration newConfiguration() {
