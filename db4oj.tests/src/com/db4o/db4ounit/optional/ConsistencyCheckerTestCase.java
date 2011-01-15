@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.optional;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.consistency.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.*;
@@ -10,7 +11,7 @@ import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
-public class ConsistencyCheckerTestCase extends TestWithTempFile {
+public class ConsistencyCheckerTestCase extends Db4oTestWithTempFile {
 
 	public static class Item {
 	}
@@ -40,7 +41,8 @@ public class ConsistencyCheckerTestCase extends TestWithTempFile {
 	}
 
 	private void assertInconsistencyDetected(Procedure4<Pair<LocalObjectContainer, Item>> proc) {
-		LocalObjectContainer db = (LocalObjectContainer) Db4oEmbedded.openFile(tempFile());
+		EmbeddedConfiguration config = newConfiguration();
+		LocalObjectContainer db = (LocalObjectContainer) Db4oEmbedded.openFile(config, tempFile());
 		try {
 			Item item = new Item();
 			db.store(item);

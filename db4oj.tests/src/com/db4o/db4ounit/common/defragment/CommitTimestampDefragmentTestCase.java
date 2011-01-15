@@ -18,7 +18,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 
 	public void testKeepingBtrees() throws IOException {
 
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		EmbeddedConfiguration config = newConfiguration();
 		config.file().generateCommitTimestamps(true);
 
 		long version = storeItemAndGetCommitTimestamp(config);
@@ -33,7 +33,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 
 	public void testRemovingBtrees() throws IOException {
 
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		EmbeddedConfiguration config = newConfiguration();
 		config.file().generateCommitTimestamps(true);
 
 		long version = storeItemAndGetCommitTimestamp(config);
@@ -50,7 +50,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 
 	public void testTurningOnGenerateCommitTimestampInDefrag() throws IOException {
 
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		EmbeddedConfiguration config = newConfiguration();
 
 		long version = storeItemAndGetCommitTimestamp(config);
 
@@ -65,8 +65,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 	}
 
 	private void assertVersionAfterDefrag(long version, EmbeddedConfiguration afterDefragConfig) {
-		EmbeddedObjectContainer db;
-		db = openContainer(afterDefragConfig);
+		EmbeddedObjectContainer db = openContainer(afterDefragConfig);
 
 		Item retrievedItem = db.query(Item.class).next();
 		long retrievedVersion = db.ext().getObjectInfo(retrievedItem).getCommitTimestamp();
@@ -88,6 +87,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 
 	private void defrag(TernaryBool generateCommitTimestamp) throws IOException {
 		DefragmentConfig config = new DefragmentConfig(sourceFile(), backupFile());
+		config.db4oConfig(newConfiguration());
 		config.forceBackupDelete(true);
 
 		if (!generateCommitTimestamp.isUnspecified()) {
@@ -99,7 +99,7 @@ public class CommitTimestampDefragmentTestCase extends DefragmentTestCaseBase {
 
 	private EmbeddedObjectContainer openContainer(EmbeddedConfiguration config) {
 		if(config == null) {
-			config = Db4oEmbedded.newConfiguration();
+			config = newConfiguration();
 		}
 		config.common().reflectWith(Platform4.reflectorForType(Item.class));
 		return config == null ? Db4oEmbedded.openFile(sourceFile()) : Db4oEmbedded.openFile(config, sourceFile());
