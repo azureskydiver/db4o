@@ -1,3 +1,4 @@
+/* Copyright (C) 2011 Versant Inc.   http://www.db4o.com */
 package com.db4o.drs.test.versant;
 
 import com.db4o.Db4oEmbedded;
