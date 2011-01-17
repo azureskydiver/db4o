@@ -193,8 +193,23 @@
 		</javadoc>
 		<copy file="${javadoc.stylesheet}" todir="${drs.dir.dist.api}" overwrite="true" />
 	</target>
+	
+	
+	<target name="flare-drs-java" >
 
-	<target name="dist" depends="build-all, javadoc">
+		<flare output="${dir.dist.flare.temp}" target="JavaPdf" projectDirectory="${flare.project.drs.folder}" />
+		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/drs-reference-java.pdf" todir="${zipbasedir}/doc/reference" />
+		
+		<flare output="${dir.dist.flare.temp}" target="JavaWeb" projectDirectory="${flare.project.drs.folder}"  />
+		<copy todir="${zipbasedir}/doc/reference">
+			<fileset dir="${dir.dist.flare.temp}/Output/JavaWeb">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="dist" depends="build-all, javadoc, flare-drs-java">
 		<property name="zipbasedir" value="drs-${db4o.version.dotted}" />
 		
 		<copy file="${drs.dir.base}/compatibility.java.html" tofile="${drs.dir.dist.temp}/compatibility.html" overwrite="true">
@@ -225,7 +240,6 @@
 			<zipfileset file="${file.jdk1.5.db4ounit.jar}" prefix="${zipbasedir}/lib" />
 			<zipfileset dir="${drs.dir.src}" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
-			<zipfileset dir="${drs.dir.base}/docWiki/java" prefix="${zipbasedir}/doc/reference" />
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
 
 			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
