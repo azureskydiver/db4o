@@ -50,31 +50,10 @@ public class ObjectConfigurationExamples {
         container.close();
     }
 
-    private static void enableReplication() {
-        // #example: Enable this type for replication
-        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        // is a short-cut for generateUUIDs and generateVersionNumbers
-        configuration.common().objectClass(Person.class).enableReplication(true);
-        // #end example
-
-        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
-        container.close();
-    }
-
     private static void generateUUIDs() {
         // #example: Generate uuids for this type
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         configuration.common().objectClass(Person.class).generateUUIDs(true);
-        // #end example
-
-        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
-        container.close();
-    }
-
-    private static void generateVersions() {
-        // #example: Generate versions for this type
-        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        configuration.common().objectClass(Person.class).generateVersionNumbers(true);
         // #end example
 
         ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);

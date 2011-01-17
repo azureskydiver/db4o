@@ -312,9 +312,9 @@ namespace Db4oDoc.Drs.Db4o
         private static IObjectContainer OpenDatabase(string fileName)
         {
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            // #example: Configure db4o to generate UUIDs and Version-Numbers
+            // #example: Configure db4o to generate UUIDs and commit timestamps
             configuration.File.GenerateUUIDs = ConfigScope.Globally;
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally;
+            configuration.File.GenerateCommitTimestamps = true;
             // #end example
             return Db4oEmbedded.OpenFile(configuration, fileName);
         }

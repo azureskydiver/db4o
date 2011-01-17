@@ -70,30 +70,12 @@ public class FileConfiguration {
         container.close();
     }
 
-    public static void globalVersions(){
-        // #example: Enable db4o versions globally
+    public static void commitTimestamps(){
+        // #example: Enable db4o commit timestamps
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        configuration.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+        configuration.file().generateCommitTimestamps(true);
         // #end example
         ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
-        container.close();
-    }
-    public static void individualVersions(){
-        // #example: Enable db4o versions for certain classes
-        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        configuration.file().generateVersionNumbers(ConfigScope.INDIVIDUALLY);
-        configuration.common().objectClass(SpecialClass.class).generateVersionNumbers(true);
-        // #end example
-        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
-
-        SpecialClass withversin = new SpecialClass();
-        container.store(withversin);
-        NormalClass withoutVersion = new NormalClass();
-        container.store(withoutVersion);
-
-        assertTrue(container.ext().getObjectInfo(withversin).getVersion()!=0);
-        assertTrue(container.ext().getObjectInfo(withoutVersion).getVersion()==0);
-
         container.close();
     }
 

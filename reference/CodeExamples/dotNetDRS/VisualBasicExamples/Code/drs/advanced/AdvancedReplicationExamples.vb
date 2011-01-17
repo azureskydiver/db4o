@@ -193,7 +193,7 @@ Namespace Db4oDoc.Drs.Advanced
             Dim desktopDatabase As IObjectContainer = OpenDatabase(DesktopDatabaseName)
             Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
 
-            ' #example: Updating all objects ensures that it has a UUID and version
+            ' #example: Updating all objects ensures that it has a UUID and timestamp
             Dim allObjects As IList(Of Object) = desktopDatabase.Query(Of Object)()
             For Each objectToUpdate As Object In allObjects
                 desktopDatabase.Store(objectToUpdate)
@@ -274,14 +274,14 @@ Namespace Db4oDoc.Drs.Advanced
         Private Shared Function OpenDatabase(ByVal fileName As String) As IObjectContainer
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             configuration.File.GenerateUUIDs = ConfigScope.Globally
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally
+            configuration.File.GenerateCommitTimestamps = True
             Return Db4oEmbedded.OpenFile(configuration, fileName)
         End Function
 
         Private Shared Function OpenDatabaseServer(ByVal fileName As String) As IObjectServer
             Dim configuration As IServerConfiguration = Db4oClientServer.NewServerConfiguration()
             configuration.File.GenerateUUIDs = ConfigScope.Globally
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally
+            configuration.File.GenerateCommitTimestamps = True
             Dim srv As IObjectServer = Db4oClientServer.OpenServer(configuration, fileName, Port)
             srv.GrantAccess(UserName, UserName)
             Return srv

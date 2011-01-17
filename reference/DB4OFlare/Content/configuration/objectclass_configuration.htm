@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="3" MadCap:lastHeight="727" MadCap:lastWidth="547">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="3" MadCap:lastHeight="775" MadCap:lastWidth="500">
     <head>
         <link href="../Resources/TableStyles/Basic.css" rel="stylesheet" MadCap:stylesheetType="table" />
     </head>
@@ -14,54 +14,52 @@
         <h2>Overview</h2>
         <p>Here's a overview over all common configuration-settings which you can change:</p>
         <table style="width: 100%;mc-table-style: url('../Resources/TableStyles/Basic.css');caption-side: top;" class="TableStyle_Basic" cellspacing="0">
-            <col style="width: 80%;" />
+            <col style="width: 100%;" />
             <tbody>
                 <tr>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/call_constructor.htm">CallConstructor</a></strong>: Configure db4o to call constructors when instantiating objects.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/call_constructor.htm">CallConstructor</a></strong>: Configure db4o to call constructors when instantiating objects.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/cascade_on_delete.htm">CascadeOnDelete</a></strong>: When a object is deleted, delete also referenced objects.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/cascade_on_delete.htm">CascadeOnDelete</a></strong>: When a object is deleted, delete also referenced objects.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/cascade_on_update.htm">CascadeOnUpdate</a></strong>: When a object is updated, update also referenced objects.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/cascade_on_update.htm">CascadeOnUpdate</a></strong>: When a object is updated, update also referenced objects.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/cascade_on-activate.htm">CascadeOnActivation</a></strong>: When a object is activated, activate also referenced objects.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/cascade_on-activate.htm">CascadeOnActivation</a></strong>: When a object is activated, activate also referenced objects.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/diable_class_index.htm">Index</a></strong>: Don't index the objects of this type.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/diable_class_index.htm">Index</a></strong>: Don't index the objects of this type.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><strike>EnableReplication</strike></strong>: Deprecated. <a href="file/generate_uuids.htm">Generate uuids</a> and <a href="file/generate_timestamps.htm">commit timestamps</a> to enable replication.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/enable_replication.htm">EnableReplication</a></strong>: Enable uuids and version numbers for this type.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/generate_uuid.htm">GenerateUUIDs</a></strong>: Generate UUIDs, mainly used for replication.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/generate_uuid.htm">GenerateUUIDs</a></strong>: Generate UUIDs, mainly used for replication.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><strike>GenerateVersionNumbers</strike></strong>: Deprecated. Generate <a href="file/generate_timestamps.htm">commit timestamps</a> instead.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/generate_version_numbers.htm">GenerateVersionNumbers</a></strong>: Generate Version numbers, mainly used for replication.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/maximum_activation_depth.htm">MaximumActivationDepth</a></strong>: Set a maximum activation-depth.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/maximum_activation_depth.htm">MaximumActivationDepth</a></strong>: Set a maximum activation-depth.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/minimum_activation_depth.htm">MinimumActivationDeph</a></strong>: Set a minimum activation-depth.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/minimum_activation_depth.htm">MinimumActivationDeph</a></strong>: Set a minimum activation-depth.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/persist_static_fields.htm">PersistStaticFields</a></strong>: Persist also the static fields of this type.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/persist_static_fields.htm">PersistStaticFields</a></strong>: Persist also the static fields of this type.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/rename_class.htm">Rename</a></strong>: Rename this type. Used for <a href="../advanced_topics/refactoring_and_schema_evolution.htm">refactorings</a>.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/rename_class.htm">Rename</a></strong>: Rename this type. Used for <a href="../advanced_topics/refactoring_and_schema_evolution.htm">refactorings</a>.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/set_a_translator.htm">Translate</a></strong>: Set a translator for this type.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/set_a_translator.htm">Translate</a></strong>: Set a translator for this type.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd" style=""><strong><a href="objectclass/store_transient_fields.htm">StoreTransientFields</a></strong>: Store also transient fields.</td>
                 </tr>
                 <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowSep_ColEnd"><strong><a href="objectclass/store_transient_fields.htm">StoreTransientFields</a></strong>: Store also transient fields.</td>
-                </tr>
-                <tr>
-                    <td class="TableStyle_Basic_Body_0_0_RowEnd_ColEnd"><strong><a href="objectclass/update_depth.htm">UpdateDepth</a></strong>: Set the update-depth for this type.</td>
+                    <td class="TableStyle_Basic_Body_0_0_RowEnd_ColEnd" style=""><strong><a href="objectclass/update_depth.htm">UpdateDepth</a></strong>: Set the update-depth for this type.</td>
                 </tr>
             </tbody>
         </table>
