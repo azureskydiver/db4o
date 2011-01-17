@@ -280,9 +280,9 @@ Namespace Db4oDoc.Drs.Db4o
 
         Private Shared Function OpenDatabase(ByVal fileName As String) As IObjectContainer
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            ' #example: Configure db4o to generate UUIDs and Version-Numbers
+            ' #example: Configure db4o to generate UUIDs and commit timestamps
             configuration.File.GenerateUUIDs = ConfigScope.Globally
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally
+            configuration.File.GenerateCommitTimestamps = True
             ' #end example
             Return Db4oEmbedded.OpenFile(configuration, fileName)
         End Function

@@ -270,9 +270,9 @@ public class Db4oReplicationExamples {
 
     private static ObjectContainer openDatabase(String fileName) {
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-        // #example: Configure db4o to generate UUIDs and Version-Numbers
+        // #example: Configure db4o to generate UUIDs and commit timestamps
         configuration.file().generateUUIDs(ConfigScope.GLOBALLY);
-        configuration.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+        configuration.file().generateCommitTimestamps(true);
         // #end example
         return Db4oEmbedded.openFile(configuration, fileName);
     }

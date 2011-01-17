@@ -8,7 +8,6 @@ namespace Db4oDoc.Code.Pitfalls.Activation
 
         public Person(string name)
         {
-            mother = mother;
             this.name = name;
         }
 

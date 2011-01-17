@@ -46,31 +46,10 @@ Namespace Db4oDoc.Code.Configuration.ObjectConfig
             container.Close()
         End Sub
 
-        Private Shared Sub EnableReplication()
-            ' #example: Enable this type for replication
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            ' is a short-cut for generateUUIDs and generateVersionNumbers
-            configuration.Common.ObjectClass(GetType(Person)).EnableReplication(True)
-            ' #end example
-
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
-            container.Close()
-        End Sub
-
         Private Shared Sub GenerateUuiDs()
             ' #example: Generate uuids for this type
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
             configuration.Common.ObjectClass(GetType(Person)).GenerateUUIDs(True)
-            ' #end example
-
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
-            container.Close()
-        End Sub
-
-        Private Shared Sub GenerateVersions()
-            ' #example: Generate versions for this type
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.Common.ObjectClass(GetType(Person)).GenerateVersionNumbers(True)
             ' #end example
 
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)

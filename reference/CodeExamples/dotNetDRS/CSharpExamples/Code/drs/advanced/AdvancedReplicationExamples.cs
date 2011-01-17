@@ -207,7 +207,7 @@ namespace Db4oDoc.Drs.Advanced
             IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
             IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
-            // #example: Updating all objects ensures that it has a UUID and version
+            // #example: Updating all objects ensures that it has a UUID and timestamp
             IList<object> allObjects = desktopDatabase.Query<object>();
             foreach (object objectToUpdate in allObjects)
             {
@@ -307,7 +307,7 @@ namespace Db4oDoc.Drs.Advanced
         {
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
             configuration.File.GenerateUUIDs = ConfigScope.Globally;
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally;
+            configuration.File.GenerateCommitTimestamps = true;
             return Db4oEmbedded.OpenFile(configuration, fileName);
         }
 
@@ -315,7 +315,7 @@ namespace Db4oDoc.Drs.Advanced
         {
             IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
             configuration.File.GenerateUUIDs = ConfigScope.Globally;
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally;
+            configuration.File.GenerateCommitTimestamps = true;
             IObjectServer srv = Db4oClientServer.OpenServer(configuration, fileName, Port);
             srv.GrantAccess(UserName, UserName);
             return srv;

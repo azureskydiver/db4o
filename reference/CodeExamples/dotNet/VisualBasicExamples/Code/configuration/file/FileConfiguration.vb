@@ -60,30 +60,12 @@ Namespace Db4oDoc.Code.Configuration.File
             container.Close()
         End Sub
 
-        Public Shared Sub GlobalVersions()
-            ' #example: Enable db4o versions globally
+        Public Shared Sub CommitTimestamps()
+            ' #example: Enable db4o commit timestamps
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally
-            ' #end example
-            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(Configuration, "database.db4o")
-            container.Close()
-        End Sub
-        Public Shared Sub IndividualVersions()
-            ' #example: Enable db4o versions for certain classes
-            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-            configuration.File.GenerateVersionNumbers = (ConfigScope.Individually)
-            configuration.Common.ObjectClass(GetType(SpecialClass)).GenerateVersionNumbers(True)
+            configuration.File.GenerateCommitTimestamps = True
             ' #end example
             Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, "database.db4o")
-
-            Dim withVersion As New SpecialClass()
-            container.Store(withVersion)
-            Dim withoutVersion As New NormalClass()
-            container.Store(withoutVersion)
-
-            AssertTrue(container.Ext().GetObjectInfo(withVersion).GetVersion() <> 0)
-            AssertTrue(container.Ext().GetObjectInfo(withoutVersion).GetVersion() = 0)
-
             container.Close()
         End Sub
 

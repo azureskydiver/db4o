@@ -206,10 +206,10 @@ public class SimpleReplication {
     }
 
     private static EmbeddedConfiguration newConfiguration() {
-        // #example: Enable UUIDs and version numbers, use the JDO reflector
+        // #example: Enable UUIDs and commit timestamps use the JDO reflector
         EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
         config.file().generateUUIDs(ConfigScope.GLOBALLY);
-        config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+        config.file().generateCommitTimestamps(true);
         config.common().reflectWith(
                 new JdoReflector(Thread.currentThread().getContextClassLoader()));
         // #end example

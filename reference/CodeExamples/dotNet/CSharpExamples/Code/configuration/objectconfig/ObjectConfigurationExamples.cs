@@ -53,34 +53,11 @@ namespace Db4oDoc.Code.Configuration.ObjectConfig
             container.Close();
         }
 
-        private static void EnableReplication()
-        {
-            // #example: Enable this type for replication
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            // is a short-cut for generateUUIDs and generateVersionNumbers
-            configuration.Common.ObjectClass(typeof (Person)).EnableReplication(true);
-            // #end example
-
-            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
-            container.Close();
-        }
-
         private static void GenerateUuiDs()
         {
             // #example: Generate uuids for this type
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
             configuration.Common.ObjectClass(typeof (Person)).GenerateUUIDs(true);
-            // #end example
-
-            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
-            container.Close();
-        }
-
-        private static void GenerateVersions()
-        {
-            // #example: Generate versions for this type
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.Common.ObjectClass(typeof (Person)).GenerateVersionNumbers(true);
             // #end example
 
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);

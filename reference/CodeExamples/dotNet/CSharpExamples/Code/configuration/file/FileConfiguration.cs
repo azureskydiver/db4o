@@ -68,32 +68,17 @@ namespace Db4oDoc.Code.Configuration.File
             container.Close();
         }
 
-        public static void GlobalVersions(){
-            // #example: Enable db4o versions globally
+
+        public static void CommitTimestamps()
+        {
+            // #example: Enable db4o commit timestamps
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.File.GenerateVersionNumbers = ConfigScope.Globally;
+            configuration.File.GenerateCommitTimestamps = true;
             // #end example
             IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
             container.Close();
         }
-        public static void IndividualVersions(){
-            // #example: Enable db4o versions for certain classes
-            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            configuration.File.GenerateVersionNumbers = (ConfigScope.Individually);
-            configuration.Common.ObjectClass(typeof(SpecialClass)).GenerateVersionNumbers(true);
-            // #end example
-            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, "database.db4o");
 
-            SpecialClass withVersion = new SpecialClass();
-            container.Store(withVersion);
-            NormalClass withoutVersion = new NormalClass();
-            container.Store(withoutVersion);
-
-            AssertTrue(container.Ext().GetObjectInfo(withVersion).GetVersion()!=0);
-            AssertTrue(container.Ext().GetObjectInfo(withoutVersion).GetVersion()==0);
-
-            container.Close();
-        }
 
         public static void ReserveSpace()
         {

@@ -1,57 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="808" MadCap:lastWidth="624" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;a1;b1;c1;b2;uncomment;antlr;asm;attrs;cglib;ehcache;jta;log4j">
-    <head><title>Creating A Sample Test	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="577" MadCap:lastWidth="560">
+    <head>
     </head>
-    <body onload="prettyPrint()">
+    <body>
         <h1>Creating A Sample Test</h1>
-        <p>Let's create a simple test case
-to check if the cascade on update setting is working as expected. </p>
-        <p>We will use a simple linked list
-class:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.java/Atom.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.cs/Atom.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:net" />
-        <p>Custom configuration should be
-added to configure method:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.java/configure.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.cs/Configure.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:net" />
-        <p>To prepare the database we will
-need to store some Atom objects:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.java/store.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.cs/Store.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:net" />
-        <p>Now we are ready to test the
-expected behavior:</p>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.java/test.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:java" />
-        <p MadCap:conditions="Primary..NET">
-            <MadCap:snippetBlock src="../Resources/Snippets/Creating A Sample Test/CascadeOnUpdate.cs/Test.flsnp" />
-        </p>
-        <p MadCap:conditions="Primary:net" />
-        <p MadCap:conditions="Primary.Online">Download example code:</p>
-        <p MadCap:conditions="Primary.Online">
-            <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages"><a href="testscs.zip">c# </a>
-            </MadCap:conditionalText>
-            <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="testsjava.zip">Java </a>
-            </MadCap:conditionalText>
-        </p>
+        <p>Let's create the a extremely simple test case. The first step is to setup db4ounit. The best way is to use db4ounit directly from the source. db4ounit is in the db4o source code folder of the distribution. </p>
+        <p MadCap:conditions="Primary.Java">Open the db4o source-code of the db4o test-projects in Eclipse (or another IDE). The db4ounit projects are called 'db4ounit' and 'db4ounit.extensions'. Then create a new project which references the db4ounit projects. </p>
+        <p>After that we're ready to write our first db4ounit test. Create a new class which inherits from AbstractDb4oTestCase. Then add a test-method. Any method which starts with the prefix 'test' is a test method. Then add a main method which starts the test.</p>
+        <MadCap:snippetBlock src="../CodeExamples/db4otests/ExampleTestCase-Basic-test-case.all.flsnp" />
+        <p>&#160;</p>
+        <p>&#160;</p>
     </body>
 </html>

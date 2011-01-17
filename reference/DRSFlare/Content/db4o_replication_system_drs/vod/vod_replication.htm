@@ -11,7 +11,7 @@
         <h2><a name="Prepare"></a>Prepare db4o </h2>
         <p>The first thing you need to do is preparing db4o for replication. Enable the UUID and version-number support for your database. UUID's are used to recognize objects across the database boundary. The version number is used the track changes.</p>
         <p>Because classes are enhanced for JDO they have additional fields. To avoid that these artificial fields are stored in the db4o database you need to use the JDOReflector. This reflector recognized JDO -aware objects and treats them differently.</p>
-        <MadCap:snippetBlock src="../../CodeExamples/drs/vod/SimpleReplication-Enable-UUIDs-and-version-numbers,-use-the-JDO-reflector.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/drs/vod/SimpleReplication-Enable-UUIDs-and-commit-timestamps-use-the-JDO-reflector.all.flsnp" />
         <h2><a name="db4oToVod"></a>Replication from db4o to VOD</h2>
         <p>After this preparation you can store, retrieve and update normally. To start the replication-process you need to create the two replication partners. Open a replication partner for db4o like this:</p>
         <MadCap:snippetBlock src="../../CodeExamples/drs/vod/SimpleReplication-Open-the-db4o-replication-provider.all.flsnp" />

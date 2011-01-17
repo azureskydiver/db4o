@@ -222,7 +222,7 @@ public class AdvancedReplicationExamples {
         ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
         ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
 
-        // #example: Updating all objects ensures that it has a UUID and version
+        // #example: Updating all objects ensures that it has a UUID and timestamp
         ObjectSet<Object> allObjects = desktopDatabase.query(Object.class);
         for (Object objectToUpdate : allObjects) {
             desktopDatabase.store(objectToUpdate);
@@ -309,14 +309,14 @@ public class AdvancedReplicationExamples {
     private static ObjectContainer openDatabase(String fileName) {
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         configuration.file().generateUUIDs(ConfigScope.GLOBALLY);
-        configuration.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+        configuration.file().generateCommitTimestamps(true);
         return Db4oEmbedded.openFile(configuration, fileName);
     }
 
     private static ObjectServer openDatabaseServer(String fileName) {
         ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
         configuration.file().generateUUIDs(ConfigScope.GLOBALLY);
-        configuration.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+        configuration.file().generateCommitTimestamps(true);
         ObjectServer srv = Db4oClientServer.openServer(configuration, fileName, PORT);
         srv.grantAccess(USER_NAME, USER_NAME);
         return srv;
