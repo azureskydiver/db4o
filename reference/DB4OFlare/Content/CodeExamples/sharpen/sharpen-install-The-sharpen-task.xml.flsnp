@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;macrodef name=&quot;sharpen&quot;&gt;
+    &lt;attribute name=&quot;workspace&quot;/&gt;
+    &lt;attribute name=&quot;resource&quot;/&gt;
+
+    &lt;element name=&quot;args&quot; optional=&quot;yes&quot;/&gt;
+
+    &lt;sequential&gt;
+        &lt;java taskname=&quot;sharpen&quot;
+              fork=&quot;true&quot;
+              classname=&quot;org.eclipse.core.launcher.Main&quot;
+              failonerror=&quot;true&quot; timeout=&quot;1800000&quot;&gt;
+
+            &lt;classpath&gt;
+                &lt;fileset dir=&quot;${eclipse.home}/plugins&quot;&gt;
+                    &lt;include name=&quot;org.eclipse.equinox.launcher_*.jar&quot;/&gt;
+                &lt;/fileset&gt;
+            &lt;/classpath&gt;
+
+            &lt;arg value=&quot;-clean&quot;/&gt;
+            &lt;arg value=&quot;-data&quot;/&gt;
+            &lt;arg file=&quot;@{workspace}&quot;/&gt;
+            &lt;arg value=&quot;-application&quot;/&gt;
+            &lt;arg value=&quot;sharpen.core.application&quot;/&gt;
+            &lt;arg value=&quot;@{resource}&quot;/&gt;
+            &lt;args/&gt;
+        &lt;/java&gt;
+    &lt;/sequential&gt;
+&lt;/macrodef&gt;</pre>
+		<div class="codesnippet-meta">
+			sharpen-install.xml: The sharpen task
+			<div class="codedownload">
+				<a href="Example-db4odoc-sharpen-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>
