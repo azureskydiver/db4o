@@ -3,9 +3,9 @@ package com.db4odoc.disconnectedobj.merging;
 import java.util.UUID;
 
 public abstract class IDHolder {
-    private final String uuid = UUID.randomUUID().toString();
+    private final UUID uuid = UUID.randomUUID();
 
-    public String getObjectId(){
+    public UUID getObjectId(){
         return uuid;
     }
 }

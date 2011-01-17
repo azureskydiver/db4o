@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- #example: The persistent # -->
+<jdo>
+    <package name="com.db4odoc.drs.vod">
+        <class name="Car"/>
+        <class name="Pilot"/>
+    </package>
+</jdo>
+<!-- #end example -->

@@ -1,40 +1,46 @@
 package com.db4odoc.disconnectedobj.idexamples;
 
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.config.UuidSupport;
+import com.db4o.diagnostic.Diagnostic;
+import com.db4o.diagnostic.DiagnosticListener;
+import com.db4o.diagnostic.DiagnosticToConsole;
+import com.db4o.diagnostic.LoadedFromClassIndex;
 import com.db4o.query.Predicate;
+import com.db4o.query.Query;
 
 import java.util.UUID;
 
 
-public class UuidOnObject implements IdExample<String> {
+public class UuidOnObject implements IdExample<UUID> {
 
-    public static IdExample<String> create() {
+    public static IdExample<UUID> create() {
         return new UuidOnObject();
     }
 
-    public String idForObject(Object obj, ObjectContainer container) {
+    public UUID idForObject(Object obj, ObjectContainer container) {
         // #example: get the uuid
         IDHolder uuidHolder = (IDHolder)obj;
-        String uuid = uuidHolder.getObjectId();
+        UUID uuid = uuidHolder.getObjectId();
         // #end example
         return uuid;
     }
 
-    public IDHolder objectForID(final String idForObject, ObjectContainer container) {
+    public IDHolder objectForID(final UUID idForObject, ObjectContainer container) {
         // #example: get an object its UUID
-        IDHolder object= container.query(new Predicate<IDHolder>() {
-            @Override
-            public boolean match(IDHolder o) {
-                return o.getObjectId().equals(idForObject);
-            }
-        }).get(0);
+        Query query = container.query();
+        query.constrain(IDHolder.class);
+        query.descend("uuid").constrain(idForObject);
+        IDHolder object= (IDHolder) query.execute().get(0);
         // #end example
         return object;
     }
 
     public void configure(EmbeddedConfiguration configuration) {
         // #example: index the uuid-field
+        configuration.common().add(new UuidSupport());
         configuration.common().objectClass(IDHolder.class).objectField("uuid").indexed(true);
         // #end example
     }

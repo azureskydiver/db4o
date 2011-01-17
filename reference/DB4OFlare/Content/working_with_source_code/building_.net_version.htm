@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="500" MadCap:lastWidth="454" MadCap:conditions="Primary..NET,Primary.All languages">
+    <head><title>Building .NET Version	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>Building .NET Version</h1>
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET version can
+also be built from MS Visual Studio. </p>
+            <p>The sources are
+available in your db4o distribution. They can also be obtained from the <a href="using_the_repository.htm">SVN repository</a> by
+checking out db4o.net project.</p>
+            <p>Open an appropriate
+solution in Visual Studio (Db4objects.Db4o-XX.sln), run
+the build. The output can be found in 
+/bin folder.</p>
+            <p>If you want to build the other supplemental projects distributed with the db4o source you can use the corresponding solution files in the /src folder. </p>
+            <p>Using Db4objects.Db4o.NativeQueries or Db4objects.Db4o.Instrumentation projects you must know that they depend on external Cecil libraries:</p>
+            <ul>
+                <li>Cecil.Flowanalysis.dll</li>
+                <li>Mono.Cecil.Pdb.dll </li>
+                <li>Mono.Cecil.dll  </li>
+            </ul>
+            <p>Mono version can be built using Makefile or default.build (nAnt). For more details see Db4o On Mono. </p>
+            <p>You can also build .NET version using db4obuild project - this process is fully described in <a href="building_full_distribution.htm">Building Full Distribution</a> chapter. The explanation of Sharpen settings used in building db4o is described in <a href="sharpen_set-up_for_db4o_build.htm">Sharpen Set-Up For Db4o Build</a>. </p>
+        </p>
+        <p MadCap:conditions="Primary:net" />
+        <p>Further reading:</p>
+        <p><a href="testing_db4o.htm">Testing Db4o</a>
+        </p>
+        <p><a href="patch_submission.htm">Patch Submission</a>
+        </p>
+    </body>
+</html>

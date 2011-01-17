@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">&lt;project name=&quot;tutorial&quot; default=&quot;build-and-enhance&quot; basedir=&quot;.&quot;&gt;
+
+    &lt;property file=&quot;machine.properties&quot;/&gt;
+    &lt;!--The location of the build-result (the compiled class-files).
+     Depends on you're build-system / IDE.
+     For plain Eclipse projects it's usually &quot;./bin&quot; --&gt;
+    &lt;property name=&quot;dir.build.output&quot; value=&quot;./bin&quot;/&gt;
+    &lt;property name=&quot;dir.build.source&quot; value=&quot;./src&quot;/&gt;
+    &lt;property name=&quot;dir.lib&quot; value=&quot;./lib&quot;/&gt;
+
+    &lt;property name=&quot;dir.jdo.lib&quot; value=&quot;${dir.vod.install.location}\lib&quot;/&gt;
+    &lt;property name=&quot;dir.jdo.sdklib&quot; value=&quot;${dir.vod.install.location}\sdk\lib&quot;/&gt;
+
+    &lt;path id=&quot;enhancerClassPath&quot;&gt;
+        &lt;pathelement  path=&quot;${dir.build.output}&quot;/&gt;
+        &lt;fileset dir=&quot;${dir.jdo.lib}&quot; includes=&quot;**/*.jar&quot;/&gt;
+        &lt;fileset dir=&quot;${dir.jdo.sdklib}&quot; includes=&quot;**/*.jar&quot;/&gt;
+    &lt;/path&gt;
+
+    &lt;target name=&quot;build-and-enhance&quot; depends=&quot;compile, enhance&quot;/&gt;
+
+    &lt;target name=&quot;enhance&quot; description=&quot;Enhance the JOD classes&quot;&gt;
+        &lt;taskdef resource=&quot;versant.tasks&quot;&gt;
+            &lt;classpath&gt;
+                &lt;path refid=&quot;enhancerClassPath&quot;/&gt;
+            &lt;/classpath&gt;
+        &lt;/taskdef&gt;
+
+        &lt;jdo-enhance outputdir=&quot;${dir.build.output}&quot;
+                     classpathref=&quot;enhancerClassPath&quot; &gt;
+            &lt;persistentaware dir=&quot;${dir.build.output}&quot;/&gt;
+        &lt;/jdo-enhance&gt;
+    &lt;/target&gt;
+
+    &lt;target name=&quot;compile&quot;&gt;
+        &lt;javac srcdir=&quot;${dir.build.source}&quot;
+            destdir=&quot;${dir.build.output}&quot;
+            target=&quot;6&quot;
+			source=&quot;6&quot;
+			debug=&quot;on&quot;
+			encoding=&quot;UTF-8&quot;&gt;
+                &lt;classpath&gt;
+                    &lt;pathelement path=&quot;${dir.jdo.lib}/jdo2-api-2.1.jar&quot;/&gt;
+                    &lt;pathelement path=&quot;${dir.jdo.lib}/vodjdo.jar&quot;/&gt;
+                    &lt;pathelement path=&quot;${dir.jdo.lib}/asm-all-3.1.jar&quot;/&gt;
+                    &lt;pathelement path=&quot;${dir.lib}/*&quot;/&gt;
+                &lt;/classpath&gt;
+			&lt;/javac&gt;
+    &lt;/target&gt;
+&lt;/project&gt;</pre>
+		<div class="codesnippet-meta">
+			build.xml: Enhancer script 
+			<div class="codedownload">
+				<a href="Example-CodeExamples-javaDRS-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

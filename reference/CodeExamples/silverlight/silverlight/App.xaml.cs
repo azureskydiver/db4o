@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
 using Db4objects.Db4o.IO;
 
 namespace silverlight
@@ -30,7 +31,7 @@ namespace silverlight
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             var cfg = Db4oEmbedded.NewConfiguration();
-            cfg.File.Storage = new IsolatedStorageStorage();
+            cfg.AddConfigurationItem(new SilverlightSupport());
             container = Db4oEmbedded.OpenFile(cfg,"database.db4o");
             this.RootVisual = new MainPage(container);
         }

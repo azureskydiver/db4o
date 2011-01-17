@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2266" MadCap:lastWidth="623" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
+    <head><title>Memory Storage	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <h1>
+            <MadCap:keyword term="In Memory Database;Storage:Memory" />Memory Storage</h1>
+        <p>The MemoryStorage allows you to create
+and use a db4o database fully in RAM. This strategy eliminates long disk access
+times and makes db4o much faster.</p>
+        <MadCap:snippetBlock src="../../../CodeExamples/configuration/io/IOConfigurationExamples-Using-memory-storage.all.flsnp" />
+        <p>MemoryStorage can be
+created without any additional parameters passed to the constructor. In this
+case default configuration values will be used. </p>
+        <h2>PagingMemoryStorage</h2>
+        <p>The regular MemoryStorage implementation keeps all the content in a single byte-array. However this brings some issues. When the database outgrows the array-size, a new, larger array is created and the content is copied over. This can be quite slow. Also can cause this a out of memory exception, because during the copying these two large arrays are present. Also, on some runtimes large objects are treated different by the garbage-collector and are less often collected. </p>
+        <p>To avoid all this issues, the PagingMemoryStorage uses multiple, small arrays to keep the database in memory. When the database outgrows the storage, only such a smaller arrays needs to be allocated. The old content stays in the existing arrays. No coping is required. </p>
+        <p>However managing these arrays cost some small overhead. But for lots of cases, the PagingMemoryStorage is the better choice.</p>
+        <MadCap:snippetBlock src="../../../CodeExamples/configuration/io/IOConfigurationExamples-Using-paging-memory-storage.all.flsnp" />
+        <h2>Growth Strategy for MemoryStorage</h2>
+        <p>Growth strategy defines
+how the database storage (reserved disk or memory space) will grow when the
+current space is not enough anymore.</p>
+        <p>DoublingGrowthStrategy - default
+setting. When the size of the database is not enough, the reserved size will be
+doubled.</p>
+        <p>ConstantGrowthStrategy -
+a configured amount of bytes will be added to the existing size when necessary.</p>
+        <MadCap:snippetBlock src="../../../CodeExamples/configuration/io/IOConfigurationExamples-Using-memory-storage-with-constant-grow-strategy.all.flsnp" />
+        <h2>MemoryBin</h2>
+        <p>Each memory storage can contain a collection of memory bins, which are
+actually just names memory storages. You can reuse the MemoryBin created
+earlier for this MemoryStorage. MemoryBins are identified
+by their URI, i.e. when an object container is opened with:</p>
+        <p MadCap:conditions="Primary.Java,Primary.All languages">
+            <p>Java:  </p>
+            <p><code>Db4oEmbedded.openFile(embeddedConfiguration,
+"myEmbeddedDb.db4o");</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:java" />
+        <p MadCap:conditions="Primary..NET">
+            <p>.NET:  </p>
+            <p><code>Db4oEmbedded.OpenFile(embeddedConfiguration,
+"myEmbeddedDb.db4o");</code>
+            </p>
+        </p>
+        <p MadCap:conditions="Global.Primary:net" />
+        <p>A MemoryBin with URI = "myEmbeddedDb.db4o"
+will be used. If this memory bin does not exist in the storage when the
+container is opened, a new MemoryBin will be created and associated with this
+URI. When you pass the same memory storage to multiple object containers these containers can access to the same in memory file when they are using the same name.</p>
+        <p>More Reading:<ul><li><p><a href="memory_storage/storing_memorybin_data.htm">Storing MemoryBin Data</a></p></li></ul></p>
+    </body>
+</html>
