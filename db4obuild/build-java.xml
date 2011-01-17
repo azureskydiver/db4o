@@ -2076,10 +2076,10 @@
 	
 	<target name="flare-java" depends="init" if="flare.executable">
 
-		<flare output="${dir.dist.flare.temp}" target="JavaPdf" />
+		<flare output="${dir.dist.flare.temp}" target="JavaPdf" projectDirectory="${flare.project.db4o.folder}" />
 		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/db4o-reference-java.pdf" todir="${dir.dist.java.build.reference}" />
 		
-		<flare output="${dir.dist.flare.temp}" target="JavaWeb" />
+		<flare output="${dir.dist.flare.temp}" target="JavaWeb" projectDirectory="${flare.project.db4o.folder}"  />
 		<copy todir="${dir.dist.java.build.reference}">
 			<fileset dir="${dir.dist.flare.temp}/Output/JavaWeb">
 				<include name="**/*" />
