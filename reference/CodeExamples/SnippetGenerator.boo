@@ -26,7 +26,7 @@ class CodeZip:
 		return Path.GetFileName(fileName)
 	
 	def AddFiles(zipFile as ZipFile,directoryToZip as DirectoryInfo):
-		explicitIncludes = directoryToZip.GetFiles(IgnoreFile)
+		explicitIncludes = directoryToZip.GetFiles(IgnoreFile)		
 		if explicitIncludes.Length > 0:
 			for line in File.ReadAllLines(explicitIncludes[0].FullName):
 				path = Path.Combine(directoryToZip.FullName,line)
@@ -146,6 +146,7 @@ class SnippetGenerator:
 
 
 class CodeToSnippets:
+	final NoDescendDescription = ".snippet-generator.nodescend"
 	final _SnippetGeneration as SnippetGenerator
 	final IgnoredFilesWithEnding = (".jar",".dll",".class",".db4o",".dat")
 
@@ -163,8 +164,19 @@ class CodeToSnippets:
 		for file in sourceDir.GetFiles():
 			if not IsIgnored(file):
 				_SnippetGeneration.HandleCodeFile(file,snippetDir,language)
+		ignoredDirectories = ListIgnoredDirectories(sourceDir)
 		for dir in sourceDir.GetDirectories():
-			HandleSubDirectory(dir,snippetDir,language)
+			if not ignoredDirectories.ContainsKey(dir.FullName):
+				HandleSubDirectory(dir,snippetDir,language)
+	
+	def ListIgnoredDirectories(sourceDir as DirectoryInfo):		
+		files = sourceDir.GetFiles(NoDescendDescription)
+		forbidden = {}
+		if files.Length == 1:
+			for dirName in File.ReadAllLines(files[0].FullName):
+				fullName = Path.Combine(sourceDir.FullName,dirName)
+				forbidden.Add(fullName,true)		
+		return forbidden
 
 	def CreateCodeSnippets(sourceDir as string, snippetDir as string, language as string):
 		CreateCodeSnippets(Directory.CreateDirectory(sourceDir),Directory.CreateDirectory(snippetDir),language)
@@ -228,7 +240,8 @@ class SnippetAggregator:
 	
 if(Environment.GetCommandLineArgs().Length == 3 and Environment.GetCommandLineArgs()[2] == '-rebuild'):
 	print "full rebuild"
-	Directory.CreateDirectory("../Flare/Content/CodeExamples").Delete(true)
+	Directory.CreateDirectory("../DB4OFlare/Content/CodeExamples").Delete(true)
+	Directory.CreateDirectory("../DRSFlare/Content/CodeExamples").Delete(true)
 	File.Delete(TimeStampStorage.TimeStampFile)
 else:
 	print "Update the snippets. For a full rebuild use the argument -rebuild"
@@ -241,26 +254,33 @@ tsCondition = TimeStampStorage()
 
 # regular examples
 snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator,tsCondition)
-snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../Flare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("olderJava/src/com/db4odoc","../Flare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../Flare/Content/CodeExamples","csharp")
-snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../Flare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../DB4OFlare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("olderJava/src/com/db4odoc","../DB4OFlare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../DB4OFlare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../DB4OFlare/Content/CodeExamples","csharp")
+
+# DRS
+snippetGenerator.CreateCodeSnippets("javaDRS/src/com/db4odoc","../DRSFlare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("javaDRS","../DRSFlare/Content/CodeExamples/javaDRS","java")
+snippetGenerator.CreateCodeSnippets("dotNetDRS/CSharpExamples/Code","../DRSFlare/Content/CodeExamples","csharp")
 
 # enhancement-examples
-snippetGenerator.CreateCodeSnippets("javaEnhancement","../Flare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../Flare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("javaEnhancement","../DB4OFlare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../DB4OFlare/Content/CodeExamples","csharp")
 
 # mini-example-applications
-snippetGenerator.CreateCodeSnippets("javaAppExamples/","../Flare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../Flare/Content/CodeExamples","csharp")
+snippetGenerator.CreateCodeSnippets("javaAppExamples/","../DB4OFlare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../DB4OFlare/Content/CodeExamples","csharp")
 
 
 # vb-stuff with other template:
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator,tsCondition)
-snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../Flare/Content/CodeExamples","vb")
-snippetGeneratorForVB.CreateCodeSnippets("silverlight/silverlightVB/Code","../Flare/Content/CodeExamples","vb")
+snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../DB4OFlare/Content/CodeExamples","vb")
+snippetGeneratorForVB.CreateCodeSnippets("dotNetDRS/VisualBasicExamples/Code","../DRSFlare/Content/CodeExamples","vb")
+snippetGeneratorForVB.CreateCodeSnippets("silverlight/silverlightVB/Code","../DB4OFlare/Content/CodeExamples","vb")
 
 aggreatedSnippet = SnippetAggregator(File.ReadAllText("./AggregateSnippetTemplate.flsnp"),tsCondition)
-aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../Flare/Content/CodeExamples"))
+aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../DB4OFlare/Content/CodeExamples"))
+aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../DRSFlare/Content/CodeExamples"))
 
 tsCondition.PersistInfo()

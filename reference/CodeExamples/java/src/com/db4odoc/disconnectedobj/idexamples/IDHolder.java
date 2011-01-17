@@ -9,9 +9,9 @@ import java.util.UUID;
 public abstract class IDHolder {
 
     // #example: generate the id
-    private final String uuid = UUID.randomUUID().toString();
+    private final UUID uuid = UUID.randomUUID();
 
-    public String getObjectId(){
+    public UUID getObjectId(){
         return uuid;
     }
     // #end example

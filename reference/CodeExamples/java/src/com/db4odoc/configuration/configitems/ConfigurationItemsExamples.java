@@ -4,6 +4,9 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.config.BigMathSupport;
 import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.config.UuidSupport;
+
+import java.util.UUID;
 
 
 public class ConfigurationItemsExamples {
@@ -17,5 +20,16 @@ public class ConfigurationItemsExamples {
         ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
         container.close();
     }
+    public static  void addUUIDSupport(){
+        // #example: Add proper support for UUIDs
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().add(new UuidSupport());
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        container.close();
+    }
+
+
 
 }

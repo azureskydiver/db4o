@@ -81,7 +81,7 @@ public class MergeExample {
         container.close();
     }
 
-    private static Car getCarById(ObjectContainer container,final String id) {
+    private static Car getCarById(ObjectContainer container,final UUID id) {
         return container.query(new Predicate<Car>() {
             @Override
             public boolean match(Car car) {
