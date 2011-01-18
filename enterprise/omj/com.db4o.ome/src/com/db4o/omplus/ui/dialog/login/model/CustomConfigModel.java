@@ -11,7 +11,7 @@ import com.db4o.omplus.connection.*;
 public class CustomConfigModel {
 
 	public static interface CustomConfigListener {
-		void customConfig(String[] jarPaths, String[] configClassNames);
+		void customConfig(String[] jarPaths, String[] configClassNames, String[] selectedConfigNames);
 	}
 
 	private final CustomConfigSink sink;
@@ -22,6 +22,7 @@ public class CustomConfigModel {
 
 	private List<File> jarFiles = new ArrayList<File>();
 	private List<String> configClassNames = new ArrayList<String>();
+	private List<String> selectedConfigClassNames = new ArrayList<String>();
 
 	public CustomConfigModel(CustomConfigSink sink, ConfiguratorExtractor extractor, ErrorMessageHandler err) {
 		this.sink = sink;
@@ -83,17 +84,32 @@ public class CustomConfigModel {
 		notifyListeners();
 	}
 
+	public void selectConfigClassNames(String... selectedClassNames) {
+		final ArrayList<String> selectedConfigClassNames = new ArrayList<String>(selectedClassNames.length);
+		for (String configClassName : selectedClassNames) {
+			if(!this.configClassNames.contains(configClassName)) {
+				err.error("unknown config class: " + configClassName);
+				return;
+			}
+			selectedConfigClassNames.add(configClassName);
+		}
+		Collections.sort(selectedConfigClassNames);
+		this.selectedConfigClassNames = selectedConfigClassNames;
+		notifyListeners();
+	}
+	
 	public void commit() {
 		String[] jarPaths = new String[jarFiles.size()];
 		for (int jarIdx = 0; jarIdx < jarFiles.size(); jarIdx++) {
 			jarPaths[jarIdx] = jarFiles.get(jarIdx).getAbsolutePath();
 		}
-		sink.customConfig(jarPaths, configClassNames.toArray(new String[configClassNames.size()]));
+		sink.customConfig(jarPaths, selectedConfigClassNames.toArray(new String[selectedConfigClassNames.size()]));
 	}
 
 	private void extractConfigNames(List<File> jarFileList) throws DBConnectException {
-		this.configClassNames = extractor.configuratorClassNames(jarFileList);
+		configClassNames = extractor.configuratorClassNames(jarFileList);
 		Collections.sort(configClassNames);
+		selectedConfigClassNames.retainAll(configClassNames);
 	}
 
 	private void notifyListeners() {
@@ -102,7 +118,10 @@ public class CustomConfigModel {
 			jarPaths[jarIdx] = jarFiles.get(jarIdx).getAbsolutePath();
 		}
 		for (CustomConfigListener listener : listeners) {
-			listener.customConfig(jarPaths, configClassNames.toArray(new String[configClassNames.size()]));
+			listener.customConfig(
+					jarPaths, 
+					configClassNames.toArray(new String[configClassNames.size()]), 
+					selectedConfigClassNames.toArray(new String[selectedConfigClassNames.size()]));
 		}
 	}
 
