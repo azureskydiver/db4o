@@ -3,6 +3,8 @@ package com.db4o.omplus.ui.dialog.login.model.test;
 
 import static org.junit.Assert.*;
 
+import java.io.*;
+
 import org.junit.*;
 
 import com.db4o.foundation.*;
@@ -27,6 +29,10 @@ public class LoginPresentationModelTestCase {
 			@Override
 			public void localSelection(String path, boolean readOnly) {
 				received[0] = path;
+			}
+
+			@Override
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
 			}
 		});
 		fixture.localModel().select(1);
@@ -56,6 +62,29 @@ public class LoginPresentationModelTestCase {
 		assertOpen("bar", true);
 	}
 
+	@Test
+	public void testCustomConfig() {
+		final ByRef<String[]> jarPathsReceived = ByRef.newInstance();
+		final ByRef<String[]> configClassNamesReceived = ByRef.newInstance();
+		fixture.localModel().addListener(new LocalSelectionListener() {
+			@Override
+			public void localSelection(String path, boolean readOnly) {
+			}
+			
+			@Override
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
+				jarPathsReceived.value = jarPaths;
+				configClassNamesReceived.value = configClassNames;
+			}
+		});
+		fixture.localModel().jarPaths(new String[] { "foo.jar", "bar.jar" });
+		Assert.assertEquals(2, jarPathsReceived.value.length);
+		Assert.assertEquals("bar.jar", new File(jarPathsReceived.value[0]).getName());
+		Assert.assertEquals("foo.jar", new File(jarPathsReceived.value[1]).getName());
+		Assert.assertEquals(0, configClassNamesReceived.value.length);
+		fixture.assertNoError();
+	}
+	
 	private void assertOpen(final String path, final boolean readOnly) {
 		final ByRef<ConnectionParams> received = new ByRef<ConnectionParams>();
 		fixture.interceptor(new ConnectInterceptor() {

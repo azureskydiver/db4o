@@ -21,7 +21,7 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 	private final LocalPresentationModel model;
 	
 	public LocalLoginPaneSpec(LoginPresentationModel model) {
-		this.model = new LocalPresentationModel(model);
+		this.model = new LocalPresentationModel(model, new SPIConfiguratorExtractor());
 	}
 
 	public ConnectionPresentationModel<FileConnectionParams> model() {
@@ -75,6 +75,9 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 			public void localSelection(String path, boolean readOnly) {
 				newConnectionText(newConnectionText, path);
 				readOnlyButton.setSelection(readOnly);
+			}
+
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
 			}
 		});
 

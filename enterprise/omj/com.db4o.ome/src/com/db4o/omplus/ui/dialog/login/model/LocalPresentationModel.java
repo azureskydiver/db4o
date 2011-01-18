@@ -2,6 +2,7 @@
 
 package com.db4o.omplus.ui.dialog.login.model;
 
+import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.connection.*;
@@ -10,15 +11,21 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 
 	private String path = "";
 	private boolean readOnly = false;
+	private List<File> jarFiles = new ArrayList<File>();
+	private List<String> configClassNames = new ArrayList<String>();
+	private List<Integer> selectedConfigIndices = new ArrayList<Integer>();
 	
 	public static interface LocalSelectionListener {
 		void localSelection(String path, boolean readOnly);
+		void customConfig(String[] jarPaths, String[] configClassNames);
 	}
 
 	private final List<LocalSelectionListener> localListeners = new LinkedList<LocalSelectionListener>();
+	private final ConfiguratorExtractor extractor;
 
-	public LocalPresentationModel(LoginPresentationModel model) {
+	public LocalPresentationModel(LoginPresentationModel model, ConfiguratorExtractor extractor) {
 		super(model);
+		this.extractor = extractor;
 	}
 
 	public void addListener(LocalSelectionListener listener) {
@@ -32,7 +39,33 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		unselect();
 		this.path = path;
 		this.readOnly = readOnly;
+		jarFiles = new ArrayList<File>();
+		configClassNames = new ArrayList<String>();
 		notifyListeners(path, readOnly);
+		notifyListenersCustomState();
+	}
+	
+	public void jarPaths(String[] jarPaths) {
+		try {
+			List<File> jarFiles = new ArrayList<File>();
+			for (int jarIdx = 0; jarIdx < jarPaths.length; jarIdx++) {
+				File jarFile = new File(jarPaths[jarIdx]);
+				if(!extractor.acceptJarFile(jarFile)) {
+					err().error("not an existing jar file: " + jarFile.getAbsolutePath());
+					return;
+				}
+				jarFiles.add(jarFile);
+			}
+			Collections.sort(jarFiles);
+			this.configClassNames = extractor.configuratorClassNames(jarFiles);
+			this.jarFiles = jarFiles;
+		} 
+		catch (DBConnectException exc) {
+			err().error(exc);
+		}
+		finally {
+			notifyListenersCustomState();
+		}
 	}
 
 	@Override
@@ -61,4 +94,13 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		}
 	}
 
+	private void notifyListenersCustomState() {
+		String[] jarPaths = new String[jarFiles.size()];
+		for (int jarIdx = 0; jarIdx < jarFiles.size(); jarIdx++) {
+			jarPaths[jarIdx] = jarFiles.get(jarIdx).getAbsolutePath();
+		}
+		for (LocalSelectionListener listener : localListeners) {
+			listener.customConfig(jarPaths, configClassNames.toArray(new String[configClassNames.size()]));
+		}
+	}
 }
