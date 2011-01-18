@@ -1,11 +1,15 @@
 package com.db4o.omplus.connection;
 
 import java.io.*;
+import java.util.*;
+
+import sun.misc.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.omplus.custom.*;
 
 
 public class FileConnectionParams extends ConnectionParams {
@@ -42,8 +46,16 @@ public class FileConnectionParams extends ConnectionParams {
 	public EmbeddedConfiguration configure(){
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		configureCommon(config.common());
+		configureCustom(config);
 		config.file().readOnly(readOnly);
 		return config;
+	}
+
+	private void configureCustom(EmbeddedConfiguration config) {
+		Iterator<OMJCustomConfigurator> ps = Service.providers(OMJCustomConfigurator.class);
+		if(ps.hasNext()) {
+			ps.next().configure(config);
+		}
 	}
 
 	@Override
