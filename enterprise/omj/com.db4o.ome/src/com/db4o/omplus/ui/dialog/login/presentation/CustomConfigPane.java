@@ -97,7 +97,13 @@ public class CustomConfigPane extends Composite {
 				System.err.println(msg);
 			}
 			
-			public void logExc(Throwable exc) {
+			public void showExc(String msg, Throwable exc) {
+				System.err.println("ERR: " + msg);
+				exc.printStackTrace();
+			}
+
+			public void logWarning(String msg, Throwable exc) {
+				System.err.println("WARN: " + msg);
 				exc.printStackTrace();
 			}
 		};

@@ -58,7 +58,7 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 					}
 					catch(Exception ex){
 						backupComplete = false;
-						showErrorMessageDialog(ex);
+						showErrorMessageDialog("Error creating backup to " + backupFile, ex);
 					}
 					if(backupComplete)
 						showInfoDialog();
@@ -96,8 +96,8 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 				BACKUP_SUCCESS_MESSAGE);
 	}
 
-	private void showErrorMessageDialog(Exception exc) {
-		new ShellErrorMessageSink(window.getShell()).logExc(exc);
+	private void showErrorMessageDialog(String msg, Exception exc) {
+		new ShellErrorMessageSink(window.getShell()).showExc(msg, exc);
 	}
 	
 	public static void enableAction(boolean enabled){

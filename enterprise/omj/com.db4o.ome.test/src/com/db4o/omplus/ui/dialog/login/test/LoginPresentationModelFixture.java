@@ -35,8 +35,11 @@ public class LoginPresentationModelFixture {
 				errorMsgReceived = msg;
 			}
 
-			public void logExc(Throwable exc) {
+			public void showExc(String msg, Throwable exc) {
 				exceptionReceived = exc;
+			}
+
+			public void logWarning(String msg, Throwable exc) {
 			}
 		};
 		Connector connector = new Connector() {

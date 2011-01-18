@@ -20,8 +20,17 @@ public class ShellErrorMessageSink implements ErrorMessageSink {
 		MessageDialog.openError(shell, OMPlusConstants.DIALOG_BOX_TITLE, msg);
 	}
 
-	public void logExc(Throwable exc) {
-		IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, exc.getMessage(), exc);
+	public void showExc(String msg, Throwable exc) {
+		log(msg, exc, IStatus.ERROR);
+	}
+
+	public void logWarning(String msg, Throwable exc) {
+		log(msg, exc, IStatus.WARNING);
+	}
+
+	private void log(String msg, Throwable exc, final int level) {
+		IStatus status = new Status(level, Activator.PLUGIN_ID, msg, exc);
 		Activator.getDefault().getLog().log(status);
 	}
+
 }
