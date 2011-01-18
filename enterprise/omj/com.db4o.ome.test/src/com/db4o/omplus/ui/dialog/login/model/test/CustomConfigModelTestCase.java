@@ -17,7 +17,7 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 		final String[] jarPaths = { "foo.jar", "bar.jar" };
 		final String[] configNames = { "FooConfig", "BarConfig" };
 		assertAddJars(jarPaths, configNames, new String[0], new String[0], new String[0]);	
-		assertCommit(jarPaths, new String[0]);
+		assertCommit(jarPaths, configNames);
 	}
 
 	@Test
@@ -25,11 +25,11 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 		final String[] jarPaths = { "foo.jar", "foo.jar" };
 		final String[] configNames = { "FooConfig", "FooConfig" };
 		assertAddJars(jarPaths, configNames, new String[0], new String[0], new String[0]);	
-		assertCommit(canonicalPaths(jarPaths[0]), new String[0]);
+		assertCommit(canonicalPaths(jarPaths[0]), arr(configNames[0]));
 	}
 
 	@Test
-	public void testAddJarsAndSelectOne() throws Exception {
+	public void testAddJarsAndDeselectOne() throws Exception {
 		final String[] jarPaths = { "foo.jar", "bar.jar" };
 		final String[] configNames = { "FooConfig", "BarConfig" };
 		assertAddJars(jarPaths, configNames, new String[0], new String[0], new String[0]);	
@@ -38,24 +38,23 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 	}
 
 	@Test
-	public void testMultipleAddJarsAndSelectOne() throws Exception {
+	public void testMultipleAddJarsAndDeselectOne() throws Exception {
 		final String firstJar = "foo.jar";
 		final String firstConfigName = "FooConfig";
 		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0], new String[0]);
 		
 		final String secondJar = "bar.jar";
 		final String secondConfigName = "BarConfig";
-		assertAddJars(arr(secondJar), arr(secondConfigName), arr(firstJar), arr(firstConfigName), new String[0]);
+		assertAddJars(arr(secondJar), arr(secondConfigName), arr(firstJar), arr(firstConfigName), arr(firstConfigName, secondConfigName));
 		assertSelectConfigNames(arr(firstJar, secondJar), arr(firstConfigName, secondConfigName), arr(firstConfigName));
 		assertCommit(arr(firstJar, secondJar), arr(firstConfigName));
 	}
 
 	@Test
-	public void testDuplicateAddJarsAndSelectOne() throws Exception {
+	public void testDuplicateAddJars() throws Exception {
 		final String firstJar = "foo.jar";
 		final String firstConfigName = "FooConfig";
 		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0], new String[0]);
-		assertSelectConfigNames(canonicalPaths(firstJar), arr(firstConfigName), arr(firstConfigName));
 		
 		final String secondJar = "foo.jar";
 		final String secondConfigName = "FooConfig";
@@ -74,7 +73,6 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 		final String firstJar = "foo.jar";
 		final String firstConfigName = "FooConfig";
 		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0], new String[0]);
-		assertSelectConfigNames(arr(firstJar), arr(firstConfigName), arr(firstConfigName));
 		assertAddJarsFailure(arr("bar.jar"), 0);
 		assertCommit(arr(firstJar), arr(firstConfigName));
 	}
@@ -98,7 +96,7 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 		final String retainedConfigName = "FooConfig";
 		final String removedConfigName = "BarConfig";
 		assertAddJars(arr(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0], new String[0]);
-		assertRemoveJars(arr(removedJar), arr(retainedJar), arr(retainedConfigName), new String[0]);
+		assertRemoveJars(arr(removedJar), arr(retainedJar), arr(retainedConfigName), arr(retainedConfigName));
 		assertRemoveJars(arr(retainedJar), new String[0], new String[0], new String[0]);
 		assertCommit(new String[0], new String[0]);
 	}
@@ -139,6 +137,11 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 		assertCommit(canonicalPaths(retainedJar), new String[0]);
 	}
 
+	@Test
+	public void testPreselectConfigNamesOnFirstAdd() {
+		
+	}
+	
 	@Override
 	protected String[] initialConfigNames() {
 		return new String[0];
