@@ -15,9 +15,13 @@ public class RemoteConnectionParams extends ConnectionParams{
 	private String user;
 	
 	private String password;
-	
+
 	public RemoteConnectionParams(String host,int port,String user,String password) {
-//		super(readOnly);
+		this(host, port, user, password, new String[0], new String[0]);
+	}
+
+	public RemoteConnectionParams(String host,int port,String user,String password, String[] jarPaths, String[] configNames) {
+		super(jarPaths, configNames);
 		this.host=host;
 		this.port = port;
 		this.user=user;

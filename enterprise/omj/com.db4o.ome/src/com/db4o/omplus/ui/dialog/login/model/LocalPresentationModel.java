@@ -2,7 +2,6 @@
 
 package com.db4o.omplus.ui.dialog.login.model;
 
-import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.connection.*;
@@ -37,11 +36,11 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 	}
 	
 	@Override
-	protected FileConnectionParams fromState(File[] jarFiles, String[] configNames) throws DBConnectException {
+	protected FileConnectionParams fromState(String[] jarPaths, String[] configNames) throws DBConnectException {
 		if(path == null || path.length() == 0) {
 			throw new DBConnectException("Path is empty.");
 		}
-		return new FileConnectionParams(path, readOnly);
+		return new FileConnectionParams(path, readOnly, jarPaths, configNames);
 	}
 
 	@Override

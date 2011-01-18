@@ -2,7 +2,6 @@
 
 package com.db4o.omplus.ui.dialog.login.model;
 
-import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.*;
@@ -15,7 +14,7 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 	
 	private abstract class LoginPresentationState {
 		abstract P params() throws DBConnectException;
-		abstract void customConfig(File[] jarFiles, String[] customConfigClassNames);
+		abstract void customConfig(String[] jarPaths, String[] customConfigClassNames);
 	}
 
 	private class SelectedState extends LoginPresentationState {
@@ -29,20 +28,20 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 			return params;
 		}
 		
-		void customConfig(File[] jarFiles, String[] customConfigClassNames) {
+		void customConfig(String[] jarPaths, String[] customConfigClassNames) {
 		}
 	}
 
 	private class NewState extends LoginPresentationState {
-		private File[] jarFiles;
-		private String[] configNames;
+		private String[] jarPaths = {};
+		private String[] configNames = {};
 
 		public P params() throws DBConnectException {
-			return fromState(jarFiles, configNames);
+			return fromState(jarPaths, configNames);
 		}
 
-		public void customConfig(File[] jarFiles, String[] customConfigClassNames) {
-			this.jarFiles = jarFiles;
+		public void customConfig(String[] jarPaths, String[] customConfigClassNames) {
+			this.jarPaths = jarPaths;
 			this.configNames = customConfigClassNames;
 		}
 	}
@@ -50,10 +49,6 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 	public ConnectionPresentationModel(LoginPresentationModel model) {
 		this.model = model;
 		this.state = new NewState();
-	}
-	
-	protected List<P> connections() {
-		return connections(model.recentConnections());
 	}
 	
 	public String[] recentConnections() {
@@ -82,20 +77,24 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 		selected(selected);
 	}
 	
+	public void customConfig(String[] jarFiles, String[] customConfigClassNames) {
+		state.customConfig(jarFiles, customConfigClassNames);
+	}
+
+	protected List<P> connections() {
+		return connections(model.recentConnections());
+	}
+	
 	protected void newState() {
 		state = new NewState();
 	}
 	
-	public void customConfig(File[] jarFiles, String[] customConfigClassNames) {
-		state.customConfig(jarFiles, customConfigClassNames);
-	}
-
 	// FIXME revert to protected
 	public ErrorMessageHandler err() {
 		return model.err();
 	}
 	
-	protected abstract P fromState(File[] jarFiles, String[] configNames) throws DBConnectException;
+	protected abstract P fromState(String[] jarPaths, String[] configNames) throws DBConnectException;
 	protected abstract void selected(P selected);
 	protected abstract List<P> connections(RecentConnectionList recentConnections);
 	

@@ -5,5 +5,5 @@ package com.db4o.omplus.ui.dialog.login.model;
 import java.io.*;
 
 public interface CustomConfigSink {
-	void customConfig(File[] jarFiles, String[] configClassNames);
+	void customConfig(String[] jarPaths, String[] configClassNames);
 }

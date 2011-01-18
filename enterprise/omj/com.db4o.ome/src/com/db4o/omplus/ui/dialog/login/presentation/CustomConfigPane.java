@@ -102,8 +102,8 @@ public class CustomConfigPane extends Composite {
 			}
 		};
 		CustomConfigSink sink = new CustomConfigSink() {
-			public void customConfig(File[] jarFiles, String[] configClassNames) {
-				System.out.println(java.util.Arrays.toString(jarFiles));
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
+				System.out.println(java.util.Arrays.toString(jarPaths));
 				System.out.println(java.util.Arrays.toString(configClassNames));
 			}
 		};

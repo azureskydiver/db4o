@@ -2,8 +2,6 @@
 
 package com.db4o.omplus.ui.dialog.login.presentation;
 
-import java.io.*;
-
 import org.eclipse.jface.layout.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
@@ -82,9 +80,6 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 				newConnectionText(newConnectionText, path);
 				readOnlyButton.setSelection(readOnly);
 			}
-
-			public void customConfig(String[] jarPaths, String[] configClassNames) {
-			}
 		});
 
 		browseBtn.addListener(SWT.Selection, new Listener() {
@@ -124,8 +119,8 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 		dialog.setLayout(new GridLayout());
 		dialog.setText("Jars/Configurators");
 		CustomConfigSink sink = new CustomConfigSink() {
-			public void customConfig(File[] jarFiles, String[] configClassNames) {
-				model.customConfig(jarFiles, configClassNames);
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
+				model.customConfig(jarPaths, configClassNames);
 			}
 		};
 		CustomConfigModel customModel = new CustomConfigModel(sink , new SPIConfiguratorExtractor(), model.err());

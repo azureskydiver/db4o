@@ -89,7 +89,11 @@ public class CustomConfigModel {
 	}
 
 	public void commit() {
-		sink.customConfig(jarFiles.toArray(new File[jarFiles.size()]), configClassNames.toArray(new String[configClassNames.size()]));
+		String[] jarPaths = new String[jarFiles.size()];
+		for (int jarIdx = 0; jarIdx < jarFiles.size(); jarIdx++) {
+			jarPaths[jarIdx] = jarFiles.get(jarIdx).getAbsolutePath();
+		}
+		sink.customConfig(jarPaths, configClassNames.toArray(new String[configClassNames.size()]));
 	}
 	
 	private void notifyListeners() {
