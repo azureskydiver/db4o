@@ -20,10 +20,6 @@ public class CustomConfigModelImpl implements CustomConfigModel {
 	private List<String> configClassNames = new ArrayList<String>();
 	private List<String> selectedConfigClassNames = new ArrayList<String>();
 
-	public CustomConfigModelImpl(CustomConfigSink sink, ConfiguratorExtractor extractor, ErrorMessageHandler err) {
-		this(new String[0], new String[0], sink, extractor, err);
-	}
-
 	public CustomConfigModelImpl(String[] jarPaths, String[] selectedConfigClassNames, CustomConfigSink sink, ConfiguratorExtractor extractor, ErrorMessageHandler err) {
 		this.sink = sink;
 		this.extractor = extractor;

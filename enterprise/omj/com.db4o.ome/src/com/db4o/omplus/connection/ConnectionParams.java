@@ -1,5 +1,7 @@
 package com.db4o.omplus.connection;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
@@ -32,6 +34,22 @@ public abstract class ConnectionParams {
 		config.activationDepth(0);
 // see OMJ-154
 //		config.add(new DotnetSupport(true));
+	}
+	
+	public int jarPathCount() {
+		return jarPaths.length;
+	}
+	
+	public String[] jarPaths() {
+		return Arrays.copyOf(jarPaths, jarPaths.length);
+	}
+
+	public int configuratorClassNameCount() {
+		return configNames.length;
+	}
+	
+	public String[] configuratorClassNames() {
+		return Arrays.copyOf(configNames, configNames.length);
 	}
 	
 	public void configureUpdates() {

@@ -21,9 +21,9 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		this.state = new NewState();
 	}
 
-	public void addCustomConfigListener(ConnectionPresentationListener listener) {
+	public void addConnectionPresentationListener(ConnectionPresentationListener listener) {
 		listeners.add(listener);
-		listener.editingEnabled(state.editEnabled());
+		state.notifyListener(listener);
 	}
 	
 	public String[] recentConnections() {
@@ -50,7 +50,6 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		P selected = connections().get(idx);
 		state(new SelectedState(selected));
 		selected(selected);
-		notifyCustomConfigEditEnabled(false);
 	}
 	
 	public void requestCustomConfig() {
@@ -59,6 +58,7 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 	
 	public void customConfig(String[] jarFiles, String[] customConfigClassNames) {
 		state.customConfig(jarFiles, customConfigClassNames);
+		notifyListeners();
 	}
 
 	protected List<P> connections() {
@@ -69,39 +69,30 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		state(new NewState());
 	}
 	
-	protected boolean editEnabled() {
-		return state.editEnabled();
-	}
-	
-	// FIXME revert to protected
-	public ErrorMessageHandler err() {
-		return model.err();
-	}
-	
 	protected abstract P fromState(String[] jarPaths, String[] configNames) throws DBConnectException;
 	protected abstract void selected(P selected);
 	protected abstract List<P> connections(RecentConnectionList recentConnections);
 	
-	private void notifyCustomConfigEditEnabled(boolean enabled) {
+	private void notifyListeners() {
 		for (ConnectionPresentationListener listener : listeners) {
-			listener.editingEnabled(enabled);
+			state.notifyListener(listener);
 		}
 	}
-	
+
+	private ErrorMessageHandler err() {
+		return model.err();
+	}
+
 	private void state(LoginPresentationState state) {
-		boolean editEnabledPrev = this.state.editEnabled();
 		this.state = state;
-		boolean editEnabledNew = state.editEnabled();
-		if(editEnabledPrev != editEnabledNew) {
-			notifyCustomConfigEditEnabled(editEnabledNew);
-		}
+		notifyListeners();
 	}
 	
 	private abstract class LoginPresentationState {
 		abstract P params() throws DBConnectException;
 		abstract void requestCustomConfig();
-		abstract boolean editEnabled();
 		abstract void customConfig(String[] jarPaths, String[] customConfigClassNames);
+		abstract void notifyListener(ConnectionPresentationListener listener);
 	}
 
 	private class SelectedState extends LoginPresentationState {
@@ -122,13 +113,13 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		}
 
 		@Override
-		boolean editEnabled() {
-			return false;
+		void requestCustomConfig() {
+			err().error("custom config editing disabled for history items");
 		}
 
 		@Override
-		void requestCustomConfig() {
-			err().error("custom config editing disabled for history items");
+		void notifyListener(ConnectionPresentationListener listener) {
+			listener.connectionPresentationState(false, params.jarPathCount(), params.configuratorClassNameCount());
 		}
 	}
 
@@ -148,30 +139,18 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		}
 
 		@Override
-		boolean editEnabled() {
-			return true;
-		}
-
-		@Override
 		void requestCustomConfig() {
 			configSource.requestCustomConfig(ConnectionPresentationModel.this, jarPaths, configNames);
 		}
-	}
+
+		@Override
+		void notifyListener(ConnectionPresentationListener listener) {
+			listener.connectionPresentationState(true, jarPaths.length, configNames.length);
+		}
+}
 	
 	public static interface ConnectionPresentationListener {
-		void editingEnabled(boolean enabled);
-		void customConfigStateChanged(int jarPathCount, int configuratorCount);
+		void connectionPresentationState(boolean editEnabled, int jarPathCount, int configuratorCount);
 	}
-
-
-//	private void notifyListenersCustomState() {
-//		String[] jarPaths = new String[jarFiles.length];
-//		for (int jarIdx = 0; jarIdx < jarFiles.length; jarIdx++) {
-//			jarPaths[jarIdx] = jarFiles[jarIdx].getAbsolutePath();
-//		}
-//		for (LocalSelectionListener listener : localListeners) {
-//			listener.customConfig(jarPaths, configClassNames);
-//		}
-//	}
 
 }
