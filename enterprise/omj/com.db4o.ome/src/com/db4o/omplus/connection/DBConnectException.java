@@ -8,12 +8,19 @@ public class DBConnectException extends Exception {
 	
 	public DBConnectException(ConnectionParams params, String message, Throwable cause) {
 		super(message, cause);
-		this.params = params;
-		
+		this.params = params;		
+	}
+
+	public DBConnectException(String message, Throwable cause) {
+		this(null, message, cause);
 	}
 
 	public DBConnectException(ConnectionParams params, String message) {
 		this(params, message, null);
+	}
+
+	public DBConnectException(String message) {
+		this(null, message, null);
 	}
 
 	public DBConnectException(ConnectionParams params, Throwable cause) {

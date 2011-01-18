@@ -14,7 +14,7 @@ public class SWTTestUtil {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Widget>  T findChild(Widget root, String name) {
-		//System.err.println("SEARCHING " + root + " (" + root.getData(OMPlusConstants.WIDGET_NAME_KEY) + ") FOR " + name);
+		//System.err.println("SEARCHING " + root + " (" + root.getData(OMESWTUtil.WIDGET_NAME_KEY) + ") FOR " + name);
 		if(name.equals(root.getData(OMESWTUtil.WIDGET_NAME_KEY))) {
 			return (T) root;
 		}

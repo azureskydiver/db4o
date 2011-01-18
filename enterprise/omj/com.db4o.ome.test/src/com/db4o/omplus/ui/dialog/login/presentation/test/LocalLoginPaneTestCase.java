@@ -18,14 +18,14 @@ import com.db4o.omplus.ui.dialog.login.test.LoginPresentationModelFixture.*;
 public class LocalLoginPaneTestCase {
 
 	private Shell shell;
-	private LocalLoginPane loginPane;
+	private LoginPaneBase<FileConnectionParams> loginPane;
 	private LoginPresentationModelFixture fixture;
 	
 	@Before
 	public void setUp() {
 		fixture = new LoginPresentationModelFixture();
 		shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		loginPane = new LocalLoginPane(shell, shell, fixture.model());
+		loginPane = new LoginPaneBase<FileConnectionParams>(shell, shell, "", new LocalLoginPaneSpec(fixture.model()));
 	}
 	
 	@After
@@ -82,7 +82,7 @@ public class LocalLoginPaneTestCase {
 		});
 		newConnectionText().setText("baz");
 		pressButton(okButton());
-		fixture.assertNotConnected(IllegalStateException.class);
+		fixture.assertNotConnected(DBConnectException.class);
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class LocalLoginPaneTestCase {
 	}
 
 	private Button readOnlyButton() {
-		return findChild(loginPane, LocalLoginPane.READ_ONLY_BUTTON_ID);
+		return findChild(loginPane, LocalLoginPaneSpec.READ_ONLY_BUTTON_ID);
 	}
 
 	private Button okButton() {
@@ -107,7 +107,7 @@ public class LocalLoginPaneTestCase {
 	}
 
 	private Text newConnectionText() {
-		return findChild(loginPane, LocalLoginPane.NEW_CONNECTION_TEXT_ID);
+		return findChild(loginPane, LocalLoginPaneSpec.NEW_CONNECTION_TEXT_ID);
 	}
 
 	private Combo recentConnectionCombo() {
