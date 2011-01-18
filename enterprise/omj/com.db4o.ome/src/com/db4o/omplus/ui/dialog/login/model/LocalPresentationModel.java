@@ -17,8 +17,8 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 
 	private final List<LocalSelectionListener> localListeners = new LinkedList<LocalSelectionListener>();
 
-	public LocalPresentationModel(LoginPresentationModel model) {
-		super(model);
+	public LocalPresentationModel(LoginPresentationModel model, CustomConfigSource configSource) {
+		super(model, configSource);
 	}
 
 	public void addListener(LocalSelectionListener listener) {

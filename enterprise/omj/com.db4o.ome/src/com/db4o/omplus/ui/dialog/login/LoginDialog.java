@@ -2,14 +2,17 @@ package com.db4o.omplus.ui.dialog.login;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import com.db4o.config.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.presentation.*;
+import com.db4o.omplus.ui.dialog.login.presentation.CustomConfigPane.*;
 
 public class LoginDialog {
 
@@ -31,7 +34,7 @@ public class LoginDialog {
 		mainCompositeShell.setText("Connection Info");
 		model = new LoginPresentationModel(new DataStoreRecentConnectionList(dataStore), err, connector);
 
-		createContents();
+		createContents(err);
 		
 		try {
 			mainCompositeShell.setImage(ImageUtility.getImage(OMPlusConstants.DB4O_WIND_ICON));
@@ -55,11 +58,12 @@ public class LoginDialog {
 		mainCompositeShell.open();
 	}
 
-	protected Control createContents() {
+	protected Control createContents(ErrorMessageHandler err) {
 		TabFolder folder = new TabFolder(mainCompositeShell, SWT.BORDER);
 		OMESWTUtil.assignWidgetId(folder, TAB_FOLDER_ID);
-		Composite localPane = new LoginPane<FileConnectionParams>(mainCompositeShell, folder, LOCAL_DIALOG_TITLE, new LocalLoginPaneSpec(model));
-		Composite remotePane = new LoginPane<RemoteConnectionParams>(mainCompositeShell, folder, REMOTE_DIALOG_TITLE, new RemoteLoginPaneSpec(model));
+		CustomConfigSource configSource = new DialogCustomConfigSource(mainCompositeShell, err);
+		Composite localPane = new LoginPane<FileConnectionParams>(mainCompositeShell, folder, LOCAL_DIALOG_TITLE, new LocalLoginPaneSpec(new LocalPresentationModel(model, configSource)));
+		Composite remotePane = new LoginPane<RemoteConnectionParams>(mainCompositeShell, folder, REMOTE_DIALOG_TITLE, new RemoteLoginPaneSpec(new RemotePresentationModel(model, configSource)));
 		addTab(folder, "Local", LOCAL_DIALOG_TITLE, localPane, LOCAL_TAB_ID);
 		addTab(folder, "Remote", REMOTE_DIALOG_TITLE, remotePane, REMOTE_TAB_ID);
 		folder.pack(true);
@@ -73,6 +77,34 @@ public class LoginDialog {
 		item.setText(name);
 		item.setControl(content);
 		OMESWTUtil.assignWidgetId(item, id);
+	}
+
+	private final static class DialogCustomConfigSource implements CustomConfigSource {		
+		private final Shell shell;
+		private final ErrorMessageHandler errHandler;
+
+		public DialogCustomConfigSource(Shell shell, ErrorMessageHandler errHandler) {
+			this.shell = shell;
+			this.errHandler = errHandler;
+		}
+		
+		public void requestCustomConfig(CustomConfigSink configSink, String[] jarPaths, String[] selectedConfigNames) {
+			Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+			dialog.setLayout(new GridLayout());
+			dialog.setText("Jars/Configurators");
+			CustomConfigModel customModel = new CustomConfigModelImpl(configSink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), errHandler);			
+			JarPathSource jarPathSource = new JarPathSource() {
+				public String jarPath() {
+					FileDialog fileChooser = new FileDialog(shell, SWT.OPEN);
+					fileChooser.setFilterExtensions(new String[] { "*.jar" });
+					fileChooser.setFilterNames(new String[] { "Jar Files (*.jar)" });
+					return fileChooser.open();
+				}
+			};
+			new CustomConfigPane(dialog, dialog, customModel, jarPathSource);
+			dialog.pack(true);
+			dialog.open();
+		}
 	}
 
 }

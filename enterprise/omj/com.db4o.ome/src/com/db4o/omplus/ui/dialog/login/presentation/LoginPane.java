@@ -29,11 +29,17 @@ public class LoginPane<P extends ConnectionParams> extends Composite {
 		data.right = new FormAttachment(98, -2);
 		data.bottom = new FormAttachment(80, -2);
 		innerComposite.setLayoutData(data);
-		LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, new Closure4<Boolean>() {
+		Closure4<Boolean> openAction = new Closure4<Boolean>() {
 			public Boolean run() {
 				return model.connect();
 			}
-		});
+		};
+		Block4 customAction = new Block4() {
+			public void run() {
+				model.requestCustomConfig();
+			}
+		};
+		LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, openAction, customAction);
 		data = new FormData();
 		data.top = new FormAttachment(innerComposite, 2);
 		data.left = new FormAttachment(2, 2);
