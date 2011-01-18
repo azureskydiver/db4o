@@ -39,7 +39,7 @@ public class AllDrsTests implements TestSuiteBuilder {
 	public Iterator4 iterator() {
 		
 		boolean runVodTests = "true".equals(System.getProperty("runVodTests", "false"));
-
+		
 		Collection4<TestSuiteBuilder> list = new Collection4<TestSuiteBuilder>();
 		
 		list.add(new Db4oDrsTestSuiteBuilder());

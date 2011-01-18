@@ -1370,7 +1370,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return new QQuery(checkTransaction(ta), null, null);
     }
 
-    public abstract void raiseVersion(long a_minimumVersion);
+    public abstract void raiseCommitTimestamp(long minimumTimestamp);
 
     public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws Db4oIOException;
 
@@ -2161,5 +2161,18 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	public void replaceClassMetadataRepository(ClassMetadataRepository repository){
 		_classCollection = repository;
 	}
+	
+	public final long generateTransactionTimestamp(){
+		synchronized (lock()) {
+			return checkTransaction().generateTransactionTimestamp();
+		}
+	}
+	
+	public final void useDefaultTransactionTimestamp(){
+		synchronized (lock()) {
+			checkTransaction().useDefaultTransactionTimestamp();
+		}
+	}
+
 
 }

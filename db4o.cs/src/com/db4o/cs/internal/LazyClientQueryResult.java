@@ -80,7 +80,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 
 	public void fetchIDs(int batchSize) {
 		_client.write(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, _queryResultID, batchSize, _client.prefetchDepth()));
-		ByteArrayBuffer reader = _client.expectedByteResponse(Msg.ID_LIST);
+		ByteArrayBuffer reader = _client.expectedBufferResponse(Msg.ID_LIST);
 		loadFromIdReader(_client.idIteratorFor(_transaction, reader));
 	}
 	

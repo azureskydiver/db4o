@@ -253,7 +253,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	Socket4Adapter createParallelSocket() throws IOException {
 		write(Msg.GET_THREAD_ID);
 		
-		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
+		int serverThreadID = expectedBufferResponse(Msg.ID_LIST).readInt();
 
 		Socket4Adapter sock = _socket.openParalellSocket();
 		loginToServer(sock);
@@ -342,7 +342,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return _doFinalize;
 	}
 	
-	final ByteArrayBuffer expectedByteResponse(Msg expectedMessage) {
+	final ByteArrayBuffer expectedBufferResponse(Msg expectedMessage) {
 		Msg msg = expectedResponse(expectedMessage);
 		if (msg == null) {
 			// TODO: throw Exception to allow
@@ -486,7 +486,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public Db4oDatabase identity() {
 		if (i_db == null) {
 			write(Msg.IDENTITY);
-			ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
+			ByteArrayBuffer reader = expectedBufferResponse(Msg.ID_LIST);
 			showInternalClasses(true);
 			try {
 				i_db = (Db4oDatabase) getByID(systemTransaction(), reader.readInt());
@@ -545,7 +545,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		if (remainingIDs < 1) {
 			MsgD msg = Msg.PREFETCH_IDS.getWriterForInt(_transaction, prefetchIDCount);
 			write(msg);
-			reader = expectedByteResponse(Msg.ID_LIST);
+			reader = expectedBufferResponse(Msg.ID_LIST);
 			for (int i = prefetchIDCount - 1; i >= 0; i--) {
 				_prefetchedIDs[i] = reader.readInt();
 			}
@@ -568,9 +568,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	public void raiseVersion(long a_minimumVersion) {
+	public void raiseCommitTimestamp(long a_minimumVersion) {
 		synchronized(lock()){
-			write(Msg.RAISE_VERSION.getWriterForLong(_transaction, a_minimumVersion));
+			write(Msg.RAISE_COMMIT_TIMESTAMP.getWriterForLong(_transaction, a_minimumVersion));
 		}
 	}
 
@@ -582,7 +582,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		MsgD msg = Msg.READ_SLOT.getWriterForInts(_transaction, new int[] {
 				a_address, a_length });
 		write(msg);
-		ByteArrayBuffer reader = expectedByteResponse(Msg.READ_SLOT);
+		ByteArrayBuffer reader = expectedBufferResponse(Msg.READ_SLOT);
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
 
@@ -672,7 +672,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 		withEnvironment(new Runnable() { public void run() {
 			
-			ByteArrayBuffer reader = expectedByteResponse(Msg.QUERY_RESULT);
+			ByteArrayBuffer reader = expectedBufferResponse(Msg.QUERY_RESULT);
 			int queryResultID = reader.readInt();
 			AbstractQueryResult queryResult = queryResultFor(trans, queryResultID);
 			
@@ -703,7 +703,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	void readThis() {
 		write(Msg.GET_CLASSES.getWriter(systemTransaction()));
-		ByteArrayBuffer bytes = expectedByteResponse(Msg.GET_CLASSES);
+		ByteArrayBuffer bytes = expectedBufferResponse(Msg.GET_CLASSES);
 		classCollection().setID(bytes.readInt());
 		
 		final byte stringEncoding = bytes.readByte();
@@ -729,15 +729,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	public void releaseSemaphores(Transaction ta) {
 		// do nothing
-	}
-
-	private void reReadAll(Configuration config) {
-		remainingIDs = 0;
-		initialize1(config);
-		initializeTransactions();
-        initializeClassMetadataRepository();
-        initalizeWeakReferenceSupport();
-		readThis();
 	}
 
 	public final void rollback1(Transaction trans) {
@@ -801,7 +792,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		writeMsg(msg, false);
 	}
 	
-	private final void writeMsg(Msg msg, boolean flush) {
+	public final void writeMsg(Msg msg, boolean flush) {
 		if(_config.batchMessages()) {
 			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly
@@ -910,7 +901,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     	final ByRef<long[]> result = ByRef.newInstance();
     	
     	withEnvironment(new Runnable() { public void run() {
-	    	ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
+	    	ByteArrayBuffer reader = expectedBufferResponse(Msg.ID_LIST);
 	    	FixedSizeIntIterator4 idIterator = idIteratorFor(trans, reader);
 	    	result.value = toLongArray(idIterator);
 	    }});
@@ -1141,7 +1132,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         // We need a better strategy for C/S concurrency behaviour.
         MsgD msg = Msg.TA_IS_DELETED.getWriterForInt(trans, id);
 		write(msg);
-        int res = expectedByteResponse(Msg.TA_IS_DELETED).readInt();
+        int res = expectedBufferResponse(Msg.TA_IS_DELETED).readInt();
         return res == 1;
 	}
 	
@@ -1173,6 +1164,5 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public <T> QLin<T> from(Class<T> clazz) {
 		return new QLinRoot<T>(query(), clazz);
 	}
-
 
 }

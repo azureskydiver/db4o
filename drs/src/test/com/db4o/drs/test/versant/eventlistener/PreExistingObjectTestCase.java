@@ -5,11 +5,13 @@ package com.db4o.drs.test.versant.eventlistener;
 import javax.jdo.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
-import com.db4o.drs.test.*;
 import com.db4o.drs.test.versant.data.*;
 import com.db4o.drs.versant.*;
+import com.db4o.io.*;
 
 import db4ounit.*;
 
@@ -38,13 +40,18 @@ public class PreExistingObjectTestCase implements TestCase {
 			try{
 				VodReplicationProvider vodReplicationProvider = new VodReplicationProvider(vod);
 				try {
-					TransientReplicationProvider transientReplicationProvider = new TransientReplicationProvider(new byte[] {(byte)'T'}, "transient");
-					Replication.begin(vodReplicationProvider, transientReplicationProvider);
+					
+					EmbeddedObjectContainer objectContainer = openInMemoryObjectContainer();
+					ReplicationProvider replicationProvider = new Db4oEmbeddedReplicationProvider(objectContainer);
+					
+					Replication.begin(vodReplicationProvider, replicationProvider);
 					ObjectSet replicationSet = vodReplicationProvider.objectsChangedSinceLastReplication(Item.class);
 					Assert.areEqual(1, replicationSet.size());
 					Item item = (Item) replicationSet.next();
 					ReplicationReference ref = vodReplicationProvider.produceReference(item);
 					Assert.isNotNull(ref);
+					
+					objectContainer.close();
 				}finally {
 					vodReplicationProvider.destroy();
 				}
@@ -55,6 +62,12 @@ public class PreExistingObjectTestCase implements TestCase {
 		} finally {
 			vod.removeDb();
 		}
+	}
+
+	private EmbeddedObjectContainer openInMemoryObjectContainer() {
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.file().storage(new MemoryStorage());
+		return Db4oEmbedded.openFile(config, "InMemory");
 	}
 
 }

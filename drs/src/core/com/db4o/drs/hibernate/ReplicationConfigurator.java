@@ -46,15 +46,8 @@ import org.hibernate.cfg.Configuration;
  * Session session = sessionFactory.openSession();
  * // Let the ReplicationConfigurator install the listeners to the Session
  * ReplicationConfigurator.install(session, cfg);
- * Transaction tx = session.beginTransaction();
- * Pilot john = (Pilot) session.createCriteria(Pilot.class) .add(Restrictions.eq("name", "John")).list().get(0);
- * john.name = "Anna";
- * // Remember to call flush() before commit()
- * session.flush();
- * tx.commit();
  * </pre>
  *
- * @author Albert Kwan
  * @version 1.2
  * @since dRS 1.0
  */

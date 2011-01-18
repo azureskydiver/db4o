@@ -46,8 +46,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	private final Traverser _traverser;
 
-	private long _lastReplicationVersion;
-
 	private HashSet4 _processedUuids = new HashSet4(SIZE);
 
 	private boolean _isReplicatingOnlyDeletions;
@@ -74,13 +72,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 			public void run() {
 				_providerA.startReplicationTransaction(_providerB.getSignature());
 				_providerB.startReplicationTransaction(_providerA.getSignature());
-
-				if (_providerA.getLastReplicationVersion() != _providerB.getLastReplicationVersion())
-					throw new RuntimeException("Version numbers must be the same but (" 
-							+ _providerA.getName() + ":" + _providerA.getLastReplicationVersion() 
-							+ ")  (" + _providerB.getName() + ":" + _providerB.getLastReplicationVersion() + ")");
-
-				_lastReplicationVersion = _providerA.getLastReplicationVersion();
 			}
 		});
 		
@@ -110,19 +101,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 	public final void commit() {
 		runIsolated(new Block4() {
 			public void run() {
-
-				_providerA.ensureVersionsAreGenerated();
-				_providerB.ensureVersionsAreGenerated();
-				
-				long maxVersion = Math.max(_providerA.getCurrentVersion(), _providerB.getCurrentVersion());
-						
-				_providerA.syncVersionWithPeer(maxVersion);
-				_providerB.syncVersionWithPeer(maxVersion);
-				
-				maxVersion ++;
-		
-				_providerA.commitReplicationTransaction(maxVersion);
-				_providerB.commitReplicationTransaction(maxVersion);
+				_providerA.commitReplicationTransaction();
+				_providerB.commitReplicationTransaction();
 			}
 		});
 	}
@@ -180,7 +160,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void prepareGraphToBeReplicated(Object root) {
-		_traverser.traverseGraph(root, new InstanceReplicationPreparer(_providerA, _providerB, _directionTo, _listener, _isReplicatingOnlyDeletions, _lastReplicationVersion, _processedUuids, _traverser, _reflector, _collectionHandler));
+		_traverser.traverseGraph(root, new InstanceReplicationPreparer(_providerA, _providerB, _directionTo, _listener, _isReplicatingOnlyDeletions, _processedUuids, _traverser, _reflector, _collectionHandler));
 	}
 
 	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {

@@ -183,10 +183,10 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		replicateAll(replication, changedSet.iterator());
 	}
 
-	private void replicateAll(final ReplicationSession replication, final Iterator allObjects) {
+	protected void replicateAll(final ReplicationSession replication, final Iterator allObjects) {
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
-			//System.out.println("changed = " + changed);
+//			System.out.println("Replicating = " + changed);
 			replication.replicate(changed);
 		}
 		replication.commit();

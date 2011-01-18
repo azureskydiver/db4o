@@ -175,7 +175,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	}
 	
 	@Override
-	public void raiseVersion(long a_minimumVersion){
+	public void raiseCommitTimestamp(long a_minimumVersion){
 	    // do nothing
 	}
 	

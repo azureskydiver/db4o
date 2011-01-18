@@ -32,20 +32,12 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	 */
 	void clearAllReferences();
 
-	void commitReplicationTransaction(long raisedDatabaseVersion);
+	void commitReplicationTransaction();
 
 	/**
 	 * Destroys this provider and frees up resources.
 	 */
 	void destroy();
-
-
-	/**
-	 * Returns the current transaction serial number.
-	 *
-	 * @return the current transaction serial number
-	 */
-	long getCurrentVersion();
 
 	long getLastReplicationVersion();
 
@@ -99,8 +91,6 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	 */
 	void storeReplica(Object obj);
 
-	void syncVersionWithPeer(long maxVersion);
-
 	/**
 	 * Visits the object of each cached ReplicationReference.
 	 *
@@ -117,4 +107,7 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	boolean isSecondClassObject(Object obj);
 
 	void ensureVersionsAreGenerated();
+	
+	TimeStamps timeStamps();
+
 }

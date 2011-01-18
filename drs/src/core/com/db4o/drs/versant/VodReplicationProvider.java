@@ -43,7 +43,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final long _mySignatureLoid;
 	
-	private volatile long _timeStamp;
+	private volatile long _commitTimeStamp;
 	
 	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
 	
@@ -113,7 +113,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 					 classMetadataLoid = ensureClassKnown(clazz);
 				}
 				long loid = loid(object);
-				log("Timestamp for " + loid + " preset to " + timeStamp());
+				log("Timestamp for " + loid + " preset to " + _commitTimeStamp);
 			}
 		});
 	}
@@ -189,7 +189,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private void internalCommit() {
-		timeStamp(syncEventProcessor().generateTimestamp());
 		syncEventProcessor().requestIsolation(true);
 		try {
 			_jdo.commit();
@@ -266,14 +265,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_replicationReferences.clear();
 	}
 
-	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		timeStamp(raisedDatabaseVersion - 1);
+	public void commitReplicationTransaction() {
+		storeReplicationCommitRecord();
 		updateReplicationCommitToken();
 		_jdo.commit();
-		
-		syncEventProcessor().syncTimestamp(raisedDatabaseVersion);
-		timeStamp(raisedDatabaseVersion);
-		
 		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	}
 
@@ -301,11 +296,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return _jdo.loid(commitToken);
 	}
 	
-	public long getCurrentVersion() {
-		_timeStamp = syncEventProcessor().lastTimestamp(); 
-		return _timeStamp;
-	}
-
 	public long getLastReplicationVersion() {
 		ensureReplicationSessionActive();
 		return _replicationCommitRecord.timestamp();
@@ -372,10 +362,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		_jdo.rollback();
 	}
 	
-	boolean inReplicationTransaction = false;
-
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peer) {
-		inReplicationTransaction = true;
 		clearAllReferences();
 		long peerId = produceSignature(new Signature(peer.getSignature()));
 		long lowerId = Math.min(peerId, _mySignatureLoid);
@@ -389,13 +376,13 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
 			_cobra.store(_replicationCommitRecord);
 			_cobra.commit();
-			_timeStamp = syncEventProcessor().generateTimestamp();
 		} else {
-			_timeStamp = Math.max(syncEventProcessor().generateTimestamp(), _replicationCommitRecord.timestamp() + 1);
+			syncEventProcessor().syncTimestamp(_replicationCommitRecord.timestamp() + 1);
 		}
+		_commitTimeStamp = syncEventProcessor().generateTimestamp();
 	}
 
-	private void waitForPreviousCommits() {
+	public void waitForPreviousCommits() {
 		final long barrierLoid = updateBarrierCommitToken();
 		final BlockingQueue<Long> barrierQueue = new BlockingQueue<Long>();
 		
@@ -460,11 +447,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			long signatureLoid = produceSignature(signature);
 			long otherLongPart = ref.uuid().getLongPart();
-			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, timeStamp(), Operations.CREATE.value);
+			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimeStamp, Operations.CREATE.value);
 		} else{
-			objectInfo.version(timeStamp());
+			objectInfo.version(_commitTimeStamp);
 			objectInfo.operation(Operations.UPDATE.value);
 		}
+		
 		_cobra.store(objectInfo);
 		_cobra.commit();
 		
@@ -476,13 +464,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return _cobra.from(ObjectInfo.class).where(objectInfo.objectLoid()).equal(objectLoid).singleOrDefault(null);
 	}
 
-	public void syncVersionWithPeer(long maxVersion) {
-		log(" version synced to " + maxVersion);
-		_replicationCommitRecord.timestamp(maxVersion);
+	private void storeReplicationCommitRecord() {
+		_replicationCommitRecord.timestamp(_commitTimeStamp);
 		_cobra.store(_replicationCommitRecord);
 		_cobra.commit();
-		syncEventProcessor().syncTimestamp(maxVersion);
-		_timeStamp = maxVersion;
 	}
 
 	public void visitCachedReferences(Visitor4 visitor) {
@@ -497,6 +482,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public ObjectSet objectsChangedSinceLastReplication() {
 		long lastReplicationVersion = getLastReplicationVersion();
 		String filter = "this.version > " + lastReplicationVersion;
+		
 		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
 		for (ObjectInfo info : infos) {
@@ -716,14 +702,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return pinging;
 	}
 
-	private void timeStamp(long timeStamp) {
-		_timeStamp = timeStamp;
-	}
-
-	private long timeStamp() {
-		return _timeStamp;
-	}
-
 	@Override
 	public String toString() {
 		return getName();
@@ -756,5 +734,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void ensureVersionsAreGenerated() {
+	}
+
+	public TimeStamps timeStamps() {
+		return new TimeStamps(_replicationCommitRecord.timestamp(), _commitTimeStamp);
 	}
 }

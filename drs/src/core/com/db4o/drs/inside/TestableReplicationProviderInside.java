@@ -31,5 +31,7 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 	void commit();
 
 	long objectVersion(Object storedObject);
+	
+	void waitForPreviousCommits();
 
 }
