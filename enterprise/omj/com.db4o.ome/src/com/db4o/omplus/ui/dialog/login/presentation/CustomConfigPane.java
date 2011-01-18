@@ -12,8 +12,8 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
 
+import com.db4o.config.*;
 import com.db4o.omplus.*;
-import com.db4o.omplus.custom.*;
 
 public class CustomConfigPane extends Composite {
 
@@ -88,9 +88,9 @@ public class CustomConfigPane extends Composite {
 				urls[jarIdx] = new File(jarPaths[jarIdx]).toURI().toURL();
 			}
 			URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
-			Iterator<OMJCustomConfigurator> ps = sun.misc.Service.providers(OMJCustomConfigurator.class, cl);
+			Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
 			while(ps.hasNext()) {
-				OMJCustomConfigurator configurator = ps.next();
+				EmbeddedConfigurationItem configurator = ps.next();
 				configNames.add(configurator.getClass().getName());
 			}
 			Collections.sort(configNames);
