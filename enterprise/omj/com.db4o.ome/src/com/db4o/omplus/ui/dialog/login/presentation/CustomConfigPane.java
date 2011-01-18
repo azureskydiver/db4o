@@ -71,6 +71,12 @@ public class CustomConfigPane extends Composite {
 				}
 			}
 		});		
+		okButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				model.commit();
+				dialog.close();
+			}
+		});
 		cancelButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				dialog.close();

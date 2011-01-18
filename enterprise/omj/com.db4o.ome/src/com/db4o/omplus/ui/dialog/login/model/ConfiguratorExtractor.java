@@ -8,6 +8,6 @@ import java.util.*;
 import com.db4o.omplus.connection.*;
 
 public interface ConfiguratorExtractor {
-	List<String> configuratorClassNames(List<File> jarFiles) throws DBConnectException;
+	List<String> configuratorClassNames(File jarFile) throws DBConnectException;
 	boolean acceptJarFile(File file);
 }

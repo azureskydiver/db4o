@@ -25,9 +25,15 @@ public class CustomConfigModel {
 	private List<String> selectedConfigClassNames = new ArrayList<String>();
 
 	public CustomConfigModel(CustomConfigSink sink, ConfiguratorExtractor extractor, ErrorMessageHandler err) {
+		this(new String[0], new String[0], sink, extractor, err);
+	}
+
+	public CustomConfigModel(String[] jarPaths, String[] selectedConfigClassNames, CustomConfigSink sink, ConfiguratorExtractor extractor, ErrorMessageHandler err) {
 		this.sink = sink;
 		this.extractor = extractor;
 		this.err = err;
+		addJarPaths(jarPaths);
+		selectConfigClassNames(selectedConfigClassNames);
 	}
 
 	public void addListener(CustomConfigListener listener) {
@@ -35,31 +41,26 @@ public class CustomConfigModel {
 	}
 
 	public void addJarPaths(String... jarPaths) {
-		try {
-			Set<File> jarFileSet = new HashSet<File>(jarFiles);
-			for (int jarIdx = 0; jarIdx < jarPaths.length; jarIdx++) {
-				try {
-					File jarFile = new File(jarPaths[jarIdx]).getCanonicalFile();
-					if(!extractor.acceptJarFile(jarFile)) {
-						err.error("not an existing jar file: " + jarFile.getAbsolutePath());
-						return;
-					}
-					jarFileSet.add(jarFile);
-				} 
-				catch (IOException exc) {
-					err.error("could not interpret path: " + jarPaths[jarIdx], exc);
+		Set<File> jarFileSet = new HashSet<File>(jarFiles);
+		for (int jarIdx = 0; jarIdx < jarPaths.length; jarIdx++) {
+			try {
+				File jarFile = new File(jarPaths[jarIdx]).getCanonicalFile();
+				if(!extractor.acceptJarFile(jarFile)) {
+					err.error("not an existing jar file: " + jarFile.getAbsolutePath());
 					return;
 				}
+				jarFileSet.add(jarFile);
+			} 
+			catch (IOException exc) {
+				err.error("could not interpret path: " + jarPaths[jarIdx], exc);
+				return;
 			}
-			List<File> jarFileList = new ArrayList<File>(jarFileSet);
-			Collections.sort(jarFileList);
-			extractConfigNames(jarFileList);
-			this.jarFiles = jarFileList;
-			notifyListeners();
-		} 
-		catch (DBConnectException exc) {
-			err.error(exc);
-		} 
+		}
+		List<File> jarFileList = new ArrayList<File>(jarFileSet);
+		Collections.sort(jarFileList);
+		extractConfigNames(jarFileList);
+		this.jarFiles = jarFileList;
+		notifyListeners();
 	}
 
 	public void removeJarPaths(String... jarPaths) {
@@ -72,15 +73,8 @@ public class CustomConfigModel {
 				err.error("could not interpret path: " + jarPath, exc);
 			}
 		}
-		try {
-			extractConfigNames(jarFiles);
-			this.jarFiles = jarFiles;
-		}
-		catch(DBConnectException exc) {
-			err.error("inconsistent state, purging jar path and configurator list - could not extract configurators from: " + Arrays.toString(jarPaths), exc);
-			configClassNames.clear();
-			this.jarFiles.clear();
-		}
+		extractConfigNames(jarFiles);
+		this.jarFiles = jarFiles;
 		notifyListeners();
 	}
 
@@ -106,8 +100,17 @@ public class CustomConfigModel {
 		sink.customConfig(jarPaths, selectedConfigClassNames.toArray(new String[selectedConfigClassNames.size()]));
 	}
 
-	private void extractConfigNames(List<File> jarFileList) throws DBConnectException {
-		configClassNames = extractor.configuratorClassNames(jarFileList);
+	private void extractConfigNames(List<File> jarFileList) {
+		Set<String> configNames = new HashSet<String>();
+		for (File curJar : jarFileList) {
+			try {
+				configNames.addAll(extractor.configuratorClassNames(curJar));
+			} 
+			catch (DBConnectException exc) {
+				err.error("could not extract configurators from jar " + curJar.getAbsolutePath() + " - ignoring", exc);
+			}
+		}
+		configClassNames = new ArrayList<String>(configNames);
 		Collections.sort(configClassNames);
 		selectedConfigClassNames.retainAll(configClassNames);
 	}
