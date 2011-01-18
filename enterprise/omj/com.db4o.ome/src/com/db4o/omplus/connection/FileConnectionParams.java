@@ -9,7 +9,6 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.omplus.*;
-import com.db4o.omplus.custom.*;
 import com.db4o.reflect.jdk.*;
 
 
@@ -60,11 +59,11 @@ public class FileConnectionParams extends ConnectionParams {
 		try {
 			URL[] urls = new URL[] { new File(jarPath).toURI().toURL() };
 			URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
-			Iterator<OMJCustomConfigurator> ps = sun.misc.Service.providers(OMJCustomConfigurator.class, cl);
+			Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
 			if(ps.hasNext()) {
-				OMJCustomConfigurator configurator = ps.next();
+				EmbeddedConfigurationItem configurator = ps.next();
 				System.out.println("CONFIG: " + configurator);
-				configurator.configure(config);
+				config.addConfigurationItem(configurator);
 			}
 			config.common().reflectWith(new JdkReflector(cl));
 		} 
