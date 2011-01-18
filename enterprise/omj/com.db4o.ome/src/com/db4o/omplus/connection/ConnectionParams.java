@@ -7,8 +7,6 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.omplus.*;
-import com.db4o.reflect.jdk.*;
 
 public abstract class ConnectionParams {
 	
@@ -80,20 +78,7 @@ public abstract class ConnectionParams {
 		return getPath();
 	}
 
-	protected void configureCustom(EmbeddedConfiguration config) throws DBConnectException {
-		URL[] urls = jarURLs();
-		URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
-		@SuppressWarnings({ "unchecked", "restriction" })
-		Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
-		if(ps.hasNext()) {
-			EmbeddedConfigurationItem configurator = ps.next();
-			System.out.println("CONFIG: " + configurator);
-			config.addConfigurationItem(configurator);
-		}
-		config.common().reflectWith(new JdkReflector(cl));
-	}
-
-	private URL[] jarURLs() throws DBConnectException {
+	protected URL[] jarURLs() throws DBConnectException {
 		if(jarPaths == null || jarPaths.length == 0) {
 			return new URL[0];
 		}

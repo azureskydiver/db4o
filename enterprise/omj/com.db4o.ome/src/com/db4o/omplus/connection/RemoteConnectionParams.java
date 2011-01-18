@@ -1,10 +1,15 @@
 package com.db4o.omplus.connection;
 
+import java.net.*;
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.omplus.*;
+import com.db4o.reflect.jdk.*;
 
 public class RemoteConnectionParams extends ConnectionParams{
 
@@ -55,9 +60,10 @@ public class RemoteConnectionParams extends ConnectionParams{
 		return password;
 	}
 	
-	public ClientConfiguration configure(){
+	public ClientConfiguration configure() throws DBConnectException{
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		configureCommon(config.common());
+		configureCustom(config);
 		return config;
 	}
 
@@ -71,6 +77,25 @@ public class RemoteConnectionParams extends ConnectionParams{
 		} 
 		catch (Exception e) {
 			throw new DBConnectException(this, "Could not connect to remote database", e);
+		}
+	}
+
+	private void configureCustom(ClientConfiguration config) throws DBConnectException {
+		URL[] urls = jarURLs();
+		if(urls.length == 0) {
+			return;
+		}
+		URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
+		applyConfigurationItems(config, cl);
+		config.common().reflectWith(new JdkReflector(cl));
+	}
+
+	private void applyConfigurationItems(ClientConfiguration config, URLClassLoader loader) {
+		Iterator<ClientConfigurationItem> ps = SunSPIUtil.retrieveSPIImplementors(ClientConfigurationItem.class, loader);
+		if(ps.hasNext()) {
+			ClientConfigurationItem configurator = ps.next();
+			System.out.println("CONFIG: " + configurator);
+			config.addConfigurationItem(configurator);
 		}
 	}
 

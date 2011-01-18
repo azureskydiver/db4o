@@ -67,10 +67,16 @@ public class RemoteLoginPaneSpec implements LoginPaneSpec<RemoteConnectionParams
 		
 		model.addRemoteSelectionListener(new RemoteSelectionListener() {
 			public void remoteSelection(String host, String port, String user, String pwd) {
-				hostText.setText(host);
-				portText.setText(port);
-				usernameText.setText(user);
-				passwordText.setText("");
+				setTextIfChanged(hostText, host);
+				setTextIfChanged(portText, port);
+				setTextIfChanged(usernameText, user);
+				setTextIfChanged(passwordText, pwd);
+			}
+			
+			private void setTextIfChanged(Text text, String value) {
+				if(!text.getText().equals(value)) {
+					text.setText(value);
+				}
 			}
 		});
 
