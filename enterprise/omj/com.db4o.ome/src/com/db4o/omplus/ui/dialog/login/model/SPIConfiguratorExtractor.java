@@ -12,9 +12,15 @@ import com.db4o.omplus.connection.*;
 
 public class SPIConfiguratorExtractor implements ConfiguratorExtractor {
 
+	private final Class<?> spi;
+
+	public SPIConfiguratorExtractor(Class<?> spi) {
+		this.spi = spi;
+	}
+	
 	public List<String> configuratorClassNames(List<File> jarFiles) throws DBConnectException {
 		URLClassLoader cl = new URLClassLoader(urls(jarFiles), Activator.class.getClassLoader());
-		Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
+		Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(spi, cl);
 		Set<String> classNames = new HashSet<String>();
 		while(ps.hasNext()) {
 			EmbeddedConfigurationItem configurator = ps.next();

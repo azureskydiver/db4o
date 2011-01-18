@@ -8,6 +8,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import com.db4o.config.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
@@ -123,7 +124,7 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 				model.customConfig(jarPaths, configClassNames);
 			}
 		};
-		CustomConfigModel customModel = new CustomConfigModel(sink , new SPIConfiguratorExtractor(), model.err());
+		CustomConfigModel customModel = new CustomConfigModel(sink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), model.err());
 		new CustomConfigPane(dialog, dialog, customModel);
 		dialog.pack(true);
 		dialog.open();
