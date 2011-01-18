@@ -23,7 +23,7 @@ public class CustomConfigPane extends Composite {
 		createContents(dialog, parent);
 	}
 
-	private void createContents(Shell dialog, final Composite parent) {
+	private void createContents(final Shell dialog, final Composite parent) {
 		Label jarLabel = label("Jars:");
 		Label confLabel = label("Configurators:");
 		final List jarList = new List (this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -52,7 +52,12 @@ public class CustomConfigPane extends Composite {
 				}
 			}
 		});		
-
+		cancelButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				dialog.close();
+			}
+		});
+		
 		model.addListener(new LocalSelectionListener() {
 			public void localSelection(String path, boolean readOnly) {
 			}

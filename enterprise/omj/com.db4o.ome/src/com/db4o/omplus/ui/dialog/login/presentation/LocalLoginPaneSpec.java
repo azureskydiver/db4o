@@ -5,13 +5,14 @@ package com.db4o.omplus.ui.dialog.login.presentation;
 import org.eclipse.jface.layout.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.*;
+import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.LocalSelectionListener;
 
 public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
@@ -57,17 +58,20 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 		Button configButton = new Button(innerComposite, SWT.PUSH);
 		configButton.setText("Config...");
 
+		configButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				openCustomConfigDialog(parent.getShell());
+			}
+		});
+		
 		newConnectionText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				sendStateChange(newConnectionText, readOnlyButton);
 			}
 		});
-		readOnlyButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
+		readOnlyButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
 				sendStateChange(newConnectionText, readOnlyButton);
-			}
-			
-			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
 
@@ -110,6 +114,15 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
 	private void sendStateChange(Text newConnectionText, Button readOnlyButton) {
 		model.state(newConnectionText.getText(), readOnlyButton.getSelection());
+	}
+
+	private void openCustomConfigDialog(Shell shell) {
+		Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		dialog.setLayout(new GridLayout());
+		dialog.setText("Jars/Configurators");
+		new CustomConfigPane(dialog, dialog, model);
+		dialog.pack(true);
+		dialog.open();
 	}
 
 }
