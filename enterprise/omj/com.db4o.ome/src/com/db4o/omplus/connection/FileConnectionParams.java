@@ -1,11 +1,15 @@
 package com.db4o.omplus.connection;
 
 import java.io.*;
+import java.net.*;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.omplus.*;
+import com.db4o.reflect.jdk.*;
 
 
 public class FileConnectionParams extends ConnectionParams {
@@ -89,6 +93,25 @@ public class FileConnectionParams extends ConnectionParams {
 				return connect();
 			}
 			throw new DBConnectException(this, "Could not open database.", ex);
+		}
+	}
+
+	private void configureCustom(EmbeddedConfiguration config) throws DBConnectException {
+		URL[] urls = jarURLs();
+		if(urls.length == 0) {
+			return;
+		}
+		URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
+		applyConfigurationItems(config, cl);
+		config.common().reflectWith(new JdkReflector(cl));
+	}
+
+	private void applyConfigurationItems(EmbeddedConfiguration config, URLClassLoader loader) {
+		Iterator<EmbeddedConfigurationItem> ps = SunSPIUtil.retrieveSPIImplementors(EmbeddedConfigurationItem.class, loader);
+		if(ps.hasNext()) {
+			EmbeddedConfigurationItem configurator = ps.next();
+			System.out.println("CONFIG: " + configurator);
+			config.addConfigurationItem(configurator);
 		}
 	}
 

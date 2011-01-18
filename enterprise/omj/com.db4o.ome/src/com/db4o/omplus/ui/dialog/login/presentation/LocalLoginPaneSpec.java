@@ -68,7 +68,9 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 		model.addLocalSelectionListener(new LocalSelectionListener() {
 			public void localSelection(String path, boolean readOnly) {
 				newConnectionText(newConnectionText, path);
-				readOnlyButton.setSelection(readOnly);
+				if(readOnlyButton.getSelection() != readOnly) {
+					readOnlyButton.setSelection(readOnly);
+				}
 			}
 		});
 
@@ -94,8 +96,10 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 	}
 
 	private void newConnectionText(Text newConnectionText, String path) {
-		newConnectionText.setText(path);
-		newConnectionText.setToolTipText(path);
+		if(!newConnectionText.getText().equals(path)) {
+			newConnectionText.setText(path);
+			newConnectionText.setToolTipText(path);
+		}
 	}
 
 }

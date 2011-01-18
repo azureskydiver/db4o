@@ -6,6 +6,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.config.*;
+import com.db4o.cs.config.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
@@ -61,9 +62,10 @@ public class LoginDialog {
 	protected Control createContents(ErrorMessageHandler err) {
 		TabFolder folder = new TabFolder(mainCompositeShell, SWT.BORDER);
 		OMESWTUtil.assignWidgetId(folder, TAB_FOLDER_ID);
-		CustomConfigSource configSource = new DialogCustomConfigSource(mainCompositeShell, err);
-		Composite localPane = new LoginPane<FileConnectionParams>(mainCompositeShell, folder, LOCAL_DIALOG_TITLE, new LocalLoginPaneSpec(new LocalPresentationModel(model, configSource)));
-		Composite remotePane = new LoginPane<RemoteConnectionParams>(mainCompositeShell, folder, REMOTE_DIALOG_TITLE, new RemoteLoginPaneSpec(new RemotePresentationModel(model, configSource)));
+		LocalPresentationModel localModel = new LocalPresentationModel(model, new DialogCustomConfigSource(mainCompositeShell, err, EmbeddedConfigurationItem.class));
+		RemotePresentationModel remoteModel = new RemotePresentationModel(model, new DialogCustomConfigSource(mainCompositeShell, err, ClientConfigurationItem.class));
+		Composite localPane = new LoginPane<FileConnectionParams>(mainCompositeShell, folder, LOCAL_DIALOG_TITLE, new LocalLoginPaneSpec(localModel));
+		Composite remotePane = new LoginPane<RemoteConnectionParams>(mainCompositeShell, folder, REMOTE_DIALOG_TITLE, new RemoteLoginPaneSpec(remoteModel));
 		addTab(folder, "Local", LOCAL_DIALOG_TITLE, localPane, LOCAL_TAB_ID);
 		addTab(folder, "Remote", REMOTE_DIALOG_TITLE, remotePane, REMOTE_TAB_ID);
 		folder.pack(true);
@@ -82,17 +84,19 @@ public class LoginDialog {
 	private final static class DialogCustomConfigSource implements CustomConfigSource {		
 		private final Shell shell;
 		private final ErrorMessageHandler errHandler;
+		private final Class<?> spi;
 
-		public DialogCustomConfigSource(Shell shell, ErrorMessageHandler errHandler) {
+		public DialogCustomConfigSource(Shell shell, ErrorMessageHandler errHandler, Class<?> spi) {
 			this.shell = shell;
 			this.errHandler = errHandler;
+			this.spi = spi;
 		}
 		
 		public void requestCustomConfig(CustomConfigSink configSink, String[] jarPaths, String[] selectedConfigNames) {
 			Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 			dialog.setLayout(new GridLayout());
 			dialog.setText("Jars/Configurators");
-			CustomConfigModel customModel = new CustomConfigModelImpl(jarPaths, selectedConfigNames, configSink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), errHandler);			
+			CustomConfigModel customModel = new CustomConfigModelImpl(jarPaths, selectedConfigNames, configSink , new SPIConfiguratorExtractor(spi), errHandler);			
 			JarPathSource jarPathSource = new JarPathSource() {
 				public String jarPath() {
 					FileDialog fileChooser = new FileDialog(shell, SWT.OPEN);

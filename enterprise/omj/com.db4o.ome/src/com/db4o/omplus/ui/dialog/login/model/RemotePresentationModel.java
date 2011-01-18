@@ -75,16 +75,7 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 		if(port.length() == 0) {
 			throw new DBConnectException("Port is empty.");
 		}
-		int portNum = -1;
-		try {
-			portNum = Integer.parseInt(port);
-		}
-		catch(NumberFormatException exc) {
-			throw new DBConnectException("Illegal port: " + port, exc);
-		}
-		if(portNum < 0 || portNum > MAX_PORT) {
-			throw new DBConnectException("Port not in range (0-" + MAX_PORT + "): " + portNum);
-		}
+		int portNum = parsePortNumber(port);
 		user = trim(user);
 		if(user.length() == 0) {
 			throw new DBConnectException("User is empty.");
@@ -94,6 +85,25 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 			throw new DBConnectException("Password is empty.");
 		}
 		return new RemoteConnectionParams(host, portNum, user, pwd, jarPaths, configNames);
+	}
+
+	private static int parsePortNumber(String port) throws DBConnectException {
+		String parsePort = port.toLowerCase();
+		int radix = 10;
+		if(parsePort.startsWith("0x")) {
+			parsePort = parsePort.substring(2);
+			radix = 16;
+		}
+		try {
+			int portNum = Integer.parseInt(parsePort, radix);
+			if(portNum < 0 || portNum > MAX_PORT) {
+				throw new DBConnectException("Port not in range (0-" + MAX_PORT + "): " + portNum);
+			}
+			return portNum;
+		}
+		catch(NumberFormatException exc) {
+			throw new DBConnectException("Illegal port: " + port, exc);
+		}
 	}
 
 	@Override
