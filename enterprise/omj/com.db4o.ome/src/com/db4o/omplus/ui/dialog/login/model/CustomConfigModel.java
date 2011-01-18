@@ -52,40 +52,35 @@ public class CustomConfigModel {
 			}
 			List<File> jarFileList = new ArrayList<File>(jarFileSet);
 			Collections.sort(jarFileList);
-			this.configClassNames = extractor.configuratorClassNames(jarFileList);
+			extractConfigNames(jarFileList);
 			this.jarFiles = jarFileList;
+			notifyListeners();
 		} 
 		catch (DBConnectException exc) {
 			err.error(exc);
 		} 
-		finally {
-			notifyListeners();
-		}
 	}
 
 	public void removeJarPaths(String... jarPaths) {
-		try {
-			List<File> jarFiles = new ArrayList<File>(this.jarFiles);
-			for (String jarPath : jarPaths) {
-				try {
-					jarFiles.remove(new File(jarPath).getCanonicalFile());
-				} 
-				catch (IOException exc) {
-					err.error("could not interpret path: " + jarPath, exc);
-				}
-			}
+		List<File> jarFiles = new ArrayList<File>(this.jarFiles);
+		for (String jarPath : jarPaths) {
 			try {
-				configClassNames = extractor.configuratorClassNames(jarFiles);
+				jarFiles.remove(new File(jarPath).getCanonicalFile());
+			} 
+			catch (IOException exc) {
+				err.error("could not interpret path: " + jarPath, exc);
 			}
-			catch(DBConnectException exc) {
-				err.error("inconsistent state, purging configurator list - could not extract configurators from: " + Arrays.toString(jarPaths), exc);
-				configClassNames = new ArrayList<String>();
-			}
-			this.jarFiles = jarFiles;
-		} 
-		finally {
-			notifyListeners();
 		}
+		try {
+			extractConfigNames(jarFiles);
+			this.jarFiles = jarFiles;
+		}
+		catch(DBConnectException exc) {
+			err.error("inconsistent state, purging jar path and configurator list - could not extract configurators from: " + Arrays.toString(jarPaths), exc);
+			configClassNames.clear();
+			this.jarFiles.clear();
+		}
+		notifyListeners();
 	}
 
 	public void commit() {
@@ -95,7 +90,12 @@ public class CustomConfigModel {
 		}
 		sink.customConfig(jarPaths, configClassNames.toArray(new String[configClassNames.size()]));
 	}
-	
+
+	private void extractConfigNames(List<File> jarFileList) throws DBConnectException {
+		this.configClassNames = extractor.configuratorClassNames(jarFileList);
+		Collections.sort(configClassNames);
+	}
+
 	private void notifyListeners() {
 		String[] jarPaths = new String[jarFiles.size()];
 		for (int jarIdx = 0; jarIdx < jarFiles.size(); jarIdx++) {

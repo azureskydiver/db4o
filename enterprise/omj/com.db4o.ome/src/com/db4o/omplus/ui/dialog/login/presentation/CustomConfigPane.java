@@ -2,13 +2,12 @@
 
 package com.db4o.omplus.ui.dialog.login.presentation;
 
-import java.io.*;
-
 import org.eclipse.jface.layout.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import com.db4o.config.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.model.CustomConfigModel.CustomConfigListener;
@@ -107,7 +106,7 @@ public class CustomConfigPane extends Composite {
 				System.out.println(java.util.Arrays.toString(configClassNames));
 			}
 		};
-		new CustomConfigPane(shell, shell, new CustomConfigModel(sink, new SPIConfiguratorExtractor(), new ErrorMessageHandler(errSink)));
+		new CustomConfigPane(shell, shell, new CustomConfigModel(sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)));
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {
