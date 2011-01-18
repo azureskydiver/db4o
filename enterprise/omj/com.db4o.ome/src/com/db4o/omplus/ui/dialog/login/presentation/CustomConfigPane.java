@@ -15,6 +15,10 @@ import com.db4o.omplus.ui.dialog.login.model.CustomConfigModel.CustomConfigListe
 
 public class CustomConfigPane extends Composite {
 
+	public static interface JarPathSource {
+		String jarPath();
+	}
+	
 	public static final String JAR_LIST_ID = CustomConfigPane.class.getName() + "$jarList";
 	public static final String CONFIGURATOR_LIST_ID = CustomConfigPane.class.getName() + "$configuratorList";
 	public static final String ADD_JAR_BUTTON_ID = CustomConfigPane.class.getName() + "$addJarButton";
@@ -22,21 +26,26 @@ public class CustomConfigPane extends Composite {
 	public static final String CANCEL_BUTTON_ID = CustomConfigPane.class.getName() + "$cancelButton";
 	public static final String OK_BUTTON_ID = CustomConfigPane.class.getName() + "$okButton";
 
-	private CustomConfigModel model;
+	private final CustomConfigModel model;
+	private final JarPathSource jarPathSource;
 	
-	public CustomConfigPane(Shell dialog, Composite parent, CustomConfigModel model) {
+	private Button removeButton;
+	private List jarList;
+	
+	public CustomConfigPane(Shell dialog, Composite parent, CustomConfigModel model, JarPathSource jarPathSource) {
 		super(parent, SWT.NONE);
 		this.model = model;
+		this.jarPathSource = jarPathSource;
 		createContents(dialog, parent);
 	}
 
 	private void createContents(final Shell dialog, final Composite parent) {
 		Label jarLabel = label("Jars:");
 		Label confLabel = label("Configurators:");
-		final List jarList = new List (this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+		jarList = new List (this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		final List confList = new List (this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		Button addButton = button("Add");
-		Button removeButton = button("Remove");
+		removeButton = button("Remove");
 		Button okButton = button("OK");
 		Button cancelButton = button("Cancel");
 		
@@ -52,12 +61,14 @@ public class CustomConfigPane extends Composite {
 				model.selectConfigClassNames(confList.getSelection());
 			}
 		});		
+		jarList.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				updateJarRemovalState();
+			}
+		});
 		addButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				FileDialog fileChooser = new FileDialog(parent.getShell(), SWT.OPEN);
-				fileChooser.setFilterExtensions(new String[] { "*.jar" });
-				fileChooser.setFilterNames(new String[] { "Jar Files (*.jar)" });
-				String jarPath = fileChooser.open();
+				String jarPath = jarPathSource.jarPath();
 				if(jarPath != null){
 					model.addJarPaths(jarPath);
 				}
@@ -71,15 +82,18 @@ public class CustomConfigPane extends Composite {
 				}
 			}
 		});		
+		removeButton.setEnabled(false);
 		okButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				model.commit();
 				dialog.close();
+				dialog.dispose();
 			}
 		});
 		cancelButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				dialog.close();
+				dialog.dispose();
 			}
 		});
 		
@@ -88,6 +102,7 @@ public class CustomConfigPane extends Composite {
 				jarList.setItems(jarPaths);
 				confList.setItems(configClassNames);
 				confList.setSelection(selectedConfigNames);
+				updateJarRemovalState();
 			}
 		});
 		
@@ -116,7 +131,7 @@ public class CustomConfigPane extends Composite {
 	
 	public static void main(String[] args) {
 		Display display = new Display();
-		Shell shell = new Shell(display);
+		final Shell shell = new Shell(display);
 		shell.setLayout (new GridLayout());
 		ErrorMessageSink errSink = new ErrorMessageSink() {
 			public void showError(String msg) {
@@ -139,12 +154,24 @@ public class CustomConfigPane extends Composite {
 				System.out.println(java.util.Arrays.toString(configClassNames));
 			}
 		};
-		new CustomConfigPane(shell, shell, new CustomConfigModelImpl(sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)));
+		JarPathSource jarPathSource = new JarPathSource() {
+			public String jarPath() {
+				FileDialog fileChooser = new FileDialog(shell, SWT.OPEN);
+				fileChooser.setFilterExtensions(new String[] { "*.jar" });
+				fileChooser.setFilterNames(new String[] { "Jar Files (*.jar)" });
+				return fileChooser.open();
+			}
+		};
+		new CustomConfigPane(shell, shell, new CustomConfigModelImpl(sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)), jarPathSource);
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {
 			if (!display.readAndDispatch ()) display.sleep ();
 		}
 		display.dispose ();
+	}
+	
+	private void updateJarRemovalState() {
+		removeButton.setEnabled(jarList.getSelectionCount() > 0 );
 	}
 }

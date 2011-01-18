@@ -50,6 +50,11 @@ public class SWTTestUtil {
 		combo.notifyListeners(SWT.Selection, new Event());
 	}
 
+	public static void selectList(List list, String[] selection) {
+		list.setSelection(selection);
+		list.notifyListeners(SWT.Selection, new Event());
+	}
+
 	public static Shell findShell(String id) {
 		Shell[] shells = PlatformUI.getWorkbench().getDisplay().getShells();
 		for (Shell shell : shells) {
