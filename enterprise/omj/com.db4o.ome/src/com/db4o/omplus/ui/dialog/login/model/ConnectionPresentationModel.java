@@ -2,17 +2,54 @@
 
 package com.db4o.omplus.ui.dialog.login.model;
 
+import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 
 public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
+	
 	private LoginPresentationModel model;
-	private P selected;
+	private LoginPresentationState state;
+	
+	private abstract class LoginPresentationState {
+		abstract P params() throws DBConnectException;
+		abstract void customConfig(File[] jarFiles, String[] customConfigClassNames);
+	}
+
+	private class SelectedState extends LoginPresentationState {
+		private final P params;
+		
+		public SelectedState(P params) {
+			this.params = params;
+		}
+
+		P params() {
+			return params;
+		}
+		
+		void customConfig(File[] jarFiles, String[] customConfigClassNames) {
+		}
+	}
+
+	private class NewState extends LoginPresentationState {
+		private File[] jarFiles;
+		private String[] configNames;
+
+		public P params() throws DBConnectException {
+			return fromState(jarFiles, configNames);
+		}
+
+		public void customConfig(File[] jarFiles, String[] customConfigClassNames) {
+			this.jarFiles = jarFiles;
+			this.configNames = customConfigClassNames;
+		}
+	}
 	
 	public ConnectionPresentationModel(LoginPresentationModel model) {
 		this.model = model;
+		this.state = new NewState();
 	}
 	
 	protected List<P> connections() {
@@ -30,7 +67,7 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 
 	public boolean connect() {
 		try {
-			model.connect(selected != null ? selected : fromState());
+			model.connect(state.params());
 			return true;
 		} 
 		catch (DBConnectException exc) {
@@ -40,19 +77,37 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 	}
 	
 	public void select(int idx) {
-		selected = connections().get(idx);
+		P selected = connections().get(idx);
+		state = new SelectedState(selected);
 		selected(selected);
 	}
 	
-	protected void unselect() {
-		selected = null;
+	protected void newState() {
+		state = new NewState();
 	}
 	
-	protected ErrorMessageSink err() {
+	public void customConfig(File[] jarFiles, String[] customConfigClassNames) {
+		state.customConfig(jarFiles, customConfigClassNames);
+	}
+
+	// FIXME revert to protected
+	public ErrorMessageHandler err() {
 		return model.err();
 	}
 	
-	protected abstract P fromState() throws DBConnectException;
+	protected abstract P fromState(File[] jarFiles, String[] configNames) throws DBConnectException;
 	protected abstract void selected(P selected);
 	protected abstract List<P> connections(RecentConnectionList recentConnections);
+	
+
+//	private void notifyListenersCustomState() {
+//		String[] jarPaths = new String[jarFiles.length];
+//		for (int jarIdx = 0; jarIdx < jarFiles.length; jarIdx++) {
+//			jarPaths[jarIdx] = jarFiles[jarIdx].getAbsolutePath();
+//		}
+//		for (LocalSelectionListener listener : localListeners) {
+//			listener.customConfig(jarPaths, configClassNames);
+//		}
+//	}
+
 }

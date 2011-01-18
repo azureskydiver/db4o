@@ -147,7 +147,7 @@ public class Activator extends AbstractUIPlugin {
 								}
 		    					
 		    				});
-		    	queryModel = new QueryPresentationModel(new ShellErrorMessageSink(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()));
+		    	queryModel = new QueryPresentationModel(new ErrorMessageHandler(new ShellErrorMessageSink(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell())));
 		    }
 		
 		});

@@ -7,10 +7,10 @@ import com.db4o.omplus.connection.*;
 public class LoginPresentationModel {
 
 	private final RecentConnectionList recentConnections;
-	private final ErrorMessageSink err;
+	private final ErrorMessageHandler err;
 	private final Connector connector;
 	
-	public LoginPresentationModel(RecentConnectionList recentConnections, ErrorMessageSink err, Connector connector) {
+	public LoginPresentationModel(RecentConnectionList recentConnections, ErrorMessageHandler err, Connector connector) {
 		this.recentConnections = recentConnections;
 		this.err = err;
 		this.connector = connector;
@@ -20,7 +20,7 @@ public class LoginPresentationModel {
 		return recentConnections;
 	}
 
-	ErrorMessageSink err() {
+	ErrorMessageHandler err() {
 		return err;
 	}
 	

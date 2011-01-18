@@ -37,7 +37,7 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 				public boolean connect(ConnectionParams params) throws DBConnectException {
 					return DbConnectUtil.connect(params, window.getShell());
 				}
-			}, new ShellErrorMessageSink(window.getShell()));
+			}, new ErrorMessageHandler(new ShellErrorMessageSink(window.getShell())));
 			myWindow.open();
 		}
 	}

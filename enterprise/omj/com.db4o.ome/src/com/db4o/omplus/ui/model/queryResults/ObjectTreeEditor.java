@@ -300,7 +300,7 @@ public class ObjectTreeEditor extends  EditingSupport
 		return true;
 	}
 	
-	private ErrorMessageSink err()
+	private ErrorMessageHandler err()
 	{
 		return queryModel.err();
 	}

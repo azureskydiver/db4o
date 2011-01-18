@@ -5,10 +5,8 @@ import java.util.*;
 
 public interface RecentConnectionList {
 
-	List<FileConnectionParams> getRecentFileConnections();
+	<T extends ConnectionParams> List<T> getRecentConnections(Class<T> paramType);
 
-	List<RemoteConnectionParams> getRecentRemoteConnections();
-
-	void addNewConnection(ConnectionParams params);
+	<T extends ConnectionParams> void addNewConnection(T params);
 
 }

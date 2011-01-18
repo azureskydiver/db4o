@@ -969,7 +969,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		}
 	}
 	
-	private ErrorMessageSink err() {
+	private ErrorMessageHandler err() {
 		return queryModel.err();
 	}
 

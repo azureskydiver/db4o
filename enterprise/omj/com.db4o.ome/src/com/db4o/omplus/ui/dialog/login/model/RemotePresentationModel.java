@@ -2,6 +2,7 @@
 
 package com.db4o.omplus.ui.dialog.login.model;
 
+import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.connection.*;
@@ -33,16 +34,16 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 		if(this.host.equals(host) && this.port.equals(port) && this.user.equals(user) && this.pwd.equals(pwd)) {
 			return;
 		}
-		unselect();
 		this.host = host;
 		this.port = port;
 		this.user = user;
 		this.pwd = pwd;
+		newState();
 		notifyListeners(host, port, user, pwd);
 	}
 	
 	@Override
-	protected RemoteConnectionParams fromState() throws DBConnectException {
+	protected RemoteConnectionParams fromState(File[] jarFiles, String[] configNames) throws DBConnectException {
 		host = trim(host);
 		if(host.length() == 0) {
 			throw new DBConnectException("Host is empty.");
@@ -74,7 +75,7 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 
 	@Override
 	protected List<RemoteConnectionParams> connections(RecentConnectionList recentConnections) {
-		return recentConnections.getRecentRemoteConnections();
+		return recentConnections.getRecentConnections(RemoteConnectionParams.class);
 	}
 
 	@Override

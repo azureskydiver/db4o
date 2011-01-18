@@ -53,18 +53,16 @@ public class CustomConfigModelTestCase {
 				return acceptJarFiles;
 			}
 		};
-		ErrorMessageSink err = new ErrorMessageSink() {
-			@Override
-			protected void showError(String msg) {
+		ErrorMessageSink errSink = new ErrorMessageSink() {
+			public void showError(String msg) {
 				CustomConfigModelTestCase.this.errMsg = msg;
 			}
 			
-			@Override
-			protected void logExc(Throwable exc) {
+			public void logExc(Throwable exc) {
 				CustomConfigModelTestCase.this.exc = exc;
 			}
 		};
-		model = new CustomConfigModel(sink , extractor , err );
+		model = new CustomConfigModel(sink , extractor , new ErrorMessageHandler(errSink));
 		
 		listener = new CapturingCustomListener();
 		model.addListener(listener);

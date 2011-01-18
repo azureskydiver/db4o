@@ -310,7 +310,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 	 * Displays error message on screen
 	 * @param msg
 	 */
-	private ErrorMessageSink err()
+	private ErrorMessageHandler err()
 	{
 		return model.err();
 	}

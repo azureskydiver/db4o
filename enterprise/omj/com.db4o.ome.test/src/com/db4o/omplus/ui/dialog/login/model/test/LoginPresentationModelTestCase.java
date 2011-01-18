@@ -28,10 +28,6 @@ public class LoginPresentationModelTestCase {
 			public void localSelection(String path, boolean readOnly) {
 				received[0] = path;
 			}
-
-			@Override
-			public void customConfig(String[] jarPaths, String[] configClassNames) {
-			}
 		});
 		fixture.localModel().select(1);
 		assertEquals(fixture.presetFileParams().get(1).getPath(), received[0]);

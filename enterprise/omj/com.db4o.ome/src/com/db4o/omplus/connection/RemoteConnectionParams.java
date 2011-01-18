@@ -35,12 +35,6 @@ public class RemoteConnectionParams extends ConnectionParams{
 		return sb.toString();
 	}
 
-	@Override
-	public boolean isRemote() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
 	public String getHost() {
 		return host;
 	}

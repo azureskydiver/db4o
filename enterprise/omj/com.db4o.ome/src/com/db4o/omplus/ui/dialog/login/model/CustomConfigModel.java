@@ -16,15 +16,15 @@ public class CustomConfigModel {
 
 	private final CustomConfigSink sink;
 	private final ConfiguratorExtractor extractor;
-	private final ErrorMessageSink err;
+	private final ErrorMessageHandler err;
 
 	private Set<CustomConfigListener> listeners = new HashSet<CustomConfigListener>();
 
 	private List<File> jarFiles = new ArrayList<File>();
 	private List<String> configClassNames = new ArrayList<String>();
 
-	public CustomConfigModel(CustomConfigSink model, ConfiguratorExtractor extractor, ErrorMessageSink err) {
-		this.sink = model;
+	public CustomConfigModel(CustomConfigSink sink, ConfiguratorExtractor extractor, ErrorMessageHandler err) {
+		this.sink = sink;
 		this.extractor = extractor;
 		this.err = err;
 	}

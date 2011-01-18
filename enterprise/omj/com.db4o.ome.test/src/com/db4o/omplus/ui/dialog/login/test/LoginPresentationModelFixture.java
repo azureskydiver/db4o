@@ -1,12 +1,8 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.ui.dialog.login.test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
-import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.*;
@@ -26,8 +22,6 @@ public class LoginPresentationModelFixture {
 	private Throwable exceptionReceived;
 	private String errorMsgReceived;
 	private ConnectInterceptor interceptor;
-	private ConfiguratorExtractor extractor;
-	private List<String> configNames;
 
 	public LoginPresentationModelFixture() {
 		presetFileParams = Collections.unmodifiableList(Arrays.asList(new FileConnectionParams("foo", false), new FileConnectionParams("bar", true)));
@@ -36,14 +30,12 @@ public class LoginPresentationModelFixture {
 		for(int idx = presetFileParams.size() - 1; idx >= 0; idx--) {
 			recentConnections.addNewConnection(presetFileParams.get(idx));
 		}
-		ErrorMessageSink err = new ErrorMessageSink() {
-			@Override
-			protected void showError(String msg) {
+		ErrorMessageSink errSink = new ErrorMessageSink() {
+			public void showError(String msg) {
 				errorMsgReceived = msg;
 			}
 
-			@Override
-			protected void logExc(Throwable exc) {
+			public void logExc(Throwable exc) {
 				exceptionReceived = exc;
 			}
 		};
@@ -55,22 +47,8 @@ public class LoginPresentationModelFixture {
 				return true;
 			}
 		};
-		model = new LoginPresentationModel(recentConnections, err,  connector);
-		configNames = new ArrayList<String>();
-		extractor = new ConfiguratorExtractor() {
-			public List<String> configuratorClassNames(List<File> jarFiles) throws DBConnectException {
-				if(configNames == null) {
-					throw new DBConnectException("");
-				}
-				return configNames;
-			}
-
-			@Override
-			public boolean acceptJarFile(File file) {
-				return true;
-			}
-		};
-		localModel = new LocalPresentationModel(model, extractor);
+		model = new LoginPresentationModel(recentConnections, new ErrorMessageHandler(errSink),  connector);
+		localModel = new LocalPresentationModel(model);
 		remoteModel = new RemotePresentationModel(model);
 		interceptor = new NullConnectInterceptor();
 		paramsReceived = null;
@@ -98,13 +76,9 @@ public class LoginPresentationModelFixture {
 		this.interceptor = interceptor;
 	}
 	
-	public void configNames(List<String> configNames) {
-		this.configNames = configNames;
-	}
-	
 	public void assertConnected(ConnectionParams expected) {
 		assertEquals(expected, paramsReceived);
-		List<FileConnectionParams> recentFileConnections = recentConnections.getRecentFileConnections();
+		List<FileConnectionParams> recentFileConnections = recentConnections.getRecentConnections(FileConnectionParams.class);
 		assertEquals(expected, recentFileConnections.get(0));
 		int cmpIdx = 1;
 		for (FileConnectionParams curPreset : presetFileParams) {

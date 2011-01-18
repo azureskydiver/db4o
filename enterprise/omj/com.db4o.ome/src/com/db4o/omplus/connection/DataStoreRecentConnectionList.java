@@ -14,43 +14,17 @@ public class DataStoreRecentConnectionList implements RecentConnectionList {
 	public DataStoreRecentConnectionList(OMEDataStore dataStore) {
 		this.dataStore = dataStore;
 	}
-	
-	public List<FileConnectionParams> getRecentFileConnections() {
-		List<FileConnectionParams> connections = connections(LOCAL);
-		return Collections.unmodifiableList(connections);
-	}
-	
-	public List<RemoteConnectionParams> getRecentRemoteConnections() {
-		List<RemoteConnectionParams>  connections = connections(REMOTE);
+
+	public <T extends ConnectionParams> List<T> getRecentConnections(Class<T> paramType) {
+		List<T> connections = connections(paramType);
 		return Collections.unmodifiableList(connections);
 	}
 
-	public void addNewConnection(ConnectionParams params) {
+	public <T extends ConnectionParams> void addNewConnection(T params) {
 		if (params == null) {
 			return;
 		}
-		if (params.isRemote()) {
-			internalAddParams((RemoteConnectionParams)params, dataStore, connections(REMOTE));
-		}
-		else {
-			internalAddParams((FileConnectionParams)params, dataStore, connections(LOCAL));
-		}
-	}
-
-	private <T extends ConnectionParams> List<T> connections(String key) {
-		List<T> connections = dataStore.getGlobalEntry(key);
-		if(connections == null) {
-			connections = new LinkedList<T>();
-			dataStore.setGlobalEntry(key, connections);
-		}
-		return connections;
-	}
-	
-	private <T extends ConnectionParams> void connections(String key, List<T> list){
-		dataStore.setGlobalEntry(key, list);
-	}
-
-	private <T extends ConnectionParams> void internalAddParams(T params, OMEDataStore omeData, List<T> connections) {
+		List<T> connections = connections(params.getClass());
 		if(connections.contains(params)) {
 			if(params.equals(connections.get(0))) {
 				return;
@@ -58,7 +32,30 @@ public class DataStoreRecentConnectionList implements RecentConnectionList {
 			connections.remove(params);
 		}
 		connections.add(0, params);
-		connections((params.isRemote() ? REMOTE : LOCAL), connections);
+		connections((Class<T>)params.getClass(), connections);
 	}
 
+	private <T extends ConnectionParams> List<T> connections(Class<?> paramType) {
+		String key = key(paramType);
+		List<T> connections = dataStore.getGlobalEntry(key);
+		if(connections == null) {
+			connections = new LinkedList<T>();
+			dataStore.setGlobalEntry(key, connections);
+		}
+		return connections;
+	}
+
+	private String key(Class<?> paramType) {
+		if(paramType == FileConnectionParams.class) {
+			return LOCAL;
+		}
+		if(paramType == RemoteConnectionParams.class) {
+			return REMOTE;
+		}
+		return paramType.getName();
+	}
+	
+	private <T extends ConnectionParams> void connections(Class<T> paramType, List<T> list){
+		dataStore.setGlobalEntry(key(paramType), list);
+	}
 }
