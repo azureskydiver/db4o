@@ -155,7 +155,6 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
 		if(dataStore != null) {
 			dataStore.close();
 		}
@@ -167,6 +166,7 @@ public class Activator extends AbstractUIPlugin {
 			status.closeExistingDB();
 		}
 		super.stop(context);
+		plugin = null;
 	}
 	
 	public OMEDataStore getOMEDataStore() {
