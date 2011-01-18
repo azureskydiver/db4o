@@ -9,10 +9,18 @@ import org.eclipse.swt.widgets.*;
 
 import com.db4o.config.*;
 import com.db4o.omplus.*;
+import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.model.CustomConfigModel.CustomConfigListener;
 
 public class CustomConfigPane extends Composite {
+
+	public static final String JAR_LIST_ID = CustomConfigPane.class.getName() + "$jarList";
+	public static final String CONFIGURATOR_LIST_ID = CustomConfigPane.class.getName() + "$configuratorList";
+	public static final String ADD_JAR_BUTTON_ID = CustomConfigPane.class.getName() + "$addJarButton";
+	public static final String REMOVE_JAR_BUTTON_ID = CustomConfigPane.class.getName() + "$removeJarButton";
+	public static final String CANCEL_BUTTON_ID = CustomConfigPane.class.getName() + "$cancelButton";
+	public static final String OK_BUTTON_ID = CustomConfigPane.class.getName() + "$okButton";
 
 	private CustomConfigModel model;
 	
@@ -32,6 +40,18 @@ public class CustomConfigPane extends Composite {
 		Button okButton = button("OK");
 		Button cancelButton = button("Cancel");
 		
+		OMESWTUtil.assignWidgetId(jarList, JAR_LIST_ID);
+		OMESWTUtil.assignWidgetId(confList, CONFIGURATOR_LIST_ID);
+		OMESWTUtil.assignWidgetId(addButton, ADD_JAR_BUTTON_ID);
+		OMESWTUtil.assignWidgetId(removeButton, REMOVE_JAR_BUTTON_ID);
+		OMESWTUtil.assignWidgetId(cancelButton, CANCEL_BUTTON_ID);
+		OMESWTUtil.assignWidgetId(okButton, OK_BUTTON_ID);
+
+		confList.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				model.selectConfigClassNames(confList.getSelection());
+			}
+		});		
 		addButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				FileDialog fileChooser = new FileDialog(parent.getShell(), SWT.OPEN);
