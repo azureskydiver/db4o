@@ -866,7 +866,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 	
 	private void showMessage(String message)
 	{
-		new ShellErrorMessageSink(parentComposite.getShell()).error(message);
+		new ShellErrorMessageSink(parentComposite.getShell()).showError(message);
 	}
 
 	/**

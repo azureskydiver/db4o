@@ -4,13 +4,13 @@ import com.db4o.omplus.*;
 
 public class QueryPresentationModel {
 
-	private ErrorMessageSink err;
+	private ErrorMessageHandler err;
 	
-	public QueryPresentationModel(ErrorMessageSink err) {
+	public QueryPresentationModel(ErrorMessageHandler err) {
 		this.err = err;
 	}
 	
-	public ErrorMessageSink err() {
+	public ErrorMessageHandler err() {
 		return err;
 	}
 	

@@ -9,8 +9,6 @@ public abstract class ConnectionParams {
 	protected boolean allowUpdates = false;
 	
 	public abstract String getPath();
-	// TODO get rid of me
-	public abstract boolean isRemote();
 	public abstract ObjectContainer connect(Function4<String, Boolean> userCallback) throws DBConnectException;
 	
 	public final ObjectContainer connect() throws DBConnectException {

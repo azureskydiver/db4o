@@ -212,7 +212,7 @@ public class ResultTableCellModifier implements ICellModifier
 		return true;
 	}
 	
-	private ErrorMessageSink err()
+	private ErrorMessageHandler err()
 	{
 		return queryModel.err();
 	}

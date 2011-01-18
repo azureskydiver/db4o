@@ -39,10 +39,6 @@ public class FileConnectionParams extends ConnectionParams {
 		return readOnly;
 	}
 	
-	public boolean isRemote() {
-		return false;
-	}
-	
 	public EmbeddedConfiguration configure(){
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		configureCommon(config.common());

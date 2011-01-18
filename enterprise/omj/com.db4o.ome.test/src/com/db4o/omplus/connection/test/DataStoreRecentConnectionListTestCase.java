@@ -25,11 +25,11 @@ public class DataStoreRecentConnectionListTestCase {
 		recentConnections.addNewConnection(new RemoteConnectionParams("host1", 0xdb40, "db4o", "db4o"));
 		recentConnections.addNewConnection(new FileConnectionParams("bar"));
 		recentConnections.addNewConnection(new RemoteConnectionParams("host2", 0xdb40, "db4o", "db4o"));
-		List<FileConnectionParams> fileConnections = recentConnections.getRecentFileConnections();
+		List<FileConnectionParams> fileConnections = recentConnections.getRecentConnections(FileConnectionParams.class);
 		assertEquals(2, fileConnections.size());
 		assertEquals("bar", fileConnections.get(0).getPath());
 		assertEquals("foo", fileConnections.get(1).getPath());
-		List<RemoteConnectionParams> remoteConnections = recentConnections.getRecentRemoteConnections();
+		List<RemoteConnectionParams> remoteConnections = recentConnections.getRecentConnections(RemoteConnectionParams.class);
 		assertEquals(2, remoteConnections.size());
 		assertEquals("host2", remoteConnections.get(0).getHost());
 		assertEquals("host1", remoteConnections.get(1).getHost());
@@ -43,11 +43,11 @@ public class DataStoreRecentConnectionListTestCase {
 		recentConnections.addNewConnection(new RemoteConnectionParams("host2", 0xdb40, "db4o", "db4o"));
 		recentConnections.addNewConnection(new FileConnectionParams("foo"));
 		recentConnections.addNewConnection(new RemoteConnectionParams("host1", 0xdb40, "db4o", "db4o"));
-		List<FileConnectionParams> fileConnections = recentConnections.getRecentFileConnections();
+		List<FileConnectionParams> fileConnections = recentConnections.getRecentConnections(FileConnectionParams.class);
 		assertEquals(2, fileConnections.size());
 		assertEquals("foo", fileConnections.get(0).getPath());
 		assertEquals("bar", fileConnections.get(1).getPath());
-		List<RemoteConnectionParams> remoteConnections = recentConnections.getRecentRemoteConnections();
+		List<RemoteConnectionParams> remoteConnections = recentConnections.getRecentConnections(RemoteConnectionParams.class);
 		assertEquals(2, remoteConnections.size());
 		assertEquals("host1", remoteConnections.get(0).getHost());
 		assertEquals("host2", remoteConnections.get(1).getHost());

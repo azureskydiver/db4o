@@ -2,22 +2,22 @@
 
 package com.db4o.omplus.ui.dialog.login.presentation;
 
+import java.io.*;
+
 import org.eclipse.jface.layout.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.omplus.*;
-import com.db4o.omplus.connection.*;
-import com.db4o.omplus.debug.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.LocalSelectionListener;
+import com.db4o.omplus.ui.dialog.login.model.CustomConfigModel.CustomConfigListener;
 
 public class CustomConfigPane extends Composite {
 
-	private LocalPresentationModel model;
+	private CustomConfigModel model;
 	
-	public CustomConfigPane(Shell dialog, Composite parent, LocalPresentationModel model) {
+	public CustomConfigPane(Shell dialog, Composite parent, CustomConfigModel model) {
 		super(parent, SWT.NONE);
 		this.model = model;
 		createContents(dialog, parent);
@@ -58,10 +58,7 @@ public class CustomConfigPane extends Composite {
 			}
 		});
 		
-		model.addListener(new LocalSelectionListener() {
-			public void localSelection(String path, boolean readOnly) {
-			}
-			
+		model.addListener(new CustomConfigListener() {
 			public void customConfig(String[] jarPaths, String[] configClassNames) {
 				jarList.setItems(jarPaths);
 				confList.setItems(configClassNames);
@@ -95,18 +92,22 @@ public class CustomConfigPane extends Composite {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setLayout (new GridLayout());
-		ErrorMessageSink err = new ErrorMessageSink() {
-			@Override
-			protected void showError(String msg) {
+		ErrorMessageSink errSink = new ErrorMessageSink() {
+			public void showError(String msg) {
 				System.err.println(msg);
 			}
 			
-			@Override
-			protected void logExc(Throwable exc) {
+			public void logExc(Throwable exc) {
 				exc.printStackTrace();
 			}
 		};
-		new CustomConfigPane(shell, shell, new LocalPresentationModel(new LoginPresentationModel(new DataStoreRecentConnectionList(new InMemoryOMEDataStore()), err, null), new SPIConfiguratorExtractor()));
+		CustomConfigSink sink = new CustomConfigSink() {
+			public void customConfig(File[] jarFiles, String[] configClassNames) {
+				System.out.println(java.util.Arrays.toString(jarFiles));
+				System.out.println(java.util.Arrays.toString(configClassNames));
+			}
+		};
+		new CustomConfigPane(shell, shell, new CustomConfigModel(sink, new SPIConfiguratorExtractor(), new ErrorMessageHandler(errSink)));
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {

@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 
-public class ShellErrorMessageSink extends ErrorMessageSink {
+public class ShellErrorMessageSink implements ErrorMessageSink {
 	
 	private final Shell shell;
 	
@@ -16,13 +16,11 @@ public class ShellErrorMessageSink extends ErrorMessageSink {
 		this.shell = shell;
 	}
 
-	@Override
-	protected void showError(String msg) {
+	public void showError(String msg) {
 		MessageDialog.openError(shell, OMPlusConstants.DIALOG_BOX_TITLE, msg);
 	}
 
-	@Override
-	protected void logExc(Throwable exc) {
+	public void logExc(Throwable exc) {
 		IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, exc.getMessage(), exc);
 		Activator.getDefault().getLog().log(status);
 	}

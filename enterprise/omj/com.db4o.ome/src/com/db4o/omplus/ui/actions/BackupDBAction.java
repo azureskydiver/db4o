@@ -97,7 +97,7 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	private void showErrorMessageDialog(Exception exc) {
-		new ShellErrorMessageSink(window.getShell()).error(exc);
+		new ShellErrorMessageSink(window.getShell()).logExc(exc);
 	}
 	
 	public static void enableAction(boolean enabled){

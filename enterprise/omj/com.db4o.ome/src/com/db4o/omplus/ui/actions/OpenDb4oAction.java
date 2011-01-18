@@ -60,7 +60,7 @@ public abstract class OpenDb4oAction implements IObjectActionDelegate {
 		}
 		*/
 		catch(Exception ex){
-			ShellErrorMessageSink err = new ShellErrorMessageSink(getTargetPart().getSite().getShell());
+			ErrorMessageHandler err = new ErrorMessageHandler(new ShellErrorMessageSink(getTargetPart().getSite().getShell()));
 			err.error("Could not open " + fullPath + ": " + ex.getMessage(), ex);
 		}
 	}
