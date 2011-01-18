@@ -133,8 +133,8 @@ public class ConnectionPresentationModelTestCase {
 		final String[] jarFiles = { "foo.jar" };
 		final String[] configNames = { "FooConfig" };
 		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId, jarFiles, configNames)));
-		expect(connector.connect(eqParams(manualId))).andReturn(true);
-		recentConnections.addNewConnection(eqParams(manualId));
+		expect(connector.connect(eqParams(manualId, jarFiles, configNames))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(manualId, jarFiles, configNames));
 		replayMocks();
 		model.select(0);
 		model.state(manualId);
@@ -196,7 +196,7 @@ public class ConnectionPresentationModelTestCase {
 		verifyMocks();
 		resetMocks();
 		
-		listener.connectionPresentationState(true, 0, 0);
+		listener.connectionPresentationState(true, 1, 1);
 		replayMocks();
 		model.state("bar");
 		verifyMocks();
@@ -215,6 +215,23 @@ public class ConnectionPresentationModelTestCase {
 		listener.connectionPresentationState(true, 1, 1);
 		replayMocks();
 		model.customConfig(jarFiles, configNames);
+		verifyMocks();
+	}
+	
+	@Test
+	public void testClear() throws Exception {
+		replayMocks();
+		model.state("foo");
+		final String[] jarFiles = { "bar.jar" };
+		final String[] configNames = { "BarConfig" };
+		model.customConfig(jarFiles, configNames);
+		verifyMocks();
+		resetMocks();
+		expect(connector.connect(eqParams(""))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(""));
+		replayMocks();
+		model.clear();
+		model.connect();
 		verifyMocks();
 	}
 	
@@ -337,6 +354,11 @@ public class ConnectionPresentationModelTestCase {
 		public void state(String id) {
 			this.id = id;
 			newState();
+		}
+
+		@Override
+		protected void clearSpecificState() {
+			state("");
 		}
 	}
 	

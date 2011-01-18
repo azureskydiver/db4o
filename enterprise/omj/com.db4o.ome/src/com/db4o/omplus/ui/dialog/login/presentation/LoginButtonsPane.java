@@ -12,19 +12,21 @@ public class LoginButtonsPane extends Composite {
 	public static final String OK_BUTTON_ID = LoginButtonsPane.class.getName() + "$okButton";
 	public static final String CANCEL_BUTTON_ID = LoginButtonsPane.class.getName() + "$cancelButton";
 	public static final String CUSTOM_BUTTON_ID = LoginButtonsPane.class.getName() + "$customButton";
+	public static final String CLEAR_BUTTON_ID = LoginButtonsPane.class.getName() + "$clearButton";
 
 	private static final String CANCEL_TEXT = "Cancel";
 	private Button cancelBtn;
 	private Button openBtn;
 	private Button customBtn;
+	private Button clearBtn;
 	
-	public LoginButtonsPane(Composite parent, Composite dialog, String openText, Closure4<Boolean> openAction, Block4 customAction) {
+	public LoginButtonsPane(Composite parent, Composite dialog, String openText, Closure4<Boolean> openAction, Block4 customAction, Block4 clearAction) {
 		super(parent, SWT.NONE);
-		createContents(parent, dialog, openText, openAction, customAction);
+		createContents(parent, dialog, openText, openAction, customAction, clearAction);
 	}
 
 	// TODO register model as action listener and invoke closure from model in response
-	private void createContents(Composite parent, final Composite dialog, String openText, final Closure4<Boolean> openAction, final Block4 customAction) {	
+	private void createContents(Composite parent, final Composite dialog, String openText, final Closure4<Boolean> openAction, final Block4 customAction, final Block4 clearAction) {	
 		setLayout(new FormLayout());
 		
 		openBtn = new Button(this, SWT.PUSH);
@@ -48,13 +50,23 @@ public class LoginButtonsPane extends Composite {
 		});
 
 		customBtn = new Button(this, SWT.PUSH);
+		OMESWTUtil.assignWidgetId(customBtn, CUSTOM_BUTTON_ID);
 		customBtn.setText("Custom config...");
 		customBtn.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				customAction.run();
 			}
 		});
-		
+
+		clearBtn = new Button(this, SWT.PUSH);
+		OMESWTUtil.assignWidgetId(clearBtn, CLEAR_BUTTON_ID);
+		clearBtn.setText("Clear");
+		clearBtn.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				clearAction.run();
+			}
+		});
+
 		FormData data = new FormData();
 		data.top = new FormAttachment(0);
 		data.left = new FormAttachment(60);
@@ -72,6 +84,11 @@ public class LoginButtonsPane extends Composite {
 		data.left = new FormAttachment(0);
 		data.right = new FormAttachment(19);
 		customBtn.setLayoutData(data);	
+
+		data = new FormData();
+		data.top = new FormAttachment(0);
+		data.left = new FormAttachment(customBtn, 5);
+		clearBtn.setLayoutData(data);	
 	}
 	
 	@Override

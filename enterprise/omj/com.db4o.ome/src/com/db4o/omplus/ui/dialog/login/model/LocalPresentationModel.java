@@ -63,9 +63,16 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		notifyListeners();
 	}
 
+	@Override
+	protected void clearSpecificState() {
+		path("");
+		readOnly(false);
+	}
+	
 	private void notifyListeners() {
 		for (LocalSelectionListener listener : localListeners) {
 			listener.localSelection(path, readOnly);
 		}
 	}
+
 }

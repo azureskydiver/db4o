@@ -61,17 +61,30 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		notifyListeners();
 	}
 
+	public void clear() {
+		state(new NewState());
+		clearSpecificState();
+	}
+	
 	protected List<P> connections() {
 		return connections(model.recentConnections());
 	}
 	
 	protected void newState() {
-		state(new NewState());
+		String[] jarPaths = state.jarPaths();
+		String[] configNames = state.configNames();
+		state(new NewState(Arrays.copyOf(jarPaths, jarPaths.length), Arrays.copyOf(configNames, configNames.length)));
+	}
+
+	private void newStateFrom(P template) {
+		newState();
+		selected(template);
 	}
 	
 	protected abstract P fromState(String[] jarPaths, String[] configNames) throws DBConnectException;
 	protected abstract void selected(P selected);
 	protected abstract List<P> connections(RecentConnectionList recentConnections);
+	protected abstract void clearSpecificState();
 	
 	private void notifyListeners() {
 		for (ConnectionPresentationListener listener : listeners) {
@@ -93,6 +106,8 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		abstract void requestCustomConfig();
 		abstract void customConfig(String[] jarPaths, String[] customConfigClassNames);
 		abstract void notifyListener(ConnectionPresentationListener listener);
+		abstract String[] jarPaths();
+		abstract String[] configNames();
 	}
 
 	private class SelectedState extends LoginPresentationState {
@@ -109,17 +124,28 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		
 		@Override
 		void customConfig(String[] jarPaths, String[] customConfigClassNames) {
-			err().error("custom config editing disabled for history items");
+			err().error("cannot change custom config on history entry");
 		}
 
 		@Override
 		void requestCustomConfig() {
-			err().error("custom config editing disabled for history items");
+			newStateFrom(params);
+			configSource.requestCustomConfig(ConnectionPresentationModel.this, params.jarPaths(), params.configuratorClassNames());
 		}
 
 		@Override
 		void notifyListener(ConnectionPresentationListener listener) {
 			listener.connectionPresentationState(false, params.jarPathCount(), params.configuratorClassNameCount());
+		}
+
+		@Override
+		String[] jarPaths() {
+			return params.jarPaths();
+		}
+
+		@Override
+		String[] configNames() {
+			return params.configuratorClassNames();
 		}
 	}
 
@@ -127,6 +153,15 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		private String[] jarPaths = {};
 		private String[] configNames = {};
 
+		public NewState() {
+			this(new String[0], new String[0]);
+		}
+		
+		public NewState(String[] jarPaths, String[] configNames) {
+			this.jarPaths = jarPaths;
+			this.configNames = configNames;
+		}
+		
 		@Override
 		public P params() throws DBConnectException {
 			return fromState(jarPaths, configNames);
@@ -147,7 +182,17 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		void notifyListener(ConnectionPresentationListener listener) {
 			listener.connectionPresentationState(true, jarPaths.length, configNames.length);
 		}
-}
+
+		@Override
+		String[] jarPaths() {
+			return jarPaths;
+		}
+
+		@Override
+		String[] configNames() {
+			return configNames;
+		}
+	}
 	
 	public static interface ConnectionPresentationListener {
 		void connectionPresentationState(boolean editEnabled, int jarPathCount, int configuratorCount);

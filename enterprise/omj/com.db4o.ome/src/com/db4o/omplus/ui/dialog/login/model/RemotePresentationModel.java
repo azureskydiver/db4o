@@ -120,6 +120,15 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 		notifyListeners();
 	}
 
+	@Override
+	protected void clearSpecificState() {
+		host("");
+		port("");
+		user("");
+		password("");
+	}
+
+
 	private void notifyListeners() {
 		for (RemoteSelectionListener listener : remoteListeners) {
 			listener.remoteSelection(host, port, user, pwd);

@@ -43,12 +43,12 @@ public class LoginPane<P extends ConnectionParams> extends Composite {
 				model.requestCustomConfig();
 			}
 		};
-		final LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, openAction, customAction);
-		model.addConnectionPresentationListener(new ConnectionPresentationListener() {
-			public void connectionPresentationState(boolean editEnabled, int jarPathCount, int configuratorCount) {
-				buttonComposite.customActionEnabled(editEnabled);
+		Block4 clearAction = new Block4() {
+			public void run() {
+				model.clear();
 			}
-		});
+		};
+		final LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, openAction, customAction, clearAction);
 
 		GridLayoutFactory.swtDefaults().numColumns(1).equalWidth(false).applyTo(this);
 		GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(innerComposite);
