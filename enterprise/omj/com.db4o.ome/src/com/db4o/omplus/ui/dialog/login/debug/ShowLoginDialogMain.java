@@ -1,6 +1,9 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.ui.dialog.login.debug;
 
+import java.util.*;
+import java.util.List;
+
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.omplus.*;
@@ -36,7 +39,18 @@ public class ShowLoginDialogMain {
 			}
 		};
 
-	    LoginDialog dialog = new LoginDialog(shell, new InMemoryOMEDataStore(), connector, err);
+		RecentConnectionList recentConnections = new RecentConnectionList() {
+			public <T extends ConnectionParams> List<T> getRecentConnections(Class<T> paramType) {
+				if(paramType == FileConnectionParams.class) {
+					return (List<T>) Arrays.asList(new FileConnectionParams("foo.db4o", true));
+				}
+				return new ArrayList<T>();
+			}
+			
+			public <T extends ConnectionParams> void addNewConnection(T params) {
+			}
+		};
+	    LoginDialog dialog = new LoginDialog(shell, recentConnections, connector, err);
 	    dialog.open();
 	    
 	    shell.open();

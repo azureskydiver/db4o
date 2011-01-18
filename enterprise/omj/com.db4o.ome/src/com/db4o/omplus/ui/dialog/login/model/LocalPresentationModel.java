@@ -25,16 +25,24 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		localListeners.add(listener);
 	}
 	
-	public void state(String path, boolean readOnly) {
-		if(this.path.equals(path) && this.readOnly == readOnly) {
+	public void path(String path) {
+		if(this.path.equals(path)) {
 			return;
 		}
 		this.path = path;
-		this.readOnly = readOnly;
 		newState();
-		notifyListeners(path, readOnly);
+		notifyListeners();
 	}
-	
+
+	public void readOnly(boolean readOnly) {
+		if(this.readOnly == readOnly) {
+			return;
+		}
+		this.readOnly = readOnly;
+		notifyListeners();
+		newState();
+	}
+
 	@Override
 	protected FileConnectionParams fromState(String[] jarPaths, String[] configNames) throws DBConnectException {
 		if(path == null || path.length() == 0) {
@@ -50,12 +58,12 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 
 	@Override
 	protected void selected(FileConnectionParams selected) {
-		path = "";
-		readOnly = false;
-		notifyListeners(selected.getPath(), selected.readOnly());
+		path = selected.getPath();
+		readOnly = selected.readOnly();
+		notifyListeners();
 	}
 
-	private void notifyListeners(String path, boolean readOnly) {
+	private void notifyListeners() {
 		for (LocalSelectionListener listener : localListeners) {
 			listener.localSelection(path, readOnly);
 		}

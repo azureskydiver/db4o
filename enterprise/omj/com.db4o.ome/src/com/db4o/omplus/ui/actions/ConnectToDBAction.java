@@ -33,11 +33,14 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 			}
 		}
 		else {
-			LoginDialog myWindow = new LoginDialog(window.getShell(), Activator.getDefault().getOMEDataStore(), new Connector() {
+			Connector connector = new Connector() {
 				public boolean connect(ConnectionParams params) throws DBConnectException {
 					return DbConnectUtil.connect(params, window.getShell());
 				}
-			}, new ErrorMessageHandler(new ShellErrorMessageSink(window.getShell())));
+			};
+			DataStoreRecentConnectionList recentConnections = new DataStoreRecentConnectionList(Activator.getDefault().getOMEDataStore());
+			ErrorMessageHandler errHandler = new ErrorMessageHandler(new ShellErrorMessageSink(window.getShell()));
+			LoginDialog myWindow = new LoginDialog(window.getShell(), recentConnections, connector, errHandler);
 			myWindow.open();
 		}
 	}

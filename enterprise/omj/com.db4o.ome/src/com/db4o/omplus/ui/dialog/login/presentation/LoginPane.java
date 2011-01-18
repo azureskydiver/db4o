@@ -46,7 +46,12 @@ public class LoginPane<P extends ConnectionParams> extends Composite {
 				model.requestCustomConfig();
 			}
 		};
-		LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, openAction, customAction);
+		final LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, openAction, customAction);
+		model.addConnectionPresentationListener(new ConnectionPresentationListener() {
+			public void connectionPresentationState(boolean editEnabled, int jarPathCount, int configuratorCount) {
+				buttonComposite.customActionEnabled(editEnabled);
+			}
+		});
 
 		addComponentBelow(innerComposite, null, 70);
 		addComponentBelow(statusLabel, innerComposite, 80);

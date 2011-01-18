@@ -44,11 +44,26 @@ public class RemoteLoginPaneSpec implements LoginPaneSpec<RemoteConnectionParams
 		passwordLabel.setText("Password: ");
 		final Text passwordText  = new Text(innerComposite, SWT.BORDER|SWT.PASSWORD);
 		
-		StateListener stateListener = new StateListener(model, hostText, portText, usernameText, passwordText);
-		hostText.addModifyListener(stateListener);
-		portText.addModifyListener(stateListener);
-		usernameText.addModifyListener(stateListener);
-		passwordText.addModifyListener(stateListener);
+		hostText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				model.host(hostText.getText());
+			}
+		});
+		portText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				model.port(portText.getText());
+			}
+		});
+		usernameText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				model.user(usernameText.getText());
+			}
+		});
+		passwordText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				model.password(passwordText.getText());
+			}
+		});
 		
 		model.addListener(new RemoteSelectionListener() {
 			public void remoteSelection(String host, String port, String user, String pwd) {
@@ -70,26 +85,5 @@ public class RemoteLoginPaneSpec implements LoginPaneSpec<RemoteConnectionParams
 		GridDataFactory.swtDefaults().span(2, 1).grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(usernameText);
 		GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).applyTo(passwordLabel);
 		GridDataFactory.swtDefaults().span(2,1).grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(passwordText);
-	}
-	
-	private static class StateListener implements ModifyListener {
-		private final RemotePresentationModel model;
-		private final Text host;
-		private final Text port;
-		private final Text user;
-		private final Text pwd;
-		
-		public StateListener(RemotePresentationModel model, Text host, Text port, Text user, Text pwd) {
-			this.model = model;
-			this.host = host;
-			this.port = port;
-			this.user = user;
-			this.pwd = pwd;
-		}
-
-		public void modifyText(ModifyEvent e) {
-			model.state(host.getText(), port.getText(), user.getText(), pwd.getText());
-		}
-		
 	}
 }
