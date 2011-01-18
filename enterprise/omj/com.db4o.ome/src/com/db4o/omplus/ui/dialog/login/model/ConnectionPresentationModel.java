@@ -4,6 +4,7 @@ package com.db4o.omplus.ui.dialog.login.model;
 
 import java.util.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 
 public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
@@ -45,6 +46,10 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> {
 	
 	protected void unselect() {
 		selected = null;
+	}
+	
+	protected ErrorMessageSink err() {
+		return model.err();
 	}
 	
 	protected abstract P fromState() throws DBConnectException;

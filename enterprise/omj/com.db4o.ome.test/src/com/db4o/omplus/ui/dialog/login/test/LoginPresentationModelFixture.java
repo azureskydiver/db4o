@@ -6,6 +6,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
+import java.io.*;
 import java.util.*;
 
 import com.db4o.omplus.*;
@@ -25,6 +26,8 @@ public class LoginPresentationModelFixture {
 	private Throwable exceptionReceived;
 	private String errorMsgReceived;
 	private ConnectInterceptor interceptor;
+	private ConfiguratorExtractor extractor;
+	private List<String> configNames;
 
 	public LoginPresentationModelFixture() {
 		presetFileParams = Collections.unmodifiableList(Arrays.asList(new FileConnectionParams("foo", false), new FileConnectionParams("bar", true)));
@@ -53,7 +56,21 @@ public class LoginPresentationModelFixture {
 			}
 		};
 		model = new LoginPresentationModel(recentConnections, err,  connector);
-		localModel = new LocalPresentationModel(model);
+		configNames = new ArrayList<String>();
+		extractor = new ConfiguratorExtractor() {
+			public List<String> configuratorClassNames(List<File> jarFiles) throws DBConnectException {
+				if(configNames == null) {
+					throw new DBConnectException("");
+				}
+				return configNames;
+			}
+
+			@Override
+			public boolean acceptJarFile(File file) {
+				return true;
+			}
+		};
+		localModel = new LocalPresentationModel(model, extractor);
 		remoteModel = new RemotePresentationModel(model);
 		interceptor = new NullConnectInterceptor();
 		paramsReceived = null;
@@ -81,6 +98,10 @@ public class LoginPresentationModelFixture {
 		this.interceptor = interceptor;
 	}
 	
+	public void configNames(List<String> configNames) {
+		this.configNames = configNames;
+	}
+	
 	public void assertConnected(ConnectionParams expected) {
 		assertEquals(expected, paramsReceived);
 		List<FileConnectionParams> recentFileConnections = recentConnections.getRecentFileConnections();
@@ -105,6 +126,11 @@ public class LoginPresentationModelFixture {
 		if(excType != null) {
 			assertTrue(excType.isAssignableFrom(exceptionReceived.getClass()));
 		}
+	}
+	
+	public void assertNoError() {
+		assertNull(errorMsgReceived);
+		assertNull(exceptionReceived);
 	}
 	
 	public static interface ConnectInterceptor {
