@@ -21,8 +21,8 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 
 	private final List<RemoteSelectionListener> remoteListeners = new LinkedList<RemoteSelectionListener>();
 	
-	public RemotePresentationModel(LoginPresentationModel model) {
-		super(model);
+	public RemotePresentationModel(LoginPresentationModel model, CustomConfigSource configSource) {
+		super(model, configSource);
 	}
 
 	public void addListener(RemoteSelectionListener listener) {

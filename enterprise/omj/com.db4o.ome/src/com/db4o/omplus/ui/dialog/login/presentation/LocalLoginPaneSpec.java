@@ -5,16 +5,13 @@ package com.db4o.omplus.ui.dialog.login.presentation;
 import org.eclipse.jface.layout.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-import com.db4o.config.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.LocalSelectionListener;
-import com.db4o.omplus.ui.dialog.login.presentation.CustomConfigPane.JarPathSource;
 
 public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
@@ -23,8 +20,8 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
 	private final LocalPresentationModel model;
 	
-	public LocalLoginPaneSpec(LoginPresentationModel model) {
-		this.model = new LocalPresentationModel(model);
+	public LocalLoginPaneSpec(LocalPresentationModel model) {
+		this.model = model;
 	}
 
 	public ConnectionPresentationModel<FileConnectionParams> model() {
@@ -57,15 +54,6 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 		OMESWTUtil.assignWidgetId(readOnlyButton, READ_ONLY_BUTTON_ID);
 		readOnlyButton.setText("read-only");
 
-		Button configButton = new Button(innerComposite, SWT.PUSH);
-		configButton.setText("Config...");
-
-		configButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				openCustomConfigDialog(parent.getShell());
-			}
-		});
-		
 		newConnectionText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				sendStateChange(newConnectionText, readOnlyButton);
@@ -94,14 +82,13 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 			}
 		});		
 		
-		GridLayoutFactory.swtDefaults().numColumns(4).equalWidth(false).applyTo(innerComposite);
+		GridLayoutFactory.swtDefaults().numColumns(3).equalWidth(false).applyTo(innerComposite);
 		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(recentConnectionLabel);
-		GridDataFactory.swtDefaults().span(3, 1).grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(recentConnectionCombo);
+		GridDataFactory.swtDefaults().span(2, 1).grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(recentConnectionCombo);
 		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(newConnectionLabel);
-		GridDataFactory.swtDefaults().span(2, 1).grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(newConnectionText);
+		GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(newConnectionText);
 		GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(browseBtn);
-		GridDataFactory.swtDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(readOnlyButton);
-		GridDataFactory.swtDefaults().span(2, 1).align(SWT.RIGHT, SWT.CENTER).applyTo(configButton);
+		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(readOnlyButton);
 		
 		innerComposite.pack();
 	}
@@ -113,31 +100,6 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
 	private void sendStateChange(Text newConnectionText, Button readOnlyButton) {
 		model.state(newConnectionText.getText(), readOnlyButton.getSelection());
-	}
-
-	// FIXME factor out
-	private void openCustomConfigDialog(final Shell shell) {
-		Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
-		dialog.setLayout(new GridLayout());
-		dialog.setText("Jars/Configurators");
-		CustomConfigSink sink = new CustomConfigSink() {
-			public void customConfig(String[] jarPaths, String[] configClassNames) {
-				model.customConfig(jarPaths, configClassNames);
-			}
-		};
-		CustomConfigModel customModel = new CustomConfigModelImpl(sink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), model.err());
-		
-		JarPathSource jarPathSource = new JarPathSource() {
-			public String jarPath() {
-				FileDialog fileChooser = new FileDialog(shell, SWT.OPEN);
-				fileChooser.setFilterExtensions(new String[] { "*.jar" });
-				fileChooser.setFilterNames(new String[] { "Jar Files (*.jar)" });
-				return fileChooser.open();
-			}
-		};
-		new CustomConfigPane(dialog, dialog, customModel, jarPathSource);
-		dialog.pack(true);
-		dialog.open();
 	}
 
 }

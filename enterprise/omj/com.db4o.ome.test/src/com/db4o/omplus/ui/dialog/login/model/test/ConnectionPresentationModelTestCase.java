@@ -22,6 +22,7 @@ public class ConnectionPresentationModelTestCase {
 	private Connector connector;
 	private ErrorMessageSink errSink;
 	private RecentConnectionList recentConnections;
+	private CustomConfigSource configSource;
 	private MockConnectionPresentationModel model;
 	
 	@Before
@@ -29,8 +30,9 @@ public class ConnectionPresentationModelTestCase {
 		recentConnections = createMock(RecentConnectionList.class);
 		errSink = createMock(ErrorMessageSink.class);
 		connector = createMock(Connector.class);
+		configSource = createMock(CustomConfigSource.class);
 		LoginPresentationModel loginModel = new LoginPresentationModel(recentConnections, new ErrorMessageHandler(errSink), connector);
-		model = new MockConnectionPresentationModel(loginModel);
+		model = new MockConnectionPresentationModel(loginModel, configSource);
 	}
 	
 	@Test
@@ -177,12 +179,14 @@ public class ConnectionPresentationModelTestCase {
 		replay(recentConnections);
 		replay(errSink);
 		replay(connector);
+		replay(configSource);
 	}
 
 	private void verifyMocks() {
 		verify(recentConnections);
 		verify(errSink);
 		verify(connector);
+		verify(configSource);
 	}	
 	
 	private static class ConnectionParamMatcher implements IArgumentMatcher {
@@ -258,8 +262,8 @@ public class ConnectionPresentationModelTestCase {
 		
 		private String id;
 		
-		public MockConnectionPresentationModel(LoginPresentationModel model) {
-			super(model);
+		public MockConnectionPresentationModel(LoginPresentationModel model, CustomConfigSource configSource) {
+			super(model, configSource);
 		}
 
 		@Override

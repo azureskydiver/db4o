@@ -37,16 +37,5 @@ public class LoginDialogUtil {
 //		}
 		return combo;
 	}
-	
-	public static LoginButtonsPane createButtonsPane(Composite parent, Composite dialog, Composite relative, String openText, int offset, Closure4<Boolean> openAction) {
-		LoginButtonsPane buttonComposite = new LoginButtonsPane(parent, dialog, openText, openAction);
-		FormData data = new FormData();
-		data.top = new FormAttachment(relative, offset);
-		data.left = new FormAttachment(2,2);
-		data.right = new FormAttachment(100, -offset);
-		buttonComposite.setLayoutData(data);
-		buttonComposite.setLayout(new FormLayout());
-		return buttonComposite;
-	}
 
 }

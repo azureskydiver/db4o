@@ -13,7 +13,7 @@ import org.junit.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.presentation.*;
 import com.db4o.omplus.ui.dialog.login.test.*;
-import com.db4o.omplus.ui.dialog.login.test.LoginPresentationModelFixture.*;
+import com.db4o.omplus.ui.dialog.login.test.LoginPresentationModelFixture.ConnectInterceptor;
 
 public class LocalLoginPaneTestCase {
 
@@ -25,7 +25,7 @@ public class LocalLoginPaneTestCase {
 	public void setUp() {
 		fixture = new LoginPresentationModelFixture();
 		shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		loginPane = new LoginPane<FileConnectionParams>(shell, shell, "", new LocalLoginPaneSpec(fixture.model()));
+		loginPane = new LoginPane<FileConnectionParams>(shell, shell, "", new LocalLoginPaneSpec(fixture.localModel()));
 	}
 	
 	@After

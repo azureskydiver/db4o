@@ -15,8 +15,8 @@ public class RemoteLoginPaneSpec implements LoginPaneSpec<RemoteConnectionParams
 
 	private final RemotePresentationModel model;
 	
-	public RemoteLoginPaneSpec(LoginPresentationModel model) {
-		this.model = new RemotePresentationModel(model);
+	public RemoteLoginPaneSpec(RemotePresentationModel model) {
+		this.model = model;
 	}
 
 	public ConnectionPresentationModel<RemoteConnectionParams> model() {

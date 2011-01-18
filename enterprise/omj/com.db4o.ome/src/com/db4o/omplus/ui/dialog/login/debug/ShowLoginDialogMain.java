@@ -1,14 +1,15 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
-package com.db4o.omplus.debug;
+package com.db4o.omplus.ui.dialog.login.debug;
 
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
+import com.db4o.omplus.debug.*;
 import com.db4o.omplus.ui.dialog.login.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 
-public class RunShell {
+public class ShowLoginDialogMain {
 	public static void main(String[] args) {
 	    Display display = new Display();
 	    final Shell shell = new Shell(display);
@@ -34,13 +35,9 @@ public class RunShell {
 				return true;
 			}
 		};
-	    //LoginPresentationModel model = new LoginPresentationModel(new PresetRecentConnectionList(), err, connector);
-	    //LoginPaneBase pane = new RemoteLoginPane(shell, shell, model);
 
 	    LoginDialog dialog = new LoginDialog(shell, new InMemoryOMEDataStore(), connector, err);
 	    dialog.open();
-	    //shell.setSize(430, 230);
-	    //pane.setSize(430, 230);
 	    
 	    shell.open();
 	    while (!shell.isDisposed()) {

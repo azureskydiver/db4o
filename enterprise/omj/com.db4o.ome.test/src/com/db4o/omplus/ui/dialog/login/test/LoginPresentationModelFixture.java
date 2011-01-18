@@ -51,8 +51,8 @@ public class LoginPresentationModelFixture {
 			}
 		};
 		model = new LoginPresentationModel(recentConnections, new ErrorMessageHandler(errSink),  connector);
-		localModel = new LocalPresentationModel(model);
-		remoteModel = new RemotePresentationModel(model);
+		localModel = new LocalPresentationModel(model, null); // FIXME
+		remoteModel = new RemotePresentationModel(model, null); // FIXME
 		interceptor = new NullConnectInterceptor();
 		paramsReceived = null;
 		exceptionReceived = null;
