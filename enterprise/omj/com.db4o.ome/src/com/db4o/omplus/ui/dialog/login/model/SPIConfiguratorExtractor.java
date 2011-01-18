@@ -40,6 +40,6 @@ public class SPIConfiguratorExtractor implements ConfiguratorExtractor {
 	}
 
 	public boolean acceptJarFile(File file) {
-		return file.isFile() && !file.getName().endsWith(".jar");
+		return file.isFile() && file.getName().endsWith(".jar");
 	}
 }
