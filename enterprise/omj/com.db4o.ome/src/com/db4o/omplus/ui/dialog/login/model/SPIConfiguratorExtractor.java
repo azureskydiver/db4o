@@ -18,8 +18,8 @@ public class SPIConfiguratorExtractor implements ConfiguratorExtractor {
 		this.spi = spi;
 	}
 	
-	public List<String> configuratorClassNames(List<File> jarFiles) throws DBConnectException {
-		URLClassLoader cl = new URLClassLoader(urls(jarFiles), Activator.class.getClassLoader());
+	public List<String> configuratorClassNames(File jarFile) throws DBConnectException {
+		URLClassLoader cl = new URLClassLoader(new URL[] { url(jarFile) }, Activator.class.getClassLoader());
 		Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(spi, cl);
 		Set<String> classNames = new HashSet<String>();
 		while(ps.hasNext()) {
@@ -31,18 +31,13 @@ public class SPIConfiguratorExtractor implements ConfiguratorExtractor {
 		return configClassNames;
 	}
 
-	private URL[] urls(List<File> jarFiles) throws DBConnectException { // FIXME better exception
-		URL[] urls = new URL[jarFiles.size()];
-		for (int jarIdx = 0; jarIdx < jarFiles.size(); jarIdx++) {
-			File jarFile = jarFiles.get(jarIdx);
-			try {
-				urls[jarIdx] = jarFile.toURI().toURL();
-			} 
-			catch (MalformedURLException exc) {
-				throw new DBConnectException("invalid jar reference: " + jarFile, exc);
-			}
+	private URL url(File jarFile) throws DBConnectException { // FIXME better exception
+		try {
+			return jarFile.toURI().toURL();
+		} 
+		catch (MalformedURLException exc) {
+			throw new DBConnectException("invalid jar reference: " + jarFile, exc);
 		}
-		return urls;
 	}
 
 	public boolean acceptJarFile(File file) {
