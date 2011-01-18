@@ -18,14 +18,14 @@ import com.db4o.omplus.ui.dialog.login.test.LoginPresentationModelFixture.*;
 public class LocalLoginPaneTestCase {
 
 	private Shell shell;
-	private LoginPaneBase<FileConnectionParams> loginPane;
+	private LoginPane<FileConnectionParams> loginPane;
 	private LoginPresentationModelFixture fixture;
 	
 	@Before
 	public void setUp() {
 		fixture = new LoginPresentationModelFixture();
 		shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		loginPane = new LoginPaneBase<FileConnectionParams>(shell, shell, "", new LocalLoginPaneSpec(fixture.model()));
+		loginPane = new LoginPane<FileConnectionParams>(shell, shell, "", new LocalLoginPaneSpec(fixture.model()));
 	}
 	
 	@After
