@@ -2,19 +2,16 @@
 
 package com.db4o.omplus.ui.dialog.login.presentation;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
 import org.eclipse.jface.layout.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.List;
 
-import com.db4o.config.*;
 import com.db4o.omplus.*;
+import com.db4o.omplus.connection.*;
+import com.db4o.omplus.debug.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
+import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.LocalSelectionListener;
 
 public class CustomConfigPane extends Composite {
 
@@ -42,26 +39,29 @@ public class CustomConfigPane extends Composite {
 				fileChooser.setFilterExtensions(new String[] { "*.jar" });
 				fileChooser.setFilterNames(new String[] { "Jar Files (*.jar)" });
 				String jarPath = fileChooser.open();
-				// TODO duplicates
 				if(jarPath != null){
-					jarList.add(jarPath);
-					updateConfiguratorList(jarList, confList);
+					model.addJarPaths(jarPath);
 				}
 			}
 		});		
 		removeButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				String[] selectedItems = jarList.getSelection();
-				if(selectedItems.length == 0) {
-					return;
+				if(selectedItems.length > 0) {
+					model.removeJarPaths(selectedItems);
 				}
-				for (String item : selectedItems) {
-					jarList.remove(item);
-				}
-				updateConfiguratorList(jarList, confList);
 			}
 		});		
 
+		model.addListener(new LocalSelectionListener() {
+			public void localSelection(String path, boolean readOnly) {
+			}
+			
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
+				jarList.setItems(jarPaths);
+				confList.setItems(configClassNames);
+			}
+		});
 		
 		GridLayoutFactory.swtDefaults().numColumns(4).equalWidth(true).applyTo(this);
 		GridDataFactory.swtDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(jarLabel);
@@ -72,40 +72,6 @@ public class CustomConfigPane extends Composite {
 		GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(removeButton);
 		GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(okButton);
 		GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(cancelButton);
-	}
-
-	public void updateConfiguratorList(List jarList, List configList) {
-		configList.removeAll();
-		java.util.List<String> configNames = retrieveConfiguratorList(jarList.getItems());
-		System.out.println(configNames);
-		for (String configName : configNames) {
-			configList.add(configName);
-		}
-	}
-	
-	private java.util.List<String> retrieveConfiguratorList(String[] jarPaths) {
-		java.util.List<String> configNames = new ArrayList<String>();
-		try {
-			URL[] urls = new URL[jarPaths.length];
-			for (int jarIdx = 0; jarIdx < jarPaths.length; jarIdx++) {
-				urls[jarIdx] = new File(jarPaths[jarIdx]).toURI().toURL();
-			}
-			URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
-			Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
-			while(ps.hasNext()) {
-				EmbeddedConfigurationItem configurator = ps.next();
-				configNames.add(configurator.getClass().getName());
-			}
-			Collections.sort(configNames);
-		} 
-		catch (Exception exc) {
-			exc.printStackTrace();
-		}
-		return configNames;
-	}
-
-	protected void addJarPath(String jarPath) {
-		System.out.println(jarPath);
 	}
 
 	private Label label(String text) {
@@ -124,7 +90,18 @@ public class CustomConfigPane extends Composite {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setLayout (new GridLayout());
-		new CustomConfigPane(shell, shell, null);
+		ErrorMessageSink err = new ErrorMessageSink() {
+			@Override
+			protected void showError(String msg) {
+				System.err.println(msg);
+			}
+			
+			@Override
+			protected void logExc(Throwable exc) {
+				exc.printStackTrace();
+			}
+		};
+		new CustomConfigPane(shell, shell, new LocalPresentationModel(new LoginPresentationModel(new DataStoreRecentConnectionList(new InMemoryOMEDataStore()), err, null), new SPIConfiguratorExtractor()));
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {
