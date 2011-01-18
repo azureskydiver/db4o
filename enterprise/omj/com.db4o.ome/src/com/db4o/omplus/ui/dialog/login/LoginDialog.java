@@ -92,7 +92,7 @@ public class LoginDialog {
 			Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 			dialog.setLayout(new GridLayout());
 			dialog.setText("Jars/Configurators");
-			CustomConfigModel customModel = new CustomConfigModelImpl(configSink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), errHandler);			
+			CustomConfigModel customModel = new CustomConfigModelImpl(jarPaths, selectedConfigNames, configSink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), errHandler);			
 			JarPathSource jarPathSource = new JarPathSource() {
 				public String jarPath() {
 					FileDialog fileChooser = new FileDialog(shell, SWT.OPEN);

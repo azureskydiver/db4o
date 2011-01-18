@@ -45,7 +45,7 @@ public class ShowCustomConfigDialogMain {
 				return fileChooser.open();
 			}
 		};
-		new CustomConfigPane(shell, shell, new CustomConfigModelImpl(sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)), jarPathSource);
+		new CustomConfigPane(shell, shell, new CustomConfigModelImpl(new String[0], new String[0], sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)), jarPathSource);
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {

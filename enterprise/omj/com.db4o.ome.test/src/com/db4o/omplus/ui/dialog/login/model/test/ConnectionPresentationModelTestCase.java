@@ -15,6 +15,7 @@ import com.db4o.foundation.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
+import com.db4o.omplus.ui.dialog.login.model.ConnectionPresentationModel.ConnectionPresentationListener;
 
 public class ConnectionPresentationModelTestCase {
 
@@ -23,6 +24,7 @@ public class ConnectionPresentationModelTestCase {
 	private ErrorMessageSink errSink;
 	private RecentConnectionList recentConnections;
 	private CustomConfigSource configSource;
+	private ConnectionPresentationListener listener;
 	private MockConnectionPresentationModel model;
 	
 	@Before
@@ -31,6 +33,7 @@ public class ConnectionPresentationModelTestCase {
 		errSink = createMock(ErrorMessageSink.class);
 		connector = createMock(Connector.class);
 		configSource = createMock(CustomConfigSource.class);
+		listener = createMock(ConnectionPresentationListener.class);
 		LoginPresentationModel loginModel = new LoginPresentationModel(recentConnections, new ErrorMessageHandler(errSink), connector);
 		model = new MockConnectionPresentationModel(loginModel, configSource);
 	}
@@ -175,11 +178,52 @@ public class ConnectionPresentationModelTestCase {
 		verifyMocks();
 	}
 
+	@Test
+	public void testListenerStateChange() {
+		listener.connectionPresentationState(true, 0, 0);
+		replayMocks();
+		model.addConnectionPresentationListener(listener);
+		verifyMocks();
+		resetMocks();
+
+		final String selectedId = "foo";
+		final String[] selectedJarFiles = { "foo.jar" };
+		final String[] selectedConfigNames = { "FooConfig" };
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId, selectedJarFiles, selectedConfigNames)));
+		listener.connectionPresentationState(false, 1, 1);
+		replayMocks();
+		model.select(0);
+		verifyMocks();
+		resetMocks();
+		
+		listener.connectionPresentationState(true, 0, 0);
+		replayMocks();
+		model.state("bar");
+		verifyMocks();
+	}
+	
+	@Test
+	public void testListenerConfigChange() {
+		listener.connectionPresentationState(true, 0, 0);
+		replayMocks();
+		model.addConnectionPresentationListener(listener);
+		verifyMocks();
+		resetMocks();
+		
+		final String[] jarFiles = { "bar.jar" };
+		final String[] configNames = { "BarConfig" };
+		listener.connectionPresentationState(true, 1, 1);
+		replayMocks();
+		model.customConfig(jarFiles, configNames);
+		verifyMocks();
+	}
+	
 	private void replayMocks() {
 		replay(recentConnections);
 		replay(errSink);
 		replay(connector);
 		replay(configSource);
+		replay(listener);
 	}
 
 	private void verifyMocks() {
@@ -187,8 +231,17 @@ public class ConnectionPresentationModelTestCase {
 		verify(errSink);
 		verify(connector);
 		verify(configSource);
+		verify(listener);
 	}	
-	
+
+	private void resetMocks() {
+		reset(recentConnections);
+		reset(errSink);
+		reset(connector);
+		reset(configSource);
+		reset(listener);
+	}	
+
 	private static class ConnectionParamMatcher implements IArgumentMatcher {
 		
 		private String expectedId;

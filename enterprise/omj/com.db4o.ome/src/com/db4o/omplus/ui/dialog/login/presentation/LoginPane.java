@@ -8,9 +8,12 @@ import org.eclipse.swt.widgets.*;
 import com.db4o.foundation.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
+import com.db4o.omplus.ui.dialog.login.model.ConnectionPresentationModel.ConnectionPresentationListener;
 
 public class LoginPane<P extends ConnectionParams> extends Composite {
 
+	private static final int GAP = 2;
+	
 	private ConnectionPresentationModel<P> model;
 	
 	public LoginPane(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
@@ -23,12 +26,16 @@ public class LoginPane<P extends ConnectionParams> extends Composite {
 	private void createContents(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
 		Composite innerComposite = new Composite(this, SWT.BORDER);
 		spec.create(this, innerComposite);
-		FormData data = new FormData();
-		data.top = new FormAttachment(2, 2);
-		data.left = new FormAttachment(2, 2);
-		data.right = new FormAttachment(98, -2);
-		data.bottom = new FormAttachment(80, -2);
-		innerComposite.setLayoutData(data);
+		
+		final Label statusLabel = new Label(this, SWT.BORDER);
+		statusLabel.setText("no custom config");
+		model.addConnectionPresentationListener(new ConnectionPresentationListener() {
+			public void connectionPresentationState(boolean editEnabled, int jarPathCount, int configuratorCount) {
+				String msg = jarPathCount == 0 ? "no custom config" : jarPathCount + " jars, " + configuratorCount + " configurators";
+				statusLabel.setText(msg);
+			}
+		});
+		
 		Closure4<Boolean> openAction = new Closure4<Boolean>() {
 			public Boolean run() {
 				return model.connect();
@@ -40,14 +47,20 @@ public class LoginPane<P extends ConnectionParams> extends Composite {
 			}
 		};
 		LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, openAction, customAction);
-		data = new FormData();
-		data.top = new FormAttachment(innerComposite, 2);
-		data.left = new FormAttachment(2, 2);
-		data.right = new FormAttachment(98, -2);
-		data.bottom = new FormAttachment(98, -2);
-		buttonComposite.setLayoutData(data);
+
+		addComponentBelow(innerComposite, null, 70);
+		addComponentBelow(statusLabel, innerComposite, 80);
+		addComponentBelow(buttonComposite, statusLabel, 100);
 
 		pack(true);
 	}
-	
+
+	private void addComponentBelow(Control component, Control above, int bottom) {
+		FormData data = new FormData();
+		data.top = above == null ? new FormAttachment(GAP, GAP) : new FormAttachment(above, GAP);
+		data.left = new FormAttachment(GAP, GAP);
+		data.right = new FormAttachment(100 - GAP, -GAP);
+		data.bottom = new FormAttachment(bottom - GAP, -GAP);
+		component.setLayoutData(data);
+	}
 }
