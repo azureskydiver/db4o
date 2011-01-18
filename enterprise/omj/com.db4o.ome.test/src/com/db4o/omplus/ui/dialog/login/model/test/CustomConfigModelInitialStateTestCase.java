@@ -1,14 +1,7 @@
 /* Copyright (C) 2004 - 2010  Versant Inc.  http://www.db4o.com */
 package com.db4o.omplus.ui.dialog.login.model.test;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.*;
-
 import org.junit.*;
-
-import com.db4o.omplus.*;
-import com.db4o.omplus.ui.dialog.login.model.*;
 
 public class CustomConfigModelInitialStateTestCase extends CustomConfigModelTestCaseBase {
 
@@ -36,19 +29,14 @@ public class CustomConfigModelInitialStateTestCase extends CustomConfigModelTest
 	}
 
 	@Override
-	protected CustomConfigModel createModel(ConfiguratorExtractor extractorMock, CustomConfigSink sinkMock, ErrorMessageHandler errHandler) {
-		try {
-			expect(extractorMock.acceptJarFile(file(INITIAL_JAR_PATH))).andReturn(true);
-			expect(extractorMock.configuratorClassNames(file(INITIAL_JAR_PATH))).andReturn(Arrays.asList(INITIAL_CONFIG_NAME));
-			replayMocks();
-			CustomConfigModel model = new CustomConfigModel(arr(INITIAL_JAR_PATH), arr(INITIAL_CONFIG_NAME), sinkMock, extractorMock, errHandler);
-			verifyMocks();
-			resetMocks();
-			return model;
-		} 
-		catch (Exception exc) {
-			throw new RuntimeException(exc);
-		} 
+	protected String[] initialConfigNames() {
+		return new String[] { INITIAL_CONFIG_NAME };
+	}
+
+	@Override
+	protected String[] initialJarPaths() {
+		return new String[] { INITIAL_JAR_PATH };
+
 	}
 	
 }

@@ -139,7 +139,7 @@ public class CustomConfigPane extends Composite {
 				System.out.println(java.util.Arrays.toString(configClassNames));
 			}
 		};
-		new CustomConfigPane(shell, shell, new CustomConfigModel(sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)));
+		new CustomConfigPane(shell, shell, new CustomConfigModelImpl(sink, new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), new ErrorMessageHandler(errSink)));
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {

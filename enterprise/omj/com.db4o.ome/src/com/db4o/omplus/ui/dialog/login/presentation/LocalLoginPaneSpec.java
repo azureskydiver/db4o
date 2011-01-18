@@ -124,7 +124,7 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 				model.customConfig(jarPaths, configClassNames);
 			}
 		};
-		CustomConfigModel customModel = new CustomConfigModel(sink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), model.err());
+		CustomConfigModel customModel = new CustomConfigModelImpl(sink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), model.err());
 		new CustomConfigPane(dialog, dialog, customModel);
 		dialog.pack(true);
 		dialog.open();

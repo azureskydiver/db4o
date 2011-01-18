@@ -17,8 +17,6 @@ public abstract class CustomConfigModelTestCaseBase {
 
 	protected CustomConfigModel model;
 
-	protected abstract CustomConfigModel createModel(ConfiguratorExtractor extractorMock, CustomConfigSink sinkMock, ErrorMessageHandler errHandler);
-
 	protected CustomConfigListener listener;
 	private CustomConfigSink sink;
 	protected ConfiguratorExtractor extractor;
@@ -48,8 +46,7 @@ public abstract class CustomConfigModelTestCaseBase {
 		listener = createMock(CustomConfigListener.class);
 		extractor = createMock(ConfiguratorExtractor.class);
 		errSink = createMock(ErrorMessageSink.class);
-		model = createModel(extractor, sink, new ErrorMessageHandler(errSink));				
-		model.addListener(listener);
+		model = createModel(new ErrorMessageHandler(errSink));
 	}
 
 	public static <T extends Throwable> T eqExc(Class<T> expected) {
@@ -175,5 +172,37 @@ public abstract class CustomConfigModelTestCaseBase {
 		Collections.sort(list);
 		return list;
 	}
+
+	protected CustomConfigModel createModel(ErrorMessageHandler errHandler) {
+		try {
+			String[] initialJarPaths = initialJarPaths();
+			String[] initialConfigNames = initialConfigNames();
+			for (String jarPath : initialJarPaths) {
+				expect(extractor.acceptJarFile(file(jarPath))).andReturn(true);
+			}
+			for (String jarPath : initialJarPaths) {
+				expect(extractor.configuratorClassNames(file(jarPath))).andReturn(Arrays.asList(initialConfigNames));
+			}
+			replayMocks();
+			CustomConfigModel model = new CustomConfigModelImpl(initialJarPaths, initialConfigNames, sink, extractor, errHandler);
+			verifyMocks();
+			resetMocks();
+
+			listener.customConfig(aryEq(canonicalPaths(initialJarPaths)), aryEq(sort(initialConfigNames)), aryEq(sort(initialConfigNames)));
+			replayMocks();
+			model.addListener(listener);
+			verifyMocks();
+			resetMocks();
+
+			return model;
+		} 
+		catch (Exception exc) {
+			throw new RuntimeException(exc);
+		} 
+	}
+
+	protected abstract String[] initialConfigNames();
+
+	protected abstract String[] initialJarPaths();
 
 }

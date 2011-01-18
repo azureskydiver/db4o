@@ -7,9 +7,7 @@ import static org.easymock.EasyMock.*;
 import org.easymock.*;
 import org.junit.*;
 
-import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
-import com.db4o.omplus.ui.dialog.login.model.*;
 
 
 public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
@@ -142,8 +140,13 @@ public class CustomConfigModelTestCase extends CustomConfigModelTestCaseBase {
 	}
 
 	@Override
-	protected CustomConfigModel createModel(ConfiguratorExtractor extractorMock, CustomConfigSink sinkMock, ErrorMessageHandler errHandler) {
-		return new CustomConfigModel(new String[0], new String[0], sinkMock , extractorMock , errHandler);
+	protected String[] initialConfigNames() {
+		return new String[0];
+	}
+
+	@Override
+	protected String[] initialJarPaths() {
+		return new String[0];
 	}
 	
 }
