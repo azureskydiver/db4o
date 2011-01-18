@@ -1,10 +1,14 @@
 package com.db4o.omplus.connection;
 
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.omplus.*;
+import com.db4o.reflect.jdk.*;
 
 public abstract class ConnectionParams {
 	
@@ -76,4 +80,36 @@ public abstract class ConnectionParams {
 		return getPath();
 	}
 
+	protected void configureCustom(EmbeddedConfiguration config) throws DBConnectException {
+		URL[] urls = jarURLs();
+		URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
+		@SuppressWarnings({ "unchecked", "restriction" })
+		Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
+		if(ps.hasNext()) {
+			EmbeddedConfigurationItem configurator = ps.next();
+			System.out.println("CONFIG: " + configurator);
+			config.addConfigurationItem(configurator);
+		}
+		config.common().reflectWith(new JdkReflector(cl));
+	}
+
+	private URL[] jarURLs() throws DBConnectException {
+		if(jarPaths == null || jarPaths.length == 0) {
+			return new URL[0];
+		}
+		URL[] urls = new URL[jarPaths.length];
+		for (int jarIdx = 0; jarIdx < jarPaths.length; jarIdx++) {
+			File jarFile = new File(jarPaths[jarIdx]);
+			if(!jarFile.isFile() || !jarFile.canRead()) {
+				throw new DBConnectException(this, "cannot access jar: " + jarFile.getAbsolutePath());
+			}
+			try {
+				urls[jarIdx] = jarFile.toURI().toURL();
+			} 
+			catch (MalformedURLException exc) {
+				throw new DBConnectException(this, "invalid url for jar: " + jarFile.getAbsolutePath(), exc);
+			}
+		}
+		return urls;
+	}
 }
