@@ -198,10 +198,10 @@
 	<target name="flare-drs-java" >
 
 		<flare output="${dir.dist.flare.temp}" target="JavaPdf" projectDirectory="${flare.project.drs.folder}" />
-		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/drs-reference-java.pdf" todir="${zipbasedir}/doc/reference" />
+		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/drs-reference-java.pdf" todir="${drs.dir.dist.temp}/doc/reference" />
 		
 		<flare output="${dir.dist.flare.temp}" target="JavaWeb" projectDirectory="${flare.project.drs.folder}"  />
-		<copy todir="${zipbasedir}/doc/reference">
+		<copy todir="${drs.dir.dist.temp}/doc/reference">
 			<fileset dir="${dir.dist.flare.temp}/Output/JavaWeb">
 				<include name="**/*" />
 			</fileset>
@@ -241,6 +241,7 @@
 			<zipfileset dir="${drs.dir.src}" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
+			<zipfileset dir="${drs.dir.dist.temp}/doc/reference" prefix="${zipbasedir}/doc/reference" />
 
 			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
 			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
