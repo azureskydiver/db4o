@@ -1,15 +1,11 @@
 package com.db4o.omplus.connection;
 
 import java.io.*;
-import java.net.*;
-import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.omplus.*;
-import com.db4o.reflect.jdk.*;
 
 
 public class FileConnectionParams extends ConnectionParams {
@@ -17,7 +13,6 @@ public class FileConnectionParams extends ConnectionParams {
 	private final static String OLD_FORMAT = "Database is of old Format";
 	private final static String GENERIC_OBJ = "com.db4o.reflect.generic.GenericObject";
 	private static final String VERSION_UPDATE_TXT = "Old database file format detected. Would you like to upgrade ?";
-
 
 	private String filePath;
 	private boolean readOnly;
@@ -44,33 +39,12 @@ public class FileConnectionParams extends ConnectionParams {
 		return readOnly;
 	}
 	
-	public EmbeddedConfiguration configure(){
+	public EmbeddedConfiguration configure() throws DBConnectException {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		configureCommon(config.common());
 		configureCustom(config);
 		config.file().readOnly(readOnly);
 		return config;
-	}
-
-	private void configureCustom(EmbeddedConfiguration config) {
-		String jarPath = System.getProperty("omj.custom.jar");
-		if(jarPath == null) {
-			return;
-		}
-		try {
-			URL[] urls = new URL[] { new File(jarPath).toURI().toURL() };
-			URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
-			Iterator<EmbeddedConfigurationItem> ps = sun.misc.Service.providers(EmbeddedConfigurationItem.class, cl);
-			if(ps.hasNext()) {
-				EmbeddedConfigurationItem configurator = ps.next();
-				System.out.println("CONFIG: " + configurator);
-				config.addConfigurationItem(configurator);
-			}
-			config.common().reflectWith(new JdkReflector(cl));
-		} 
-		catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 
 	@Override
