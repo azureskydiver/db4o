@@ -58,9 +58,10 @@ public class CustomConfigPane extends Composite {
 		});
 		
 		model.addListener(new CustomConfigListener() {
-			public void customConfig(String[] jarPaths, String[] configClassNames) {
+			public void customConfig(String[] jarPaths, String[] configClassNames, String[] selectedConfigNames) {
 				jarList.setItems(jarPaths);
 				confList.setItems(configClassNames);
+				confList.setSelection(selectedConfigNames);
 			}
 		});
 		

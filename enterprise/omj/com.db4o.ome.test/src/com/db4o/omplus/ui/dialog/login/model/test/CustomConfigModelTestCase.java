@@ -27,7 +27,6 @@ public class CustomConfigModelTestCase {
 		
 	@Before
 	public void setUp() {
-
 		sink = createMock(CustomConfigSink.class);
 		listener = createMock(CustomConfigListener.class);
 		extractor = createMock(ConfiguratorExtractor.class);
@@ -40,20 +39,30 @@ public class CustomConfigModelTestCase {
 	public void testAddJars() throws Exception {
 		final String[] jarPaths = { "foo.jar", "bar.jar" };
 		final String[] configNames = { "FooConfig", "BarConfig" };
-		assertAddJars(jarPaths, configNames, new String[0], new String[0]);	
-		assertCommit(jarPaths, configNames);
+		assertAddJars(jarPaths, configNames, new String[0], new String[0], new String[0]);	
+		assertCommit(jarPaths, new String[0]);
 	}
-	
+
 	@Test
-	public void testMultipleAddJars() throws Exception {
+	public void testAddJarsAndSelectOne() throws Exception {
+		final String[] jarPaths = { "foo.jar", "bar.jar" };
+		final String[] configNames = { "FooConfig", "BarConfig" };
+		assertAddJars(jarPaths, configNames, new String[0], new String[0], new String[0]);	
+		assertSelectConfigNames(jarPaths, configNames, arr(configNames[0]));
+		assertCommit(jarPaths, arr(configNames[0]));
+	}
+
+	@Test
+	public void testMultipleAddJarsAndSelectOne() throws Exception {
 		final String firstJar = "foo.jar";
 		final String firstConfigName = "FooConfig";
-		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0]);
+		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0], new String[0]);
 		
 		final String secondJar = "bar.jar";
 		final String secondConfigName = "BarConfig";
-		assertAddJars(arr(secondJar), arr(secondConfigName), arr(firstJar), arr(firstConfigName));
-		assertCommit(arr(firstJar, secondJar), arr(firstConfigName, secondConfigName));
+		assertAddJars(arr(secondJar), arr(secondConfigName), arr(firstJar), arr(firstConfigName), new String[0]);
+		assertSelectConfigNames(arr(firstJar, secondJar), arr(firstConfigName, secondConfigName), arr(firstConfigName));
+		assertCommit(arr(firstJar, secondJar), arr(firstConfigName));
 	}
 
 	@Test
@@ -66,7 +75,8 @@ public class CustomConfigModelTestCase {
 	public void testAddJarsFailureRetainsLastState() throws Exception {
 		final String firstJar = "foo.jar";
 		final String firstConfigName = "FooConfig";
-		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0]);
+		assertAddJars(arr(firstJar), arr(firstConfigName), new String[0], new String[0], new String[0]);
+		assertSelectConfigNames(arr(firstJar), arr(firstConfigName), arr(firstConfigName));
 		assertAddJarsFailure(arr("bar.jar"), 0);
 		assertCommit(arr(firstJar), arr(firstConfigName));
 	}
@@ -77,8 +87,9 @@ public class CustomConfigModelTestCase {
 		final String removedJar = "bar.jar";
 		final String retainedConfigName = "FooConfig";
 		final String removedConfigName = "BarConfig";
-		assertAddJars(arr(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0]);
-		assertRemoveJars(arr(removedJar), arr(retainedJar), arr(retainedConfigName));
+		assertAddJars(arr(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0], new String[0]);
+		assertSelectConfigNames(arr(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), arr(retainedConfigName));
+		assertRemoveJars(arr(removedJar), arr(retainedJar), arr(retainedConfigName), arr(retainedConfigName));
 		assertCommit(arr(retainedJar), arr(retainedConfigName));
 	}
 
@@ -88,9 +99,9 @@ public class CustomConfigModelTestCase {
 		final String removedJar = "bar.jar";
 		final String retainedConfigName = "FooConfig";
 		final String removedConfigName = "BarConfig";
-		assertAddJars(arr(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0]);
-		assertRemoveJars(arr(removedJar), arr(retainedJar), arr(retainedConfigName));
-		assertRemoveJars(arr(retainedJar), new String[0], new String[0]);
+		assertAddJars(arr(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0], new String[0]);
+		assertRemoveJars(arr(removedJar), arr(retainedJar), arr(retainedConfigName), new String[0]);
+		assertRemoveJars(arr(retainedJar), new String[0], new String[0], new String[0]);
 		assertCommit(new String[0], new String[0]);
 	}
 
@@ -116,12 +127,12 @@ public class CustomConfigModelTestCase {
 		final String retainedConfigName = "FooConfig";
 		final String removedJar = "bar.jar";
 		final String removedConfigName = "BarConfig";
-		assertAddJars(canonicalPaths(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0]);
+		assertAddJars(canonicalPaths(retainedJar, removedJar), arr(retainedConfigName, removedConfigName), new String[0], new String[0], new String[0]);
 		expect(extractor.configuratorClassNames(files(retainedJar))).andThrow(new DBConnectException(""));
 		checkOrder(errSink, false);
 		errSink.showError(EasyMock.<String>anyObject());
 		errSink.logExc(eqExc(DBConnectException.class));
-		listener.customConfig(aryEq(new String[0]), aryEq(new String[0]));
+		listener.customConfig(aryEq(new String[0]), aryEq(new String[0]), aryEq(new String[0]));
 		replayMocks();
 		model.removeJarPaths(removedJar);
 		verifyMocks();
@@ -160,13 +171,13 @@ public class CustomConfigModelTestCase {
 		verifyMocks();
 	}
 	
-	private void assertAddJars(String[] jarPaths, String[] configNames, String[] existingJarPaths, String[] existingConfigNames) throws Exception {
+	private void assertAddJars(String[] jarPaths, String[] configNames, String[] existingJarPaths, String[] existingConfigNames, String[] selectedConfigNames) throws Exception {
 		final List<String> allJarsList = concat(canonicalPaths(jarPaths), canonicalPaths(existingJarPaths));
 		final List<String> allConfigNamesList = concat(configNames, existingConfigNames);
 		final String[] allJars = allJarsList.toArray(new String[allJarsList.size()]);
 		final String[] allConfigNames = allConfigNamesList.toArray(new String[allConfigNamesList.size()]);
 		
-		listener.customConfig(aryEq(allJars), aryEq(allConfigNames));
+		listener.customConfig(aryEq(allJars), aryEq(allConfigNames), aryEq(selectedConfigNames));
 		for (String jarName : jarPaths) {
 			expectAcceptJarFileInvocation(jarName, true);
 		}
@@ -189,16 +200,25 @@ public class CustomConfigModelTestCase {
 		resetMocks();		
 	}
 
-	private void assertRemoveJars(String[] removedJars, String[] retainedJars, String[] retainedConfigNames) throws Exception {
+	private void assertRemoveJars(String[] removedJars, String[] retainedJars, String[] retainedConfigNames, String[] selectedRetainedConfigNames) throws Exception {
 		expect(extractor.configuratorClassNames(files(retainedJars))).andReturn(Arrays.asList(retainedConfigNames));
-		listener.customConfig(aryEq(canonicalPaths(retainedJars)), aryEq(retainedConfigNames));
+		listener.customConfig(aryEq(canonicalPaths(retainedJars)), aryEq(retainedConfigNames), aryEq(selectedRetainedConfigNames));
 		replayMocks();
 		
 		model.removeJarPaths(removedJars);
 		verifyMocks();
 		resetMocks();
 	}
-	
+
+	private void assertSelectConfigNames(String[] jarPaths, String[] configNames, String[] selectedConfigNames) throws IOException {
+		listener.customConfig(aryEq(canonicalPaths(jarPaths)), aryEq(sort(configNames)), aryEq(sort(selectedConfigNames)));
+		replayMocks();		
+		model.selectConfigClassNames(selectedConfigNames);
+		verifyMocks();
+		resetMocks();
+	}
+
+
 	private void expectAcceptJarFileInvocation(final String jarPath, final boolean retVal) throws IOException {
 		expect(extractor.acceptJarFile(file(jarPath))).andReturn(retVal);
 	}
