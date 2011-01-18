@@ -1,15 +1,16 @@
 package com.db4o.omplus.connection;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
-
-import sun.misc.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.omplus.*;
 import com.db4o.omplus.custom.*;
+import com.db4o.reflect.jdk.*;
 
 
 public class FileConnectionParams extends ConnectionParams {
@@ -52,9 +53,23 @@ public class FileConnectionParams extends ConnectionParams {
 	}
 
 	private void configureCustom(EmbeddedConfiguration config) {
-		Iterator<OMJCustomConfigurator> ps = Service.providers(OMJCustomConfigurator.class);
-		if(ps.hasNext()) {
-			ps.next().configure(config);
+		String jarPath = System.getProperty("omj.custom.jar");
+		if(jarPath == null) {
+			return;
+		}
+		try {
+			URL[] urls = new URL[] { new File(jarPath).toURI().toURL() };
+			URLClassLoader cl = new URLClassLoader(urls, Activator.class.getClassLoader());
+			Iterator<OMJCustomConfigurator> ps = sun.misc.Service.providers(OMJCustomConfigurator.class, cl);
+			if(ps.hasNext()) {
+				OMJCustomConfigurator configurator = ps.next();
+				System.out.println("CONFIG: " + configurator);
+				configurator.configure(config);
+			}
+			config.common().reflectWith(new JdkReflector(cl));
+		} 
+		catch (Exception exc) {
+			exc.printStackTrace();
 		}
 	}
 
