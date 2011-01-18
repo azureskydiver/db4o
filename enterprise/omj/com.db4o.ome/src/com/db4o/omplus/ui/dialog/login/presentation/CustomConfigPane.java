@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.List;
 
 import com.db4o.omplus.*;
 import com.db4o.omplus.custom.*;
-import com.db4o.reflect.jdk.*;
 
 public class CustomConfigPane extends Composite {
 

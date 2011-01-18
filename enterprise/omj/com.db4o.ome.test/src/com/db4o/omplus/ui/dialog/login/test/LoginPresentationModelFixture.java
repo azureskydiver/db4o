@@ -19,6 +19,8 @@ public class LoginPresentationModelFixture {
 	private final RecentConnectionList recentConnections;
 	private final List<FileConnectionParams> presetFileParams;
 	private final LoginPresentationModel model;
+	private final LocalPresentationModel localModel;
+	private final RemotePresentationModel remoteModel;
 	private ConnectionParams paramsReceived;
 	private Throwable exceptionReceived;
 	private String errorMsgReceived;
@@ -51,6 +53,8 @@ public class LoginPresentationModelFixture {
 			}
 		};
 		model = new LoginPresentationModel(recentConnections, err,  connector);
+		localModel = new LocalPresentationModel(model);
+		remoteModel = new RemotePresentationModel(model);
 		interceptor = new NullConnectInterceptor();
 		paramsReceived = null;
 		exceptionReceived = null;
@@ -59,6 +63,14 @@ public class LoginPresentationModelFixture {
 	
 	public LoginPresentationModel model() {
 		return model;
+	}
+
+	public LocalPresentationModel localModel() {
+		return localModel;
+	}
+
+	public RemotePresentationModel remoteModel() {
+		return remoteModel;
 	}
 
 	public List<FileConnectionParams> presetFileParams() {

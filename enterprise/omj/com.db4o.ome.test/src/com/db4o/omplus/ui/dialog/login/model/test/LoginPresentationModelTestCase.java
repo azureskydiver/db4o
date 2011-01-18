@@ -7,10 +7,9 @@ import org.junit.*;
 
 import com.db4o.foundation.*;
 import com.db4o.omplus.connection.*;
-import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.LoginPresentationModel.*;
+import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.LocalSelectionListener;
 import com.db4o.omplus.ui.dialog.login.test.*;
-import com.db4o.omplus.ui.dialog.login.test.LoginPresentationModelFixture.*;
+import com.db4o.omplus.ui.dialog.login.test.LoginPresentationModelFixture.ConnectInterceptor;
 
 public class LoginPresentationModelTestCase {
 	
@@ -24,13 +23,13 @@ public class LoginPresentationModelTestCase {
 	@Test
 	public void testLocalSelectionListener() {
 		final String[] received = new String[1];
-		fixture.model().addListener(new LocalSelectionListener() {
+		fixture.localModel().addListener(new LocalSelectionListener() {
 			@Override
 			public void localSelection(String path, boolean readOnly) {
 				received[0] = path;
 			}
 		});
-		fixture.model().select(LoginPresentationModel.LoginMode.LOCAL, 1);
+		fixture.localModel().select(1);
 		assertEquals(fixture.presetFileParams().get(1).getPath(), received[0]);
 	}
 
@@ -42,7 +41,8 @@ public class LoginPresentationModelTestCase {
 				throw new DBConnectException(params, "");
 			}
 		});
-		fixture.model().connect("foo", false);
+		fixture.localModel().state("foo", false);
+		fixture.localModel().connect();
 		fixture.assertNotConnected(DBConnectException.class);
 	}
 
@@ -64,7 +64,8 @@ public class LoginPresentationModelTestCase {
 				received.value = params;
 			}
 		});
-		fixture.model().connect(path, readOnly);
+		fixture.localModel().state(path, readOnly);
+		fixture.localModel().connect();
 		assertEquals(path, received.value.getPath());
 		assertEquals(readOnly, ((FileConnectionParams)received.value).readOnly());
 	}

@@ -6,22 +6,23 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import com.db4o.foundation.*;
+import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 
-public abstract class LoginPaneBase extends Composite {
+public class LoginPaneBase<P extends ConnectionParams> extends Composite {
 
-	private LoginPresentationModel model;
+	private ConnectionPresentationModel<P> model;
 	
-	public LoginPaneBase(Shell dialog, Composite parent, String openText, LoginPresentationModel model) {
+	public LoginPaneBase(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
 		super(parent, SWT.NONE);
-		this.model = model;
+		model = spec.model();
 		setLayout(new FormLayout());
-		createContents(dialog, parent, openText);
+		createContents(dialog, parent, openText, spec);
 	}
 
-	private void createContents(Shell dialog, Composite parent, String openText) {
+	private void createContents(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
 		Composite innerComposite = new Composite(this, SWT.BORDER);
-		populateInnerComposite(innerComposite, parent, model);
+		spec.create(parent, innerComposite);
 		FormData data = new FormData();
 		data.top = new FormAttachment(2, 2);
 		data.left = new FormAttachment(2, 2);
@@ -30,7 +31,7 @@ public abstract class LoginPaneBase extends Composite {
 		innerComposite.setLayoutData(data);
 		LoginButtonsPane buttonComposite = new LoginButtonsPane(this, dialog, openText, new Closure4<Boolean>() {
 			public Boolean run() {
-				return connect(model);
+				return model.connect();
 			}
 		});
 		data = new FormData();
@@ -40,13 +41,7 @@ public abstract class LoginPaneBase extends Composite {
 		data.bottom = new FormAttachment(98, -2);
 		buttonComposite.setLayoutData(data);
 
+		pack();
 	}
-
-	protected void showErrorMsg(String msg){
-		model.err().error(msg);
-	}
-
-	protected abstract void populateInnerComposite(Composite innerComposite, Composite parent, LoginPresentationModel model);
-	protected abstract boolean connect(LoginPresentationModel model);
 	
 }

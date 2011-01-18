@@ -58,7 +58,7 @@ public class LoginDialogIntegrationTestCase {
 			Shell dialogShell = findDialogShell();
 			TabItem localTab = findTabItem(dialogShell, LoginDialog.TAB_FOLDER_ID, LoginDialog.LOCAL_TAB_ID);
 			assertSame(localTab, localTab.getParent().getItems()[localTab.getParent().getSelectionIndex()]);
-			Text fileText = findChild(dialogShell, LocalLoginPane.NEW_CONNECTION_TEXT_ID);
+			Text fileText = findChild(dialogShell, LocalLoginPaneSpec.NEW_CONNECTION_TEXT_ID);
 			fileText.setText(dbFile.getAbsolutePath());
 			Button okButton = findChild(dialogShell, LoginButtonsPane.OK_BUTTON_ID);
 			pressButton(okButton);
