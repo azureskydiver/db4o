@@ -2,20 +2,19 @@
 
 package com.db4o.omplus.ui.dialog.login.model.test;
 
-import java.io.*;
+import static org.easymock.EasyMock.*;
+
 import java.util.*;
 
+import org.easymock.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
-import com.db4o.omplus.debug.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-
-import org.easymock.*;
-import static org.easymock.EasyMock.*;
 
 public class ConnectionPresentationModelTestCase {
 
@@ -35,16 +34,146 @@ public class ConnectionPresentationModelTestCase {
 	}
 	
 	@Test
+	public void testRecentConnections() {
+		final String id = "foo";
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(id)));
+		replayMocks();
+		assertArrayEquals(new String[] { id }, model.recentConnections());
+		verifyMocks();
+	}
+	
+	@Test
 	public void testManualEntry() throws Exception {
-		expect(connector.connect(eqParams("foo"))).andReturn(true);
-		recentConnections.addNewConnection(eqParams("foo"));
-		prepareMocks();
-		model.state("foo");
+		final String id = "foo";
+		expect(connector.connect(eqParams(id))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(id));
+		replayMocks();
+		model.state(id);
 		model.connect();
 		verifyMocks();
 	}
 
-	private void prepareMocks() {
+	@Test
+	public void testSelectionEntry() throws Exception {
+		final String id = "foo";
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(id)));
+		expect(connector.connect(eqParams(id))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(id));
+		replayMocks();
+		model.select(0);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testSelectionThenManualEntry() throws Exception {
+		final String selectedId = "foo";
+		final String manualId = "bar";
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId)));
+		expect(connector.connect(eqParams(manualId))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(manualId));
+		replayMocks();
+		model.select(0);
+		model.state(manualId);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testManualThenSelectionEntry() throws Exception {
+		final String selectedId = "foo";
+		final String manualId = "bar";
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId)));
+		expect(connector.connect(eqParams(selectedId))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(selectedId));
+		replayMocks();
+		model.state(manualId);
+		model.select(0);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testManualEntryWithConfig() throws Exception {
+		final String id = "foo";
+		final String[] jarFiles = { "foo.jar" };
+		final String[] configNames = { "FooConfig" };
+		expect(connector.connect(eqParams(id, jarFiles, configNames))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(id, jarFiles, configNames));
+		replayMocks();
+		model.state(id);
+		model.customConfig(jarFiles, configNames);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testSelectionEntryWithConfig() throws Exception {
+		final String id = "foo";
+		final String[] jarFiles = { "foo.jar" };
+		final String[] configNames = { "FooConfig" };
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(id, jarFiles, configNames)));
+		expect(connector.connect(eqParams(id, jarFiles, configNames))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(id, jarFiles, configNames));
+		replayMocks();
+		model.select(0);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testSelectionWithConfigThenManualEntry() throws Exception {
+		final String selectedId = "foo";
+		final String manualId = "bar";
+		final String[] jarFiles = { "foo.jar" };
+		final String[] configNames = { "FooConfig" };
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId, jarFiles, configNames)));
+		expect(connector.connect(eqParams(manualId))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(manualId));
+		replayMocks();
+		model.select(0);
+		model.state(manualId);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testManualWithConfigThenSelectionEntry() throws Exception {
+		final String selectedId = "foo";
+		final String manualId = "bar";
+		final String[] jarFiles = { "foo.jar" };
+		final String[] configNames = { "FooConfig" };
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId)));
+		expect(connector.connect(eqParams(selectedId))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(selectedId));
+		replayMocks();
+		model.state(manualId);
+		model.customConfig(jarFiles, configNames);
+		model.select(0);
+		model.connect();
+		verifyMocks();
+	}
+
+	@Test
+	public void testSelectionWithConfigThenManualEntryWithConfig() throws Exception {
+		final String selectedId = "foo";
+		final String manualId = "bar";
+		final String[] selectedJarFiles = { "foo.jar" };
+		final String[] selectedConfigNames = { "FooConfig" };
+		final String[] manualJarFiles = { "bar.jar" };
+		final String[] manualConfigNames = { "BarConfig" };
+		expect(recentConnections.getRecentConnections(MockConnectionParams.class)).andReturn(Arrays.asList(new MockConnectionParams(selectedId, selectedJarFiles, selectedConfigNames)));
+		expect(connector.connect(eqParams(manualId, manualJarFiles, manualConfigNames))).andReturn(true);
+		recentConnections.addNewConnection(eqParams(manualId, manualJarFiles, manualConfigNames));
+		replayMocks();
+		model.select(0);
+		model.state(manualId);
+		model.customConfig(manualJarFiles, manualConfigNames);
+		model.connect();
+		verifyMocks();
+	}
+
+	private void replayMocks() {
 		replay(recentConnections);
 		replay(errSink);
 		replay(connector);
@@ -59,14 +188,18 @@ public class ConnectionPresentationModelTestCase {
 	private static class ConnectionParamMatcher implements IArgumentMatcher {
 		
 		private String expectedId;
+		private String[] jarPaths;
+		private String[] configNames;
 		
-		public ConnectionParamMatcher(String id) {
+		public ConnectionParamMatcher(String id, String[] jarPaths, String[] configNames) {
 			this.expectedId = id;
+			this.jarPaths = jarPaths;
+			this.configNames = configNames;
 		}
-
+		
 		@Override
 		public void appendTo(StringBuffer str) {
-			str.append("eqParams(" + expectedId + ")");
+			str.append("eqParams(" + expectedId + "," + Arrays.toString(jarPaths) + "," + Arrays.toString(configNames) + ")");
 		}
 
 		@Override
@@ -74,12 +207,17 @@ public class ConnectionPresentationModelTestCase {
 			if(other.getClass() != MockConnectionParams.class) {
 				return false;
 			}
-			return expectedId.equals(((MockConnectionParams)other).id);
+			final MockConnectionParams params = (MockConnectionParams)other;
+			return expectedId.equals(params.id) && Arrays.equals(jarPaths, params.jarPaths()) && Arrays.equals(configNames, params.configNames());
 		}
 	}
 	
 	public static ConnectionParams eqParams(String id) {
-	    EasyMock.reportMatcher(new ConnectionParamMatcher(id));
+		return eqParams(id, new String[0], new String[0]);
+	}
+
+	public static ConnectionParams eqParams(String id, String[] jarPaths, String[] configNames) {
+	    EasyMock.reportMatcher(new ConnectionParamMatcher(id, jarPaths, configNames));
 	    return null;
 	}
 
@@ -87,9 +225,13 @@ public class ConnectionPresentationModelTestCase {
 	private static class MockConnectionParams extends ConnectionParams {
 		
 		private String id;
-		private boolean connectInvoked = false;
 
 		public MockConnectionParams(String id) {
+			this(id, new String[0], new String[0]);
+		}
+
+		public MockConnectionParams(String id, String[] jarPaths, String[] configNames) {
+			super(jarPaths, configNames);
 			this.id = id;
 		}
 
@@ -100,8 +242,15 @@ public class ConnectionPresentationModelTestCase {
 
 		@Override
 		public ObjectContainer connect(Function4<String, Boolean> userCallback) throws DBConnectException {
-			connectInvoked = true;
 			return null;
+		}
+		
+		public String[] jarPaths() {
+			return jarPaths;
+		}
+		
+		public String[] configNames() {
+			return configNames;
 		}
 	}
 	
@@ -114,8 +263,8 @@ public class ConnectionPresentationModelTestCase {
 		}
 
 		@Override
-		protected MockConnectionParams fromState(File[] jarFiles, String[] configNames) throws DBConnectException {
-			return new MockConnectionParams(id);
+		protected MockConnectionParams fromState(String[] jarPaths, String[] configNames) throws DBConnectException {
+			return new MockConnectionParams(id, jarPaths, configNames);
 		}
 
 		@Override
@@ -130,6 +279,7 @@ public class ConnectionPresentationModelTestCase {
 		
 		public void state(String id) {
 			this.id = id;
+			newState();
 		}
 	}
 	

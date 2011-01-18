@@ -24,7 +24,7 @@ public class CustomConfigModelTestCase {
 	private boolean failExtraction = false;
 	private boolean acceptJarFiles = true;
 	
-	private File[] jarFilesCommitted;
+	private String[] jarPathsCommitted;
 	private String[] configClassNamesCommitted;
 	private Throwable exc;
 	private String errMsg;
@@ -34,8 +34,8 @@ public class CustomConfigModelTestCase {
 	public void setUp() {
 		CustomConfigSink sink = new CustomConfigSink() {
 			@Override
-			public void customConfig(File[] jarFiles, String[] configClassNames) {
-				CustomConfigModelTestCase.this.jarFilesCommitted = jarFiles;
+			public void customConfig(String[] jarPaths, String[] configClassNames) {
+				CustomConfigModelTestCase.this.jarPathsCommitted = jarPaths;
 				CustomConfigModelTestCase.this.configClassNamesCommitted = configClassNames;
 			}
 		};
@@ -73,9 +73,9 @@ public class CustomConfigModelTestCase {
 		String[] jarPaths = { "foo.jar", "bar.jar" };
 		model.addJarPaths(jarPaths);
 		assertJarFiles(jarPaths, listener.jarPathsReceived);
-		assertNull(jarFilesCommitted);
+		assertNull(jarPathsCommitted);
 		model.commit();
-		assertJarFiles(jarPaths, jarFilesCommitted);
+		assertJarFiles(jarPaths, jarPathsCommitted);
 		assertNoError();
 	}
 
@@ -87,7 +87,7 @@ public class CustomConfigModelTestCase {
 		String[] jarPaths = { "foo.jar", "bar.jar" };
 		assertJarFiles(jarPaths, listener.jarPathsReceived);
 		model.commit();
-		assertJarFiles(jarPaths, jarFilesCommitted);
+		assertJarFiles(jarPaths, jarPathsCommitted);
 		assertNoError();
 	}
 
@@ -98,7 +98,7 @@ public class CustomConfigModelTestCase {
 		assertJarFiles(new String[0], listener.jarPathsReceived);
 		assertError();
 		model.commit();
-		assertTrue(jarFilesCommitted.length == 0);
+		assertTrue(jarPathsCommitted.length == 0);
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class CustomConfigModelTestCase {
 		assertJarFiles(jarPaths, listener.jarPathsReceived);
 		assertError();
 		model.commit();
-		assertJarFiles(jarPaths, jarFilesCommitted);
+		assertJarFiles(jarPaths, jarPathsCommitted);
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class CustomConfigModelTestCase {
 		String[] jarPaths = new String[] { "foo.jar" };
 		assertJarFiles(jarPaths, listener.jarPathsReceived);
 		model.commit();
-		assertJarFiles(jarPaths, jarFilesCommitted);
+		assertJarFiles(jarPaths, jarPathsCommitted);
 		assertNoError();
 	}
 
@@ -133,7 +133,7 @@ public class CustomConfigModelTestCase {
 		model.removeJarPaths("foo.jar");
 		assertJarFiles(new String[0], listener.jarPathsReceived);
 		model.commit();
-		assertJarFiles(new String[0], jarFilesCommitted);
+		assertJarFiles(new String[0], jarPathsCommitted);
 		assertNoError();
 	}
 
@@ -211,7 +211,7 @@ public class CustomConfigModelTestCase {
 		assertJarFiles(jarFiles, listener.jarPathsReceived);
 		assertArrayEquals(configNames, listener.configClassNamesReceived);
 		model.commit();
-		assertJarFiles(jarFiles, jarFilesCommitted);
+		assertJarFiles(jarFiles, jarPathsCommitted);
 		assertArrayEquals(configNames, configClassNamesCommitted);
 	}
 

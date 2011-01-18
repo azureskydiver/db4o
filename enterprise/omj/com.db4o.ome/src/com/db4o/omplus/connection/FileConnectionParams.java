@@ -22,7 +22,8 @@ public class FileConnectionParams extends ConnectionParams {
 	private String filePath;
 	private boolean readOnly;
 
-	public FileConnectionParams(String path, boolean readOnly) {
+	public FileConnectionParams(String path, boolean readOnly, String[] jarPaths, String[] configNames) {
+		super(jarPaths, configNames);
 		this.filePath = path;
 		this.readOnly = readOnly;
 	}
@@ -30,7 +31,11 @@ public class FileConnectionParams extends ConnectionParams {
 	public FileConnectionParams(String path) {
 		this(path, false);
 	}
-	
+
+	public FileConnectionParams(String path, boolean readOnly) {
+		this(path, readOnly, new String[0], new String[0]);
+	}
+
 	public String getPath() {
 		return filePath;
 	}
