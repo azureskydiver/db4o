@@ -12,16 +12,22 @@ public class RunShell {
 	public static void main(String[] args) {
 	    Display display = new Display();
 	    final Shell shell = new Shell(display);
-	    ErrorMessageSink sink = new ErrorMessageSink() {
+		ErrorMessageSink errSink = new ErrorMessageSink() {
 			public void showError(String msg) {
 				System.err.println(msg);
 			}
+			
+			public void showExc(String msg, Throwable exc) {
+				System.err.println("ERR: " + msg);
+				exc.printStackTrace();
+			}
 
-			public void logExc(Throwable exc) {
+			public void logWarning(String msg, Throwable exc) {
+				System.err.println("WARN: " + msg);
 				exc.printStackTrace();
 			}
 		};
-		ErrorMessageHandler err = new ErrorMessageHandler(sink);
+		ErrorMessageHandler err = new ErrorMessageHandler(errSink);
 		Connector connector = new Connector() {
 			public boolean connect(ConnectionParams params) throws DBConnectException {
 				System.out.println(params);

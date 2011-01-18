@@ -19,7 +19,7 @@ public class ErrorMessageHandler {
 	public void error(String msg, Throwable exc) {
 		sink.showError(msg);
 		if(exc != null) {
-			sink.logExc(exc);	
+			sink.showExc(msg, exc);	
 		}
 	}
 }

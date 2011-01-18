@@ -112,7 +112,7 @@ public class CustomConfigModelTestCase {
 		expect(extractor.configuratorClassNames(files(jarPath))).andThrow(new DBConnectException(""));
 		checkOrder(errSink, false);
 		errSink.showError(EasyMock.<String>anyObject());
-		errSink.logExc(eqExc(DBConnectException.class));
+		errSink.showExc(EasyMock.<String>anyObject(), eqExc(DBConnectException.class));
 		replayMocks();
 		model.addJarPaths("foo.jar");
 		verifyMocks();
@@ -131,7 +131,7 @@ public class CustomConfigModelTestCase {
 		expect(extractor.configuratorClassNames(files(retainedJar))).andThrow(new DBConnectException(""));
 		checkOrder(errSink, false);
 		errSink.showError(EasyMock.<String>anyObject());
-		errSink.logExc(eqExc(DBConnectException.class));
+		errSink.showExc(EasyMock.<String>anyObject(), eqExc(DBConnectException.class));
 		listener.customConfig(aryEq(new String[0]), aryEq(new String[0]), aryEq(new String[0]));
 		replayMocks();
 		model.removeJarPaths(removedJar);
