@@ -68,10 +68,12 @@ public abstract class CustomConfigModelTestCaseBase {
 	protected void assertAddJars(String[] jarPaths, String[] configNames, String[] existingJarPaths, String[] existingConfigNames, String[] selectedConfigNames) throws Exception {
 		final List<String> allJarsList = concatUnique(canonicalPaths(jarPaths), canonicalPaths(existingJarPaths));
 		final List<String> allConfigNamesList = concatUnique(configNames, existingConfigNames);
+		final List<String> allSelectedConfigNamesList = concatUnique(configNames, selectedConfigNames);
 		final String[] allJars = allJarsList.toArray(new String[allJarsList.size()]);
 		final String[] allConfigNames = allConfigNamesList.toArray(new String[allConfigNamesList.size()]);
-		
-		listener.customConfig(aryEq(allJars), aryEq(allConfigNames), aryEq(selectedConfigNames));
+		final String[] allSelectedConfigNames = allSelectedConfigNamesList.toArray(new String[allSelectedConfigNamesList.size()]);
+				
+		listener.customConfig(aryEq(allJars), aryEq(allConfigNames), aryEq(allSelectedConfigNames));
 		for (String jarName : jarPaths) {
 			expectAcceptJarFileInvocation(jarName, true);
 		}

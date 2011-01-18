@@ -103,9 +103,13 @@ public class CustomConfigModelImpl implements CustomConfigModel {
 				err.error("could not extract configurators from jar " + curJar.getAbsolutePath() + " - ignoring", exc);
 			}
 		}
+		List<String> originalConfigNames = configClassNames;
 		configClassNames = new ArrayList<String>(configNames);
 		Collections.sort(configClassNames);
+		configNames.removeAll(originalConfigNames);
 		selectedConfigClassNames.retainAll(configClassNames);
+		selectedConfigClassNames.addAll(configNames);
+		Collections.sort(selectedConfigClassNames);
 	}
 
 	private void notifyListener(CustomConfigListener listener) {
