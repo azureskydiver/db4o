@@ -29,18 +29,42 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 		remoteListeners.add(listener);
 	}
 
-	public void state(String host, String port, String user, String pwd) {
-		if(this.host.equals(host) && this.port.equals(port) && this.user.equals(user) && this.pwd.equals(pwd)) {
+	public void host(String host) {
+		if(this.host.equals(host)) {
 			return;
 		}
 		this.host = host;
-		this.port = port;
-		this.user = user;
-		this.pwd = pwd;
 		newState();
-		notifyListeners(host, port, user, pwd);
+		notifyListeners();
 	}
-	
+
+	public void port(String port) {
+		if(this.port.equals(port)) {
+			return;
+		}
+		this.port = port;
+		newState();
+		notifyListeners();
+	}
+
+	public void user(String user) {
+		if(this.user.equals(user)) {
+			return;
+		}
+		this.user = user;
+		newState();
+		notifyListeners();
+	}
+
+	public void password(String password) {
+		if(this.pwd.equals(password)) {
+			return;
+		}
+		this.pwd = password;
+		newState();
+		notifyListeners();
+	}
+
 	@Override
 	protected RemoteConnectionParams fromState(String[] jarPaths, String[] configNames) throws DBConnectException {
 		host = trim(host);
@@ -79,14 +103,14 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 
 	@Override
 	protected void selected(RemoteConnectionParams remoteParams) {
-		host = "";
-		port = "";
-		user = "";
-		pwd = "";
-		notifyListeners(remoteParams.getHost(), String.valueOf(remoteParams.getPort()), remoteParams.getUser(), remoteParams.getPassword());
+		host = remoteParams.getHost();
+		port = String.valueOf(remoteParams.getPort());
+		user = remoteParams.getUser();
+		pwd = remoteParams.getPassword();
+		notifyListeners();
 	}
 
-	private void notifyListeners(String host, String port, String user, String pwd) {
+	private void notifyListeners() {
 		for (RemoteSelectionListener listener : remoteListeners) {
 			listener.remoteSelection(host, port, user, pwd);
 		}

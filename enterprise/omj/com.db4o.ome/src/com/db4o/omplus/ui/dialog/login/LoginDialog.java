@@ -28,11 +28,11 @@ public class LoginDialog {
 
 	private LoginPresentationModel model;
 
-	public LoginDialog(Shell parentShell, OMEDataStore dataStore, final Connector connector, ErrorMessageHandler err) {
+	public LoginDialog(Shell parentShell, RecentConnectionList recentConnections, final Connector connector, ErrorMessageHandler err) {
 		mainCompositeShell = new Shell(parentShell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		OMESWTUtil.assignWidgetId(mainCompositeShell, SHELL_ID);
 		mainCompositeShell.setText("Connection Info");
-		model = new LoginPresentationModel(new DataStoreRecentConnectionList(dataStore), err, connector);
+		model = new LoginPresentationModel(recentConnections, err, connector);
 
 		createContents(err);
 		

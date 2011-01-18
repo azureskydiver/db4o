@@ -41,7 +41,8 @@ public class LoginPresentationModelTestCase {
 				throw new DBConnectException(params, "");
 			}
 		});
-		fixture.localModel().state("foo", false);
+		fixture.localModel().path("foo");
+		fixture.localModel().readOnly(false);
 		fixture.localModel().connect();
 		fixture.assertNotConnected(DBConnectException.class);
 	}
@@ -64,7 +65,8 @@ public class LoginPresentationModelTestCase {
 				received.value = params;
 			}
 		});
-		fixture.localModel().state(path, readOnly);
+		fixture.localModel().path(path);
+		fixture.localModel().readOnly(readOnly);
 		fixture.localModel().connect();
 		assertEquals(path, received.value.getPath());
 		assertEquals(readOnly, ((FileConnectionParams)received.value).readOnly());

@@ -72,10 +72,14 @@ public class LoginButtonsPane extends Composite {
 		data.left = new FormAttachment(0);
 		data.right = new FormAttachment(19);
 		customBtn.setLayoutData(data);	
-}
+	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
+	}
+	
+	public void customActionEnabled(boolean enabled) {
+		customBtn.setEnabled(enabled);
 	}
 }

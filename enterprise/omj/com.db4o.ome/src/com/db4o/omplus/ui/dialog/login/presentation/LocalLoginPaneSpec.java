@@ -56,12 +56,12 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
 		newConnectionText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				sendStateChange(newConnectionText, readOnlyButton);
+				model.path(newConnectionText.getText());
 			}
 		});
 		readOnlyButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				sendStateChange(newConnectionText, readOnlyButton);
+				model.readOnly(readOnlyButton.getSelection());
 			}
 		});
 
@@ -96,10 +96,6 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 	private void newConnectionText(Text newConnectionText, String path) {
 		newConnectionText.setText(path);
 		newConnectionText.setToolTipText(path);
-	}
-
-	private void sendStateChange(Text newConnectionText, Button readOnlyButton) {
-		model.state(newConnectionText.getText(), readOnlyButton.getSelection());
 	}
 
 }
