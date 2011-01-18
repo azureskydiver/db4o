@@ -14,6 +14,7 @@ import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.model.LocalPresentationModel.LocalSelectionListener;
+import com.db4o.omplus.ui.dialog.login.presentation.CustomConfigPane.JarPathSource;
 
 public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 
@@ -115,7 +116,7 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 	}
 
 	// FIXME factor out
-	private void openCustomConfigDialog(Shell shell) {
+	private void openCustomConfigDialog(final Shell shell) {
 		Shell dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		dialog.setLayout(new GridLayout());
 		dialog.setText("Jars/Configurators");
@@ -125,7 +126,16 @@ public class LocalLoginPaneSpec implements LoginPaneSpec<FileConnectionParams> {
 			}
 		};
 		CustomConfigModel customModel = new CustomConfigModelImpl(sink , new SPIConfiguratorExtractor(EmbeddedConfigurationItem.class), model.err());
-		new CustomConfigPane(dialog, dialog, customModel);
+		
+		JarPathSource jarPathSource = new JarPathSource() {
+			public String jarPath() {
+				FileDialog fileChooser = new FileDialog(shell, SWT.OPEN);
+				fileChooser.setFilterExtensions(new String[] { "*.jar" });
+				fileChooser.setFilterNames(new String[] { "Jar Files (*.jar)" });
+				return fileChooser.open();
+			}
+		};
+		new CustomConfigPane(dialog, dialog, customModel, jarPathSource);
 		dialog.pack(true);
 		dialog.open();
 	}
