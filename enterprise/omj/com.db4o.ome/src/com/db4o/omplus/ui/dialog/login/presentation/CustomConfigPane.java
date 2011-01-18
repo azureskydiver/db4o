@@ -14,12 +14,15 @@ import org.eclipse.swt.widgets.List;
 
 import com.db4o.config.*;
 import com.db4o.omplus.*;
+import com.db4o.omplus.ui.dialog.login.model.*;
 
 public class CustomConfigPane extends Composite {
 
+	private LocalPresentationModel model;
 	
-	public CustomConfigPane(Shell dialog, Composite parent) {
+	public CustomConfigPane(Shell dialog, Composite parent, LocalPresentationModel model) {
 		super(parent, SWT.NONE);
+		this.model = model;
 		createContents(dialog, parent);
 	}
 
@@ -121,7 +124,7 @@ public class CustomConfigPane extends Composite {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setLayout (new GridLayout());
-		new CustomConfigPane(shell, shell);
+		new CustomConfigPane(shell, shell, null);
 		shell.pack();
 		shell.open ();
 		while (!shell.isDisposed ()) {
