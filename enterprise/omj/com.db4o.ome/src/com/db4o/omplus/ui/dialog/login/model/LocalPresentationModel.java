@@ -45,18 +45,36 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		notifyListenersCustomState();
 	}
 	
-	public void jarPaths(String[] jarPaths) {
+	public void addJarPaths(String... jarPaths) {
 		try {
-			List<File> jarFiles = new ArrayList<File>();
+			Set<File> jarFileSet = new HashSet<File>(jarFiles);
 			for (int jarIdx = 0; jarIdx < jarPaths.length; jarIdx++) {
 				File jarFile = new File(jarPaths[jarIdx]);
 				if(!extractor.acceptJarFile(jarFile)) {
 					err().error("not an existing jar file: " + jarFile.getAbsolutePath());
 					return;
 				}
-				jarFiles.add(jarFile);
+				jarFileSet.add(jarFile);
 			}
-			Collections.sort(jarFiles);
+			List<File> jarFileList = new ArrayList<File>(jarFileSet);
+			Collections.sort(jarFileList);
+			this.configClassNames = extractor.configuratorClassNames(jarFileList);
+			this.jarFiles = jarFileList;
+		} 
+		catch (DBConnectException exc) {
+			err().error(exc);
+		}
+		finally {
+			notifyListenersCustomState();
+		}
+	}
+
+	public void removeJarPaths(String... jarPaths) {
+		try {
+			List<File> jarFiles = new ArrayList<File>(this.jarFiles);
+			for (String jarPath : jarPaths) {
+				jarFiles.remove(new File(jarPath));
+			}
 			this.configClassNames = extractor.configuratorClassNames(jarFiles);
 			this.jarFiles = jarFiles;
 		} 

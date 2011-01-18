@@ -122,12 +122,21 @@ public class LoginPresentationModelFixture {
 
 	public void assertNotConnected(Class<? extends Throwable> excType) {
 		assertNotConnected();
+		assertExceptionReceived(excType);
+	}
+
+	public void assertExceptionReceived(Class<? extends Throwable> excType) {
 		assertNotNull(errorMsgReceived);
 		if(excType != null) {
 			assertTrue(excType.isAssignableFrom(exceptionReceived.getClass()));
 		}
 	}
-	
+
+	public void assertExceptionReceived() {
+		assertNotNull(exceptionReceived);
+	}
+
+
 	public void assertNoError() {
 		assertNull(errorMsgReceived);
 		assertNull(exceptionReceived);
