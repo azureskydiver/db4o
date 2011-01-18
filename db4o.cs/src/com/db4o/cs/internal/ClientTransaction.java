@@ -89,8 +89,16 @@ public final class ClientTransaction extends Transaction {
 	public long versionForId(int id) {
         MsgD msg = Msg.VERSION_FOR_ID.getWriterForInt(systemTransaction(), id);
 		_client.write(msg);
-        return _client.expectedByteResponse(Msg.VERSION_FOR_ID).readLong();
+        return _client.expectedBufferResponse(Msg.VERSION_FOR_ID).readLong();
 	}
-
+	
+	public long generateTransactionTimestamp(){
+		_client.writeMsg(Msg.GENERATE_TRANSACTION_TIMESTAMP.getWriter(this), true);
+		return _client.expectedBufferResponse(Msg.GENERATE_TRANSACTION_TIMESTAMP).readLong();		
+	}
+	
+	public void useDefaultTransactionTimestamp(){
+		_client.writeMsg(Msg.USE_DEFAULT_TRANSACTION_TIMESTAMP, true);
+	}
 
 }

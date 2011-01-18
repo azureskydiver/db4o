@@ -37,7 +37,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 	protected ReadonlyReplicationProviderSignature B_SIGNATURE;
 	private ReadonlyReplicationProviderSignature A_SIGNATURE;
 
-	public void test() {
+	public void testReplicationLifeCycle() {
 		B_SIGNATURE_BYTES = b().provider().getSignature().getSignature();
 
 		A_SIGNATURE = a().provider().getSignature();
@@ -100,16 +100,8 @@ public class ReplicationProviderTest extends DrsTestCase {
 	}
 
 	private void commitReplication() {
-		long maxVersion = a().provider().getCurrentVersion() > b().provider().getCurrentVersion()
-				? a().provider().getCurrentVersion() : b().provider().getCurrentVersion();
-
-		a().provider().syncVersionWithPeer(maxVersion);
-		b().provider().syncVersionWithPeer(maxVersion);
-
-		maxVersion ++;
-
-		a().provider().commitReplicationTransaction(maxVersion);
-		b().provider().commitReplicationTransaction(maxVersion);
+		a().provider().commitReplicationTransaction();
+		b().provider().commitReplicationTransaction();
 	}
 
 	private Object findCar(String model) {
@@ -307,7 +299,7 @@ public class ReplicationProviderTest extends DrsTestCase {
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
 
 		a().provider().referenceNewObject(object1, ref, null, null);
-
+		
 		a().provider().storeReplica(object1);
 		ReplicationReference reference = a().provider().produceReferenceByUUID(uuid, object1.getClass());
 		Assert.areEqual(reference, a().provider().produceReference(object1, null, null));

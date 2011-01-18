@@ -11,6 +11,20 @@ public class Db4oDrsTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	public Iterator4 iterator() {
+		
+		if(false)
+			return new DrsTestSuiteBuilder(
+				new Db4oDrsFixture("db4o-a"),
+				new Db4oDrsFixture("db4o-b"),
+				Db4oDrsTestSuite.class).iterator();
+		
+		if(false)
+			return new DrsTestSuiteBuilder(
+					new Db4oClientServerDrsFixture("db4o-cs-a", 0xdb40), 
+					new Db4oClientServerDrsFixture("db4o-cs-b", 4455),
+					Db4oDrsTestSuite.class).iterator();
+		
+		
 		return Iterators.concat(
 			Iterators.concat(
 				new DrsTestSuiteBuilder(

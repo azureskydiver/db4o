@@ -69,9 +69,12 @@ public class CommitTimestampSupport {
 		EventRegistryFactory.forObjectContainer(_container).committing().addListener(new EventListener4<CommitEventArgs>() {
 			public void onEvent(Event4<CommitEventArgs> e, CommitEventArgs args) {
 
-				long commitTimestamp = _container.generateTimeStampId();
-
-				Transaction trans = (Transaction) args.transaction();
+				LocalTransaction trans = (LocalTransaction) args.transaction();
+				long transactionTimestamp = trans.timestamp();
+				
+				long commitTimestamp = 
+					(transactionTimestamp > 0) ? transactionTimestamp :_container.generateTimeStampId();
+				
 
 				Transaction sysTrans = trans.systemTransaction();
 

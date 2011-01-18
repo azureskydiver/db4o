@@ -69,7 +69,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	 */
 	private PeerSignature _peerSignature;
 
-	private FlushEventListener _flushEventListener = new MyFlushEventListener();
+	private MyFlushEventListener _flushEventListener = new MyFlushEventListener();
 
 	/**
 	 * The Record of {@link #_peerSignature}.
@@ -86,6 +86,8 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	private boolean _inReplication = false;
 
 	private final TimeStampIdGenerator _generator;
+
+	private long _commitTimestamp;
 
 	public HibernateReplicationProvider(Configuration cfg) {
 		this(cfg, null);
@@ -126,32 +128,24 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	}
 
 	public final void clearAllReferences() {
-		ensureReplicationActive();
-
 		_replicationReferences.clear();
 	}
 
 	public final void commit() {
 		final Session session = getSession();
-
-
 		session.flush();
 		_transaction.commit();
-		clearSession();
 		_transaction = session.beginTransaction();
 		setCommitted(true);
 	}
 
-	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
+	public final synchronized void commitReplicationTransaction() {
 		ensureReplicationActive();
-
+		storeReplicationRecord();
 		getSession().flush();
-
-		_generator.setMinimumNext(raisedDatabaseVersion);
-
 		commit();
 		_dirtyRefs.clear();
-
+		_flushEventListener.useDefaultTransactionTimestamp();
 		_inReplication = false;
 	}
 
@@ -210,12 +204,6 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		return _cfg;
 	}
 
-	public final long getCurrentVersion() {
-		ensureReplicationActive();
-
-		return _generator.generate();
-	}
-	
 	public long getLastReplicationVersion() {
 		ensureReplicationActive();
 
@@ -359,6 +347,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		_transaction.commit();
 		_transaction = getSession().beginTransaction();
 		clearSession();
+		clearAllReferences();
 
 		byte[] peerSigBytes = aPeerSignature.getSignature();
 
@@ -396,7 +385,9 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 
 		_generator.setMinimumNext(Util.getMaxReplicationRecordVersion(_session));
-
+		
+		_commitTimestamp = _flushEventListener.generateTransactionTimestamp();
+		
 		_inReplication = true;
 	}
 
@@ -449,10 +440,8 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		return true;
 	}
 
-	public final void syncVersionWithPeer(long version) {
-		ensureReplicationActive();
-
-		_replicationRecord.setTime(version);
+	private void storeReplicationRecord() {
+		_replicationRecord.setTime(_commitTimestamp);
 		getSession().saveOrUpdate(_replicationRecord);
 		getSession().flush();
 	}
@@ -595,8 +584,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 
 	private ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
-		long id = Util.castAsLong(getSession().getIdentifier(obj));
-		final ObjectReference ref = Util.getObjectReferenceById(getSession(), obj.getClass().getName(), id);
+		final ObjectReference ref = objectReferenceFor(obj);
 
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
@@ -606,6 +594,12 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 			new ReplicationReferenceImpl(obj, new DrsUUIDImpl(new Db4oUUID(uuid.getCreated(), uuid.getProvider().getSignature())), ref.getModified());
 		_replicationReferences.put(replicationReference);
 		return replicationReference;
+	}
+
+	private ObjectReference objectReferenceFor(Object obj) {
+		long id = Util.castAsLong(getSession().getIdentifier(obj));
+		final ObjectReference ref = Util.getObjectReferenceById(getSession(), obj.getClass().getName(), id);
+		return ref;
 	}
 
 	private ReplicationReference produceObjectReferenceByUUID(DrsUUID uuid) {
@@ -627,6 +621,20 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	}
 
 	private final class MyFlushEventListener implements FlushEventListener {
+		
+		private long _transactionTimestamp;
+		
+		public long generateTransactionTimestamp() {
+			final Session s = getSession();
+			TimeStampIdGenerator generator = GeneratorMap.get(s);
+			_transactionTimestamp = generator.generate();
+			return _transactionTimestamp;
+		}
+
+		public void useDefaultTransactionTimestamp() {
+			_transactionTimestamp = 0;
+		}
+		
 		public final void onFlush(FlushEvent event) throws HibernateException {
 			if (!isReplicationActive()) return;
 
@@ -644,7 +652,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 					tmp.setClassName(obj.getClass().getName());
 					tmp.setTypedId(Util.castAsLong(getSession().getIdentifier(obj)));
 					tmp.setUuid(uuid);
-					tmp.setModified(ref.version());
+					tmp.setModified(_transactionTimestamp);
 					try {
 						getSession().save(tmp);
 					} catch (HibernateException e) {
@@ -657,7 +665,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 					if (exist.getTypedId() != id) //deletion rollback case, id may change
 						exist.setTypedId(id);
 
-					exist.setModified(ref.version());
+					exist.setModified(_transactionTimestamp);
 					getSession().update(exist);
 				}
 			}
@@ -707,13 +715,23 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		return obj instanceof Timestamp;
 	}
 
-	public long objectVersion(Object next) {
-		throw new java.lang.UnsupportedOperationException();
+	public long objectVersion(Object obj) {
+		ObjectReference ref = objectReferenceFor(obj);
+		if(ref == null){
+			throw new IllegalStateException("Object unknown: "  + obj.toString());
+		}
+		return ref.getModified();
 	}
 
 	public void ensureVersionsAreGenerated() {
 	}
 
+	public TimeStamps timeStamps() {
+		return new TimeStamps(_replicationRecord.getTime(), _commitTimestamp);
+	}
 	
-
+	public void waitForPreviousCommits() {
+		// do nothing
+	}
+	
 }

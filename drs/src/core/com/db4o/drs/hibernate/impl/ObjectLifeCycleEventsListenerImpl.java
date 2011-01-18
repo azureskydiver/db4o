@@ -67,7 +67,7 @@ public class ObjectLifeCycleEventsListenerImpl
 	private Map<Thread, Session> _threadSessionMap = new HashMap<Thread, Session>();
 
 	private boolean _alive = true;
-
+	
 	public final void configure(Configuration cfg) {
 		new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg)).validateOrCreate();
 
@@ -109,21 +109,23 @@ public class ObjectLifeCycleEventsListenerImpl
 		final Session s = getSession();
 
 		TimeStampIdGenerator generator = GeneratorMap.get(s);
-
+		
+		long timestamp = generator.generate();
+		
 		for (ObjectReference ref : _dirtyNewRefs) {
 			Uuid uuid = new Uuid();
 			uuid.setCreated(generator.generate());
 			uuid.setProvider(Util.genMySignature(s));
 
 			ref.setUuid(uuid);
-			ref.setModified(generator.generate());
+			ref.setModified(timestamp);
 			getSession().save(ref);
 		}
 
 		for (HibernateObjectId hid : _dirtyUpdatedRefs) {
 			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid._className, hid._hibernateId);
 			if (ref != null && !_dirtyNewRefs.contains(ref) && !_deletedRefs.contains(ref)) {
-				ref.setModified(generator.generate());
+				ref.setModified(timestamp);
 				getSession().update(ref);
 			}
 		}
@@ -277,4 +279,5 @@ public class ObjectLifeCycleEventsListenerImpl
 		el.setFlushEventListeners((FlushEventListener[])
 				Util.add(el.getFlushEventListeners(), this));
 	}
+
 }

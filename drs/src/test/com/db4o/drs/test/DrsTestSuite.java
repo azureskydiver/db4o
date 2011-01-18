@@ -25,13 +25,16 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-/**
- * @exclude
- */
 public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	@SuppressWarnings("unchecked")
 	protected Class[] testCases() {
+		
+		if(false){
+			return new Class[]{
+					ReplicationFeaturesMain.class
+			};
+		}
 		
 		return new Class[] {
 				
@@ -56,8 +59,8 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 				ReplicationFeaturesMain.class,
 
 				// General
-				CollectionHandlerImplTest.class,  
-				ReplicationTraversalTest.class,
+				CollectionHandlerImplTest.class,
+				TimestampTestCase.class,
 		
 				MapTest.class,
 				ArrayReplicationTest.class,

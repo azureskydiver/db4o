@@ -5,9 +5,9 @@ package com.db4o.cs.internal.messages;
 /**
  * @exclude
  */
-public class MRaiseVersion extends MsgD implements ServerSideMessage {
+public class MRaiseCommitTimestamp extends MsgD implements ServerSideMessage {
 
 	public void processAtServer() {
-		container().raiseVersion(readLong());
+		container().raiseCommitTimestamp(readLong());
 	}
 }

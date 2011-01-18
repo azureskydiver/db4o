@@ -299,6 +299,9 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 		a().provider().commit();
 		b().provider().commit();
+		
+		a().provider().waitForPreviousCommits();
+		b().provider().waitForPreviousCommits();
 
 		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider());
 

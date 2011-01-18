@@ -35,7 +35,6 @@ class InstanceReplicationPreparer implements Visitor {
 	private final ReplicationProvider _directionTo;
 	private final ReplicationEventListener _listener;
 	private final boolean _isReplicatingOnlyDeletions;
-	private final long _lastReplicationVersion;
 	
 	private final HashSet4 _uuidsProcessedInSession;
 	private final Traverser _traverser;
@@ -61,7 +60,7 @@ class InstanceReplicationPreparer implements Visitor {
 	private Object _referencingObject;
 	private String _fieldName;	
 	
-	InstanceReplicationPreparer(ReplicationProviderInside providerA, ReplicationProviderInside providerB, ReplicationProvider directionTo, ReplicationEventListener listener, boolean isReplicatingOnlyDeletions, long lastReplicationVersion, HashSet4 uuidsProcessedInSession, Traverser traverser, ReplicationReflector reflector, CollectionHandler collectionHandler) {
+	InstanceReplicationPreparer(ReplicationProviderInside providerA, ReplicationProviderInside providerB, ReplicationProvider directionTo, ReplicationEventListener listener, boolean isReplicatingOnlyDeletions, HashSet4 uuidsProcessedInSession, Traverser traverser, ReplicationReflector reflector, CollectionHandler collectionHandler) {
 		_event = new ReplicationEventImpl();
 		_stateInA = _event._stateInProviderA;
 		_stateInB = _event._stateInProviderB;
@@ -71,7 +70,6 @@ class InstanceReplicationPreparer implements Visitor {
 		_directionTo = directionTo;
 		_listener = listener;
 		_isReplicatingOnlyDeletions = isReplicatingOnlyDeletions;
-		_lastReplicationVersion = lastReplicationVersion;
 		_uuidsProcessedInSession = uuidsProcessedInSession;
 		_traverser = traverser;
 		_reflector = reflector;
@@ -140,7 +138,7 @@ class InstanceReplicationPreparer implements Visitor {
 
 			long creationTime = ownerRef.uuid().getLongPart();
 
-			if (creationTime > _lastReplicationVersion) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+			if (creationTime > owner.timeStamps().from()) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
 				if (_isReplicatingOnlyDeletions) return false;
 				return handleNewObject(_obj, ownerRef, owner, other, _referencingObject, _fieldName, true, false);
 			} else 

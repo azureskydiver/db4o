@@ -4,9 +4,6 @@ public class VersantDrsTestSuite extends DrsTestSuite {
 	
 	@Override
 	protected Class[] testCases() {
-		if(false){
-			return super.testCases();
-		}
 		return concat(super.testCases(), specificTestcases());
 	}
 

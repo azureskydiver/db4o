@@ -37,6 +37,7 @@ public abstract class Msg implements Cloneable, Message {
 	public static final MDelete DELETE = new MDelete();
 	public static final MError ERROR = new MError();
 	public static final MFailed FAILED = new MFailed();
+	public static final MGenerateTransactionTimestamp GENERATE_TRANSACTION_TIMESTAMP = new MGenerateTransactionTimestamp();
 	public static final MGetAll GET_ALL = new MGetAll();
 	public static final MGetClasses GET_CLASSES = new MGetClasses();
 	public static final MGetInternalIDs GET_INTERNAL_IDS = new MGetInternalIDs();
@@ -63,7 +64,7 @@ public abstract class Msg implements Cloneable, Message {
 	public static final MProcessDeletes PROCESS_DELETES = new MProcessDeletes();
 	public static final MQueryExecute QUERY_EXECUTE = new MQueryExecute();
 	public static final MQueryResult QUERY_RESULT = new MQueryResult();
-	public static final MRaiseVersion RAISE_VERSION = new MRaiseVersion();
+	public static final MRaiseCommitTimestamp RAISE_COMMIT_TIMESTAMP = new MRaiseCommitTimestamp();
 	public static final MReadBlob READ_BLOB = new MReadBlob();
 	public static final MReadBytes READ_BYTES = new MReadBytes();
 	public static final MReadSlot READ_SLOT = new MReadSlot();
@@ -79,6 +80,7 @@ public abstract class Msg implements Cloneable, Message {
 	public static final MTaDelete TA_DELETE = new MTaDelete();
 	public static final MTaIsDeleted TA_IS_DELETED = new MTaIsDeleted();
 	public static final MVersionForId VERSION_FOR_ID = new MVersionForId();
+	public static final MUseDefaultTransactionTimestamp USE_DEFAULT_TRANSACTION_TIMESTAMP = new MUseDefaultTransactionTimestamp();
 	public static final MUserMessage USER_MESSAGE = new MUserMessage();
 	public static final MUseTransaction USE_TRANSACTION = new MUseTransaction();
 	public static final MWriteBlob WRITE_BLOB = new MWriteBlob();

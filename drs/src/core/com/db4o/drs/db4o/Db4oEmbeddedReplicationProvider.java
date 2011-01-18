@@ -64,6 +64,8 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 
 	private final Procedure4 _activationStrategy;
 	
+	private long _commitTimeStamp;
+	
 	public Db4oEmbeddedReplicationProvider(ObjectContainer objectContainer, String name) {
 		Configuration cfg = objectContainer.ext().configure();
 		cfg.callbacks(false);
@@ -147,27 +149,27 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 			if (_replicationRecord == null) {
 				_replicationRecord = new ReplicationRecord(younger, older);
 				_replicationRecord.store(_container);
+			} else {
+				_container.raiseCommitTimestamp(_replicationRecord._version + 1);
 			}
+			_commitTimeStamp = _container.generateTransactionTimestamp();
 		}
 	}
 
-	public void syncVersionWithPeer(long version) {
-		_replicationRecord._version = version;
-		_replicationRecord.store(_container);
+	public void commitReplicationTransaction() {
+		storeReplicationRecord();
+		_container.commit();
+		_container.useDefaultTransactionTimestamp();
 	}
 
-	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		_container.raiseVersion(raisedDatabaseVersion);
-		_container.commit();
+	private void storeReplicationRecord() {
+		_replicationRecord._version = _commitTimeStamp;
+		_replicationRecord.store(_container);
 	}
 
 	public void rollbackReplication() {
 		_container.rollback();
 		_referencesByObject = null;
-	}
-
-	public long getCurrentVersion() {
-		return _container.version();
 	}
 
 	public long getLastReplicationVersion() {
@@ -423,6 +425,14 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 
 	public void ensureVersionsAreGenerated() {
 		commit();
+	}
+
+	public TimeStamps timeStamps() {
+		return new TimeStamps(_replicationRecord._version, _commitTimeStamp);
+	}
+
+	public void waitForPreviousCommits() {
+		// do nothing
 	}
 	
 }

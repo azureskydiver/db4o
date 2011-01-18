@@ -27,6 +27,8 @@ public class LocalTransaction extends Transaction {
 	
 	private CommitTimestampSupport _commitTimestampSupport = null;
 	
+    private long _timestamp;
+	
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalIdSystem idSystem, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
@@ -384,6 +386,19 @@ public class LocalTransaction extends Transaction {
 		}
 		
 		return _commitTimestampSupport;
+	}
+	
+	public long generateTransactionTimestamp(){
+		_timestamp = localContainer().generateTimeStampId();
+		return _timestamp;
+	}
+	
+	public void useDefaultTransactionTimestamp(){
+		_timestamp = 0;
+	}
+	
+	public long timestamp(){
+		return _timestamp;
 	}
 
 }
