@@ -9,11 +9,11 @@ import com.db4o.foundation.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 
-public class LoginPaneBase<P extends ConnectionParams> extends Composite {
+public class LoginPane<P extends ConnectionParams> extends Composite {
 
 	private ConnectionPresentationModel<P> model;
 	
-	public LoginPaneBase(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
+	public LoginPane(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
 		super(parent, SWT.NONE);
 		model = spec.model();
 		setLayout(new FormLayout());
@@ -22,7 +22,7 @@ public class LoginPaneBase<P extends ConnectionParams> extends Composite {
 
 	private void createContents(Shell dialog, Composite parent, String openText, LoginPaneSpec<P> spec) {
 		Composite innerComposite = new Composite(this, SWT.BORDER);
-		spec.create(parent, innerComposite);
+		spec.create(this, innerComposite);
 		FormData data = new FormData();
 		data.top = new FormAttachment(2, 2);
 		data.left = new FormAttachment(2, 2);
@@ -41,7 +41,7 @@ public class LoginPaneBase<P extends ConnectionParams> extends Composite {
 		data.bottom = new FormAttachment(98, -2);
 		buttonComposite.setLayoutData(data);
 
-		pack();
+		pack(true);
 	}
 	
 }

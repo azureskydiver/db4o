@@ -58,8 +58,8 @@ public class LoginDialog {
 	protected Control createContents() {
 		TabFolder folder = new TabFolder(mainCompositeShell, SWT.BORDER);
 		OMESWTUtil.assignWidgetId(folder, TAB_FOLDER_ID);
-		Composite localPane = new LoginPaneBase<FileConnectionParams>(mainCompositeShell, folder, LOCAL_DIALOG_TITLE, new LocalLoginPaneSpec(model));
-		Composite remotePane = new LoginPaneBase<RemoteConnectionParams>(mainCompositeShell, folder, REMOTE_DIALOG_TITLE, new RemoteLoginPaneSpec(model));
+		Composite localPane = new LoginPane<FileConnectionParams>(mainCompositeShell, folder, LOCAL_DIALOG_TITLE, new LocalLoginPaneSpec(model));
+		Composite remotePane = new LoginPane<RemoteConnectionParams>(mainCompositeShell, folder, REMOTE_DIALOG_TITLE, new RemoteLoginPaneSpec(model));
 		addTab(folder, "Local", LOCAL_DIALOG_TITLE, localPane, LOCAL_TAB_ID);
 		addTab(folder, "Remote", REMOTE_DIALOG_TITLE, remotePane, REMOTE_TAB_ID);
 		folder.pack(true);
