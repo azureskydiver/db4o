@@ -21,7 +21,7 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		super(model, configSource);
 	}
 
-	public void addListener(LocalSelectionListener listener) {
+	public void addLocalSelectionListener(LocalSelectionListener listener) {
 		localListeners.add(listener);
 	}
 	

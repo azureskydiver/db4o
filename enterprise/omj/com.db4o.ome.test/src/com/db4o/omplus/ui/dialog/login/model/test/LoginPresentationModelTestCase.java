@@ -23,7 +23,7 @@ public class LoginPresentationModelTestCase {
 	@Test
 	public void testLocalSelectionListener() {
 		final String[] received = new String[1];
-		fixture.localModel().addListener(new LocalSelectionListener() {
+		fixture.localModel().addLocalSelectionListener(new LocalSelectionListener() {
 			@Override
 			public void localSelection(String path, boolean readOnly) {
 				received[0] = path;

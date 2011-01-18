@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.*;
 
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
-import com.db4o.omplus.ui.dialog.login.model.RemotePresentationModel.*;
+import com.db4o.omplus.ui.dialog.login.model.RemotePresentationModel.RemoteSelectionListener;
 
 public class RemoteLoginPaneSpec implements LoginPaneSpec<RemoteConnectionParams> {
 
@@ -65,7 +65,7 @@ public class RemoteLoginPaneSpec implements LoginPaneSpec<RemoteConnectionParams
 			}
 		});
 		
-		model.addListener(new RemoteSelectionListener() {
+		model.addRemoteSelectionListener(new RemoteSelectionListener() {
 			public void remoteSelection(String host, String port, String user, String pwd) {
 				hostText.setText(host);
 				portText.setText(port);

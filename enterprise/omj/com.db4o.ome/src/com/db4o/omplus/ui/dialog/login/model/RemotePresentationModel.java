@@ -25,7 +25,7 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 		super(model, configSource);
 	}
 
-	public void addListener(RemoteSelectionListener listener) {
+	public void addRemoteSelectionListener(RemoteSelectionListener listener) {
 		remoteListeners.add(listener);
 	}
 
