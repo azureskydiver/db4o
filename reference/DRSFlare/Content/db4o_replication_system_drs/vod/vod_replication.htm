@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2042" MadCap:lastWidth="574">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2161" MadCap:lastWidth="560">
     <head>
     </head>
     <body>
@@ -15,7 +15,9 @@
         <h2><a name="db4oToVod"></a>Replication from db4o to VOD</h2>
         <p>After this preparation you can store, retrieve and update normally. To start the replication-process you need to create the two replication partners. Open a replication partner for db4o like this:</p>
         <MadCap:snippetBlock src="../../CodeExamples/drs/vod/SimpleReplication-Open-the-db4o-replication-provider.all.flsnp" />
-        <p>Then open a replication provider for VOD. For VOD you should additionally add all classes which you want to replicate. Why is this necessary? In VOD you usually have a huge database and you only want to replicate parts of it to db4o. Therefore you can specify which classes are replicated. In case you don’t specify anything only the types which have been already replicate once are replicated.</p>
+        <p>Then open a replication provider for VOD. First create a new VodDatabase instance by passing the JDO PersistenceManagerFactory or the <a href="setup.htm#JDOSetup">configuration properties</a> to the constructor.</p>
+        <p>Second configure the host and port of the event processor with the configureEventProcessor method. Use the port which you've configured when setting up the <a href="setup-event-processing.htm">event processor</a>. It's the port you've configured with the '-eventProcessorPort'-configuration.</p>
+        <p>Then create the VOD replication provider. For the VOD replication provider you should additionally add all classes which you want to replicate. Why is this necessary? In VOD you usually have a huge database and you only want to replicate parts of it to db4o. Therefore you can specify which classes are replicated. In case you don’t specify anything only the types which have been already replicate once are replicated.</p>
         <MadCap:snippetBlock src="../../CodeExamples/drs/vod/SimpleReplication-Open-the-VOD-replication-provider.all.flsnp" />
         <p>After that you can start the replication. Request the changes from the db4o replication provider. Then iterate over the changed objects and replicate them. Commit to complete the replication process.</p>
         <MadCap:snippetBlock src="../../CodeExamples/drs/vod/SimpleReplication-Start-replication.all.flsnp" />

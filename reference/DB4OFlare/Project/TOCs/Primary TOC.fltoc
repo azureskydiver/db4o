@@ -1512,6 +1512,10 @@
     Title="db4o Replication System"
     conditions="Primary.Java"
     Link="../../../DRSFlare/Reference.flprj#JavaWeb"
+    ReplaceMergeNode="false"
+    StartSection="false"
+    StartChapter="false"
+    AutoMerge="after-head"
     AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/workingCopy/DRSFlare/Reference.flprj#JavaWeb"></TocEntry>
   <TocEntry
     Title="db4o Replication System"

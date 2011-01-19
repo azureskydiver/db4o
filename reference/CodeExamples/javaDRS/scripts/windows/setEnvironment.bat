@@ -3,7 +3,7 @@ REM Specify the directory where the DRS and db4o jars are
 REM This directory should contain the dRS distribution.
 REM Or more specific it needs the dRS-X.XX-core.jar, 
 REM db4o-X.XX-core-java5.jar or db4o-X.XX-core-java5.jar, commons-cli-1.2.jar
-SET LIB_DIR=.\lib
+SET LIB_DIR=./lib
 
 REM Specify the VOD database name
 SET DATABASE_NAME=dRSVodExample
