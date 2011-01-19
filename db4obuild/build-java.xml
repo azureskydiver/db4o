@@ -2138,7 +2138,10 @@
 	<target name="package.java" depends="init, build.db4ojava, build.db4ojava.tests, 
 		prepare.docs, prepare.java.src, build.omej">
 		<copy todir="${dir.dist.java.build}">
-			<fileset dir="${dir.dist.java}" includes="lib/**" />
+			<fileset dir="${dir.dist.java}">
+				<include name="lib/**" />
+				<exclude name="lib/*-java1.*"/>
+			</fileset>
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
 		</copy>
 		
