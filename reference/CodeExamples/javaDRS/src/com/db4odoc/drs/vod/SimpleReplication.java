@@ -28,8 +28,8 @@ public class SimpleReplication {
     private static final String DATABASE_FILE = "database.db4o";
 
     public static void main(String[] args) {
-//        fromDB4OtoVOD();
-//        fromVODtoDB4O();
+        fromDB4OtoVOD();
+        fromVODtoDB4O();
         biDirectional();
 
     }
@@ -47,8 +47,10 @@ public class SimpleReplication {
             // #end example
 
             // #example: Open the VOD replication provider
+            VodDatabase vodDatabase = new VodDatabase(factory);
+            vodDatabase.configureEventProcessor("localhost",4100);
             VodReplicationProvider centralDatabase
-                    = new VodReplicationProvider(new VodDatabase(factory));
+                    = new VodReplicationProvider(vodDatabase);
             centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);
             // #end example
 
