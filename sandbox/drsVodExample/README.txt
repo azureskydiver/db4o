@@ -28,9 +28,30 @@ It should come up in a separate console stay up and print:
 It should come up in a separate console stay up and print:
 'VOD EventProcessor for dRS is listening for events.'
 
-Once you have done the above you can play with all the classes
-in the drs.vod.example package to store, replicate and print
-the content of a VOD and a db4o database.
+- The persistent classes for this example need to be enhanced.
+To do this, you can use the build.xml Ant script in this 
+project. To set this up, create a machine.properties containing
+a single line where dir.versant points to the /lib folder of
+your VOD installation. For example:
+dir.versant.lib=C:/Versant/8/lib
+Once this machine.properties file is created, you can run the
+enhance target in the build.xml.
+
+Once you have done all of the above you can play with all the
+classes in the drs.vod.example package to store, replicate and
+print the content of a VOD and a db4o database.
+
+A recommended sequence to run the Java programs:
+(1) Store2NewBooksToVod
+(2) PrintDatabaseContent 
+(3) ReplicateAllBooksOrdersCustomersFromVodToDb4o
+(4) PrintDatabaseContent
+(5) StoreNewOrderInDb4o
+(6) PrintDatabaseContent
+(7) ReplicateAllChangesInBothDirections
+(8) PrintDatabaseContent
+...
+
 
 **************************************************************
                        * Important *

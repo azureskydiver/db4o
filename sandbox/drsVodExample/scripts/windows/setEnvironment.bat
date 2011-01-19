@@ -3,23 +3,11 @@ SET EXAMPLE_HOME=%CD%\..\..
 
 SET JAVA=java
 
-REM To bring the eventprocessor up without a window.
-REM SET JAVA=javaw
-
-REM Use full path if needed
-REM SET JAVA="C:\Program Files (x86)\Java\jdk1.6.0_17\bin\java.exe"
-
-SET DB4O_VERSION=8.0.173.15095
+SET DB4O_VERSION=8.0.183.15418
 
 SET CLI=%EXAMPLE_HOME%\lib\commons-cli-1.2.jar
 SET DB4O_JAR=%EXAMPLE_HOME%\lib\db4o-%DB4O_VERSION%-all-java5.jar
 SET DRS_PATH=%EXAMPLE_HOME%\lib\dRS-%DB4O_VERSION%-core.jar
-
-REM delete the following before releasing
-SET PATCH_JAR=%EXAMPLE_HOME%\lib\vod8.drs.patch.jar
-
-REM for debugging:
-REM SET DRS_PATH=D:/workspaces/trunk/drs/bin
 
 SET DATABASE_NAME=dRSVodExample
 
@@ -38,5 +26,6 @@ SET SERVER_PORT=4000
 SET CLIENT_PORT=4100
 SET EVENTPROCESSOR_PORT=4200
 
-SET LOCAL_CLASSPATH=%PATCH_JAR%;%VOD_JDO%;%JVI%;%DRS_PATH%;%CLI%;%JDO_JAR%;%ASM%;%DB4O_JAR%;
+SET LOCAL_CLASSPATH=%VOD_JDO%;%JVI%;%DRS_PATH%;%CLI%;%JDO_JAR%;%ASM%;%DB4O_JAR%
+
 
