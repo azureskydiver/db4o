@@ -34,7 +34,7 @@
     </target>
       
 	
-	<target name="flare-drs-net" >
+	<target name="flare-drs-net" if="flare.executable">
 
 		<flare output="${dir.dist.flare.temp}" target="NetPdf" projectDirectory="${flare.project.drs.folder}" />
 		<copy file="${dir.dist.flare.temp}/Output/NetPdf/drs-reference-net.pdf" todir="${drs.net.dir}/docs/reference" />

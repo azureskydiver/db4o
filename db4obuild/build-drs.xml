@@ -195,7 +195,7 @@
 	</target>
 	
 	
-	<target name="flare-drs-java" >
+	<target name="flare-drs-java" if="flare.executable">
 
 		<flare output="${dir.dist.flare.temp}" target="JavaPdf" projectDirectory="${flare.project.drs.folder}" />
 		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/drs-reference-java.pdf" todir="${drs.dir.dist.temp}/doc/reference" />
@@ -224,6 +224,8 @@
 					    </copy>
 		
         <antcall target="add-gplheader" />
+		
+		<mkdir dir="${drs.dir.dist.temp}/doc/reference"/>
         
 		<zip destfile="${file.drs.zip}" >
 			<zipfileset dir="${drs.dir.base}" prefix="${zipbasedir}" includes="readme.html, drs.license.html" />
