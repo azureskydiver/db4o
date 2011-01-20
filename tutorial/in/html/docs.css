@@ -96,3 +96,8 @@ a:visited{
 	background-color: #BB0000;
 	color: #FFFFFF;
 }
+#footer {
+	border: 1px solid #F6F6F6;
+	background-color: 1px solid #F6F6F6;
+	padding: 2px;
+}
