@@ -8,6 +8,8 @@ import com.db4o.rmi.*;
 
 public class TcpClient implements ClientChannelControl {
 
+	private static final long CONNECTION_TIMEOUT_IN_MILLIS = 5 * 1000;
+
 	volatile boolean running = true;
 	
 	private Thread thread;
@@ -107,11 +109,18 @@ public class TcpClient implements ClientChannelControl {
 	
 	private Socket connect() throws IOException {
 		Socket s = null;
+		long startedTime = System.currentTimeMillis();
+		int count = 0;
 		while (running) {
 			try {
 				s = new Socket(host, port);
 				break;
 			} catch (ConnectException e) {
+				count++ ;
+				long elapsed = System.currentTimeMillis() - startedTime;
+				if (elapsed > CONNECTION_TIMEOUT_IN_MILLIS) {
+					throw new ConnectionTimeoutException(host, port, elapsed, count, e);
+				}
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {

@@ -49,15 +49,33 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final Map<Class, List<Class>> _classHierarchy = new HashMap<Class, List<Class>>();
 	
-	SimpleTimer _heartbeatTimer = new SimpleTimer(
-		new Runnable() {
-			public void run() {
-				if (!pinging()) {
-					return;
-				}
+	SimpleTimer _heartbeatTimer = new SimpleTimer(new Runnable() {
+		boolean firstTime = true;
+
+		public void run() {
+
+			// to make debugging easier, we dont want the heartbeatTimer be the
+			// first one to do a scynrhonous remote call against the event
+			// processor. if we ignore the first heartbeat, when runnint
+			// testcases, chances are that the first call will be the test
+			// itself. Fabio.
+			if (firstTime) {
+				firstTime = false;
+				return;
+			}
+			
+			if (!pinging()) {
+				return;
+			}
+			try {
 				asyncEventProcessor().ping();
-			}}, 
-		COMM_HEARTBEAT);
+			} catch (RuntimeException e) {
+				if (!(e.getCause() instanceof ConnectionTimeoutException)) {
+					throw e;
+				}
+			}
+		}
+	}, COMM_HEARTBEAT);
 
 	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heartbeat");
 
