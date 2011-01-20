@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2813" MadCap:lastWidth="1309">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2841" MadCap:lastWidth="1122">
     <head>
         <link href="../../Resources/TableStyles/Basic.css" rel="stylesheet" MadCap:stylesheetType="table" />
     </head>
@@ -7,6 +7,8 @@
         <h1>
             <MadCap:keyword term="VOD:Event Processing" MadCap:conditions="Primary.Java" />Setup Event Processing</h1>
         <p>The replication system needs to know which objects have been changed in order to replicate these changes. To do so it uses VOD's event system. You need to setup the event processing and keep it running for this purpose.</p>
+        <p><b>Note: Replication with VOD require at least VOD version 8 with patch 3 and JVI installed. </b>
+        </p>
         <h2>The Classpath</h2>
         <p>For the replication operations some additional libraries are required besides the JDO ones. This includes the db4o related libraries and additional VOD libraries.</p>
         <MadCap:snippetBlock src="../../Snippets/VODDrsClasspath.flsnp" />
