@@ -8,7 +8,7 @@
 	<property name="dir.omn.dist" value="${dir.dist.dll}/omn" />
 	<property name="output.dir" value="bin" />
 
-	<target name="build-omn-standalone" depends="configure-net2, build-omn" description="Builds OMN">
+	<target name="build-omn-standalone" depends="configure-net35, build-omn" description="Builds OMN">
 	</target>
 	
 	<target name="build-omn" depends="properties, prepare-build" description="Builds OMN">
@@ -42,9 +42,6 @@
 		<property name="file.omn-solution" value = "${dir.omn.dist.src}/OMAddin" />
 		
 		<switch value="${msbuild.target.platform}">
-			<case value="2005">
-				<property name="VSSerialVersion" value="8.0" />
-			</case>
 			<case value="2008">
 				<property name="VSSerialVersion" value="9.0" />
 			</case>
