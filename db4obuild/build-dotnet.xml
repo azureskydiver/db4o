@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Db4objects.Db4o" default="build-net20">
+<project name="Db4objects.Db4o" default="build-net35">
 	<!--
 	The following properties should be specified in machine.properties:
 	
@@ -90,11 +90,6 @@
 			description="Builds and runs all the .net 3.5 relevant test cases (including Visual Basic LINQ and ASTORIA tests)">
 	</target>
 	
-	<target name="run-tests-net20"
-			depends="clean, configure-debug, configure-net2, run-tests-net"
-			description="Builds and runs all the .net 2.0 relevant test cases">
-	</target>
-	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 
@@ -176,9 +171,6 @@
 	    
 		<exec executable="make" dir="${dir.n.v6}">
 		</exec>
-	</target>
-	
-	<target name="package-net20" depends="build-net20, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
 	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 3.5 distros">
@@ -376,9 +368,6 @@
 		</ant>
 	</target>
 	
-	<target name="build-net20" depends="init, configure-net2, build-all" description="Builds Db4o for the .net 2.0 framework">
-	</target>
-	
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
 	</target>
 
@@ -395,9 +384,6 @@
 	</target>
 
 	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial, build-omn">
-	</target>
-	
-	<target name="rebuild" depends="clean, build-net20">
 	</target>
 	
 	<target name="api-diff">
@@ -597,7 +583,6 @@
 		
 		<updateAssemblyKey keyfile="${dir.n.v6}/db4objects.snk">
 			<projectFiles dir="${dir.n.v6}">
-				<include name="**/*-2005.csproj" />
 				<include name="**/*-2008.csproj" />				
 				<include name="**/*-2010.csproj" />				
 				<exclude name="Db4oTutorial/**" />
@@ -745,14 +730,6 @@
 		<attribute name="sources" />
 			
 		<sequential>
-			<updatecsharpproject projectFile="@{project}-2005.csproj">
-				<sources refid="@{sources}" />
-			</updatecsharpproject>
-
-			<updatecsharpproject projectFile="@{project}-CF-2005.csproj">
-				<sources refid="@{sources}" />
-			</updatecsharpproject>
-			
 			<updatecsharpproject projectFile="@{project}-2008.csproj">
 				<sources refid="@{sources}" />
 			</updatecsharpproject>
@@ -910,10 +887,6 @@
 			<include name="**/*.cs" />
 		</fileset>
 
-		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool/Db4oTool-2005.csproj">
-			<sources refid="db4otool.files" />
-		</updatecsharpproject>			
-		
 		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool/Db4oTool-2008.csproj">
 			<sources refid="db4otool.files" />
 		</updatecsharpproject>
@@ -929,11 +902,6 @@
 			<include name="**/Resources/*.*" />
 		</fileset>
 			
-		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool.Tests/Db4oTool.Tests-2005.csproj">
-			<sources refid="db4otool-tests.files" />
-			<resources refid="db4otool-tests.resources" />
-		</updatecsharpproject>
-		
 		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool.Tests/Db4oTool.Tests-2008.csproj">
 			<sources refid="db4otool-tests.files" />
 			<resources refid="db4otool-tests.resources" />
@@ -1026,7 +994,7 @@
 	<target name="sandcastle" depends="run-sandcastle, warn-about-sandcastle">
 	</target>
 	
-	<target name="sandcastle-standalone" depends="configure-net2, sandcastle">
+	<target name="sandcastle-standalone" depends="configure-net35, sandcastle">
 	</target>
 	
 	<target name="warn-about-sandcastle" unless="sandcastle.available">
@@ -1159,31 +1127,6 @@
 		
 	<target name="ndoc-net" unless="mono">	
 		<antcall target="sandcastle" />
-	</target>
-	
-	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
-		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
-			<arg value="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
-			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
-			<arg value="-documenter=VS.NET 2003" />
-			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
-			<arg value="-BuildSeparateIndexFile=false" />
-			<arg value="-CollectionNamespace=com.db4o" />
-			<arg value="-CreateFullTextIndex=true" />
-			<arg value="-GenerateCollectionFiles=true" />
-			<arg value="-HtmlHelpName=db4o" />
-			<arg value="-IncludeDefaultStopWordList=true" />
-			<arg value="-LinkToSdkDocVersion=1.1" />
-			<arg value="-PlugInNamespace=ms.vscc" />
-			<arg value="-RegisterTitleWithNamespace=true" />
-			<arg value="-Title=db4o" />
-			<arg value="-SkipNamespacesWithoutSummaries=True" />
-			<arg value="-SdkLinksOnWeb=False" />
-            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
-			<arg value="-CopyrightText=Copyright (C) 2004 - 2009  Versant Corporation" />
-            <arg value="-CopyrightHref=http://www.db4o.com/" />
-			<arg value="-IncludeFavorites=True" />
-		</exec>
 	</target>
 	
 	<target name="init" depends="properties">
@@ -1365,10 +1308,6 @@
     <target name="build-cf35" depends="init, configure-debug, configure-net35, prepare-csproject-all">
     	<build-cf />
     </target>
-	
-    <target name="build-cf20" depends="init, configure, prepare-csproject-all">
-    	<build-cf />
-    </target>	
     
     <target name="sharpen-all" depends="check-dependencies, install-sharpen-plugin, prepare-conversion-workspace" unless="skip.sharpen">
         <sharpen workspace="${dir.sharpen}" resource="db4oj">
