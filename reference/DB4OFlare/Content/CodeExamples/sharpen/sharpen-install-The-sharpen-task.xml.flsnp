@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
-	<div class="codesnippet" MadCap:conditions="Primary.Java">
+	<div class="codesnippet" MadCap:conditions="">
         <pre class="prettyprint" xml:space="preserve">&lt;macrodef name=&quot;sharpen&quot;&gt;
     &lt;attribute name=&quot;workspace&quot;/&gt;
     &lt;attribute name=&quot;resource&quot;/&gt;
@@ -33,7 +33,7 @@
 		<div class="codesnippet-meta">
 			sharpen-install.xml: The sharpen task
 			<div class="codedownload">
-				<a href="Example-db4odoc-sharpen-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+				<a href="Example-db4odoc-sharpen-.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
 			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
 		</div>

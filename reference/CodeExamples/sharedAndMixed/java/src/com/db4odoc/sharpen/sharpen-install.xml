@@ -10,7 +10,7 @@
         </sequential>
     </macrodef>
 
-    <!-- #example: Build Sharpen # -->
+    <!-- #example: Build Sharpen# -->
     <target name="build-sharpen">
         <property name="sharpen.core.dir" location="${dir.workspace}/sharpen.core"/>
         <reset-dir dir="${dir.dist.classes.sharp}"/>
@@ -42,7 +42,7 @@
     </target>
     <!-- #end example  -->
 
-    <!-- #example: Install Sharpen to Eclipse # -->
+    <!-- #example: Install Sharpen to Eclipse# -->
     <target name="install-sharpen-plugin" depends="build-sharpen">
         <copyfile src="${dir.dist.classes.sharp}/sharpen.core_1.0.0.jar" dest="${plugins.home}/sharpen.core_1.0.0.jar"/>
     </target>
