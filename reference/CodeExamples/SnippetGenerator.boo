@@ -272,6 +272,8 @@ snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../DB4OFlare/Content/C
 snippetGenerator.CreateCodeSnippets("javaAppExamples/","../DB4OFlare/Content/CodeExamples","java")
 snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../DB4OFlare/Content/CodeExamples","csharp")
 
+# Stuff which is shared between .NET and Java
+snippetGenerator.CreateCodeSnippets("sharedAndMixed/java/src/com/db4odoc","../DB4OFlare/Content/CodeExamples","")
 
 # vb-stuff with other template:
 snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator,tsCondition)
