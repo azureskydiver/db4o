@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="">
+        <pre class="prettyprint" xml:space="preserve">&lt;target name=&quot;build-sharpen&quot;&gt;
+    &lt;property name=&quot;sharpen.core.dir&quot; location=&quot;${dir.workspace}/sharpen.core&quot;/&gt;
+    &lt;reset-dir dir=&quot;${dir.dist.classes.sharp}&quot;/&gt;
+
+    &lt;javac fork=&quot;true&quot;
+           debug=&quot;true&quot;
+           target=&quot;1.5&quot;
+           source=&quot;1.5&quot;
+           destdir=&quot;${dir.dist.classes.sharp}&quot;
+           srcdir=&quot;${sharpen.core.dir}/src&quot;
+           encoding=&quot;UTF-8&quot;&gt;
+        &lt;classpath&gt;
+            &lt;fileset dir=&quot;${eclipse.home}/plugins&quot;&gt;
+                &lt;include name=&quot;org.eclipse.osgi_*.jar&quot;/&gt;
+                &lt;include name=&quot;org.eclipse.core.resources_*.jar&quot;/&gt;
+                &lt;include name=&quot;org.eclipse.core.runtime_*.jar&quot;/&gt;
+                &lt;include name=&quot;org.eclipse.jdt.core_*.jar&quot;/&gt;
+                &lt;include name=&quot;org.eclipse.jdt.launching_*.jar&quot;/&gt;
+                &lt;include name=&quot;org.eclipse.equinox.*.jar&quot;/&gt;
+                &lt;include name=&quot;org.eclipse.core.jobs_*.jar&quot;/&gt;
+            &lt;/fileset&gt;
+        &lt;/classpath&gt;
+    &lt;/javac&gt;
+    &lt;jar destfile=&quot;${dir.dist.classes.sharp}/sharpen.core_1.0.0.jar&quot; basedir=&quot;${dir.dist.classes.sharp}&quot;&gt;
+        &lt;fileset dir=&quot;${sharpen.core.dir}&quot;&gt;
+            &lt;include name=&quot;plugin.xml&quot;/&gt;
+        &lt;/fileset&gt;
+    &lt;/jar&gt;
+&lt;/target&gt;</pre>
+		<div class="codesnippet-meta">
+			sharpen-install.xml: Build Sharpen
+			<div class="codedownload">
+				<a href="Example-db4odoc-sharpen-.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

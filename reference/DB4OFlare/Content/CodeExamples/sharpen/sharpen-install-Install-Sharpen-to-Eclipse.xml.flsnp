@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="">
+        <pre class="prettyprint" xml:space="preserve">&lt;target name=&quot;install-sharpen-plugin&quot; depends=&quot;build-sharpen&quot;&gt;
+    &lt;copyfile src=&quot;${dir.dist.classes.sharp}/sharpen.core_1.0.0.jar&quot; dest=&quot;${plugins.home}/sharpen.core_1.0.0.jar&quot;/&gt;
+&lt;/target&gt;</pre>
+		<div class="codesnippet-meta">
+			sharpen-install.xml: Install Sharpen to Eclipse
+			<div class="codedownload">
+				<a href="Example-db4odoc-sharpen-.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>
