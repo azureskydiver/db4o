@@ -52,7 +52,7 @@ public class AllDrsTests implements TestSuiteBuilder {
 		
 		Iterator4 tests = Iterators.concat(list).iterator();
 
-		if (runVodTests) {
+		if (runVodTests && ! DrsTestSuite.RUN_ONE_SINGLE_TEST) {
 			tests = Iterators.concat(tests, new VodStandaloneTests().iterator());
 		}
 		

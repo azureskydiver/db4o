@@ -146,11 +146,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		checkName(container(inspected), "oldFromBChangedIn" + origin, isChangedNameExpected(origin, inspected));
 	}
 
-//	public void configure() {
-//		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-//		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-//	}
-
 	private TestableReplicationProviderInside container(String aOrB) {
 		return aOrB.equals(AStuff) ? a().provider() : b().provider();
 	}
@@ -300,9 +295,6 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		a().provider().commit();
 		b().provider().commit();
 		
-		a().provider().waitForPreviousCommits();
-		b().provider().waitForPreviousCommits();
-
 		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider());
 
 		replicateQueryingFrom(replication, a().provider(), b().provider());

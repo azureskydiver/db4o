@@ -26,13 +26,16 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 public abstract class DrsTestSuite extends ReflectionTestSuite {
+	
+	public static final boolean RUN_ONE_SINGLE_TEST = false;
 
 	@SuppressWarnings("unchecked")
 	protected Class[] testCases() {
 		
-		if(false){
+		if(RUN_ONE_SINGLE_TEST){
 			return new Class[]{
-					ReplicationFeaturesMain.class
+				ReplicationFeaturesMain.class,
+				// SimpleBidirectionalReplication.class
 			};
 		}
 		
@@ -60,6 +63,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 				// General
 				CollectionHandlerImplTest.class,
+				SimpleBidirectionalReplication.class,
 				TimestampTestCase.class,
 		
 				MapTest.class,
