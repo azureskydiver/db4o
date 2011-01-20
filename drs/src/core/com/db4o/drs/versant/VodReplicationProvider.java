@@ -125,13 +125,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 						return;
 					}
 				}
-				String className = clazz.getName();
-				Long classMetadataLoid = _knownClasses.get(className);
+				Long classMetadataLoid = _knownClasses.get(clazz.getName());
 				if(classMetadataLoid == null) {
 					 classMetadataLoid = ensureClassKnown(clazz);
 				}
-				long loid = loid(object);
-				log("Timestamp for " + loid + " preset to " + _commitTimeStamp);
 			}
 		});
 	}
