@@ -110,10 +110,6 @@
             Link="/Content/basics/querying/native_queries/native_query_examples.htm#ArbitraryCode" />
         </TocEntry>
         <TocEntry
-          Title="Native Queries Without Generics"
-          Link="/Content/basics/querying/native_queries/native_queries_old_java.htm"
-          conditions="Primary.Java" />
-        <TocEntry
           Title="Native Query Sorting"
           Link="/Content/basics/querying/native_queries/native_query_sorting.htm" />
         <TocEntry
