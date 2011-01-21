@@ -163,6 +163,10 @@
 		<condition property="inWindows">
 			<os family="windows"/>
 		</condition>
+		
+		<!-- BLD-200 - we give the emulator 5 seconds for it to quit gracefully before killing it -->
+		<sleep if="inWindows" seconds="5"/>
+		
 		<antcall target="kill-emulator-on-windows" />
 		
 		<exec executable="${file.android.tool.adb}">
