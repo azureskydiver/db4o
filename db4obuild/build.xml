@@ -27,7 +27,6 @@
 	java.vmargs=<OPTIONAL: java VM args for test suites>
 	sharpen.core.dir=<OPTIONAL: if you keep sharpen in a different location>
 	
-	
  	##################################
  	#          Flare Support         # 
     ##################################
@@ -35,9 +34,6 @@
 	flare.executable=<OPTIONAL: path to the flare executable, usually its installation folder/Flare.app/madbuild.exe
 								if this property is missing, flare wont be executed. so the reference documentation
 								will not be generated>
-									
-	
-	
 
  	##################################
  	#          Maven Support         # 
@@ -60,12 +56,9 @@
 	The path to this file can be specified via property "path.machine.properties", as in
 	ant -Dpath.machine.properties=machine.properties.win build-before-checkin
 	
-	
-	
  	##################################
  	#         Android Support        # 
     ##################################
-	
 	
 	#The following line enables the Android build. You are going to need Android platform sdk tools in your path.
 	#android.enabled=true
@@ -74,7 +67,6 @@
 	android.apilevel=<android api level>
 	
 	# for further customizations check build-android-tests.xml properties
-	
 
     ##################################
  	#         Building on a x64 bit Windows box          # 
@@ -82,7 +74,23 @@
 
 	dir.programfiles= ${env.ProgramFiles(x86)}
 	
+	##################################
+ 	#           VOD Support          # 
+    ##################################
+    
+	run.vod.drs.tests = true | false, default: false
+    dir.vod.lib = <vod lib folder ~ $VERSANT_ROOT/lib>, required for drs build
+    path.vod.bin = OPTIONAL <vod bin folder ~ $VERSANT_ROOT/bin>, required for drs regression tests if run.vod.drs.tests == true
+	path.vod.lib = OPTIONAL <vod library path ~ $VERSANT_ROOT/lib and $VERSANT_ROOT/sdk/lib>, required for drs regression tests if run.vod.drs.tests == true
 	
+	##################################
+ 	#              DRS BBC           # 
+    ##################################
+    
+	skip.drs.net.tests = true # if you do not have a .NET build environment set this to true 
+	                          # and build-drs-beforen-checkin target will build and run drs 
+	                          # and tests for java and also run sharpen. 
+
 	
 		An example:
 	dir.workspace=C:/_db4o/production
@@ -102,26 +110,10 @@
 	
 	android.apilevel=android-7
 	emulator.device=android-2.1
-	
-	
-	##################################
- 	#           VOD Support          # 
-    ##################################
-    
-    Examples:
-    
+	 
     dir.vod.lib=C:/Versant/8/lib
     path.vod.bin=C:/Versant/8/bin
 	path.vod.lib=C:/Versant/8/lib;C:/Versant/8/sdk/lib
-	
-	##################################
- 	#              DRS BBC           # 
-    ##################################
-    
-	skip.drs.net.tests = true # if you do not have a .NET build environment set this to true 
-	                          # and build-drs-beforen-checkin target will build and run drs 
-	                          # and tests for java and also run sharpen. 
- 
 -->
 	<import file="common.xml" />
 	
