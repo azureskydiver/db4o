@@ -40,7 +40,11 @@
 			<fileset dir="${drs.dir.dist.lib}">
 				<include name="**/*.jar" />
 			</fileset>
-			
+
+			<fileset dir="${dir.vod.lib}">
+				<include name="**/*.jar" />
+			</fileset>
+
 			<pathelement location="${drs.dir.dist.classes}" />
 			<pathelement location="${file.jdk1.5.jar}" />
 			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
@@ -268,12 +272,7 @@
 	
 	<target name="run-regression" depends="init">
 		<java jvm="${file.jvm.jdk1.6}" fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
-			<classpath>
-				<fileset dir="${dir.vod.drs.patch}">
-					<include name="**/*.jar" />
-				</fileset>
-				<path refid="class.path" />
-			</classpath>
+			<classpath refid="class.path" />
 			<jvmarg line="-DrunVodTests=${run.vod.drs.tests}" />
 			<jvmarg line="${jvmarg.drs.vod.regression.enhancer}" />
 			<env key="${key.drs.vod.regression.bin}" path="${path.drs.vod.regression.bin}" />
