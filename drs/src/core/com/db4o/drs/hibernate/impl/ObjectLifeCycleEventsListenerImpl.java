@@ -79,6 +79,9 @@ public class ObjectLifeCycleEventsListenerImpl
 
 	public final void destroy() {
 		_alive = false;
+		for(Session session : _threadSessionMap.values()) {
+			GeneratorMap.remove(session);
+		}
 		_threadSessionMap.clear();
 		_threadSessionMap = null;
 

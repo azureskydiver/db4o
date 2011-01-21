@@ -33,7 +33,12 @@ public class GeneratorMap {
 		_sessionTimeStampIdGeneratorMap.put(s, t);
 	}
 
+
 	static TimeStampIdGenerator get(Session s) {
 		return _sessionTimeStampIdGeneratorMap.get(s);
+	}
+	
+	static void remove(Session session) {
+		_sessionTimeStampIdGeneratorMap.remove(session);
 	}
 }
