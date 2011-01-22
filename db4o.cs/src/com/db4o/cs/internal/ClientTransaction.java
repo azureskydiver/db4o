@@ -92,8 +92,8 @@ public final class ClientTransaction extends Transaction {
         return _client.expectedBufferResponse(Msg.VERSION_FOR_ID).readLong();
 	}
 	
-	public long generateTransactionTimestamp(){
-		_client.writeMsg(Msg.GENERATE_TRANSACTION_TIMESTAMP.getWriter(this), true);
+	public long generateTransactionTimestamp(long forcedTimeStamp){
+		_client.writeMsg(Msg.GENERATE_TRANSACTION_TIMESTAMP.getWriterForLong(this, forcedTimeStamp), true);
 		return _client.expectedBufferResponse(Msg.GENERATE_TRANSACTION_TIMESTAMP).readLong();		
 	}
 	

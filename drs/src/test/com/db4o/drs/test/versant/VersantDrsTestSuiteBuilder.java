@@ -23,6 +23,23 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 
 	public Iterator4 iterator() {
 		
+		if(false){
+			return new DrsTestSuiteBuilder(
+					new VodDrsFixture("vod-drs-b"), 
+					new Db4oDrsFixture("db4o-drs-a", reflector),
+					VersantDrsTestSuite.class, 
+					reflector).iterator();
+		}
+		
+		if(false){
+			return new DrsTestSuiteBuilder(
+					new Db4oDrsFixture("db4o-drs-a", reflector),
+					new VodDrsFixture("vod-drs-b"), 
+					VersantDrsTestSuite.class, 
+					reflector).iterator();
+ 
+		}
+		
 		return Iterators.concat(
 			
 			new DrsTestSuiteBuilder(

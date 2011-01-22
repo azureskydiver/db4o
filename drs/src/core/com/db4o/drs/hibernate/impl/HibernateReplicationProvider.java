@@ -718,9 +718,17 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	public long objectVersion(Object obj) {
 		ObjectReference ref = objectReferenceFor(obj);
 		if(ref == null){
-			throw new IllegalStateException("Object unknown: "  + obj.toString());
+			return 0;
 		}
 		return ref.getModified();
+	}
+	
+	public long creationTime(Object obj) {
+		ObjectReference ref = objectReferenceFor(obj);
+		if(ref == null){
+			return 0;
+		}
+		return ref.getUuid().getCreated();
 	}
 
 	public void ensureVersionsAreGenerated() {
@@ -732,6 +740,14 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	
 	public void waitForPreviousCommits() {
 		// do nothing
+	}
+
+	public void syncCommitTimestamp(long syncedTimeStamp) {
+		if(syncedTimeStamp <= _commitTimestamp){
+			return;
+		}
+		_commitTimestamp = syncedTimeStamp;
+		_generator.setMinimumNext(syncedTimeStamp + 1);
 	}
 	
 }

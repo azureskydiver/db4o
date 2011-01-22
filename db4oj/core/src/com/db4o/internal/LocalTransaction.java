@@ -388,8 +388,12 @@ public class LocalTransaction extends Transaction {
 		return _commitTimestampSupport;
 	}
 	
-	public long generateTransactionTimestamp(){
-		_timestamp = localContainer().generateTimeStampId();
+	public long generateTransactionTimestamp(long forcedTimeStamp){
+		if(forcedTimeStamp > 0){
+			_timestamp = forcedTimeStamp;
+		} else {
+			_timestamp = localContainer().generateTimeStampId();
+		}
 		return _timestamp;
 	}
 	

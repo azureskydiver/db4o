@@ -34,4 +34,6 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 	
 	void waitForPreviousCommits();
 
+	long creationTime(Object obj);
+
 }

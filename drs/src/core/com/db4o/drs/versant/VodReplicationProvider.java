@@ -43,7 +43,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final long _mySignatureLoid;
 	
-	private volatile long _commitTimeStamp;
+	private volatile long _commitTimestamp;
 	
 	List<Long> _ignoreEventsForLoid = new java.util.LinkedList<Long>();
 	
@@ -394,7 +394,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		} else {
 			syncEventProcessor().syncTimestamp(_replicationCommitRecord.timestamp() + 1);
 		}
-		_commitTimeStamp = syncEventProcessor().generateTimestamp();
+		_commitTimestamp = syncEventProcessor().generateTimestamp();
 	}
 
 	public void waitForPreviousCommits() {
@@ -462,9 +462,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			long signatureLoid = produceSignature(signature);
 			long otherLongPart = ref.uuid().getLongPart();
-			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimeStamp, Operations.CREATE.value);
+			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimestamp, Operations.CREATE.value);
 		} else{
-			objectInfo.version(_commitTimeStamp);
+			objectInfo.version(_commitTimestamp);
 			objectInfo.operation(Operations.UPDATE.value);
 		}
 		
@@ -480,7 +480,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private void storeReplicationCommitRecord() {
-		_replicationCommitRecord.timestamp(_commitTimeStamp);
+		_replicationCommitRecord.timestamp(_commitTimestamp);
 		_cobra.store(_replicationCommitRecord);
 		_cobra.commit();
 	}
@@ -743,15 +743,29 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 
-	public long objectVersion(Object next) {
-		ObjectInfo objInfo = objectInfoForLoid(loid(next));
+	public long objectVersion(Object object) {
+		ObjectInfo objInfo = objectInfoForLoid(loid(object));
 		return objInfo == null ? 0 : objInfo.version();
 	}
+	
+	public long creationTime(Object object) {
+		ObjectInfo objInfo = objectInfoForLoid(loid(object));
+		return objInfo == null ? 0 : objInfo.uuidLongPart();
+	}
+
 
 	public void ensureVersionsAreGenerated() {
 	}
 
 	public TimeStamps timeStamps() {
-		return new TimeStamps(_replicationCommitRecord.timestamp(), _commitTimeStamp);
+		return new TimeStamps(_replicationCommitRecord.timestamp(), _commitTimestamp);
+	}
+
+	public void syncCommitTimestamp(long syncedTimeStamp) {
+		if(syncedTimeStamp <= _commitTimestamp){
+			return;
+		}
+		_commitTimestamp = syncedTimeStamp;
+		syncEventProcessor().syncTimestamp(syncedTimeStamp + 1);
 	}
 }

@@ -324,7 +324,7 @@ public abstract class Transaction {
 
 	public abstract long versionForId(int id);
 	
-	public abstract long generateTransactionTimestamp();
+	public abstract long generateTransactionTimestamp(long forcedTimeStamp);
 	
 	public abstract void useDefaultTransactionTimestamp();
 

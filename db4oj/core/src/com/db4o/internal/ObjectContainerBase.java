@@ -2162,9 +2162,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		_classCollection = repository;
 	}
 	
-	public final long generateTransactionTimestamp(){
+	public final long generateTransactionTimestamp(long forcedTimestamp){
 		synchronized (lock()) {
-			return checkTransaction().generateTransactionTimestamp();
+			return checkTransaction().generateTransactionTimestamp(forcedTimestamp);
 		}
 	}
 	
