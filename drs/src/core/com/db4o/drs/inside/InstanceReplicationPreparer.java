@@ -139,12 +139,15 @@ class InstanceReplicationPreparer implements Visitor {
 			long creationTime = ownerRef.uuid().getLongPart();
 
 			if (creationTime > owner.timeStamps().from()) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
-				if (_isReplicatingOnlyDeletions) return false;
+				if (_isReplicatingOnlyDeletions){
+					return false;
+				}
 				return handleNewObject(_obj, ownerRef, owner, other, _referencingObject, _fieldName, true, false);
-			} else 
+			} else {
 				// If it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 				// No, not always, in a three-way replication setup it can also be new.
 				return handleMissingObjectInOther(_obj, ownerRef, owner, other, _referencingObject, _fieldName);
+			}
 		}
 
 		if (_isReplicatingOnlyDeletions) return false;

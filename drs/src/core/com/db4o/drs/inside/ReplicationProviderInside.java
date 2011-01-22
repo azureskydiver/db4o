@@ -110,4 +110,6 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 	
 	TimeStamps timeStamps();
 
+	void syncCommitTimestamp(long syncedTimeStamp);
+
 }

@@ -68,12 +68,12 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_providerB = (ReplicationProviderInside) providerB;
 		_listener = listener;
 		
-		runIsolated(new Block4() {
-			public void run() {
-				_providerA.startReplicationTransaction(_providerB.getSignature());
-				_providerB.startReplicationTransaction(_providerA.getSignature());
-			}
-		});
+		_providerA.startReplicationTransaction(_providerB.getSignature());
+		_providerB.startReplicationTransaction(_providerA.getSignature());
+		long syncedTimeStamp = 
+			Math.max(_providerA.timeStamps().commit(), _providerB.timeStamps().commit());
+		_providerA.syncCommitTimestamp(syncedTimeStamp);
+		_providerB.syncCommitTimestamp(syncedTimeStamp);
 		
 	}
 
@@ -85,26 +85,10 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_providerB = null;
 		_processedUuids = null;
 	}
-
-	private void runIsolated(final Block4 block) {
-		_providerA.runIsolated(new Block4() {
-			public void run() {
-				_providerB.runIsolated(new Block4() {
-					public void run() {
-						block.run();
-					}
-				});
-			}
-		});
-	}
 	
 	public final void commit() {
-		runIsolated(new Block4() {
-			public void run() {
-				_providerA.commitReplicationTransaction();
-				_providerB.commitReplicationTransaction();
-			}
-		});
+		_providerA.commitReplicationTransaction();
+		_providerB.commitReplicationTransaction();
 	}
 
 	public final ReplicationProvider providerA() {
@@ -139,7 +123,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_isReplicatingOnlyDeletions = true;
 		try {
 			Iterator instances = provider.getStoredObjects(extent).iterator();
-			while (instances.hasNext()) replicate(instances.next());
+			while (instances.hasNext()){
+				replicate(instances.next());
+			}
 		} finally {
 			_isReplicatingOnlyDeletions = false;
 		}

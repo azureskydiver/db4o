@@ -122,7 +122,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		out(String.valueOf(checkNameCount));
 		checkNameCount++;
 		if (isExpected) {
-			Assert.isNotNull(obj);
+			Assert.isNotNull(obj, "Expecting: " + name + " in " + containerName(container));
 		} else {
 			Assert.isNull(obj);
 		}
@@ -213,13 +213,17 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		ObjectSet storedObjects = provider.getStoredObjects(Replicated.class);
 		System.out.println("PROVIDER: "+provider);
 		while(storedObjects.hasNext()) {
-			Object next = storedObjects.next();
-			System.out.println("---> " + next + " - " + version(provider, next));
+			Object object = storedObjects.next();
+			System.out.println("-> " + object + " - c:" +creationTime(provider, object) + " v:" + version(provider, object));
 		}
 	}
 
 	private long version(TestableReplicationProviderInside provider, Object obj) {
 		return provider.objectVersion(obj);
+	}
+	
+	private long creationTime(TestableReplicationProviderInside provider, Object obj) {
+		return provider.creationTime(obj);
 	}
 
 	private boolean tryToReplicate(final ReplicationSession replication) {
@@ -295,6 +299,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		a().provider().commit();
 		b().provider().commit();
 		
+		printProvidersContent("init state");
 		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider());
 
 		replicateQueryingFrom(replication, a().provider(), b().provider());

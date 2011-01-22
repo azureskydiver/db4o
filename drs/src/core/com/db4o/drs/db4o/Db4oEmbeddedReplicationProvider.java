@@ -64,7 +64,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 
 	private final Procedure4 _activationStrategy;
 	
-	private long _commitTimeStamp;
+	private long _commitTimestamp;
 	
 	public Db4oEmbeddedReplicationProvider(ObjectContainer objectContainer, String name) {
 		Configuration cfg = objectContainer.ext().configure();
@@ -152,7 +152,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 			} else {
 				_container.raiseCommitTimestamp(_replicationRecord._version + 1);
 			}
-			_commitTimeStamp = _container.generateTransactionTimestamp();
+			_commitTimestamp = _container.generateTransactionTimestamp(0);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	}
 
 	private void storeReplicationRecord() {
-		_replicationRecord._version = _commitTimeStamp;
+		_replicationRecord._version = _commitTimestamp;
 		_replicationRecord.store(_container);
 	}
 
@@ -380,9 +380,9 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 
 	public void replicateDeletion(DrsUUID uuid) {
 		Object obj = _container.getByUUID(new Db4oUUID(uuid.getLongPart(), uuid.getSignaturePart()));
-		if (obj == null)
+		if (obj == null){
 			return;
-
+		}
 		_container.delete(obj);
 	}
 
@@ -419,8 +419,12 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 		return false;
 	}
 
-	public long objectVersion(Object next) {
-		return _container.getObjectInfo(next).getCommitTimestamp();
+	public long objectVersion(Object object) {
+		return _container.getObjectInfo(object).getCommitTimestamp();
+	}
+	
+	public long creationTime(Object object) {
+		return _container.getObjectInfo(object).getUUID().getLongPart();
 	}
 
 	public void ensureVersionsAreGenerated() {
@@ -428,11 +432,20 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	}
 
 	public TimeStamps timeStamps() {
-		return new TimeStamps(_replicationRecord._version, _commitTimeStamp);
+		return new TimeStamps(_replicationRecord._version, _commitTimestamp);
 	}
 
 	public void waitForPreviousCommits() {
 		// do nothing
+	}
+
+	public void syncCommitTimestamp(long syncedTimeStamp) {
+		if(syncedTimeStamp <= _commitTimestamp){
+			return;
+		}
+		_commitTimestamp = syncedTimeStamp;
+		_container.raiseCommitTimestamp(syncedTimeStamp + 1);
+		_container.generateTransactionTimestamp(syncedTimeStamp);
 	}
 	
 }
