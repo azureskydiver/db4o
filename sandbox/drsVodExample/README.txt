@@ -3,14 +3,25 @@
                       drsVodExample
 **************************************************************
 
-All Java classes in the drs.vod.example package contain
-main() methods that can be run.
+All Java classes in the drs.vod.example package contain main()
+methods that can be run.
 
-Before you can get started with running these classes you need
-to prepare the Vod Database for events and you have to start
-the EventDriver and the EventProcessor applications.
- 
- 
+This sample requires VOD 8.0 Patch 3 available from here:
+http://www.versant.com/developer/downloads/
+
+When you install it, make sure you also include JVI, selectable
+below Java, since JVI includes veddriver libraries, required 
+for this sample.
+
+To include VOD libraries for this sample, it's easiest if you
+create a 'VERSANT' user library. Configure the Eclipse build
+path, add library, User Library, new library 'VERSANT', and
+add jars below C:/Versant/lib and C:/Versant/SDK/lib.    
+
+Before you can get started you need to prepare the VOD Database
+for events and you have to start the EventDriver and the 
+EventProcessor applications.
+
 To do this: 
 
 - Adjust the script /scripts/setEnvironment to the paths on 
@@ -67,7 +78,7 @@ profile.be configuration file of the database to automate
 starting the event driver and the event processor.
 
 To set this up (after creating the database and the event schema):
-- Stop the database with stopdb [databaseName] -f
+- Stop the database with stopdb <databaseName> -f
 
 - Copy the setEnvironment and the startEventProcessor scripts and
 the config.ved file ( config.ved.win  or config.ved.linux)
