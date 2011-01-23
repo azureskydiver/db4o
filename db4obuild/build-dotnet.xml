@@ -812,9 +812,9 @@
 	<target name="create-dependencies-jar" depends="compiletestsjava" unless="skip.sharpen">
 		<mkdir dir="${dir.sharpen}/lib" />
 		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.dist.classes.java1.1}" />
-			<fileset dir="${dir.dist.classes.db4ounit.jdk1.1}" />
-			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
+			<fileset dir="${dir.dist.classes.java1.2}" />
+			<fileset dir="${dir.dist.classes.db4ounit.jdk1.2}" />
+			<fileset dir="${dir.dist.classes.test.jdk1.2}" />
 		</jar>
 	</target>
 	

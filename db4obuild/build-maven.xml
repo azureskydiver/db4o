@@ -69,11 +69,9 @@
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.instrumentation.jar}" pom="db4o-instrumentation-java1.2.xml"/>		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.instrumentation.jar}" pom="db4o-instrumentation-java5.xml"/>		
 		
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.jar}" pom="db4o-core-java1.1.xml"/>
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.jar}" pom="db4o-core-java1.2.xml" />
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.jar}" pom="db4o-core-java5.xml" />
 
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.nodep.jar}" pom="db4o-full-java1.1.xml" />		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.nodep.jar}" pom="db4o-full-java1.2.xml" />			
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.nodep.jar}" pom="db4o-full-java5.xml" />
 		
@@ -88,15 +86,12 @@
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.db4otools.jar}" pom="db4o-tools-java1.2.xml" />
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.db4otools.jar}" pom="db4o-tools-java5.xml" />
 		
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.cs.jar}" pom="db4o-cs-java1.1.xml" />	
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.cs.jar}" pom="db4o-cs-java1.2.xml" />		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.cs.jar}" pom="db4o-cs-java5.xml" />	
 			
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.cs.optional.jar}" pom="db4o-cs-optional-java1.1.xml" />	
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.cs.optional.jar}" pom="db4o-cs-optional-java1.2.xml" />		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.cs.optional.jar}" pom="db4o-cs-optional-java5.xml" />
 		
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.optional.jar}" pom="db4o-optional-java1.1.xml" />		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.optional.jar}" pom="db4o-optional-java1.2.xml" />			
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.optional.jar}" pom="db4o-optional-java5.xml" />
 		

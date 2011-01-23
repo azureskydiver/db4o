@@ -361,16 +361,12 @@
 		<property name="db4o.version.iteration.revision" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
 		<property name="db4o.file" value="db4o-${db4o.version.iteration.revision}-" />
 		
-		<property name="filename.jdk1.1.jar" value="${db4o.file}core-java1.1.jar" />
 		<property name="filename.jdk1.2.jar" value="${db4o.file}core-java1.2.jar" />
 		<property name="filename.jdk1.5.jar" value="${db4o.file}core-java5.jar" />
-		<property name="filename.jdk1.1.optional.jar" value="${db4o.file}optional-java1.1.jar" />
 		<property name="filename.jdk1.2.optional.jar" value="${db4o.file}optional-java1.2.jar" />
 		<property name="filename.jdk1.5.optional.jar" value="${db4o.file}optional-java5.jar" />		
-		<property name="filename.jdk1.1.cs.optional.jar" value="${db4o.file}cs.optional-java1.1.jar" />
 		<property name="filename.jdk1.2.cs.optional.jar" value="${db4o.file}cs.optional-java1.2.jar" />
 		<property name="filename.jdk1.5.cs.optional.jar" value="${db4o.file}cs.optional-java5.jar" />		
-		<property name="filename.jdk1.1.cs.jar" value="${db4o.file}cs-java1.1.jar" />
 		<property name="filename.jdk1.2.cs.jar" value="${db4o.file}cs-java1.2.jar" />
 		<property name="filename.jdk1.5.cs.jar" value="${db4o.file}cs-java5.jar" />
 		<property name="filename.jdk1.2.nqopt.jar" value="${db4o.file}nqopt-java1.2.jar" />
@@ -381,7 +377,6 @@
 		<property name="filename.jdk1.5.db4otools.jar" value="${db4o.file}tools-java5.jar" />
 		<property name="filename.db4obench.jar" value="${db4o.file}bench.jar" />
 		
-		<property name="filename.jdk1.1.db4ounit.jar" value="${db4o.file}db4ounit-java1.1.jar" />
 		<property name="filename.jdk1.2.db4ounit.jar" value="${db4o.file}db4ounit-java1.2.jar" />
 		<property name="filename.jdk1.5.db4ounit.jar" value="${db4o.file}db4ounit-java5.jar" />
 				
@@ -391,21 +386,16 @@
 		<property name="filename.osgi1.2.test.jar" value="${db4o.file}osgi-test-java1.2.jar" />
 		<property name="filename.osgi1.5.jar" value="${db4o.file}osgi-java5.jar" />
 		<property name="filename.osgi1.5.test.jar" value="${db4o.file}osgi-test-java5.jar" />
-		<property name="filename.jdk1.1.nodep.jar" value="${db4o.file}all-java1.1.jar" />
 		<property name="filename.jdk1.2.nodep.jar" value="${db4o.file}all-java1.2.jar" />
 		<property name="filename.jdk1.5.nodep.jar" value="${db4o.file}all-java5.jar" />
 		
-		<property name="file.jdk1.1.jar" value="${dir.dist.jars}/${filename.jdk1.1.jar}" />
 		<property name="file.jdk1.2.jar" value="${dir.dist.jars}/${filename.jdk1.2.jar}" />
 		<property name="file.jdk1.5.jar" value="${dir.dist.jars}/${filename.jdk1.5.jar}" />
 		<property name="file.decaf.annotations" value="${dir.j}/lib/decaf-annotations.jar" />
-		<property name="file.jdk1.1.optional.jar" value="${dir.dist.jars}/${filename.jdk1.1.optional.jar}" />
 		<property name="file.jdk1.2.optional.jar" value="${dir.dist.jars}/${filename.jdk1.2.optional.jar}" />
 		<property name="file.jdk1.5.optional.jar" value="${dir.dist.jars}/${filename.jdk1.5.optional.jar}" />
-		<property name="file.jdk1.1.cs.optional.jar" value="${dir.dist.jars}/${filename.jdk1.1.cs.optional.jar}" />
 		<property name="file.jdk1.2.cs.optional.jar" value="${dir.dist.jars}/${filename.jdk1.2.cs.optional.jar}" />
 		<property name="file.jdk1.5.cs.optional.jar" value="${dir.dist.jars}/${filename.jdk1.5.cs.optional.jar}" />		
-		<property name="file.jdk1.1.cs.jar" value="${dir.dist.jars}/${filename.jdk1.1.cs.jar}" />
 		<property name="file.jdk1.2.cs.jar" value="${dir.dist.jars}/${filename.jdk1.2.cs.jar}" />
 		<property name="file.jdk1.5.cs.jar" value="${dir.dist.jars}/${filename.jdk1.5.cs.jar}" />		
 		<property name="file.jdk1.2.nqopt.jar" value="${dir.dist.jars}/${filename.jdk1.2.nqopt.jar}" />
@@ -415,7 +405,6 @@
 		<property name="file.jdk1.2.db4otools.jar" value="${dir.dist.jars}/${filename.jdk1.2.db4otools.jar}" />
 		<property name="file.jdk1.5.db4otools.jar" value="${dir.dist.jars}/${filename.jdk1.5.db4otools.jar}" />
 		<property name="file.db4obench.jar" value="${dir.dist.jars}/${filename.db4obench.jar}" />
-		<property name="file.jdk1.1.db4ounit.jar" value="${dir.dist.jars}/${filename.jdk1.1.db4ounit.jar}" />
 		<property name="file.jdk1.2.db4ounit.jar" value="${dir.dist.jars}/${filename.jdk1.2.db4ounit.jar}" />
 		<property name="file.jdk1.5.db4ounit.jar" value="${dir.dist.jars}/${filename.jdk1.5.db4ounit.jar}" />
 				
@@ -429,7 +418,6 @@
 		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.file}test.zip" />
 		<property name="file.dist.java" value="${dir.dist}/${db4o.file}java.zip" />
 		<property name="file.bench.jar" value="${dir.dist.jars}/${filename.db4obench.jar}" />
-		<property name="file.jdk1.1.nodep.jar" value="${dir.dist.jars}/${filename.jdk1.1.nodep.jar}" />
 		<property name="file.jdk1.2.nodep.jar" value="${dir.dist.jars}/${filename.jdk1.2.nodep.jar}" />
 		<property name="file.jdk1.5.nodep.jar" value="${dir.dist.jars}/${filename.jdk1.5.nodep.jar}" />
 		
@@ -437,7 +425,7 @@
 
 		<for list="core,core.optional,core.cs,core.cs.optional,test,db4ounit,db4ounit.extensions,instrumentation,instrumentation.test,taj,taj.test,nqopt,nqopt.test,tools,tools.test" param="project-id">
 			<sequential>
-				<for list="jdk1.1,jdk1.2,sharpen" param="platform-id">
+				<for list="jdk1.2,sharpen" param="platform-id">
 					<sequential>
 						<property name="dir.dist.decaf.@{platform-id}.@{project-id}.src" value="${dir.dist.decaf.@{platform-id}.project.target}/${path.decaf.@{project-id}.src}" />
 					</sequential>
