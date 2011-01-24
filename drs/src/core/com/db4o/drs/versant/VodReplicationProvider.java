@@ -495,31 +495,11 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
-		long lastReplicationVersion = getLastReplicationVersion();
-		String filter = "this.version > " + lastReplicationVersion;
-		
-		Set<Long> loids = new HashSet<Long>();
-		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
-		for (ObjectInfo info : infos) {
-			if(Operations.forValue(info.operation()) != Operations.DELETE){
-				loids.add(info.objectLoid());
-			}
-		}
-		Collection<Object> objects = new ArrayList<Object>(loids.size());
-		for (Long loid : loids) {
-			objects.add(_jdo.objectByLoid(loid));
-		}
-		return new ObjectSetCollectionFacade(objects);
+		return queryForModifiedObjects(null, getLastReplicationVersion());
 	}
 	
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		long lastReplicationVersion = getLastReplicationVersion();
-		Set<Long> loids = queryForModifiedObjects(clazz, lastReplicationVersion, true);
-		Collection<Object> objects = new ArrayList<Object>(loids.size());
-		for (Long loid : loids) {
-			objects.add(_jdo.objectByLoid(loid));
-		}
-		return new ObjectSetCollectionFacade(objects);
+		return queryForModifiedObjects(clazz, getLastReplicationVersion());
 	}
 
 	private void ensureReplicationSessionActive() {
@@ -528,22 +508,24 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 
-	private Set<Long> queryForModifiedObjects(Class clazz, long lastReplicationVersion, boolean withClassMetadataLoid) {
-		ensureClassKnown(clazz);
-		
-		String filter = "this.version > " + lastReplicationVersion;
-		if(withClassMetadataLoid){
+	private ObjectSet queryForModifiedObjects(Class clazz, long lastReplicationVersion) {
+		String filter = "this.version > " + lastReplicationVersion + "&& this.version < " + _commitTimestamp;
+		if(clazz != null){
+			ensureClassKnown(clazz);
 			filter += " && (" + classMetadataLoidFilter(clazz) + ")";
 		}
 		Set<Long> loids = new HashSet<Long>();
 		Collection<ObjectInfo> infos = _jdo.query(ObjectInfo.class, filter);
 		for (ObjectInfo info : infos) {
-			_jdo.refresh(info);
 			if(Operations.forValue(info.operation()) != Operations.DELETE){
 				loids.add(info.objectLoid());
 			}
 		}
-		return loids;
+		Collection<Object> objects = new ArrayList<Object>(loids.size());
+		for (Long loid : loids) {
+			objects.add(_jdo.objectByLoid(loid));
+		}
+		return new ObjectSetCollectionFacade(objects);
 	}
 
 	private String classMetadataLoidFilter(Class clazz) {

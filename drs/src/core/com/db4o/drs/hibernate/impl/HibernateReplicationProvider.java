@@ -526,6 +526,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		long lastReplicationVersion = getLastReplicationVersion();
 		criteria.add(Restrictions.gt(ObjectReference.Fields.VERSION, lastReplicationVersion));
+		criteria.add(Restrictions.lt(ObjectReference.Fields.VERSION, _commitTimestamp));
 		Disjunction disjunction = Restrictions.disjunction();
 
 		List<String> names = new ArrayList<String>();

@@ -35,7 +35,6 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		if(RUN_ONE_SINGLE_TEST){
 			return new Class[]{
 				ReplicationFeaturesMain.class,
-				// SimpleBidirectionalReplication.class
 			};
 		}
 		
@@ -63,7 +62,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 				// General
 				CollectionHandlerImplTest.class,
-				SimpleBidirectionalReplication.class,
+				BidirectionalReplicationTestCase.class,
 				TimestampTestCase.class,
 		
 				MapTest.class,

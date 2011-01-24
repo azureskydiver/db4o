@@ -10,7 +10,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-public class SimpleBidirectionalReplication extends DrsTestCase {
+public class BidirectionalReplicationTestCase extends DrsTestCase {
 	
 	public void testObjectsAreOnlyReplicatedOnce(){
 		TestableReplicationProviderInside providerA = a().provider();
@@ -18,21 +18,21 @@ public class SimpleBidirectionalReplication extends DrsTestCase {
 		
 		storeNewPilotIn(providerA);
 		
-		int replicatedObjects = replicateBidirectional(providerA, providerB);
+		int replicatedObjects = replicateBidirectional(providerA, providerB, null);
 		Assert.areEqual(1, replicatedObjects);
 		
 		modifyPilotIn(providerA, "modifiedInA");
-		replicatedObjects = replicateBidirectional(providerA, providerB);
+		replicatedObjects = replicateBidirectional(providerA, providerB, Pilot.class);
 		Assert.areEqual(1, replicatedObjects);
 		
 		modifyPilotIn(providerB, "modifiedInB");
-		replicatedObjects = replicateBidirectional(providerA, providerB);
+		replicatedObjects = replicateBidirectional(providerA, providerB, null);
 		Assert.areEqual(1, replicatedObjects);
 		
 		storeNewPilotIn(providerA);
 		storeNewPilotIn(providerB);
 		
-		replicatedObjects = replicateBidirectional(providerA, providerB);
+		replicatedObjects = replicateBidirectional(providerA, providerB, Pilot.class);
 		Assert.areEqual(2, replicatedObjects);
 		
 	}
@@ -48,26 +48,29 @@ public class SimpleBidirectionalReplication extends DrsTestCase {
 
 	private int replicateBidirectional(
 			TestableReplicationProviderInside providerA,
-			TestableReplicationProviderInside providerB) {
+			TestableReplicationProviderInside providerB,
+			Class clazz) {
 		
-		final IntByRef replicatedObjects = new IntByRef();
-		ReplicationEventListener listener = new ReplicationEventListener() {
-			public void onReplicate(ReplicationEvent e) {
-				replicatedObjects.value ++;
-			}
-		};
-		
-		ReplicationSession replicationSession = Replication.begin(providerA, providerB, listener);
-		ObjectSet changedInA = providerA.objectsChangedSinceLastReplication();
+		int replicatedObjects = 0;
+		ReplicationSession replicationSession = Replication.begin(providerA, providerB, null, _fixtures.reflector);
+		ObjectSet changedInA = 
+			clazz == null ? 
+			providerA.objectsChangedSinceLastReplication() :
+			providerA.objectsChangedSinceLastReplication(clazz);
 		for(Object obj: changedInA){
+			replicatedObjects++;
 			replicationSession.replicate(obj);
 		}
-		ObjectSet changedInB = providerB.objectsChangedSinceLastReplication();
+		ObjectSet changedInB = 
+			clazz == null ? 
+			providerB.objectsChangedSinceLastReplication() :
+			providerB.objectsChangedSinceLastReplication(clazz);
 		for(Object obj: changedInB){
+			replicatedObjects++;
 			replicationSession.replicate(obj);
 		}
 		replicationSession.commit();
-		return replicatedObjects.value;
+		return replicatedObjects;
 	}
 
 	private void storeNewPilotIn(TestableReplicationProviderInside provider) {
