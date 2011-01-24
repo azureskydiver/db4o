@@ -300,7 +300,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 		b().provider().commit();
 		
 		printProvidersContent("init state");
-		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider());
+		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider(), null, _fixtures.reflector);
 
 		replicateQueryingFrom(replication, a().provider(), b().provider());
 		replicateQueryingFrom(replication, b().provider(), a().provider());
