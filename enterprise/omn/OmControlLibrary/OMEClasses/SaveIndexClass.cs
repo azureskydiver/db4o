@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using OManager.BusinessLayer.UIHelper;
+using OManager.DataLayer.Connection;
 using OMControlLibrary.Common;
 using System.Collections;
 
@@ -9,9 +10,8 @@ namespace OMControlLibrary
 {
 	public class SaveIndexClass
 	{
-		ArrayList fieldname;
+		ArrayList fieldnames;
 		string classname;
-
 		ArrayList indexed;
 
 		public string Classname
@@ -28,15 +28,22 @@ namespace OMControlLibrary
 
 		public ArrayList Fieldname
 		{
-			get { return fieldname; }
-			set { fieldname = value; }
+			get { return fieldnames; }
+			set { fieldnames = value; }
 		}
+		public SaveIndexClass(string classname)
+		{
+			this.fieldnames = new ArrayList( );
+			this.classname = classname;
+			this.indexed = new ArrayList( );
+		}
+
 		internal void SaveIndex()
 		{
-			for (int i = 0; i < fieldname.Count; i++)
-			{
-				dbInteraction.SetIndexedConfiguration(fieldname[i].ToString(), classname, Convert.ToBoolean(indexed[i]));
-			}
+
+			dbInteraction.SetIndexedConfiguration(fieldnames, classname, indexed);
+
+
 		}
 	}
 }

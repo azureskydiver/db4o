@@ -44,7 +44,7 @@ namespace OManager.BusinessLayer.Login
         public List<OMQuery> QueryList
         {
             get { return m_queryList; }
-            set { m_queryList = value; }
+            set { m_queryList = value;}
         }
 
         public ConnParams ConnParam
@@ -187,7 +187,7 @@ namespace OManager.BusinessLayer.Login
 					container.Ext().Store(temprc, 5);
 					container.Commit();
 					container = null;
-					Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+					Db4oClient.CloseRecentConnectionFile();
 
 
 				}
@@ -196,7 +196,7 @@ namespace OManager.BusinessLayer.Login
 			{
 				LoggingHelper.HandleException(oEx);
 				container = null;
-				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+				Db4oClient.CloseRecentConnectionFile();
 			}
         }
 
@@ -258,7 +258,7 @@ namespace OManager.BusinessLayer.Login
             {
                 LoggingHelper.HandleException(oEx);
                 container = null;
-                Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+                Db4oClient.CloseRecentConnectionFile();
                 
             }
             return qList;

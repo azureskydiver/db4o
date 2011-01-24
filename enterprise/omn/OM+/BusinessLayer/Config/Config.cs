@@ -37,7 +37,7 @@ namespace OManager.BusinessLayer.Config
 			try
 			{
 				recentQueries.Timestamp = DateTime.Now;
-				RecentQueries temprc = recentQueries.ChkIfRecentConnIsInDb();
+				RecentQueries temprc = Db4oClient.CurrentRecentConnection.ChkIfRecentConnIsInDb();
                 if (temprc != null)
                 {
                     temprc.Timestamp = DateTime.Now;
@@ -52,7 +52,7 @@ namespace OManager.BusinessLayer.Config
 			    IObjectContainer dbrecentConn = Db4oClient.RecentConn;
 				dbrecentConn.Store(temprc);
 				dbrecentConn.Commit();
-				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+				Db4oClient.CloseRecentConnectionFile();
 			}
 
 			catch (Exception oEx)
@@ -69,16 +69,15 @@ namespace OManager.BusinessLayer.Config
 
 		public List<RecentQueries> GetRecentQueries(bool remote)
 		{
-			List<RecentQueries> recConnections=null;
+			List<RecentQueries> recConnections = null;
 			try
 			{
 #if DEBUG
 				CreateOMNDirectory();
 #endif
-				Db4oClient.RecentConnFile = OMNConfigDatabasePath();
 				IObjectContainer dbrecentConn = Db4oClient.RecentConn;
 				IQuery query = dbrecentConn.Query();
-				query.Constrain(typeof(RecentQueries));
+				query.Constrain(typeof (RecentQueries));
 				if (remote)
 				{
 					query.Descend("m_connParam").Descend("m_host").Constrain(null).Not();
@@ -99,16 +98,16 @@ namespace OManager.BusinessLayer.Config
 						recConnections.Add((RecentQueries) os.Next());
 					}
 				}
-				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+				Db4oClient.CloseRecentConnectionFile();
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.HandleException(oEx);
-				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+				Db4oClient.CloseRecentConnectionFile();
 				return null;
 			}
 			return recConnections;
-			
+
 		}
 
 		private void CreateOMNDirectory()
@@ -122,14 +121,12 @@ namespace OManager.BusinessLayer.Config
 
 		public void SaveAssemblySearchPath()
 		{
-			using(IObjectContainer configDatabase = Db4oClient.OpenConfigDatabase(OMNConfigDatabasePath()))
-			{
-				PathContainer pathContainer = PathContainerFor(configDatabase);
-				configDatabase.Delete(pathContainer.SearchPath);
-				pathContainer.SearchPath = AssemblySearchPath;
 
-				configDatabase.Store(pathContainer);
-			}
+			PathContainer pathContainer = PathContainerFor(Db4oClient.RecentConn);
+			Db4oClient.RecentConn.Delete(pathContainer.SearchPath);
+			pathContainer.SearchPath = AssemblySearchPath;
+			Db4oClient.RecentConn.Store(pathContainer);
+			Db4oClient.CloseRecentConnectionFile();
 		}
 
 		public static string OMNConfigDatabasePath()
@@ -140,10 +137,9 @@ namespace OManager.BusinessLayer.Config
 		
 		private static ISearchPath LoadSearchPath()
 		{
-			using (IObjectContainer configDatabase = Db4oClient.OpenConfigDatabase(OMNConfigDatabasePath()))
-			{
-				return PathContainerFor(configDatabase).SearchPath;
-			}
+			ISearchPath searchPath = PathContainerFor(Db4oClient.RecentConn).SearchPath;
+			Db4oClient.CloseRecentConnectionFile();
+			return searchPath;
 		}
 
 		private static PathContainer PathContainerFor(IObjectContainer database)

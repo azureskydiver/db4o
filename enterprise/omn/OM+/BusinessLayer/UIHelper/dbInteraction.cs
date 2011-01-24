@@ -353,28 +353,25 @@ namespace OManager.BusinessLayer.UIHelper
 
 		}
 
-		public static void Closedb(RecentQueries recConnection)
+		public static void Closedb()
 		{
-			if (Db4oClient.RecentConnFile==null)
-			{
-				Db4oClient.RecentConnFile = Config.Config.OMNConfigDatabasePath();
-			}
+			
 			SaveRecentConnection(Db4oClient.CurrentRecentConnection);
 			Db4oClient.CloseConnection();
-			Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
 		}
 
 		public static void CloseCurrDb()
 		{
 			Db4oClient.CloseConnection();
+			Db4oClient.CloseRecentConnectionFile();
 		}
 
 		public static void CloseRecentConn()
 		{
-			Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
+			Db4oClient.CloseRecentConnectionFile();
 		}
 
-		public static void SetIndexedConfiguration(string fieldname, string className, bool isIndexed)
+		public static void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed)
 		{
 			ClassPropertiesTable classtable = new ClassPropertiesTable(className);
 			classtable.SetIndex(fieldname, className, isIndexed);

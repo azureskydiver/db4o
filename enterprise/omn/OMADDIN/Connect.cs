@@ -347,7 +347,7 @@ namespace OMAddin
 			{
 				//This function Aborts the current session
 				CloseAllToolWindows();
-				//Helper.ClearAllCachedAttributes();
+				
 			}
 			catch (Exception oEx)
 			{
@@ -1188,7 +1188,7 @@ namespace OMAddin
                     omBackupControl.Enabled = false;
 
                     CloseAllToolWindows();
-                    dbInteraction.SetCurrentRecentConnection(null);
+                    
                 }
 			}
 			catch (Exception oEx)
@@ -1208,13 +1208,11 @@ namespace OMAddin
 			try
 			{
 
-				
-				RecentQueries recQueries = dbInteraction.GetCurrentRecentConnection();
-				if (recQueries != null)
-				{
-					dbInteraction.Closedb(recQueries);
-				}
 
+
+				dbInteraction.Closedb();
+
+				dbInteraction.SetCurrentRecentConnection(null);
 				Helper.ClearAllCachedAttributes();
 
 				ForEachOMNWindow(delegate(Window window)
@@ -1227,14 +1225,14 @@ namespace OMAddin
 
 				CloseMiscToolwindows();
 
-                if (oPopup != null)
-                {
-                    RemoveMenuControls();
-                    omObjectBrowserControl = null;
-                    omQueryBuilderControl = null;
-                    omPropertiesControl = null;
-                }
-			    RemoveAllQueryResultToolwindows();
+				if (oPopup != null)
+				{
+					RemoveMenuControls();
+					omObjectBrowserControl = null;
+					omQueryBuilderControl = null;
+					omPropertiesControl = null;
+				}
+				RemoveAllQueryResultToolwindows();
 
 			}
 
@@ -1247,7 +1245,7 @@ namespace OMAddin
 			}
 		}
 
-	    private void CloseMiscToolwindows()
+		private void CloseMiscToolwindows()
 	    {
 	        CloseWindow(ref windb4oHome);
 	        CloseWindow(ref windb4oDownloads);

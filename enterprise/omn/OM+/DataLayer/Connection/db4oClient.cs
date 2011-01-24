@@ -3,6 +3,7 @@ using System.Configuration;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
+using Db4objects.Db4o.Diagnostic;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Internal;
@@ -23,6 +24,7 @@ namespace OManager.DataLayer.Connection
 		public static string exceptionConnection = "";
 		public static bool boolExceptionForRecentConn;
 		private static bool isConnected;
+		private static IEmbeddedConfiguration embeddedConfig;
 		public static TypeResolver TypeResolver
 		{
 			get
@@ -126,12 +128,13 @@ namespace OManager.DataLayer.Connection
 
 		}
 
-		private static IObjectContainer  ConnectEmbedded()
+		private static IObjectContainer ConnectEmbedded()
 		{
-			IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
-			ConfigureCommon(config.Common);
-			config.File.ReadOnly = conn.ConnectionReadOnly;
-			return  Db4oEmbedded.OpenFile(config,conn.Connection);
+			if (embeddedConfig == null)
+				embeddedConfig = Db4oEmbedded.NewConfiguration();
+			ConfigureCommon(embeddedConfig.Common);
+			embeddedConfig.File.ReadOnly = conn.ConnectionReadOnly;
+			return Db4oEmbedded.OpenFile(embeddedConfig, conn.Connection);
 		}
 
 		private static IObjectContainer  ConnectClient()
@@ -140,6 +143,12 @@ namespace OManager.DataLayer.Connection
 			ConfigureCommon(config.Common);
 			return  Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord);
 			
+		}
+		public static void SetIndex (string fieldname, string className, bool isIndexed)
+		{
+			if (embeddedConfig == null)
+				embeddedConfig = Db4oEmbedded.NewConfiguration();
+			embeddedConfig.Common.ObjectClass(className).ObjectField(fieldname).Indexed(isIndexed);
 		}
 
 		protected static void ConfigureCommon(ICommonConfiguration config)
@@ -159,10 +168,11 @@ namespace OManager.DataLayer.Connection
 					RecentConnFile = GetOMNConfigdbPath();
 					if (userConfigDatabase == null && RecentConnFile != null)
 					{
-						Db4oFactory.Configure().UpdateDepth(int.MaxValue);
-						Db4oFactory.Configure().ActivationDepth(int.MaxValue);
-						Db4oFactory.Configure().LockDatabaseFile(false);
-						userConfigDatabase = Db4oFactory.OpenFile(RecentConnFile);
+						IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
+						config.Common.Diagnostic.AddListener(new DiagnosticToTrace());
+						config.Common.UpdateDepth = int.MaxValue;
+						config.Common.ActivationDepth = int.MaxValue;
+						userConfigDatabase = Db4oEmbedded.OpenFile(config,RecentConnFile);
 					}
 				}
 				catch (Exception oEx)
@@ -173,6 +183,7 @@ namespace OManager.DataLayer.Connection
 
 				return userConfigDatabase;
 			}
+
 		}
 
 
@@ -188,8 +199,10 @@ namespace OManager.DataLayer.Connection
 					objContainer.Close();
 					objContainer = null;
 					isConnected = false;
+					conn = null;
 				}
-				conn = null;
+				embeddedConfig = null;
+				
 
 			}
 			catch (Exception oEx)
@@ -198,15 +211,14 @@ namespace OManager.DataLayer.Connection
 			}
 		}
 
-		public static void CloseRecentConnectionFile(IObjectContainer objectContainer)
+		public static void CloseRecentConnectionFile()
 		{
-			objectContainer = RecentConn;
+			
 			try
 			{
-				if (objectContainer != null)
+				if (RecentConn != null)
 				{
-					objectContainer.Close();
-					objectContainer = null;
+					RecentConn.Close();
 					userConfigDatabase = null;
 				}
 
@@ -216,15 +228,6 @@ namespace OManager.DataLayer.Connection
 				LoggingHelper.HandleException(oEx);
 
 			}
-		}
-
-		public static IObjectContainer OpenConfigDatabase(string path)
-		{
-			Db4oFactory.Configure().UpdateDepth(int.MaxValue);
-			Db4oFactory.Configure().ActivationDepth(int.MaxValue);
-			Db4oFactory.Configure().LockDatabaseFile(false);
-
-			return Db4oFactory.OpenFile(path);
 		}
 
 		private static string GetOMNConfigdbPath()

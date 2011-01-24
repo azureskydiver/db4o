@@ -189,9 +189,12 @@ namespace OMControlLibrary
 		{
 			if (GotFocus.Caption == Constants.QUERYBUILDER )
 			{
-				PropertiesTab.Instance.ShowObjectPropertiesTab = false;
-				PropertiesTab.Instance.ShowClassProperties = true;
-				PropertiesTab.Instance.SelectDefaultTab();
+				if (dbInteraction.CheckIfDbConnected())
+				{
+					PropertiesTab.Instance.ShowObjectPropertiesTab = false;
+					PropertiesTab.Instance.ShowClassProperties = true;
+					PropertiesTab.Instance.SelectDefaultTab();
+				}
 			}
 		}
 
