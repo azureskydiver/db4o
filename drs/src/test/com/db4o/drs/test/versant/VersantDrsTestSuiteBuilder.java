@@ -25,8 +25,8 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 		
 		if(false){
 			return new DrsTestSuiteBuilder(
-					new VodDrsFixture("vod-drs-b"), 
-					new Db4oDrsFixture("db4o-drs-a", reflector),
+					new VodDrsFixture("vod-drs-a"), 
+					new Db4oDrsFixture("db4o-drs-b", reflector),
 					VersantDrsTestSuite.class, 
 					reflector).iterator();
 		}
