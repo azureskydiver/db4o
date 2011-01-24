@@ -16,20 +16,6 @@ namespace OManager.DataLayer.DemoDBCreation
         public void CreateDemoDb(string filepath)
         {
 
-            ConnParams conParams = new ConnParams(filepath,false);
-            RecentQueries recQueries = new RecentQueries(conParams);
-            recQueries = recQueries.ChkIfRecentConnIsInDb();
-
-            if (recQueries != null)
-            {
-                FavouriteList favList = new FavouriteList(conParams);
-                favList.RemoveFavouritFolderForAConnection();
-
-                GroupofSearchStrings grpSearchString = new GroupofSearchStrings(conParams);
-                grpSearchString.RemovesSearchStringsForAConnection();
-
-                recQueries.deleteRecentQueriesForAConnection();
-            }
             if (File.Exists(filepath))
             {
                 File.Delete(filepath);
@@ -159,8 +145,26 @@ namespace OManager.DataLayer.DemoDBCreation
             objContainer.Close();
             objContainer = null;
             #endregion
+
+			RefreshConnectionData(filepath);
         }
 
-        
+    	private void RefreshConnectionData(string filepath)
+    	{
+    		ConnParams conParams = new ConnParams(filepath, false);
+    		RecentQueries recQueries = new RecentQueries(conParams);
+    		recQueries = recQueries.ChkIfRecentConnIsInDb();
+
+    		if (recQueries != null)
+    		{
+    			FavouriteList favList = new FavouriteList(conParams);
+    			favList.RemoveFavouritFolderForAConnection();
+
+    			GroupofSearchStrings grpSearchString = new GroupofSearchStrings(conParams);
+    			grpSearchString.RemovesSearchStringsForAConnection();
+
+    			recQueries.deleteRecentQueriesForAConnection();
+    		}
+    	}
     }
 }

@@ -519,7 +519,7 @@ namespace OMControlLibrary.Common
 
 				if (ListOMQueries != null)
 					ListOMQueries.Clear();
-
+			
 				Tab_index = 0;
 				ListofModifiedObjects.Instance.Clear();
 			}

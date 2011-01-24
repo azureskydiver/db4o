@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Db4objects.Db4o;
+using OManager.DataLayer.Connection;
 using OManager.DataLayer.Modal;
 using OME.Logging.Common;
 
@@ -54,10 +55,13 @@ namespace OManager.DataLayer.PropertyTable
             
             
         }
-        public void SetIndex(string fieldname, string className, bool isIndexed)
+		public void SetIndex(ArrayList fieldnames, string className, ArrayList Indexed)
         {
-            
-            Db4oFactory.Configure().ObjectClass(className).ObjectField(fieldname).Indexed(isIndexed);
+			for (int i = 0; i < fieldnames.Count; i++)
+			{
+				Db4oClient.SetIndex(fieldnames[i].ToString(), className, Convert.ToBoolean(Indexed[i]));
+				
+			}
         }
 
     }

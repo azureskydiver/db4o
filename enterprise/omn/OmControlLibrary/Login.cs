@@ -324,8 +324,11 @@ namespace OMControlLibrary
 				 RecentQueries currRecentQueries = new RecentQueries(conparam);
 				 RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
 				 if (tempRecentQueries != null)
-					 currRecentQueries = tempRecentQueries;
-				 string  exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
+				 {
+				 	currRecentQueries = tempRecentQueries;
+				 	currRecentQueries.ConnParam.ConnectionReadOnly = chkReadOnly.Checked;      
+				 }
+				string  exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
 
 				if (exceptionString == string.Empty)
 				{
@@ -346,7 +349,7 @@ namespace OMControlLibrary
 				}
 				else
 				{
-					
+					dbInteraction.CloseCurrDb(); 
 					textBoxConnection.Clear();
 					MessageBox.Show(exceptionString,
 					                Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),

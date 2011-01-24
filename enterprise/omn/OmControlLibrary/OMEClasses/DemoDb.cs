@@ -25,6 +25,7 @@ namespace OMControlLibrary
 				if (tempRc != null)
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
+				currRecentConnection.ConnParam = conparam;
 				dbInteraction.ConnectoToDB(currRecentConnection);
 				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
 

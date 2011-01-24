@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using EnvDTE;
 using OManager.BusinessLayer.Login;
+using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.UIHelper;
+using OManager.DataLayer.Connection;
 using OManager.DataLayer.PropertyTable;
 using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
@@ -349,10 +351,8 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				SaveIndexClass saveIndexInstance = new SaveIndexClass();
-				saveIndexInstance.Classname = Helper.ClassName;
-				saveIndexInstance.Fieldname = new ArrayList();
-				saveIndexInstance.Indexed = new ArrayList();
+				SaveIndexClass saveIndexInstance = new SaveIndexClass(Helper.ClassName);
+				
 				foreach (DataGridViewRow row in dbGridViewProperties.Rows)
 				{
 					bool boolValue = Convert.ToBoolean(row.Cells[2].Value);
@@ -367,12 +367,17 @@ namespace OMControlLibrary
 				saveIndexInstance.SaveIndex();
 
 				RecentQueries currRecentConnection = new RecentQueries(conparam);
+				Db4oClient.conn = conparam;  
 				RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
 				if (tempRc != null)
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
 				dbInteraction.ConnectoToDB(currRecentConnection);
 				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
+
+				//Only if following line is added the index is saved.
+				OMQuery omQuery = new OMQuery(saveIndexInstance.Classname , DateTime.Now);
+				long[] objectid = dbInteraction.ExecuteQueryResults(omQuery);
 
 				if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
 					ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbAssemblyTreeView);
