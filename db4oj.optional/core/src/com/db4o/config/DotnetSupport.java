@@ -13,7 +13,7 @@ import com.db4o.internal.handlers.*;
  * The configuration only makes sure that database files can be
  * successfully open and things like UUIDs can be successfully
  * retrieved.
- * 
+ * @deprecated
  * @sharpen.ignore
  */
 public class DotnetSupport implements ConfigurationItem {

@@ -12,6 +12,7 @@ import com.db4o.query.*;
 
 /**
  * @exclude
+ * @deprecated Since 8.0
  * @sharpen.ignore
  */
 public class DotNetSupportClientServer implements ConfigurationItem {
