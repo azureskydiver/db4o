@@ -13,7 +13,7 @@ import com.db4o.internal.handlers.*;
  * The configuration only makes sure that database files can be
  * successfully open and things like UUIDs can be successfully
  * retrieved.
- * @deprecated
+ * @deprecated Since 8.0
  * @sharpen.ignore
  */
 public class DotnetSupport implements ConfigurationItem {
@@ -22,7 +22,7 @@ public class DotnetSupport implements ConfigurationItem {
 	
 	/**
 	 * @deprecated Use the constructor with the boolean parameter to specify if 
-	 * client/server support is desired. 
+	 * client/server support is desired.
 	 */
 	public DotnetSupport() {
 		_addCSSupport = false;	
@@ -31,6 +31,8 @@ public class DotnetSupport implements ConfigurationItem {
 	/**
 	 * @param addCSSupport true if mappings required for Client/Server 
 	 *                     support should be included also.
+	 *                     
+	 * @deprecated Since 8.0
 	 */
 	public DotnetSupport(boolean addCSSupport) {
 		_addCSSupport = addCSSupport;
