@@ -20,11 +20,8 @@ import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectInfo.Operations;
 import com.db4o.foundation.*;
 
-
 public class VodReplicationProvider implements TestableReplicationProviderInside, LoidProvider {
 	
-	private static final int COMM_HEARTBEAT = 2000;
-
 	private final VodDatabase _vod;
 	
 	private final VodCobraFacade _cobra;
@@ -49,39 +46,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final Map<Class, List<Class>> _classHierarchy = new HashMap<Class, List<Class>>();
 	
-	SimpleTimer _heartbeatTimer = new SimpleTimer(new Runnable() {
-		boolean firstTime = true;
-
-		public void run() {
-
-			// to make debugging easier, we dont want the heartbeatTimer be the
-			// first one to do a scynrhonous remote call against the event
-			// processor. if we ignore the first heartbeat, when runnint
-			// testcases, chances are that the first call will be the test
-			// itself. Fabio.
-			if (firstTime) {
-				firstTime = false;
-				return;
-			}
-			
-			if (!pinging()) {
-				return;
-			}
-			try {
-				asyncEventProcessor().ping();
-			} catch (RuntimeException e) {
-				if (!(e.getCause() instanceof ConnectionTimeoutException)) {
-					throw e;
-				}
-			}
-		}
-	}, COMM_HEARTBEAT);
-
-	private Thread _heartbeatThread = new Thread(_heartbeatTimer, "VodReplicationProvider heartbeat");
-
 	private final ClientChannelControl _control;
-
-	private boolean pinging = true;
 
 	public VodReplicationProvider(VodDatabase vod) {
 		_control = TcpCommunicationNetwork.newClient(vod);
@@ -107,9 +72,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 				return _mySignatureLoid;
 			}
 		};
-		
-		_heartbeatThread.setDaemon(true);
-		_heartbeatThread.start();
 		
 	}
 	
@@ -200,16 +162,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	
 	public void commit() {
-		internalCommit();
-	}
-
-	private void internalCommit() {
-		syncEventProcessor().requestIsolation(true);
-		try {
-			_jdo.commit();
-		} finally {
-			syncEventProcessor().requestIsolation(false);
-		}
+		_jdo.commit();
 	}
 
 	public void delete(Object obj) {
@@ -245,11 +198,6 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void destroy() {
-		_heartbeatTimer.stop();
-		try {
-			_heartbeatThread.join();
-		} catch (InterruptedException e) {
-		}
 		_jdo.close();
 		_cobra.close();
 		_control.stop();
@@ -411,7 +359,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		};
 		syncEventProcessor().addListener(listener);
 		
-		internalCommit();
+		_jdo.commit();
 		
 		barrierQueue.next();
 		
@@ -673,30 +621,12 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		return _jdo.loid(obj);
 	}
 
-	public void runIsolated(Block4 block) {
-		syncEventProcessor().requestIsolation(true);
-		try {
-			block.run();
-		}
-		finally {
-			syncEventProcessor().requestIsolation(false);
-		}
-	}
-
 	public EventProcessor syncEventProcessor() {
 		return _control.sync();
 	}
 	
 	public EventProcessor asyncEventProcessor() {
 		return _control.async();
-	}
-
-	public void pinging(boolean pinging) {
-		this.pinging = pinging;
-	}
-
-	public boolean pinging() {
-		return pinging;
 	}
 
 	@Override

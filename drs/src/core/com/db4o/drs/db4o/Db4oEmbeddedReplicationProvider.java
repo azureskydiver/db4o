@@ -405,12 +405,6 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 		return produceReference(obj, null, null);
 	}
 
-	public void runIsolated(Block4 block) {
-		synchronized(lock()) {
-			block.run();
-		}
-	}
-	
 	public Object replaceIfSpecific(Object value) {
 		return value;
 	}
