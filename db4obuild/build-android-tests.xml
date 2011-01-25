@@ -168,7 +168,7 @@
 		<if>
 			<equals arg1="${inWindows}" arg2="true" />
 			<then>
-				<sleep if="inWindows" seconds="5"/>
+				<sleep seconds="5"/>
 			</then>
 		</if>
 		
