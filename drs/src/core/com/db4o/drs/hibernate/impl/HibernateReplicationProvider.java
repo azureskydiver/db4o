@@ -697,14 +697,6 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		return produceReference(obj, null, null);
 	}
 
-	public void runIsolated(Block4 block) {
-		// TODO: Here we should make sure that no other HibernateReplicationProvider is interacting
-		// with the database, by storing a singleton "lock" object.
-		synchronized(this) {
-			block.run();
-		}
-	}
-	
 	public Object replaceIfSpecific(Object value) {
 		if (value instanceof Timestamp) {
 			return new Date(((Timestamp)value).getTime());

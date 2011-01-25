@@ -41,8 +41,6 @@ public interface ReplicationProviderInside extends ReplicationProvider, Collecti
 
 	long getLastReplicationVersion();
 
-	void runIsolated(Block4 block);
-	
 	String getName();
 
 	ReadonlyReplicationProviderSignature getSignature();

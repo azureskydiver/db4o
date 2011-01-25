@@ -21,10 +21,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	public static final String SIMPLE_NAME = ReflectPlatform.simpleName(EventProcessor.class);
 
-	public static final long ISOLATION_TIMEOUT = 5000;
-
-	private static final long ISOLATION_WATCHDOG_INTERVAL = 1000;
-
 	private static final long OBJECT_VERSION_FOR_PREEXISTING = 1; 	// can't use 0 because we query for > 0   
 
 	private final VodEventClient _client;
@@ -35,7 +31,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private final TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 	
-	private TimeoutBlockingQueue4<Block4> _pausableTasks = new TimeoutBlockingQueue<Block4>(ISOLATION_TIMEOUT);
+	private BlockingQueue4<Block4> _pausableTasks = new BlockingQueue<Block4>();
 	
 	private ServerChannelControl _incomingMessages;
 
@@ -45,17 +41,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private long _defaultSignatureLoid;
 	
-	
-	SimpleTimer _isolationWatchdogTimer = new SimpleTimer(
-		new Runnable() {
-			public void run() {
-				if (_pausableTasks.isPaused()) {
-					_pausableTasks.check();
-				}
-			}}, 
-		ISOLATION_WATCHDOG_INTERVAL);
-
-	private Thread _isolatinWatchdogThread = new Thread(_isolationWatchdogTimer, SIMPLE_NAME+" Isolation watchdog");
 	
 	private CommitTimestamp _commitTimestamp;
 
@@ -107,8 +92,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	}
 
 	public void run() {
-		_isolatinWatchdogThread.setDaemon(true);
-	    _isolatinWatchdogThread.start();
 		_incomingMessages = TcpCommunicationNetwork.prepareCommunicationChannel(this, _vod, _client);
 		startPausableTasksExecutor();
 		synchronized (_listeners) {
@@ -175,37 +158,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 		return lastTimestamp();
 	}
 	
-	public boolean requestIsolation(boolean isolated) {
-		
-		if(_pausableTasks.isPaused() == isolated) {
-			return false;
-		}
-		
-		// FIXME: timeout for isolation mode (can rely on new implementation of BlockingQueue#next(long timeout)
-		
-		if (isolated) {
-			_pausableTasks.pause();
-		} else {
-			_pausableTasks.resume();
-		}
-		
-		return true;
-	}
-	
-	public void ping() {
-		if (!_pausableTasks.isPaused()) {
-			return;
-		}
-		_pausableTasks.reset();
-	}
-	
 	private void shutdown() {
 		_client.shutdown();
-		_isolationWatchdogTimer.stop();
-		try {
-			_isolatinWatchdogThread.join();
-		} catch (InterruptedException e) {
-		}
 		synchronized (_lock) {
 			_cobra.close();
 		}
