@@ -171,6 +171,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 		ReflectClass superclass = claxx.getSuperclass();
 		if (superclass == null) return;
+		if (dest == null) {
+			throw new IllegalStateException("Dest cannot be null: src="+src+", class="+claxx+", source="+sourceProvider.getName()+ ", target="+targetProvider.getName());
+		}
 		copyFieldValuesAcross(src, dest, superclass, sourceProvider, targetProvider);
 	}
 
