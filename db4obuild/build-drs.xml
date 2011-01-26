@@ -270,7 +270,18 @@
 		</java>
 	</target>
 	
-	<target name="run-regression" depends="init">
+	<target name="run-regression-with-debug" depends="init" if="run-drs-tests-with-debug">
+		<java jvm="${file.jvm.jdk1.6}" fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
+			<classpath refid="class.path" />
+			<jvmarg line="-DrunVodTests=${run.vod.drs.tests}" />
+			<jvmarg line="${jvmarg.drs.vod.regression.enhancer}" />
+			<jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y"/>
+			<env key="${key.drs.vod.regression.bin}" path="${path.drs.vod.regression.bin}" />
+			<env key="LD_LIBRARY_PATH" path="${path.drs.vod.regression.lib}" />
+		</java>
+	</target>
+
+	<target name="run-regression-without-debug" depends="init" unless="run-drs-tests-with-debug">
 		<java jvm="${file.jvm.jdk1.6}" fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
 			<classpath refid="class.path" />
 			<jvmarg line="-DrunVodTests=${run.vod.drs.tests}" />
@@ -278,6 +289,9 @@
 			<env key="${key.drs.vod.regression.bin}" path="${path.drs.vod.regression.bin}" />
 			<env key="LD_LIBRARY_PATH" path="${path.drs.vod.regression.lib}" />
 		</java>
+	</target>
+
+	<target name="run-regression" depends="run-regression-with-debug, run-regression-without-debug">
 	</target>
 
 	<target name="clean">
