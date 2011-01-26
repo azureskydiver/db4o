@@ -162,6 +162,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 
 	private void copyFieldValuesAcross(Object src, Object dest, ReflectClass claxx, ReplicationProviderInside sourceProvider, ReplicationProviderInside targetProvider) {
+		if (dest == null) {
+			throw new IllegalStateException("Dest cannot be null: src="+src+", class="+claxx+", source="+sourceProvider.getName()+ ", target="+targetProvider.getName());
+		}
 		final Iterator4 fields = FieldIterators.persistentFields(claxx);
 		while (fields.moveNext()) {
 			ReflectField field = (ReflectField) fields.current();
@@ -171,9 +174,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 		ReflectClass superclass = claxx.getSuperclass();
 		if (superclass == null) return;
-		if (dest == null) {
-			throw new IllegalStateException("Dest cannot be null: src="+src+", class="+claxx+", source="+sourceProvider.getName()+ ", target="+targetProvider.getName());
-		}
 		copyFieldValuesAcross(src, dest, superclass, sourceProvider, targetProvider);
 	}
 
