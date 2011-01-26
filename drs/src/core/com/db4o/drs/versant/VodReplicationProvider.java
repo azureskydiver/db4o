@@ -46,10 +46,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	
 	private final Map<Class, List<Class>> _classHierarchy = new HashMap<Class, List<Class>>();
 	
-	private final ClientChannelControl _control;
+	private volatile ClientChannelControl _control;
 
 	public VodReplicationProvider(VodDatabase vod) {
-		_control = TcpCommunicationNetwork.newClient(vod);
 		_vod = vod;
 		_cobra = VodCobra.createInstance(vod);
 		_jdo = VodJdo.createInstance(vod);
@@ -200,9 +199,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	public void destroy() {
 		_jdo.close();
 		_cobra.close();
-		_control.stop();
+		control().stop();
 		try {
-			_control.join();
+			control().join();
 		} catch (InterruptedException e) {
 		}
 	}
@@ -622,13 +621,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public EventProcessor syncEventProcessor() {
-		return _control.sync();
+		return control().sync();
 	}
 	
-	public EventProcessor asyncEventProcessor() {
-		return _control.async();
-	}
-
 	@Override
 	public String toString() {
 		return getName();
@@ -679,5 +674,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		_commitTimestamp = syncedTimeStamp;
 		syncEventProcessor().syncTimestamp(syncedTimeStamp + 1);
+	}
+
+	private ClientChannelControl control() {
+		if (_control == null) {
+			synchronized (this) {
+				if (_control == null) {
+					_control = TcpCommunicationNetwork.newClient(_vod);
+				}
+			}
+		}
+		return _control;
 	}
 }
