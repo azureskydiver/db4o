@@ -26,6 +26,8 @@ import com.versant.util.*;
  */
 public class VodDatabase {
 	
+	private static final int EVENT_PROCESSOR_PORT = 4088;
+
 	private static final long STARTUP_TIMEOUT = DrsDebug.timeout(10000);
 
 	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
@@ -37,8 +39,6 @@ public class VodDatabase {
 
 	private static final int DEFAULT_PORT = 5019;
 
-	private final String _name;
-	
 	private final Properties _properties;
 	
 	private PersistenceManagerFactory _persistenceManagerFactory;
@@ -53,14 +53,17 @@ public class VodDatabase {
 	
 	private Stoppable _eventProcessor;
 
-	private String _eventProcessorHost = "localhost";
-
-	private int _eventProcessorPort = 4088;
-
-	public VodDatabase(String name, Properties properties){
-		_name = name;
+	public VodDatabase(EventConfiguration eventConfiguration, Properties properties) {
+		_eventConfiguration = eventConfiguration;
 		_properties = properties;
 		addDefaultProperties();
+	}
+	
+	public VodDatabase(String name, Properties properties){
+		this(new EventConfiguration(name, name + "event.log", "localhost", nextPort(), "localhost",
+									new IncrementingEventClientPortSelectionStrategy(nextPort()), 
+									"localhost", EVENT_PROCESSOR_PORT, DrsDebug.verbose),
+				properties);
 	}
 	
 	public VodDatabase(String name){
@@ -72,9 +75,13 @@ public class VodDatabase {
     	_persistenceManagerFactory = pmf;
     }
     
-    public void configureEventProcessor(String host, int port){
-    	_eventProcessorHost = host;
-    	_eventProcessorPort = port;
+    public VodDatabase(EventConfiguration eventConfiguration) {
+    	this(eventConfiguration, new Properties());
+	}
+
+	public void configureEventProcessor(String host, int port){
+    	eventConfiguration().eventProcessorHost = host;
+    	eventConfiguration().eventProcessorPort = port;
     }
     
     private static String extractName(PersistenceManagerFactory pmf){
@@ -112,9 +119,13 @@ public class VodDatabase {
 		 */
 		// addPropertyIfNotExists("versant.vdsNamingPolicy", "none");
 		
-		addPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + _name + "@localhost");
+		addPropertyIfNotExists(CONNECTION_URL_KEY, "versant:" + name() + "@localhost");
 		addPropertyIfNotExists("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 		addJdoMetaDataFiles();
+	}
+	
+	public String name() {
+		return eventConfiguration().databaseName;
 	}
 	
 	public void addPropertyIfNotExists(String key, String value) {
@@ -134,7 +145,7 @@ public class VodDatabase {
 				name = name.substring(0, indexOfHostName);
 			}
 			
-			if(_name.equals(name)){
+			if(name().equals(name)){
 				return true;
 			}
 		}
@@ -148,13 +159,13 @@ public class VodDatabase {
 		Properties props = new Properties();
 		props.put ("-f","");
 		try{
-			DBUtility.stopDB(_name,props);
+			DBUtility.stopDB(name(),props);
 		} catch(Exception ex){
 			ex.printStackTrace();
 		}
 		props.put("-rmdir","");
 		try{
-			DBUtility.removeDB(_name, props);
+			DBUtility.removeDB(name(), props);
 		} catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -165,8 +176,8 @@ public class VodDatabase {
 			return;
 		}
 		Properties p=new Properties();
-		DBUtility.makeDB(_name,p);
-		DBUtility.createDB(_name);
+		DBUtility.makeDB(name(),p);
+		DBUtility.createDB(name());
 	}
 
 	public PersistenceManagerFactory persistenceManagerFactory(){
@@ -209,7 +220,7 @@ public class VodDatabase {
 	
 	private synchronized DatastoreManagerFactory datastoreManagerFactory(){
 		if(_datastoreManagerFactory == null){
-			ConnectionInfo con = new ConnectionInfo(_name, host(), port(), userName(), passWord());
+			ConnectionInfo con = new ConnectionInfo(name(), host(), port(), userName(), passWord());
 			_datastoreManagerFactory = new DatastoreManagerFactory(con, new ConnectionProperties());
 		}
 		return _datastoreManagerFactory;
@@ -296,9 +307,9 @@ public class VodDatabase {
 		if(_eventDriver != null){
 			return;
 		}
-		int serverPort = nextPort();
-		EventClientPortSelectionStrategy clientPortStrategy = new IncrementingEventClientPortSelectionStrategy(nextPort());
-		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, _eventProcessorHost, _eventProcessorPort, DrsDebug.verbose);
+//		int serverPort = nextPort();
+//		EventClientPortSelectionStrategy clientPortStrategy = new IncrementingEventClientPortSelectionStrategy(nextPort());
+//		_eventConfiguration = new EventConfiguration(_name, _name + "event.log",  "localhost", serverPort, "localhost", clientPortStrategy, _eventProcessorHost, _eventProcessorPort, DrsDebug.verbose);
 		_eventDriver = new VodEventDriver(_eventConfiguration);
 		boolean started = _eventDriver.start();
 		if(! started ){
@@ -318,13 +329,9 @@ public class VodDatabase {
 		jvi.close();
 	}
 	
-	public String databaseName(){
-		return _name;
-	}
-	
 	@Override
 	public String toString() {
-		return "VOD " + _name;
+		return "VOD " + name();
 	}
 
 	public void stopEventDriver() {
@@ -376,7 +383,7 @@ public class VodDatabase {
 		
 		List<String> arguments = new ArrayList<String>();
 		
-		addArgument(arguments, Arguments.DATABASE, _name);
+		addArgument(arguments, Arguments.DATABASE, name());
 		addArgument(arguments, Arguments.LOGFILE, _eventConfiguration.logFileName);
 		addArgument(arguments, Arguments.SERVER_PORT, _eventConfiguration.serverPort);
 		addArgument(arguments, Arguments.CLIENT_PORT, _eventConfiguration.clientPort());
@@ -443,11 +450,11 @@ public class VodDatabase {
 	}
 	
 	public String eventProcessorHost() {
-		return _eventProcessorHost;
+		return eventConfiguration().eventProcessorHost;
 	}
 	
 	public int eventProcessorPort() {
-		return _eventProcessorPort;
+		return eventConfiguration().eventProcessorPort;
 	}
 	
 }

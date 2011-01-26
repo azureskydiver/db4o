@@ -32,7 +32,7 @@ public class VodJvi {
 	}
 	
 	private void defineSchema(String schema) {
-		DBUtility.defineSchema(_vod.databaseName(), new File(new File(versantRootPath()), schema).getAbsolutePath());
+		DBUtility.defineSchema(_vod.name(), new File(new File(versantRootPath()), schema).getAbsolutePath());
 	}
 	
 	public void createEventSchema() {
@@ -42,7 +42,7 @@ public class VodJvi {
 	
 	public TransSession createTransSession() {
         Properties properties = new Properties ();
-        properties.put ("database", _vod.databaseName());
+        properties.put ("database", _vod.name());
         properties.put ("lockmode", com.versant.fund.Constants.NOLOCK + "");
         properties.put ("options",  com.versant.fund.Constants.READ_ACCESS + "");
         return new TransSession(properties);

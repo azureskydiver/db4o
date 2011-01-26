@@ -23,8 +23,8 @@ public class EventConfiguration {
 	
 	private final int clientPort;
 	
-	public final String eventProcessorHost;
-	public final int eventProcessorPort;
+	public String eventProcessorHost;
+	public int eventProcessorPort;
 	
 	public final boolean verbose;
 	
