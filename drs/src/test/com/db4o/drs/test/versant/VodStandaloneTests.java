@@ -29,6 +29,7 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 			VodProviderTestCase.class,
 			VodSimpleObjectContainerTestCase.class,
 			ReplicationTimeoutTestCase.class,
+			PortSetupTestCases.class,
 		};
 	}
 
