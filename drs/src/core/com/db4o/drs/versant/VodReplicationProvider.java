@@ -264,7 +264,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public String getName() {
-		return _vod.databaseName();
+		return _vod.name();
 	}
 
 	public ReadonlyReplicationProviderSignature getSignature() {

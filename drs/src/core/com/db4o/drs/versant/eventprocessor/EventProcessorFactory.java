@@ -13,7 +13,7 @@ public class EventProcessorFactory {
 	        	EventProcessorImpl.unrecoverableExceptionOccurred(exception);
 	        }
 	    });
-		VodDatabase vod = new VodDatabase(eventConfiguration.databaseName);
+		VodDatabase vod = new VodDatabase(eventConfiguration);
 		EventProcessorImpl eventProcessor = new EventProcessorImpl(client, vod, eventConfiguration.verbose);
 		return eventProcessor;
 	}

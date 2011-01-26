@@ -36,7 +36,7 @@ public class VodDatabaseTestCase extends VodDatabaseTestCaseBase {
     public void testNameFromPersistenceManagerFactory(){
         PersistenceManagerFactory persistenceManagerFactory = _vod.persistenceManagerFactory();
         VodDatabase database = new VodDatabase(persistenceManagerFactory);
-        Assert.areEqual(_vod.databaseName(),database.databaseName());
+        Assert.areEqual(_vod.name(),database.name());
     }
 
     public void testConfigurationWithPersisteneManagerFactoryConstructor(){

@@ -371,7 +371,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	public String databaseName(){
-		return _vod.databaseName();
+		return _vod.name();
 	}
 
 	public void delete(long loid) {
