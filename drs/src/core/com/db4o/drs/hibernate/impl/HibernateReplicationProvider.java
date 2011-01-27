@@ -626,10 +626,13 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		private long _transactionTimestamp;
 		
 		public long generateTransactionTimestamp() {
-			final Session s = getSession();
-			TimeStampIdGenerator generator = GeneratorMap.get(s);
+			TimeStampIdGenerator generator = GeneratorMap.get(getSession());
 			_transactionTimestamp = generator.generate();
 			return _transactionTimestamp;
+		}
+		
+		public void transactionTimestamp(long newTimestamp){
+			_transactionTimestamp = newTimestamp;
 		}
 
 		public void useDefaultTransactionTimestamp() {
@@ -741,6 +744,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		}
 		_commitTimestamp = syncedTimeStamp;
 		_generator.setMinimumNext(syncedTimeStamp + 1);
+		_flushEventListener.transactionTimestamp(_commitTimestamp);
 	}
 	
 }
