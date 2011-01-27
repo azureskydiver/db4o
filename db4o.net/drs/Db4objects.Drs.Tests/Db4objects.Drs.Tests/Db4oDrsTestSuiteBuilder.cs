@@ -16,6 +16,17 @@ namespace Db4objects.Drs.Tests
 
 		public virtual IEnumerator GetEnumerator()
 		{
+			if (false)
+			{
+				return new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"), new Db4oDrsFixture("db4o-b"
+					), typeof(Db4oDrsTestSuite)).GetEnumerator();
+			}
+			if (false)
+			{
+				return new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture("db4o-cs-a", unchecked(
+					(int)(0xdb40))), new Db4oClientServerDrsFixture("db4o-cs-b", 4455), typeof(Db4oDrsTestSuite
+					)).GetEnumerator();
+			}
 			return Iterators.Concat(Iterators.Concat(new DrsTestSuiteBuilder(new Db4oDrsFixture
 				("db4o-a"), new Db4oDrsFixture("db4o-b"), typeof(Db4oDrsTestSuite)).GetEnumerator
 				(), new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture("db4o-cs-a", unchecked(

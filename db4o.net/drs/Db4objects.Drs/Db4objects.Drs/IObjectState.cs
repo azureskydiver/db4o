@@ -28,5 +28,9 @@ namespace Db4objects.Drs
 		/// <remarks>The time when the object is modified in a provider.</remarks>
 		/// <returns>time when the object is modified in a provider.</returns>
 		long ModificationDate();
+
+		/// <summary>whether or not the object is known to the ReplicationProvider.</summary>
+		/// <remarks>whether or not the object is known to the ReplicationProvider.</remarks>
+		bool IsKnown();
 	}
 }
