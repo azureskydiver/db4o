@@ -83,7 +83,7 @@ namespace Db4objects.Drs.Tests
 			IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
 			config.File.Storage = _storage;
 			config.File.GenerateUUIDs = ConfigScope.Globally;
-			config.File.GenerateVersionNumbers = ConfigScope.Globally;
+			config.File.GenerateCommitTimestamps = true;
 			return Db4oEmbedded.OpenFile(config, filePath);
 		}
 	}

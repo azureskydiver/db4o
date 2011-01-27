@@ -12,7 +12,7 @@ namespace Db4objects.Drs.Inside
 
 		internal readonly ObjectStateImpl _stateInProviderB = new ObjectStateImpl();
 
-		internal bool _isConflict;
+		private bool _isConflict;
 
 		internal IObjectState _actionChosenState;
 
@@ -64,6 +64,11 @@ namespace Db4objects.Drs.Inside
 			_actionWasChosen = false;
 			_actionShouldStopTraversal = false;
 			_creationDate = -1;
+		}
+
+		internal void Conflict(bool isConflict)
+		{
+			_isConflict = isConflict;
 		}
 	}
 }

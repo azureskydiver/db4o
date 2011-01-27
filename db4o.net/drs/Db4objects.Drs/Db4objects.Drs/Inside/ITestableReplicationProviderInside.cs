@@ -14,5 +14,11 @@ namespace Db4objects.Drs.Inside
 		bool SupportsRollback();
 
 		void Commit();
+
+		long ObjectVersion(object storedObject);
+
+		void WaitForPreviousCommits();
+
+		long CreationTime(object obj);
 	}
 }

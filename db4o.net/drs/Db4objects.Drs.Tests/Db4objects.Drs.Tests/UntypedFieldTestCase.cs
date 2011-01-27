@@ -135,7 +135,7 @@ namespace Db4objects.Drs.Tests
 		{
 			IObjectSet found = B().Provider().GetStoredObjects(klass);
 			Assert.AreEqual(1, found.Count);
-			return found.GetEnumerator().Current;
+			return found[0];
 		}
 	}
 }
