@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class ExampleTestCase
+    Inherits AbstractDb4oTestCase
+    Public Shared Sub Main(ByVal args As String())
+        Dim testCase = New ExampleTestCase()
+        testCase.RunSolo()
+    End Sub
+
+    Public Sub TestStoresElement()
+        Db().Store(New TestItem())
+        Dim result As IList(Of TestItem) = Db().Query(Of TestItem)()
+        Assert.AreEqual(1, result.Count)
+    End Sub
+
+
+    Private Class TestItem
+
+    End Class
+End Class</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class ExampleTestCase
+    Inherits AbstractDb4oTestCase
+    Public Shared Sub Main(ByVal args As String())
+        Dim testCase = New ExampleTestCase()
+        testCase.RunSolo()
+    End Sub
+
+    Public Sub TestStoresElement()
+        Db().Store(New TestItem())
+        Dim result As IList(Of TestItem) = Db().Query(Of TestItem)()
+        Assert.AreEqual(1, result.Count)
+    End Sub
+
+
+    Private Class TestItem
+
+    End Class
+End Class</pre>
+		<div class="codesnippet-meta">
+			ExampleTestCase.vb: Basic test case
+			<div class="codedownload">
+				<a href="Example-Code-db4otests-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>
