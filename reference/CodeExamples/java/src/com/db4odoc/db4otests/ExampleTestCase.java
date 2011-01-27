@@ -8,7 +8,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 public class ExampleTestCase extends AbstractDb4oTestCase{
 
     public static void main(String[] args) {
-        new ExampleTestCase().runSolo();
+        new ExampleTestCase().runEmbedded();
     }
 
     public void testStoresElement(){
