@@ -30,7 +30,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.fixtures.*;
-
+/** @sharpen.ignore */
 public class ReplicationFeaturesMainFixtureBased extends FixtureBasedTestSuite {
 	
 	private static final boolean DEBUG = false;
