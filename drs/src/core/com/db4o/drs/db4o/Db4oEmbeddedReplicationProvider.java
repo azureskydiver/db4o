@@ -221,7 +221,8 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 		if (uuid == null)
 			throw new NullPointerException();
 
-		Db4oReplicationReferenceImpl newNode = new Db4oReplicationReferenceImpl(objectInfo);
+		Db4oReplicationReferenceImpl newNode = 
+			new Db4oReplicationReferenceImpl(objectInfo, obj);
 
 		addReference(newNode);
 
