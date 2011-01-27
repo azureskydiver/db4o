@@ -119,7 +119,7 @@
 			<delete dir="${temp.dir}" />
 			<mkdir dir="${temp.dir}" />
 
-			<javac srcdir="@{srcdir}" destdir="${temp.dir}" target="1.5" source="1.5" failonerror="true">
+			<javac srcdir="@{srcdir}" destdir="${temp.dir}" debug="true" target="1.5" source="1.5" failonerror="true">
 				<classpath refid="@{classpathrefid}" />
 			</javac>
 			<copy todir="${temp.dir}">
@@ -140,7 +140,7 @@
 		<mkdir dir="${temp.dir}" />
 		
 
-		<javac srcdir="${drs.dir.src.core}" destdir="${temp.dir}" target="1.5" source="1.5" failonerror="true">
+		<javac srcdir="${drs.dir.src.core}" destdir="${temp.dir}" debug="true" target="1.5" source="1.5" failonerror="true">
 			<classpath refid="class.path" />
 		</javac>
 		
