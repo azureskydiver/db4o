@@ -96,6 +96,20 @@ public class FileConnectionParams extends ConnectionParams {
 		}
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(!super.equals(other)) {
+			return false;
+		}
+		FileConnectionParams params = (FileConnectionParams)other;
+		return filePath.equals(params.filePath) && readOnly == params.readOnly;
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ filePath.hashCode() ^ (readOnly ? 0 : 1);
+	}
+	
 	private void configureCustom(EmbeddedConfiguration config) throws DBConnectException {
 		URL[] urls = jarURLs();
 		if(urls.length == 0) {
@@ -110,7 +124,6 @@ public class FileConnectionParams extends ConnectionParams {
 		Iterator<EmbeddedConfigurationItem> ps = SunSPIUtil.retrieveSPIImplementors(EmbeddedConfigurationItem.class, loader);
 		if(ps.hasNext()) {
 			EmbeddedConfigurationItem configurator = ps.next();
-			System.out.println("CONFIG: " + configurator);
 			config.addConfigurationItem(configurator);
 		}
 	}

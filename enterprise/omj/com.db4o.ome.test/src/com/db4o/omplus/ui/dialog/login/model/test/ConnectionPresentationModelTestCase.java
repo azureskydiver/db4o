@@ -18,7 +18,6 @@ import com.db4o.omplus.ui.dialog.login.model.*;
 import com.db4o.omplus.ui.dialog.login.model.ConnectionPresentationModel.ConnectionPresentationListener;
 
 public class ConnectionPresentationModelTestCase {
-
 	
 	private Connector connector;
 	private ErrorMessageSink errSink;

@@ -5,6 +5,7 @@ import static com.db4o.omplus.test.util.Db4oTestUtil.*;
 import static org.junit.Assert.*;
 
 import java.io.*;
+import java.util.*;
 
 import org.junit.*;
 
@@ -60,6 +61,44 @@ public class RemoteConnectionParamsTestCase {
 		finally {
 			server.close();
 			dbFile.delete();
+		}
+	}
+
+	@Test
+	public void testEquals() {
+		String[] hosts = { "foo.invalid", "bar.invalid" };
+		int[] ports = { 42, 43 };
+		String[] users = { "Ann", "Bob" };
+		String[] passwords = { "**", "***" };
+		String[][] jarPaths = { {}, { "baz.jar" } };
+		String[] configNames = { "BazConfig" };
+		List<RemoteConnectionParams> params = new ArrayList<RemoteConnectionParams>();
+		List<RemoteConnectionParams> clones = new ArrayList<RemoteConnectionParams>();
+		for (String host : hosts) {
+			for (int port : ports) {
+				for (String user : users) {
+					for (String password : passwords) {
+						for (String[] jarPath : jarPaths) {
+							params.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+							clones.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+							if(jarPath.length > 0) {
+								params.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+								clones.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+							}
+						}
+					}
+				}
+			}
+		}
+		for (int outer = 0; outer < params.size(); outer++) {
+			assertEquals(clones.get(outer), params.get(outer));
+			assertEquals(clones.get(outer).hashCode(), params.get(outer).hashCode());
+			for (int inner = 0; inner < params.size(); inner++) {
+				if(outer == inner) {
+					continue;
+				}
+				assertFalse(params.get(outer).equals(params.get(inner)));
+			}				
 		}
 	}
 

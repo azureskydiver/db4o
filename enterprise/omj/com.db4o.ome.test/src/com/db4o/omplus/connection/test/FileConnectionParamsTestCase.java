@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static com.db4o.omplus.test.util.Db4oTestUtil.*;
 
 import java.io.*;
+import java.util.*;
 
 import org.hamcrest.*;
 import org.junit.*;
@@ -82,4 +83,35 @@ public class FileConnectionParamsTestCase {
 		}
 	}
 
+	@Test
+	public void testEquals() {
+		String[] paths = { "foo.db4o", "bar.db4o" };
+		boolean[] readOnly = { true, false };
+		String[][] jarPaths = { {}, { "baz.jar" } };
+		String[] configNames = { "BazConfig" };
+		List<FileConnectionParams> params = new ArrayList<FileConnectionParams>();
+		List<FileConnectionParams> clones = new ArrayList<FileConnectionParams>();
+		for (String path : paths) {
+			for (boolean ro : readOnly) {
+				for (String[] jarPath : jarPaths) {
+					params.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+					clones.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+					if(jarPath.length > 0) {
+						params.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+						clones.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+					}
+				}
+			}
+		}
+		for (int outer = 0; outer < params.size(); outer++) {
+			assertEquals(clones.get(outer), params.get(outer));
+			assertEquals(clones.get(outer).hashCode(), params.get(outer).hashCode());
+			for (int inner = 0; inner < params.size(); inner++) {
+				if(outer == inner) {
+					continue;
+				}
+				assertFalse(params.get(outer).equals(params.get(inner)));
+			}				
+		}
+	}
 }

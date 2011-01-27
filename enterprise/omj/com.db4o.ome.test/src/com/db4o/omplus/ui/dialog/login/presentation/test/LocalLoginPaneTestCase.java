@@ -60,7 +60,7 @@ public class LocalLoginPaneTestCase {
 	public void testSetPathReadOnlyOk() {
 		final String path = "baz";
 		newConnectionText().setText(path);
-		readOnlyButton().setSelection(true);
+		selectButton(readOnlyButton(), true);
 		pressButton(okButton());
 		fixture.assertConnected(new FileConnectionParams(path, true));
 	}
