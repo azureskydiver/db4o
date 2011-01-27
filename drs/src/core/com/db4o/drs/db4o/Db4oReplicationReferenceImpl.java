@@ -49,7 +49,10 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 
 	private final long _version;
 
-	Db4oReplicationReferenceImpl(ObjectInfo objectInfo) {
+	Db4oReplicationReferenceImpl(ObjectInfo objectInfo, Object obj) {
+		if(obj == null){
+			throw new IllegalStateException("obj may not be null");
+		}
 		_version = objectInfo.getCommitTimestamp();
 		ObjectReference ref = (ObjectReference) objectInfo;
 		Transaction trans = ref.transaction();
@@ -59,13 +62,15 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 		} else {
 			setVirtualAttributes(new VirtualAttributes());
 		}
-		Object obj = ref.getObject();
 		setObject(obj);
 		ref_init();
 	}
 
-	public Db4oReplicationReferenceImpl(Object myObject, Db4oDatabase db, long longPart, long version) {
-		setObject(myObject);
+	public Db4oReplicationReferenceImpl(Object obj, Db4oDatabase db, long longPart, long version) {
+		if(obj == null){
+			throw new IllegalStateException("obj may not be null");
+		}
+		setObject(obj);
 		ref_init();
 		VirtualAttributes va = new VirtualAttributes();
 		va.i_database = db;
