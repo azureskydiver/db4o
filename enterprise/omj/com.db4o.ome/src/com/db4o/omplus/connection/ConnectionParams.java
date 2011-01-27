@@ -66,12 +66,13 @@ public abstract class ConnectionParams {
 		if(other == null || getClass() != other.getClass()) {
 			return false;
 		}
-		return getPath().equals(((ConnectionParams)other).getPath());
+		ConnectionParams params = (ConnectionParams)other;
+		return Arrays.equals(jarPaths, params.jarPaths) && Arrays.equals(configNames, params.configNames);
 	}
 	
 	@Override
 	public int hashCode() {
-		return getPath().hashCode();
+		return Arrays.hashCode(jarPaths) ^ Arrays.hashCode(configNames);
 	}
 	
 	public String toString() {

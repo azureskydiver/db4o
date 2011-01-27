@@ -44,7 +44,12 @@ public class SWTTestUtil {
 	public static void pressButton(Button button) {
 		button.notifyListeners(SWT.Selection, new Event());
 	}
-	
+
+	public static void selectButton(Button button, boolean selected) {
+		button.setSelection(selected);
+		button.notifyListeners(SWT.Selection, new Event());
+	}
+
 	public static void selectCombo(Combo combo, int idx) {
 		combo.select(idx);
 		combo.notifyListeners(SWT.Selection, new Event());

@@ -79,7 +79,21 @@ public class RemoteConnectionParams extends ConnectionParams{
 			throw new DBConnectException(this, "Could not connect to remote database", e);
 		}
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!super.equals(other)) {
+			return false;
+		}
+		RemoteConnectionParams params = (RemoteConnectionParams) other;
+		return host.equals(params.host) && port == params.port && user.equals(params.user) && password.equals(params.password);
+	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode() ^ host.hashCode() ^ port ^ user.hashCode() ^ password.hashCode();
+	}
+	
 	private void configureCustom(ClientConfiguration config) throws DBConnectException {
 		URL[] urls = jarURLs();
 		if(urls.length == 0) {
@@ -94,7 +108,6 @@ public class RemoteConnectionParams extends ConnectionParams{
 		Iterator<ClientConfigurationItem> ps = SunSPIUtil.retrieveSPIImplementors(ClientConfigurationItem.class, loader);
 		if(ps.hasNext()) {
 			ClientConfigurationItem configurator = ps.next();
-			System.out.println("CONFIG: " + configurator);
 			config.addConfigurationItem(configurator);
 		}
 	}
