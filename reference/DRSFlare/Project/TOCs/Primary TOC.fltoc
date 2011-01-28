@@ -108,9 +108,6 @@
     <TocEntry
       Title="Prepare Old Databases for Replication"
       Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/Prepare_old_databases_for_replication.htm" />
-    <TocEntry
-      Title="Concurrency-Limitations"
-      Link="/Content/db4o_replication_system_drs/advanced_replication_strategies/Concurrency.htm" />
   </TocEntry>
   <TocEntry
     Title="Deployment Instructions"
