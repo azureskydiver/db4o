@@ -181,7 +181,7 @@
 	
 	<target name="package-net35-standalone" depends="properties, configure-net35, meta-package" />
 	
-	<target name="package-net40-standalone" depends="init, configure-net40, meta-package" />
+	<target name="package-net40-standalone" depends="properties, configure-net40, meta-package" />
 	
 	<target name="meta-package" depends="ndoc, build-zip, build-net-installer">
 	</target>
@@ -1013,11 +1013,13 @@
 	
 		<antcall target="prepare-sandcastle-output" />
 		
+		<!--
 		<copy todir="${dir.lib.sandcastle}/Presentation">
 			<fileset dir="config/sandcastle/Presentation">
 				<include name="**/*.xml" />
 			</fileset>
 		</copy>
+		-->
 
 		<exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
