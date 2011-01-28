@@ -5,7 +5,7 @@
         <pre class="prettyprint" xml:space="preserve">public class ExampleTestCase extends AbstractDb4oTestCase{
 
     public static void main(String[] args) {
-        new ExampleTestCase().runSolo();
+        new ExampleTestCase().runEmbedded();
     }
 
     public void testStoresElement(){

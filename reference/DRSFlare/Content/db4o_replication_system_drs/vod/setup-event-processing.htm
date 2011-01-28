@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3400" MadCap:lastWidth="1122">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4034" MadCap:lastWidth="1122">
     <head>
         <link href="../../Resources/TableStyles/Basic.css" rel="stylesheet" MadCap:stylesheetType="table" />
     </head>
@@ -116,7 +116,7 @@ libvedse.so
         <p>You can do this by adding startup entries to your database configuration.</p>
         <p>First copy the scripts for starting the event processor to your VOD database directory. Edit the script so that it works from the new location. In the example scripts you probably have to change the directory where the libraries reside.</p>
         <p>Second add two new configuration entries to the profile.be file:</p>
-        <pre class="monospace">event_daemon veddriver  The/Path/To/config.ved.win<br />startup_script startEventProcessor.bat</pre>
+        <pre class="monospace">event_daemon veddriver  the/path/to/config.ved.win<br />startup_script startEventProcessor.bat</pre>
         <p>Then restart the database. These configuration entries should ensure that the event driver and processor are started together with the VOD database.</p>
     </body>
 </html>
