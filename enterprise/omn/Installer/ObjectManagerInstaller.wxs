@@ -305,9 +305,6 @@
 			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
 			  <Text>This is the folder where [ProductName] will be installed.</Text>
 			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[TitleFont]Select Installation Folder</Text>
-			</Control>
 			<Control Id="FolderLabel" Type="Text" X="20" Y="114" Width="348" Height="12" Text="&amp;Folder:" />
 		  </Dialog>
 
@@ -340,12 +337,6 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>Select the way you want features to be installed.</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[DlgTitleFont]Custom Setup</Text>
-			</Control>
 			<Control Id="Box" Type="GroupBox" X="210" Y="81" Width="140" Height="98" />
 			<Control Id="ItemDescription" Type="Text" X="215" Y="90" Width="131" Height="30">
 			  <Text>Multiline description of the currently selected item.</Text>
@@ -394,12 +385,6 @@
 
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>The [Wizard] is ready to begin the [InstallMode] installation</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[DlgTitleFont]Ready to Install</Text>
-			</Control>
 		  </Dialog>
 		  
 		  <Dialog Id="VerifyRemoveDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes" TrackDiskSpace="yes">
@@ -423,12 +408,6 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>You have chosen to remove the program from your computer.</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[DlgTitleFont]Remove [ProductName]</Text>
-			</Control>
 		  </Dialog>
 
 		  <Dialog Id="VerifyRepairDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes" TrackDiskSpace="yes">
@@ -453,13 +432,8 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>The [Wizard] is ready to begin the repair of [ProductName].</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[DlgTitleFont]Repair [ProductName]</Text>
-			</Control>
 		  </Dialog>
+		  
 		  <Dialog Id="ProgressDialog" Width="370" Height="270" Title="[ProductName]" Modeless="yes">
 			<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Cancel]">
 			  <Publish Event="SpawnDialog" Value="CancelDialog">1</Publish>
@@ -472,9 +446,6 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="4" Y="234" Width="370" Height="0" />
-			<Control Id="Title" Type="Text" X="20" Y="15" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>Install [ProductName]</Text>
-			</Control>
 			<Control Id="ActionText" Type="Text" X="70" Y="100" Width="265" Height="10">
 			  <Subscribe Event="ActionText" Attribute="Text" />
 			</Control>
@@ -487,19 +458,6 @@
 		  <Dialog Id="SetupTypeDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
 			<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
 			
-			<!--
-			<Control Id="TypicalText" Type="Text" X="105" Y="78" Width="230" Height="20">
-			  <Text>Installs the most common program features. Recommended for most users.</Text>
-			</Control>
-			<Control Id="TypicalLabel" Type="Text" X="105" Y="65" Width="100" Height="10" TabSkip="no">
-			  <Text>[DlgTitleFont]&amp;Typical</Text>
-			</Control>
-			<Control Id="TypicalButton" Type="PushButton" X="50" Y="65" Width="38" Height="38" ToolTip="Typical Installation" Default="yes" Icon="yes" FixedSize="yes" IconSize="32" Text="[InstallerIcon]">
-			  <Publish Property="InstallMode" Value="Typical"><![CDATA[1]]></Publish>
-			  <Publish Event="SetInstallLevel" Value="3"><![CDATA[1]]></Publish>
-			  <Publish Event="NewDialog" Value="VerifyReadyDialog"><![CDATA[1]]></Publish>
-			</Control>
-			-->
 			<Control Id="CustomLabel" Type="Text" X="105" Y="65" Width="100" Height="10" TabSkip="no">
 			  <Text>[DlgTitleFont]C&amp;ustom</Text>
 			</Control>
@@ -525,12 +483,6 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>Choose the setup type that best suits your needs</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[DlgTitleFont]Choose Setup Type</Text>
-			</Control>
 			<Control Id="CustomText" Type="Text" X="105" Y="78" Width="230" Height="30">
 			  <Text>Allows users to choose which program features will be installed and where they will be installed. Recommended for advanced users.</Text>
 			</Control>
@@ -577,12 +529,6 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes">
-			  <Text>Select the operation you wish to perform.</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="240" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[DlgTitleFont]Modify, Repair or Remove installation</Text>
-			</Control>
 			<Control Id="ChangeText" Type="Text" X="105" Y="78" Width="230" Height="20">
 			  <Text>Allows users to change the way features are installed.</Text>
 			</Control>
@@ -632,12 +578,6 @@
 			<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="4" Y="234" Width="370" Height="0" />
-			<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>Browse to the destination folder</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[TitleFont]Change current destination folder</Text>
-			</Control>
 		  </Dialog>
 
 		  <Dialog Id="UserExit" Width="370" Height="270" Title="[ProductName] [Setup]">
@@ -688,16 +628,11 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="4" Y="234" Width="370" Height="0" />
-			<Control Id="Description" Type="Text" X="20" Y="20" Width="280" Height="20" Transparent="yes" NoPrefix="yes">
-			  <Text>Disk space required for the installation exceeds available disk space.</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[TitleFont]Out of Disk Space</Text>
-			</Control>
 			<Control Id="VolumeList" Type="VolumeCostList" X="20" Y="100" Width="330" Height="120" Sunken="yes" Fixed="yes" Remote="yes">
 			  <Text>{120}{70}{70}{70}{70}</Text>
 			</Control>
 		  </Dialog>
+		  
 		  <Dialog Id="OutOfRbDiskDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
 			<Control Id="No" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_No]">
 			  <Publish Event="EndDialog" Value="Return">1</Publish>
@@ -712,12 +647,6 @@
 			</Control>
 			<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 			<Control Id="BottomLine" Type="Line" X="4" Y="234" Width="370" Height="0" />
-			<Control Id="Description" Type="Text" X="20" Y="20" Width="280" Height="20" Transparent="yes" NoPrefix="yes">
-			  <Text>Disk space required for the installation exceeds available disk space.</Text>
-			</Control>
-			<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
-			  <Text>[TitleFont]Out of Disk Space</Text>
-			</Control>
 			<Control Id="VolumeList" Type="VolumeCostList" X="20" Y="140" Width="330" Height="80" Sunken="yes" Fixed="yes" Remote="yes" ShowRollbackCost="yes">
 			  <Text>{120}{70}{70}{70}{70}</Text>
 			</Control>
@@ -734,23 +663,11 @@
 			<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" FixedSize="yes" TabSkip="no" Text="dialog.bmp" />
 			<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="[Button_Back]" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
-			<Control Id="Title" Type="Text" X="135" Y="20" Width="220" Height="60" Transparent="yes" NoPrefix="yes">
-			  <Text>[BigFont][ProductName] ended prematurely</Text>
-			</Control>
 			<Control Id="Description1" Type="Text" X="135" Y="70" Width="220" Height="40" Transparent="yes" NoPrefix="yes">
 			  <Text>[ProductName] setup ended prematurely because of an error.  Your system has not been modified.  To install this program at a later time, please run the installation again.</Text>
 			</Control>
 			<Control Id="Description2" Type="Text" X="135" Y="115" Width="220" Height="20" Transparent="yes" NoPrefix="yes">
 			  <Text>Click the Finish button to exit the.</Text>
-			</Control>
-		  </Dialog>
-
-		  <Dialog Width="370" Height="100" Id="InstallOMNInstructions" Title="Install ObjectManager Enterprise">
-			<Control Type="Text" Width="332" Height="58" X="17" Y="11" Id="lblInstructions">
-			  <Text>{\TahomaBold10}To proceed with the installation of the Object Manager Enterprise plugin for Visual Studio please choose the appropriate shortcut from your db4objects Start menu</Text>
-			</Control>
-			<Control Type="PushButton" Width="50" Height="17" X="304" Y="75" Id="Finish" Text="Finish">
-			  <Publish Event="EndDialog" Value="Return">1</Publish>
 			</Control>
 		  </Dialog>
 		  <!-- END DIALOG DEFINITION -->
