@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- #example: The persistent # -->
+<!-- #example: List all persistent classes of this package # -->
 <jdo>
     <package name="com.db4odoc.drs.vod">
         <class name="Car"/>

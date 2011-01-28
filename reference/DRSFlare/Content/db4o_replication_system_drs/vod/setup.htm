@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2633" MadCap:lastWidth="636">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2769" MadCap:lastWidth="636">
     <head>
     </head>
     <body>
@@ -26,7 +26,7 @@ startdb databaseName@localhost
         <p>For more properties and settings read the JDO and VOD documentation. The example property-file looks like this:</p>
         <MadCap:snippetBlock src="../../CodeExamples/javaDRS/src/versant-JDO-configuration-for-VOD.all.flsnp" />
         <p>Additionally you need to have a package description where you declare all persistent classes:</p>
-        <MadCap:snippetBlock src="../../CodeExamples/drs/vod/package-The-persistent-.all.flsnp" />
+        <MadCap:snippetBlock src="../../CodeExamples/drs/vod/package-List-all-persistent-classes-of-this-package-.all.flsnp" />
         <p>The last preparation step is to get the enhancer in place. JDO requires that classes implements the PersistenceCapable interface. Implementing this by hand would be extremely painful. That's why you can use an enhancer which does this for you. Create an Ant build script which does that.</p>
         <MadCap:snippetBlock src="../../CodeExamples/javaDRS/build-Enhancer-script-.xml.flsnp" />
         <p>Along to the Ant-script add a machine.properties-file, which contains the installation specific information. Like the installation-location of VOD.</p>

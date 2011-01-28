@@ -9,7 +9,7 @@
     &lt;/package&gt;
 &lt;/jdo&gt;</pre>
 		<div class="codesnippet-meta">
-			package.jdo: The persistent 
+			package.jdo: List all persistent classes of this package 
 			<div class="codedownload">
 				<a href="Example-drs-vod-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
