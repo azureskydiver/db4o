@@ -2,10 +2,11 @@
 .a Roadmap ..
 .0 Roadmap ..
 
-This section describes the features supported in current release and features planned in upcoming releases.
+This section describes the features supported in the current release and features planned in upcoming releases.
 
 .1 Supported Features ..
 - db4o to db4o replication
+- db4o to VOD (Versant Object Database) replication
 - db4o to Hibernate replication
 - Hibernate to Hibernate replication
 
@@ -16,19 +17,18 @@ This section describes the features supported in current release and features pl
 - One-To-Many Relations 
 - Many-To-One Relations
 
-- UUID and Version generation for db4o and Hibernate
+- UUID and Version generation for db4o, VOD and Hibernate
 - Queries for changed objects
 - Parent-to-Child traversal along changed objects
 - Collection Replication
-- Replication Event System
 - Replication of deleted objects
+- Listeners for programmatic conflict resolution
 
 .1 Unsupported Features ..
 - Multidimensional Arrays in Hibernate replication
 
 .1 Planned Features ..
-- Generation Hibernate mapping files
-- RDBMS triggers for updating version number
+- Generation of Hibernate mapping files
+- RDBMS triggers for updating version numbers
 - Instant replication
-- Update of UUID generation mechanism, this may break existing data
 - JDK5 enum support
