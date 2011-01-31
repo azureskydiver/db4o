@@ -11,12 +11,14 @@ object BuildPrepareConsoleMain {
 		args match {
 		  	case BuildPrepareArgs(dryRun, folder, version2category) => 
 		  		run(dryRun, folder, version2category)
-		  	case _ =>
-		  		println("Usage: BuildPrepareConsoleMain [-dry] <folder> [<version>  <category>]*")
+		  	case _ => {
+		  		println("Usage: BuildPrepareConsoleMain [-dry] <folder> [<version>  [<from>'>']<to>]*")
+		  		println("Ex.: BuildPrepareConsoleMain ./data 7.12 Production>Stable 8.0 Production")
+		  	}
 		}
 	}		
  
-	private def run(dryRun: Boolean, folder: File, version2category: Map[String, String]) {
+	private def run(dryRun: Boolean, folder: File, version2category: Map[String, Category]) {
 		val files = filterFolder(folder)
 		files.foreach(logFile(_, "? "))
 		println()
@@ -56,7 +58,9 @@ object BuildPrepareConsoleMain {
 }
 
 object BuildPrepareArgs {
-	def unapply(args: Array[String]): Option[(Boolean, File, Map[String, String])] = {
+	val CategoryPattern = """(([^>]+)>)?(.+)""".r
+	
+	def unapply(args: Array[String]): Option[(Boolean, File, Map[String, Category])] = {
 		if(args == null || args.size == 0) {
 			return None
 		}
@@ -70,14 +74,21 @@ object BuildPrepareArgs {
 			return None
 		}
 		val folder = new File(remainingArgs(0))
-		val version2category = arr2map(remainingArgs.drop(1))
+		val version2category = arr2map(remainingArgs.drop(1), str2Category)
 		Some((dryRun, folder, version2category))
 	}
  
- 	private def arr2map[T](arr: Array[T]) = {
-		val map = mutable.Map[T, T]()
+	private def str2Category(s: String) =
+		s match {
+			case CategoryPattern(null, null, to) => Category(None, to)
+			case CategoryPattern(fromgt, from, to) => Category(Some(from), to)
+			case _ => throw new IllegalArgumentException("Not a category: " + s)
+		}
+	
+ 	private def arr2map[T, V](arr: Array[T], mapper: T => V) = {
+		val map = mutable.Map[T, V]()
 		for(idx <- 0 until arr.size by 2) {
-			map += arr(idx) -> arr(idx + 1)
+			map += arr(idx) -> mapper(arr(idx + 1))
 		}
 		map
 	}
