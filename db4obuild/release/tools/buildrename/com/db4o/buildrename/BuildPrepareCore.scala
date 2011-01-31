@@ -59,7 +59,7 @@ object VersionedFile {
   		} 
 }
 
-class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], version2category: Map[String, String]) {
+class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], version2category: Map[String, Category]) {
 	private val DATE = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date) + "T00:00:00"
  
    	def render() {
@@ -76,10 +76,14 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
 	def renderFiles() =
 		"""<?xml version="1.0" encoding="utf-8" ?>""" + "\n\n" + new PrettyPrinter(50, 3).format(metaData())
  
-    def metaData(): Elem = 
-      <Downloads>{files.map(metaData(_))}</Downloads>
-    
- 	private def metaData(file: VersionedFile): Elem =
+    def metaData(): Elem = {
+	  val addedDownloadTags = files.map(metaDataAdd(_))
+	  val filesToBeRemoved = files.filter(f => version2category.get(f.major).map(_.from.isDefined).getOrElse(false))
+	  val removedDownloadTags = filesToBeRemoved.map(metaDataRemove(_))
+      <Downloads>{addedDownloadTags ++ removedDownloadTags}</Downloads>
+	} 
+	
+ 	private def metaDataAdd(file: VersionedFile): Elem =
  		<Download		
  			file={file.targetFile.getName}
  			title={file.product.description}
@@ -87,19 +91,34 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
  			releaseDate={DATE}
       		release={file.extension.toUpperCase}
  			platform={file.platform.toString}>
-      		{categoryTag(file)}
+      		{categoryAddTag(file)}
       	</Download>
-    
-    private def categoryTag(file: VersionedFile): Iterable[Elem] = {
-    	version2category.get(file.major).map(category => <Folders><add folder={category} /></Folders>)
+
+ 	private def metaDataRemove(file: VersionedFile): Elem =
+ 		<Download		
+ 			file={file.targetFile.getName}
+      		release={file.extension.toUpperCase}
+ 			platform={file.platform.toString}>
+      		{categoryRemoveTag(file)}
+      	</Download>
+
+    private def categoryAddTag(file: VersionedFile): Iterable[Elem] = {
+    	version2category.get(file.major).map(category => <Folders><add folder={category.to} /></Folders>)
+    }
+
+    private def categoryRemoveTag(file: VersionedFile): Iterable[Elem] = {
+    	version2category.get(file.major).map(category => <Folders><remove folder={category.from.get} /></Folders>)
     }
 }
+
+case class Category(from: Option[String], to: String)
+
 
 object BuildPrepareCore {
  	def filterFolder(folder: File) =
 		folder.listFiles.flatMap(VersionedFile(_))
 
-  	def writeXMLFile(file: File, files: Iterable[VersionedFile], version2category: Map[String, String]) =
+  	def writeXMLFile(file: File, files: Iterable[VersionedFile], version2category: Map[String, Category]) =
   		new VersionedFileMetaRenderer(file, files, version2category).render()
 
   	def renameFile(file: VersionedFile) =
