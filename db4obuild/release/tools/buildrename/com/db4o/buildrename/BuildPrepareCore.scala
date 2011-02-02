@@ -85,6 +85,7 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
  			file={file.targetFile.getName}
  			title={file.product.description}
  			version={file.fullVersion}
+ 			size={file.sourceFile.length.toString}
  			releaseDate={DATE}
       		release={file.extension.toUpperCase}
  			platform={file.platform.toString}>
