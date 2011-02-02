@@ -1,8 +1,6 @@
 package com.db4o.omplus.datalayer.propertyViewer;
 
-import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.propertyViewer.classProperties.*;
 import com.db4o.reflect.*;

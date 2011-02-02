@@ -1,6 +1,5 @@
 package com.db4o.omplus.ui;
 
-import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
@@ -19,8 +18,7 @@ import com.db4o.omplus.datalayer.propertyViewer.objectProperties.*;
 import com.db4o.omplus.ui.customisedcontrols.propertyViewer.*;
 import com.db4o.omplus.ui.model.propertyViewer.*;
 
-public class PropertyViewer extends ViewPart 
-{
+public class PropertyViewer extends ViewPart {
 	
 	private Composite parentComposite;
 	private Composite childComposite = null;
@@ -48,8 +46,7 @@ public class PropertyViewer extends ViewPart
 	
 
 	@Override
-	public void createPartControl(Composite parent)
-	{
+	public void createPartControl(Composite parent) {
 		parentComposite = parent;
 		childComposite = new Composite(parentComposite,SWT.NONE);
 		childComposite.setLayout(new FillLayout());
@@ -64,11 +61,9 @@ public class PropertyViewer extends ViewPart
 	/**
 	 * Update view when new DB loaded
 	 */
-	public void newDBUpdate()
-	{
+	public void newDBUpdate() {
 		//dispose all child tabs..reverse order necessary else indexes modified and tabs not deleted
-		for(int i = mainTab.getItemCount()-1; i >= 0; i--)
-		{	
+		for(int i = mainTab.getItemCount()-1; i >= 0; i--) {	
 			mainTab.getItem(i).dispose();
 		}
 		
@@ -80,15 +75,13 @@ public class PropertyViewer extends ViewPart
 	/**
 	 * Initialize the providers for various tabs
 	 */
-	private void initializeProviders()
-	{
+	private void initializeProviders() {
 		dbProperties = dbProps();
 		classProperties = null;
 		objectProperties = null;
 	}
-	private void addChildComponents() 
-	{
-		
+
+	private void addChildComponents() {
 		addDB4OPropertiesTab();
 		
 		if(classProperties!=null)
@@ -98,23 +91,20 @@ public class PropertyViewer extends ViewPart
 			addObjectPropertiesTab();		
 	}
 	
-	private void removeAllComponentsFromClassPropertiesTab()
-	{
-		if(mainClassComposite!=null)
-		{
-			for (Control control : mainClassComposite.getChildren()) 
-			{
-				control.dispose();
-			}
-			/*CTabItem item = mainTab.getItem(CLASS_TAB_INDEX);
-			if(item!=null)
-				item.dispose();*/
-			for(int i = 0; i< mainTab.getItemCount(); i++)
-			{
-				CTabItem item = mainTab.getItem(i);
-				if(item.getText().equals(CLASS_TAB_TITLE))
-					item.dispose();
-			}
+	private void removeAllComponentsFromClassPropertiesTab() {
+		if(mainClassComposite == null) {
+			return;
+		}
+		for (Control control : mainClassComposite.getChildren()) {
+			control.dispose();
+		}
+		/*CTabItem item = mainTab.getItem(CLASS_TAB_INDEX);
+		if(item!=null)
+			item.dispose();*/
+		for(int i = 0; i< mainTab.getItemCount(); i++) {
+			CTabItem item = mainTab.getItem(i);
+			if(item.getText().equals(CLASS_TAB_TITLE))
+				item.dispose();
 		}
 	}
 	
@@ -123,8 +113,7 @@ public class PropertyViewer extends ViewPart
 	 * Reset the class properties tab
 	 * @param classname
 	 */
-	private void resetClassPropertiesTab(String classname)
-	{	
+	private void resetClassPropertiesTab(String classname) {	
 		removeAllComponentsFromClassPropertiesTab();
 		if(classname != null) {
 			classProperties = Activator.getDefault().dbModel().props().getClassProperties(classname);
@@ -133,10 +122,8 @@ public class PropertyViewer extends ViewPart
 		}
 	}
 	
-	private void removeAllComponentsFromObjectPropertiesTab()
-	{
-		if(objectComposite!=null)
-		{
+	private void removeAllComponentsFromObjectPropertiesTab() {
+		if(objectComposite!=null) {
 			for (Control control : objectComposite.getChildren()) 
 			{
 				control.dispose();
@@ -145,8 +132,7 @@ public class PropertyViewer extends ViewPart
 			/*CTabItem item = mainTab.getItem(OBJECT_TAB_INDEX);
 			if(item!=null)
 				item.dispose();*/
-			for(int i = 0; i< mainTab.getItemCount(); i++)
-			{
+			for(int i = 0; i< mainTab.getItemCount(); i++) {
 				CTabItem item = mainTab.getItem(i);
 				if(item.getText().equals(OBJECT_TAB_TITLE))
 					item.dispose();
@@ -158,8 +144,7 @@ public class PropertyViewer extends ViewPart
 	 * Reste the object properties tab
 	 * @param resultObject
 	 */
-	private void resetObjectPropertiesTab(Object resultObject)
-	{
+	private void resetObjectPropertiesTab(Object resultObject) {
 		removeAllComponentsFromObjectPropertiesTab();
 		objectProperties = Activator.getDefault().dbModel().props().getObjectProperties(resultObject);
 		addObjectPropertiesTab();
@@ -169,8 +154,7 @@ public class PropertyViewer extends ViewPart
 	
 
 	
-	private void addDB4OPropertiesTab() 
-	{
+	private void addDB4OPropertiesTab() {
 		CTabItem db4oTabItem  = new CTabItem(mainTab, SWT.NONE,DB4O_TAB_INDEX);
 		db4oTabItem.setText(DB4O_TAB_TITLE);
 				
@@ -183,8 +167,7 @@ public class PropertyViewer extends ViewPart
 		table.setLinesVisible(true);
 		TableColumn column = null;
 		
-		for(int i = 0; i<PropertyViewerConstants.DB_PROPERTY_COLUMN_ARRAY.length; i++)
-		{
+		for(int i = 0; i<PropertyViewerConstants.DB_PROPERTY_COLUMN_ARRAY.length; i++) {
 			column = new TableColumn(table, SWT.CENTER);		
 			column.setText(PropertyViewerConstants.DB_PROPERTY_COLUMN_ARRAY[i]);
 			//column.setWidth(100);
@@ -209,8 +192,7 @@ public class PropertyViewer extends ViewPart
 	}
 	
 
-	private void addClasspropertiesTab() 
-	{
+	private void addClasspropertiesTab() {
 		//NOTE: Future this will have editing too		
 		CTabItem tabItem  = new CTabItem(mainTab, SWT.NONE,CLASS_TAB_INDEX);
 		tabItem.setText(CLASS_TAB_TITLE);
@@ -283,11 +265,8 @@ public class PropertyViewer extends ViewPart
 		column.getColumn().setText(PropertyViewerConstants.CLASS_PROPERTY_COLUMN_ARRAY[3]);
 		//column.setEditingSupport(new ClassPropertiesEditor(tableViewer));
 		
-		
-		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(tableViewer) 
-		{
-			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) 
-			{
+		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(tableViewer) {
+			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
 				return event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;			
 			}
 		};
@@ -332,22 +311,15 @@ public class PropertyViewer extends ViewPart
 
 	
 	private void addListenerForSaveBtn(TableViewer tableViewer, Button saveBtn) {
-		final Table table = tableViewer.getTable();
 		saveBtn.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
 				if(classProperties == null)
 					return;
 				ConfigureIndex indexing = new ConfigureIndex(Activator.getDefault().dbModel());
-//				if(indexing.isLocal()){
-					boolean save = showMessage(table.getShell());
-					if(save == true) {
-						closeOMEPerspective();
-						indexing.createIndex(classProperties);
-						showOMEPerspective();
-					}
-//				}
+				closeOMEPerspective();
+				indexing.createIndex(classProperties);
+				showOMEPerspective();
 			}
-			
 		});
 		
 	}
@@ -369,13 +341,7 @@ public class PropertyViewer extends ViewPart
 			page.closePerspective(page.getPerspective(), true, true);
 	}
 
-	private boolean showMessage(Shell shell) {
-		String message = "This will close the database connection and reopen. Do you want to continue?";
-		return MessageDialog.openQuestion(shell, OMPlusConstants.DIALOG_BOX_TITLE, message);
-	}
-
-	private void addObjectPropertiesTab() 
-	{
+	private void addObjectPropertiesTab() {
 		CTabItem tabItem  = new CTabItem(mainTab, SWT.NONE,OBJECT_TAB_INDEX);
 		tabItem.setText(OBJECT_TAB_TITLE);		
 		
@@ -390,8 +356,7 @@ public class PropertyViewer extends ViewPart
 		table.setLinesVisible(true);
 		TableColumn column = null;
 		
-		for(int i = 0; i<PropertyViewerConstants.OBJECT_PROPERTY_COLUMN_ARRAY.length; i++)
-		{
+		for(int i = 0; i<PropertyViewerConstants.OBJECT_PROPERTY_COLUMN_ARRAY.length; i++) {
 			column = new TableColumn(table, SWT.CENTER);		
 			column.setText(PropertyViewerConstants.OBJECT_PROPERTY_COLUMN_ARRAY[i]);
 			column.setWidth(100);
@@ -415,21 +380,16 @@ public class PropertyViewer extends ViewPart
 	}
 
 	@Override
-	public void setFocus() 
-	{
-		// Auto-generated method stub
-
+	public void setFocus() {
 	}
 
 	
 
-	public void updateClassProperties(String className)
-	{
+	public void updateClassProperties(String className) {
 		resetClassPropertiesTab(className);
 	}
 	
-	public void updateClassProperties(String className, boolean isObjectPropetiestabToBeUpdated)
-	{
+	public void updateClassProperties(String className, boolean isObjectPropetiestabToBeUpdated) {
 		resetClassPropertiesTab(className);
 		if(!isObjectPropetiestabToBeUpdated)
 		{
@@ -437,8 +397,7 @@ public class PropertyViewer extends ViewPart
 		}
 	}
 	
-	public void updateObjectproperties(Object resultObject)
-	{
+	public void updateObjectproperties(Object resultObject) {
 		resetObjectPropertiesTab(resultObject);
 	}
 	
@@ -446,13 +405,11 @@ public class PropertyViewer extends ViewPart
 	 * The ClassViewer view has been activated.
 	 * Remove the Object properties tab if any
 	 */
-	public void classViewerActivated() 
-	{
+	public void classViewerActivated() {
 		removeAllComponentsFromObjectPropertiesTab();
-		
 	}
-	public void classViewerActivated(String classname) 
-	{
+
+	public void classViewerActivated(String classname) {
 		removeAllComponentsFromObjectPropertiesTab();
 		resetClassPropertiesTab(classname);
 	}
