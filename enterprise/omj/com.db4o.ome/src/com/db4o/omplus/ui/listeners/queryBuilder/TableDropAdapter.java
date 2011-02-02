@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.OMPlusConstants;
 import com.db4o.omplus.datalayer.ReflectHelper;
 import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
@@ -29,9 +30,7 @@ public class TableDropAdapter extends ViewerDropAdapter
 	private QueryGroupComposite queryGroupComposite;
 	private IDropValidator dropValidator;
 	
-	public TableDropAdapter(int index,QueryGroup qg, TableViewer t, QueryGroupComposite c, 
-							IDropValidator dropValidator)
-	{
+	public TableDropAdapter(int index,QueryGroup qg, TableViewer t, QueryGroupComposite c, IDropValidator dropValidator) {
 		//TODO: Check if this super's call is needed
 		super(t);
 		tableIndex = index;
@@ -98,7 +97,7 @@ public class TableDropAdapter extends ViewerDropAdapter
 					addQueryClause(clauses, queryList);
 					updateUI = true;
 				}
-				else if(ReflectHelper.getFieldTypeClass(field) != -1){
+				else if(reflectHelper().getFieldTypeClass(field) != -1){
 					q = newQueryClause(field, operator);
 					queryList.add(q);
 					addQueryClause(q);
@@ -113,7 +112,7 @@ public class TableDropAdapter extends ViewerDropAdapter
 
 	private ArrayList<QueryClause> getPrimitiveFields(String className, String operator)
 	{
-		ReflectClass clazz = ReflectHelper.getReflectClazz(className);
+		ReflectClass clazz = reflectHelper().getReflectClazz(className);
 		ReflectField [] fields = ReflectHelper.getDeclaredFieldsInHierarchy(clazz);
 		ArrayList<QueryClause> list = new ArrayList<QueryClause>(fields.length);
 		for(ReflectField f : fields){
@@ -156,4 +155,7 @@ public class TableDropAdapter extends ViewerDropAdapter
 		return true;
 	}
 
+	private ReflectHelper reflectHelper() {
+		return Activator.getDefault().dbModel().db().reflectHelper();
+	}
 }

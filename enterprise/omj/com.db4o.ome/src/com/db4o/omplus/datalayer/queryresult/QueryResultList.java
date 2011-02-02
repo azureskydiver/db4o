@@ -15,6 +15,12 @@ public class QueryResultList {
 	
 	private ArrayList<Long> localIdList;
 
+	private final ReflectHelper reflectHelper;
+
+	public QueryResultList(ReflectHelper reflectHelper) {
+		this.reflectHelper = reflectHelper;
+	}
+	
 	public String[] getFieldNames()
 	{
 		return fieldNames;
@@ -74,7 +80,7 @@ public class QueryResultList {
 	public int getDataType(String fieldName)
 	{
 		if( fieldName != null ){
-			int type = ReflectHelper.getFieldTypeClass(fieldName);
+			int type = reflectHelper.getFieldTypeClass(fieldName);
 			return type;
 		}
 		return -1;

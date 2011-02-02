@@ -13,6 +13,12 @@ public class ObjectTreeNode {
 	private ObjectTreeNode parent;
 	
 	private int nodeType;
+	private final ReflectHelper reflectHelper;
+
+	public ObjectTreeNode(ReflectHelper reflectHelper) {
+		this.reflectHelper = reflectHelper;
+		
+	}
 	
 	public String getName() {
 		return name;
@@ -75,7 +81,7 @@ public class ObjectTreeNode {
 		if( value == null || value.equals(OMPlusConstants.NULL_VALUE))
 			return 0;
 		else {
-			return ReflectHelper.getArraySize(value);
+			return reflectHelper.getArraySize(value);
 			
 		}
 			

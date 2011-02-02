@@ -584,13 +584,13 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		tableViewer.setCellEditors(editors);		
 		modifiedObjList = new QueryResultTableModifiedList();
 		
-		ResultTableCellModifier modifier = new ResultTableCellModifier(queryModel, tableViewer, 
+		ResultTableCellModifier modifier = new ResultTableCellModifier(Activator.getDefault().dbModel().db().reflectHelper(), queryModel, tableViewer, 
 											   queryResultList, modifiedObjList,this,columnNameMap);
 		tableViewer.setCellModifier(modifier);
 		
 		//Set Content Providers for Table
 		tableViewer.setContentProvider(new QueryResultsContentProvider(resultPage) );
-		tableViewer.setLabelProvider(new QueryResultsLabelProvider());
+		tableViewer.setLabelProvider(new QueryResultsLabelProvider(Activator.getDefault().dbModel().db().reflectHelper()));
 		try {
 			tableViewer.setInput(queryResultList);
 		}

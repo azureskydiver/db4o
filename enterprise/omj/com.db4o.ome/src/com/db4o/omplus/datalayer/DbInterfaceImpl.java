@@ -131,4 +131,8 @@ public class DbInterfaceImpl implements IDbInterface {
 		return ((LocalObjectContainer)objContainer).config().isReadOnly();
 	}
 
+	public ReflectHelper reflectHelper() {
+		return new ReflectHelper(objContainer.ext().reflector());
+	}
+
 }

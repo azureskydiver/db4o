@@ -1,16 +1,11 @@
 package com.db4o.omplus.ui.customisedcontrols.queryBuilder;
 
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
 
-
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.omplus.datalayer.queryBuilder.QueryClause;
-import com.db4o.omplus.datalayer.queryBuilder.QueryGroup;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
 
 public class QueryBuilderComboEditor extends EditingSupport
 {
@@ -19,7 +14,6 @@ public class QueryBuilderComboEditor extends EditingSupport
 	private QueryGroup queryGroup;
 	private TableViewer tableViewer;
 	private int columnIndex;
-	
 
 	public QueryBuilderComboEditor(TableViewer viewer, QueryGroup  group, int i) 
 	{
@@ -41,7 +35,7 @@ public class QueryBuilderComboEditor extends EditingSupport
 	protected CellEditor getCellEditor(Object element) 
 	{
 		QueryClause queryClause = (QueryClause)element;
-		int datatype = ReflectHelper.getFieldTypeClass(queryClause.getField());
+		int datatype = reflectHelper().getFieldTypeClass(queryClause.getField());
 		String[] choices = null;
 		
 		switch(columnIndex)
@@ -115,7 +109,7 @@ public class QueryBuilderComboEditor extends EditingSupport
 			return;
 		
 		QueryClause query = (QueryClause)element;
-		int datatype = ReflectHelper.getFieldTypeClass(query.getField());
+		int datatype = reflectHelper().getFieldTypeClass(query.getField());
 		
 		switch(columnIndex)
 		{
@@ -163,4 +157,7 @@ public class QueryBuilderComboEditor extends EditingSupport
 		tableViewer.refresh();		
 	}
 
+	private ReflectHelper reflectHelper() {
+		return Activator.getDefault().dbModel().db().reflectHelper();
+	}
 }

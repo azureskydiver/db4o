@@ -14,16 +14,20 @@ import com.db4o.reflect.generic.GenericObject;
 
 
 
-public class QueryResultsLabelProvider extends LabelProvider implements ITableLabelProvider
-{
+public class QueryResultsLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private final ReflectHelper reflectHelper;
+
+	public QueryResultsLabelProvider(ReflectHelper reflectHelper) {
+		this.reflectHelper = reflectHelper;
+	}
+	
 	public Image getColumnImage(Object element, int columnIndex) {
 		// Auto-generated method stub
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getColumnText(Object element, int columnIndex)
-	{
+	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof QueryResultRow) 
 		{
 			if(columnIndex == 0)//Deafult columnidentifier added
@@ -53,9 +57,9 @@ public class QueryResultsLabelProvider extends LabelProvider implements ITableLa
 						else if(obj instanceof Map)
 							return getString( ((Map)obj).size() );
 						else {
-							ReflectClass clazz = ReflectHelper.getReflectClazz(obj);
+							ReflectClass clazz = reflectHelper.getReflectClazz(obj);
 							if(clazz.isArray())
-								return getString( ReflectHelper.getArraySize(obj));
+								return getString( reflectHelper.getArraySize(obj));
 						}
 							return (obj!=null)?obj.toString():"";
 					}

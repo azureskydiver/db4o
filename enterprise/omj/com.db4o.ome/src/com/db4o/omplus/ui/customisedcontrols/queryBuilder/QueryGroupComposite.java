@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.queryBuilder.*;
 import com.db4o.omplus.ui.interfaces.*;
@@ -67,16 +68,12 @@ public class QueryGroupComposite extends Composite implements IObservable
 	private int INCREMENT_TABLE_HEIGHT = 20;
 
 	private int LABEL_WIDTH = 100;
-	
-	
-	
-
 
 	public QueryGroupComposite(QueryPresentationModel model, Composite queryBuilderComnposite, int style,
 								int idx, QueryGroup queryGroup, 
 								IChildObserver observer, IDropValidator dropValidator) 
 	{
-		super(queryBuilderComnposite, style|SWT.SHADOW_ETCHED_IN);	
+		super(queryBuilderComnposite, style|SWT.SHADOW_ETCHED_IN);
 		this.model = model;
 		index = idx;
 		this.queryGroup = queryGroup;
@@ -431,5 +428,5 @@ public class QueryGroupComposite extends Composite implements IObservable
 		}
 		return clsName;
 	}
-	
+
 }

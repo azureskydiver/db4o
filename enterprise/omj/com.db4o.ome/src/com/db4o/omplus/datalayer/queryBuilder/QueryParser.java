@@ -8,7 +8,6 @@ import com.db4o.omplus.datalayer.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
-@SuppressWarnings("unchecked")
 public class QueryParser
 {
     private final String OR_OPERATOR = "OR";
@@ -16,7 +15,7 @@ public class QueryParser
     
 	private boolean isDate;
 
-    public ObjectSet ExecuteOMQueryList(OMQuery allConstraints)
+    public ObjectSet executeOMQueryList(OMQuery allConstraints)
     {
         Constraint rootConstraint = null;
         Constraint ConCatClauses = null;
@@ -24,8 +23,8 @@ public class QueryParser
         Constraint buildGroup = null;           
         Constraint conCatGroup = null; ;
 
-        ObjectContainer objectContainer = Activator.getDefault().dbModel().db().getDB();
-        Query query = objectContainer.query();
+        IDbInterface db = Activator.getDefault().dbModel().db();
+		Query query = db.getDB().query();
         rootConstraint = null;        
         int groupcount = 0;
         
@@ -41,7 +40,7 @@ public class QueryParser
                 clausecount++;
                 // Adds Class Constraint for all groups
                 if(rootConstraint == null)
-                	rootConstraint = addClassConstraint(query, qmclause.getField());
+                	rootConstraint = addClassConstraint(query, qmclause.getField(), db.reflectHelper());
                 buildClause = addFieldConstraints(query, qmclause);
                 if (qmclause.getCondition() != null)
                 {
@@ -97,9 +96,9 @@ public class QueryParser
         return objSet;
     }
 
-    private Constraint addClassConstraint(Query query, String field) {
+    private Constraint addClassConstraint(Query query, String field, ReflectHelper reflectHelper) {
     	String className = field.split(OMPlusConstants.REGEX)[0];
-    	ReflectClass clazz = ReflectHelper.getReflectClazz(className);
+    	ReflectClass clazz = reflectHelper.getReflectClazz(className);
 		return query.constrain(clazz);
 	}
 
@@ -139,7 +138,7 @@ public class QueryParser
     }
 
 
-	@SuppressWarnings({ "unused", "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	public Constraint addFieldConstraints(Query query, QueryClause clause)
     {
     	 String fieldname = clause.getField();

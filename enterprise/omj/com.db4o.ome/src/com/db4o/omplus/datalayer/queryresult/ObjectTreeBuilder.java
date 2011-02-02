@@ -17,20 +17,17 @@ public class ObjectTreeBuilder {
 	private final String KEY = "key";
 	private final String VALUE = "value";
 	
-	private IDbInterface db;
+	private final IDbInterface db;
 	
-	private static Reflector reflector;
-	
-	public ObjectTreeBuilder(){
-		db  = Activator.getDefault().dbModel().db(); 
-		reflector=db.reflector();		
+	public ObjectTreeBuilder(IDbInterface db){
+		this.db  = db; 
 	}
 	
 	private ArrayList<Object> modifiedObjList = new ArrayList<Object>();
 	private HashMap<Object, Integer> updateDepth = new HashMap<Object, Integer>();
 
 	public ObjectTreeNode getObjectTreeRootNode(String className, Object resultObj){
-		ObjectTreeNode newNode = new ObjectTreeNode();
+		ObjectTreeNode newNode = new ObjectTreeNode(db.reflectHelper());
 		newNode.setType(className);
 		newNode.setValue(resultObj);
 		newNode.setName(className);
@@ -145,17 +142,17 @@ public class ObjectTreeBuilder {
 	{
 		int size = modifiedObjList.size();
 		if( size > 0){
-			ObjectContainer db = getObjContainer();
+			ObjectContainer oc = db.getDB();
 			ListIterator<Object> iter = modifiedObjList.listIterator();
 			while(iter.hasNext()){
 				Object obj = iter.next();
 				if(updateDepth.containsKey(obj)){
-					db.ext().store(obj, updateDepth.get(obj));
+					oc.ext().store(obj, updateDepth.get(obj));
 				}
 				else
-					db.store(obj);
+					oc.store(obj);
 			}
-			db.commit();
+			oc.commit();
 			// remove all obj in modifiedObjlist
 			removeAll();
 		}
@@ -191,7 +188,6 @@ public class ObjectTreeBuilder {
 		return clz.getDeclaredField(fieldName);
 	}
 
-	@SuppressWarnings("unchecked")
 	private ObjectTreeNode[] makeCollectionNode(Object resultObj, ObjectTreeNode parent) {
 		ObjectTreeNode []nodes = null;
 //		db.activate(resultObj, 2);
@@ -206,7 +202,7 @@ public class ObjectTreeBuilder {
 				Iterator iterator = collection.iterator();
 				while(iterator.hasNext()) {
 					Object obj = iterator.next();
-					ObjectTreeNode newNode = new ObjectTreeNode();
+					ObjectTreeNode newNode = new ObjectTreeNode(db.reflectHelper());
 					StringBuilder sb = new StringBuilder();
 					sb.append(PRMITVE_ARRAY).append(count).append(END_ARRAY);
 					newNode.setName(sb.toString());
@@ -223,11 +219,10 @@ public class ObjectTreeBuilder {
 	}
 
 	private boolean isPrimitive(Object obj) {
-		ReflectClass cls =reflector.forObject(obj);
+		ReflectClass cls =getReflectClazz(obj);
 		return ( cls.isPrimitive() || ReflectHelper.isWrapperClass(cls.getName()));
 	}
 
-	@SuppressWarnings("unchecked")
 	private ObjectTreeNode[] makeMapNode(Object resultObj, ObjectTreeNode parent) {
 		ObjectTreeNode []nodes = null;
 		Map map = (Map)resultObj;
@@ -239,14 +234,14 @@ public class ObjectTreeBuilder {
 			{
 				Object key = iterator.next();
 				Object obj = map.get(key);
-				ObjectTreeNode keyNode = new ObjectTreeNode();
+				ObjectTreeNode keyNode = new ObjectTreeNode(db.reflectHelper());
 				keyNode.setName(KEY);
 				keyNode.setValue(key);
 				keyNode.setPrimitive(isPrimitive(key));
 				keyNode.setParent(parent);
 				keyNode.setType(getReflectClazz(key).getName());
 				nodes[count++] = keyNode;
-				ObjectTreeNode newNode = new ObjectTreeNode();
+				ObjectTreeNode newNode = new ObjectTreeNode(db.reflectHelper());
 				newNode.setName(VALUE);
 				newNode.setValue(obj);
 				newNode.setPrimitive(isPrimitive(obj));
@@ -261,11 +256,11 @@ public class ObjectTreeBuilder {
 	private ObjectTreeNode[] makeArrayNode(Object resultObj, ObjectTreeNode parent) {
 		int index = 0;
 //		db.activate(resultObj, 2);
-		int length = reflector.array().getLength(resultObj);
+		int length = reflector().array().getLength(resultObj);
 		ObjectTreeNode []nodes = new ObjectTreeNode[length];
 		for(int count = 0; count < length; count++){
-			ObjectTreeNode newNode = new ObjectTreeNode();
-			Object obj = reflector.array().get(resultObj, count);
+			ObjectTreeNode newNode = new ObjectTreeNode(db.reflectHelper());
+			Object obj = reflector().array().get(resultObj, count);
 			StringBuilder sb = new StringBuilder();
 			sb.append(PRMITVE_ARRAY).append(count).append("]");
 			newNode.setName(sb.toString());
@@ -290,7 +285,7 @@ public class ObjectTreeBuilder {
 	}
 
 	private ObjectTreeNode createObjectNode(ReflectField rField, Object obj, ObjectTreeNode parent) {
-		ObjectTreeNode newNode = new ObjectTreeNode();
+		ObjectTreeNode newNode = new ObjectTreeNode(db.reflectHelper());
 		ReflectClass type = rField.getFieldType();
 		if(parent != null){
 			StringBuilder sb = new StringBuilder();
@@ -326,7 +321,7 @@ public class ObjectTreeBuilder {
 				newNode.setNodeType(OMPlusConstants.COMPLEX);
 				db.activate(value, 1);
 			} else {
-				ReflectClass clazz = ReflectHelper.getReflectClazz(value);
+				ReflectClass clazz = getReflectClazz(value);
 				if(clazz.isArray()) {
 					newNode.setNodeType(OMPlusConstants.COLLECTION);
 					db.activate(value, 1);
@@ -337,12 +332,8 @@ public class ObjectTreeBuilder {
 		return newNode;
 	}
 
-	private ReflectClass getReflectClazz(String className){
-		return ReflectHelper.getReflectClazz(className);
-	}
-	
 	private ReflectClass getReflectClazz(Object obj){
-		return ReflectHelper.getReflectClazz(obj);
+		return reflector().forObject(obj);
 	}
 
 	public void setNodeToNull(ObjectTreeNode node)
@@ -362,7 +353,7 @@ public class ObjectTreeBuilder {
 				if(type.startsWith(GENERIC_ARRAY) || type.equals("[Ljava.lang.String;"))
 				{ // Add support for String arrays
 					int index =  getIndex(node.getName());
-					reflector.array().set(parentObj, index, null);
+					reflector().array().set(parentObj, index, null);
 				}
 //				Do nothing for Collections
 				/*else if(parentObj instanceof Collection) {
@@ -376,7 +367,7 @@ public class ObjectTreeBuilder {
 				String fieldName = getFieldName(node.getName());
 				if(parentObj != null) {
 					ReflectField field = ReflectHelper.getDeclaredFieldInHeirarchy(
-							ReflectHelper.getReflectClazz(parentObj), fieldName);
+							getReflectClazz(parentObj), fieldName);
 					field.set(parentObj, null);
 				}
 			}
@@ -402,11 +393,11 @@ public class ObjectTreeBuilder {
 	public void refresh() {
 		int size = modifiedObjList.size();
 		if( size > 0){
-			ObjectContainer db = getObjContainer();
+			ObjectContainer oc = db.getDB();
 			ListIterator<Object> iter = modifiedObjList.listIterator();
 			while(iter.hasNext()){
 				Object obj = iter.next();
-				db.ext().refresh(obj, 2);
+				oc.ext().refresh(obj, 2);
 			}
 			// remove all obj in modifiedObjlist
 			removeAll();
@@ -414,8 +405,7 @@ public class ObjectTreeBuilder {
 		
 	}
 
-	private ObjectContainer getObjContainer() {
-		return Activator.getDefault().dbModel().db().getDB();
+	private Reflector reflector() {
+		return db.getDB().ext().reflector();
 	}
-
 }

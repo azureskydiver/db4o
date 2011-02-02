@@ -2,6 +2,7 @@ package com.db4o.omplus.datalayer.queryresult;
 
 import java.util.Date;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.ModifyObject;
 import com.db4o.omplus.datalayer.OMPlusConstants;
 import com.db4o.omplus.datalayer.ReflectHelper;
@@ -44,6 +45,7 @@ public class QueryResultRow {
 
 	// date modification? isn't there a better way
 	public Object updateValue(String fieldName, Object newValue, QueryResultList list)	{
+		ReflectHelper reflectHelper = Activator.getDefault().dbModel().db().reflectHelper();
 		Object obj = null, parent = null;
 		Object rowObj = resultObj;
 		if((newValue != null) && (fieldName != null) ){
@@ -56,13 +58,13 @@ public class QueryResultRow {
 				while(count < length) {
 					if(obj != null) {
 						parent = obj;
-						clazz = ReflectHelper.getReflectClazz(parent);
+						clazz = reflectHelper.getReflectClazz(parent);
 						obj = ReflectHelper.getFieldValueInHierarchy(hierarchy[count++], clazz, parent);
 					}
 				}
 			}else{
 				parent = obj;
-				clazz = ReflectHelper.getReflectClazz(parent);
+				clazz = reflectHelper.getReflectClazz(parent);
 				obj = ReflectHelper.getFieldValueInHierarchy(hierarchy[0], clazz, parent);
 			}
 //			if(obj != null){
@@ -88,7 +90,7 @@ public class QueryResultRow {
 				}
 			}else {
 				// FIXME same code as in OMJ-135 - just call field#set() here, too?
-				ModifyObject modify = new ModifyObject();
+				ModifyObject modify = new ModifyObject(reflectHelper);
 				if(obj != null){
 					modify.updateValue(obj, newValue, type);
 				} else {

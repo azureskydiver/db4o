@@ -1,32 +1,25 @@
 package com.db4o.omplus.datalayer;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-
-import com.db4o.ObjectContainer;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.generic.GenericObject;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.reflect.*;
 
 public class ModifyObject {
 	
 	private final String VALUE = "value";
 	private final String COUNT = "count";
 
-	private ObjectContainer objContainer;
-	private Reflector reflector;
-	private HashSet<Object> set;
 	private Converter convert = new Converter();
+	private final ReflectHelper reflectHelper;
 	
+	public ModifyObject(ReflectHelper reflectHelper) {
+		this.reflectHelper = reflectHelper;
+	}
+
 	// TODO: how to handle enums?
 	public void updateValue(Object prev, Object value, String fieldType)
 	{
 		int type = convert.getType(fieldType);
-		ReflectClass clz = ReflectHelper.getReflectClazz(prev);
+		ReflectClass clz = reflectHelper.getReflectClazz(prev);
 		ReflectField field = ReflectHelper.getReflectField(clz, VALUE);
 		Object obj = convert.getValue(fieldType, value.toString());
 		switch (type){
