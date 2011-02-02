@@ -81,7 +81,7 @@ object BuildPrepareArgs {
 	private def str2Category(s: String) =
 		s match {
 			case CategoryPattern(null, null, to) => Category(None, to)
-			case CategoryPattern(fromgt, from, to) => Category(Some(from), to)
+			case CategoryPattern(_, from, to) => Category(Some(from), to)
 			case _ => throw new IllegalArgumentException("Not a category: " + s)
 		}
 	
