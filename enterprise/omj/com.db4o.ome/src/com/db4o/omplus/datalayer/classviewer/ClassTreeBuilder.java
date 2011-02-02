@@ -160,7 +160,7 @@ public class ClassTreeBuilder {
 
 	public Object [] getStoredClasses() {
 		Object classes[] = null;
-		IDbInterface db = Activator.getDefault().getDatabaseInterface();
+		IDbInterface db = Activator.getDefault().dbModel().db();
 //		try{
 			classes = db.getStoredClasses();
 	/*	}catch(Exception ex){

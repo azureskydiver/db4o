@@ -34,8 +34,8 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	private OMEDataStore dataStore = null;
-	private IDbInterface db = null;
 	private QueryPresentationModel queryModel = null;
+	private DatabaseModel dbModel;
 	
 	public void start(BundleContext context) throws Exception 
 	{
@@ -44,6 +44,8 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		
 		//OMEDebugItem.createDebugDatabase();
+		
+		dbModel = new DatabaseModel();
 		
 		Display.getDefault().asyncExec(new Runnable() 
 		{
@@ -158,9 +160,6 @@ public class Activator extends AbstractUIPlugin {
 		if(dataStore != null) {
 			dataStore.close();
 		}
-		if(db != null) {
-			db.close();
-		}
 		ConnectionStatus status = new ConnectionStatus();
 		if(status.isConnected()){
 			status.closeExistingDB();
@@ -189,12 +188,8 @@ public class Activator extends AbstractUIPlugin {
 		return path;
 	}
 
-	public IDbInterface getDatabaseInterface() {
-		if(db != null) {
-			return db;
-		}
-		db = new DbInterfaceImpl();
-		return db;
+	public DatabaseModel dbModel() {
+		return dbModel;
 	}
 	
 	public QueryPresentationModel queryModel() {
@@ -203,8 +198,8 @@ public class Activator extends AbstractUIPlugin {
 	
 	private static class DatabasePathPrefixProvider implements ContextPrefixProvider {
 		public String currentPrefix() {
-			String prefix = Activator.getDefault().getDatabaseInterface().getDbPath();
-			return prefix == null ? "" : prefix;
+			DatabaseModel dbModel = Activator.getDefault().dbModel();
+			return dbModel.connected() ? dbModel.db().getDbPath() : "";
 		}
 	}
 

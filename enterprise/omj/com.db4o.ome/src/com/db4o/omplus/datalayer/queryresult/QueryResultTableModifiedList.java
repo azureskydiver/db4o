@@ -112,6 +112,6 @@ public class QueryResultTableModifiedList
 	
 	private ObjectContainer getOC()
 	{
-		return Activator.getDefault().getDatabaseInterface().getDB();
+		return Activator.getDefault().dbModel().db().getDB();
 	}
 }

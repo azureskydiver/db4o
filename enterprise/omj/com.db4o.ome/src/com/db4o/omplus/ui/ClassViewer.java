@@ -665,7 +665,7 @@ public class ClassViewer extends ViewPart
 	public void refreshClassViewerWithNewDB()
 	{
 		boolean refreshClassTree = false;
-		if(Activator.getDefault().getDatabaseInterface().getDB() != null)
+		if(Activator.getDefault().dbModel().db().getDB() != null)
 		{	
 			setCurrentView();
 			int size = setItemsForCombo();

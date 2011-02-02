@@ -5,22 +5,19 @@ import com.db4o.omplus.*;
 public class ConnectionStatus {
 	
 	public boolean isConnected() {
-		if(Activator.getDefault().getDatabaseInterface().getDB() != null){
-			return true;
-		}
-		return false;
+		return Activator.getDefault().dbModel().connected();
 	}
 	
 	public String getVersion(){
-		return Activator.getDefault().getDatabaseInterface().getVersion();
+		return Activator.getDefault().dbModel().db().getVersion();
 	}
 	
 	public String getCurrentDB(){
-		return Activator.getDefault().getDatabaseInterface().getDbPath();
+		return Activator.getDefault().dbModel().db().getDbPath();
 	}
 	
 	public void closeExistingDB(){
-		Activator.getDefault().getDatabaseInterface().close();
+		Activator.getDefault().dbModel().disconnect();
 	}
 
 }

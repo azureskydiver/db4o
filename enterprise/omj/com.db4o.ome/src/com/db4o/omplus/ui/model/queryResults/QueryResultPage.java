@@ -17,7 +17,7 @@ public class QueryResultPage
 	
 	private boolean refresh;
 	
-	private IDbInterface db = Activator.getDefault().getDatabaseInterface();
+	private IDbInterface db = Activator.getDefault().dbModel().db();
 
 	public int getNumOfPages() {
 		return numOfPages;
@@ -44,7 +44,7 @@ public class QueryResultPage
 			length = OMPlusConstants.MAX_OBJS_PAGE;
 		ArrayList<QueryResultRow> rowList = new ArrayList<QueryResultRow>(length);
 		int idx = (currentPage - 1) * OMPlusConstants.MAX_OBJS_PAGE;
-		IDbInterface db = Activator.getDefault().getDatabaseInterface();
+		IDbInterface db = Activator.getDefault().dbModel().db();
 		for(int i = 0; i < length && idx < size ; i++){
 			long objId = ids.get(idx);
 			Object obj = getObjectById(objId, db);

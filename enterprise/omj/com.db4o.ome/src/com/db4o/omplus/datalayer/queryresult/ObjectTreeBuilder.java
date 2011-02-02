@@ -22,7 +22,7 @@ public class ObjectTreeBuilder {
 	private static Reflector reflector;
 	
 	public ObjectTreeBuilder(){
-		db  = Activator.getDefault().getDatabaseInterface(); 
+		db  = Activator.getDefault().dbModel().db(); 
 		reflector=db.reflector();		
 	}
 	
@@ -388,7 +388,7 @@ public class ObjectTreeBuilder {
 		{ // equivalent to delete operation in table & tree;
 			if(node.getValue() != null)
 			{
-				IDbInterface db = Activator.getDefault().getDatabaseInterface();
+				IDbInterface db = Activator.getDefault().dbModel().db();
 				db.getDB().delete(node.getValue());
 			}
 		}
@@ -415,7 +415,7 @@ public class ObjectTreeBuilder {
 	}
 
 	private ObjectContainer getObjContainer() {
-		return Activator.getDefault().getDatabaseInterface().getDB();
+		return Activator.getDefault().dbModel().db().getDB();
 	}
 
 }

@@ -567,7 +567,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 
 	private Object[] getFieldsForClazz(String className)
 	{
-		PropertiesManager properties = PropertiesManager.getInstance();
+		PropertiesManager properties = Activator.getDefault().dbModel().props();
 		ClassProperties classProperties = properties.getClassProperties(className);
 		FieldProperties []fields = classProperties.getFields();
 		Object []list = new Object[fields.length];
