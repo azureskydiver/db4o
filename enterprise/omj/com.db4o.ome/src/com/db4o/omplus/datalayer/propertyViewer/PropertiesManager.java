@@ -71,7 +71,7 @@ public class PropertiesManager {
 	private ClassProperties buildClassProperties(String className) {
 		ClassProperties clsProperties = new ClassProperties();
 		clsProperties.setClassname(className);
-		ReflectClass clazz = ReflectHelper.getReflectClazz(className);
+		ReflectClass clazz = db.reflectHelper().getReflectClazz(className);
 		clsProperties.setNumberOfObjects(getNumberOfObj(className));
 		clsProperties.setFields(buildFieldProperties(clazz));
 		return clsProperties;

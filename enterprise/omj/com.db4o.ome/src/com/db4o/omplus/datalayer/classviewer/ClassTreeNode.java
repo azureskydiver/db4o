@@ -17,6 +17,12 @@ public class ClassTreeNode {
 	
 	private boolean hasChildren;
 
+	private final ReflectHelper reflectHelper;
+	
+	public ClassTreeNode(ReflectHelper reflectHelper) {
+		this.reflectHelper = reflectHelper;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -54,7 +60,7 @@ public class ClassTreeNode {
 			if(type.contains("(GA")){
 				return OMPlusConstants.COLLECTION;
 			}
-			ReflectClass clazz = ReflectHelper.getReflectClazz(type);
+			ReflectClass clazz = reflectHelper.getReflectClazz(type);
 			if(clazz != null){
 				if(clazz.isPrimitive() || ReflectHelper.isWrapperClass(type))
 					return OMPlusConstants.PRIMITIVE;

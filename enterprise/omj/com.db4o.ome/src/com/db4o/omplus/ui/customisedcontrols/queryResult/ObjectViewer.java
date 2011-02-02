@@ -54,7 +54,7 @@ public class ObjectViewer extends CTabFolder
 		this.parent = parent;
 		this.addCTabFolder2Listener(new ObjectViewerTabCloseAdapter());
 		queryResultList = qList;
-		objectTreeBuilder = new ObjectTreeBuilder();
+		objectTreeBuilder = new ObjectTreeBuilder(Activator.getDefault().dbModel().db());
 		this.childModifier = childModifier;
 		
 		

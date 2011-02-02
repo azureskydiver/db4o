@@ -40,6 +40,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 	public QueryBuilderValueEditor(QueryPresentationModel model, TableViewer viewer, QueryGroup group) 
 	{
 		super(viewer);
+		
 		this.queryGroup = group;
 		this.tableViewer = viewer;
 		this.model = model;
@@ -58,7 +59,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 	protected CellEditor getCellEditor(Object element) 
 	{
 		QueryClause query = ((QueryClause) element);
-		int datatype = ReflectHelper.getFieldTypeClass(query.getField());
+		int datatype = reflectHelper().getFieldTypeClass(query.getField());
 		
 		switch(datatype)
 		{
@@ -79,7 +80,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 	protected Object getValue(Object element) 
 	{
 		QueryClause query = ((QueryClause) element);
-		int datatype = ReflectHelper.getFieldTypeClass(query.getField());
+		int datatype = reflectHelper().getFieldTypeClass(query.getField());
 		
 		switch(datatype)
 		{
@@ -120,7 +121,7 @@ public class QueryBuilderValueEditor extends EditingSupport
 	protected void setValue(Object element, Object value) 
 	{
 		QueryClause query = ((QueryClause) element);
-		int datatype = ReflectHelper.getFieldTypeClass(query.getField());
+		int datatype = reflectHelper().getFieldTypeClass(query.getField());
 		
 		switch(datatype)
 		{
@@ -212,9 +213,9 @@ public class QueryBuilderValueEditor extends EditingSupport
 			return true; 
 		
 		QueryClause query = ((QueryClause) element);
-		int datatype = ReflectHelper.getFieldTypeClass(query.getField());	
+		int datatype = reflectHelper().getFieldTypeClass(query.getField());	
 		
-		int numericDatatype = ReflectHelper.getNumberType(query.getField());
+		int numericDatatype = reflectHelper().getNumberType(query.getField());
 		switch (numericDatatype)
 		{
 			case QueryBuilderConstants.DATATYPE_BYTE:
@@ -314,5 +315,9 @@ public class QueryBuilderValueEditor extends EditingSupport
 	{
 		return model.err();
 	}
-	
+
+	private ReflectHelper reflectHelper() {
+		return Activator.getDefault().dbModel().db().reflectHelper();
+	}
+
 }

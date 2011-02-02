@@ -101,7 +101,7 @@ public class QueryResultPage
 			int count = 1;
 			int length = hierarchy.length;
 			db.activate(resObj, length);
-			ReflectClass clazz = ReflectHelper.getReflectClazz(hierarchy[0]);
+			ReflectClass clazz = db.reflectHelper().getReflectClazz(hierarchy[0]);
 //			for each displayField i.e. ClzName.field.subClzField type get value for subClzField
 			while(count < length && resObj != null)
 			{

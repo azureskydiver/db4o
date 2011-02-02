@@ -8,7 +8,10 @@ import com.db4o.reflect.*;
 
 public class ClassTreeBuilder {
 	
-	private final String DEFAULT_PACKAGE = "default";
+	private final static String DEFAULT_PACKAGE = "default";
+	
+	public ClassTreeBuilder() {
+	}
 	
 	public ClassTreeNode [] getClassNodesForPackage(String packageName){
 		if(packageName == null)
@@ -31,7 +34,7 @@ public class ClassTreeBuilder {
 	public ClassTreeNode [] getFieldNodesForClass(String className, String hierarchy) {
 		ClassTreeNode [] nodes = null;
 		if(className != null ){
-			ReflectClass clazz = ReflectHelper.getReflectClazz(className);
+			ReflectClass clazz = db().reflectHelper().getReflectClazz(className);
 			if(clazz != null) {
 				ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHierarchy(clazz);
 				if(fields != null) {
@@ -50,7 +53,7 @@ public class ClassTreeBuilder {
 	private ClassTreeNode buildFieldNode(ReflectField field, String hierarchy) {
 		if(field == null && hierarchy == null)
 			return null;
-		ClassTreeNode node = new ClassTreeNode();
+		ClassTreeNode node = new ClassTreeNode(db().reflectHelper());
 		node.setName(append(hierarchy, field.getName()));
 		node.setNodeType(OMPlusConstants.CLASS_FIELD_NODE);
 		ReflectClass type = field.getFieldType();
@@ -87,7 +90,7 @@ public class ClassTreeBuilder {
 	
 	// ignored parent for class. check if it's needed
 	private ClassTreeNode buildClassNode(String className){
-		ClassTreeNode node = new ClassTreeNode();
+		ClassTreeNode node = new ClassTreeNode(db().reflectHelper());
 		node.setName((String)className);
 		node.setType((String)className);
 		node.setHasChildren(true);
@@ -111,7 +114,7 @@ public class ClassTreeBuilder {
 	}
 	
 	private ClassTreeNode buildPackageNode(String packageName) {
-		ClassTreeNode node = new ClassTreeNode();
+		ClassTreeNode node = new ClassTreeNode(db().reflectHelper());
 		node.setName((String)packageName);
 		node.setHasChildren(true);
 		node.setNodeType(OMPlusConstants.PACKAGE_NODE);
@@ -159,13 +162,10 @@ public class ClassTreeBuilder {
 	}
 
 	public Object [] getStoredClasses() {
-		Object classes[] = null;
-		IDbInterface db = Activator.getDefault().dbModel().db();
-//		try{
-			classes = db.getStoredClasses();
-	/*	}catch(Exception ex){
-			
-		}*/
-		return classes;
+		return db().getStoredClasses();
+	}
+	
+	private IDbInterface db() {
+		return Activator.getDefault().dbModel().db();
 	}
 }

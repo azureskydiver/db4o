@@ -314,7 +314,7 @@ public class PropertyViewer extends ViewPart
 		data.right = new FormAttachment(97, 0);
 		saveBtn.setLayoutData(data);
 		
-		if(!ConfigureIndex.isLocal())
+		if(!isLocal())
 			saveBtn.setEnabled(false);
 		
 		data = new FormData();
@@ -337,7 +337,7 @@ public class PropertyViewer extends ViewPart
 			public void widgetSelected(SelectionEvent e) {
 				if(classProperties == null)
 					return;
-				ConfigureIndex indexing = new ConfigureIndex();
+				ConfigureIndex indexing = new ConfigureIndex(Activator.getDefault().dbModel().db());
 //				if(indexing.isLocal()){
 					boolean save = showMessage(table.getShell());
 					if(save == true) {
@@ -460,6 +460,10 @@ public class PropertyViewer extends ViewPart
 	private DBProperties dbProps() {
 		DatabaseModel dbModel = Activator.getDefault().dbModel();
 		return dbModel.connected() ? dbModel.props().getDBProperties() : new DBProperties();
+	}
+
+	private boolean isLocal() {
+		return (!Activator.getDefault().dbModel().db().isClient());
 	}
 
 }

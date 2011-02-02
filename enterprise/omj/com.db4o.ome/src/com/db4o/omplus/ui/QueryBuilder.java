@@ -1086,7 +1086,7 @@ public class QueryBuilder extends ViewPart implements IChildObserver,IDropValida
 		showNewQueryGroupComposite();
 		resetAttributeViewer();
 	}
-
+	
 	private QueryPresentationModel queryModel() {
 		return Activator.getDefault().queryModel();
 	}

@@ -3,14 +3,18 @@ package com.db4o.omplus.datalayer;
 import java.util.*;
 
 import com.db4o.ext.*;
-import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.queryBuilder.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
 public class ReflectHelper {
 	 
+	private final Reflector reflector;
 	
+	public ReflectHelper(Reflector reflector) {
+		this.reflector = reflector;
+	}
+
 	public static boolean isWrapperClass(String name) {
 		if( name.equals(String.class.getName())
 				|| name.equals(Integer.class.getName())
@@ -27,18 +31,14 @@ public class ReflectHelper {
 			return false;
 	}
 	
-	public static int getArraySize(Object obj){
-		return getReflector().array().getLength(obj);
+	public int getArraySize(Object obj){
+		return reflector.array().getLength(obj);
 	}
 	
-	private static Reflector getReflector(){
-		return Activator.getDefault().dbModel().db().reflector();
-	}
-	
-	public static int getFieldTypeClass(String fieldname){
+	public int getFieldTypeClass(String fieldname){
 		String []hierarchy = ((String)fieldname).split(OMPlusConstants.REGEX);
 		int length = hierarchy.length;
-		ReflectClass clazz = getReflector().forName(hierarchy[0]);
+		ReflectClass clazz = reflector.forName(hierarchy[0]);
 		if(length > 1)
 		{
 			clazz =  getReflectCass(hierarchy, clazz);
@@ -74,11 +74,11 @@ public class ReflectHelper {
 		return -1;
 	}
 
-	public static int getNumberType(String fieldname)
+	public int getNumberType(String fieldname)
 	{
 		String []hierarchy = ((String)fieldname).split(OMPlusConstants.REGEX);
 		int length = hierarchy.length;
-		ReflectClass clazz = getReflector().forName(hierarchy[0]);
+		ReflectClass clazz = reflector.forName(hierarchy[0]);
 		if(length > 1){
 			clazz =  getReflectCass(hierarchy, clazz);
 		}
@@ -97,20 +97,19 @@ public class ReflectHelper {
 		return rClazz;
 	}
 	
-	public static ReflectClass getReflectClazz(String className){
-		return getReflector().forName(className);
+	public ReflectClass getReflectClazz(String className){
+		return reflector.forName(className);
 	}
 	
-	public static ReflectClass getReflectClazz(Object obj){
-		return getReflector().forObject(obj);
+	public ReflectClass getReflectClazz(Object obj){
+		return reflector.forObject(obj);
 	}	
 	
 	public static ReflectField getReflectField(ReflectClass clz, String fieldName) {
 		return clz.getDeclaredField(fieldName);
 	}
 	
-	public static ReflectField getDeclaredFieldInHeirarchy(ReflectClass reflectClass,
-					String field) {
+	public static ReflectField getDeclaredFieldInHeirarchy(ReflectClass reflectClass, String field) {
 		ReflectField rf = reflectClass.getDeclaredField(field);
 		if(rf == null) {
 			ReflectClass parent = reflectClass.getSuperclass();
@@ -120,14 +119,12 @@ public class ReflectHelper {
 		return rf;
 	}
 	
-	public static ReflectField[] getDeclaredFieldsInHierarchy(
-			ReflectClass clazz) {
+	public static ReflectField[] getDeclaredFieldsInHierarchy(ReflectClass clazz) {
 		List<ReflectField>  list = getDeclaredFieldsListInHeirarchy(clazz);
 		return (ReflectField[])list.toArray(new ReflectField[list.size()]);
 	}
 	
-	 private static List<ReflectField> getDeclaredFieldsListInHeirarchy(
-			 								ReflectClass reflectclass) {
+	 private static List<ReflectField> getDeclaredFieldsListInHeirarchy(ReflectClass reflectclass) {
 		 List<ReflectField> list = getDeclaredFieldsList(reflectclass);
 	        ReflectClass reflectclass1 = reflectclass.getSuperclass();
 	        if(reflectclass1 != null)
@@ -135,8 +132,7 @@ public class ReflectHelper {
 	        return list;
 	}
 
-	private static List<ReflectField> getDeclaredFieldsList(
-			ReflectClass reflectclass) {
+	private static List<ReflectField> getDeclaredFieldsList(ReflectClass reflectclass) {
 		ArrayList<ReflectField> arrayList = new ArrayList<ReflectField>();
 		ReflectField fields[] = reflectclass.getDeclaredFields();
 		for(int i = 0; i < fields.length; i++) {
@@ -147,15 +143,12 @@ public class ReflectHelper {
 	    return arrayList;
 	}
 	
-    public static StoredField[] getDeclaredFieldsInHeirarchy(
-    		StoredClass clazz) {
+    public static StoredField[] getDeclaredFieldsInHeirarchy(StoredClass clazz) {
         List<StoredField> ret = getDeclaredFieldsListInHeirarchy(clazz);
         return (StoredField[])ret.toArray(new StoredField[ret.size()]);
     }
 
-    private static List<StoredField> getDeclaredFieldsListInHeirarchy(
-    		StoredClass aClass)
-    {
+    private static List<StoredField> getDeclaredFieldsListInHeirarchy(StoredClass aClass) {
         if(aClass == null)
             return null;
         List<StoredField> ret = getDeclaredFieldsList(aClass);
@@ -165,8 +158,7 @@ public class ReflectHelper {
         return ret;
     }
 
-    public static List<StoredField> getDeclaredFieldsList(StoredClass aClass)
-    {
+    public static List<StoredField> getDeclaredFieldsList(StoredClass aClass) {
         List<StoredField> ret = new ArrayList<StoredField>();
         StoredField fields[] = aClass.getStoredFields();
         for(int i = 0; i < fields.length; i++)
@@ -208,10 +200,8 @@ public class ReflectHelper {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static boolean checkForHierarchy(Object obj) {
+	public boolean checkForHierarchy(Object obj) {
 		if(obj != null) {
-			Reflector reflector = getReflector();
 			ReflectClass clazz = getReflectClazz(obj);
 			if(clazz != null){
 				ReflectField [] fields =getDeclaredFieldsInHierarchy(clazz);

@@ -66,4 +66,7 @@ Export-Package: com.db4o,
  com.db4o.omplus.ui.model;x-friends:="com.db4o.ome.test",
  com.db4o.omplus.ui.model.propertyViewer;x-friends:="com.db4o.ome.test",
  com.db4o.omplus.ui.model.queryBuilder;x-friends:="com.db4o.ome.test",
- com.db4o.omplus.ui.model.queryResults;x-friends:="com.db4o.ome.test"
+ com.db4o.omplus.ui.model.queryResults;x-friends:="com.db4o.ome.test",
+ com.db4o.reflect,
+ com.db4o.reflect.generic,
+ com.db4o.reflect.jdk

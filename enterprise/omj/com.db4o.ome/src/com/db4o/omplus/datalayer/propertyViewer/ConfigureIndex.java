@@ -11,8 +11,8 @@ public class ConfigureIndex {
 	
 	IDbInterface db;
 	
-	public ConfigureIndex() {
-		db = Activator.getDefault().dbModel().db();
+	public ConfigureIndex(IDbInterface db) {
+		this.db = db;
 	}
 	
 	public static boolean isLocal(){
@@ -45,7 +45,7 @@ public class ConfigureIndex {
 	
 	public void createIndex(ClassProperties clsProperties){
 		boolean reconnect = false;
-		ReflectClass clazz = ReflectHelper.getReflectClazz(clsProperties.getClassname());
+		ReflectClass clazz = db.reflectHelper().getReflectClazz(clsProperties.getClassname());
 		StoredClass storedClz = db.getStoredClass(clazz.getName());
 		if(storedClz != null) {
 			for(FieldProperties field : clsProperties.getFields()) {

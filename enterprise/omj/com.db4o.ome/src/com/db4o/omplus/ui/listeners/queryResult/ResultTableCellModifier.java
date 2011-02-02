@@ -23,12 +23,15 @@ public class ResultTableCellModifier implements ICellModifier
 	private IChildModifier childModifier;
 	private HashMap<String, String> columnMap;
 	
-	private QueryPresentationModel queryModel;	
+	private QueryPresentationModel queryModel;
 
-	public ResultTableCellModifier(QueryPresentationModel queryModel, TableViewer tableViewer, QueryResultList queryResultList,
+	private final ReflectHelper reflectHelper;	
+
+	public ResultTableCellModifier(ReflectHelper reflectHelper, QueryPresentationModel queryModel, TableViewer tableViewer, QueryResultList queryResultList,
 									QueryResultTableModifiedList modifiedObjList, 
 									IChildModifier childModifier, 
 									HashMap<String, String> columnNameMap) {
+		this.reflectHelper = reflectHelper;
 		this.queryModel = queryModel;
 		this.tableViewer = tableViewer;
 		this.queryResultList = queryResultList;
@@ -123,7 +126,7 @@ public class ResultTableCellModifier implements ICellModifier
 	}
 	
 	private int getDataType(String fieldName){
-		return ReflectHelper.getFieldTypeClass(fieldName);
+		return reflectHelper.getFieldTypeClass(fieldName);
 	}
 	
 
@@ -139,7 +142,7 @@ public class ResultTableCellModifier implements ICellModifier
 	private boolean validateNumber(String property, Object value) 
 	{
 		
-		int numericDatatype = ReflectHelper.getNumberType(property);
+		int numericDatatype = reflectHelper.getNumberType(property);
 		switch (numericDatatype)
 		{
 			case QueryBuilderConstants.DATATYPE_BYTE:

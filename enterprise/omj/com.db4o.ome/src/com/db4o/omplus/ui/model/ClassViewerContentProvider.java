@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.db4o.omplus.datalayer.OMPlusConstants;
+import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.classviewer.ClassTreeBuilder;
 import com.db4o.omplus.datalayer.classviewer.ClassTreeNode;
 import com.db4o.omplus.ui.ClassViewer;
@@ -44,7 +44,7 @@ public class ClassViewerContentProvider implements ITreeContentProvider
 			String searchStr = strPattern.getPattern();
 			if(classes != null && searchStr != null && (searchStr.trim().length() > 0)) {
 				searchStr = replaceStr(searchStr);
-				ArrayList<ClassTreeNode> list = getMacthingClasses(searchStr, classes);
+				ArrayList<ClassTreeNode> list = getMatchingClasses(searchStr, classes);
 				return list.toArray();
 			}
 			return classes;
@@ -91,7 +91,7 @@ public class ClassViewerContentProvider implements ITreeContentProvider
 				if(inputElement.equals(ClassViewer.HIERARCHICAL_VIEW)){
 					list = getMacthingPackages(searchStr, classes);
 				} else{
-					list = getMacthingClasses(searchStr, classes);
+					list = getMatchingClasses(searchStr, classes);
 				}
 				return list.toArray();
 			}
@@ -131,7 +131,7 @@ public class ClassViewerContentProvider implements ITreeContentProvider
 		return list;
 	}
 
-	private ArrayList<ClassTreeNode> getMacthingClasses(String searchStr,
+	private ArrayList<ClassTreeNode> getMatchingClasses(String searchStr,
 													   ClassTreeNode[] classes) {
 		ArrayList<ClassTreeNode> list = new ArrayList<ClassTreeNode>();
 		Pattern pattern = getPattern(searchStr);

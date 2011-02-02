@@ -22,7 +22,7 @@ public class QueryResultsManager
 	
 	private OMQuery oMQuery;
 	
-	private Reflector reflector = Activator.getDefault().dbModel().db().reflector();
+	private IDbInterface db = Activator.getDefault().dbModel().db();
 	
 	public QueryResultsManager() {
 	}
@@ -41,13 +41,13 @@ public class QueryResultsManager
 			QueryParser parser = new QueryParser();
 			className = query.getQueryClass();
 			displayFields = query.getAttributeList();
-			ObjectSet set = parser.ExecuteOMQueryList(query);
+			ObjectSet set = parser.executeOMQueryList(query);
 			resultObjIds = set.ext().getIDs();
 		}
 	}
 	
 	public QueryResultList getResultList(){
-		QueryResultList list = new QueryResultList();
+		QueryResultList list = new QueryResultList(db.reflectHelper());
 		if(displayFields == null || (displayFields.length == 0) ){
 			displayFields = getAllFieldNames();
 		}
@@ -80,12 +80,12 @@ public class QueryResultsManager
 
 	private ReflectClass getReflectClazz(String className)
 	{
-		return reflector.forName(className);
+		return db.getDB().ext().reflector().forName(className);
 	}
 
 	public void runQuery(String name, String []fieldNames)
 	{
-		ReflectClass clazz = ReflectHelper.getReflectClazz(name);
+		ReflectClass clazz = db.reflectHelper().getReflectClazz(name);
 		if(clazz != null)
 		{
 			setClassname(name);
