@@ -337,7 +337,7 @@ public class PropertyViewer extends ViewPart
 			public void widgetSelected(SelectionEvent e) {
 				if(classProperties == null)
 					return;
-				ConfigureIndex indexing = new ConfigureIndex(Activator.getDefault().dbModel().db());
+				ConfigureIndex indexing = new ConfigureIndex(Activator.getDefault().dbModel());
 //				if(indexing.isLocal()){
 					boolean save = showMessage(table.getShell());
 					if(save == true) {
