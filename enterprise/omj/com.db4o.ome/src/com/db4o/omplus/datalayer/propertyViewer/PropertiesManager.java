@@ -2,9 +2,7 @@ package com.db4o.omplus.datalayer.propertyViewer;
 
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.propertyViewer.classProperties.*;
 import com.db4o.omplus.datalayer.propertyViewer.dbProperties.*;
@@ -14,45 +12,32 @@ import com.db4o.reflect.*;
 
 public class PropertiesManager {
 
-	private static PropertiesManager propertiesMgr;
+	private final IDbInterface db;
+	private final HashMap<String, ClassProperties> properties = new HashMap<String, ClassProperties>();
 	
-	private static HashMap<String, ClassProperties> properties;
-	
-	private ObjectContainer oc;
-	
-	private PropertiesManager(){
-		if(properties == null)
-			properties = new HashMap<String, ClassProperties>();
-	}
-	
-	public static PropertiesManager getInstance(){
-		if( propertiesMgr == null)
-			propertiesMgr = new PropertiesManager();
-		return propertiesMgr;
+	public PropertiesManager(IDbInterface db){
+		this.db = db;
 	}
 	
 	public ObjectProperties getObjectProperties(Object obj){
-		ObjectProperties objProp = null;
-		if(obj != null){
-			ObjectContainer oc = Activator.getDefault().getDatabaseInterface().getDB();
-			if(oc != null){
-				ExtObjectContainer db = oc.ext();
-				objProp = new ObjectProperties();
-				objProp.setLocalID(db.getID(obj));
-				ObjectInfo objInfo = db.getObjectInfo(obj);
-				if(objInfo != null){
-					objProp.setUuid(objInfo.getUUID());
-					objProp.setVersion(objInfo.getVersion());
-				}
-			}
-	//			TODO: check depth and reference
+		if(obj == null) {
+			return null;
 		}
+		ObjectProperties objProp = new ObjectProperties();;
+		ExtObjectContainer eoc = db.getDB().ext();
+		objProp.setLocalID(eoc.getID(obj));
+		ObjectInfo objInfo = eoc.getObjectInfo(obj);
+		if(objInfo != null){
+			objProp.setUuid(objInfo.getUUID());
+			objProp.setVersion(objInfo.getVersion());
+		}
+	//			TODO: check depth and reference
 		return objProp;
 	}
 	
 	public ClassProperties getClassProperties(String className){
 		ClassProperties clsProperties = null;
-		if((properties != null) && (className != null) && (className.trim().length() > 0)){
+		if((className != null) && (className.trim().length() > 0)){
 			
 			if(properties.containsKey(className)){
 				clsProperties = properties.get(className);
@@ -60,7 +45,6 @@ public class PropertiesManager {
 				return clsProperties;
 			}
 			else{
-				oc = Activator.getDefault().getDatabaseInterface().getDB();
 				clsProperties = buildClassProperties(className);
 				if(clsProperties != null)
 					properties.put(className, clsProperties);
@@ -69,19 +53,16 @@ public class PropertiesManager {
 		return clsProperties;
 	}	
 	
-	public DBProperties getDBProperties(){
-		IDbInterface dbInterface = Activator.getDefault().getDatabaseInterface();
+	public DBProperties getDBProperties(){		
 		DBProperties dbProperties = new DBProperties();
-		if(dbInterface.getDB() != null){
-			dbProperties.setDbSize(dbInterface.getDBSize());
-			dbProperties.setFreeSpace(dbInterface.getFreespaceSize());
-			Object[] classes = null;
-			try {
-				classes = dbInterface.getStoredClasses();
-			} catch (Exception e) {
-			}
-			if(classes != null)
-				dbProperties.setNoOfClasses(classes.length);
+		dbProperties.setDbSize(db.getDBSize());
+		dbProperties.setFreeSpace(db.getFreespaceSize());
+		Object[] classes = null;
+		try {
+			classes = db.getStoredClasses();
+			dbProperties.setNoOfClasses(classes.length);
+		} 
+		catch (Exception e) {
 		}
 		return dbProperties;
 	}
@@ -121,7 +102,7 @@ public class PropertiesManager {
 	}
 
 	private boolean isIndexed(String clsname, String fname) {
-		StoredClass storedClass = oc.ext().storedClass(clsname);
+		StoredClass storedClass = db.getDB().ext().storedClass(clsname);
 		if(storedClass != null){
 			StoredField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(storedClass);
 			if(fields != null){
@@ -141,8 +122,7 @@ public class PropertiesManager {
 	}*/
 
 	private int getNumberOfObj(String className) {
-		IDbInterface dbInterface = Activator.getDefault().getDatabaseInterface();
-		return dbInterface.getNumOfObjects(className);
+		return db.getNumOfObjects(className);
 	}
 	
 	public int getDepthForObj(Object obj){

@@ -14,7 +14,7 @@ public final class DbConnectUtil {
 	// TODO progress bar for large databases?
 	public static boolean connect(ConnectionParams params, Shell shell) throws DBConnectException {
 		ObjectContainer db = params.connect(new BooleanUserCallbackDialog(shell));
-		Activator.getDefault().getDatabaseInterface().setDB(db, params.getPath());
+		Activator.getDefault().dbModel().connect(db, params.getPath());
 		enableDBMaintenanceActions(true);
 		shell.setText(params.getPath());
 		showPerspective();

@@ -24,7 +24,7 @@ public class QueryParser
         Constraint buildGroup = null;           
         Constraint conCatGroup = null; ;
 
-        ObjectContainer objectContainer = Activator.getDefault().getDatabaseInterface().getDB();
+        ObjectContainer objectContainer = Activator.getDefault().dbModel().db().getDB();
         Query query = objectContainer.query();
         rootConstraint = null;        
         int groupcount = 0;
@@ -192,7 +192,7 @@ public class QueryParser
     }
     
     private ReflectClass getFieldType(String []strArray) {
-		Reflector rf = Activator.getDefault().getDatabaseInterface().reflector();
+		Reflector rf = Activator.getDefault().dbModel().db().reflector();
 		ReflectClass clz = rf.forName(strArray[0]);
 		int length = strArray.length;
 		int count = 1;
@@ -216,7 +216,7 @@ public class QueryParser
 
 	public ObjectSet execute(ReflectClass clazz)
 	{
-		ObjectContainer objectContainer = Activator.getDefault().getDatabaseInterface().getDB();
+		ObjectContainer objectContainer = Activator.getDefault().dbModel().db().getDB();
         Query query = objectContainer.query();
         query.constrain(clazz);
 		return query.execute();

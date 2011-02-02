@@ -1,52 +1,23 @@
 package com.db4o.omplus.ui;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
-import org.eclipse.ui.part.ViewPart;
-
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.part.*;
 
 import com.db4o.omplus.*;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.propertyViewer.ConfigureIndex;
-import com.db4o.omplus.datalayer.propertyViewer.PropertiesManager;
-import com.db4o.omplus.datalayer.propertyViewer.PropertyViewerConstants;
-import com.db4o.omplus.datalayer.propertyViewer.classProperties.ClassProperties;
-import com.db4o.omplus.datalayer.propertyViewer.dbProperties.DBProperties;
-import com.db4o.omplus.datalayer.propertyViewer.objectProperties.ObjectProperties;
-import com.db4o.omplus.ui.customisedcontrols.propertyViewer.ClassPropertiesEditor;
-import com.db4o.omplus.ui.model.propertyViewer.ClassPropertyContentProvider;
-import com.db4o.omplus.ui.model.propertyViewer.ClassPropertyLabelProvider;
-import com.db4o.omplus.ui.model.propertyViewer.DBPropertyContentProvider;
-import com.db4o.omplus.ui.model.propertyViewer.DBPropertyLabelProvider;
-import com.db4o.omplus.ui.model.propertyViewer.ObjectPropertyContentProvider;
-import com.db4o.omplus.ui.model.propertyViewer.ObjectPropertyLabelProvider;;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.propertyViewer.*;
+import com.db4o.omplus.datalayer.propertyViewer.classProperties.*;
+import com.db4o.omplus.datalayer.propertyViewer.dbProperties.*;
+import com.db4o.omplus.datalayer.propertyViewer.objectProperties.*;
+import com.db4o.omplus.ui.customisedcontrols.propertyViewer.*;
+import com.db4o.omplus.ui.model.propertyViewer.*;
 
 public class PropertyViewer extends ViewPart 
 {
@@ -95,23 +66,14 @@ public class PropertyViewer extends ViewPart
 	 */
 	public void newDBUpdate()
 	{
-		classProperties = null;
-		objectProperties = null;
-		dbProperties = PropertiesManager.getInstance().getDBProperties();	
-		
-		
 		//dispose all child tabs..reverse order necessary else indexes modified and tabs not deleted
 		for(int i = mainTab.getItemCount()-1; i >= 0; i--)
 		{	
 			mainTab.getItem(i).dispose();
 		}
 		
-		
-/*		ObjectContainer oc = DbInterface.getInstance().getDB();
-		if(oc != null){*/
-			initializeProviders();
-			addChildComponents();
-//		}
+		initializeProviders();
+		addChildComponents();
 		
 	}
 
@@ -120,7 +82,7 @@ public class PropertyViewer extends ViewPart
 	 */
 	private void initializeProviders()
 	{
-		dbProperties = PropertiesManager.getInstance().getDBProperties();
+		dbProperties = dbProps();
 		classProperties = null;
 		objectProperties = null;
 	}
@@ -165,7 +127,7 @@ public class PropertyViewer extends ViewPart
 	{	
 		removeAllComponentsFromClassPropertiesTab();
 		if(classname != null) {
-			classProperties = PropertiesManager.getInstance().getClassProperties(classname);
+			classProperties = Activator.getDefault().dbModel().props().getClassProperties(classname);
 			addClasspropertiesTab();
 			mainTab.setSelection(CLASS_TAB_INDEX);
 		}
@@ -199,7 +161,7 @@ public class PropertyViewer extends ViewPart
 	private void resetObjectPropertiesTab(Object resultObject)
 	{
 		removeAllComponentsFromObjectPropertiesTab();
-		objectProperties = PropertiesManager.getInstance().getObjectProperties(resultObject);
+		objectProperties = Activator.getDefault().dbModel().props().getObjectProperties(resultObject);
 		addObjectPropertiesTab();
 		mainTab.setSelection(OBJECT_TAB_INDEX);
 	}
@@ -311,7 +273,7 @@ public class PropertyViewer extends ViewPart
 		column = new TableViewerColumn(tableViewer, SWT.NONE);
 		column.getColumn().setWidth(PropertyViewerConstants.CLASS_PROPERTY_COLUMN_WIDTHS[2]);
 		column.getColumn().setText(PropertyViewerConstants.CLASS_PROPERTY_COLUMN_ARRAY[2]);
-		if(!Activator.getDefault().getDatabaseInterface().readOnly()) {
+		if(!Activator.getDefault().dbModel().db().readOnly()) {
 			column.setEditingSupport(new ClassPropertiesEditor(tableViewer));
 		}
 		
@@ -493,6 +455,11 @@ public class PropertyViewer extends ViewPart
 	{
 		removeAllComponentsFromObjectPropertiesTab();
 		resetClassPropertiesTab(classname);
+	}
+
+	private DBProperties dbProps() {
+		DatabaseModel dbModel = Activator.getDefault().dbModel();
+		return dbModel.connected() ? dbModel.props().getDBProperties() : new DBProperties();
 	}
 
 }

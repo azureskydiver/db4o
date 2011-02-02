@@ -55,8 +55,6 @@ public interface IDbInterface {
 
 	Reflector reflector();
 
-	void setDB(ObjectContainer oc, String path);
-
 	long getDBSize();
 
 	long getFreespaceSize();

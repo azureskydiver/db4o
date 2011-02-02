@@ -9,17 +9,19 @@ import com.db4o.reflect.*;
 
 public class DbInterfaceImpl implements IDbInterface {
 	
-	private ObjectContainer objContainer;
+	private final ObjectContainer objContainer;
+	private final String dbPath;
 	
-	private String dbPath;
-	
+	public DbInterfaceImpl(ObjectContainer objContainer, String dbPath) {
+		this.objContainer = objContainer;
+		this.dbPath = dbPath;
+	}
+
 	public String getVersion(){
 		return Db4o.version();
 	}
 	
 	public Object[] getStoredClasses() {
-		if(objContainer == null)
-			return null;
 		StoredClass []classes = null;
 		try{
 			classes = objContainer.ext().storedClasses();
@@ -54,11 +56,6 @@ public class DbInterfaceImpl implements IDbInterface {
 		return objContainer;
 	}
 	
-	public void setDB(ObjectContainer db, String path) {
-		objContainer = db;
-		dbPath = path;
-	}
-
 	public String getDbPath() {
 		return dbPath;
 	}
@@ -69,7 +66,7 @@ public class DbInterfaceImpl implements IDbInterface {
 	
 	public int getNumOfObjects(String className){
 		try {
-			if(objContainer != null && className != null){
+			if(className != null){
 				StoredClass strClass = objContainer.ext().storedClass(className);
 				if(strClass != null)
 					return strClass.getIDs().length;
@@ -81,20 +78,15 @@ public class DbInterfaceImpl implements IDbInterface {
 	}
 	
 	public void commit(){
-		if(objContainer != null)
-			objContainer.commit();
+		objContainer.commit();
 	}
 	
 	public void close(){
-		if(objContainer != null){
-			objContainer.close();
-			objContainer = null;
-			dbPath = null;
-		}
+		objContainer.close();
 	}
 
 	public long getDBSize() {
-		if(objContainer != null && !isClient()){
+		if(!isClient()){
 			SystemInfo sysInfo = objContainer.ext().systemInfo();
 			if(sysInfo != null)
 				return sysInfo.totalSize();
@@ -103,16 +95,13 @@ public class DbInterfaceImpl implements IDbInterface {
 	}
 	
 	public long getFreespaceSize() {
-		if(objContainer != null && !isClient())
+		if(!isClient())
 			return objContainer.ext().systemInfo().freespaceSize();
 		return 0;
 	}
 	
 	public boolean isClient(){
-		boolean isClient = false;
-		if(objContainer != null)
-			isClient = ((ObjectContainerBase)objContainer).isClient();
-		return isClient;
+		return ((ObjectContainerBase)objContainer).isClient();
 	}
 
 	public Object getObjectById(long objId) {
@@ -120,12 +109,11 @@ public class DbInterfaceImpl implements IDbInterface {
 	}
 
 	public void activate(Object resObj, int i) {
-		if(objContainer != null)
-			objContainer.activate(resObj, i);		
+		objContainer.activate(resObj, i);		
 	}
 
 	public StoredClass getStoredClass(String name) {
-		if(name == null || objContainer == null)
+		if(name == null)
 			return null;
 		return objContainer.ext().storedClass(name);
 		

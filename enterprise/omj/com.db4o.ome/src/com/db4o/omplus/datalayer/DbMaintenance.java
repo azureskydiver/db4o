@@ -36,11 +36,11 @@ public class DbMaintenance {
 	}
 
 	public boolean isClient() {
-		return Activator.getDefault().getDatabaseInterface().isClient();
+		return Activator.getDefault().dbModel().db().isClient();
 	}
 
 	private ObjectContainer getObjectContainer(){
-		IDbInterface dbinterface = Activator.getDefault().getDatabaseInterface();
+		IDbInterface dbinterface = Activator.getDefault().dbModel().db();
 		oc = dbinterface.getDB();
 		return oc;
 	}

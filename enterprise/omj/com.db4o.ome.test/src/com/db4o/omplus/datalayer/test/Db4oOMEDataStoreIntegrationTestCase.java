@@ -1,11 +1,14 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.datalayer.test;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.util.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
+import com.db4o.*;
 import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 
@@ -16,14 +19,28 @@ public class Db4oOMEDataStoreIntegrationTestCase {
 	@Test
 	public void testAppDataStore() {
 		OMEDataStore dataStore = Activator.getDefault().getOMEDataStore();
-		IDbInterface db = Activator.getDefault().getDatabaseInterface();
-		db.setDB(null, "a");
+		DatabaseModel dbModel = Activator.getDefault().dbModel();
+		assertNull(dataStore.getContextLocalEntry(KEY));
+		ObjectContainer dbA = db();
+		dbModel.connect(dbA, "a");
 		dataStore.setContextLocalEntry(KEY, new ArrayList<String>());
 		assertNotNull(dataStore.getContextLocalEntry(KEY));
-		db.setDB(null, "b");
+		ObjectContainer dbB = db();
+		dbModel.connect(dbB, "b");
+		verify(dbA);
 		assertNull(dataStore.getContextLocalEntry(KEY));
-		db.setDB(null, "a");
+		ObjectContainer dbAA = db();
+		dbModel.connect(dbAA, "a");
+		verify(dbB);
 		assertNotNull(dataStore.getContextLocalEntry(KEY));
+		dbModel.disconnect();
+		verify(dbAA);
 	}
-	
+
+	private ObjectContainer db() {
+		ObjectContainer db = createMock(ObjectContainer.class);
+		expect(db.close()).andReturn(true);
+		replay(db);
+		return db;
+	}
 }

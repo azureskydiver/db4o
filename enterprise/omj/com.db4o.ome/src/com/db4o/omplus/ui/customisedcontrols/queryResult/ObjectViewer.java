@@ -160,7 +160,7 @@ public class ObjectViewer extends CTabFolder
 	    	column1.getColumn().setText(str);
 	    	column1.getColumn().setWidth(200);
 	    	
-	    	if(i==1 && !Activator.getDefault().getDatabaseInterface().readOnly())//Allow editions only for value
+	    	if(i==1 && !Activator.getDefault().dbModel().db().readOnly())//Allow editions only for value
 	    	{
 	    		column1.setEditingSupport(new ObjectTreeEditor(queryModel, this,tabItem,treeViewer,
 	    									textCellEditor, queryResultList.getClassName(),
@@ -190,7 +190,7 @@ public class ObjectViewer extends CTabFolder
 	
 	private void addSetToNullAction(final TreeViewer objTree) 
 	{
-		if(Activator.getDefault().getDatabaseInterface().readOnly()) {
+		if(Activator.getDefault().dbModel().db().readOnly()) {
 			return;
 		}
 		final Tree tree = objTree.getTree();

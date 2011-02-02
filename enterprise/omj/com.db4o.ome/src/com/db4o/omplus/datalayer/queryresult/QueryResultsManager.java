@@ -22,7 +22,7 @@ public class QueryResultsManager
 	
 	private OMQuery oMQuery;
 	
-	private Reflector reflector = Activator.getDefault().getDatabaseInterface().reflector();
+	private Reflector reflector = Activator.getDefault().dbModel().db().reflector();
 	
 	public QueryResultsManager() {
 	}

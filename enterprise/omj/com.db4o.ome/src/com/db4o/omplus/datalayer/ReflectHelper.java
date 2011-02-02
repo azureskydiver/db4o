@@ -32,7 +32,7 @@ public class ReflectHelper {
 	}
 	
 	private static Reflector getReflector(){
-		return Activator.getDefault().getDatabaseInterface().reflector();
+		return Activator.getDefault().dbModel().db().reflector();
 	}
 	
 	public static int getFieldTypeClass(String fieldname){

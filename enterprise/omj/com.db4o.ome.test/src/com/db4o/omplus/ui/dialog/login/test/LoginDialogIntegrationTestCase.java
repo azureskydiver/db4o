@@ -47,7 +47,7 @@ public class LoginDialogIntegrationTestCase {
 		Button cancelButton = findChild(dialogShell, LoginButtonsPane.CANCEL_BUTTON_ID);
 		pressButton(cancelButton);
 		assertNull(findDialogShell());
-		assertNull(Activator.getDefault().getDatabaseInterface().getDB());
+		assertFalse(Activator.getDefault().dbModel().connected());
 	}
 
 	@Test
@@ -63,9 +63,9 @@ public class LoginDialogIntegrationTestCase {
 			Button okButton = findChild(dialogShell, LoginButtonsPane.OK_BUTTON_ID);
 			pressButton(okButton);
 			assertNull(findDialogShell());
-			LocalObjectContainer db = (LocalObjectContainer) Activator.getDefault().getDatabaseInterface().getDB();
+			LocalObjectContainer db = (LocalObjectContainer) Activator.getDefault().dbModel().db().getDB();
 			assertEquals(dbFile.getAbsolutePath(), db.fileName());
-			Activator.getDefault().getDatabaseInterface().close();
+			Activator.getDefault().dbModel().disconnect();
 		}
 		finally {
 			dbFile.delete();

@@ -12,18 +12,19 @@ public class ConfigureIndex {
 	IDbInterface db;
 	
 	public ConfigureIndex() {
-		db = Activator.getDefault().getDatabaseInterface();
+		db = Activator.getDefault().dbModel().db();
 	}
 	
 	public static boolean isLocal(){
-		return (!Activator.getDefault().getDatabaseInterface().isClient());
+		return (!Activator.getDefault().dbModel().db().isClient());
 	}
 	
+	// FIXME should use ConnectionParams
 	private void reconnect(){
-		String path = Activator.getDefault().getDatabaseInterface().getDbPath();
-		db.close();
+		String path = Activator.getDefault().dbModel().db().getDbPath();
+		Activator.getDefault().dbModel().disconnect();
 		ObjectContainer oc = Db4o.openFile(path);
-		db.setDB(oc, path);
+		Activator.getDefault().dbModel().connect(oc, path);
 	}
 	
 	private boolean isIndexable(StoredField storedField, ObjectContainer db) {
