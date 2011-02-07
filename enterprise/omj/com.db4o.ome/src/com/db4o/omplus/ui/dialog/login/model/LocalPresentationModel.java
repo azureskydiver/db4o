@@ -40,7 +40,6 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 		}
 		this.readOnly = readOnly;
 		notifyListeners();
-		newState();
 	}
 
 	@Override
@@ -49,6 +48,11 @@ public class LocalPresentationModel extends ConnectionPresentationModel<FileConn
 			throw new DBConnectException("Path is empty.");
 		}
 		return new FileConnectionParams(path, readOnly, jarPaths, configNames);
+	}
+	
+	@Override
+	protected void fromState(FileConnectionParams params) {
+		params.readOnly(readOnly);
 	}
 
 	@Override

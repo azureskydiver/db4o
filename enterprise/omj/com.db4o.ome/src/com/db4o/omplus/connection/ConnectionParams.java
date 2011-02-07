@@ -10,8 +10,8 @@ import com.db4o.foundation.*;
 
 public abstract class ConnectionParams {
 	
-	protected final String[] jarPaths;
-	protected final String[] configNames;
+	protected String[] jarPaths;
+	protected String[] configNames;
 	
 	protected boolean allowUpdates = false;
 	
@@ -54,25 +54,16 @@ public abstract class ConnectionParams {
 		return Arrays.copyOf(configNames, configNames.length);
 	}
 	
+	public void jarPaths(String[] jarPaths) {
+		this.jarPaths = jarPaths == null ? new String[0] : jarPaths;
+	}
+	
+	public void configuratorClassNames(String[] configNames) {
+		this.configNames = configNames == null ? new String[0] : configNames;
+	}
+	
 	public void configureUpdates() {
 		allowUpdates = true;
-	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if(this == other) {
-			return true;
-		}
-		if(other == null || getClass() != other.getClass()) {
-			return false;
-		}
-		ConnectionParams params = (ConnectionParams)other;
-		return Arrays.equals(jarPaths, params.jarPaths) && Arrays.equals(configNames, params.configNames);
-	}
-	
-	@Override
-	public int hashCode() {
-		return Arrays.hashCode(jarPaths) ^ Arrays.hashCode(configNames);
 	}
 	
 	public String toString() {

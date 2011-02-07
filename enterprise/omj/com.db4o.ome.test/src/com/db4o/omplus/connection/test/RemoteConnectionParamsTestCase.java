@@ -72,22 +72,26 @@ public class RemoteConnectionParamsTestCase {
 		String[] passwords = { "**", "***" };
 		String[][] jarPaths = { {}, { "baz.jar" } };
 		String[] configNames = { "BazConfig" };
-		List<RemoteConnectionParams> params = new ArrayList<RemoteConnectionParams>();
-		List<RemoteConnectionParams> clones = new ArrayList<RemoteConnectionParams>();
+		List<List<RemoteConnectionParams>> params = new ArrayList<List<RemoteConnectionParams>>();
+		List<List<RemoteConnectionParams>> clones = new ArrayList<List<RemoteConnectionParams>>();
 		for (String host : hosts) {
 			for (int port : ports) {
+				List<RemoteConnectionParams> curParams = new ArrayList<RemoteConnectionParams>();
+				List<RemoteConnectionParams> curClones = new ArrayList<RemoteConnectionParams>();
 				for (String user : users) {
 					for (String password : passwords) {
 						for (String[] jarPath : jarPaths) {
-							params.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
-							clones.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+							curParams.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+							curClones.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
 							if(jarPath.length > 0) {
-								params.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
-								clones.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+								curParams.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+								curClones.add(new RemoteConnectionParams(host, port, user, password, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
 							}
 						}
 					}
 				}
+				params.add(curParams);
+				clones.add(curClones);
 			}
 		}
 		for (int outer = 0; outer < params.size(); outer++) {

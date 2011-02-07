@@ -89,19 +89,23 @@ public class FileConnectionParamsTestCase {
 		boolean[] readOnly = { true, false };
 		String[][] jarPaths = { {}, { "baz.jar" } };
 		String[] configNames = { "BazConfig" };
-		List<FileConnectionParams> params = new ArrayList<FileConnectionParams>();
-		List<FileConnectionParams> clones = new ArrayList<FileConnectionParams>();
+		List<List<FileConnectionParams>> params = new ArrayList<List<FileConnectionParams>>();
+		List<List<FileConnectionParams>> clones = new ArrayList<List<FileConnectionParams>>();
 		for (String path : paths) {
+			List<FileConnectionParams> curParams = new ArrayList<FileConnectionParams>();
+			List<FileConnectionParams> curClones = new ArrayList<FileConnectionParams>();
 			for (boolean ro : readOnly) {
 				for (String[] jarPath : jarPaths) {
-					params.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
-					clones.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+					curParams.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
+					curClones.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), new String[0]));
 					if(jarPath.length > 0) {
-						params.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
-						clones.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+						curParams.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
+						curClones.add(new FileConnectionParams(path, ro, Arrays.copyOf(jarPath, jarPath.length), Arrays.copyOf(configNames, configNames.length)));
 					}
 				}
 			}
+			params.add(curParams);
+			clones.add(curClones);
 		}
 		for (int outer = 0; outer < params.size(); outer++) {
 			assertEquals(clones.get(outer), params.get(outer));

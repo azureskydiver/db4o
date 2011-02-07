@@ -18,7 +18,7 @@ public class LoginPresentationModelFixture {
 	private final LoginPresentationModel model;
 	private final LocalPresentationModel localModel;
 	private final RemotePresentationModel remoteModel;
-	private ConnectionParams paramsReceived;
+	private FileConnectionParams paramsReceived;
 	private Throwable exceptionReceived;
 	private String errorMsgReceived;
 	private ConnectInterceptor interceptor;
@@ -46,7 +46,7 @@ public class LoginPresentationModelFixture {
 			@Override
 			public boolean connect(ConnectionParams params) throws DBConnectException {
 				interceptor.connect(params);
-				paramsReceived = params;
+				paramsReceived = (FileConnectionParams) params;
 				return true;
 			}
 		};
@@ -79,16 +79,16 @@ public class LoginPresentationModelFixture {
 		this.interceptor = interceptor;
 	}
 	
-	public void assertConnected(ConnectionParams expected) {
-		assertEquals(expected, paramsReceived);
+	public void assertConnected(FileConnectionParams expected) {
+		assertParamsEquals(expected, paramsReceived);
 		List<FileConnectionParams> recentFileConnections = recentConnections.getRecentConnections(FileConnectionParams.class);
-		assertEquals(expected, recentFileConnections.get(0));
+		assertParamsEquals(expected, recentFileConnections.get(0));
 		int cmpIdx = 1;
 		for (FileConnectionParams curPreset : presetFileParams) {
-			if(curPreset.equals(expected)) {
+			if(equals(curPreset, expected)) {
 				continue;
 			}
-			assertEquals(curPreset, recentFileConnections.get(cmpIdx));
+			assertParamsEquals(curPreset, recentFileConnections.get(cmpIdx));
 			cmpIdx++;
 		}
 	}
@@ -121,6 +121,14 @@ public class LoginPresentationModelFixture {
 	
 	public static interface ConnectInterceptor {
 		void connect(ConnectionParams params) throws DBConnectException;
+	}
+	
+	private void assertParamsEquals(FileConnectionParams a, FileConnectionParams b) {
+		assertTrue(equals(a, b));
+	}
+
+	private boolean equals(FileConnectionParams a, FileConnectionParams b) {
+		return a.equals(b) && a.readOnly() == b.readOnly() && Arrays.equals(a.jarPaths(), b.jarPaths()) && Arrays.equals(a.configuratorClassNames(), b.configuratorClassNames());
 	}
 	
 	private static class NullConnectInterceptor implements ConnectInterceptor {

@@ -42,6 +42,10 @@ public class FileConnectionParams extends ConnectionParams {
 	public boolean readOnly() {
 		return readOnly;
 	}
+
+	public void readOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
 	
 	public EmbeddedConfiguration configure() throws DBConnectException {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
@@ -98,16 +102,19 @@ public class FileConnectionParams extends ConnectionParams {
 
 	@Override
 	public boolean equals(Object other) {
-		if(!super.equals(other)) {
+		if(this == other) {
+			return true;
+		}
+		if(other == null || getClass() != other.getClass()) {
 			return false;
 		}
 		FileConnectionParams params = (FileConnectionParams)other;
-		return filePath.equals(params.filePath) && readOnly == params.readOnly;
+		return filePath.equals(params.filePath);
 	}
 	
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ filePath.hashCode() ^ (readOnly ? 0 : 1);
+		return filePath.hashCode();
 	}
 	
 	private void configureCustom(EmbeddedConfiguration config) throws DBConnectException {
