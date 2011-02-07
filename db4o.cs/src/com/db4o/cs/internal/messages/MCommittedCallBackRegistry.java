@@ -3,11 +3,12 @@ package com.db4o.cs.internal.messages;
 
 import com.db4o.cs.internal.*;
 
-public class MCommittedCallBackRegistry extends Msg implements ServerSideMessage {
+public class MCommittedCallBackRegistry extends Msg implements MessageWithResponse {
 
-	public void processAtServer() {
+	public Msg replyFromServer() {
 		ServerMessageDispatcher dispatcher = serverMessageDispatcher();
 		dispatcher.caresAboutCommitted(true);
+		return Msg.OK;
 	}
 
 }

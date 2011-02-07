@@ -17,6 +17,7 @@ public class Lock4 {
     	try {
             wait(timeout);
         } catch (Exception e) {
+        	e.printStackTrace();
         }
         
     }
