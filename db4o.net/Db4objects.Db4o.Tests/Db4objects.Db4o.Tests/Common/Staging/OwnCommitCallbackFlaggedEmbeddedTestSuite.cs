@@ -15,6 +15,7 @@ namespace Db4objects.Db4o.Tests.Common.Staging
 
 			public Item(int id)
 			{
+				// COR-1822
 				_id = id;
 			}
 		}

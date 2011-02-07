@@ -17,7 +17,7 @@ namespace Db4objects.Db4o.Diagnostic
 
 		public override object Reason()
 		{
-			return "Db4o.configure().updateDepth(" + _depth + ")";
+			return "configuration.common().configure().updateDepth(" + _depth + ")";
 		}
 
 		public override string Problem()

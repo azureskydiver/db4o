@@ -1307,6 +1307,7 @@ namespace Db4objects.Db4o.CS.Internal
 				return;
 			}
 			Write(Msg.CommittedCallbackRegister);
+			ExpectedResponse(Msg.Ok);
 		}
 
 		public override int ClassMetadataIdForName(string name)

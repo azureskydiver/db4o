@@ -29,7 +29,7 @@ namespace Db4objects.Db4o.Diagnostic
 
 		public override string Solution()
 		{
-			return "Consider indexing fields that you query for: " + "Db4o.configure().objectClass([class]).objectField([fieldName]).indexed(true)";
+			return "Consider indexing fields that you query for: " + "configuration.common().objectClass([class]).objectField([fieldName]).indexed(true)";
 		}
 	}
 }

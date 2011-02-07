@@ -46,6 +46,10 @@
 
 
 
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -77,6 +81,15 @@
     <NoWarn>1591;1572;1573;1574;0419;</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+<Compile Include="native\Db4oUnit\ArrayAssert.cs"/>
+<Compile Include="native\Db4oUnit\Assert.cs"/>
+<Compile Include="native\Db4oUnit\AssertionException.cs"/>
+<Compile Include="native\Db4oUnit\Data\Generators.cs"/>
+<Compile Include="native\Db4oUnit\NullTextWriter.cs"/>
+<Compile Include="native\Db4oUnit\TestException.cs"/>
+<Compile Include="native\Db4oUnit\TestPlatform.cs"/>
+<Compile Include="native\Db4oUnit\Util\PlatformInformation.cs"/>
+<Compile Include="native\Db4oUnit\Util\StopWatch.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\ArrayAssert.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\Assert.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\AssertionException.cs"/>
@@ -164,15 +177,6 @@
 <Compile Include="Db4oUnit\Db4oUnit\Tests\TestLifeCycleTestCase.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\Tests\TestRunnerTestCase.cs"/>
 <Compile Include="Properties\AssemblyInfo.cs"/>
-<Compile Include="native\Db4oUnit\ArrayAssert.cs"/>
-<Compile Include="native\Db4oUnit\Assert.cs"/>
-<Compile Include="native\Db4oUnit\AssertionException.cs"/>
-<Compile Include="native\Db4oUnit\Data\Generators.cs"/>
-<Compile Include="native\Db4oUnit\NullTextWriter.cs"/>
-<Compile Include="native\Db4oUnit\TestException.cs"/>
-<Compile Include="native\Db4oUnit\TestPlatform.cs"/>
-<Compile Include="native\Db4oUnit\Util\PlatformInformation.cs"/>
-<Compile Include="native\Db4oUnit\Util\StopWatch.cs"/>
 </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
