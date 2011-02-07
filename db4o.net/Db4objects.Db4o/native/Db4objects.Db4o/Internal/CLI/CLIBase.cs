@@ -1,15 +1,16 @@
 ﻿/* Copyright (C) 2011 Versant Inc.   http://www.db4o.com */
-using System;
 using System.IO;
 using Db4objects.Db4o.IO;
 
 namespace Db4objects.Db4o.Internal.CLI
 {
-	internal class Silverlight3 : SilverlightCLIBase
+	internal abstract class CLIBase : ICLIFacade
 	{
-		public override void Flush(FileStream stream)
+		public abstract void Flush(FileStream stream);
+		
+		public virtual IStorage NewStorage()
 		{
-			stream.Flush();
+			return new FileStorage();
 		}
 	}
 }
