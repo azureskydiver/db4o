@@ -52,22 +52,6 @@ public class CSharp2005Project extends CSharpProject {
 		return node;
     }
 	
-//	@Override
-//	protected Element resetFilesContainerElement() throws Exception {
-//		Element compile = selectElement("//*[local-name()='ItemGroup']/*[local-name()='Compile']");
-//		if (null == compile) invalidProjectFile();
-//		
-//		NodeList nonNativeSources = selectNodes("//*[local-name()='ItemGroup']/*[local-name()='Compile' and not(starts-with(@Include, 'native\\'))]");
-//		
-//		Element container = (Element)compile.getParentNode();
-//		
-//		for (int i =0; i < nonNativeSources.getLength(); i++) {
-//			container.removeChild(nonNativeSources.item(i));
-//		}
-//		
-//		return container;
-//	}
-	
 	@Override
 	protected Element resetFilesContainerElement() throws Exception {
  		Element compile = selectElement("//*[local-name()='ItemGroup']/*[local-name()='Compile']");
