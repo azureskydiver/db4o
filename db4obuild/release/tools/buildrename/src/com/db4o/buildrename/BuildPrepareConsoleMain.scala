@@ -12,8 +12,8 @@ object BuildPrepareConsoleMain {
 		  	case BuildPrepareArgs(dryRun, folder, version2category) => 
 		  		run(dryRun, folder, version2category)
 		  	case _ => {
-		  		println("Usage: BuildPrepareConsoleMain [-dry] <folder> [<version>  [<from>'>']<to>]*")
-		  		println("Ex.: BuildPrepareConsoleMain ./data 7.12 Production>Stable 8.0 Production")
+		  		println("Usage: BuildPrepareConsoleMain [-dry] <folder> [<version>  <category>['/''c'|'a']]*")
+		  		println("Ex.: BuildPrepareConsoleMain ./data 7.12 Stable/a 8.0 Production/c 8.1 Development/c")
 		  	}
 		}
 	}		
@@ -58,7 +58,7 @@ object BuildPrepareConsoleMain {
 }
 
 object BuildPrepareArgs {
-	val CategoryPattern = """(([^>]+)>)?(.+)""".r
+	val CategoryPattern = """([^/]+)(\/([ca]))?""".r
 	
 	def unapply(args: Array[String]): Option[(Boolean, File, Map[String, Category])] = {
 		if(args == null || args.size == 0) {
@@ -78,12 +78,17 @@ object BuildPrepareArgs {
 		Some((dryRun, folder, version2category))
 	}
  
-	private def str2Category(s: String) =
+	private def str2Category(s: String) = {
+		def op(id: String) = id match {
+			case "c" => ClearOp
+			case "a" => ArchiveOp
+			case _ => NoOp
+		}
 		s match {
-			case CategoryPattern(null, null, to) => Category(None, to)
-			case CategoryPattern(_, from, to) => Category(Some(from), to)
+			case CategoryPattern(name, _, opId) => Category(name, op(opId))
 			case _ => throw new IllegalArgumentException("Not a category: " + s)
 		}
+	}
 	
  	private def arr2map[T, V](arr: Array[T], mapper: T => V) = {
 		val map = mutable.Map[T, V]()
