@@ -19,7 +19,7 @@ public class RemoteConnectionParams extends ConnectionParams{
 	
 	private String user;
 	
-	private String password;
+	private transient String password;
 
 	public RemoteConnectionParams(String host,int port,String user,String password) {
 		this(host, port, user, password, new String[0], new String[0]);
@@ -56,8 +56,16 @@ public class RemoteConnectionParams extends ConnectionParams{
 		return user;
 	}
 
+	public void user(String user) {
+		this.user = user;
+	}
+	
 	public String getPassword() {
-		return password;
+		return password == null ? "" : password;
+	}
+	
+	public void password(String password) {
+		this.password = password;
 	}
 	
 	public ClientConfiguration configure() throws DBConnectException{
@@ -82,16 +90,19 @@ public class RemoteConnectionParams extends ConnectionParams{
 	
 	@Override
 	public boolean equals(Object other) {
-		if(!super.equals(other)) {
+		if(this == other) {
+			return true;
+		}
+		if(other == null || getClass() != other.getClass()) {
 			return false;
 		}
 		RemoteConnectionParams params = (RemoteConnectionParams) other;
-		return host.equals(params.host) && port == params.port && user.equals(params.user) && password.equals(params.password);
+		return host.equals(params.host) && port == params.port;
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ host.hashCode() ^ port ^ user.hashCode() ^ password.hashCode();
+		return host.hashCode() ^ port;
 	}
 	
 	private void configureCustom(ClientConfiguration config) throws DBConnectException {

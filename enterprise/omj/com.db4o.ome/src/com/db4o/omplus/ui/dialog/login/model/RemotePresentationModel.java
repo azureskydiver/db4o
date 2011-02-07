@@ -52,7 +52,6 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 			return;
 		}
 		this.user = user;
-		newState();
 		notifyListeners();
 	}
 
@@ -61,32 +60,35 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 			return;
 		}
 		this.pwd = password;
-		newState();
 		notifyListeners();
 	}
 
 	@Override
 	protected RemoteConnectionParams fromState(String[] jarPaths, String[] configNames) throws DBConnectException {
-		host = trim(host);
-		if(host.length() == 0) {
-			throw new DBConnectException("Host is empty.");
-		}
-		port = trim(port);
-		if(port.length() == 0) {
-			throw new DBConnectException("Port is empty.");
-		}
+		host = trim(host, "host");
+		port = trim(port, "port");
 		int portNum = parsePortNumber(port);
-		user = trim(user);
-		if(user.length() == 0) {
-			throw new DBConnectException("User is empty.");
-		}
-		pwd = trim(pwd);
-		if(pwd.length() == 0) {
-			throw new DBConnectException("Password is empty.");
-		}
+		user = trim(user, "user");
+		pwd = trim(pwd, "password");
 		return new RemoteConnectionParams(host, portNum, user, pwd, jarPaths, configNames);
 	}
 
+	@Override
+	protected void fromState(RemoteConnectionParams params) throws DBConnectException {
+		user = trim(user, "user");
+		pwd = trim(pwd, "password");
+		params.user(user);
+		params.password(pwd);
+	}
+	
+	private String trim(String str, String name) throws DBConnectException {
+		String trimmed = str == null ? "" : str.trim();
+		if(trimmed.length() == 0) {
+			throw new DBConnectException(name + " is empty");
+		}
+		return trimmed;
+	}
+	
 	private static int parsePortNumber(String port) throws DBConnectException {
 		String parsePort = port.toLowerCase();
 		int radix = 10;
@@ -133,10 +135,6 @@ public class RemotePresentationModel extends ConnectionPresentationModel<RemoteC
 		for (RemoteSelectionListener listener : remoteListeners) {
 			listener.remoteSelection(host, port, user, pwd);
 		}
-	}
-	
-	private String trim(String str) {
-		return str == null ? "" : str.trim();
 	}
 
 }

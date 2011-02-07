@@ -4,7 +4,6 @@ package com.db4o.omplus.ui.dialog.login.model;
 
 import java.util.*;
 
-import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 
 public abstract class ConnectionPresentationModel<P extends ConnectionParams> implements CustomConfigSink {
@@ -82,6 +81,7 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 	}
 	
 	protected abstract P fromState(String[] jarPaths, String[] configNames) throws DBConnectException;
+	protected abstract void fromState(P params) throws DBConnectException;
 	protected abstract void selected(P selected);
 	protected abstract List<P> connections(RecentConnectionList recentConnections);
 	protected abstract void clearSpecificState();
@@ -90,10 +90,6 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		for (ConnectionPresentationListener listener : listeners) {
 			state.notifyListener(listener);
 		}
-	}
-
-	private ErrorMessageHandler err() {
-		return model.err();
 	}
 
 	private void state(LoginPresentationState state) {
@@ -118,18 +114,19 @@ public abstract class ConnectionPresentationModel<P extends ConnectionParams> im
 		}
 
 		@Override
-		P params() {
+		P params() throws DBConnectException {
+			fromState(params);
 			return params;
 		}
 		
 		@Override
 		void customConfig(String[] jarPaths, String[] customConfigClassNames) {
-			err().error("cannot change custom config on history entry");
+			params.jarPaths(jarPaths);
+			params.configuratorClassNames(customConfigClassNames);
 		}
 
 		@Override
 		void requestCustomConfig() {
-			newStateFrom(params);
 			configSource.requestCustomConfig(ConnectionPresentationModel.this, params.jarPaths(), params.configuratorClassNames());
 		}
 
