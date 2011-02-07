@@ -2,7 +2,7 @@
 
 package com.db4o.config;
 
-import com.db4o.*;
+import com.db4o.ObjectContainer;
 
 /**
  * interface to allow instantiating objects by calling specific constructors.
@@ -16,8 +16,8 @@ import com.db4o.*;
  * need to be registered.<br><br>
  * Example:<br>
  * <code>
- * Configuration config = Db4o.configure();<br>
- * ObjectClass oc = config.objectClass("package.className");<br>
+ * EmbeddedConfiguration config = Db4oEmbedded.newConfiguration(); <br>
+ * ObjectClass oc = config.common().objectClass("package.className");<br>
  * oc.translate(new FooTranslator());</code><br><br>
  */
 public interface ObjectConstructor extends ObjectTranslator {

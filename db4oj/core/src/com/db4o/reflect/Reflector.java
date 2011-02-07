@@ -2,14 +2,14 @@
 
 package com.db4o.reflect;
 
-import com.db4o.foundation.*;
+import com.db4o.foundation.DeepClone;
 
 /**
  * root of the reflection implementation API.
  * <br><br>The open reflection interface is supplied to allow to implement
  * reflection functionality on JDKs that do not come with the
  * java.lang.reflect.* package.<br><br>
- * Use {@link com.db4o.config.Configuration#reflectWith Db4o.configure().reflectWith(IReflect reflector)}
+ * Use {@link com.db4o.config.CommonConfiguration#reflectWith configuration.commmon().reflectWith(IReflect reflector)}
  * to register the use of your implementation before opening database
  * files.
  */

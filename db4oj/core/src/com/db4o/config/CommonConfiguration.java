@@ -2,14 +2,16 @@
 
 package com.db4o.config;
 
-import java.io.*;
-
-import com.db4o.config.encoding.*;
-import com.db4o.diagnostic.*;
-import com.db4o.foundation.*;
+import com.db4o.config.encoding.StringEncoding;
+import com.db4o.config.encoding.StringEncodings;
+import com.db4o.diagnostic.DiagnosticConfiguration;
+import com.db4o.foundation.Environment;
 import com.db4o.internal.Const4;
-import com.db4o.reflect.*;
-import com.db4o.typehandlers.*;
+import com.db4o.reflect.Reflector;
+import com.db4o.typehandlers.TypeHandler4;
+import com.db4o.typehandlers.TypeHandlerPredicate;
+
+import java.io.PrintStream;
 
 /**
  * Common configuration methods, applicable for
@@ -40,18 +42,19 @@ public interface CommonConfiguration {
      * Examples of concrete usecases:
      * <br><br>
      * <code>
-     * <b>// Creating an Alias for a single class</b><br> 
-     * Db4o.configure().addAlias(<br>
+     * <b>// Creating an Alias for a single class</b><br>
+     * EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+     * config.common().addAlias(<br>
      * &#160;&#160;new TypeAlias("com.f1.Pilot", "com.f1.Driver"));<br>
      * <br><br>
      * <b>// Accessing a .NET assembly from a Java package</b><br> 
-     * Db4o.configure().addAlias(<br>
+     * config.common().addAlias(<br>
      * &#160;&#160;new WildcardAlias(<br>
      * &#160;&#160;&#160;&#160;"Tutorial.F1.*, Tutorial",<br>
      * &#160;&#160;&#160;&#160;"com.f1.*"));<br>
      * <br><br>
      * <b>// Mapping a Java package onto another</b><br> 
-     * Db4o.configure().addAlias(<br>
+     * config.common().addAlias(<br>
      * &#160;&#160;new WildcardAlias(<br>
      * &#160;&#160;&#160;&#160;"com.f1.*",<br>
      * &#160;&#160;&#160;&#160;"com.f1.client*"));<br></code>

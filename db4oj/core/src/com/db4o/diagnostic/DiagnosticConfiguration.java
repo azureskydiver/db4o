@@ -10,7 +10,9 @@ package com.db4o.diagnostic;
  * Diagnostic listeners can be be added and removed with calls
  * to this interface.
  * To install the most basic listener call:<br>
- * <code>Db4o.configure().diagnostic().addListener(new DiagnosticToConsole());</code>
+ * <code>
+ * EmbeddedConfiguration config = Db4oEmbedded.newConfiguration(); <br>
+ * config.common().diagnostic().addListener(new DiagnosticToConsole());</code>
  * @see com.db4o.config.Configuration#diagnostic()
  * @see DiagnosticListener
  */

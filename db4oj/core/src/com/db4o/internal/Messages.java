@@ -2,10 +2,12 @@
 
 package com.db4o.internal;
 
-import java.io.*;
+import com.db4o.Db4o;
+import com.db4o.Db4oVersion;
+import com.db4o.Deploy;
+import com.db4o.config.Configuration;
 
-import com.db4o.*;
-import com.db4o.config.*;
+import java.io.PrintStream;
 
 
 /**
@@ -120,7 +122,7 @@ public final class Messages {
                     "Only use persisted first class objects as keys for IdentityHashMap.",
                     "This functionality is only available from version 5.0 onwards.",
                     "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}",
-                    "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true).", // 65
+                    "Old database file format detected. To allow automatic updates call configuration.common().configure().allowVersionUpdates(true).", // 65
                     "This functionality is only available for indexed fields.", // 66
                     "This functionality is not supported for db4o clients in Client/Server mode.", // 67
                     "Invalid address: %", 
