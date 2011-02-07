@@ -12,6 +12,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.io.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -680,5 +681,9 @@ public final class Platform4 {
 	
 	public static final byte toSByte(byte b){
 		return b;
+	}
+
+	public static Storage newStorage() {
+		return new FileStorage();
 	}	
 }

@@ -14,9 +14,6 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-/**
- * @sharpen.partial
- */
 @decaf.Remove(decaf.Platform.JDK11)
 public class IdMappingTestSuite extends FixtureBasedTestSuite {
 	
@@ -90,9 +87,6 @@ public class IdMappingTestSuite extends FixtureBasedTestSuite {
 		
 	}
 
-	/**
-	 * @sharpen.ignore
-	 */
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
