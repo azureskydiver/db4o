@@ -44,13 +44,10 @@ public class IO {
 		createFolder(new File(filePath).getParent());
 	}
 
-	public static void createFileContents(String parent, String fileReference)
-			throws IOException {
+	public static String createFileContents(String parent, String fileReference) throws IOException {
 
 		if (fileReference.startsWith(IO.RESOURCE_PREFIX)) {
-			createFileFromResource(parent, fileReference
-					.substring(IO.RESOURCE_PREFIX.length()));
-			return;
+			return createFileFromResource(parent, fileReference.substring(IO.RESOURCE_PREFIX.length()));
 		}
 
 		Matcher m = FILE_CONTENTS_REGEX.matcher(fileReference);
@@ -58,19 +55,27 @@ public class IO {
 			String filePath = combine(parent, m.group(1));
 			String fileContents = m.group(2);
 			createFile(filePath, fileContents);
+			
+			return filePath;
 		} else {
 			createFolder(parent);
 		}
+		
+		return parent;
 	}
 
 	private static String combine(final String parent, final String fname) {
 		return parent + "/" + fname;
 	}
 
-	private static void createFileFromResource(String parent, String resource)
+	private static String createFileFromResource(String parent, String resource)
 			throws IOException {
 		final String contents = readResource(IO.class, resource);
-		createFile(combine(parent, resource), contents);
+		String filePath = combine(parent, resource);
+		
+		createFile(filePath, contents);
+		
+		return filePath;
 	}
 
 	public static String createFolderStructure(String folderName,
