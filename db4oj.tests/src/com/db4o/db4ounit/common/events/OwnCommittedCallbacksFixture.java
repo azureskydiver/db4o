@@ -149,10 +149,10 @@ public class OwnCommittedCallbacksFixture {
 			final BooleanByRef gotEvent = new BooleanByRef(false);
 			final BooleanByRef shallListen = new BooleanByRef(false);
 			ContainerFactory factory = FACTORY.value();
-			CommitAction action = ACTION.value();
+			final CommitAction action = ACTION.value();
 			factory.open();
-			ObjectContainer clientA = factory.openClient();
-			ObjectContainer clientB = factory.openClient();
+			final ObjectContainer clientA = factory.openClient();
+			final ObjectContainer clientB = factory.openClient();
 			EventRegistry registry = EventRegistryFactory.forObjectContainer(clientA);
 			registry.committed().addListener(new EventListener4<CommitEventArgs>() {
 				public void onEvent(Event4<CommitEventArgs> e, CommitEventArgs args) {
@@ -170,11 +170,11 @@ public class OwnCommittedCallbacksFixture {
 					});
 				}
 			});
-			shallListen.value = true;
-			action.commitItem(new OwnCommitCallbackFlaggedNetworkingTestSuite.Item(42), clientA, clientB);
 
 			lockObject.run(new Closure4() {
 				public Object run() {
+					shallListen.value = true;
+					action.commitItem(new OwnCommitCallbackFlaggedNetworkingTestSuite.Item(42), clientA, clientB);
 					lockObject.snooze(TIMEOUT);
 					return null;
 				}

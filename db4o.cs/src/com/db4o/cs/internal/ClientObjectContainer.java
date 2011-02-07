@@ -962,7 +962,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				msg = (Msg) iter.current();
 				if (msg == null) {
 					multibytes.writeInt(0);
-				} else {
+				} 
+				else {
 					multibytes.writeInt(msg.payLoad().length());
 					multibytes.payLoad().append(msg.payLoad()._buffer);
 				}
@@ -1015,6 +1016,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			return;
 		}
 		write(Msg.COMMITTED_CALLBACK_REGISTER);
+		expectedResponse(Msg.OK);
 	}
 	
 	public int classMetadataIdForName(String name) {

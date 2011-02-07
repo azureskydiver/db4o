@@ -8,6 +8,7 @@ import com.db4o.db4ounit.common.events.*;
 
 import db4ounit.fixtures.*;
 
+// COR-1822
 public class OwnCommitCallbackFlaggedEmbeddedTestSuite extends FixtureBasedTestSuite {
 
 	public static class Item {
