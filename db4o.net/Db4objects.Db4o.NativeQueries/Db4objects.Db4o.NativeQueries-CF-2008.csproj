@@ -48,6 +48,10 @@
 
 
 
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -93,6 +97,13 @@
     <Reference Include="System"/>
   </ItemGroup>
   <ItemGroup>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\AssemblyResolver.cs"/>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\ICachingStrategy.cs"/>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\NQOptimizer.cs"/>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\Optimization\NativeQueriesPlatform.cs"/>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\QueryExpressionBuilder.cs"/>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\SingleItemCachingStrategy.cs"/>
+<Compile Include="native\Db4objects.Db4o.NativeQueries\UnsupportedPredicateException.cs"/>
 <Compile Include="Db4objects.Db4o.NativeQueries\Expr\AndExpression.cs"/>
 <Compile Include="Db4objects.Db4o.NativeQueries\Expr\BinaryExpression.cs"/>
 <Compile Include="Db4objects.Db4o.NativeQueries\Expr\BoolConstExpression.cs"/>
@@ -127,13 +138,6 @@
 <Compile Include="Db4objects.Db4o.NativeQueries\Optimization\ComparisonQueryGeneratingVisitor.cs"/>
 <Compile Include="Db4objects.Db4o.NativeQueries\Optimization\SODAQueryBuilder.cs"/>
 <Compile Include="Properties\AssemblyInfo.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\AssemblyResolver.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\ICachingStrategy.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\NQOptimizer.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\Optimization\NativeQueriesPlatform.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\QueryExpressionBuilder.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\SingleItemCachingStrategy.cs"/>
-<Compile Include="native\Db4objects.Db4o.NativeQueries\UnsupportedPredicateException.cs"/>
 </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

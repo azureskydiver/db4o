@@ -53,17 +53,18 @@ namespace Db4objects.Db4o.Config
 		/// <br /><br />
 		/// <code>
 		/// <b>// Creating an Alias for a single class</b><br />
-		/// Db4o.configure().addAlias(<br />
+		/// EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		/// config.common().addAlias(<br />
 		/// &#160;&#160;new TypeAlias("com.f1.Pilot", "com.f1.Driver"));<br />
 		/// <br /><br />
 		/// <b>// Accessing a .NET assembly from a Java package</b><br />
-		/// Db4o.configure().addAlias(<br />
+		/// config.common().addAlias(<br />
 		/// &#160;&#160;new WildcardAlias(<br />
 		/// &#160;&#160;&#160;&#160;"Tutorial.F1.*, Tutorial",<br />
 		/// &#160;&#160;&#160;&#160;"com.f1.*"));<br />
 		/// <br /><br />
 		/// <b>// Mapping a Java package onto another</b><br />
-		/// Db4o.configure().addAlias(<br />
+		/// config.common().addAlias(<br />
 		/// &#160;&#160;new WildcardAlias(<br />
 		/// &#160;&#160;&#160;&#160;"com.f1.*",<br />
 		/// &#160;&#160;&#160;&#160;"com.f1.client*"));<br /></code>
