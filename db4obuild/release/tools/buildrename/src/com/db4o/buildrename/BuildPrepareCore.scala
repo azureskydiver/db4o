@@ -74,7 +74,7 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
 	}
 
 	def renderFiles() =
-		"""<?xml version="1.0" encoding="utf-8" ?>""" + "\n\n" + new PrettyPrinter(50, 3).format(metaData())
+		"""<?xml version="1.0" encoding="utf-8" ?>""" + "\n\n" + new PrettyPrinter(100, 2).format(metaData())
  
     def metaData(): Elem = {
       <Downloads>{files.map(metaData(_))}</Downloads>
@@ -87,17 +87,22 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
  			version={file.fullVersion}
  			size={file.sourceFile.length.toString}
  			releaseDate={DATE}
-      		release={file.extension.toUpperCase}
+      		package={file.extension.toUpperCase}
  			platform={file.platform.toString}>
       		{categoryTag(file)}
       	</Download>
 
     private def categoryTag(file: VersionedFile): Iterable[Elem] = {
-    	version2category.get(file.major).map(category => <Folders>{category.from.map(f => <clear />).toArray}<add folder={category.to} /></Folders>)
+    	version2category.get(file.major).map(category => <Releases>{if(category.op == ClearOp) List(<clear />) else Nil}<add name={category.name} archivePrevious={(category.op == ArchiveOp).toString} /></Releases>)
     }
 }
 
-case class Category(from: Option[String], to: String)
+sealed trait PreviousOp
+object NoOp extends PreviousOp
+object ClearOp extends PreviousOp
+object ArchiveOp extends PreviousOp
+
+case class Category(name: String, op: PreviousOp)
 
 
 object BuildPrepareCore {

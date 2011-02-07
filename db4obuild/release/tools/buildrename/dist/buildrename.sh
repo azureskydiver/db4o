@@ -1,2 +1,3 @@
 #!/bin/sh
-java -classpath buildrename.jar:scala-library.jar com.db4o.buildrename.BuildPrepareConsoleMain $*
+SCRIPT_DIR=`dirname $0`
+java -classpath $SCRIPT_DIR/buildrename.jar:$SCRIPT_DIR/scala-library.jar com.db4o.buildrename.BuildPrepareConsoleMain $*
