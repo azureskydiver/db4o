@@ -3,9 +3,9 @@ using System.IO;
 
 namespace Db4objects.Db4o.Internal.CLI
 {
-	internal class Silverlight4 : ICLIFacade
+	internal class Silverlight4 : SilverlightCLIBase
 	{
-		public void Flush(FileStream stream)
+		public override void Flush(FileStream stream)
 		{
 			stream.Flush(true);
 		}

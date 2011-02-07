@@ -4,14 +4,14 @@ using System.Runtime.InteropServices;
 
 namespace Db4objects.Db4o.Internal.CLI
 {
-	internal class CLR40 : ICLIFacade
+	internal class CLR40 : CLIBase
 	{
 		[System.Security.SecuritySafeCritical]
 		[DllImport("kernel32.dll", SetLastError = true)]
 		static extern int FlushFileBuffers(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
 
 		[System.Security.SecuritySafeCritical]
-		public void Flush(FileStream stream)
+		public override void Flush(FileStream stream)
 		{
 			stream.Flush(true); 
 			FlushFileBuffers(stream.SafeFileHandle); // We still need to call FlushFileBuffer due to bug 

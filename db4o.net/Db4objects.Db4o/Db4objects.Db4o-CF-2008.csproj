@@ -888,6 +888,7 @@
     <Compile Include="Db4objects.Db4o\Types\IUnversioned.cs" />
     <Compile Include="Db4objects.Db4o\User.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\CF35.cs" />
+    <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLIBase.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLIFacadeFactory.CF35.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\ICLIFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

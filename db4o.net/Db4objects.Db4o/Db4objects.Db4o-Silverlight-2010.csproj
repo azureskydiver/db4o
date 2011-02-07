@@ -895,9 +895,11 @@
     <Compile Include="Db4objects.Db4o\Types\ITransientClass.cs" />
     <Compile Include="Db4objects.Db4o\Types\IUnversioned.cs" />
     <Compile Include="Db4objects.Db4o\User.cs" />
+    <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLIBase.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLIFacadeFactory.SL4.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\ICLIFacade.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\Silverlight4.cs" />
+    <Compile Include="native\Db4objects.Db4o\Internal\CLI\SilverlightCLIBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="native\Db4objects.Db4o\Collections\ActivatableDictionary.cs" />
     <Compile Include="native\Db4objects.Db4o\Collections\ActivatableList.cs" />

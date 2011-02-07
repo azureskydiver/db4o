@@ -3,9 +3,9 @@ using System.IO;
 
 namespace Db4objects.Db4o.Internal.CLI
 {
-	internal class Mono35 : ICLIFacade
+	internal class Mono35 : CLIBase
 	{
-		public void Flush(FileStream stream)
+		public override void Flush(FileStream stream)
 		{
 			stream.Flush();
 		}

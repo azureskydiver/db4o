@@ -887,6 +887,7 @@
     <Compile Include="Db4objects.Db4o\Types\ITransientClass.cs" />
     <Compile Include="Db4objects.Db4o\Types\IUnversioned.cs" />
     <Compile Include="Db4objects.Db4o\User.cs" />
+    <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLIBase.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLIFacadeFactory.NET40.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\CLR40.cs" />
     <Compile Include="native\Db4objects.Db4o\Internal\CLI\MONO40.cs" />
