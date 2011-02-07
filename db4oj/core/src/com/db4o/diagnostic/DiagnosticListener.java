@@ -6,7 +6,7 @@ package com.db4o.diagnostic;
 /**
  * listens to Diagnostic messages. 
  * <br><br>Create a class that implements this listener interface and add
- * the listener by calling Db4o.configure().diagnostic().addListener().
+ * the listener by calling configuration.common().diagnostic().addListener().
  * @see DiagnosticConfiguration
  */
 public interface DiagnosticListener {

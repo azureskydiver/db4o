@@ -14,7 +14,7 @@ public class UpdateDepthGreaterOne extends DiagnosticBase{
     }
 
     public Object reason() {
-        return "Db4o.configure().updateDepth(" + _depth + ")";
+        return "configuration.common().configure().updateDepth(" + _depth + ")";
     }
 
     public String problem() {

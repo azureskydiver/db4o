@@ -1,9 +1,10 @@
 package com.db4odoc.f1.chapter6;
 
-import com.db4o.*;
-import com.db4o.cs.*;
-import com.db4o.cs.config.*;
-import com.db4o.messaging.*;
+import com.db4o.ObjectServer;
+import com.db4o.cs.Db4oClientServer;
+import com.db4o.cs.config.ServerConfiguration;
+import com.db4o.messaging.MessageContext;
+import com.db4o.messaging.MessageRecipient;
 
 /**
  * starts a db4o server with the settings from {@link ServerInfo}. <br>
@@ -14,9 +15,6 @@ import com.db4o.messaging.*;
  * StartServer instance is used as a MessageRecipient and reacts to receiving an
  * instance of a StopServer object. <br>
  * <br>
- * Note that all user classes need to be present on the server side and that all
- * possible Db4o.configure() calls to alter the db4o configuration need to be
- * executed on the client and on the server.
  */
 public class StartServer implements ServerInfo, MessageRecipient {
 
