@@ -121,7 +121,7 @@ namespace Db4objects.Db4o.Defragment
 		internal static LocalObjectContainer FreshTempFile(string fileName, int blockSize
 			)
 		{
-			FileStorage storage = new FileStorage();
+			IStorage storage = Platform4.NewStorage();
 			storage.Delete(fileName);
 			IConfiguration db4oConfig = DefragmentConfig.VanillaDb4oConfig(blockSize);
 			db4oConfig.ObjectClass(typeof(IdSlotMapping)).ObjectField("_id").Indexed(true);

@@ -13,6 +13,7 @@ using Db4objects.Db4o.Internal.CLI;
 using Db4objects.Db4o.Internal.Handlers;
 using Db4objects.Db4o.Internal.Query;
 using Db4objects.Db4o.Internal.Query.Processor;
+using Db4objects.Db4o.IO;
 using Db4objects.Db4o.Query;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
@@ -46,6 +47,11 @@ namespace Db4objects.Db4o.Internal
 		private static ICLIFacade CreateCLIFacade()
 		{
 			return CLIFacadeFactory.NewInstance();
+		}
+
+		internal static IStorage NewStorage()
+		{
+			return CLIFacade.NewStorage();
 		}
 
 		public static object[] CollectionToArray(ObjectContainerBase stream, object obj)

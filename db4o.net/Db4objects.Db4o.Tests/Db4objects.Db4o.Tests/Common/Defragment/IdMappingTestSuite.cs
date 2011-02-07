@@ -15,7 +15,7 @@ using Db4objects.Db4o.Tests.Common.Defragment;
 
 namespace Db4objects.Db4o.Tests.Common.Defragment
 {
-	public partial class IdMappingTestSuite : FixtureBasedTestSuite
+	public class IdMappingTestSuite : FixtureBasedTestSuite
 	{
 		public static void Main(string[] args)
 		{

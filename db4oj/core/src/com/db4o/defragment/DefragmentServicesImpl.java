@@ -90,7 +90,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	static LocalObjectContainer freshTempFile(String fileName,int blockSize) throws IOException {
-		FileStorage storage = new FileStorage();
+		Storage storage = Platform4.newStorage();
 		storage.delete(fileName);
 		Configuration db4oConfig = DefragmentConfig.vanillaDb4oConfig(blockSize);
 		db4oConfig.objectClass(IdSlotMapping.class).objectField("_id").indexed(true);
