@@ -15,6 +15,8 @@ import db4ounit.extensions.util.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLibrarian {
 	
+	private static final String JDK_VERSION_1_2 = "1.2";
+	private static final String JDK_VERSION_5 = "5";
 	private final Db4oLibraryEnvironmentProvider _provider;
 
 	public Db4oLibrarian(Db4oLibraryEnvironmentProvider provider) {
@@ -35,7 +37,16 @@ public class Db4oLibrarian {
 	}
 
 	private String fileForVersion(String version) {
-		return Path4.combine(archivesPath(), "db4o-" + version + "-java1.2.jar");
+		String java5Path = fileForVersion(version, JDK_VERSION_5);
+		if(File4.exists(java5Path)) {
+			return java5Path;
+		}
+		String java12Path = fileForVersion(version, JDK_VERSION_1_2);
+		return java12Path;
+	}
+
+	private String fileForVersion(String db4oVersion, String javaVersion) {
+		return Path4.combine(archivesPath(), "db4o-" + db4oVersion + "-java" + javaVersion + ".jar");
 	}
 
 	public Db4oLibrary forFile(final String fname) throws IOException {
