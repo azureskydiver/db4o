@@ -16,9 +16,9 @@ public class CountingSocket4 extends Socket4Decorator {
 	}
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
-		super.write(bytes, offset, count);
 		_bytesSent += count;
-		_messagesSent++;	
+		_messagesSent++;
+		super.write(bytes, offset, count);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class CountingSocket4 extends Socket4Decorator {
 		_messagesSent = 0.0;
 	}
 	
-	private double _bytesSent;
-	private double _bytesReceived;
-	private double _messagesSent;
+	private volatile double _bytesSent;
+	private volatile double _bytesReceived;
+	private volatile double _messagesSent;
 }
