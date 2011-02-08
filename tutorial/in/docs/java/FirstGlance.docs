@@ -8,35 +8,21 @@ The db4o object database engine consists of one single core jar file. ._
 In addition you may want to use client/server library or optional components. ._
 You may also get it all in a single jar "db4o-all": 
 
-.b db4o- .p version .. -core-java1.1.jar ..
-will run with most Java JDKs that supply JDK 1.1.x functionality ._
-such as reflection and Exception handling. That includes many ._
-IBM J9 configurations, Symbian and Savaje.
-
-.b db4o- .p version .. -core-java1.2.jar ..
-is built for all Java JDKs between 1.2 and 1.4.
-
 .b db4o- .p version .. -core-java5.jar ..
 is built for Java JDK 5 and JDK 6
 
 If you intend to use client/server version of db4o you will additionally need ._
-client/server library matching your JDK version:
+the client/server library :
 
-.b db4o- .p version .. -cs-java1.1.jar ..
-.b db4o- .p version .. -cs-java1.2.jar ..
 .b db4o- .p version .. -cs-java5.jar ..
  
 Some advanced functionality such as cluster support, platform-specific IO adapters,
-statistic tools etc can be added by including db4o optional library:
+statistic tools etc can be added by including the db4o optional library:
 
-.b db4o- .p version .. -optional-java1.1.jar ..
-.b db4o- .p version .. -optional-java1.2.jar ..
 .b db4o- .p version .. -optional-java5.jar ..
 
 You can also get all of the above in a single jar:
 
-.b db4o- .p version .. -all-java1.1.jar ..
-.b db4o- .p version .. -all-java1.2.jar ..
 .b db4o- .p version .. -all-java5.jar ..
    
 .1 Installation ..
