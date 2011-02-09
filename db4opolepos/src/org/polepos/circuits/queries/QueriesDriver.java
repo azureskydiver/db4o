@@ -52,5 +52,6 @@ public interface QueriesDriver {
     
     void queryByChildIdentity();
     
-    void addSingleObjectAndCommit();
+    void getSingleRandomObject();
+    
 }
