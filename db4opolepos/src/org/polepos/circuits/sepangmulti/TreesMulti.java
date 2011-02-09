@@ -19,16 +19,29 @@ MA  02111-1307, USA. */
 
 package org.polepos.circuits.sepangmulti;
 
+import org.polepos.framework.*;
+
 /**
  * @author Herkules
  */
-public interface SepangMultiDriver
+public class TreesMulti extends CircuitBase
 {
     
-	void write();
+    @Override
+    public String description(){
+        return "writes, reads and then deletes an object tree";
+    }
     
-    void read ();
+    @Override
+    protected void addLaps() {
+        add(new Lap("write"));
+        add(new Lap("read"));
+        add(new Lap("delete"));
+    }
     
-	void delete ();
-    
+    @Override
+    public Class requiredDriver() {
+		return TreesMultiDriver.class;
+	}
+
 }

@@ -17,31 +17,9 @@ License along with this program; if not, write to the Free
 Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA  02111-1307, USA. */
 
-package org.polepos.circuits.sepangmulti;
+package org.polepos.circuits.querycaching;
 
-import org.polepos.framework.*;
-
-/**
- * @author Herkules
- */
-public class SepangMulti extends CircuitBase
-{
-    
-    @Override
-    public String description(){
-        return "writes, reads and then deletes an object tree";
-    }
-    
-    @Override
-    protected void addLaps() {
-        add(new Lap("write"));
-        add(new Lap("read"));
-        add(new Lap("delete"));
-    }
-    
-    @Override
-    public Class requiredDriver() {
-		return SepangMultiDriver.class;
-	}
-
+public interface QueryCachingDriver {
+	void store();
+	void query();
 }

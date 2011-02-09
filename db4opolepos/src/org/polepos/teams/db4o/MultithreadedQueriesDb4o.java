@@ -1,6 +1,6 @@
 package org.polepos.teams.db4o;
 
-import org.polepos.circuits.hungaroring.*;
+import org.polepos.circuits.multithreadedqueries.*;
 import org.polepos.framework.*;
 import org.polepos.runner.db4o.*;
 
@@ -8,19 +8,19 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-public class HungaroringDb4o extends Db4oDriver implements HungaroringDriver {
+public class MultithreadedQueriesDb4o extends Db4oDriver implements MultithreadedQueriesDriver {
 
 
 	private static int maximumPayload;
 	
 	@Override
 	public void configure(Configuration config) {
-		indexField(config, Hungaroring.class, fieldNext());
-		indexField(config, Hungaroring.class, fieldPayload());
+		indexField(config, MultithreadedQueries.class, fieldNext());
+		indexField(config, MultithreadedQueries.class, fieldPayload());
 	}
 
 	public void write() {
-		HungaroringList list = HungaroringList.generate(setup()
+		MultithreadedQueriesList list = MultithreadedQueriesList.generate(setup()
 				.getObjectCount());
 		maximumPayload = list.getPayload();
 		begin();
@@ -74,16 +74,16 @@ public class HungaroringDb4o extends Db4oDriver implements HungaroringDriver {
 
 	private Query newHungaroringListQuery() {
 		Query q = db().query();
-		q.constrain(HungaroringList.class);
+		q.constrain(MultithreadedQueriesList.class);
 		return q;
 	}
 
 	private String fieldNext() {
-		return HungaroringList.FIELD_NEXT;
+		return MultithreadedQueriesList.FIELD_NEXT;
 	}
 
 	private String fieldPayload() {
-		return HungaroringList.FIELD_PAYLOAD;
+		return MultithreadedQueriesList.FIELD_PAYLOAD;
 	}
 
 }

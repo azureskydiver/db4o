@@ -21,15 +21,15 @@ package org.polepos.teams.db4o;
 
 import java.util.*;
 
-import org.polepos.circuits.magnycours.*;
+import org.polepos.circuits.listoperations.*;
 import org.polepos.runner.db4o.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-public class MagnycoursDb4o extends Db4oDriver implements
-		MagnycoursDriver {
+public class ListOperationsDb4o extends Db4oDriver implements
+		ListOperationsDriver {
 
 
 	@Override
@@ -46,19 +46,19 @@ public class MagnycoursDb4o extends Db4oDriver implements
 
 	public void addFirstElement() {
 		List list = retrieveList();
-		list.add(0, new MagnycoursItem(0));
+		list.add(0, new ListOperationsItem(0));
 		db().commit();
 	}
 
 	public void addLastElement() {
 		List list = retrieveList();
-		list.add(new MagnycoursItem(0));
+		list.add(new ListOperationsItem(0));
 		db().commit();
 	}
 
 	public void addMiddleElement() {
 		List list = retrieveList();
-		list.add(setup().getObjectCount()/2, new MagnycoursItem(0));
+		list.add(setup().getObjectCount()/2, new ListOperationsItem(0));
 		db().commit();
 	}
 	
@@ -66,7 +66,7 @@ public class MagnycoursDb4o extends Db4oDriver implements
 		List list = retrieveList();
 		Iterator iter = list.iterator();
 		while(iter.hasNext()) {
-			MagnycoursItem item = (MagnycoursItem) iter.next();
+			ListOperationsItem item = (ListOperationsItem) iter.next();
 			addToCheckSum(item.checkSum());
 		}
 	}
@@ -101,14 +101,14 @@ public class MagnycoursDb4o extends Db4oDriver implements
 	}
 
 	private void getListElement(List list, int index){
-		MagnycoursItem item = (MagnycoursItem) list.get(index);
+		ListOperationsItem item = (ListOperationsItem) list.get(index);
 		addToCheckSum(item.checkSum());
 	}
 
 	private void generateList() {
-		_list = new ArrayList<MagnycoursItem>();
+		_list = new ArrayList<ListOperationsItem>();
 		for (int i = 0; i < setup().getObjectCount(); ++i) {
-			_list.add(new MagnycoursItem(i));
+			_list.add(new ListOperationsItem(i));
 		}
 	}
 
