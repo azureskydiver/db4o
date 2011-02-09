@@ -11,42 +11,56 @@ import com.db4o.cs.foundation.*;
 
 public class CountingSocket4 extends Socket4Decorator {
 	
+	private final Object lock = new Object();
+	
 	public CountingSocket4(Socket4 socket) {	
 		super(socket);
 	}
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
-		_bytesSent += count;
-		_messagesSent++;
+		synchronized(lock){
+			_bytesSent += count;
+			_messagesSent++;
+		}
 		super.write(bytes, offset, count);
 	}
 
 	@Override
 	public int read(byte[] buffer, int offset, int count) throws IOException {
 		int bytesReceived = super.read(buffer, offset, count);
-		_bytesReceived += bytesReceived;
+		synchronized(lock){
+			_bytesReceived += bytesReceived;
+		}
 		return bytesReceived;
 	}
 	
 	public double bytesSent() {
-		return _bytesSent;
+		synchronized(lock){
+			return _bytesSent;
+		}
 	}
 
 	public double bytesReceived() {
-		return _bytesReceived;
+		synchronized(lock){
+			return _bytesReceived;
+		}
 	}
 
 	public double messagesSent() {
-		return _messagesSent;
+		synchronized(lock){
+			return _messagesSent;
+		}
 	}
 	
 	public void resetCount() {
-		_bytesSent = 0.0;
-		_bytesReceived = 0.0;
-		_messagesSent = 0.0;
+		synchronized(lock){
+			_bytesSent = 0.0;
+			_bytesReceived = 0.0;
+			_messagesSent = 0.0;
+		}
 	}
 	
-	private volatile double _bytesSent;
-	private volatile double _bytesReceived;
-	private volatile double _messagesSent;
+	private double _bytesSent;
+	private double _bytesReceived;
+	private double _messagesSent;
 }
