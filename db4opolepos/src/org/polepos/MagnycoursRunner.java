@@ -20,7 +20,7 @@ MA  02111-1307, USA. */
 
 package org.polepos;
 
-import org.polepos.circuits.magnycours.*;
+import org.polepos.circuits.listoperations.*;
 import org.polepos.db4o.*;
 import org.polepos.framework.*;
 import org.polepos.runner.db4o.*;
@@ -33,7 +33,7 @@ public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
 	
 	public CircuitBase[] circuits() {
 		return new CircuitBase[] { 
-				new Magnycours(),  
+				new ListOperations(),  
 		};
 	}
 	
@@ -46,7 +46,7 @@ public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
 
 	public DriverBase[] drivers() {
 		return new DriverBase [] {
-				new MagnycoursDb4o(),
+				new ListOperationsDb4o(),
 		};
 	}
 	

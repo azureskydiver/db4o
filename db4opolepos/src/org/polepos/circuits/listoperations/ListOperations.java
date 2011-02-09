@@ -18,36 +18,33 @@ Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA  02111-1307, USA. */
 
 
-package org.polepos;
+package org.polepos.circuits.listoperations;
 
-import org.polepos.circuits.queries.*;
 import org.polepos.framework.*;
-import org.polepos.runner.db4o.*;
-import org.polepos.teams.db4o.*;
 
-public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
-	
-	public static void main(String[] arguments) {
-        new IndianapolisRunner().run();
+
+public class ListOperations extends CircuitBase {
+
+    @Override
+    public String description() {
+        return "operations on collections";
     }
-	
-	public CircuitBase[] circuits() {
-		return new CircuitBase[] { 
-				new QueriesFast(),  
-		};
-	}
-	
-	public Team[] teams(){
-		return new Team [] {
-				db4oTeam(Db4oVersions.JAR74),		
-				db4oTeam(Db4oVersions.JAR78),
-		};
-	}
 
-	public DriverBase[] drivers() {
-		return new DriverBase [] {
-				new QueriesDb4o(),
-		};
-	}
-	
+    @Override
+    public Class requiredDriver() {
+        return ListOperationsDriver.class;
+    }
+
+    @Override
+    protected void addLaps() {
+    	add(new Lap("store", false, false));
+        add(new Lap("getFirstElement"));
+        add(new Lap("getMiddleElement"));
+        add(new Lap("getLastElement"));
+        add(new Lap("getAllElements"));
+        add(new Lap("addFirstElement"));
+        add(new Lap("addMiddleElement"));
+        add(new Lap("addLastElement"));
+    }
+
 }

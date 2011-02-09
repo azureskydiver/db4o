@@ -19,8 +19,8 @@ MA  02111-1307, USA. */
 
 package org.polepos.teams.db4o;
 
-import org.polepos.circuits.sepang.*;
 import org.polepos.circuits.sepangmulti.*;
+import org.polepos.circuits.trees.*;
 import org.polepos.runner.db4o.*;
 
 import com.db4o.config.*;
@@ -28,7 +28,7 @@ import com.db4o.config.*;
 /**
  * @author Herkules
  */
-public class SepangMultiDb4o extends Db4oDriver implements SepangMultiDriver{
+public class TreesMultiDb4o extends Db4oDriver implements TreesMultiDriver{
 	
 
 	@Override

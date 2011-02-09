@@ -23,21 +23,22 @@ package org.polepos;
 import java.io.*;
 import java.util.*;
 
-import org.polepos.circuits.bahrain.*;
-import org.polepos.circuits.barcelona.*;
-import org.polepos.circuits.hockenheim.*;
-import org.polepos.circuits.hungaroring.*;
-import org.polepos.circuits.imola.*;
-import org.polepos.circuits.indianapolis.*;
-import org.polepos.circuits.istanbul.*;
-import org.polepos.circuits.magnycours.*;
-import org.polepos.circuits.melbourne.*;
-import org.polepos.circuits.monaco.*;
-import org.polepos.circuits.montreal.*;
-import org.polepos.circuits.nurburgring.*;
-import org.polepos.circuits.sepang.*;
+import org.polepos.circuits.arraylists.*;
+import org.polepos.circuits.commits.*;
+import org.polepos.circuits.complex.*;
+import org.polepos.circuits.flatobject.*;
+import org.polepos.circuits.fragmentation.*;
+import org.polepos.circuits.inheritancehierarchy.*;
+import org.polepos.circuits.listoperations.*;
+import org.polepos.circuits.multithreadedqueries.*;
+import org.polepos.circuits.nativeids.*;
+import org.polepos.circuits.nestedlists.*;
+import org.polepos.circuits.queries.*;
+import org.polepos.circuits.querycaching.*;
 import org.polepos.circuits.sepangmulti.*;
-import org.polepos.circuits.silverstone.*;
+import org.polepos.circuits.sortedquery.*;
+import org.polepos.circuits.strings.*;
+import org.polepos.circuits.trees.*;
 import org.polepos.framework.*;
 import org.polepos.reporters.*;
 import org.polepos.runner.db4o.*;
@@ -155,43 +156,42 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public CircuitBase[] circuits() {
 		return new CircuitBase[] {
-			 new Melbourne(), // ok
-			 new SepangMulti(), // ok
-			 new Sepang(), // ok
-			 new Bahrain(), // ok
-			 new Imola(), // ok
-			 new Barcelona(), // write???, delete :/
-			 new Monaco(),
-			 new Nurburgring(),
-			 new Montreal(),
-			 new IndianapolisFast(),
-			 new IndianapolisMedium(),
-			 new IndianapolisSlow(),
-			 new Magnycours(), // ok
-			 new Silverstone(),
-			 new Hockenheim(),
-			 new Hungaroring(),
-			 new Istanbul(),
+			new ReflectiveCircuitBase(Complex.class),
+			new ReflectiveCircuitBase(InheritanceHierarchy.class),
+			new ReflectiveCircuitBase(NestedLists.class),
+			new ReflectiveCircuitBase(FlatObject.class),
+
+			 new TreesMulti(), // ok
+			 new Trees(), // ok
+			 new NativeIds(), // ok
+			 new Commits(),
+			 new Strings(),
+			 new ArrayLists(),
+			 new QueriesFast(),
+			 new QueriesMedium(),
+			 new QueriesSlow(),
+			 new ListOperations(), // ok
+			 new Fragmentation(),
+			 new SortedQuery(),
+			 new MultithreadedQueries(),
+			 new QueryCaching(),
 		};
 	}
 
 	public DriverBase[] drivers() {
 		return new DriverBase [] {
-			new MelbourneDb4o(),
-			new SepangMultiDb4o(),
-			new SepangDb4o(),
-			new BahrainDb4o(),
-			new ImolaDb4o(),
-			new BarcelonaDb4o(),
-			new MonacoDb4o(),
-			new NurburgringDb4o(),
-			new MontrealDb4o(),
-			new MagnycoursDb4o(),
-			new IndianapolisDb4o(),
-			new SilverstoneDb4o(),
-			new HockenheimDb4o(),
-			new HungaroringDb4o(),
-			new IstanbulDb4o(),
+			new TreesMultiDb4o(),
+			new TreesDb4o(),
+			new NativeIdsDb4o(),
+			new CommitsDb4o(),
+			new StringsDb4o(),
+			new ArrayListsDb4o(),
+			new ListOperationsDb4o(),
+			new QueriesDb4o(),
+			new FragmentationDb4o(),
+			new SortedQueryDb4o(),
+			new MultithreadedQueriesDb4o(),
+			new QueryCachingDb4o(),
 		};
 	}
     

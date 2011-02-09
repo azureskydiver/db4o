@@ -17,37 +17,33 @@ License along with this program; if not, write to the Free
 Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA  02111-1307, USA. */
 
+package org.polepos.circuits.queries;
 
-package org.polepos;
-
-import org.polepos.circuits.queries.*;
 import org.polepos.framework.*;
-import org.polepos.runner.db4o.*;
-import org.polepos.teams.db4o.*;
 
-public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
-	
-	public static void main(String[] arguments) {
-        new IndianapolisRunner().run();
+
+public class QueriesFast extends CircuitBase {
+
+    @Override
+    public String description() {
+        return "excecutes a variety of queries to test the efficiency of the query processor";
     }
-	
-	public CircuitBase[] circuits() {
-		return new CircuitBase[] { 
-				new QueriesFast(),  
-		};
-	}
-	
-	public Team[] teams(){
-		return new Team [] {
-				db4oTeam(Db4oVersions.JAR74),		
-				db4oTeam(Db4oVersions.JAR78),
-		};
-	}
 
-	public DriverBase[] drivers() {
-		return new DriverBase [] {
-				new QueriesDb4o(),
-		};
-	}
-	
+    @Override
+    public Class requiredDriver() {
+        return QueriesDriver.class;
+    }
+
+    @Override
+    protected void addLaps() {    	
+        add(new Lap("write", false, false));
+        
+        add(new Lap("queryTwoFieldAnd"));
+
+        add(new Lap("queryRange"));
+        add(new Lap("query5Links"));
+        add(new Lap("queryByChildIdentity"));
+        add(new Lap("queryNotGreater"));        
+    }
+
 }
