@@ -243,15 +243,6 @@ public class QueriesDb4o extends Db4oDriver implements QueriesDriver{
     	return (IndianapolisList) q.execute().next();
     }
     
-    public void addSingleObjectAndCommit(){
-        begin();
-        int count = setup().getSelectCount();
-        for (int i = 1; i <= count; i++) {
-            store(new IndianapolisList());
-            commit();
-        }
-    }
-    
     private Query newIndianapolisListQuery() {
         Query q = db().query();
         q.constrain(IndianapolisList.class);

@@ -47,9 +47,6 @@ public class QueriesSlow extends CircuitBase {
         add(new Lap("queryOrTwoLevels"));
         add(new Lap("queryBigRangeFound"));
 
-        add(new Lap("getSingleRandomObject"));
-        add(new Lap("queryPreferShortPath"));
-
         add(new Lap("getOneFromBigRangeQuery"));
         add(new Lap("getOneFromOrTwoLevelsQuery"));        
     }

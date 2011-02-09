@@ -36,10 +36,12 @@ public class QueriesMedium extends CircuitBase {
 
     @Override
     protected void addLaps() {    	
-        add(new Lap("write"));
+    	add(new Lap("write", false, false));
         add(new Lap("queryOr"));
         add(new Lap("queryOrRange"));
-        add(new Lap("addSingleObjectAndCommit"));
+        add(new Lap("getSingleRandomObject"));
+        add(new Lap("queryPreferShortPath"));
+
     }
 
 }

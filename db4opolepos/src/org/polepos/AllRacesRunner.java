@@ -191,25 +191,22 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public CircuitBase[] circuits() {
 		return new CircuitBase[] {
-				
-				new QueriesFast(),
-				
-//			new ReflectiveCircuitBase(Complex.class),
-//			new ReflectiveCircuitBase(NestedLists.class),
-//			new ReflectiveCircuitBase(InheritanceHierarchy.class),
-//			new ReflectiveCircuitBase(FlatObject.class),
-//
-//			 new Commits(),
-//			 new Strings(),
-//			 new ArrayLists(),
-//			 new QueriesFast(),
-//			 new QueriesMedium(),
-//			 new QueriesSlow(),
-//			 new ListOperations(),
-//			 new Fragmentation(),
-//			 new SortedQuery(),
-//			 new MultithreadedQueries(),
-//			 new QueryCaching(),
+			new ReflectiveCircuitBase(Complex.class),
+			new ReflectiveCircuitBase(NestedLists.class),
+			new ReflectiveCircuitBase(InheritanceHierarchy.class),
+			new ReflectiveCircuitBase(FlatObject.class),
+
+			 new Commits(),
+			 new Strings(),
+			 new ArrayLists(),
+			 new QueriesFast(),
+			 new QueriesMedium(),
+			 new QueriesSlow(),
+			 new ListOperations(),
+			 new Fragmentation(),
+			 new SortedQuery(),
+			 new MultithreadedQueries(),
+			 new QueryCaching(),
 		};
 	}
 
