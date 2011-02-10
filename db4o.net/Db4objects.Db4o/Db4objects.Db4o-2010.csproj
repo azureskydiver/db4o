@@ -34,9 +34,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     
     
-  
-
-<SignAssembly>true</SignAssembly>
+  <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -469,7 +467,6 @@
 <Compile Include="Db4objects.Db4o\IO\BinDecorator.cs"/>
 <Compile Include="Db4objects.Db4o\IO\BlockAwareBin.cs"/>
 <Compile Include="Db4objects.Db4o\IO\BlockAwareBinWindow.cs"/>
-<Compile Include="Db4objects.Db4o\IO\CachedIoAdapter.cs"/>
 <Compile Include="Db4objects.Db4o\IO\CachingBin.cs"/>
 <Compile Include="Db4objects.Db4o\IO\CachingStorage.cs"/>
 <Compile Include="Db4objects.Db4o\IO\ConstantGrowthStrategy.cs"/>
@@ -479,19 +476,15 @@
 <Compile Include="Db4objects.Db4o\IO\IBlockSize.cs"/>
 <Compile Include="Db4objects.Db4o\IO\IGrowthStrategy.cs"/>
 <Compile Include="Db4objects.Db4o\IO\IStorage.cs"/>
-<Compile Include="Db4objects.Db4o\IO\IoAdapter.cs"/>
-<Compile Include="Db4objects.Db4o\IO\IoAdapterStorage.cs"/>
 <Compile Include="Db4objects.Db4o\IO\MemoryBin.cs"/>
 <Compile Include="Db4objects.Db4o\IO\MemoryStorage.cs"/>
 <Compile Include="Db4objects.Db4o\IO\NonFlushingStorage.cs"/>
 <Compile Include="Db4objects.Db4o\IO\PagingMemoryBin.cs"/>
 <Compile Include="Db4objects.Db4o\IO\PagingMemoryStorage.cs"/>
-<Compile Include="Db4objects.Db4o\IO\RandomAccessFileAdapter.cs"/>
 <Compile Include="Db4objects.Db4o\IO\ReadOnlyBin.cs"/>
 <Compile Include="Db4objects.Db4o\IO\StorageDecorator.cs"/>
 <Compile Include="Db4objects.Db4o\IO\SynchronizedBin.cs"/>
 <Compile Include="Db4objects.Db4o\IO\ThreadedSyncBin.cs"/>
-<Compile Include="Db4objects.Db4o\IO\VanillaIoAdapter.cs"/>
 <Compile Include="Db4objects.Db4o\IObjectServer.cs"/>
 <Compile Include="Db4objects.Db4o\IObjectSet.cs"/>
 <Compile Include="Db4objects.Db4o\ITransactionAware.cs"/>

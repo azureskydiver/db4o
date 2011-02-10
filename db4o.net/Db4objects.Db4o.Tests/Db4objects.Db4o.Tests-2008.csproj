@@ -831,18 +831,13 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\BinTest.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\BlockAwareBinTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\BlockSizeDependentBinTestCase.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Common\IO\IoAdapterTest.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Common\IO\IoAdapterTestSuite.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Common\IO\IoAdapterTestUnitBase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\MemoryBinGrowthTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\MemoryBinIsReusableTestCase.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Common\IO\MemoryIoAdapterTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\MockBin.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\NonFlushingStorageTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\RandomAccessFileFactoryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\RandomAccessFileStorageFactoryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\ReadOnlyBinTest.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Common\IO\ReadOnlyIoAdapterTest.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\SaveAsStorageTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\StorageTest.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\StorageTestSuite.cs"/>
@@ -1077,6 +1072,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\AllTests.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\ClientServerPingTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\DeepPrefetchingCacheConcurrencyTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Staging\DescQueryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\GenericClassWithExistingSuperClassTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\InterfaceQueryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\LazyQueryDeleteTestCase.cs"/>

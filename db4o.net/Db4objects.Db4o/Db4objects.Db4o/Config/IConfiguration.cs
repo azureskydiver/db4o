@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2011  Versant Inc.  http://www.db4o.com */
 
 using System.IO;
 using Db4objects.Db4o.Config;
@@ -486,25 +486,6 @@ namespace Db4objects.Db4o.Config
 		/// <remarks>returns true if strings will be interned.</remarks>
 		bool InternStrings();
 
-		/// <summary>allows to configure db4o to use a customized byte IO adapter.</summary>
-		/// <remarks>
-		/// allows to configure db4o to use a customized byte IO adapter.
-		/// <br /><br />Derive from the abstract class
-		/// <see cref="Db4objects.Db4o.IO.IoAdapter">Db4objects.Db4o.IO.IoAdapter</see>
-		/// to
-		/// write your own. Possible usecases could be improved performance
-		/// with a native library, mirrored write to two files, encryption or
-		/// read-on-write fail-safety control.<br /><br />An example of a custom
-		/// io adapter can be found in xtea_db4o community project:<br />
-		/// http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA<br /><br />
-		/// In client-server environment this setting should be used on the server
-		/// (adapter class must be available)<br /><br />
-		/// </remarks>
-		/// <param name="adapter">- the IoAdapter</param>
-		/// <exception cref="Db4objects.Db4o.Config.GlobalOnlyConfigException"></exception>
-		[System.ObsoleteAttribute(@"Use Storage(Db4objects.Db4o.IO.IStorage) instead.")]
-		void Io(IoAdapter adapter);
-
 		/// <summary>allows to configure db4o to use a customized byte IO storage mechanism.</summary>
 		/// <remarks>
 		/// allows to configure db4o to use a customized byte IO storage mechanism.
@@ -533,15 +514,6 @@ namespace Db4objects.Db4o.Config
 			get;
 			set;
 		}
-
-		/// <summary>
-		/// returns the configured
-		/// <see cref="Db4objects.Db4o.IO.IoAdapter">Db4objects.Db4o.IO.IoAdapter</see>
-		/// .
-		/// </summary>
-		/// <returns></returns>
-		[System.ObsoleteAttribute(@"Use Storage() instead.")]
-		IoAdapter Io();
 
 		/// <summary>allows to mark fields as transient with custom attributes.</summary>
 		/// <remarks>
