@@ -7,7 +7,6 @@ public class Delays {
 
 	public static final int READ = 0;
 	public static final int WRITE = 1;
-	public static final int SEEK = 2;
 	public static final int SYNC = 3;
 	
 	public static final int COUNT = 4;
@@ -17,13 +16,13 @@ public class Delays {
 	public long[] values;
 
 	
-	public Delays(long read, long write, long seek, long sync) {
-		values = new long[] {read, write, seek, sync};
+	public Delays(long read, long write, long sync) {
+		values = new long[] {read, write, sync};
 	}
 	
 	public String toString() {
 		return "[delays in " + units + "] read: " + values[READ] + " | write: " + values[WRITE] +
-				" | seek: " + values[SEEK] + " | sync: " + values[SYNC];
+			 " | sync: " + values[SYNC];
 	}
 	
 }

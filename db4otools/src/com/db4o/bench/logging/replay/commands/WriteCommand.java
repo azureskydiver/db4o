@@ -6,12 +6,12 @@ import com.db4o.io.*;
 
 public class WriteCommand extends ReadWriteCommand implements IoCommand{
 	
-	public WriteCommand(int length) {
-		super(length);
+	public WriteCommand(long pos, int length) {
+		super(pos, length);
 	}
 	
-	public void replay(IoAdapter adapter){
-		adapter.write(prepareBuffer());
+	public void replay(Bin bin){
+		bin.write(_pos, prepareBuffer(), _length);
 	}
 
 }

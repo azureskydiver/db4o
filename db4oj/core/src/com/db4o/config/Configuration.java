@@ -433,22 +433,6 @@ public interface Configuration {
     public boolean internStrings();
     
     /**
-     * allows to configure db4o to use a customized byte IO adapter.
-     * <br><br>Derive from the abstract class {@link IoAdapter} to
-     * write your own. Possible usecases could be improved performance
-     * with a native library, mirrored write to two files, encryption or 
-     * read-on-write fail-safety control.<br><br>An example of a custom
-     * io adapter can be found in xtea_db4o community project:<br>
-     * http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA<br><br>
-     * In client-server environment this setting should be used on the server 
-     * (adapter class must be available)<br><br>
-     * @param adapter - the IoAdapter
-     * 
-     * @deprecated Use {@link #storage(Storage)} instead.
-     */
-    public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
-    
-    /**
      * allows to configure db4o to use a customized byte IO storage mechanism.
      * <br><br>Implement the interface {@link Storage} to
      * write your own. Possible usecases could be improved performance
@@ -469,14 +453,6 @@ public interface Configuration {
      */
     public Storage storage();
     
-    /**
-     * returns the configured {@link IoAdapter}.
-     * 
-     * @return
-     * 
-     * @deprecated Use {@link #storage()} instead.
-     */
-    public IoAdapter io();
     /**
      * allows to mark fields as transient with custom attributes.
      * <br><br>.NET only: Call this method with the attribute name that you

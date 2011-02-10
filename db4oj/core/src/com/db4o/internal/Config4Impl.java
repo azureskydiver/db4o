@@ -473,12 +473,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_internStrings = doIntern;
     }
     
-    @SuppressWarnings("deprecation")
-    public void io(IoAdapter adapter){
-    	globalSettingOnly();
-    	storage(new IoAdapterStorage(adapter));
-    }
-
     public void lockDatabaseFile(boolean flag) {
     	_config.put(LOCK_FILE_KEY,flag);
     }

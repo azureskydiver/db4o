@@ -6,8 +6,8 @@ import com.db4o.io.*;
 
 public class SyncCommand implements IoCommand{
 
-	public void replay(IoAdapter adapter) {
-		adapter.sync();
+	public void replay(Bin bin) {
+		bin.sync();
 	}
 
 }

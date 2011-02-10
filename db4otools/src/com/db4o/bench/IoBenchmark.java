@@ -63,15 +63,15 @@ public class IoBenchmark {
 	private void prepareDbFile(int itemCount) {
 		sysout("Preparing DB file ...");
 		deleteFile(_dbFileName);
-		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter raf = rafFactory.open(_dbFileName, false, 0, false);
-		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
+		Storage storage = new FileStorage();
+		Bin bin = storage.open(new BinConfiguration(_dbFileName, false, 0, false));
+		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), bin);
 		try {
 			replayer.replayLog();
 		} catch (IOException e) {
 			exitWithError("Error reading I/O operations log file");
 		} finally {
-			raf.close();
+			bin.close();
 		}
 	}
 
@@ -92,7 +92,7 @@ public class IoBenchmark {
 		
 	private void benchmarkCommand(String command, int itemCount, String dbFileName, PrintStream out) throws IOException {
 		HashSet commands = commandSet(command);
-		IoAdapter io = ioAdapter(dbFileName);
+		Bin io = ioAdapter(dbFileName);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), io, commands);
 		List4 commandList = replayer.readCommandList();
 		
@@ -108,20 +108,20 @@ public class IoBenchmark {
 	}
 
 
-	private IoAdapter ioAdapter(String dbFileName) throws NumberFormatException, IOException, Db4oIOException {
+	private Bin ioAdapter(String dbFileName) throws NumberFormatException, IOException, Db4oIOException {
 		if (delayed()) {
 			return delayingIoAdapter(dbFileName);
 		}
 		
-		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		return rafFactory.open(dbFileName, false, 0, false);
+		Storage rafFactory = new FileStorage();
+		return rafFactory.open(new BinConfiguration(dbFileName, false, 0, false));
 	}
 	
 	
-	private IoAdapter delayingIoAdapter(String dbFileName) throws NumberFormatException{
-		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);
-		return delFactory.open(dbFileName, false, 0, false);
+	private Bin delayingIoAdapter(String dbFileName) throws NumberFormatException{
+		Storage rafFactory = new FileStorage();
+		Storage delFactory = new DelayingStorage(rafFactory, _delays);
+		return delFactory.open(new BinConfiguration(dbFileName, false, 0, false));
 	}
 
 

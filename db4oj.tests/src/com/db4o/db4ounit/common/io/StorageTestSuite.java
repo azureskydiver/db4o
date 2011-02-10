@@ -24,7 +24,6 @@ public class StorageTestSuite extends FixtureTestSuiteDescription implements Opt
 						new MemoryStorage(),
 						new PagingMemoryStorage(63),
 						new CachingStorage(Db4oUnitPlatform.newPersistentStorage()),
-						new IoAdapterStorage(new RandomAccessFileAdapter()),
 				})			
 		};
 	}

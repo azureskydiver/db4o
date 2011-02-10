@@ -4,9 +4,11 @@ package com.db4o.bench.logging.replay.commands;
 
 public class ReadWriteCommand {
 	
+	protected final long _pos;
 	protected final int _length;
 	
-	public ReadWriteCommand(int length) {
+	public ReadWriteCommand(long pos, int length) {
+		_pos = pos;
 		_length = length;
 	}
 

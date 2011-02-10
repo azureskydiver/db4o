@@ -28,7 +28,7 @@ public class CrudApplication {
 		deleteDbFile();
 	}
 
-	private void create(int itemCount, Configuration config) {
+	private void create(int itemCount, EmbeddedConfiguration config) {
 		ObjectContainer oc = open(config);
 		for (int i = 0; i < itemCount; i++) {
 			oc.store(Item.newItem(i));
@@ -41,7 +41,7 @@ public class CrudApplication {
 		oc.close();
 	}
 	
-	private void read(Configuration config) {
+	private void read(EmbeddedConfiguration config) {
 		ObjectContainer oc = open(config);
 		ObjectSet objectSet = allItems(oc);
 		while(objectSet.hasNext()){
@@ -50,7 +50,7 @@ public class CrudApplication {
 		oc.close();
 	}
 	
-	private void update(Configuration config) {
+	private void update(EmbeddedConfiguration config) {
 		ObjectContainer oc = open(config);
 		ObjectSet objectSet = allItems(oc);
 		while(objectSet.hasNext()){
@@ -61,7 +61,7 @@ public class CrudApplication {
 		oc.close();
 	}
 
-	private void delete(Configuration config) {
+	private void delete(EmbeddedConfiguration config) {
 		ObjectContainer oc = open(config);
 		ObjectSet objectSet = allItems(oc);
 		while(objectSet.hasNext()){
@@ -73,11 +73,11 @@ public class CrudApplication {
 		oc.close();
 	}
 
-	private Configuration newConfiguration(int itemCount) {
-		RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
-		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFileName(itemCount));
-		Configuration config = Db4o.newConfiguration();
-		config.io(ioAdapter);
+	private EmbeddedConfiguration newConfiguration(int itemCount) {
+		FileStorage rafAdapter = new FileStorage();
+		Storage ioAdapter = new LoggingStorage(rafAdapter, logFileName(itemCount));
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.file().storage(ioAdapter);
 		return config;
 	}
 
@@ -89,8 +89,8 @@ public class CrudApplication {
 		return oc.query(Item.class);
 	}
 
-	private ObjectContainer open(Configuration config) {
-		return Db4o.openFile(config, DATABASE_FILE);
+	private ObjectContainer open(EmbeddedConfiguration config) {
+		return Db4oEmbedded.openFile(config, DATABASE_FILE);
 	}
 
 	public static String logFileName(int itemCount) {
