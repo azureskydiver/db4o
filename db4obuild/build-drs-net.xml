@@ -129,6 +129,7 @@
     	
     	<fileset id="drs.tests.sources" dir="${drs.net.src.dir}/Db4objects.Drs.Tests">
     		<include name="**/*.cs" />
+			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}" />
     	</fileset>
     	
     	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-2008.csproj">
