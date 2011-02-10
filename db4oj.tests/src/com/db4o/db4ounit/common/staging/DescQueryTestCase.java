@@ -46,7 +46,7 @@ public class DescQueryTestCase extends AbstractDb4oTestCase {
 		
 		@Override
 		public String toString() {
-			return _id + "[" + (_child == null ? "" : _child) + "]";
+			return _id + "[" + (_child == null ? "" : _child.toString()) + "]";
 		}
 	}
 
