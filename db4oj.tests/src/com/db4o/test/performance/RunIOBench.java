@@ -15,20 +15,18 @@ public class RunIOBench {
 
 		RandomAccessFile recordedIn = new RandomAccessFile(Util.BENCHFILE+".1", "rw");
 		new File(Util.DBFILE).delete();
-		IoAdapter testadapt = new RandomAccessFileAdapter().open(Util.DBFILE,
-				false, 1024, false);
+		Bin testbin = new FileStorage().open(new BinConfiguration(Util.DBFILE, false, 1024, false));
 
 		// IoAdapter testadapt = new MemoryIoAdapter().open(Util.DBFILE, false,
 		// 1024);
 		// IoAdapter testadapt = new SymbianIoAdapter().open(Util.DBFILE,
 		// false, 1024);
-		long bench = benchmark(recordedIn, testadapt);
+		long bench = benchmark(recordedIn, testbin);
 		System.out.println("tested IOAdapter: ["
-				+ testadapt.getClass().getName() + "]\nspeed: " + bench);
+				+ testbin.getClass().getName() + "]\nspeed: " + bench);
 	}
 
-	public static long benchmark(RandomAccessFile recordedIn, IoAdapter adapter)
-			throws IOException {
+	public static long benchmark(RandomAccessFile recordedIn, Bin bin) throws IOException {
 		byte[] defaultData = new byte[1000];
 		long start = System.currentTimeMillis();
 		int runs = 0;
@@ -40,20 +38,19 @@ public class RunIOBench {
 					break;
 				}
 				if (type == 'f') {
-					adapter.sync();
+					bin.sync();
 					continue;
 				}
 				long pos = recordedIn.readLong();
 				int length = recordedIn.readInt();
-				adapter.seek(pos);
 				byte[] data = (length <= defaultData.length ? defaultData
 						: new byte[length]);
 				switch (type) {
 				case 'r':
-					adapter.read(data, length);
+					bin.read(pos, data, length);
 					break;
 				case 'w':
-					adapter.write(data, length);
+					bin.write(pos, data, length);
 					break;
 				default:
 					throw new IllegalArgumentException("Unknown access type: "
@@ -62,7 +59,7 @@ public class RunIOBench {
 			}
 		} finally {
 			recordedIn.close();
-			adapter.close();
+			bin.close();
 		}
 		// System.err.println(runs);
 		return System.currentTimeMillis() - start;

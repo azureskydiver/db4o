@@ -49,7 +49,7 @@ public class DelayCalculation {
 		for (int i = 0; i < Delays.COUNT; i++) {
 			tempDelays[i] = _slowerMachine.times.values[i] - _fasterMachine.times.values[i];
 		}	
-		return new Delays(tempDelays[Delays.READ], tempDelays[Delays.WRITE], tempDelays[Delays.SEEK], tempDelays[Delays.SYNC]);
+		return new Delays(tempDelays[Delays.READ], tempDelays[Delays.WRITE], tempDelays[Delays.SYNC]);
 	}
 	
 	public void adjustDelays(Delays delays) {
@@ -141,7 +141,7 @@ class MachineCharacteristics {
 
 	private void parseLog() throws NumberFormatException, IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(_logFileName));
-		long readTime = 0, writeTime = 0, seekTime = 0, syncTime = 0;
+		long readTime = 0, writeTime = 0, syncTime = 0;
 		String line = null;
 		while ( (line = reader.readLine()) != null ) {
 			if (line.startsWith(LogConstants.READ_ENTRY)) {
@@ -150,15 +150,12 @@ class MachineCharacteristics {
 			else if (line.startsWith(LogConstants.WRITE_ENTRY)) {
 				writeTime = extractNumber(line);
 			}
-			else if (line.startsWith(LogConstants.SEEK_ENTRY)) {
-				seekTime = extractNumber(line);
-			}
 			else if (line.startsWith(LogConstants.SYNC_ENTRY)) {
 				syncTime = extractNumber(line);
 			}
 		}
 		reader.close();
-		times = new Delays(readTime, writeTime, seekTime, syncTime);
+		times = new Delays(readTime, writeTime, syncTime);
 	}
 
 	private long extractNumber(String line) {

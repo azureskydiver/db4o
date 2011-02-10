@@ -6,6 +6,6 @@ import com.db4o.io.*;
 
 public interface IoCommand {
 	
-	public void replay(IoAdapter adapter);
+	public void replay(Bin bin);
 
 }

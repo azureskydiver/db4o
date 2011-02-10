@@ -180,17 +180,9 @@ public class LogStatistics {
 		else if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			handleSync();
 		}
-		else if ( line.startsWith(LogConstants.SEEK_ENTRY)  ) {
-			handleSeek();
-		}
 		else {
 			throw new IllegalArgumentException("Unknown command in log: " + line);
 		}
-	}
-
-
-	private void handleSeek() {
-		_seekCount++;
 	}
 
 	private void handleSync() {
@@ -199,11 +191,13 @@ public class LogStatistics {
 
 	private void handleRead(String line) {
 		_readCount++;
+		_seekCount++;
 		_readBytes += bytesForLine(line, LogConstants.READ_ENTRY.length());
 	}
 
 	private void handleWrite(String line) {
 		_writeCount++;
+		_seekCount++;
 		_writeBytes += bytesForLine(line, LogConstants.WRITE_ENTRY.length());
 	}
 

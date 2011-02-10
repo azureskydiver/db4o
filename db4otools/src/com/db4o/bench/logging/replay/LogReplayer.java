@@ -8,20 +8,20 @@ import java.util.*;
 import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.commands.*;
 import com.db4o.foundation.*;
-import com.db4o.io.IoAdapter;
+import com.db4o.io.*;
 /**
  * @sharpen.ignore
  */
 public class LogReplayer {
 	
 	private String _logFilePath;
-	private IoAdapter _io;
+	private Bin _bin;
 	private Set _commands;
 	private Map _counts;
 	
-	public LogReplayer(String logFilePath, IoAdapter io, Set commands) {
+	public LogReplayer(String logFilePath, Bin bin, Set commands) {
 		_logFilePath = logFilePath;
-		_io = io;
+		_bin = bin;
 		_commands = commands;
 		_counts = new HashMap();
 		Iterator it = commands.iterator();
@@ -30,8 +30,8 @@ public class LogReplayer {
 		}
 	}
 	
-	public LogReplayer(String logFilePath, IoAdapter io) {
-		this(logFilePath, io, LogConstants.allEntries());
+	public LogReplayer(String logFilePath, Bin bin) {
+		this(logFilePath, bin, LogConstants.allEntries());
 	}
 	
 	
@@ -56,7 +56,7 @@ public class LogReplayer {
 	public void playCommandList(List4 commandList){
 		while(commandList != null){
 			IoCommand ioCommand = (IoCommand) commandList._element;
-			ioCommand.replay(_io);
+			ioCommand.replay(_bin);
 			commandList = commandList._next;
 		}
 	}
@@ -87,31 +87,40 @@ public class LogReplayer {
 	
 	private IoCommand commandForLine(String line) {
 		if (line.startsWith(LogConstants.READ_ENTRY)) {
-			int length = parameter(LogConstants.READ_ENTRY,  line);
-			return new ReadCommand(length);
+			Param param = parameter(LogConstants.READ_ENTRY,  line);
+			return new ReadCommand(param.pos, param.len);
 		}
 		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
-			int length = parameter(LogConstants.WRITE_ENTRY,  line);
-			return new WriteCommand(length);
+			Param param = parameter(LogConstants.WRITE_ENTRY,  line);
+			return new WriteCommand(param.pos, param.len);
 		}
 		if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			return new SyncCommand();
-		}
-		if ( line.startsWith(LogConstants.SEEK_ENTRY) ) {
-			int address = parameter(LogConstants.READ_ENTRY,  line);
-			return new SeekCommand(address);
 		}
 		
 		return null;
 	}
 
 	
-	private int parameter(String command, String line){
+	private Param parameter(String command, String line){
 		return parameter(command.length(),  line);
 	}
 
-	private int parameter(int start, String line) {
-		return Integer.parseInt(line.substring(start));
+	private Param parameter(int start, String line) {
+		String[] paramStr = line.substring(start).split(" ");
+		long pos = Long.parseLong(paramStr[0]);
+		int len = Integer.parseInt(paramStr[1]);
+		return new Param(pos, len);
+	}
+
+	private static class Param {
+		public final long pos;
+		public final int len;
+
+		public Param(long pos, int len) {
+			this.pos = pos;
+			this.len = len;
+		}
 	}
 	
 	private void incrementCount(String key) {

@@ -16,7 +16,6 @@ public class AllTests extends ComposibleTestSuite {
 									DiskFullTestCase.class,
 									MemoryBinGrowthTestCase.class,
 									MemoryBinIsReusableTestCase.class,
-									MemoryIoAdapterTestCase.class,
 									NonFlushingStorageTestCase.class,
 									RandomAccessFileStorageFactoryTestCase.class,
 									// SaveAsStorageTestCase.class,  COR-2036
@@ -32,7 +31,6 @@ public class AllTests extends ComposibleTestSuite {
 	protected Class[] composeWith() {
 		return new Class[] { 
 						BlockSizeDependentBinTestCase.class, 
-						IoAdapterTestSuite.class,
 						RandomAccessFileFactoryTestCase.class,
 				};
 	}
