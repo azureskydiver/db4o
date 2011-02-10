@@ -54,7 +54,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
     private static String JAR_TRUNK = "db4o-8.1.186.15516-all-java5.jar";
 
-    private static String JAR_PRODUCTION = "db4o-8.0.145.14388-all-java5.jar";
+    private static String JAR_PRODUCTION = "db4o-8.0.184.15484-all-java5.jar";
     
     private static String JAR_74 = "db4o-7.4.136.14268-java5.jar";
     
@@ -73,9 +73,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-				
 				db4oTeam(JAR_TRUNK),
-				
 				configuredDb4oTeam(JAR_PRODUCTION),
 				configuredDb4oTeam(JAR_STABLE),
 				configuredDb4oTeam(JAR_74),
@@ -190,6 +188,14 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
 
 	public CircuitBase[] circuits() {
+		
+		if(false){
+			return new CircuitBase[]{
+					// new Fragmentation(),
+					new QueriesSlow(),
+			};
+		}
+		
 		return new CircuitBase[] {
 			new ReflectiveCircuitBase(Complex.class),
 			new ReflectiveCircuitBase(NestedLists.class),
