@@ -19,10 +19,10 @@ public class CountingSocket4 extends Socket4Decorator {
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
 		synchronized(lock){
+			super.write(bytes, offset, count);
 			_bytesSent += count;
 			_messagesSent++;
 		}
-		super.write(bytes, offset, count);
 	}
 
 	@Override
