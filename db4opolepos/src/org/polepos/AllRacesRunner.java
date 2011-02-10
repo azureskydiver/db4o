@@ -121,18 +121,6 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 		};
     }
 
-	private ConfigurationSetting cachedIoAdapter() {
-		return new ConfigurationSetting(){
-			public void apply(Object config) {
-				((Configuration)config).io(new CachedIoAdapter(new RandomAccessFileAdapter()));
-			}
-			public String name() {
-				return "TransactionLog";
-			}
-			
-		};
-	}
-
 	private ConfigurationSetting lru() {
 		return new ConfigurationSetting(){
 			public void apply(Object config) {
@@ -171,21 +159,6 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 			}
 		};
 	}
-
-	private ConfigurationSetting randomAccessFileAdapter() {
-		return new ConfigurationSetting(){
-			public void apply(Object config) {
-				((Configuration)config).io(new RandomAccessFileAdapter());
-				
-			}
-			public String name() {
-				return "RandomAccessFileAdapter";
-			}
-			
-		};
-	}
-    
-    
 
 	public CircuitBase[] circuits() {
 		
