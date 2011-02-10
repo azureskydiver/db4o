@@ -154,7 +154,7 @@
          <!-- Connect -->
          <action
                label="&amp;Connect/Disconnect DB"
-               icon="icons/DBConnect.png" 
+               icon="icons/DBConnect.gif" 
                class="com.db4o.omplus.ui.actions.ConnectToDBAction"
                tooltip="Connect"
                menubarPath="sampleMenu/loginSep"
