@@ -10,18 +10,9 @@ H4 { font-size: 10pt; color: black; }
 </style>
 </head>
 <body bgcolor="#FFFFFF" color=#000000>
-    This folder contains binary release files in the following folders:
-    <br />
-    <ul>
-        <li>compact-2.0 </li>
-        <li>compact-3.5</li>
-        <li>net-2.0 </li>
-        <li>net-3.5</li>
-    </ul>
-    <br />
-    The "compact" folders contain the following files:
-    <br />
-    <br />
+    This folder contains subfolders for the different .NET flavors. Choose the assemblies
+	in the subfolder which match your framework. Following assemblies are available: 
+    <br /><br /><br />
     <table>
         <tr>
             <td style="width: 280px">Cecil.Flowanalysis.dll</td>
@@ -34,6 +25,10 @@ H4 { font-size: 10pt; color: black; }
         <tr>
             <td valign=top>Db4objects.Db4o.CS.dll</td>
             <td>db4o client/server class library</td>
+        </tr>
+        <tr>
+            <td valign=top>Db4objects.Db4o.CS.Optional.dll</td>
+            <td>optional db4o client/server components</td>
         </tr>
         <tr>
             <td valign=top>Db4objects.Db4o.dll</td>
@@ -57,43 +52,32 @@ H4 { font-size: 10pt; color: black; }
             <td>db4o optional components</td>
         </tr>
         <tr>
+            <td>Db4oTool.exe</td>
+            <td>db4o tool for enhancing assemblies etc</td>
+        </tr>
+        <tr>
+            <td>Db4oTool.MSBuild.dll</td>
+            <td>MSBuild integration for the Db4oTool</td>
+        </tr>
+        <tr>
             <td valign=top>Mono.Cecil.dll</td>
             <td>
                 <a href="http://www.mono-project.com/Cecil" target=_blank>Mono Cecil</a> bytecode analyzing library, 
                 required for enhancements for Native Queries and Transparent Activation</td>
         </tr>
         <tr>
-            <td>System.Linq.Expressions.dll</td>
-            <td>Support for LINQ on CompactFramework</td>
-        </tr>
-    </table>
-    <br />
-    <br />
-    The "net" folders contain the following files in addition to the above:
-    <br />
-    <br />
-    <table>
-        <tr>
-            <td valign=top style="width: 280px">
-                Db4oTool.exe</td>
-            <td>db4o commandline tool. For a list of options run it without parameters.</td>
-        </tr>
-        <tr>
-            <td valign=top>Db4oTool.MSBuild.dll</td>
+            <td valign=top>Mono.GetOptions</td>
             <td>
-                MSBuild tasks for build-time enhancements for Transparent Activation and Native Queries</td>
+                Dependency for Db4oTool
         </tr>
         <tr>
-            <td>Mono.Getoptions.dll</td>
-            <td>required for Db4oTool.exe to parse parameters</td>
+            <td valign=top>Mono.Reflection</td>
+            <td>
+                Dependency for the db4o LINQ implementation
         </tr>
         <tr>
-            <td>Mono.Cecil.Pdb.dll</td>
-            <td><a href="http://mono-project.com/Cecil">Mono Cecil</a> pdb library</td>
-        </tr>
-        <tr>
-            <td>Moq.dll</td>
-            <td><a href="http://code.google.com/p/moq/">moq</a> mocking library for .NET 3.5.</td>
+            <td>System.Linq.Expressions.dll</td>
+            <td>(only for Compact Framework) Support for LINQ on CompactFramework</td>
         </tr>
     </table>
 </body>
