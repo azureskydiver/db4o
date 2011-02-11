@@ -1090,6 +1090,7 @@
 				<include name="icons/**" />
 				<include name="Scripts/**" />
 				<include name="Styles/**" />
+				<include name="transforms/**" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.ndoc}/Output">
@@ -1097,6 +1098,8 @@
 				<include name="**/**" />
 			</fileset>
 		</copy>
+		<copy file="${dir.build}/config/sandcastle/Presentation/vs2005/transforms/main_sandcastle.xsl"
+			tofile="${dir.dist.ndoc}/Output/transforms/main_sandcastle.xsl"/>
 		<mkdir dir="${dir.dist.ndoc}/Intellisense" />
 
 	</target>

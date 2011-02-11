@@ -68,10 +68,16 @@ def isExcluded(excluded as Boo.Lang.List, type as System.Type) as bool:
 		return isExcluded(excluded, type.DeclaringType)
 	return false
 	
+def addObsoleteNamespace( filters as XmlElement):
+	typeSection = appendElement(filters, "namespace", {"name": "System", "expose": "true"})
+	appendElement(typeSection, "type", { "name": "ObsoleteAttribute", "expose": "true" })
+	appendElement(typeSection, "type", { "name": "SerializableAttribute", "expose": "false" })
 	
 def processAssembly(assemblyPath as string, filters as XmlElement, documentedNamespaces as Boo.Lang.List):
 	xmldocPath = Path.ChangeExtension(assemblyPath, ".xml")
 	excludedTypes = getExcludedTypes(xmldocPath)
+	
+	addObsoleteNamespace(filters);
 	
 	for namespaceGroup in getExportedTypes(assemblyPath):
 		currentNamespace = namespaceGroup.Key
