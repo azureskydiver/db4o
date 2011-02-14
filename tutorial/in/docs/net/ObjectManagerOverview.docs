@@ -5,10 +5,10 @@
 If you did not install the Object Manager Enterprise yet, please, return to  .l FirstGlance ..  chapter and follow the installation instructions there.
 Once the Object Manager Enterprise (OME) is installed you can see it in ._
 Visual Studio Tools menu:
-.g OMN1.jpg .. 
+.g omn1.png .. 
  
 You should also be able to see OME toolbar icons:
-.g OMN_Tool.jpg ..
+.g omn_tool.png ..
 
 .1 Browsing the database .. 
 In the  .l First previous chapter ..  we've learned how to create a new database ._
@@ -20,7 +20,7 @@ the toolbar menu) and browse to ome.db4o file in your Local Application ._
 Data folder. (normally it is C:\Documents and Settings\[user name]\Local Settings\Application Data on Windows XP/2000, c:/Users/[user name]/AppData/Local on Windows Vista).
 .n
 Once you've connected you will see a screen similar to this:
-.g OMN_Pilot.jpg ..
+.g omn_Pilot.png ..
  
 In this view you can see:
 -	Db4o Browser:  window displaying the contents of the open db4o database
@@ -39,13 +39,13 @@ database with lots of different classes. You can use wildcard searches and benef
 from the search history to make the selection faster. To further improve the navigation ._
 experience, you can create favourite folders and drag&drop frequently used ._
 classes into these folders.
-.g OMN_Fav.jpg .. 
+.g omn_fav.png .. 
 .n 
 .1 Querying .. 
 It is easy to retrieve all of the Pilot instances from the database: just right-click ._
 the Pilot class in Db4o Browser and select "Show All Objects". The list of the Pilot ._
 objects will be shown in the Query Result view:
-.g OMN_Result.jpg .. 
+.g omn_result.png .. 
  
 You can see object details in the detailed view below. Try to change any values and use ._
 Save button to persist the changes to the database. You can also use Delete button to ._
@@ -53,20 +53,20 @@ delete objects from the database. For the objects containing field objects you w
 prompted to use cascade on delete.
 .n
 More complex queries can be done by using Query Builder view:
-.g OME_Query.jpg .. 
+.g omn_query.png .. 
  
-Drag "_name" field from the Db4o Browser view into the Query Builder view, set ._
+Drag "name" field from the Db4o Browser view into the Query Builder view, set ._
 condition "Contains", put a value "a" and run the query. You can return to the ._
 Built Query tab and modify the query later on again. For example: add "AND" operator, ._
-drag "_name" field, set Condition to "Starts With" and the value to "M". Re-run the query. 
+drag "name" field, set Condition to "Starts With" and the value to "M". Re-run the query. 
 .n
 If you want only selected fields to be displayed in the query result, drag and drop ._
 fields to be displayed from Db4o Browser into "Attribute List" window.
-.g OME_Attr.jpg .. 
+.g omn_attr.png .. 
  
 When the new query is created, the previous query is stored and can be selected ._
 from the history drop-down:
-.g OME_QHistory.jpg .. 
+.g omn_qhistory.png .. 
  
 More sophisticated queries can be build by joining grouped constraints using "Add Group" ._
 button.
