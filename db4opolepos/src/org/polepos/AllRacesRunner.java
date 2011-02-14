@@ -41,7 +41,6 @@ import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 import com.db4o.config.*;
-import com.db4o.configurations.*;
 import com.db4o.internal.*;
 import com.db4o.internal.caching.*;
 import com.db4o.internal.config.*;
@@ -73,11 +72,10 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-				db4oTeam(JAR_TRUNK),
-				configuredDb4oTeam(JAR_PRODUCTION),
-				configuredDb4oTeam(JAR_STABLE),
 				configuredDb4oTeam(JAR_74),
-				
+				configuredDb4oTeam(JAR_STABLE),
+				configuredDb4oTeam(JAR_PRODUCTION),
+				configuredDb4oTeam(JAR_TRUNK),
 				
 //				configuredDb4oTeam(JAR_DEVEL, new SingleBTreeIdSystem()),
 //				configuredDb4oTeam(JAR_DEVEL, new PointerBasedIdSystem()),
@@ -159,6 +157,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 			}
 		};
 	}
+    
 
 	public CircuitBase[] circuits() {
 		
@@ -174,7 +173,8 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 			new ReflectiveCircuitBase(NestedLists.class),
 			new ReflectiveCircuitBase(InheritanceHierarchy.class),
 			new ReflectiveCircuitBase(FlatObject.class),
-
+			new Trees(),
+			new NativeIds(),
 			 new Commits(),
 			 new Strings(),
 			 new ArrayLists(),
