@@ -54,7 +54,7 @@ Let's look at how a simple native query ._
 will look like in some of the programming languages and dialects that db4o ._
 supports:
 
-.b C# .NET (using generics) ..
+.b C# .NET  ..
 .c IList <Pilot> pilots = db.Query <Pilot> (delegate(Pilot pilot) {
     return pilot.Points == 100;
 }); ..c 
@@ -66,33 +66,6 @@ supports:
     }
 }); ..c
 
-.b Java JDK 1.2 to 1.4 ..
-.c List pilots = db.query(new Predicate() {
-    public boolean match(Pilot pilot) {
-        return pilot.getPoints() == 100;
-    }
-}); ..c
-
-.b Java JDK 1.1 ..
-.c ObjectSet pilots = db.query(new PilotHundredPoints());
-
-public static class PilotHundredPoints extends Predicate {
-    public boolean match(Pilot pilot) {
-        return pilot.getPoints() == 100;
-    }
-} ..c
-
-.b C# .NET (not using generics) ..
-.c IList pilots = db.Query(new PilotHundredPoints());
-
-public class PilotHundredPoints : Predicate {
-    public boolean Match(Pilot pilot) {
-        return pilot.Points == 100;
-    }
-} ..c
-
-.b VB .NET (not using generics) ..
-.c Dim pilots As IList = db.Query(new PilotHundredPoints())
 
 Public Class PilotHundredPoints 
 	Inherits Predicate

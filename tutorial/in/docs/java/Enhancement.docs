@@ -31,22 +31,22 @@ for using the  .l http://ant.apache.org/ Ant ..  enhancer task
 .b bloat-1.0.jar ..
 the bytecode optimization library
 
-.b db4o-7.0-instrumentation.jar ..
+.b db4o- .p version .. -instrumentation.jar ..
 instrumentation library on top of bloat
 
-.b db4o-7.0-java5.jar ..
+.b db4o- .p version ..  -java5.jar ..
 the db4o core engine
 
-.b db4o-7.0-nqopt.jar ..
+.b db4o- .p version ..  -nqopt.jar ..
 the Native Query Optimizer
 
-.b db4o-7.0-taj.jar ..
+.b db4o- .p version .. -taj.jar ..
 the Transparent Activation Framework for Java
 
-.b db4o-7.0-tools.jar ..
+.b db4o- .p version ..  -tools.jar ..
 the tools interface that provides the top level enhancer tasks.
 
-Alternatively you can add  .b db4o-7.0-all-java5.jar .. instead, which contains the classes from all
+Alternatively you can add  .b db4o- .p version .. -all-java5.jar .. instead, which contains the classes from all
 the libraries listed above.
 
 .a EnhancementCompileTime ..
@@ -176,7 +176,7 @@ For using the launcher, please see the method signatures of
 In case no other enhancer has been run previously, Native Queries will ._
 still be optimized automatically if the following optimization libraries ._
 are found in the CLASSPATH:
-bloat-1.0.jar, db4o-7.0-classedit.jar, db4o-7.0-nqopt.jar
+bloat-1.0.jar, db4o- .p version .. -instrumentation.jar, db4o- .p version .. -nqopt.jar
 
 The Native Query optimizer is still under development to eventually ._
 "understand" all Java constructs. Current optimization supports ._
