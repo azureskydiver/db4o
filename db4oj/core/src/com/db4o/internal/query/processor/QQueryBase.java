@@ -668,7 +668,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
             if(constraintCanBeAddedToExisting(candidatesList, constraint)){
             	continue;
             }
-    		QCandidates candidates = new QCandidates((LocalTransaction) _trans, classMetadata, null);
+    		QCandidates candidates = new QCandidates((LocalTransaction) _trans, classMetadata, null, true);
     		candidatesList = new List4(candidatesList, candidates);
         }
 		return candidatesList;

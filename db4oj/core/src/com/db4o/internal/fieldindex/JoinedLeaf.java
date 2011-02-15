@@ -54,6 +54,10 @@ public abstract class JoinedLeaf implements IndexedNodeWithRange {
 		return _range.size();
 	}
 	
+	public boolean isEmpty(){
+		return _range.isEmpty();
+	}
+	
 	public void markAsBestIndex() {
 		_leaf1.markAsBestIndex();
 		_constraint.setProcessedByIndex();

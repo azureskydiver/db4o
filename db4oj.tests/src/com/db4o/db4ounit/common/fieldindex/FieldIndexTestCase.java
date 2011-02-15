@@ -77,8 +77,8 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     
     private BTreeRange fieldIndexKeySearch(Transaction trans, BTree btree, Object key) {
         // SearchTarget should not make a difference, HIGHEST is faster
-        BTreeNodeSearchResult start = btree.searchLeaf(trans, fieldIndexKey(0, key), SearchTarget.LOWEST);
-        BTreeNodeSearchResult end = btree.searchLeaf(trans, fieldIndexKey(Integer.MAX_VALUE, key), SearchTarget.LOWEST);
+        BTreeNodeSearchResult start = btree.searchLeafByObject(trans, fieldIndexKey(0, key), SearchTarget.LOWEST);
+        BTreeNodeSearchResult end = btree.searchLeafByObject(trans, fieldIndexKey(Integer.MAX_VALUE, key), SearchTarget.LOWEST);
         return start.createIncludingRange(end);
     }
     

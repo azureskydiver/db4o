@@ -55,5 +55,9 @@ public class IndexedLeaf extends IndexedNodeBase implements IndexedNodeWithRange
 	public void markAsBestIndex() {
 		_constraint.setProcessedByIndex();
 	}
+	
+	public boolean isEmpty(){
+		return _range.isEmpty();
+	}
 
 }

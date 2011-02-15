@@ -16,7 +16,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTypeHandler, BuiltinTypeHandler, QueryableTypeHandler {
+public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTypeHandler, BuiltinTypeHandler, QueryableTypeHandler, CanExcludeNullInQueries {
     
     protected ReflectClass _classReflector;
     
@@ -160,6 +160,10 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
 	}
 	
 	public abstract PreparedComparison internalPrepareComparison(final Object obj);
+	
+	public boolean excludeNull() {
+		return true;
+	}
 
 
 }

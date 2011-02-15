@@ -26,10 +26,10 @@ public abstract class IndexedNodeBase  implements IndexedNode {
     }
 	
 	public final BTree getIndex() {
-	    return getYapField().getIndex(transaction());
+	    return fieldMetadata().getIndex(transaction());
 	}
 
-	private FieldMetadata getYapField() {
+	private FieldMetadata fieldMetadata() {
 	    return _constraint.getField().getFieldMetadata();
 	}
 
@@ -43,7 +43,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	}
 
 	public BTreeRange search(final Object value) {
-		return getYapField().search(transaction(), value);
+		return fieldMetadata().search(transaction(), value);
 	}
 
 	public static TreeInt addToTree(TreeInt tree, final IndexedNode node) {
@@ -65,5 +65,12 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	private Transaction transaction() {
 		return constraint().transaction();
 	}
+	
+	@Override
+	public String toString() {
+		return "IndexedNode " + _constraint.toString(); 
+	}
+	
+	
 
 }

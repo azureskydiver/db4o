@@ -34,15 +34,14 @@ public abstract class BTreeUpdate extends BTreePatch {
 		if (_transaction == trans) {
 			return _next;
 		}
-		if (_next == null) {
-			return this;
+		if (_next != null) {
+			_next = _next.removeFor(trans);
 		}
-		return _next.removeFor(trans);
+		return this;
 	}
 
 	public void append(BTreeUpdate patch) {
 	    if(_transaction == patch._transaction){
-	    	// don't allow two patches for the same transaction
 	        throw new IllegalArgumentException();
 	    }
 	    if(!hasNext()){

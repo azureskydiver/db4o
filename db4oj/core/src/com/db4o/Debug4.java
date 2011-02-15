@@ -62,13 +62,13 @@ public final class Debug4 {
      * makes sure a configuration entry is generated for each persistent
      * class 
      */
-    public static final boolean configureAllClasses = indexAllFields;
+    public static final boolean configureAllClasses = false;
     
     /**
      * makes sure a configuration entry is generated for each persistent
      * field
      */
-    public static final boolean configureAllFields = indexAllFields;
+    public static final boolean configureAllFields = false;
     
     /**
      * allows turning weak references off

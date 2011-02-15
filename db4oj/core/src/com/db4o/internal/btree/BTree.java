@@ -197,7 +197,7 @@ public class BTree extends LocalPersistentBase implements TransactionParticipant
     	return _keyHandler;
     }
 
-	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
+	public BTreeNodeSearchResult searchLeafByObject(Transaction trans, Object key, SearchTarget target) {
 	    return searchLeaf(trans, _keyHandler.prepareComparison(trans.context(), key), target);
     }
 	
