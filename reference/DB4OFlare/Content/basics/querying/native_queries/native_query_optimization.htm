@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2403" MadCap:lastWidth="553">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2472" MadCap:lastWidth="553">
     <head>
     </head>
     <body>
         <h1>
             <MadCap:keyword term="Native Queries:Optimization" />Native Query Optimization</h1>
+        <MadCap:snippetBlock src="../../../Snippets/linq_instead_of_nq.flsnp" />
         <p>Native queries will run out of the box in any environment. This optimization is turned on by default. Native queries will be converted to <a href="../soda_query.htm">SODA</a> where this is possible. This allows db4o to use indexes and optimized internal comparison algorithms. Otherwise native query may be executed by instantiating all objects, using <a href="../soda/soda_evaluations.htm">SODA evaluations</a>. Naturally performance will not be as good in this case.</p>
         <H2>Optimization Theory </H2>
         <p>For Native Query the <MadCap:variable name="Primary.ByteCode" /> is analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</p>
@@ -42,9 +43,24 @@
                 <LI>Db4objects.Db4o.NativeQueries.dll                        </LI>
                 <LI>Mono.Cecil.dll                        </LI>
                 <LI>Cecil.FlowAnalysis.dll </LI>
-                <LI>                       </LI>
+                <LI>
+                </LI>
             </ul>
-			<p>These assemblies must be available in your project for successful native query optimization. </p>                   <p>Current optimization supports the following constructs well:</p><UL><LI>Compile-time constants.</LI><LI>Simple member access.</LI><LI>Primitive comparisons.</LI><LI>Equality operator.</LI><LI>Contains, StartsWith- and EndsWith-methods for strings.</LI><LI>Boolean expressions.</LI><LI>Arbitrary method calls,including property accessors, on predicate fields (without any arguments).</LI><LI>Candidate methods composed of the above.</LI><LI>Chained combinations of the above.</LI></UL><p>Note that the current implementation doesn't support polymorphism yet.</p><p>The specifics of Compact Framework platform are explained in <a href="native_query_optimization/nq_optimization_on_cf2.0.htm">NQ Optimization On CF2.0</a>. </p><p>An alternative optimization practice can be found in <a href="native_query_optimization/nq_build_time_optimisation.htm">Build-time Optimization For .NET</a> article.</p></p>
+            <p>These assemblies must be available in your project for successful native query optimization. </p>
+            <p>Current optimization supports the following constructs well:</p>
+            <UL>
+                <LI>Compile-time constants.</LI>
+                <LI>Simple member access.</LI>
+                <LI>Primitive comparisons.</LI>
+                <LI>Equality operator.</LI>
+                <LI>Contains, StartsWith- and EndsWith-methods for strings.</LI>
+                <LI>Boolean expressions.</LI>
+                <LI>Arbitrary method calls,including property accessors, on predicate fields (without any arguments).</LI>
+                <LI>Candidate methods composed of the above.</LI>
+                <LI>Chained combinations of the above.</LI>
+            </UL>
+            <p>Note that the current implementation doesn't support polymorphism yet.</p>
+        </p>
         <p>For more information on native queries optimization see <a href="native_query_optimization/monitoring_optimization.htm">Monitoring Optimization</a>.</p>
     </body>
 </html>

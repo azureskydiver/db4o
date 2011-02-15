@@ -255,6 +255,7 @@ tsCondition = TimeStampStorage()
 # regular examples
 snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator,tsCondition)
 snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../DB4OFlare/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("java/src/META-INF","../DB4OFlare/Content/CodeExamples/META-INF","java")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../DB4OFlare/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../DB4OFlare/Content/CodeExamples","csharp")
 
