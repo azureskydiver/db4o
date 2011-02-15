@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="716" MadCap:lastWidth="471">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="600" MadCap:lastWidth="527">
     <head>
     </head>
     <body>
@@ -24,8 +24,7 @@ db4o:</p><ul><li>The connection should not
      connected at the same time, it makes sense to be careful with the
      resources the server reserves for each client. </li><li>A client can be a very
      small machine, so it would be good if the client application can work with
-     a single thread.</li></ul><p>Unfortunately all the requirements are difficult to achieve
-for a cross-platform application, as Java and .NET sockets behave differently.</p><p>The current approach tries to keep things as simple as
+     a single thread.</li></ul><p>The current approach tries to keep things as simple as
 possible: any connection is closed immediately upon a timeout. In order to
 prevent closing connections when there is no communication between client and
 server due to reasons different from connection problems a separate timer
