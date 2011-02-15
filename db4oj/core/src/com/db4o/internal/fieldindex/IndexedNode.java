@@ -16,8 +16,10 @@ public interface IndexedNode extends Iterable4 {
 	
 	int resultSize();
 
-	//FIXME: do we need this?
 	TreeInt toTreeInt();
 
 	void markAsBestIndex();
+
+	boolean isEmpty();
+	
 }

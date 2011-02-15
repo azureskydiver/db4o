@@ -14,10 +14,6 @@ import com.db4o.typehandlers.*;
 
 
 /**
- * Holds the tree of {@link QCandidate} objects and the list of {@link QCon} during query evaluation.
- * The query work (adding and removing nodes) happens here.
- * Candidates during query evaluation. {@link QCandidate} objects are stored in i_root
- * 
  * @exclude
  */
 public final class QCandidates implements Visitor4 {
@@ -25,28 +21,32 @@ public final class QCandidates implements Visitor4 {
     // Transaction necessary as reference to stream
     public final LocalTransaction i_trans;
 
-    // root of the QCandidate tree
-    public Tree i_root;
+
+    public QueryResultCandidates _result;
 
     // collection of all constraints
     private List4 _constraints;
 
     // possible class information
-    ClassMetadata i_classMetadata;
+    ClassMetadata _classMetadata;
 
     // possible field information
     private QField _field;
 
     // current executing constraint, only set where needed
-    QCon i_currentConstraint;
+    QCon _currentConstraint;
 
     private IDGenerator _idGenerator;
     
     private boolean _loadedFromClassIndex;
-
-    QCandidates(LocalTransaction a_trans, ClassMetadata a_classMetadata, QField a_field) {
+    
+    private boolean _isTopLevel;
+    
+    QCandidates(LocalTransaction a_trans, ClassMetadata a_classMetadata, QField a_field, boolean isTopLevel) {
+    	_result = new QueryResultCandidates(this);
+    	_isTopLevel = isTopLevel;
     	i_trans = a_trans;
-    	i_classMetadata = a_classMetadata;
+    	_classMetadata = a_classMetadata;
     	_field = a_field;
    
     	if (a_field == null
@@ -57,14 +57,19 @@ public final class QCandidates implements Visitor4 {
     	}
 
     	ClassMetadata yc = ((StandardReferenceTypeHandler) a_field._fieldMetadata.getHandler()).classMetadata();
-    	if (i_classMetadata == null) {
-    		i_classMetadata = yc;
+    	if (_classMetadata == null) {
+    		_classMetadata = yc;
     	} else {
-    		yc = i_classMetadata.getHigherOrCommonHierarchy(yc);
+    		yc = _classMetadata.getHigherOrCommonHierarchy(yc);
     		if (yc != null) {
-    			i_classMetadata = yc;
+    			_classMetadata = yc;
     		}
     	}
+    	
+    }
+    
+    public boolean isTopLevel(){
+    	return _isTopLevel;
     }
 
     public QCandidate add(QCandidate candidate) {
@@ -76,7 +81,8 @@ public final class QCandidates implements Visitor4 {
             }
 			System.out.println(msg);
         }
-        i_root = Tree.add(i_root, candidate);
+        _result.add(candidate);
+        
         if(candidate._size == 0){
         	
         	// This means that the candidate was already present
@@ -140,7 +146,7 @@ public final class QCandidates implements Visitor4 {
         }
         final FieldIndexProcessorResult result = processFieldIndexes();
         if(result.foundIndex()){
-        	i_root = result.toQCandidate(this);
+        	_result.fieldIndexProcessorResult(result);
         }else{
         	loadFromClassIndex();
         }
@@ -160,7 +166,7 @@ public final class QCandidates implements Visitor4 {
 			public Object apply(Object current) {
 				int id = ((Integer)current).intValue();
 				QCandidate candidate = new QCandidate(QCandidates.this, null, id); 
-				i_root = candidate; 
+				_result.singleCandidate(candidate); 
 				evaluate();
 				if(! candidate.include()){
 					return Iterators.SKIP;
@@ -183,10 +189,10 @@ public final class QCandidates implements Visitor4 {
     	if(result.foundIndex()){
     		return result.iterateIDs();
     	}
-    	if(!i_classMetadata.hasClassIndex()) {
+    	if(!_classMetadata.hasClassIndex()) {
     		return Iterators.EMPTY_ITERATOR;
     	}
-    	return BTreeClassIndexStrategy.iterate(i_classMetadata, i_trans);
+    	return BTreeClassIndexStrategy.iterate(_classMetadata, i_trans);
     }
 
 	private Iterator4 mapIdsToExecutionPath(Iterator4 singleObjectQueryIterator, Collection4 executionPath) {
@@ -224,7 +230,7 @@ public final class QCandidates implements Visitor4 {
 	}
 
 	public int classIndexEntryCount() {
-		return i_classMetadata.indexEntryCount(i_trans);
+		return _classMetadata.indexEntryCount(i_trans);
 	}
 
 	private FieldIndexProcessorResult processFieldIndexes() {
@@ -235,7 +241,6 @@ public final class QCandidates implements Visitor4 {
 	}
 
     void evaluate() {
-    	
     	if (_constraints == null) {
     		return;
     	}
@@ -302,16 +307,8 @@ public final class QCandidates implements Visitor4 {
         return ret[0];
     }
 
-    boolean filter(Visitor4 a_host) {
-        if (i_root != null) {
-            i_root.traverse(a_host);
-            i_root = i_root.filter(new Predicate4() {
-                public boolean match(Object a_candidate) {
-                    return ((QCandidate) a_candidate)._include;
-                }
-            });
-        }
-        return i_root != null;
+    boolean filter(Visitor4 visitor) {
+    	return _result.filter(visitor);
     }
     
     int generateCandidateId(){
@@ -341,19 +338,11 @@ public final class QCandidates implements Visitor4 {
     		return;
     	}
     	
-    	final TreeIntBuilder result = new TreeIntBuilder();
-    	final ClassIndexStrategy index = i_classMetadata.index();
-		index.traverseAll(i_trans, new Visitor4() {
-    		public void visit(Object obj) {
-    			result.add(new QCandidate(QCandidates.this, null, ((Integer)obj).intValue()));
-    		}
-    	});
-    
-		i_root = result.tree;
-        
+    	_result.loadFromClassIndex(_classMetadata.index());
+    	
         DiagnosticProcessor dp = i_trans.container()._handlers.diagnosticProcessor();
         if (dp.enabled() && !isClassOnlyQuery()){
-            dp.loadedFromClassIndex(i_classMetadata);
+            dp.loadedFromClassIndex(_classMetadata);
         }
         
         _loadedFromClassIndex = true;
@@ -361,13 +350,11 @@ public final class QCandidates implements Visitor4 {
     }
 
 	void setCurrentConstraint(QCon a_constraint) {
-        i_currentConstraint = a_constraint;
+        _currentConstraint = a_constraint;
     }
 
-    void traverse(Visitor4 a_visitor) {
-        if(i_root != null){
-            i_root.traverse(a_visitor);
-        }
+    void traverse(Visitor4 visitor) {
+    	_result.traverse(visitor);
     }
 
     // FIXME: This method should go completely.
@@ -392,15 +379,15 @@ public final class QCandidates implements Visitor4 {
             }
         }
 
-        if (i_classMetadata == null || a_constraint.isNullConstraint()) {
+        if (_classMetadata == null || a_constraint.isNullConstraint()) {
             addConstraint(a_constraint);
             return true;
         }
         ClassMetadata yc = a_constraint.getYapClass();
         if (yc != null) {
-            yc = i_classMetadata.getHigherOrCommonHierarchy(yc);
+            yc = _classMetadata.getHigherOrCommonHierarchy(yc);
             if (yc != null) {
-                i_classMetadata = yc;
+                _classMetadata = yc;
                 addConstraint(a_constraint);
                 return true;
             }
@@ -427,7 +414,7 @@ public final class QCandidates implements Visitor4 {
     
     public String toString() {
     	final StringBuffer sb = new StringBuffer();
-    	i_root.traverse(new Visitor4() {
+    	_result.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				QCandidate candidate = (QCandidate) obj;
 				sb.append(" ");
@@ -455,18 +442,18 @@ public final class QCandidates implements Visitor4 {
             }
         }
 
-        if (i_classMetadata == null || constraint.isNullConstraint()) {
+        if (_classMetadata == null || constraint.isNullConstraint()) {
             return true;
         }
         ClassMetadata classMetadata = constraint.getYapClass();
         if (classMetadata == null) {
         	return false;
         }
-        classMetadata = i_classMetadata.getHigherOrCommonHierarchy(classMetadata);
+        classMetadata = _classMetadata.getHigherOrCommonHierarchy(classMetadata);
         if (classMetadata == null) {
         	return false;
         }
-        i_classMetadata = classMetadata;
+        _classMetadata = classMetadata;
         return true;
 	}
 	

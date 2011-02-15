@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class CreateIndexInheritedTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new CreateIndexInheritedTestCase().runConcurrency();
+		new CreateIndexInheritedTestCase().runConcurrencyAll();
 	}
 
 	public int i_int;

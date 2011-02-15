@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class FieldIndexKeyHandler implements Indexable4{
+public class FieldIndexKeyHandler implements Indexable4, CanExcludeNullInQueries{
 	
     private final Indexable4 _valueHandler;
     
@@ -61,6 +61,9 @@ public class FieldIndexKeyHandler implements Indexable4{
 	}
 
 	public PreparedComparison prepareComparison(Context context, Object fieldIndexKey) {
+		if(fieldIndexKey == null){
+			fieldIndexKey = new FieldIndexKeyImpl(Integer.MAX_VALUE, null);
+		}
 		final FieldIndexKey source = (FieldIndexKey)fieldIndexKey;
         final PreparedComparison preparedValueComparison = _valueHandler.prepareComparison(context, source.value());
         final PreparedComparison preparedParentIdComparison = _parentIdHandler.newPrepareCompare(source.parentID());
@@ -79,5 +82,13 @@ public class FieldIndexKeyHandler implements Indexable4{
 			}
 		};
 	}
+
+	public boolean excludeNull() {
+		if(_valueHandler instanceof CanExcludeNullInQueries){
+			return ((CanExcludeNullInQueries)_valueHandler).excludeNull();
+		}
+		return false;
+	}
+
 }
 

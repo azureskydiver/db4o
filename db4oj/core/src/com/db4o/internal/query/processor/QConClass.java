@@ -5,6 +5,8 @@ package com.db4o.internal.query.processor;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
+import com.db4o.internal.classindex.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -52,15 +54,27 @@ public class QConClass extends QConObject{
         return false;
     }
 	
-	boolean evaluate(QCandidate a_candidate){
-		boolean res = true;
-		ReflectClass claxx = a_candidate.classReflector();
-		if(claxx == null){
-			res = false;
-		}else{
-			res = i_equal ? _claxx.equals(claxx) : _claxx.isAssignableFrom(claxx);
+	boolean evaluate(QCandidate candidate){
+		boolean result = true;
+		if(candidate.candidates().isTopLevel()) { 
+			if(_classMetadata.getAncestor() != null){
+				BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) _classMetadata.index();
+				if(index == null){
+					return i_evaluator.not(true);
+				}
+				BTree btree = index.btree();
+				Object searchResult = btree.search(candidate.transaction(), candidate._key);
+				result = searchResult != null;
+			}
+		} else {
+			ReflectClass claxx = candidate.classReflector();
+			if(claxx == null){
+				result = false;
+			}else{
+				result = i_equal ? _claxx.equals(claxx) : _claxx.isAssignableFrom(claxx);
+			}
 		}
-		return i_evaluator.not(res);
+		return i_evaluator.not(result);
 	}
 	
 	void evaluateSelf() {
@@ -73,8 +87,8 @@ public class QConClass extends QConObject{
 		if(i_candidates.wasLoadedFromClassIndex()){
 			if(i_evaluator.isDefault()){
 				if(! hasJoins()){
-					if(_classMetadata != null  && i_candidates.i_classMetadata != null){
-						if(_classMetadata.getHigherHierarchy(i_candidates.i_classMetadata) == _classMetadata){
+					if(_classMetadata != null  && i_candidates._classMetadata != null){
+						if(_classMetadata.getHigherHierarchy(i_candidates._classMetadata) == _classMetadata){
 							return;
 						}
 					}

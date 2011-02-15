@@ -50,5 +50,10 @@ public class IndexedPath extends IndexedNodeBase {
 		_constraint.setProcessedByIndex();
 		_next.markAsBestIndex();
 	}
+	
+	public boolean isEmpty(){
+		throw new NotSupportedException();
+	}
+
 
 }

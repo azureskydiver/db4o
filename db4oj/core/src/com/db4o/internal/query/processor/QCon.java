@@ -195,7 +195,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
                 return;
             }
         }
-        i_candidates = new QCandidates((LocalTransaction) i_trans, getYapClass(), getField());
+        i_candidates = new QCandidates((LocalTransaction) i_trans, getYapClass(), getField(), false);
         i_candidates.addConstraint(this);
         a_candidateCollection.add(i_candidates);
     }
@@ -280,9 +280,12 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         Iterator4 i = iterateChildren();
         while(i.moveNext()){
     		QCon qcon = (QCon)i.current();
-    		i_candidates.setCurrentConstraint(qcon);
-    		qcon.setCandidates(i_candidates);
-    		qcon.evaluateSimpleExec(i_candidates);
+    		if(! qcon.processedByIndex()){
+	    		i_candidates.setCurrentConstraint(qcon);
+	    		qcon.setCandidates(i_candidates);
+	    		qcon.evaluateSimpleExec(i_candidates);
+    		}
+    		
     	}
     	i_candidates.setCurrentConstraint(null);
     }

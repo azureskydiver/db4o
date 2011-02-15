@@ -145,6 +145,19 @@ public class BTreeRangeSingle implements BTreeRange {
 	}
 
 	private BTreePointer firstBTreePointer() {
+	
+		// We don't want nulls included so we have to search for null and use the resulting pointer if we find one.
+		Indexable4 keyHandler = btree().keyHandler();
+		if(keyHandler instanceof CanExcludeNullInQueries){
+			CanExcludeNullInQueries canExcludeNullInQueries = (CanExcludeNullInQueries) keyHandler;
+			if(canExcludeNullInQueries.excludeNull()){
+				BTreeNodeSearchResult searchLeaf = btree().searchLeafByObject(transaction(), null, SearchTarget.HIGHEST);
+				BTreePointer pointer = searchLeaf.firstValidPointer();
+				if(pointer != null){
+					return pointer;
+				}
+			}
+		}
 		return btree().firstPointer(transaction());
 	}
 

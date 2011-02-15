@@ -91,7 +91,7 @@ public class QConJoin extends QCon {
 			if (!res) {
 				if (Debug4.queries) {
 					System.out.println(
-						"QConJoin evaluatePending FALSE "
+						"QConJoin evaluatePending FALSE for " + a_root._key + " "
 							+ id()
 							+ " doNotInclude: "
 							+ constraint1().id()
@@ -103,7 +103,7 @@ public class QConJoin extends QCon {
 			}else{
 				if (Debug4.queries) {
 					System.out.println(
-						"QConJoin evaluatePending TRUE "
+						"QConJoin evaluatePending TRUE for " + a_root._key + " "
 							+ id()
 							+ " keeping constraints: "
 							+ constraint1().id()

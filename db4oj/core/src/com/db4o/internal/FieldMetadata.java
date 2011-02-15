@@ -956,7 +956,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	}
 
 	private BTreeNodeSearchResult searchBound(Transaction transaction, int parentID, Object keyPart) {
-	    return getIndex(transaction).searchLeaf(transaction, createFieldIndexKey(parentID, keyPart), SearchTarget.LOWEST);
+	    return getIndex(transaction).searchLeafByObject(transaction, createFieldIndexKey(parentID, keyPart), SearchTarget.LOWEST);
 	}
 
 	public boolean rebuildIndexForClass(LocalObjectContainer stream, ClassMetadata classMetadata) {

@@ -24,6 +24,7 @@ public class AllTests extends ComposibleTestSuite {
 	            StringIndexTestCase.class,
 	            StringIndexCorruptionTestCase.class,
 	            StringIndexWithSuperClassTestCase.class,
+	            UseSecondBestIndexTestCase.class,
 		});
     }
 	

@@ -194,7 +194,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	private BTreePointer searchBTree(BTree bTree, Slot slot, SearchTarget target) {
-        BTreeNodeSearchResult searchResult = bTree.searchLeaf(transaction(), slot, target);
+        BTreeNodeSearchResult searchResult = bTree.searchLeafByObject(transaction(), slot, target);
         return searchResult.firstValidPointer();
     }
 

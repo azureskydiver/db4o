@@ -18,38 +18,40 @@ public class FieldIndexProcessor {
 		if (null == bestIndex) {
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
-		if (bestIndex.resultSize() > 0) {
-			IndexedNode resolved = resolveFully(bestIndex);
-			if (null == resolved) {
-				return FieldIndexProcessorResult.NO_INDEX_FOUND;
-			}
-			resolved.markAsBestIndex();
+		IndexedNode resolved = resolveFully(bestIndex);
+		
+		if (! bestIndex.isEmpty()) {
+			bestIndex.markAsBestIndex();
 			return new FieldIndexProcessorResult(resolved);
 		}
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;
 	}
 
-	private IndexedNode resolveFully(IndexedNode bestIndex) {
-		if (null == bestIndex) {
+	private IndexedNode resolveFully(IndexedNode indexedNode) {
+		if (null == indexedNode) {
 			return null;
 		}
-		if (bestIndex.isResolved()) {
-			return bestIndex;
+		if (indexedNode.isResolved()) {
+			return indexedNode;
 		}
-		return resolveFully(bestIndex.resolve());
+		return resolveFully(indexedNode.resolve());
 	}
 	
 	public IndexedNode selectBestIndex() {		
 		final Iterator4 i = collectIndexedNodes();
-		if (!i.moveNext()) {
-			return null;
-		}
-		
-		IndexedNode best = (IndexedNode)i.current();
+		IndexedNode best = null;
 		while (i.moveNext()) {
-			IndexedNode leaf = (IndexedNode)i.current();
-			if (leaf.resultSize() < best.resultSize()) {
-				best = leaf;
+			IndexedNode indexedNode = (IndexedNode)i.current();
+			IndexedNode resolved = resolveFully(indexedNode);
+			if(resolved == null){
+				continue;
+			}
+			if(best == null){
+				best = indexedNode;
+				continue;
+			}
+			if (indexedNode.resultSize() < best.resultSize()) {
+				best = indexedNode;
 			}
 		}
 		return best;

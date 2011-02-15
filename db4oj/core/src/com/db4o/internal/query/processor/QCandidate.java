@@ -138,7 +138,7 @@ public class QCandidate extends TreeInt implements Candidate {
 							qcon.setParent(null);
 
 							final QCandidates candidates = new QCandidates(
-									a_candidates.i_trans, null, qf);
+									a_candidates.i_trans, null, qf, false);
 							candidates.addConstraint(qcon);
 
 							qcon.setCandidates(candidates);
@@ -264,7 +264,7 @@ public class QCandidate extends TreeInt implements Candidate {
 				// immediately.
 
 				if (Handlers4.isQueryLeaf(handler)) {
-					a_candidates.i_currentConstraint.visit(this);
+					a_candidates._currentConstraint.visit(this);
 					return true;
 				}
 			}
@@ -285,8 +285,8 @@ public class QCandidate extends TreeInt implements Candidate {
 		}
 
 		// fast early check for ClassMetadata
-		if (a_candidates.i_classMetadata != null
-				&& a_candidates.i_classMetadata.isStronglyTyped()) {
+		if (a_candidates._classMetadata != null
+				&& a_candidates._classMetadata.isStronglyTyped()) {
 			
 			TypeHandler4 handler = _fieldMetadata.getHandler();
 			if (Handlers4.isUntyped(handler)){
@@ -585,7 +585,7 @@ public class QCandidate extends TreeInt implements Candidate {
 	}
 
 	public String toString() {
-		String str = "QCandidate ";
+		String str = "QCandidate id: " + _key; 
 		if (_classMetadata != null) {
 			str += "\n   YapClass " + _classMetadata.getName();
 		}
@@ -696,5 +696,9 @@ public class QCandidate extends TreeInt implements Candidate {
 
 	public void classMetadata(ClassMetadata classMetadata) {
 		_classMetadata = classMetadata;
-	}    
+	}
+	
+	public QCandidates candidates(){
+		return _candidates;
+	}
 }
