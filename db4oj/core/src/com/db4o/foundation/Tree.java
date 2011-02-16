@@ -519,5 +519,11 @@ public abstract class Tree<T> implements ShallowClone , DeepClone, Visitable <T>
 		);
 	}
 
+	public static int depth(Tree tree) {
+		if(tree == null) {
+			return 0;
+		}
+		return Math.max(depth(tree._preceding), depth(tree._subsequent)) + 1;
+	}
 
 }
