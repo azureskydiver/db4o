@@ -53,7 +53,7 @@ public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutMu
 	private void assertIndex(Object[] expected) {
 		ExpectingVisitor visitor = new ExpectingVisitor(expected);
 		ClassIndexStrategy index = classMetadataFor(Item.class).index();
-		index.traverseAll(trans(),visitor);
+		index.traverseIds(trans(),visitor);
 		visitor.assertExpectations();
 	}
 }

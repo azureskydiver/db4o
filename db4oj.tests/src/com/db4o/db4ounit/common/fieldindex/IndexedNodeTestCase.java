@@ -57,7 +57,17 @@ public class IndexedNodeTestCase extends FieldIndexProcessorTestCaseBase {
 		Assert.isTrue(result.isResolved());
 		Assert.isNull(result.resolve());
 		
-		assertComplexItems(new int[] { 4 }, result.toTreeInt());
+		assertComplexItems(new int[] { 4 }, toTreeInt(result));
+	}
+
+	private TreeInt toTreeInt(IndexedNode result) {
+		final ByRef<TreeInt> treeInts = ByRef.newInstance();
+		result.traverse(new IntVisitor() {
+			public void visit(int i) {
+				treeInts.value = Tree.add(treeInts.value, new TreeInt(i));
+			}
+		});
+		return treeInts.value;
 	}	
 	
 	public void testTripleDescendingOnQuery() {
@@ -78,7 +88,7 @@ public class IndexedNodeTestCase extends FieldIndexProcessorTestCaseBase {
 		Assert.isNotNull(result);
 		assertComplexItemIndex("child", result);
 		
-		assertComplexItems(new int[] { 7 } , result.toTreeInt());
+		assertComplexItems(new int[] { 7 } , toTreeInt(result));
 	}
 	
 	private void assertComplexItems(final int[] expectedFoos, final TreeInt found) {

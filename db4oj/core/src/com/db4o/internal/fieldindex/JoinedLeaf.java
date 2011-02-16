@@ -3,7 +3,6 @@
 package com.db4o.internal.fieldindex;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.query.processor.*;
 
@@ -34,10 +33,6 @@ public abstract class JoinedLeaf implements IndexedNodeWithRange {
 		return _range.keys();
 	}
 
-	public TreeInt toTreeInt() {
-		return IndexedNodeBase.addToTree(null, this);
-	}
-
 	public BTree getIndex() {
 		return _leaf1.getIndex();
 	}
@@ -61,5 +56,9 @@ public abstract class JoinedLeaf implements IndexedNodeWithRange {
 	public void markAsBestIndex() {
 		_leaf1.markAsBestIndex();
 		_constraint.setProcessedByIndex();
+	}
+	
+	public void traverse(IntVisitor visitor){
+		IndexedNodeBase.traverse(this, visitor);
 	}
 }

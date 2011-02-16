@@ -95,6 +95,17 @@ public class QConClass extends QConObject{
 				}
 			}
 		}
+		
+		if(i_candidates.isTopLevel()) {
+			if(i_evaluator.isDefault()){
+				if(! hasJoins()){
+					if(_classMetadata != null && _classMetadata.getAncestor() == null){
+						return;
+					}
+				}
+			}
+		}
+
 		i_candidates.filter(this);
 	}
 	

@@ -21,10 +21,6 @@ public abstract class IndexedNodeBase  implements IndexedNode {
         _constraint = qcon;
 	}
 
-    public TreeInt toTreeInt() {
-    	return addToTree(null, this);
-    }
-	
 	public final BTree getIndex() {
 	    return fieldMetadata().getIndex(transaction());
 	}
@@ -46,13 +42,16 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 		return fieldMetadata().search(transaction(), value);
 	}
 
-	public static TreeInt addToTree(TreeInt tree, final IndexedNode node) {
+	public static void traverse(final IndexedNode node, IntVisitor visitor) {
 	    Iterator4 i = node.iterator();
 		while (i.moveNext()) {
 		    FieldIndexKey composite = (FieldIndexKey)i.current();
-		    tree = (TreeInt) Tree.add(tree, new TreeInt(composite.parentID()));
+		    visitor.visit(composite.parentID());
 		}
-		return tree;
+	}
+	
+	public void traverse(IntVisitor visitor){
+		traverse(this, visitor);
 	}
 
 	public IndexedNode resolve() {
@@ -70,6 +69,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	public String toString() {
 		return "IndexedNode " + _constraint.toString(); 
 	}
+
 	
 	
 

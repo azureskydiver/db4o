@@ -3,6 +3,7 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.fieldindex.*;
@@ -297,8 +298,13 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 			Assert.areSame(FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH, result);
 			return;
 		}
-				 
-		assertTreeInt(expectedIds, result.toTreeInt());
+		final ByRef<TreeInt> treeInts = ByRef.newInstance();
+		result.traverse(new IntVisitor() {
+			public void visit(int i) {
+				treeInts.value = Tree.add(treeInts.value, new TreeInt(i));
+			}
+		});	 
+		assertTreeInt(expectedIds, treeInts.value);
 	}
 
 	private FieldIndexProcessorResult executeProcessor(final Query query) {

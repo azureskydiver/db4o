@@ -161,7 +161,7 @@ public class FileUsageStatsCollector {
 		final LongByRef slotUsage = new LongByRef();
 		final LongByRef miscUsage = new LongByRef();
 		BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) clazz.index();
-		index.traverseAll(_db.systemTransaction(), new Visitor4<Integer>() {
+		index.traverseIds(_db.systemTransaction(), new Visitor4<Integer>() {
 			public void visit(Integer id) {
 				slotUsage.value += slotSizeForId(id);
 				if(miscCollector != null) {
@@ -177,7 +177,7 @@ public class FileUsageStatsCollector {
 			return;
 		}
 		BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) clazz.index();
-		index.traverseAll(_db.systemTransaction(), new Visitor4<Integer>() {
+		index.traverseIds(_db.systemTransaction(), new Visitor4<Integer>() {
 			public void visit(Integer id) {
 				_slots.add(slot(id));
 			}

@@ -47,7 +47,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         return _btreeIndex.getID();
 	}
 	
-	public void traverseAll(Transaction ta, Visitor4 command) {
+	public void traverseIds(Transaction ta, Visitor4 command) {
 		if(_btreeIndex!=null) {
 			_btreeIndex.traverseKeys(ta,command);
 		}
@@ -118,7 +118,18 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public static Iterator4 iterate(ClassMetadata clazz, Transaction trans) {
 		return btree(clazz).asRange(trans).keys();
 	}
-	
+
+	public IntVisitable idVisitable(final Transaction trans){
+		return new IntVisitable() {
+			public void traverse(final IntVisitor visitor) {
+				traverseIds(trans, new Visitor4<Integer>() {
+					public void visit(Integer i) {
+						visitor.visit(i);
+					}
+				});				
+			}
+		};
+	}
 	
 	
 }

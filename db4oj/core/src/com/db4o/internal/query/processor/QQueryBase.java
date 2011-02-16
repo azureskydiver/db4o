@@ -372,54 +372,13 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		        result.checkDuplicates();
 		    }
 		
-		    final ObjectContainerBase stream = stream();
 		    i = new Iterator4Impl(candidateCollection);
 		    while (i.moveNext()) {
 		        QCandidates candidates = (QCandidates)i.current();
 		        if (topLevel) {
-		            candidates.traverse(result);
+		            candidates.traverseIds(result);
 		        } else {
-		            candidates.traverse(new Visitor4() {
-		                public void visit(Object a_object) {
-		                    QCandidate candidate = (QCandidate)a_object;
-		                    if (candidate.include()) {
-		                        TreeInt ids = new TreeInt(candidate._key);
-		                        final ByRef<TreeInt> idsNew = new ByRef<TreeInt>();
-		                        Iterator4 itPath = executionPath.iterator();
-		                        while (itPath.moveNext()) {
-		                            idsNew.value = null;
-		                            final String fieldName = (String) (itPath.current());
-		                            if (ids != null) {
-		                                ids.traverse(new Visitor4() {
-		                                    public void visit(Object treeInt) {
-		                                        int id = ((TreeInt)treeInt)._key;
-		                                        StatefulBuffer reader =
-		                                            stream.readStatefulBufferById(_trans, id);
-		                                        if (reader != null) {
-		                                            ObjectHeader oh = new ObjectHeader(stream, reader);
-		                                            CollectIdContext context = new CollectIdContext(_trans, oh, reader);
-		                                            oh.classMetadata().collectIDs(context, fieldName);
-		                                            Tree.traverse(context.ids(), new Visitor4<TreeInt>() {
-														public void visit(TreeInt node) {
-															idsNew.value = TreeInt.add(idsNew.value, node._key);
-														}
-		                                            });
-		                                        }
-		                                    }
-		                                });
-		                            }
-		                            ids = (TreeInt) idsNew.value;
-		                        }
-		                        if(ids != null){
-		                            ids.traverse(new Visitor4() {
-		                                public void visit(Object treeInt) {
-		                                    result.addKeyCheckDuplicates(((TreeInt)treeInt)._key);
-		                                }
-		                            });
-		                        }
-		                    }
-		                }
-		            });
+		            candidates.traverseIds(new AscendingQueryExecutor(_trans, result, executionPath));
 		        }
 		    }
 		}
@@ -533,7 +492,57 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 		return (Constraint)i_constraints.singleElement();
 	}
 
-    public static class CreateCandidateCollectionResult {
+    private static final class AscendingQueryExecutor implements IntVisitor {
+    	
+		private final ObjectContainerBase _container;
+		private final IdListQueryResult _result;
+		private final Collection4 _executionPath;
+		private final Transaction _trans;
+
+		public AscendingQueryExecutor(Transaction trans, IdListQueryResult result, Collection4 executionPath) {
+			_trans = trans;
+			_container = _trans.container();
+			_result = result;
+			_executionPath = executionPath;
+		}
+
+		public void visit(int id) {
+		    TreeInt ids = new TreeInt(id);
+		    final ByRef<TreeInt> idsNew = new ByRef<TreeInt>();
+		    Iterator4 itPath = _executionPath.iterator();
+		    while (itPath.moveNext()) {
+		        idsNew.value = null;
+		        final String fieldName = (String) (itPath.current());
+		            ids.traverse(new Visitor4() {
+		                public void visit(Object treeInt) {
+		                    int id = ((TreeInt)treeInt)._key;
+		                    StatefulBuffer buffer = _container.readStatefulBufferById(_trans, id);
+		                    if (buffer != null) {
+		                        ObjectHeader oh = new ObjectHeader(_container, buffer);
+		                        CollectIdContext context = new CollectIdContext(_trans, oh, buffer);
+		                        oh.classMetadata().collectIDs(context, fieldName);
+		                        Tree.traverse(context.ids(), new Visitor4<TreeInt>() {
+									public void visit(TreeInt node) {
+										idsNew.value = TreeInt.add(idsNew.value, node._key);
+									}
+		                        });
+		                    }
+		                }
+		            });
+		        ids = (TreeInt) idsNew.value;
+		        if(ids == null){
+		        	return;
+		        }
+		    }
+	        ids.traverse(new Visitor4() {
+	            public void visit(Object treeInt) {
+	                _result.addKeyCheckDuplicates(((TreeInt)treeInt)._key);
+	            }
+	        });
+		}
+	}
+
+	public static class CreateCandidateCollectionResult {
     	public final boolean checkDuplicates;
         public final boolean topLevel;
         public final List4 candidateCollection;

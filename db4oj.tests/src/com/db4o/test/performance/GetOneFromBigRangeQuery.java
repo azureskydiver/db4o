@@ -61,6 +61,7 @@ public class GetOneFromBigRangeQuery {
 	private static ObjectContainer openObjectContainer() {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
+		// config.idSystem().usePointerBasedSystem();
 		ObjectContainer objectContainer = Db4oEmbedded.openFile(config, FILE);
 		return objectContainer;
 	}
