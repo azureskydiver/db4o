@@ -187,6 +187,13 @@ public class QueriesDb4o extends Db4oDriver implements QueriesDriver{
         }
     }
     
+    public void queryTwoLevelBigRangeFound(){
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            doQuery(twoLevelBigRangeQuery());
+        }
+    }
+    
     public void queryByChildIdentity(){
         
         Query q = newIndianapolisListQuery();
@@ -216,6 +223,13 @@ public class QueriesDb4o extends Db4oDriver implements QueriesDriver{
         }
     }
     
+    public void getOneFromTwoLevelBigRangeQuery(){
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            getOne(twoLevelBigRangeQuery());
+        }
+    }
+    
     public void getOneFromOrTwoLevelsQuery(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
@@ -231,13 +245,21 @@ public class QueriesDb4o extends Db4oDriver implements QueriesDriver{
         return q;
     }
     
-    private Query bigRangeQuery(){
+    private Query twoLevelBigRangeQuery(){
         Query q = newIndianapolisListQuery();
         Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(1)).greater();
         Constraint c2 = q.descend(fieldNext()).descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
         c1.or(c2);
         return q;
     }
+    
+    private Query bigRangeQuery(){
+        Query q = newIndianapolisListQuery();
+        q.descend(fieldPayload()).constrain(new Integer(1)).greater();
+        q.descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
+        return q;
+    }
+
     
     private IndianapolisList getOne(Query q){
     	return (IndianapolisList) q.execute().next();

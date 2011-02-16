@@ -50,6 +50,12 @@ public interface QueriesDriver {
     
     void queryBigRangeFound();
     
+    void queryTwoLevelBigRangeFound();
+    
+    void getOneFromBigRangeQuery();
+    
+    void getOneFromTwoLevelBigRangeQuery();
+    
     void queryByChildIdentity();
     
     void getSingleRandomObject();
