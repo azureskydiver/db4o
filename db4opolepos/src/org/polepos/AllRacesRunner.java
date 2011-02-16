@@ -51,7 +51,7 @@ import com.db4o.io.*;
  */
 public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
-    private static String JAR_TRUNK = "db4o-8.1.186.15546-all-java5.jar";
+    private static String JAR_TRUNK = "db4o-8.1.187.15546-all-java5.jar";
 
     private static String JAR_PRODUCTION = "db4o-8.0.184.15484-all-java5.jar";
     
