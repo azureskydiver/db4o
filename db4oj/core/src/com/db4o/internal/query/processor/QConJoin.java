@@ -158,13 +158,13 @@ public class QConJoin extends QCon {
 		return !i_and;
 	}
 	
-	public void setProcessedByIndex() {
+	public void setProcessedByIndex(QCandidates candidates) {
 		if(processedByIndex()){
 			return;
 		}
-		super.setProcessedByIndex();
-		constraint1().setProcessedByIndex();
-		constraint2().setProcessedByIndex();
+		super.setProcessedByIndex(candidates);
+		constraint1().setProcessedByIndex(candidates);
+		constraint2().setProcessedByIndex(candidates);
 	}
 
 }

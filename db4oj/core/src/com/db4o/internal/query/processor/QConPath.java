@@ -130,9 +130,9 @@ public class QConPath extends QConClass {
 	}
 	
     @Override
-    public void setProcessedByIndex() {
+    public void setProcessedByIndex(QCandidates candidates) {
     	if(childrenCount() <=1){
-    		internalSetProcessedByIndex();
+    		internalSetProcessedByIndex(null);
     	}
     }
 

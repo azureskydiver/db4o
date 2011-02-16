@@ -56,7 +56,8 @@ public class QConClass extends QConObject{
 	
 	boolean evaluate(QCandidate candidate){
 		boolean result = true;
-		if(candidate.candidates().isTopLevel()) { 
+		QCandidates qCandidates = candidate.candidates();
+		if(qCandidates.isTopLevel() && qCandidates.wasLoadedFromClassFieldIndex()) { 
 			if(_classMetadata.getAncestor() != null){
 				BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) _classMetadata.index();
 				if(index == null){
@@ -79,11 +80,6 @@ public class QConClass extends QConObject{
 	
 	void evaluateSelf() {
 		
-		// optimization for simple class queries: 
-		// No instantiation of objects, if not necessary.
-		// Does not handle the special comparison of the
-		// Compare interface.
-		//
 		if(i_candidates.wasLoadedFromClassIndex()){
 			if(i_evaluator.isDefault()){
 				if(! hasJoins()){
@@ -96,11 +92,13 @@ public class QConClass extends QConObject{
 			}
 		}
 		
-		if(i_candidates.isTopLevel()) {
-			if(i_evaluator.isDefault()){
-				if(! hasJoins()){
-					if(_classMetadata != null && _classMetadata.getAncestor() == null){
-						return;
+		if(i_candidates.wasLoadedFromClassFieldIndex()){
+			if(i_candidates.isTopLevel()) {
+				if(i_evaluator.isDefault()){
+					if(! hasJoins()){
+						if(_classMetadata != null && _classMetadata.getAncestor() == null){
+							return;
+						}
 					}
 				}
 			}
@@ -165,7 +163,7 @@ public class QConClass extends QConObject{
     }
     
     @Override
-    public void setProcessedByIndex() {
+    public void setProcessedByIndex(QCandidates candidates) {
     	// do nothing, QConClass needs to stay in the evaluation graph.
     }
     

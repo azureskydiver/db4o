@@ -464,4 +464,16 @@ public class QConObject extends QCon {
         }
         return str;
     }
+    
+    @Override
+    protected void internalSetProcessedByIndex(QCandidates candidates) {
+    	super.internalSetProcessedByIndex(candidates);
+    	if(i_field == null){
+    		return;
+    	}
+    	FieldMetadata fieldMetadata = i_field.getFieldMetadata();
+    	if(! fieldMetadata.isVirtual()){
+    		candidates.wasLoadedFromClassFieldIndex(true);
+    	}
+    }
 }

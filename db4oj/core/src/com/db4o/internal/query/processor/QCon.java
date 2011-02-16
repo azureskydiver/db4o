@@ -726,16 +726,16 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return i_evaluator;
     }
 
-    public void setProcessedByIndex() {
-		internalSetProcessedByIndex();
+    public void setProcessedByIndex(QCandidates candidates) {
+		internalSetProcessedByIndex(candidates);
 	}
 
-	protected void internalSetProcessedByIndex() {
+	protected void internalSetProcessedByIndex(QCandidates candidates) {
 		_processedByIndex = true;
 		if(i_joins != null){
 			Iterator4 i = i_joins.iterator();
 			while(i.moveNext()){
-				((QConJoin)i.current()).setProcessedByIndex();
+				((QConJoin)i.current()).setProcessedByIndex(candidates);
 			}
 		}
 	}

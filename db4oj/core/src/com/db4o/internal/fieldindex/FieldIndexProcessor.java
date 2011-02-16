@@ -21,7 +21,7 @@ public class FieldIndexProcessor {
 		IndexedNode resolved = resolveFully(bestIndex);
 		
 		if (! bestIndex.isEmpty()) {
-			bestIndex.markAsBestIndex();
+			bestIndex.markAsBestIndex(_candidates);
 			return new FieldIndexProcessorResult(resolved);
 		}
 		return FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH;

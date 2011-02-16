@@ -46,9 +46,9 @@ public class IndexedPath extends IndexedNodeBase {
 		throw new NotSupportedException();
 	}
 	
-	public void markAsBestIndex() {
-		_constraint.setProcessedByIndex();
-		_next.markAsBestIndex();
+	public void markAsBestIndex(QCandidates candidates) {
+		_constraint.setProcessedByIndex(candidates);
+		_next.markAsBestIndex(candidates);
 	}
 	
 	public boolean isEmpty(){

@@ -53,12 +53,13 @@ public abstract class JoinedLeaf implements IndexedNodeWithRange {
 		return _range.isEmpty();
 	}
 	
-	public void markAsBestIndex() {
-		_leaf1.markAsBestIndex();
-		_constraint.setProcessedByIndex();
+	public void markAsBestIndex(QCandidates candidates) {
+		_leaf1.markAsBestIndex(candidates);
+		_constraint.setProcessedByIndex(candidates);
 	}
 	
 	public void traverse(IntVisitor visitor){
 		IndexedNodeBase.traverse(this, visitor);
 	}
+
 }
