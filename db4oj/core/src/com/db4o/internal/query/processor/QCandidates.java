@@ -324,14 +324,6 @@ public final class QCandidates implements Visitor4 {
         }
         return new Iterator4Impl(_constraints);
     }
-    
-    final static class TreeIntBuilder {
-    	public TreeInt tree;
-    	
-    	public void add(TreeInt node) {
-    		tree = (TreeInt)Tree.add(tree, node);
-    	}
-    }
 
     void loadFromClassIndex() {
     	if (!isEmpty()) {
@@ -356,6 +348,11 @@ public final class QCandidates implements Visitor4 {
     void traverse(Visitor4 visitor) {
     	_result.traverse(visitor);
     }
+    
+    void traverseIds(IntVisitor visitor) {
+    	_result.traverseIds(visitor);
+    }
+
 
     // FIXME: This method should go completely.
     //        We changed the code to create the QCandidates graph in two steps:

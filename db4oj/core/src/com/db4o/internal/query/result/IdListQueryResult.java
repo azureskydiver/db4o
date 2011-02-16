@@ -14,7 +14,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
+public class IdListQueryResult extends AbstractQueryResult implements Visitor4, IntVisitor{
     
 	private Tree _candidates;
 	
@@ -57,6 +57,10 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 		if (candidate.include()) {
 		    addKeyCheckDuplicates(candidate._key);
 		}
+	}
+	
+	public void visit(int id){
+		addKeyCheckDuplicates(id);
 	}
 	
 	public void addKeyCheckDuplicates(int a_key){
@@ -106,7 +110,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 			BTree btree = ((BTreeClassIndexStrategy)index).btree();
 			_ids = new IntArrayList(btree.size(transaction()));
 		}
-		index.traverseAll(_transaction, new Visitor4() {
+		index.traverseIds(_transaction, new Visitor4() {
 			public void visit(Object a_object) {
 				add(((Integer)a_object).intValue());
 			}
@@ -129,7 +133,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 				if (claxx == null
 						|| !(stream()._handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
 					final ClassIndexStrategy index = classMetadata.index();
-					index.traverseAll(_transaction, new Visitor4() {
+					index.traverseIds(_transaction, new Visitor4() {
 						public void visit(Object obj) {
 							int id = ((Integer)obj).intValue();
 							TreeInt newNode = new TreeInt(id);

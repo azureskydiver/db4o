@@ -222,7 +222,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		if(!classMetadata.hasClassIndex()) {
 			return;
 		}
-		classMetadata.index().traverseAll(SOURCEDB.transaction(this), command);
+		classMetadata.index().traverseIds(SOURCEDB.transaction(this), command);
 	}
 	
 	public void traverseAllIndexSlots(ClassMetadata classMetadata,Visitor4 command) {

@@ -3,11 +3,9 @@
 package com.db4o.internal.fieldindex;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.internal.query.processor.*;
 
-public class FieldIndexProcessorResult {
+public class FieldIndexProcessorResult implements IntVisitable{
 	
 	public static final FieldIndexProcessorResult NO_INDEX_FOUND = new FieldIndexProcessorResult(null);
 
@@ -19,15 +17,11 @@ public class FieldIndexProcessorResult {
 		_indexedNode = indexedNode;
 	}
 	
-	public Tree toQCandidate(QCandidates candidates){
-		return TreeInt.toQCandidate(toTreeInt(), candidates);
-	}
-	
-	public TreeInt toTreeInt(){
-		if(foundMatch()){
-			return _indexedNode.toTreeInt();
+	public void traverse(IntVisitor visitor) {
+		if(! foundMatch()){
+			return;
 		}
-		return null;
+		_indexedNode.traverse(visitor);
 	}
 	
 	public boolean foundMatch(){
@@ -50,5 +44,6 @@ public class FieldIndexProcessorResult {
 			}
 		};
 	}
+
 	
 }

@@ -5,39 +5,51 @@ package com.db4o.internal.query.processor;
 import com.db4o.foundation.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.fieldindex.*;
-import com.db4o.internal.query.processor.QCandidates.*;
 
 /**
  * @exclude
  */
 public class QueryResultCandidates {
 	
-	private FieldIndexProcessorResult _fieldIndexProcessorResult;
-	
 	private QCandidate _candidates;
 
 	private QCandidates _qCandidates;
 	
-	ClassIndexStrategy _classIndex;
+	IntVisitable _candidateIds;
+	
 	
 	public QueryResultCandidates(QCandidates qCandidates){
 		_qCandidates = qCandidates;
 	}
 
 	public void add(QCandidate candidate) {
+		toQCandidates();
 		_candidates = Tree.add(_candidates, candidate);
 	}
 
+	private void toQCandidates() {
+		if(_candidateIds == null){
+			return;
+		}
+		_candidateIds.traverse(new IntVisitor() {
+			public void visit(int id) {
+				_candidates = Tree.add(_candidates, new QCandidate(_qCandidates, null, id));
+			}
+		});
+		_candidateIds = null;
+	}
+
 	public void fieldIndexProcessorResult(FieldIndexProcessorResult result) {
-		_fieldIndexProcessorResult = result;
-    	_candidates = (QCandidate) result.toQCandidate(_qCandidates);
+		_candidateIds = result;
 	}
 
 	public void singleCandidate(QCandidate candidate) {
 		_candidates = candidate;
+		_candidateIds = null;
 	}
 	
     boolean filter(Visitor4 visitor) {
+    	toQCandidates();
         if (_candidates != null) {
         	_candidates.traverse(visitor);
         	_candidates = (QCandidate) _candidates.filter(new Predicate4() {
@@ -50,22 +62,31 @@ public class QueryResultCandidates {
     }
 
 	public void loadFromClassIndex(ClassIndexStrategy index) {
-		_classIndex = index;
-    	final TreeIntBuilder result = new TreeIntBuilder();
-		index.traverseAll(_qCandidates.transaction(), new Visitor4() {
-    		public void visit(Object obj) {
-    			result.add(new QCandidate(_qCandidates, null, ((Integer)obj).intValue()));
-    		}
-    	});
-		_candidates = (QCandidate) result.tree;
+		_candidateIds = index.idVisitable(_qCandidates.transaction());
 	}
 	
     void traverse(Visitor4 visitor) {
+    	toQCandidates();
         if(_candidates != null){
             _candidates.traverse(visitor);
         }
     }
 
+	public void traverseIds(final IntVisitor visitor) {
+		if(_candidateIds != null){
+			_candidateIds.traverse(visitor);
+			return;
+		}
+		traverse(new Visitor4() {
+			public void visit(Object obj) {
+				QCandidate candidate = (QCandidate) obj;
+				if(candidate.include()){
+					visitor.visit(candidate._key);
+				}
+			}
+		});
+		
+	}
 
 
 }

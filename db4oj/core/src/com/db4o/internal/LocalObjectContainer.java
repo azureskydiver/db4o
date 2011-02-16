@@ -790,7 +790,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
 		final IntArrayList ids = new IntArrayList();
-        clazz.index().traverseAll(trans, new Visitor4() {
+        clazz.index().traverseIds(trans, new Visitor4() {
         	public void visit(Object obj) {
         		ids.add(((Integer)obj).intValue());
         	}

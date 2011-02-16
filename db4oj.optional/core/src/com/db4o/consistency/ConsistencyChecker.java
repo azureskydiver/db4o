@@ -141,7 +141,7 @@ public class ConsistencyChecker {
 				continue;
 			}
 			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) clazz.index();
-			index.traverseAll(_db.systemTransaction(), new Visitor4<Integer>() {
+			index.traverseIds(_db.systemTransaction(), new Visitor4<Integer>() {
 				public void visit(Integer id) {
 					if(!idIsValid(id)) {
 						invalidIds.add(new Pair(clazz.getName(), id));

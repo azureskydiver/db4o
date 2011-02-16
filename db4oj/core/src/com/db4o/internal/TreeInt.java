@@ -109,21 +109,6 @@ public class TreeInt extends Tree<Integer> implements ReadWriteable {
 		return false;
 	}
 
-	QCandidate toQCandidate(QCandidates candidates) {
-		QCandidate qc = new QCandidate(candidates, null, _key);
-		qc._preceding = toQCandidate((TreeInt) _preceding, candidates);
-		qc._subsequent = toQCandidate((TreeInt) _subsequent, candidates);
-		qc._size = _size;
-		return qc;
-	}
-
-	public static QCandidate toQCandidate(TreeInt tree, QCandidates candidates) {
-		if (tree == null) {
-			return null;
-		}
-		return tree.toQCandidate(candidates);
-	}
-
 	public String toString() {
 		return "" + _key;
 	}
