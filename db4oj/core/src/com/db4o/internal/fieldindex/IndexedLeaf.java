@@ -52,8 +52,8 @@ public class IndexedLeaf extends IndexedNodeBase implements IndexedNodeWithRange
 		return _range;
 	}
 	
-	public void markAsBestIndex() {
-		_constraint.setProcessedByIndex();
+	public void markAsBestIndex(QCandidates candidates) {
+		_constraint.setProcessedByIndex(candidates);
 	}
 	
 	public boolean isEmpty(){

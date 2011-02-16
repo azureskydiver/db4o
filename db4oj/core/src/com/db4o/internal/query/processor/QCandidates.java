@@ -40,6 +40,8 @@ public final class QCandidates implements Visitor4 {
     
     private boolean _loadedFromClassIndex;
     
+    private boolean _loadedFromClassFieldIndex;
+    
     private boolean _isTopLevel;
     
     QCandidates(LocalTransaction a_trans, ClassMetadata a_classMetadata, QField a_field, boolean isTopLevel) {
@@ -427,6 +429,14 @@ public final class QCandidates implements Visitor4 {
 	
 	public boolean wasLoadedFromClassIndex(){
 		return _loadedFromClassIndex;
+	}
+	
+	public boolean wasLoadedFromClassFieldIndex(){
+		return _loadedFromClassFieldIndex;
+	}
+	
+	public void wasLoadedFromClassFieldIndex(boolean flag){
+		_loadedFromClassFieldIndex = flag;
 	}
 
 	public boolean fitsIntoExistingConstraintHierarchy(QCon constraint) {
