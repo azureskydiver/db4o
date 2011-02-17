@@ -21,7 +21,7 @@ package org.polepos.circuits.querycaching;
 
 import org.polepos.framework.*;
 
-public class QueryCaching extends CircuitBase {
+public class QueryCaching extends TimedLapsCircuitBase {
 
 	@Override
 	public String description() {

@@ -22,7 +22,7 @@ package org.polepos.circuits.queries;
 import org.polepos.framework.*;
 
 
-public class QueriesMedium extends CircuitBase {
+public class QueriesMedium extends TimedLapsCircuitBase {
 
     @Override
     public String description() {

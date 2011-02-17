@@ -3,7 +3,7 @@ package com.db4o.polepos.idsys;
 
 import org.polepos.framework.*;
 
-public class PlainAllocateCircuit extends CircuitBase {
+public class PlainAllocateCircuit extends TimedLapsCircuitBase {
 
 	@Override
 	protected void addLaps() {

@@ -22,7 +22,7 @@ package org.polepos.circuits.fragmentation;
 
 import org.polepos.framework.*;
 
-public class Fragmentation extends CircuitBase {
+public class Fragmentation extends TimedLapsCircuitBase {
 
     @Override
     protected void addLaps() {

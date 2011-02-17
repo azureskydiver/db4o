@@ -24,7 +24,7 @@ import org.polepos.framework.*;
 /**
  * @author Herkules
  */
-public class TreesMulti extends CircuitBase
+public class TreesMulti extends TimedLapsCircuitBase
 {
     
     @Override

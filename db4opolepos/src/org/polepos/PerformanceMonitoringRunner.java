@@ -63,8 +63,8 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	private final File[] _libPaths;
 	
     public static void main(String[] args) {
-    	System.setProperty(CircuitBase.NUM_RUNS_PROPERTY_ID, String.valueOf(NUM_RUNS));
-    	System.setProperty(CircuitBase.MEMORY_USAGE_PROPERTY_ID, CircuitBase.NullMemoryUsage.class.getName());
+    	System.setProperty(TimedLapsCircuitBase.NUM_RUNS_PROPERTY_ID, String.valueOf(NUM_RUNS));
+    	System.setProperty(TimedLapsCircuitBase.MEMORY_USAGE_PROPERTY_ID, TimedLapsCircuitBase.NullMemoryUsage.class.getName());
     	int[] selectedIndices = null;
     	try {
     		selectedIndices = parseSelectedIndices(args[0]);
@@ -154,8 +154,8 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     	return teams.toArray(new Team[teams.size()]);
 	}
 
-	public CircuitBase[] circuits() {
-		return new CircuitBase[] {
+	public Circuit[] circuits() {
+		return new Circuit[] {
 			new ReflectiveCircuitBase(Complex.class),
 			new ReflectiveCircuitBase(InheritanceHierarchy.class),
 			new ReflectiveCircuitBase(NestedLists.class),

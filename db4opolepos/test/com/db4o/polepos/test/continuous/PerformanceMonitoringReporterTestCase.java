@@ -105,7 +105,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		for(int turnIdx = 0; turnIdx < readings.length; turnIdx++) {
 			turnResults[turnIdx] = new TurnResult();
 			for(int lapIdx = 0; lapIdx < readings[turnIdx].length; lapIdx++) {
-				turnResults[turnIdx].report(new Result(circuit, team, laps[lapIdx], setups[turnIdx], 0, readings[turnIdx][lapIdx].time, readings[turnIdx][lapIdx].memory, 0, 0));
+				turnResults[turnIdx].report(new TimedLapsResult(circuit, team, laps[lapIdx], setups[turnIdx], 0, readings[turnIdx][lapIdx].time, readings[turnIdx][lapIdx].memory, 0, 0));
 			}
 		}
 		reporter.report(team, car, setups, turnResults);
@@ -295,7 +295,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		
 	}
 	
-	private static class MockCircuit extends CircuitBase {
+	private static class MockCircuit extends TimedLapsCircuitBase {
 		@Override
 		protected void addLaps() {
 		}

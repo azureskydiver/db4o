@@ -159,16 +159,16 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 	}
     
 
-	public CircuitBase[] circuits() {
+	public Circuit[] circuits() {
 		
 		if(false){
-			return new CircuitBase[]{
+			return new Circuit[]{
 					// new Fragmentation(),
 					new QueriesSlow(),
 			};
 		}
 		
-		return new CircuitBase[] {
+		return new Circuit[] {
 			new ReflectiveCircuitBase(Complex.class),
 			new ReflectiveCircuitBase(NestedLists.class),
 			new ReflectiveCircuitBase(InheritanceHierarchy.class),
@@ -206,6 +206,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 			new SortedQueryDb4o(),
 			new MultithreadedQueriesDb4o(),
 			new QueryCachingDb4o(),
+	    	new ComplexConcurrencyDb4o(),
 		};
 	}
     
