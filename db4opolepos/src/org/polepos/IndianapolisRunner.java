@@ -31,8 +31,8 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
         new IndianapolisRunner().run();
     }
 	
-	public CircuitBase[] circuits() {
-		return new CircuitBase[] { 
+	public Circuit[] circuits() {
+		return new Circuit[] { 
 				new QueriesFast(),  
 		};
 	}

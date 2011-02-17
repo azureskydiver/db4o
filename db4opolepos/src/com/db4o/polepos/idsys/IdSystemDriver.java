@@ -18,12 +18,12 @@ public abstract class IdSystemDriver extends DriverBase {
 	}
 	
 	@Override
-	public void backToPit() {
+	public void closeDatabase() {
 		close();
 	}
 
 	@Override
-	public void prepare() throws CarMotorFailureException {
+	public void prepare() {
 		close();
 		IdSystemCar car = (IdSystemCar)car();
 		LocalObjectContainer container = _engine.open(car);

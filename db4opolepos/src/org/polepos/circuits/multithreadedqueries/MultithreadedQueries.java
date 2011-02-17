@@ -2,7 +2,7 @@ package org.polepos.circuits.multithreadedqueries;
 
 import org.polepos.framework.*;
 
-public class MultithreadedQueries extends CircuitBase {
+public class MultithreadedQueries extends TimedLapsCircuitBase {
 
     @Override
     public String description() {

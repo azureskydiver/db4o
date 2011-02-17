@@ -55,8 +55,8 @@ public class AllSettingsRunner extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
-	public CircuitBase[] circuits() {
-		return new CircuitBase[] {
+	public Circuit[] circuits() {
+		return new Circuit[] {
 				
 				new ReflectiveCircuitBase(Complex.class),
 				new ReflectiveCircuitBase(InheritanceHierarchy.class),

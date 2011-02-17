@@ -22,7 +22,7 @@ package org.polepos.circuits.sortedquery;
 import org.polepos.framework.*;
 
 
-public class SortedQuery extends CircuitBase
+public class SortedQuery extends TimedLapsCircuitBase
 {
     
     @Override
