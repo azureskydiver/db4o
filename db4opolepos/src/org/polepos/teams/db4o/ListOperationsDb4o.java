@@ -22,14 +22,12 @@ package org.polepos.teams.db4o;
 import java.util.*;
 
 import org.polepos.circuits.listoperations.*;
-import org.polepos.runner.db4o.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-public class ListOperationsDb4o extends Db4oDriver implements
-		ListOperationsDriver {
+public class ListOperationsDb4o extends Db4oDriver implements ListOperationsDriver {
 
 
 	@Override
