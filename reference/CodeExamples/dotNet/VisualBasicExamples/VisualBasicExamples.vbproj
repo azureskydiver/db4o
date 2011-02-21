@@ -137,6 +137,7 @@
     <Compile Include="Code\features\uniqueconstrain\UniqueConstrainExample.vb" />
     <Compile Include="Code\indexing\check\CheckForAndIndex.vb" />
     <Compile Include="Code\metainfo\MetaInfoExample.vb" />
+    <Compile Include="Code\PersistanceAware.vb" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.vb" />
     <Compile Include="Code\reflection\ReflectorExamples.vb" />
     <Compile Include="Code\systeminfo\SystemInfoExamples.vb" />
@@ -145,10 +146,13 @@
     <Compile Include="Code\ta\collections\Team.vb" />
     <Compile Include="Code\ta\example\Person.vb" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.vb" />
+    <Compile Include="Code\tp\rollback\RollbackExample.vb" />
+    <Compile Include="Code\tp\TransparentActivationExample.vb" />
     <Compile Include="Code\typehandling\blob\BlobStorage.vb" />
     <Compile Include="Code\typehandling\translator\ExampleTranslator.vb" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.vb" />
     <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.vb" />
+    <Compile Include="Code\xml\XMLSerialisationExamples.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -275,6 +279,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(SolutionDir)\..\libs\net\Db4oTool.exe -tp -collections -debug -by-attribute:Db4oDoc.Code.PersistanceAwareAttribute $(TargetPath)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

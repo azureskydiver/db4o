@@ -12,7 +12,6 @@
     <taskdef name="db4o-enhance"
              classname="com.db4o.enhance.Db4oEnhancerAntTask"
              classpathref="project.classpath"/>
-    
     <!-- #end example -->
     
     
@@ -24,14 +23,8 @@
                       collections="true">
             <classpath refid="project.classpath"/>
             <sources dir="${basedir}/bin">
-                      <include name="**/*.class"/>
+                <include name="**/*.class"/>
             </sources>
-            <jars dir="${basedir}/lib">
-                <include name="*.jar"/>
-                <exclude name="db4o-*.jar"/>
-                <exclude name="ant.jar"/>
-                <exclude name="bloat-1.0.jar"/>
-            </jars>
         </db4o-enhance>
     </target>
     
@@ -46,14 +39,8 @@
                       collections="false">
             <classpath refid="project.classpath"/>
             <sources dir="${basedir}/bin">
-                      <include name="**/*.class"/>
+                <include name="**/*.class"/>
             </sources>
-            <jars dir="${basedir}/lib">
-                <include name="*.jar"/>
-                <exclude name="db4o-*.jar"/>
-                <exclude name="ant.jar"/>
-                <exclude name="bloat-1.0.jar"/>
-            </jars>
         </db4o-enhance>
     </target>
     

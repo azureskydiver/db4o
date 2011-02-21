@@ -1,50 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="4475" MadCap:lastWidth="651" MadCap:conditions="Primary..NET,Primary.All languages" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
-    <head><title>TA Enhancement With Db4oTool	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1404" MadCap:lastWidth="560" MadCap:conditions="Primary..NET,Primary.All languages">
+    <head>
     </head>
-    <body onload="prettyPrint()">
+    <body>
         <h1>TA Enhancement With Db4oTool</h1>
-        <p>TA instrumentation can be done by applying     <![CDATA[ ]]></p>
-        <p><a href="../../../../advanced_topics/enhancement_tools/enhancement_for_.net/db4otool.htm">Db4oTool</a> utility to the ready .NET assemblies:</p>
-        <p><code>Db4oTool -ta assembly</code>
+        <p>TA instrumentation can be done by applying       <![CDATA[ ]]><a href="../../../../advanced_topics/enhancement_tools/enhancement_for_.net/db4otool.htm">Db4oTool</a> utility to the ready .NET assemblies:</p>
+        <p><code>Db4oTool -ta -debug YourAssemblyName</code>
         </p>
-        <p>Let's look at a simple example. We will use SensorPanel
-class from <a href="../../../activation.htm">Activation</a> example: </p>
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/SensorPanelTA.cs/SensorPanelTA.cs.flsnp" />
-        </p>
-        <p MadCap:conditions="Global.Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/SensorPanelTA.vb/SensorPanelTA.vb.flsnp" />
-        </p>
-        <p MadCap:conditions="Global.Primary:vb" />
+        <p>Let's look at a simple example. First we create our domain model. For example a simple pilot-class.</p>
+        <MadCap:snippetBlock src="../../../../CodeExamples/tp/TransparentActivationExample-Our-domain-model.all.flsnp" />
         <p>In your code you will need to add Transparent Activation
 support to the configuration:</p>
-        <p MadCap:conditions="Primary..NET,Primary.c#,Primary.All languages">
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/TAExample.cs/ConfigureTA.flsnp" />
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/TAExample.cs/StoreSensorPanel.flsnp" />
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/TAExample.cs/TestActivation.flsnp" />
-        </p>
-        <p MadCap:conditions="Global.Primary:cs" />
-        <p MadCap:conditions="Primary..NET,Primary.VB.NET,Primary.All languages">
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/TAExample.vb/ConfigureTA.flsnp" />
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/TAExample.vb/StoreSensorPanel.flsnp" />
-            <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement With Db4oTool/TAExample.vb/TestActivation.flsnp" />
-        </p>
-        <p MadCap:conditions="Global.Primary:vb" />
+        <MadCap:snippetBlock src="../../../../CodeExamples/tp/TransparentActivationExample-Add-transparent-persistence-support.all.flsnp" />
         <p>Compile and run the application. Now, you can add TA support by using the following
 command-line:</p>
-        <p><code>Db4oTool -ta TAExamples.exe</code>
+        <p><code>Db4oTool -ta -debug TAExamples.exe</code>
         </p>
-        <p>use -vv option for verbose output:</p>
-        <p><code>Db4oTool -ta -vv TAExamples.exe</code>
+        <p>Maybe you want to check it the enhancement worked. You can do that with a simple check:</p>
+        <MadCap:snippetBlock src="../../../../CodeExamples/tp/TransparentActivationExample-Verify-that-pilot-support-transparent-activation.all.flsnp" />
+        <p>Now you probably don't want to call the Db4oTool every time you compile. You can automate that by adding it to the build step. You can do that in Visual Studio by adding the command line to run in the build settings. Go to the project settings of your project. Select 'Build Events' in the project-settings. Then add the command to run the Db4oTool in the 'Post build event command line'. Note that you can use variables to find the right path for your assembly. </p>
+        <p>
+            <img src="vs-enhance-setup.PNG" />
         </p>
-        <p>You can also apply type filter to TA enable only selected
-types:</p>
-        <p><code>Db4oTool.exe -vv -ta -by-name:S* TAExamples.exe</code>
-        </p>
-        <p>Db4oTool uses .NET regex to parse the -by-name parameter,
-in the example above all types starting with "S" will be TA enabled.</p>
-        <p>Run TA enabled assembly and compare results to the previous run. </p>
+        <p>&#160;</p>
+        <p>&#160;</p>
     </body>
 </html>

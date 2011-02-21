@@ -146,6 +146,7 @@
     <Compile Include="Code\disconnectedobj\merging\Pilot.cs" />
     <Compile Include="Code\disconnectedobj\objectidentity\ObjectIdentityExamples.cs" />
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
+    <Compile Include="Code\PersistanceAwareAttribute.cs" />
     <Compile Include="Code\features\uniqueconstrain\UniqueConstrainExample.cs" />
     <Compile Include="Code\identiy\DataModel.cs" />
     <Compile Include="Code\identiy\IdentityConcepts.cs" />
@@ -185,6 +186,8 @@
     <Compile Include="Code\ta\collections\Team.cs" />
     <Compile Include="Code\ta\example\Person.cs" />
     <Compile Include="Code\ta\example\TransparentActivationExamples.cs" />
+    <Compile Include="Code\tp\rollback\RollbackExample.cs" />
+    <Compile Include="Code\tp\TransparentActivationExample.cs" />
     <Compile Include="Code\transactions\Transactions.cs" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
     <Compile Include="Code\tuning\monitoring\IOMonitoring.cs" />
@@ -199,6 +202,7 @@
     <Compile Include="Code\typehandling\translator\ExampleTranslator.cs" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.cs" />
     <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.cs" />
+    <Compile Include="Code\xml\XMLSerialisationExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +239,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(SolutionDir)\..\libs\net\Db4oTool.exe -tp -collections -debug -by-attribute:Db4oDoc.Code.PersistanceAwareAttribute $(TargetPath)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

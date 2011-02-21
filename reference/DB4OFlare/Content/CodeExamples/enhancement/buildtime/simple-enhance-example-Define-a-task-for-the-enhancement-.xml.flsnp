@@ -10,8 +10,7 @@
 &lt;/path&gt;
 &lt;taskdef name=&quot;db4o-enhance&quot;
          classname=&quot;com.db4o.enhance.Db4oEnhancerAntTask&quot;
-         classpathref=&quot;project.classpath&quot;/&gt;
-</pre>
+         classpathref=&quot;project.classpath&quot;/&gt;</pre>
 		<div class="codesnippet-meta">
 			simple-enhance-example.xml: Define a task for the enhancement 
 			<div class="codedownload">
