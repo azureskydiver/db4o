@@ -19,6 +19,8 @@ import com.db4o.internal.config.*;
  * - print the version number of this db4o version {@link #main(String[])} 
  * @see ExtDb4o ExtDb4o for extended functionality.
  * 
+ * @deprecated Since 8.1. Use {@link Db4oEmbedded}, {@link Db4oClientServer} and {@link Db4oVersion} classes instead. 
+ * 
  * @sharpen.rename Db4oFactory
  */
 public class Db4o {
@@ -30,7 +32,9 @@ public class Db4o {
 	}
 
     /**
-	 * prints the version name of this db4o version to <code>System.out</code>.
+	 * prints the version name of this db4o version to {@link System#out}.
+	 * 
+	 * @deprecated Use {@link Db4oVersion#NAME} instead.
      */
 	public static void main(String args[]){
 		System.out.println(version());
@@ -39,10 +43,10 @@ public class Db4o {
     /**
 	 * returns the global db4o
 	 * {@link Configuration Configuration} context 
-	 * for the running JVM session.
+	 * for the running VM session.
 	 * <br><br>
 	 * The {@link Configuration Configuration}
-	 * can be overriden in each
+	 * can be overridden in each
 	 * {@link com.db4o.ext.ExtObjectContainer#configure ObjectContainer}.<br><br>
 	 * @return the global {@link Configuration configuration} context
 	 * 
@@ -104,8 +108,7 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
-     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
-     * db4o-X.x-cs-java.jar
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in db4o client server library
      * for methods to open db4o servers and db4o clients. 
 	 */
 	public static ObjectContainer openClient(String hostName, int port,
@@ -140,8 +143,7 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
-     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
-     * db4o-X.x-cs-java.jar
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in db4o client server library
      * for methods to open db4o servers and db4o clients. 
 	 */
 	public static ObjectContainer openClient(Configuration config,
@@ -161,7 +163,7 @@ public class Db4o {
 	 * another {@link ObjectContainer ObjectContainer} against the same file will result in
 	 * a {@link DatabaseFileLockedException DatabaseFileLockedException}.<br><br>
  	 * Database files can only be accessed for readwrite access from one process 
- 	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
+ 	 * (one VM) at one time. All versions except for db4o mobile edition use an
  	 * internal mechanism to lock the database file for other processes. 
      * <br><br>
      * @param databaseFileName an absolute or relative path to the database file
@@ -194,7 +196,7 @@ public class Db4o {
 	 * another {@link ObjectContainer ObjectContainer} against the same file will result in
 	 * a {@link DatabaseFileLockedException DatabaseFileLockedException}.<br><br>
 	 * Database files can only be accessed for readwrite access from one process 
-	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
+	 * (one VM) at a time. All versions except for db4o mobile edition use an
 	 * internal mechanism to lock the database file for other processes. 
 	 * <br><br>
 	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
@@ -253,8 +255,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
-     * db4o-X.x-cs-java.jar
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in db4o client server library
      * for methods to open db4o servers and db4o clients. 
 	 */
 	public static final ObjectServer openServer(String databaseFileName,
@@ -291,8 +292,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
-     * db4o-X.x-cs-java.jar 
+     * @deprecated See the Db4oClientServer class in db4o client server library 
      * for methods to open db4o servers and db4o clients. 
 	 */
 	public static final ObjectServer openServer(Configuration config,
@@ -305,7 +305,9 @@ public class Db4o {
 	/**
      * returns the version name of the used db4o version.
      * <br><br>
-     * @return version information as a <code>String</code>.
+     * @return version information as a {@link String}.
+     * 
+     * @deprecated Since 8.1. Use {@link Db4oVersion#NAME} instead.
      */
     public static final String version () {
     	 return "db4o " + Db4oVersion.NAME;
