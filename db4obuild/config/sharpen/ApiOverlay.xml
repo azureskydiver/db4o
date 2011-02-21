@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <doc xmlns:xi="http://www.w3.org/2001/XInclude">
 
-
-	<xi:include href="CachedIoAdapter.xml" />
 	<xi:include href="DiagnosticToConsole.xml" />
 	<xi:include href="EventException.xml" />
 	<xi:include href="IActivatable.xml" />
@@ -16,6 +14,7 @@
 	<xi:include href="MapTypeHandler.xml" />
 	<xi:include href="TransparentActivationSupport.xml" />
 	<xi:include href="TransparentPersistenceSupport.xml" />
+	
 	<type name="Db4objects.Db4o.Db4oEmbedded">
 		<doc>
 			<summary>Factory class to open db4o instances in embedded
@@ -404,28 +403,6 @@
     </doc>
   </type>
 
-  <type name="Db4objects.Db4o.Config.IObjectMarshaller">
-    <doc>
-      <summary>interface for custom marshallers.</summary>
-      <remarks>
-        interface for custom marshallers.
-        Custom marshallers can be used for tuning the performance to store
-        and read objects. Instead of letting db4o do all the marshalling
-        by detecting the fields on a class and by using reflection, a
-        custom
-        <see cref="IObjectMarshaller">IObjectMarshaller</see>
-        allows the
-        application developer to write the logic how the fields of an
-        object are converted to a byte[] and back.
-        <br /><br />To implement a custom marshaller, write a class that
-        implements the methods of the
-        <see cref="IObjectMarshaller">IObjectMarshaller</see>
-        interface and register it for your persistent class:<br />
-        <code>Db4oFactory.Configure().ObjectClass(typeof(YourClass)).MarshallWith(yourMarshaller);</code>
-      </remarks>
-    </doc>
-  </type>
-
   <type name="Db4objects.Db4o.Events.IEventRegistry">
 
     <doc>
@@ -448,137 +425,6 @@
         </code>
         <seealso cref="EventRegistryFactory">EventRegistryFactory</seealso>
       </summary>
-    </doc>
-  </type>
-
-  <type name="Db4objects.Db4o.Ext.ExtDb4oFactory">
-    <member name="OpenMemoryFile(MemoryFile)">
-      <doc>
-        <summary>
-          Operates just like
-          <see cref="ExtDb4oFactory.OpenMemoryFile">ExtDb4oFactory.OpenMemoryFile</see>
-          , but uses
-          the global db4o
-          <see cref="IConfiguration">IConfiguration</see>
-          context.
-          opens an
-          <see cref="IObjectContainer">IObjectContainer</see>
-          for in-memory use .
-          <br /><br />In-memory ObjectContainers are useful for maximum performance
-          on small databases, for swapping objects or for storing db4o format data
-          to other media or other databases.<br /><br />Be aware of the danger of running
-          into OutOfMemory problems or complete loss of all data, in case of hardware
-          or software failures.<br /><br />
-
-        </summary>
-        <param name="memoryFile">
-          a
-          <see cref="MemoryFile">MemoryFile</see>
-
-          to store the raw byte data.
-
-        </param>
-        <returns>
-          an open
-          <see cref="IObjectContainer">IObjectContainer</see>
-
-        </returns>
-        <seealso cref="MemoryFile">MemoryFile</seealso>
-      </doc>
-    </member>
-    <member name="OpenMemoryFile(IConfiguration, MemoryFile)">
-      \
-      <doc>
-        <summary>
-          opens an
-          <see cref="IObjectContainer">IObjectContainer</see>
-          for in-memory use .
-          <br /><br />In-memory ObjectContainers are useful for maximum performance
-          on small databases, for swapping objects or for storing db4o format data
-          to other media or other databases.<br /><br />Be aware of the danger of running
-          into OutOfMemory problems or complete loss of all data, in case of hardware
-          or software failures.<br /><br />
-
-        </summary>
-        <param name="config">
-          a custom
-          <see cref="IConfiguration">IConfiguration</see>
-          instance to be obtained via
-          <see cref="Db4oFactory.NewConfiguration">Db4oFactory.NewConfiguration</see>
-
-        </param>
-        <param name="memoryFile">
-          a
-          <see cref="MemoryFile">MemoryFile</see>
-
-          to store the raw byte data.
-
-        </param>
-        <returns>
-          an open
-          <see cref="IObjectContainer">IObjectContainer</see>
-
-        </returns>
-        <seealso cref="MemoryFile">MemoryFile</seealso>
-      </doc>
-    </member>
-  </type>
-
-  <type name="Db4objects.Db4o.Ext.MemoryFile">
-    <doc>
-      <summary>carries in-memory data for db4o in-memory operation.</summary>
-      <remarks>
-        carries in-memory data for db4o in-memory operation.
-        <br /><br />In-memory ObjectContainers are useful for maximum performance
-        on small databases, for swapping objects or for storing db4o format data
-        to other media or other databases.<br /><br />Be aware of the danger of running
-        into OutOfMemory problems or complete loss of all data, in case of hardware
-        or runtime failures.
-        <br /><br />
-
-      </remarks>
-      <seealso cref="ExtDb4oFactory.OpenMemoryFile">ExtDb4oFactory.OpenMemoryFile</seealso>
-    </doc>
-  </type>
-
-  <type name="Db4objects.Db4o.IO.MemoryIoAdapter">
-    <doc>
-      <summary>IoAdapter for in-memory operation.</summary>
-      <remarks>
-        IoAdapter for in-memory operation. <br />
-        <br />
-        Configure db4o to operate with this in-memory IoAdapter with
-        <code>
-          MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();<br />
-          Db4oFactory.Configure().Io(memoryIoAdapter);
-        </code><br />
-        <br />
-        <br />
-        Use the normal #openFile() and #openServer() commands to open
-        ObjectContainers and ObjectServers. The names specified as file names will be
-        used to identify the <code>byte[]</code> content of the in-memory files in
-        the _memoryFiles Hashtable in the adapter. After working with an in-memory
-        ObjectContainer/ObjectServer the <code>byte[]</code> content is available
-        in the MemoryIoAdapter by using
-        <see cref="Db4objects.Db4o.IO.MemoryIoAdapter.Get">
-          Db4objects.Db4o.IO.MemoryIoAdapter.Get
-        </see>
-        . To add old existing
-        database <code>byte[]</code> content to a MemoryIoAdapter use
-        <see cref="Db4objects.Db4o.IO.MemoryIoAdapter.Put">
-          Db4objects.Db4o.IO.MemoryIoAdapter.Put
-
-        </see>
-        . To reduce memory consumption of memory file
-        names that will no longer be used call
-        <see cref="Db4objects.Db4o.IO.MemoryIoAdapter.Put">
-          Db4objects.Db4o.IO.MemoryIoAdapter.Put
-
-        </see>
-        and pass
-        an empty byte array.
-
-      </remarks>
     </doc>
   </type>
 
@@ -679,103 +525,6 @@
         <remarks>
           returns an ReflectArray object.
         </remarks>
-      </doc>
-    </member>
-  </type>
-
-  <type name="Db4objects.Db4o.Types.IDb4oCollections">
-    <member name="NewHashMap(int)">
-      <doc>
-        <summary>creates a new database-aware HashMap.</summary>
-        <remarks>
-          creates a new database-aware HashMap.
-          <br /><br />
-          This map will call the HashCode() method on the key objects to calculate the
-          hash value. Since the hash value is stored to the ObjectContainer, key objects
-          will have to return the same HashCode() value in every CLR session.
-          <br /><br />
-          Usage:<br />
-          - declare an IDictionary variable in your persistent class.<br />
-          - fill the variable with this method.<br /><br />
-          <b>Example:</b><br /><br />
-          <code>
-            <pre>
-              class MyClass{
-              IDictionary dict;
-              }
-              MyClass myObject = new MyClass();
-              myObject.dict = objectContainer.Ext().Collections().NewHashMap(0);
-            </pre>
-          </code><br /><br />
-        </remarks>
-        <param name="initialSize">the initial size of the HashMap</param>
-        <returns>
-          <see cref="IDb4oMap">IDb4oMap</see>
-        </returns>
-        <seealso cref="IDb4oMap">IDb4oMap</seealso>
-      </doc>
-    </member>
-
-    <member name="NewIdentityHashMap(int)">
-      <doc>
-        <summary>creates a new database-aware IdentityHashMap.</summary>
-        <remarks>
-          creates a new database-aware IdentityHashMap.
-          <br /><br />
-          Only first class objects already stored to the ObjectContainer (objects with a db4o ID)
-          can be used as keys for this type of Map. The internal db4o ID will be used as
-          the hash value.
-          <br /><br />
-          Usage:<br />
-          - declare an IDictionary variable in your persistent class.<br />
-          - fill the variable with this method.<br /><br />
-          <b>Example:</b><br /><br />
-          <code>
-            <pre>
-              public class MyClass{
-              public IDictionary  dict;
-              }
-              MyClass myObject = new MyClass();
-              myObject.dict = objectContainer.Ext().Collections().NewIdentityHashMap(0);
-            </pre>
-          </code><br /><br />
-
-        </remarks>
-        <param name="initialSize">the initial size of the IdentityHashMap</param>
-        <returns>
-
-          <see cref="IDb4oMap">IDb4oMap</see>
-        </returns>
-        <seealso cref="IDb4oMap">IDb4oMap</seealso>
-      </doc>
-    </member>
-
-    <member name="NewLinkedList()">
-      <doc>
-        <summary>creates a new database-aware linked list.</summary>
-        <remarks>
-          creates a new database-aware linked list.
-          <br /><br />Usage:<br />
-          - declare an IList variable in your persistent class.<br />
-          - fill this variable with this method.<br /><br />
-          <b>Example:</b><br /><br />
-          <code>
-            <pre>
-              class MyClass{
-              IList myList;
-              }
-              MyClass myObject = new MyClass();
-              myObject.myList = objectContainer.Ext().Collections().NewLinkedList();
-            </pre>
-          </code><br /><br />
-
-        </remarks>
-        <returns>
-
-          <see cref="IDb4oList">IDb4oList</see>
-
-        </returns>
-        <seealso cref="IDb4oList">IDb4oList</seealso>
       </doc>
     </member>
   </type>
