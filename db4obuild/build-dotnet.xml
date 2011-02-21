@@ -28,7 +28,8 @@
 					<include name="*.xml" />
 					
 					<exclude name="*Tests*" />
-					<exclude name="*Db4oUnit*" />					
+					<exclude name="*Db4oUnit*" />
+					<exclude name="*Moq*" />
 	
 					<additional-files />
 				</fileset>
@@ -204,16 +205,16 @@
 						<include name="db4o.license.html" />
 					</fileset>
 				</copy>
+				
 				<copy todir="${dir.dist.net.build}/bin">			
 					<fileset dir="${dir.config}/net">
 						<include name="Cecil.FlowAnalysis.license.html" />
 						<include name="Mono.Cecil.license.html" />
 						<include name="Mono.GetOptions.license.html" />
-						<include name="moq.license.html" />
 						<include name="System.Linq.Expressions.license.html" />
 					</fileset>
-				</copy>				
-						
+				</copy>
+				
 				<!-- readme's in distribution folders-->
 				<copy file="${dir.config}/net/readme.html" tofile="${dir.dist.net.build}/readme.html" >
 			        <filterchain>	
