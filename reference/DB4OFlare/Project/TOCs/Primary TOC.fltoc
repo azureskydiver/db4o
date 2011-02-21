@@ -348,45 +348,11 @@
           Title="Transparent Persistence Implementation"
           Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence_implementation.htm" />
         <TocEntry
-          Title="TP Enhanced Example"
-          Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example.htm">
-          <TocEntry
-            Title="TP Enhancement On Java"
-            Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java.htm">
-            <TocEntry
-              Title="SensorPanel"
-              Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java/sensorpanel.htm" />
-          </TocEntry>
-        </TocEntry>
+          Title="TP Enhancement"
+          Link="/Content/basics/update_concept/transparent_persistence/tp_enhanced_example.htm"></TocEntry>
         <TocEntry
-          Title="Transparent Persistence Pitfalls"
-          Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence.htm">
-          <TocEntry
-            Title="Rollback Strategies"
-            Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies.htm">
-            <TocEntry
-              Title="Rollback And Cache"
-              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/rollback_and_cache.htm" />
-            <TocEntry
-              Title="Automatic Deactivation"
-              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/automatic_deactivation.htm" />
-            <TocEntry
-              Title="Car"
-              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/car.htm" />
-            <TocEntry
-              Title="Id"
-              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/id.htm" />
-            <TocEntry
-              Title="Pilot"
-              Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/rollback_strategies/pilot.htm" />
-          </TocEntry>
-          <TocEntry
-            Title="Car"
-            Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/car.htm" />
-          <TocEntry
-            Title="Object Clone"
-            Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/object_clone.htm" />
-        </TocEntry>
+          Title="Rollback Strategy"
+          Link="/Content/basics/update_concept/transparent_persistence/transparent_persistence/automatic_deactivation.htm" />
         <TocEntry
           Title="Collections"
           Link="/Content/basics/update_concept/transparent_persistence/collection_example.htm" />
@@ -581,11 +547,7 @@
         </TocEntry>
         <TocEntry
           Title="CachingStorage"
-          Link="/Content/configuration/file/storage/cachingstorage.htm">
-          <TocEntry
-            Title="Cache Configuration Example"
-            Link="/Content/configuration/file/storage/cachingstorage/cache_configuration_example.htm" />
-        </TocEntry>
+          Link="/Content/configuration/file/storage/cachingstorage.htm" />
         <TocEntry
           Title="NonFlushingStorage"
           Link="/Content/configuration/file/storage/nonflushingstorage.htm" />
@@ -1153,13 +1115,8 @@
       Link="/Content/platform_specific_issues/asp.net.htm"
       conditions="Primary..NET,Primary.All languages" />
     <TocEntry
-      Title="XML Import-Export In .NET"
-      Link="/Content/platform_specific_issues/xml_import-export_in_.net.htm"
-      conditions="Primary..NET,Primary.All languages" />
-    <TocEntry
-      Title="XML Import-Export In Java"
-      Link="/Content/platform_specific_issues/xml_import-export_in_java.htm"
-      conditions="Primary.All languages,Primary.Java" />
+      Title="XML Import-Export"
+      Link="/Content/platform_specific_issues/xml_import-export.htm" />
     <TocEntry
       Title="Classloader Issues"
       Link="/Content/platform_specific_issues/classloader_issues.htm"
@@ -1206,107 +1163,6 @@
     Title="Tuning"
     Link="/Content/tuning.htm">
     <TocEntry
-      Title="Main Operations Performance"
-      Link="/Content/tuning/main_operations_performance.htm">
-      <TocEntry
-        Title="Insert Performance"
-        Link="/Content/tuning/main_operations_performance/insert_performance.htm">
-        <TocEntry
-          Title="Hardware Resources"
-          Link="/Content/tuning/main_operations_performance/insert_performance/hardware_resources.htm" />
-        <TocEntry
-          Title="Local And Remote Modes"
-          Link="/Content/tuning/main_operations_performance/insert_performance/local_and_remote_modes.htm" />
-        <TocEntry
-          Title="Commit Frequency"
-          Link="/Content/tuning/main_operations_performance/insert_performance/commit_frequency.htm" />
-        <TocEntry
-          Title="Object Structure"
-          Link="/Content/tuning/main_operations_performance/insert_performance/object_structure.htm" />
-        <TocEntry
-          Title="Indexes"
-          Link="/Content/tuning/main_operations_performance/insert_performance/indexes.htm" />
-        <TocEntry
-          Title="Inherited Objects"
-          Link="/Content/tuning/main_operations_performance/insert_performance/inherited_objects.htm" />
-        <TocEntry
-          Title="Configuration Options"
-          Link="/Content/tuning/main_operations_performance/insert_performance/configuration_options.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Delete Performance"
-        Link="/Content/tuning/main_operations_performance/delete_performance.htm">
-        <TocEntry
-          Title="Commit Frequency"
-          Link="/Content/tuning/main_operations_performance/delete_performance/commit_frequency.htm" />
-        <TocEntry
-          Title="Complexity Of Objects"
-          Link="/Content/tuning/main_operations_performance/delete_performance/complexity_of_objects.htm" />
-        <TocEntry
-          Title="Storage Characteristics"
-          Link="/Content/tuning/main_operations_performance/delete_performance/storage_characteristics.htm" />
-        <TocEntry
-          Title="Client-Server"
-          Link="/Content/tuning/main_operations_performance/delete_performance/client-server.htm" />
-        <TocEntry
-          Title="Cascade On Delete"
-          Link="/Content/tuning/main_operations_performance/delete_performance/cascade_on_delete.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Update Performance"
-        Link="/Content/tuning/main_operations_performance/update_performance.htm">
-        <TocEntry
-          Title="Configuration"
-          Link="/Content/tuning/main_operations_performance/update_performance/configuration.htm" />
-        <TocEntry
-          Title="Object Structure"
-          Link="/Content/tuning/main_operations_performance/update_performance/object_structure.htm" />
-        <TocEntry
-          Title="Commit Frequency"
-          Link="/Content/tuning/main_operations_performance/update_performance/commit_frequency.htm" />
-        <TocEntry
-          Title="Hard Drive Speed"
-          Link="/Content/tuning/main_operations_performance/update_performance/hard_drive_speed.htm" />
-        <TocEntry
-          Title="Cient-Server"
-          Link="/Content/tuning/main_operations_performance/update_performance/client-server.htm" />
-        <TocEntry
-          Title="Indexes"
-          Link="/Content/tuning/main_operations_performance/update_performance/indexes.htm" />
-        <TocEntry
-          Title="Inheritance"
-          Link="/Content/tuning/main_operations_performance/update_performance/inheritance.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Query Performance"
-        Link="/Content/tuning/main_operations_performance/query_performance.htm">
-        <TocEntry
-          Title="Different Query Types"
-          Link="/Content/tuning/main_operations_performance/query_performance/different_query_types.htm" />
-        <TocEntry
-          Title="Query Structure"
-          Link="/Content/tuning/main_operations_performance/query_performance/query_structure.htm" />
-        <TocEntry
-          Title="Database Size"
-          Link="/Content/tuning/main_operations_performance/query_performance/database_size.htm" />
-        <TocEntry
-          Title="Complexity Of Objects"
-          Link="/Content/tuning/main_operations_performance/query_performance/complexity_of_objects.htm" />
-        <TocEntry
-          Title="Inherited  Objects"
-          Link="/Content/tuning/main_operations_performance/query_performance/inherited_objects.htm" />
-        <TocEntry
-          Title="Hardware Resources"
-          Link="/Content/tuning/main_operations_performance/query_performance/hardware_resources.htm" />
-        <TocEntry
-          Title="Client-Server"
-          Link="/Content/tuning/main_operations_performance/query_performance/client-server.htm" />
-        <TocEntry
-          Title="Indexing"
-          Link="/Content/tuning/main_operations_performance/query_performance/indexing.htm" />
-      </TocEntry>
-    </TocEntry>
-    <TocEntry
       Title="Io Benchmark Tools"
       Link="/Content/tuning/io_benchmark_tools.htm"
       conditions="Primary.Java,Primary.All languages">
@@ -1340,14 +1196,7 @@
         conditions="Primary..NET,Primary.All languages" />
       <TocEntry
         Title="Transient Classes"
-        Link="/Content/tuning/selective_persistence/transient_classes.htm">
-        <TocEntry
-          Title="test1"
-          Link="/Content/tuning/selective_persistence/transient_classes/test1.htm" />
-        <TocEntry
-          Title="test2"
-          Link="/Content/tuning/selective_persistence/transient_classes/test2.htm" />
-      </TocEntry>
+        Link="/Content/tuning/selective_persistence/transient_classes.htm"></TocEntry>
     </TocEntry>
     <TocEntry
       Title="Performance Hints"
@@ -1425,22 +1274,6 @@
       <TocEntry
         Title="Diagnostic Messages Filter"
         Link="/Content/tuning/diagnostics/diagnostic_messages_filter.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Utility Methods"
-      Link="/Content/tuning/utility_methods.htm">
-      <TocEntry
-        Title="peekpersisted"
-        Link="/Content/tuning/utility_methods/peekpersisted.htm" />
-      <TocEntry
-        Title="isactive"
-        Link="/Content/tuning/utility_methods/isactive.htm" />
-      <TocEntry
-        Title="isstored"
-        Link="/Content/tuning/utility_methods/isstored.htm" />
-      <TocEntry
-        Title="descend"
-        Link="/Content/tuning/utility_methods/descend.htm" />
     </TocEntry>
   </TocEntry>
   <TocEntry

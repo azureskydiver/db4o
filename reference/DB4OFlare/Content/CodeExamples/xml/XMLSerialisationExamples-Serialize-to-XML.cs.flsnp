@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.c#">
+        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(&quot;database.db4o&quot;))
+{
+    XmlSerializer pilotSerializer = new XmlSerializer(typeof(Pilot[]));
+    using(FileStream file  = new FileStream(&quot;pilots.xml&quot;,FileMode.CreateNew))
+    {
+        var pilots = (from Pilot c in container
+                      select c).ToArray();
+        pilotSerializer.Serialize(file, pilots);   
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			XMLSerialisationExamples.cs: Serialize to XML
+			<div class="codedownload">
+				<a href="Example-Code-xml-csharp.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

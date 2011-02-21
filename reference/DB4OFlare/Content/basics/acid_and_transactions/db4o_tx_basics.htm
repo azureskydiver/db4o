@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2873" MadCap:lastWidth="567">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2985" MadCap:lastWidth="567">
     <head>
     </head>
     <body>
@@ -10,7 +10,8 @@
         <h2>Commit A Transactions</h2>
         <p>In order to commit a transaction, you need to call the commit-method. This will make all changes of the current transaction persistent. When the commit call is finished, everything is safely stored. If something goes wrong during the commit-operation or the commit-operation is interrupted (power-off, crash etc) the database has the state of either before or after the commit-call. </p>
         <MadCap:snippetBlock src="../../CodeExamples/transactions/Transactions-Commit-changes.all.flsnp" />
-        <h2>Rollback A Transaction</h2>
+        <h2>
+            <MadCap:keyword term="Rollback" />Rollback a Transaction</h2>
         <p>Of course you also can rollback a transaction. Just call rollback on the object container. </p>
         <MadCap:snippetBlock src="../../CodeExamples/transactions/Transactions-Rollback-changes.all.flsnp" />
         <p>Note that when you rollback the changes, db4o won't rollback the objects in memory. All objects in memory will keep the state. If you want to make sure that objects in memory have the same state as in the database, you need to refresh the objects.</p>

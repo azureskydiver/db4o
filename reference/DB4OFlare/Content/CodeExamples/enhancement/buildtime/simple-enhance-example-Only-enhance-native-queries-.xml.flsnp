@@ -9,14 +9,8 @@
                   collections=&quot;false&quot;&gt;
         &lt;classpath refid=&quot;project.classpath&quot;/&gt;
         &lt;sources dir=&quot;${basedir}/bin&quot;&gt;
-                  &lt;include name=&quot;**/*.class&quot;/&gt;
+            &lt;include name=&quot;**/*.class&quot;/&gt;
         &lt;/sources&gt;
-        &lt;jars dir=&quot;${basedir}/lib&quot;&gt;
-            &lt;include name=&quot;*.jar&quot;/&gt;
-            &lt;exclude name=&quot;db4o-*.jar&quot;/&gt;
-            &lt;exclude name=&quot;ant.jar&quot;/&gt;
-            &lt;exclude name=&quot;bloat-1.0.jar&quot;/&gt;
-        &lt;/jars&gt;
     &lt;/db4o-enhance&gt;
 &lt;/target&gt;
 </pre>

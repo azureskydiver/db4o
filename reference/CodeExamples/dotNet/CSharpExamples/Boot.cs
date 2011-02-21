@@ -1,6 +1,9 @@
 
 using System;
-using Db4oDoc.Code.db4otests;
+using System.Collections.Generic;
+using Db4objects.Db4o;
+using Db4oDoc.Code.Tp.Rollback;
+using Db4oDoc.Code.xml;
 
 namespace Db4oDoc
 {
@@ -8,8 +11,7 @@ namespace Db4oDoc
     {
         public static void Main(string[] args)
         {
-            ExampleTestCase.Main(args);
-            Console.Read();
+            XMLSerialisationExamples.Main(args);
         }
     }
 }
