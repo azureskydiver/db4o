@@ -23,6 +23,7 @@ package org.polepos;
 import org.polepos.circuits.arraylists.*;
 import org.polepos.circuits.commits.*;
 import org.polepos.circuits.complex.*;
+import org.polepos.circuits.complexconcurrency.*;
 import org.polepos.circuits.flatobject.*;
 import org.polepos.circuits.fragmentation.*;
 import org.polepos.circuits.inheritancehierarchy.*;
@@ -168,11 +169,22 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 			};
 		}
 		
+		if(false){
+			return new Circuit[]{
+					new ComplexConcurrency(),
+					new QueryCentricConcurrency(),
+					new InsertCentricConcurrency(),
+			};
+		}
+		
 		return new Circuit[] {
 			new ReflectiveCircuitBase(Complex.class),
 			new ReflectiveCircuitBase(NestedLists.class),
 			new ReflectiveCircuitBase(InheritanceHierarchy.class),
 			new ReflectiveCircuitBase(FlatObject.class),
+//			new ComplexConcurrency(),
+//			new QueryCentricConcurrency(),
+//			new InsertCentricConcurrency(),
 			new Trees(),
 			new NativeIds(),
 			 new Commits(),
