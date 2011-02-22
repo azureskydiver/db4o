@@ -22,7 +22,7 @@ Namespace Db4oDoc.Code.Strategies.Refactoring
                 ' first get all objects which should be updated
                 Dim persons As IList(Of Person) = container.Query(Of Person)()
                 For Each person As Person In persons
-                    ' get the database-meta data about this object-type
+                    ' get the database-metadata about this object-type
                     Dim dbClass As IStoredClass = container.Ext().StoredClass(person)
                     ' get the old field which was an int-type
                     Dim oldField As IStoredField = dbClass.StoredField("id", GetType(Integer))

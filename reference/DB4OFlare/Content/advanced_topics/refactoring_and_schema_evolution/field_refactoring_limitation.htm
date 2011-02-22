@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1208" MadCap:lastWidth="497">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1113" MadCap:lastWidth="531">
     <head>
     </head>
     <body>
@@ -12,11 +12,11 @@
             <li>You can change a string-array to an int-, object etc. Every type is possible except a string.</li>
         </ul>
         <h2>Refactoring To An Array-Field Step by Step</h2>
-        <p>When you change the type of a field to its array-type equivalent, you can do this only by copying the old data to a new class. In this example we have a Person-class which has its name in a string field. Now we want to change that to a string array to support multiple names.</p>
+        <p>When you change the type of a field to its array-type equivalent, you can do this only by copying the old data to a new class. In this example we have a Person class which has its name in a string field. Now we want to change that to a string array to support multiple names.</p>
         <ol>
-            <li>Create a copy of the Person-class with a new name.</li>
+            <li>Create a copy of the Person class with a new name.</li>
             <li>Do the refactoring on the new Person class</li>
-            <li>Query for old instances of the old Person-class and copy the values over to the new class.</li>
+            <li>Query for old instances of the old Person class and copy the values over to the new class.</li>
         </ol>
         <MadCap:snippetBlock src="../../CodeExamples/strategies/refactoring/arraychange/ChangeArrayType-Copy-the-string-field-to-the-new-string-array-field.all.flsnp" />
         <MadCap:snippetBlock src="../../Snippets/update_references_not_included.flsnp" />

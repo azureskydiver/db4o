@@ -23,8 +23,8 @@ Namespace Db4oDoc.Code.Identiy
                 Dim theCar As Car = container.Query(Of Car)()(0)
                 Dim thePilot As Pilot = container.Query(Of Pilot)()(0)
                 Dim pilotViaCar As Pilot = theCar.Pilot
-                ' #end example
                 AssertTrue(ReferenceEquals(thePilot, pilotViaCar))
+                ' #end example
             End Using
         End Sub
 
@@ -33,8 +33,8 @@ Namespace Db4oDoc.Code.Identiy
                 ' #example: Loading with different object container results in different objects
                 Dim loadedWithContainer1 As Car = container1.Query(Of Car)()(0)
                 Dim loadedWithContainer2 As Car = container2.Query(Of Car)()(0)
-                ' #end example
                 AssertFalse(ReferenceEquals(loadedWithContainer1, loadedWithContainer2))
+                ' #end example
             End Using
         End Sub
 
