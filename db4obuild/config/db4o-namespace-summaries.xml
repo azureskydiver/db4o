@@ -12,6 +12,7 @@
 	<namespace name="Db4objects.Db4o.Events">Events support.</namespace>
 	<namespace name="Db4objects.Db4o.Ext">Advanced API support.</namespace>
 	<namespace name="Db4objects.Db4o.IO">Input/Output abstraction layer.</namespace>
+	<namespace name="Db4objects.Db4o.Linq">LINQ to db4o support. Include this namespace for LINQ support</namespace>
 	<namespace name="Db4objects.Db4o.IO.Crypt">Cryptographic IO support.</namespace>
 	<namespace name="Db4objects.Db4o.Marshall">Marshalling Interfaces.</namespace>
 	<namespace name="Db4objects.Db4o.Messaging">Messaging infrastructure.</namespace>
