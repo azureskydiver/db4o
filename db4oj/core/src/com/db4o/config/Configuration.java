@@ -150,14 +150,6 @@ public interface Configuration {
     
     /**
      * turns automatic shutdown of the engine on and off.
-     * <br><br>Depending on the JDK, db4o uses one of the following
-     * two methods to shut down, if no more references to the ObjectContainer
-     * are being held or the JVM terminates:<br>
-     * - JDK 1.3 and above: <code>Runtime.addShutdownHook()</code><br>
-     * - JDK 1.2 and below: <code>System.runFinalizersOnExit(true)</code> and code
-     * in the finalizer.<br><br>
-     * Some JVMs have severe problems with both methods. For these rare cases the
-     * autoShutDown feature may be turned off.<br><br>
      * The default and recommended setting is <code>true</code>.<br><br>
      * In client-server environment this setting should be used on both client 
      * and server.
@@ -714,7 +706,6 @@ public interface Configuration {
      * references to objects, preventing the garbage collection process 
      * from disposing of unused objects.
      * <br><br>The default setting is <code>true</code>.
-     * <br><br>Ignored on JDKs before 1.2.
      */
     public void weakReferences(boolean flag);
     
@@ -723,7 +714,6 @@ public interface Configuration {
      * <br><br>The default setting is 1000 milliseconds.
      * <br><br>Configure this setting to zero to turn WeakReference
      * collection off.
-     * <br><br>Ignored on JDKs before 1.2.<br><br>
      * @param milliseconds the time in milliseconds
      */
     public void weakReferenceCollectionInterval(int milliseconds);
