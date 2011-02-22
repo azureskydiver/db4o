@@ -19,7 +19,7 @@ we don't even need it - all we need is a way to write a specific
 persistence solution for any custom object, and now db4o provides this way
 though a pluggable <span MadCap:conditions="Primary..NET">I</span>TypeHandler4 interface. You can register any number of type handlers to the configuration. Additionally you need to register a predicate which decides which classes are handled by the type handler. </p>
         <MadCap:snippetBlock src="../../CodeExamples/typehandling/typehandler/TypeHandlerExample-Register-type-handler.all.flsnp" />
-        <p>Note that type handler are a low level API which doesn't protect you from any mistakes. If you make a mistake in a typehandler you can loose data.</p>
+        <p>Note that type handler are a low level API which doesn't protect you from any mistakes. If you make a mistake in a typehandler you can lose data.</p>
         <p>Type handler functionality is best explained on a <a href="typehandlers/custom_typehandler_example.htm">working example</a>.</p>
         <p>Usecases and other benefits of the pluggable typehandler interface are
 reviewed <a href="typehandlers/pluggable_typehandler_benefits.htm">here</a>.</p>

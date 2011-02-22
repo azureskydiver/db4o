@@ -29,7 +29,7 @@ namespace Db4oDoc.Code.Strategies.Refactoring
                 IList<Person> persons = container.Query<Person>();
                 foreach (Person person in persons)
                 {
-                    // get the database-meta data about this object-type
+                    // get the database-metadata about this object-type
                     IStoredClass dbClass = container.Ext().StoredClass(person);
                     // get the old field which was an int-type
                     IStoredField oldField = dbClass.StoredField("id", typeof (int));

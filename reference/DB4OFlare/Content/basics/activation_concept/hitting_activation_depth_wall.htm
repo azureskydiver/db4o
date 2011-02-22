@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3704" MadCap:lastWidth="560">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3688" MadCap:lastWidth="531">
     <head>
     </head>
     <body>
         <h1>Activation In Action</h1>
-        <p>Let's see db4o's activation in action. To see activation you need a deep object-graph. To keep this example simple we create a person-class with a mother-field. This allows us to simply create a very deep object graph.</p>
+        <p>Let's see db4o's activation in action. To see activation you need a deep object-graph. To keep this example simple we create a person class with a mother-field. This allows us to simply create a very deep object graph.</p>
         <p>First the Person class:</p>
         <MadCap:snippetBlock src="../../CodeExamples/pitfalls/activation/Person-Person-with-a-reference-to-the-mother.all.flsnp" />
         <p>After that we store a deep hierarchy of persons. Let's say we store a hierarchy of seven people. Then we query for it and traverse this object graph. When we hit the sixth person, that object won't be activated, because it's outside the activation depth. That object will have all fields set to null.</p>

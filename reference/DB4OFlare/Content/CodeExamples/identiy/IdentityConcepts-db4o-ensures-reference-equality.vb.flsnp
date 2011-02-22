@@ -4,10 +4,12 @@
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim theCar As Car = container.Query(Of Car)()(0)
 Dim thePilot As Pilot = container.Query(Of Pilot)()(0)
-Dim pilotViaCar As Pilot = theCar.Pilot</pre>
+Dim pilotViaCar As Pilot = theCar.Pilot
+AssertTrue(ReferenceEquals(thePilot, pilotViaCar))</pre>
         <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim theCar As Car = container.Query(Of Car)()(0)
 Dim thePilot As Pilot = container.Query(Of Pilot)()(0)
-Dim pilotViaCar As Pilot = theCar.Pilot</pre>
+Dim pilotViaCar As Pilot = theCar.Pilot
+AssertTrue(ReferenceEquals(thePilot, pilotViaCar))</pre>
 		<div class="codesnippet-meta">
 			IdentityConcepts.vb: db4o ensures reference equality
 			<div class="codedownload">

@@ -8,7 +8,7 @@
     IList&lt;Person&gt; persons = container.Query&lt;Person&gt;();
     foreach (Person person in persons)
     {
-        // get the database-meta data about this object-type
+        // get the database-metadata about this object-type
         IStoredClass dbClass = container.Ext().StoredClass(person);
         // get the old field which was an int-type
         IStoredField oldField = dbClass.StoredField(&quot;id&quot;, typeof (int));

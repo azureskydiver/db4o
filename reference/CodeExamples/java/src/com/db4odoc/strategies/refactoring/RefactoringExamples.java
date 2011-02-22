@@ -40,7 +40,7 @@ public class RefactoringExamples {
             // first get all objects which should be updated
             ObjectSet<Person> persons = container.query(Person.class);
             for (Person person : persons) {
-                // get the database-meta data about this object-type
+                // get the database-metadata about this object-type
                 StoredClass dbClass = container.ext().storedClass(person);
                 // get the old field which was an int-type
                 StoredField oldField = dbClass.storedField("id", int.class);
