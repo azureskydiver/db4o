@@ -211,26 +211,13 @@
 		<delete dir="${drs.net.dir}/config" failonerror="true" />		
     	<delete dir="${drs.net.dir}/Output" failonerror="true" />
 	</target>
-	
-	<target name="preparendoc">
-		<delete dir="${drs.net.dir}/config" failonerror="false" />
-		<mkdir dir="${drs.net.dir}/config" />
-		<copy todir="${drs.net.dir}/config">
-			<fileset dir="${drs.net.dir}/sandcastle">
-				<include name="dRS-namespace-summaries.xml" />
-			</fileset>
-		</copy>
-		<copy todir="${drs.net.dir}/config/sandcastle">			
-			<fileset dir="${dir.build}/config/sandcastle">
-				<include name="*.*" />
-			</fileset>
-		</copy>
 
-		<property name="dRS-namespace-summaries.xml" location="${drs.net.dir}/config/dRS-namespace-summaries.xml" />		
+	<target name="preparendoc">
+		<property name="dRS-namespace-summaries.xml" location="${drs.net.dir}/config/dRS-namespace-summaries.xml" />
 		<property name="ndoc.home" location="lib/ndoc" />
-				
-		<delete dir="${drs.net.dir}/ndoc" failonerror="false" />
-		<mkdir dir="${drs.net.dir}/ndoc" />
+
+		<delete dir="${dir.dist.ndoc}" failonerror="false" />
+		<mkdir dir="${dir.dist.ndoc}" />
 	</target>
 
 			
@@ -259,122 +246,119 @@
 		Then set the dir.lib.sandcastle property pointing to the root of the installation.
 			</echo>
 		</target>
-		
-		<target name="run-sandcastle" if="sandcastle.available">
-		
-			<antcall target="prepare-sandcastle-output" />
-			
-			<copy todir="${dir.lib.sandcastle}/Presentation">
-				<fileset dir="config/sandcastle/Presentation">
-					<include name="**/*.xml" />
-				</fileset>
-			</copy>
-			
-			<exec executable="${dir.build}/lib/boo/booi">
-				<arg file="${drs.net.dir}/sandcastle/MRefDrsConfigGenerator.boo" />
-				<arg path="${drs.net.dir}" />
-			</exec>
 
-			<exec executable="${sandcastle.tools}/MRefBuilder">
-				<arg value="/config:${drs.net.dir}/ndoc/Output/MRefBuilder.config" />
-				<arg file="${drs.net.dir}/bin/Db4objects.Drs.dll" />
-				<arg value="/out:${drs.net.dir}/ndoc/sandcastle" />
-				<arg value="/internal-" />
-			</exec>	
-		
-			<exec executable="${XslTransform}">
-				<!--
-				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddOverloads.xsl" />
-				-->
-				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ApplyVSDocModel.xsl" />
-				<arg value="${drs.net.dir}/ndoc/sandcastle" />
-				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddFriendlyFilenames.xsl" />
-				<arg value="/out:${drs.net.dir}/ndoc/reflection.xml" />
-			</exec>
-		
-			<exec executable="${XslTransform}">
-				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToManifest.xsl" />
-				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/manifest.xml" />
-			</exec>
-		
-			<exec executable="${sandcastle.tools}/BuildAssembler"
-				dir="${drs.net.dir}/ndoc">
-				<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
-				<arg file="${drs.net.dir}/ndoc/manifest.xml" />
-		
-				<env key="XMLDOC" value="${drs.net.dir}/bin/Db4objects.Drs.xml" />
-				<env key="DXROOT" value="${dir.lib.sandcastle}" />			
-			</exec>
-		
-			<antcall target="generate-sandcastle-chm" />
+    <target name="run-sandcastle" if="sandcastle.available">
 
-		</target>
-		
-		<target name="prepare-sandcastle-output">
-		
-			<!-- adapted from ${dir.lib.sandcastle}/Presentation/vs2005/copyOutput.bat"  -->
-			<mkdir dir="${drs.net.dir}/ndoc/Output" />
-			<mkdir dir="${drs.net.dir}/ndoc/Output/html" />
-			<mkdir dir="${drs.net.dir}/ndoc/Output/icons" />
-			<mkdir dir="${drs.net.dir}/ndoc/Output/scripts" />
-			<mkdir dir="${drs.net.dir}/ndoc/Output/styles" />
-			<mkdir dir="${drs.net.dir}/ndoc/Output/media" />
-			<copy todir="${drs.net.dir}/ndoc/Output">
-				<fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
-					<include name="Icons/**" />
-					<include name="icons/**" />
-					<include name="Scripts/**" />
-					<include name="Styles/**" />
-				</fileset>
-			</copy>
-			<copy todir="${drs.net.dir}/Output">
-				<fileset dir="${dir.lib.sandcastle}/Presentation/Shared">
-					<include name="**/**" />
-				</fileset>
-			</copy>
-			<mkdir dir="${drs.net.dir}/ndoc/Intellisense" />
+        <antcall target="prepare-sandcastle-output"/>
 
-		</target>
-		
-		<target name="generate-sandcastle-chm">
+        <exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator">
+            <arg file="src/sandcastle/MRefConfigGenerator.boo"/>
+			<arg path="${dir.build}/config" />
+			<arg path="${dir.dist}" />
+			<arg path="${dir.build}/config/drs-namespace-summaries.xml" />
+            <arg path="${drs.net.dir}/bin"/>
+        </exec>
+
+        <exec executable="${sandcastle.tools}/MRefBuilder" dir="${dir.dist.ndoc}" failonerror="true"
+              taskname="MRefBuilder">
+            <env key="DXROOT" file="${dir.lib.sandcastle}"/>
+            <arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config"/>
+            <arg file="${drs.net.dir}/bin/Db4objects.Drs.dll"/>
+            <arg value="/out:${dir.dist.ndoc}/sandcastle"/>
+            <arg value="/internal-"/>
+        </exec>
+
+        <exec executable="${XslTransform}" failonerror="true" dir="${dir.dist.ndoc}">
+            <arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ApplyVSDocModel.xsl"/>
+            <arg value="${dir.dist.ndoc}/sandcastle"/>
+            <arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddFriendlyFilenames.xsl"/>
+            <arg value="/out:${dir.dist.ndoc}/reflection.xml"/>
+        </exec>
+
+        <exec executable="${XslTransform}" failonerror="true" dir="${dir.dist.ndoc}">
+            <arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToManifest.xsl"/>
+            <arg value="${dir.dist.ndoc}/reflection.xml"/>
+            <arg value="/out:${dir.dist.ndoc}/manifest.xml"/>
+        </exec>
+
+        <exec executable="${sandcastle.tools}/BuildAssembler" dir="${dir.dist.ndoc}">
+            <arg value="/config:${dir.build}/config/sandcastle/sandcastle.config"/>
+            <arg file="${dir.dist.ndoc}/manifest.xml"/>
+
+            <env key="XMLDOC" value="${drs.net.dir}/bin/Db4objects.Drs.xml"/>
+            <env key="DXROOT" value="${dir.lib.sandcastle}"/>
+        </exec>
+
+        <antcall target="generate-sandcastle-chm"/>
+
+    </target>
+
+
+    <target name="prepare-sandcastle-output">
+        <mkdir dir="${dir.dist.ndoc}/Output"/>
+        <mkdir dir="${dir.dist.ndoc}/Output/html"/>
+        <mkdir dir="${dir.dist.ndoc}/Output/icons"/>
+        <mkdir dir="${dir.dist.ndoc}/Output/scripts"/>
+        <mkdir dir="${dir.dist.ndoc}/Output/styles"/>
+        <mkdir dir="${dir.dist.ndoc}/Output/media"/>
+        <copy todir="${dir.dist.ndoc}/Output">
+            <fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
+                <include name="Icons/**"/>
+                <include name="icons/**"/>
+                <include name="Scripts/**"/>
+                <include name="Styles/**"/>
+                <include name="transforms/**"/>
+            </fileset>
+        </copy>
+        <copy todir="${dir.dist.ndoc}/Output">
+            <fileset dir="${dir.lib.sandcastle}/Presentation/Shared">
+                <include name="**/**"/>
+            </fileset>
+        </copy>
+        <copy file="${dir.build}/config/sandcastle/Presentation/vs2005/transforms/main_sandcastle.xsl"
+              tofile="${dir.dist.ndoc}/Output/transforms/main_sandcastle.xsl"/>
+        <mkdir dir="${dir.dist.ndoc}/Intellisense"/>
+
+    </target>
+
+    <target name="generate-sandcastle-chm">
 		
 			<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
 		
 			<!-- Generate HTML help project -->
 			<exec executable="${XslTransform}">
 				<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
-				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/Output/dRS.hhp" />
+				<arg value="${dir.dist.ndoc}/reflection.xml" />
+				<arg value="/out:${dir.dist.ndoc}/Output/dRS.hhp" />
 				<arg value="/arg:project=dRS" />
 			</exec>	 
 		
 			<!--  Generate table of contents for HTML help project -->
 			<exec executable="${XslTransform}">
 				<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
-				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/toc.xml" />
+				<arg value="${dir.dist.ndoc}/reflection.xml" />
+				<arg value="/out:${dir.dist.ndoc}/toc.xml" />
 			</exec>
 
-			<exec executable="${XslTransform}" dir="${drs.net.dir}/ndoc">
+			<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
 				<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
-				<arg value="${drs.net.dir}/ndoc/toc.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/Output/dRS.hhc" />
+				<arg value="${dir.dist.ndoc}/toc.xml" />
+				<arg value="/out:${dir.dist.ndoc}/Output/dRS.hhc" />
 			</exec>
 		
 			<!-- Generate Index information -->
 			<exec executable="${XslTransform}">
 				<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
-				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/Output/dRS.hhk" />
+				<arg value="${dir.dist.ndoc}/reflection.xml" />
+				<arg value="/out:${dir.dist.ndoc}/Output/dRS.hhk" />
 			</exec>
 		
 			<property name="hhc.home" location="${env.ProgramFiles}/HTML Help Workshop" />
-			<exec executable="${hhc.home}/hhc.exe" dir="${drs.net.dir}/ndoc/Output">
+			<exec executable="${hhc.home}/hhc.exe" dir="${dir.dist.ndoc}/Output">
 				<arg value="dRS.hhp" />
 			</exec>
 		
-			<copy file="${drs.net.dir}/ndoc/Output/dRS.chm" tofile="${drs.net.dir}/ndoc/dRS.chm" />
+			<copy file="${dir.dist.ndoc}/Output/dRS.chm" tofile="${drs.net.dir}/ndoc/dRS.chm" />
 		</target>	
 			
 		<target name="ndoc-net" unless="mono">

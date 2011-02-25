@@ -1027,19 +1027,12 @@
 	<target name="run-sandcastle" if="sandcastle.available">
 	
 		<antcall target="prepare-sandcastle-output" />
-		
-		<!--
-		<copy todir="${dir.lib.sandcastle}/Presentation">
-			<fileset dir="config/sandcastle/Presentation">
-				<include name="**/*.xml" />
-			</fileset>
-		</copy>
-		-->
 
 		<exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
 			<arg path="${dir.build}/config" />
 			<arg path="${dir.dist}" />
+			<arg path="${dir.build}/config/db4o-namespace-summaries.xml" />
 		</exec>
 		
 		<exec executable="${sandcastle.tools}/MRefBuilder" dir="${dir.dist.ndoc}" failonerror="true" taskname="MRefBuilder">
