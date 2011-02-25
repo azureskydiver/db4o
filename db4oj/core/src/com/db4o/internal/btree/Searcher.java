@@ -36,7 +36,7 @@ public final class Searcher {
         adjustCursor();
     }
     
-    private void adjustBounds(){
+    private final void adjustBounds(){
         if(_cmp > 0){
             _upper = _cursor - 1;
             if (_upper < _lower) {
@@ -64,10 +64,9 @@ public final class Searcher {
         }else{
             throw new IllegalStateException("Unknown target");
         }
-        
     }
     
-    private void adjustCursor(){
+    private final void adjustCursor(){
         int oldCursor = _cursor;
         if(_upper - _lower <= 1){
             if((_target == SearchTarget.LOWEST)  && (_cmp == 0)){
@@ -83,18 +82,18 @@ public final class Searcher {
         }
     }
     
-    public boolean afterLast(){
+    public final boolean afterLast(){
         if(_count == 0){
             return false;  // _cursor is 0: not after last
         }
         return (_cursor == _count -1) && _cmp < 0;
     }
     
-    public boolean beforeFirst() {
+    public final boolean beforeFirst() {
         return (_cursor == 0) && (_cmp > 0);
     }
 
-    private void complete(){
+    private final void complete(){
         _upper = -2;
     }
     
@@ -118,7 +117,7 @@ public final class Searcher {
         _cursor++;
     }
 
-    public void resultIs(int cmp){
+    public final void resultIs(int cmp){
         _cmp = cmp;
         adjustBounds();
         adjustCursor();

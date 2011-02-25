@@ -25,20 +25,15 @@ public class FieldIndexKeyHandler implements Indexable4, CanExcludeNullInQueries
         return _valueHandler.linkLength() + Const4.INT_LENGTH;
     }
 
-    public Object readIndexEntry(Context context, ByteArrayBuffer a_reader) {
-        // TODO: could read int directly here with a_reader.readInt()
-        int parentID = readParentID(context, a_reader);
-        Object objPart = _valueHandler.readIndexEntry(context, a_reader);
+    public Object readIndexEntry(Context context, ByteArrayBuffer buffer) {
+        int parentID = buffer.readInt();
+        Object objPart = _valueHandler.readIndexEntry(context, buffer);
         if (parentID < 0){
             objPart = null;
             parentID = - parentID;
         }
         return new FieldIndexKeyImpl(parentID, objPart);
     }
-
-	private int readParentID(Context context, ByteArrayBuffer a_reader) {
-		return ((Integer)_parentIdHandler.readIndexEntry(context, a_reader)).intValue();
-	}
 
     public void writeIndexEntry(Context context, ByteArrayBuffer writer, Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;

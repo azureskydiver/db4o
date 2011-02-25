@@ -11,16 +11,25 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 
 	public AbstractBTreeRangeIterator(BTreeRangeSingle range) {
 		_range = range;
-		_cursor = range.first();
+		BTreePointer first = range.first();
+		if(first != null){
+			// we clone here, because we are calling unsafeNext() on BTreePointer
+			// _cursor is our private copy, we modify it and never pass it out.
+			_cursor = first.shallowClone();
+		}
 	}
 
 	public boolean moveNext() {
-		if (reachedEnd(_cursor)) {
+		if (reachedEnd()) {
 			_current = null;
 			return false;
 		}
-		_current = _cursor;
-		_cursor = _cursor.next();
+		if(_current == null){
+			_current = _cursor.shallowClone();
+		} else {
+			_cursor.copyTo(_current);
+		}
+		_cursor = _cursor.unsafeFastNext();
 		return true;		
 	}
 	
@@ -35,13 +44,13 @@ public abstract class AbstractBTreeRangeIterator implements Iterator4 {
 		return _current;
 	}
 
-	private boolean reachedEnd(BTreePointer cursor) {
-	    if(cursor == null){
+	private final boolean reachedEnd() {
+	    if(_cursor == null){
 	        return true;
 	    }
 	    if(_range.end() == null){
 	        return false;
 	    }
-	    return _range.end().equals(cursor);
+	    return _range.end().equals(_cursor);
 	}
 }
