@@ -9,10 +9,10 @@ class IgnoreJdk11 extends Base {
 class IgnoreJdk12 extends Base {
 }
 
-class IgnoreJdk15 extends Base {
+class IgnoreJdk15 {
 }
 
-class IgnoreAndroid {
+class IgnoreAndroid extends Base {
 }
 
 class IgnoreAll {

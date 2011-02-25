@@ -11,6 +11,10 @@ class IgnoreJdk11 implements Interface {
 class IgnoreJdk12 implements Interface {
 }
 
+@decaf.IgnoreImplements(decaf.Platform.JDK15)
+class IgnoreJdk15 implements Interface {
+}
+
 @decaf.IgnoreImplements(decaf.Platform.ANDROID)
 class IgnoreAndroid implements Interface {
 }

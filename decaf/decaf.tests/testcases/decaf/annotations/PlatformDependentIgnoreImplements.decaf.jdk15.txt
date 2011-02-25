@@ -6,10 +6,10 @@ interface Interface {
 class IgnoreJdk11 implements Interface {
 }
 
-class IgnoreJdk12 {
+class IgnoreJdk12 implements Interface {
 }
 
-class IgnoreJdk15 implements Interface {
+class IgnoreJdk15 {
 }
 
 class IgnoreAndroid implements Interface {
