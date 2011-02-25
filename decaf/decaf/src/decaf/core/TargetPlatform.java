@@ -81,6 +81,23 @@ public enum TargetPlatform {
 			return NONE.compilerSettings();
 		}
 	},	
+	JDK15 {
+		@Override
+		public DecafConfiguration defaultConfig() {
+			return NONE.defaultConfig();
+		}
+
+		@Override
+		public IterablePlatformMapping iterablePlatformMapping() {
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public CompilerSettings compilerSettings() {
+			return new CompilerSettings("1.5", "1.5");
+		}
+		
+	},	
 	SHARPEN {
 		@Override
 		public DecafConfiguration defaultConfig() {

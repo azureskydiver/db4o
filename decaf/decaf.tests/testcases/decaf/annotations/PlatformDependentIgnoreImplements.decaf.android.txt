@@ -9,6 +9,9 @@ class IgnoreJdk11 implements Interface {
 class IgnoreJdk12 implements Interface {
 }
 
+class IgnoreJdk15 implements Interface {
+}
+
 class IgnoreAndroid {
 }
 

@@ -11,6 +11,10 @@ class IgnoreJdk11 extends Base {
 class IgnoreJdk12 extends Base {
 }
 
+@decaf.IgnoreExtends(decaf.Platform.JDK15)
+class IgnoreJdk15 extends Base {
+}
+
 @decaf.IgnoreExtends(decaf.Platform.ANDROID)
 class IgnoreAndroid extends Base {
 }

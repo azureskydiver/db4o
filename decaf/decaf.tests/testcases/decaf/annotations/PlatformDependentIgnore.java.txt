@@ -8,6 +8,10 @@ class IgnoreJdk11 {
 class IgnoreJdk12 {
 }
 
+@decaf.Ignore(decaf.Platform.JDK15)
+class IgnoreJdk15 {
+}
+
 @decaf.Ignore(decaf.Platform.ANDROID)
 class IgnoreAndroid {
 }
