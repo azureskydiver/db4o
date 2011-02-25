@@ -75,6 +75,8 @@ def addObsoleteNamespace( filters as XmlElement):
 	
 def processAssembly(assemblyPath as string, filters as XmlElement, documentedNamespaces as Boo.Lang.List):
 	xmldocPath = Path.ChangeExtension(assemblyPath, ".xml")
+	if not File.Exists(xmldocPath):
+		return
 	excludedTypes = getExcludedTypes(xmldocPath)
 	
 	addObsoleteNamespace(filters);
@@ -89,28 +91,33 @@ def processAssembly(assemblyPath as string, filters as XmlElement, documentedNam
 		else:
 			appendElement(filters, "namespace", {"name": currentNamespace, "expose": "false" })	
 			
-if len(argv) == 2:
-	 baseConfigPath, baseDistPath = argv
+if len(argv) == 3:
+	 baseConfigPath, baseDistPath,namespaceSelection = argv
+	 dllPath = Path.Combine(baseDistPath, "dll")
+elif len(argv) == 4:
+	 baseConfigPath, baseDistPath,namespaceSelection, dllPath = argv
 else:
 	basePath, = argv
 	baseConfigPath = Path.Combine(basePath, "config")
 	baseDistPath = Path.Combine(basePath, "dist")
+	dllPath = Path.Combine(basePath, "dist")
 
 buildDistPath = { path  | Path.Combine(baseDistPath, path) }
+buildAssemblyPath = { path  | Path.Combine(dllPath, path) }
 buildConfigPath = { path | Path.Combine(baseConfigPath, path) }
 
 configTemplatePath = buildConfigPath("sandcastle/MRefBuilder.config")
 configPath = buildDistPath("ndoc/Output/MRefBuilder.config")
-namespaceSummaryPath = buildConfigPath("db4o-namespace-summaries.xml")
 
-try: 
+try:
 	File.Copy(configTemplatePath, configPath, true)
-	
-	documentedNamespaces = namespacesFromXmlSummary(namespaceSummaryPath)
+
+
+	documentedNamespaces = namespacesFromXmlSummary(namespaceSelection)
 	filters = resetApiFilters(configPath)	
 	
-	for assemblyName in ["Db4Objects.Db4o.dll","Db4Objects.Db4o.Linq.dll", "Db4Objects.Db4o.CS.dll", "Db4objects.Db4o.Optional.dll", "Db4objects.Db4o.CS.Optional.dll"]:
-		processAssembly(buildDistPath("dll/${assemblyName}"), filters, documentedNamespaces)
+	for assemblyName in Directory.GetFiles(dllPath, "Db4objects.*.dll"):
+		processAssembly(buildAssemblyPath("${assemblyName}"), filters, documentedNamespaces)
 	
 	filters.OwnerDocument.Save(configPath)
 			
