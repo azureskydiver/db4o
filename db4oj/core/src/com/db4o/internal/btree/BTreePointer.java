@@ -36,13 +36,23 @@ public final class BTreePointer{
 		return y;
 	}
     
-    private final BTreeNode _node;
+    private BTreeNode _node;
     
-    private final int _index;
+    private int _index;
 
 	private final Transaction _transaction;
 
-	private final ByteArrayBuffer _nodeReader;
+	private ByteArrayBuffer _nodeReader;
+	
+	public BTreePointer shallowClone(){
+		return new BTreePointer(_transaction, _nodeReader, _node, _index);
+	}
+	
+	public void copyTo(BTreePointer target) {
+		target._node = _node;
+		target._index = _index;
+		target._nodeReader = _nodeReader;
+	}
    
     public BTreePointer(Transaction transaction, ByteArrayBuffer nodeReader, BTreeNode node, int index) {
     	if(transaction == null || node == null){
@@ -88,6 +98,40 @@ public final class BTreePointer{
         btree().convertCacheEvictedNodesToReadMode();
         return new BTreePointer(_transaction, nextReader, nextNode, newIndex);
     }
+	
+	/**
+	 * Duplicate code of next(), reusing this BTreePointer without creating a 
+	 * new BTreePointer, very dangerous to call because there may be side 
+	 * effects if this BTreePointer is used elsewhere and code relies on
+	 * state the stay the same. 
+	 */
+	public BTreePointer unsafeFastNext(){
+        int indexInMyNode = _index + 1;
+        while(indexInMyNode < _node.count()){
+            if(_node.indexIsValid(_transaction, indexInMyNode)){
+                _index = indexInMyNode;
+                return this;
+            }
+            indexInMyNode ++;
+        }
+        int newIndex = -1;
+        BTreeNode nextNode = _node;
+        ByteArrayBuffer nextReader = null;
+        while(newIndex == -1){
+            nextNode = nextNode.nextNode();
+            if(nextNode == null){
+                return null;
+            }
+            nextReader = nextNode.prepareRead(_transaction);
+            newIndex = nextNode.firstKeyIndex(_transaction);
+        }
+        btree().convertCacheEvictedNodesToReadMode();
+        _nodeReader = nextReader;
+        _node = nextNode;
+        _index = newIndex;
+        return this;
+    }
+
     
 	public BTreePointer previous() {
 		int indexInMyNode = _index - 1;
