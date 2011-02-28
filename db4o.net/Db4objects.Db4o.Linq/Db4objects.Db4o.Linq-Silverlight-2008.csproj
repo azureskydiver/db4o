@@ -98,7 +98,6 @@
     <Compile Include="Db4objects.Db4o.Linq\Internals\PlaceholderQuery.cs" />
     <Compile Include="Db4objects.Db4o.Linq\Internals\QueryBuilderContext.cs" />
     <Compile Include="Db4objects.Db4o.Linq\Internals\QueryBuilderRecorder.cs" />
-    <Compile Include="Db4objects.Db4o.Linq\Internals\SelectPlaceHolder.cs" />
     <Compile Include="Db4objects.Db4o.Linq\Internals\UnoptimizedQuery.cs" />
     <Compile Include="Db4objects.Db4o.Linq\ObjectContainerExtensions.cs" />
     <Compile Include="Db4objects.Db4o.Linq\QueryOptimizationException.cs" />
