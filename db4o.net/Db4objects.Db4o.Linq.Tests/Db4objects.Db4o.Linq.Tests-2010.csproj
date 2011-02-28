@@ -93,6 +93,11 @@
     <Compile Include="Db4objects.Db4o.Linq.Tests\Queries\QueryExtensions.cs" />
     <Compile Include="Db4objects.Db4o.Linq.Tests\Queries\QueryPrettyPrinter.cs" />
     <Compile Include="Db4objects.Db4o.Linq.Tests\Queries\QueryPrettyPrinterTestCase.cs" />
+    <Compile Include="Db4objects.Db4o.Linq.Tests\QueryOperators\AllTests.cs" />
+    <Compile Include="Db4objects.Db4o.Linq.Tests\QueryOperators\SkipTestSuiteVariables.cs" />
+    <Compile Include="Db4objects.Db4o.Linq.Tests\QueryOperators\SkipTestSuite.cs" />
+    <Compile Include="Db4objects.Db4o.Linq.Tests\QueryOperators\SkipTestUnit.cs" />
+    <Compile Include="Db4objects.Db4o.Linq.Tests\QueryOperators\SkipTestUnit.Helper.cs" />
     <Compile Include="Db4objects.Db4o.Linq.Tests\QueryReuseTestCase.cs" />
     <Compile Include="Db4objects.Db4o.Linq.Tests\QueryTranslationPerformanceTestCase.cs" />
     <Compile Include="Db4objects.Db4o.Linq.Tests\QueryableTestCase.cs" />

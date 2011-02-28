@@ -8,7 +8,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 
-
 /**
  * @exclude
  */
@@ -86,5 +85,9 @@ public class HybridQueryResult extends AbstractQueryResult {
 	public void sortIds(IntComparator cmp) {
 		_delegate = _delegate.supportSort();
 		_delegate.sortIds(cmp);
+	}
+
+	public void skip(int count) {
+		_delegate.skip(count);
 	}
 }
