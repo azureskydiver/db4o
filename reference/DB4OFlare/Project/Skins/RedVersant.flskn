@@ -17,7 +17,8 @@
   AutoSyncTOC="true"
   NavigationLinkTop="true"
   NavigationLinkBottom="false"
-  BrowserSetup="">
+  BrowserSetup=""
+  EnableAboutBox="false">
   <!-- saved from url=(0014)about:internet -->
   <Index
     BinaryStorage="true" />
