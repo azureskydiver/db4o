@@ -13,6 +13,7 @@ public class Db4oBasics {
         storeObject();
         query();
         updateDatabase();
+        storeObject();
         deleteObject();
 
         allOperationsInOnGo();

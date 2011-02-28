@@ -736,15 +736,14 @@
       Title="Backup"
       Link="/Content/advanced_topics/backup.htm" />
     <TocEntry
-      Title="UUID Support"
-      Link="/Content/advanced_topics/uuid_support.htm"
-      conditions="Primary.Java" />
-    <TocEntry
       Title="IDs And UUIDs"
       Link="/Content/advanced_topics/ids_and_uuids.htm"></TocEntry>
     <TocEntry
       Title="db4o Meta-Information"
       Link="/Content/advanced_topics/db4o_meta-information.htm"></TocEntry>
+    <TocEntry
+      Title="Consistency Check and File Statistics"
+      Link="/Content/advanced_topics/consistency_check.htm" />
     <TocEntry
       Title="System Info"
       Link="/Content/advanced_topics/system_info.htm" />
@@ -848,8 +847,15 @@
       Title="Type Handling"
       Link="/Content/advanced_topics/type_handling.htm">
       <TocEntry
+        Title="UUID Support"
+        Link="/Content/advanced_topics/type_handling/uuid_support.htm"
+        conditions="Primary.Java" />
+      <TocEntry
         Title="Big Math"
         Link="/Content/advanced_topics/type_handling/bigmath.htm" />
+      <TocEntry
+        Title="Object Construction"
+        Link="/Content/advanced_topics/type_handling/object_construction.htm" />
       <TocEntry
         Title="Blobs"
         Link="/Content/advanced_topics/type_handling/blobs.htm">

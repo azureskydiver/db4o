@@ -13,6 +13,7 @@ namespace Db4oDoc.Code.Basics
             StoreObject();
             Query();
             UpdateDatabase();
+            StoreObject();
             DeleteObject();
 
             AllOperationsInOnGo();
