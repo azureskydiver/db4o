@@ -62,7 +62,7 @@ namespace Db4objects.Db4o.CS.Internal
 
 		public override IEnumerator GetEnumerator()
 		{
-			return ClientServerPlatform.CreateClientQueryResultIterator(this);
+			return Skip(ClientServerPlatform.CreateClientQueryResultIterator(this));
 		}
 
 		public override int Size()

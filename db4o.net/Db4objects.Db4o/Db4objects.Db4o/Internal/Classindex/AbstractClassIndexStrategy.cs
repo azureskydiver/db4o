@@ -69,13 +69,15 @@ namespace Db4objects.Db4o.Internal.Classindex
 
 		public abstract int Id();
 
+		public abstract IIntVisitable IdVisitable(Transaction arg1);
+
 		public abstract void Initialize(ObjectContainerBase arg1);
 
 		public abstract void Purge();
 
 		public abstract void Read(ObjectContainerBase arg1, int arg2);
 
-		public abstract void TraverseAll(Transaction arg1, IVisitor4 arg2);
+		public abstract void TraverseIds(Transaction arg1, IVisitor4 arg2);
 
 		public abstract int Write(Transaction arg1);
 	}

@@ -234,8 +234,8 @@ namespace Db4objects.Db4o.Internal.Btree
 			return _keyHandler;
 		}
 
-		public virtual BTreeNodeSearchResult SearchLeaf(Transaction trans, object key, SearchTarget
-			 target)
+		public virtual BTreeNodeSearchResult SearchLeafByObject(Transaction trans, object
+			 key, SearchTarget target)
 		{
 			return SearchLeaf(trans, _keyHandler.PrepareComparison(trans.Context(), key), target
 				);

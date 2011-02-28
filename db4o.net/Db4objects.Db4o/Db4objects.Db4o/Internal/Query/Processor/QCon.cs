@@ -244,7 +244,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 				}
 			}
 			i_candidates = new QCandidates((LocalTransaction)i_trans, GetYapClass(), GetField
-				());
+				(), false);
 			i_candidates.AddConstraint(this);
 			a_candidateCollection.Add(i_candidates);
 		}
@@ -345,9 +345,12 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			{
 				Db4objects.Db4o.Internal.Query.Processor.QCon qcon = (Db4objects.Db4o.Internal.Query.Processor.QCon
 					)i.Current;
-				i_candidates.SetCurrentConstraint(qcon);
-				qcon.SetCandidates(i_candidates);
-				qcon.EvaluateSimpleExec(i_candidates);
+				if (!qcon.ProcessedByIndex())
+				{
+					i_candidates.SetCurrentConstraint(qcon);
+					qcon.SetCandidates(i_candidates);
+					qcon.EvaluateSimpleExec(i_candidates);
+				}
 			}
 			i_candidates.SetCurrentConstraint(null);
 		}
@@ -858,12 +861,12 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return i_evaluator;
 		}
 
-		public virtual void SetProcessedByIndex()
+		public virtual void SetProcessedByIndex(QCandidates candidates)
 		{
-			InternalSetProcessedByIndex();
+			InternalSetProcessedByIndex(candidates);
 		}
 
-		protected virtual void InternalSetProcessedByIndex()
+		protected virtual void InternalSetProcessedByIndex(QCandidates candidates)
 		{
 			_processedByIndex = true;
 			if (i_joins != null)
@@ -871,7 +874,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 				IEnumerator i = i_joins.GetEnumerator();
 				while (i.MoveNext())
 				{
-					((QConJoin)i.Current).SetProcessedByIndex();
+					((QConJoin)i.Current).SetProcessedByIndex(candidates);
 				}
 			}
 		}

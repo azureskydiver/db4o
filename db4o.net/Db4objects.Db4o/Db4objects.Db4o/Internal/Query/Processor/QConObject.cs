@@ -557,5 +557,19 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			}
 			return str;
 		}
+
+		protected override void InternalSetProcessedByIndex(QCandidates candidates)
+		{
+			base.InternalSetProcessedByIndex(candidates);
+			if (i_field == null)
+			{
+				return;
+			}
+			FieldMetadata fieldMetadata = i_field.GetFieldMetadata();
+			if (!fieldMetadata.IsVirtual())
+			{
+				candidates.WasLoadedFromClassFieldIndex(true);
+			}
+		}
 	}
 }

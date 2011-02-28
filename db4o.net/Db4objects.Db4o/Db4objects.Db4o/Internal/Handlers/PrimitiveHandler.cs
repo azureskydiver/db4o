@@ -14,7 +14,7 @@ namespace Db4objects.Db4o.Internal.Handlers
 {
 	/// <exclude></exclude>
 	public abstract class PrimitiveHandler : IValueTypeHandler, IIndexableTypeHandler
-		, IBuiltinTypeHandler, IQueryableTypeHandler
+		, IBuiltinTypeHandler, IQueryableTypeHandler, ICanExcludeNullInQueries
 	{
 		protected IReflectClass _classReflector;
 
@@ -192,5 +192,10 @@ namespace Db4objects.Db4o.Internal.Handlers
 		}
 
 		public abstract IPreparedComparison InternalPrepareComparison(object obj);
+
+		public virtual bool ExcludeNull()
+		{
+			return true;
+		}
 	}
 }

@@ -104,5 +104,10 @@ namespace Db4objects.Db4o.Internal.Query.Result
 			_delegate = _delegate.SupportSort();
 			_delegate.SortIds(cmp);
 		}
+
+		public override void Skip(int count)
+		{
+			_delegate.Skip(count);
+		}
 	}
 }

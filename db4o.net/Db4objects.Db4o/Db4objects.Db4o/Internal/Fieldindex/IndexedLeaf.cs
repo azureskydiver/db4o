@@ -60,9 +60,14 @@ namespace Db4objects.Db4o.Internal.Fieldindex
 			return _range;
 		}
 
-		public override void MarkAsBestIndex()
+		public override void MarkAsBestIndex(QCandidates candidates)
 		{
-			_constraint.SetProcessedByIndex();
+			_constraint.SetProcessedByIndex(candidates);
+		}
+
+		public override bool IsEmpty()
+		{
+			return _range.IsEmpty();
 		}
 	}
 }

@@ -57,7 +57,7 @@ namespace Db4objects.Db4o.Tests.Common.Classindex
 			ExpectingVisitor visitor = new ExpectingVisitor(expected);
 			IClassIndexStrategy index = ClassMetadataFor(typeof(ClassIndexTestCase.Item)).Index
 				();
-			index.TraverseAll(Trans(), visitor);
+			index.TraverseIds(Trans(), visitor);
 			visitor.AssertExpectations();
 		}
 	}

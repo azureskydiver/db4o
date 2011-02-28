@@ -195,7 +195,7 @@ namespace Db4objects.Db4o.Filestats
 			LongByRef slotUsage = new LongByRef();
 			LongByRef miscUsage = new LongByRef();
 			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy)clazz.Index();
-			index.TraverseAll(_db.SystemTransaction(), new _IVisitor4_166(this, slotUsage, miscCollector
+			index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_166(this, slotUsage, miscCollector
 				, miscUsage));
 			return new FileUsageStatsCollector.InstanceUsage(slotUsage.value, miscUsage.value
 				);
@@ -238,7 +238,7 @@ namespace Db4objects.Db4o.Filestats
 				return;
 			}
 			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy)clazz.Index();
-			index.TraverseAll(_db.SystemTransaction(), new _IVisitor4_182(this));
+			index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_182(this));
 		}
 
 		private sealed class _IVisitor4_182 : IVisitor4

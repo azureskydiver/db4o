@@ -1202,8 +1202,8 @@ namespace Db4objects.Db4o.Internal
 		private BTreeNodeSearchResult SearchBound(Transaction transaction, int parentID, 
 			object keyPart)
 		{
-			return GetIndex(transaction).SearchLeaf(transaction, CreateFieldIndexKey(parentID
-				, keyPart), SearchTarget.Lowest);
+			return GetIndex(transaction).SearchLeafByObject(transaction, CreateFieldIndexKey(
+				parentID, keyPart), SearchTarget.Lowest);
 		}
 
 		public virtual bool RebuildIndexForClass(LocalObjectContainer stream, ClassMetadata

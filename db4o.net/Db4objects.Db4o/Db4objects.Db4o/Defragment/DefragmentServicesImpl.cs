@@ -297,7 +297,7 @@ namespace Db4objects.Db4o.Defragment
 			{
 				return;
 			}
-			classMetadata.Index().TraverseAll(Sourcedb.Transaction(this), command);
+			classMetadata.Index().TraverseIds(Sourcedb.Transaction(this), command);
 		}
 
 		public virtual void TraverseAllIndexSlots(ClassMetadata classMetadata, IVisitor4 

@@ -172,7 +172,7 @@ namespace Db4objects.Db4o.Consistency
 					continue;
 				}
 				BTreeClassIndexStrategy index = (BTreeClassIndexStrategy)clazz.Index();
-				index.TraverseAll(_db.SystemTransaction(), new _IVisitor4_143(this, invalidIds, clazz
+				index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_143(this, invalidIds, clazz
 					));
 			}
 			return invalidIds;

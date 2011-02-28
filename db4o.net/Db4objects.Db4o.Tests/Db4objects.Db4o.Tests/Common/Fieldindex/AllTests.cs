@@ -19,7 +19,8 @@ namespace Db4objects.Db4o.Tests.Common.Fieldindex
 				), typeof(FieldIndexProcessorTestCase), typeof(StringFieldIndexTestCase), typeof(
 				DoubleFieldIndexTestCase), typeof(RuntimeFieldIndexTestCase), typeof(SecondLevelIndexTestCase
 				), typeof(StringFieldIndexDefragmentTestCase), typeof(StringIndexTestCase), typeof(
-				StringIndexCorruptionTestCase), typeof(StringIndexWithSuperClassTestCase) });
+				StringIndexCorruptionTestCase), typeof(StringIndexWithSuperClassTestCase), typeof(
+				UseSecondBestIndexTestCase) });
 		}
 
 		#if !SILVERLIGHT

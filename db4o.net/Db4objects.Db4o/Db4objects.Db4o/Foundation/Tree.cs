@@ -690,5 +690,15 @@ namespace Db4objects.Db4o.Foundation
 
 			private readonly IVisitor4 visitor;
 		}
+
+		public static int Depth(Tree tree)
+		{
+			if (tree == null)
+			{
+				return 0;
+			}
+			return Math.Max(Depth(((Tree)tree._preceding)), Depth(((Tree)tree._subsequent))) 
+				+ 1;
+		}
 	}
 }

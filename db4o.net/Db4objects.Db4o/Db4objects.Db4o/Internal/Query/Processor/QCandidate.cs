@@ -148,7 +148,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 							{
 								QCon tempParent = qcon.Parent();
 								qcon.SetParent(null);
-								QCandidates candidates = new QCandidates(a_candidates.i_trans, null, qf);
+								QCandidates candidates = new QCandidates(a_candidates.i_trans, null, qf, false);
 								candidates.AddConstraint(qcon);
 								qcon.SetCandidates(candidates);
 								ReadArrayCandidates(handler, queryingReadContext.Buffer(), arrayElementHandler, candidates
@@ -212,7 +212,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 					// immediately.
 					if (Handlers4.IsQueryLeaf(handler))
 					{
-						a_candidates.i_currentConstraint.Visit(this);
+						a_candidates._currentConstraint.Visit(this);
 						return true;
 					}
 				}
@@ -233,7 +233,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 				return false;
 			}
 			// fast early check for ClassMetadata
-			if (a_candidates.i_classMetadata != null && a_candidates.i_classMetadata.IsStronglyTyped
+			if (a_candidates._classMetadata != null && a_candidates._classMetadata.IsStronglyTyped
 				())
 			{
 				ITypeHandler4 handler = _fieldMetadata.GetHandler();
@@ -687,7 +687,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 
 		public override string ToString()
 		{
-			string str = "QCandidate ";
+			string str = "QCandidate id: " + _key;
 			if (_classMetadata != null)
 			{
 				str += "\n   YapClass " + _classMetadata.GetName();
@@ -825,6 +825,11 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			)
 		{
 			_classMetadata = classMetadata;
+		}
+
+		public virtual QCandidates Candidates()
+		{
+			return _candidates;
 		}
 	}
 }

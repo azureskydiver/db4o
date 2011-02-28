@@ -10,6 +10,8 @@
 
 
 
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -410,6 +412,8 @@
 <Compile Include="Db4objects.Db4o\Foundation\IIntComparator.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\IIntIterator4.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\IIntObjectVisitor.cs"/>
+<Compile Include="Db4objects.Db4o\Foundation\IIntVisitable.cs"/>
+<Compile Include="Db4objects.Db4o\Foundation\IIntVisitor.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\IListener4.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\IMap4.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\IObjectPool.cs"/>
@@ -734,6 +738,7 @@
 <Compile Include="Db4objects.Db4o\Internal\IBlockConverter.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\IBuiltinTypeHandler.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\ICallbackInfoCollector.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\ICanExcludeNullInQueries.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\ICommittedCallbackDispatcher.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\IComparable4.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\IDGenerator.cs"/>
@@ -893,6 +898,7 @@
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QPending.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QQuery.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QQueryBase.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Query\Processor\QueryResultCandidates.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Result\AbstractLateQueryResult.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Result\AbstractQueryResult.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Result\HybridQueryResult.cs"/>

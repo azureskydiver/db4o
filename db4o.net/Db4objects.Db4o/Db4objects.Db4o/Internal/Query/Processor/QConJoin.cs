@@ -138,15 +138,15 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return !i_and;
 		}
 
-		public override void SetProcessedByIndex()
+		public override void SetProcessedByIndex(QCandidates candidates)
 		{
 			if (ProcessedByIndex())
 			{
 				return;
 			}
-			base.SetProcessedByIndex();
-			Constraint1().SetProcessedByIndex();
-			Constraint2().SetProcessedByIndex();
+			base.SetProcessedByIndex(candidates);
+			Constraint1().SetProcessedByIndex(candidates);
+			Constraint2().SetProcessedByIndex(candidates);
 		}
 	}
 }

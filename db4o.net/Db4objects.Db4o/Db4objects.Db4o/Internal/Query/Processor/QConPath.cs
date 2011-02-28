@@ -155,11 +155,11 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return "QConPath " + base.ToString();
 		}
 
-		public override void SetProcessedByIndex()
+		public override void SetProcessedByIndex(QCandidates candidates)
 		{
 			if (ChildrenCount() <= 1)
 			{
-				InternalSetProcessedByIndex();
+				InternalSetProcessedByIndex(null);
 			}
 		}
 	}

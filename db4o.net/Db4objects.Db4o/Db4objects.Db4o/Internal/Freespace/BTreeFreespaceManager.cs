@@ -240,8 +240,8 @@ namespace Db4objects.Db4o.Internal.Freespace
 
 		private BTreePointer SearchBTree(BTree bTree, Slot slot, SearchTarget target)
 		{
-			BTreeNodeSearchResult searchResult = bTree.SearchLeaf(Transaction(), slot, target
-				);
+			BTreeNodeSearchResult searchResult = bTree.SearchLeafByObject(Transaction(), slot
+				, target);
 			return searchResult.FirstValidPointer();
 		}
 
