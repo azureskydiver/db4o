@@ -64,10 +64,15 @@ namespace Db4objects.Db4o.Internal.Fieldindex
 			throw new NotSupportedException();
 		}
 
-		public override void MarkAsBestIndex()
+		public override void MarkAsBestIndex(QCandidates candidates)
 		{
-			_constraint.SetProcessedByIndex();
-			_next.MarkAsBestIndex();
+			_constraint.SetProcessedByIndex(candidates);
+			_next.MarkAsBestIndex(candidates);
+		}
+
+		public override bool IsEmpty()
+		{
+			throw new NotSupportedException();
 		}
 	}
 }

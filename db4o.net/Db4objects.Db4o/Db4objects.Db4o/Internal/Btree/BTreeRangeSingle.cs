@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using Db4objects.Db4o.Foundation;
+using Db4objects.Db4o.Internal;
 using Db4objects.Db4o.Internal.Btree;
 using Db4objects.Db4o.Internal.Btree.Algebra;
 
@@ -182,6 +183,22 @@ namespace Db4objects.Db4o.Internal.Btree
 
 		private BTreePointer FirstBTreePointer()
 		{
+			// We don't want nulls included so we have to search for null and use the resulting pointer if we find one.
+			IIndexable4 keyHandler = Btree().KeyHandler();
+			if (keyHandler is ICanExcludeNullInQueries)
+			{
+				ICanExcludeNullInQueries canExcludeNullInQueries = (ICanExcludeNullInQueries)keyHandler;
+				if (canExcludeNullInQueries.ExcludeNull())
+				{
+					BTreeNodeSearchResult searchLeaf = Btree().SearchLeafByObject(Transaction(), null
+						, SearchTarget.Highest);
+					BTreePointer pointer = searchLeaf.FirstValidPointer();
+					if (pointer != null)
+					{
+						return pointer;
+					}
+				}
+			}
 			return Btree().FirstPointer(Transaction());
 		}
 

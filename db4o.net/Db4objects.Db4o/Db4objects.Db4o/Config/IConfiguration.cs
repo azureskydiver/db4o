@@ -390,7 +390,7 @@ namespace Db4objects.Db4o.Config
 		/// </param>
 		/// <seealso cref="Password(string)">Password(string)</seealso>
 		/// <exception cref="Db4objects.Db4o.Config.GlobalOnlyConfigException"></exception>
-		[System.ObsoleteAttribute(@"use a custom encrypting  instead")]
+		[System.ObsoleteAttribute(@"use a custom encrypting IoAdapter instead")]
 		void Encrypt(bool flag);
 
 		/// <summary>configures whether Exceptions are to be thrown, if objects can not be stored.
@@ -622,7 +622,7 @@ namespace Db4objects.Db4o.Config
 		/// </remarks>
 		/// <param name="pass">the password to be used.</param>
 		/// <exception cref="Db4objects.Db4o.Config.GlobalOnlyConfigException"></exception>
-		[System.ObsoleteAttribute(@"use a custom encrypting  instead")]
+		[System.ObsoleteAttribute(@"use a custom encrypting IoAdapter instead")]
 		void Password(string pass);
 
 		/// <summary>returns the Query configuration interface.</summary>

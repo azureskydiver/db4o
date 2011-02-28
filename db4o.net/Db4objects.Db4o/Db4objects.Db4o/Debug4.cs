@@ -50,13 +50,13 @@ namespace Db4objects.Db4o
 		/// makes sure a configuration entry is generated for each persistent
 		/// class
 		/// </summary>
-		public const bool configureAllClasses = indexAllFields;
+		public const bool configureAllClasses = false;
 
 		/// <summary>
 		/// makes sure a configuration entry is generated for each persistent
 		/// field
 		/// </summary>
-		public const bool configureAllFields = indexAllFields;
+		public const bool configureAllFields = false;
 
 		/// <summary>allows turning weak references off</summary>
 		public const bool weakReferences = true;

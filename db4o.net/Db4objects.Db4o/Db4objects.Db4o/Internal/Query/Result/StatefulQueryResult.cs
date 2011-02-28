@@ -122,5 +122,10 @@ namespace Db4objects.Db4o.Internal.Query.Result
 				return _delegate.GetEnumerator();
 			}
 		}
+
+		public virtual void Skip(int count)
+		{
+			_delegate.Skip(count);
+		}
 	}
 }

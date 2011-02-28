@@ -104,10 +104,10 @@ namespace Db4objects.Db4o.Tests.Common.Fieldindex
 			)
 		{
 			// SearchTarget should not make a difference, HIGHEST is faster
-			BTreeNodeSearchResult start = btree.SearchLeaf(trans, FieldIndexKey(0, key), SearchTarget
-				.Lowest);
-			BTreeNodeSearchResult end = btree.SearchLeaf(trans, FieldIndexKey(int.MaxValue, key
+			BTreeNodeSearchResult start = btree.SearchLeafByObject(trans, FieldIndexKey(0, key
 				), SearchTarget.Lowest);
+			BTreeNodeSearchResult end = btree.SearchLeafByObject(trans, FieldIndexKey(int.MaxValue
+				, key), SearchTarget.Lowest);
 			return start.CreateIncludingRange(end);
 		}
 

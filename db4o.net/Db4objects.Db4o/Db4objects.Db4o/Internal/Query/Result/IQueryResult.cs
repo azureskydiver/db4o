@@ -25,5 +25,7 @@ namespace Db4objects.Db4o.Internal.Query.Result
 		void Sort(IQueryComparator cmp);
 
 		void SortIds(IIntComparator cmp);
+
+		void Skip(int count);
 	}
 }
