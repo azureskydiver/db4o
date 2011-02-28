@@ -27,17 +27,29 @@ public class GetOneFromBigRangeQuery {
 		
 	private static final int OBJECT_COUNT = 10000;
 	
+	private static final int COMMIT_INTERVAL = 1000;
+	
 	private static final int QUERIES = 50;
 	
 	public static void main(String[] args) {
 		
-		if(false){
+		if(true){
 			File4.delete(FILE);
 			ObjectContainer objectContainer = openObjectContainer();
+			long start = System.currentTimeMillis();
 			for (int i = 0; i < OBJECT_COUNT; i++) {
 				objectContainer.store(new Item(i));
+				if(i % COMMIT_INTERVAL == 0){
+					objectContainer.commit();
+				}
 			}
+			objectContainer.commit();
+			long stop = System.currentTimeMillis();
+			long duration = stop - start;
+			System.out.println("Time to store and commit " + OBJECT_COUNT + " objects:");
+			System.out.println("" + duration + "ms");
 			objectContainer.close();
+			return;
 		}
 		
 		ObjectContainer objectContainer = openObjectContainer();
