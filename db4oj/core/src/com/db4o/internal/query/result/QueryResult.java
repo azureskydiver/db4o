@@ -27,4 +27,6 @@ public interface QueryResult extends Iterable4 {
     
     public void sortIds(IntComparator cmp);
 
+	public void skip(int count);
+
 }

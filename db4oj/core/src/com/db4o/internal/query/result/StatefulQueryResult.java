@@ -96,4 +96,8 @@ public class StatefulQueryResult implements Iterable4 {
 			return _delegate.iterator();
 		}
 	}
+
+	public void skip(int count) {
+		_delegate.skip(count);
+	}
 }

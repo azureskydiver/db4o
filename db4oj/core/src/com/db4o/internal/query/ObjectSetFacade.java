@@ -26,6 +26,10 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
 		_delegate.sort(cmp);
 	}
 	
+	public void skip(int count) {
+		_delegate.skip(count);
+	}
+	
 	@decaf.ReplaceFirst(value="return _delegate.iterator();", platform=decaf.Platform.JDK11)
     public Iterator iterator() {
     	return new JDKIterator();

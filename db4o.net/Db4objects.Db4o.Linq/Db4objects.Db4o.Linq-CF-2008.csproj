@@ -49,6 +49,12 @@
 
 
 
+
+
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -128,8 +134,10 @@
 <Compile Include="Db4objects.Db4o.Linq\ILinqQueryMonitor.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\Db4oLinqQueryable.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\Db4oQuery.cs"/>
+<Compile Include="Db4objects.Db4o.Linq\Internals\DelayedSelect.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\Extensions.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\IDb4oLinqQueryInternal.cs"/>
+<Compile Include="Db4objects.Db4o.Linq\Internals\IDelayedSelectOperation.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\LinqQueryMonitorImpl.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\ObjectSequence.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\ObjectSetWrapper.cs"/>
@@ -137,6 +145,7 @@
 <Compile Include="Db4objects.Db4o.Linq\Internals\PlaceholderQuery.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\QueryBuilderContext.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\QueryBuilderRecorder.cs"/>
+<Compile Include="Db4objects.Db4o.Linq\Internals\SelectPlaceHolder.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\Internals\UnoptimizedQuery.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\ObjectContainerExtensions.cs"/>
 <Compile Include="Db4objects.Db4o.Linq\QueryOptimizationException.cs"/>

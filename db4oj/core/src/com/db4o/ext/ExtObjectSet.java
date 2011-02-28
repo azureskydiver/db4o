@@ -32,5 +32,16 @@ public interface ExtObjectSet extends ObjectSet {
      * @return the activated object.
      */
     public Object get(int index);
+    
+    /**
+     * skips the specified number of objects without activating them.
+     * 
+     * Call this method before starting iterating over the iterator returned by {@link ObjectSet#iterator()}.
+     * 
+     * This method has no effect on calls to {@link #get} 
+     * 
+     * @since 8.1
+     */
+    public void skip(int count);
 	
 }

@@ -15,6 +15,7 @@ import com.db4o.query.*;
 public abstract class AbstractQueryResult implements QueryResult {
 	
 	protected final Transaction _transaction;
+	private int _skipCount;
 
 	public AbstractQueryResult(Transaction transaction) {
 		_transaction = transaction;
@@ -53,7 +54,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 	
     public Iterator4 iterator() {
-    	return new MappingIterator(iterateIDs()){
+    	return new MappingIterator(skip(iterateIDs())){
     		protected Object map(Object current) {
     			if(current == null){
     				return Iterators.SKIP;
@@ -69,7 +70,34 @@ public abstract class AbstractQueryResult implements QueryResult {
     	};
     }
     
-    public AbstractQueryResult supportSize(){
+    protected Iterator4 skip(final Iterator4 source) {
+    	return new Iterator4() {
+			private int _skipped;
+    		
+			public boolean moveNext() {
+		    	while (_skipped < _skipCount) {
+		    		_skipped++;
+
+		    		if (!source.moveNext()) {
+		    			return false;
+		    		}
+		    	}
+		    	
+		    	return source.moveNext();
+			}
+
+			public Object current() {
+				return source.current();
+			}
+
+			public void reset() {
+				source.reset();
+				_skipped = 0;
+			}    	
+    	};    	
+	}
+
+	public AbstractQueryResult supportSize(){
     	return this;
     }
     
@@ -105,6 +133,10 @@ public abstract class AbstractQueryResult implements QueryResult {
 	public int size() {
 		throw new NotImplementedException();
 	}
+	
+	public void skip(int count) {
+		_skipCount = count;
+	}
 
 	public void sort(QueryComparator cmp) {
 		throw new NotImplementedException();
@@ -118,7 +150,6 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 	
-    /** @param i */
 	public int getId(int i) {
 		throw new NotImplementedException();
 	}
@@ -127,22 +158,18 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 
-    /** @param c */
 	public void loadFromClassIndex(ClassMetadata c) {
 		throw new NotImplementedException();
 	}
 
-    /** @param i */
 	public void loadFromClassIndexes(ClassMetadataIterator i) {
 		throw new NotImplementedException();
 	}
 
-    /** @param ids */
 	public void loadFromIdReader(Iterator4 ids) {
 		throw new NotImplementedException();
 	}
 
-    /** @param q */
 	public void loadFromQuery(QQuery q) {
 		throw new NotImplementedException();
 	}

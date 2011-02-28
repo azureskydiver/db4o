@@ -119,24 +119,24 @@ public class ClusterQueryResult implements QueryResult {
 		throw new NotSupportedException();
 	}
 
-    /** @param c */
 	public void loadFromClassIndex(ClassMetadata c) {
         throw new NotSupportedException();
 	}
 
-    /** @param q */
 	public void loadFromQuery(QQuery q) {
 		throw new NotSupportedException();
 	}
 
-    /** @param i */
 	public void loadFromClassIndexes(ClassMetadataIterator i) {
 		throw new NotSupportedException();
 	}
 
-    /** @param r */
 	public void loadFromIdReader(ByteArrayBuffer r) {
 		throw new NotSupportedException();
+	}
+
+	public void skip(int count) {
+		throw new NotImplementedException();
 	}
 }
 
