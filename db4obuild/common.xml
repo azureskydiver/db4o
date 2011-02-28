@@ -150,6 +150,8 @@
 				</fileset>
 			</delete>
 			
+			<copy file="${dir.config}/flare/index_fix.html" tofile="@{output}/Output/@{target}/index.html" overwrite="true"/>
+			
 		</sequential>
 	</macrodef>
 	
