@@ -25,6 +25,8 @@
 
 
 
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -336,6 +338,7 @@
 <Compile Include="Db4objects.Db4o\Ext\OldFormatException.cs"/>
 <Compile Include="Db4objects.Db4o\Ext\Status.cs"/>
 <Compile Include="Db4objects.Db4o\Ext\UnsupportedOldFormatException.cs"/>
+<Compile Include="Db4objects.Db4o\Ext\UnsupportedOrderingException.cs"/>
 <Compile Include="Db4objects.Db4o\Ext\VirtualField.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\AbstractTreeIterator.cs"/>
 <Compile Include="Db4objects.Db4o\Foundation\Algorithms4.cs"/>
