@@ -837,6 +837,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\LazyQueryResultTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\MultiFieldIndexQueryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\NoClassIndexQueryTestSuite.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Querying\NonPrimitiveSortingTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\NullConstraintQueryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\ObjectSetTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\OrderedQueryTestCase.cs"/>
