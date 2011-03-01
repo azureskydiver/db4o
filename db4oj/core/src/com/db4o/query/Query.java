@@ -5,6 +5,7 @@ package  com.db4o.query;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.ta.*;
 
 
 /**
@@ -85,13 +86,16 @@ public interface Query {
 
     
     /**
-	 * adds an ascending ordering criteria to this node of
-	 * the query graph. 
+	 * adds an ascending ordering criteria to this node of the query graph. 
 	 * <p>
 	 * If multiple ordering criteria are applied, the chronological
 	 * order of method calls is relevant: criteria created by 'earlier' calls are
 	 * considered more significant, i.e. 'later' criteria only have an effect
 	 * for elements that are considered equal by all 'earlier' criteria.
+	 * </p>
+	 * <p>
+	 * Ordering by non primitive fields works only for classes that implement the {@link Activatable} interface 
+	 * and {@link TransparentActivationSupport} is enabled.  
 	 * </p>
 	 * <p>
 	 * As an example, consider a type with two int fields, and an instance set

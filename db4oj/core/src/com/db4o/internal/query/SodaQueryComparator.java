@@ -3,10 +3,14 @@ package com.db4o.internal.query;
 
 import java.util.*;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.reflect.*;
+import com.db4o.ta.*;
+import com.db4o.typehandlers.*;
 
 public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 	
@@ -137,10 +141,46 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 	}
 
 	private int compareByField(int x, int y, List<FieldMetadata> path) {
+		
 		final Object xFieldValue = getFieldValue(x, path);
 		final Object yFieldValue = getFieldValue(y, path);
+		
+		ensureNoManualActivationRequired(xFieldValue);
+		
 		final FieldMetadata field = path.get(path.size() - 1);
 		return field.prepareComparison(_transaction.context(), xFieldValue).compareTo(yFieldValue);
+	}
+
+	private void ensureNoManualActivationRequired(final Object obj) {
+		if (obj == null) return;
+		
+		if (!hasValueTypeBehavior(obj)) {
+			if (!Activatable.class.isAssignableFrom(obj.getClass())) {
+				throwUnsupportedOrderingException(obj.getClass(), "make it implement Activatable interface.");
+			}
+			
+			if (!TransparentActivationSupport.isTransparentActivationEnabledOn(_container)) {
+				throwUnsupportedOrderingException(obj.getClass(), "enable transparent activation support by adding TransparentActivationSupport to the configutation before opening the db.");
+			}			
+		}
+	}
+
+	private boolean hasValueTypeBehavior(final Object obj) {
+		boolean isSimple = Platform4.isSimple(obj.getClass());
+		if (isSimple) return true;
+		
+		ReflectClass reflectClass = _container.reflector().forObject(obj);
+		if (Platform4.isStruct(reflectClass)) return true;
+			
+		boolean isEnum = Platform4.isEnum(_container.reflector(), reflectClass);
+		if (isEnum) return true;
+		
+		TypeHandler4 typeHandler = _container.typeHandlerForClass(reflectClass);		
+		return Handlers4.isValueType(typeHandler);
+	}
+
+	private void throwUnsupportedOrderingException(final Class clazz, String msg) {
+		throw new UnsupportedOrderingException("Cannot sort on class '" + clazz.getName() + "'. If you do want to use it as a sort criteria " + msg);
 	}
 
 	private Object getFieldValue(int id, List<FieldMetadata> path) {
