@@ -27,4 +27,6 @@ public interface EditTasksController {
 
 	void setIteration(Collection<Task> selectedTasks, int week);
 
+	void setLabel(Collection<Task> task, String newLabel);
+
 }

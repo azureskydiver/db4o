@@ -218,14 +218,14 @@ public final class EditTasksControllerImpl implements EditTasksController {
 	private RemoteIssue[] fetchAndSave() throws RemoteException, com.atlassian.jira.rpc.soap.client.RemoteException {
 		RemoteIssue[] ret = jira().getIssuesFromFilter(auth(), "10590");
 		
-//		try {
-//			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("issues.dat")));
-//			out.writeObject(ret);
-//			out.flush();
-//			out.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("issues.dat")));
+			out.writeObject(ret);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return ret;
 	}
 
@@ -343,6 +343,17 @@ public final class EditTasksControllerImpl implements EditTasksController {
 		for(Task t : tasks) {
 			t.makeDirty();
 			t.setIteration(it);
+			root.store(t);
+		}
+		root.commit();
+	}
+
+	@Override
+	public void setLabel(Collection<Task> tasks, String newLabel) {
+		String[] label = newLabel.split(" ");
+		for(Task t : tasks) {
+			t.makeDirty();
+			t.setLabel(label);
 			root.store(t);
 		}
 		root.commit();
