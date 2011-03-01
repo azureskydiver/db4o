@@ -25,6 +25,8 @@ public class Task {
 	
 	private boolean dirty = false;
 	
+	private String[] label;
+	
 	public Task(String key) {
 		this.key = key;
 	}
@@ -149,6 +151,12 @@ public class Task {
 
 	public int getOrder() {
 		return order;
+	}
+	public void setLabel(String[] label) {
+		this.label = label;
+	}
+	public String[] getLabel() {
+		return label;
 	}
 	
 }

@@ -23,9 +23,10 @@ public class JiraConnection {
 		while (r.hasNext()) {
 			peers.add(r.next().getId());
 		}
+		Iteration iteration = task.getIteration();
 		fields.add(new RemoteFieldValue("customfield_10000", peers.toArray(new String[peers.size()])));
 		fields.add(new RemoteFieldValue("customfield_10020", new String[]{String.format("%d", task.getOrder())}));
-		Iteration iteration = task.getIteration();
+		fields.add(new RemoteFieldValue("customfield_10120", task.getLabel()));
 		fields.add(new RemoteFieldValue("customfield_10030", iteration == null ? EMPTY : new String[]{String.format("%d", iteration.getId())}));
 		fields.add(new RemoteFieldValue("customfield_10040", new String[]{task.getEstimate() == 0 ? "" : String.format("%d", task.getEstimate())}));
 		fields.add(new RemoteFieldValue("customfield_10150", new String[]{String.format("%.10f", task.getFineGrainedOrder())}));
@@ -59,6 +60,10 @@ public class JiraConnection {
 			String[] order = custom.get("customfield_10020");
 			if (order != null && order.length > 0) {
 				task.setOrder(Integer.parseInt(order[0]));
+			}
+			String[] label = custom.get("customfield_10120");
+			if (label != null && label.length > 0) {
+				task.setLabel(toLowerCase(label));
 			}
 			String[] estimate = custom.get("customfield_10040");
 			if (estimate != null && estimate.length > 0) {
@@ -96,6 +101,14 @@ public class JiraConnection {
 		}
 		
 		root.commit();
+	}
+
+	private static String[] toLowerCase(String[] label) {
+		String[] ret = new String[label.length];
+		for(int i=0;i<ret.length;i++) {
+			ret[i] = label[i].toLowerCase();
+		}
+		return ret;
 	}
 
 	private static Map<String, String[]> parseCustomFields(RemoteIssue issue) {

@@ -225,6 +225,7 @@ public final class EditTasks extends Composite {
 		addMenuAssign(menu);
 		addMenuIteration(menu);
 		addMenuDropTask(menu);
+		addMenuLabelTask(menu);
 		
 		tree.setMenu (menu);
 	}
@@ -254,6 +255,56 @@ public final class EditTasks extends Composite {
 		});
 	}
 	
+	private void addMenuLabelTask(Menu parent) {
+		MenuItem menuItem = new MenuItem (parent, SWT.PUSH);
+		menuItem.setText ("Label task...");
+		
+		menuItem.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				final Set<Task> selectedTasks = new LinkedHashSet<Task>();
+				TreeItem[] selectedItems = tree.getSelection();
+				Set<String> labels = new LinkedHashSet<String>();
+				for(TreeItem item : selectedItems) {
+					Task data = (Task) item.getData();
+					selectedTasks.add(data);
+					for(String s : data.getLabel()) {
+						labels.add(s);
+					}
+				}
+				
+				String label = formatLabel(labels);
+				
+				String newLabel = new LabelDialog(getDisplay(), label).open();
+				
+				if (newLabel == null) {
+					return;
+				}
+				
+				controller.setLabel(selectedTasks, newLabel);
+				for(TreeItem item : selectedItems) {
+					fillItem((Task)item.getData(), item);
+				}
+			}
+
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
+	}
+	
+	private String formatLabel(Iterable<String> labels) {
+		String label = "";
+		for(String s : labels) {
+			if (!label.isEmpty()) {
+				label += " ";
+			}
+			label += s;
+		}
+		return label;
+	}
 	private void addMenuAssign(Menu parent) {
 		MenuItem menuItem = new MenuItem (parent, SWT.CASCADE);
 		menuItem.setText ("Assign to");
@@ -450,7 +501,7 @@ public final class EditTasks extends Composite {
 		
 		for(int i=1;i<=9;i++) {
 			final int order = i;
-			addSetOrderMenu(subMenu, i, new Predicate4<Integer>() {
+			addSetOrderMenu(subMenu, i, true, new Predicate4<Integer>() {
 
 				@Override
 				public boolean match(Integer candidate) {
@@ -469,7 +520,7 @@ public final class EditTasks extends Composite {
 		
 		for(int i=1;i<=9;i++) {
 			final int order = i;
-			addSetOrderMenu(subMenu, i, new Predicate4<Integer>() {
+			addSetOrderMenu(subMenu, i, false, new Predicate4<Integer>() {
 
 				@Override
 				public boolean match(Integer candidate) {
@@ -479,7 +530,7 @@ public final class EditTasks extends Composite {
 		}
 	}
 
-	private void addSetOrderMenu(Menu subMenu, int i, final Predicate4<Integer> predicate) {
+	private void addSetOrderMenu(Menu subMenu, int i, final boolean defaultTop, final Predicate4<Integer> predicate) {
 		final int order = i;
 		MenuItem item = new MenuItem (subMenu, SWT.PUSH);
 		item.setText (""+i);
@@ -513,14 +564,18 @@ public final class EditTasks extends Composite {
 				int index = 0;
 				for(int i=0;i<items.length;i++) {
 					TreeItem treeItem = items[i];
-					if (selectedTasks.contains(treeItem.getData())) {
+					Task task = (Task)treeItem.getData();
+					if (selectedTasks.contains(task)) {
 						continue;
 					}
-					int taskOrder = ((Task)treeItem.getData()).getOrder();
-					if (predicate.match(taskOrder)) {
+					if (predicate.match(task.getOrder())) {
 						index = i;
 						break;
 					}
+				}
+				
+				if (index == 0 && !predicate.match(((Task)items[items.length-1].getData()).getOrder())) {
+					index = items.length;
 				}
 				
 				moveItems(selectedItems, selectedTasks, index, taskBefore.value, taskAfter, order);
@@ -558,6 +613,9 @@ public final class EditTasks extends Composite {
 		column = new TreeColumn(tree, SWT.LEFT);
 		column.setText("Assignee");
 
+		column = new TreeColumn(tree, SWT.LEFT);
+		column.setText("Labels");
+		
 		column = new TreeColumn(tree, SWT.LEFT);
 		column.setText("Fine Order");
 	}
@@ -762,6 +820,7 @@ public final class EditTasks extends Composite {
 		final Set<String> orders = filterByKey(filters, "order:");
 		final Set<String> assignees = filterByKey(filters, "assignee:", "peer:");
 		final Set<String> iterations = filterByKey(filters, "it:", "iteration:");
+		final Set<String> labels = filterByKey(filters, "label:");
 		
 		tree.setRedraw(false);
 
@@ -781,6 +840,9 @@ public final class EditTasks extends Composite {
 					return null;
 				}
 				if (iterations != null && (t.getIteration()==null || !iterations.contains(""+t.getIteration().getId()))) {
+					return null;
+				}
+				if (labels != null && (t.getLabel()==null || !containsAny(labels, t.getLabel()))) {
 					return null;
 				}
 				if (assignees != null) {
@@ -824,6 +886,17 @@ public final class EditTasks extends Composite {
 			
 		}
 
+	}
+
+	protected boolean containsAny(Collection<String> needles, String[] haystacks) {
+		for(String haystack : haystacks) {
+			for(String needle: needles) {
+				if (haystack.contains(needle)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private Set<String> filterByKey(final Set<String> filters, String... filterKeys) {
@@ -891,6 +964,7 @@ public final class EditTasks extends Composite {
 	}
 
 	private void fillItem(Task t, TreeItem item) {
+		if (item.isDisposed()) return;
 		item.setText(new String[] {
 				t.getKey() + (t.isDirty() ? "*" : ""),
 				t.getSummary(), 
@@ -898,6 +972,7 @@ public final class EditTasks extends Composite {
 				t.getEstimate() == 0 ? "" : "" + t.getEstimate(),
 				t.getIteration() == null ? "" : "" + t.getIteration().getId(), 
 				formatAssignee(t.getResources()),
+				formatLabel(list(t.getLabel())),
 				String.format("%.4f", t.getFineGrainedOrder()),
 		});
 		item.setData(t);
