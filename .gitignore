@@ -14,3 +14,4 @@ _ReSharper*/
 *.backup
 *.cache
 *.suo
+.DS_Store
