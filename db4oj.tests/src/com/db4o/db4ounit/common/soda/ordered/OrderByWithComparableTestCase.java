@@ -45,7 +45,6 @@ public class OrderByWithComparableTestCase extends AbstractDb4oTestCase {
 			return "ItemComparable(" + _id + ")";
 		}
 		
-		@Override
 		public void bind(Activator activator) {
 			if (_activator == activator) return;
 			
@@ -56,7 +55,6 @@ public class OrderByWithComparableTestCase extends AbstractDb4oTestCase {
 			_activator = activator;
 		}
 
-		@Override
 		public void activate(ActivationPurpose purpose) {
 			if (_activator != null) {
 				_activator.activate(purpose);
