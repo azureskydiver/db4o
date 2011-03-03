@@ -934,6 +934,9 @@ public final class EditTasks extends Composite {
 	
 	protected boolean accept(Set<String> filters, Task t) {
 		Set<String> task = parseFilter(t.getKey() + " " + t.getSummary());
+		if (t.getLabel() != null) {
+			task.addAll(Arrays.asList(t.getLabel()));
+		}
 		
 		search1: for (String filter : filters) {
 			for (String word : task) {
