@@ -27,6 +27,9 @@
 			iteration="${db4o.iteration}"
 			revision="${svn.revision}"
 		/>
+		<tstamp>
+	  		<format property="CURRENT_YEAR" pattern="yyyy" locale="en,US"/>
+		</tstamp>
 	</target>
 		
 	<target name="clean">
@@ -1664,7 +1667,7 @@
 				<pathelement location="${file.decaf.annotations}" />
 			</classpath>
 			
-			<bottom><![CDATA[<i>Copyright 2009 Versant Corporation. All rights reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright ${CURRENT_YEAR} Versant Corporation. All rights reserved.</i>]]></bottom>
 			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/internal/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
