@@ -99,7 +99,7 @@
 				<arg value="jdk12" />
 				
 				<arg value="-targetPlatform" />
-				<arg value="sharpen" />				
+				<arg value="jdk15" />				
 
 				<arg value="-cp" />
 				<arg path="${file.bloat.jar}" />
@@ -280,7 +280,7 @@
 		
 	</target>
 
-	<target name="build.db4ojdk1.5" depends="init">
+	<target name="build.db4ojdk1.5" depends="init, decaf.all">
 		<mkdir dir="${dir.dist.classes.jdk1.5}" />
 
 		<javac  
@@ -290,7 +290,7 @@
             target="1.5" 
             source="1.5" 
             encoding="UTF-8">
-			<src path="${dir.j.core.src}" />
+			<src path="${dir.dist.decaf.jdk1.5.core.src}" />
 			<classpath>
 				<pathelement location="${file.decaf.annotations}" />
 			</classpath>
@@ -312,7 +312,7 @@
             target="1.5" 
             source="1.5" 
             encoding="UTF-8">
-			<src path="${dir.j.cs.src}" />
+			<src path="${dir.dist.decaf.jdk1.5.core.cs.src}" />
 			<classpath>
 				<pathelement location="${file.jdk1.5.jar}"/>
 				<pathelement location="${file.decaf.annotations}" />
@@ -335,7 +335,7 @@
             target="1.5" 
             source="1.5" 
             encoding="UTF-8">
-			<src path="${dir.j.optional.core.src}" />
+			<src path="${dir.dist.decaf.jdk1.5.core.optional.src}" />
 			<classpath>
 				<pathelement location="${file.jdk1.5.jar}"/>
 				<pathelement location="${file.decaf.annotations}" />
@@ -358,7 +358,7 @@
             target="1.5" 
             source="1.5" 
             encoding="UTF-8">
-			<src path="${dir.j.cs.optional.src}" />
+			<src path="${dir.dist.decaf.jdk1.5.core.cs.optional.src}" />
 			<classpath>
 				<pathelement location="${file.jdk1.5.jar}"/>
 				<pathelement location="${file.decaf.annotations}" />
@@ -402,7 +402,7 @@
 
 	<target name="build.instrumentation1.5" depends="build.db4ojdk1.5">
 	    <mkdir dir="${dir.dist.classes.jdk1.5.instrumentation}" />
-		<javac srcdir="${dir.j.instrumentation.src}" 
+		<javac srcdir="${dir.dist.decaf.jdk1.5.instrumentation.src}" 
 	        fork="true" 
 	        destdir="${dir.dist.classes.jdk1.5.instrumentation}" 
 	        debug="${javac.debug.mode}" 
@@ -560,7 +560,7 @@
 
 	<target name="build.nqopt1.5" depends="build.db4ojdk1.5, build.instrumentation1.5">
         <mkdir dir="${dir.dist.classes.jdk1.5.nqopt}" />
-		<javac srcdir="${dir.j.nqopt.src}" 
+		<javac srcdir="${dir.dist.decaf.jdk1.5.nqopt.src}" 
             fork="true" 
             destdir="${dir.dist.classes.jdk1.5.nqopt}" 
             debug="${javac.debug.mode}" 
@@ -848,8 +848,8 @@
 		<build-db4ounit
 				source="1.5"
 				target="1.5"
-				src="${dir.db4ounit.src}"
-				extensions="${dir.db4ounit.extensions.src}" />
+				src="${dir.dist.decaf.jdk1.5.db4ounit.src}"
+				extensions="${dir.dist.decaf.jdk1.5.db4ounit.extensions.src}" />
 		
 	</target>
 		
@@ -918,7 +918,7 @@
 				<pathelement location="${file.decaf.annotations}" />
 				<path refid="tests.jdk1.5.cp" />
 			</classpath>
-			<src path="${dir.j.tests.src}"/>
+			<src path="${dir.dist.decaf.jdk1.5.test.src}"/>
 			<src path="${dir.j.tools.src}" />
 		</javac>
 		<copy todir="${dir.dist.classes.test.jdk1.5}" overwrite="true">
@@ -1005,7 +1005,7 @@
 				<pathelement location="${dir.dist.classes.test.jdk1.5}" />
 				<pathelement location="${file.ant.jar}"  />
 			</classpath>
-			<src path="${dir.j.nqopt.test.src}" />
+			<src path="${dir.dist.decaf.jdk1.5.nqopt.test.src}" />
 		</javac>
 	</target>
 
@@ -1208,7 +1208,7 @@
             target="1.5" 
             source="1.5" 
             encoding="UTF-8">
-            <src path="${dir.j.instrumentation.test.src}" />
+            <src path="${dir.dist.decaf.jdk1.5.instrumentation.test.src}" />
 			<classpath>
 				<pathelement path="${file.decaf.annotations}" />
 				<pathelement path="${file.jdk1.5.jar}"/>

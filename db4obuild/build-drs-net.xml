@@ -174,7 +174,7 @@
 		</jar>
     	
     	<copy todir="${drs.sharpen.workspace.dir}/drs/db4o">
-			<fileset dir="${dir.j.core.src}">
+			<fileset dir="${dir.dist.decaf.jdk1.5.core.src}">
 				<include name="**/*.java" />
 			</fileset>
     	</copy>

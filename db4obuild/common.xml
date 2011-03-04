@@ -427,7 +427,7 @@
 
 		<for list="core,core.optional,core.cs,core.cs.optional,test,db4ounit,db4ounit.extensions,instrumentation,instrumentation.test,taj,taj.test,nqopt,nqopt.test,tools,tools.test" param="project-id">
 			<sequential>
-				<for list="jdk1.2,sharpen" param="platform-id">
+				<for list="jdk1.2,sharpen,jdk1.5" param="platform-id">
 					<sequential>
 						<property name="dir.dist.decaf.@{platform-id}.@{project-id}.src" value="${dir.dist.decaf.@{platform-id}.project.target}/${path.decaf.@{project-id}.src}" />
 					</sequential>
