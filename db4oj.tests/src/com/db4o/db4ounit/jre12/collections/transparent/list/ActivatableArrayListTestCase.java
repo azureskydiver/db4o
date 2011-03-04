@@ -62,5 +62,22 @@ public class ActivatableArrayListTestCase extends ActivatableCollectionTestCaseB
 		singleList.ensureCapacity(10);
 		assertAreEqual(newPlainList(), singleList);
 	}
+	
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	public void testRetainAll() throws Exception{
+		Element element = new Element("first");
+		singleCollection().add(element);
+		ArrayList<CollectionElement> newPlainList = newPlainList();
+		newPlainList.add(element);
+		Assert.isTrue(newPlainList.size()>1);
+		Collection<CollectionElement> excerpt = new ArrayList<CollectionElement>();
+		excerpt.add(element);
+		reopen();
+		Assert.isTrue(newPlainList.retainAll(excerpt));
+		Assert.isTrue(singleCollection().retainAll(excerpt));
+		reopen();
+		IteratorAssert.areEqual(newPlainList, singleCollection());
+	}
+
 
 }

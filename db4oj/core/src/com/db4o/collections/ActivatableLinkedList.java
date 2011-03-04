@@ -193,5 +193,157 @@ public class ActivatableLinkedList<E> extends LinkedList<E> implements Activatab
 		activate(ActivationPurpose.WRITE);
 		return super.removeAll(c);
 	}
+	
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	@Override
+    public java.util.Iterator<E> descendingIterator() {
+		activate(ActivationPurpose.READ);
+    	return super.descendingIterator();
+    }
 
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	@Override
+    public E element() {
+		activate(ActivationPurpose.READ);
+    	return super.element();
+    }
+	
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	@Override
+    public E getFirst() {
+		activate(ActivationPurpose.READ);
+    	return super.getFirst();
+    }
+	
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	@Override
+    public E getLast() {
+		activate(ActivationPurpose.READ);
+    	return super.getLast();
+    }
+
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	@Override
+	public boolean offer(E e) {
+		activate(ActivationPurpose.READ);
+		return super.offer(e);
+	}
+
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK16)
+	@Override
+	public boolean offerFirst(E e) {
+		activate(ActivationPurpose.READ);
+		return super.offerFirst(e);
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public boolean offerLast(E e) {
+		activate(ActivationPurpose.READ);
+		return super.offerLast(e);
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E peek() {
+		activate(ActivationPurpose.READ);
+		return super.peek();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E peekFirst() {
+		activate(ActivationPurpose.READ);
+		return super.peekFirst();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E peekLast() {
+		activate(ActivationPurpose.READ);
+		return super.peekLast();
+	}
+
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E poll() {
+		activate(ActivationPurpose.READ);
+		return super.poll();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E pollFirst() {
+		activate(ActivationPurpose.READ);
+		return super.pollFirst();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E pollLast() {
+		activate(ActivationPurpose.READ);
+		return super.pollLast();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E pop() {
+		activate(ActivationPurpose.WRITE);
+		return super.pop();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public void push(E element) {
+		activate(ActivationPurpose.WRITE);
+		super.push(element);
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E remove() {
+		activate(ActivationPurpose.WRITE);
+		return super.remove();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E removeFirst() {
+		activate(ActivationPurpose.WRITE);
+		return super.removeFirst();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public boolean removeFirstOccurrence(Object element) {
+		activate(ActivationPurpose.WRITE);
+		return super.removeFirstOccurrence(element);
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public E removeLast() {
+		activate(ActivationPurpose.WRITE);
+		return super.removeLast();
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public boolean removeLastOccurrence(Object element) {
+		activate(ActivationPurpose.WRITE);
+		return super.removeLastOccurrence(element);
+	}
+
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		activate(ActivationPurpose.WRITE);
+		return super.retainAll(c);
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 }
