@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
+        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Sub ValidateObject(ByVal sender As Object, ByVal eventInfo As CancellableObjectEventArgs)
+    Dim context As New ValidationContext(eventInfo.Object, Nothing, Nothing)
+    'This throws when the object isn't valid.
+    Validator.ValidateObject(eventInfo.Object, context, True)
+End Sub</pre>
+        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Sub ValidateObject(ByVal sender As Object, ByVal eventInfo As CancellableObjectEventArgs)
+    Dim context As New ValidationContext(eventInfo.Object, Nothing, Nothing)
+    'This throws when the object isn't valid.
+    Validator.ValidateObject(eventInfo.Object, context, True)
+End Sub</pre>
+		<div class="codesnippet-meta">
+			DataValidation.vb: Validation support
+			<div class="codedownload">
+				<a href="Example-Code-validation-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>

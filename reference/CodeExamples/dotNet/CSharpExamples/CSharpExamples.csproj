@@ -80,6 +80,7 @@
       <HintPath>..\..\libs\net\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -202,6 +203,7 @@
     <Compile Include="Code\typehandling\translator\ExampleTranslator.cs" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.cs" />
     <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.cs" />
+    <Compile Include="Code\validation\DataValidation.cs" />
     <Compile Include="Code\xml\XMLSerialisationExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

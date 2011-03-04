@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
+    <body>
+	<div class="codesnippet" MadCap:conditions="Primary.Java">
+        <pre class="prettyprint" xml:space="preserve">private static class ValidationListener implements EventListener4&lt;CancellableObjectEventArgs&gt; {
+    private final Validator validator = Validation.buildDefaultValidatorFactory()
+            .getValidator();
+
+    @Override
+    public void onEvent(Event4&lt;CancellableObjectEventArgs&gt; events,
+                        CancellableObjectEventArgs eventInfo) {
+        Set&lt;ConstraintViolation&lt;Object&gt;&gt; violations = validator.validate(eventInfo.object());
+        if (!violations.isEmpty()) {
+            throw new ValidationException(buildMessage(violations));
+        }
+    }
+
+    private String buildMessage(Set&lt;ConstraintViolation&lt;Object&gt;&gt; violations) {
+        final StringBuilder builder = new StringBuilder(&quot;Violations of validation-rules:\n&quot;);
+        for (ConstraintViolation&lt;Object&gt; violation : violations) {
+            builder.append(violation.getPropertyPath()).append(&quot; &quot;)
+                    .append(violation.getMessage()).append(&quot;\n&quot;);
+        }
+        return builder.toString();
+    }
+}</pre>
+		<div class="codesnippet-meta">
+			DataValidation.java: Validation support
+			<div class="codedownload">
+				<a href="Example-db4odoc-validation-java.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
+			</div>
+			<div class="codedownload copylink-marker" MadCap:conditions="Primary.Online"><a href="#copy">Copy Code</a></div>
+		</div>
+	</div>
+
+    </body>
+</html>
