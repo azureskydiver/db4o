@@ -1033,6 +1033,9 @@
         Link="/Content/platform_specific_issues/web/asp.net_mvc_example.htm" />
     </TocEntry>
     <TocEntry
+      Title="Validation"
+      Link="/Content/platform_specific_issues/validation.htm" />
+    <TocEntry
       Title="Automatic Properties"
       Link="/Content/platform_specific_issues/automatic_properties.htm" />
     <TocEntry
