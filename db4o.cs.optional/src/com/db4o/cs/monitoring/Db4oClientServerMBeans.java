@@ -8,10 +8,12 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.monitoring.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class Db4oClientServerMBeans {
 
 	public static Networking newClientNetworkingStatsMBean(ObjectContainer container) {

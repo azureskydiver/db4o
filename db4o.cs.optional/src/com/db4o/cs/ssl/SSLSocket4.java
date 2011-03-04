@@ -7,7 +7,9 @@ import javax.net.ssl.SSLSocketFactory;
 
 import com.db4o.cs.foundation.*;
 
-@decaf.Ignore
+import decaf.*;
+
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class SSLSocket4 extends NetworkSocketBase {
 
 	private SSLSocketFactory _factory;

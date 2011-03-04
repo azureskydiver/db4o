@@ -9,10 +9,12 @@ import com.db4o.cs.internal.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 
+import decaf.*;
+
 /**
  * publishes the number of client connections to JMX.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class ClientConnectionsMonitoringSupport implements ServerConfigurationItem {
 
 	public void apply(ObjectServer server) {

@@ -7,7 +7,9 @@ import com.db4o.config.*;
 import com.db4o.cs.internal.config.*;
 import com.db4o.internal.*;
 
-@decaf.Ignore
+import decaf.*;
+
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class SSLSupport implements ConfigurationItem {
 
 	private SSLContext _context;

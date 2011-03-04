@@ -12,10 +12,12 @@ import com.db4o.*;
 import com.db4o.cs.foundation.*;
 import com.db4o.events.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 class MonitoredServerSocket4 extends ServerSocket4Decorator {
 	public MonitoredServerSocket4(ServerSocket4 serverSocket) {
 		super(serverSocket);

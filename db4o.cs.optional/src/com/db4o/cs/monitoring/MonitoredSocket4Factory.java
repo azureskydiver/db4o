@@ -6,10 +6,12 @@ import java.io.*;
 
 import com.db4o.cs.foundation.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class MonitoredSocket4Factory implements Socket4Factory {
 	
 	private final Socket4Factory _socketFactory;

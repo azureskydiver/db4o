@@ -6,10 +6,12 @@ import javax.management.*;
 
 import com.db4o.monitoring.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class ClientConnections extends MBeanRegistrationSupport implements ClientConnectionsMBean {
 
 	public ClientConnections(ObjectName name) throws JMException {

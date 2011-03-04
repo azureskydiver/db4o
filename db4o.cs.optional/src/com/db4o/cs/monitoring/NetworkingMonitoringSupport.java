@@ -8,10 +8,12 @@ import com.db4o.cs.foundation.*;
 import com.db4o.cs.internal.config.*;
 import com.db4o.internal.*;
 
+import decaf.*;
+
 /**
  * publishes statistics about networking activities to JMX.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class NetworkingMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {
