@@ -17,6 +17,10 @@ class Foo {
 	public void ignoredExceptAndroid() {
 	}
 
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JMX)
+	public void ignoredUnlessCompatibleJmx() {
+	}
+
 	@decaf.Ignore(decaf.Platform.JDK11)
 	public void ignoredOnJdk11Only() {
 	}
