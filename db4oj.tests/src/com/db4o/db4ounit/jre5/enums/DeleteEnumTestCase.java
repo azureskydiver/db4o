@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class DeleteEnumTestCase extends AbstractDb4oTestCase {
     
 	public static final class Item {

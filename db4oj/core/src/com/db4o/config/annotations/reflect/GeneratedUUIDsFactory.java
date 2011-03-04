@@ -11,7 +11,7 @@ import com.db4o.config.annotations.*;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class GeneratedUUIDsFactory implements
 		Db4oConfiguratorFactory {
 

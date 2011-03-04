@@ -6,7 +6,7 @@ import javax.management.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public interface Db4oMBean {
 	void register() throws JMException;
 	void unregister() throws JMException;

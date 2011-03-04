@@ -8,7 +8,7 @@ import db4ounit.extensions.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class AllTestsJdk5 extends Db4oConcurrencyTestSuite {
 
 	public static void main(String[] args) {

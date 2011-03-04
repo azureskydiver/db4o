@@ -4,7 +4,7 @@ package com.db4o.db4ounit.optional.monitoring.cs;
 
 import db4ounit.extensions.Db4oTestSuite;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class AllTests extends Db4oTestSuite {	
 	
 	@Override

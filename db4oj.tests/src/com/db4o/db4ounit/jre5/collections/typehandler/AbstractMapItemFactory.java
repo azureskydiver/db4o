@@ -2,7 +2,7 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class AbstractMapItemFactory extends AbstractItemFactory {
 
 	public String fieldName() {

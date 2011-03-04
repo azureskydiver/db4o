@@ -7,7 +7,7 @@ import db4ounit.extensions.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Db4oAndroid extends Db4oSolo{
 	
 	@Override

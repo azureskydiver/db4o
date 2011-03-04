@@ -4,7 +4,7 @@ package com.db4o.db4ounit.optional.monitoring;
 
 import com.db4o.query.Predicate;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public abstract class QueryMonitoringTestCaseBase extends MBeanTestCaseBase {
 
 	public static final class OptimizableQuery extends Predicate<Item> {

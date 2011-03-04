@@ -11,7 +11,7 @@ import db4ounit.*;
 import db4ounit.extensions.OptOutNotSupportedJavaxManagement;
 import db4ounit.extensions.fixtures.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class ObjectLifecycleMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagement {
 	
 	public static class Item {

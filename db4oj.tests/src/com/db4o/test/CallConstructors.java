@@ -7,7 +7,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class CallConstructors {
     
     static Hashtable constructorCalledByClass = new Hashtable();

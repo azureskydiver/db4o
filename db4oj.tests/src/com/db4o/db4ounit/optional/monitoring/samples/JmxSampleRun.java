@@ -7,7 +7,7 @@ import com.db4o.config.*;
 import com.db4o.io.*;
 import com.db4o.monitoring.*;
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class JmxSampleRun {
 
 	private static final int OBJECT_COUNT = 300000;

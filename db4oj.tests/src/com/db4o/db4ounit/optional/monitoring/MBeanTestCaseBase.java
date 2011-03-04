@@ -12,7 +12,7 @@ import com.db4o.monitoring.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
 
 	public static class Item {

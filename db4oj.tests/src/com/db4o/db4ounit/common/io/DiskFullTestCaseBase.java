@@ -11,7 +11,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class DiskFullTestCaseBase extends Db4oTestWithTempFile {
 	
 	protected abstract ThrowCondition createThrowCondition(Object conditionConfig);

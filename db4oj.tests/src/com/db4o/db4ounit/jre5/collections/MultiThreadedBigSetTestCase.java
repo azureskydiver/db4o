@@ -8,7 +8,7 @@ import com.db4o.collections.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class MultiThreadedBigSetTestCase extends AbstractDb4oTestCase {
 	
 	static class Item {

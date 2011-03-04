@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class COR756TestCase extends AbstractDb4oTestCase {
 	
 	public static class A implements Serializable {

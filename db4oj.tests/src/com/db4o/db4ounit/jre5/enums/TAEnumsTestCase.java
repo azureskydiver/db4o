@@ -12,7 +12,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class TAEnumsTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {

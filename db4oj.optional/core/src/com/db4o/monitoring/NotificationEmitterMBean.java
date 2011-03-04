@@ -8,7 +8,7 @@ import com.db4o.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class NotificationEmitterMBean extends MBeanRegistrationSupport implements NotificationEmitter{
 
 	private final NotificationBroadcasterSupport _notificationSupport = new NotificationBroadcasterSupport();

@@ -10,7 +10,7 @@ import com.db4o.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class QueryForClass {
     
     public String name;

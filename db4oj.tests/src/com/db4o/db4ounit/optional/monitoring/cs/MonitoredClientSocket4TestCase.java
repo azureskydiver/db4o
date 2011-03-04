@@ -9,7 +9,7 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase {
 	
 	@Override

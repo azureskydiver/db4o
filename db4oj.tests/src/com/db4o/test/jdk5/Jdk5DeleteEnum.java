@@ -9,7 +9,7 @@ import com.db4o.test.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Jdk5DeleteEnum {
     
     Jdk5Enum a;

@@ -7,7 +7,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ConstructorNotRequiredTestCase extends AbstractDb4oTestCase {
 	
     public static class Item {

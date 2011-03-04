@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 /**
  * publishes statistics about file IO to JMX.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class IOMonitoringSupport implements ConfigurationItem{
 
 	public void apply(InternalObjectContainer container) {

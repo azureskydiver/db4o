@@ -12,7 +12,7 @@ import com.db4o.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class MBeanRegistrationSupport implements Db4oMBean {
 
 	private ObjectContainer _db;

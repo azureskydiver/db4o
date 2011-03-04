@@ -12,7 +12,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class UpdateDepthTestCase extends FixtureTestSuiteDescription implements Db4oTestCase {
 	
 	{

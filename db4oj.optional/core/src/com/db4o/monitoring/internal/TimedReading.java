@@ -6,7 +6,7 @@ import static com.db4o.foundation.Environments.my;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class TimedReading {
 	
 	private static final int IDENTITY_MS_FACTOR = 1;

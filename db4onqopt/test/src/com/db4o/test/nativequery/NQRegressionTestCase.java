@@ -602,7 +602,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		},
 	};
 	
-	@decaf.ReplaceFirst("return null;")
+	@decaf.ReplaceFirst(value="return null;", platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
 	private static ExpectingPredicate[] jdk5Predicates() {
 		return new ExpectingPredicate[] {
 			new ExpectingPredicate<Data>("name.contains('a')") {

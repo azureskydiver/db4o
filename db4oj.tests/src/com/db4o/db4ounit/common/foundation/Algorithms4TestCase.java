@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class Algorithms4TestCase implements TestCase {
 	
 	public static class QuickSortableIntArray implements Sortable4{

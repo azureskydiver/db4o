@@ -8,7 +8,7 @@ import static com.db4o.foundation.Environments.*;
 /**
  * Publishes storage statistics to JMX.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class MonitoredStorage extends StorageDecorator {
 
 	public MonitoredStorage(Storage storage) {

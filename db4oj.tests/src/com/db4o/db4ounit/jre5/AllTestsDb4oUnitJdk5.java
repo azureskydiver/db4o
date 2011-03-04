@@ -7,7 +7,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 
 	public static void main(String[] args) {

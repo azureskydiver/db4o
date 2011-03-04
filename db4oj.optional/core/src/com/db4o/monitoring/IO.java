@@ -9,7 +9,7 @@ import com.db4o.monitoring.internal.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 class IO extends MBeanRegistrationSupport implements IOMBean {
 
 	private TimedReading _numBytesReadPerSec = TimedReading.newPerSecond();

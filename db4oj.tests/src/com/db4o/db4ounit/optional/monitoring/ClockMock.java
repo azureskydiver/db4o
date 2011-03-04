@@ -3,7 +3,7 @@ package com.db4o.db4ounit.optional.monitoring;
 
 import com.db4o.monitoring.internal.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 final public class ClockMock implements Clock {
 	
 	private long _currentTime;

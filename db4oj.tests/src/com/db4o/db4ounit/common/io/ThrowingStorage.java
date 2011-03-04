@@ -6,7 +6,7 @@ import com.db4o.io.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ThrowingStorage extends StorageDecorator {
 
 	private final ThrowCondition _condition;

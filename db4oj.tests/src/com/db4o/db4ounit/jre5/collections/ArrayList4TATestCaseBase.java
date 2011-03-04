@@ -12,7 +12,7 @@ import com.db4o.ext.*;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase {
 	
 	@Override

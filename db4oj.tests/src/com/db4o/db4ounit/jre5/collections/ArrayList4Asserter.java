@@ -12,7 +12,7 @@ import db4ounit.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4Asserter {
 	
 	public static int CAPACITY = 100;

@@ -12,7 +12,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class NamedArrayListTypeHandlerTestCase extends AbstractDb4oTestCase{
     
     private static String NAME = "listname";

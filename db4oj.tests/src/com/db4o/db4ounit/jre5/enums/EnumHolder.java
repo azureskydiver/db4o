@@ -5,7 +5,7 @@ package com.db4o.db4ounit.jre5.enums;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class EnumHolder {
     // JDK1.5: typesafe enums
     private TypeCountEnum type;

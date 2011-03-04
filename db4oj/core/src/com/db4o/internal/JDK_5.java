@@ -13,10 +13,10 @@ import com.db4o.reflect.jdk.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 class JDK_5 extends JDK_1_4 {
 
-	@decaf.Remove
+	@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 	public final static class Factory implements JDKFactory {
 		public JDK tryToCreate() {
 	    	if(!classIsAvailable("java.lang.Enum")){

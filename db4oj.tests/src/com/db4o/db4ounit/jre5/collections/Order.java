@@ -10,7 +10,7 @@ import com.db4o.db4ounit.common.ta.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Order extends ActivatableImpl {
 	private ArrayList4<OrderItem> _items;
 

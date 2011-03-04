@@ -7,7 +7,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class DiskFullTestCase extends DiskFullTestCaseBase {
 
 	private static final long NO_SIZE_LIMIT = -1;

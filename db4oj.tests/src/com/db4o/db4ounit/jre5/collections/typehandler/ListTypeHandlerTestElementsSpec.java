@@ -6,7 +6,7 @@ import db4ounit.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ListTypeHandlerTestElementsSpec implements Labeled {
 
 	public final Object[] _elements;

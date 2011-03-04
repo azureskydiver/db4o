@@ -11,7 +11,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayMap4TestCase implements TestLifeCycle {
 
     private ArrayMap4<String, Integer> map;

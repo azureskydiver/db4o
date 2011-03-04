@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class RunTestsWithBTreeFreespaceManager implements TestSuiteBuilder {
 	
 	public Class testSuite() {

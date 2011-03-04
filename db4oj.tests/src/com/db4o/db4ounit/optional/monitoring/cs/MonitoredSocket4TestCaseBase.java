@@ -18,7 +18,7 @@ import com.db4o.monitoring.*;
 import db4ounit.extensions.OptOutNotSupportedJavaxManagement;
 import db4ounit.extensions.fixtures.*;
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile implements OptOutNotSupportedJavaxManagement, OptOutCustomContainerInstantiation {
 
 	protected static class Item {

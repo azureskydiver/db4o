@@ -6,7 +6,7 @@ import java.util.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class StatefulList implements List {
 	
 	private transient List _delegate = new ArrayList();

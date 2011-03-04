@@ -14,7 +14,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase implements OptOutMultiSession, OptOutNoInheritedClassPath, OptOutWorkspaceIssue {
 	
 	public static void main(String[] arguments) {

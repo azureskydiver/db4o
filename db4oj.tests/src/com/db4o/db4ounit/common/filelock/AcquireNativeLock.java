@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class AcquireNativeLock {
 
 	public static void main(String[] args) throws IOException {

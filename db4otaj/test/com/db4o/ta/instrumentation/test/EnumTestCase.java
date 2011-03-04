@@ -13,7 +13,7 @@ import com.db4o.ta.instrumentation.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class EnumTestCase implements TestLifeCycle{
 	
 	private BloatInstrumentingClassLoader _loader;

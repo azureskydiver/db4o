@@ -10,7 +10,7 @@ import java.lang.reflect.*;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class NoArgsClassConfiguratorFactory implements Db4oConfiguratorFactory {
 	private Constructor _constructor;
 

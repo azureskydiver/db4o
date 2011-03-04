@@ -12,7 +12,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.IOServices.ProcessRunner;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class DatabaseFileLockedAcrossVMTestCase
 	extends TestWithTempFile
 	implements OptOutInMemory, OptOutNoInheritedClassPath, OptOutWorkspaceIssue {

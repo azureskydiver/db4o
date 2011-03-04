@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
  * COR-465
  * merge into SimpleEnumTestCase when fixed
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class EnumPeekPersistedTestCase extends AbstractDb4oTestCase{
 	
     public static final class Item {

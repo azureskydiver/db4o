@@ -14,7 +14,7 @@ import com.db4o.db4ounit.util.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class SSLSocketTestCase extends StandaloneCSTestCaseBase implements OptOutWorkspaceIssue {
 
 	private static final String KEYSTORE_PATH = "keystore/test_keystore";

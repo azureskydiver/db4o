@@ -4,7 +4,7 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class AbstractItemFactory {
 	
 	static final String MAP_FIELD_NAME = "_map";

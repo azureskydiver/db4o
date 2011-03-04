@@ -28,7 +28,7 @@ import com.db4o.ta.*;
  * @sharpen.if !SILVERLIGHT
  */
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		Serializable, RandomAccess, Activatable {
 

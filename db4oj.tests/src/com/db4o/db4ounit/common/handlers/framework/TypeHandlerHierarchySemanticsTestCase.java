@@ -15,7 +15,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class TypeHandlerHierarchySemanticsTestCase extends AbstractInMemoryDb4oTestCase implements OptOutDefragSolo {
 	
 	public static class A {

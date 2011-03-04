@@ -10,7 +10,7 @@ import com.db4o.internal.config.*;
 /**
  * publishes statistics about Queries to JMX.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class QueryMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {

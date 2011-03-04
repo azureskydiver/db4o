@@ -6,7 +6,6 @@ public class Collections4 {
 		return new UnmodifiableSequence4(orig);
 	}
 	
-	@decaf.Ignore(except=decaf.Platform.JDK11)
 	public static void sort(Sequence4 sequence, final Comparison4 comparator) {
 		final Object[] array = sequence.toArray();
 		Arrays4.sort(array, comparator);

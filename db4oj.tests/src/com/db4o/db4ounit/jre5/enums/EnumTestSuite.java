@@ -17,7 +17,7 @@ import db4ounit.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class EnumTestSuite extends FixtureBasedTestSuite /* implements OptOutTemporary */ implements Db4oTestCase {
 	
 	

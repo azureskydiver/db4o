@@ -10,7 +10,7 @@ import com.db4o.monitoring.internal.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 class Queries extends NotificationEmitterMBean implements QueriesMBean {
 
 	private final TimedReading _classIndexScans = TimedReading.newPerSecond();

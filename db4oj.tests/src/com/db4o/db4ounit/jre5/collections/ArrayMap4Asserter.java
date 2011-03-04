@@ -9,7 +9,7 @@ import db4ounit.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayMap4Asserter {
 
     public static int DATA_LENGTH = 10;

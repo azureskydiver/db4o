@@ -11,7 +11,7 @@ import db4ounit.Assert;
 import db4ounit.extensions.OptOutNotSupportedJavaxManagement;
 import db4ounit.extensions.fixtures.CustomClientServerConfiguration;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class NativeQueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration, OptOutNotSupportedJavaxManagement {
 	
 	@Override

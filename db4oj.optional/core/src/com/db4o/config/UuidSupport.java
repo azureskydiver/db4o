@@ -12,7 +12,7 @@ import com.db4o.typehandlers.*;
  * 
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class UuidSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {

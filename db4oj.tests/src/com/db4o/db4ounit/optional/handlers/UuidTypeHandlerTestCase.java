@@ -15,7 +15,7 @@ import db4ounit.extensions.*;
 /**
  * @sharpen.remove
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class UuidTypeHandlerTestCase extends AbstractDb4oTestCase {
 
 	private static final UUID UUID_1_2 = new UUID(20L, 40L);

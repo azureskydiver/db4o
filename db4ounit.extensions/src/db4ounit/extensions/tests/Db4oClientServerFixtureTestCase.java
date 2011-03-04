@@ -16,7 +16,7 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class Db4oClientServerFixtureTestCase implements TestCase {
 	
 	public void testOpenWithCustomClientServerConfiguration() throws Exception {

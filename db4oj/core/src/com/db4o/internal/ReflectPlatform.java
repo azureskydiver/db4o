@@ -49,7 +49,7 @@ public class ReflectPlatform {
 		return !clazz.isPrimitive();
 	}
 
-	@decaf.ReplaceFirst("return simpleNameForJdksPriorTo5(clazz);")
+	@decaf.ReplaceFirst(value="return simpleNameForJdksPriorTo5(clazz);", platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
 	public static String simpleName(Class clazz) {
 		return clazz.getSimpleName();
     }

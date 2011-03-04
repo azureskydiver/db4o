@@ -8,7 +8,7 @@ import db4ounit.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public final class ListTypeHandlerTestVariables {
 	
 	public final static FixtureVariable LIST_IMPLEMENTATION = new FixtureVariable("list");
