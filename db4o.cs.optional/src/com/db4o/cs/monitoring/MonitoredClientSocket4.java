@@ -7,10 +7,12 @@ import static com.db4o.foundation.Environments.*;
 import com.db4o.*;
 import com.db4o.cs.foundation.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class MonitoredClientSocket4 extends MonitoredSocket4Base {
 
 	protected MonitoredClientSocket4(Socket4 socket) {

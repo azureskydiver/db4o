@@ -4,10 +4,12 @@ package com.db4o.cs.monitoring;
 
 import com.db4o.cs.foundation.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class MonitoredServerSideClientSocket4 extends MonitoredSocket4Base {
 
 	public MonitoredServerSideClientSocket4(Socket4 socket, Networking bean) {

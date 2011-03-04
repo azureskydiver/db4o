@@ -2,13 +2,15 @@
 
 package com.db4o.cs.monitoring;
 
+import decaf.*;
+
 /**
  * @exclude
  * JMX MBean for tracking client connections.
  * 
  * @since 7.12
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public interface ClientConnectionsMBean {
 	int getConnectedClientCount();
 }

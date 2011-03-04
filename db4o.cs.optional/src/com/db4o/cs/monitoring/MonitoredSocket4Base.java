@@ -6,10 +6,12 @@ import java.io.*;
 
 import com.db4o.cs.foundation.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 abstract class MonitoredSocket4Base extends Socket4Decorator {
 	public MonitoredSocket4Base(Socket4 socket) {
 		super(socket);

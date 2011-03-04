@@ -4,10 +4,12 @@ import javax.management.*;
 
 import com.db4o.*;
 
+import decaf.*;
+
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=Platform.JMX)
 public class SynchronizedNetworking extends Networking {
 
 	public SynchronizedNetworking(ObjectContainer db, Class<?> type) throws JMException {
