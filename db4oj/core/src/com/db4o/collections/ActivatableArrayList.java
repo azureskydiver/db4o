@@ -205,4 +205,16 @@ public class ActivatableArrayList<E> extends ArrayList<E> implements Activatable
 		super.trimToSize();
 	}
 	
+	@decaf.Ignore(unlessCompatible = decaf.Platform.JDK16)
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		activate(ActivationPurpose.WRITE);
+		return super.retainAll(c);
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	
 }
