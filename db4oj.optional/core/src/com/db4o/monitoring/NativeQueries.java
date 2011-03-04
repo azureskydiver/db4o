@@ -12,7 +12,7 @@ import com.db4o.query.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class NativeQueries extends NotificationEmitterMBean implements NativeQueriesMBean {
 	
 	private final TimedReading _nativeQueries = TimedReading.newPerSecond();

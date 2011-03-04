@@ -21,7 +21,7 @@ public class AllTests extends ComposibleTestSuite {
 	@Override
 	protected Class[] composeWith() {
 		return new Class[] {
-				CrashSimulatingTestSuite.class,
+//				CrashSimulatingTestSuite.class,
 				ReadCommittedIsolationTestCase.class,
 			};
 	}

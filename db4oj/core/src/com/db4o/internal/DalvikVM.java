@@ -12,10 +12,10 @@ import com.db4o.reflect.core.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 class DalvikVM extends JDK_5 {
 	
-	@decaf.Remove
+	@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 	public final static class Factory implements JDKFactory {
 		public JDK tryToCreate() {
 			if (!"Dalvik".equals(System.getProperty("java.vm.name"))) {

@@ -13,7 +13,7 @@ import com.db4o.internal.caching.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class PurgeableCacheTestCase implements TestCase {
 	
 	final PurgeableCache4<Integer, Integer> subject = CacheFactory.newLRUCache(2);

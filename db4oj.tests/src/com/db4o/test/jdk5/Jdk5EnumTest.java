@@ -12,7 +12,7 @@ import com.db4o.test.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Jdk5EnumTest {
 	private final static int NUMRUNS=1;
     

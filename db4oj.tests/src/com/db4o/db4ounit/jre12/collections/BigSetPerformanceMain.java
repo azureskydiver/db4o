@@ -15,7 +15,7 @@ import db4ounit.fixtures.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class BigSetPerformanceMain extends FixtureTestSuiteDescription {
 	
 	{

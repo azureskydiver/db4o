@@ -13,7 +13,7 @@ import com.db4o.monitoring.internal.*;
 /**
  * Publishes statistics about the ReferenceSystem to JMX.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ReferenceSystemMonitoringSupport implements ConfigurationItem {
 
 	private final static class MonitoringSupportReferenceSystemFactory implements ReferenceSystemFactory, DeepClone {

@@ -10,7 +10,7 @@ import com.db4o.monitoring.internal.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ObjectLifecycle extends MBeanRegistrationSupport implements ObjectLifecycleMBean{
 	
 	private final TimedReading _activated = TimedReading.newPerSecond();

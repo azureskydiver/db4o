@@ -11,7 +11,7 @@ import db4ounit.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db4oTestCase  {
 
 	@Override

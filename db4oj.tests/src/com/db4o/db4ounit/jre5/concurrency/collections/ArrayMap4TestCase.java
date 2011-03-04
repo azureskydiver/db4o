@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayMap4TestCase extends Db4oConcurrencyTestCase {
 
     public static void main(String[] args) {

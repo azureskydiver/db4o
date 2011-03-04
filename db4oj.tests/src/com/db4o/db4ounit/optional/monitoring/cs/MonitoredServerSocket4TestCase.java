@@ -14,7 +14,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase {
 
 	private static final int CLIENT_1 = 0;

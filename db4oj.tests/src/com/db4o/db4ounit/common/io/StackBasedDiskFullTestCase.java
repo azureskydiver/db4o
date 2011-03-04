@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.io;
 
 /**
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class StackBasedDiskFullTestCase extends DiskFullTestCaseBase {
 
 	public void testFailDuringCommitParticipants() {

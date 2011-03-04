@@ -17,7 +17,7 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class UuidSupportTestCase implements TestCase {
 	
 	private final class TypeHandlerPredicateMatcher implements IArgumentMatcher {

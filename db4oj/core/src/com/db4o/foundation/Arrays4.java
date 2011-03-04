@@ -123,7 +123,6 @@ public class Arrays4 {
 		return merged;
 	}
 
-	@decaf.Ignore(except=decaf.Platform.JDK11)
 	public static void sort(final Object[] array, final Comparison4 comparator) {
 		Algorithms4.sort(new Sortable4() {
 			public void swap(int leftIndex, int rightIndex) {

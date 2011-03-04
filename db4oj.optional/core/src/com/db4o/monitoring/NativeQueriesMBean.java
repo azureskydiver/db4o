@@ -4,7 +4,7 @@ package com.db4o.monitoring;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public interface NativeQueriesMBean {
 	
 	double getUnoptimizedNativeQueriesPerSecond();

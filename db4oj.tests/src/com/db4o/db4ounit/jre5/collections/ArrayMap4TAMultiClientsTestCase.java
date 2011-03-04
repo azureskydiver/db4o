@@ -10,7 +10,7 @@ import db4ounit.extensions.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCaseBase
         implements OptOutSolo {
 

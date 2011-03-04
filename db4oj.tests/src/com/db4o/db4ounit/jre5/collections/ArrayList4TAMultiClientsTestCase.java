@@ -13,7 +13,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase implements OptOutSolo {
 	public static void main(String[] args) {
 		new ArrayList4TAMultiClientsTestCase().runEmbedded();

@@ -12,12 +12,12 @@ import com.db4o.monitoring.*;
  */
 public class AllMonitoringSupport {
 	
-	@decaf.RemoveFirst
+	@decaf.RemoveFirst(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
 	public void apply(CommonConfigurationProvider config){
 		addMonitoringSupport(config.common());
 	}
 	
-	@decaf.Ignore
+	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 	private void addMonitoringSupport(CommonConfiguration commonConfig) {
 		commonConfig.add(new IOMonitoringSupport());
 		commonConfig.add(new QueryMonitoringSupport());

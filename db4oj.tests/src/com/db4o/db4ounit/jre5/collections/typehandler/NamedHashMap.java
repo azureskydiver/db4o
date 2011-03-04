@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class NamedHashMap extends HashMap {
 	
 	public String name;

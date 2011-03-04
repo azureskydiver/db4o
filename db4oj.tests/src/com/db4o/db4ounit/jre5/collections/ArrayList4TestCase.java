@@ -13,7 +13,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4TestCase implements TestLifeCycle {
 
 	public static void main(String[] args) {

@@ -7,7 +7,7 @@ import com.db4o.collections.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public interface ArrayList4Operation <T> {
 	public void operate(ArrayList4<T> list);
 }

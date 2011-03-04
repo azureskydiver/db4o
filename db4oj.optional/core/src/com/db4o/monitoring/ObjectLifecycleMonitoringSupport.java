@@ -14,7 +14,7 @@ import com.db4o.internal.*;
  * only tracked on the client side. The counter 
  * ObjectsDeletedPerSec is only tracked on the server side.
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ObjectLifecycleMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {

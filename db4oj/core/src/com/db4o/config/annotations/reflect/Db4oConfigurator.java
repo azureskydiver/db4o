@@ -8,7 +8,7 @@ import com.db4o.config.*;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class Db4oConfigurator {	
 	private Configuration _config;
 	private ObjectClass _objectClass;

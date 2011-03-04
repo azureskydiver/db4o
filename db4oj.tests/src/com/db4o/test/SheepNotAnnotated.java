@@ -6,7 +6,7 @@ package com.db4o.test;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class SheepNotAnnotated {
 	
 	private String name;

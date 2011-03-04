@@ -20,7 +20,7 @@ public class AllTestsConfAll extends TestSuite{
         addNativeQueryTestSuite(suites);
 	}
 
-    @decaf.ReplaceFirst("return;")
+    @decaf.ReplaceFirst(value="return;", platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
 	private void addNativeQueryTestSuite(TestSuite suites) {
 		suites.add(new com.db4o.test.nativequery.NativeQueryTestSuite());
 	}

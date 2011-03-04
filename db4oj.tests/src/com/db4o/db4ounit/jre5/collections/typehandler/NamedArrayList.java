@@ -6,7 +6,7 @@ import java.util.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class NamedArrayList extends ArrayList {
     
     public String name;

@@ -6,7 +6,7 @@ package com.db4o.test.jdk5;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public enum Jdk5Enum {
     
     A("A"),

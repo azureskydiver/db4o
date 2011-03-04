@@ -16,7 +16,7 @@ import com.db4o.internal.*;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ConfigurationIntrospector {
 
 	Map<Class<? extends Annotation>, Db4oConfiguratorFactory> _configurators;

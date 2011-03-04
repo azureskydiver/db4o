@@ -11,7 +11,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4SODATestCase extends TransparentActivationTestCaseBase {
 	
 	private static final Product PRODUCT_BATERY = new Product("BATE", "Batery 9v");

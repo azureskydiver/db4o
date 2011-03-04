@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.io;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Item {
 	public int _id;
 

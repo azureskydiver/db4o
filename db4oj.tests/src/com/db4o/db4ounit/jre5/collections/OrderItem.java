@@ -6,7 +6,7 @@ import com.db4o.db4ounit.common.ta.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class OrderItem extends ActivatableImpl {
 	private Product _product;
 	private int _quantity;

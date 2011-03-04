@@ -13,7 +13,7 @@ import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class SlotCollectorTestCase implements TestCase {
 
 	final IMocksControl mockery = createControl();

@@ -18,7 +18,7 @@ import com.db4o.query.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class FulltextIndex implements MessageRecipient{
     
     public String toIndex;

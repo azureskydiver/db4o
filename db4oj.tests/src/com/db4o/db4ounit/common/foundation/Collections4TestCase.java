@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class Collections4TestCase implements TestCase {
 	
 	public void testSequenceSort() {

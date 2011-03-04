@@ -6,7 +6,7 @@ package com.db4o.db4ounit.jre5;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class AllTestsDb4oUnitJdk5CS {
 	public static void main(String[] args) {
 		System.exit(new AllTestsDb4oUnitJdk5().runNetworking());

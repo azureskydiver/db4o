@@ -8,7 +8,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public abstract class CollectionTypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 
 	protected abstract void assertCompareItems(Object element, boolean successful);

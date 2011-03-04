@@ -10,7 +10,7 @@ import db4ounit.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4TATestCase extends ArrayList4TATestCaseBase {
 
 	public static void main(String[] args) {

@@ -10,7 +10,7 @@ import db4ounit.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 @SuppressWarnings("unchecked")
 public class ListTypeHandlerGreaterSmallerTestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
 	

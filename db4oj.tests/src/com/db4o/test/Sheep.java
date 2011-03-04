@@ -8,7 +8,7 @@ import com.db4o.config.annotations.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Sheep {
 
 	@Indexed 

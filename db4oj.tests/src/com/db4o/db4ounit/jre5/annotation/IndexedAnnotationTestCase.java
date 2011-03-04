@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 
 	private static class DataAnnotated {

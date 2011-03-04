@@ -8,7 +8,7 @@ import db4ounit.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class MapTypeHandlerTestVariables {
 
 	public final static FixtureVariable MAP_IMPLEMENTATION = new FixtureVariable("map");

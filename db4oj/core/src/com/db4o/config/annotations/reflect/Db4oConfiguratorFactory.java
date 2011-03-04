@@ -9,7 +9,7 @@ import java.lang.reflect.*;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public interface Db4oConfiguratorFactory {
 	Db4oConfigurator configuratorFor(AnnotatedElement element,Annotation annotation);
 }

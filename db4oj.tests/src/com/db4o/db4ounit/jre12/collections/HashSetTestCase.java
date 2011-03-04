@@ -4,7 +4,7 @@ import java.util.*;
 
 import db4ounit.extensions.*;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class HashSetTestCase extends AbstractDb4oTestCase {
 	
 	public static class Item {

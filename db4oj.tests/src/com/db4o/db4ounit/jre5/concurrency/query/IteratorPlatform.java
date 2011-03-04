@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class IteratorPlatform {
 
 	static Object next(final Iterator result) {

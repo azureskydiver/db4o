@@ -13,7 +13,7 @@ import static com.db4o.foundation.Environments.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Db4oMBeanRegistryImpl implements Db4oMBeanRegistry {
 
 	private Set<Db4oMBean> _beans = new HashSet<Db4oMBean>();

@@ -9,7 +9,7 @@ import com.db4o.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ReferenceSystem extends MBeanRegistrationSupport implements ReferenceSystemMBean, ReferenceSystemListener {
 	
 	private int _objectReferenceCount;

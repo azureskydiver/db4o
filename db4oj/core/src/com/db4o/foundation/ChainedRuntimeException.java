@@ -17,12 +17,12 @@ public abstract class ChainedRuntimeException extends RuntimeException {
     public ChainedRuntimeException() {
     }
 
-    @decaf.ReplaceFirst("super(msg);")
+    @decaf.ReplaceFirst(value="super(msg);", platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
     public ChainedRuntimeException(String msg) {
         super(msg, null);
     }
 
-    @decaf.ReplaceFirst("super(msg);")
+    @decaf.ReplaceFirst(value="super(msg);", platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
     public ChainedRuntimeException(String msg, Throwable cause) {
         super(msg, cause);
     }

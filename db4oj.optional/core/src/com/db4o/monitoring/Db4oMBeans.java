@@ -10,7 +10,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Db4oMBeans {
 	
 	private static final String MONITORING_DOMAIN_NAME = "com.db4o.monitoring";

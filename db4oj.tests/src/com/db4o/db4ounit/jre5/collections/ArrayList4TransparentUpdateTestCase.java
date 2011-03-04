@@ -10,7 +10,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayList4TransparentUpdateTestCase implements TestLifeCycle {
 	
 	private ArrayList4<Object> list;

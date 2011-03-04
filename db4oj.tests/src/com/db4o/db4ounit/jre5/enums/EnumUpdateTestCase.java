@@ -8,7 +8,7 @@ import db4ounit.extensions.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class EnumUpdateTestCase extends AbstractDb4oTestCase {
 	
 	public enum MyEnum {

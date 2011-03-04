@@ -16,7 +16,7 @@ import com.db4o.monitoring.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ClientConnectionsTestCase extends TestWithTempFile implements OptOutAllButNetworkingCS {
 
 	private static final String USER = "db4o";

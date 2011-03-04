@@ -11,6 +11,6 @@ package com.db4o.internal;
  * 
  * @exclude
  */
-@decaf.IgnoreImplements
+@decaf.IgnoreImplements(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
 public interface ObjectContainerSpec extends InternalObjectContainer {
 }

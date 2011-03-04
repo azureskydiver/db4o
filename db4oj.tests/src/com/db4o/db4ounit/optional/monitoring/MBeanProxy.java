@@ -8,7 +8,7 @@ import javax.management.*;
 /**
  * JDK 1.5 compatible MBean "proxy".
  */
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class MBeanProxy {
 
 	private final MBeanServer _platformServer = ManagementFactory.getPlatformMBeanServer();

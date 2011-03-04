@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class EmptyObjectSet {
     
     public void test(){

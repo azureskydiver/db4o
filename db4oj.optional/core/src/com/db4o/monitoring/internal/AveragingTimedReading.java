@@ -3,7 +3,7 @@ package com.db4o.monitoring.internal;
 
 import static com.db4o.foundation.Environments.my;
 
-@decaf.Remove
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class AveragingTimedReading {
 	
 	private final Clock _clock = my(Clock.class);

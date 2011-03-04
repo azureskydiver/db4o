@@ -9,7 +9,7 @@ import db4ounit.extensions.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class AllTestsWithTAJdk5 {
 	public static void main(String[] args) {
 		TestSuiteBuilder builder = new Db4oTestSuiteBuilder(

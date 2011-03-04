@@ -18,7 +18,7 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class UuidTypeHandler implements ValueTypeHandler, QueryableTypeHandler, IndexableTypeHandler {
 
 	// null marker byte + uuid most significant bytes + uuid least significant bytes

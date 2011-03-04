@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 /**
  * @exclude
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ListTypeHandlerCascadedDeleteTestCase extends AbstractDb4oTestCase{
 
     /**

@@ -16,7 +16,7 @@ import db4ounit.extensions.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class StatefulListTestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
 	
 	public static final Object[] DATA = new Object[]{

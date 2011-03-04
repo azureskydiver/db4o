@@ -6,7 +6,7 @@ package com.db4o.config.annotations.reflect;
  * @exclude
  * @sharpen.ignore
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class CalledConstructorConfigurator extends Db4oConfigurator {
 	private String _className;
 

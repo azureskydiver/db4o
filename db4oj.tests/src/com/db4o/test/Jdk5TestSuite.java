@@ -7,7 +7,7 @@ import com.db4o.test.jdk5.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class Jdk5TestSuite extends TestSuite{   
     public Class[] tests(){
         return new Class[] {

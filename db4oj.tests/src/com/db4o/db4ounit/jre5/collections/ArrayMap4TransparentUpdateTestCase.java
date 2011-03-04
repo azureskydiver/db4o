@@ -10,7 +10,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class ArrayMap4TransparentUpdateTestCase implements TestLifeCycle {
 
 	private ArrayMap4<Object, Object> _map;

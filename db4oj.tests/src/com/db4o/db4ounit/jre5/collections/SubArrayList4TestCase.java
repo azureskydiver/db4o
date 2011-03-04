@@ -9,7 +9,7 @@ import db4ounit.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class SubArrayList4TestCase implements TestLifeCycle {
 
 	List<Integer> _subList;

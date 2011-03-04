@@ -10,7 +10,7 @@ import db4ounit.extensions.fixtures.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 	
 	@Override

@@ -8,7 +8,7 @@ import com.db4o.test.*;
 
 /**
  */
-@decaf.Ignore
+@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 public class AllTestsFileHeader extends AllTestsJdk1_2 {
 
     public static void main(String[] args) {
