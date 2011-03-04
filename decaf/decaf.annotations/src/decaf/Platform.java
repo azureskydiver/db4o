@@ -1,3 +1,4 @@
+/* Copyright (C) 2011  Versant Inc.   http://www.db4o.com */
 package decaf;
 
 interface NegatablePlatform {

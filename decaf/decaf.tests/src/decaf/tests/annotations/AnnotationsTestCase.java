@@ -1,5 +1,7 @@
+/* Copyright (C) 2011  Versant Inc.   http://www.db4o.com */
 package decaf.tests.annotations;
 
+import decaf.builder.*;
 import decaf.core.*;
 import decaf.tests.*;
 
@@ -63,6 +65,16 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 
 	public void testIgnoreMethod() throws Exception {
 		runPlatformTestCase("IgnoreMethod");
+	}
+
+	public void testIgnoreThrowsOnIncompatibleAttributes() throws Exception {
+		try {
+			runPlatformTestCase("IgnoreThrowsOnIncompatibleAttributes");
+		} catch (IllegalArgumentException e) {
+			assertEquals(DecafVisitorBase.ERROR_MSG_UNLESS_INVALID, e.getMessage());
+			return;
+		}
+		fail("Exception expected");
 	}
 
 	public void testRemoveAllClassesInArray() throws Exception {

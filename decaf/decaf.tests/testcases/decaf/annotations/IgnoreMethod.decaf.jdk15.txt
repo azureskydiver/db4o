@@ -5,6 +5,9 @@ class Foo {
 	public void bar() {
 	}
 	
+	public void ignoredUnlessCompatibleJmx() {
+	}
+
 	public void ignoredOnJdk11Only() {
 	}
 

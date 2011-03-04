@@ -11,4 +11,7 @@ public @interface Ignore {
 	Platform[] platforms() default { Platform.ALL };
 
 	Platform[] except() default { };
+	
+	Platform[] unlessCompatible() default {};
+	
 }

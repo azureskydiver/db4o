@@ -2,6 +2,7 @@
 
 package decaf.core;
 
+import decaf.*;
 import decaf.config.*;
 
 public enum TargetPlatform {
@@ -31,6 +32,11 @@ public enum TargetPlatform {
 		public CompilerSettings compilerSettings() {
 			return new CompilerSettings("1.3", "1.1");
 		}
+
+		@Override
+		public Platform platform() {
+			return Platform.ALL;
+		}
 	},
 	ANDROID {
 		@Override
@@ -46,6 +52,11 @@ public enum TargetPlatform {
 		@Override
 		public CompilerSettings compilerSettings() {
 			return new CompilerSettings("1.5", "1.5");
+		}
+
+		@Override
+		public Platform platform() {
+			return Platform.ANDROID;
 		}
 		
 	},
@@ -64,6 +75,11 @@ public enum TargetPlatform {
 		public CompilerSettings compilerSettings() {
 			return NONE.compilerSettings();
 		}
+
+		@Override
+		public Platform platform() {
+			return Platform.JDK11;
+		}
 	},
 	JDK12 {
 		@Override
@@ -80,6 +96,11 @@ public enum TargetPlatform {
 		public CompilerSettings compilerSettings() {
 			return NONE.compilerSettings();
 		}
+
+		@Override
+		public Platform platform() {
+			return Platform.JDK12;
+		}
 	},	
 	JDK15 {
 		@Override
@@ -95,6 +116,11 @@ public enum TargetPlatform {
 		@Override
 		public CompilerSettings compilerSettings() {
 			return new CompilerSettings("1.5", "1.5");
+		}
+
+		@Override
+		public Platform platform() {
+			return Platform.JDK15;
 		}
 		
 	},	
@@ -113,6 +139,12 @@ public enum TargetPlatform {
 		public CompilerSettings compilerSettings() {
 			return new CompilerSettings("1.5", "1.5");
 		}
+
+		@Override
+		public Platform platform() {
+			return Platform.SHARPEN;
+		}
+		
 	};
 	
 	
@@ -133,6 +165,8 @@ public enum TargetPlatform {
 	}
 
 	public abstract CompilerSettings compilerSettings();
+	
+	public abstract Platform platform();
 
 	public static class CompilerSettings {
 

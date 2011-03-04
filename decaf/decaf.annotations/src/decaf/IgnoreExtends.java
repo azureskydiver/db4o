@@ -7,5 +7,9 @@ import java.lang.annotation.*;
 public @interface IgnoreExtends {
 
 	Platform value() default Platform.ALL;
+	
+	Platform platform() default Platform.ALL;
+	
+	Platform[] platforms() default { Platform.ALL };
 
 }

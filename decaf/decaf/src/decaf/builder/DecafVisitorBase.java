@@ -10,9 +10,12 @@ import sharpen.core.framework.*;
 import decaf.*;
 import decaf.core.*;
 import decaf.rewrite.*;
+import decaf.util.*;
 
 public abstract class DecafVisitorBase extends ASTVisitor {
 
+	private static final String UNLESS_COMPATIBLE_ATTRIBUTE_NAME = "unlessCompatible";
+	public static final String ERROR_MSG_UNLESS_INVALID = "Argument '"+UNLESS_COMPATIBLE_ATTRIBUTE_NAME+"' can only be used alone.";
 	private static final String EXCEPT_ATTRIBUTE_NAME = "except";
 	protected final DecafRewritingContext _context;
 
@@ -27,7 +30,7 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		
 		final Set<String> platforms = applicablePlatformsFor(annotationBinding);
 		
-		return platforms.contains(targetPlatform().toString());
+		return platforms != null && platforms.contains(targetPlatform().toString());
 	}
 
 	protected boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
@@ -36,9 +39,9 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 
 	private Set<String> applicablePlatformsFor(IAnnotationBinding annotationBinding) {
 		Set<String> declaredPlatforms = collectApplicablePlatforms(annotationBinding.getDeclaredMemberValuePairs());
-		if (null != declaredPlatforms && declaredPlatforms.size() > 0) 
+		if (declaredPlatforms != null) {
 			return declaredPlatforms;
-		
+		}
 		return collectApplicablePlatforms(annotationBinding.getAllMemberValuePairs());
 	}
 
@@ -46,33 +49,72 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		Set<String> platforms = new HashSet<String>();
 		Set<String> except = new HashSet<String>();
 		for (IMemberValuePairBinding valuePair : pairs) {
-			Set<String> collection = valuePair.getName().equals(EXCEPT_ATTRIBUTE_NAME) ? except : platforms;
-			final Object value = valuePair.getValue();
-			if (value instanceof Object[]) {
-				tryAddToPlatforms(collection, (Object[]) value);
-			} else {
-				tryAddToPlatform(collection, value);
+			
+			String key = valuePair.getName();
+			Object value = valuePair.getValue();
+
+			if (UNLESS_COMPATIBLE_ATTRIBUTE_NAME.equals(key)) {
+				
+				if (value == null || (value instanceof Object[] && ((Object[])value).length == 0)) {
+					continue;
+				}
+				
+				return handleUnlessSupported(platforms, value, pairs.length == 1);
 			}
+			
+			final Set<String> collection = key.equals(EXCEPT_ATTRIBUTE_NAME) ? except : platforms;
+			visitVaribleBinding(value, new Visitor<IVariableBinding>() {
+				public void visit(IVariableBinding variable) {
+					collection.add(variable.getName());
+				}
+			});
 	    }
+		if (platforms.isEmpty()) {
+			return null;
+		}
 		expandAll(platforms, except);
 		platforms.removeAll(except);
 		return platforms;
 	}
 
-	private void tryAddToPlatforms(Set<String> platforms, final Object[] values) {
-		for (Object value : values) {
-			tryAddToPlatform(platforms, value);
+	private Set<String> handleUnlessSupported(Set<String> platforms, Object value, boolean onlyOneArgument) {
+
+		if (!onlyOneArgument) {
+			// so far we couldnt find a situation where it would be
+			// really illegal/harmfull to use unlessCompatible with
+			// other arguments, but since we dont directly support using
+			// it, for sanity reasons, we throw here.
+			throw new IllegalArgumentException(ERROR_MSG_UNLESS_INVALID);
 		}
+		
+		final ByRef<Boolean> compatible = new ByRef<Boolean>(true);
+		visitVaribleBinding(value, new Visitor<IVariableBinding>() {
+			public void visit(IVariableBinding variable) {
+				Platform platform = Platform.valueOf(variable.getName());
+				compatible.value &= targetPlatform().platform().compatibleWith(platform);
+			}
+		});
+		
+		if (!compatible.value) {
+			platforms.add(targetPlatform().name());
+		}
+		return platforms;
 	}
-	
-	private void tryAddToPlatform(Set<String> platforms, final Object value) {
-		if (!(value instanceof IVariableBinding)) {
-			return;
-		}
-			
-		final IVariableBinding variable = (IVariableBinding)value;
-		if (isDecafPlatform(variable.getType())) {
-			platforms.add(variable.getName());
+
+	private void visitVaribleBinding(Object value, Visitor<IVariableBinding> visitor) {
+		if (value instanceof Object[]) {
+			for(Object o : (Object[])value) {
+				visitVaribleBinding(o, visitor);
+			}
+		} else {
+			if (!(value instanceof IVariableBinding)) {
+				return;
+			}
+				
+			final IVariableBinding variable = (IVariableBinding)value;
+			if (isDecafPlatform(variable.getType())) {
+				visitor.visit(variable);
+			}
 		}
 	}
 

@@ -8,4 +8,8 @@ public @interface RemoveFirst {
 
 	Platform value() default Platform.ALL;
 	
+	Platform platform() default Platform.ALL;
+	
+	Platform[] platforms() default { Platform.ALL };
+	
 }

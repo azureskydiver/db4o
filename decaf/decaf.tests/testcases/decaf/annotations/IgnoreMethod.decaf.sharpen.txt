@@ -8,6 +8,9 @@ class Foo {
 	public void ignoredExceptSharpen() {
 	}
 
+	public void ignoredUnlessCompatibleJmx() {
+	}
+
 	public void ignoredOnJdk11Only() {
 	}
 
