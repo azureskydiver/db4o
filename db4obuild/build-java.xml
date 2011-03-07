@@ -919,7 +919,6 @@
 				<path refid="tests.jdk1.5.cp" />
 			</classpath>
 			<src path="${dir.dist.decaf.jdk1.5.test.src}"/>
-			<src path="${dir.j.tools.src}" />
 		</javac>
 		<copy todir="${dir.dist.classes.test.jdk1.5}" overwrite="true">
 			<fileset dir="${dir.j.tests.src}">
