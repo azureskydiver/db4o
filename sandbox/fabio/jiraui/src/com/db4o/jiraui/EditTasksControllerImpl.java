@@ -211,8 +211,8 @@ public final class EditTasksControllerImpl implements EditTasksController {
 	}
 
 	private RemoteIssue[] issues() throws RemoteException, com.atlassian.jira.rpc.soap.client.RemoteException {
-		return fetchAndSave();
-//		return loadFromCache();
+//		return fetchAndSave();
+		return loadFromCache();
 	}
 
 	private RemoteIssue[] fetchAndSave() throws RemoteException, com.atlassian.jira.rpc.soap.client.RemoteException {
