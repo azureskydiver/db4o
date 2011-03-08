@@ -126,7 +126,9 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
             threads[i].join();
         }
         
-        ensureMessageProcessed(clients[0]);
+        for (int i = 0; i < threads.length; i++) {
+        	ensureMessageProcessed(clients[i]);
+        }
 
         Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
         clients[0].close();
