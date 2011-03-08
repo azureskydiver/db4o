@@ -211,21 +211,21 @@ public final class EditTasksControllerImpl implements EditTasksController {
 	}
 
 	private RemoteIssue[] issues() throws RemoteException, com.atlassian.jira.rpc.soap.client.RemoteException {
-//		return fetchAndSave();
-		return loadFromCache();
+		return fetchAndSave();
+//		return loadFromCache();
 	}
 
 	private RemoteIssue[] fetchAndSave() throws RemoteException, com.atlassian.jira.rpc.soap.client.RemoteException {
 		RemoteIssue[] ret = jira().getIssuesFromFilter(auth(), "10590");
 		
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("issues.dat")));
-			out.writeObject(ret);
-			out.flush();
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("issues.dat")));
+//			out.writeObject(ret);
+//			out.flush();
+//			out.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return ret;
 	}
 
