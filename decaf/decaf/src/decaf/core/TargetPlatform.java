@@ -7,7 +7,7 @@ import decaf.config.*;
 
 public enum TargetPlatform {
 	
-	NONE {
+	NONE(false, false) {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return new DecafConfiguration();
@@ -38,7 +38,7 @@ public enum TargetPlatform {
 			return Platform.ALL;
 		}
 	},
-	ANDROID {
+	ANDROID(true, false) {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return NONE.defaultConfig();
@@ -60,7 +60,7 @@ public enum TargetPlatform {
 		}
 		
 	},
-	JDK11 {
+	JDK11(false, false) {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return DecafConfiguration.forJDK11();
@@ -81,7 +81,7 @@ public enum TargetPlatform {
 			return Platform.JDK11;
 		}
 	},
-	JDK12 {
+	JDK12(false,false) {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return DecafConfiguration.forJDK12();
@@ -102,7 +102,7 @@ public enum TargetPlatform {
 			return Platform.JDK12;
 		}
 	},	
-	JDK15 {
+	JDK15(true,false) {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return NONE.defaultConfig();
@@ -124,7 +124,7 @@ public enum TargetPlatform {
 		}
 		
 	},	
-	SHARPEN {
+	SHARPEN(true,false) {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return NONE.defaultConfig();
@@ -148,6 +148,9 @@ public enum TargetPlatform {
 	};
 	
 	
+	private final boolean supportsOverrideAnnotation;
+	private final boolean supportsOverrideAnnotationImplemetingInterfaces;
+
 	public String appendPlatformId(String orig, String separator) {
 		return orig + separator + platformId();
 	}
@@ -167,6 +170,12 @@ public enum TargetPlatform {
 	public abstract CompilerSettings compilerSettings();
 	
 	public abstract Platform platform();
+	
+	TargetPlatform(boolean supportsOverrideAnnotation, boolean supportsOverrideAnnotationImplemetingInterfaces) {
+		this.supportsOverrideAnnotation = supportsOverrideAnnotation;
+		this.supportsOverrideAnnotationImplemetingInterfaces = supportsOverrideAnnotationImplemetingInterfaces;
+		
+	}
 
 	public static class CompilerSettings {
 
@@ -177,6 +186,14 @@ public enum TargetPlatform {
 		
 		public final String source;
 		public final String codeGenTargetPlatform;
+	}
+
+	public boolean supportsOverrideAnnotation() {
+		return supportsOverrideAnnotation;
+	}
+
+	public boolean supportsOverrideAnnotationImplemetingInterfaces() {
+		return supportsOverrideAnnotationImplemetingInterfaces;
 	}
 	
 }

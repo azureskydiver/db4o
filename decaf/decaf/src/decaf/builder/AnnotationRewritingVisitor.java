@@ -6,6 +6,8 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import sharpen.core.framework.*;
+
 
 public class AnnotationRewritingVisitor extends DecafVisitorBase {
 
@@ -17,6 +19,21 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 		if (isDecafAnnotation(node)) {
 			rewrite().remove(node);
 		}
+		if (node.resolveTypeBinding().getQualifiedName().equals(Override.class.getName())) {
+			if (!targetPlatform().supportsOverrideAnnotation()) {
+				rewrite().remove(node);
+			} else {
+				IMethodBinding mb = ((MethodDeclaration)node.getParent()).resolveBinding();
+				IMethodBinding s = findOverriddenMethodInParents(mb);
+				if (s.getDeclaringClass().isInterface() && !targetPlatform().supportsOverrideAnnotationImplemetingInterfaces()) {
+					rewrite().remove(node);
+				}
+			}
+		}
+	}
+	
+	public static IMethodBinding findOverriddenMethodInParents(IMethodBinding binding) {
+		return BindingUtils.findOverriddenMethodInHierarchy(binding.getDeclaringClass(), binding, true, false);
 	}
 	
 	@Override

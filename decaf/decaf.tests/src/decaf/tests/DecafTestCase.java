@@ -47,4 +47,8 @@ public class DecafTestCase extends DecafTestCaseBase {
 	public void _testCovariance() throws Exception {
 		runResourceTestCase("Covariance", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
+	
+	public void testOverride() throws Exception {
+		runResourceTestCase("Override", TargetPlatform.JDK12, TargetPlatform.JDK15);
+	}
 }
