@@ -19,6 +19,7 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 			EnsureReplicationActiveTestCase.class,
 			ExplicitListenTestCase.class,
 			JdoClassTestCase.class,
+			ListenForClassesTestCase.class,
 			TriangleReplicationTestCase.class,
 			UuidConverterTestCase.class,
 			VodCobraTestCase.class,

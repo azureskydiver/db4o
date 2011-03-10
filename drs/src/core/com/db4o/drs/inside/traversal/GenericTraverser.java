@@ -23,7 +23,6 @@ package com.db4o.drs.inside.traversal;
 import com.db4o.drs.inside.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.reflect.*;
 
