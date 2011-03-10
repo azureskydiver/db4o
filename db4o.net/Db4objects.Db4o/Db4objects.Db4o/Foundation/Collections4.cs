@@ -13,6 +13,18 @@ namespace Db4objects.Db4o.Foundation
 			return new Collections4.UnmodifiableSequence4(orig);
 		}
 
+		public static void Sort(ISequence4 sequence, IComparison4 comparator)
+		{
+			object[] array = sequence.ToArray();
+			Arrays4.Sort(array, comparator);
+			sequence.Clear();
+			for (int oIndex = 0; oIndex < array.Length; ++oIndex)
+			{
+				object o = array[oIndex];
+				sequence.Add(o);
+			}
+		}
+
 		private class UnmodifiableSequence4 : ISequence4
 		{
 			private ISequence4 _sequence;
