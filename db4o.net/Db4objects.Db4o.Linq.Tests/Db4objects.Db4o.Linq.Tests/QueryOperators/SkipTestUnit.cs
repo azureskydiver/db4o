@@ -38,7 +38,7 @@ namespace Db4objects.Db4o.Linq.Tests.QueryOperators
 			var expectedCount = Items().Length;
 			
 			Assert.AreEqual(expectedCount - 1, skippedQuery.Count());
-			AssertActictionCount(expectedCount - 1);
+			AssertActivationCount(expectedCount - 1);
 			
 			Assert.AreEqual(expectedCount, originalQuery.Count());
 			
@@ -58,7 +58,7 @@ namespace Db4objects.Db4o.Linq.Tests.QueryOperators
 
 			AssertQuery(actual, "(Item(Id >= 2))", expected);
 
-			AssertActictionCount(expected.Count());
+			AssertActivationCount(expected.Count());
 		}
 
 		//TODO: Write the test!
@@ -82,7 +82,7 @@ namespace Db4objects.Db4o.Linq.Tests.QueryOperators
 
 			AssertQuery(actual, "(Item(Id >= 2))", expected);
 
-			AssertActictionCount(expected.Count());
+			AssertActivationCount(expected.Count());
 		}
 	}
 }

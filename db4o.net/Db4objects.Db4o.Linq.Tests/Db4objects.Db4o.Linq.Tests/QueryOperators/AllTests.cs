@@ -11,6 +11,7 @@ namespace Db4objects.Db4o.Linq.Tests.QueryOperators
 			return new[]
 			       	{
 			       		typeof(SkipTestSuite),
+						typeof(SkipTestCase),
 			       	};
 		}
 	}

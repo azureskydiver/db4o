@@ -5,7 +5,7 @@ using Db4objects.Db4o.Query;
 
 namespace Db4objects.Db4o.Linq.Internals
 {
-	public interface IQueryBuilderRecord
+	internal interface IQueryBuilderRecord
 	{
 		void Playback(IQuery query);
 		void Playback(QueryBuilderContext context);

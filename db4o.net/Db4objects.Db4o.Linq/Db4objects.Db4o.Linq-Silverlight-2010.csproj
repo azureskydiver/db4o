@@ -19,9 +19,7 @@
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     
     
-  
-
-<SignAssembly>true</SignAssembly>
+  <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
@@ -68,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Db4objects.Db4o.Linq\Caching\CacheFactory.cs"/>
     <Compile Include="Db4objects.Db4o.Linq\Caching\ICache4.cs"/>
+    <Compile Include="Db4objects.Db4o.Linq\Caching\SynchronizedCache.cs"/>
     <Compile Include="Db4objects.Db4o.Linq\Caching\TracingCacheDecorator.cs"/>
     <Compile Include="Db4objects.Db4o.Linq\CodeAnalysis\CecilMethodAnalyser.cs"/>
     <Compile Include="Db4objects.Db4o.Linq\CodeAnalysis\CodeQueryBuilder.cs"/>

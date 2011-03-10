@@ -6,7 +6,7 @@ using Db4objects.Db4o.Query;
 
 namespace Db4objects.Db4o.Linq.Internals
 {
-	public class QueryBuilderContext
+	internal class QueryBuilderContext
 	{
 		private readonly IQuery _root;
 		private IQuery _currentQuery;
