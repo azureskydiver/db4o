@@ -22,11 +22,15 @@ package com.db4o.drs.test.all;
 
 import com.db4o.drs.test.*;
 import com.db4o.drs.test.versant.*;
+import com.db4o.drs.versant.jdo.reflect.*;
 import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 
 public class ASingleDrsTest implements TestSuiteBuilder {
+	
+	Reflector reflector = new JdoReflector(getClass().getClassLoader());
 	
 	public static void main(String[] args) {
 		int errors = new ConsoleTestRunner(new ASingleDrsTest()).run();
@@ -39,7 +43,8 @@ public class ASingleDrsTest implements TestSuiteBuilder {
 		return new DrsTestSuiteBuilder(
 				new Db4oDrsFixture("db4o-a"),
 				new VodDrsFixture("vod-drs-b"),
-				CustomArrayListTestCase.class).iterator();
-
+				UnqualifiedNamedTestCase.class,
+				reflector).iterator();
 	}
+
 }

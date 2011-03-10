@@ -30,7 +30,9 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	private final VodDatabase _vod;
 	
 	private DatastoreManager _dm;
-
+	
+	private Set<String> _storedClassNames;
+	
 	public static VodCobraFacade createInstance(VodDatabase vod) {
 		return new VodCobra(vod);
 		// return ProxyUtil.throwOnConcurrentAccess(new VodCobra(vod));
@@ -384,7 +386,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 
 	public void deleteAll() {
 		rollback();
-		Collection<String> classNames = classNames();
+		Collection<String> classNames = classNames(false);
 		String[] classNameArr = classNames.toArray(new String[classNames.size()]);
 		for (int i = 0; i < classNameArr.length; i++) {
 		    DatastoreQuery qry = new DatastoreQuery(classNameArr[i]);
@@ -396,7 +398,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		}
 	}
 	
-	private Collection<String> classNames() {
+	private Collection<String> classNames(boolean all) {
 	      Set<String> classNames = new HashSet<String>();
 	      String classclazzNam = CLASS_CLASS_NAME;
 	      DatastoreObject[] dsos = datastoreObjects(classclazzNam);
@@ -404,7 +406,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	      DatastoreSchemaField dsf = dsc.findField(CLASS_NAME_FIELD_NAME);
 	      for(int i = 0; i < dsos.length;i++){
 	    	  String className = dsos[i].readObject(dsf).toString();
-	    	  if(isUserClassName(className)){
+	    	  if(all || isUserClassName(className)){
 	    		  classNames.add(className);
 	    	  }
 	      }
@@ -433,7 +435,6 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	    _dm.groupReadObjects(dsos, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
 		return dsos;
 	}
-
 	
 	public Object[] executeQuery(DatastoreQuery query) {
 		return _dm.executeQuery(query, DataStoreLockMode.NOLOCK,
@@ -445,7 +446,35 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	private Object[] datastoreLoids(String className) {
-		return executeQuery(new DatastoreQuery(className));
+		return executeQuery(new DatastoreQuery(storedClassName(className)));
+	}
+	
+	private String storedClassName(String className){
+		initializeStoredClassNames();
+		if(_storedClassNames.contains(className)){
+			return className;
+		}
+		String unqualifiedName = unqualifiedName(className);
+		if(_storedClassNames.contains(unqualifiedName)){
+			return unqualifiedName;
+		}
+		throw new IllegalStateException("Classname not found: " + className);
+	}
+
+	private void initializeStoredClassNames() {
+		if(_storedClassNames != null){
+			return;
+		}
+		_storedClassNames = new HashSet<String>();
+		_storedClassNames.addAll(classNames(true));
+	}
+
+	private String unqualifiedName(String className) {
+		int index = className.lastIndexOf(".");
+		if(index > 0){
+			return className.substring(index + 1);
+		}
+		return className;
 	}
 	
 	public long queryForMySignatureLoid(){

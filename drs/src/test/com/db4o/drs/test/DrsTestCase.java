@@ -43,9 +43,13 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		mappings = new Class[]{
 				Car.class, 
 				CollectionHolder.class,
+				ItemDates.class,
+				ItemWithCloneable.class,
+				ItemWithUntypedField.class,
 				ListContent.class,
 				ListHolder.class, 
 				MapContent.class,
+				NamedList.class,
 				Pilot.class, 
 				R0.class,
 				Replicated.class,
@@ -55,10 +59,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				SimpleListHolder.class, 
 				SPCChild.class,
 				SPCParent.class,
-				ItemWithUntypedField.class,
-		    	com.db4o.drs.test.data.ItemDates.class,
-		    	com.db4o.drs.test.data.NamedList.class,
-		    	com.db4o.drs.test.data.ItemWithCloneable.class,
+				UnqualifiedNamed.class,
 		};
 	}
 
@@ -162,15 +163,13 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	protected Object getOneInstance(DrsProviderFixture fixture, Class clazz) {
 		Iterator objectSet = fixture.provider().getStoredObjects(clazz).iterator();
-		
 		Object candidate = null;
 		if (objectSet.hasNext()) {
 			candidate = objectSet.next();
-			
-			if (objectSet.hasNext())
-				 throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);	 
+			if (objectSet.hasNext()){
+				throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);
+			}
 		}
-		
 		return candidate;
 	}
 

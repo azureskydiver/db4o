@@ -34,7 +34,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		
 		if(RUN_ONE_SINGLE_TEST){
 			return new Class[]{
-				ReplicationFeaturesMain.class,
+				UnqualifiedNamedTestCase.class,
 			};
 		}
 		
@@ -51,6 +51,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
 				ByteArrayTest.class,
+				UnqualifiedNamedTestCase.class,
 				
 				// Collection
 				ComplexListTestCase.class,

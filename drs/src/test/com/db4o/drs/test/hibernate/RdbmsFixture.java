@@ -47,10 +47,12 @@ public abstract class RdbmsFixture implements DrsProviderFixture {
 				Car.class,
 				CollectionHolder.class, 
 				IByteArrayHolder.class,
+				ItemDates.class,
 				ListContent.class,
 				ListHolder.class, 
 				MapContent.class,
-				MapHolder.class,  
+				MapHolder.class,
+				NewPilot.class,
 				Pilot.class, 
 				R0.class, 
 				Replicated.class,
@@ -60,9 +62,8 @@ public abstract class RdbmsFixture implements DrsProviderFixture {
 				SimpleListHolder.class, 
 				SPCParent.class, 
 				SPCChild.class,
-                NewPilot.class,
-                ItemDates.class
-                };
+				UnqualifiedNamed.class,
+         };
 	}
 	
 	public static Configuration addAllMappings(Configuration cfg) {

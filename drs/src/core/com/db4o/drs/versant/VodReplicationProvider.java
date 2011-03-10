@@ -456,7 +456,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	private ObjectSet queryForModifiedObjects(Class clazz, long lastReplicationVersion) {
-		String filter = "this.version > " + lastReplicationVersion + "&& this.version < " + _commitTimestamp;
+		String filter = "this.version > " + lastReplicationVersion + " && this.version < " + _commitTimestamp;
 		if(clazz != null){
 			ensureClassKnown(clazz);
 			filter += " && (" + classMetadataLoidFilter(clazz) + ")";
