@@ -178,7 +178,10 @@ namespace Db4objects.Db4o.Tests.Common.CS
 			{
 				threads[i].Join();
 			}
-			EnsureMessageProcessed(clients[0]);
+			for (int i = 0; i < threads.Length; i++)
+			{
+				EnsureMessageProcessed(clients[i]);
+			}
 			Assert.IsTrue(clients[0].SetSemaphore(SemaphoreName, 0));
 			clients[0].Close();
 			threads[2] = StartGetAndReleaseThread(clients[2]);

@@ -21,9 +21,9 @@ namespace Db4objects.Db4o.Tests.Common.Acid
 		#if !SILVERLIGHT
 		protected override Type[] ComposeWith()
 		{
-			return new Type[] { typeof(CrashSimulatingTestSuite), typeof(ReadCommittedIsolationTestCase
-				) };
+			return new Type[] { typeof(ReadCommittedIsolationTestCase) };
 		}
 		#endif // !SILVERLIGHT
+		//				CrashSimulatingTestSuite.class,
 	}
 }

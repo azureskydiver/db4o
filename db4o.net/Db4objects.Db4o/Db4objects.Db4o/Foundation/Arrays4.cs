@@ -146,5 +146,40 @@ namespace Db4objects.Db4o.Foundation
 			}
 			return coll;
 		}
+
+		public static void Sort(object[] array, IComparison4 comparator)
+		{
+			Algorithms4.Sort(new _ISortable4_127(array, comparator));
+		}
+
+		private sealed class _ISortable4_127 : ISortable4
+		{
+			public _ISortable4_127(object[] array, IComparison4 comparator)
+			{
+				this.array = array;
+				this.comparator = comparator;
+			}
+
+			public void Swap(int leftIndex, int rightIndex)
+			{
+				object leftValue = array[leftIndex];
+				array[leftIndex] = array[rightIndex];
+				array[rightIndex] = leftValue;
+			}
+
+			public int Size()
+			{
+				return array.Length;
+			}
+
+			public int Compare(int leftIndex, int rightIndex)
+			{
+				return comparator.Compare(array[leftIndex], array[rightIndex]);
+			}
+
+			private readonly object[] array;
+
+			private readonly IComparison4 comparator;
+		}
 	}
 }
