@@ -38,7 +38,7 @@ namespace Db4objects.Db4o.Linq.Tests.QueryOperators
 			}
 		}
 
-		private void AssertActictionCount(int expectedActivationCount)
+		private void AssertActivationCount(int expectedActivationCount)
 		{
 			Assert.AreEqual(expectedActivationCount, _activationCount);
 		}

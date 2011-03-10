@@ -42,6 +42,9 @@ namespace Db4objects.Db4o.Linq.Tests
 #if !CF
 				typeof(GenericQueryTestCase),
 #endif
+#if !CF && !SILVERLIGHT
+				typeof(GenericQueryTestCase),
+#endif
 			};
 		}
 	}
