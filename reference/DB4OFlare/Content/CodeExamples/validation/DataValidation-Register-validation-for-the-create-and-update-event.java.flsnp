@@ -3,7 +3,8 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">EventRegistry events = EventRegistryFactory.forObjectContainer(container);
-events.creating().addListener(new ValidationListener());</pre>
+events.creating().addListener(new ValidationListener());
+events.updating().addListener(new ValidationListener());</pre>
 		<div class="codesnippet-meta">
 			DataValidation.java: Register validation for the create and update event
 			<div class="codedownload">
