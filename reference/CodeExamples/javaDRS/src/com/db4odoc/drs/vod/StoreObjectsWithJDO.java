@@ -3,10 +3,7 @@ package com.db4odoc.drs.vod;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
-/**
- * @author roman.stoffel@gamlor.info
- * @since 02.12.10
- */
+
 public class StoreObjectsWithJDO {
 
     public static void main(String[] args) {
