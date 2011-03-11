@@ -4,8 +4,8 @@
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">&lt;jdo&gt;
     &lt;package name=&quot;com.db4odoc.drs.vod&quot;&gt;
-        &lt;class name=&quot;Car&quot;/&gt;
-        &lt;class name=&quot;Pilot&quot;/&gt;
+        &lt;class name=&quot;com.db4odoc.drs.vod.Car&quot;/&gt;
+        &lt;class name=&quot;com.db4odoc.drs.vod.Pilot&quot;/&gt;
     &lt;/package&gt;
 &lt;/jdo&gt;</pre>
 		<div class="codesnippet-meta">

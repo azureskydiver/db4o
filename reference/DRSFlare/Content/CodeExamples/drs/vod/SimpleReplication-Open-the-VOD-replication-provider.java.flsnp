@@ -2,8 +2,8 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">VodDatabase vodDatabase = new VodDatabase(factory);
-vodDatabase.configureEventProcessor(&quot;localhost&quot;,4100);
+        <pre class="prettyprint" xml:space="preserve">VodDatabase vodDatabase = JDOUtilities.createDatabase(factory);
+vodDatabase.configureEventProcessor(&quot;localhost&quot;,4088);
 VodReplicationProvider centralDatabase
         = new VodReplicationProvider(vodDatabase);
 centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);</pre>
