@@ -20,10 +20,7 @@ import java.util.List;
 
 import static com.db4odoc.drs.vod.JDOUtilities.inTransaction;
 
-/**
- * @author roman.stoffel@gamlor.info
- * @since 08.12.10
- */
+
 public class SimpleReplication {
     private static final String DATABASE_FILE = "database.db4o";
 
@@ -47,8 +44,8 @@ public class SimpleReplication {
             // #end example
 
             // #example: Open the VOD replication provider
-            VodDatabase vodDatabase = new VodDatabase(factory);
-            vodDatabase.configureEventProcessor("localhost",4100);
+            VodDatabase vodDatabase = JDOUtilities.createDatabase(factory);
+            vodDatabase.configureEventProcessor("localhost",4088);
             VodReplicationProvider centralDatabase
                     = new VodReplicationProvider(vodDatabase);
             centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);
@@ -84,7 +81,7 @@ public class SimpleReplication {
                     = new Db4oClientServerReplicationProvider(container);
 
             VodReplicationProvider centralDatabase
-                    = new VodReplicationProvider(new VodDatabase(factory));
+                    = new VodReplicationProvider(JDOUtilities.createDatabase(factory));
             centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);
 
             // #example: From VOD to db4o
@@ -118,7 +115,7 @@ public class SimpleReplication {
                     = new Db4oClientServerReplicationProvider(container);
 
             VodReplicationProvider centralDatabase
-                    = new VodReplicationProvider(new VodDatabase(persistenceFactory));
+                    = new VodReplicationProvider(JDOUtilities.createDatabase(persistenceFactory));
             centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);
 
             // #example: Bidirectional replication

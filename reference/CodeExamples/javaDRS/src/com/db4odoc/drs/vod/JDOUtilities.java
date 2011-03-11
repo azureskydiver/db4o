@@ -45,7 +45,7 @@ class JDOUtilities {
     }
 
 
-    static VodDatabase createDatabase(PersistenceManagerFactory sessionFactory){
+    public static VodDatabase createDatabase(PersistenceManagerFactory sessionFactory){
         Properties properties = sessionFactory.getProperties();
         String connectionURL = properties.getProperty("javax.jdo.option.ConnectionURL");
         if(isEmpty(connectionURL) || notVersantDBConnection(connectionURL)){

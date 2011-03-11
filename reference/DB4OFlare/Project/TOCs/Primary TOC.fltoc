@@ -1172,27 +1172,6 @@
     Title="Tuning"
     Link="/Content/tuning.htm">
     <TocEntry
-      Title="Io Benchmark Tools"
-      Link="/Content/tuning/io_benchmark_tools.htm"
-      conditions="Primary.Java,Primary.All languages">
-      <TocEntry
-        Title="First Steps"
-        Link="/Content/tuning/io_benchmark_tools/first_steps.htm"
-        conditions="Primary.All languages,Primary.Java" />
-      <TocEntry
-        Title="Using Your Application To Generate The  Io Pattern"
-        Link="/Content/tuning/io_benchmark_tools/using_your_application_to_generate_the_io_pattern.htm"
-        conditions="Primary.All languages,Primary.Java" />
-      <TocEntry
-        Title="Simulating Slow Io On A Fast Machine"
-        Link="/Content/tuning/io_benchmark_tools/simulating_slow_io_on_a_fast_machine.htm"
-        conditions="Primary.All languages,Primary.Java" />
-      <TocEntry
-        Title="Io Log File Statistics"
-        Link="/Content/tuning/io_benchmark_tools/io_log_file_statistics.htm"
-        conditions="Primary.All languages,Primary.Java" />
-    </TocEntry>
-    <TocEntry
       Title="Selective Persistence"
       Link="/Content/tuning/selective_persistence.htm">
       <TocEntry
