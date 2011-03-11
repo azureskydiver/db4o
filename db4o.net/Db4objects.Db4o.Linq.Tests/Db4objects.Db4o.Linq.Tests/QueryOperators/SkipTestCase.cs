@@ -184,14 +184,19 @@ namespace Db4objects.Db4o.Linq.Tests
 		}
 
 
-		internal class Item
+		public class Item
 		{
+			public int _number;
+
 			public Item(int number)
 			{
-				Number = number;
+				_number = number;
 			}
 
-			public int Number { get; private set; }
+			public int Number
+			{
+				get { return _number; }
+			}
 		}
 	}
 }
