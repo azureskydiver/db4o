@@ -19,7 +19,9 @@
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     
     
-  <SignAssembly>true</SignAssembly>
+  
+
+<SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
