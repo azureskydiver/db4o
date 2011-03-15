@@ -1033,6 +1033,11 @@
         Link="/Content/platform_specific_issues/web/asp.net_mvc_example.htm" />
     </TocEntry>
     <TocEntry
+      Title="Maven"
+      Link="/Content/platform_specific_issues/maven.htm"
+      conditions="Primary.Java"
+      ComputeToc="false" />
+    <TocEntry
       Title="Validation"
       Link="/Content/platform_specific_issues/validation.htm" />
     <TocEntry

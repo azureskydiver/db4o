@@ -35,14 +35,14 @@ window.onload = function(){
     
     </head>
     <body>
-        <MadCap:breadcrumbsProxy />
-		<p>
-			<script type="text/javascript">/*<![CDATA[*/document.write('<a href="' + location.href +'">');
+		<MadCap:breadcrumbsProxy />		
+		<script type="text/javascript"><![CDATA[
+				document.write("<a href=\"" + location.href +"\">");
 				document.write("Direct Link");
-			document.write('</a>');/*]]>*/</script>
-		</p>
-		<p>
-        </p>
+			document.write('</a>');]]>
+		</script>
+		
+
         <MadCap:bodyProxy />
         
     </body>
