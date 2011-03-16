@@ -2,7 +2,6 @@ package com.db4o.jiraui.ui;
 
 import java.awt.*;
 import java.net.*;
-import java.text.*;
 import java.util.*;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tree;
-
 
 import com.db4o.foundation.*;
 import com.db4o.jiraui.*;
@@ -41,6 +39,11 @@ public final class EditTasks extends Composite {
 	protected boolean selectingResources;
 	private Menu menu;
 	private Text search;
+	private List<Pair<Integer, Integer>> history = new ArrayList<Pair<Integer, Integer>>();
+	private Button back;
+	private Pair<TreeItem, TreeItem> lastSelectedItem;
+	private boolean goingBack;
+
 
 	
 	public EditTasks(Composite parent, int style, EditTasksController editTasksController) {
@@ -70,6 +73,7 @@ public final class EditTasks extends Composite {
 		addTreeMouseListener();
 		addTreeSelectionListener();
 		addTreeDragAndDropSupport();
+		
 	}
 
 	private void addTreeKeyListener() {
@@ -178,14 +182,26 @@ public final class EditTasks extends Composite {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				System.out.println("selected: " + arg0);
 				updateSelectedInfo();
+				updateHistory((TreeItem) arg0.item);
 			}
+
+
 
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
+	}
+
+	private void accumulateHistory(Pair<TreeItem, TreeItem> selection) {
+		int index = tree.indexOf(selection.second);
+		if (!history.isEmpty() && history.get(history.size()-1).second == index) return;
+		history.add(new Pair<Integer, Integer>(tree.indexOf(selection.first), index));
+		back.setEnabled(true);
+		System.out.println("acc: " + index);
 	}
 
 	private void addTreeMouseListener() {
@@ -635,6 +651,7 @@ public final class EditTasks extends Composite {
 	}
 
 	private void moveItems(TreeItem[] sourceItems, Collection<Task> tasks, int index, Task taskBefore, Task taskAfter, int order) {
+		updateHistory(sourceItems[0]);
 		Collection<Task> modifiedTasks = controller.moveTasks(taskBefore, taskAfter, tasks, order);
 		if (modifiedTasks != tasks) {
 			List<TreeItem> selected = new ArrayList<TreeItem>();
@@ -673,7 +690,22 @@ public final class EditTasks extends Composite {
 		Composite c = new Composite(this, SWT.NONE);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		
-		c.setLayout(new GridLayout(6, false));
+		c.setLayout(new GridLayout(7, false));
+		
+		back = new Button(c, SWT.PUSH);
+		back.setText("Back");
+		back.setEnabled(false);
+		back.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				back();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
 		
 		Label label = new Label(c, SWT.NONE);
 		label.setText("Search:");
@@ -723,8 +755,7 @@ public final class EditTasks extends Composite {
 				if (msg.open() == SWT.NO) {
 					return;
 				}
-				controller.clear();
-				tree.removeAll();
+				clear();
 			}
 			
 			@Override
@@ -763,6 +794,19 @@ public final class EditTasks extends Composite {
 		});
 	}
 	
+	protected void back() {
+		if (history.isEmpty()) new IllegalStateException("History is empty");
+		goingBack = true;
+		Pair<Integer, Integer> index = history.remove(history.size()-1);
+		TreeItem selectedItem = tree.getItem(index.second);
+		TreeItem topItem = tree.getItem(index.first);
+		tree.setTopItem(topItem);
+		tree.setSelection(selectedItem);
+		back.setEnabled(!history.isEmpty());
+		goingBack = false;
+		lastSelectedItem = new Pair<TreeItem, TreeItem>(topItem, selectedItem);
+	}
+
 	private void addBottomComposite() {
 		Composite c = new Composite(this, SWT.BORDER);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
@@ -781,6 +825,9 @@ public final class EditTasks extends Composite {
 	
 	
 	private void setFilter(String filter) {
+
+		historyClear();
+		
 		
 		final Set<Task> selectedTasks = new HashSet<Task>();
 		for(TreeItem item : tree.getSelection()) {
@@ -805,6 +852,11 @@ public final class EditTasks extends Composite {
 		updateSelectedInfo();
 	}
 	
+	private void historyClear() {
+		history.clear();
+		back.setEnabled(false);
+	}
+
 	public int getSuggestedWidth() {
 		int w = 0;
 		for(TreeColumn c : tree.getColumns()) {
@@ -1016,5 +1068,19 @@ public final class EditTasks extends Composite {
 	public void taskUpdated(Task t) {
 		TreeItem item = taskToItem.get(t.getKey());
 		fillItem(t, item);
+	}
+
+	private void updateHistory(TreeItem item) {
+		if (goingBack) return;
+		if (lastSelectedItem != null) {
+			accumulateHistory(lastSelectedItem);
+		}
+		lastSelectedItem = new Pair<TreeItem, TreeItem>(tree.getTopItem(), item);
+	}
+
+	private void clear() {
+		controller.clear();
+		tree.removeAll();
+		historyClear();
 	}
 }
