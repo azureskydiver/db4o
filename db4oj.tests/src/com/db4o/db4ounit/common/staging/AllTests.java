@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.staging;
 
+import com.db4o.db4ounit.common.defragment.*;
+
 import db4ounit.extensions.ComposibleTestSuite;
 
 public class AllTests extends ComposibleTestSuite {
@@ -21,7 +23,6 @@ public class AllTests extends ComposibleTestSuite {
 							GenericClassWithExistingSuperClassTestCase.class, // COR-1959
 							LazyQueryDeleteTestCase.class,
 							OldVersionReflectFieldAfterRefactorTestCase.class, // COR-1937
-							RemovedFieldDefragmentTestCase.class,
 							StoredClassUnknownClassQueryTestCase.class, // COR-1542
 							UnavailableEnumTestCase.class, // special case of COR-1959
 							UntypedFieldSortingTestCase.class,
