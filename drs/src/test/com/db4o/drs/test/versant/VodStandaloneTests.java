@@ -17,6 +17,7 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
 			ConcurrentUpdateTestCase.class,
 			EnsureReplicationActiveTestCase.class,
+			ExistingJDOFactoryTestCase.class,
 			ExplicitListenTestCase.class,
 			JdoClassTestCase.class,
 			ListenForClassesTestCase.class,

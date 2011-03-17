@@ -72,7 +72,6 @@ public class VodDatabase {
 	
     public VodDatabase (PersistenceManagerFactory pmf){
     	this(extractName(pmf), pmf.getProperties());
-    	_persistenceManagerFactory = pmf;
     }
     
     public VodDatabase(EventConfiguration eventConfiguration) {
