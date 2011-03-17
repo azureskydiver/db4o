@@ -1,5 +1,5 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
-package com.db4o.db4ounit.common.staging;
+package com.db4o.db4ounit.common.defragment;
 
 import com.db4o.config.*;
 import com.db4o.reflect.*;
@@ -7,7 +7,6 @@ import com.db4o.reflect.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-// COR-1740
 public class RemovedFieldDefragmentTestCase extends AbstractDb4oTestCase{
 
 	public static class Before {
