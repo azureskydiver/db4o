@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.jre11.staging;
 
+import com.db4o.db4ounit.jre11.events.*;
+
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -14,6 +16,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.common.staging.AllTests.class,
 			
+			CommittedCallbacksUpdateTestCase.class, // COR-594
 			SQLDateTestCase.class, // COR-1989
 			
 			/**
