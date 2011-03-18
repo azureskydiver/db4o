@@ -2,6 +2,7 @@ package com.db4o.jiraui.ui;
 
 import java.awt.*;
 import java.net.*;
+import java.text.*;
 import java.util.*;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -23,9 +25,11 @@ import org.eclipse.swt.widgets.Tree;
 import com.db4o.foundation.*;
 import com.db4o.jiraui.*;
 import com.db4o.jiraui.api.*;
+import com.db4o.jiraui.ui.EditTasks.Field;
 
 public final class EditTasks extends Composite {
 	
+	private static final int MAX_HISTORY_SIZE = 20;
 	private final EditTasksController controller;
 	private Tree tree;
 	private TreeItem[] dragSourceItems;
@@ -43,6 +47,9 @@ public final class EditTasks extends Composite {
 	private Button back;
 	private Pair<TreeItem, TreeItem> lastSelectedItem;
 	private boolean goingBack;
+	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	private List<Field> fields = new ArrayList<Field>();
+	protected Field sortField;
 
 
 	
@@ -182,7 +189,6 @@ public final class EditTasks extends Composite {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println("selected: " + arg0);
 				updateSelectedInfo();
 				updateHistory((TreeItem) arg0.item);
 			}
@@ -199,9 +205,12 @@ public final class EditTasks extends Composite {
 	private void accumulateHistory(Pair<TreeItem, TreeItem> selection) {
 		int index = tree.indexOf(selection.second);
 		if (!history.isEmpty() && history.get(history.size()-1).second == index) return;
-		history.add(new Pair<Integer, Integer>(tree.indexOf(selection.first), index));
+		history.add(new Pair<Integer, Integer>(tree.indexOf(selection.first.isDisposed() ? tree.getTopItem() : selection.first), index));
 		back.setEnabled(true);
-		System.out.println("acc: " + index);
+		
+		if (history.size() > MAX_HISTORY_SIZE) {
+			history = new ArrayList<Pair<Integer,Integer>>(history.subList(history.size()-MAX_HISTORY_SIZE, history.size()));
+		}
 	}
 
 	private void addTreeMouseListener() {
@@ -608,32 +617,173 @@ public final class EditTasks extends Composite {
 	protected <T> List<T> list(T... tasks) {
 		return Arrays.asList(tasks);
 	}
+	
+	
+	public abstract static class Field implements Comparator<Task> {
+		private final String columnName;
+		private final int swtAligmnent;
+
+		public Field(String columnName) {
+			this(columnName, SWT.LEFT);
+		}
+
+		public Field(String columnName, int swtAligmnent) {
+			this.columnName = columnName;
+			this.swtAligmnent = swtAligmnent;
+		}
+
+		public abstract String toString(Task t);
+
+		public String getColumnName() {
+			return columnName;
+		}
+
+		public int getSwtAligmnent() {
+			return swtAligmnent;
+		}
+
+		@Override
+		public int compare(Task o1, Task o2) {
+			return toString(o1).compareToIgnoreCase(toString(o2));
+		}
+
+	}
+	
+	public static int compareFloat(float first, float second) {
+		if (first == second) return 0;
+		return first > second ? 1 : -1;
+	}
+
 
 	private void addTreeColumns() {
-		TreeColumn column;
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Key");
+		
+		addColumn(new Field("Key") {
 
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Summary");
+			@Override
+			public int compare(Task o1, Task o2) {
+				String k1 = (o1.isDirty() ? "A" : "B") + o1.getKey();
+				String k2 = (o2.isDirty() ? "A" : "B") + o2.getKey();
+				return k1.compareTo(k2);
+			}
 
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Order");
+			@Override
+			public String toString(Task t) {
+				return t.getKey() + (t.isDirty() ? "*" : "");
+			}
+		});
 		
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Estimate");
-		
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Iteration");
-		
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Assignee");
+		addColumn(new Field("Created") {
 
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Labels");
+			@Override
+			public int compare(Task o1, Task o2) {
+				return o1.getCreated().compareTo(o2.getCreated());
+			}
+
+			@Override
+			public String toString(Task t) {
+				return formatter.format(t.getCreated());
+			}
+		});
 		
-		column = new TreeColumn(tree, SWT.LEFT);
-		column.setText("Fine Order");
+		addColumn(new Field("Summary") {
+
+			@Override
+			public String toString(Task t) {
+				return t.getSummary();
+			}
+		});
+		
+		addColumn(new Field("Order") {
+
+			@Override
+			public int compare(Task o1, Task o2) {
+				return o1.getOrder()-o2.getOrder();
+			}
+
+			@Override
+			public String toString(Task t) {
+				return ""+t.getOrder();
+			}
+		});
+		
+		addColumn(new Field("Estimate") {
+
+			@Override
+			public int compare(Task o1, Task o2) {
+				return o1.getEstimate()-o2.getEstimate();
+			}
+
+			@Override
+			public String toString(Task t) {
+				return t.getEstimate() == 0 ? "" : "" + t.getEstimate();
+			}
+		});
+		
+		addColumn(new Field("Iteration") {
+
+			@Override
+			public int compare(Task o1, Task o2) {
+				return o1.getIteration().getId()-o2.getIteration().getId();
+			}
+
+			@Override
+			public String toString(Task t) {
+					return t.getIteration() == null ? "" : "" + t.getIteration().getId(); 
+			}
+		});
+		
+		addColumn(new Field("Assignee") {
+
+			@Override
+			public String toString(Task t) {
+				return formatAssignee(t.getResources());
+			}
+		});
+		
+		addColumn(new Field("Labels") {
+
+			@Override
+			public String toString(Task t) {
+				return formatLabel(list(t.getLabel()));
+			}
+		});
+		
+
+		TreeColumn fineOrder = addColumn(new Field("Fine Order", SWT.RIGHT) {
+
+			@Override
+			public int compare(Task o1, Task o2) {
+				return compareFloat(o1.getFineGrainedOrder(), o2.getFineGrainedOrder());
+			}
+
+			@Override
+			public String toString(Task t) {
+				return String.format("%.4f", t.getFineGrainedOrder());
+			}
+		});
+		
+		setSortField(fineOrder);
+
+	}
+	
+
+
+		
+	private TreeColumn addColumn(final Field field) {
+		fields.add(field);
+		final TreeColumn column = new TreeColumn(tree, field.getSwtAligmnent());
+		column.setData(field);
+		column.setText(field.getColumnName());
+		
+	    column.addListener(SWT.Selection, new Listener() {
+			
+			@Override
+	        public void handleEvent(Event e) {
+				setSortField(column);
+	        }
+	    });
+		return column;
+
 	}
 
 	private void updateSelectedInfo() {
@@ -675,9 +825,14 @@ public final class EditTasks extends Composite {
 		
 		tree.setRedraw(false);
 		List<TreeItem> newItems = new ArrayList<TreeItem>();
+		lastSelectedItem = null;
 		for(TreeItem dragged : sourceItems) {
 			Task task = (Task)dragged.getData();
-			newItems.add(insertTask(tree, task, index++));
+			TreeItem item = insertTask(tree, task, index++);
+			newItems.add(item);
+			if (lastSelectedItem == null) {
+				lastSelectedItem = new Pair<TreeItem, TreeItem>(tree.getTopItem(), item);
+			}
 		}
 		for(TreeItem dragged : sourceItems) {
 			dragged.dispose();
@@ -827,6 +982,7 @@ public final class EditTasks extends Composite {
 	private void setFilter(String filter) {
 
 		historyClear();
+		lastSelectedItem = null;
 		
 		
 		final Set<Task> selectedTasks = new HashSet<Task>();
@@ -855,6 +1011,7 @@ public final class EditTasks extends Composite {
 	private void historyClear() {
 		history.clear();
 		back.setEnabled(false);
+		lastSelectedItem = null;
 	}
 
 	public int getSuggestedWidth() {
@@ -874,9 +1031,10 @@ public final class EditTasks extends Composite {
 		final Set<String> iterations = filterByKey(filters, "it:", "iteration:");
 		final Set<String> labels = filterByKey(filters, "label:");
 		
-		tree.setRedraw(false);
 
 		final Set<Resource> res = filter == null ? new HashSet<Resource>() : null;
+		
+		final List<Task> tasks = new ArrayList<Task>();
 		
 		controller.acceptTaskVisitor(new Visitor<Task>() {
 			@Override
@@ -910,14 +1068,25 @@ public final class EditTasks extends Composite {
 				if (filters != null && !accept(filters, t)) {
 					return null;
 				}
-				TreeItem item = insertTask(tree, t, -1);
-				if (visitor != null) {
-					visitor.visit(item);
-				}
+				tasks.add(t);
+				
 				return null;
 			}
 
 		});
+		
+		if (sortField != null) {
+			Collections.sort(tasks, new ComparatorMultiplier<Task>(sortField, tree.getSortDirection()==SWT.UP?1:-1));
+		}
+		
+		tree.setRedraw(false);
+
+		for(Task t : tasks) {
+			TreeItem item = insertTask(tree, t, -1);
+			if (visitor != null) {
+				visitor.visit(item);
+			}
+		}
 		tree.setRedraw(true);
 		
 		if (res != null) {
@@ -1020,8 +1189,13 @@ public final class EditTasks extends Composite {
 
 	private void fillItem(Task t, TreeItem item) {
 		if (item.isDisposed()) return;
+		int idx = 0;
+		for(Field f : fields) {
+			item.setText(idx++, f.toString(t));
+		}
 		item.setText(new String[] {
 				t.getKey() + (t.isDirty() ? "*" : ""),
+				formatter.format(t.getCreated()),
 				t.getSummary(), 
 				t.getOrder() + "", 
 				t.getEstimate() == 0 ? "" : "" + t.getEstimate(),
@@ -1082,5 +1256,35 @@ public final class EditTasks extends Composite {
 		controller.clear();
 		tree.removeAll();
 		historyClear();
+	}
+
+	private void reorderTasksBy() {
+		if (tree.getItemCount() == 0) return;
+		tree.setRedraw(false);
+		List<TreeItem> items = new ArrayList<TreeItem>(Arrays.asList(tree.getItems()));
+		final int sortMultiplier = tree.getSortDirection() == SWT.UP ? 1 : -1;
+		List<Task> tasks = new ArrayList<Task>();
+		for(TreeItem item : items) {
+			tasks.add((Task) item.getData());
+		}
+		Collections.sort(tasks, new ComparatorMultiplier<Task>(sortField, sortMultiplier));
+		tree.removeAll();
+		for(Task task : tasks) {
+			insertTask(tree, task, -1);
+		}
+		tree.setRedraw(true);
+		historyClear();
+	}
+
+	private void setSortField(TreeColumn column) {
+		sortField = (Field) column.getData();
+		int direction = tree.getSortDirection();
+		if (direction == SWT.None) direction = SWT.UP;
+		if (column == tree.getSortColumn()) {
+			direction = direction == SWT.UP ? SWT.DOWN : SWT.UP; 
+		}
+		tree.setSortColumn(column);
+		tree.setSortDirection(direction);
+		reorderTasksBy();
 	}
 }
