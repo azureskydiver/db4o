@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Tree;
 import com.db4o.foundation.*;
 import com.db4o.jiraui.*;
 import com.db4o.jiraui.api.*;
-import com.db4o.jiraui.ui.EditTasks.Field;
+import com.db4o.jiraui.api.Resource;
 
 public final class EditTasks extends Composite {
 	
@@ -723,7 +723,9 @@ public final class EditTasks extends Composite {
 
 			@Override
 			public int compare(Task o1, Task o2) {
-				return o1.getIteration().getId()-o2.getIteration().getId();
+				int i1 = o1.getIteration() == null ? 0 : o1.getIteration().getId();
+				int i2 = o2.getIteration() == null ? 0 : o2.getIteration().getId();
+				return i1-i2;
 			}
 
 			@Override
@@ -1193,17 +1195,17 @@ public final class EditTasks extends Composite {
 		for(Field f : fields) {
 			item.setText(idx++, f.toString(t));
 		}
-		item.setText(new String[] {
-				t.getKey() + (t.isDirty() ? "*" : ""),
-				formatter.format(t.getCreated()),
-				t.getSummary(), 
-				t.getOrder() + "", 
-				t.getEstimate() == 0 ? "" : "" + t.getEstimate(),
-				t.getIteration() == null ? "" : "" + t.getIteration().getId(), 
-				formatAssignee(t.getResources()),
-				formatLabel(list(t.getLabel())),
-				String.format("%.4f", t.getFineGrainedOrder()),
-		});
+//		item.setText(new String[] {
+//				t.getKey() + (t.isDirty() ? "*" : ""),
+//				formatter.format(t.getCreated()),
+//				t.getSummary(), 
+//				t.getOrder() + "", 
+//				t.getEstimate() == 0 ? "" : "" + t.getEstimate(),
+//				t.getIteration() == null ? "" : "" + t.getIteration().getId(), 
+//				formatAssignee(t.getResources()),
+//				formatLabel(list(t.getLabel())),
+//				String.format("%.4f", t.getFineGrainedOrder()),
+//		});
 		item.setData(t);
 		item.setForeground(getDisplay().getSystemColor(t.isDirty() ? SWT.COLOR_BLUE : SWT.COLOR_LIST_FOREGROUND));
 	}
