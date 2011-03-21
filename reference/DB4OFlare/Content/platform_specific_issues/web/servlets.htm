@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1257" MadCap:lastWidth="700" MadCap:conditions="Primary.Java,Primary.All languages">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1381" MadCap:lastWidth="644" MadCap:conditions="Primary.Java,Primary.All languages">
     <head><title>Servlets	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
     </head>
     <body onload="prettyPrint()">
         <h1>
             <MadCap:keyword term="Web:Servlets" />Servlets</h1>
         <p MadCap:conditions="Primary.Java,Primary.All languages">
-            <p>Running db4o as the persistence layer of a Java web application is easy. There is no installation procedure - db4o is just another library in your application. There are only two issues that make web applications distinct from standalone programs from db4o's point of view. One is the more complex classloader environment - db4o needs to know itself  and the classes to be persisted. Please refer to the <a href="../classloader_issues.htm">classloader</a> chapter for more information.</p>
+            <p>Running db4o as the persistence layer of a Java web application is easy. There is no installation procedure - db4o is just another library in your application. There are only two issues that make web applications distinct from standalone programs from db4o's point of view. One is the more complex classloader environment - db4o needs to know itself  and the classes to be persisted. </p>
             <p>The other issue is configuring, starting and shutting down the db4o correctly. This can be done at the Servlet API layer or within the web application framework you are using.</p>
             <p>On the Servlet API layer, you could bind db4o server handling to the Servlet. </p>
             <p>You can implement the ServletContextListener-interface, open the database when the web application starts and close when it ends.</p>

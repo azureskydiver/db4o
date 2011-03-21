@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.db4o</groupId>
+    <artifactId>db4o-parent</artifactId>
+    <version>8.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>the db4o parent project</name>
+
+	<modules>
+        <module>db4ounit</module>
+        <module>db4ounit.extensions</module>
+        <module>decaf.annotations</module>
+    </modules>
+	
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bundle.namespace>com.db4odoc.reference</bundle.namespace>
+        <bundle.symbolicName>${bundle.namespace}</bundle.symbolicName>
+    </properties>
+
+    <dependencies>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>db4o.com</id>
+            <url>http://source.db4o.com/maven/</url>
+        </repository>
+    </repositories>
+
+</project>
