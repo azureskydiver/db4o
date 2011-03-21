@@ -1132,46 +1132,9 @@
       Title="XML Import-Export"
       Link="/Content/platform_specific_issues/xml_import-export.htm" />
     <TocEntry
-      Title="Classloader Issues"
-      Link="/Content/platform_specific_issues/classloader_issues.htm"
-      conditions="Primary.All languages,Primary.Java">
-      <TocEntry
-        Title="Classloader Basics"
-        Link="/Content/platform_specific_issues/classloader_issues/classloader_basics.htm" />
-      <TocEntry
-        Title="Configuration"
-        Link="/Content/platform_specific_issues/classloader_issues/configuration.htm" />
-      <TocEntry
-        Title="Special Cases"
-        Link="/Content/platform_specific_issues/classloader_issues/special_cases.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Database For OSGI"
+      Title="OSGi"
       Link="/Content/platform_specific_issues/database_for_osgi.htm"
-      conditions="Primary.All languages,Primary.Java">
-      <TocEntry
-        Title="db4o-OSGI Usage"
-        Link="/Content/platform_specific_issues/database_for_osgi/db4o-osgi_usage.htm" />
-      <TocEntry
-        Title="Eclipse Plug-In With db4o Service"
-        Link="/Content/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service.htm">
-        <TocEntry
-          Title="Creating a Plugin"
-          Link="/Content/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/creating_a_plugin.htm" />
-        <TocEntry
-          Title="Code Overview"
-          Link="/Content/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/code_overview.htm" />
-        <TocEntry
-          Title="Connecting To db4o"
-          Link="/Content/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/connecting_to_db4o.htm" />
-        <TocEntry
-          Title="Testing Memoplugin"
-          Link="/Content/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/testing_memoplugin.htm" />
-      </TocEntry>
-      <TocEntry
-        Title="Memoplugin"
-        Link="/Content/platform_specific_issues/database_for_osgi/memoplugin.jpg" />
-    </TocEntry>
+      conditions="Primary.Java" />
   </TocEntry>
   <TocEntry
     Title="Tuning"
