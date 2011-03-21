@@ -2,20 +2,20 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve"><c:forEach items="${pilots}" var="pilot">
-    <tr>
-        <td>
-            <a href="edit${pilot.id}.html"/>Edit</a>
-            <a href="delete${pilot.id}.html"/>Delete</a>
-        </td>
-        <td>
+        <pre class="prettyprint" xml:space="preserve">&lt;c:forEach items=&quot;${pilots}&quot; var=&quot;pilot&quot;&gt;
+    &lt;tr&gt;
+        &lt;td&gt;
+            &lt;a href=&quot;edit${pilot.id}.html&quot;/&gt;Edit&lt;/a&gt;
+            &lt;a href=&quot;delete${pilot.id}.html&quot;/&gt;Delete&lt;/a&gt;
+        &lt;/td&gt;
+        &lt;td&gt;
                 ${pilot.name}
-        </td>
-        <td>
+        &lt;/td&gt;
+        &lt;td&gt;
                 ${pilot.points}
-        </td>
-    </tr>
-</c:forEach></pre>
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/c:forEach&gt;</pre>
 		<div class="codesnippet-meta">
 			list.jsp: In the view use the ids to identify the objects
 			<div class="codedownload">

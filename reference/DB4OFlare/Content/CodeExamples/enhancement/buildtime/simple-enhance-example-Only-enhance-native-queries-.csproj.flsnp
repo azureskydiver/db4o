@@ -2,9 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve"><Target Name="AfterBuild">
-  <Db4oEnhancerMSBuildTask Assemblies="@(Db4oEnhance)" CommandLine="-nq" />
-</Target></pre>
+        <pre class="prettyprint" xml:space="preserve">&lt;Target Name=&quot;AfterBuild&quot;&gt;
+  &lt;Db4oEnhancerMSBuildTask Assemblies=&quot;@(Db4oEnhance)&quot; CommandLine=&quot;-nq&quot; /&gt;
+&lt;/Target&gt;</pre>
 		<div class="codesnippet-meta">
 			simple-enhance-example.csproj: Only enhance native queries 
 			<div class="codedownload">

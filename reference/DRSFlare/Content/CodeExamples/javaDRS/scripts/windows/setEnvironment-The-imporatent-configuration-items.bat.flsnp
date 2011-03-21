@@ -11,7 +11,7 @@ SET LIB_DIR=./lib
 REM Specify the VOD database name
 SET DATABASE_NAME=dRSVodExample
 
-REM Set the directory where VOD is installed. For example "C:\Program Files\Versant\8"
+REM Set the directory where VOD is installed. For example &quot;C:\Program Files\Versant\8&quot;
 SET VERSANT_ROOT=%VERSANT_ROOT%
 
 REM This should work if the JAVA_HOME variable is set. 

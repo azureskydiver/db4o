@@ -2,6 +2,7 @@
 
 import System
 import System.IO
+import System.Web from 'System.Web'
 import ColorCode;
 
 class SyntaxHighLighter:
@@ -14,7 +15,7 @@ class SyntaxHighLighter:
 		language = TypeOfFile(Path.GetExtension(fileName))
 		if language != null: 
 			return StripDiv(colorizer.Colorize(textToTranslate,language ))			
-		return textToTranslate 
+		return HttpUtility.HtmlEncode(textToTranslate) 
 
 	def StripDiv(code as string):
 		length = code.Length-countPrefix-countSuffix
@@ -28,6 +29,8 @@ class SyntaxHighLighter:
 		if ".vb" == fileEnding:
 			return Languages.VbDotNet
 		if ".xml" == fileEnding:
+			return Languages.Xml
+		if ".jdo" == fileEnding:
 			return Languages.Xml
 		return null
 
