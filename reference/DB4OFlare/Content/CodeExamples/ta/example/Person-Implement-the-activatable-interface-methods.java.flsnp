@@ -2,21 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">public void bind(Activator activator) {
-    if (this.activator == activator) {
-        return;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> bind(Activator activator) {
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">this</span>.activator == activator) {
+        <span style="color:Blue;">return</span>;
     }
-    if (activator != null &amp;&amp; null != this.activator) {
-        throw new IllegalStateException(&quot;Object can only be bound to one activator&quot;);
+    <span style="color:Blue;">if</span> (activator != <span style="color:Blue;">null</span> &amp;&amp; <span style="color:Blue;">null</span> != <span style="color:Blue;">this</span>.activator) {
+        <span style="color:Blue;">throw</span> <span style="color:Blue;">new</span> IllegalStateException(<span style="color:#A31515;">&quot;Object can only be bound to one activator&quot;</span>);
     }
-    this.activator = activator;
+    <span style="color:Blue;">this</span>.activator = activator;
 }
 
-public void activate(ActivationPurpose activationPurpose) {
-    if(null!=activator){
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> activate(ActivationPurpose activationPurpose) {
+    <span style="color:Blue;">if</span>(<span style="color:Blue;">null</span>!=activator){
         activator.activate(activationPurpose);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Person.java: Implement the activatable interface methods
 			<div class="codedownload">

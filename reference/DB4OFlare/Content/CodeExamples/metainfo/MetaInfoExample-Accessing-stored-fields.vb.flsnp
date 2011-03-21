@@ -2,38 +2,24 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim metaInfoForPerson As IStoredClass = container.Ext().StoredClass(GetType(Person))
-' Access all existing fields
-For Each field As IStoredField In metaInfoForPerson.GetStoredFields()
-    Console.WriteLine(&quot;Field: &quot; &amp; field.GetName())
-Next
-' Accessing the field 'name' of any type.
-Dim nameField As IStoredField = metaInfoForPerson.StoredField(&quot;name&quot;, Nothing)
-' Accessing the string field 'name'. Important if this field had another time in previous
-' versions of the class model
-Dim ageField As IStoredField = metaInfoForPerson.StoredField(&quot;age&quot;, GetType(Integer))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> metaInfoForPerson <span style="color:Blue;">As</span> IStoredClass = container.Ext().StoredClass(<span style="color:Blue;">GetType</span>(Person))
+<span style="color:Green;">' Access all existing fields</span>
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> field <span style="color:Blue;">As</span> IStoredField <span style="color:Blue;">In</span> metaInfoForPerson.GetStoredFields()
+    Console.WriteLine(<span style="color:#A31515;">&quot;Field: &quot;</span> &amp; field.GetName())
+<span style="color:Blue;">Next</span>
+<span style="color:Green;">' Accessing the field 'name' of any type.</span>
+<span style="color:Blue;">Dim</span> nameField <span style="color:Blue;">As</span> IStoredField = metaInfoForPerson.StoredField(<span style="color:#A31515;">&quot;name&quot;</span>, <span style="color:Blue;">Nothing</span>)
+<span style="color:Green;">' Accessing the string field 'name'. Important if this field had another time in previous</span>
+<span style="color:Green;">' versions of the class model</span>
+<span style="color:Blue;">Dim</span> ageField <span style="color:Blue;">As</span> IStoredField = metaInfoForPerson.StoredField(<span style="color:#A31515;">&quot;age&quot;</span>, <span style="color:Blue;">GetType</span>(<span style="color:Blue;">Integer</span>))
 
-' Check if the field is indexed
-Dim isAgeFieldIndexed As Boolean = ageField.HasIndex()
+<span style="color:Green;">' Check if the field is indexed</span>
+<span style="color:Blue;">Dim</span> isAgeFieldIndexed <span style="color:Blue;">As</span> <span style="color:Blue;">Boolean</span> = ageField.HasIndex()
 
-' Get the type of the field
-Dim fieldType As String = ageField.GetStoredType().GetName()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim metaInfoForPerson As IStoredClass = container.Ext().StoredClass(GetType(Person))
-' Access all existing fields
-For Each field As IStoredField In metaInfoForPerson.GetStoredFields()
-    Console.WriteLine(&quot;Field: &quot; &amp; field.GetName())
-Next
-' Accessing the field 'name' of any type.
-Dim nameField As IStoredField = metaInfoForPerson.StoredField(&quot;name&quot;, Nothing)
-' Accessing the string field 'name'. Important if this field had another time in previous
-' versions of the class model
-Dim ageField As IStoredField = metaInfoForPerson.StoredField(&quot;age&quot;, GetType(Integer))
-
-' Check if the field is indexed
-Dim isAgeFieldIndexed As Boolean = ageField.HasIndex()
-
-' Get the type of the field
-Dim fieldType As String = ageField.GetStoredType().GetName()</pre>
+<span style="color:Green;">' Get the type of the field</span>
+<span style="color:Blue;">Dim</span> fieldType <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = ageField.GetStoredType().GetName()
+</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.vb: Accessing stored fields
 			<div class="codedownload">

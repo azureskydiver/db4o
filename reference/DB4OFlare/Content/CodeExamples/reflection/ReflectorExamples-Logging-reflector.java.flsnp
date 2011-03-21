@@ -2,60 +2,62 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">class LoggerReflector implements Reflector{
-    private final Reflector readReflector;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> LoggerReflector <span style="color:Blue;">implements</span> Reflector{
+    <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> Reflector readReflector;
 
-    public LoggerReflector() {
-        this(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+    <span style="color:Blue;">public</span> LoggerReflector() {
+        <span style="color:Blue;">this</span>(<span style="color:Blue;">new</span> JdkReflector(Thread.currentThread().getContextClassLoader()));
     }
 
-    public LoggerReflector(Reflector readReflector) {
-        this.readReflector = readReflector;
+    <span style="color:Blue;">public</span> LoggerReflector(Reflector readReflector) {
+        <span style="color:Blue;">this</span>.readReflector = readReflector;
     }
 
     @Override
-    public void configuration(ReflectorConfiguration reflectorConfiguration) {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> configuration(ReflectorConfiguration reflectorConfiguration) {
         readReflector.configuration(reflectorConfiguration);
     }
 
     @Override
-    public ReflectArray array() {
-        return readReflector.array();
+    <span style="color:Blue;">public</span> ReflectArray array() {
+        <span style="color:Blue;">return</span> readReflector.array();
     }
 
     @Override
-    public ReflectClass forClass(Class aClass) {
-        System.out.println(&quot;Reflector.forClass(&quot;+aClass+&quot;)&quot;);
-        return readReflector.forClass(aClass);
+    <span style="color:Blue;">public</span> ReflectClass forClass(Class aClass) {
+        System.out.println(<span style="color:#A31515;">&quot;Reflector.forClass(&quot;</span>+aClass+<span style="color:#A31515;">&quot;)&quot;</span>);
+        <span style="color:Blue;">return</span> readReflector.forClass(aClass);
     }
 
     @Override
-    public ReflectClass forName(String className) {
-        System.out.println(&quot;Reflector.forName(&quot;+className+&quot;)&quot;);
-        return readReflector.forName(className);
+    <span style="color:Blue;">public</span> ReflectClass forName(String className) {
+        System.out.println(<span style="color:#A31515;">&quot;Reflector.forName(&quot;</span>+className+<span style="color:#A31515;">&quot;)&quot;</span>);
+        <span style="color:Blue;">return</span> readReflector.forName(className);
     }
 
     @Override
-    public ReflectClass forObject(Object o) {
-        System.out.println(&quot;Reflector.forObject(&quot;+o+&quot;)&quot;);
-        return readReflector.forObject(o);
+    <span style="color:Blue;">public</span> ReflectClass forObject(Object o) {
+        System.out.println(<span style="color:#A31515;">&quot;Reflector.forObject(&quot;</span>+o+<span style="color:#A31515;">&quot;)&quot;</span>);
+        <span style="color:Blue;">return</span> readReflector.forObject(o);
     }
 
     @Override
-    public boolean isCollection(ReflectClass reflectClass) {
-        return readReflector.isCollection(reflectClass);
+    <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> isCollection(ReflectClass reflectClass) {
+        <span style="color:Blue;">return</span> readReflector.isCollection(reflectClass);
     }
 
     @Override
-    public void setParent(Reflector reflector) {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> setParent(Reflector reflector) {
         readReflector.setParent(reflector);
     }
 
     @Override
-    public Object deepClone(Object o) {
-        return new LoggerReflector((Reflector) readReflector.deepClone(o));
+    <span style="color:Blue;">public</span> Object deepClone(Object o) {
+        <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> LoggerReflector((Reflector) readReflector.deepClone(o));
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			ReflectorExamples.java: Logging reflector
 			<div class="codedownload">

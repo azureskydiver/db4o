@@ -2,34 +2,36 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = OpenDatabase())
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectContainer container = OpenDatabase())
 {
-    // first get the object from the database
+    <span style="color:Green;">// first get the object from the database</span>
     Car carInDb = GetCarById(container, disconnectedCar.ObjectId);
 
-    // copy the value-objects (int, long, double, string etc)
+    <span style="color:Green;">// copy the value-objects (int, long, double, string etc)</span>
     carInDb.Name = disconnectedCar.Name;
 
-    // traverse into the references
+    <span style="color:Green;">// traverse into the references</span>
     Pilot pilotInDB = carInDb.Pilot;
     Pilot disconnectedPilot = disconnectedCar.Pilot;
 
-    // check if the object is still the same
-    if (pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId))
+    <span style="color:Green;">// check if the object is still the same</span>
+    <span style="color:Blue;">if</span> (pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId))
     {
-        // if it is, copy the value-objects
+        <span style="color:Green;">// if it is, copy the value-objects</span>
         pilotInDB.Name = disconnectedPilot.Name;
         pilotInDB.Points = disconnectedPilot.Points;
     }
-    else
+    <span style="color:Blue;">else</span>
     {
-        // otherwise replace the object
+        <span style="color:Green;">// otherwise replace the object</span>
         carInDb.Pilot = disconnectedPilot;
     }
 
-    // finally store the changes
+    <span style="color:Green;">// finally store the changes</span>
     container.Store(pilotInDB);
-    container.Store(carInDb);</pre>
+    container.Store(carInDb);
+</pre>
 		<div class="codesnippet-meta">
 			MergeExample.cs: merging
 			<div class="codedownload">

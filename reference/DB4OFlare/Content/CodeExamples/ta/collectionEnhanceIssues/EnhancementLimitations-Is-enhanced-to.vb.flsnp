@@ -2,28 +2,19 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class CanBeEnhanced
-    Private _names As IList(Of String) = New ActivatableList(Of String)()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> CanBeEnhanced
+    <span style="color:Blue;">Private</span> _names <span style="color:Blue;">As</span> IList(Of <span style="color:Blue;">String</span>) = <span style="color:Blue;">New</span> ActivatableList(Of <span style="color:Blue;">String</span>)()
 
-    Public Function ContainsName(ByVal item As String) As Boolean
-        Return _names.Contains(item)
-    End Function
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Function</span> ContainsName(<span style="color:Blue;">ByVal</span> item <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>) <span style="color:Blue;">As</span> <span style="color:Blue;">Boolean</span>
+        <span style="color:Blue;">Return</span> _names.Contains(item)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
 
-    Public Sub AddName(ByVal item As String)
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> AddName(<span style="color:Blue;">ByVal</span> item <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
         _names.Add(item)
-    End Sub
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class CanBeEnhanced
-    Private _names As IList(Of String) = New ActivatableList(Of String)()
-
-    Public Function ContainsName(ByVal item As String) As Boolean
-        Return _names.Contains(item)
-    End Function
-
-    Public Sub AddName(ByVal item As String)
-        _names.Add(item)
-    End Sub
-End Class</pre>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			EnhancementLimitations.vb: Is enhanced to
 			<div class="codedownload">

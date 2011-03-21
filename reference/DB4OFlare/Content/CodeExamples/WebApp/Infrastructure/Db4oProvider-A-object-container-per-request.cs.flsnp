@@ -2,13 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private void RegisterSessionCreation(HttpApplication httpApplication)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">void</span> RegisterSessionCreation(HttpApplication httpApplication)
 {
     httpApplication.BeginRequest += OpenSession;
     httpApplication.EndRequest += CloseSession;
 }
 
-private void OpenSession(object sender, EventArgs e)
+<span style="color:Blue;">private</span> <span style="color:Blue;">void</span> OpenSession(<span style="color:Blue;">object</span> sender, EventArgs e)
 {
     IObjectContainer container =
         (IObjectContainer)HttpContext.Current.Application[DataBaseInstance];
@@ -16,11 +17,12 @@ private void OpenSession(object sender, EventArgs e)
     HttpContext.Current.Items[SessionKey] = session;
 }
 
-private void CloseSession(object sender, EventArgs e)
+<span style="color:Blue;">private</span> <span style="color:Blue;">void</span> CloseSession(<span style="color:Blue;">object</span> sender, EventArgs e)
 {
     IObjectContainer session = (IObjectContainer)HttpContext.Current.Items[SessionKey];
     session.Dispose();
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oProvider.cs: A object container per request
 			<div class="codedownload">

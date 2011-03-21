@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">configuration.common().objectClass(&quot;com.db4odoc.strategies.refactoring.PersonOld&quot;)
-        .rename(&quot;com.db4odoc.strategies.refactoring.PersonNew&quot;);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.common().objectClass(<span style="color:#A31515;">&quot;com.db4odoc.strategies.refactoring.PersonOld&quot;</span>)
+        .rename(<span style="color:#A31515;">&quot;com.db4odoc.strategies.refactoring.PersonNew&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			RefactoringExamples.java: Rename a class
 			<div class="codedownload">

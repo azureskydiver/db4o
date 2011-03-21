@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class Person
-    Implements IActivatable
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Person
+    <span style="color:Blue;">Implements</span> IActivatable
     &lt;Transient()&gt; _
-    Private m_activator As IActivator</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class Person
-    Implements IActivatable
-    &lt;Transient()&gt; _
-    Private m_activator As IActivator</pre>
+    <span style="color:Blue;">Private</span> m_activator <span style="color:Blue;">As</span> IActivator
+</pre>
 		<div class="codesnippet-meta">
 			Person.vb: Implement the required activatable interface and add activator
 			<div class="codedownload">

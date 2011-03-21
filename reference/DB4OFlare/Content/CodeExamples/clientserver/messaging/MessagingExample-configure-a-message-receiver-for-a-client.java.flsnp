@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
-configuration.networking().messageRecipient(new MessageRecipient() {
-    public void processMessage(MessageContext messageContext, Object o) {
-        System.out.println(&quot;The client received a '&quot; + o + &quot;' message&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+configuration.networking().messageRecipient(<span style="color:Blue;">new</span> MessageRecipient() {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> processMessage(MessageContext messageContext, Object o) {
+        System.out.println(<span style="color:#A31515;">&quot;The client received a '&quot;</span> + o + <span style="color:#A31515;">&quot;' message&quot;</span>);
     }
-});</pre>
+});
+</pre>
 		<div class="codesnippet-meta">
 			MessagingExample.java: configure a message receiver for a client
 			<div class="codedownload">

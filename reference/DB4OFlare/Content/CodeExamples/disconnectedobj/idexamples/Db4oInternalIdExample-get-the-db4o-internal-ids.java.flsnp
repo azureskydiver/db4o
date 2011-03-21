@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">long interalId = container.ext().getID(obj);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">long</span> interalId = container.ext().getID(obj);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oInternalIdExample.java: get the db4o internal ids
 			<div class="codedownload">

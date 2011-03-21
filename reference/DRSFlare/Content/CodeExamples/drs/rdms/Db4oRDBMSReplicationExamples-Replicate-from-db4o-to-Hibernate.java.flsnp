@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final ObjectSet changesInHibernate =
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> ObjectSet changesInHibernate =
         replicationSession.providerA().objectsChangedSinceLastReplication();
-for (Object changedObject : changesInHibernate) {
+<span style="color:Blue;">for</span> (Object changedObject : changesInHibernate) {
     replicationSession.replicate(changedObject);
 }
 
-replicationSession.commit();</pre>
+replicationSession.commit();
+</pre>
 		<div class="codesnippet-meta">
 			Db4oRDBMSReplicationExamples.java: Replicate from db4o to Hibernate
 			<div class="codedownload">

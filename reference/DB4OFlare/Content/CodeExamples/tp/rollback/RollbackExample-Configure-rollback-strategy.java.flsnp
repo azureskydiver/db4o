@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 configuration.common()
-        .add(new TransparentPersistenceSupport(new DeactivatingRollbackStrategy()));</pre>
+        .add(<span style="color:Blue;">new</span> TransparentPersistenceSupport(<span style="color:Blue;">new</span> DeactivatingRollbackStrategy()));
+</pre>
 		<div class="codesnippet-meta">
 			RollbackExample.java: Configure rollback strategy
 			<div class="codedownload">

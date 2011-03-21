@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Pilot otherPilot = new Pilot(&quot;&quot;);
-try {
+        <pre class="prettyprint" xml:space="preserve">
+Pilot otherPilot = <span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;&quot;</span>);
+<span style="color:Blue;">try</span> {
     container.store(otherPilot);
-} catch (EventException e) {
+} <span style="color:Blue;">catch</span> (EventException e) {
     ValidationException cause = (ValidationException) e.getCause();
     System.out.println(cause.getMessage());
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.java: Storing a invalid pilot throws exception
 			<div class="codedownload">

@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IObjectServer server = 
+        <pre class="prettyprint" xml:space="preserve">
+IObjectServer server = 
         Db4oClientServer.OpenServer(DatabaseFileName, PortNumber);
 IEventRegistry eventsOnServer = 
-        EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer());</pre>
+        EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer());
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.cs: register for events on the server
 			<div class="codedownload">

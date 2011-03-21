@@ -2,25 +2,27 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = database();
-if (container != null){
-	ObjectSet&lt;Car&gt;  result = container.query(new Predicate&lt;Car&gt;(){
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer container = database();
+<span style="color:Blue;">if</span> (container != <span style="color:Blue;">null</span>){
+	ObjectSet&lt;Car&gt;  result = container.query(<span style="color:Blue;">new</span> Predicate&lt;Car&gt;(){
 		@Override
-		public boolean match(Car car) {
-			return car.getPilot().getPoints()==15;
+		<span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Car car) {
+			<span style="color:Blue;">return</span> car.getPilot().getPoints()==15;
 		}
 		
 	});
-	if (!result.hasNext()){
-		logToConsole(0, &quot;Car not found, refill the database to continue.&quot;, false);
-	} else {
+	<span style="color:Blue;">if</span> (!result.hasNext()){
+		logToConsole(0, <span style="color:#A31515;">&quot;Car not found, refill the database to continue.&quot;</span>, <span style="color:Blue;">false</span>);
+	} <span style="color:Blue;">else</span> {
 		Car car = result.next();
-		logToConsole(startTime, &quot;Selected Car (&quot; + car + &quot;): &quot;, false);
+		logToConsole(startTime, <span style="color:#A31515;">&quot;Selected Car (&quot;</span> + car + <span style="color:#A31515;">&quot;): &quot;</span>, <span style="color:Blue;">false</span>);
 		startTime = System.currentTimeMillis();
-		car.setRegistration(new RegistrationRecord(&quot;A1&quot;, new Date()));
-		logToConsole(startTime, &quot;Updated Car (&quot; + car + &quot;): &quot;, true);
+		car.setRegistration(<span style="color:Blue;">new</span> RegistrationRecord(<span style="color:#A31515;">&quot;A1&quot;</span>, <span style="color:Blue;">new</span> Date()));
+		logToConsole(startTime, <span style="color:#A31515;">&quot;Updated Car (&quot;</span> + car + <span style="color:#A31515;">&quot;): &quot;</span>, <span style="color:Blue;">true</span>);
 	}			
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oExample.java: update a car with db4o
 			<div class="codedownload">

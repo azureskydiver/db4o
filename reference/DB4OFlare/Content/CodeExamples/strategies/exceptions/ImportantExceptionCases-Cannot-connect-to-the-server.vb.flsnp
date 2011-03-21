@@ -2,18 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Try
-    Dim container As IObjectContainer = Db4oClientServer.OpenClient(&quot;localhost&quot;, 1337, &quot;sa&quot;, &quot;sa&quot;)
-Catch e As Db4oIOException
-    ' Couldn't connect to the server.
-    ' Ask for new connection-settings or handle this case gracefully
-End Try</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Try
-    Dim container As IObjectContainer = Db4oClientServer.OpenClient(&quot;localhost&quot;, 1337, &quot;sa&quot;, &quot;sa&quot;)
-Catch e As Db4oIOException
-    ' Couldn't connect to the server.
-    ' Ask for new connection-settings or handle this case gracefully
-End Try</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Try</span>
+    <span style="color:Blue;">Dim</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oClientServer.OpenClient(<span style="color:#A31515;">&quot;localhost&quot;</span>, 1337, <span style="color:#A31515;">&quot;sa&quot;</span>, <span style="color:#A31515;">&quot;sa&quot;</span>)
+<span style="color:Blue;">Catch</span> e <span style="color:Blue;">As</span> Db4oIOException
+    <span style="color:Green;">' Couldn't connect to the server.</span>
+    <span style="color:Green;">' Ask for new connection-settings or handle this case gracefully</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Try</span>
+</pre>
 		<div class="codesnippet-meta">
 			ImportantExceptionCases.vb: Cannot connect to the server
 			<div class="codedownload">

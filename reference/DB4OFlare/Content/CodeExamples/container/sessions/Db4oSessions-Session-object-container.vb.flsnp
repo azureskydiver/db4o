@@ -2,20 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using rootContainer As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFileName)
-    ' open the db4o-session. For example at the beginning for a web-request
-    Using session As IObjectContainer = rootContainer.Ext().OpenSession()
-        ' do the operations on the session-container
-        session.Store(New Person(&quot;Joe&quot;))
-    End Using
-End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using rootContainer As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFileName)
-    ' open the db4o-session. For example at the beginning for a web-request
-    Using session As IObjectContainer = rootContainer.Ext().OpenSession()
-        ' do the operations on the session-container
-        session.Store(New Person(&quot;Joe&quot;))
-    End Using
-End Using</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Using</span> rootContainer <span style="color:Blue;">As</span> IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFileName)
+    <span style="color:Green;">' open the db4o-session. For example at the beginning for a web-request</span>
+    <span style="color:Blue;">Using</span> session <span style="color:Blue;">As</span> IObjectContainer = rootContainer.Ext().OpenSession()
+        <span style="color:Green;">' do the operations on the session-container</span>
+        session.Store(<span style="color:Blue;">New</span> Person(<span style="color:#A31515;">&quot;Joe&quot;</span>))
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+</pre>
 		<div class="codesnippet-meta">
 			Db4oSessions.vb: Session object container
 			<div class="codedownload">

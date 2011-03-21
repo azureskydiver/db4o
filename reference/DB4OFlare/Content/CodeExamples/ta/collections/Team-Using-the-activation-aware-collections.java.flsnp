@@ -2,20 +2,22 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">public class Team  extends AbstractActivatable{ 
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Team  <span style="color:Blue;">extends</span> AbstractActivatable{ 
 
-    private List&lt;Pilot&gt; pilots = new ActivatableArrayList&lt;Pilot&gt;();
+    <span style="color:Blue;">private</span> List&lt;Pilot&gt; pilots = <span style="color:Blue;">new</span> ActivatableArrayList&lt;Pilot&gt;();
 
-    public boolean add(Pilot pilot) {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> add(Pilot pilot) {
         activate(ActivationPurpose.WRITE);
-        return pilots.add(pilot);
+        <span style="color:Blue;">return</span> pilots.add(pilot);
     }
 
-    public Collection&lt;Pilot&gt; getPilots(){
+    <span style="color:Blue;">public</span> Collection&lt;Pilot&gt; getPilots(){
         activate(ActivationPurpose.READ);
-        return pilots;
+        <span style="color:Blue;">return</span> pilots;
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Team.java: Using the activation aware collections
 			<div class="codedownload">

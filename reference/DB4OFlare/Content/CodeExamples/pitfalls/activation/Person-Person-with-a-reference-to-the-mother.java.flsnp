@@ -2,27 +2,29 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">class Person {
-    private Person mother;
-    private String name;
-    public Person(String name) {
-        this.mother = mother;
-        this.name = name;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> Person {
+    <span style="color:Blue;">private</span> Person mother;
+    <span style="color:Blue;">private</span> String name;
+    <span style="color:Blue;">public</span> Person(String name) {
+        <span style="color:Blue;">this</span>.mother = mother;
+        <span style="color:Blue;">this</span>.name = name;
     }
 
-    public Person(Person mother, String name) {
-        this.mother = mother;
-        this.name = name;
+    <span style="color:Blue;">public</span> Person(Person mother, String name) {
+        <span style="color:Blue;">this</span>.mother = mother;
+        <span style="color:Blue;">this</span>.name = name;
     }
 
-    public Person mother() {
-        return mother;
+    <span style="color:Blue;">public</span> Person mother() {
+        <span style="color:Blue;">return</span> mother;
     }
 
-    public String getName() {
-        return name;
+    <span style="color:Blue;">public</span> String getName() {
+        <span style="color:Blue;">return</span> name;
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Person.java: Person with a reference to the mother
 			<div class="codedownload">

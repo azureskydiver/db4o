@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = client.Ext().OpenSession())
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectContainer container = client.Ext().OpenSession())
 {
-    // do work
+    <span style="color:Green;">// do work</span>
 }
-// Start with a fresh cache:
-using (IObjectContainer container = client.Ext().OpenSession())
+<span style="color:Green;">// Start with a fresh cache:</span>
+<span style="color:Blue;">using</span> (IObjectContainer container = client.Ext().OpenSession())
 {
-    // do work
-}</pre>
+    <span style="color:Green;">// do work</span>
+}
+</pre>
 		<div class="codesnippet-meta">
 			ReferenceCacheExamples.cs: Clean cache for each unit of work
 			<div class="codedownload">

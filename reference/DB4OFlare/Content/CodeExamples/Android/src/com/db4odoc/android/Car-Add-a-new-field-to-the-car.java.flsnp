@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">   private RegistrationRecord registration;
+        <pre class="prettyprint" xml:space="preserve">
+   <span style="color:Blue;">private</span> RegistrationRecord registration;
    
-public RegistrationRecord getRegistration() {
-	return registration;
+<span style="color:Blue;">public</span> RegistrationRecord getRegistration() {
+	<span style="color:Blue;">return</span> registration;
 }
 
-public void setRegistration(RegistrationRecord registration) {
-	this.registration = registration;
-}</pre>
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> setRegistration(RegistrationRecord registration) {
+	<span style="color:Blue;">this</span>.registration = registration;
+}
+</pre>
 		<div class="codesnippet-meta">
 			Car.java: Add a new field to the car
 			<div class="codedownload">

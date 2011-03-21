@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">while (blob.getStatus() &gt; Status.COMPLETED){
-    try {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">while</span> (blob.getStatus() &gt; Status.COMPLETED){
+    <span style="color:Blue;">try</span> {
         Thread.sleep(50);
-    } catch (InterruptedException ex) {
+    } <span style="color:Blue;">catch</span> (InterruptedException ex) {
         Thread.currentThread().interrupt();
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			BlobStorage.java: wait until the operation is done
 			<div class="codedownload">

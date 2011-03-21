@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">Car car = QueryForCar(container);
-car.CarName = &quot;New Mercedes&quot;;
-car.Driver.Name = &quot;New Driver Name&quot;;
+        <pre class="prettyprint" xml:space="preserve">
+Car car = QueryForCar(container);
+car.CarName = <span style="color:#A31515;">&quot;New Mercedes&quot;</span>;
+car.Driver.Name = <span style="color:#A31515;">&quot;New Driver Name&quot;</span>;
 
-// Explicitly state the update depth
-container.Ext().Store(car, 2);</pre>
+<span style="color:Green;">// Explicitly state the update depth</span>
+container.Ext().Store(car, 2);
+</pre>
 		<div class="codesnippet-meta">
 			UpdateDepthPitfall.cs: Explicitly use the update depth
 			<div class="codedownload">

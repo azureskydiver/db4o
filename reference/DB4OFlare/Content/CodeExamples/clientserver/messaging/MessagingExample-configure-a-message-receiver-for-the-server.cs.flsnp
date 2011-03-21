@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
-configuration.Networking.MessageRecipient = new ServerMessageReceiver();
-IObjectServer server = Db4oClientServer.OpenServer(configuration, DatabaseFile, PortNumber);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
+configuration.Networking.MessageRecipient = <span style="color:Blue;">new</span> ServerMessageReceiver();
+IObjectServer server = Db4oClientServer.OpenServer(configuration, DatabaseFile, PortNumber);
+</pre>
 		<div class="codesnippet-meta">
 			MessagingExample.cs: configure a message receiver for the server
 			<div class="codedownload">

@@ -2,26 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Sub HandleCreatingEvent(ByVal sender As Object, _
-     ByVal args As CancellableObjectEventArgs)
-    If TypeOf args.[Object] Is Person Then
-        Dim p As Person = DirectCast(args.[Object], Person)
-        If p.Name.Equals(&quot;Joe Junior&quot;) Then
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Sub</span> HandleCreatingEvent(<span style="color:Blue;">ByVal</span> sender <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span>, _
+     <span style="color:Blue;">ByVal</span> args <span style="color:Blue;">As</span> CancellableObjectEventArgs)
+    <span style="color:Blue;">If</span> <span style="color:Blue;">TypeOf</span> args.[<span style="color:Blue;">Object</span>] <span style="color:Blue;">Is</span> Person <span style="color:Blue;">Then</span>
+        <span style="color:Blue;">Dim</span> p <span style="color:Blue;">As</span> Person = <span style="color:Blue;">DirectCast</span>(args.[<span style="color:Blue;">Object</span>], Person)
+        <span style="color:Blue;">If</span> p.Name.<span style="color:Blue;">Equals</span>(<span style="color:#A31515;">&quot;Joe Junior&quot;</span>) <span style="color:Blue;">Then</span>
             args.Cancel()
-        End If
-    End If
+        <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
 
-End Sub</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Sub HandleCreatingEvent(ByVal sender As Object, _
-     ByVal args As CancellableObjectEventArgs)
-    If TypeOf args.[Object] Is Person Then
-        Dim p As Person = DirectCast(args.[Object], Person)
-        If p.Name.Equals(&quot;Joe Junior&quot;) Then
-            args.Cancel()
-        End If
-    End If
-
-End Sub</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.vb: Cancel store operation Handler
 			<div class="codedownload">

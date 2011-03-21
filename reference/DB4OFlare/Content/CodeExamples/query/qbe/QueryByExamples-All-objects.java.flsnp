@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final ObjectSet&lt;Pilot&gt; result = container.queryByExample(null);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> ObjectSet&lt;Pilot&gt; result = container.queryByExample(<span style="color:Blue;">null</span>);
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.java: All objects
 			<div class="codedownload">

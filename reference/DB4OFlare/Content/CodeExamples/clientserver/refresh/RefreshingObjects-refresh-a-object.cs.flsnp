@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">db.Ext().Refresh(objToRefresh, int.MaxValue);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+db.Ext().Refresh(objToRefresh, <span style="color:Blue;">int</span>.MaxValue);
+</pre>
 		<div class="codesnippet-meta">
 			RefreshingObjects.cs: refresh a object
 			<div class="codedownload">

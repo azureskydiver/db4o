@@ -2,21 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private ReadOnly guid As Guid = Guid.NewGuid()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> guid <span style="color:Blue;">As</span> Guid = Guid.NewGuid()
 
-Public ReadOnly Property ObjectId() As Guid
-    Get
-        Return guid
-    End Get
-End Property
-</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private ReadOnly guid As Guid = Guid.NewGuid()
+<span style="color:Blue;">Public</span> <span style="color:Blue;">ReadOnly</span> <span style="color:Blue;">Property</span> ObjectId() <span style="color:Blue;">As</span> Guid
+    <span style="color:Blue;">Get</span>
+        <span style="color:Blue;">Return</span> guid
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
 
-Public ReadOnly Property ObjectId() As Guid
-    Get
-        Return guid
-    End Get
-End Property
 </pre>
 		<div class="codesnippet-meta">
 			IDHolder.vb: generate the id

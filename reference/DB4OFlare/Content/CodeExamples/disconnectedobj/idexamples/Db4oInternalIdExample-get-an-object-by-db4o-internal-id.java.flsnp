@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">long internalId =idForObject;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">long</span> internalId =idForObject;
 Object objectForID = container.ext().getByID(internalId);
-// getting by id doesn't activate the object
-// so you need to do it manually
-container.ext().activate(objectForID);</pre>
+<span style="color:Green;">// getting by id doesn't activate the object</span>
+<span style="color:Green;">// so you need to do it manually</span>
+container.ext().activate(objectForID);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oInternalIdExample.java: get an object by db4o internal id
 			<div class="codedownload">

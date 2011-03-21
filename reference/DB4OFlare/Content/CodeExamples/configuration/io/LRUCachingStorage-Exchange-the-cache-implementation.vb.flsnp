@@ -2,42 +2,26 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class LRUCachingStorage
-    Inherits CachingStorage
-    Private ReadOnly pageCount As Integer
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> LRUCachingStorage
+    <span style="color:Blue;">Inherits</span> CachingStorage
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> pageCount <span style="color:Blue;">As</span> <span style="color:Blue;">Integer</span>
 
-    Public Sub New(ByVal storage As IStorage)
-        MyBase.New(storage)
-        Me.pageCount = 128
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> storage <span style="color:Blue;">As</span> IStorage)
+        <span style="color:Blue;">MyBase</span>.<span style="color:Blue;">New</span>(storage)
+        <span style="color:Blue;">Me</span>.pageCount = 128
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public Sub New(ByVal storage As IStorage, ByVal pageCount As Integer, ByVal pageSize As Integer)
-        MyBase.New(storage, pageCount, pageSize)
-        Me.pageCount = pageCount
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> storage <span style="color:Blue;">As</span> IStorage, <span style="color:Blue;">ByVal</span> pageCount <span style="color:Blue;">As</span> <span style="color:Blue;">Integer</span>, <span style="color:Blue;">ByVal</span> pageSize <span style="color:Blue;">As</span> <span style="color:Blue;">Integer</span>)
+        <span style="color:Blue;">MyBase</span>.<span style="color:Blue;">New</span>(storage, pageCount, pageSize)
+        <span style="color:Blue;">Me</span>.pageCount = pageCount
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Protected Overrides Function NewCache() As ICache4
-        Return CacheFactory.NewLRUCache(pageCount)
-    End Function
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class LRUCachingStorage
-    Inherits CachingStorage
-    Private ReadOnly pageCount As Integer
-
-    Public Sub New(ByVal storage As IStorage)
-        MyBase.New(storage)
-        Me.pageCount = 128
-    End Sub
-
-    Public Sub New(ByVal storage As IStorage, ByVal pageCount As Integer, ByVal pageSize As Integer)
-        MyBase.New(storage, pageCount, pageSize)
-        Me.pageCount = pageCount
-    End Sub
-
-    Protected Overrides Function NewCache() As ICache4
-        Return CacheFactory.NewLRUCache(pageCount)
-    End Function
-End Class</pre>
+    <span style="color:Blue;">Protected</span> <span style="color:Blue;">Overrides</span> <span style="color:Blue;">Function</span> NewCache() <span style="color:Blue;">As</span> ICache4
+        <span style="color:Blue;">Return</span> CacheFactory.NewLRUCache(pageCount)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			LRUCachingStorage.vb: Exchange the cache-implementation
 			<div class="codedownload">

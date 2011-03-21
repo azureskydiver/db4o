@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.Common.ObjectClass(typeof (Person)).ObjectField(&quot;name&quot;).Rename(&quot;sirname&quot;);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+configuration.Common.ObjectClass(<span style="color:Blue;">typeof</span> (Person)).ObjectField(<span style="color:#A31515;">&quot;name&quot;</span>).Rename(<span style="color:#A31515;">&quot;sirname&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			ObjectFieldConfigurations.cs: Rename this field
 			<div class="codedownload">

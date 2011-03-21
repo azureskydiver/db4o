@@ -2,34 +2,22 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Class RegexConstrain
-    Implements IEvaluation
-    Private ReadOnly pattern As Regex
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Class</span> RegexConstrain
+    <span style="color:Blue;">Implements</span> IEvaluation
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> pattern <span style="color:Blue;">As</span> Regex
 
-    Public Sub New(ByVal pattern As [String])
-        Me.pattern = New Regex(pattern)
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> pattern <span style="color:Blue;">As</span> [<span style="color:Blue;">String</span>])
+        <span style="color:Blue;">Me</span>.pattern = <span style="color:Blue;">New</span> Regex(pattern)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public Sub Evaluate(ByVal candidate As ICandidate) _
-        Implements IEvaluation.Evaluate
-        Dim stringValue As String = DirectCast(candidate.GetObject(), String)
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> Evaluate(<span style="color:Blue;">ByVal</span> candidate <span style="color:Blue;">As</span> ICandidate) _
+        <span style="color:Blue;">Implements</span> IEvaluation.Evaluate
+        <span style="color:Blue;">Dim</span> stringValue <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = <span style="color:Blue;">DirectCast</span>(candidate.GetObject(), <span style="color:Blue;">String</span>)
         candidate.Include(pattern.IsMatch(stringValue))
-    End Sub
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Class RegexConstrain
-    Implements IEvaluation
-    Private ReadOnly pattern As Regex
-
-    Public Sub New(ByVal pattern As [String])
-        Me.pattern = New Regex(pattern)
-    End Sub
-
-    Public Sub Evaluate(ByVal candidate As ICandidate) _
-        Implements IEvaluation.Evaluate
-        Dim stringValue As String = DirectCast(candidate.GetObject(), String)
-        candidate.Include(pattern.IsMatch(stringValue))
-    End Sub
-End Class</pre>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			SodaEvaluationExamples.vb: Regex Evaluator
 			<div class="codedownload">

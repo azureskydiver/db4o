@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">While blob.GetStatus() &gt; Status.Completed
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">While</span> blob.GetStatus() &gt; Status.Completed
     Thread.Sleep(50)
-End While</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">While blob.GetStatus() &gt; Status.Completed
-    Thread.Sleep(50)
-End While</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">While</span>
+</pre>
 		<div class="codesnippet-meta">
 			BlobStorage.vb: wait until the operation is done
 			<div class="codedownload">

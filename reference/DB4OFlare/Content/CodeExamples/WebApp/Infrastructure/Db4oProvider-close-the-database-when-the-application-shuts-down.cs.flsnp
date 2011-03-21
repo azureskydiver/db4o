@@ -2,14 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public void Dispose()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Dispose()
 {
-    IDisposable toDispose = HttpContext.Current.Application[DataBaseInstance] as IDisposable;
-    if (null != toDispose)
+    IDisposable toDispose = HttpContext.Current.Application[DataBaseInstance] <span style="color:Blue;">as</span> IDisposable;
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> != toDispose)
     {
         toDispose.Dispose();
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oProvider.cs: close the database when the application shuts down
 			<div class="codedownload">

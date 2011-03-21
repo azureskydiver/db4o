@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectContainer container = Db4oEmbedded.OpenFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>))
 {
-    // use the object container
-}</pre>
+    <span style="color:Green;">// use the object container</span>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.cs: Open the object container to use the database
 			<div class="codedownload">

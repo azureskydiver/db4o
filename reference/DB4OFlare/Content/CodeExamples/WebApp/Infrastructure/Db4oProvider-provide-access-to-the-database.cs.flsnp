@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public static IObjectContainer Database
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">static</span> IObjectContainer Database
 {
-    get { return (IObjectContainer)HttpContext.Current.Items[SessionKey]; }
-}</pre>
+    <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> (IObjectContainer)HttpContext.Current.Items[SessionKey]; }
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oProvider.cs: provide access to the database
 			<div class="codedownload">

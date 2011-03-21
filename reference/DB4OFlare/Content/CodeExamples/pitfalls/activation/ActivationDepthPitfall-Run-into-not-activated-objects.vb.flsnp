@@ -2,30 +2,20 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim jodie As Person = QueryForJodie(container)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> jodie <span style="color:Blue;">As</span> Person = QueryForJodie(container)
 
-Dim julia As Person = jodie.Mother.Mother.Mother.Mother.Mother
+<span style="color:Blue;">Dim</span> julia <span style="color:Blue;">As</span> Person = jodie.Mother.Mother.Mother.Mother.Mother
 
-' This will print null
-' Because julia is not activated
-' and therefore all fields are not set
+<span style="color:Green;">' This will print null</span>
+<span style="color:Green;">' Because julia is not activated</span>
+<span style="color:Green;">' and therefore all fields are not set</span>
 Console.WriteLine(julia.Name)
-' This will throw a NullPointerException.
-' Because julia is not activated
-' and therefore all fields are not set
-Dim joannaName As String = julia.Mother.Name</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim jodie As Person = QueryForJodie(container)
-
-Dim julia As Person = jodie.Mother.Mother.Mother.Mother.Mother
-
-' This will print null
-' Because julia is not activated
-' and therefore all fields are not set
-Console.WriteLine(julia.Name)
-' This will throw a NullPointerException.
-' Because julia is not activated
-' and therefore all fields are not set
-Dim joannaName As String = julia.Mother.Name</pre>
+<span style="color:Green;">' This will throw a NullPointerException.</span>
+<span style="color:Green;">' Because julia is not activated</span>
+<span style="color:Green;">' and therefore all fields are not set</span>
+<span style="color:Blue;">Dim</span> joannaName <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = julia.Mother.Name
+</pre>
 		<div class="codesnippet-meta">
 			ActivationDepthPitfall.vb: Run into not activated objects
 			<div class="codedownload">

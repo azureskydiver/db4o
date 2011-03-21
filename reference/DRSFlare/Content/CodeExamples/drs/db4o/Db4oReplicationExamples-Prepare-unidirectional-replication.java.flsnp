@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
 ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
 
-Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
-Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+Db4oEmbeddedReplicationProvider providerA = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(desktopDatabase);
+Db4oEmbeddedReplicationProvider providerB = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(mobileDatabase);
 
 ReplicationSession replicationSession = Replication.begin(providerA, providerB);
 
-// set the replication-direction from the desktop database to the mobile database. 
-replicationSession.setDirection(replicationSession.providerA(), replicationSession.providerB());</pre>
+<span style="color:Green;">// set the replication-direction from the desktop database to the mobile database. </span>
+replicationSession.setDirection(replicationSession.providerA(), replicationSession.providerB());
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.java: Prepare unidirectional replication
 			<div class="codedownload">

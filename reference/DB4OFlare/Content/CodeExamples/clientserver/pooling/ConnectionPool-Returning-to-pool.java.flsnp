@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">// First you need to get the underlying client for the session
-final ObjectContainer client = clientForSession(session);
-// then the client is ready for reuse
-returnToThePool(client);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">// First you need to get the underlying client for the session</span>
+<span style="color:Blue;">final</span> ObjectContainer client = clientForSession(session);
+<span style="color:Green;">// then the client is ready for reuse</span>
+returnToThePool(client);
+</pre>
 		<div class="codesnippet-meta">
 			ConnectionPool.java: Returning to pool
 			<div class="codedownload">

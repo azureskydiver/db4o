@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim growStrategy As IGrowthStrategy = New ConstantGrowthStrategy(100)
-Dim memory As New MemoryStorage(growStrategy)
-configuration.File.Storage = memory</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim growStrategy As IGrowthStrategy = New ConstantGrowthStrategy(100)
-Dim memory As New MemoryStorage(growStrategy)
-configuration.File.Storage = memory</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> growStrategy <span style="color:Blue;">As</span> IGrowthStrategy = <span style="color:Blue;">New</span> ConstantGrowthStrategy(100)
+<span style="color:Blue;">Dim</span> memory <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> MemoryStorage(growStrategy)
+configuration.File.Storage = memory
+</pre>
 		<div class="codesnippet-meta">
 			IOConfigurationExamples.vb: Using memory-storage with constant grow strategy
 			<div class="codedownload">

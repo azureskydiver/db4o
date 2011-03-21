@@ -2,23 +2,25 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">&lt;target name=&quot;enhance&quot;&gt;
-    &lt;db4o-enhance classtargetdir=&quot;${basedir}/bin&quot;
-                  jartargetdir=&quot;${basedir}/lib&quot;
-                  nq=&quot;true&quot; ta=&quot;false&quot;
-                  collections=&quot;false&quot;&gt;        	
-        &lt;classpath refid=&quot;project.classpath&quot;/&gt;
-        &lt;sources dir=&quot;${basedir}/bin&quot;&gt;
-                  &lt;include name=&quot;**/*.class&quot;/&gt;
-        &lt;/sources&gt;
-        &lt;jars dir=&quot;${basedir}/lib&quot;&gt;
-            &lt;include name=&quot;*.jar&quot;/&gt;
-            &lt;exclude name=&quot;db4o-*.jar&quot;/&gt;
-            &lt;exclude name=&quot;ant.jar&quot;/&gt;
-            &lt;exclude name=&quot;bloat-1.0.jar&quot;/&gt;
-        &lt;/jars&gt;
-    &lt;/db4o-enhance&gt;
-&lt;/target&gt;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">&lt;</span><span style="color:#A31515;">target</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">enhance</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+    <span style="color:Blue;">&lt;</span><span style="color:#A31515;">db4o-enhance</span> <span style="color:Red;">classtargetdir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${basedir}/bin</span><span style="color:Black;">&quot;</span>
+                  <span style="color:Red;">jartargetdir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${basedir}/lib</span><span style="color:Black;">&quot;</span>
+                  <span style="color:Red;">nq</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">true</span><span style="color:Black;">&quot;</span> <span style="color:Red;">ta</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">false</span><span style="color:Black;">&quot;</span>
+                  <span style="color:Red;">collections</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">false</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>        	
+        <span style="color:Blue;">&lt;</span><span style="color:#A31515;">classpath</span> <span style="color:Red;">refid</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">project.classpath</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+        <span style="color:Blue;">&lt;</span><span style="color:#A31515;">sources</span> <span style="color:Red;">dir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${basedir}/bin</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+                  <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">**/*.class</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+        <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">sources</span><span style="color:Blue;">&gt;</span>
+        <span style="color:Blue;">&lt;</span><span style="color:#A31515;">jars</span> <span style="color:Red;">dir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${basedir}/lib</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+            <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+            <span style="color:Blue;">&lt;</span><span style="color:#A31515;">exclude</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">db4o-*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+            <span style="color:Blue;">&lt;</span><span style="color:#A31515;">exclude</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">ant.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+            <span style="color:Blue;">&lt;</span><span style="color:#A31515;">exclude</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">bloat-1.0.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+        <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">jars</span><span style="color:Blue;">&gt;</span>
+    <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">db4o-enhance</span><span style="color:Blue;">&gt;</span>
+<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">target</span><span style="color:Blue;">&gt;</span>
+
 </pre>
 		<div class="codesnippet-meta">
 			android-nq-optimisation.xml: Define a target which runs the task 

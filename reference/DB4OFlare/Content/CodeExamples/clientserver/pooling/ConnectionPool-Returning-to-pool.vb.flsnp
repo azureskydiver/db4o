@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">' First you need to get the underlying client for the session
-Dim client As IObjectContainer = ClientForSession(session)
-' then the client is ready for reuse
-ReturnToThePool(client)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">' First you need to get the underlying client for the session
-Dim client As IObjectContainer = ClientForSession(session)
-' then the client is ready for reuse
-ReturnToThePool(client)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">' First you need to get the underlying client for the session</span>
+<span style="color:Blue;">Dim</span> client <span style="color:Blue;">As</span> IObjectContainer = ClientForSession(session)
+<span style="color:Green;">' then the client is ready for reuse</span>
+ReturnToThePool(client)
+</pre>
 		<div class="codesnippet-meta">
 			ConnectionPool.vb: Returning to pool
 			<div class="codedownload">

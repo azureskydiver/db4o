@@ -2,12 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">&lt;jdo&gt;
-    &lt;package name=&quot;com.db4odoc.drs.vod&quot;&gt;
-        &lt;class name=&quot;com.db4odoc.drs.vod.Car&quot;/&gt;
-        &lt;class name=&quot;com.db4odoc.drs.vod.Pilot&quot;/&gt;
-    &lt;/package&gt;
-&lt;/jdo&gt;</pre>
+        <pre class="prettyprint" xml:space="preserve"><jdo>
+    <package name="com.db4odoc.drs.vod">
+        <class name="com.db4odoc.drs.vod.Car"/>
+        <class name="com.db4odoc.drs.vod.Pilot"/>
+    </package>
+</jdo></pre>
 		<div class="codesnippet-meta">
 			package.jdo: List all persistent classes of this package 
 			<div class="codedownload">

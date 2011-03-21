@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">SQLiteDatabase db = _context.openOrCreateDatabase(DATABASE_NAME,
-		Context.MODE_PRIVATE, null);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+SQLiteDatabase db = _context.openOrCreateDatabase(DATABASE_NAME,
+		Context.MODE_PRIVATE, <span style="color:Blue;">null</span>);
+</pre>
 		<div class="codesnippet-meta">
 			SqlExample.java: opening SQLite database
 			<div class="codedownload">

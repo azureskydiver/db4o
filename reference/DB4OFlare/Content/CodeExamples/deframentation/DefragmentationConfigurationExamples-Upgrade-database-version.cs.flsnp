@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">DefragmentConfig config = new DefragmentConfig(&quot;database.db4o&quot;);
-config.UpgradeFile(Environment.GetEnvironmentVariable(&quot;TEMP&quot;));
+        <pre class="prettyprint" xml:space="preserve">
+DefragmentConfig config = <span style="color:Blue;">new</span> DefragmentConfig(<span style="color:#A31515;">&quot;database.db4o&quot;</span>);
+config.UpgradeFile(Environment.GetEnvironmentVariable(<span style="color:#A31515;">&quot;TEMP&quot;</span>));
 
-Defragment.Defrag(config);</pre>
+Defragment.Defrag(config);
+</pre>
 		<div class="codesnippet-meta">
 			DefragmentationConfigurationExamples.cs: Upgrade database version
 			<div class="codedownload">

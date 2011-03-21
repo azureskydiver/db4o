@@ -2,8 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">@Override
-public void requestInitialized(ServletRequestEvent requestEvent) {
+        <pre class="prettyprint" xml:space="preserve">
+@Override
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> requestInitialized(ServletRequestEvent requestEvent) {
     EmbeddedObjectContainer rootContainer = (EmbeddedObjectContainer) requestEvent
             .getServletContext().getAttribute(Db4oServletListener.KEY_DB4O_SERVER);
 
@@ -13,12 +14,13 @@ public void requestInitialized(ServletRequestEvent requestEvent) {
 
 
 @Override
-public void requestDestroyed(ServletRequestEvent requestEvent) {
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> requestDestroyed(ServletRequestEvent requestEvent) {
     ObjectContainer session = (ObjectContainer) requestEvent
             .getServletRequest().getAttribute(KEY_DB4O_SESSION);
 
     close(session);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oServletListener.java: a db4o-session for each request
 			<div class="codedownload">

@@ -2,14 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class OnlyOddAge : IEvaluation
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> OnlyOddAge : IEvaluation
 {
-    public void Evaluate(ICandidate candidate)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Evaluate(ICandidate candidate)
     {
         Pilot pilot = (Pilot)candidate.GetObject();
         candidate.Include(pilot.Age % 2 != 0);
     }
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			SodaEvaluationExamples.cs: Simple evaluation which includes only odd aged pilots

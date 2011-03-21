@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IReplicationSession replicationSession 
-    = Replication.Begin(desktopRelicationPartner,mobileRelicationPartner,new LogReplicationListener());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IReplicationSession replicationSession 
+    = Replication.Begin(desktopRelicationPartner,mobileRelicationPartner,<span style="color:Blue;">new</span> LogReplicationListener());
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.cs: Register a listener for information about the replication process
 			<div class="codedownload">

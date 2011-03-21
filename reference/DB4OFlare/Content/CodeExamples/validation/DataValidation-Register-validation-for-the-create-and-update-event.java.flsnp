@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EventRegistry events = EventRegistryFactory.forObjectContainer(container);
-events.creating().addListener(new ValidationListener());
-events.updating().addListener(new ValidationListener());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+events.creating().addListener(<span style="color:Blue;">new</span> ValidationListener());
+events.updating().addListener(<span style="color:Blue;">new</span> ValidationListener());
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.java: Register validation for the create and update event
 			<div class="codedownload">

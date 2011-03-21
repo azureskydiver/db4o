@@ -2,21 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class RegexConstrain : IEvaluation
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> RegexConstrain : IEvaluation
 {
-    private readonly Regex pattern;
+    <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> Regex pattern;
 
-    public RegexConstrain(String pattern)
+    <span style="color:Blue;">public</span> RegexConstrain(String pattern)
     {
-        this.pattern = new Regex(pattern);
+        <span style="color:Blue;">this</span>.pattern = <span style="color:Blue;">new</span> Regex(pattern);
     }
 
-    public void Evaluate(ICandidate candidate)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Evaluate(ICandidate candidate)
     {
-        string stringValue = (string)candidate.GetObject();
+        <span style="color:Blue;">string</span> stringValue = (<span style="color:Blue;">string</span>)candidate.GetObject();
         candidate.Include(pattern.IsMatch(stringValue));
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			SodaEvaluationExamples.cs: Regex Evaluator
 			<div class="codedownload">

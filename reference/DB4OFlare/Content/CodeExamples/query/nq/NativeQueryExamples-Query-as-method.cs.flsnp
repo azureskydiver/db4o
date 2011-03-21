@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private static bool AllJohns(Pilot pilot)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">bool</span> AllJohns(Pilot pilot)
 {
-    return pilot.Name == &quot;John&quot;;
+    <span style="color:Blue;">return</span> pilot.Name == <span style="color:#A31515;">&quot;John&quot;</span>;
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			NativeQueryExamples.cs: Query as method

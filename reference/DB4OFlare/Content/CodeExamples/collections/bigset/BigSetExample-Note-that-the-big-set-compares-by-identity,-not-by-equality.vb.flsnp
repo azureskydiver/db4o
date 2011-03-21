@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim aCitizen As Person
-Using aCitizenEnumerator As IEnumerator(Of Person) = city.Citizen.GetEnumerator()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> aCitizen <span style="color:Blue;">As</span> Person
+<span style="color:Blue;">Using</span> aCitizenEnumerator <span style="color:Blue;">As</span> IEnumerator(Of Person) = city.Citizen.GetEnumerator()
     aCitizenEnumerator.MoveNext()
     aCitizen = aCitizenEnumerator.Current
-End Using
-Console.WriteLine(&quot;The big-set uses the identity, not equality of an object&quot;)
-Console.WriteLine(&quot;Therefore it .contains() on the same person-object is &quot; &amp; city.Citizen.Contains(aCitizen))
-Dim equalPerson As New Person(aCitizen.Name)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim aCitizen As Person
-Using aCitizenEnumerator As IEnumerator(Of Person) = city.Citizen.GetEnumerator()
-    aCitizenEnumerator.MoveNext()
-    aCitizen = aCitizenEnumerator.Current
-End Using
-Console.WriteLine(&quot;The big-set uses the identity, not equality of an object&quot;)
-Console.WriteLine(&quot;Therefore it .contains() on the same person-object is &quot; &amp; city.Citizen.Contains(aCitizen))
-Dim equalPerson As New Person(aCitizen.Name)</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+Console.WriteLine(<span style="color:#A31515;">&quot;The big-set uses the identity, not equality of an object&quot;</span>)
+Console.WriteLine(<span style="color:#A31515;">&quot;Therefore it .contains() on the same person-object is &quot;</span> &amp; city.Citizen.Contains(aCitizen))
+<span style="color:Blue;">Dim</span> equalPerson <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> Person(aCitizen.Name)
+</pre>
 		<div class="codesnippet-meta">
 			BigSetExample.vb: Note that the big-set compares by identity, not by equality
 			<div class="codedownload">

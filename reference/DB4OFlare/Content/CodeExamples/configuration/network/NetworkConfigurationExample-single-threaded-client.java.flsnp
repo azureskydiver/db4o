@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
-configuration.networking().singleThreadedClient(true);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+configuration.networking().singleThreadedClient(<span style="color:Blue;">true</span>);
+</pre>
 		<div class="codesnippet-meta">
 			NetworkConfigurationExample.java: single threaded client
 			<div class="codedownload">

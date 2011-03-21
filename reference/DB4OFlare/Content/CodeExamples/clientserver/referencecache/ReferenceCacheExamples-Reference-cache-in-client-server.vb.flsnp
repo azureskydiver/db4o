@@ -2,36 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim personOnClient1 As Person = QueryForPerson(client1)
-Dim personOnClient2 As Person = QueryForPerson(client2)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> personOnClient1 <span style="color:Blue;">As</span> Person = QueryForPerson(client1)
+<span style="color:Blue;">Dim</span> personOnClient2 <span style="color:Blue;">As</span> Person = QueryForPerson(client2)
 Console.Write(QueryForPerson(client2).Name)
 
-personOnClient1.Name = (&quot;New Name&quot;)
+personOnClient1.Name = (<span style="color:#A31515;">&quot;New Name&quot;</span>)
 client1.Store(personOnClient1)
 client1.Commit()
 
-' The other client still has the old data in the cache
+<span style="color:Green;">' The other client still has the old data in the cache</span>
 Console.Write(QueryForPerson(client2).Name)
 
-client2.Ext().Refresh(personOnClient2, Integer.MaxValue)
+client2.Ext().Refresh(personOnClient2, <span style="color:Blue;">Integer</span>.MaxValue)
 
-' After refreshing the date is visible
-Console.Write(QueryForPerson(client2).Name)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim personOnClient1 As Person = QueryForPerson(client1)
-Dim personOnClient2 As Person = QueryForPerson(client2)
+<span style="color:Green;">' After refreshing the date is visible</span>
 Console.Write(QueryForPerson(client2).Name)
-
-personOnClient1.Name = (&quot;New Name&quot;)
-client1.Store(personOnClient1)
-client1.Commit()
-
-' The other client still has the old data in the cache
-Console.Write(QueryForPerson(client2).Name)
-
-client2.Ext().Refresh(personOnClient2, Integer.MaxValue)
-
-' After refreshing the date is visible
-Console.Write(QueryForPerson(client2).Name)</pre>
+</pre>
 		<div class="codesnippet-meta">
 			ReferenceCacheExamples.vb: Reference cache in client server
 			<div class="codedownload">

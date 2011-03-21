@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="319" MadCap:lastWidth="489" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment">
-    <head><title>Scalability	<link href="../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
-    </head>
-    <body onload="prettyPrint()">
-        <h1>Scalability</h1>
-        <p>db4o can potentially be used for rather large databases - up to 254 GB per database file.   However, this would be highly unusual and likely due to having the kind of application that was storing relatively few, but very large objects in the database.   As a general rule, if you expect your database to grow beyond 10 gigabytes, you should probably be looking at the <a href="http://www.versant.com/" target="_top">Versant object database</a>.</p>
-        <p>Also db4o is currently not designed to scale for highly concurrent access. If you expect a high load of concurrent access to the database, you should also consider a larger database like the <a href="http://www.versant.com/" target="_top">Versant object database</a>.</p>
-        <p>If you want to make sure that your
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="319" MadCap:lastWidth="489">
+  <head />
+  <body>
+    <h1>Scalability</h1>
+    <p>db4o can potentially be used for rather large databases - up to 254 GB per database file.   However, this would be highly unusual and likely due to having the kind of application that was storing relatively few, but very large objects in the database.   As a general rule, if you expect your database to grow beyond 10 gigabytes, you should probably be looking at the <a href="http://www.versant.com/" target="_top">Versant object database</a>.</p>
+    <p>Also db4o is currently not designed to scale for highly concurrent access. If you expect a high load of concurrent access to the database, you should also consider a larger database like the <a href="http://www.versant.com/" target="_top">Versant object database</a>.</p>
+    <p>If you want to make sure that your
 application can grow and scale with db4o database you may take the following
 steps:</p>
-        <ul>
-            <li>Write performance tests to accommodate for performance requirements
+    <ul>
+      <li>Write performance tests to accommodate for performance requirements
      of the growing application. Especially look that you also capture to complexity of the model and don't use a simplified flat data model.</li>
-            <li>Use client-server version to enable many clients using
+      <li>Use client-server version to enable many clients using
      data at the same time.</li>
-        </ul>
-    </body>
+    </ul>
+  </body>
 </html>

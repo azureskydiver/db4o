@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 config.file().generateUUIDs(ConfigScope.GLOBALLY);
-config.file().generateCommitTimestamps(true);
+config.file().generateCommitTimestamps(<span style="color:Blue;">true</span>);
 config.common().reflectWith(
-        new JdoReflector(Thread.currentThread().getContextClassLoader()));</pre>
+        <span style="color:Blue;">new</span> JdoReflector(Thread.currentThread().getContextClassLoader()));
+</pre>
 		<div class="codesnippet-meta">
 			SimpleReplication.java: Enable UUIDs and commit timestamps use the JDO reflector
 			<div class="codedownload">

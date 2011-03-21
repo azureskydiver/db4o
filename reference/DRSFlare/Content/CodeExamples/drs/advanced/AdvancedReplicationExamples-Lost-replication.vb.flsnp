@@ -2,108 +2,59 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim serverDatabase As IObjectServer = OpenDatabaseServer(DesktopDatabaseName)
-Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> serverDatabase <span style="color:Blue;">As</span> IObjectServer = OpenDatabaseServer(DesktopDatabaseName)
+<span style="color:Blue;">Dim</span> mobileDatabase <span style="color:Blue;">As</span> IObjectContainer = OpenDatabase(MobileDatabaseName)
 
-If True Then
-    Dim serverDbConnection As IObjectContainer = _
+<span style="color:Blue;">If</span> <span style="color:Blue;">True</span> <span style="color:Blue;">Then</span>
+    <span style="color:Blue;">Dim</span> serverDbConnection <span style="color:Blue;">As</span> IObjectContainer = _
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-    serverDbConnection.Store(New Pilot(&quot;Pilot 1&quot;))
+    serverDbConnection.Store(<span style="color:Blue;">New</span> Pilot(<span style="color:#A31515;">&quot;Pilot 1&quot;</span>))
     serverDbConnection.Commit()
 
-    ' The replication starts here
-    Dim connectionForReplication As IObjectContainer = _
+    <span style="color:Green;">' The replication starts here</span>
+    <span style="color:Blue;">Dim</span> connectionForReplication <span style="color:Blue;">As</span> IObjectContainer = _
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-    Dim replicationSession As IReplicationSession = _
+    <span style="color:Blue;">Dim</span> replicationSession <span style="color:Blue;">As</span> IReplicationSession = _
         Replication.Begin(connectionForReplication, mobileDatabase)
-    Dim changesOnDesktop As IObjectSet = _
+    <span style="color:Blue;">Dim</span> changesOnDesktop <span style="color:Blue;">As</span> IObjectSet = _
         replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
 
-    ' during the replication other clients store data on the server
-    serverDbConnection.Store(New Pilot(&quot;Pilot 2&quot;))
+    <span style="color:Green;">' during the replication other clients store data on the server</span>
+    serverDbConnection.Store(<span style="color:Blue;">New</span> Pilot(<span style="color:#A31515;">&quot;Pilot 2&quot;</span>))
     serverDbConnection.Commit()
 
-    For Each changedObjectOnDesktop As Object In changesOnDesktop
+    <span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> changedObjectOnDesktop <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> <span style="color:Blue;">In</span> changesOnDesktop
         replicationSession.Replicate(changedObjectOnDesktop)
-    Next
+    <span style="color:Blue;">Next</span>
 
     replicationSession.Commit()
 
-    serverDbConnection.Store(New Pilot(&quot;Pilot 3&quot;))
+    serverDbConnection.Store(<span style="color:Blue;">New</span> Pilot(<span style="color:#A31515;">&quot;Pilot 3&quot;</span>))
     serverDbConnection.Commit()
-End If
+<span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
 
-' Pilot 2 is not replicated
+<span style="color:Green;">' Pilot 2 is not replicated</span>
 PrintPilots(mobileDatabase)
 
 
-If True Then
-    Dim connectionForReplication As IObjectContainer = _
+<span style="color:Blue;">If</span> <span style="color:Blue;">True</span> <span style="color:Blue;">Then</span>
+    <span style="color:Blue;">Dim</span> connectionForReplication <span style="color:Blue;">As</span> IObjectContainer = _
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-    Dim replicationSession As IReplicationSession = _
+    <span style="color:Blue;">Dim</span> replicationSession <span style="color:Blue;">As</span> IReplicationSession = _
         Replication.Begin(connectionForReplication, mobileDatabase)
-    Dim changesOnDesktop As IObjectSet = _
+    <span style="color:Blue;">Dim</span> changesOnDesktop <span style="color:Blue;">As</span> IObjectSet = _
         replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
 
-    For Each changedOnDesktop As Object In changesOnDesktop
+    <span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> changedOnDesktop <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> <span style="color:Blue;">In</span> changesOnDesktop
         replicationSession.Replicate(changedOnDesktop)
-    Next
+    <span style="color:Blue;">Next</span>
     replicationSession.Commit()
-End If
+<span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
 
-' Pilot 2 is still not replicated
-PrintPilots(mobileDatabase)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim serverDatabase As IObjectServer = OpenDatabaseServer(DesktopDatabaseName)
-Dim mobileDatabase As IObjectContainer = OpenDatabase(MobileDatabaseName)
-
-If True Then
-    Dim serverDbConnection As IObjectContainer = _
-        Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-    serverDbConnection.Store(New Pilot(&quot;Pilot 1&quot;))
-    serverDbConnection.Commit()
-
-    ' The replication starts here
-    Dim connectionForReplication As IObjectContainer = _
-        Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-    Dim replicationSession As IReplicationSession = _
-        Replication.Begin(connectionForReplication, mobileDatabase)
-    Dim changesOnDesktop As IObjectSet = _
-        replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
-
-    ' during the replication other clients store data on the server
-    serverDbConnection.Store(New Pilot(&quot;Pilot 2&quot;))
-    serverDbConnection.Commit()
-
-    For Each changedObjectOnDesktop As Object In changesOnDesktop
-        replicationSession.Replicate(changedObjectOnDesktop)
-    Next
-
-    replicationSession.Commit()
-
-    serverDbConnection.Store(New Pilot(&quot;Pilot 3&quot;))
-    serverDbConnection.Commit()
-End If
-
-' Pilot 2 is not replicated
+<span style="color:Green;">' Pilot 2 is still not replicated</span>
 PrintPilots(mobileDatabase)
-
-
-If True Then
-    Dim connectionForReplication As IObjectContainer = _
-        Db4oClientServer.OpenClient(Host, Port, UserName, UserName)
-    Dim replicationSession As IReplicationSession = _
-        Replication.Begin(connectionForReplication, mobileDatabase)
-    Dim changesOnDesktop As IObjectSet = _
-        replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
-
-    For Each changedOnDesktop As Object In changesOnDesktop
-        replicationSession.Replicate(changedOnDesktop)
-    Next
-    replicationSession.Commit()
-End If
-
-' Pilot 2 is still not replicated
-PrintPilots(mobileDatabase)</pre>
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.vb: Lost replication
 			<div class="codedownload">

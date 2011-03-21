@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.common().nameProvider(new SimpleNameProvider(&quot;Database&quot;));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.common().nameProvider(<span style="color:Blue;">new</span> SimpleNameProvider(<span style="color:#A31515;">&quot;Database&quot;</span>));
+</pre>
 		<div class="codesnippet-meta">
 			CommonConfigurationExamples.java: set a name-provider
 			<div class="codedownload">

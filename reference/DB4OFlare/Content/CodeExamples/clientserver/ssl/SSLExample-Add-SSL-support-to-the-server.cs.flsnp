@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
-// For the server you need a certificate. For example using a certificate from a file
-X509Certificate2 certificate = new X509Certificate2(&quot;cert.cer&quot;);
-configuration.AddConfigurationItem(new ServerSslSupport(certificate));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IServerConfiguration configuration = Db4oClientServer.NewServerConfiguration();
+<span style="color:Green;">// For the server you need a certificate. For example using a certificate from a file</span>
+X509Certificate2 certificate = <span style="color:Blue;">new</span> X509Certificate2(<span style="color:#A31515;">&quot;cert.cer&quot;</span>);
+configuration.AddConfigurationItem(<span style="color:Blue;">new</span> ServerSslSupport(certificate));
+</pre>
 		<div class="codesnippet-meta">
 			SSLExample.cs: Add SSL-support to the server
 			<div class="codedownload">

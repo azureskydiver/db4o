@@ -2,10 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">configuration.Common.ObjectClass(&quot;Db4oDoc.Code.Strategies.Refactoring.PersonOld, Db4oDoc&quot;) _
-    .Rename(&quot;Db4oDoc.Code.Strategies.Refactoring.PersonNew, Db4oDoc&quot;)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">configuration.Common.ObjectClass(&quot;Db4oDoc.Code.Strategies.Refactoring.PersonOld, Db4oDoc&quot;) _
-    .Rename(&quot;Db4oDoc.Code.Strategies.Refactoring.PersonNew, Db4oDoc&quot;)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.Common.ObjectClass(<span style="color:#A31515;">&quot;Db4oDoc.Code.Strategies.Refactoring.PersonOld, Db4oDoc&quot;</span>) _
+    .Rename(<span style="color:#A31515;">&quot;Db4oDoc.Code.Strategies.Refactoring.PersonNew, Db4oDoc&quot;</span>)
+</pre>
 		<div class="codesnippet-meta">
 			RefactoringExamples.vb: Rename a class
 			<div class="codedownload">

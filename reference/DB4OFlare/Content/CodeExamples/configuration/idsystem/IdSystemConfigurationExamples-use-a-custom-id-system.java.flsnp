@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.idSystem().useCustomSystem(new CustomIdSystemFactory());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.idSystem().useCustomSystem(<span style="color:Blue;">new</span> CustomIdSystemFactory());
+</pre>
 		<div class="codesnippet-meta">
 			IdSystemConfigurationExamples.java: use a custom id system
 			<div class="codedownload">

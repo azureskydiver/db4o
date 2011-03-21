@@ -2,10 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim events As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
-AddHandler events.Deleting, AddressOf HandleDeleteEvent</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim events As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
-AddHandler events.Deleting, AddressOf HandleDeleteEvent</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> events <span style="color:Blue;">As</span> IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
+<span style="color:Blue;">AddHandler</span> events.Deleting, <span style="color:Blue;">AddressOf</span> HandleDeleteEvent
+</pre>
 		<div class="codesnippet-meta">
 			DeletionStrategies.vb: Deletion-Flag
 			<div class="codedownload">

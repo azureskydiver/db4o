@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim pilot As Pilot = container.Query(Of Pilot)()(0)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> pilot <span style="color:Blue;">As</span> Pilot = container.Query(Of Pilot)()(0)
 
-Dim query As IQuery = container.Query()
-query.Constrain(GetType(Car))
-' if the given object is stored, its compared by identity
-query.Descend(&quot;pilot&quot;).Constrain(pilot)
+<span style="color:Blue;">Dim</span> query <span style="color:Blue;">As</span> IQuery = container.Query()
+query.Constrain(<span style="color:Blue;">GetType</span>(Car))
+<span style="color:Green;">' if the given object is stored, its compared by identity</span>
+query.Descend(<span style="color:#A31515;">&quot;pilot&quot;</span>).Constrain(pilot)
 
-Dim carsOfPilot As IObjectSet = query.Execute()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim pilot As Pilot = container.Query(Of Pilot)()(0)
-
-Dim query As IQuery = container.Query()
-query.Constrain(GetType(Car))
-' if the given object is stored, its compared by identity
-query.Descend(&quot;pilot&quot;).Constrain(pilot)
-
-Dim carsOfPilot As IObjectSet = query.Execute()</pre>
+<span style="color:Blue;">Dim</span> carsOfPilot <span style="color:Blue;">As</span> IObjectSet = query.Execute()
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.vb: Compare with existing object
 			<div class="codedownload">

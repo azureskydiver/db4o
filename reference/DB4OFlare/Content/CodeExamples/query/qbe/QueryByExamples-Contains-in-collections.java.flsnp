@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">BlogPost pilotExample = new BlogPost();
-pilotExample.addTags(&quot;db4o&quot;);
-final ObjectSet&lt;Car&gt; result = container.queryByExample(pilotExample);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+BlogPost pilotExample = <span style="color:Blue;">new</span> BlogPost();
+pilotExample.addTags(<span style="color:#A31515;">&quot;db4o&quot;</span>);
+<span style="color:Blue;">final</span> ObjectSet&lt;Car&gt; result = container.queryByExample(pilotExample);
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.java: Contains in collections
 			<div class="codedownload">

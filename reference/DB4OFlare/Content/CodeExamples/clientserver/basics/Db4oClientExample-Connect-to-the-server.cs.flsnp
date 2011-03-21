@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container
-    = Db4oClientServer.OpenClient(&quot;localhost&quot;, 8080, &quot;user&quot;, &quot;password&quot;))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectContainer container
+    = Db4oClientServer.OpenClient(<span style="color:#A31515;">&quot;localhost&quot;</span>, 8080, <span style="color:#A31515;">&quot;user&quot;</span>, <span style="color:#A31515;">&quot;password&quot;</span>))
 {
-    // Your operations
-}</pre>
+    <span style="color:Green;">// Your operations</span>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oClientExample.cs: Connect to the server
 			<div class="codedownload">

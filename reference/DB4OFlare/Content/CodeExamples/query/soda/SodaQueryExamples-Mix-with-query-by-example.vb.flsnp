@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim query As IQuery = container.Query()
-query.Constrain(GetType(Car))
-' if the given object is not stored,
-' it will behave like query by example for the given object
-Dim examplePilot As New Pilot(Nothing, 42)
-query.Descend(&quot;pilot&quot;).Constrain(examplePilot)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> query <span style="color:Blue;">As</span> IQuery = container.Query()
+query.Constrain(<span style="color:Blue;">GetType</span>(Car))
+<span style="color:Green;">' if the given object is not stored,</span>
+<span style="color:Green;">' it will behave like query by example for the given object</span>
+<span style="color:Blue;">Dim</span> examplePilot <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> Pilot(<span style="color:Blue;">Nothing</span>, 42)
+query.Descend(<span style="color:#A31515;">&quot;pilot&quot;</span>).Constrain(examplePilot)
 
-Dim carsOfPilot As IObjectSet = query.Execute()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim query As IQuery = container.Query()
-query.Constrain(GetType(Car))
-' if the given object is not stored,
-' it will behave like query by example for the given object
-Dim examplePilot As New Pilot(Nothing, 42)
-query.Descend(&quot;pilot&quot;).Constrain(examplePilot)
-
-Dim carsOfPilot As IObjectSet = query.Execute()</pre>
+<span style="color:Blue;">Dim</span> carsOfPilot <span style="color:Blue;">As</span> IObjectSet = query.Execute()
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.vb: Mix with query by example
 			<div class="codedownload">

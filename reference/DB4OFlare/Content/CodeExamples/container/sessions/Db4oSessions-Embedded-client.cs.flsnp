@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectServer server = Db4oClientServer.OpenServer(DatabaseFileName, 0))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectServer server = Db4oClientServer.OpenServer(DatabaseFileName, 0))
 {
-    // open the db4o-embedded client. For example at the beginning for a web-request
-    using (IObjectContainer container = server.OpenClient())
+    <span style="color:Green;">// open the db4o-embedded client. For example at the beginning for a web-request</span>
+    <span style="color:Blue;">using</span> (IObjectContainer container = server.OpenClient())
     {
-        // do the operations on the session-container
-        container.Store(new Person(&quot;Joe&quot;));
+        <span style="color:Green;">// do the operations on the session-container</span>
+        container.Store(<span style="color:Blue;">new</span> Person(<span style="color:#A31515;">&quot;Joe&quot;</span>));
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oSessions.cs: Embedded client
 			<div class="codedownload">

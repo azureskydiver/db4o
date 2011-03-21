@@ -2,26 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Friend Class IndexDiagnostics
-    Implements IDiagnosticListener
-    Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
-        Implements IDiagnosticListener.OnDiagnostic
-        If TypeOf diagnostic Is LoadedFromClassIndex Then
-            Console.WriteLine(&quot;This query couldn't use field indexes &quot; &amp; DirectCast(diagnostic, LoadedFromClassIndex).Reason())
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Friend</span> <span style="color:Blue;">Class</span> IndexDiagnostics
+    <span style="color:Blue;">Implements</span> IDiagnosticListener
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> OnDiagnostic(<span style="color:Blue;">ByVal</span> diagnostic <span style="color:Blue;">As</span> IDiagnostic) _
+        <span style="color:Blue;">Implements</span> IDiagnosticListener.OnDiagnostic
+        <span style="color:Blue;">If</span> <span style="color:Blue;">TypeOf</span> diagnostic <span style="color:Blue;">Is</span> LoadedFromClassIndex <span style="color:Blue;">Then</span>
+            Console.WriteLine(<span style="color:#A31515;">&quot;This query couldn't use field indexes &quot;</span> &amp; <span style="color:Blue;">DirectCast</span>(diagnostic, LoadedFromClassIndex).Reason())
             Console.WriteLine(diagnostic)
-        End If
-    End Sub
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Friend Class IndexDiagnostics
-    Implements IDiagnosticListener
-    Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
-        Implements IDiagnosticListener.OnDiagnostic
-        If TypeOf diagnostic Is LoadedFromClassIndex Then
-            Console.WriteLine(&quot;This query couldn't use field indexes &quot; &amp; DirectCast(diagnostic, LoadedFromClassIndex).Reason())
-            Console.WriteLine(diagnostic)
-        End If
-    End Sub
-End Class</pre>
+        <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			WhereToIndexExample.vb: Index diagnostics
 			<div class="codedownload">

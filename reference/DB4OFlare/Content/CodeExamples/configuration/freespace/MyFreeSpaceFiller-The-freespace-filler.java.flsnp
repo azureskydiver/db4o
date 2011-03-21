@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">class MyFreeSpaceFiller implements FreespaceFiller {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> MyFreeSpaceFiller <span style="color:Blue;">implements</span> FreespaceFiller {
     @Override
-    public void fill(BlockAwareBinWindow block) throws IOException {
-        byte[] emptyBytes = new byte[block.length()];
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> fill(BlockAwareBinWindow block) <span style="color:Blue;">throws</span> IOException {
+        <span style="color:Blue;">byte</span>[] emptyBytes = <span style="color:Blue;">new</span> <span style="color:Blue;">byte</span>[block.length()];
         block.write(0,emptyBytes);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			MyFreeSpaceFiller.java: The freespace filler
 			<div class="codedownload">

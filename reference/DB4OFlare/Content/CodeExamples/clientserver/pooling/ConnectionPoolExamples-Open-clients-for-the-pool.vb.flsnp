@@ -2,10 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim client As IObjectContainer = Db4oClientServer.OpenClient(&quot;localhost&quot;, _
-             Port, UserAndPassword, UserAndPassword)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim client As IObjectContainer = Db4oClientServer.OpenClient(&quot;localhost&quot;, _
-             Port, UserAndPassword, UserAndPassword)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> client <span style="color:Blue;">As</span> IObjectContainer = Db4oClientServer.OpenClient(<span style="color:#A31515;">&quot;localhost&quot;</span>, _
+             Port, UserAndPassword, UserAndPassword)
+</pre>
 		<div class="codesnippet-meta">
 			ConnectionPoolExamples.vb: Open clients for the pool
 			<div class="codedownload">

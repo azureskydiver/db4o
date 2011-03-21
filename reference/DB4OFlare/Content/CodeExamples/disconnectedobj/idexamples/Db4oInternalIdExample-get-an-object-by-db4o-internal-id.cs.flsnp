@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">long internalId = idForObject;
-object objectForID = container.Ext().GetByID(internalId);
-// getting by id doesn't activate the object
-// so you need to do it manually
-container.Ext().Activate(objectForID);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">long</span> internalId = idForObject;
+<span style="color:Blue;">object</span> objectForID = container.Ext().GetByID(internalId);
+<span style="color:Green;">// getting by id doesn't activate the object</span>
+<span style="color:Green;">// so you need to do it manually</span>
+container.Ext().Activate(objectForID);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oInternalIdExample.cs: get an object by db4o internal id
 			<div class="codedownload">

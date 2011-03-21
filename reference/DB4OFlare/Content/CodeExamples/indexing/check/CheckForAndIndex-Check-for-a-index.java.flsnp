@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">StoredClass metaInfo = container.ext().storedClass(IndexedClass.class);
-// list a fields and check if they have a index
-for (StoredField field : metaInfo.getStoredFields()) {
-    if(field.hasIndex()){
-        System.out.println(&quot;The field '&quot;+field.getName()+&quot;' is indexed&quot;);
-    } else{
-        System.out.println(&quot;The field '&quot;+field.getName()+&quot;' isn't indexed&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+StoredClass metaInfo = container.ext().storedClass(IndexedClass.<span style="color:Blue;">class</span>);
+<span style="color:Green;">// list a fields and check if they have a index</span>
+<span style="color:Blue;">for</span> (StoredField field : metaInfo.getStoredFields()) {
+    <span style="color:Blue;">if</span>(field.hasIndex()){
+        System.out.println(<span style="color:#A31515;">&quot;The field '&quot;</span>+field.getName()+<span style="color:#A31515;">&quot;' is indexed&quot;</span>);
+    } <span style="color:Blue;">else</span>{
+        System.out.println(<span style="color:#A31515;">&quot;The field '&quot;</span>+field.getName()+<span style="color:#A31515;">&quot;' isn't indexed&quot;</span>);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			CheckForAndIndex.java: Check for a index
 			<div class="codedownload">

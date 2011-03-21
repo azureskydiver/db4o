@@ -2,19 +2,21 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">@RequestMapping(value = &quot;/edit{id}.html&quot;, method = RequestMethod.POST)
-public ModelAndView editPilot(@PathVariable final String id, Pilot pilotFromForm) {
-    Pilot pilotFromDatabase = db4o.objectContainer().query(new Predicate&lt;Pilot&gt;() {
+        <pre class="prettyprint" xml:space="preserve">
+@RequestMapping(value = <span style="color:#A31515;">&quot;/edit{id}.html&quot;</span>, method = RequestMethod.POST)
+<span style="color:Blue;">public</span> ModelAndView editPilot(@PathVariable <span style="color:Blue;">final</span> String id, Pilot pilotFromForm) {
+    Pilot pilotFromDatabase = db4o.objectContainer().query(<span style="color:Blue;">new</span> Predicate&lt;Pilot&gt;() {
         @Override
-        public boolean match(Pilot p) {
-            return p.getId().equals(id);
+        <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Pilot p) {
+            <span style="color:Blue;">return</span> p.getId().equals(id);
         }
     }).get(0);
     pilotFromDatabase.setName(pilotFromForm.getName());
     pilotFromDatabase.setPoints(pilotFromForm.getPoints());
     db4o.objectContainer().store(pilotFromDatabase);
-    return new ModelAndView(new RedirectView(&quot;list.html&quot;));
-}</pre>
+    <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> ModelAndView(<span style="color:Blue;">new</span> RedirectView(<span style="color:#A31515;">&quot;list.html&quot;</span>));
+}
+</pre>
 		<div class="codesnippet-meta">
 			HomeController.java: Update the object
 			<div class="codedownload">

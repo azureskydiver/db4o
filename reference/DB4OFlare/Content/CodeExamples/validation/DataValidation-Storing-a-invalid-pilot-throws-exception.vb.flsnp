@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim otherPilot = New Pilot()
-otherPilot.Name = &quot;&quot;
-Try
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> otherPilot = <span style="color:Blue;">New</span> Pilot()
+otherPilot.Name = <span style="color:#A31515;">&quot;&quot;</span>
+<span style="color:Blue;">Try</span>
     container.Store(otherPilot)
-Catch e As EventException
-    Dim cause As ValidationException = DirectCast(e.InnerException, ValidationException)
+<span style="color:Blue;">Catch</span> e <span style="color:Blue;">As</span> EventException
+    <span style="color:Blue;">Dim</span> cause <span style="color:Blue;">As</span> ValidationException = <span style="color:Blue;">DirectCast</span>(e.InnerException, ValidationException)
     Console.WriteLine(cause.ValidationResult.ErrorMessage)
-End Try</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim otherPilot = New Pilot()
-otherPilot.Name = &quot;&quot;
-Try
-    container.Store(otherPilot)
-Catch e As EventException
-    Dim cause As ValidationException = DirectCast(e.InnerException, ValidationException)
-    Console.WriteLine(cause.ValidationResult.ErrorMessage)
-End Try</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Try</span>
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.vb: Storing a invalid pilot throws exception
 			<div class="codedownload">

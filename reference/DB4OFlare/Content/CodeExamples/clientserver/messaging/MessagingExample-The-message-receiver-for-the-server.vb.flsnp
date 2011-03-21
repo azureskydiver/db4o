@@ -2,24 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Class ServerMessageReceiver
-    Implements IMessageRecipient
-    Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _
-        Implements IMessageRecipient.ProcessMessage
-        Console.WriteLine(&quot;The server received a '{0}' message&quot;, message)
-        ' you can respond to the client
-        context.Sender.Send(New HelloMessage(&quot;Hi Client!&quot;))
-    End Sub
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Class ServerMessageReceiver
-    Implements IMessageRecipient
-    Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) _
-        Implements IMessageRecipient.ProcessMessage
-        Console.WriteLine(&quot;The server received a '{0}' message&quot;, message)
-        ' you can respond to the client
-        context.Sender.Send(New HelloMessage(&quot;Hi Client!&quot;))
-    End Sub
-End Class</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> ServerMessageReceiver
+    <span style="color:Blue;">Implements</span> IMessageRecipient
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> ProcessMessage(<span style="color:Blue;">ByVal</span> context <span style="color:Blue;">As</span> IMessageContext, <span style="color:Blue;">ByVal</span> message <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span>) _
+        <span style="color:Blue;">Implements</span> IMessageRecipient.ProcessMessage
+        Console.WriteLine(<span style="color:#A31515;">&quot;The server received a '{0}' message&quot;</span>, message)
+        <span style="color:Green;">' you can respond to the client</span>
+        context.Sender.Send(<span style="color:Blue;">New</span> HelloMessage(<span style="color:#A31515;">&quot;Hi Client!&quot;</span>))
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			MessagingExample.vb: The message receiver for the server
 			<div class="codedownload">

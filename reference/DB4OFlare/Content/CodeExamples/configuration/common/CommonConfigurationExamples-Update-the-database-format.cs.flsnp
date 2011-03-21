@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.Common.AllowVersionUpdates = true;
+        <pre class="prettyprint" xml:space="preserve">
+IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+configuration.Common.AllowVersionUpdates = <span style="color:Blue;">true</span>;
 
-// reopen and close the database to do the update
+<span style="color:Green;">// reopen and close the database to do the update</span>
 IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
-container.Close();</pre>
+container.Close();
+</pre>
 		<div class="codesnippet-meta">
 			CommonConfigurationExamples.cs: Update the database-format
 			<div class="codedownload">

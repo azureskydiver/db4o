@@ -2,21 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public class CannotBeEnhanced
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> CannotBeEnhanced
 {
-    // cannot be enhanced, because it uses the concrete type
-    private List&lt;string&gt; _names = new List&lt;string&gt;();
+    <span style="color:Green;">// cannot be enhanced, because it uses the concrete type</span>
+    <span style="color:Blue;">private</span> List&lt;<span style="color:Blue;">string</span>&gt; _names = <span style="color:Blue;">new</span> List&lt;<span style="color:Blue;">string</span>&gt;();
 
-    public bool ContainsName(string item)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">bool</span> ContainsName(<span style="color:Blue;">string</span> item)
     {
-        return _names.Contains(item);
+        <span style="color:Blue;">return</span> _names.Contains(item);
     }
 
-    public void AddName(string item)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> AddName(<span style="color:Blue;">string</span> item)
     {
         _names.Add(item);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			EnhancementLimitations.cs: Cannot be enhanced by the db4o-tools
 			<div class="codedownload">

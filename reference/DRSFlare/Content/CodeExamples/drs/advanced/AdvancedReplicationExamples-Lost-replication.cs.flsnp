@@ -2,45 +2,46 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IObjectServer serverDatabase = OpenDatabaseServer(DesktopDatabaseName);
+        <pre class="prettyprint" xml:space="preserve">
+IObjectServer serverDatabase = OpenDatabaseServer(DesktopDatabaseName);
 IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
 {
     IObjectContainer serverDbConnection = 
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
-    serverDbConnection.Store(new Pilot(&quot;Pilot 1&quot;));
+    serverDbConnection.Store(<span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Pilot 1&quot;</span>));
     serverDbConnection.Commit();
 
-    // The replication starts here
+    <span style="color:Green;">// The replication starts here</span>
     IObjectContainer connectionForReplication = 
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
 
     IReplicationProvider clientReplication
-        = new Db4oEmbeddedReplicationProvider(connectionForReplication);
+        = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(connectionForReplication);
     IReplicationProvider mobileRelicationPartner
-        = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(mobileDatabase);
 
     IReplicationSession replicationSession =
         Replication.Begin(clientReplication, mobileRelicationPartner);
     IObjectSet changesOnDesktop = 
         replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
 
-    // during the replication other clients store data on the server
-    serverDbConnection.Store(new Pilot(&quot;Pilot 2&quot;));
+    <span style="color:Green;">// during the replication other clients store data on the server</span>
+    serverDbConnection.Store(<span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Pilot 2&quot;</span>));
     serverDbConnection.Commit();
 
-    foreach (object changedObjectOnDesktop in changesOnDesktop)
+    <span style="color:Blue;">foreach</span> (<span style="color:Blue;">object</span> changedObjectOnDesktop <span style="color:Blue;">in</span> changesOnDesktop)
     {
         replicationSession.Replicate(changedObjectOnDesktop);
     }
 
     replicationSession.Commit();
 
-    serverDbConnection.Store(new Pilot(&quot;Pilot 3&quot;));
+    serverDbConnection.Store(<span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Pilot 3&quot;</span>));
     serverDbConnection.Commit();
 }
 
-// Pilot 2 is not replicated
+<span style="color:Green;">// Pilot 2 is not replicated</span>
 PrintPilots(mobileDatabase);
 
 
@@ -49,23 +50,24 @@ PrintPilots(mobileDatabase);
         Db4oClientServer.OpenClient(Host, Port, UserName, UserName);
 
     IReplicationProvider clientRelicationPartner
-        = new Db4oEmbeddedReplicationProvider(connectionForReplication);
+        = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(connectionForReplication);
     IReplicationProvider mobileRelicationPartner
-        = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+        = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(mobileDatabase);
 
     IReplicationSession replicationSession =
         Replication.Begin(clientRelicationPartner, mobileRelicationPartner);
     IObjectSet changesOnDesktop = 
         replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
-    foreach (object changedOnDesktop in changesOnDesktop)
+    <span style="color:Blue;">foreach</span> (<span style="color:Blue;">object</span> changedOnDesktop <span style="color:Blue;">in</span> changesOnDesktop)
     {
         replicationSession.Replicate(changedOnDesktop);
     }
     replicationSession.Commit();
 }
 
-// Pilot 2 is still not replicated
-PrintPilots(mobileDatabase);</pre>
+<span style="color:Green;">// Pilot 2 is still not replicated</span>
+PrintPilots(mobileDatabase);
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.cs: Lost replication
 			<div class="codedownload">

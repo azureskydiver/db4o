@@ -2,14 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public class TeamDataService : DataService&lt;TeamDataContext&gt;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> TeamDataService : DataService&lt;TeamDataContext&gt;
 {
-    public static void InitializeService(DataServiceConfiguration config)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">static</span> <span style="color:Blue;">void</span> InitializeService(DataServiceConfiguration config)
     {
-        config.SetEntitySetAccessRule(&quot;*&quot;, EntitySetRights.All);
-        config.SetServiceOperationAccessRule(&quot;*&quot;, ServiceOperationRights.All);
+        config.SetEntitySetAccessRule(<span style="color:#A31515;">&quot;*&quot;</span>, EntitySetRights.All);
+        config.SetServiceOperationAccessRule(<span style="color:#A31515;">&quot;*&quot;</span>, ServiceOperationRights.All);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			TeamDataService.svc.cs: Build the concrete service
 			<div class="codedownload">

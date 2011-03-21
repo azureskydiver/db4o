@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim changesOnDesktop As IObjectSet = _
-    replicationSession.ProviderA().ObjectsChangedSinceLastReplication(GetType(Pilot))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> changesOnDesktop <span style="color:Blue;">As</span> IObjectSet = _
+    replicationSession.ProviderA().ObjectsChangedSinceLastReplication(<span style="color:Blue;">GetType</span>(Pilot))
 
-For Each changedObjectOnDesktop As Object In changesOnDesktop
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> changedObjectOnDesktop <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> <span style="color:Blue;">In</span> changesOnDesktop
     replicationSession.Replicate(changedObjectOnDesktop)
-Next
+<span style="color:Blue;">Next</span>
 
-replicationSession.Commit()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim changesOnDesktop As IObjectSet = _
-    replicationSession.ProviderA().ObjectsChangedSinceLastReplication(GetType(Pilot))
-
-For Each changedObjectOnDesktop As Object In changesOnDesktop
-    replicationSession.Replicate(changedObjectOnDesktop)
-Next
-
-replicationSession.Commit()</pre>
+replicationSession.Commit()
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.vb: Selective replication by class
 			<div class="codedownload">

@@ -2,42 +2,26 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim joe As Pilot
-Using container As IObjectContainer = OpenDatabase()
-    joe = QueryByName(container, &quot;Joe&quot;)
-End Using
-' The update on another object 
-joe.Name = &quot;Joe New&quot;
-Using otherContainer As IObjectContainer = OpenDatabase()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> joe <span style="color:Blue;">As</span> Pilot
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = OpenDatabase()
+    joe = QueryByName(container, <span style="color:#A31515;">&quot;Joe&quot;</span>)
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+<span style="color:Green;">' The update on another object </span>
+joe.Name = <span style="color:#A31515;">&quot;Joe New&quot;</span>
+<span style="color:Blue;">Using</span> otherContainer <span style="color:Blue;">As</span> IObjectContainer = OpenDatabase()
     otherContainer.Store(joe)
-End Using
-Using container As IObjectContainer = OpenDatabase()
-    ' instead of updating the existing pilot,
-    ' a new instance was stored.
-    Dim pilots As IList(Of Pilot) = container.Query(Of Pilot)()
-    Console.WriteLine(&quot;Amount of pilots: &quot; &amp; pilots.Count)
-    For Each pilot As Pilot In pilots
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = OpenDatabase()
+    <span style="color:Green;">' instead of updating the existing pilot,</span>
+    <span style="color:Green;">' a new instance was stored.</span>
+    <span style="color:Blue;">Dim</span> pilots <span style="color:Blue;">As</span> IList(Of Pilot) = container.Query(Of Pilot)()
+    Console.WriteLine(<span style="color:#A31515;">&quot;Amount of pilots: &quot;</span> &amp; pilots.<span style="color:Blue;">Count</span>)
+    <span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> pilot <span style="color:Blue;">As</span> Pilot <span style="color:Blue;">In</span> pilots
         Console.WriteLine(pilot)
-    Next
-End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim joe As Pilot
-Using container As IObjectContainer = OpenDatabase()
-    joe = QueryByName(container, &quot;Joe&quot;)
-End Using
-' The update on another object 
-joe.Name = &quot;Joe New&quot;
-Using otherContainer As IObjectContainer = OpenDatabase()
-    otherContainer.Store(joe)
-End Using
-Using container As IObjectContainer = OpenDatabase()
-    ' instead of updating the existing pilot,
-    ' a new instance was stored.
-    Dim pilots As IList(Of Pilot) = container.Query(Of Pilot)()
-    Console.WriteLine(&quot;Amount of pilots: &quot; &amp; pilots.Count)
-    For Each pilot As Pilot In pilots
-        Console.WriteLine(pilot)
-    Next
-End Using</pre>
+    <span style="color:Blue;">Next</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+</pre>
 		<div class="codesnippet-meta">
 			ObjectIdentityExamples.vb: Update doesn't works when using the different object containers
 			<div class="codedownload">

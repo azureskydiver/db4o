@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public void Defragment(IDefragmentContext defragmentContext)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Defragment(IDefragmentContext defragmentContext)
 {
     SkipData(defragmentContext);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			StringBuilderHandler.cs: Defragment the content
 			<div class="codedownload">

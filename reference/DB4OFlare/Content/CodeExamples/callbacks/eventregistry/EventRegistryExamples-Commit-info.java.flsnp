@@ -2,26 +2,28 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EventRegistry events = EventRegistryFactory.forObjectContainer(container);
-events.committed().addListener(new EventListener4&lt;CommitEventArgs&gt;() {
-    public void onEvent(Event4&lt;CommitEventArgs&gt; events,
+        <pre class="prettyprint" xml:space="preserve">
+EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+events.committed().addListener(<span style="color:Blue;">new</span> EventListener4&lt;CommitEventArgs&gt;() {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onEvent(Event4&lt;CommitEventArgs&gt; events,
                         CommitEventArgs eventArgs) {
-        for(Iterator4 it=eventArgs.added().iterator();it.moveNext();){
+        <span style="color:Blue;">for</span>(Iterator4 it=eventArgs.added().iterator();it.moveNext();){
             LazyObjectReference reference = (LazyObjectReference) it.current();
-            System.out.println(&quot;Added &quot;+reference.getObject());
+            System.out.println(<span style="color:#A31515;">&quot;Added &quot;</span>+reference.getObject());
         }
-        for(Iterator4 it=eventArgs.updated().iterator();it.moveNext();){
+        <span style="color:Blue;">for</span>(Iterator4 it=eventArgs.updated().iterator();it.moveNext();){
             LazyObjectReference reference = (LazyObjectReference) it.current();
-            System.out.println(&quot;Updated &quot;+reference.getObject());
+            System.out.println(<span style="color:#A31515;">&quot;Updated &quot;</span>+reference.getObject());
         }
-        for(Iterator4 it=eventArgs.deleted().iterator();it.moveNext();){
+        <span style="color:Blue;">for</span>(Iterator4 it=eventArgs.deleted().iterator();it.moveNext();){
             FrozenObjectInfo deletedInfo = (FrozenObjectInfo) it.current();
-            // the deleted info might doesn't contain the object anymore and
-            // return the null.
-            System.out.println(&quot;Deleted &quot;+deletedInfo.getObject());
+            <span style="color:Green;">// the deleted info might doesn't contain the object anymore and</span>
+            <span style="color:Green;">// return the null.</span>
+            System.out.println(<span style="color:#A31515;">&quot;Deleted &quot;</span>+deletedInfo.getObject());
         }
     }
-});</pre>
+});
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.java: Commit-info
 			<div class="codedownload">

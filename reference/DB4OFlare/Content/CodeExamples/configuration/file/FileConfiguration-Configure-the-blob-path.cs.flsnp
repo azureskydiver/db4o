@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.File.BlobPath = &quot;myBlobDirectory&quot;;</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+configuration.File.BlobPath = <span style="color:#A31515;">&quot;myBlobDirectory&quot;</span>;
+</pre>
 		<div class="codesnippet-meta">
 			FileConfiguration.cs: Configure the blob-path
 			<div class="codedownload">

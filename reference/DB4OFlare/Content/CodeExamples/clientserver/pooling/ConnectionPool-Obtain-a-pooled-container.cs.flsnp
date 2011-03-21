@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">// Obtain a client container. Either take one from the pool or allocate a new one
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">// Obtain a client container. Either take one from the pool or allocate a new one</span>
 IObjectContainer client = ObtainClientContainer();
-// Make sure that the transaction is in clean state
+<span style="color:Green;">// Make sure that the transaction is in clean state</span>
 client.Rollback();
-// Then create a session on that client container and use it for the database operations.
-// The client-container is now in use. Ensure that it isn't leased twice.
-IObjectContainer sessionContainer = client.Ext().OpenSession();</pre>
+<span style="color:Green;">// Then create a session on that client container and use it for the database operations.</span>
+<span style="color:Green;">// The client-container is now in use. Ensure that it isn't leased twice.</span>
+IObjectContainer sessionContainer = client.Ext().OpenSession();
+</pre>
 		<div class="codesnippet-meta">
 			ConnectionPool.cs: Obtain a pooled container
 			<div class="codedownload">

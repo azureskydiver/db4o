@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim pilotExample As New BlogPost()
-pilotExample.AddTags(&quot;db4o&quot;)
-Dim result As IList = container.QueryByExample(pilotExample)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim pilotExample As New BlogPost()
-pilotExample.AddTags(&quot;db4o&quot;)
-Dim result As IList = container.QueryByExample(pilotExample)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> pilotExample <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> BlogPost()
+pilotExample.AddTags(<span style="color:#A31515;">&quot;db4o&quot;</span>)
+<span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IList = container.QueryByExample(pilotExample)
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.vb: Contains in collections
 			<div class="codedownload">

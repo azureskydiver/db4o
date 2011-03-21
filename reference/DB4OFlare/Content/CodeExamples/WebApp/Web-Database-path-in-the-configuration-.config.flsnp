@@ -2,9 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">&lt;appSettings&gt;
-  &lt;add key=&quot;DatabaseFileName&quot; value=&quot;~/App_Data/database.db4o&quot;/&gt;
-&lt;/appSettings&gt;</pre>
+        <pre class="prettyprint" xml:space="preserve"><appSettings>
+  <add key="DatabaseFileName" value="~/App_Data/database.db4o"/>
+</appSettings></pre>
 		<div class="codesnippet-meta">
 			Web.config: Database path in the configuration 
 			<div class="codedownload">

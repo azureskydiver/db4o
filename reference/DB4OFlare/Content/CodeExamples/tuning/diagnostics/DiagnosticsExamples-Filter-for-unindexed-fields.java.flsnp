@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 configuration.common().diagnostic()
-        .addListener(new DiagnosticFilter(new DiagnosticToConsole(), LoadedFromClassIndex.class));</pre>
+        .addListener(<span style="color:Blue;">new</span> DiagnosticFilter(<span style="color:Blue;">new</span> DiagnosticToConsole(), LoadedFromClassIndex.<span style="color:Blue;">class</span>));
+</pre>
 		<div class="codesnippet-meta">
 			DiagnosticsExamples.java: Filter for unindexed fields
 			<div class="codedownload">

@@ -2,25 +2,27 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve">
+IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
 events.Committed +=
-    delegate(object sender, CommitEventArgs args)
+    <span style="color:Blue;">delegate</span>(<span style="color:Blue;">object</span> sender, CommitEventArgs args)
         {
-            foreach (LazyObjectReference reference in args.Added)
+            <span style="color:Blue;">foreach</span> (LazyObjectReference reference <span style="color:Blue;">in</span> args.Added)
             {
-                Console.WriteLine(&quot;Added &quot; + reference.GetObject());
+                Console.WriteLine(<span style="color:#A31515;">&quot;Added &quot;</span> + reference.GetObject());
             }
-            foreach (LazyObjectReference reference in args.Updated)
+            <span style="color:Blue;">foreach</span> (LazyObjectReference reference <span style="color:Blue;">in</span> args.Updated)
             {
-                Console.WriteLine(&quot;Updated &quot; + reference.GetObject());
+                Console.WriteLine(<span style="color:#A31515;">&quot;Updated &quot;</span> + reference.GetObject());
             }
-            foreach (FrozenObjectInfo reference in args.Deleted)
+            <span style="color:Blue;">foreach</span> (FrozenObjectInfo reference <span style="color:Blue;">in</span> args.Deleted)
             {
-                //the deleted info might doesn't contain the object anymore and
-                //return the null.
-                Console.WriteLine(&quot;Deleted &quot; + reference.GetObject());
+                <span style="color:Green;">//the deleted info might doesn't contain the object anymore and</span>
+                <span style="color:Green;">//return the null.</span>
+                Console.WriteLine(<span style="color:#A31515;">&quot;Deleted &quot;</span> + reference.GetObject());
             }
-        };</pre>
+        };
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.cs: Commit-info
 			<div class="codedownload">

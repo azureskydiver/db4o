@@ -2,18 +2,20 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">public class HelloMessage {
-    private final String message;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> HelloMessage {
+    <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> String message;
 
-    public HelloMessage(String message) {
-        this.message = message;
+    <span style="color:Blue;">public</span> HelloMessage(String message) {
+        <span style="color:Blue;">this</span>.message = message;
     }
 
     @Override
-    public String toString() {
-        return message;
+    <span style="color:Blue;">public</span> String toString() {
+        <span style="color:Blue;">return</span> message;
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			HelloMessage.java: The message class
 			<div class="codedownload">

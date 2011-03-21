@@ -2,23 +2,25 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final AutoIncrement increment = new AutoIncrement(container);
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> AutoIncrement increment = <span style="color:Blue;">new</span> AutoIncrement(container);
 EventRegistry eventRegistry = EventRegistryFactory.forObjectContainer(container);
-eventRegistry.creating().addListener(new EventListener4&lt;CancellableObjectEventArgs&gt;() {
-    public void onEvent(Event4&lt;CancellableObjectEventArgs&gt; event4,
+eventRegistry.creating().addListener(<span style="color:Blue;">new</span> EventListener4&lt;CancellableObjectEventArgs&gt;() {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onEvent(Event4&lt;CancellableObjectEventArgs&gt; event4,
                         CancellableObjectEventArgs objectArgs) {
-        if(objectArgs.object() instanceof IDHolder){
+        <span style="color:Blue;">if</span>(objectArgs.object() <span style="color:Blue;">instanceof</span> IDHolder){
             IDHolder idHolder = (IDHolder) objectArgs.object();
             idHolder.setId(increment.getNextID(idHolder.getClass()));
         }
     }
 });
-eventRegistry.committing().addListener(new EventListener4&lt;CommitEventArgs&gt;() {
-    public void onEvent(Event4&lt;CommitEventArgs&gt; commitEventArgsEvent4,
+eventRegistry.committing().addListener(<span style="color:Blue;">new</span> EventListener4&lt;CommitEventArgs&gt;() {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onEvent(Event4&lt;CommitEventArgs&gt; commitEventArgsEvent4,
                         CommitEventArgs commitEventArgs) {
         increment.storeState();
     }
-});</pre>
+});
+</pre>
 		<div class="codesnippet-meta">
 			AutoIncrementExample.java: use events to assign the ids
 			<div class="codedownload">

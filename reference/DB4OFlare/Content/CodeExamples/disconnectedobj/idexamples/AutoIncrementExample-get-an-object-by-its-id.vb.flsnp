@@ -2,8 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim instance As Object = container.Query(Function(o As IDHolder) o.Id = id)(0)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim instance As Object = container.Query(Function(o As IDHolder) o.Id = id)(0)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> instance <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> = container.Query(<span style="color:Blue;">Function</span>(o <span style="color:Blue;">As</span> IDHolder) o.Id = id)(0)
+</pre>
 		<div class="codesnippet-meta">
 			AutoIncrementExample.vb: get an object by its id
 			<div class="codedownload">

@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
-// change the configuration...
-IObjectContainer container = Db4oClientServer.OpenClient(configuration, &quot;localhost&quot;, 1337, &quot;user&quot;, &quot;pwd&quot;);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IClientConfiguration configuration = Db4oClientServer.NewClientConfiguration();
+<span style="color:Green;">// change the configuration...</span>
+IObjectContainer container = Db4oClientServer.OpenClient(configuration, <span style="color:#A31515;">&quot;localhost&quot;</span>, 1337, <span style="color:#A31515;">&quot;user&quot;</span>, <span style="color:#A31515;">&quot;pwd&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			ConfigurationBasics.cs: Configure a client object container
 			<div class="codedownload">

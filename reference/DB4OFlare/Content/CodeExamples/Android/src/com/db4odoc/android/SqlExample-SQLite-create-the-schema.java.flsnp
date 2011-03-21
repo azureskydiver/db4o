@@ -2,18 +2,20 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">db.execSQL(&quot;CREATE TABLE IF NOT EXISTS &quot; + DB_TABLE_PILOT + &quot; (&quot;
-		+ &quot;id INTEGER PRIMARY KEY AUTOINCREMENT, &quot;
-		+ &quot;name TEXT NOT NULL, points INTEGER NOT NULL);&quot;);
-// Foreign key constraint is parsed but not enforced
-// Here it is used for documentation purposes
-db.execSQL(&quot;CREATE TABLE IF NOT EXISTS &quot; + DB_TABLE_CAR + &quot; (&quot;
-		+ &quot;id INTEGER PRIMARY KEY AUTOINCREMENT, &quot;
-		+ &quot;model TEXT NOT NULL, pilot INTEGER NOT NULL,&quot;
-		+ &quot;FOREIGN KEY (pilot)&quot;
-		+ &quot;REFERENCES pilot(id) ON DELETE CASCADE);&quot;);
-db.execSQL(&quot;CREATE INDEX IF NOT EXISTS CAR_PILOT ON &quot; + DB_TABLE_CAR
-		+ &quot; (pilot);&quot;);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+db.execSQL(<span style="color:#A31515;">&quot;CREATE TABLE IF NOT EXISTS &quot;</span> + DB_TABLE_PILOT + <span style="color:#A31515;">&quot; (&quot;</span>
+		+ <span style="color:#A31515;">&quot;id INTEGER PRIMARY KEY AUTOINCREMENT, &quot;</span>
+		+ <span style="color:#A31515;">&quot;name TEXT NOT NULL, points INTEGER NOT NULL);&quot;</span>);
+<span style="color:Green;">// Foreign key constraint is parsed but not enforced</span>
+<span style="color:Green;">// Here it is used for documentation purposes</span>
+db.execSQL(<span style="color:#A31515;">&quot;CREATE TABLE IF NOT EXISTS &quot;</span> + DB_TABLE_CAR + <span style="color:#A31515;">&quot; (&quot;</span>
+		+ <span style="color:#A31515;">&quot;id INTEGER PRIMARY KEY AUTOINCREMENT, &quot;</span>
+		+ <span style="color:#A31515;">&quot;model TEXT NOT NULL, pilot INTEGER NOT NULL,&quot;</span>
+		+ <span style="color:#A31515;">&quot;FOREIGN KEY (pilot)&quot;</span>
+		+ <span style="color:#A31515;">&quot;REFERENCES pilot(id) ON DELETE CASCADE);&quot;</span>);
+db.execSQL(<span style="color:#A31515;">&quot;CREATE INDEX IF NOT EXISTS CAR_PILOT ON &quot;</span> + DB_TABLE_CAR
+		+ <span style="color:#A31515;">&quot; (pilot);&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			SqlExample.java: SQLite create the schema
 			<div class="codedownload">

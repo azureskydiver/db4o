@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim config As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> config <span style="color:Blue;">As</span> IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 config.Common.UpdateDepth = 2
-Using container As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFile)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim config As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-config.Common.UpdateDepth = 2
-Using container As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFile)</pre>
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFile)
+</pre>
 		<div class="codesnippet-meta">
 			UpdateDepthPitfall.vb: A higher update depth fixes the issue
 			<div class="codedownload">

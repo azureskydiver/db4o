@@ -2,21 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public void Init(HttpApplication context)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Init(HttpApplication context)
 {
-    if (null == HttpContext.Current.Application[DataBaseInstance])
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> == HttpContext.Current.Application[DataBaseInstance])
     {
         HttpContext.Current.Application[DataBaseInstance] = OpenDatabase();
     }
     RegisterSessionCreation(context);
 }
 
-private IEmbeddedObjectContainer OpenDatabase()
+<span style="color:Blue;">private</span> IEmbeddedObjectContainer OpenDatabase()
 {
-    string relativePath = ConfigurationSettings.AppSettings[&quot;DatabaseFileName&quot;];
-    string filePath = HttpContext.Current.Server.MapPath(relativePath);
-    return Db4oEmbedded.OpenFile(filePath);
-}</pre>
+    <span style="color:Blue;">string</span> relativePath = ConfigurationSettings.AppSettings[<span style="color:#A31515;">&quot;DatabaseFileName&quot;</span>];
+    <span style="color:Blue;">string</span> filePath = HttpContext.Current.Server.MapPath(relativePath);
+    <span style="color:Blue;">return</span> Db4oEmbedded.OpenFile(filePath);
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oProvider.cs: open database when the application starts
 			<div class="codedownload">

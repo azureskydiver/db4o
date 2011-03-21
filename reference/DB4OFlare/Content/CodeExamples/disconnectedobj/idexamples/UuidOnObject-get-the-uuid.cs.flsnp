@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IDHolder uuidHolder = (IDHolder) obj;
-Guid uuid = uuidHolder.ObjectId;</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IDHolder uuidHolder = (IDHolder) obj;
+Guid uuid = uuidHolder.ObjectId;
+</pre>
 		<div class="codesnippet-meta">
 			UuidOnObject.cs: get the uuid
 			<div class="codedownload">

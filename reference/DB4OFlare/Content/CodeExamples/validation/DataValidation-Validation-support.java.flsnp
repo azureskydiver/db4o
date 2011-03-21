@@ -2,28 +2,30 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">private static class ValidationListener implements EventListener4&lt;CancellableObjectEventArgs&gt; {
-    private final Validator validator = Validation.buildDefaultValidatorFactory()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">class</span> ValidationListener <span style="color:Blue;">implements</span> EventListener4&lt;CancellableObjectEventArgs&gt; {
+    <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> Validator validator = Validation.buildDefaultValidatorFactory()
             .getValidator();
 
     @Override
-    public void onEvent(Event4&lt;CancellableObjectEventArgs&gt; events,
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onEvent(Event4&lt;CancellableObjectEventArgs&gt; events,
                         CancellableObjectEventArgs eventInfo) {
         Set&lt;ConstraintViolation&lt;Object&gt;&gt; violations = validator.validate(eventInfo.object());
-        if (!violations.isEmpty()) {
-            throw new ValidationException(buildMessage(violations));
+        <span style="color:Blue;">if</span> (!violations.isEmpty()) {
+            <span style="color:Blue;">throw</span> <span style="color:Blue;">new</span> ValidationException(buildMessage(violations));
         }
     }
 
-    private String buildMessage(Set&lt;ConstraintViolation&lt;Object&gt;&gt; violations) {
-        final StringBuilder builder = new StringBuilder(&quot;Violations of validation-rules:\n&quot;);
-        for (ConstraintViolation&lt;Object&gt; violation : violations) {
-            builder.append(violation.getPropertyPath()).append(&quot; &quot;)
-                    .append(violation.getMessage()).append(&quot;\n&quot;);
+    <span style="color:Blue;">private</span> String buildMessage(Set&lt;ConstraintViolation&lt;Object&gt;&gt; violations) {
+        <span style="color:Blue;">final</span> StringBuilder builder = <span style="color:Blue;">new</span> StringBuilder(<span style="color:#A31515;">&quot;Violations of validation-rules:\n&quot;</span>);
+        <span style="color:Blue;">for</span> (ConstraintViolation&lt;Object&gt; violation : violations) {
+            builder.append(violation.getPropertyPath()).append(<span style="color:#A31515;">&quot; &quot;</span>)
+                    .append(violation.getMessage()).append(<span style="color:#A31515;">&quot;\n&quot;</span>);
         }
-        return builder.toString();
+        <span style="color:Blue;">return</span> builder.toString();
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.java: Validation support
 			<div class="codedownload">

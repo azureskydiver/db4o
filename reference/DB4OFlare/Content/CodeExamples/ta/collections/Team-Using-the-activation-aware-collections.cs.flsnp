@@ -2,25 +2,27 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public class Team : ActivatableBase
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Team : ActivatableBase
 {
-    private readonly IList&lt;Pilot&gt; pilots = new ActivatableList&lt;Pilot&gt;();
+    <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> IList&lt;Pilot&gt; pilots = <span style="color:Blue;">new</span> ActivatableList&lt;Pilot&gt;();
 
-    public void Add(Pilot pilot)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Add(Pilot pilot)
     {
         Activate(ActivationPurpose.Write);
         pilots.Add(pilot);
     }
 
-    public ICollection&lt;Pilot&gt; Pilots
+    <span style="color:Blue;">public</span> ICollection&lt;Pilot&gt; Pilots
     {
-        get
+        <span style="color:Blue;">get</span>
         {
             Activate(ActivationPurpose.Read);
-            return pilots;
+            <span style="color:Blue;">return</span> pilots;
         }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Team.cs: Using the activation aware collections
 			<div class="codedownload">

@@ -2,19 +2,21 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">// Grab the lock. Specify the name and a timeout in milliseconds
-boolean hasLock = container.ext().setSemaphore(&quot;LockName&quot;, 1000);
-try {
-    // you need to check the lock
-    if (hasLock) {
-        System.out.println(&quot;Could get lock&quot;);
-    } else{
-        System.out.println(&quot;Couldn't get lock&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">// Grab the lock. Specify the name and a timeout in milliseconds</span>
+<span style="color:Blue;">boolean</span> hasLock = container.ext().setSemaphore(<span style="color:#A31515;">&quot;LockName&quot;</span>, 1000);
+<span style="color:Blue;">try</span> {
+    <span style="color:Green;">// you need to check the lock</span>
+    <span style="color:Blue;">if</span> (hasLock) {
+        System.out.println(<span style="color:#A31515;">&quot;Could get lock&quot;</span>);
+    } <span style="color:Blue;">else</span>{
+        System.out.println(<span style="color:#A31515;">&quot;Couldn't get lock&quot;</span>);
     }
-} finally {
-    // release the lock
-    container.ext().releaseSemaphore(&quot;LockName&quot;);
-}</pre>
+} <span style="color:Blue;">finally</span> {
+    <span style="color:Green;">// release the lock</span>
+    container.ext().releaseSemaphore(<span style="color:#A31515;">&quot;LockName&quot;</span>);
+}
+</pre>
 		<div class="codesnippet-meta">
 			SemaphoreExamples.java: Grab a semaphore
 			<div class="codedownload">

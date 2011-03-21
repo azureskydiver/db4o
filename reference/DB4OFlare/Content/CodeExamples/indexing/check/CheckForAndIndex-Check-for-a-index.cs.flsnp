@@ -2,19 +2,21 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IStoredClass metaInfo = container.Ext().StoredClass(typeof(IndexedClass));
-// list a fields and check if they have a index
-foreach (IStoredField field in metaInfo.GetStoredFields())
+        <pre class="prettyprint" xml:space="preserve">
+IStoredClass metaInfo = container.Ext().StoredClass(<span style="color:Blue;">typeof</span>(IndexedClass));
+<span style="color:Green;">// list a fields and check if they have a index</span>
+<span style="color:Blue;">foreach</span> (IStoredField field <span style="color:Blue;">in</span> metaInfo.GetStoredFields())
 {
-    if (field.HasIndex())
+    <span style="color:Blue;">if</span> (field.HasIndex())
     {
-        Console.WriteLine(&quot;The field '&quot; + field.GetName() + &quot;' is indexed&quot;);
+        Console.WriteLine(<span style="color:#A31515;">&quot;The field '&quot;</span> + field.GetName() + <span style="color:#A31515;">&quot;' is indexed&quot;</span>);
     }
-    else
+    <span style="color:Blue;">else</span>
     {
-        Console.WriteLine(&quot;The field '&quot; + field.GetName() + &quot;' isn't indexed&quot;);
+        Console.WriteLine(<span style="color:#A31515;">&quot;The field '&quot;</span> + field.GetName() + <span style="color:#A31515;">&quot;' isn't indexed&quot;</span>);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			CheckForAndIndex.cs: Check for a index
 			<div class="codedownload">

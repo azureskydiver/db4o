@@ -2,13 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Function AllJohns(ByVal pilot As Pilot) As Boolean
-    Return pilot.Name = &quot;John&quot;
-End Function
-</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Function AllJohns(ByVal pilot As Pilot) As Boolean
-    Return pilot.Name = &quot;John&quot;
-End Function
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Function</span> AllJohns(<span style="color:Blue;">ByVal</span> pilot <span style="color:Blue;">As</span> Pilot) <span style="color:Blue;">As</span> <span style="color:Blue;">Boolean</span>
+    <span style="color:Blue;">Return</span> pilot.Name = <span style="color:#A31515;">&quot;John&quot;</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
+
 </pre>
 		<div class="codesnippet-meta">
 			NativeQueryExamples.vb: Query as method

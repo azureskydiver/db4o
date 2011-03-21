@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectSet&lt;Human&gt; allMammals = container.query(Human.class);
-for (Human oldHuman : allMammals) {
-    HumanNew newHuman = new HumanNew(&quot;&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+ObjectSet&lt;Human&gt; allMammals = container.query(Human.<span style="color:Blue;">class</span>);
+<span style="color:Blue;">for</span> (Human oldHuman : allMammals) {
+    HumanNew newHuman = <span style="color:Blue;">new</span> HumanNew(<span style="color:#A31515;">&quot;&quot;</span>);
     newHuman.setBodyTemperature(oldHuman.getBodyTemperature());
     newHuman.setIq(oldHuman.getIq());
     newHuman.setName(oldHuman.getName());
 
     container.store(newHuman);
     container.delete(oldHuman);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			AddClassToHierarchy.java: copy the data from the old type to the new one
 			<div class="codedownload">

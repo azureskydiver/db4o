@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IList&lt;Pilot&gt; result = container.Query(
-    delegate(Pilot pilot)
+        <pre class="prettyprint" xml:space="preserve">
+IList&lt;Pilot&gt; result = container.Query(
+    <span style="color:Blue;">delegate</span>(Pilot pilot)
         {
-            return (pilot.Age &gt; 18 &amp;&amp; pilot.Age &lt; 30)
-                   || pilot.Name == &quot;John&quot;;
-        });</pre>
+            <span style="color:Blue;">return</span> (pilot.Age &gt; 18 &amp;&amp; pilot.Age &lt; 30)
+                   || pilot.Name == <span style="color:#A31515;">&quot;John&quot;</span>;
+        });
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueryExamples.cs: Combine different comparisons with the logical operators
 			<div class="codedownload">

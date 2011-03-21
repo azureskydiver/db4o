@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IList&lt;Pilot&gt; pilots = container.Query(
-    delegate(Pilot p) { return p.Age &gt; 18; },
-    delegate(Pilot p1, Pilot p2) { return p1.Name.CompareTo(p2.Name); });</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IList&lt;Pilot&gt; pilots = container.Query(
+    <span style="color:Blue;">delegate</span>(Pilot p) { <span style="color:Blue;">return</span> p.Age &gt; 18; },
+    <span style="color:Blue;">delegate</span>(Pilot p1, Pilot p2) { <span style="color:Blue;">return</span> p1.Name.CompareTo(p2.Name); });
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueriesSorting.cs: Native query with sorting
 			<div class="codedownload">

@@ -2,52 +2,31 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using container As IObjectContainer = OpenDatabase()
-    ' first get the object from the database
-    Dim carInDb As Car = GetCarById(container, disconnectedCar.ObjectId)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = OpenDatabase()
+    <span style="color:Green;">' first get the object from the database</span>
+    <span style="color:Blue;">Dim</span> carInDb <span style="color:Blue;">As</span> Car = GetCarById(container, disconnectedCar.ObjectId)
 
-    ' copy the value-objects (int, long, double, string etc)
+    <span style="color:Green;">' copy the value-objects (int, long, double, string etc)</span>
     carInDb.Name = disconnectedCar.Name
 
-    ' traverse into the references
-    Dim pilotInDB As Pilot = carInDb.Pilot
-    Dim disconnectedPilot As Pilot = disconnectedCar.Pilot
+    <span style="color:Green;">' traverse into the references</span>
+    <span style="color:Blue;">Dim</span> pilotInDB <span style="color:Blue;">As</span> Pilot = carInDb.Pilot
+    <span style="color:Blue;">Dim</span> disconnectedPilot <span style="color:Blue;">As</span> Pilot = disconnectedCar.Pilot
 
-    ' check if the object is still the same
-    If pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId) Then
-        ' if it is, copy the value-objects
+    <span style="color:Green;">' check if the object is still the same</span>
+    <span style="color:Blue;">If</span> pilotInDB.ObjectId.<span style="color:Blue;">Equals</span>(disconnectedPilot.ObjectId) <span style="color:Blue;">Then</span>
+        <span style="color:Green;">' if it is, copy the value-objects</span>
         pilotInDB.Name = disconnectedPilot.Name
         pilotInDB.Points = disconnectedPilot.Points
-    Else
-        ' otherwise replace the object
+    <span style="color:Blue;">Else</span>
+        <span style="color:Green;">' otherwise replace the object</span>
         carInDb.Pilot = disconnectedPilot
-    End If
+    <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
 
-    ' finally store the changes
-    container.Store(pilotInDB)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using container As IObjectContainer = OpenDatabase()
-    ' first get the object from the database
-    Dim carInDb As Car = GetCarById(container, disconnectedCar.ObjectId)
-
-    ' copy the value-objects (int, long, double, string etc)
-    carInDb.Name = disconnectedCar.Name
-
-    ' traverse into the references
-    Dim pilotInDB As Pilot = carInDb.Pilot
-    Dim disconnectedPilot As Pilot = disconnectedCar.Pilot
-
-    ' check if the object is still the same
-    If pilotInDB.ObjectId.Equals(disconnectedPilot.ObjectId) Then
-        ' if it is, copy the value-objects
-        pilotInDB.Name = disconnectedPilot.Name
-        pilotInDB.Points = disconnectedPilot.Points
-    Else
-        ' otherwise replace the object
-        carInDb.Pilot = disconnectedPilot
-    End If
-
-    ' finally store the changes
-    container.Store(pilotInDB)</pre>
+    <span style="color:Green;">' finally store the changes</span>
+    container.Store(pilotInDB)
+</pre>
 		<div class="codesnippet-meta">
 			MergeExample.vb: merging
 			<div class="codedownload">

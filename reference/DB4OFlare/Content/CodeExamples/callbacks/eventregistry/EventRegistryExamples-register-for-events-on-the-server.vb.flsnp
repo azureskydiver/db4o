@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim server As IObjectServer = _
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> server <span style="color:Blue;">As</span> IObjectServer = _
         Db4oClientServer.OpenServer(DatabaseFileName, PortNumber)
-Dim eventsOnServer As IEventRegistry = _ 
-        EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer())</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim server As IObjectServer = _
-        Db4oClientServer.OpenServer(DatabaseFileName, PortNumber)
-Dim eventsOnServer As IEventRegistry = _ 
-        EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer())</pre>
+<span style="color:Blue;">Dim</span> eventsOnServer <span style="color:Blue;">As</span> IEventRegistry = _ 
+        EventRegistryFactory.ForObjectContainer(server.Ext().ObjectContainer())
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.vb: register for events on the server
 			<div class="codedownload">

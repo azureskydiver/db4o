@@ -2,16 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim internalId As Long = idForObject
-Dim objForID As Object = container.Ext().GetByID(internalId)
-' getting by id doesn't activate the object
-' so you need to do it manually
-container.Ext().Activate(objForID)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim internalId As Long = idForObject
-Dim objForID As Object = container.Ext().GetByID(internalId)
-' getting by id doesn't activate the object
-' so you need to do it manually
-container.Ext().Activate(objForID)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> internalId <span style="color:Blue;">As</span> <span style="color:Blue;">Long</span> = idForObject
+<span style="color:Blue;">Dim</span> objForID <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> = container.Ext().GetByID(internalId)
+<span style="color:Green;">' getting by id doesn't activate the object</span>
+<span style="color:Green;">' so you need to do it manually</span>
+container.Ext().Activate(objForID)
+</pre>
 		<div class="codesnippet-meta">
 			Db4oInternalIdExample.vb: get an object by db4o internal id
 			<div class="codedownload">

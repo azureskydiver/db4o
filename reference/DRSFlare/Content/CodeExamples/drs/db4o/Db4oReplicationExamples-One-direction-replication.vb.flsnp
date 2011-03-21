@@ -2,16 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim changes As IObjectSet = replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
-For Each changedObject As Object In changes
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> changes <span style="color:Blue;">As</span> IObjectSet = replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> changedObject <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> <span style="color:Blue;">In</span> changes
     replicationSession.Replicate(changedObject)
-Next
-replicationSession.Commit()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim changes As IObjectSet = replicationSession.ProviderA().ObjectsChangedSinceLastReplication()
-For Each changedObject As Object In changes
-    replicationSession.Replicate(changedObject)
-Next
-replicationSession.Commit()</pre>
+<span style="color:Blue;">Next</span>
+replicationSession.Commit()
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.vb: One direction replication
 			<div class="codedownload">

@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">container.ext().backup(&quot;backup.db4o&quot;);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+container.ext().backup(<span style="color:#A31515;">&quot;backup.db4o&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			BackupExample.java: Store a backup while using the database
 			<div class="codedownload">

@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">VodDatabase vodDatabase = JDOUtilities.createDatabase(factory);
-vodDatabase.configureEventProcessor(&quot;localhost&quot;,4088);
+        <pre class="prettyprint" xml:space="preserve">
+VodDatabase vodDatabase = JDOUtilities.createDatabase(factory);
+vodDatabase.configureEventProcessor(<span style="color:#A31515;">&quot;localhost&quot;</span>,4088);
 VodReplicationProvider centralDatabase
-        = new VodReplicationProvider(vodDatabase);
-centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);</pre>
+        = <span style="color:Blue;">new</span> VodReplicationProvider(vodDatabase);
+centralDatabase.listenForReplicationEvents(Car.<span style="color:Blue;">class</span>, Pilot.<span style="color:Blue;">class</span>);
+</pre>
 		<div class="codesnippet-meta">
 			SimpleReplication.java: Open the VOD replication provider
 			<div class="codedownload">

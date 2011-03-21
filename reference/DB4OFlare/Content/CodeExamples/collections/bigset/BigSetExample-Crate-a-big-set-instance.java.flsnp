@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Set&lt;Person&gt; citizen= CollectionFactory.forObjectContainer(container).newBigSet();
-// now you can use the big-set like a normal set:
-citizen.add(new Person(&quot;Citizen Kane&quot;));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+Set&lt;Person&gt; citizen= CollectionFactory.forObjectContainer(container).newBigSet();
+<span style="color:Green;">// now you can use the big-set like a normal set:</span>
+citizen.add(<span style="color:Blue;">new</span> Person(<span style="color:#A31515;">&quot;Citizen Kane&quot;</span>));
+</pre>
 		<div class="codesnippet-meta">
 			BigSetExample.java: Crate a big-set instance
 			<div class="codedownload">

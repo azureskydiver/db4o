@@ -2,38 +2,24 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class Team
-    Inherits ActivatableBase
-    Private ReadOnly m_pilots As IList(Of Pilot) = New ActivatableList(Of Pilot)()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Team
+    <span style="color:Blue;">Inherits</span> ActivatableBase
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> m_pilots <span style="color:Blue;">As</span> IList(Of Pilot) = <span style="color:Blue;">New</span> ActivatableList(Of Pilot)()
 
-    Public Sub Add(ByVal pilot As Pilot)
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> Add(<span style="color:Blue;">ByVal</span> pilot <span style="color:Blue;">As</span> Pilot)
         Activate(ActivationPurpose.Write)
         m_pilots.Add(pilot)
-    End Sub
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public ReadOnly Property Pilots() As ICollection(Of Pilot)
-        Get
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">ReadOnly</span> <span style="color:Blue;">Property</span> Pilots() <span style="color:Blue;">As</span> ICollection(Of Pilot)
+        <span style="color:Blue;">Get</span>
             Activate(ActivationPurpose.Read)
-            Return m_pilots
-        End Get
-    End Property
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class Team
-    Inherits ActivatableBase
-    Private ReadOnly m_pilots As IList(Of Pilot) = New ActivatableList(Of Pilot)()
-
-    Public Sub Add(ByVal pilot As Pilot)
-        Activate(ActivationPurpose.Write)
-        m_pilots.Add(pilot)
-    End Sub
-
-    Public ReadOnly Property Pilots() As ICollection(Of Pilot)
-        Get
-            Activate(ActivationPurpose.Read)
-            Return m_pilots
-        End Get
-    End Property
-End Class</pre>
+            <span style="color:Blue;">Return</span> m_pilots
+        <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			Team.vb: Using the activation aware collections
 			<div class="codedownload">

@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.common().objectClass(Person.class).objectField(&quot;name&quot;).indexed(true);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.common().objectClass(Person.<span style="color:Blue;">class</span>).objectField(<span style="color:#A31515;">&quot;name&quot;</span>).indexed(<span style="color:Blue;">true</span>);
+</pre>
 		<div class="codesnippet-meta">
 			ObjectFieldConfigurations.java: Index a certain field
 			<div class="codedownload">

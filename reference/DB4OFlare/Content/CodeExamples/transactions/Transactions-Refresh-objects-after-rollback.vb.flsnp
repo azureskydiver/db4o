@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim pilot As Pilot = container.Query(Of Pilot)()(0)
-pilot.Name = &quot;New Name&quot;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> pilot <span style="color:Blue;">As</span> Pilot = container.Query(Of Pilot)()(0)
+pilot.Name = <span style="color:#A31515;">&quot;New Name&quot;</span>
 container.Store(pilot)
 container.Rollback()
 
-' use refresh to return the in memory objects back
-' to the state in the database.
-container.Ext().Refresh(pilot, Integer.MaxValue)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim pilot As Pilot = container.Query(Of Pilot)()(0)
-pilot.Name = &quot;New Name&quot;
-container.Store(pilot)
-container.Rollback()
-
-' use refresh to return the in memory objects back
-' to the state in the database.
-container.Ext().Refresh(pilot, Integer.MaxValue)</pre>
+<span style="color:Green;">' use refresh to return the in memory objects back</span>
+<span style="color:Green;">' to the state in the database.</span>
+container.Ext().Refresh(pilot, <span style="color:Blue;">Integer</span>.MaxValue)
+</pre>
 		<div class="codesnippet-meta">
 			Transactions.vb: Refresh objects after rollback
 			<div class="codedownload">

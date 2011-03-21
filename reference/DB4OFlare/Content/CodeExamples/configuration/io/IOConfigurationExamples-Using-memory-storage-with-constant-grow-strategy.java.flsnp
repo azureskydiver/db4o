@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">GrowthStrategy growStrategy = new ConstantGrowthStrategy(100);
-MemoryStorage memory = new MemoryStorage(growStrategy);
-configuration.file().storage(memory);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+GrowthStrategy growStrategy = <span style="color:Blue;">new</span> ConstantGrowthStrategy(100);
+MemoryStorage memory = <span style="color:Blue;">new</span> MemoryStorage(growStrategy);
+configuration.file().storage(memory);
+</pre>
 		<div class="codesnippet-meta">
 			IOConfigurationExamples.java: Using memory-storage with constant grow strategy
 			<div class="codedownload">

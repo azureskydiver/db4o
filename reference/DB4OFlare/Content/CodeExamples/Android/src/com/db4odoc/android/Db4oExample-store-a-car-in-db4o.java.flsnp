@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Car car = new Car(&quot;BMW&quot;);
-car.setPilot(new Pilot(&quot;Tester&quot;, points));
-container.store(car);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+Car car = <span style="color:Blue;">new</span> Car(<span style="color:#A31515;">&quot;BMW&quot;</span>);
+car.setPilot(<span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Tester&quot;</span>, points));
+container.store(car);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oExample.java: store a car in db4o
 			<div class="codedownload">

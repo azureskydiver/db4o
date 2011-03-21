@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">container.store(new NonStorableType(&quot;TestData&quot;));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+container.store(<span style="color:Blue;">new</span> NonStorableType(<span style="color:#A31515;">&quot;TestData&quot;</span>));
+</pre>
 		<div class="codesnippet-meta">
 			TranslatorExample.java: Store the non storable type
 			<div class="codedownload">

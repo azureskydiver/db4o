@@ -2,25 +2,27 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public class ExampleTestCase : AbstractDb4oTestCase
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> ExampleTestCase : AbstractDb4oTestCase
 {
-    public static void Main(string[] args)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">static</span> <span style="color:Blue;">void</span> Main(<span style="color:Blue;">string</span>[] args)
     {
-        new ExampleTestCase().RunSolo();
+        <span style="color:Blue;">new</span> ExampleTestCase().RunSolo();
     }
 
-    public void TestStoresElement()
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> TestStoresElement()
     {
-        Db().Store(new TestItem());
+        Db().Store(<span style="color:Blue;">new</span> TestItem());
         IList&lt;TestItem&gt; result = Db().Query&lt;TestItem&gt;();
         Assert.AreEqual(1, result.Count);
     }
 
 
-    private class TestItem
+    <span style="color:Blue;">private</span> <span style="color:Blue;">class</span> TestItem
     {
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			ExampleTestCase.cs: Basic test case
 			<div class="codedownload">

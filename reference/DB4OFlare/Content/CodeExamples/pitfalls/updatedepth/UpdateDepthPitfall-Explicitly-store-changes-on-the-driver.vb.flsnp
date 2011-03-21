@@ -2,18 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim car As Car = QueryForCar(container)
-car.CarName = &quot;New Mercedes&quot;
-car.Driver.Name = &quot;New Driver Name&quot;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> car <span style="color:Blue;">As</span> Car = QueryForCar(container)
+car.CarName = <span style="color:#A31515;">&quot;New Mercedes&quot;</span>
+car.Driver.Name = <span style="color:#A31515;">&quot;New Driver Name&quot;</span>
 
-' Explicitly store the driver to ensure that those changes are also in the database
-container.Store(car)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim car As Car = QueryForCar(container)
-car.CarName = &quot;New Mercedes&quot;
-car.Driver.Name = &quot;New Driver Name&quot;
-
-' Explicitly store the driver to ensure that those changes are also in the database
-container.Store(car)</pre>
+<span style="color:Green;">' Explicitly store the driver to ensure that those changes are also in the database</span>
+container.Store(car)
+</pre>
 		<div class="codesnippet-meta">
 			UpdateDepthPitfall.vb: Explicitly store changes on the driver
 			<div class="codedownload">

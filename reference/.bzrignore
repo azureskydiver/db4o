@@ -3,3 +3,5 @@
 DRSFlare/Analyzer
 DRSFlare/Output
 *.idea
+**/bin
+**/obj

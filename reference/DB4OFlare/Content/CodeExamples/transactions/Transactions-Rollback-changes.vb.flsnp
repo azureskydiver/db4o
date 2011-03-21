@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">container.Store(New Pilot(&quot;John&quot;))
-container.Store(New Pilot(&quot;Joanna&quot;))
+        <pre class="prettyprint" xml:space="preserve">
+container.Store(<span style="color:Blue;">New</span> Pilot(<span style="color:#A31515;">&quot;John&quot;</span>))
+container.Store(<span style="color:Blue;">New</span> Pilot(<span style="color:#A31515;">&quot;Joanna&quot;</span>))
 
-container.Rollback()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">container.Store(New Pilot(&quot;John&quot;))
-container.Store(New Pilot(&quot;Joanna&quot;))
-
-container.Rollback()</pre>
+container.Rollback()
+</pre>
 		<div class="codesnippet-meta">
 			Transactions.vb: Rollback changes
 			<div class="codedownload">

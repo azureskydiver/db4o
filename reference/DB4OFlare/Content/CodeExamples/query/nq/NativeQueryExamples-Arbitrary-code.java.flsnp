@@ -2,14 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final List&lt;Integer&gt; allowedAges = Arrays.asList(18,20,33,55);
-ObjectSet&lt;Pilot&gt; result = container.query(new Predicate&lt;Pilot&gt;() {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> List&lt;Integer&gt; allowedAges = Arrays.asList(18,20,33,55);
+ObjectSet&lt;Pilot&gt; result = container.query(<span style="color:Blue;">new</span> Predicate&lt;Pilot&gt;() {
     @Override
-    public boolean match(Pilot pilot) {
-        return allowedAges.contains(pilot.getAge()) ||
-               pilot.getName().toLowerCase().equals(&quot;John&quot;); 
+    <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Pilot pilot) {
+        <span style="color:Blue;">return</span> allowedAges.contains(pilot.getAge()) ||
+               pilot.getName().toLowerCase().equals(<span style="color:#A31515;">&quot;John&quot;</span>); 
     }
-});</pre>
+});
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueryExamples.java: Arbitrary code
 			<div class="codedownload">

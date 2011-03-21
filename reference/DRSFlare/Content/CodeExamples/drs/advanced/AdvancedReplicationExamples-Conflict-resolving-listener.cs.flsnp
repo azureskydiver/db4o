@@ -2,17 +2,19 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class SimpleConflictResolvingListener : IReplicationEventListener
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> SimpleConflictResolvingListener : IReplicationEventListener
 {
-    public void OnReplicate(IReplicationEvent replicationEvent)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> OnReplicate(IReplicationEvent replicationEvent)
     {
-        if (replicationEvent.IsConflict())
+        <span style="color:Blue;">if</span> (replicationEvent.IsConflict())
         {
             IObjectState stateOfTheDesktop = replicationEvent.StateInProviderA();
             replicationEvent.OverrideWith(stateOfTheDesktop);
         }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.cs: Conflict resolving listener
 			<div class="codedownload">
