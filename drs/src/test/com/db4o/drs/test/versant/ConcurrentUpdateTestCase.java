@@ -13,6 +13,7 @@ import com.db4o.io.*;
 import db4ounit.*;
 
 public class ConcurrentUpdateTestCase extends VodProviderTestCaseBase implements TestLifeCycle{
+	
     private PersistenceManagerFactory persistenceFactory;
 
     public static void main(String[] args) {
@@ -22,7 +23,6 @@ public class ConcurrentUpdateTestCase extends VodProviderTestCaseBase implements
     public void setUp() {
         super.setUp();
         storeTestObject();
-
     }
 
     private void storeTestObject() {

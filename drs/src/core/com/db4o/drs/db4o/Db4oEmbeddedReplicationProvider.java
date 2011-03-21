@@ -39,7 +39,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.ExternalObjectContainer;
 import com.db4o.internal.Transaction;
 import com.db4o.internal.replication.Db4oReplicationReference;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 import com.db4o.ta.*;
@@ -64,7 +64,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 
 	private final Procedure4 _activationStrategy;
 	
-	private long _commitTimestamp;
+	protected long _commitTimestamp;
 	
 	public Db4oEmbeddedReplicationProvider(ObjectContainer objectContainer, String name) {
 		Configuration cfg = objectContainer.ext().configure();
@@ -144,8 +144,7 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 				older = otherIdentity;
 			}
 
-			_replicationRecord = ReplicationRecord.queryForReplicationRecord(
-					_container, trans, younger, older);
+			_replicationRecord = ReplicationRecord.queryForReplicationRecord(_container, trans, younger, older);
 			if (_replicationRecord == null) {
 				_replicationRecord = new ReplicationRecord(younger, older);
 				_replicationRecord.store(_container);
@@ -162,9 +161,13 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 		_container.useDefaultTransactionTimestamp();
 	}
 
-	private void storeReplicationRecord() {
+	protected void storeReplicationRecord() {
 		_replicationRecord._version = _commitTimestamp;
 		_replicationRecord.store(_container);
+	}
+	
+	protected long replicationRecordId(){
+		return _container.getID(_replicationRecord);
 	}
 
 	public void rollbackReplication() {
@@ -316,8 +319,14 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	 *            the Query to be constrained
 	 */
 	public void whereModified(Query query) {
-		query.descend(VirtualField.COMMIT_TIMESTAMP).constrain(
-				new Long(getLastReplicationVersion())).greater();
+		Query qTimestamp = query.descend(VirtualField.COMMIT_TIMESTAMP);
+		Constraint constraint = qTimestamp.constrain(new Long(getLastReplicationVersion())).greater();
+		long[] concurrentTimestamps = _replicationRecord._concurrentTimestamps;
+		if(concurrentTimestamps != null){
+			for (int i = 0; i < concurrentTimestamps.length; i++) {
+				constraint = constraint.or(qTimestamp.constrain(new Long(concurrentTimestamps[i])));
+			}
+		}
 	}
 
 	public ObjectSet getStoredObjects(Class type) {
@@ -360,7 +369,20 @@ public class Db4oEmbeddedReplicationProvider implements Db4oReplicationProvider 
 	}
 
 	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
-		return reference.version() > getLastReplicationVersion();
+		long timestamp = reference.version();
+		if(timestamp > _replicationRecord._version){
+			return true;
+		}
+		long[] concurrentTimestamps = _replicationRecord.concurrentTimestamps();
+		if(concurrentTimestamps == null){
+			return false;
+		}
+		for (int i = 0; i < concurrentTimestamps.length; i++) {
+			if(timestamp == concurrentTimestamps[i]){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean supportsMultiDimensionalArrays() {

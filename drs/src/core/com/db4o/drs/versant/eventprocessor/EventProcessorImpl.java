@@ -41,7 +41,6 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	
 	private long _defaultSignatureLoid;
 	
-	
 	private CommitTimestamp _commitTimestamp;
 
 	private Map<String, Long> _knownClasses = new HashMap<String, Long>();
@@ -57,6 +56,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private long _barrierTokenClassMetadataLoid;
 	
 	private boolean _verbose;
+	
+	private Map<Long, List<Long>> _concurrentTimestamps = new HashMap<Long, List<Long>>();
 
 	public EventProcessorImpl(VodEventClient client, VodDatabase vod, boolean verbose)  {
 		_client = client;
@@ -156,6 +157,42 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	public long generateTimestamp() {
 		_timeStampIdGenerator.generate();
 		return lastTimestamp();
+	}
+	
+	public long beginReplicationGenerateTimestamp(){
+		synchronized (_lock) {
+			long timestamp = generateTimestamp();
+			_concurrentTimestamps.put(timestamp, new ArrayList<Long>());
+			return timestamp;
+		}
+	}
+	
+	public void replaceCommitTimestamp(long commitTimestamp, long syncedTimeStamp){
+		synchronized (_lock) {
+			List<Long> list = _concurrentTimestamps.get(commitTimestamp);
+			_concurrentTimestamps.remove(commitTimestamp);
+			for(List<Long> otherList : _concurrentTimestamps.values()){
+				if(otherList.remove(commitTimestamp)){
+					otherList.add(syncedTimeStamp);
+				}
+			}
+			_concurrentTimestamps.put(syncedTimeStamp, list);
+			syncTimestamp(syncedTimeStamp + 1);
+		}
+	}
+	
+	public long[] commitReplicationGetConcurrentTimestamps(long timestamp) {
+		synchronized (_lock) {
+			List<Long> list = _concurrentTimestamps.get(timestamp);
+			_concurrentTimestamps.remove(timestamp);
+			for(List<Long> otherList : _concurrentTimestamps.values()){
+				otherList.add(timestamp);
+			}
+			for(Long runningTimestamp : _concurrentTimestamps.keySet()){
+				list.add(runningTimestamp);
+			}
+			return Arrays4.toLongArray(list);
+		}
 	}
 	
 	private void shutdown() {
@@ -515,6 +552,7 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 	private String schemaFor(String fullyQualifiedName) {
 		return _cobra.schemaName(fullyQualifiedName);
 	}
+
 	
 
 }

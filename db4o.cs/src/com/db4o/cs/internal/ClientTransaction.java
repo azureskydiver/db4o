@@ -20,15 +20,19 @@ public final class ClientTransaction extends Transaction {
     }
     
     public void commit() {
-    	commitTransactionListeners();
-        clearAll();
+    	preCommit();
         if(isSystemTransaction()){
         	_client.write(Msg.COMMIT_SYSTEMTRANS);
         }else{
-        	_client.write(Msg.COMMIT);
+        	_client.write(Msg.COMMIT.getWriter(this));
         	_client.expectedResponse(Msg.OK);
         }
     }
+
+	public void preCommit() {
+		commitTransactionListeners();
+        clearAll();
+	}
     
     protected void clear() {
     	removeObjectReferences();

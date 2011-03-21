@@ -326,7 +326,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 
 		public void write(Object obj, DatastoreObject datastoreObject) {
 			Object fieldValue = Reflection4.getFieldValue(obj, name());
-			if(isCobraPersitentObject()){
+			if(isCobraPersistentObject()){
 				if(fieldValue == null){
 					datastoreObject.writeObject(_datastoreSchemaField, 0);
 				} else {
@@ -341,7 +341,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 			return _datastoreSchemaField.getName();
 		}
 		
-		public boolean isCobraPersitentObject(){
+		public boolean isCobraPersistentObject(){
 			return VodLoidAwareObject.class.isAssignableFrom(_field.getType());
 		}
 		
@@ -351,7 +351,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 			}
 			try {
 				Object readObject = datastoreObject.readObject(_datastoreSchemaField);
-				if(isCobraPersitentObject()){
+				if(isCobraPersistentObject()){
 					Long loid = (Long)readObject;
 					if(loid > 0){
 						readObject = objectByLoid(loid);

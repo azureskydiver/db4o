@@ -7,6 +7,7 @@ import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
 
+import javax.jdo.*;
 import javax.jdo.spi.*;
 
 import com.db4o.*;
@@ -228,9 +229,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public void commitReplicationTransaction() {
-		storeReplicationCommitRecord();
 		updateReplicationCommitToken();
 		_jdo.commit();
+		storeReplicationCommitRecord();
 		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	}
 
@@ -336,12 +337,16 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		
 		if(_replicationCommitRecord == null){
 			_replicationCommitRecord = new ReplicationCommitRecord(databaseSignature(lowerId), databaseSignature(higherId));
+			_replicationCommitRecord.concurrentTimestamps(new long[]{});
 			_cobra.store(_replicationCommitRecord);
 			_cobra.commit();
 		} else {
 			syncEventProcessor().syncTimestamp(_replicationCommitRecord.timestamp() + 1);
+			if(_replicationCommitRecord.concurrentTimestamps() == null){
+				_replicationCommitRecord.concurrentTimestamps(new long[]{});
+			}
 		}
-		_commitTimestamp = syncEventProcessor().generateTimestamp();
+		_commitTimestamp = syncEventProcessor().beginReplicationGenerateTimestamp();
 	}
 
 	public void waitForPreviousCommits() {
@@ -428,6 +433,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 
 	private void storeReplicationCommitRecord() {
 		_replicationCommitRecord.timestamp(_commitTimestamp);
+		long[] concurrentTimestamps = syncEventProcessor().commitReplicationGetConcurrentTimestamps(_commitTimestamp);
+		_replicationCommitRecord.concurrentTimestamps(concurrentTimestamps);
 		_cobra.store(_replicationCommitRecord);
 		_cobra.commit();
 	}
@@ -437,16 +444,25 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 
 	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
-		log("comparing versions reference.version()=" + reference.version() + " getLastReplicationVersion()=" + getLastReplicationVersion());
-		return reference.version() > getLastReplicationVersion();
+		long timestamp = reference.version();
+		if (timestamp > getLastReplicationVersion()){
+			return true;
+		}
+		long[] concurrentTimestamps = _replicationCommitRecord.concurrentTimestamps();
+		for (int i = 0; i < concurrentTimestamps.length; i++) {
+			if(concurrentTimestamps[i] == timestamp){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
-		return queryForModifiedObjects(null, getLastReplicationVersion());
+		return queryForModifiedObjects(null);
 	}
 	
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		return queryForModifiedObjects(clazz, getLastReplicationVersion());
+		return queryForModifiedObjects(clazz);
 	}
 
 	private void ensureReplicationSessionActive() {
@@ -455,8 +471,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 	}
 
-	private ObjectSet queryForModifiedObjects(Class clazz, long lastReplicationVersion) {
-		String filter = "this.version > " + lastReplicationVersion + " && this.version < " + _commitTimestamp;
+	private ObjectSet queryForModifiedObjects(Class clazz) {
+		String filter = "((this.version > " + getLastReplicationVersion() + " && this.version < " + _commitTimestamp + ")";
+		long[] concurrentTimestamps = _replicationCommitRecord.concurrentTimestamps();
+		if(concurrentTimestamps != null){
+			for (int i = 0; i < concurrentTimestamps.length; i++) {
+				filter += " || this.version == " + concurrentTimestamps[i];  
+			}
+		}
+		filter += ")";
 		if(clazz != null){
 			ensureClassKnown(clazz);
 			filter += " && (" + classMetadataLoidFilter(clazz) + ")";
@@ -470,7 +493,15 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		}
 		Collection<Object> objects = new ArrayList<Object>(loids.size());
 		for (Long loid : loids) {
-			objects.add(_jdo.objectByLoid(loid));
+			try{
+				objects.add(_jdo.objectByLoid(loid));
+			} catch(JDOObjectNotFoundException ex){
+				// This may happen, either because the JDO transaction is not
+				// yet committed or deletion has happened and the EventProcessor
+				// has not followed up.
+				
+				// FIXME: Log here
+			}
 		}
 		return new ObjectSetCollectionFacade(objects);
 	}
@@ -672,8 +703,8 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(syncedTimeStamp <= _commitTimestamp){
 			return;
 		}
+		syncEventProcessor().replaceCommitTimestamp(_commitTimestamp, syncedTimeStamp);
 		_commitTimestamp = syncedTimeStamp;
-		syncEventProcessor().syncTimestamp(syncedTimeStamp + 1);
 	}
 
 	private ClientChannelControl control() {

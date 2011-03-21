@@ -28,6 +28,7 @@ public abstract class Msg implements Cloneable, Message {
 	public static final MClose CLOSE = new MClose();
 	public static final MCloseSocket CLOSE_SOCKET = new MCloseSocket();
     public static final MCommit COMMIT = new MCommit();
+    public static final MCommitReplication COMMIT_REPLICATION = new MCommitReplication();
     public static final MCommittedCallBackRegistry COMMITTED_CALLBACK_REGISTER = new MCommittedCallBackRegistry();
     public static final MCommittedInfo COMMITTED_INFO = new MCommittedInfo();
     public static final MCommitSystemTransaction COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();

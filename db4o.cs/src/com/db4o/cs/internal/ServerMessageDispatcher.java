@@ -52,5 +52,7 @@ public interface ServerMessageDispatcher extends ClientConnection, MessageDispat
 	public void join() throws InterruptedException;
 
 	public void setDispatcherName(String name);
+	
+	public Transaction transaction();
 
 }

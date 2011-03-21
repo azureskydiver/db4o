@@ -2,8 +2,11 @@
 
 package com.db4o.drs.db4o;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
@@ -17,8 +20,12 @@ import com.db4o.query.*;
 public class ReplicationRecord implements Internal4{
    
     public Db4oDatabase _youngerPeer;
+    
     public Db4oDatabase _olderPeer;
+    
     public long _version;
+    
+    public long[] _concurrentTimestamps;
     
     public ReplicationRecord(){
     }
@@ -33,11 +40,14 @@ public class ReplicationRecord implements Internal4{
     }
     
     public void store(ObjectContainerBase container){
+    	store(container.checkTransaction());
+    }
+    
+    public void store(Transaction trans){
+    	ObjectContainerBase container = trans.container();
         container.showInternalClasses(true);
         try {
-	        Transaction trans = container.checkTransaction();
-	        container.storeAfterReplication(trans, this, container.updateDepthProvider().forDepth(1), false);
-	        container.commit(trans);
+	        container.storeAfterReplication(trans, this, container.updateDepthProvider().forDepth(Integer.MAX_VALUE), false);
         } finally {
         	container.showInternalClasses(false);
         }
@@ -101,12 +111,24 @@ public class ReplicationRecord implements Internal4{
 	        q.descend("_youngerPeer").constrain(younger).identity();
 	        q.descend("_olderPeer").constrain(older).identity();
 	        ObjectSet objectSet = q.execute();
-	        return objectSet.hasNext() 
-	        	? (ReplicationRecord)objectSet.next()
-	        	: null;
+	        if(objectSet.hasNext()){
+	        	ReplicationRecord replicationRecord = (ReplicationRecord) objectSet.next();
+	        	container.activate(replicationRecord, Integer.MAX_VALUE);
+	        	return replicationRecord;
+	        }
+	        return null;
         } finally {
         	container.showInternalClasses(false);
         }
     }
+
+	public void concurrentTimestamps(List<Long> concurrentTimestamps) {
+		_concurrentTimestamps = Arrays4.toLongArray(concurrentTimestamps);
+	}
+	
+	public long[] concurrentTimestamps(){
+		return _concurrentTimestamps;
+	}
+	
 }
 

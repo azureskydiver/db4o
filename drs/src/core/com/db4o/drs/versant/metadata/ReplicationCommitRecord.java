@@ -7,17 +7,11 @@ public class ReplicationCommitRecord extends VodLoidAwareObject {
 	
 	private DatabaseSignature higherPeer;
 	
-	public DatabaseSignature higherPeer() {
-		return higherPeer;
-	}
-
-	public DatabaseSignature lowerPeer() {
-		return lowerPeer;
-	}
-
 	private DatabaseSignature lowerPeer;
 	
 	private long timestamp;
+	
+	private long[] _concurrentTimestamps;
 	
 	public ReplicationCommitRecord() {
 		
@@ -35,5 +29,22 @@ public class ReplicationCommitRecord extends VodLoidAwareObject {
 	public void timestamp(long timestamp){
 		this.timestamp = timestamp;
 	}
+	
+	public DatabaseSignature higherPeer() {
+		return higherPeer;
+	}
+
+	public DatabaseSignature lowerPeer() {
+		return lowerPeer;
+	}
+
+	public void concurrentTimestamps(long[] concurrentTimestamps) {
+		_concurrentTimestamps = concurrentTimestamps;
+	}
+
+	public long[] concurrentTimestamps() {
+		return _concurrentTimestamps;
+	}
+
 
 }

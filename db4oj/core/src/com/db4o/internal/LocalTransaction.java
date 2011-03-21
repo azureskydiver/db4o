@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -28,6 +30,8 @@ public class LocalTransaction extends Transaction {
 	private CommitTimestampSupport _commitTimestampSupport = null;
 	
     private long _timestamp;
+    
+    private List<Long> _concurrentReplicationTimestamps;
 	
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalIdSystem idSystem, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
@@ -399,10 +403,29 @@ public class LocalTransaction extends Transaction {
 	
 	public void useDefaultTransactionTimestamp(){
 		_timestamp = 0;
+		_concurrentReplicationTimestamps = null;
 	}
 	
 	public long timestamp(){
 		return _timestamp;
+	}
+
+	public void notifyAboutOtherReplicationCommit(long replicationVersion, List<Long> concurrentTimestamps) {
+		if(timestamp() == 0){
+			return;
+		}
+		if(_concurrentReplicationTimestamps == null){
+			_concurrentReplicationTimestamps = new ArrayList<Long>();
+		}
+		_concurrentReplicationTimestamps.add(replicationVersion);
+		concurrentTimestamps.add(timestamp());
+	}
+	
+	public List<Long> concurrentReplicationTimestamps(){
+		if(_concurrentReplicationTimestamps != null){
+			return _concurrentReplicationTimestamps;
+		}
+		return new ArrayList<Long>();
 	}
 
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant;
 
+import com.db4o.*;
+import com.db4o.drs.*;
 import com.db4o.drs.versant.*;
 import com.db4o.foundation.*;
 
@@ -9,6 +11,12 @@ import db4ounit.*;
 
 public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLevelFixtureTest  {
 	
+	public static abstract class ReplicationAction{
+	    public static final ReplicationAction NO_ACTIONS = new ReplicationAction() {        };
+	    public void beforeCommit(){}
+	    public void afterCommit(){}
+	}
+
 	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
 	protected static VodDatabase _vod;
@@ -71,6 +79,22 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 		_vod = null;
 	}
 	
+	protected void replicate(ReplicationProvider firstProvider, ReplicationProvider secondProvider, ReplicationAction replicationActions) {
+	    ReplicationSession session = Replication.begin(firstProvider, secondProvider);
+	    replicate(session, firstProvider.objectsChangedSinceLastReplication());
+	    replicate(session, secondProvider.objectsChangedSinceLastReplication());
+	    replicationActions.beforeCommit();
+	    session.commit();
+	    replicationActions.afterCommit();
+	    session.close();
+	}
+
+	protected void replicate(ReplicationSession session, ObjectSet objectSet) {
+	    for (Object object : objectSet) {
+	        session.replicate(object);
+	    }
+	}
+
 	protected void withEventProcessor(Closure4<Void> closure) throws Exception {
 		_vod.startEventProcessor();
 		produceProvider();

@@ -3,6 +3,7 @@
 package com.db4o.cs.internal;
 
 import java.io.*;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -416,6 +417,15 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	public void addCommittedInfoMsg(MCommittedInfo message) {
 		_committedInfosQueue.add(message);			
+	}
+	
+	public void broadcastReplicationCommit(long timestamp, List concurrentTimestamps) {
+		Iterator4 i = iterateDispatchers();
+		while(i.moveNext()){
+			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
+			LocalTransaction transaction = (LocalTransaction) dispatcher.transaction();
+			transaction.notifyAboutOtherReplicationCommit(timestamp, concurrentTimestamps);
+		}
 	}
 	
 	public void broadcastMsg(Msg message, BroadcastFilter filter) {		

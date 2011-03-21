@@ -116,6 +116,26 @@ public class Serializers {
 		}
 	}, String[].class);
 	
+	public final static Serializer<long[]> longArray = addSerializer(new Serializer<long[]>() {
+
+		public void serialize(DataOutput out, long[] arr) throws IOException {
+			out.writeInt(arr.length);
+			for (int i = 0; i < arr.length; i++) {
+				out.writeLong(arr[i]);	
+			}
+		}
+
+		public long[] deserialize(DataInput in) throws IOException {
+			int length = in.readInt();
+			long[] result = new long[length];
+			for (int i = 0; i < result.length; i++) {
+				result[i] = in.readLong();	
+			}
+			return result;
+		}
+	}, long[].class);
+
+	
 	public final static Serializer<Pair<Long, Long>> pairOfLong = addSerializer(new Serializer<Pair<Long, Long>>() {
 
 		public void serialize(DataOutput out, Pair<Long, Long> pair) throws IOException {

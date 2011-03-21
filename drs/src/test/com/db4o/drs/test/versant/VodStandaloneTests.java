@@ -15,6 +15,7 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			com.db4o.drs.test.versant.eventlistener.AllTests.class,
+			ConcurrentReplicationTestCase.class,
 			ConcurrentUpdateTestCase.class,
 			EnsureReplicationActiveTestCase.class,
 			ExistingJDOFactoryTestCase.class,
@@ -31,6 +32,7 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 			VodProviderTestCase.class,
 			VodSimpleObjectContainerTestCase.class,
 			ReplicationTimeoutTestCase.class,
+			ReplicationViaIntermediateServerTestCase.class,
 			PortSetupTestCases.class,
 		};
 	}

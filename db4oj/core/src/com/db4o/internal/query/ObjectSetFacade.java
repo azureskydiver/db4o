@@ -79,8 +79,8 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     /**
      */
     @decaf.Ignore(decaf.Platform.JDK11)
-    public boolean contains(Object a_object) {
-        return indexOf(a_object) >= 0;
+    public boolean contains(Object obj) {
+        return indexOf(obj) >= 0;
     }
 
     public Object get(int index) {
@@ -90,15 +90,15 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     /**
      */
     @decaf.Ignore(decaf.Platform.JDK11)
-    public int indexOf(Object a_object) {
-    	return _delegate.indexOf(a_object);
+    public int indexOf(Object obj) {
+    	return _delegate.indexOf(obj);
     }
     
     /**
      */
     @decaf.Ignore(decaf.Platform.JDK11)
-    public int lastIndexOf(Object a_object) {
-        return indexOf(a_object);
+    public int lastIndexOf(Object obj) {
+        return indexOf(obj);
     }
     
     /**

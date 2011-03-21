@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.db4o;
 
 import com.db4o.ObjectContainer;
+import com.db4o.cs.internal.*;
 
 public class Db4oClientServerReplicationProvider extends Db4oEmbeddedReplicationProvider {
 	
@@ -35,4 +36,10 @@ public class Db4oClientServerReplicationProvider extends Db4oEmbeddedReplication
 	protected void refresh(Object obj) {
 		_container.refresh(obj, 1);
 	}
+	
+	public void commitReplicationTransaction() {
+		storeReplicationRecord();
+		((ClientObjectContainer)_container).commitReplication(replicationRecordId(), _commitTimestamp);
+	}
+
 }
