@@ -49,6 +49,13 @@ class TestSyntaxHighLighter:
 		assert not result.Contains("<div")
 
 	[Test]
+	def AssumeJDOIsXML():
+		result = testInstance.Translate(XML,"TheFile.jdo")
+		print result
+		assert result.Contains("element")
+		assert not result.Contains("<div")
+
+	[Test]
 	def JavaTranslation():
 		result = testInstance.Translate(Java,"TheFile.java")
 		print result
@@ -60,6 +67,14 @@ class TestSyntaxHighLighter:
 		result = testInstance.Translate(CSharpCode,"zomg")
 		print result
 		assert result.Contains("Pilot")
+
+		
+	[Test]
+	def OtherCodeIsEncoded():
+		result = testInstance.Translate(XML,"zomg")
+		print result
+		assert result.Contains("&lt;")
+		assert result.Contains("&gt;")
 		
 
 
