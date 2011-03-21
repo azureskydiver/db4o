@@ -1153,7 +1153,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			return new ObjectContainerSession(this);
 		}
 	}
-
 	
     public int serverSideID() {
     	return _serverSideID;
@@ -1165,6 +1164,17 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	
 	public <T> QLin<T> from(Class<T> clazz) {
 		return new QLinRoot<T>(query(), clazz);
+	}
+	
+	public void commitReplication(long replicationRecordId, long timestamp){
+		synchronized (_lock) {		
+			checkReadOnly();
+			ClientTransaction clientTransaction = (ClientTransaction) transaction();
+			clientTransaction.preCommit();
+			write(Msg.COMMIT_REPLICATION.getWriterForLongs(clientTransaction, replicationRecordId, timestamp));
+			expectedResponse(Msg.OK);
+			clientTransaction.postCommit();
+		}
 	}
 
 }

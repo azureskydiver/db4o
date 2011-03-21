@@ -187,7 +187,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void copyStateAcross(ReplicationReference sourceRef, ReplicationProviderInside sourceProvider, final ReplicationProviderInside targetProvider) {
-		if (!sourceRef.isMarkedForReplicating()) return;
+		if (!sourceRef.isMarkedForReplicating()) {
+			return;
+		}
 		Object source = sourceRef.object();
 		Object target = sourceRef.counterpart();
 		if(source == null){

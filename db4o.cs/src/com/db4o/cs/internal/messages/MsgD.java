@@ -103,6 +103,14 @@ public class MsgD extends Msg{
 		return message;
 	}
 	
+	public final MsgD getWriterForLongs(Transaction trans, long... longs) {
+        MsgD message = getWriterForLength(trans, Const4.LONG_LENGTH * longs.length);
+        for (int i = 0; i < longs.length; i++) {
+            message.writeLong(longs[i]);
+        }
+       return message;
+    }
+	
 	public MsgD getWriterForSingleObject(Transaction trans, Object obj) {
 		SerializedGraph serialized = Serializer.marshall(trans.container(), obj);
 		MsgD msg = getWriterForLength(trans, serialized.marshalledLength());

@@ -1,8 +1,9 @@
-/* Copyright (C) 2006 Versant Inc. http://www.db4o.com */
+/* Copyright (C) 2006 - 2011 Versant Inc. http://www.db4o.com */
 
 package com.db4o.foundation;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 
 
@@ -139,6 +140,14 @@ public class Arrays4 {
 				return comparator.compare(array[leftIndex], array[rightIndex]);
 			}
 		});
+	}
+	
+	public static long[] toLongArray(List<Long> list) {
+		long[] arr = new long[list.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = list.get(i);
+		}
+		return arr;
 	}
 
 }

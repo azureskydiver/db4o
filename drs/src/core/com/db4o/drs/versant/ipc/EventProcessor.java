@@ -5,7 +5,13 @@ import java.util.*;
 import com.db4o.rmi.*;
 
 public interface EventProcessor {
-
+	
+	long beginReplicationGenerateTimestamp();
+	
+	void replaceCommitTimestamp(long commitTimestamp, long syncedTimeStamp);
+	
+	long[] commitReplicationGetConcurrentTimestamps(long timestamp);
+	
 	long generateTimestamp();
 
 	long lastTimestamp();

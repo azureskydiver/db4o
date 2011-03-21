@@ -401,7 +401,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             asTopLevelCall(new Function4<Transaction, Object>() {
 				public Object apply(Transaction trans) {
 	            	commit1(trans);
-	            	trans.commitReferenceSystem();
+	            	trans.postCommit();
 	            	return null;
 				}
             }, trans);
@@ -420,7 +420,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     /**
      * @sharpen.ignore
      */
-    private <R> R asTopLevelCall(Function4<Transaction,R> block, Transaction trans) {
+    protected <R> R asTopLevelCall(Function4<Transaction,R> block, Transaction trans) {
     	trans = checkTransaction(trans);
     	beginTopLevelCall();
         try{            	

@@ -5,11 +5,11 @@ package com.db4o.cs.internal.messages;
 import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
 
-public final class MCommit extends Msg implements MessageWithResponse {
+public class MCommit extends MsgD implements MessageWithResponse {
 
-	private CallbackObjectInfoCollections committedInfo = null;
+	protected CallbackObjectInfoCollections committedInfo = null;
 
-	public final Msg replyFromServer() {
+	public Msg replyFromServer() {
 		ServerMessageDispatcher dispatcher = serverMessageDispatcher();
 		synchronized (containerLock()) {
 			serverTransaction().commit(dispatcher);

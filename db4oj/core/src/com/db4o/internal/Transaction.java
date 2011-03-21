@@ -215,6 +215,10 @@ public abstract class Transaction {
     public void rollbackReferenceSystem() {
         referenceSystem().rollback();
     }
+    
+    public void postCommit(){
+    	commitReferenceSystem();
+    }
 
     public void commitReferenceSystem() {
         referenceSystem().commit();
