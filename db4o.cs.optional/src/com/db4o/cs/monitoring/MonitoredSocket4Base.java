@@ -18,8 +18,8 @@ abstract class MonitoredSocket4Base extends Socket4Decorator {
 	}
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
-		super.write(bytes, offset, count);
 		bean().notifyWrite(count);
+		super.write(bytes, offset, count);
 	}
 	
 	@Override
