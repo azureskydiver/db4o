@@ -2,21 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class Pilot
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> Pilot
 {
-    private string name;
+    <span style="color:Blue;">private</span> <span style="color:Blue;">string</span> name;
 
-    public Pilot(string name)
+    <span style="color:Blue;">public</span> Pilot(<span style="color:Blue;">string</span> name)
     {
-        this.name = name;
+        <span style="color:Blue;">this</span>.name = name;
     }
 
-    public string Name
+    <span style="color:Blue;">public</span> <span style="color:Blue;">string</span> Name
     {
-        get { return name; }
-        set { name = value; }
+        <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> name; }
+        <span style="color:Blue;">set</span> { name = value; }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			TransparentActivationExample.cs: Our domain model
 			<div class="codedownload">

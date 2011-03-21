@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">configuration.File.GenerateUUIDs = ConfigScope.Globally;
-configuration.File.GenerateCommitTimestamps = true;</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.File.GenerateUUIDs = ConfigScope.Globally;
+configuration.File.GenerateCommitTimestamps = <span style="color:Blue;">true</span>;
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.cs: Configure db4o to generate UUIDs and commit timestamps
 			<div class="codedownload">

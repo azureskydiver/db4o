@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Function QueryAdults(ByVal pilot As Pilot)
-    Return pilot.Age &lt; 18
-End Function</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Function QueryAdults(ByVal pilot As Pilot)
-    Return pilot.Age &lt; 18
-End Function</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Function</span> QueryAdults(<span style="color:Blue;">ByVal</span> pilot <span style="color:Blue;">As</span> Pilot)
+    <span style="color:Blue;">Return</span> pilot.Age &lt; 18
+<span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueryExamples.vb: Query for adults
 			<div class="codedownload">

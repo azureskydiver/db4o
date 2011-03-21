@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private static bool CheckCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">bool</span> CheckCertificate(<span style="color:Blue;">object</span> sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
 {
-    // here you can check the certificates of the server and accept it if it's ok.)
-    return true;
-}</pre>
+    <span style="color:Green;">// here you can check the certificates of the server and accept it if it's ok.)</span>
+    <span style="color:Blue;">return</span> <span style="color:Blue;">true</span>;
+}
+</pre>
 		<div class="codesnippet-meta">
 			SSLExample.cs: callback for validating the certificate
 			<div class="codedownload">

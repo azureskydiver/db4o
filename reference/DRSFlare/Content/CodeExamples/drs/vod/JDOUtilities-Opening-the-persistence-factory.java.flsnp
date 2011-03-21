@@ -2,19 +2,21 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">InputStream propertySource = Thread.currentThread()
+        <pre class="prettyprint" xml:space="preserve">
+InputStream propertySource = Thread.currentThread()
         .getContextClassLoader().getResourceAsStream(VERSANT_PROPERTY_FILE);
-if (null == propertySource) {
-    throw new RuntimeException(&quot;Couldn't find resource '&quot; + VERSANT_PROPERTY_FILE + &quot;' in the classpath&quot;);
+<span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> == propertySource) {
+    <span style="color:Blue;">throw</span> <span style="color:Blue;">new</span> RuntimeException(<span style="color:#A31515;">&quot;Couldn't find resource '&quot;</span> + VERSANT_PROPERTY_FILE + <span style="color:#A31515;">&quot;' in the classpath&quot;</span>);
 }
-try {
-    return JDOHelper.getPersistenceManagerFactory(propertySource);
-} finally {
-    try {
+<span style="color:Blue;">try</span> {
+    <span style="color:Blue;">return</span> JDOHelper.getPersistenceManagerFactory(propertySource);
+} <span style="color:Blue;">finally</span> {
+    <span style="color:Blue;">try</span> {
         propertySource.close();
-    } catch (IOException ignored) {
+    } <span style="color:Blue;">catch</span> (IOException ignored) {
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			JDOUtilities.java: Opening the persistence factory
 			<div class="codedownload">

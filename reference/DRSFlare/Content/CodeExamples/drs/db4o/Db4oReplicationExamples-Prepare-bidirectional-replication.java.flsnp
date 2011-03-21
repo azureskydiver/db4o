@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer desktopDatabase = openDatabase(DESKTOP_DATABASE_NAME);
 ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
 
-Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(desktopDatabase);
-Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+Db4oEmbeddedReplicationProvider providerA = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(desktopDatabase);
+Db4oEmbeddedReplicationProvider providerB = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(mobileDatabase);
 
-ReplicationSession replicationSession = Replication.begin(providerA, providerB);</pre>
+ReplicationSession replicationSession = Replication.begin(providerA, providerB);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.java: Prepare bidirectional replication
 			<div class="codedownload">

@@ -2,22 +2,24 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">class Pilot {
-    private String name;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> Pilot {
+    <span style="color:Blue;">private</span> String name;
 
     Pilot(String name) {
-        this.name = name;
+        <span style="color:Blue;">this</span>.name = name;
     }
 
     @NotBlank
-    public String getName() {
-        return name;
+    <span style="color:Blue;">public</span> String getName() {
+        <span style="color:Blue;">return</span> name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> setName(String name) {
+        <span style="color:Blue;">this</span>.name = name;
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Pilot.java: Validation attributes
 			<div class="codedownload">

@@ -2,8 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim builder As MyType = container.Query(Of MyType)()(0)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim builder As MyType = container.Query(Of MyType)()(0)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> builder <span style="color:Blue;">As</span> MyType = container.Query(Of MyType)()(0)
+</pre>
 		<div class="codesnippet-meta">
 			TypeHandlerExample.vb: Load the non storable type
 			<div class="codedownload">

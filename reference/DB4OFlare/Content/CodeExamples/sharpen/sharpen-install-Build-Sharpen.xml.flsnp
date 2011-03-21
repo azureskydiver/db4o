@@ -2,35 +2,37 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="">
-        <pre class="prettyprint" xml:space="preserve">&lt;target name=&quot;build-sharpen&quot;&gt;
-    &lt;property name=&quot;sharpen.core.dir&quot; location=&quot;${dir.workspace}/sharpen.core&quot;/&gt;
-    &lt;reset-dir dir=&quot;${dir.dist.classes.sharp}&quot;/&gt;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">&lt;</span><span style="color:#A31515;">target</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">build-sharpen</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+    <span style="color:Blue;">&lt;</span><span style="color:#A31515;">property</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">sharpen.core.dir</span><span style="color:Black;">&quot;</span> <span style="color:Red;">location</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${dir.workspace}/sharpen.core</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+    <span style="color:Blue;">&lt;</span><span style="color:#A31515;">reset-dir</span> <span style="color:Red;">dir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${dir.dist.classes.sharp}</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
 
-    &lt;javac fork=&quot;true&quot;
-           debug=&quot;true&quot;
-           target=&quot;1.5&quot;
-           source=&quot;1.5&quot;
-           destdir=&quot;${dir.dist.classes.sharp}&quot;
-           srcdir=&quot;${sharpen.core.dir}/src&quot;
-           encoding=&quot;UTF-8&quot;&gt;
-        &lt;classpath&gt;
-            &lt;fileset dir=&quot;${eclipse.home}/plugins&quot;&gt;
-                &lt;include name=&quot;org.eclipse.osgi_*.jar&quot;/&gt;
-                &lt;include name=&quot;org.eclipse.core.resources_*.jar&quot;/&gt;
-                &lt;include name=&quot;org.eclipse.core.runtime_*.jar&quot;/&gt;
-                &lt;include name=&quot;org.eclipse.jdt.core_*.jar&quot;/&gt;
-                &lt;include name=&quot;org.eclipse.jdt.launching_*.jar&quot;/&gt;
-                &lt;include name=&quot;org.eclipse.equinox.*.jar&quot;/&gt;
-                &lt;include name=&quot;org.eclipse.core.jobs_*.jar&quot;/&gt;
-            &lt;/fileset&gt;
-        &lt;/classpath&gt;
-    &lt;/javac&gt;
-    &lt;jar destfile=&quot;${dir.dist.classes.sharp}/sharpen.core_1.0.0.jar&quot; basedir=&quot;${dir.dist.classes.sharp}&quot;&gt;
-        &lt;fileset dir=&quot;${sharpen.core.dir}&quot;&gt;
-            &lt;include name=&quot;plugin.xml&quot;/&gt;
-        &lt;/fileset&gt;
-    &lt;/jar&gt;
-&lt;/target&gt;</pre>
+    <span style="color:Blue;">&lt;</span><span style="color:#A31515;">javac</span> <span style="color:Red;">fork</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">true</span><span style="color:Black;">&quot;</span>
+           <span style="color:Red;">debug</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">true</span><span style="color:Black;">&quot;</span>
+           <span style="color:Red;">target</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">1.5</span><span style="color:Black;">&quot;</span>
+           <span style="color:Red;">source</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">1.5</span><span style="color:Black;">&quot;</span>
+           <span style="color:Red;">destdir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${dir.dist.classes.sharp}</span><span style="color:Black;">&quot;</span>
+           <span style="color:Red;">srcdir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${sharpen.core.dir}/src</span><span style="color:Black;">&quot;</span>
+           <span style="color:Red;">encoding</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">UTF-8</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+        <span style="color:Blue;">&lt;</span><span style="color:#A31515;">classpath</span><span style="color:Blue;">&gt;</span>
+            <span style="color:Blue;">&lt;</span><span style="color:#A31515;">fileset</span> <span style="color:Red;">dir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${eclipse.home}/plugins</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.osgi_*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.core.resources_*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.core.runtime_*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.jdt.core_*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.jdt.launching_*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.equinox.*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+                <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">org.eclipse.core.jobs_*.jar</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+            <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">fileset</span><span style="color:Blue;">&gt;</span>
+        <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">classpath</span><span style="color:Blue;">&gt;</span>
+    <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">javac</span><span style="color:Blue;">&gt;</span>
+    <span style="color:Blue;">&lt;</span><span style="color:#A31515;">jar</span> <span style="color:Red;">destfile</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${dir.dist.classes.sharp}/sharpen.core_1.0.0.jar</span><span style="color:Black;">&quot;</span> <span style="color:Red;">basedir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${dir.dist.classes.sharp}</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+        <span style="color:Blue;">&lt;</span><span style="color:#A31515;">fileset</span> <span style="color:Red;">dir</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">${sharpen.core.dir}</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+            <span style="color:Blue;">&lt;</span><span style="color:#A31515;">include</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">plugin.xml</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
+        <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">fileset</span><span style="color:Blue;">&gt;</span>
+    <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">jar</span><span style="color:Blue;">&gt;</span>
+<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">target</span><span style="color:Blue;">&gt;</span>
+</pre>
 		<div class="codesnippet-meta">
 			sharpen-install.xml: Build Sharpen
 			<div class="codedownload">

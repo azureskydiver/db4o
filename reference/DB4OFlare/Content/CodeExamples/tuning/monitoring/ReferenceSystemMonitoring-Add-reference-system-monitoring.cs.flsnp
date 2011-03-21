@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">configuration.Common.Add(new ReferenceSystemMonitoringSupport());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.Common.Add(<span style="color:Blue;">new</span> ReferenceSystemMonitoringSupport());
+</pre>
 		<div class="codesnippet-meta">
 			ReferenceSystemMonitoring.cs: Add reference system monitoring
 			<div class="codedownload">

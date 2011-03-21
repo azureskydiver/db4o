@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">db.ext().refresh(objToRefresh,Integer.MAX_VALUE);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+db.ext().refresh(objToRefresh,Integer.MAX_VALUE);
+</pre>
 		<div class="codesnippet-meta">
 			RefreshingObjects.java: refresh a object
 			<div class="codedownload">

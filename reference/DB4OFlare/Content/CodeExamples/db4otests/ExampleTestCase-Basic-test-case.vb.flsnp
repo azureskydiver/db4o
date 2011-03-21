@@ -2,42 +2,26 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class ExampleTestCase
-    Inherits AbstractDb4oTestCase
-    Public Shared Sub Main(ByVal args As String())
-        Dim testCase = New ExampleTestCase()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> ExampleTestCase
+    <span style="color:Blue;">Inherits</span> AbstractDb4oTestCase
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Sub</span> Main(<span style="color:Blue;">ByVal</span> args <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>())
+        <span style="color:Blue;">Dim</span> testCase = <span style="color:Blue;">New</span> ExampleTestCase()
         testCase.RunSolo()
-    End Sub
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public Sub TestStoresElement()
-        Db().Store(New TestItem())
-        Dim result As IList(Of TestItem) = Db().Query(Of TestItem)()
-        Assert.AreEqual(1, result.Count)
-    End Sub
-
-
-    Private Class TestItem
-
-    End Class
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class ExampleTestCase
-    Inherits AbstractDb4oTestCase
-    Public Shared Sub Main(ByVal args As String())
-        Dim testCase = New ExampleTestCase()
-        testCase.RunSolo()
-    End Sub
-
-    Public Sub TestStoresElement()
-        Db().Store(New TestItem())
-        Dim result As IList(Of TestItem) = Db().Query(Of TestItem)()
-        Assert.AreEqual(1, result.Count)
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> TestStoresElement()
+        Db().Store(<span style="color:Blue;">New</span> TestItem())
+        <span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IList(Of TestItem) = Db().Query(Of TestItem)()
+        Assert.AreEqual(1, result.<span style="color:Blue;">Count</span>)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
 
-    Private Class TestItem
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> TestItem
 
-    End Class
-End Class</pre>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			ExampleTestCase.vb: Basic test case
 			<div class="codedownload">

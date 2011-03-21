@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Car car = findCar(container);
+        <pre class="prettyprint" xml:space="preserve">
+Car car = findCar(container);
 container.delete(car);
-// Now the pilot is also gone
-assertEquals(0,allPilots(container).size());</pre>
+<span style="color:Green;">// Now the pilot is also gone</span>
+assertEquals(0,allPilots(container).size());
+</pre>
 		<div class="codesnippet-meta">
 			DeletionExamples.java: Cascade deletion
 			<div class="codedownload">

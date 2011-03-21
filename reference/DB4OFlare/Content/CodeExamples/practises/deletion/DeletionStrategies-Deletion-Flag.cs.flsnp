@@ -2,20 +2,22 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve">
+IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
 events.Deleting +=
     (sender, args) =&gt;
         {
-            object obj = args.Object;
-            // if the object has a deletion-flag:
-            // set the flag instead of deleting the object
-            if (obj is Deletable)
+            <span style="color:Blue;">object</span> obj = args.Object;
+            <span style="color:Green;">// if the object has a deletion-flag:</span>
+            <span style="color:Green;">// set the flag instead of deleting the object</span>
+            <span style="color:Blue;">if</span> (obj <span style="color:Blue;">is</span> Deletable)
             {
                 ((Deletable) obj).Delete();
                 args.ObjectContainer().Store(obj);
                 args.Cancel();
             }
-        };</pre>
+        };
+</pre>
 		<div class="codesnippet-meta">
 			DeletionStrategies.cs: Deletion-Flag
 			<div class="codedownload">

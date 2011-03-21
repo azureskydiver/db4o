@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">   public synchronized int getNextID(Class forClass) {
+        <pre class="prettyprint" xml:space="preserve">
+   <span style="color:Blue;">public</span> <span style="color:Blue;">synchronized</span> <span style="color:Blue;">int</span> getNextID(Class forClass) {
        PersistedAutoIncrements incrementState = ensureLoadedIncrements();
-       return incrementState.nextNumber(forClass);
+       <span style="color:Blue;">return</span> incrementState.nextNumber(forClass);
 }
 
-   public synchronized void storeState(){
-       if(null!=state){
+   <span style="color:Blue;">public</span> <span style="color:Blue;">synchronized</span> <span style="color:Blue;">void</span> storeState(){
+       <span style="color:Blue;">if</span>(<span style="color:Blue;">null</span>!=state){
            container.ext().store(state,2);            
        }
-   }</pre>
+   }
+</pre>
 		<div class="codesnippet-meta">
 			AutoIncrement.java: getting the next id and storing state
 			<div class="codedownload">

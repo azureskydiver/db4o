@@ -2,58 +2,34 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Friend Class Person
-    Private m_mother As Person
-    Private m_name As String
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Friend</span> <span style="color:Blue;">Class</span> Person
+    <span style="color:Blue;">Private</span> m_mother <span style="color:Blue;">As</span> Person
+    <span style="color:Blue;">Private</span> m_name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
 
-    Public Sub New(ByVal name As String)
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
         m_mother = m_mother
-        Me.m_name = name
-    End Sub
+        <span style="color:Blue;">Me</span>.m_name = name
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public Sub New(ByVal mother As Person, ByVal name As String)
-        Me.m_mother = mother
-        Me.m_name = name
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> mother <span style="color:Blue;">As</span> Person, <span style="color:Blue;">ByVal</span> name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
+        <span style="color:Blue;">Me</span>.m_mother = mother
+        <span style="color:Blue;">Me</span>.m_name = name
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public ReadOnly Property Mother() As Person
-        Get
-            Return m_mother
-        End Get
-    End Property
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">ReadOnly</span> <span style="color:Blue;">Property</span> Mother() <span style="color:Blue;">As</span> Person
+        <span style="color:Blue;">Get</span>
+            <span style="color:Blue;">Return</span> m_mother
+        <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
 
-    Public ReadOnly Property Name() As String
-        Get
-            Return m_name
-        End Get
-    End Property
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Friend Class Person
-    Private m_mother As Person
-    Private m_name As String
-
-    Public Sub New(ByVal name As String)
-        m_mother = m_mother
-        Me.m_name = name
-    End Sub
-
-    Public Sub New(ByVal mother As Person, ByVal name As String)
-        Me.m_mother = mother
-        Me.m_name = name
-    End Sub
-
-    Public ReadOnly Property Mother() As Person
-        Get
-            Return m_mother
-        End Get
-    End Property
-
-    Public ReadOnly Property Name() As String
-        Get
-            Return m_name
-        End Get
-    End Property
-End Class</pre>
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">ReadOnly</span> <span style="color:Blue;">Property</span> Name() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+        <span style="color:Blue;">Get</span>
+            <span style="color:Blue;">Return</span> m_name
+        <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			Person.vb: Person with a reference to the mother
 			<div class="codedownload">

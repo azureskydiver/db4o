@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">configuration.common().add(new QueryMonitoringSupport());
-configuration.common().add(new NativeQueryMonitoringSupport());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.common().add(<span style="color:Blue;">new</span> QueryMonitoringSupport());
+configuration.common().add(<span style="color:Blue;">new</span> NativeQueryMonitoringSupport());
+</pre>
 		<div class="codesnippet-meta">
 			QueryMonitoring.java: Add query monitoring
 			<div class="codedownload">

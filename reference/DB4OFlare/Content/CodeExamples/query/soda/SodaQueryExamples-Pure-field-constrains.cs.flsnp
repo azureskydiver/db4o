@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IQuery query = container.Query();
-// You can simple filter objects which have a certain field
-query.Descend(&quot;name&quot;).Constrain(null).Not();
+        <pre class="prettyprint" xml:space="preserve">
+IQuery query = container.Query();
+<span style="color:Green;">// You can simple filter objects which have a certain field</span>
+query.Descend(<span style="color:#A31515;">&quot;name&quot;</span>).Constrain(<span style="color:Blue;">null</span>).Not();
 
-IObjectSet result = query.Execute();</pre>
+IObjectSet result = query.Execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.cs: Pure field constrains
 			<div class="codedownload">

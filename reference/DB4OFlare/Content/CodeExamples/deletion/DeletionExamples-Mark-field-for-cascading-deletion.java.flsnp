@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-config.common().objectClass(Car.class).objectField(&quot;pilot&quot;).cascadeOnDelete(true);
-ObjectContainer container = Db4oEmbedded.openFile(config,DATABASE_FILE);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+config.common().objectClass(Car.<span style="color:Blue;">class</span>).objectField(<span style="color:#A31515;">&quot;pilot&quot;</span>).cascadeOnDelete(<span style="color:Blue;">true</span>);
+ObjectContainer container = Db4oEmbedded.openFile(config,DATABASE_FILE);
+</pre>
 		<div class="codesnippet-meta">
 			DeletionExamples.java: Mark field for cascading deletion
 			<div class="codedownload">

@@ -2,24 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">container.Store(New UniqueId(42))
-container.Store(New UniqueId(42))
-Try
+        <pre class="prettyprint" xml:space="preserve">
+container.Store(<span style="color:Blue;">New</span> UniqueId(42))
+container.Store(<span style="color:Blue;">New</span> UniqueId(42))
+<span style="color:Blue;">Try</span>
     container.Commit()
-Catch e As UniqueFieldValueConstraintViolationException
-    ' Violated the unique-constraint!
-    ' Retry with a new value or handle this gracefully
+<span style="color:Blue;">Catch</span> e <span style="color:Blue;">As</span> UniqueFieldValueConstraintViolationException
+    <span style="color:Green;">' Violated the unique-constraint!</span>
+    <span style="color:Green;">' Retry with a new value or handle this gracefully</span>
     container.Rollback()
-End Try</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">container.Store(New UniqueId(42))
-container.Store(New UniqueId(42))
-Try
-    container.Commit()
-Catch e As UniqueFieldValueConstraintViolationException
-    ' Violated the unique-constraint!
-    ' Retry with a new value or handle this gracefully
-    container.Rollback()
-End Try</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Try</span>
+</pre>
 		<div class="codesnippet-meta">
 			ImportantExceptionCases.vb: Violation of the unique constraint
 			<div class="codedownload">

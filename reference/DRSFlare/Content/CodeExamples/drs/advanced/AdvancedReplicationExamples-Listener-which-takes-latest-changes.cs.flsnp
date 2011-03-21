@@ -2,26 +2,28 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class TakeLatestModificationOnConflictListener : IReplicationEventListener
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> TakeLatestModificationOnConflictListener : IReplicationEventListener
 {
-    public void OnReplicate(IReplicationEvent replicationEvent)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> OnReplicate(IReplicationEvent replicationEvent)
     {
-        if (replicationEvent.IsConflict())
+        <span style="color:Blue;">if</span> (replicationEvent.IsConflict())
         {
             IObjectState stateOfTheDesktop = replicationEvent.StateInProviderA();
             IObjectState stateOfTheMobile = replicationEvent.StateInProviderB();
 
-            if (stateOfTheDesktop.ModificationDate() &gt;= stateOfTheMobile.ModificationDate())
+            <span style="color:Blue;">if</span> (stateOfTheDesktop.ModificationDate() &gt;= stateOfTheMobile.ModificationDate())
             {
                 replicationEvent.OverrideWith(stateOfTheDesktop);
             }
-            else
+            <span style="color:Blue;">else</span>
             {
                 replicationEvent.OverrideWith(stateOfTheMobile);
             }
         }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.cs: Listener which takes latest changes
 			<div class="codedownload">

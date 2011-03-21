@@ -2,26 +2,28 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private class DiagnosticFilter : IDiagnosticListener
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">class</span> DiagnosticFilter : IDiagnosticListener
 {
-    private readonly ICollection&lt;Type&gt; filterFor;
-    private readonly IDiagnosticListener target;
+    <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> ICollection&lt;Type&gt; filterFor;
+    <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> IDiagnosticListener target;
 
-    public DiagnosticFilter(IDiagnosticListener target, params Type[] filterFor)
+    <span style="color:Blue;">public</span> DiagnosticFilter(IDiagnosticListener target, <span style="color:Blue;">params</span> Type[] filterFor)
     {
-        this.target = target;
-        this.filterFor = new List&lt;Type&gt;(filterFor);
+        <span style="color:Blue;">this</span>.target = target;
+        <span style="color:Blue;">this</span>.filterFor = <span style="color:Blue;">new</span> List&lt;Type&gt;(filterFor);
     }
 
-    public void OnDiagnostic(IDiagnostic diagnostic)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> OnDiagnostic(IDiagnostic diagnostic)
     {
         Type type = diagnostic.GetType();
-        if (filterFor.Contains(type))
+        <span style="color:Blue;">if</span> (filterFor.Contains(type))
         {
             target.OnDiagnostic(diagnostic);
         }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			DiagnosticsExamples.cs: A simple message filter
 			<div class="codedownload">

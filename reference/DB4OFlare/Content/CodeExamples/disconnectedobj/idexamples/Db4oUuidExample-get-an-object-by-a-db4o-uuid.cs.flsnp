@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">object objectForId = container.Ext().GetByUUID(idForObject);
-// getting by uuid doesn't activate the object
-// so you need to do it manually
-container.Ext().Activate(objectForId);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">object</span> objectForId = container.Ext().GetByUUID(idForObject);
+<span style="color:Green;">// getting by uuid doesn't activate the object</span>
+<span style="color:Green;">// so you need to do it manually</span>
+container.Ext().Activate(objectForId);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oUuidExample.cs: get an object by a db4o-uuid
 			<div class="codedownload">

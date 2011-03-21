@@ -1,33 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="752" MadCap:lastWidth="560">
-    <head><title>No Class Index	<link href="../../Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
-    </head>
-    <body onload="prettyPrint()">
-        <h1>No Class Index</h1>
-        <p MadCap:conditions="Primary.Java,Primary.All languages">You can disable the class-index: <MadCap:xref href="../../configuration/objectclass/diable_class_index.htm" target="" title="" alt="">See "Disable Class Index"</MadCap:xref></p>
-        <MadCap:snippetBlock src="../../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Disable-class-index.all.flsnp" />
-        <h2>Advantage</h2>
-        <p>Allows to improve the performance to delete
-and create objects of a class. </p><a name="Effect"></a>
-        <h2>Effect</h2>
-        <p>db4o maintains an index for each class to be
+  <head />
+  <body>
+    <h1>No Class Index</h1>
+    <p MadCap:conditions="Primary.Java,Primary.All languages">You can disable the class-index: <MadCap:xref href="../../configuration/objectclass/diable_class_index.htm" target="" title="" alt="">See "Disable Class Index"</MadCap:xref></p>
+    <MadCap:snippetBlock src="../../CodeExamples/configuration/objectconfig/ObjectConfigurationExamples-Disable-class-index.all.flsnp" />
+    <h2>Advantage</h2>
+    <p>Allows to improve the performance to delete
+and create objects of a class. </p>
+    <a name="Effect"></a>
+    <h2>Effect</h2>
+    <p>db4o maintains an index for each class to be
 able to deliver all instances of a class in a query. In some cases class index
 is not necessary:</p>
-        <ul>
-            <li>the application always works with subclasses or superclasses;</li>
-            <li>there are convenient field indexes that will always find instances
+    <ul>
+      <li>the application always works with subclasses or superclasses;</li>
+      <li>there are convenient field indexes that will always find instances
      of a class;</li>
-            <li>the application always works with IDs.</li>
-        </ul>
-        <p><code>Indexed(false)</code> setting will save
+      <li>the application always works with IDs.</li>
+    </ul>
+    <p>
+      <code>Indexed(false)</code> setting will save
 resources on maintaining the class index on create and delete of the class
-objects.</p><a name="Alternate Strategies"></a>
-        <h2>Alternate Strategies</h2>
-        <p>Object creation performance can be improved using
+objects.</p>
+    <a name="Alternate Strategies"></a>
+    <h2>Alternate Strategies</h2>
+    <p>Object creation performance can be improved using
 <a href="../../configuration/common/calling_constructors.htm">configuration.callConstructors(true)</a> setting.</p>
-        <p>
-            <MadCap:conditionalText MadCap:conditions="Primary.TobeReviewed">General read/write performance can be improved with the
+    <p>
+      <MadCap:conditionalText MadCap:conditions="Primary.TobeReviewed">General read/write performance can be improved with the
 <a href="reserving_storage_space.htm">configuration.reserveStorageSpace(byteCount)</a>setting.</MadCap:conditionalText>
-        </p>
-    </body>
+    </p>
+  </body>
 </html>

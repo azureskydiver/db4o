@@ -2,31 +2,33 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = openDatabase();
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer container = openDatabase();
 
-// first get the object from the database
+<span style="color:Green;">// first get the object from the database</span>
 Car carInDb = getCarById(container,disconnectedCar.getObjectId());
 
-// copy the value-objects (int, long, double, string etc)
+<span style="color:Green;">// copy the value-objects (int, long, double, string etc)</span>
 carInDb.setName(disconnectedCar.getName());
 
-// traverse into the references
+<span style="color:Green;">// traverse into the references</span>
 Pilot pilotInDB = carInDb.getPilot();
 Pilot disconnectedPilot = disconnectedCar.getPilot();
 
-// check if the object is still the same
-if(pilotInDB.getObjectId().equals(disconnectedPilot.getObjectId())){
-    // if it is, copy the value-objects
+<span style="color:Green;">// check if the object is still the same</span>
+<span style="color:Blue;">if</span>(pilotInDB.getObjectId().equals(disconnectedPilot.getObjectId())){
+    <span style="color:Green;">// if it is, copy the value-objects</span>
     pilotInDB.setName(disconnectedPilot.getName());
     pilotInDB.setPoints(disconnectedPilot.getPoints());
-} else{
-    // otherwise replace the object
+} <span style="color:Blue;">else</span>{
+    <span style="color:Green;">// otherwise replace the object</span>
     carInDb.setPilot(disconnectedPilot); 
 }
 
-// finally store the changes
+<span style="color:Green;">// finally store the changes</span>
 container.store(pilotInDB);
-container.store(carInDb);</pre>
+container.store(carInDb);
+</pre>
 		<div class="codesnippet-meta">
 			MergeExample.java: merging
 			<div class="codedownload">

@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">' Get the information about all stored classes.
-Dim classesInDB As IStoredClass() = container.Ext().StoredClasses()
-For Each storedClass As IStoredClass In classesInDB
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">' Get the information about all stored classes.</span>
+<span style="color:Blue;">Dim</span> classesInDB <span style="color:Blue;">As</span> IStoredClass() = container.Ext().StoredClasses()
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> storedClass <span style="color:Blue;">As</span> IStoredClass <span style="color:Blue;">In</span> classesInDB
     Console.WriteLine(storedClass.GetName())
-Next
+<span style="color:Blue;">Next</span>
 
-' Information for a certain class
-Dim metaInfo As IStoredClass = container.Ext().StoredClass(GetType(Person))</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">' Get the information about all stored classes.
-Dim classesInDB As IStoredClass() = container.Ext().StoredClasses()
-For Each storedClass As IStoredClass In classesInDB
-    Console.WriteLine(storedClass.GetName())
-Next
-
-' Information for a certain class
-Dim metaInfo As IStoredClass = container.Ext().StoredClass(GetType(Person))</pre>
+<span style="color:Green;">' Information for a certain class</span>
+<span style="color:Blue;">Dim</span> metaInfo <span style="color:Blue;">As</span> IStoredClass = container.Ext().StoredClass(<span style="color:Blue;">GetType</span>(Person))
+</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.vb: All stored classes
 			<div class="codedownload">

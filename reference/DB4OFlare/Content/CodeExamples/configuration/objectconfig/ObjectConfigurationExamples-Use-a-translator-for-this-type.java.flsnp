@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.common().objectClass(Person.class).translate(new TSerializable());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.common().objectClass(Person.<span style="color:Blue;">class</span>).translate(<span style="color:Blue;">new</span> TSerializable());
+</pre>
 		<div class="codesnippet-meta">
 			ObjectConfigurationExamples.java: Use a translator for this type
 			<div class="codedownload">

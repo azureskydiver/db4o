@@ -2,14 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ReplicationSession replicationSession =
+        <pre class="prettyprint" xml:space="preserve">
+ReplicationSession replicationSession =
         Replication.begin(mobileDatabase, centralDatabase);
 
 ObjectSet changesOnMobileDB = mobileDatabase.objectsChangedSinceLastReplication();
-for (Object changedObject : changesOnMobileDB) {
+<span style="color:Blue;">for</span> (Object changedObject : changesOnMobileDB) {
     replicationSession.replicate(changedObject);
 }
-replicationSession.commit();</pre>
+replicationSession.commit();
+</pre>
 		<div class="codesnippet-meta">
 			SimpleReplication.java: Start replication
 			<div class="codedownload">

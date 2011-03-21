@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ReplicationSession replicationSession = Replication.begin(providerA, providerB,
-        new ReplicationEventListener() {
-            public void onReplicate(ReplicationEvent replicationEvent) {
-                if (replicationEvent.isConflict()) {
+        <pre class="prettyprint" xml:space="preserve">
+ReplicationSession replicationSession = Replication.begin(providerA, providerB,
+        <span style="color:Blue;">new</span> ReplicationEventListener() {
+            <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onReplicate(ReplicationEvent replicationEvent) {
+                <span style="color:Blue;">if</span> (replicationEvent.isConflict()) {
                     ObjectState stateOfTheDesktop = replicationEvent.stateInProviderA();
                     replicationEvent.overrideWith(stateOfTheDesktop);
                 }
             }
-        });</pre>
+        });
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.java: Deal with conflicts
 			<div class="codedownload">

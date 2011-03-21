@@ -1,80 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="1842" MadCap:lastWidth="511" MadCap:conditions="Primary.Java,Primary.All languages" MadCap:ignoredWords="RandomAccessFileAdapter;randomAccessFileAdapter;NonFlushingIoAdapter;nonFlushingIoAdapter;CachedIoAdapter;cachedIoAdapter;disableCommitRecovery;DisableCommitRecovery;extObjectContainer;setSemaphore;getName;SetSemaphore;typeof;LOCK_;getID;GetID;getPilot;getSignature;idenity;car1;car2;car3;UUID;defragment;startsWith;getPoints;StartsWith;ExtentType;oql;AllPilots;OQLQuery;persistenceManager;newQuery;IList;IComparer;ObjectSet;IObjectSet;comparer;ExtObjectContainer;IExtObjectContainer;VB;pilot1;name1;name2;peekPersisted;isCached;JDO;WeakReferences;VM;ClientConfiguration;IClientConfiguration;BatchMessages;NO_OF_OBJECTS;maxBatchQueueSize;MaxBatchQueueSize;listResult;MessageRecipient;ObjectServer;openServer;ObjectNotStorableException;s;clientserverJava;ServerConfiguration;clientserverCS;cs;clientserverVB;vb;config;databaseFileName;int;NativeSocketFactory;socketFactory;OpenClient;hostName;IObjectServer;OpenServer;IConfiguration;INativeSocketFactory;IObjectContainer;genkey;SSLcert;storepass;SecureSocketFactory;IMessageSender;setMessageRecipient;SetMessageRecipient;IMessageRecipient;processMessage;ProcessMessage;ByVal;UpdateServer;waitMilliSeconds;releaseSemaphore;ReleaseSemaphore;monitorObject;semaphoreName;switchToFile;fileName;SwitchToFile;switchToMainFile;SwitchToMainFile;switchs;isAlive;IsAlive;replicateDeletions;ReplicateDeletions;GetType;g;ReplicationEvent;VersionNumbers;providerA;objectsChangedSinceLastReplication;ProviderA;ObjectsChangedSinceLastReplication;hbm;ProviderSignature;MySignature;PeerSignature;ReplicationProvider;HibernateReplicationProvider;ReplicationProviders;m;typed_id;pi2763;longPart;ObjectReference;className;typedId;Uuid;uuid;drs_providers;is_my_sig;t';f';drs_history;provider_id;PK;drs_objects;class_name;varchar;one_to_one;ReplicationConfigurator;SessionFactory;sessionFactory;buildSessionFactory;openSession;beginTransaction;createCriteria;AbstractDb4oTestCase;Db4oFixture;_fixture;AbstractSoloDb4oFixture;AbstractClientServerDb4oFixture;IDb4oFixture;IQuery;NewQuery;retrieveOnlyInstance;RetrieveOnlyInstance;countOccurences;CountOccurences;foreach;Visitor4;Foreach;IVisitor4;obj;deleteAll;DeleteAll;ReflectClass;reflectClass;indexField;fieldName;IndexField;Config;setUp;SetUp;db4oSetupBeforeStore;db4oSetupAfterStore;Db4oSetupBeforeStore;Db4oSetupAfterStore;runSoloAndClientServer;RunSoloAndClientServer;runSolo;RunSolo;runClientServer;RunClientServer;CodeBlock;Db4oUnit;ICodeBlock;isTrue;msg;IsTrue;bool;Msg;areEqual;AreEqual;FrameworkTestCase;runTestAndExpect;expFailures;RunTestAndExpect;ITest;GetConfig;storedType;runtimeType;tAlias;resolveRuntimeName;resolveStoredName;storedPattern;runtimePattern;aliasing;QueryStarted;QueryFinished;QueryEventArgs;ObjectEventArgs;CancellableObjectEventArgs;CommitEventArgs;client2;client1;WaitForCompletion;args;AddHandler;forObjectContainer;ForObjectContainer;OnCreated;createdEvent;onEvent;Event4;ABC0001DEF;MustInherit;CountedObject;IncrementedId;queryStarted;queryFinished;QueryStats;q;executionTime;activationCount;storedClass;Foo;classname;storedClasses;StoredClasses;getStoredFields;GetStoredFields;storedField;getParentStoredClass;GetParentStoredClass;reflectWith;Db4oFactory;ReflectWith;self_get;self_set;LoggingReflector;IoAdapter;MyEncryptionAdapter;Io;Db4oEnhancerMSBuildTask;SensorPanel;GetOptions;UsingTask;AssemblyFile;OutputPath;TaskName;ItemGroup;Db4oEnhance;TargetPath;AfterBuild;AbstractAssemblyInstrumentation;IAssemblyInstrumentation;TAInstrumentation;tp;EnhancementExample;tacustom;Db4oPersistent;typedef;classTargetDir;jarTargetDir;MaintenanceQueue;'Barrichello';'BMW';useIndexSystem;useRamSystem;discardSmallerThan;DiscardSmallerThan;allObjects;SumPilotPoints;SelectMinPointsPilot;AveragePilotPoints;CountSubGroups;SelectPilotsAndTrainees;SelectPilotsInRange;SelectAndChangePilots;SelectTestPilots6PointsMore;SelectPilots6To12Points;SelectPilotsRandom;SelectPilotsEven;SelectAnyOnePilot;SelectDistinctPilots;SelectAllPilots;SelectAllPilotsNonGeneric;GetSortedPilots;GetPilotsSortByNameAndPoints;GetPilotsSortWithComparator;SelectPilot5Points;SelectTestPilots;SelectPilotsNumberX6;newPackage;newClass;objectField;oldField;newField;newAssembly;ObjectField;aaplication">
-    <head><title>TA Enhancement At Build Time	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
-    </head>
-    <body onload="prettyPrint()">
-        <h1>TA Enhancement At Build Time</h1>
-        <p>In this topic we will
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="1842" MadCap:lastWidth="511" MadCap:conditions="Primary.Java,Primary.All languages">
+  <head />
+  <body>
+    <h1>TA Enhancement At Build Time</h1>
+    <p>In this topic we will
 look at even more convenient and performant way of enhancing classes to support
 TA: during application build time. </p>
-        <p>For simplistic example our build script should:</p>
-        <ul>
-            <li>Use classes, created by
+    <p>For simplistic example our build script should:</p>
+    <ul>
+      <li>Use classes, created by
      normal build script</li>
-            <li>Create a new enhanced-bin
+      <li>Create a new enhanced-bin
      folder for the enhanced classes</li>
-            <li>Use TAAntClassEditFactory
+      <li>Use TAAntClassEditFactory
      to create InjectTransparentActivationEdit (can be based on class filter)</li>
-            <li>Call
+      <li>Call
      Db4oFileEnhancerAntTask#execute, which will call
      Db4oClassInstrumenter#enhance passing the previously created InjectTransparentActivationEdit
      to instrument classes with TA.</li>
-        </ul>
-        <p>All
+    </ul>
+    <p>All
 these can be done with the following script:</p>
-        <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Build Time/Build.Xml/Build.Xml.flsnp" />
-        <p>In
+    <MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Build Time/Build.Xml/Build.Xml.flsnp" />
+    <p>In
 order to test this script:</p>
-        <ul>
-            <li>Create a new project,
+    <ul>
+      <li>Create a new project,
      consisting of TAInstrumentationExample and SensorPanel classes from the
      <a href="ta_enhancement_at_load_time.htm">previous example</a></li>
-            <li>Add lib folder to the
+      <li>Add lib folder to the
      project root and copy the following jars from db4o distribution:</li>
-            <ul>
-                <li>ant.jar </li>
-                <li>bloat-1.0.jar</li>
-                <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-instrumentation.jar</li>
-                <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-java5.jar</li>
-                <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-taj.jar</li>
-                <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-tools.jar 
+      <ul>
+        <li>ant.jar </li>
+        <li>bloat-1.0.jar</li>
+        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-instrumentation.jar</li>
+        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-java5.jar</li>
+        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-taj.jar</li>
+        <li>db4o-<MadCap:variable name="Primary.CurrentVersion" />-tools.jar 
       (Note, that the described functionality is only valid for db4o releases
       after 7.0)</li>
-            </ul>
-            <li>Build the project with your
+      </ul>
+      <li>Build the project with your
      IDE or any other build tools (it is assumed that the built class files go
      to the project's bin directory)</li>
-            <li>Copy build.xml into the
+      <li>Copy build.xml into the
      root project folder and execute it</li>
-        </ul>
-        <p>Successfully
+    </ul>
+    <p>Successfully
 executed build script will produce an instrumented copy of the project classes
 in enhanced-bin folder. You can check the results by running the following
 batch file from bin and enhanced-bin folders:</p>
-        <p><code>set
+    <p>
+      <code>set
 CLASSPATH=.;{$PROJECT_ROOT}\lib\db4o-<MadCap:variable name="Primary.CurrentVersion" />-java5.jar</code>
-        </p>
-        <p><code>java
+    </p>
+    <p>
+      <code>java
 com.db4odoc.taexamples.enhancer.TAInstrumentationExample</code>
-        </p>
-        <p>(In
+    </p>
+    <p>(In
 enhanced version the warning about classes that do not support TA should
 disappear).</p>
-        <p>Of
+    <p>Of
 course, the presented example is very simple and limited in functionality. In
 fact you can do a lot more things using the build script:</p>
-        <p>o      
+    <p>o      
 Add NQ optimization in the same enhancer task</p>
-        <p>o      
+    <p>o      
 Use ClassFilter to select classes for
 enhancement</p>
-        <p>o      
+    <p>o      
 Use regex to select classes for enhancement</p>
-        <p>o      
+    <p>o      
 Use several source folders</p>
-        <p>o      
+    <p>o      
 Use jar as the source for enhancement</p>
-        <p>An example of the above features can be found in our <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/TA_And_NQ_Enhancement_Example">Project
+    <p>An example of the above features can be found in our <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/TA_And_NQ_Enhancement_Example">Project
 Spaces</a>.</p>
-    </body>
+  </body>
 </html>

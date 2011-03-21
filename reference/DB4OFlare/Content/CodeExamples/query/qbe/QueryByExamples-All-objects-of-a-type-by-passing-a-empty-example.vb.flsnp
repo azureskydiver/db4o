@@ -2,10 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim example As New Pilot()
-Dim result As IList = container.QueryByExample(example)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim example As New Pilot()
-Dim result As IList = container.QueryByExample(example)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> example <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> Pilot()
+<span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IList = container.QueryByExample(example)
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.vb: All objects of a type by passing a empty example
 			<div class="codedownload">

@@ -2,14 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectSet changesOnDesktop =
-    replicationSession.providerA().objectsChangedSinceLastReplication(Pilot.class);
+        <pre class="prettyprint" xml:space="preserve">
+ObjectSet changesOnDesktop =
+    replicationSession.providerA().objectsChangedSinceLastReplication(Pilot.<span style="color:Blue;">class</span>);
 
-for (Object changedObjectOnDesktop : changesOnDesktop) {
+<span style="color:Blue;">for</span> (Object changedObjectOnDesktop : changesOnDesktop) {
     replicationSession.replicate(changedObjectOnDesktop);
 }
 
-replicationSession.commit();</pre>
+replicationSession.commit();
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.java: Selective replication by class
 			<div class="codedownload">

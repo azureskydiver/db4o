@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+        <pre class="prettyprint" xml:space="preserve">
+IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
 configuration.Common
-    .Add(new TransparentPersistenceSupport(new DeactivatingRollbackStrategy()));</pre>
+    .Add(<span style="color:Blue;">new</span> TransparentPersistenceSupport(<span style="color:Blue;">new</span> DeactivatingRollbackStrategy()));
+</pre>
 		<div class="codesnippet-meta">
 			RollbackExample.cs: Configure rollback strategy
 			<div class="codedownload">

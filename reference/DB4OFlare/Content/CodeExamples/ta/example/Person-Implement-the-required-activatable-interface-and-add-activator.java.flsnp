@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">import com.db4o.activation.ActivationPurpose;
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">import</span> com.db4o.activation.ActivationPurpose;
+<span style="color:Blue;">import</span> com.db4o.activation.Activator;
+<span style="color:Blue;">import</span> com.db4o.ta.Activatable;
 
-public class Person implements Activatable{
+<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Person <span style="color:Blue;">implements</span> Activatable{
 
-    private transient Activator activator;</pre>
+    <span style="color:Blue;">private</span> <span style="color:Blue;">transient</span> Activator activator;
+</pre>
 		<div class="codesnippet-meta">
 			Person.java: Implement the required activatable interface and add activator
 			<div class="codedownload">

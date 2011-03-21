@@ -2,32 +2,21 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Class Pilot
-    Private m_name As String
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Class</span> Pilot
+    <span style="color:Blue;">Private</span> m_name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
 
     &lt;Required()&gt; _
-    Public Property Name() As String
-        Get
-            Return m_name
-        End Get
-        Set(ByVal value As String)
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Property</span> Name() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+        <span style="color:Blue;">Get</span>
+            <span style="color:Blue;">Return</span> m_name
+        <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
+        <span style="color:Blue;">Set</span>(<span style="color:Blue;">ByVal</span> value <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
             m_name = value
-        End Set
-    End Property
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Class Pilot
-    Private m_name As String
-
-    &lt;Required()&gt; _
-    Public Property Name() As String
-        Get
-            Return m_name
-        End Get
-        Set(ByVal value As String)
-            m_name = value
-        End Set
-    End Property
-End Class</pre>
+        <span style="color:Blue;">End</span> <span style="color:Blue;">Set</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.vb: Validation attributes
 			<div class="codedownload">

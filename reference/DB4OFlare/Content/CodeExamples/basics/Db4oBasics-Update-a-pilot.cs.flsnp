@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectContainer container = Db4oEmbedded.OpenFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>))
 {
-    var pilot = (from Pilot p in container
-                 where p.Name == &quot;Joe&quot;
-                 select p).First();
-    pilot.Name = &quot;New Name&quot;;
-    // update the pilot
+    <span style="color:Blue;">var</span> pilot = (<span style="color:Blue;">from</span> Pilot p <span style="color:Blue;">in</span> container
+                 <span style="color:Blue;">where</span> p.Name == <span style="color:#A31515;">&quot;Joe&quot;</span>
+                 <span style="color:Blue;">select</span> p).First();
+    pilot.Name = <span style="color:#A31515;">&quot;New Name&quot;</span>;
+    <span style="color:Green;">// update the pilot</span>
     container.Store(pilot);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.cs: Update a pilot
 			<div class="codedownload">

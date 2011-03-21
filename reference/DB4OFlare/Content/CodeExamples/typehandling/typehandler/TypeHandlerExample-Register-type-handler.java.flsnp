@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 configuration.common().registerTypeHandler(
-        new SingleClassTypeHandlerPredicate(StringBuilder.class), new StringBuilderHandler());</pre>
+        <span style="color:Blue;">new</span> SingleClassTypeHandlerPredicate(StringBuilder.<span style="color:Blue;">class</span>), <span style="color:Blue;">new</span> StringBuilderHandler());
+</pre>
 		<div class="codesnippet-meta">
 			TypeHandlerExample.java: Register type handler
 			<div class="codedownload">

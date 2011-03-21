@@ -2,38 +2,24 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Class TakeLatestModificationOnConflictListener
-    Implements IReplicationEventListener
-    Public Sub OnReplicate(ByVal replicationEvent As IReplicationEvent) _
-                            Implements IReplicationEventListener.OnReplicate
-        If replicationEvent.IsConflict() Then
-            Dim stateOfTheDesktop As IObjectState = replicationEvent.StateInProviderA()
-            Dim stateOfTheMobile As IObjectState = replicationEvent.StateInProviderB()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> TakeLatestModificationOnConflictListener
+    <span style="color:Blue;">Implements</span> IReplicationEventListener
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> OnReplicate(<span style="color:Blue;">ByVal</span> replicationEvent <span style="color:Blue;">As</span> IReplicationEvent) _
+                            <span style="color:Blue;">Implements</span> IReplicationEventListener.OnReplicate
+        <span style="color:Blue;">If</span> replicationEvent.IsConflict() <span style="color:Blue;">Then</span>
+            <span style="color:Blue;">Dim</span> stateOfTheDesktop <span style="color:Blue;">As</span> IObjectState = replicationEvent.StateInProviderA()
+            <span style="color:Blue;">Dim</span> stateOfTheMobile <span style="color:Blue;">As</span> IObjectState = replicationEvent.StateInProviderB()
 
-            If stateOfTheDesktop.ModificationDate() &gt;= stateOfTheMobile.ModificationDate() Then
+            <span style="color:Blue;">If</span> stateOfTheDesktop.ModificationDate() &gt;= stateOfTheMobile.ModificationDate() <span style="color:Blue;">Then</span>
                 replicationEvent.OverrideWith(stateOfTheDesktop)
-            Else
+            <span style="color:Blue;">Else</span>
                 replicationEvent.OverrideWith(stateOfTheMobile)
-            End If
-        End If
-    End Sub
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Class TakeLatestModificationOnConflictListener
-    Implements IReplicationEventListener
-    Public Sub OnReplicate(ByVal replicationEvent As IReplicationEvent) _
-                            Implements IReplicationEventListener.OnReplicate
-        If replicationEvent.IsConflict() Then
-            Dim stateOfTheDesktop As IObjectState = replicationEvent.StateInProviderA()
-            Dim stateOfTheMobile As IObjectState = replicationEvent.StateInProviderB()
-
-            If stateOfTheDesktop.ModificationDate() &gt;= stateOfTheMobile.ModificationDate() Then
-                replicationEvent.OverrideWith(stateOfTheDesktop)
-            Else
-                replicationEvent.OverrideWith(stateOfTheMobile)
-            End If
-        End If
-    End Sub
-End Class</pre>
+            <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+        <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.vb: Listener which takes latest changes
 			<div class="codedownload">

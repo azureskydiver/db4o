@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">' use the object container
-Using container As IObjectContainer = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;)
-End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">' use the object container
-Using container As IObjectContainer = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;)
-End Using</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">' use the object container</span>
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oEmbedded.OpenFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>)
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.vb: Open the object container to use the database
 			<div class="codedownload">

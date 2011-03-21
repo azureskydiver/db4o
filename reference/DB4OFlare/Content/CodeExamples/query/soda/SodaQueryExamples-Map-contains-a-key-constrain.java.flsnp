@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Query query = container.query();
-query.constrain(BlogPost.class);
-query.descend(&quot;metaData&quot;).constrain(&quot;source&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+Query query = container.query();
+query.constrain(BlogPost.<span style="color:Blue;">class</span>);
+query.descend(<span style="color:#A31515;">&quot;metaData&quot;</span>).constrain(<span style="color:#A31515;">&quot;source&quot;</span>);
 
-ObjectSet&lt;Object&gt; result = query.execute();</pre>
+ObjectSet&lt;Object&gt; result = query.execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.java: Map contains a key constrain
 			<div class="codedownload">

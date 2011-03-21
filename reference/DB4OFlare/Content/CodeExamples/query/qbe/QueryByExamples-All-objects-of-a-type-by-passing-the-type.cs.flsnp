@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IList result = container.QueryByExample(typeof (Pilot));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IList result = container.QueryByExample(<span style="color:Blue;">typeof</span> (Pilot));
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.cs: All objects of a type by passing the type
 			<div class="codedownload">

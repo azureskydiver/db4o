@@ -2,22 +2,16 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim metaInfo As IStoredClass = container.Ext().StoredClass(GetType(IndexedClass))
-' list a fields and check if they have a index
-For Each field As IStoredField In metaInfo.GetStoredFields()
-    If field.HasIndex() Then
-        Console.WriteLine(&quot;The field '&quot; &amp; field.GetName() &amp; &quot;' is indexed&quot;)
-    Else
-        Console.WriteLine(&quot;The field '&quot; &amp; field.GetName() &amp; &quot;' isn't indexed&quot;)
-    End If</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim metaInfo As IStoredClass = container.Ext().StoredClass(GetType(IndexedClass))
-' list a fields and check if they have a index
-For Each field As IStoredField In metaInfo.GetStoredFields()
-    If field.HasIndex() Then
-        Console.WriteLine(&quot;The field '&quot; &amp; field.GetName() &amp; &quot;' is indexed&quot;)
-    Else
-        Console.WriteLine(&quot;The field '&quot; &amp; field.GetName() &amp; &quot;' isn't indexed&quot;)
-    End If</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> metaInfo <span style="color:Blue;">As</span> IStoredClass = container.Ext().StoredClass(<span style="color:Blue;">GetType</span>(IndexedClass))
+<span style="color:Green;">' list a fields and check if they have a index</span>
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> field <span style="color:Blue;">As</span> IStoredField <span style="color:Blue;">In</span> metaInfo.GetStoredFields()
+    <span style="color:Blue;">If</span> field.HasIndex() <span style="color:Blue;">Then</span>
+        Console.WriteLine(<span style="color:#A31515;">&quot;The field '&quot;</span> &amp; field.GetName() &amp; <span style="color:#A31515;">&quot;' is indexed&quot;</span>)
+    <span style="color:Blue;">Else</span>
+        Console.WriteLine(<span style="color:#A31515;">&quot;The field '&quot;</span> &amp; field.GetName() &amp; <span style="color:#A31515;">&quot;' isn't indexed&quot;</span>)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+</pre>
 		<div class="codesnippet-meta">
 			CheckForAndIndex.vb: Check for a index
 			<div class="codedownload">

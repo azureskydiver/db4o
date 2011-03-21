@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
+        <pre class="prettyprint" xml:space="preserve">
+IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
 IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
 IReplicationProvider dektopReplicationProvider
-    = new Db4oEmbeddedReplicationProvider(desktopDatabase);
+    = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(desktopDatabase);
 IReplicationProvider mobileReplicationProvider
-    = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+    = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(mobileDatabase);
 
 IReplicationSession replicationSession
-    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);</pre>
+    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.cs: Prepare bidirectional replication
 			<div class="codedownload">

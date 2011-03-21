@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IQuery query = container.Query();
-query.Constrain(typeof(Car));
-query.Descend(&quot;name&quot;).Constrain(&quot;Mercedes&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+IQuery query = container.Query();
+query.Constrain(<span style="color:Blue;">typeof</span>(Car));
+query.Descend(<span style="color:#A31515;">&quot;name&quot;</span>).Constrain(<span style="color:#A31515;">&quot;Mercedes&quot;</span>);
 
-// returns the pilot of these cars
-IObjectSet result = query.Descend(&quot;pilot&quot;).Execute();</pre>
+<span style="color:Green;">// returns the pilot of these cars</span>
+IObjectSet result = query.Descend(<span style="color:#A31515;">&quot;pilot&quot;</span>).Execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.cs: Return the object of a field
 			<div class="codedownload">

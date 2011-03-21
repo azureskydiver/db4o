@@ -3,13 +3,15 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">
-// You can build your own SSLContext and use all features of Java's SSL-support.
-// To keep this example small, we just use the default-context instead of building one.
+
+<span style="color:Green;">// You can build your own SSLContext and use all features of Java's SSL-support.</span>
+<span style="color:Green;">// To keep this example small, we just use the default-context instead of building one.</span>
 SSLContext context = SSLContext.getDefault();
 
 
 ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
-configuration.common().add(new SSLSupport(context));</pre>
+configuration.common().add(<span style="color:Blue;">new</span> SSLSupport(context));
+</pre>
 		<div class="codesnippet-meta">
 			SSLExample.java: You can build up a regular SSL-Context and us it
 			<div class="codedownload">

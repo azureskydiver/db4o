@@ -2,8 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">configuration.AddConfigurationItem(New ClientConnectionsMonitoringSupport())</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">configuration.AddConfigurationItem(New ClientConnectionsMonitoringSupport())</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.AddConfigurationItem(<span style="color:Blue;">New</span> ClientConnectionsMonitoringSupport())
+</pre>
 		<div class="codesnippet-meta">
 			CSMonitoring.vb: Add the client connections monitoring support
 			<div class="codedownload">

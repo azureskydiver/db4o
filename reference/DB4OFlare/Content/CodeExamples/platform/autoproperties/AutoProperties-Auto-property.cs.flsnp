@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class Person
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> Person
 {
-    public string Name { get; set; }
-}</pre>
+    <span style="color:Blue;">public</span> <span style="color:Blue;">string</span> Name { <span style="color:Blue;">get</span>; <span style="color:Blue;">set</span>; }
+}
+</pre>
 		<div class="codesnippet-meta">
 			AutoProperties.cs: Auto property
 			<div class="codedownload">

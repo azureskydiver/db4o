@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.common().objectClass(Car.class).objectField(&quot;pilot&quot;).indexed(true);
-configuration.common().objectClass(Pilot.class).objectField(&quot;points&quot;).indexed(true);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.common().objectClass(Car.<span style="color:Blue;">class</span>).objectField(<span style="color:#A31515;">&quot;pilot&quot;</span>).indexed(<span style="color:Blue;">true</span>);
+configuration.common().objectClass(Pilot.<span style="color:Blue;">class</span>).objectField(<span style="color:#A31515;">&quot;points&quot;</span>).indexed(<span style="color:Blue;">true</span>);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oExample.java: configure db4o
 			<div class="codedownload">

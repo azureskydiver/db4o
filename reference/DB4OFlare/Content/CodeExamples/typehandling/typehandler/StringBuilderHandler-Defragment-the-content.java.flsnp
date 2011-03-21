@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">@Override
-public void defragment(DefragmentContext defragmentContext) {
+        <pre class="prettyprint" xml:space="preserve">
+@Override
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> defragment(DefragmentContext defragmentContext) {
     skipData(defragmentContext);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			StringBuilderHandler.java: Defragment the content
 			<div class="codedownload">

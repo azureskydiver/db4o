@@ -2,14 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public string Name
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">string</span> Name
 {
-    get
+    <span style="color:Blue;">get</span>
     {
         Activate(ActivationPurpose.Read);
-        return name;
+        <span style="color:Blue;">return</span> name;
     }
-    set
+    <span style="color:Blue;">set</span>
     {
         Activate(ActivationPurpose.Write);
         name = value;
@@ -17,12 +18,13 @@
 }
 
 
-public override string ToString()
+<span style="color:Blue;">public</span> <span style="color:Blue;">override</span> <span style="color:Blue;">string</span> ToString()
 {
-    // use the getter/setter withing the class,
-    // to ensure the activate-method is called
-    return Name;
+    <span style="color:Green;">// use the getter/setter withing the class,</span>
+    <span style="color:Green;">// to ensure the activate-method is called</span>
+    <span style="color:Blue;">return</span> Name;
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			Person.cs: Call the activate method on every field access

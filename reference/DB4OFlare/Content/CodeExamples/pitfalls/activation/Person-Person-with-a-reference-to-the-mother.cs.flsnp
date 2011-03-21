@@ -2,32 +2,34 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">internal class Person
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">internal</span> <span style="color:Blue;">class</span> Person
 {
-    private Person mother;
-    private string name;
+    <span style="color:Blue;">private</span> Person mother;
+    <span style="color:Blue;">private</span> <span style="color:Blue;">string</span> name;
 
-    public Person(string name)
+    <span style="color:Blue;">public</span> Person(<span style="color:Blue;">string</span> name)
     {
-        this.name = name;
+        <span style="color:Blue;">this</span>.name = name;
     }
 
-    public Person(Person mother, string name)
+    <span style="color:Blue;">public</span> Person(Person mother, <span style="color:Blue;">string</span> name)
     {
-        this.mother = mother;
-        this.name = name;
+        <span style="color:Blue;">this</span>.mother = mother;
+        <span style="color:Blue;">this</span>.name = name;
     }
 
-    public Person Mother
+    <span style="color:Blue;">public</span> Person Mother
     {
-        get { return mother; }
+        <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> mother; }
     }
 
-    public string Name
+    <span style="color:Blue;">public</span> <span style="color:Blue;">string</span> Name
     {
-        get { return name; }
+        <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> name; }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Person.cs: Person with a reference to the mother
 			<div class="codedownload">

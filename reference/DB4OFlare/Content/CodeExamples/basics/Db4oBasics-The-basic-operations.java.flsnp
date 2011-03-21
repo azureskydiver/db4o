@@ -2,30 +2,32 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = Db4oEmbedded.openFile(&quot;databaseFile.db4o&quot;);
-try {
-    // store a new pilot
-    Pilot pilot = new Pilot(&quot;Joe&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>);
+<span style="color:Blue;">try</span> {
+    <span style="color:Green;">// store a new pilot</span>
+    Pilot pilot = <span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Joe&quot;</span>);
     container.store(pilot);
 
-    // query for pilots
-    List&lt;Pilot&gt; pilots = container.query(new Predicate&lt;Pilot&gt;() {
+    <span style="color:Green;">// query for pilots</span>
+    List&lt;Pilot&gt; pilots = container.query(<span style="color:Blue;">new</span> Predicate&lt;Pilot&gt;() {
         @Override
-        public boolean match(Pilot pilot) {
-            return pilot.getName().startsWith(&quot;Jo&quot;);
+        <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Pilot pilot) {
+            <span style="color:Blue;">return</span> pilot.getName().startsWith(<span style="color:#A31515;">&quot;Jo&quot;</span>);
         }
     });
 
-    // update pilot
+    <span style="color:Green;">// update pilot</span>
     Pilot toUpdate = pilots.get(0);
-    toUpdate.setName(&quot;New Name&quot;);
+    toUpdate.setName(<span style="color:#A31515;">&quot;New Name&quot;</span>);
     container.store(toUpdate);
 
-    // delete pilot
+    <span style="color:Green;">// delete pilot</span>
     container.delete(toUpdate);
-} finally {
+} <span style="color:Blue;">finally</span> {
     container.close();
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.java: The basic operations
 			<div class="codedownload">

@@ -2,10 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim uuidHolder As IDHolder = DirectCast(obj, IDHolder)
-Dim uuid As Guid = uuidHolder.ObjectId</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim uuidHolder As IDHolder = DirectCast(obj, IDHolder)
-Dim uuid As Guid = uuidHolder.ObjectId</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> uuidHolder <span style="color:Blue;">As</span> IDHolder = <span style="color:Blue;">DirectCast</span>(obj, IDHolder)
+<span style="color:Blue;">Dim</span> uuid <span style="color:Blue;">As</span> Guid = uuidHolder.ObjectId
+</pre>
 		<div class="codesnippet-meta">
 			UuidOnObject.vb: get the uuid
 			<div class="codedownload">

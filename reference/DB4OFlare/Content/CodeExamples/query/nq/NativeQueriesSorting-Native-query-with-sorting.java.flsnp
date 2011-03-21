@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final ObjectSet&lt;Pilot&gt; pilots = container.query(new Predicate&lt;Pilot&gt;() {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> ObjectSet&lt;Pilot&gt; pilots = container.query(<span style="color:Blue;">new</span> Predicate&lt;Pilot&gt;() {
     @Override
-    public boolean match(Pilot o) {
-        return o.getAge() &gt; 18;
+    <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Pilot o) {
+        <span style="color:Blue;">return</span> o.getAge() &gt; 18;
     }
-}, new QueryComparator&lt;Pilot&gt;() {
-    public int compare(Pilot pilot, Pilot pilot1) {
-        return pilot.getName().compareTo(pilot1.getName());
+}, <span style="color:Blue;">new</span> QueryComparator&lt;Pilot&gt;() {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">int</span> compare(Pilot pilot, Pilot pilot1) {
+        <span style="color:Blue;">return</span> pilot.getName().compareTo(pilot1.getName());
     }
-});</pre>
+});
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueriesSorting.java: Native query with sorting
 			<div class="codedownload">

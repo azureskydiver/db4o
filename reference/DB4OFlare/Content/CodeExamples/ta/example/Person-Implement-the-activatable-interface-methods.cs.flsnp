@@ -2,26 +2,28 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">public void Bind(IActivator activator)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Bind(IActivator activator)
 {
-    if (this.activator == activator)
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">this</span>.activator == activator)
     {
-        return;
+        <span style="color:Blue;">return</span>;
     }
-    if (activator != null &amp;&amp; null != this.activator)
+    <span style="color:Blue;">if</span> (activator != <span style="color:Blue;">null</span> &amp;&amp; <span style="color:Blue;">null</span> != <span style="color:Blue;">this</span>.activator)
     {
-        throw new InvalidOperationException(&quot;Object can only be bound to one activator&quot;);
+        <span style="color:Blue;">throw</span> <span style="color:Blue;">new</span> InvalidOperationException(<span style="color:#A31515;">&quot;Object can only be bound to one activator&quot;</span>);
     }
-    this.activator = activator;
+    <span style="color:Blue;">this</span>.activator = activator;
 }
 
-public void Activate(ActivationPurpose activationPurpose)
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Activate(ActivationPurpose activationPurpose)
 {
-    if (null != activator)
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> != activator)
     {
         activator.Activate(activationPurpose);
     }
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			Person.cs: Implement the activatable interface methods

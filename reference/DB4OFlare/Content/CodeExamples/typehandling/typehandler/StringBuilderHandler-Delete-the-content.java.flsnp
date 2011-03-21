@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">@Override
-public void delete(DeleteContext deleteContext) throws Db4oIOException {
+        <pre class="prettyprint" xml:space="preserve">
+@Override
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> delete(DeleteContext deleteContext) <span style="color:Blue;">throws</span> Db4oIOException {
     skipData(deleteContext);
 }
 
-private void skipData(ReadBuffer deleteContext) {
-    int numBytes = deleteContext.readInt();
+<span style="color:Blue;">private</span> <span style="color:Blue;">void</span> skipData(ReadBuffer deleteContext) {
+    <span style="color:Blue;">int</span> numBytes = deleteContext.readInt();
     deleteContext.seek(deleteContext.offset()+ numBytes);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			StringBuilderHandler.java: Delete the content
 			<div class="codedownload">

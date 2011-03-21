@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
-configuration.networking().clientServerFactory(new StandardClientServerFactory());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+configuration.networking().clientServerFactory(<span style="color:Blue;">new</span> StandardClientServerFactory());
+</pre>
 		<div class="codesnippet-meta">
 			NetworkConfigurationExample.java: exchange the way a client or server is created
 			<div class="codedownload">

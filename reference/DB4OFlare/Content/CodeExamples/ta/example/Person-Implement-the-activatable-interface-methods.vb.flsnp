@@ -2,41 +2,25 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Sub Bind(ByVal activator As IActivator) _
-        Implements IActivatable.Bind
-    If m_activator Is activator Then
-        Exit Sub
-    End If
-    If activator IsNot Nothing AndAlso m_activator IsNot Nothing Then
-        Throw New InvalidOperationException(&quot;Object can only be bound to one activator&quot;)
-    End If
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> Bind(<span style="color:Blue;">ByVal</span> activator <span style="color:Blue;">As</span> IActivator) _
+        <span style="color:Blue;">Implements</span> IActivatable.Bind
+    <span style="color:Blue;">If</span> m_activator <span style="color:Blue;">Is</span> activator <span style="color:Blue;">Then</span>
+        <span style="color:Blue;">Exit</span> <span style="color:Blue;">Sub</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+    <span style="color:Blue;">If</span> activator <span style="color:Blue;">IsNot</span> <span style="color:Blue;">Nothing</span> <span style="color:Blue;">AndAlso</span> m_activator <span style="color:Blue;">IsNot</span> <span style="color:Blue;">Nothing</span> <span style="color:Blue;">Then</span>
+        <span style="color:Blue;">Throw</span> <span style="color:Blue;">New</span> InvalidOperationException(<span style="color:#A31515;">&quot;Object can only be bound to one activator&quot;</span>)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
     m_activator = activator
-End Sub
+<span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-Public Sub Activate(ByVal activationPurpose As ActivationPurpose) _
-        Implements IActivatable.Activate
-    If m_activator IsNot Nothing Then
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> Activate(<span style="color:Blue;">ByVal</span> activationPurpose <span style="color:Blue;">As</span> ActivationPurpose) _
+        <span style="color:Blue;">Implements</span> IActivatable.Activate
+    <span style="color:Blue;">If</span> m_activator <span style="color:Blue;">IsNot</span> <span style="color:Blue;">Nothing</span> <span style="color:Blue;">Then</span>
         m_activator.Activate(activationPurpose)
-    End If
-End Sub
-</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Sub Bind(ByVal activator As IActivator) _
-        Implements IActivatable.Bind
-    If m_activator Is activator Then
-        Exit Sub
-    End If
-    If activator IsNot Nothing AndAlso m_activator IsNot Nothing Then
-        Throw New InvalidOperationException(&quot;Object can only be bound to one activator&quot;)
-    End If
-    m_activator = activator
-End Sub
+    <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-Public Sub Activate(ByVal activationPurpose As ActivationPurpose) _
-        Implements IActivatable.Activate
-    If m_activator IsNot Nothing Then
-        m_activator.Activate(activationPurpose)
-    End If
-End Sub
 </pre>
 		<div class="codesnippet-meta">
 			Person.vb: Implement the activatable interface methods

@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IQuery query = container.Query();
-query.Constrain(typeof (Pilot));
-query.Descend(&quot;age&quot;).Constrain(42).Greater().Equal();
+        <pre class="prettyprint" xml:space="preserve">
+IQuery query = container.Query();
+query.Constrain(<span style="color:Blue;">typeof</span> (Pilot));
+query.Descend(<span style="color:#A31515;">&quot;age&quot;</span>).Constrain(42).Greater().Equal();
 
-IObjectSet result = query.Execute();</pre>
+IObjectSet result = query.Execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.cs: A greater than or equals constrain
 			<div class="codedownload">

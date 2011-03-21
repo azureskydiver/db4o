@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IQuery query = container.Query();
-query.Constrain(typeof (Car));
-query.Descend(&quot;pilot&quot;).Descend(&quot;name&quot;).Constrain(&quot;John&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+IQuery query = container.Query();
+query.Constrain(<span style="color:Blue;">typeof</span> (Car));
+query.Descend(<span style="color:#A31515;">&quot;pilot&quot;</span>).Descend(<span style="color:#A31515;">&quot;name&quot;</span>).Constrain(<span style="color:#A31515;">&quot;John&quot;</span>);
 
-IObjectSet result = query.Execute();</pre>
+IObjectSet result = query.Execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.cs: Descend over multiple fields
 			<div class="codedownload">

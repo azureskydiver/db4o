@@ -2,18 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim optimizedPart = From p As Person In container _
- Where p.Age &gt; 18 AndAlso p.Age &lt; 70 _
- Select p
-Dim endResult = From p In optimizedPart.AsEnumerable() _
- Where p.Name.Substring(2).Contains(&quot;n&quot;) _
- Select p</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim optimizedPart = From p As Person In container _
- Where p.Age &gt; 18 AndAlso p.Age &lt; 70 _
- Select p
-Dim endResult = From p In optimizedPart.AsEnumerable() _
- Where p.Name.Substring(2).Contains(&quot;n&quot;) _
- Select p</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> optimizedPart = <span style="color:Blue;">From</span> p <span style="color:Blue;">As</span> Person <span style="color:Blue;">In</span> container _
+ <span style="color:Blue;">Where</span> p.Age &gt; 18 <span style="color:Blue;">AndAlso</span> p.Age &lt; 70 _
+ <span style="color:Blue;">Select</span> p
+<span style="color:Blue;">Dim</span> endResult = <span style="color:Blue;">From</span> p <span style="color:Blue;">In</span> optimizedPart.AsEnumerable() _
+ <span style="color:Blue;">Where</span> p.Name.Substring(2).Contains(<span style="color:#A31515;">&quot;n&quot;</span>) _
+ <span style="color:Blue;">Select</span> p
+</pre>
 		<div class="codesnippet-meta">
 			LinqExamples.vb: Splitting into two parts
 			<div class="codedownload">

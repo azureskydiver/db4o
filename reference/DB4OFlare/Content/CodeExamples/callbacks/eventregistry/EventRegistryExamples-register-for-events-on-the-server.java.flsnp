@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectServer server = 
+        <pre class="prettyprint" xml:space="preserve">
+ObjectServer server = 
         Db4oClientServer.openServer(DATABASE_FILE_NAME, PORT_NUMBER);
 EventRegistry eventsOnServer =
-        EventRegistryFactory.forObjectContainer(server.ext().objectContainer());    </pre>
+        EventRegistryFactory.forObjectContainer(server.ext().objectContainer());    
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.java: register for events on the server
 			<div class="codedownload">

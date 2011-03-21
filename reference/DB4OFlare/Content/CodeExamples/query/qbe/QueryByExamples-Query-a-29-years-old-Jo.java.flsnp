@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Pilot theExample = new Pilot();
-theExample.setName(&quot;Jo&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+Pilot theExample = <span style="color:Blue;">new</span> Pilot();
+theExample.setName(<span style="color:#A31515;">&quot;Jo&quot;</span>);
 theExample.setAge(29);
-final ObjectSet&lt;Pilot&gt; result = container.queryByExample(theExample);</pre>
+<span style="color:Blue;">final</span> ObjectSet&lt;Pilot&gt; result = container.queryByExample(theExample);
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.java: Query a 29 years old Jo
 			<div class="codedownload">

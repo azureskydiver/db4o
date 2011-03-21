@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">private static void handleCommitting(Event4&lt;CommitEventArgs&gt; source,
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">void</span> handleCommitting(Event4&lt;CommitEventArgs&gt; source,
                                      CommitEventArgs commitEventArgs) {
-    // handle the event here
-}</pre>
+    <span style="color:Green;">// handle the event here</span>
+}
+</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.java: implement your event handling
 			<div class="codedownload">

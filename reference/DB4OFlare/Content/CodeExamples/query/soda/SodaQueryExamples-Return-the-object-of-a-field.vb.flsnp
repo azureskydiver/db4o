@@ -2,18 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim query As IQuery = container.Query()
-query.Constrain(GetType(Car))
-query.Descend(&quot;name&quot;).Constrain(&quot;Mercedes&quot;)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> query <span style="color:Blue;">As</span> IQuery = container.Query()
+query.Constrain(<span style="color:Blue;">GetType</span>(Car))
+query.Descend(<span style="color:#A31515;">&quot;name&quot;</span>).Constrain(<span style="color:#A31515;">&quot;Mercedes&quot;</span>)
 
-' returns the pilot of these cars
-Dim result As IObjectSet = query.Descend(&quot;pilot&quot;).Execute()</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim query As IQuery = container.Query()
-query.Constrain(GetType(Car))
-query.Descend(&quot;name&quot;).Constrain(&quot;Mercedes&quot;)
-
-' returns the pilot of these cars
-Dim result As IObjectSet = query.Descend(&quot;pilot&quot;).Execute()</pre>
+<span style="color:Green;">' returns the pilot of these cars</span>
+<span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IObjectSet = query.Descend(<span style="color:#A31515;">&quot;pilot&quot;</span>).Execute()
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.vb: Return the object of a field
 			<div class="codedownload">

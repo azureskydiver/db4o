@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">using (IObjectContainer container = Db4oEmbedded.OpenFile(&quot;database.db4o&quot;))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">using</span> (IObjectContainer container = Db4oEmbedded.OpenFile(<span style="color:#A31515;">&quot;database.db4o&quot;</span>))
 {
-    XmlSerializer pilotSerializer = new XmlSerializer(typeof(Pilot[]));
-    using(FileStream file  = new FileStream(&quot;pilots.xml&quot;,FileMode.CreateNew))
+    XmlSerializer pilotSerializer = <span style="color:Blue;">new</span> XmlSerializer(<span style="color:Blue;">typeof</span>(Pilot[]));
+    <span style="color:Blue;">using</span>(FileStream file  = <span style="color:Blue;">new</span> FileStream(<span style="color:#A31515;">&quot;pilots.xml&quot;</span>,FileMode.CreateNew))
     {
-        var pilots = (from Pilot c in container
-                      select c).ToArray();
+        <span style="color:Blue;">var</span> pilots = (<span style="color:Blue;">from</span> Pilot c <span style="color:Blue;">in</span> container
+                      <span style="color:Blue;">select</span> c).ToArray();
         pilotSerializer.Serialize(file, pilots);   
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			XMLSerialisationExamples.cs: Serialize to XML
 			<div class="codedownload">

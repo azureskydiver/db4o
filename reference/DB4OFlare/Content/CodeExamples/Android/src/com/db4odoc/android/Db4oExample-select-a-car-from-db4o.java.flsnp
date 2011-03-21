@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer db = database();
-ObjectSet&lt;Car&gt; cars = db.query(new Predicate&lt;Car&gt;() {
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer db = database();
+ObjectSet&lt;Car&gt; cars = db.query(<span style="color:Blue;">new</span> Predicate&lt;Car&gt;() {
 	@Override
-	public boolean match(Car car) {
-		return car.getPilot().getPoints() == 15;
+	<span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Car car) {
+		<span style="color:Blue;">return</span> car.getPilot().getPoints() == 15;
 	}
 });
 
-Car car = cars.get(0);</pre>
+Car car = cars.get(0);
+</pre>
 		<div class="codesnippet-meta">
 			Db4oExample.java: select a car from db4o
 			<div class="codedownload">

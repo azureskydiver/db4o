@@ -2,20 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim oldPersons As IList(Of PersonOld) = container.Query(Of PersonOld)()
-For Each old As PersonOld In oldPersons
-    Dim newPerson As New PersonNew()
-    newPerson.Name = New String() {old.Name}
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> oldPersons <span style="color:Blue;">As</span> IList(Of PersonOld) = container.Query(Of PersonOld)()
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> old <span style="color:Blue;">As</span> PersonOld <span style="color:Blue;">In</span> oldPersons
+    <span style="color:Blue;">Dim</span> newPerson <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> PersonNew()
+    newPerson.Name = <span style="color:Blue;">New</span> <span style="color:Blue;">String</span>() {old.Name}
     container.Store(newPerson)
     container.Delete(old)
-Next</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim oldPersons As IList(Of PersonOld) = container.Query(Of PersonOld)()
-For Each old As PersonOld In oldPersons
-    Dim newPerson As New PersonNew()
-    newPerson.Name = New String() {old.Name}
-    container.Store(newPerson)
-    container.Delete(old)
-Next</pre>
+<span style="color:Blue;">Next</span>
+</pre>
 		<div class="codesnippet-meta">
 			ChangeArrayType.vb: Copy the string-field to the new string-array field
 			<div class="codedownload">

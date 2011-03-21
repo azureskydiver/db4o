@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final Person jodie = queryForJodie(container);
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> Person jodie = queryForJodie(container);
 Person julia = jodie.mother().mother().mother().mother().mother();
-// This will print null
-// Because julia is not activated
-// and therefore all fields are not set
+<span style="color:Green;">// This will print null</span>
+<span style="color:Green;">// Because julia is not activated</span>
+<span style="color:Green;">// and therefore all fields are not set</span>
 System.out.println(julia.getName());
-// This will throw a NullPointerException.
-// Because julia is not activated
-// and therefore all fields are not set
-String joannaName = julia.mother().getName();</pre>
+<span style="color:Green;">// This will throw a NullPointerException.</span>
+<span style="color:Green;">// Because julia is not activated</span>
+<span style="color:Green;">// and therefore all fields are not set</span>
+String joannaName = julia.mother().getName();
+</pre>
 		<div class="codesnippet-meta">
 			ActivationDepthPitfall.java: Run into not activated objects
 			<div class="codedownload">

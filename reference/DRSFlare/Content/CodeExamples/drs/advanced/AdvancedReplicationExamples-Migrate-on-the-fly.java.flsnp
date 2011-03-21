@@ -3,20 +3,22 @@
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
         <pre class="prettyprint" xml:space="preserve">
-Db4oEmbeddedReplicationProvider providerA = new Db4oClientServerReplicationProvider(desktopDatabase);
-Db4oEmbeddedReplicationProvider providerB = new Db4oEmbeddedReplicationProvider(mobileDatabase);
+
+Db4oEmbeddedReplicationProvider providerA = <span style="color:Blue;">new</span> Db4oClientServerReplicationProvider(desktopDatabase);
+Db4oEmbeddedReplicationProvider providerB = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(mobileDatabase);
 
 ReplicationSession replicationSession = Replication.begin(providerA, providerB);
-ObjectSet initialReplication = desktopDatabase.query(Car.class);
+ObjectSet initialReplication = desktopDatabase.query(Car.<span style="color:Blue;">class</span>);
 
-for (Object changedObjectOnDesktop : initialReplication) {
+<span style="color:Blue;">for</span> (Object changedObjectOnDesktop : initialReplication) {
     ObjectInfo infoAboutObject = desktopDatabase.ext().getObjectInfo(changedObjectOnDesktop);
-    if (null == infoAboutObject.getUUID()) {
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> == infoAboutObject.getUUID()) {
         desktopDatabase.ext().store(changedObjectOnDesktop, 2);
     }
     replicationSession.replicate(changedObjectOnDesktop);
 }
-replicationSession.commit();</pre>
+replicationSession.commit();
+</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.java: Migrate on the fly
 			<div class="codedownload">

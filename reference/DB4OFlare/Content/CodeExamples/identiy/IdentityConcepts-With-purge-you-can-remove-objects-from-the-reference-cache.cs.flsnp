@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">Car theCar = container.Query&lt;Car&gt;()[0];
-container.Ext().Purge(theCar);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+Car theCar = container.Query&lt;Car&gt;()[0];
+container.Ext().Purge(theCar);
+</pre>
 		<div class="codesnippet-meta">
 			IdentityConcepts.cs: With purge you can remove objects from the reference cache
 			<div class="codedownload">

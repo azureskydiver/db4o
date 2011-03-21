@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.file().generateCommitTimestamps(true);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.file().generateCommitTimestamps(<span style="color:Blue;">true</span>);
+</pre>
 		<div class="codesnippet-meta">
 			FileConfiguration.java: Enable db4o commit timestamps
 			<div class="codedownload">

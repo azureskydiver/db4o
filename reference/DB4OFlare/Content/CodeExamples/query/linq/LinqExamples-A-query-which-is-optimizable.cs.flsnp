@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">var adults = from Person p in container
-             where p.Age &gt; 18 &amp;&amp; p.Age &lt; 70
-             orderby p.Name
-             select p;</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">var</span> adults = <span style="color:Blue;">from</span> Person p <span style="color:Blue;">in</span> container
+             <span style="color:Blue;">where</span> p.Age &gt; 18 &amp;&amp; p.Age &lt; 70
+             <span style="color:Blue;">orderby</span> p.Name
+             <span style="color:Blue;">select</span> p;
+</pre>
 		<div class="codesnippet-meta">
 			LinqExamples.cs: A query which is optimizable
 			<div class="codedownload">

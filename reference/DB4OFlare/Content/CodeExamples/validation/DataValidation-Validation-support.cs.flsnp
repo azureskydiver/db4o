@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private static void ValidateObject(object sender,
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">void</span> ValidateObject(<span style="color:Blue;">object</span> sender,
                                    CancellableObjectEventArgs eventInfo)
 {
-    ValidationContext context = new ValidationContext(eventInfo.Object, null, null);
-    // This throws when the object isn't valid.
-    Validator.ValidateObject(eventInfo.Object, context, true);
-}</pre>
+    ValidationContext context = <span style="color:Blue;">new</span> ValidationContext(eventInfo.Object, <span style="color:Blue;">null</span>, <span style="color:Blue;">null</span>);
+    <span style="color:Green;">// This throws when the object isn't valid.</span>
+    Validator.ValidateObject(eventInfo.Object, context, <span style="color:Blue;">true</span>);
+}
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.cs: Validation support
 			<div class="codedownload">

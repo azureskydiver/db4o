@@ -2,29 +2,19 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class HelloMessage
-    Private ReadOnly message As String
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> HelloMessage
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> message <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
 
-    Public Sub New(ByVal message As String)
-        Me.message = message
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> message <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
+        <span style="color:Blue;">Me</span>.message = message
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public Overrides Function ToString() As String
-        Return message
-    End Function
-End Class
-</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class HelloMessage
-    Private ReadOnly message As String
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Overrides</span> <span style="color:Blue;">Function</span> ToString() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+        <span style="color:Blue;">Return</span> message
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
 
-    Public Sub New(ByVal message As String)
-        Me.message = message
-    End Sub
-
-    Public Overrides Function ToString() As String
-        Return message
-    End Function
-End Class
 </pre>
 		<div class="codesnippet-meta">
 			MessagingExample.vb: The message class

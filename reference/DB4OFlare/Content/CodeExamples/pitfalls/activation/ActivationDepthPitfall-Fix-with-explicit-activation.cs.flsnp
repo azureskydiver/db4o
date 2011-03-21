@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">Person julia = jodie.Mother.Mother.Mother.Mother.Mother;
+        <pre class="prettyprint" xml:space="preserve">
+Person julia = jodie.Mother.Mother.Mother.Mother.Mother;
 container.Activate(julia,5);
 
 Console.WriteLine(julia.Name);
-string joannaName = julia.Mother.Name;
-Console.WriteLine(joannaName);</pre>
+<span style="color:Blue;">string</span> joannaName = julia.Mother.Name;
+Console.WriteLine(joannaName);
+</pre>
 		<div class="codesnippet-meta">
 			ActivationDepthPitfall.cs: Fix with explicit activation
 			<div class="codedownload">

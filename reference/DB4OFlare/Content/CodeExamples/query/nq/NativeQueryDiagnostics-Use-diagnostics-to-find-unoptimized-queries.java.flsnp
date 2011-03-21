@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">configuration.common().diagnostic().addListener(new DiagnosticListener() {
+        <pre class="prettyprint" xml:space="preserve">
+configuration.common().diagnostic().addListener(<span style="color:Blue;">new</span> DiagnosticListener() {
     @Override
-    public void onDiagnostic(Diagnostic diagnostic) {
-        if(diagnostic instanceof NativeQueryNotOptimized){
-            System.out.println(&quot;Query not optimized&quot;+diagnostic);
-        } else if(diagnostic instanceof NativeQueryOptimizerNotLoaded){
-            System.out.println(&quot;Missing native query optimisation jars in classpath &quot;+diagnostic);
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onDiagnostic(Diagnostic diagnostic) {
+        <span style="color:Blue;">if</span>(diagnostic <span style="color:Blue;">instanceof</span> NativeQueryNotOptimized){
+            System.out.println(<span style="color:#A31515;">&quot;Query not optimized&quot;</span>+diagnostic);
+        } <span style="color:Blue;">else</span> <span style="color:Blue;">if</span>(diagnostic <span style="color:Blue;">instanceof</span> NativeQueryOptimizerNotLoaded){
+            System.out.println(<span style="color:#A31515;">&quot;Missing native query optimisation jars in classpath &quot;</span>+diagnostic);
         }
     }
-});</pre>
+});
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueryDiagnostics.java: Use diagnostics to find unoptimized queries
 			<div class="codedownload">

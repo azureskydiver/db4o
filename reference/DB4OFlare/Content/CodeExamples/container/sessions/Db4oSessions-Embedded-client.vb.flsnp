@@ -2,20 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using server As IObjectServer = Db4oClientServer.OpenServer(DatabaseFileName, 0)
-    ' open the db4o-embedded client. For example at the beginning for a web-request
-    Using container As IObjectContainer = server.OpenClient()
-        ' do the operations on the session-container
-        container.Store(New Person(&quot;Joe&quot;))
-    End Using
-End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using server As IObjectServer = Db4oClientServer.OpenServer(DatabaseFileName, 0)
-    ' open the db4o-embedded client. For example at the beginning for a web-request
-    Using container As IObjectContainer = server.OpenClient()
-        ' do the operations on the session-container
-        container.Store(New Person(&quot;Joe&quot;))
-    End Using
-End Using</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Using</span> server <span style="color:Blue;">As</span> IObjectServer = Db4oClientServer.OpenServer(DatabaseFileName, 0)
+    <span style="color:Green;">' open the db4o-embedded client. For example at the beginning for a web-request</span>
+    <span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = server.OpenClient()
+        <span style="color:Green;">' do the operations on the session-container</span>
+        container.Store(<span style="color:Blue;">New</span> Person(<span style="color:#A31515;">&quot;Joe&quot;</span>))
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+</pre>
 		<div class="codesnippet-meta">
 			Db4oSessions.vb: Embedded client
 			<div class="codedownload">

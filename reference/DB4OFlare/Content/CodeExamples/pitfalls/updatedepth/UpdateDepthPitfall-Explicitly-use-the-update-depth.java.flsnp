@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Car car = queryForCar(container);
-car.setCarName(&quot;New Mercedes&quot;);
-car.getDriver().setName(&quot;New Driver Name&quot;);
+        <pre class="prettyprint" xml:space="preserve">
+Car car = queryForCar(container);
+car.setCarName(<span style="color:#A31515;">&quot;New Mercedes&quot;</span>);
+car.getDriver().setName(<span style="color:#A31515;">&quot;New Driver Name&quot;</span>);
 
-// Explicitly state the update depth
-container.ext().store(car,2);</pre>
+<span style="color:Green;">// Explicitly state the update depth</span>
+container.ext().store(car,2);
+</pre>
 		<div class="codesnippet-meta">
 			UpdateDepthPitfall.java: Explicitly use the update depth
 			<div class="codedownload">

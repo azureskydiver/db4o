@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">var otherPilot = new Pilot {Name = &quot;&quot;};
-try
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">var</span> otherPilot = <span style="color:Blue;">new</span> Pilot {Name = <span style="color:#A31515;">&quot;&quot;</span>};
+<span style="color:Blue;">try</span>
 {
     container.Store(otherPilot);
 }
-catch (EventException e)
+<span style="color:Blue;">catch</span> (EventException e)
 {
     ValidationException cause = (ValidationException) e.InnerException;
     Console.WriteLine(cause.ValidationResult.ErrorMessage);
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.cs: Storing a invalid pilot throws exception
 			<div class="codedownload">

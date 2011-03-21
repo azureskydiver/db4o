@@ -2,44 +2,27 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Class DiagnosticFilter
-    Implements IDiagnosticListener
-    Private ReadOnly filterFor As ICollection(Of Type)
-    Private ReadOnly target As IDiagnosticListener
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> DiagnosticFilter
+    <span style="color:Blue;">Implements</span> IDiagnosticListener
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> filterFor <span style="color:Blue;">As</span> ICollection(Of Type)
+    <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> target <span style="color:Blue;">As</span> IDiagnosticListener
 
-    Public Sub New(ByVal target As IDiagnosticListener, ByVal ParamArray filterFor As Type())
-        Me.target = target
-        Me.filterFor = New List(Of Type)(filterFor)
-    End Sub
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> target <span style="color:Blue;">As</span> IDiagnosticListener, <span style="color:Blue;">ByVal</span> <span style="color:Blue;">ParamArray</span> filterFor <span style="color:Blue;">As</span> Type())
+        <span style="color:Blue;">Me</span>.target = target
+        <span style="color:Blue;">Me</span>.filterFor = <span style="color:Blue;">New</span> List(Of Type)(filterFor)
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
 
-    Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
-        Implements IDiagnosticListener.OnDiagnostic
+    <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> OnDiagnostic(<span style="color:Blue;">ByVal</span> diagnostic <span style="color:Blue;">As</span> IDiagnostic) _
+        <span style="color:Blue;">Implements</span> IDiagnosticListener.OnDiagnostic
 
-        Dim type As Type = diagnostic.[GetType]()
-        If filterFor.Contains(type) Then
+        <span style="color:Blue;">Dim</span> type <span style="color:Blue;">As</span> Type = diagnostic.[<span style="color:Blue;">GetType</span>]()
+        <span style="color:Blue;">If</span> filterFor.Contains(type) <span style="color:Blue;">Then</span>
             target.OnDiagnostic(diagnostic)
-        End If
-    End Sub
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Class DiagnosticFilter
-    Implements IDiagnosticListener
-    Private ReadOnly filterFor As ICollection(Of Type)
-    Private ReadOnly target As IDiagnosticListener
-
-    Public Sub New(ByVal target As IDiagnosticListener, ByVal ParamArray filterFor As Type())
-        Me.target = target
-        Me.filterFor = New List(Of Type)(filterFor)
-    End Sub
-
-    Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
-        Implements IDiagnosticListener.OnDiagnostic
-
-        Dim type As Type = diagnostic.[GetType]()
-        If filterFor.Contains(type) Then
-            target.OnDiagnostic(diagnostic)
-        End If
-    End Sub
-End Class</pre>
+        <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			DiagnosticsExamples.vb: A simple message filter
 			<div class="codedownload">

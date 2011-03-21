@@ -2,21 +2,23 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">public void setName(String name) {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> setName(String name) {
     activate(ActivationPurpose.WRITE);
-    this.name = name;
+    <span style="color:Blue;">this</span>.name = name;
 }
 
-public String getName()  {
+<span style="color:Blue;">public</span> String getName()  {
     activate(ActivationPurpose.READ);
-    return name;
+    <span style="color:Blue;">return</span> name;
 }
 
-public String toString()  {
-    // use the getter/setter withing the class,
-    // to ensure the activate-method is called
-    return getName();
-}</pre>
+<span style="color:Blue;">public</span> String toString()  {
+    <span style="color:Green;">// use the getter/setter withing the class,</span>
+    <span style="color:Green;">// to ensure the activate-method is called</span>
+    <span style="color:Blue;">return</span> getName();
+}
+</pre>
 		<div class="codesnippet-meta">
 			Person.java: Call the activate method on every field access
 			<div class="codedownload">

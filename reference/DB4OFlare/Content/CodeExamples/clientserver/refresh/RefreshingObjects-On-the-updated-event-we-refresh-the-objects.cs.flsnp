@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve">
+IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
 events.Committed += 
-    delegate(object sender, CommitEventArgs args)
+    <span style="color:Blue;">delegate</span>(<span style="color:Blue;">object</span> sender, CommitEventArgs args)
         {
-            foreach (LazyObjectReference updated in args.Updated)
+            <span style="color:Blue;">foreach</span> (LazyObjectReference updated <span style="color:Blue;">in</span> args.Updated)
             {
-                object obj = updated.GetObject();
+                <span style="color:Blue;">object</span> obj = updated.GetObject();
                 args.ObjectContainer().Ext().Refresh(obj, 1);
             }
-        };</pre>
+        };
+</pre>
 		<div class="codesnippet-meta">
 			RefreshingObjects.cs: On the updated-event we refresh the objects
 			<div class="codedownload">

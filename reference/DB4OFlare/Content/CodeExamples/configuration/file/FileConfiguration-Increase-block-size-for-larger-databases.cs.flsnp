@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.File.BlockSize = 8;</pre>
+        <pre class="prettyprint" xml:space="preserve">
+IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+configuration.File.BlockSize = 8;
+</pre>
 		<div class="codesnippet-meta">
 			FileConfiguration.cs: Increase block size for larger databases
 			<div class="codedownload">

@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Storage fileStorage = new FileStorage();
-configuration.file().storage(new NonFlushingStorage(fileStorage));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+Storage fileStorage = <span style="color:Blue;">new</span> FileStorage();
+configuration.file().storage(<span style="color:Blue;">new</span> NonFlushingStorage(fileStorage));
+</pre>
 		<div class="codesnippet-meta">
 			DangerousPractises.java: Using the non-flushing storage weakens the ACID-properties
 			<div class="codedownload">

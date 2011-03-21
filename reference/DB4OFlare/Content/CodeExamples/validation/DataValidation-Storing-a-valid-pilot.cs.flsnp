@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">var pilot = new Pilot {Name = &quot;Joe&quot;};
-container.Store(pilot);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">var</span> pilot = <span style="color:Blue;">new</span> Pilot {Name = <span style="color:#A31515;">&quot;Joe&quot;</span>};
+container.Store(pilot);
+</pre>
 		<div class="codesnippet-meta">
 			DataValidation.cs: Storing a valid pilot
 			<div class="codedownload">

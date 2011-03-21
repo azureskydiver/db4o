@@ -2,30 +2,32 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">class ExampleTranslator implements ObjectConstructor {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> ExampleTranslator <span style="color:Blue;">implements</span> ObjectConstructor {
 
-    // This is called to store the object
-    public Object onStore(ObjectContainer objectContainer, Object objToStore) {
+    <span style="color:Green;">// This is called to store the object</span>
+    <span style="color:Blue;">public</span> Object onStore(ObjectContainer objectContainer, Object objToStore) {
         NonStorableType notStorable = (NonStorableType) objToStore;
-        return notStorable.getData();
+        <span style="color:Blue;">return</span> notStorable.getData();
     }
 
-    // This is called when the object is activated
-    public void onActivate(ObjectContainer objectContainer, Object targetObject, Object storedObject) {
+    <span style="color:Green;">// This is called when the object is activated</span>
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onActivate(ObjectContainer objectContainer, Object targetObject, Object storedObject) {
         NonStorableType notStorable = (NonStorableType) targetObject;
         notStorable.setData((String)storedObject);
     }
 
-    // Tell db4o which type we use to store the data
-    public Class storedClass() {
-        return String.class;
+    <span style="color:Green;">// Tell db4o which type we use to store the data</span>
+    <span style="color:Blue;">public</span> Class storedClass() {
+        <span style="color:Blue;">return</span> String.<span style="color:Blue;">class</span>;
     }
 
-    // This method is called when a new instance is needed
-    public Object onInstantiate(ObjectContainer objectContainer, Object storedObject) {
-        return new NonStorableType(&quot;&quot;);
+    <span style="color:Green;">// This method is called when a new instance is needed</span>
+    <span style="color:Blue;">public</span> Object onInstantiate(ObjectContainer objectContainer, Object storedObject) {
+        <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> NonStorableType(<span style="color:#A31515;">&quot;&quot;</span>);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			ExampleTranslator.java: An example translator
 			<div class="codedownload">

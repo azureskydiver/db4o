@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Pilot example = new Pilot();
-final ObjectSet&lt;Pilot&gt; result = container.queryByExample(example);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+Pilot example = <span style="color:Blue;">new</span> Pilot();
+<span style="color:Blue;">final</span> ObjectSet&lt;Pilot&gt; result = container.queryByExample(example);
+</pre>
 		<div class="codesnippet-meta">
 			QueryByExamples.java: All objects of a type by passing a empty example
 			<div class="codedownload">

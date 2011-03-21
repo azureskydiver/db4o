@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">final ObjectSet&lt;StoredItems&gt; queryResult = container.query(StoredItems.class);
-List&lt;StoredItems&gt; pagedResult = PagingUtility.paging(queryResult, 2, 2);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">final</span> ObjectSet&lt;StoredItems&gt; queryResult = container.query(StoredItems.<span style="color:Blue;">class</span>);
+List&lt;StoredItems&gt; pagedResult = PagingUtility.paging(queryResult, 2, 2);
+</pre>
 		<div class="codesnippet-meta">
 			TestPagingUtility.java: Use the paging utility
 			<div class="codedownload">

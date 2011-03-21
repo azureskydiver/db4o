@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Person aCitizen = city.citizen().iterator().next();
-System.out.println(&quot;The big-set uses the identity, not equality of an object&quot;);
-System.out.println(&quot;Therefore it .contains() on the same person-object is &quot;
+        <pre class="prettyprint" xml:space="preserve">
+Person aCitizen = city.citizen().iterator().next();
+System.out.println(<span style="color:#A31515;">&quot;The big-set uses the identity, not equality of an object&quot;</span>);
+System.out.println(<span style="color:#A31515;">&quot;Therefore it .contains() on the same person-object is &quot;</span>
         +city.citizen().contains(aCitizen));
-Person equalPerson = new Person(aCitizen.getName());
-System.out.println(&quot;Therefore it .contains() on a equal person-object is &quot;
-        +city.citizen().contains(equalPerson));</pre>
+Person equalPerson = <span style="color:Blue;">new</span> Person(aCitizen.getName());
+System.out.println(<span style="color:#A31515;">&quot;Therefore it .contains() on a equal person-object is &quot;</span>
+        +city.citizen().contains(equalPerson));
+</pre>
 		<div class="codesnippet-meta">
 			BigSetExample.java: Note that the big-set compares by identity, not by equality
 			<div class="codedownload">

@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = openDB();
+        <pre class="prettyprint" xml:space="preserve">
+ObjectContainer container = openDB();
 
-Db4oEmbeddedReplicationProvider providerA = new Db4oEmbeddedReplicationProvider(container);
-HibernateReplicationProvider providerB = new HibernateReplicationProvider(hibernateConfig);
+Db4oEmbeddedReplicationProvider providerA = <span style="color:Blue;">new</span> Db4oEmbeddedReplicationProvider(container);
+HibernateReplicationProvider providerB = <span style="color:Blue;">new</span> HibernateReplicationProvider(hibernateConfig);
 
 ReplicationSession replicationSession = Replication.begin(providerA, providerB);
-replicationSession.setDirection(replicationSession.providerA(),replicationSession.providerB());</pre>
+replicationSession.setDirection(replicationSession.providerA(),replicationSession.providerB());
+</pre>
 		<div class="codesnippet-meta">
 			Db4oRDBMSReplicationExamples.java: Prepare replication
 			<div class="codedownload">

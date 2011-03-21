@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">container.store(new UniqueId(42));
-container.store(new UniqueId(42));
-try{
+        <pre class="prettyprint" xml:space="preserve">
+container.store(<span style="color:Blue;">new</span> UniqueId(42));
+container.store(<span style="color:Blue;">new</span> UniqueId(42));
+<span style="color:Blue;">try</span>{
     container.commit();
-} catch (UniqueFieldValueConstraintViolationException e){
-    // Violated the unique-constraint!
-    // Retry with a new value or handle this gracefully
+} <span style="color:Blue;">catch</span> (UniqueFieldValueConstraintViolationException e){
+    <span style="color:Green;">// Violated the unique-constraint!</span>
+    <span style="color:Green;">// Retry with a new value or handle this gracefully</span>
     container.rollback();
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			ImportantExceptionCases.java: Violation of the unique constraint
 			<div class="codedownload">

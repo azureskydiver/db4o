@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim objForId As Object = container.Ext().GetByUUID(idForObject)
-' getting by uuid doesn't activate the object
-' so you need to do it manually
-container.Ext().Activate(objForId)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim objForId As Object = container.Ext().GetByUUID(idForObject)
-' getting by uuid doesn't activate the object
-' so you need to do it manually
-container.Ext().Activate(objForId)</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> objForId <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> = container.Ext().GetByUUID(idForObject)
+<span style="color:Green;">' getting by uuid doesn't activate the object</span>
+<span style="color:Green;">' so you need to do it manually</span>
+container.Ext().Activate(objForId)
+</pre>
 		<div class="codesnippet-meta">
 			Db4oUuidExample.vb: get an object by a db4o-uuid
 			<div class="codedownload">

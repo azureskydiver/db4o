@@ -2,22 +2,24 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">private static class DiagnosticFilter implements DiagnosticListener{
-    private final Set&lt;Class&gt; filterFor;
-    private final DiagnosticListener delegate;
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">class</span> DiagnosticFilter <span style="color:Blue;">implements</span> DiagnosticListener{
+    <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> Set&lt;Class&gt; filterFor;
+    <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> DiagnosticListener delegate;
 
-    private DiagnosticFilter(DiagnosticListener delegate,Class&lt;? extends Diagnostic&gt;...filterFor) {
-        this.delegate = delegate;
-        this.filterFor = new HashSet&lt;Class&gt;(Arrays.asList(filterFor));
+    <span style="color:Blue;">private</span> DiagnosticFilter(DiagnosticListener delegate,Class&lt;? <span style="color:Blue;">extends</span> Diagnostic&gt;...filterFor) {
+        <span style="color:Blue;">this</span>.delegate = delegate;
+        <span style="color:Blue;">this</span>.filterFor = <span style="color:Blue;">new</span> HashSet&lt;Class&gt;(Arrays.asList(filterFor));
     }
 
-    public void onDiagnostic(Diagnostic diagnostic) {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onDiagnostic(Diagnostic diagnostic) {
         Class&lt;?&gt; type = diagnostic.getClass();
-        if(filterFor.contains(type)){
+        <span style="color:Blue;">if</span>(filterFor.contains(type)){
             delegate.onDiagnostic(diagnostic);
         }
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			DiagnosticsExamples.java: A simple message filter
 			<div class="codedownload">

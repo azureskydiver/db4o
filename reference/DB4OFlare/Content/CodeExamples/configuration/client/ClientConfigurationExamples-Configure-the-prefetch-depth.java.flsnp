@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
-configuration.prefetchDepth(5);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+ClientConfiguration configuration = Db4oClientServer.newClientConfiguration();
+configuration.prefetchDepth(5);
+</pre>
 		<div class="codesnippet-meta">
 			ClientConfigurationExamples.java: Configure the prefetch depth
 			<div class="codedownload">

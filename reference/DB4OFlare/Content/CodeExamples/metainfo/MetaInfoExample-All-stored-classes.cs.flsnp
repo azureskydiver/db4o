@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">// Get the information about all stored classes.
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">// Get the information about all stored classes.</span>
 IStoredClass[] classesInDB = container.Ext().StoredClasses();
-foreach (IStoredClass storedClass in classesInDB)
+<span style="color:Blue;">foreach</span> (IStoredClass storedClass <span style="color:Blue;">in</span> classesInDB)
 {
     Console.WriteLine(storedClass.GetName());
 }
 
-// Information for a certain class
-IStoredClass metaInfo = container.Ext().StoredClass(typeof (Person));</pre>
+<span style="color:Green;">// Information for a certain class</span>
+IStoredClass metaInfo = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));
+</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.cs: All stored classes
 			<div class="codedownload">

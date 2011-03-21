@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Person julia = jodie.mother().mother().mother().mother().mother();
+        <pre class="prettyprint" xml:space="preserve">
+Person julia = jodie.mother().mother().mother().mother().mother();
 container.activate(julia,5);
 
 System.out.println(julia.getName());
 String joannaName = julia.mother().getName();
-System.out.println(joannaName);</pre>
+System.out.println(joannaName);
+</pre>
 		<div class="codesnippet-meta">
 			ActivationDepthPitfall.java: Fix with explicit activation
 			<div class="codedownload">

@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">[Indexed]
-private string zipCode;</pre>
+        <pre class="prettyprint" xml:space="preserve">
+[Indexed]
+<span style="color:Blue;">private</span> <span style="color:Blue;">string</span> zipCode;
+</pre>
 		<div class="codesnippet-meta">
 			ObjectFieldConfigurations.cs: Index a field
 			<div class="codedownload">

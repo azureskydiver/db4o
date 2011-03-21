@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">class OnlyOddAge implements Evaluation {
-    public void evaluate(Candidate candidate) {
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> OnlyOddAge <span style="color:Blue;">implements</span> Evaluation {
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> evaluate(Candidate candidate) {
         Pilot pilot = (Pilot) candidate.getObject();
         candidate.include(pilot.getAge()%2!=0);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			SodaEvaluationExamples.java: Simple evaluation which includes only odd aged pilots
 			<div class="codedownload">

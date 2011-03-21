@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">configuration.addConfigurationItem(new ClientConnectionsMonitoringSupport());</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.addConfigurationItem(<span style="color:Blue;">new</span> ClientConnectionsMonitoringSupport());
+</pre>
 		<div class="codesnippet-meta">
 			CSMonitoring.java: Add the client connections monitoring support
 			<div class="codedownload">

@@ -2,16 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim personQuerable As IQueryable(Of Person) = container.AsQueryable(Of Person)()
-Dim adults = From p In personQuerable _
- Where p.Age &gt; 18 _
- Order By p.Name _
- Select p</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim personQuerable As IQueryable(Of Person) = container.AsQueryable(Of Person)()
-Dim adults = From p In personQuerable _
- Where p.Age &gt; 18 _
- Order By p.Name _
- Select p</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> personQuerable <span style="color:Blue;">As</span> IQueryable(Of Person) = container.AsQueryable(Of Person)()
+<span style="color:Blue;">Dim</span> adults = <span style="color:Blue;">From</span> p <span style="color:Blue;">In</span> personQuerable _
+ <span style="color:Blue;">Where</span> p.Age &gt; 18 _
+ <span style="color:Blue;">Order</span> <span style="color:Blue;">By</span> p.Name _
+ <span style="color:Blue;">Select</span> p
+</pre>
 		<div class="codesnippet-meta">
 			LinqExamples.vb: Get a IQueryable-instance
 			<div class="codedownload">

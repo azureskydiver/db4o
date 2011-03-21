@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-configuration.AddConfigurationItem(new SilverlightSupport());
+        <pre class="prettyprint" xml:space="preserve">
+IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+configuration.AddConfigurationItem(<span style="color:Blue;">new</span> SilverlightSupport());
 
-IObjectContainer container = Db4oEmbedded.OpenFile(configuration, &quot;database.db4o&quot;);</pre>
+IObjectContainer container = Db4oEmbedded.OpenFile(configuration, <span style="color:#A31515;">&quot;database.db4o&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			IOExamples.cs: Add Silverlight support
 			<div class="codedownload">

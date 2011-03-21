@@ -2,31 +2,33 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private PersistedAutoIncrements EnsureLoadedIncrements()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> PersistedAutoIncrements EnsureLoadedIncrements()
 {
-    if (null == state)
+    <span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> == state)
     {
         state = LoadOrCreateState();
     }
-    return state;
+    <span style="color:Blue;">return</span> state;
 }
 
-private PersistedAutoIncrements LoadOrCreateState()
+<span style="color:Blue;">private</span> PersistedAutoIncrements LoadOrCreateState()
 {
     IList&lt;PersistedAutoIncrements&gt; existingState = container.Query&lt;PersistedAutoIncrements&gt;();
-    if (0 == existingState.Count)
+    <span style="color:Blue;">if</span> (0 == existingState.Count)
     {
-        return new PersistedAutoIncrements();
+        <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> PersistedAutoIncrements();
     }
-    else if (1 == existingState.Count)
+    <span style="color:Blue;">else</span> <span style="color:Blue;">if</span> (1 == existingState.Count)
     {
-        return existingState[0];
+        <span style="color:Blue;">return</span> existingState[0];
     }
-    else
+    <span style="color:Blue;">else</span>
     {
-        throw new InvalidOperationException(&quot;Cannot have more than one state stored in database&quot;);
+        <span style="color:Blue;">throw</span> <span style="color:Blue;">new</span> InvalidOperationException(<span style="color:#A31515;">&quot;Cannot have more than one state stored in database&quot;</span>);
     }
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			AutoIncrement.cs: load the state from the database

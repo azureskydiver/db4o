@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Class Person
-    Public FirstName As String
-    Public SirName As String
-End Class</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Class Person
-    Public FirstName As String
-    Public SirName As String
-End Class</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Person
+    <span style="color:Blue;">Public</span> FirstName <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+    <span style="color:Blue;">Public</span> SirName <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
+</pre>
 		<div class="codesnippet-meta">
 			Person.vb: fields need to be public to be persisted
 			<div class="codedownload">

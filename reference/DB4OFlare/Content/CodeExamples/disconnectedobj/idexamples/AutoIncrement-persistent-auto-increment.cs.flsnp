@@ -2,22 +2,24 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private class PersistedAutoIncrements
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">class</span> PersistedAutoIncrements
 {
-    private readonly IDictionary&lt;Type, int&gt; currentHighestIds = new Dictionary&lt;Type, int&gt;();
+    <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> IDictionary&lt;Type, <span style="color:Blue;">int</span>&gt; currentHighestIds = <span style="color:Blue;">new</span> Dictionary&lt;Type, <span style="color:Blue;">int</span>&gt;();
 
-    public int NextNumber(Type forClass)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">int</span> NextNumber(Type forClass)
     {
-        int number;
-        if (!currentHighestIds.TryGetValue(forClass, out number))
+        <span style="color:Blue;">int</span> number;
+        <span style="color:Blue;">if</span> (!currentHighestIds.TryGetValue(forClass, <span style="color:Blue;">out</span> number))
         {
             number = 0;
         }
         number += 1;
         currentHighestIds[forClass] = number;
-        return number;
+        <span style="color:Blue;">return</span> number;
     }
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			AutoIncrement.cs: persistent auto increment

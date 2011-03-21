@@ -2,8 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">configuration.common().objectClass(UniqueId.class).objectField(&quot;id&quot;).indexed(true);
-configuration.common().add(new UniqueFieldValueConstraint(UniqueId.class, &quot;id&quot;));</pre>
+        <pre class="prettyprint" xml:space="preserve">
+configuration.common().objectClass(UniqueId.<span style="color:Blue;">class</span>).objectField(<span style="color:#A31515;">&quot;id&quot;</span>).indexed(<span style="color:Blue;">true</span>);
+configuration.common().add(<span style="color:Blue;">new</span> UniqueFieldValueConstraint(UniqueId.<span style="color:Blue;">class</span>, <span style="color:#A31515;">&quot;id&quot;</span>));
+</pre>
 		<div class="codesnippet-meta">
 			UniqueConstrainExample.java: Add the index the field and then the unique constrain
 			<div class="codedownload">

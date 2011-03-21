@@ -2,16 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Private Shared Function QueryWithAnyCode(ByVal pilot As Pilot)
-    Dim allowedAges As IList(Of Integer) = Array.AsReadOnly(New Integer() {18, 20, 35})
-    Return allowedAges.Contains(Pilot.Age) _
-                OrElse Pilot.Name.ToLowerInvariant() = &quot;John&quot;
-End Function</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Private Shared Function QueryWithAnyCode(ByVal pilot As Pilot)
-    Dim allowedAges As IList(Of Integer) = Array.AsReadOnly(New Integer() {18, 20, 35})
-    Return allowedAges.Contains(Pilot.Age) _
-                OrElse Pilot.Name.ToLowerInvariant() = &quot;John&quot;
-End Function</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Private</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Function</span> QueryWithAnyCode(<span style="color:Blue;">ByVal</span> pilot <span style="color:Blue;">As</span> Pilot)
+    <span style="color:Blue;">Dim</span> allowedAges <span style="color:Blue;">As</span> IList(Of <span style="color:Blue;">Integer</span>) = Array.AsReadOnly(<span style="color:Blue;">New</span> <span style="color:Blue;">Integer</span>() {18, 20, 35})
+    <span style="color:Blue;">Return</span> allowedAges.Contains(Pilot.Age) _
+                <span style="color:Blue;">OrElse</span> Pilot.Name.ToLowerInvariant() = <span style="color:#A31515;">&quot;John&quot;</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
+</pre>
 		<div class="codesnippet-meta">
 			NativeQueryExamples.vb: Query with arbitrary code
 			<div class="codedownload">

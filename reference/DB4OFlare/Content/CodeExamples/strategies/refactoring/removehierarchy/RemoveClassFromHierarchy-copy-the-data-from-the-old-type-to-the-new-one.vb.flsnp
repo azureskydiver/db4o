@@ -2,24 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim allMammals As IList(Of Human) = container.Query(Of Human)()
-For Each oldHuman As Human In allMammals
-    Dim newHuman As New HumanNew(&quot;&quot;)
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> allMammals <span style="color:Blue;">As</span> IList(Of Human) = container.Query(Of Human)()
+<span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> oldHuman <span style="color:Blue;">As</span> Human <span style="color:Blue;">In</span> allMammals
+    <span style="color:Blue;">Dim</span> newHuman <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> HumanNew(<span style="color:#A31515;">&quot;&quot;</span>)
     newHuman.BodyTemperature = oldHuman.BodyTemperature
     newHuman.IQ = oldHuman.IQ
     newHuman.Name = oldHuman.Name
 
     container.Store(newHuman)
-    container.Delete(oldHuman)</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim allMammals As IList(Of Human) = container.Query(Of Human)()
-For Each oldHuman As Human In allMammals
-    Dim newHuman As New HumanNew(&quot;&quot;)
-    newHuman.BodyTemperature = oldHuman.BodyTemperature
-    newHuman.IQ = oldHuman.IQ
-    newHuman.Name = oldHuman.Name
-
-    container.Store(newHuman)
-    container.Delete(oldHuman)</pre>
+    container.Delete(oldHuman)
+</pre>
 		<div class="codesnippet-meta">
 			RemoveClassFromHierarchy.vb: copy the data from the old type to the new one
 			<div class="codedownload">

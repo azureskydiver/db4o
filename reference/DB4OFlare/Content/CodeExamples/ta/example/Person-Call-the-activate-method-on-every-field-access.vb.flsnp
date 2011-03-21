@@ -2,41 +2,25 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public Property Name() As String
-    Get
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Property</span> Name() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+    <span style="color:Blue;">Get</span>
         Activate(ActivationPurpose.Read)
-        Return m_name
-    End Get
-    Set(ByVal value As String)
+        <span style="color:Blue;">Return</span> m_name
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
+    <span style="color:Blue;">Set</span>(<span style="color:Blue;">ByVal</span> value <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
         Activate(ActivationPurpose.Write)
         m_name = value
-    End Set
-End Property
+    <span style="color:Blue;">End</span> <span style="color:Blue;">Set</span>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
 
 
-Public Overloads Overrides Function ToString() As String
-    ' use the getter/setter withing the class,
-    ' to ensure the activate-method is called
-    Return Name
-End Function
-</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public Property Name() As String
-    Get
-        Activate(ActivationPurpose.Read)
-        Return m_name
-    End Get
-    Set(ByVal value As String)
-        Activate(ActivationPurpose.Write)
-        m_name = value
-    End Set
-End Property
+<span style="color:Blue;">Public</span> <span style="color:Blue;">Overloads</span> <span style="color:Blue;">Overrides</span> <span style="color:Blue;">Function</span> ToString() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+    <span style="color:Green;">' use the getter/setter withing the class,</span>
+    <span style="color:Green;">' to ensure the activate-method is called</span>
+    <span style="color:Blue;">Return</span> Name
+<span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
 
-
-Public Overloads Overrides Function ToString() As String
-    ' use the getter/setter withing the class,
-    ' to ensure the activate-method is called
-    Return Name
-End Function
 </pre>
 		<div class="codesnippet-meta">
 			Person.vb: Call the activate method on every field access

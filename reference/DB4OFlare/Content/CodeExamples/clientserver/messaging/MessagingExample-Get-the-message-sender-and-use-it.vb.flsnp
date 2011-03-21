@@ -2,18 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim sender As IMessageSender = configuration.MessageSender
-Using container As IObjectContainer = Db4oClientServer.OpenClient(configuration, _
-            &quot;localhost&quot;, PortNumber, UserAndPassword, UserAndPassword)
-    sender.Send(New HelloMessage(&quot;Hi Server!&quot;))
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> sender <span style="color:Blue;">As</span> IMessageSender = configuration.MessageSender
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oClientServer.OpenClient(configuration, _
+            <span style="color:#A31515;">&quot;localhost&quot;</span>, PortNumber, UserAndPassword, UserAndPassword)
+    sender.Send(<span style="color:Blue;">New</span> HelloMessage(<span style="color:#A31515;">&quot;Hi Server!&quot;</span>))
     WaitForAWhile()
-End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim sender As IMessageSender = configuration.MessageSender
-Using container As IObjectContainer = Db4oClientServer.OpenClient(configuration, _
-            &quot;localhost&quot;, PortNumber, UserAndPassword, UserAndPassword)
-    sender.Send(New HelloMessage(&quot;Hi Server!&quot;))
-    WaitForAWhile()
-End Using</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+</pre>
 		<div class="codesnippet-meta">
 			MessagingExample.vb: Get the message sender and use it
 			<div class="codedownload">

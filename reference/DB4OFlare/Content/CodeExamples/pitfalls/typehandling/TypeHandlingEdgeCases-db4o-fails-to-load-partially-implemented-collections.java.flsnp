@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">try {
-    ObjectSet&lt;CollectionHolder&gt; holders = container.query(CollectionHolder.class);
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">try</span> {
+    ObjectSet&lt;CollectionHolder&gt; holders = container.query(CollectionHolder.<span style="color:Blue;">class</span>);
     MyFixedSizeCollection&lt;String&gt; collection = holders.get(0).getNames();
-} catch (Exception e) {
-    // this will fail! The db4o collection-storage
-    // assumes that collections support all operations of the collection interface.
-    // db4o uses the regular collection-methods to restore the instance.
+} <span style="color:Blue;">catch</span> (Exception e) {
+    <span style="color:Green;">// this will fail! The db4o collection-storage</span>
+    <span style="color:Green;">// assumes that collections support all operations of the collection interface.</span>
+    <span style="color:Green;">// db4o uses the regular collection-methods to restore the instance.</span>
     e.printStackTrace();
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			TypeHandlingEdgeCases.java: db4o fails to load partially implemented collections
 			<div class="codedownload">

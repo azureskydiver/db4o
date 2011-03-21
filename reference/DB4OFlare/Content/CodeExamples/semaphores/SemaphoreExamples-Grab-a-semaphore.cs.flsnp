@@ -2,25 +2,27 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">// Grab the lock. Specify the name and a timeout in milliseconds
-bool hasLock = container.Ext().SetSemaphore(&quot;LockName&quot;, 1000);
-try
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Green;">// Grab the lock. Specify the name and a timeout in milliseconds</span>
+<span style="color:Blue;">bool</span> hasLock = container.Ext().SetSemaphore(<span style="color:#A31515;">&quot;LockName&quot;</span>, 1000);
+<span style="color:Blue;">try</span>
 {
-    // you need to check the lock
-    if (hasLock)
+    <span style="color:Green;">// you need to check the lock</span>
+    <span style="color:Blue;">if</span> (hasLock)
     {
-        Console.WriteLine(&quot;Could get lock&quot;);
+        Console.WriteLine(<span style="color:#A31515;">&quot;Could get lock&quot;</span>);
     }
-    else
+    <span style="color:Blue;">else</span>
     {
-        Console.WriteLine(&quot;Couldn't get lock&quot;);
+        Console.WriteLine(<span style="color:#A31515;">&quot;Couldn't get lock&quot;</span>);
     }
 }
-finally
+<span style="color:Blue;">finally</span>
 {
-    // release the lock
-    container.Ext().ReleaseSemaphore(&quot;LockName&quot;);
-}</pre>
+    <span style="color:Green;">// release the lock</span>
+    container.Ext().ReleaseSemaphore(<span style="color:#A31515;">&quot;LockName&quot;</span>);
+}
+</pre>
 		<div class="codesnippet-meta">
 			SemaphoreExamples.cs: Grab a semaphore
 			<div class="codedownload">

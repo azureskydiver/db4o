@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Dim</span> configuration <span style="color:Blue;">As</span> IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 configuration.Common.Diagnostic _
-    .AddListener(New DiagnosticFilter(New DiagnosticToConsole(), GetType(LoadedFromClassIndex)))</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
-configuration.Common.Diagnostic _
-    .AddListener(New DiagnosticFilter(New DiagnosticToConsole(), GetType(LoadedFromClassIndex)))</pre>
+    .AddListener(<span style="color:Blue;">New</span> DiagnosticFilter(<span style="color:Blue;">New</span> DiagnosticToConsole(), <span style="color:Blue;">GetType</span>(LoadedFromClassIndex)))
+</pre>
 		<div class="codesnippet-meta">
 			DiagnosticsExamples.vb: Filter for unindexed fields
 			<div class="codedownload">

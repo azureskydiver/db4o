@@ -2,9 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">    public Identity id = Identity.newId();
-//  was an int previously:
-//    public int id = new Random().nextInt();</pre>
+        <pre class="prettyprint" xml:space="preserve">
+    <span style="color:Blue;">public</span> Identity id = Identity.newId();
+<span style="color:Green;">//  was an int previously:</span>
+<span style="color:Green;">//    public int id = new Random().nextInt();</span>
+</pre>
 		<div class="codesnippet-meta">
 			Person.java: change type of field
 			<div class="codedownload">

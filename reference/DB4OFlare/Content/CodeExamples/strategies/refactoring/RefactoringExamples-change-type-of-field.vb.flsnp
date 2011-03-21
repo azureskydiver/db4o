@@ -2,12 +2,11 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Public m_id As Identity = Identity.NewId()
-'  was an int previously:
-'    public int id = new Random().nextInt();</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Public m_id As Identity = Identity.NewId()
-'  was an int previously:
-'    public int id = new Random().nextInt();</pre>
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Public</span> m_id <span style="color:Blue;">As</span> Identity = Identity.NewId()
+<span style="color:Green;">'  was an int previously:</span>
+<span style="color:Green;">'    public int id = new Random().nextInt();</span>
+</pre>
 		<div class="codesnippet-meta">
 			RefactoringExamples.vb: change type of field
 			<div class="codedownload">

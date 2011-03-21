@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">private readonly Guid guid = Guid.NewGuid();
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> Guid guid = Guid.NewGuid();
 
-public Guid ObjectId
+<span style="color:Blue;">public</span> Guid ObjectId
 {
-    get { return guid; }
+    <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> guid; }
 }
+
 </pre>
 		<div class="codesnippet-meta">
 			IDHolder.cs: generate the id

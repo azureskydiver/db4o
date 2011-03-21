@@ -2,15 +2,17 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">try
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">try</span>
 {
-    IObjectContainer container = Db4oEmbedded.OpenFile(&quot;database.db4o&quot;);
+    IObjectContainer container = Db4oEmbedded.OpenFile(<span style="color:#A31515;">&quot;database.db4o&quot;</span>);
 }
-catch (DatabaseFileLockedException e)
+<span style="color:Blue;">catch</span> (DatabaseFileLockedException e)
 {
-    // Database is already open!
-    // Use another database-file or handle this case gracefully
-}</pre>
+    <span style="color:Green;">// Database is already open!</span>
+    <span style="color:Green;">// Use another database-file or handle this case gracefully</span>
+}
+</pre>
 		<div class="codesnippet-meta">
 			ImportantExceptionCases.cs: If the database is already open
 			<div class="codedownload">

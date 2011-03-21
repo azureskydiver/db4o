@@ -1,3 +1,6 @@
+﻿namespace SnippetGenerator
+
+
 import System.IO
 import Ionic.Zip
 import System
@@ -12,6 +15,7 @@ import System.Web from 'System.Web'
 class CodeZip:
 	final allreadyGenerated = {}
 	final IgnoreFile = ".snippet-generator.include"
+	
 	
 	def ZipDirectory(directoryToZip as DirectoryInfo, directoryToStore as DirectoryInfo, name as string):		
 		fileName = directoryToStore.FullName+"/"+ BuildName(directoryToZip)+"-${name}.zip"
@@ -76,6 +80,7 @@ class SnippetGenerator:
 	final SnippetEnd = "#end example"
 	final Template as string
 	final zipGenerator  as CodeZip
+	final syntaxTransformer = SyntaxHighLighter()
 	
 	final tsCondition as TimeStampStorage
 	
@@ -104,9 +109,10 @@ class SnippetGenerator:
 				zipFile = zipGenerator.ZipDirectory(file.Directory,snippetDir,language)
 				normalizedCodeLines = NormalizeText(array(string,snippetText))
 				normalizedCode = join(normalizedCodeLines,"\n")
+				syntaxColoredCode = syntaxTransformer.Translate(normalizedCode,file.Name)
 				filePath = SnippetName(file.Name,snippetName.Replace(' ','-'),snippetDir.FullName)
 				snippetTitle = file.Name+":${snippetName}"
-				WriteSnippet(normalizedCode, filePath, zipFile,language,snippetTitle)
+				WriteSnippet(syntaxColoredCode, filePath, zipFile,language,snippetTitle)
 			elif inRecordingState:
 				snippetText.Add(line)
 							
@@ -121,8 +127,7 @@ class SnippetGenerator:
 		return line.Contains(SnippetEnd)
 		
 	def WriteSnippet(snippetText as string, filePath as string, zipFile as string, language as string, snippetTitle as string):
-		snippetTextHtml = HttpUtility.HtmlEncode(snippetText)
-		content = string.Format(Template,snippetTextHtml,zipFile,languageToCondition[language],snippetTitle)
+		content = string.Format(Template,snippetText,zipFile,languageToCondition[language],snippetTitle)
 		File.WriteAllText(filePath,content)
 	
 	def SnippetName(originalFileName as string, snippetName as string, location as string):
@@ -238,51 +243,4 @@ class SnippetAggregator:
 		BuildAggregateSnippets(Directory.CreateDirectory(directory))
 	
 	
-if(Environment.GetCommandLineArgs().Length == 3 and Environment.GetCommandLineArgs()[2] == '-rebuild'):
-	print "full rebuild"
-	Directory.CreateDirectory("../DB4OFlare/Content/CodeExamples").Delete(true)
-	Directory.CreateDirectory("../DRSFlare/Content/CodeExamples").Delete(true)
-	File.Delete(TimeStampStorage.TimeStampFile)
-else:
-	print "Update the snippets. For a full rebuild use the argument -rebuild"
 
-
-
-		
-zipFileGenerator = CodeZip()
-tsCondition = TimeStampStorage()
-
-# regular examples
-snippetGenerator = CodeToSnippets("./CodeSnippetTemplate.flsnp",zipFileGenerator,tsCondition)
-snippetGenerator.CreateCodeSnippets("java/src/com/db4odoc","../DB4OFlare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("java/src/META-INF","../DB4OFlare/Content/CodeExamples/META-INF","java")
-snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../DB4OFlare/Content/CodeExamples","csharp")
-snippetGenerator.CreateCodeSnippets("silverlight/silverlight/Code","../DB4OFlare/Content/CodeExamples","csharp")
-
-# DRS
-snippetGenerator.CreateCodeSnippets("javaDRS/src/com/db4odoc","../DRSFlare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("javaDRS","../DRSFlare/Content/CodeExamples/javaDRS","java")
-snippetGenerator.CreateCodeSnippets("dotNetDRS/CSharpExamples/Code","../DRSFlare/Content/CodeExamples","csharp")
-
-# enhancement-examples
-snippetGenerator.CreateCodeSnippets("javaEnhancement","../DB4OFlare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("dotNetEnhancement/","../DB4OFlare/Content/CodeExamples","csharp")
-
-# mini-example-applications
-snippetGenerator.CreateCodeSnippets("javaAppExamples/","../DB4OFlare/Content/CodeExamples","java")
-snippetGenerator.CreateCodeSnippets("dotNetAppExamples/","../DB4OFlare/Content/CodeExamples","csharp")
-
-# Stuff which is shared between .NET and Java
-snippetGenerator.CreateCodeSnippets("sharedAndMixed/java/src/com/db4odoc","../DB4OFlare/Content/CodeExamples","")
-
-# vb-stuff with other template:
-snippetGeneratorForVB = CodeToSnippets("./CodeSnippetTemplateForVB.flsnp",zipFileGenerator,tsCondition)
-snippetGeneratorForVB.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../DB4OFlare/Content/CodeExamples","vb")
-snippetGeneratorForVB.CreateCodeSnippets("dotNetDRS/VisualBasicExamples/Code","../DRSFlare/Content/CodeExamples","vb")
-snippetGeneratorForVB.CreateCodeSnippets("silverlight/silverlightVB/Code","../DB4OFlare/Content/CodeExamples","vb")
-
-aggreatedSnippet = SnippetAggregator(File.ReadAllText("./AggregateSnippetTemplate.flsnp"),tsCondition)
-aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../DB4OFlare/Content/CodeExamples"))
-aggreatedSnippet.BuildAggregateSnippets(Directory.CreateDirectory("../DRSFlare/Content/CodeExamples"))
-
-tsCondition.PersistInfo()

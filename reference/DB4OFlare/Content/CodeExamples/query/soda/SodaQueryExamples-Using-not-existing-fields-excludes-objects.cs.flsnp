@@ -2,13 +2,15 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">IQuery query = container.Query();
-query.Constrain(typeof (Pilot));
-// using not existing fields doesn't throw an exception
-// but rather exclude all object which don't use this field
-query.Descend(&quot;notExisting&quot;).Constrain(null).Not();
+        <pre class="prettyprint" xml:space="preserve">
+IQuery query = container.Query();
+query.Constrain(<span style="color:Blue;">typeof</span> (Pilot));
+<span style="color:Green;">// using not existing fields doesn't throw an exception</span>
+<span style="color:Green;">// but rather exclude all object which don't use this field</span>
+query.Descend(<span style="color:#A31515;">&quot;notExisting&quot;</span>).Constrain(<span style="color:Blue;">null</span>).Not();
 
-IObjectSet result = query.Execute();</pre>
+IObjectSet result = query.Execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.cs: Using not existing fields excludes objects
 			<div class="codedownload">

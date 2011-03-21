@@ -2,11 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">Query query = container.query();
-// You can simple filter objects which have a certain field
-query.descend(&quot;name&quot;).constrain(null).not();
+        <pre class="prettyprint" xml:space="preserve">
+Query query = container.query();
+<span style="color:Green;">// You can simple filter objects which have a certain field</span>
+query.descend(<span style="color:#A31515;">&quot;name&quot;</span>).constrain(<span style="color:Blue;">null</span>).not();
 
-ObjectSet&lt;Object&gt; result = query.execute();</pre>
+ObjectSet&lt;Object&gt; result = query.execute();
+</pre>
 		<div class="codesnippet-meta">
 			SodaQueryExamples.java: Pure field constrains
 			<div class="codedownload">

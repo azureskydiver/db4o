@@ -2,7 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">Defragment.Defrag(&quot;database.db4o&quot;, &quot;database.db4o.bak&quot;);</pre>
+        <pre class="prettyprint" xml:space="preserve">
+Defragment.Defrag(<span style="color:#A31515;">&quot;database.db4o&quot;</span>, <span style="color:#A31515;">&quot;database.db4o.bak&quot;</span>);
+</pre>
 		<div class="codesnippet-meta">
 			DefragmentationExample.cs: Specify backup file explicitly
 			<div class="codedownload">

@@ -2,18 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" MadCap:conditions="Primary.Pdf" xml:space="preserve">Using container As IObjectContainer = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;)
-    Dim pilot = (From p As Pilot In container Where p.Name = &quot;Joe&quot;).First()
-    pilot.Name = &quot;New Name&quot;
-    ' update the pilot
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oEmbedded.OpenFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>)
+    <span style="color:Blue;">Dim</span> pilot = (<span style="color:Blue;">From</span> p <span style="color:Blue;">As</span> Pilot <span style="color:Blue;">In</span> container <span style="color:Blue;">Where</span> p.Name = <span style="color:#A31515;">&quot;Joe&quot;</span>).First()
+    pilot.Name = <span style="color:#A31515;">&quot;New Name&quot;</span>
+    <span style="color:Green;">' update the pilot</span>
     container.Store(pilot)
-End Using</pre>
-        <pre class="prettyprint lang-vb" MadCap:conditions="Primary.Online" xml:space="preserve">Using container As IObjectContainer = Db4oEmbedded.OpenFile(&quot;databaseFile.db4o&quot;)
-    Dim pilot = (From p As Pilot In container Where p.Name = &quot;Joe&quot;).First()
-    pilot.Name = &quot;New Name&quot;
-    ' update the pilot
-    container.Store(pilot)
-End Using</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
+</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.vb: Update a pilot
 			<div class="codedownload">

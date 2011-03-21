@@ -2,12 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-configuration.common().allowVersionUpdates(true);
+        <pre class="prettyprint" xml:space="preserve">
+EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+configuration.common().allowVersionUpdates(<span style="color:Blue;">true</span>);
 
-// reopen and close the database to do the update
+<span style="color:Green;">// reopen and close the database to do the update</span>
 ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
-container.close();</pre>
+container.close();
+</pre>
 		<div class="codesnippet-meta">
 			CommonConfigurationExamples.java: Update the database-format
 			<div class="codedownload">

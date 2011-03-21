@@ -2,10 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">container.store(new Pilot(&quot;John&quot;));
-container.store(new Pilot(&quot;Joanna&quot;));
+        <pre class="prettyprint" xml:space="preserve">
+container.store(<span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;John&quot;</span>));
+container.store(<span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Joanna&quot;</span>));
 
-container.commit();</pre>
+container.commit();
+</pre>
 		<div class="codesnippet-meta">
 			Transactions.java: Commit changes
 			<div class="codedownload">

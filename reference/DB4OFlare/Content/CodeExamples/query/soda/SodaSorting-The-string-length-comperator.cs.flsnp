@@ -2,16 +2,18 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">class NameLengthComperator :IQueryComparator
+        <pre class="prettyprint" xml:space="preserve">
+<span style="color:Blue;">class</span> NameLengthComperator :IQueryComparator
 {
-    public int Compare(object first, object second)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">int</span> Compare(<span style="color:Blue;">object</span> first, <span style="color:Blue;">object</span> second)
     {
         Pilot p1 = (Pilot) first;
         Pilot p2 = (Pilot)second;
-        // sort by string-length
-        return Math.Sign(p1.Name.Length - p2.Name.Length);
+        <span style="color:Green;">// sort by string-length</span>
+        <span style="color:Blue;">return</span> Math.Sign(p1.Name.Length - p2.Name.Length);
     }
-}</pre>
+}
+</pre>
 		<div class="codesnippet-meta">
 			SodaSorting.cs: The string length comperator
 			<div class="codedownload">
