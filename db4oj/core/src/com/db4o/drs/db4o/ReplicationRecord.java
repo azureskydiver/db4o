@@ -13,6 +13,8 @@ import com.db4o.query.*;
 /**
  * tracks the version of the last replication between
  * two Objectcontainers.
+ * This class is persistent. It can't be moved to a 
+ * different package and field names can not be changed. 
  * 
  * @exclude
  * @persistent
