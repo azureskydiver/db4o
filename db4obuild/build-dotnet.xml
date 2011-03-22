@@ -783,6 +783,9 @@
 				<fileset dir="${dir.sharpened}/core/src/Db4objects/Db4o">
 					<include name="**/*.cs" />
 				</fileset>
+				<fileset dir="${dir.sharpened}/core/src/Db4objects/Drs">
+					<include name="**/*.cs" />
+				</fileset>
 			</files>
 		</copy-sharpened-sources>
 	    
