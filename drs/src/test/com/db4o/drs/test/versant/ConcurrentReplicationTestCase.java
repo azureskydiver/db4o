@@ -60,8 +60,8 @@ public class ConcurrentReplicationTestCase extends VodProviderTestCaseBase {
             	replicate(db4oProvider2, vodProvider2, ReplicationAction.NO_ACTIONS);
     		}
     	});
-		replicate(objectContainer1);
-		ObjectSet<Item> result = objectContainer1.query(Item.class);
+		replicate(objectContainer2);
+		ObjectSet<Item> result = objectContainer2.query(Item.class);
 		IteratorAssert.sameContent(new Object[] {new Item("storedIn1"), new Item("storedIn2")}, result);
 	}
 
