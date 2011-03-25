@@ -197,6 +197,7 @@
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\AllTests.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\AssemblyInfoTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\DelegateFieldTestCase.cs"/>
+<Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\DynamicallyLoadedAssemblyTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\ListOfNullableItemTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\NullableArraysElementsTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Assorted\NullableDateTimeTestCase.cs"/>
@@ -288,6 +289,7 @@
 <Compile Include="native\Db4objects.Db4o.Tests\Jre5\Concurrency\Query\IteratorPlatform.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\Optional\Monitoring\Samples\AllMonitoringSupport.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\SharpenLang\AllTests.cs"/>
+<Compile Include="native\Db4objects.Db4o.Tests\SharpenLang\DynamicallyLoadedAssemblyTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\SharpenLang\TypeReferenceTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\Silverlight\AllTests.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\Silverlight\Config\AllTests.cs"/>
@@ -536,6 +538,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Defragment\DefragmentUntypedPrimitiveArrayTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Defragment\IdMappingTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Defragment\LegacyDatabaseDefragTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Defragment\RemovedFieldDefragmentTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Defragment\SlotDefragmentFixture.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Defragment\SlotDefragmentTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Defragment\SlotDefragmentTestConstants.cs"/>
@@ -1007,7 +1010,6 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\OldVersionReflectFieldAfterRefactorTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\OwnCommitCallbackFlaggedEmbeddedTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\PingTestCase.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Common\Staging\RemovedFieldDefragmentTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\StoredClassUnknownClassQueryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\TAUnavailableClassAtServer.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Staging\UntypedFieldSortingTestCase.cs"/>
