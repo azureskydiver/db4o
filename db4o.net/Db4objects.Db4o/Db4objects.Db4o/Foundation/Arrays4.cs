@@ -1,6 +1,7 @@
 /* Copyright (C) 2004 - 2011  Versant Inc.  http://www.db4o.com */
 
 using System;
+using System.Collections;
 using Db4objects.Db4o.Foundation;
 using Sharpen;
 
@@ -149,12 +150,12 @@ namespace Db4objects.Db4o.Foundation
 
 		public static void Sort(object[] array, IComparison4 comparator)
 		{
-			Algorithms4.Sort(new _ISortable4_127(array, comparator));
+			Algorithms4.Sort(new _ISortable4_128(array, comparator));
 		}
 
-		private sealed class _ISortable4_127 : ISortable4
+		private sealed class _ISortable4_128 : ISortable4
 		{
-			public _ISortable4_127(object[] array, IComparison4 comparator)
+			public _ISortable4_128(object[] array, IComparison4 comparator)
 			{
 				this.array = array;
 				this.comparator = comparator;
@@ -180,6 +181,16 @@ namespace Db4objects.Db4o.Foundation
 			private readonly object[] array;
 
 			private readonly IComparison4 comparator;
+		}
+
+		public static long[] ToLongArray(IList list)
+		{
+			long[] arr = new long[list.Count];
+			for (int i = 0; i < arr.Length; i++)
+			{
+				arr[i] = (((long)list[i]));
+			}
+			return arr;
 		}
 	}
 }

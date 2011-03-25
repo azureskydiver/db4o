@@ -1490,5 +1490,19 @@ namespace Db4objects.Db4o.CS.Internal
 		{
 			return new QLinRoot(Query(), clazz);
 		}
+
+		public virtual void CommitReplication(long replicationRecordId, long timestamp)
+		{
+			lock (_lock)
+			{
+				CheckReadOnly();
+				ClientTransaction clientTransaction = (ClientTransaction)Transaction;
+				clientTransaction.PreCommit();
+				Write(Msg.CommitReplication.GetWriterForLongs(clientTransaction, new long[] { replicationRecordId
+					, timestamp }));
+				ExpectedResponse(Msg.Ok);
+				clientTransaction.PostCommit();
+			}
+		}
 	}
 }

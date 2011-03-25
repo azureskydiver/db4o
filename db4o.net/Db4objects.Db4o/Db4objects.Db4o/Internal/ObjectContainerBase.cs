@@ -531,7 +531,7 @@ namespace Db4objects.Db4o.Internal
 			public object Apply(object trans)
 			{
 				this._enclosing.Commit1(((Transaction)trans));
-				((Transaction)trans).CommitReferenceSystem();
+				((Transaction)trans).PostCommit();
 				return null;
 			}
 

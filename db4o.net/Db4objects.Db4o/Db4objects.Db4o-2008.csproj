@@ -26,6 +26,8 @@
 
 
 
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -259,6 +261,7 @@
 <Compile Include="Db4objects.Db4o\Db4oEmbedded.cs"/>
 <Compile Include="Db4objects.Db4o\Db4oFactory.cs"/>
 <Compile Include="Db4objects.Db4o\Db4oVersion.cs"/>
+<Compile Include="Db4objects.Db4o\Db4o\ReplicationRecord.cs"/>
 <Compile Include="Db4objects.Db4o\Debug4.cs"/>
 <Compile Include="Db4objects.Db4o\Defragment\AbstractIdMapping.cs"/>
 <Compile Include="Db4objects.Db4o\Defragment\DatabaseIdMapping.cs"/>
