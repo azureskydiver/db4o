@@ -148,11 +148,13 @@ namespace Sharpen.Lang
 #endif
 		}
 
+#if !CF && !SILVERLIGHT
 		private static Assembly LoadFromCurrentAppDomain(string fullName)
 		{
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			return Array.Find(assemblies, a => a.GetName().Name == fullName);
 		}
+#endif
 	}
 
 	public abstract class QualifiedTypeReference : TypeReference
