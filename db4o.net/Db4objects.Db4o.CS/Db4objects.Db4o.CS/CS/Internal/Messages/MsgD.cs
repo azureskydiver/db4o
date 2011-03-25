@@ -138,6 +138,18 @@ namespace Db4objects.Db4o.CS.Internal.Messages
 			return message;
 		}
 
+		public Db4objects.Db4o.CS.Internal.Messages.MsgD GetWriterForLongs(Transaction trans
+			, long[] longs)
+		{
+			Db4objects.Db4o.CS.Internal.Messages.MsgD message = GetWriterForLength(trans, Const4
+				.LongLength * longs.Length);
+			for (int i = 0; i < longs.Length; i++)
+			{
+				message.WriteLong(longs[i]);
+			}
+			return message;
+		}
+
 		public virtual Db4objects.Db4o.CS.Internal.Messages.MsgD GetWriterForSingleObject
 			(Transaction trans, object obj)
 		{

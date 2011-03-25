@@ -5,9 +5,9 @@ using Db4oUnit;
 using Db4oUnit.Extensions;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Reflect;
-using Db4objects.Db4o.Tests.Common.Staging;
+using Db4objects.Db4o.Tests.Common.Defragment;
 
-namespace Db4objects.Db4o.Tests.Common.Staging
+namespace Db4objects.Db4o.Tests.Common.Defragment
 {
 	public class RemovedFieldDefragmentTestCase : AbstractDb4oTestCase
 	{
@@ -17,7 +17,6 @@ namespace Db4objects.Db4o.Tests.Common.Staging
 
 			public Before(int id)
 			{
-				// COR-1740
 				_id = id;
 			}
 		}

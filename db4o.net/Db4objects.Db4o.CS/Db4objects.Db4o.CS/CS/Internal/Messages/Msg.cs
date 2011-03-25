@@ -40,6 +40,9 @@ namespace Db4objects.Db4o.CS.Internal.Messages
 
 		public static readonly MCommit Commit = new MCommit();
 
+		public static readonly MCommitReplication CommitReplication = new MCommitReplication
+			();
+
 		public static readonly MCommittedCallBackRegistry CommittedCallbackRegister = new 
 			MCommittedCallBackRegistry();
 

@@ -52,5 +52,7 @@ namespace Db4objects.Db4o.CS.Internal
 		void Join();
 
 		void SetDispatcherName(string name);
+
+		Db4objects.Db4o.Internal.Transaction Transaction();
 	}
 }

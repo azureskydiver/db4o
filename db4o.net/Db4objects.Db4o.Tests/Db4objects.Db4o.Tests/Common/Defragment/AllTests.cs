@@ -18,8 +18,8 @@ namespace Db4objects.Db4o.Tests.Common.Defragment
 			return new Type[] { typeof(BlockSizeDefragTestCase), typeof(CommitTimestampDefragmentTestCase
 				), typeof(DefragEncryptedFileTestCase), typeof(DefragInheritedFieldIndexTestCase
 				), typeof(DefragInMemoryTestSuite), typeof(DefragmentUntypedPrimitiveArrayTestCase
-				), typeof(IdMappingTestSuite), typeof(SlotDefragmentTestCase), typeof(StoredClassFilterTestCase
-				), typeof(TranslatedDefragTestCase) };
+				), typeof(IdMappingTestSuite), typeof(RemovedFieldDefragmentTestCase), typeof(SlotDefragmentTestCase
+				), typeof(StoredClassFilterTestCase), typeof(TranslatedDefragTestCase) };
 		}
 	}
 }

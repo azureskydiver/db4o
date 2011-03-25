@@ -17,9 +17,8 @@ namespace Db4objects.Db4o.Tests.Common.Staging
 		{
 			return ComposeTests(new Type[] { typeof(ActivateDepthTestCase), typeof(InterfaceQueryTestCase
 				), typeof(GenericClassWithExistingSuperClassTestCase), typeof(LazyQueryDeleteTestCase
-				), typeof(OldVersionReflectFieldAfterRefactorTestCase), typeof(RemovedFieldDefragmentTestCase
-				), typeof(StoredClassUnknownClassQueryTestCase), typeof(UntypedFieldSortingTestCase
-				) });
+				), typeof(OldVersionReflectFieldAfterRefactorTestCase), typeof(StoredClassUnknownClassQueryTestCase
+				), typeof(UntypedFieldSortingTestCase) });
 		}
 
 		// COR-1131
