@@ -48,9 +48,9 @@ public class DecafRewriter {
 					unit.accept(new DecafRewritingVisitor(context));
 				}
 				
-				unit.accept(new AnnotationRewritingVisitor(context));	
+				unit.accept(new AnnotationRewritingVisitor(context));
 				unit.accept(new AccessibilityRewritingVisitor(context));
-				
+				unit.accept(new ImportRewritingVisitor(context));
 			}
 		});
 		return rewrite;
