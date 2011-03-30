@@ -13,8 +13,8 @@ import com.db4o.reflect.*;
  */
 public class ObjectNotStorableException extends Db4oRecoverableException{
 	
-	public ObjectNotStorableException(ReflectClass a_class){
-	    super(Messages.get(a_class.isPrimitive() ? 59: 45, a_class.getName()));
+	public ObjectNotStorableException(ReflectClass clazz){
+	    super(Messages.get(clazz.isImmutable() ? 59: 45, clazz.getName()));
 	}
     
     public ObjectNotStorableException(String message){
