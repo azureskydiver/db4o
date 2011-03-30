@@ -2,12 +2,10 @@
 
 package com.db4o.internal;
 
-import com.db4o.Db4o;
-import com.db4o.Db4oVersion;
-import com.db4o.Deploy;
-import com.db4o.config.Configuration;
+import java.io.*;
 
-import java.io.PrintStream;
+import com.db4o.*;
+import com.db4o.config.*;
 
 
 /**
