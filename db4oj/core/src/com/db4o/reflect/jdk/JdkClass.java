@@ -182,7 +182,7 @@ public class JdkClass implements JavaReflectClass{
 		return constructorSpec().canBeInstantiated().definiteYes();
 	}
 
-	public boolean isImmutable() {
+	public boolean isSimple() {
 		return isPrimitive() || Platform4.isSimple(_clazz);
 	}
 }

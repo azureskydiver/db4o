@@ -121,7 +121,7 @@ public class CustomClass implements ReflectClass {
 		return true;
 	}
 
-	public boolean isImmutable() {
+	public boolean isSimple() {
 		return false;
 	}
 	

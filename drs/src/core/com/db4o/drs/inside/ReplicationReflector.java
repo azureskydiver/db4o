@@ -94,7 +94,7 @@ public class ReplicationReflector {
 
 	public boolean isValueType(ReflectClass clazz) {
 		if(_container == null){
-			return clazz.isImmutable();
+			return clazz.isSimple();
 		}
 		ClassMetadata classMetadata = _container.classMetadataForReflectClass(clazz);
 		if(classMetadata == null) {
