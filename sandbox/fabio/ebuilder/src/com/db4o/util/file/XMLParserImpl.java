@@ -18,7 +18,9 @@ final class XMLParserImpl implements XMLParser {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(this.realFile.openInputStream());
+			InputStream in = this.realFile.openInputStream();
+			Document doc = db.parse(in);
+			in.close();
 			return doc.getDocumentElement();
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);

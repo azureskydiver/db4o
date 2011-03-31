@@ -24,3 +24,4 @@ bin-testcases/
 db4obuild/*.log
 db4oj.tests/*.log
 db4oj.tests/*.db4o
+sandbox/fabio/ebuilder/output
