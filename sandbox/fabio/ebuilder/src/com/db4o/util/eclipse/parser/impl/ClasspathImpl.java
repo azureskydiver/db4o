@@ -1,14 +1,11 @@
 package com.db4o.util.eclipse.parser.impl;
 
-import java.util.*;
-
 import org.w3c.dom.*;
 
 import com.db4o.util.eclipse.parser.*;
 import com.db4o.util.file.*;
 
-final class ClasspathImpl implements Classpath {
-	private ArrayList<ClasspathEntry> entries;
+final class ClasspathImpl {
 	private final ProjectImpl project;
 
 	public ClasspathImpl(ProjectImpl project) {
@@ -19,12 +16,7 @@ final class ClasspathImpl implements Classpath {
 		return project;
 	}
 
-	public Collection<ClasspathEntry> entries() {
-		if (entries != null) {
-			return entries;
-		}
-
-		entries = new ArrayList<ClasspathEntry>();
+	public void accept(final ProjectVisitor visitor) {
 
 		IFile cp = project().root().file(".classpath");
 
@@ -34,26 +26,55 @@ final class ClasspathImpl implements Classpath {
 		for(int i=0;i<list.getLength();i++) {
 			Element entry = (Element) list.item(i);
 			String kind = entry.getAttribute("kind");
-			String name = entry.getAttribute("path");
-			IFile path;
-			if (name.startsWith("/")) {
-				path = project().workspace().root().file(name);
-			} else {
-				path = project().root().file(name);
-			}
+			String path = entry.getAttribute("path");
+			
 			if ("src".equals(kind)) {
-				if ("false".equals(entry.getAttribute("combineaccessrules"))) {
-					entries.add(new ProjectClasspathEntry(this, path));
+				if (path.startsWith("/")) {
+					visitor.visitExternalProject(project().workspace().project(path.substring(1)));
 				} else {
-					entries.add(new SourceClasspathEntry(this, path));
+					visitor.visitSourceFolder(project().root().file(path));
 				}
 			} else if ("lib".equals(kind)) {
-				entries.add(new LibClasspathEntry(this, path));
+				visitor.visitArchive(file(path));
 			} else if ("output".equals(kind)) {
-				project().setOutputDir(path);
+				visitor.visitOutputFolder(project().root().file(path));
+			} else if ("var".equals(kind)) {
+				String var = path.substring(0, path.indexOf('/'));
+				IFile value = project().workspace().variable(var);
+				if (value != null) {
+					IFile file = value.file(path.substring(path.indexOf('/')+1));
+					if (file != null) {
+						visitor.visitArchive(file);
+						continue;
+					}
+				}
+				visitor.visitUnresolvedDependency(path);
+			} else if ("con".equals(kind)) {
+				if (path.startsWith("org.eclipse.jdt.USER_LIBRARY")) {
+					UserLibrary userLibrary = project().workspace().userLibrary(path.substring(path.indexOf('/')+1));
+					if (userLibrary != null) {
+						userLibrary.accept(new UserLibraryVisitorAdapter() {
+							@Override
+							public void visitArchive(IFile file) {
+								visitor.visitArchive(file);
+							}
+						});
+						continue;
+					}
+				} else if (path.startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
+					// ignoring jre
+					continue;
+				}
+				visitor.visitUnresolvedDependency(path);
 			}
 		}
-
-		return entries;
+	}
+	
+	private IFile file(String name) {
+		if (name.startsWith("/")) {
+			return project().workspace().root().file(name);
+		} else {
+			return project().root().file(name);
+		}
 	}
 }

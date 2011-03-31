@@ -3,8 +3,10 @@ package com.db4o.util.eclipse.parser;
 
 public interface Project {
 
-	Classpath classpath();
+	String name();
 
-	void accept(ClasspathVisitor visitor);
+	void accept(ProjectVisitor visitor);
+
+	void accept(ProjectVisitor visitor, int visitorOptions);
 
 }
