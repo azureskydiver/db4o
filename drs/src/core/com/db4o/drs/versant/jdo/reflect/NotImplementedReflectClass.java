@@ -76,7 +76,7 @@ public class NotImplementedReflectClass implements ReflectClass {
 		throw new java.lang.UnsupportedOperationException();
 	}
 
-	public boolean isImmutable() {
+	public boolean isSimple() {
 		throw new java.lang.UnsupportedOperationException();
 	}
 

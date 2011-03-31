@@ -67,6 +67,6 @@ public interface ReflectClass {
 	 * the classes that are {@link #isPrimitive()} and {@link Platform4#isSimple(Class)}
 	 * We can think about letting users add an Immutable annotation.  
 	 */
-	public boolean isImmutable();
+	public boolean isSimple();
 	
 }

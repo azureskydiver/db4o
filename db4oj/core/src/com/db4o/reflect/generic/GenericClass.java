@@ -291,9 +291,9 @@ public class GenericClass implements ReflectClass, DeepClone {
 		return _delegate.nullValue();
 	}
 
-	public boolean isImmutable() {
+	public boolean isSimple() {
         if(_delegate != null){
-            return _delegate.isImmutable();
+            return _delegate.isSimple();
         }
 		return isPrimitive();
 	}
