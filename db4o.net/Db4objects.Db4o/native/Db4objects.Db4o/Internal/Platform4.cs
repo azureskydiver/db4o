@@ -585,6 +585,11 @@ namespace Db4objects.Db4o.Internal
 
         public static bool IsSimple(Type @class)
         {
+			if (@class.IsGenericType && @class.GetGenericTypeDefinition() == typeof(Nullable<>))
+			{
+				@class = @class.GetGenericArguments()[0];	
+			}
+
             for (int i1 = 0; i1 < SIMPLE_CLASSES.Length; i1++)
             {
                 if (@class == SIMPLE_CLASSES[i1])
