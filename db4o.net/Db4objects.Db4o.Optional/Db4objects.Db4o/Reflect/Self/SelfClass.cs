@@ -205,7 +205,7 @@ namespace Db4objects.Db4o.Reflect.Self
 			return true;
 		}
 
-		public virtual bool IsImmutable()
+		public virtual bool IsSimple()
 		{
 			return IsPrimitive() || Platform4.IsSimple(_class);
 		}

@@ -165,7 +165,7 @@ namespace Db4objects.Db4o.Tests.Common.Reflect.Custom
 			return true;
 		}
 
-		public virtual bool IsImmutable()
+		public virtual bool IsSimple()
 		{
 			return false;
 		}
