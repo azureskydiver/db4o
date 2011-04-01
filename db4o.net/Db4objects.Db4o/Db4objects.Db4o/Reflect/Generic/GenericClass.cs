@@ -366,11 +366,11 @@ namespace Db4objects.Db4o.Reflect.Generic
 			return _delegate.NullValue();
 		}
 
-		public virtual bool IsImmutable()
+		public virtual bool IsSimple()
 		{
 			if (_delegate != null)
 			{
-				return _delegate.IsImmutable();
+				return _delegate.IsSimple();
 			}
 			return IsPrimitive();
 		}

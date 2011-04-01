@@ -18,8 +18,8 @@ namespace Db4objects.Db4o.Ext
 	[System.Serializable]
 	public class ObjectNotStorableException : Db4oRecoverableException
 	{
-		public ObjectNotStorableException(IReflectClass a_class) : base(Db4objects.Db4o.Internal.Messages
-			.Get(a_class.IsPrimitive() ? 59 : 45, a_class.GetName()))
+		public ObjectNotStorableException(IReflectClass clazz) : base(Db4objects.Db4o.Internal.Messages
+			.Get(clazz.IsSimple() ? 59 : 45, clazz.GetName()))
 		{
 		}
 

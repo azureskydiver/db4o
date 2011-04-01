@@ -77,6 +77,6 @@ namespace Db4objects.Db4o.Reflect
 		/// 	</see>
 		/// We can think about letting users add an Immutable annotation.
 		/// </remarks>
-		bool IsImmutable();
+		bool IsSimple();
 	}
 }

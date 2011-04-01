@@ -2,6 +2,7 @@
 
 using System;
 using Db4oUnit.Extensions;
+using Db4objects.Db4o.Tests.Common.Types;
 
 namespace Db4objects.Db4o.Tests.Common.Types
 {
@@ -14,7 +15,8 @@ namespace Db4objects.Db4o.Tests.Common.Types
 
 		protected override Type[] TestCases()
 		{
-			return new Type[] { typeof(Db4objects.Db4o.Tests.Common.Types.Arrays.AllTests) };
+			return new Type[] { typeof(Db4objects.Db4o.Tests.Common.Types.Arrays.AllTests), typeof(
+				StoreTopLevelPrimitiveTestCase) };
 		}
 	}
 }
