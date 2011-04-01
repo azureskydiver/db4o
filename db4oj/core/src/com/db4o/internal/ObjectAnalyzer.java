@@ -33,7 +33,7 @@ class ObjectAnalyzer {
         }
         
         ReflectClass claxx = _container.reflector().forObject(_obj);
-        if(claxx == null || claxx.isSimple()){
+        if(claxx == null){
             notStorable(_obj, claxx);
             return;
         }
