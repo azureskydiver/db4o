@@ -1,5 +1,6 @@
 ﻿/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
 using System;
+using Db4objects.Db4o.Config;
 using Db4oUnit;
 using Db4oUnit.Extensions;
 
@@ -9,7 +10,7 @@ namespace Db4objects.Db4o.Tests.CLI2.Assorted
     {
         public class Item
         {
-            public DateTime? _typedDateTime;
+			public DateTime? _typedDateTime;
 
             public object _untypedDateTime;
 
@@ -29,6 +30,12 @@ namespace Db4objects.Db4o.Tests.CLI2.Assorted
                 _untypedArray = new DateTime?[] {value};
             }
         }
+
+		protected override void Configure(IConfiguration config)
+		{
+			//Uncoment the line bellow to test COR-2173
+			//config.ObjectClass(typeof(Item)).ObjectField("_typedDateTime").Indexed(true);
+		}
 
         protected override void Store()
         {
