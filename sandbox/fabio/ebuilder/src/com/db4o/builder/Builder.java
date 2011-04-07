@@ -13,6 +13,8 @@ public class Builder {
 	public static void main(String[] args) throws IOException {
 
 		final IFile output = new RealFile("output");
+		final IFile mainClasses = output.file("classes");
+		final IFile testClasses = output.file("test-classes");
 
 		IFile root = findWorkspace(".");
 		Workspace w = new EclipseWorkspace(root);
@@ -20,11 +22,22 @@ public class Builder {
 		w.addProjectRoot(root.file("../polepos"));
 		w.importUserLibrary(new RealFile("versant.userlibraries"));
 		
-		Project testsProject = w.project("drs");
-
-		Set<Project> buildList = new LinkedHashSet<Project>();
+		List<Project> coreProjects = new ArrayList<Project>();
 		
-		testsProject.accept(new DependencyCollectorVisitor(buildList));
+		coreProjects.add(w.project("db4oj"));
+		coreProjects.add(w.project("db4o.cs"));
+		coreProjects.add(w.project("db4o.cs.optional"));
+		coreProjects.add(w.project("db4ounit"));
+		coreProjects.add(w.project("db4o.instrumentation"));
+		coreProjects.add(w.project("db4onqopt"));
+		coreProjects.add(w.project("db4oj.optional"));
+		coreProjects.add(w.project("db4otaj"));
+		coreProjects.add(w.project("db4otools"));
+		
+
+		Set<Project> buildList = buildListFor(coreProjects);
+		
+		final Set<Project> testsBuildList = new LinkedHashSet<Project>();
 		
 		for(final Project project : buildList) {
 			
@@ -32,20 +45,96 @@ public class Builder {
 				
 				@Override
 				protected IFile resolveProjectOutputDir(Project project, IFile dir) {
-					return output.file(project.name());
+					return mainClasses.file(project.name());
 				}
 				
 				@Override
 				public void visitEnd() {
-					String projectName = project.name();
-					System.out.println("building " + projectName);
+					System.out.println("building " + project.name());
 					super.visitEnd();
-					System.out.println("   creating jar");
-					createJar(output.file(projectName), output.file(projectName+".jar"));
+				}
+				
+				@Override
+				public void visitSourceFolder(IFile dir) {
+					if ("test".equals(dir.name()) || "test".equals(dir.parent().name()) || "tutorial".equals(dir.name()) || "tutorial".equals(dir.parent().name())) {
+						testsBuildList.add(project);
+						return;
+					}
+					super.visitSourceFolder(dir);
 				}
 			});
 		}
 		
+		System.out.println("-----");
+		
+		for(final Project project : testsBuildList) {
+			
+			project.accept(new ProjectBuilderVisitor() {
+				
+				@Override
+				protected IFile resolveProjectOutputDir(Project p, IFile dir) {
+					return p == project ? testClasses.file(p.name()) : mainClasses.file(p.name());
+				}
+				
+				@Override
+				public void visitEnd() {
+					System.out.println("building tests for " + project.name());
+					super.visitEnd();
+				}
+				
+				@Override
+				public void visitSourceFolder(IFile dir) {
+					if ("test".equals(dir.name()) || "test".equals(dir.parent().name()) || "tutorial".equals(dir.name()) || "tutorial".equals(dir.parent().name())) {
+						super.visitSourceFolder(dir);
+					} else {
+						addClasspathEntry(mainClasses.file(project.name()));
+					}
+				}
+			});
+		}
+
+		System.out.println("-----");
+		
+		for(Project project : coreProjects) {
+			String projectName = project.name();
+			System.out.println("creating "+projectName+".jar");
+			createJar(mainClasses.file(projectName), output.file(projectName+".jar"));
+		}
+
+//		
+//		
+//		Manifest manifest = new Manifest();
+//		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+//
+//		final JarOutputStream jout = new JarOutputStream(new FileOutputStream("drs-all.jar"), manifest);
+//		
+//		testsProject.accept(new ProjectVisitorAdapter (){
+//			
+//			Set<Project> knownProjects = new HashSet<Project>();
+//			
+//			@Override
+//			public void visitOutputFolder(IFile dir) {
+//				dir.accept(new JarFileCollector(jout));
+//			}
+//			@Override
+//			public void visitExternalProject(Project project) {
+//				if (knownProjects.add(project)) {
+//					project.accept(this);
+//				}
+//			}
+//		});
+//		
+//		jout.flush();
+//		jout.close();
+	}
+
+	private static Set<Project> buildListFor(List<Project> coreProjects) {
+		Set<Project> buildList = new LinkedHashSet<Project>();
+		
+		for(Project p : coreProjects) {
+			p.accept(new DependencyCollectorVisitor(buildList));
+		}
+		return buildList;
 	}
 
 	private static void createJar(IFile src, IFile dest) {

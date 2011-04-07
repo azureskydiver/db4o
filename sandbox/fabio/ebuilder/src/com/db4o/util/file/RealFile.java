@@ -198,7 +198,12 @@ public class RealFile implements IFile {
 
 	@Override
 	public String getRelativePathTo(IFile base) {
-		return getAbsolutePath().substring(base.getAbsolutePath().length()+1);
+		String baseAbsolutePath = base.getAbsolutePath();
+		String absolutePath = getAbsolutePath();
+		if (baseAbsolutePath.length() == absolutePath.length()) {
+			return "";
+		}
+		return absolutePath.substring(baseAbsolutePath.length()+1);
 	}
 
 	@Override
