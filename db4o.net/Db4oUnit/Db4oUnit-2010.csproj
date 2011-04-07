@@ -82,6 +82,8 @@
 
 
 
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -133,15 +135,6 @@
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
-<Compile Include="native\Db4oUnit\ArrayAssert.cs"/>
-<Compile Include="native\Db4oUnit\Assert.cs"/>
-<Compile Include="native\Db4oUnit\AssertionException.cs"/>
-<Compile Include="native\Db4oUnit\Data\Generators.cs"/>
-<Compile Include="native\Db4oUnit\NullTextWriter.cs"/>
-<Compile Include="native\Db4oUnit\TestException.cs"/>
-<Compile Include="native\Db4oUnit\TestPlatform.cs"/>
-<Compile Include="native\Db4oUnit\Util\PlatformInformation.cs"/>
-<Compile Include="native\Db4oUnit\Util\StopWatch.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\ArrayAssert.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\Assert.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\AssertionException.cs"/>
@@ -229,6 +222,15 @@
 <Compile Include="Db4oUnit\Db4oUnit\Tests\TestLifeCycleTestCase.cs"/>
 <Compile Include="Db4oUnit\Db4oUnit\Tests\TestRunnerTestCase.cs"/>
 <Compile Include="Properties\AssemblyInfo.cs"/>
+<Compile Include="native\Db4oUnit\ArrayAssert.cs"/>
+<Compile Include="native\Db4oUnit\Assert.cs"/>
+<Compile Include="native\Db4oUnit\AssertionException.cs"/>
+<Compile Include="native\Db4oUnit\Data\Generators.cs"/>
+<Compile Include="native\Db4oUnit\NullTextWriter.cs"/>
+<Compile Include="native\Db4oUnit\TestException.cs"/>
+<Compile Include="native\Db4oUnit\TestPlatform.cs"/>
+<Compile Include="native\Db4oUnit\Util\PlatformInformation.cs"/>
+<Compile Include="native\Db4oUnit\Util\StopWatch.cs"/>
 </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

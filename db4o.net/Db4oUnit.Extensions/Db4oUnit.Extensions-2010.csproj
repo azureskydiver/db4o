@@ -82,6 +82,8 @@
 
 
 
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -133,15 +135,6 @@
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
-<Compile Include="native\Db4oUnit.Extensions\AbstractDb4oTestCase.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Db4oUnitPlatform.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Dbmock\MockClient.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Dbmock\MockEmbedded.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Dbmock\MockServer.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Fixtures\Db4oNetworking.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Fixtures\SilverlightFixture.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Util\DiagnosticCollector.cs"/>
-<Compile Include="native\Db4oUnit.Extensions\Util\IOServices.cs"/>
 <Compile Include="Db4oUnit.Extensions\AbstractDb4oTestCase.cs"/>
 <Compile Include="Db4oUnit.Extensions\AbstractInMemoryDb4oTestCase.cs"/>
 <Compile Include="Db4oUnit.Extensions\BTreeAssert.cs"/>
@@ -228,6 +221,15 @@
 <Compile Include="Db4oUnit.Extensions\Util\CrossPlatformServices.cs"/>
 <Compile Include="Db4oUnit.Extensions\Util\IOUtil.cs"/>
 <Compile Include="Properties\AssemblyInfo.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\AbstractDb4oTestCase.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Db4oUnitPlatform.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Dbmock\MockClient.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Dbmock\MockEmbedded.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Dbmock\MockServer.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Fixtures\Db4oNetworking.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Fixtures\SilverlightFixture.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Util\DiagnosticCollector.cs"/>
+<Compile Include="native\Db4oUnit.Extensions\Util\IOServices.cs"/>
 </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

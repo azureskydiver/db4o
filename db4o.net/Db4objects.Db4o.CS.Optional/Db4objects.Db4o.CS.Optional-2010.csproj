@@ -82,6 +82,8 @@
 
 
 
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -112,6 +114,7 @@
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
+<Compile Include="Properties\AssemblyInfo.cs"/>
 <Compile Include="native\Db4objects.Db4o.CS\Config\ClientSslSupport.cs"/>
 <Compile Include="native\Db4objects.Db4o.CS\Config\ServerSslSupport.cs"/>
 <Compile Include="native\Db4objects.Db4o.CS\Foundation\ServerSslSocket.cs"/>
@@ -127,7 +130,6 @@
 <Compile Include="native\Db4objects.Db4o.CS\Monitoring\MonitoredSocket4Factory.cs"/>
 <Compile Include="native\Db4objects.Db4o.CS\Monitoring\NetworkingCounters.cs"/>
 <Compile Include="native\Db4objects.Db4o.CS\Monitoring\NetworkingMonitoringSupport.cs"/>
-<Compile Include="Properties\AssemblyInfo.cs"/>
 </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
