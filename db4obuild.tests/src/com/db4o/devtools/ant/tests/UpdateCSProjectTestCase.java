@@ -24,19 +24,15 @@ public class UpdateCSProjectTestCase implements TestCase {
 			assertThereAreNonNativeFiles(project, originalNativeCount);
 			
 			project.addFile("foo.cs");
-			assertNativeFileCountHasNotChanged(project, originalNativeCount);
+			Assert.areEqual(0, nativeFilesCountIn(project));
 			
 			project.addFile("native/bar.cs");
-			Assert.areEqual(originalNativeCount + 1, nativeFilesCountIn(project));
+			Assert.areEqual(1, nativeFilesCountIn(project));
 		} 
 		finally {
 			File4.delete(filePath);
 		}		
 		
-	}
-
-	private void assertNativeFileCountHasNotChanged(CSharpProject project, int originalNativeCount) throws XPathExpressionException {
-		Assert.areEqual(originalNativeCount, nativeFilesCountIn(project));
 	}
 
 	private void assertThereAreNativeFiles(int originalNativeCount) {

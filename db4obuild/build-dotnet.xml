@@ -485,7 +485,6 @@
 
 		<fileset id="optional.net.files" dir="${dir.n.v6.optional}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 		
 	    <updateProjectFiles project="${dir.n.v6.optional}/Db4objects.Db4o.Optional" sources="optional.net.files"  />
@@ -503,8 +502,6 @@
 
 		<fileset id="cs.net.files" dir="${dir.n.v6.cs}">
 			<include name="**/*.cs" />
-			
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 		
 	    <updateProjectFiles project="${dir.n.v6.cs}/Db4objects.Db4o.CS" sources="cs.net.files"  />
@@ -525,9 +522,7 @@
 		-->
 		
 		<fileset id="cs-optional.net.files" dir="${dir.n.v6.cs.optional}">
-			<include name="**/*.cs" />
-			
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
+			<include name="**/*.cs" />		
 		</fileset>
 	    <updateProjectFiles project="${dir.n.v6.cs.optional}/DB4objects.Db4o.CS.Optional" sources="cs-optional.net.files"  />
 	</target>
@@ -543,7 +538,6 @@
 
 		<fileset id="instrumentation.net.files" dir="${dir.n.v6.instrumentation}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 		
 	    <updateProjectFiles project="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation" sources="instrumentation.net.files"  />
@@ -560,7 +554,6 @@
 
 		<fileset id="nativequeries.net.files" dir="${dir.n.v6.nq}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 		
 	    <updateProjectFiles project="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries" sources="nativequeries.net.files" />		
@@ -791,7 +784,6 @@
 	    
 		<fileset id="core.net.files" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 		
 		<updateProjectFiles project="${dir.n.v6.core}/Db4objects.Db4o" sources="core.net.files"  />
@@ -814,7 +806,6 @@
 		
 		<fileset id="db4ounit.files" dir="${dir.n.db4ounit}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 
 		<updateProjectFiles project="${dir.n.db4ounit}/Db4oUnit" sources="db4ounit.files" />
@@ -859,7 +850,6 @@
 		
 		<fileset id="db4obench.files" dir="${dir.n.db4obench}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 
 		<updateProjectFiles project="${dir.n.db4obench}/Db4oBench" sources="db4obench.files" />
@@ -909,9 +899,7 @@
 			<include name="**/*.cs" />
 			<exclude name="**/Resources/*.*" />
 			<exclude name="**/obj/**" />
-			<exclude name="**/bin/**" />
-			
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
+			<exclude name="**/bin/**" />		
 		</fileset>
 		
 		<fileset id="db4otool-tests.resources" dir="${dir.n.tools}/Db4oTool.Tests">
@@ -943,7 +931,6 @@
 
 		<fileset id="db4ounit.extensions.files" dir="${dir.n.v6.extensions}">
 			<include name="**/*.cs" />			
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 				
 		<updateProjectFiles project="${dir.n.v6.extensions}/Db4oUnit.Extensions" sources="db4ounit.extensions.files" />
@@ -970,7 +957,6 @@
 		
 		<fileset id="db4objects.test.net.files" dir="${dir.n.v6.tests}">
 			<include name="**/*.cs" />
-			<exclude name="**/native/**/*.cs" unless="${update.dotnet.native}"/>
 		</fileset>
 		
 	    <updateProjectFiles project="${dir.n.v6.tests}/Db4objects.Db4o.Tests" sources="db4objects.test.net.files" />		

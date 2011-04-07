@@ -22,7 +22,7 @@ using System.Security;
 [assembly: AllowPartiallyTrustedCallers]
 #endif
 
-#if NET_4_0
+#if NET_4_0 && !SILVERLIGHT
 [assembly: SecurityRules(SecurityRuleSet.Level1)]
 #endif
 
