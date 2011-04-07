@@ -30,4 +30,9 @@ public class QConUnconditional extends QCon {
 		return _value;
 	}
 
+	@Override
+	protected boolean canResolveByFieldIndex() {
+		return false;
+	}
+
 }

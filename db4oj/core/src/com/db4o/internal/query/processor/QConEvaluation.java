@@ -96,4 +96,9 @@ public class QConEvaluation extends QCon {
 	boolean supportsIndex() {
 		return false;
 	}
+
+	@Override
+	protected boolean canResolveByFieldIndex() {
+		return false;
+	}
 }

@@ -41,6 +41,7 @@ public class AllTests extends ComposibleTestSuite {
 	            QueryingForAllObjectsTestCase.class,
 	            QueryingVersionFieldTestCase.class,
 	            SameChildOnDifferentParentQueryTestCase.class,
+	            TwoLevelIndexTestCase.class,
 			});
 	}
 	

@@ -476,4 +476,9 @@ public class QConObject extends QCon {
     		candidates.wasLoadedFromClassFieldIndex(true);
     	}
     }
+
+	@Override
+	protected boolean canResolveByFieldIndex() {
+		return false;
+	}
 }

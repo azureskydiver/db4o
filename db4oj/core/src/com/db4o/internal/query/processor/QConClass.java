@@ -96,7 +96,7 @@ public class QConClass extends QConObject{
 			if(i_candidates.isTopLevel()) {
 				if(i_evaluator.isDefault()){
 					if(! hasJoins()){
-						if(_classMetadata != null && _classMetadata.getAncestor() == null){
+						if(canResolveByFieldIndex()){
 							return;
 						}
 					}
@@ -105,6 +105,11 @@ public class QConClass extends QConObject{
 		}
 
 		i_candidates.filter(this);
+	}
+	
+    @Override
+	protected boolean canResolveByFieldIndex() {
+    	return _classMetadata != null && _classMetadata.getAncestor() == null;
 	}
 	
 	public Constraint equal (){

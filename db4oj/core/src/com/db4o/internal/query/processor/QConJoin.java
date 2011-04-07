@@ -167,4 +167,9 @@ public class QConJoin extends QCon {
 		constraint2().setProcessedByIndex(candidates);
 	}
 
+	@Override
+	protected boolean canResolveByFieldIndex() {
+		return false;
+	}
+
 }

@@ -245,11 +245,33 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         i_childrenCandidates = new Collection4();
     	Iterator4 i = iterateChildren();
     	while(i.moveNext()){
-			((QCon)i.current()).createCandidates(i_childrenCandidates);
+    		QCon constraint = (QCon) i.current();
+			if(! constraint.resolvedByIndex()){
+				constraint.createCandidates(i_childrenCandidates);
+			}
     	}
     }
 
-    void evaluateEvaluations() {
+	private boolean resolvedByIndex() {
+		if(! canResolveByFieldIndex()){
+			return false;
+		}
+		boolean result = false;
+		Iterator4 it = iterateChildren();
+		while(it.moveNext()){
+			QCon childConstraint = (QCon) it.current();
+			if(! childConstraint.processedByIndex()){
+				return false;
+			} else {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+    protected abstract boolean canResolveByFieldIndex();
+
+	void evaluateEvaluations() {
         Iterator4 i = iterateChildren();
 		while(i.moveNext()){
 			((QCon)i.current()).evaluateEvaluationsExec(i_candidates, true);
