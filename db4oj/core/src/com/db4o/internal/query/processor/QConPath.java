@@ -98,8 +98,6 @@ public class QConPath extends QConClass {
         	}
         }
         
-        // }
-        
         if (mayMorph) {
     		Iterator4 j = iterateChildren();
     		while (j.moveNext()) {
@@ -135,5 +133,10 @@ public class QConPath extends QConClass {
     		internalSetProcessedByIndex(null);
     	}
     }
+    
+    @Override
+	protected boolean canResolveByFieldIndex() {
+    	return true;
+	}
 
 }

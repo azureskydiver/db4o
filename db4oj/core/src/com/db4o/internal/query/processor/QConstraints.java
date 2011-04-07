@@ -130,4 +130,9 @@ public class QConstraints extends QCon implements Constraints {
 			return objects;
 		}
 	}
+
+	@Override
+	protected boolean canResolveByFieldIndex() {
+		return false;
+	}
 }
