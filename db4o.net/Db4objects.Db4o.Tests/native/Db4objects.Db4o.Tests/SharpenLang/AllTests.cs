@@ -11,6 +11,7 @@ namespace Db4objects.Db4o.Tests.SharpenLang
 				{
 #if !CF && !SILVERLIGHT
 					typeof(DynamicallyLoadedAssemblyTestCase),
+					typeof(SharpenRuntimeTestCase),
 #endif
                     typeof(TypeReferenceTestCase),
 				};
