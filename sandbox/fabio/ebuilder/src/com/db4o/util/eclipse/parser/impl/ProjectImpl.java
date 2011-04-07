@@ -77,5 +77,10 @@ final class ProjectImpl implements Project {
 		}
 		return name;
 	}
+
+	@Override
+	public String getRelativePathToRoot(IFile file) {
+		return file.getRelativePathTo(root);
+	}
 	
 }

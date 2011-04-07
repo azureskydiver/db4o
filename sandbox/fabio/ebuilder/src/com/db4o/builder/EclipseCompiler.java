@@ -19,7 +19,11 @@ public class EclipseCompiler implements Compiler {
 	private PrintWriter err;
 
 	@Override
-	public void compile() {
+	public boolean compile() {
+		
+		if (sources.length() == 0) {
+			return false;
+		}
 
 		CompilationProgress progress = new CompilationProgress() {
 
@@ -44,10 +48,10 @@ public class EclipseCompiler implements Compiler {
 			public void begin(int arg0) {
 			}
 		};
-		String commandLine = "-d " + targetFolder + " -warn:none " + (debug ? "-g" : "-g:none") + " -source " + source + " -target " + target + " -classpath "
-				+ classpath;
+		String commandLine = "-d " + targetFolder + " -warn:none " + (debug ? "-g" : "-g:none") + " -source " + source + " -target " + target
+				+ (classpath.length() > 0 ? " -classpath " + classpath : "");
 //		System.out.println("   ecj "+commandLine);
-		BatchCompiler.compile(commandLine + " " + sources, out, err, progress);
+		return BatchCompiler.compile(commandLine + " " + sources, out, err, progress);
 	}
 
 	@Override

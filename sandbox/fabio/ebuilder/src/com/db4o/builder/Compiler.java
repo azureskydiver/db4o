@@ -39,6 +39,6 @@ public interface Compiler {
 	void outputWriter(PrintWriter out);
 	void errorWriter(PrintWriter out);
 	
-	void compile();
+	boolean compile();
 
 }

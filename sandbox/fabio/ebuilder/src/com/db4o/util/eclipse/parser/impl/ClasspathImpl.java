@@ -19,6 +19,10 @@ final class ClasspathImpl {
 	public void accept(final ProjectVisitor visitor) {
 
 		IFile cp = project().root().file(".classpath");
+		
+		if (!cp.exists()) {
+			return;
+		}
 
 		Element root = cp.xml().root();
 		
@@ -30,7 +34,13 @@ final class ClasspathImpl {
 			
 			if ("src".equals(kind)) {
 				if (path.startsWith("/")) {
-					visitor.visitExternalProject(project().workspace().project(path.substring(1)));
+					String projectName = path.substring(1);
+					ProjectImpl p = project().workspace().project(projectName);
+					if (p != null) {
+						visitor.visitExternalProject(p);
+					} else {
+						visitor.visitUnresolvedDependency(projectName);
+					}
 				} else {
 					visitor.visitSourceFolder(project().root().file(path));
 				}

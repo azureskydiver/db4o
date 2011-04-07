@@ -41,9 +41,9 @@ public final class EclipseWorkspace implements Workspace {
 	@Override
 	public ProjectImpl project(String name) {
 		ProjectImpl p = tryToResolveProject(name);
-		if (p == null) {
-			throw new IllegalArgumentException("Project '"+name+"' not found");
-		}
+//		if (p == null) {
+//			throw new IllegalArgumentException("Project '"+name+"' not found");
+//		}
 		return p;
 	}
 
@@ -74,7 +74,7 @@ public final class EclipseWorkspace implements Workspace {
 			public void visit(IFile child) {
 				if (child.exists(".project")) {
 					visitor.visitProject(project(child));
-				} else {
+				} else if (!".metadata".equals(child.name())) {
 					child.accept(this);
 				}
 			}

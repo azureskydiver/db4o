@@ -52,9 +52,7 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 
 	@Override
 	public void visitArchive(IFile jar) {
-		if (classpath.add(jar)) {
-			ecj.addClasspathEntry(jar);
-		}
+		addClasspathEntry(jar);
 	}
 
 	@Override
@@ -62,22 +60,19 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 		project.accept(new ProjectVisitorAdapter() {
 			@Override
 			public void visitArchive(IFile jar) {
-				if (classpath.add(jar)) {
-					ecj.addClasspathEntry(jar);
-				}
+				addClasspathEntry(jar);
 			}
 			
 			@Override
 			public void visitOutputFolder(IFile dir) {
 				dir = resolveProjectOutputDir(project, dir);
-				if (classpath.add(dir)) {
-					ecj.addClasspathEntry(dir);
-				}
+				addClasspathEntry(dir);
 			}
 			
 			@Override
 			public void visitExternalProject(Project project) {
-				project.accept(this);
+				ProjectBuilderVisitor.this.visitExternalProject(project);
+//				project.accept(this);
 			}
 		});
 	}
@@ -94,7 +89,9 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 				throw new java.lang.RuntimeException(e);
 			}
 		}
-		ecj.compile();
+		if (!ecj.compile()) {
+			throw new IllegalStateException("Compilation error");
+		}
 	}
 
 	@Override
@@ -107,5 +104,11 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 
 	protected IFile resolveProjectOutputDir(Project project, IFile dir) {
 		return dir;
+	}
+
+	public void addClasspathEntry(IFile jar) {
+		if (classpath.add(jar)) {
+			ecj.addClasspathEntry(jar);
+		}
 	}
 }
