@@ -1,7 +1,6 @@
 ﻿/* Copyright (C) 2011 Versant Inc.   http://www.db4o.com */
-using System;
+#if SILVERLIGHT && NET_3_5 && !NET_4_0
 using System.IO;
-using Db4objects.Db4o.IO;
 
 namespace Db4objects.Db4o.Internal.CLI
 {
@@ -13,3 +12,4 @@ namespace Db4objects.Db4o.Internal.CLI
 		}
 	}
 }
+#endif

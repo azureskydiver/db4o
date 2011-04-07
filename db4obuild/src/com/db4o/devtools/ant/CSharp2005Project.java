@@ -54,27 +54,16 @@ public class CSharp2005Project extends CSharpProject {
 	
 	@Override
 	protected Element resetFilesContainerElement() throws Exception {
- 		Element compile = selectElement("//*[local-name()='ItemGroup']/*[local-name()='Compile']");
- 		if (null == compile) invalidProjectFile();
- 		
-		NodeList nativeSources = selectNodes("//*[local-name()='ItemGroup']/*[local-name()='Compile' and starts-with(@Include, 'native\\')]");
+		Element compile = selectElement("//*[local-name()='ItemGroup']/*[local-name()='Compile']");
+		if (null == compile) invalidProjectFile();
 		
- 		Element container = (Element)compile.getParentNode();
+		Element container = (Element)compile.getParentNode();
 		if (container.hasChildNodes()) {
 			Element old = container;
 			container = createElement("ItemGroup");
 			old.getParentNode().replaceChild(container, old);
-			
-			moveNodesTo(old, container, nativeSources);
- 		}
- 		return container;
- 	}
-
-	private void moveNodesTo(Element from, Element to, NodeList nodes) {
-		for (int i = 0; i < nodes.getLength(); i++) {
-			Node current = nodes.item(i);
-			from.removeChild(current);				
-			to.appendChild(current);
 		}
-	}	
+		return container;
+	}
+
 }
