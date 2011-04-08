@@ -10,7 +10,8 @@
  *     Versant Inc. - Scala port and minor additions for db4o plugin
  *******************************************************************************/
 
-package com.db4o.eclipse.ui
+package com.db4o.eclipse
+package ui
 
 import scala._
 import scala.collection._

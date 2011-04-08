@@ -1,6 +1,7 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 
-package com.db4o.eclipse.builder
+package com.db4o.eclipse
+package builder
 
 import com.db4o.instrumentation.file._
 import org.eclipse.jdt.core._
