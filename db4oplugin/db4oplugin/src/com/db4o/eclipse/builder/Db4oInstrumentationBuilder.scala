@@ -1,6 +1,7 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 
-package com.db4o.eclipse.builder
+package com.db4o.eclipse
+package builder
 
 import com.db4o.eclipse.preferences._
 
@@ -75,7 +76,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
       val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new PreferenceBasedFilter(project)))
       Db4oPluginActivator.getDefault.getInstrumentationListeners.foreach(instrumentor.addInstrumentationListener(_))
       try {
-        instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots.toList.toArray, getClass.getClassLoader)
+        instrumentor.enhance(new BundleClassSource, root, new File(outPath), classPathRoots.toList.toArray, getClass.getClassLoader)
       }
       catch {
         case exc => {

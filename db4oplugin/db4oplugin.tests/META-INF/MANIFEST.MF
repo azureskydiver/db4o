@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.4.0",
  org.eclipse.ui;bundle-version="3.4.0",
  org.junit4;bundle-version="4.3.1",
  org.eclipse.swt;bundle-version="3.4.0",
- db4oplugin;bundle-version="1.0.0"
-Bundle-ClassPath: .,
- scala-bin/
+ db4oplugin;bundle-version="1.0.0",
+ org.scala-ide.scala.library
+Bundle-ClassPath: .
