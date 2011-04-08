@@ -26,15 +26,14 @@ namespace Db4objects.Db4o.Tests.CLI2.Assorted
             {
 				_typedDateTime = value;
                 _untypedDateTime = value;
-                _typedArray = new DateTime?[] {value};
-                _untypedArray = new DateTime?[] {value};
+                _typedArray = new [] {value};
+                _untypedArray = new [] {value};
             }
         }
 
 		protected override void Configure(IConfiguration config)
 		{
-			//Uncoment the line bellow to test COR-2173
-			//config.ObjectClass(typeof(Item)).ObjectField("_typedDateTime").Indexed(true);
+			config.ObjectClass(typeof(Item)).ObjectField("_typedDateTime").Indexed(true);
 		}
 
         protected override void Store()
