@@ -34,7 +34,9 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     
     
-  <SignAssembly>true</SignAssembly>
+  
+
+<SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

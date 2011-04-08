@@ -14,7 +14,9 @@
     <FileAlignment>512</FileAlignment>
     
     
-  <SignAssembly>true</SignAssembly>
+  
+
+<SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

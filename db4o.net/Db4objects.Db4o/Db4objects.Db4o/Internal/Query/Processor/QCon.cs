@@ -304,10 +304,40 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			IEnumerator i = IterateChildren();
 			while (i.MoveNext())
 			{
-				((Db4objects.Db4o.Internal.Query.Processor.QCon)i.Current).CreateCandidates(i_childrenCandidates
-					);
+				Db4objects.Db4o.Internal.Query.Processor.QCon constraint = (Db4objects.Db4o.Internal.Query.Processor.QCon
+					)i.Current;
+				if (!constraint.ResolvedByIndex())
+				{
+					constraint.CreateCandidates(i_childrenCandidates);
+				}
 			}
 		}
+
+		private bool ResolvedByIndex()
+		{
+			if (!CanResolveByFieldIndex())
+			{
+				return false;
+			}
+			bool result = false;
+			IEnumerator it = IterateChildren();
+			while (it.MoveNext())
+			{
+				Db4objects.Db4o.Internal.Query.Processor.QCon childConstraint = (Db4objects.Db4o.Internal.Query.Processor.QCon
+					)it.Current;
+				if (!childConstraint.ProcessedByIndex())
+				{
+					return false;
+				}
+				else
+				{
+					result = true;
+				}
+			}
+			return result;
+		}
+
+		protected abstract bool CanResolveByFieldIndex();
 
 		internal virtual void EvaluateEvaluations()
 		{

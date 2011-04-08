@@ -27,7 +27,7 @@ namespace Db4objects.Db4o.Tests.Common.Querying
 				NoClassIndexQueryTestSuite), typeof(NullConstraintQueryTestCase), typeof(ObjectSetTestCase
 				), typeof(OrderedQueryTestCase), typeof(QueryByExampleTestCase), typeof(QueryingForAllObjectsTestCase
 				), typeof(QueryingVersionFieldTestCase), typeof(SameChildOnDifferentParentQueryTestCase
-				) });
+				), typeof(TwoLevelIndexTestCase) });
 		}
 
 		#if !SILVERLIGHT

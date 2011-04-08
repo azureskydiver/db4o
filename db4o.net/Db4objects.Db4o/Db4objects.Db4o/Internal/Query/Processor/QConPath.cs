@@ -118,7 +118,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 					}
 				}
 			}
-			// }
 			if (mayMorph)
 			{
 				IEnumerator j = IterateChildren();
@@ -161,6 +160,11 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			{
 				InternalSetProcessedByIndex(null);
 			}
+		}
+
+		protected override bool CanResolveByFieldIndex()
+		{
+			return true;
 		}
 	}
 }
