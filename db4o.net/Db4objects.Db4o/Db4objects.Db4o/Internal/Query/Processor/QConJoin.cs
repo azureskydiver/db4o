@@ -148,5 +148,10 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			Constraint1().SetProcessedByIndex(candidates);
 			Constraint2().SetProcessedByIndex(candidates);
 		}
+
+		protected override bool CanResolveByFieldIndex()
+		{
+			return false;
+		}
 	}
 }

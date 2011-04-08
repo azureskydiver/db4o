@@ -114,7 +114,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 					{
 						if (!HasJoins())
 						{
-							if (_classMetadata != null && _classMetadata.GetAncestor() == null)
+							if (CanResolveByFieldIndex())
 							{
 								return;
 							}
@@ -123,6 +123,11 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 				}
 			}
 			i_candidates.Filter(this);
+		}
+
+		protected override bool CanResolveByFieldIndex()
+		{
+			return _classMetadata != null && _classMetadata.GetAncestor() == null;
 		}
 
 		public override IConstraint Equal()

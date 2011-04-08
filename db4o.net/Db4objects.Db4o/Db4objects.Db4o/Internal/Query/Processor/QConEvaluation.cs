@@ -124,5 +124,10 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 		{
 			return false;
 		}
+
+		protected override bool CanResolveByFieldIndex()
+		{
+			return false;
+		}
 	}
 }

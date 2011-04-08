@@ -687,6 +687,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\QueryingForAllObjectsTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\QueryingVersionFieldTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Querying\SameChildOnDifferentParentQueryTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Querying\TwoLevelIndexTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\AccessFieldTestCaseBase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\AccessOldFieldVersionsTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\AccessRemovedFieldTestCase.cs"/>
