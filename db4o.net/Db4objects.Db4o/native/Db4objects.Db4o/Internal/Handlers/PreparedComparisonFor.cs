@@ -16,8 +16,13 @@ namespace Db4objects.Db4o.Internal.Handlers
 
         public int CompareTo(object obj)
         {
-            T target = ((T)obj);
+            T target = ComparableValueFor(obj);
             return _source.CompareTo(target);
         }
+
+    	private static T ComparableValueFor(object obj)
+    	{
+    		return obj == null ? default(T) : ((T)obj);
+    	}
     }
 }
