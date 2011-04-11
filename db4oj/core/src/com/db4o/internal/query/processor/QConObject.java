@@ -17,7 +17,7 @@ import com.db4o.reflect.*;
  *
  * @exclude
  */
-public class QConObject extends QCon {
+public class QConObject extends QCon implements FieldFilterable {
 
     // the constraining object
 	@decaf.Public
@@ -145,7 +145,6 @@ public class QConObject extends QCon {
                 }
             }
             if (hasEvaluation) {
-                a_candidates.traverse(i_field);
                 Iterator4 j = iterateChildren();
                 while (j.moveNext()) {
                     ((QCon) j.current()).evaluateEvaluationsExec(a_candidates,false);
@@ -177,8 +176,7 @@ public class QConObject extends QCon {
 
     void collect(QCandidates a_candidates) {
         if (i_field.isClass()) {
-            a_candidates.traverse(i_field);
-            a_candidates.filter(i_candidates);
+            a_candidates.filter(i_field, i_candidates);
         }
     }
 
@@ -188,9 +186,8 @@ public class QConObject extends QCon {
     	//       this field to load the objects, if hasOrdering() is false
     	
     	if (i_field.isQueryLeaf() || isNullConstraint()) {
-        	a_candidates.traverse(i_field);
             prepareComparison(i_field);
-            a_candidates.filter(this);
+            a_candidates.filter(i_field, this);
     	}
     }
     
@@ -357,6 +354,24 @@ public class QConObject extends QCon {
         visit1(qc.getRoot(), this, res);
     }
 
+	@Override
+	public void filter(QField field, QCandidate candidate) {
+		candidate.useField(field);
+        boolean res = true;
+        boolean processed = false;
+        if (_checkClassMetadataOnly) {
+            ClassMetadata classMetadata = candidate.readClassMetadata();
+            if (classMetadata != null) {
+                res = i_evaluator.not(_classMetadata.getHigherHierarchy(classMetadata) == _classMetadata);
+                processed = true;
+            }
+        }
+        if (!processed) {
+            res = evaluate(candidate);
+        }
+        visit1(candidate.getRoot(), this, res);
+	}
+
     public Constraint contains() {
         synchronized (streamLock()) {
             i_evaluator = i_evaluator.add(new QEContains(true));
@@ -481,4 +496,5 @@ public class QConObject extends QCon {
 	protected boolean canResolveByFieldIndex() {
 		return false;
 	}
+
 }

@@ -16,7 +16,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public final class QCandidates implements Visitor4 {
+public final class QCandidates implements /*Visitor4, */ FieldFilterable {
 
     // Transaction necessary as reference to stream
     public final LocalTransaction i_trans;
@@ -312,7 +312,11 @@ public final class QCandidates implements Visitor4 {
     boolean filter(Visitor4 visitor) {
     	return _result.filter(visitor);
     }
-    
+
+    boolean filter(QField field, FieldFilterable filterable) {
+    	return _result.filter(field, filterable);
+    }
+
     int generateCandidateId(){
         if(_idGenerator == null){
             _idGenerator = new IDGenerator();
@@ -395,9 +399,26 @@ public final class QCandidates implements Visitor4 {
         return false;
     }
 
-    public void visit(Object a_tree) {
-    	final QCandidate parent = (QCandidate) a_tree;
-    	if (parent.createChild(this)) {
+//    public void visit(Object a_tree) {
+//    	final QCandidate parent = (QCandidate) a_tree;
+//    	if (parent.createChild(this)) {
+//    		return;
+//    	}
+//    	
+//    	// No object found.
+//    	// All children constraints are necessarily false.
+//    	// Check immediately.
+//		Iterator4 i = iterateConstraints();
+//		while(i.moveNext()){
+//			((QCon)i.current()).visitOnNull(parent.getRoot());
+//		}
+//    		
+//    }
+
+
+	@Override
+	public void filter(QField field, QCandidate parent) {
+    	if (parent.createChild(field, this)) {
     		return;
     	}
     	
@@ -408,9 +429,8 @@ public final class QCandidates implements Visitor4 {
 		while(i.moveNext()){
 			((QCon)i.current()).visitOnNull(parent.getRoot());
 		}
-    		
-    }
-    
+	}
+
     public String toString() {
     	final StringBuffer sb = new StringBuffer();
     	_result.traverse(new Visitor4() {

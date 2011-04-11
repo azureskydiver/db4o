@@ -61,6 +61,24 @@ public class QueryResultCandidates {
         return _candidates != null;
     }
 
+    boolean filter(final QField field, final FieldFilterable filterable) {
+    	toQCandidates();
+        if (_candidates != null) {
+        	_candidates.traverse(new Visitor4() {
+				@Override
+				public void visit(Object candidate) {
+					filterable.filter(field, (QCandidate)candidate);
+				}
+        	});
+        	_candidates = (QCandidate) _candidates.filter(new Predicate4() {
+                public boolean match(Object a_candidate) {
+                    return ((QCandidate) a_candidate)._include;
+                }
+            });
+        }
+        return _candidates != null;
+    }
+
 	public void loadFromClassIndex(ClassIndexStrategy index) {
 		_candidateIds = index.idVisitable(_qCandidates.transaction());
 	}
