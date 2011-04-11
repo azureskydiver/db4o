@@ -90,11 +90,13 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutM
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(smaller));
 		Assert.isSmaller(0, comparable.compareTo(greater));
+		Assert.isGreater(0, comparable.compareTo(null));
 		
 		comparable = handler.prepareComparison(context(), greater);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(greater));
 		Assert.isGreater(0, comparable.compareTo(smaller));
+		Assert.isGreater(0, comparable.compareTo(null));
 		
 		comparable = handler.prepareComparison(context(), null);
 		Assert.isNotNull(comparable);
