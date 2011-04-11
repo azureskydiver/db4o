@@ -13,7 +13,7 @@ import com.db4o.types.*;
 /**
  * @exclude
  */
-public class QField implements Visitor4, Unversioned{
+public class QField implements Unversioned{
 	
 	transient Transaction i_trans;
 	
@@ -117,10 +117,6 @@ public class QField implements Visitor4, Unversioned{
 			ClassMetadata yc = a_trans.container().classMetadataForID(i_classMetadataID);
 			_fieldMetadata = (FieldMetadata) yc._aspects[_fieldHandle];
 		}
-	}
-	
-	public void visit(Object obj) {
-		((QCandidate) obj).useField(this);
 	}
 	
 	public String toString() {

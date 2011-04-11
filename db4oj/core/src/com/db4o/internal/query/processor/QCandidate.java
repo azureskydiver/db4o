@@ -107,10 +107,12 @@ public class QCandidate extends TreeInt implements Candidate {
 		}
 	}
 	
-	boolean createChild(final QCandidates a_candidates) {
+	boolean createChild(QField field, final QCandidates a_candidates) {
 		if (!_include) {
 			return false;
 		}
+		
+		useField(field);
 
 		if (_fieldMetadata != null) {
 			TypeHandler4 handler = _fieldMetadata.getHandler();

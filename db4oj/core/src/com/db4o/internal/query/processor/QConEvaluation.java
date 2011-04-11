@@ -29,13 +29,13 @@ public class QConEvaluation extends QCon {
 	}
 
 	void evaluateEvaluationsExec(QCandidates a_candidates, boolean rereadObject) {
-		if (rereadObject) {
-			a_candidates.traverse(new Visitor4() {
-				public void visit(Object a_object) {
-					((QCandidate) a_object).useField(null);
-				}
-			});
-		}
+//		if (rereadObject) {
+//			a_candidates.traverse(new Visitor4() {
+//				public void visit(Object a_object) {
+//					((QCandidate) a_object).useField(null);
+//				}
+//			});
+//		}
 		a_candidates.filter(this);
 	}
 
