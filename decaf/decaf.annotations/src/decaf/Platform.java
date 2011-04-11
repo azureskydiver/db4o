@@ -8,11 +8,13 @@ interface NegatablePlatform {
 public enum Platform implements NegatablePlatform {
 
 	JMX,
+	ANNOTATION,
+	OVERRIDE_FOR_INTERFACE,
 	
 	JDK11,
 	JDK12(JDK11),
-	JDK15(JDK12, JMX),
-	JDK16(JDK15),
+	JDK15(JDK12, JMX, ANNOTATION),
+	JDK16(JDK15, OVERRIDE_FOR_INTERFACE),
 	
 	ANDROID(JDK15, JMX.not()),
 	SHARPEN(JDK15),

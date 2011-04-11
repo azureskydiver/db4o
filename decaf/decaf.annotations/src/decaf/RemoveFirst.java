@@ -12,4 +12,6 @@ public @interface RemoveFirst {
 	
 	Platform[] platforms() default { Platform.ALL };
 	
+	Platform[] unlessCompatible() default {};
+	
 }
