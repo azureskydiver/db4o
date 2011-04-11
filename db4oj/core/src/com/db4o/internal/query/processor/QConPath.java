@@ -33,9 +33,9 @@ public class QConPath extends QConClass {
 		return false;
 	}
 	
-	boolean evaluate(QCandidate a_candidate) {
-		if (! a_candidate.fieldIsAvailable()) {
-			visitOnNull(a_candidate.getRoot());
+	boolean evaluate(QCandidateBase candidate) {
+		if (! candidate.fieldIsAvailable()) {
+			visitOnNull(candidate.getRoot());
 		}
 		return true;
 	}

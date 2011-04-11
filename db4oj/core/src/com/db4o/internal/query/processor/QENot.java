@@ -37,7 +37,7 @@ public class QENot extends QE{
         return false;
     }
 	
-	boolean evaluate(QConObject a_constraint,  QCandidate a_candidate, Object a_value){
+	boolean evaluate(QConObject a_constraint,  QCandidateBase a_candidate, Object a_value){
 		return ! i_evaluator.evaluate(a_constraint, a_candidate, a_value);
 	}
 	

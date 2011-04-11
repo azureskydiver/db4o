@@ -54,7 +54,7 @@ public class QConClass extends QConObject{
         return false;
     }
 	
-	boolean evaluate(QCandidate candidate){
+	boolean evaluate(QCandidateBase candidate){
 		boolean result = true;
 		QCandidates qCandidates = candidate.candidates();
 		if(qCandidates.isTopLevel() && qCandidates.wasLoadedFromClassFieldIndex()) { 
@@ -68,7 +68,7 @@ public class QConClass extends QConObject{
 				result = searchResult != null;
 			}
 		} else {
-			ReflectClass claxx = candidate.classReflector();
+			ReflectClass claxx = candidate.classMetadata().classReflector();
 			if(claxx == null){
 				result = false;
 			}else{

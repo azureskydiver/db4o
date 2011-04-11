@@ -33,7 +33,7 @@ public class QE implements Unversioned {
         return true;
     }
 
-	boolean evaluate(QConObject constraint, QCandidate candidate, Object obj){
+	boolean evaluate(QConObject constraint, QCandidateBase candidate, Object obj){
         PreparedComparison prepareComparison = constraint.prepareComparison(candidate);
         if (obj == null) {
             return prepareComparison instanceof Null;

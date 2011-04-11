@@ -11,7 +11,7 @@ import com.db4o.internal.fieldindex.*;
  */
 public class QueryResultCandidates {
 	
-	private QCandidate _candidates;
+	private QCandidateBase _candidates;
 
 	private QCandidates _qCandidates;
 	
@@ -22,7 +22,7 @@ public class QueryResultCandidates {
 		_qCandidates = qCandidates;
 	}
 
-	public void add(QCandidate candidate) {
+	public void add(QCandidateBase candidate) {
 		toQCandidates();
 		_candidates = Tree.add(_candidates, candidate);
 	}
@@ -43,7 +43,7 @@ public class QueryResultCandidates {
 		_candidateIds = result;
 	}
 
-	public void singleCandidate(QCandidate candidate) {
+	public void singleCandidate(QCandidateBase candidate) {
 		_candidates = candidate;
 		_candidateIds = null;
 	}
@@ -52,9 +52,9 @@ public class QueryResultCandidates {
     	toQCandidates();
         if (_candidates != null) {
         	_candidates.traverse(visitor);
-        	_candidates = (QCandidate) _candidates.filter(new Predicate4() {
+        	_candidates = (QCandidateBase) _candidates.filter(new Predicate4() {
                 public boolean match(Object a_candidate) {
-                    return ((QCandidate) a_candidate)._include;
+                    return ((QCandidateBase) a_candidate)._include;
                 }
             });
         }
@@ -70,9 +70,9 @@ public class QueryResultCandidates {
 					filterable.filter(field, (QCandidate)candidate);
 				}
         	});
-        	_candidates = (QCandidate) _candidates.filter(new Predicate4() {
+        	_candidates = (QCandidateBase) _candidates.filter(new Predicate4() {
                 public boolean match(Object a_candidate) {
-                    return ((QCandidate) a_candidate)._include;
+                    return ((QCandidateBase) a_candidate)._include;
                 }
             });
         }
@@ -97,7 +97,7 @@ public class QueryResultCandidates {
 		}
 		traverse(new Visitor4() {
 			public void visit(Object obj) {
-				QCandidate candidate = (QCandidate) obj;
+				QCandidateBase candidate = (QCandidateBase) obj;
 				if(candidate.include()){
 					visitor.visit(candidate._key);
 				}

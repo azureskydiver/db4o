@@ -46,7 +46,7 @@ public class QConJoin extends QCon {
 	    return i_constraint1;
     }
 
-	void doNotInclude(QCandidate a_root) {
+	void doNotInclude(QCandidateBase a_root) {
 		constraint1().doNotInclude(a_root);
 		constraint2().doNotInclude(a_root);
 	}
@@ -62,7 +62,7 @@ public class QConJoin extends QCon {
 	}
 
 	void evaluatePending(
-		QCandidate a_root,
+		QCandidateBase a_root,
 		QPending a_pending,
 		int a_secondResult) {
 
