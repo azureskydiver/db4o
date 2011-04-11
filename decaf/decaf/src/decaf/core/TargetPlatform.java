@@ -7,7 +7,7 @@ import decaf.config.*;
 
 public enum TargetPlatform {
 	
-	NONE(false, false) {
+	NONE {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return new DecafConfiguration();
@@ -38,7 +38,7 @@ public enum TargetPlatform {
 			return Platform.ALL;
 		}
 	},
-	ANDROID(true, false) {
+	ANDROID {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return NONE.defaultConfig();
@@ -60,7 +60,7 @@ public enum TargetPlatform {
 		}
 		
 	},
-	JDK11(false, false) {
+	JDK11 {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return DecafConfiguration.forJDK11();
@@ -81,7 +81,7 @@ public enum TargetPlatform {
 			return Platform.JDK11;
 		}
 	},
-	JDK12(false,false) {
+	JDK12 {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return DecafConfiguration.forJDK12();
@@ -102,7 +102,7 @@ public enum TargetPlatform {
 			return Platform.JDK12;
 		}
 	},	
-	JDK15(true,false) {
+	JDK15 {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return NONE.defaultConfig();
@@ -124,7 +124,7 @@ public enum TargetPlatform {
 		}
 		
 	},	
-	SHARPEN(true,false) {
+	SHARPEN {
 		@Override
 		public DecafConfiguration defaultConfig() {
 			return NONE.defaultConfig();
@@ -148,9 +148,6 @@ public enum TargetPlatform {
 	};
 	
 	
-	private final boolean supportsOverrideAnnotation;
-	private final boolean supportsOverrideAnnotationImplemetingInterfaces;
-
 	public String appendPlatformId(String orig, String separator) {
 		return orig + separator + platformId();
 	}
@@ -171,12 +168,6 @@ public enum TargetPlatform {
 	
 	public abstract Platform platform();
 	
-	TargetPlatform(boolean supportsOverrideAnnotation, boolean supportsOverrideAnnotationImplemetingInterfaces) {
-		this.supportsOverrideAnnotation = supportsOverrideAnnotation;
-		this.supportsOverrideAnnotationImplemetingInterfaces = supportsOverrideAnnotationImplemetingInterfaces;
-		
-	}
-
 	public static class CompilerSettings {
 
 		public CompilerSettings(String source, String codeGenTargetPlatform) {
@@ -188,12 +179,4 @@ public enum TargetPlatform {
 		public final String codeGenTargetPlatform;
 	}
 
-	public boolean supportsOverrideAnnotation() {
-		return supportsOverrideAnnotation;
-	}
-
-	public boolean supportsOverrideAnnotationImplemetingInterfaces() {
-		return supportsOverrideAnnotationImplemetingInterfaces;
-	}
-	
 }

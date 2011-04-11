@@ -6,6 +6,8 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import decaf.*;
+
 import sharpen.core.framework.*;
 
 
@@ -18,18 +20,21 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 	private void processAnnotation(Annotation node) {
 		if (isDecafAnnotation(node)) {
 			rewrite().remove(node);
-		}
-		if (node.resolveTypeBinding().getQualifiedName().equals(Override.class.getName())) {
-			if (!targetPlatform().supportsOverrideAnnotation()) {
+			
+		} else if (!targetPlatform().platform().compatibleWith(Platform.ANNOTATION)) {
+			rewrite().remove(node);
+			
+		} else if (annotationTarget(node).getNodeType() == ASTNode.METHOD_DECLARATION && node.resolveTypeBinding().getQualifiedName().equals(Override.class.getName())) {
+			IMethodBinding mb = ((MethodDeclaration)annotationTarget(node)).resolveBinding();
+			IMethodBinding s = findOverriddenMethodInParents(mb);
+			if (s.getDeclaringClass().isInterface() && !targetPlatform().platform().compatibleWith(Platform.OVERRIDE_FOR_INTERFACE)) {
 				rewrite().remove(node);
-			} else {
-				IMethodBinding mb = ((MethodDeclaration)node.getParent()).resolveBinding();
-				IMethodBinding s = findOverriddenMethodInParents(mb);
-				if (s.getDeclaringClass().isInterface() && !targetPlatform().supportsOverrideAnnotationImplemetingInterfaces()) {
-					rewrite().remove(node);
-				}
 			}
 		}
+	}
+
+	private ASTNode annotationTarget(Annotation node) {
+		return node.getParent();
 	}
 	
 	public static IMethodBinding findOverriddenMethodInParents(IMethodBinding binding) {
