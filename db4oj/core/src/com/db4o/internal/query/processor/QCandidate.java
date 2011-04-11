@@ -107,190 +107,45 @@ public class QCandidate extends TreeInt implements Candidate {
 		}
 	}
 	
-	boolean createChild(QField field, final QCandidates a_candidates) {
+	boolean createChild(QField field, final QCandidates candidates) {
 		if (!_include) {
 			return false;
 		}
 		
 		useField(field);
 
-		if (_fieldMetadata != null) {
-			TypeHandler4 handler = _fieldMetadata.getHandler();
-			if (handler != null) {
-			    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes, _key); 
-				final TypeHandler4 arrayElementHandler = Handlers4.arrayElementHandler(handler, queryingReadContext);
-				if (arrayElementHandler != null) {
+		if(_fieldMetadata == null || _fieldMetadata instanceof NullFieldMetadata) {
+			return false;
+		}
+		
+		TypeHandler4 handler = _fieldMetadata.getHandler();
+		if (handler != null) {
+		    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes, _key); 
+			final TypeHandler4 arrayElementHandler = Handlers4.arrayElementHandler(handler, queryingReadContext);
+			if (arrayElementHandler != null) {
+				return createChildForDescendable(candidates, handler, queryingReadContext, arrayElementHandler);
+			}
 
-					final int offset = queryingReadContext.offset();
-					boolean outerRes = true;
+			// We may get simple types here too, if the YapField was null
+			// in the higher level simple evaluation. Evaluate these
+			// immediately.
 
-					// The following construct is worse than not ideal.
-					// For each constraint it completely reads the
-					// underlying structure again. The structure could b
-					// kept fairly easy. TODO: Optimize!
-
-					Iterator4 i = a_candidates.iterateConstraints();
-					while (i.moveNext()) {
-
-						QCon qcon = (QCon) i.current();
-						QField qf = qcon.getField();
-						if (qf == null || qf.name().equals(_fieldMetadata.getName())) {
-
-							QCon tempParent = qcon.parent();
-							qcon.setParent(null);
-
-							final QCandidates candidates = new QCandidates(
-									a_candidates.i_trans, null, qf, false);
-							candidates.addConstraint(qcon);
-
-							qcon.setCandidates(candidates);
-							
-							readArrayCandidates(handler, queryingReadContext.buffer(), arrayElementHandler,
-                                candidates);
-							
-							queryingReadContext.seek(offset);
-
-							final boolean isNot = qcon.isNot();
-							if (isNot) {
-								qcon.removeNot();
-							}
-
-							candidates.evaluate();
-
-							final ByRef<Tree> pending = ByRef.newInstance();
-							final boolean[] innerRes = { isNot };
-							candidates.traverse(new Visitor4() {
-								public void visit(Object obj) {
-
-									QCandidate cand = (QCandidate) obj;
-
-									if (cand.include()) {
-										innerRes[0] = !isNot;
-									}
-
-									// Collect all pending subresults.
-
-									if (cand._pendingJoins != null) {
-										cand._pendingJoins
-												.traverse(new Visitor4() {
-													public void visit(
-															Object a_object) {
-														QPending newPending = ((QPending) a_object).internalClonePayload();
-
-														// We need to change
-														// the
-														// constraint here, so
-														// our
-														// pending collector
-														// uses
-														// the right
-														// comparator.
-														newPending
-																.changeConstraint();
-														QPending oldPending = (QPending) Tree
-																.find(
-																		pending.value,
-																		newPending);
-														if (oldPending != null) {
-
-															// We only keep one
-															// pending result
-															// for
-															// all array
-															// elements.
-															// and memorize,
-															// whether we had a
-															// true or a false
-															// result.
-															// or both.
-
-															if (oldPending._result != newPending._result) {
-																oldPending._result = QPending.BOTH;
-															}
-
-														} else {
-															pending.value = Tree
-																	.add(
-																			pending.value,
-																			newPending);
-														}
-													}
-												});
-									}
-								}
-							});
-
-							if (isNot) {
-								qcon.not();
-							}
-
-							// In case we had pending subresults, we
-							// need to communicate
-							// them up to our root.
-							if (pending.value != null) {
-								pending.value.traverse(new Visitor4() {
-									public void visit(Object a_object) {
-										getRoot().evaluate((QPending) a_object);
-									}
-								});
-							}
-
-							if (!innerRes[0]) {
-
-								if (Debug4.queries) {
-									System.out
-											.println("  Array evaluation false. Constraint:"
-													+ qcon.id());
-								}
-
-								// Again this could be double triggering.
-								// 
-								// We want to clean up the "No route"
-								// at some stage.
-
-								qcon.visit(getRoot(), qcon.evaluator().not(false));
-
-								outerRes = false;
-							}
-
-							qcon.setParent(tempParent);
-
-						}
-					}
-
-					return outerRes;
-				}
-
-				// We may get simple types here too, if the YapField was null
-				// in the higher level simple evaluation. Evaluate these
-				// immediately.
-
-				if (Handlers4.isQueryLeaf(handler)) {
-					a_candidates._currentConstraint.visit(this);
-					return true;
-				}
+			if (Handlers4.isQueryLeaf(handler)) {
+				candidates._currentConstraint.visit(this);
+				return true;
 			}
 		}
         
-        if(_fieldMetadata == null) {
-            return false;
-        }
-        
-        if (_fieldMetadata instanceof NullFieldMetadata) {
-        	return false;
-        }
-        
         _classMetadata.seekToField(transaction(), _bytes, _fieldMetadata);
-        QCandidate candidate = readSubCandidate(a_candidates); 
+        QCandidate candidate = readSubCandidate(candidates); 
 		if (candidate == null) {
 			return false;
 		}
 
 		// fast early check for ClassMetadata
-		if (a_candidates._classMetadata != null
-				&& a_candidates._classMetadata.isStronglyTyped()) {
+		if (candidates._classMetadata != null
+				&& candidates._classMetadata.isStronglyTyped()) {
 			
-			TypeHandler4 handler = _fieldMetadata.getHandler();
 			if (Handlers4.isUntyped(handler)){
 				handler = typeHandlerFor(candidate);
 			}
@@ -299,8 +154,75 @@ public class QCandidate extends TreeInt implements Candidate {
             }
 		}
 
-		addDependant(a_candidates.add(candidate));
+		addDependant(candidates.add(candidate));
 		return true;
+	}
+
+	private boolean createChildForDescendable(final QCandidates parentCandidates, TypeHandler4 handler, final QueryingReadContext queryingReadContext, final TypeHandler4 arrayElementHandler) {
+		final int offset = queryingReadContext.offset();
+		boolean outerRes = true;
+
+		// The following construct is worse than not ideal. For each constraint it completely reads the
+		// underlying structure again. The structure could be kept fairly easy. TODO: Optimize!
+
+		Iterator4 i = parentCandidates.iterateConstraints();
+		while (i.moveNext()) {
+
+			QCon qcon = (QCon) i.current();
+			QField qf = qcon.getField();
+			if (qf != null && !qf.name().equals(_fieldMetadata.getName())) {
+				continue;
+			}
+			QCon tempParent = qcon.parent();
+			qcon.setParent(null);
+
+			final QCandidates candidates = new QCandidates(parentCandidates.i_trans, null, qf, false);
+			candidates.addConstraint(qcon);
+
+			qcon.setCandidates(candidates);
+			
+			readArrayCandidates(handler, queryingReadContext.buffer(), arrayElementHandler, candidates);
+			
+			queryingReadContext.seek(offset);
+
+			final boolean isNot = qcon.isNot();
+			if (isNot) {
+				qcon.removeNot();
+			}
+
+			candidates.evaluate();
+
+			final ByRef<Tree> pending = ByRef.newInstance();
+			final BooleanByRef innerRes = new BooleanByRef(isNot);
+			candidates.traverse(new CreateDescendChildTraversingVisitor(pending, innerRes, isNot));
+
+			if (isNot) {
+				qcon.not();
+			}
+
+			// In case we had pending subresults, we need to communicate them up to our root.
+			if (pending.value != null) {
+				pending.value.traverse(new Visitor4() {
+					public void visit(Object a_object) {
+						getRoot().evaluate((QPending) a_object);
+					}
+				});
+			}
+
+			if (!innerRes.value) {
+				if (Debug4.queries) {
+					System.out.println("  Array evaluation false. Constraint:" + qcon.id());
+				}
+
+				// Again this could be double triggering.
+				// 
+				// We want to clean up the "No route" at some stage.
+				qcon.visit(getRoot(), qcon.evaluator().not(false));
+				outerRes = false;
+			}
+			qcon.setParent(tempParent);
+		}
+		return outerRes;
 	}
 
 	private TypeHandler4 typeHandlerFor(QCandidate candidate) {
@@ -703,4 +625,52 @@ public class QCandidate extends TreeInt implements Candidate {
 	public QCandidates candidates(){
 		return _candidates;
 	}
+	
+	private static final class CreateDescendChildTraversingVisitor implements Visitor4 {
+		private final ByRef<Tree> _pending;
+		private final BooleanByRef _innerRes;
+		private final boolean _isNot;
+
+		private CreateDescendChildTraversingVisitor(ByRef<Tree> pending, BooleanByRef innerRes, boolean isNot) {
+			_pending = pending;
+			_innerRes = innerRes;
+			_isNot = isNot;
+		}
+
+		public void visit(Object obj) {
+			QCandidate cand = (QCandidate) obj;
+
+			if (cand.include()) {
+				_innerRes.value = !_isNot;
+			}
+
+			// Collect all pending subresults.
+
+			if (cand._pendingJoins == null) {
+				return;
+			}
+
+			cand._pendingJoins.traverse(new Visitor4() {
+				public void visit(Object a_object) {
+					QPending newPending = ((QPending) a_object).internalClonePayload();
+
+					// We need to change the constraint here, so our pending collector
+					// uses the right comparator.
+					newPending.changeConstraint();
+					QPending oldPending = (QPending) Tree.find(_pending.value, newPending);
+					if (oldPending != null) {
+						// We only keep one pending result for all array elements and memorize,
+						// whether we had a true or a false result or both.
+						if (oldPending._result != newPending._result) {
+							oldPending._result = QPending.BOTH;
+						}
+					} 
+					else {
+						_pending.value = Tree.add(_pending.value, newPending);
+					}
+				}
+			});
+		}
+	}
+
 }
