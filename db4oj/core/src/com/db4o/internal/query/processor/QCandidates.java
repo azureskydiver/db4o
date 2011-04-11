@@ -74,10 +74,10 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
     	return _isTopLevel;
     }
 
-    public QCandidate add(QCandidate candidate) {
+    public QCandidateBase add(QCandidateBase candidate) {
         if(Debug4.queries){
             String msg = "Candidate added ID: " + candidate._key;
-            QCandidate root = candidate.getRoot();
+            QCandidateBase root = candidate.getRoot();
             if(root != null){
             	msg += " root: " + root._key;
             }
@@ -104,7 +104,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
         _constraints = new List4(_constraints, a_constraint);
     }
     
-    public QCandidate readSubCandidate(QueryingReadContext context, TypeHandler4 handler){
+    public QCandidateBase readSubCandidate(QueryingReadContext context, TypeHandler4 handler){
         ObjectID objectID = ObjectID.NOT_POSSIBLE;
         try {
             int offset = context.offset();
@@ -118,7 +118,11 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
                 context.seek(offset);
                 Object obj = context.read(handler);
                 if(obj != null){
-                	QCandidate candidate = new QCandidate(this, obj, context.container().getID(context.transaction(), obj));
+                	int id = context.container().getID(context.transaction(), obj);
+                	if(id == 0) {
+                		return new QPrimitiveCandidate(this, obj);
+                	}
+					QCandidate candidate =  new QCandidate(this, obj, id);
                 	candidate.classMetadata(context.container().classMetadataForObject(obj));
                     return candidate;
                 }
@@ -167,7 +171,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
     	return Iterators.map(indexIterator, new Function4() {
 			public Object apply(Object current) {
 				int id = ((Integer)current).intValue();
-				QCandidate candidate = new QCandidate(QCandidates.this, null, id); 
+				QCandidateBase candidate = new QCandidate(QCandidates.this, null, id); 
 				_result.singleCandidate(candidate); 
 				evaluate();
 				if(! candidate.include()){
@@ -301,7 +305,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
         final boolean[] ret = new boolean[] { true };
         traverse(new Visitor4() {
             public void visit(Object obj) {
-                if (((QCandidate) obj)._include) {
+                if (((QCandidateBase) obj)._include) {
                     ret[0] = false;
                 }
             }
@@ -435,7 +439,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
     	final StringBuffer sb = new StringBuffer();
     	_result.traverse(new Visitor4() {
 			public void visit(Object obj) {
-				QCandidate candidate = (QCandidate) obj;
+				QCandidateBase candidate = (QCandidateBase) obj;
 				sb.append(" ");
 				sb.append(candidate._key);
 			}

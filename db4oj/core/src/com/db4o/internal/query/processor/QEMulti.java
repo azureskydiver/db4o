@@ -40,7 +40,7 @@ public class QEMulti extends QE{
         return false;
     }
 	
-	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
+	boolean evaluate(QConObject a_constraint, QCandidateBase a_candidate, Object a_value){
 		Iterator4 i = i_evaluators.iterator();
 		while(i.moveNext()){
 			if(((QE)i.current()).evaluate(a_constraint, a_candidate, a_value)){

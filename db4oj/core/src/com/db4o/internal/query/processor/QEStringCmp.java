@@ -3,6 +3,7 @@
 package com.db4o.internal.query.processor;
 
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 
 
 /**
@@ -21,10 +22,10 @@ public abstract class QEStringCmp extends QEAbstract {
 		caseSensitive = caseSensitive_;
 	}
 
-	boolean evaluate(QConObject constraint, QCandidate candidate, Object obj){
+	boolean evaluate(QConObject constraint, QCandidateBase candidate, Object obj){
 		if(obj != null){
 		    if(obj instanceof ByteArrayBuffer) {
-                obj = candidate.readString((ByteArrayBuffer)obj);
+		    	obj = StringHandler.readString(candidate.transaction().context(), (ByteArrayBuffer)obj);
 		    }
 		    String candidateStringValue = obj.toString();
 		    String stringConstraint = constraint.getObject().toString();

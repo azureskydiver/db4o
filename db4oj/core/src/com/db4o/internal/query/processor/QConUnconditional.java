@@ -26,7 +26,7 @@ public class QConUnconditional extends QCon {
     	a_candidates.filter(this);
     }
 
-	boolean evaluate(QCandidate a_candidate) {
+	boolean evaluate(QCandidateBase a_candidate) {
 		return _value;
 	}
 

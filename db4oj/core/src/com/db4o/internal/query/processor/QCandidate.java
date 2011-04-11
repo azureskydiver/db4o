@@ -10,7 +10,6 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
-import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
@@ -21,62 +20,30 @@ import com.db4o.typehandlers.*;
  * 
  * @exclude
  */
-public class QCandidate extends TreeInt implements Candidate {
+public class QCandidate extends QCandidateBase {
 
 	// db4o ID is stored in _key;
 
 	// db4o byte stream storing the object
 	ByteArrayBuffer _bytes;
 
-	final QCandidates _candidates;
-
-	// Dependent candidates
-	private List4 _dependants;
-
-	// whether to include in the result set
-	// may use id for optimisation ???
-	boolean _include = true;
-
-	private Object _member;
-
-	// Possible pending joins on children
-	private Tree _pendingJoins;
-
-	// The evaluation root to compare all ORs
-	private QCandidate _root;
+	Object _member;
 
 	// the ClassMetadata of this object
-	private ClassMetadata _classMetadata;
+	ClassMetadata _classMetadata;
 
 	// temporary field and member for one field during evaluation
-	private FieldMetadata _fieldMetadata; // null denotes null object
+	FieldMetadata _fieldMetadata; // null denotes null object
     
     private int _handlerVersion;
 
-	private QCandidate(QCandidates qcandidates) {
-		super(0);
-		_candidates = qcandidates;
-	}
-
 	public QCandidate(QCandidates candidates, Object member, int id) {
-		super(id);
-		if (DTrace.enabled) {
-			DTrace.CREATE_CANDIDATE.log(id);
-		}
-        _candidates = candidates;
+		super(candidates, id);
 		_member = member;
-		_include = true;
-        
-        if(id == 0){
-            _key = candidates.generateCandidateId();
-        }
-        if(Debug4.queries){
-            System.out.println("Candidate identified ID:" + _key );
-        }
 	}
 
 	public Object shallowClone() {
-		QCandidate qcan = new QCandidate(_candidates);
+		QCandidate qcan = new QCandidate(_candidates, _member, _key);
         qcan.setBytes(_bytes);
 		qcan._dependants = _dependants;
 		qcan._include = _include;
@@ -87,10 +54,6 @@ public class QCandidate extends TreeInt implements Candidate {
 		qcan._fieldMetadata = _fieldMetadata;
 
 		return super.shallowCloneInternal(qcan);
-	}
-
-	void addDependant(QCandidate a_candidate) {
-		_dependants = new List4(_dependants, a_candidate);
 	}
 
 	private void checkInstanceOfCompare() {
@@ -137,7 +100,7 @@ public class QCandidate extends TreeInt implements Candidate {
 		}
         
         _classMetadata.seekToField(transaction(), _bytes, _fieldMetadata);
-        QCandidate candidate = readSubCandidate(candidates); 
+        QCandidateBase candidate = readSubCandidate(candidates); 
 		if (candidate == null) {
 			return false;
 		}
@@ -225,8 +188,8 @@ public class QCandidate extends TreeInt implements Candidate {
 		return outerRes;
 	}
 
-	private TypeHandler4 typeHandlerFor(QCandidate candidate) {
-	    ClassMetadata classMetadata = candidate.readClassMetadata();
+	private TypeHandler4 typeHandlerFor(QCandidateBase candidate) {
+	    ClassMetadata classMetadata = candidate.classMetadata();
 	    if (classMetadata != null) {
 	    	return classMetadata.typeHandler();
 	    }
@@ -276,158 +239,24 @@ public class QCandidate extends TreeInt implements Candidate {
         });
     }
 
-	void doNotInclude() {
-		include(false);
-		if (_dependants != null) {
-			Iterator4 i = new Iterator4Impl(_dependants);
-			_dependants = null;
-			while (i.moveNext()) {
-				((QCandidate) i.current()).doNotInclude();
-			}
-		}
-	}
-	
-	boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
-		if (a_evaluator.identity()) {
-			return a_evaluator.evaluate(a_constraint, this, null);
-		}
-		if (_member == null) {
-			_member = value();
-		}
-		return a_evaluator.evaluate(a_constraint, this, a_constraint
-				.translate(_member));
-	}
-
-	boolean evaluate(QPending a_pending) {
-
-		if (Debug4.queries) {
-			System.out.println("Pending arrived Join: " + a_pending._join.id()
-					+ " Constraint:" + a_pending._constraint.id() + " res:"
-					+ a_pending._result);
-		}
-
-		QPending oldPending = (QPending) Tree.find(_pendingJoins, a_pending);
-
-		if (oldPending == null) {
-			a_pending.changeConstraint();
-			_pendingJoins = Tree.add(_pendingJoins, a_pending.internalClonePayload());
-			return true;
-		} 
-		_pendingJoins = _pendingJoins.removeNode(oldPending);
-		oldPending._join.evaluatePending(this, oldPending, a_pending._result);
-		return false;
-	}
-
 	ReflectClass classReflector() {
-		readClassMetadata();
+		classMetadata();
 		if (_classMetadata == null) {
 			return null;
 		}
 		return _classMetadata.classReflector();
 	}
 	
-	boolean fieldIsAvailable(){
+	@Override
+	public boolean fieldIsAvailable(){
 		return classReflector() != null;
 	}
 
-	// / ***<Candidate interface code>***
-
-	public ObjectContainer objectContainer() {
-		return container();
-	}
-
-	public Object getObject() {
-		Object obj = value(true);
-		if (obj instanceof ByteArrayBuffer) {
-			ByteArrayBuffer reader = (ByteArrayBuffer) obj;
-			int offset = reader._offset;
-            obj = readString(reader); 
-			reader._offset = offset;
-		}
-		return obj;
-	}
-	
-	public String readString(ByteArrayBuffer buffer){
-	    return StringHandler.readString(transaction().context(), buffer);
-	}
-
-	QCandidate getRoot() {
-		return _root == null ? this : _root;
-	}
-
-	final LocalObjectContainer container() {
-		return transaction().localContainer();
-	}
-
-	final LocalTransaction transaction() {
-		return _candidates.i_trans;
-	}
-
-	public boolean include() {
-		return _include;
-	}
-
-	/**
-	 * For external interface use only. Call doNotInclude() internally so
-	 * dependancies can be checked.
-	 */
-	public void include(boolean flag) {
-		// TODO:
-		// Internal and external flag may need to be handled seperately.
-		_include = flag;
-		if(Debug4.queries){
-		    System.out.println("Candidate include " + flag + " ID: " + _key);
-	    }
-
-	}
-
-	@Override
-	public Tree onAttemptToAddDuplicate(Tree oldNode) {
-		_size = 0;
-		_root = (QCandidate) oldNode;
-		return oldNode;
-	}
-
-	private ReflectClass memberClass() {
+	ReflectClass memberClass() {
 		return transaction().reflector().forObject(_member);
 	}
 
 	
-	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
-	    Context context = container.transaction().context();
-	    
-		if (_fieldMetadata != null) {
-			return _fieldMetadata.prepareComparison(context, constraint);
-		}
-		if (_classMetadata != null) {
-			return _classMetadata.prepareComparison(context, constraint);
-		}
-		Reflector reflector = container.reflector();
-		ClassMetadata classMetadata = null;
-		if (_bytes != null) {
-			classMetadata = container.produceClassMetadata(reflector.forObject(constraint));
-		} else {
-			if (_member != null) {
-				classMetadata = container.classMetadataForReflectClass(reflector.forObject(_member));
-			}
-		}
-		if (classMetadata != null) {
-			if (_member != null && _member.getClass().isArray()) {
-				TypeHandler4 arrayElementTypehandler = classMetadata.typeHandler(); 
-				if (reflector.array().isNDimensional(memberClass())) {
-					MultidimensionalArrayHandler mah = 
-						new MultidimensionalArrayHandler(arrayElementTypehandler, false);
-					return mah.prepareComparison(context, _member);
-				} 
-				ArrayHandler ya = new ArrayHandler(arrayElementTypehandler, false);
-				return ya.prepareComparison(context, _member);
-			} 
-			return classMetadata.prepareComparison(context, constraint);
-		}
-		return null;
-	}
-
-
 	private void read() {
 		if (_include) {
 			if (_bytes == null) {
@@ -450,7 +279,7 @@ public class QCandidate extends TreeInt implements Candidate {
 	    return _bytes._offset;
 	}
 
-	private QCandidate readSubCandidate(QCandidates candidateCollection) {
+	private QCandidateBase readSubCandidate(QCandidates candidateCollection) {
 		read();
 		if (_bytes == null || _fieldMetadata == null) {
 		    return null;
@@ -458,7 +287,7 @@ public class QCandidate extends TreeInt implements Candidate {
 		final int offset = currentOffSet();
         QueryingReadContext context = newQueryingReadContext();
         TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _fieldMetadata.getHandler());
-        QCandidate subCandidate = candidateCollection.readSubCandidate(context, handler);
+        QCandidateBase subCandidate = candidateCollection.readSubCandidate(context, handler);
 		seek(offset);
 		if (subCandidate != null) {
 			subCandidate._root = getRoot();
@@ -488,21 +317,23 @@ public class QCandidate extends TreeInt implements Candidate {
 		}
 	}
 
-	ClassMetadata readClassMetadata() {
-		if (_classMetadata == null) {
-			read();
-			if (_bytes != null) {
-			    seek(0);
-                ObjectContainerBase stream = container();
-                ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
-				_classMetadata = objectHeader.classMetadata();
-                
-				if (_classMetadata != null) {
-					if (stream._handlers.ICLASS_COMPARE
-							.isAssignableFrom(_classMetadata.classReflector())) {
-						readThis(false);
-					}
-				}
+	@Override
+	public ClassMetadata classMetadata() {
+		if (_classMetadata != null) {
+			return _classMetadata;
+		}
+		read();
+		if (_bytes == null) {
+			return null;
+		}
+	    seek(0);
+        ObjectContainerBase stream = container();
+        ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
+		_classMetadata = objectHeader.classMetadata();
+        
+		if (_classMetadata != null) {
+			if (stream._handlers.ICLASS_COMPARE.isAssignableFrom(_classMetadata.classReflector())) {
+				readThis(false);
 			}
 		}
 		return _classMetadata;
@@ -534,7 +365,7 @@ public class QCandidate extends TreeInt implements Candidate {
 			_fieldMetadata = null;
             return;
 		} 
-		readClassMetadata();
+		classMetadata();
 		_member = null;
 		if (a_field == null) {
 			_fieldMetadata = null;
@@ -613,32 +444,81 @@ public class QCandidate extends TreeInt implements Candidate {
         return MarshallerFamily.version(_handlerVersion);
     }
     
-    @Override
-    public boolean duplicates() {
-    	return _root != null;
-    }
-
-	public void classMetadata(ClassMetadata classMetadata) {
+    public void classMetadata(ClassMetadata classMetadata) {
 		_classMetadata = classMetadata;
 	}
 	
-	public QCandidates candidates(){
-		return _candidates;
+	@Override
+	boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
+		if (a_evaluator.identity()) {
+			return a_evaluator.evaluate(a_constraint, this, null);
+		}
+		if (_member == null) {
+			_member = value();
+		}
+		return a_evaluator.evaluate(a_constraint, this, a_constraint
+				.translate(_member));
 	}
-	
-	private static final class CreateDescendChildTraversingVisitor implements Visitor4 {
+
+	public Object getObject() {
+		Object obj = value(true);
+		if (obj instanceof ByteArrayBuffer) {
+			ByteArrayBuffer reader = (ByteArrayBuffer) obj;
+			int offset = reader._offset;
+	        obj = StringHandler.readString(transaction().context(), reader); 
+			reader._offset = offset;
+		}
+		return obj;
+	}
+
+	@Override
+	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
+	    Context context = container.transaction().context();
+	    
+		if (_fieldMetadata != null) {
+			return _fieldMetadata.prepareComparison(context, constraint);
+		}
+		if (_classMetadata != null) {
+			return _classMetadata.prepareComparison(context, constraint);
+		}
+		Reflector reflector = container.reflector();
+		ClassMetadata classMetadata = null;
+		if (_bytes != null) {
+			classMetadata = container.produceClassMetadata(reflector.forObject(constraint));
+		} else {
+			if (_member != null) {
+				classMetadata = container.classMetadataForReflectClass(reflector.forObject(_member));
+			}
+		}
+		if (classMetadata != null) {
+			if (_member != null && _member.getClass().isArray()) {
+				TypeHandler4 arrayElementTypehandler = classMetadata.typeHandler(); 
+				if (reflector.array().isNDimensional(memberClass())) {
+					MultidimensionalArrayHandler mah = 
+						new MultidimensionalArrayHandler(arrayElementTypehandler, false);
+					return mah.prepareComparison(context, _member);
+				} 
+				ArrayHandler ya = new ArrayHandler(arrayElementTypehandler, false);
+				return ya.prepareComparison(context, _member);
+			} 
+			return classMetadata.prepareComparison(context, constraint);
+		}
+		return null;
+	}
+
+	static final class CreateDescendChildTraversingVisitor implements Visitor4 {
 		private final ByRef<Tree> _pending;
 		private final BooleanByRef _innerRes;
 		private final boolean _isNot;
 
-		private CreateDescendChildTraversingVisitor(ByRef<Tree> pending, BooleanByRef innerRes, boolean isNot) {
+		CreateDescendChildTraversingVisitor(ByRef<Tree> pending, BooleanByRef innerRes, boolean isNot) {
 			_pending = pending;
 			_innerRes = innerRes;
 			_isNot = isNot;
 		}
 
 		public void visit(Object obj) {
-			QCandidate cand = (QCandidate) obj;
+			QCandidateBase cand = (QCandidateBase) obj;
 
 			if (cand.include()) {
 				_innerRes.value = !_isNot;

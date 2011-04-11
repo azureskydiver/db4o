@@ -122,9 +122,9 @@ public class QConObject extends QCon implements FieldFilterable {
         return i_field._fieldMetadata.canLoadByIndex();
     }
 
-    boolean evaluate(QCandidate a_candidate) {
+    boolean evaluate(QCandidateBase candidate) {
         try {
-            return a_candidate.evaluate(this, i_evaluator);
+            return candidate.evaluate(this, i_evaluator);
         } catch (Exception e) {
         	if (Debug4.atHome) {
 				e.printStackTrace();
@@ -191,7 +191,7 @@ public class QConObject extends QCon implements FieldFilterable {
     	}
     }
     
-    PreparedComparison prepareComparison(QCandidate candidate){
+    PreparedComparison prepareComparison(QCandidateBase candidate){
     	if(_preparedComparison != null){
     		return _preparedComparison; 
     	}
@@ -338,11 +338,11 @@ public class QConObject extends QCon implements FieldFilterable {
     }
 
     public void visit(Object obj) {
-        QCandidate qc = (QCandidate) obj;
+        QCandidateBase qc = (QCandidateBase) obj;
         boolean res = true;
         boolean processed = false;
         if (_checkClassMetadataOnly) {
-            ClassMetadata yc = qc.readClassMetadata();
+            ClassMetadata yc = qc.classMetadata();
             if (yc != null) {
                 res = i_evaluator.not(_classMetadata.getHigherHierarchy(yc) == _classMetadata);
                 processed = true;
@@ -360,7 +360,7 @@ public class QConObject extends QCon implements FieldFilterable {
         boolean res = true;
         boolean processed = false;
         if (_checkClassMetadataOnly) {
-            ClassMetadata classMetadata = candidate.readClassMetadata();
+            ClassMetadata classMetadata = candidate.classMetadata();
             if (classMetadata != null) {
                 res = i_evaluator.not(_classMetadata.getHigherHierarchy(classMetadata) == _classMetadata);
                 processed = true;

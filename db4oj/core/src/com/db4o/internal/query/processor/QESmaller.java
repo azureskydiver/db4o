@@ -10,7 +10,7 @@ import com.db4o.internal.*;
  */
 public class QESmaller extends QEAbstract {
 
-    boolean evaluate(QConObject constraint, QCandidate candidate, Object obj) {
+    boolean evaluate(QConObject constraint, QCandidateBase candidate, Object obj) {
         if (obj == null) {
             return false;
         }

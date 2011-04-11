@@ -15,7 +15,7 @@ public class QEIdentity extends QEEqual
 		return true;
 	}
 	
-	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
+	boolean evaluate(QConObject a_constraint, QCandidateBase a_candidate, Object a_value){
 		if(i_objectID == 0){
 			i_objectID = a_constraint.getObjectID();
 		}

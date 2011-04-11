@@ -2,7 +2,6 @@
 
 package com.db4o.internal.query.processor;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
@@ -71,7 +70,7 @@ public class QConEvaluation extends QCon {
     }
 
 	public void visit(Object obj) {
-		QCandidate candidate = (QCandidate) obj;
+		QCandidateBase candidate = (QCandidateBase) obj;
 		
 		// force activation outside the try block
 		// so any activation errors bubble up
@@ -89,7 +88,7 @@ public class QConEvaluation extends QCon {
 		}
 	}
 
-	private void forceActivation(QCandidate candidate) {
+	private void forceActivation(QCandidateBase candidate) {
 		candidate.getObject();
 	}
 
