@@ -2,5 +2,5 @@
 package com.db4o.internal.query.processor;
 
 public interface FieldFilterable {
-	void filter(QField field, QCandidate candidate);
+	void filter(QField field, ParentCandidate candidate);
 }

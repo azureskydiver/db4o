@@ -4,9 +4,8 @@ package com.db4o.internal.query.processor;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.query.*;
 
-public abstract class QCandidateBase extends TreeInt implements Candidate {
+public abstract class QCandidateBase extends TreeInt implements InternalCandidate {
 
 	protected final QCandidates _candidates;
 	protected List4 _dependants;
@@ -44,8 +43,6 @@ public abstract class QCandidateBase extends TreeInt implements Candidate {
 		}
 	}
 
-	abstract boolean evaluate(final QConObject a_constraint, final QE a_evaluator);
-
 	boolean evaluate(QPending a_pending) {
 	
 		if (Debug4.queries) {
@@ -70,7 +67,7 @@ public abstract class QCandidateBase extends TreeInt implements Candidate {
 		return container();
 	}
 
-	QCandidateBase getRoot() {
+	public QCandidateBase getRoot() {
 		return _root == null ? this : _root;
 	}
 
@@ -78,7 +75,7 @@ public abstract class QCandidateBase extends TreeInt implements Candidate {
 		return transaction().localContainer();
 	}
 
-	final LocalTransaction transaction() {
+	public final LocalTransaction transaction() {
 		return _candidates.i_trans;
 	}
 
@@ -107,8 +104,6 @@ public abstract class QCandidateBase extends TreeInt implements Candidate {
 		return oldNode;
 	}
 
-	abstract PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint);
-
 	@Override
 	public boolean duplicates() {
 		return _root != null;
@@ -117,8 +112,4 @@ public abstract class QCandidateBase extends TreeInt implements Candidate {
 	public QCandidates candidates() {
 		return _candidates;
 	}
-	
-	public abstract ClassMetadata classMetadata();
-	
-	public abstract boolean fieldIsAvailable();
 }

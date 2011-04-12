@@ -19,12 +19,12 @@ public class QPrimitiveCandidate extends QCandidateBase {
 	}
 
 	@Override
-	boolean evaluate(QConObject a_constraint, QE a_evaluator) {
+	public boolean evaluate(QConObject a_constraint, QE a_evaluator) {
 		return a_evaluator.evaluate(a_constraint, this, a_constraint.translate(_obj));
 	}
 
 	@Override
-	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
+	public PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
 		ClassMetadata classMetadata = classMetadata();
 		if (classMetadata == null) {
 			return null;

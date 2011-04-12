@@ -220,7 +220,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     /** @param candidate */
-    boolean evaluate(QCandidateBase candidate) {
+    boolean evaluate(InternalCandidate candidate) {
         throw Exceptions4.virtualException();
     }
 
@@ -693,8 +693,8 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 	}
 
     public void visit(Object obj) {
-        QCandidate qc = (QCandidate) obj;
-        visit1(qc.getRoot(), this, evaluate(qc));
+        InternalCandidate candidate = (InternalCandidate) obj;
+        visit1(candidate.getRoot(), this, evaluate(candidate));
     }
 
     void visit(QCandidateBase a_root, boolean res) {
