@@ -421,7 +421,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
 
 
 	@Override
-	public void filter(QField field, QCandidate parent) {
+	public void filter(QField field, ParentCandidate parent) {
     	if (parent.createChild(field, this)) {
     		return;
     	}

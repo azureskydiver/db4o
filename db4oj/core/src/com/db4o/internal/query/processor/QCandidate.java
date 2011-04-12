@@ -20,7 +20,7 @@ import com.db4o.typehandlers.*;
  * 
  * @exclude
  */
-public class QCandidate extends QCandidateBase {
+public class QCandidate extends QCandidateBase implements ParentCandidate {
 
 	// db4o ID is stored in _key;
 
@@ -70,7 +70,8 @@ public class QCandidate extends QCandidateBase {
 		}
 	}
 	
-	boolean createChild(QField field, final QCandidates candidates) {
+	@Override
+	public boolean createChild(QField field, final QCandidates candidates) {
 		if (!_include) {
 			return false;
 		}
@@ -359,7 +360,7 @@ public class QCandidate extends QCandidateBase {
 		return str;
 	}
 
-	void useField(QField a_field) {
+	public void useField(QField a_field) {
 		read();
 		if (_bytes == null) {
 			_fieldMetadata = null;
@@ -449,7 +450,7 @@ public class QCandidate extends QCandidateBase {
 	}
 	
 	@Override
-	boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
+	public boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
 		if (a_evaluator.identity()) {
 			return a_evaluator.evaluate(a_constraint, this, null);
 		}
@@ -472,7 +473,7 @@ public class QCandidate extends QCandidateBase {
 	}
 
 	@Override
-	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
+	public PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
 	    Context context = container.transaction().context();
 	    
 		if (_fieldMetadata != null) {

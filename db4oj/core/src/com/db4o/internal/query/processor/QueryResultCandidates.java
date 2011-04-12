@@ -67,7 +67,7 @@ public class QueryResultCandidates {
         	_candidates.traverse(new Visitor4() {
 				@Override
 				public void visit(Object candidate) {
-					filterable.filter(field, (QCandidate)candidate);
+					filterable.filter(field, (ParentCandidate)candidate);
 				}
         	});
         	_candidates = (QCandidateBase) _candidates.filter(new Predicate4() {

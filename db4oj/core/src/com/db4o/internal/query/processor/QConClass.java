@@ -54,7 +54,7 @@ public class QConClass extends QConObject{
         return false;
     }
 	
-	boolean evaluate(QCandidateBase candidate){
+	boolean evaluate(InternalCandidate candidate){
 		boolean result = true;
 		QCandidates qCandidates = candidate.candidates();
 		if(qCandidates.isTopLevel() && qCandidates.wasLoadedFromClassFieldIndex()) { 
@@ -64,7 +64,7 @@ public class QConClass extends QConObject{
 					return i_evaluator.not(true);
 				}
 				BTree btree = index.btree();
-				Object searchResult = btree.search(candidate.transaction(), candidate._key);
+				Object searchResult = btree.search(candidate.transaction(), candidate.key());
 				result = searchResult != null;
 			}
 		} else {

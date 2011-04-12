@@ -122,7 +122,7 @@ public class QConObject extends QCon implements FieldFilterable {
         return i_field._fieldMetadata.canLoadByIndex();
     }
 
-    boolean evaluate(QCandidateBase candidate) {
+    boolean evaluate(InternalCandidate candidate) {
         try {
             return candidate.evaluate(this, i_evaluator);
         } catch (Exception e) {
@@ -355,7 +355,7 @@ public class QConObject extends QCon implements FieldFilterable {
     }
 
 	@Override
-	public void filter(QField field, QCandidate candidate) {
+	public void filter(QField field, ParentCandidate candidate) {
 		candidate.useField(field);
         boolean res = true;
         boolean processed = false;
