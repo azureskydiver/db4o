@@ -325,7 +325,6 @@ public class VodDatabase {
 	public void createEventSchema() {
 		VodJvi jvi = new VodJvi(this);
 		jvi.createEventSchema();
-		jvi.close();
 	}
 	
 	@Override

@@ -5,7 +5,6 @@ package com.db4o.drs.test.versant;
 import java.io.*;
 
 import com.db4o.drs.versant.*;
-import com.versant.trans.*;
 
 import db4ounit.*;
 
@@ -22,37 +21,12 @@ public class VodJviTestCase extends VodDatabaseTestCaseBase implements TestLifeC
 		Assert.isTrue(file.isDirectory());
 	}
 	
-	public void testJviSession(){
-		TransSession session = _jvi.createTransSession();
-		Assert.isNotNull(session);
-	}
-	
-	public void testNewDbId(){
-		String name = VodJvi.safeDatabaseName("VodJviTestCase.test" + System.currentTimeMillis());
-		short id = _jvi.newDbId(name);
-		Assert.isGreater(0, id);
-		Assert.areEqual(id, _jvi.dbIdFor(name));
-		_jvi.deleteDbId(name);
-	}
-
-	public void testDeleteDbId() {
-		final String name = VodJvi.safeDatabaseName("VodJviTestCase.test" + System.currentTimeMillis());
-		_jvi.newDbId(name);
-		_jvi.deleteDbId(name);
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				_jvi.dbIdFor(name);
-			}
-		});
-	}
-	
 	public void setUp() throws Exception {
 		_jvi = new VodJvi(_vod);
 	}
 
 	public void tearDown() throws Exception {
-		_jvi.close();
+		
 	}
-
 
 }
