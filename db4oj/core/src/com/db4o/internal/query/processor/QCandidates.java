@@ -74,18 +74,18 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
     	return _isTopLevel;
     }
 
-    public QCandidateBase add(QCandidateBase candidate) {
+    public InternalCandidate add(InternalCandidate candidate) {
         if(Debug4.queries){
-            String msg = "Candidate added ID: " + candidate._key;
-            QCandidateBase root = candidate.getRoot();
+            String msg = "Candidate added ID: " + candidate.id();
+            InternalCandidate root = candidate.getRoot();
             if(root != null){
-            	msg += " root: " + root._key;
+            	msg += " root: " + root.id();
             }
 			System.out.println(msg);
         }
         _result.add(candidate);
         
-        if(candidate._size == 0){
+        if(((QCandidateBase)candidate)._size == 0){
         	
         	// This means that the candidate was already present
         	// and QCandidate does not allow duplicates.
@@ -104,7 +104,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
         _constraints = new List4(_constraints, a_constraint);
     }
     
-    public QCandidateBase readSubCandidate(QueryingReadContext context, TypeHandler4 handler){
+    public InternalCandidate readSubCandidate(QueryingReadContext context, TypeHandler4 handler){
         ObjectID objectID = ObjectID.NOT_POSSIBLE;
         try {
             int offset = context.offset();
@@ -305,7 +305,7 @@ public final class QCandidates implements /*Visitor4, */ FieldFilterable {
         final boolean[] ret = new boolean[] { true };
         traverse(new Visitor4() {
             public void visit(Object obj) {
-                if (((QCandidateBase) obj)._include) {
+                if (((InternalCandidate) obj).include()) {
                     ret[0] = false;
                 }
             }

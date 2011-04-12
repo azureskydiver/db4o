@@ -22,7 +22,7 @@ public abstract class QEStringCmp extends QEAbstract {
 		caseSensitive = caseSensitive_;
 	}
 
-	boolean evaluate(QConObject constraint, QCandidateBase candidate, Object obj){
+	boolean evaluate(QConObject constraint, InternalCandidate candidate, Object obj){
 		if(obj != null){
 		    if(obj instanceof ByteArrayBuffer) {
 		    	obj = StringHandler.readString(candidate.transaction().context(), (ByteArrayBuffer)obj);

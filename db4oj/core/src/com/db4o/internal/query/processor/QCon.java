@@ -200,18 +200,17 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         a_candidateCollection.add(i_candidates);
     }
 
-    void doNotInclude(QCandidateBase a_root) {
+    void doNotInclude(InternalCandidate root) {
         if(DTrace.enabled){
             DTrace.DONOTINCLUDE.log(id());
         }
         if (Debug4.queries) {
-            System.out.println("QCon.doNotInclude " + id() + " " + a_root._key
-            );
+            System.out.println("QCon.doNotInclude " + id() + " " + root.id());
         }
         if (i_parent != null) {
-            i_parent.visit1(a_root, this, false);
+            i_parent.visit1(root, this, false);
         } else {
-            a_root.doNotInclude();
+            root.doNotInclude();
         }
     }
 
@@ -697,11 +696,11 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         visit1(candidate.getRoot(), this, evaluate(candidate));
     }
 
-    void visit(QCandidateBase a_root, boolean res) {
-        visit1(a_root, this, i_evaluator.not(res));
+    void visit(InternalCandidate root, boolean res) {
+        visit1(root, this, i_evaluator.not(res));
     }
 
-    void visit1(QCandidateBase root, QCon reason, boolean res) {
+    void visit1(InternalCandidate root, QCon reason, boolean res) {
 
         // The a_reason parameter makes it eays to distinguish
         // between calls from above (a_reason == this) and below.
@@ -719,7 +718,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         }
     }
 
-    final void visitOnNull(final QCandidateBase a_root) {
+    final void visitOnNull(final InternalCandidate a_root) {
 
         // TODO: It may be more efficient to rule out 
         // all possible keepOnNull issues when starting

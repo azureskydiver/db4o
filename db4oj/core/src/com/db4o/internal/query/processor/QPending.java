@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-class QPending extends Tree{
+public class QPending extends Tree{
 	
 	final QConJoin			_join;
 	QCon 					_constraint;

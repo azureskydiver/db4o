@@ -33,13 +33,13 @@ public class QE implements Unversioned {
         return true;
     }
 
-	boolean evaluate(QConObject constraint, QCandidateBase candidate, Object obj){
+	boolean evaluate(QConObject constraint, InternalCandidate candidate, Object obj){
         PreparedComparison prepareComparison = constraint.prepareComparison(candidate);
         if (obj == null) {
             return prepareComparison instanceof Null;
         }
         if(prepareComparison instanceof PreparedArrayContainsComparison){
-        	return ((PreparedArrayContainsComparison)prepareComparison).IsEqual(obj);
+        	return ((PreparedArrayContainsComparison)prepareComparison).isEqual(obj);
         }
         return prepareComparison.compareTo(obj) == 0;
 	}

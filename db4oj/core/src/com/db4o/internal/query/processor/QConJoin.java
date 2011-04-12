@@ -46,9 +46,9 @@ public class QConJoin extends QCon {
 	    return i_constraint1;
     }
 
-	void doNotInclude(QCandidateBase a_root) {
-		constraint1().doNotInclude(a_root);
-		constraint2().doNotInclude(a_root);
+	void doNotInclude(InternalCandidate root) {
+		constraint1().doNotInclude(root);
+		constraint2().doNotInclude(root);
 	}
 
 	void exchangeConstraint(QCon a_exchange, QCon a_with) {
@@ -61,16 +61,12 @@ public class QConJoin extends QCon {
 		}
 	}
 
-	void evaluatePending(
-		QCandidateBase a_root,
-		QPending a_pending,
-		int a_secondResult) {
-
+	void evaluatePending(InternalCandidate root, QPending pending, int secondResult) {
 		boolean res =
 			i_evaluator.not(
 				i_and
-					? ((a_pending._result + a_secondResult) > 0)
-					: (a_pending._result + a_secondResult) > QPending.FALSE);
+					? ((pending._result + secondResult) > 0)
+					: (pending._result + secondResult) > QPending.FALSE);
 					
 		if (hasJoins()) {
 			Iterator4 i = iterateJoins();
@@ -85,25 +81,25 @@ public class QConJoin extends QCon {
 							+ " res:"
 							+ res);
 				}
-				a_root.evaluate(new QPending(qcj, this, res));
+				root.evaluate(new QPending(qcj, this, res));
 			}
 		} else {
 			if (!res) {
 				if (Debug4.queries) {
 					System.out.println(
-						"QConJoin evaluatePending FALSE for " + a_root._key + " "
+						"QConJoin evaluatePending FALSE for " + root.id() + " "
 							+ id()
 							+ " doNotInclude: "
 							+ constraint1().id()
 							+ ", "
 							+ constraint2().id());
 				}
-				constraint1().doNotInclude(a_root);
-				constraint2().doNotInclude(a_root);
+				constraint1().doNotInclude(root);
+				constraint2().doNotInclude(root);
 			}else{
 				if (Debug4.queries) {
 					System.out.println(
-						"QConJoin evaluatePending TRUE for " + a_root._key + " "
+						"QConJoin evaluatePending TRUE for " + root.id() + " "
 							+ id()
 							+ " keeping constraints: "
 							+ constraint1().id()

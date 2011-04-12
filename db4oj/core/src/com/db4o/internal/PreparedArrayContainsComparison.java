@@ -31,7 +31,7 @@ public class PreparedArrayContainsComparison implements PreparedComparison {
 		throw new IllegalStateException();
 	}
 	
-    public boolean IsEqual(Object array) {
+    public boolean isEqual(Object array) {
     	return isMatch(array, IntMatcher.ZERO);
     }
 

@@ -101,7 +101,7 @@ public class QCandidate extends QCandidateBase implements ParentCandidate {
 		}
         
         _classMetadata.seekToField(transaction(), _bytes, _fieldMetadata);
-        QCandidateBase candidate = readSubCandidate(candidates); 
+        InternalCandidate candidate = readSubCandidate(candidates); 
 		if (candidate == null) {
 			return false;
 		}
@@ -189,7 +189,7 @@ public class QCandidate extends QCandidateBase implements ParentCandidate {
 		return outerRes;
 	}
 
-	private TypeHandler4 typeHandlerFor(QCandidateBase candidate) {
+	private TypeHandler4 typeHandlerFor(InternalCandidate candidate) {
 	    ClassMetadata classMetadata = candidate.classMetadata();
 	    if (classMetadata != null) {
 	    	return classMetadata.typeHandler();
@@ -280,7 +280,7 @@ public class QCandidate extends QCandidateBase implements ParentCandidate {
 	    return _bytes._offset;
 	}
 
-	private QCandidateBase readSubCandidate(QCandidates candidateCollection) {
+	private InternalCandidate readSubCandidate(QCandidates candidateCollection) {
 		read();
 		if (_bytes == null || _fieldMetadata == null) {
 		    return null;
@@ -288,10 +288,10 @@ public class QCandidate extends QCandidateBase implements ParentCandidate {
 		final int offset = currentOffSet();
         QueryingReadContext context = newQueryingReadContext();
         TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _fieldMetadata.getHandler());
-        QCandidateBase subCandidate = candidateCollection.readSubCandidate(context, handler);
+        InternalCandidate subCandidate = candidateCollection.readSubCandidate(context, handler);
 		seek(offset);
 		if (subCandidate != null) {
-			subCandidate._root = getRoot();
+			subCandidate.root(getRoot());
 			return subCandidate;
 		}
 		return null;
@@ -519,7 +519,7 @@ public class QCandidate extends QCandidateBase implements ParentCandidate {
 		}
 
 		public void visit(Object obj) {
-			QCandidateBase cand = (QCandidateBase) obj;
+			InternalCandidate cand = (InternalCandidate) obj;
 
 			if (cand.include()) {
 				_innerRes.value = !_isNot;
@@ -527,11 +527,11 @@ public class QCandidate extends QCandidateBase implements ParentCandidate {
 
 			// Collect all pending subresults.
 
-			if (cand._pendingJoins == null) {
+			if (cand.pendingJoins() == null) {
 				return;
 			}
 
-			cand._pendingJoins.traverse(new Visitor4() {
+			cand.pendingJoins().traverse(new Visitor4() {
 				public void visit(Object a_object) {
 					QPending newPending = ((QPending) a_object).internalClonePayload();
 

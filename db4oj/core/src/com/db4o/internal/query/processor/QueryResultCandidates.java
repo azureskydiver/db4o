@@ -3,6 +3,7 @@
 package com.db4o.internal.query.processor;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.fieldindex.*;
 
@@ -22,9 +23,9 @@ public class QueryResultCandidates {
 		_qCandidates = qCandidates;
 	}
 
-	public void add(QCandidateBase candidate) {
+	public void add(InternalCandidate candidate) {
 		toQCandidates();
-		_candidates = Tree.add(_candidates, candidate);
+		_candidates = Tree.add(_candidates, (QCandidateBase)candidate);
 	}
 
 	private void toQCandidates() {

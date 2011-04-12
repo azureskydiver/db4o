@@ -191,7 +191,7 @@ public class QConObject extends QCon implements FieldFilterable {
     	}
     }
     
-    PreparedComparison prepareComparison(QCandidateBase candidate){
+    PreparedComparison prepareComparison(InternalCandidate candidate){
     	if(_preparedComparison != null){
     		return _preparedComparison; 
     	}
@@ -338,7 +338,7 @@ public class QConObject extends QCon implements FieldFilterable {
     }
 
     public void visit(Object obj) {
-        QCandidateBase qc = (QCandidateBase) obj;
+        InternalCandidate qc = (InternalCandidate) obj;
         boolean res = true;
         boolean processed = false;
         if (_checkClassMetadataOnly) {

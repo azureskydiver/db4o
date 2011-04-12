@@ -15,10 +15,10 @@ public class QEIdentity extends QEEqual
 		return true;
 	}
 	
-	boolean evaluate(QConObject a_constraint, QCandidateBase a_candidate, Object a_value){
+	boolean evaluate(QConObject a_constraint, InternalCandidate a_candidate, Object a_value){
 		if(i_objectID == 0){
 			i_objectID = a_constraint.getObjectID();
 		}
-		return a_candidate._key == i_objectID;
+		return a_candidate.id() == i_objectID;
 	}
 }
