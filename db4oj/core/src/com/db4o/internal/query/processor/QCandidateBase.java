@@ -11,7 +11,7 @@ public abstract class QCandidateBase extends TreeInt implements InternalCandidat
 	protected List4 _dependants;
 	boolean _include = true;
 	Tree _pendingJoins;
-	QCandidateBase _root;
+	InternalCandidate _root;
 
 	public QCandidateBase(QCandidates candidates, int id) {
 		super(id);
@@ -28,38 +28,40 @@ public abstract class QCandidateBase extends TreeInt implements InternalCandidat
         }
 	}
 
-	protected void addDependant(QCandidateBase a_candidate) {
+	protected void addDependant(InternalCandidate a_candidate) {
 		_dependants = new List4(_dependants, a_candidate);
 	}
 
-	void doNotInclude() {
+	@Override
+	public void doNotInclude() {
 		include(false);
 		if (_dependants != null) {
 			Iterator4 i = new Iterator4Impl(_dependants);
 			_dependants = null;
 			while (i.moveNext()) {
-				((QCandidateBase) i.current()).doNotInclude();
+				((InternalCandidate) i.current()).doNotInclude();
 			}
 		}
 	}
 
-	boolean evaluate(QPending a_pending) {
+	@Override
+	public boolean evaluate(QPending pending) {
 	
 		if (Debug4.queries) {
-			System.out.println("Pending arrived Join: " + a_pending._join.id()
-					+ " Constraint:" + a_pending._constraint.id() + " res:"
-					+ a_pending._result);
+			System.out.println("Pending arrived Join: " + pending._join.id()
+					+ " Constraint:" + pending._constraint.id() + " res:"
+					+ pending._result);
 		}
 	
-		QPending oldPending = (QPending) Tree.find(_pendingJoins, a_pending);
+		QPending oldPending = (QPending) Tree.find(_pendingJoins, pending);
 	
 		if (oldPending == null) {
-			a_pending.changeConstraint();
-			_pendingJoins = Tree.add(_pendingJoins, a_pending.internalClonePayload());
+			pending.changeConstraint();
+			_pendingJoins = Tree.add(_pendingJoins, pending.internalClonePayload());
 			return true;
 		} 
 		_pendingJoins = _pendingJoins.removeNode(oldPending);
-		oldPending._join.evaluatePending(this, oldPending, a_pending._result);
+		oldPending._join.evaluatePending(this, oldPending, pending._result);
 		return false;
 	}
 
@@ -67,7 +69,7 @@ public abstract class QCandidateBase extends TreeInt implements InternalCandidat
 		return container();
 	}
 
-	public QCandidateBase getRoot() {
+	public InternalCandidate getRoot() {
 		return _root == null ? this : _root;
 	}
 
@@ -75,10 +77,12 @@ public abstract class QCandidateBase extends TreeInt implements InternalCandidat
 		return transaction().localContainer();
 	}
 
+	@Override
 	public final LocalTransaction transaction() {
 		return _candidates.i_trans;
 	}
 
+	@Override
 	public boolean include() {
 		return _include;
 	}
@@ -100,7 +104,7 @@ public abstract class QCandidateBase extends TreeInt implements InternalCandidat
 	@Override
 	public Tree onAttemptToAddDuplicate(Tree oldNode) {
 		_size = 0;
-		_root = (QCandidateBase) oldNode;
+		_root = (InternalCandidate) oldNode;
 		return oldNode;
 	}
 
@@ -111,5 +115,20 @@ public abstract class QCandidateBase extends TreeInt implements InternalCandidat
 
 	public QCandidates candidates() {
 		return _candidates;
+	}
+	
+	@Override
+	public void root(InternalCandidate root) {
+		_root = root;
+	}
+	
+	@Override
+	public Tree pendingJoins() {
+		return _pendingJoins;
+	}
+	
+	@Override
+	public int id() {
+		return _key;
 	}
 }

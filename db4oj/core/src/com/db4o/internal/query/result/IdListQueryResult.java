@@ -53,9 +53,9 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4, 
 	}
 
 	public void visit(Object a_tree) {
-		QCandidateBase candidate = (QCandidateBase) a_tree;
+		InternalCandidate candidate = (InternalCandidate) a_tree;
 		if (candidate.include()) {
-		    addKeyCheckDuplicates(candidate._key);
+		    addKeyCheckDuplicates(candidate.id());
 		}
 	}
 	

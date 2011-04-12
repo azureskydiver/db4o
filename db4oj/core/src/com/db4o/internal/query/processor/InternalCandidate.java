@@ -6,12 +6,17 @@ import com.db4o.internal.*;
 import com.db4o.query.*;
 
 public interface InternalCandidate extends Candidate {
-	QCandidateBase getRoot();
+	InternalCandidate getRoot();
 	ClassMetadata classMetadata();
 	QCandidates candidates();
-	Transaction transaction();
+	LocalTransaction transaction();
 	boolean evaluate(QConObject qConObject, QE evaluator);
 	boolean fieldIsAvailable();
-	Integer key();
+	int id();
 	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint);
+	boolean evaluate(QPending pending);
+	void doNotInclude();
+	void root(InternalCandidate root);
+	boolean include();
+	Tree pendingJoins();
 }

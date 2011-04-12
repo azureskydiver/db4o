@@ -64,7 +64,7 @@ public class QConClass extends QConObject{
 					return i_evaluator.not(true);
 				}
 				BTree btree = index.btree();
-				Object searchResult = btree.search(candidate.transaction(), candidate.key());
+				Object searchResult = btree.search(candidate.transaction(), candidate.id());
 				result = searchResult != null;
 			}
 		} else {

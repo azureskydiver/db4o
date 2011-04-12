@@ -70,7 +70,7 @@ public class QConEvaluation extends QCon {
     }
 
 	public void visit(Object obj) {
-		QCandidateBase candidate = (QCandidateBase) obj;
+		InternalCandidate candidate = (InternalCandidate) obj;
 		
 		// force activation outside the try block
 		// so any activation errors bubble up
@@ -83,12 +83,12 @@ public class QConEvaluation extends QCon {
 			// TODO: implement Exception callback for the user coder
 			// at least for test cases
 		}
-		if (!candidate._include) {
+		if (!candidate.include()) {
 			doNotInclude(candidate.getRoot());
 		}
 	}
 
-	private void forceActivation(QCandidateBase candidate) {
+	private void forceActivation(InternalCandidate candidate) {
 		candidate.getObject();
 	}
 
