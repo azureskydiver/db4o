@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Tree;
 import com.db4o.foundation.*;
 import com.db4o.jiraui.*;
 import com.db4o.jiraui.api.*;
-import com.db4o.jiraui.api.Resource;
 
 public final class EditTasks extends Composite {
 	
@@ -351,9 +350,10 @@ public final class EditTasks extends Composite {
 	}
 	
 	public static int currentWeek() {
-		Calendar calendar1 = Calendar.getInstance();
-		Calendar calendar2 = Calendar.getInstance();
-		calendar1.set(2011, 1, 27);
+		TimeZone utc = TimeZone.getTimeZone("UTC");
+		Calendar calendar1 = Calendar.getInstance(utc);
+		Calendar calendar2 = Calendar.getInstance(utc);
+		calendar1.set(2011, 1, 22, 15, 0, 0);
 		calendar2.setTime(new Date());
 		long milliseconds1 = calendar1.getTimeInMillis();
 		long milliseconds2 = calendar2.getTimeInMillis();
