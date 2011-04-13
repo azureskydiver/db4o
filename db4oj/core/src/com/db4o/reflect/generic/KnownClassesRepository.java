@@ -191,16 +191,16 @@ public class KnownClassesRepository {
 										fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
+		_listeners.notifyListeners(clazz);
+
 	}
 
 	private void register(String className, ReflectClass clazz) {
-		if (lookupByName(className) != null)
+		if (lookupByName(className) != null) {
 			throw new IllegalArgumentException();
-		
+		}
 	    _classByName.put(className, clazz);
 		_classes.add(clazz);
-		
-		_listeners.notifyListeners(clazz);
     }
 
 	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo, Reflector reflector) {
