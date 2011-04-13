@@ -39,6 +39,7 @@ public class AllTests extends ComposibleTestSuite {
 			            IndexedBlockSizeQueryTestCase.class,
 			            InvalidOffsetInDeleteTestCase.class,
 			            KnownClassesTestCase.class,
+			            KnownClassesIndexTestCase.class,
 			            LazyObjectReferenceTestCase.class,
 			            LockedTreeTestCase.class,
 			            LongLinkedListTestCase.class,
