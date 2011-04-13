@@ -8,13 +8,18 @@ import com.db4o.builder.Compiler;
 import com.db4o.util.eclipse.parser.*;
 import com.db4o.util.file.*;
 
-public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
+public class ProjectBuilderVisitor extends ProjectClasspathVisitorAdapter {
+	private static Set<String> sourceIgnoreList = new HashSet<String>();
 	private Set<IFile> knownSources = new LinkedHashSet<IFile>();
 	private Set<Pair<IFile,String>> knownResources = new LinkedHashSet<Pair<IFile,String>>();
 	private Set<IFile> classpath = new LinkedHashSet<IFile>();
 	private Compiler ecj = new EclipseCompiler();
 	private IFile target;
-	private Project project;
+	
+	static {
+		sourceIgnoreList.add(".cvsignore");
+		sourceIgnoreList.add(".gitignore");
+	}
 
 	public ProjectBuilderVisitor() {
 		ecj.sourceVersion(Compiler.Version.Java16);
@@ -25,16 +30,14 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 	}
 	
 	@Override
-	public void visit(Project project, String name) {
-		this.project = project;
-	}
-
-	@Override
 	public void visitSourceFolder(final IFile dir) {
 		dir.accept(new FileVisitor() {
 			
 			@Override
 			public void visit(IFile child) {
+				if (sourceIgnoreList.contains(child.name())) {
+					return;
+				}
 				if (child.isFile()) {
 					if (child.name().toLowerCase().endsWith(".java")) {
 						if (knownSources.add(child)) {
@@ -57,7 +60,7 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 
 	@Override
 	public void visitExternalProject(final Project project) {
-		project.accept(new ProjectVisitorAdapter() {
+		project.accept(new ProjectClasspathVisitorAdapter() {
 			@Override
 			public void visitArchive(IFile jar) {
 				addClasspathEntry(jar);
@@ -65,14 +68,12 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 			
 			@Override
 			public void visitOutputFolder(IFile dir) {
-				dir = resolveProjectOutputDir(project, dir);
-				addClasspathEntry(dir);
+				addClasspathEntry(resolveExternalProjectOutputFolder(project, dir));
 			}
 			
 			@Override
 			public void visitExternalProject(Project project) {
 				ProjectBuilderVisitor.this.visitExternalProject(project);
-//				project.accept(this);
 			}
 		});
 	}
@@ -96,13 +97,12 @@ public class ProjectBuilderVisitor extends ProjectVisitorAdapter {
 
 	@Override
 	public void visitOutputFolder(IFile dir) {
-		dir = resolveProjectOutputDir(project, dir);
 		target = dir;
 		dir.mkdir();
 		ecj.targetFolder(dir.getAbsolutePath());
 	}
 
-	protected IFile resolveProjectOutputDir(Project project, IFile dir) {
+	protected IFile resolveExternalProjectOutputFolder(Project project, IFile dir) {
 		return dir;
 	}
 

@@ -16,7 +16,7 @@ final class ClasspathImpl {
 		return project;
 	}
 
-	public void accept(final ProjectVisitor visitor) {
+	public void accept(final ClasspathVisitor visitor) {
 
 		IFile cp = project().root().file(".classpath");
 		

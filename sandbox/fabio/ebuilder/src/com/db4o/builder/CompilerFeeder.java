@@ -5,7 +5,7 @@ import java.util.*;
 import com.db4o.util.eclipse.parser.*;
 import com.db4o.util.file.*;
 
-public class CompilerFeeder extends ProjectVisitorAdapter {
+public class CompilerFeeder extends ProjectClasspathVisitorAdapter {
 	private final Compiler ecj;
 	
 	private Set<String> knownProjects = new HashSet<String>();
