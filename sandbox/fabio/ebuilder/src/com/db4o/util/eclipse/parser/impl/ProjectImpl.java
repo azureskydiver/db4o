@@ -2,7 +2,6 @@ package com.db4o.util.eclipse.parser.impl;
 
 import org.w3c.dom.*;
 
-import com.db4o.builder.*;
 import com.db4o.util.eclipse.parser.*;
 import com.db4o.util.file.*;
 
@@ -30,6 +29,7 @@ final class ProjectImpl implements Project {
 		this.outputDir = outputDir;
 	}
 
+	@Override
 	public IFile root() {
 		return root;
 	}
@@ -43,37 +43,27 @@ final class ProjectImpl implements Project {
 
 	@Override
 	public void accept(ProjectVisitor visitor) {
-		accept(visitor, 0xffffffff);
-	}
 
-	@Override
-	public void accept(ProjectVisitor visitor, int visitorOptions) {
-
-		boolean visitProject = (visitorOptions & ProjectVisitor.PROJECT) != 0;
-		boolean visitClasspath = (visitorOptions & ProjectVisitor.CLASSPATH) != 0;
-
-		if (visitProject) {
-			if (name == null) {
-				Element root = root().file(".project").xml().root();
-				Node nameNode = root.getElementsByTagName("name").item(0);
-				name = nameNode.getTextContent();
-			}
-			visitor.visit(this, name);
+		if (name == null) {
+			Element root = root().file(".project").xml().root();
+			Node nameNode = root.getElementsByTagName("name").item(0);
+			name = nameNode.getTextContent();
+		}
+		
+		visitor.visit(this, name);
+		
+		ClasspathVisitor cpv = visitor.visitClasspath();
+		if (cpv != null) {
+			classpath().accept(cpv);
 		}
 
-		if (visitClasspath) {
-			classpath().accept(visitor);
-		}
-
-		if (visitProject) {
-			visitor.visitEnd();
-		}
+		visitor.visitEnd();
 	}
 
 	@Override
 	public String name() {
 		if (name != null) {
-			accept(new ProjectVisitorAdapter(), ProjectVisitor.PROJECT);
+			accept(new ProjectVisitorAdapter());
 		}
 		return name;
 	}

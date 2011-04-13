@@ -9,8 +9,8 @@ public interface Project {
 
 	void accept(ProjectVisitor visitor);
 
-	void accept(ProjectVisitor visitor, int visitorOptions);
-
 	String getRelativePathToRoot(IFile file);
+
+	IFile root();
 
 }

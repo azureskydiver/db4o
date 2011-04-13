@@ -34,7 +34,7 @@ public final class EclipseWorkspace implements Workspace {
 			public void visit(Project p, String name) {
 				projects.put(name, project);
 			}
-		}, ProjectVisitor.PROJECT);
+		});
 		return project;
 	}
 

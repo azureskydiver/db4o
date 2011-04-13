@@ -5,7 +5,7 @@ import java.util.*;
 import com.db4o.builder.*;
 import com.db4o.util.eclipse.parser.*;
 
-public class DependencyCollectorVisitor extends ProjectVisitorAdapter {
+public class DependencyCollectorVisitor extends ProjectClasspathVisitorAdapter {
 	private Project project;
 	private final Collection<Project> list;
 
