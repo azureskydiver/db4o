@@ -82,6 +82,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	private TypeHandlerAspect _customTypeHandlerAspect;
 
 	private AspectTraversalStrategy _aspectTraversalStrategy;
+	
+	private TernaryBool _isStruct = TernaryBool.UNSPECIFIED;
     
     final boolean canUpdateFast(){
         if(_canUpdateFast == TernaryBool.UNSPECIFIED){
@@ -97,15 +99,15 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		if(_config != null && _config.cascadeOnDelete() == TernaryBool.YES) {
 			return false;
 		}
-		final BooleanByRef hasIndex = new BooleanByRef(false); 
+		final BooleanByRef result = new BooleanByRef(true); 
 		traverseDeclaredFields(new Procedure4() {
-            public void apply(Object arg) {
-                if(((FieldMetadata)arg).hasIndex()){
-                    hasIndex.value = true;
+            public void apply(Object fieldMetadata) {
+                if(! ((FieldMetadata)fieldMetadata).canUpdateFast()){
+                    result.value = false;
                 }
             }
         });
-		return ! hasIndex.value;
+		return result.value;
 	}
 
 	public boolean isInternal() {
@@ -2062,7 +2064,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	public boolean isStruct() {
-		return Platform4.isStruct(classReflector());
+		if(_isStruct == TernaryBool.UNSPECIFIED){
+			_isStruct = Platform4.isStruct(classReflector()) ? TernaryBool.YES : TernaryBool.NO;
+		}
+		return _isStruct == TernaryBool.YES;
     }
 
 	public void dropClassIndex() {

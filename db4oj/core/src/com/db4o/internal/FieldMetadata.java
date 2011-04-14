@@ -436,7 +436,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         try {
             removeIndexEntry(context);
-            if(isUpdate){
+            if(isUpdate && ! _fieldType.isStruct()){
             	incrementOffset(context);
             	return;
             }
@@ -1077,6 +1077,16 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
 	public void dropIndex() {
 		dropIndex((LocalTransaction)container().systemTransaction());
+	}
+
+	public boolean canUpdateFast() {
+		if(hasIndex()){
+			return false;
+		}
+		if(_fieldType.isStruct()){
+			return false;
+		}
+		return true;
 	}
 
 }
