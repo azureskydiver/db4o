@@ -46,7 +46,8 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         return fieldName.equals(getName()); 
     }
     
-	public boolean canBeDisabled() {
+	@Override
+    public boolean canBeDisabled() {
 		return false;
 	}
     
