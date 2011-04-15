@@ -46,9 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\silverlight\Cecil.FlowAnalysis.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil, Version=0.9.4.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+    <Reference Include="Mono.Cecil, Version=0.9.3.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\temp\cecil\bin\silverlight_Release\Mono.Cecil.dll</HintPath>
+      <HintPath>..\Libs\silverlight\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
