@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> bind(Activator activator) {
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">void</span> bind(Activator activator) {
     <span style="color:Blue;">if</span> (<span style="color:Blue;">this</span>.activator == activator) {
         <span style="color:Blue;">return</span>;
     }
@@ -17,8 +16,7 @@
     <span style="color:Blue;">if</span>(<span style="color:Blue;">null</span>!=activator){
         activator.activate(activationPurpose);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Person.java: Implement the activatable interface methods
 			<div class="codedownload">

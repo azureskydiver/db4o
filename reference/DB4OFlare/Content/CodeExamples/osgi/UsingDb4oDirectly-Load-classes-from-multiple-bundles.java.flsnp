@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">class</span> OSGiLoader <span style="color:Blue;">implements</span> JdkLoader{
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">class</span> OSGiLoader <span style="color:Blue;">implements</span> JdkLoader{
     <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> Bundle[] bundlesToLookIn;
 
     OSGiLoader(Bundle... bundlesToLookIn) {
@@ -28,8 +27,7 @@
     <span style="color:Blue;">public</span> Object deepClone(Object o) {
         <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> OSGiLoader(bundlesToLookIn);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			UsingDb4oDirectly.java: Load classes from multiple bundles
 			<div class="codedownload">

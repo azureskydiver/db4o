@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Class</span> Pilot
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Class</span> Pilot
     <span style="color:Blue;">Private</span> m_name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
 
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
@@ -18,8 +17,7 @@
             m_name = value
         <span style="color:Blue;">End</span> <span style="color:Blue;">Set</span>
     <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			TransparentActivationExample.vb: Our domain model
 			<div class="codedownload">

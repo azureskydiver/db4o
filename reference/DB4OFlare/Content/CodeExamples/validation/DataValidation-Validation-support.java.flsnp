@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">class</span> ValidationListener <span style="color:Blue;">implements</span> EventListener4&lt;CancellableObjectEventArgs&gt; {
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">class</span> ValidationListener <span style="color:Blue;">implements</span> EventListener4&lt;CancellableObjectEventArgs&gt; {
     <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> Validator validator = Validation.buildDefaultValidatorFactory()
             .getValidator();
 
@@ -24,8 +23,7 @@
         }
         <span style="color:Blue;">return</span> builder.toString();
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			DataValidation.java: Validation support
 			<div class="codedownload">

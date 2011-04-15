@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">internal</span> <span style="color:Blue;">class</span> LoggerReflector : IReflector
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">internal</span> <span style="color:Blue;">class</span> LoggerReflector : IReflector
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> IReflector readReflector;
 
@@ -59,8 +58,7 @@
     {
         <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> LoggerReflector((IReflector) readReflector.DeepClone(o));
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ReflectorExamples.cs: Logging reflector
 			<div class="codedownload">

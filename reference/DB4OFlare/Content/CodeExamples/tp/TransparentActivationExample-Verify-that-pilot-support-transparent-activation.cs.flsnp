@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">bool</span> supportsTransparentPersistence = <span style="color:Blue;">typeof</span> (Pilot) <span style="color:Blue;">is</span> IActivatable;
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">bool</span> supportsTransparentPersistence = <span style="color:Blue;">typeof</span> (Pilot) <span style="color:Blue;">is</span> IActivatable;
 <span style="color:Blue;">if</span>(supportsTransparentPersistence)
 {
     Console.Out.WriteLine(<span style="color:#A31515;">&quot;The Pilot-class supports transparent persistence.&quot;</span>
@@ -12,8 +11,7 @@
 {
     Console.Out.WriteLine(<span style="color:#A31515;">&quot;Oups, not transperent persistence support.&quot;</span>
         +<span style="color:#A31515;">&quot; Something went wrong with the enhancement&quot;</span>);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			TransparentActivationExample.cs: Verify that pilot support transparent activation
 			<div class="codedownload">

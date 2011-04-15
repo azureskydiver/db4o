@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-SQLiteDatabase db = database();
+        <pre class="prettyprint" xml:space="preserve">SQLiteDatabase db = database();
 Cursor cursor = db.rawQuery(
 		<span style="color:#A31515;">&quot;SELECT c.model, p.name, p.points, r.id, r.year&quot;</span> + <span style="color:#A31515;">&quot; FROM &quot;</span>
 				+ DB_TABLE_CAR + <span style="color:#A31515;">&quot; c, &quot;</span> + DB_TABLE_PILOT + <span style="color:#A31515;">&quot; p &quot;</span>
@@ -17,9 +16,7 @@ pilot.setPoints(cursor.getInt(2));
 
 Car car = <span style="color:Blue;">new</span> Car();
 car.setModel(cursor.getString(0));
-car.setPilot(pilot);
-
-</pre>
+car.setPilot(pilot);</pre>
 		<div class="codesnippet-meta">
 			SqlExample.java: select a car from SQLite
 			<div class="codedownload">

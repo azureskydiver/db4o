@@ -2,11 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        <pre class="prettyprint" xml:space="preserve">EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 <span style="color:Green;">// Update all referenced objects for the Driver class</span>
-configuration.common().objectClass(Driver.<span style="color:Blue;">class</span>).cascadeOnUpdate(<span style="color:Blue;">true</span>);
-</pre>
+configuration.common().objectClass(Driver.<span style="color:Blue;">class</span>).cascadeOnUpdate(<span style="color:Blue;">true</span>);</pre>
 		<div class="codesnippet-meta">
 			UpdateConcept.java: More update options
 			<div class="codedownload">

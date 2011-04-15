@@ -19,7 +19,7 @@ class SyntaxHighLighter:
 
 	def StripDiv(code as string):
 		length = code.Length-countPrefix-countSuffix
-		return code.Substring(countPrefix,length)
+		return code.Substring(countPrefix,length).Trim()
 
 	def TypeOfFile(fileEnding as string):
 		if ".java" == fileEnding:

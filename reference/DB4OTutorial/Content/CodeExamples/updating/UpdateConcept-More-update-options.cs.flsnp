@@ -2,11 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+        <pre class="prettyprint" xml:space="preserve">IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
 <span style="color:Green;">// Update all referenced objects for the Driver-class</span>
-configuration.Common.ObjectClass(<span style="color:Blue;">typeof</span> (Driver)).CascadeOnUpdate(<span style="color:Blue;">true</span>);
-</pre>
+configuration.Common.ObjectClass(<span style="color:Blue;">typeof</span> (Driver)).CascadeOnUpdate(<span style="color:Blue;">true</span>);</pre>
 		<div class="codesnippet-meta">
 			UpdateConcept.cs: More update options
 			<div class="codedownload">

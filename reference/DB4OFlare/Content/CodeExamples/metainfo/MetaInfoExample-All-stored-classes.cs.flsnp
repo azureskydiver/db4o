@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Green;">// Get the information about all stored classes.</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Green;">// Get the information about all stored classes.</span>
 IStoredClass[] classesInDB = container.Ext().StoredClasses();
 <span style="color:Blue;">foreach</span> (IStoredClass storedClass <span style="color:Blue;">in</span> classesInDB)
 {
@@ -11,8 +10,7 @@ IStoredClass[] classesInDB = container.Ext().StoredClasses();
 }
 
 <span style="color:Green;">// Information for a certain class</span>
-IStoredClass metaInfo = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));
-</pre>
+IStoredClass metaInfo = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.cs: All stored classes
 			<div class="codedownload">

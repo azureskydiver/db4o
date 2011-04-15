@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IStoredClass metaInfoForPerson = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));
+        <pre class="prettyprint" xml:space="preserve">IStoredClass metaInfoForPerson = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));
 <span style="color:Green;">// Access all existing fields</span>
 <span style="color:Blue;">foreach</span> (IStoredField field <span style="color:Blue;">in</span> metaInfoForPerson.GetStoredFields())
 {
@@ -19,8 +18,7 @@ IStoredField ageField = metaInfoForPerson.StoredField(<span style="color:#A31515
 <span style="color:Blue;">bool</span> isAgeFieldIndexed = ageField.HasIndex();
 
 <span style="color:Green;">// Get the type of the field</span>
-String fieldType = ageField.GetStoredType().GetName();
-</pre>
+String fieldType = ageField.GetStoredType().GetName();</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.cs: Accessing stored fields
 			<div class="codedownload">

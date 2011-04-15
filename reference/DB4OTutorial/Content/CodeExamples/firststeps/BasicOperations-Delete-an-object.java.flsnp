@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>);
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>);
 <span style="color:Blue;">try</span> {
     List&lt;Driver&gt; drivers = container.query(<span style="color:Blue;">new</span> Predicate&lt;Driver&gt;() {
         <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Driver d) {
@@ -15,8 +14,7 @@ ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&
     container.delete(driver);
 } <span style="color:Blue;">finally</span> {
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			BasicOperations.java: Delete an object
 			<div class="codedownload">

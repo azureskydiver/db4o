@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = openDatabase();
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = openDatabase();
 
 <span style="color:Green;">// first get the object from the database</span>
 Car carInDb = getCarById(container,disconnectedCar.getObjectId());
@@ -27,8 +26,7 @@ Pilot disconnectedPilot = disconnectedCar.getPilot();
 
 <span style="color:Green;">// finally store the changes</span>
 container.store(pilotInDB);
-container.store(carInDb);
-</pre>
+container.store(carInDb);</pre>
 		<div class="codesnippet-meta">
 			MergeExample.java: merging
 			<div class="codedownload">

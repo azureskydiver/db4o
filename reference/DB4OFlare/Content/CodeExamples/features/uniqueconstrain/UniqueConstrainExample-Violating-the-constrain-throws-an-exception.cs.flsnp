@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-container.Store(<span style="color:Blue;">new</span> UniqueId(42));
+        <pre class="prettyprint" xml:space="preserve">container.Store(<span style="color:Blue;">new</span> UniqueId(42));
 container.Store(<span style="color:Blue;">new</span> UniqueId(42));
 <span style="color:Blue;">try</span>
 {
@@ -12,8 +11,7 @@ container.Store(<span style="color:Blue;">new</span> UniqueId(42));
 <span style="color:Blue;">catch</span> (UniqueFieldValueConstraintViolationException e)
 {
     Console.Out.WriteLine(e.StackTrace);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			UniqueConstrainExample.cs: Violating the constrain throws an exception
 			<div class="codedownload">

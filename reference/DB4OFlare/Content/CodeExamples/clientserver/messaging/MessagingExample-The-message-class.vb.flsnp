@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> HelloMessage
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> HelloMessage
     <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> message <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
 
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> <span style="color:Blue;">New</span>(<span style="color:Blue;">ByVal</span> message <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>)
@@ -13,9 +12,7 @@
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Overrides</span> <span style="color:Blue;">Function</span> ToString() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
         <span style="color:Blue;">Return</span> message
     <span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			MessagingExample.vb: The message class
 			<div class="codedownload">

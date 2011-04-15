@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
+        <pre class="prettyprint" xml:space="preserve">IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
 
 <span style="color:Blue;">foreach</span> (<span style="color:Blue;">object</span> changedObjectOnDesktop <span style="color:Blue;">in</span> changesOnDesktop)
 {
@@ -16,8 +15,7 @@ IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSince
     }
 }
 
-replicationSession.Commit();
-</pre>
+replicationSession.Commit();</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.cs: Selective replication with a condition
 			<div class="codedownload">

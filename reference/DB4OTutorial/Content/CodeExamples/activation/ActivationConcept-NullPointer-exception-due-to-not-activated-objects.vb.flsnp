@@ -2,9 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Dim</span> nameOfMother <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = julia.Mother.Name
-</pre>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> nameOfMother <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = julia.Mother.Name</pre>
 		<div class="codesnippet-meta">
 			ActivationConcept.vb: NullPointer exception due to not activated objects
 			<div class="codedownload">

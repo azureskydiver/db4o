@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-[TransparentPersisted]
+        <pre class="prettyprint" xml:space="preserve">[TransparentPersisted]
 <span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Driver
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">string</span> name;
@@ -42,8 +41,7 @@
     {
         ownedCars.Add(car);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Driver.cs: Domain model for drivers
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Driver
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Driver
     <span style="color:Blue;">Private</span> m_name <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
     <span style="color:Blue;">Private</span> m_age <span style="color:Blue;">As</span> <span style="color:Blue;">Integer</span>
     <span style="color:Blue;">Private</span> m_mostLovedCar <span style="color:Blue;">As</span> Car
@@ -42,8 +41,7 @@
             m_mostLovedCar = value
         <span style="color:Blue;">End</span> <span style="color:Blue;">Set</span>
     <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			Driver.vb: Domain model for drivers
 			<div class="codedownload">

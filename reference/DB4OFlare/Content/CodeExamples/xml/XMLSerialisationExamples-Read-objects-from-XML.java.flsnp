@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;database.db4o&quot;</span>);
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;database.db4o&quot;</span>);
 <span style="color:Blue;">try</span> {
     XStream xstream = <span style="color:Blue;">new</span> XStream();
     InputStream stream = <span style="color:Blue;">new</span> FileInputStream(<span style="color:#A31515;">&quot;pilots.xml&quot;</span>);
@@ -17,8 +16,7 @@ ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&
     }
 } <span style="color:Blue;">finally</span> {
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			XMLSerialisationExamples.java: Read objects from XML
 			<div class="codedownload">

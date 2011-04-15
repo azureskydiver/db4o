@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-@RequestMapping(value = <span style="color:#A31515;">&quot;/edit{id}.html&quot;</span>, method = RequestMethod.POST)
+        <pre class="prettyprint" xml:space="preserve">@RequestMapping(value = <span style="color:#A31515;">&quot;/edit{id}.html&quot;</span>, method = RequestMethod.POST)
 <span style="color:Blue;">public</span> ModelAndView editPilot(@PathVariable <span style="color:Blue;">final</span> String id, Pilot pilotFromForm) {
     Pilot pilotFromDatabase = db4o.objectContainer().query(<span style="color:Blue;">new</span> Predicate&lt;Pilot&gt;() {
         @Override
@@ -15,8 +14,7 @@
     pilotFromDatabase.setPoints(pilotFromForm.getPoints());
     db4o.objectContainer().store(pilotFromDatabase);
     <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> ModelAndView(<span style="color:Blue;">new</span> RedirectView(<span style="color:#A31515;">&quot;list.html&quot;</span>));
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			HomeController.java: Update the object
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">int</span> GetNextID(Type forClass)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">int</span> GetNextID(Type forClass)
 {
     <span style="color:Blue;">lock</span> (dataLock)
     {
@@ -21,9 +20,7 @@
             container.Ext().Store(state,2);
         }
     }
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			AutoIncrement.cs: getting the next id and storing state
 			<div class="codedownload">

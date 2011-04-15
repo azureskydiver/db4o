@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IObjectServer serverDatabase = OpenDatabaseServer(DesktopDatabaseName);
+        <pre class="prettyprint" xml:space="preserve">IObjectServer serverDatabase = OpenDatabaseServer(DesktopDatabaseName);
 IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
 {
@@ -66,8 +65,7 @@ PrintPilots(mobileDatabase);
 }
 
 <span style="color:Green;">// Pilot 2 is still not replicated</span>
-PrintPilots(mobileDatabase);
-</pre>
+PrintPilots(mobileDatabase);</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.cs: Lost replication
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
+        <pre class="prettyprint" xml:space="preserve">ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
 
 <span style="color:Blue;">for</span> (Object changedObjectOnDesktop : changesOnDesktop) {
     <span style="color:Blue;">if</span> (changedObjectOnDesktop <span style="color:Blue;">instanceof</span> Car) {
@@ -13,8 +12,7 @@ ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceL
     }            
 }
 
-replicationSession.commit();
-</pre>
+replicationSession.commit();</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.java: Selective replication with a condition
 			<div class="codedownload">

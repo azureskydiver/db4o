@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = Db4oEmbedded.openFile( <span style="color:#A31515;">&quot;database.db4o&quot;</span>);
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = Db4oEmbedded.openFile( <span style="color:#A31515;">&quot;database.db4o&quot;</span>);
 <span style="color:Blue;">try</span>{
     <span style="color:Green;">// first get all objects which should be updated</span>
     ObjectSet&lt;Person&gt; persons = container.query(Person.<span style="color:Blue;">class</span>);
@@ -23,8 +22,7 @@ ObjectContainer container = Db4oEmbedded.openFile( <span style="color:#A31515;">
     }
 } <span style="color:Blue;">finally</span> {
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			RefactoringExamples.java: copying the data from the old field type to the new one
 			<div class="codedownload">

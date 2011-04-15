@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Car {
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Car {
     @Indexed
     <span style="color:Blue;">private</span> String carName;
     <span style="color:Blue;">private</span> <span style="color:Blue;">int</span> horsePower;
@@ -21,8 +20,7 @@
         <span style="color:Blue;">return</span> horsePower;
     }
 
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Car.java: Indexing the car name
 			<div class="codedownload">

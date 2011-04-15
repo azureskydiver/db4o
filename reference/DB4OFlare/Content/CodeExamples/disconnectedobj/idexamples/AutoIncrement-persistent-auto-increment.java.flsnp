@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">class</span> PersistedAutoIncrements {
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">class</span> PersistedAutoIncrements {
  <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> Map&lt;Class, Integer&gt; currentHighestIds = <span style="color:Blue;">new</span> HashMap&lt;Class, Integer&gt;();
 
     <span style="color:Blue;">public</span> <span style="color:Blue;">int</span> nextNumber(Class forClass) {
@@ -15,8 +14,7 @@
         currentHighestIds.put(forClass,number);
         <span style="color:Blue;">return</span> number;
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			AutoIncrement.java: persistent auto increment
 			<div class="codedownload">

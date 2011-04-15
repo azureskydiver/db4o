@@ -2,9 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-String nameOfMother = julia.getMother().getName();
-</pre>
+        <pre class="prettyprint" xml:space="preserve">String nameOfMother = julia.getMother().getName();</pre>
 		<div class="codesnippet-meta">
 			ActivationConcept.java: NullPointer exception due to not activated objects
 			<div class="codedownload">

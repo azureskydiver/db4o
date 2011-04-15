@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">void</span> RegisterSessionCreation(HttpApplication httpApplication)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">void</span> RegisterSessionCreation(HttpApplication httpApplication)
 {
     httpApplication.BeginRequest += OpenSession;
     httpApplication.EndRequest += CloseSession;
@@ -21,8 +20,7 @@
 {
     IObjectContainer session = (IObjectContainer)HttpContext.Current.Items[SessionKey];
     session.Dispose();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Db4oProvider.cs: A object container per request
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">class</span> PersistedAutoIncrements
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">class</span> PersistedAutoIncrements
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> IDictionary&lt;Type, <span style="color:Blue;">int</span>&gt; currentHighestIds = <span style="color:Blue;">new</span> Dictionary&lt;Type, <span style="color:Blue;">int</span>&gt;();
 
@@ -18,9 +17,7 @@
         currentHighestIds[forClass] = number;
         <span style="color:Blue;">return</span> number;
     }
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			AutoIncrement.cs: persistent auto increment
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-[DataServiceKey(<span style="color:#A31515;">&quot;TeamName&quot;</span>)]
+        <pre class="prettyprint" xml:space="preserve">[DataServiceKey(<span style="color:#A31515;">&quot;TeamName&quot;</span>)]
 <span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Team
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">string</span> teamName;
@@ -36,8 +35,7 @@
         <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> members; }
         <span style="color:Blue;">set</span> { members = value; }
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Team.cs: The Team has also a key
 			<div class="codedownload">

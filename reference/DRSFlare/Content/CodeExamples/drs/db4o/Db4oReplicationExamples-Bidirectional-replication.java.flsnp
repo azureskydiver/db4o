@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Green;">// First get the changes of the two replication-partners</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Green;">// First get the changes of the two replication-partners</span>
 ObjectSet changesOnDesktop = replicationSession.providerA().objectsChangedSinceLastReplication();
 ObjectSet changesOnMobile = replicationSession.providerB().objectsChangedSinceLastReplication();
 
@@ -16,8 +15,7 @@ ObjectSet changesOnMobile = replicationSession.providerB().objectsChangedSinceLa
     replicationSession.replicate(changedObjectOnMobile);
 }
 
-replicationSession.commit();
-</pre>
+replicationSession.commit();</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.java: Bidirectional replication
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Green;">// First get the changes of the two replication-partners</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Green;">// First get the changes of the two replication-partners</span>
 IObjectSet changesOnDesktop = replicationSession.ProviderA().ObjectsChangedSinceLastReplication();
 IObjectSet changesOnMobile = replicationSession.ProviderB().ObjectsChangedSinceLastReplication();
 
@@ -18,8 +17,7 @@ IObjectSet changesOnMobile = replicationSession.ProviderB().ObjectsChangedSinceL
     replicationSession.Replicate(changedObjectOnMobile);
 }
 
-replicationSession.Commit();
-</pre>
+replicationSession.Commit();</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.cs: Bidirectional replication
 			<div class="codedownload">

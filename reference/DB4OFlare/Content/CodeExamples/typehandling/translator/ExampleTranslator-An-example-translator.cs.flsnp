@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">internal</span> <span style="color:Blue;">class</span> ExampleTranslator : IObjectConstructor
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">internal</span> <span style="color:Blue;">class</span> ExampleTranslator : IObjectConstructor
 {
     <span style="color:Green;">// This is called to store the object</span>
     <span style="color:Blue;">public</span> Object OnStore(IObjectContainer objectContainer, Object objToStore)
@@ -30,9 +29,7 @@
     {
         <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> NonStorableType(<span style="color:#A31515;">&quot;&quot;</span>);
     }
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ExampleTranslator.cs: An example translator
 			<div class="codedownload">

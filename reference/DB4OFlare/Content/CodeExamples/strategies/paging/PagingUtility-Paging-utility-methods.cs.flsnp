@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">static</span> IList&lt;T&gt; Paging&lt;T&gt;(IList&lt;T&gt; listToPage, <span style="color:Blue;">int</span> limit)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">static</span> IList&lt;T&gt; Paging&lt;T&gt;(IList&lt;T&gt; listToPage, <span style="color:Blue;">int</span> limit)
 {
     <span style="color:Blue;">return</span> Paging(listToPage, 0, limit);
 }
@@ -32,9 +31,7 @@
         <span style="color:Blue;">return</span> resultList.Count;
     }
     <span style="color:Blue;">return</span> end;
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			PagingUtility.cs: Paging utility methods
 			<div class="codedownload">

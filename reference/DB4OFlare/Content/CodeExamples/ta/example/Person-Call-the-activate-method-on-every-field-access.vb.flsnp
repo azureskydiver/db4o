@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Public</span> <span style="color:Blue;">Property</span> Name() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Public</span> <span style="color:Blue;">Property</span> Name() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
     <span style="color:Blue;">Get</span>
         Activate(ActivationPurpose.Read)
         <span style="color:Blue;">Return</span> m_name
@@ -19,9 +18,7 @@
     <span style="color:Green;">' use the getter/setter withing the class,</span>
     <span style="color:Green;">' to ensure the activate-method is called</span>
     <span style="color:Blue;">Return</span> Name
-<span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
-
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Function</span></pre>
 		<div class="codesnippet-meta">
 			Person.vb: Call the activate method on every field access
 			<div class="codedownload">

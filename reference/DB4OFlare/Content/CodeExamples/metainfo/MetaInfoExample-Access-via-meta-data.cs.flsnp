@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IStoredClass metaForPerson = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));
+        <pre class="prettyprint" xml:space="preserve">IStoredClass metaForPerson = container.Ext().StoredClass(<span style="color:Blue;">typeof</span> (Person));
 IStoredField metaNameField = metaForPerson.StoredField(<span style="color:#A31515;">&quot;name&quot;</span>, <span style="color:Blue;">null</span>);
 
 IList&lt;Person&gt; persons = container.Query&lt;Person&gt;();
@@ -11,8 +10,7 @@ IList&lt;Person&gt; persons = container.Query&lt;Person&gt;();
 {
     <span style="color:Blue;">string</span> name = (<span style="color:Blue;">string</span>) metaNameField.Get(person);
     Console.WriteLine(<span style="color:#A31515;">&quot;Name is &quot;</span> + name);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.cs: Access via meta data
 			<div class="codedownload">

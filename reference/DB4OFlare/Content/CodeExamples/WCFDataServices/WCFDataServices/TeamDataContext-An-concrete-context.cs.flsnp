@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> TeamDataContext : Db4oDataContext
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">class</span> TeamDataContext : Db4oDataContext
 {
     <span style="color:Green;">// Provide access to your data via properties</span>
     <span style="color:Blue;">public</span> IQueryable&lt;Person&gt; Persons
@@ -27,8 +26,7 @@
         <span style="color:Blue;">return</span> Db4oEmbedded.NewSession();
     }
 
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			TeamDataContext.cs: An concrete context
 			<div class="codedownload">

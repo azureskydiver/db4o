@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-[DataServiceKey(<span style="color:#A31515;">&quot;Email&quot;</span>)]
+        <pre class="prettyprint" xml:space="preserve">[DataServiceKey(<span style="color:#A31515;">&quot;Email&quot;</span>)]
 <span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Person
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">string</span> name;
@@ -32,8 +31,7 @@
         <span style="color:Blue;">set</span> { email = value; }
     }
 
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Person.cs: Add at least one key
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-@TransparentPersisted
+        <pre class="prettyprint" xml:space="preserve">@TransparentPersisted
 <span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Car {
     <span style="color:Blue;">private</span> String carName;
 
@@ -14,8 +13,7 @@
     <span style="color:Blue;">public</span> String getCarName() {
         <span style="color:Blue;">return</span> carName;
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Car.java: Domain model for cars
 			<div class="codedownload">

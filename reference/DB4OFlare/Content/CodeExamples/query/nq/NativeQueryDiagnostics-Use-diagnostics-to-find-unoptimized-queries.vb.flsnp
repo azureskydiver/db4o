@@ -2,9 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-configuration.Common.Diagnostic.AddListener(<span style="color:Blue;">New</span> NativeQueryListener())
-</pre>
+        <pre class="prettyprint" xml:space="preserve">configuration.Common.Diagnostic.AddListener(<span style="color:Blue;">New</span> NativeQueryListener())</pre>
 		<div class="codesnippet-meta">
 			NativeQueryDiagnostics.vb: Use diagnostics to find unoptimized queries
 			<div class="codedownload">

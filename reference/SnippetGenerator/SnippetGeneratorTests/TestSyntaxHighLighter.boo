@@ -33,6 +33,7 @@ class TestSyntaxHighLighter:
 		print result
 		assert result.Contains("Pilot pilot = <span style")
 		assert not result.Contains("<div")
+		assert result.StartsWith("Pi")
 
 	[Test]
 	def VB():
@@ -40,6 +41,7 @@ class TestSyntaxHighLighter:
 		print result
 		assert result.Contains("Dim</span> pilot")
 		assert not result.Contains("<div")
+		assert result.StartsWith("<span")
 		
 	[Test]
 	def Xml():

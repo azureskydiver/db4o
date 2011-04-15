@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">&lt;</span><span style="color:#A31515;">target</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">enhance</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">&lt;</span><span style="color:#A31515;">target</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">enhance</span><span style="color:Black;">&quot;</span><span style="color:Blue;">&gt;</span>
     <span style="color:Green;">&lt;!-- Change these according to your project --&gt;</span>
     <span style="color:Blue;">&lt;</span><span style="color:#A31515;">property</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">target</span><span style="color:Black;">&quot;</span> <span style="color:Red;">value</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">./target/classes/</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
     <span style="color:Blue;">&lt;</span><span style="color:#A31515;">property</span> <span style="color:Red;">name</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">libraries</span><span style="color:Black;">&quot;</span> <span style="color:Red;">value</span><span style="color:Blue;">=</span><span style="color:Black;">&quot;</span><span style="color:Blue;">./lib/</span><span style="color:Black;">&quot;</span><span style="color:Blue;">/&gt;</span>
@@ -36,8 +35,7 @@
             <span style="color:Blue;">&lt;</span><span style="color:#A31515;">annotation-filter</span><span style="color:Blue;">/&gt;</span>
         <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">transparent-activation-step</span><span style="color:Blue;">&gt;</span>
     <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">db4o-instrument</span><span style="color:Blue;">&gt;</span>
-<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">target</span><span style="color:Blue;">&gt;</span>
-</pre>
+<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">target</span><span style="color:Blue;">&gt;</span></pre>
 		<div class="codesnippet-meta">
 			enhance.xml: Ant target for enhancing your classes after building them
 			<div class="codedownload">

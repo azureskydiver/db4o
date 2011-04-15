@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Driver {
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Driver {
     <span style="color:Blue;">private</span> String name;
     <span style="color:Blue;">private</span> <span style="color:Blue;">final</span> List&lt;Car&gt; ownedCars = <span style="color:Blue;">new</span> ArrayList&lt;Car&gt;();
     <span style="color:Blue;">private</span> Car mostLovedCar;
@@ -36,8 +35,7 @@
     <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> addOwnedCar(Car car) {
         <span style="color:Blue;">return</span> ownedCars.add(car);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Driver.java: Domain model for drivers
 			<div class="codedownload">

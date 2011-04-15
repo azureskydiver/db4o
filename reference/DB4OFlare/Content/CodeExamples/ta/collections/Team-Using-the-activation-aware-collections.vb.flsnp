@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Team
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> Team
     <span style="color:Blue;">Inherits</span> ActivatableBase
     <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> m_pilots <span style="color:Blue;">As</span> IList(Of Pilot) = <span style="color:Blue;">New</span> ActivatableList(Of Pilot)()
 
@@ -18,8 +17,7 @@
             <span style="color:Blue;">Return</span> m_pilots
         <span style="color:Blue;">End</span> <span style="color:Blue;">Get</span>
     <span style="color:Blue;">End</span> <span style="color:Blue;">Property</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			Team.vb: Using the activation aware collections
 			<div class="codedownload">

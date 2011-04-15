@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">using</span> (IObjectContainer container = OpenDatabase())
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">using</span> (IObjectContainer container = OpenDatabase())
 {
     Pilot joe = QueryByName(container, <span style="color:#A31515;">&quot;Joe&quot;</span>);
     joe.Name = <span style="color:#A31515;">&quot;Joe New&quot;</span>;
@@ -17,8 +16,7 @@
     {
         Console.WriteLine(pilot);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ObjectIdentityExamples.cs: Update works when using the same object container
 			<div class="codedownload">

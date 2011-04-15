@@ -2,11 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = rootContainer.Ext().OpenSession()
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = rootContainer.Ext().OpenSession()
     <span style="color:Green;">' We now can use this session container like any other container</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span></pre>
 		<div class="codesnippet-meta">
 			ClientServer.vb: Creating a session container
 			<div class="codedownload">

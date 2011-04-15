@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">using</span> (IObjectContainer container = OpenDatabaseTA())
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">using</span> (IObjectContainer container = OpenDatabaseTA())
 {
     Person person = Person.PersonWithHistory();
     container.Store(person);
@@ -26,8 +25,7 @@
     <span style="color:Green;">// Just change the objects and the call commit.</span>
     beginOfDynasty.Name = <span style="color:#A31515;">&quot;New Name&quot;</span>;
     container.Commit();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			TransparentActivationExamples.cs: Transparent activation in action
 			<div class="codedownload">

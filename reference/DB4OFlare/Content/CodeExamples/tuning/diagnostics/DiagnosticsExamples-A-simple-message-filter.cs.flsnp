@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">class</span> DiagnosticFilter : IDiagnosticListener
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">class</span> DiagnosticFilter : IDiagnosticListener
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> ICollection&lt;Type&gt; filterFor;
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> IDiagnosticListener target;
@@ -22,8 +21,7 @@
             target.OnDiagnostic(diagnostic);
         }
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			DiagnosticsExamples.cs: A simple message filter
 			<div class="codedownload">

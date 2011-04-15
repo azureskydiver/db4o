@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectServer serverDatabase = openDatabaseServer(DESKTOP_DATABASE_NAME);
+        <pre class="prettyprint" xml:space="preserve">ObjectServer serverDatabase = openDatabaseServer(DESKTOP_DATABASE_NAME);
 ObjectContainer mobileDatabase = openDatabase(MOBILE_DATABASE_NAME);
 
 {
@@ -60,8 +59,7 @@ printPilots(mobileDatabase);
 }
 
 <span style="color:Green;">// Pilot 2 is still not replicated</span>
-printPilots(mobileDatabase);
-</pre>
+printPilots(mobileDatabase);</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.java: Lost replication
 			<div class="codedownload">

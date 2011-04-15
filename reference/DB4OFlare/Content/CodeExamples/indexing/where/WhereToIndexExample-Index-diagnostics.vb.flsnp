@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Friend</span> <span style="color:Blue;">Class</span> IndexDiagnostics
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Friend</span> <span style="color:Blue;">Class</span> IndexDiagnostics
     <span style="color:Blue;">Implements</span> IDiagnosticListener
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> OnDiagnostic(<span style="color:Blue;">ByVal</span> diagnostic <span style="color:Blue;">As</span> IDiagnostic) _
         <span style="color:Blue;">Implements</span> IDiagnosticListener.OnDiagnostic
@@ -12,8 +11,7 @@
             Console.WriteLine(diagnostic)
         <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
     <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			WhereToIndexExample.vb: Index diagnostics
 			<div class="codedownload">

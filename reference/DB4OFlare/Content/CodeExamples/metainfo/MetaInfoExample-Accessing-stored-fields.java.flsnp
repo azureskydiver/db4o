@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-StoredClass metaInfoForPerson = container.ext().storedClass(Person.<span style="color:Blue;">class</span>);
+        <pre class="prettyprint" xml:space="preserve">StoredClass metaInfoForPerson = container.ext().storedClass(Person.<span style="color:Blue;">class</span>);
 <span style="color:Green;">// Access all existing fields</span>
 <span style="color:Blue;">for</span> (StoredField field : metaInfoForPerson.getStoredFields()) {
     System.out.println(<span style="color:#A31515;">&quot;Field: &quot;</span>+field.getName());
@@ -18,8 +17,7 @@ StoredField ageField = metaInfoForPerson.storedField(<span style="color:#A31515;
 <span style="color:Blue;">boolean</span> isAgeFieldIndexed = ageField.hasIndex();
 
 <span style="color:Green;">// Get the type of the field</span>
-String fieldType = ageField.getStoredType().getName();
-</pre>
+String fieldType = ageField.getStoredType().getName();</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.java: Accessing stored fields
 			<div class="codedownload">

@@ -2,11 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Dim</span> configuration <span style="color:Blue;">As</span> IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> configuration <span style="color:Blue;">As</span> IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 <span style="color:Green;">' change the configuration...</span>
-<span style="color:Blue;">Dim</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oEmbedded.OpenFile(configuration, <span style="color:#A31515;">&quot;database.db4o&quot;</span>)
-</pre>
+<span style="color:Blue;">Dim</span> container <span style="color:Blue;">As</span> IObjectContainer = Db4oEmbedded.OpenFile(configuration, <span style="color:#A31515;">&quot;database.db4o&quot;</span>)</pre>
 		<div class="codesnippet-meta">
 			ConfigurationBasics.vb: Configure embedded object container
 			<div class="codedownload">

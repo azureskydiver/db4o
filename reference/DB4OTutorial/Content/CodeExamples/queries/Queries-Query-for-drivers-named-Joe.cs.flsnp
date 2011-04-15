@@ -2,11 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">var</span> drivers = <span style="color:Blue;">from</span> Driver d <span style="color:Blue;">in</span> container
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">var</span> drivers = <span style="color:Blue;">from</span> Driver d <span style="color:Blue;">in</span> container
               <span style="color:Blue;">where</span> d.Name == <span style="color:#A31515;">&quot;Joe&quot;</span>
-              <span style="color:Blue;">select</span> d;
-</pre>
+              <span style="color:Blue;">select</span> d;</pre>
 		<div class="codesnippet-meta">
 			Queries.cs: Query for drivers named Joe
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>);
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&quot;databaseFile.db4o&quot;</span>);
 <span style="color:Blue;">try</span> {
     <span style="color:Green;">// store a new pilot</span>
     Pilot pilot = <span style="color:Blue;">new</span> Pilot(<span style="color:#A31515;">&quot;Joe&quot;</span>);
@@ -26,8 +25,7 @@ ObjectContainer container = Db4oEmbedded.openFile(<span style="color:#A31515;">&
     container.delete(toUpdate);
 } <span style="color:Blue;">finally</span> {
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Db4oBasics.java: The basic operations
 			<div class="codedownload">
