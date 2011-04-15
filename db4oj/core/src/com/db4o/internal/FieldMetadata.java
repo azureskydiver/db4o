@@ -436,7 +436,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         try {
             removeIndexEntry(context);
-            if(isUpdate && ! _fieldType.isStruct()){
+            if(isUpdate && ! isStruct()){
             	incrementOffset(context);
             	return;
             }
@@ -1070,7 +1070,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return AspectType.FIELD;
     }
 
-    // overriden in VirtualFieldMetadata
 	public boolean canBeDisabled() {
 		return true;
 	}
@@ -1083,10 +1082,14 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		if(hasIndex()){
 			return false;
 		}
-		if(_fieldType.isStruct()){
+		if(isStruct()){
 			return false;
 		}
 		return true;
+	}
+
+	private boolean isStruct() {
+		return _fieldType != null && _fieldType.isStruct();
 	}
 
 }
