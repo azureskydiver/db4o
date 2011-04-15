@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">sealed</span> <span style="color:Blue;">class</span> Color
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">sealed</span> <span style="color:Blue;">class</span> Color
 {
     <span style="color:Blue;">public</span> <span style="color:Blue;">static</span> <span style="color:Blue;">readonly</span> Color Black = <span style="color:Blue;">new</span> Color(0, 0, 0);
     <span style="color:Blue;">public</span> <span style="color:Blue;">static</span> <span style="color:Blue;">readonly</span> Color White = <span style="color:Blue;">new</span> Color(255, 255, 255);
@@ -67,8 +66,7 @@
     {
         <span style="color:Blue;">return</span> <span style="color:Blue;">string</span>.Format(<span style="color:#A31515;">&quot;Red: {0}, Green: {1}, Blue: {2}&quot;</span>, red, green, blue);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Color.cs: Class as enumeration
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Person
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">class</span> Person
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> <span style="color:Blue;">string</span> name;
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> Person mother;
@@ -28,9 +27,7 @@
     {
         <span style="color:Blue;">return</span> <span style="color:Blue;">string</span>.Format(<span style="color:#A31515;">&quot;Name: {0}&quot;</span>, name);
     }
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Person.cs: Domain model for people
 			<div class="codedownload">

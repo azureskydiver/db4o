@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-{
+        <pre class="prettyprint" xml:space="preserve">{
     ObjectContainer container = openDatabase();
     Pilot joe = queryByName(container,<span style="color:#A31515;">&quot;Joe&quot;</span>);
     container.close();
@@ -24,8 +23,7 @@
         System.out.println(pilot);
     }
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ObjectIdentityExamples.java: Update doesn't works when using the different object containers
 			<div class="codedownload">

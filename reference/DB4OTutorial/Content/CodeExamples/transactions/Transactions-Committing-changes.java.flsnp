@@ -2,9 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-container.commit();
-</pre>
+        <pre class="prettyprint" xml:space="preserve">container.commit();</pre>
 		<div class="codesnippet-meta">
 			Transactions.java: Committing changes
 			<div class="codedownload">

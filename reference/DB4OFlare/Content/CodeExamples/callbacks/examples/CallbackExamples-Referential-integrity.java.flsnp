@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">final</span> EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">final</span> EventRegistry events = EventRegistryFactory.forObjectContainer(container);
 events.deleting().addListener(<span style="color:Blue;">new</span> EventListener4&lt;CancellableObjectEventArgs&gt;() {
     @Override
     <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onEvent(Event4&lt;CancellableObjectEventArgs&gt; events,
@@ -22,8 +21,7 @@ events.deleting().addListener(<span style="color:Blue;">new</span> EventListener
             }
         }
     }
-});
-</pre>
+});</pre>
 		<div class="codesnippet-meta">
 			CallbackExamples.java: Referential integrity
 			<div class="codedownload">

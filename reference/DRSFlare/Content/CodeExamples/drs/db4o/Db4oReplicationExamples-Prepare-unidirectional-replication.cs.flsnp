@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
+        <pre class="prettyprint" xml:space="preserve">IObjectContainer desktopDatabase = OpenDatabase(DesktopDatabaseName);
 IObjectContainer mobileDatabase = OpenDatabase(MobileDatabaseName);
 
 IReplicationProvider dektopReplicationProvider
@@ -14,8 +13,7 @@ IReplicationProvider mobileReplicationProvider
 IReplicationSession replicationSession 
     = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider);
 <span style="color:Green;">// set the replication-direction from the desktop database to the mobile database. </span>
-replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB());
-</pre>
+replicationSession.SetDirection(replicationSession.ProviderA(), replicationSession.ProviderB());</pre>
 		<div class="codesnippet-meta">
 			Db4oReplicationExamples.cs: Prepare unidirectional replication
 			<div class="codedownload">

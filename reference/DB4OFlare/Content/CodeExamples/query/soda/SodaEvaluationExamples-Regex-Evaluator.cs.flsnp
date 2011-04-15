@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">class</span> RegexConstrain : IEvaluation
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">class</span> RegexConstrain : IEvaluation
 {
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> Regex pattern;
 
@@ -17,8 +16,7 @@
         <span style="color:Blue;">string</span> stringValue = (<span style="color:Blue;">string</span>)candidate.GetObject();
         candidate.Include(pattern.IsMatch(stringValue));
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			SodaEvaluationExamples.cs: Regex Evaluator
 			<div class="codedownload">

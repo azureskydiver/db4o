@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = rootContainer.ext().openSession();
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = rootContainer.ext().openSession();
 <span style="color:Blue;">try</span>{
     <span style="color:Green;">// We now can use this session container like any other container</span>
 } <span style="color:Blue;">finally</span> {
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ClientServer.java: Creating a session container
 			<div class="codedownload">

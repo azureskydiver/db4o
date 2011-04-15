@@ -2,16 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">var</span> persons = <span style="color:Blue;">from</span> Person p <span style="color:Blue;">in</span> container
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">var</span> persons = <span style="color:Blue;">from</span> Person p <span style="color:Blue;">in</span> container
               <span style="color:Blue;">where</span> p.FirstName.Contains(<span style="color:#A31515;">&quot;Roman&quot;</span>)
               <span style="color:Blue;">select</span> p;
 
 <span style="color:Blue;">foreach</span> (Person person <span style="color:Blue;">in</span> persons)
 {
     <span style="color:Green;">// do something with the person</span>
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			QueriesInSilverlight.cs: Queries in Silverlight
 			<div class="codedownload">

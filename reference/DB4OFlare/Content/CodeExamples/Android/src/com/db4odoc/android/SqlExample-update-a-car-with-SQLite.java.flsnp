@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-SQLiteDatabase db = database();
+        <pre class="prettyprint" xml:space="preserve">SQLiteDatabase db = database();
 db.execSQL(<span style="color:#A31515;">&quot;INSERT INTO REG_RECORDS (id,year) VALUES ('A1', DATETIME('NOW'))&quot;</span>);
 
 ContentValues updateValues = <span style="color:Blue;">new</span> ContentValues();
@@ -34,8 +33,7 @@ updateValues.put(<span style="color:#A31515;">&quot;reg_record&quot;</span>, <sp
 	car.setModel(c.getString(0));
 	car.setRegistration(record);
 	logToConsole(startTime, <span style="color:#A31515;">&quot;Updated Car (&quot;</span> + car + <span style="color:#A31515;">&quot;): &quot;</span>, <span style="color:Blue;">true</span>);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			SqlExample.java: update a car with SQLite
 			<div class="codedownload">

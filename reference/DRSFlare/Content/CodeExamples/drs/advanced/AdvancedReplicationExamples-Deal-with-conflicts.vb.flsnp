@@ -2,12 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Dim</span> replicationListener <span style="color:Blue;">As</span> IReplicationEventListener = <span style="color:Blue;">New</span> SimpleConflictResolvingListener()
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> replicationListener <span style="color:Blue;">As</span> IReplicationEventListener = <span style="color:Blue;">New</span> SimpleConflictResolvingListener()
 
 <span style="color:Blue;">Dim</span> replicationSession <span style="color:Blue;">As</span> IReplicationSession _
-    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, replicationListener)
-</pre>
+    = Replication.Begin(dektopReplicationProvider, mobileReplicationProvider, replicationListener)</pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.vb: Deal with conflicts
 			<div class="codedownload">

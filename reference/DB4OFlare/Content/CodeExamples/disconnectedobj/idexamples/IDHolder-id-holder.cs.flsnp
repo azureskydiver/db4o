@@ -2,16 +2,13 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">int</span> id;
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">int</span> id;
 
 <span style="color:Blue;">public</span> <span style="color:Blue;">int</span> Id
 {
     <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> id; }
     <span style="color:Blue;">set</span> { id = value; }
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			IDHolder.cs: id holder
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Bind(IActivator activator)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Bind(IActivator activator)
 {
     <span style="color:Blue;">if</span> (<span style="color:Blue;">this</span>.activator == activator)
     {
@@ -22,9 +21,7 @@
     {
         activator.Activate(activationPurpose);
     }
-}
-
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Person.cs: Implement the activatable interface methods
 			<div class="codedownload">

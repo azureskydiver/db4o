@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-ObjectContainer container = client.ext().openSession();
+        <pre class="prettyprint" xml:space="preserve">ObjectContainer container = client.ext().openSession();
 <span style="color:Blue;">try</span>{
     <span style="color:Green;">// do work</span>
 }<span style="color:Blue;">finally</span> {
@@ -15,8 +14,7 @@ container = client.ext().openSession();
     <span style="color:Green;">// do work</span>
 }<span style="color:Blue;">finally</span> {
     container.close();
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ReferenceCacheExamples.java: Clean cache for each unit of work
 			<div class="codedownload">

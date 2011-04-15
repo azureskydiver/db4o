@@ -2,14 +2,12 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-List&lt;Driver&gt; drivers = container.query(<span style="color:Blue;">new</span> Predicate&lt;Driver&gt;() {
+        <pre class="prettyprint" xml:space="preserve">List&lt;Driver&gt; drivers = container.query(<span style="color:Blue;">new</span> Predicate&lt;Driver&gt;() {
     @Override
     <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> match(Driver driver) {
         <span style="color:Blue;">return</span> driver.getName().equals(<span style="color:#A31515;">&quot;Joe&quot;</span>);
     }
-});
-</pre>
+});</pre>
 		<div class="codesnippet-meta">
 			Queries.java: Query for drivers named Joe
 			<div class="codedownload">

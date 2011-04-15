@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Delete(IDeleteContext deleteContext)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">void</span> Delete(IDeleteContext deleteContext)
 {
     SkipData(deleteContext);
 }
@@ -12,8 +11,7 @@
 {
     <span style="color:Blue;">int</span> numBytes = deleteContext.ReadInt();
     deleteContext.Seek(deleteContext.Offset() + numBytes);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			StringBuilderHandler.cs: Delete the content
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">&lt;</span><span style="color:#A31515;">plugin</span><span style="color:Blue;">&gt;</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">&lt;</span><span style="color:#A31515;">plugin</span><span style="color:Blue;">&gt;</span>
     <span style="color:Blue;">&lt;</span><span style="color:#A31515;">artifactId</span><span style="color:Blue;">&gt;</span>maven-antrun-plugin<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">artifactId</span><span style="color:Blue;">&gt;</span>
     <span style="color:Blue;">&lt;</span><span style="color:#A31515;">version</span><span style="color:Blue;">&gt;</span>1.6<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">version</span><span style="color:Blue;">&gt;</span>
     <span style="color:Blue;">&lt;</span><span style="color:#A31515;">dependencies</span><span style="color:Blue;">&gt;</span>
@@ -45,8 +44,7 @@
             <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">goals</span><span style="color:Blue;">&gt;</span>
         <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">execution</span><span style="color:Blue;">&gt;</span>
     <span style="color:Blue;">&lt;/</span><span style="color:#A31515;">executions</span><span style="color:Blue;">&gt;</span>
-<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">plugin</span><span style="color:Blue;">&gt;</span>
-</pre>
+<span style="color:Blue;">&lt;/</span><span style="color:#A31515;">plugin</span><span style="color:Blue;">&gt;</span></pre>
 		<div class="codesnippet-meta">
 			pom.xml: Enhance persisted classes during the build
 			<div class="codedownload">

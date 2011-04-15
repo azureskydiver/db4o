@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-Person jodie = QueryForJodie(container);
+        <pre class="prettyprint" xml:space="preserve">Person jodie = QueryForJodie(container);
 
 Person julia = jodie.Mother.Mother.Mother.Mother.Mother;
 
@@ -14,8 +13,7 @@ Console.WriteLine(julia.Name);
 <span style="color:Green;">// This will throw a NullPointerException.</span>
 <span style="color:Green;">// Because julia is not activated</span>
 <span style="color:Green;">// and therefore all fields are not set</span>
-<span style="color:Blue;">string</span> joannaName = julia.Mother.Name;
-</pre>
+<span style="color:Blue;">string</span> joannaName = julia.Mother.Name;</pre>
 		<div class="codesnippet-meta">
 			ActivationDepthPitfall.cs: Run into not activated objects
 			<div class="codedownload">

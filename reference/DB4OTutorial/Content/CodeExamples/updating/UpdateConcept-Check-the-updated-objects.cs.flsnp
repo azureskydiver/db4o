@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-Driver driver = QueryForDriver(container);
+        <pre class="prettyprint" xml:space="preserve">Driver driver = QueryForDriver(container);
 <span style="color:Green;">// Is updated</span>
 Console.WriteLine(driver.Name);
 <span style="color:Green;">// Isn't updated at all</span>
@@ -12,8 +11,7 @@ Console.WriteLine(driver.MostLovedCar.CarName);
 <span style="color:Blue;">foreach</span> (Car car <span style="color:Blue;">in</span> driver.OwnedCars)
 {
     Console.WriteLine(car);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			UpdateConcept.cs: Check the updated objects
 			<div class="codedownload">

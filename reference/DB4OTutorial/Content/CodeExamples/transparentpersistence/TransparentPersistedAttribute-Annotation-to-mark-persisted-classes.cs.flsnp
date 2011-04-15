@@ -2,12 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-[AttributeUsage(AttributeTargets.Class,AllowMultiple = <span style="color:Blue;">false</span>,Inherited = <span style="color:Blue;">true</span>)]
+        <pre class="prettyprint" xml:space="preserve">[AttributeUsage(AttributeTargets.Class,AllowMultiple = <span style="color:Blue;">false</span>,Inherited = <span style="color:Blue;">true</span>)]
 <span style="color:Blue;">public</span> <span style="color:Blue;">class</span> TransparentPersistedAttribute : Attribute
 {
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			TransparentPersistedAttribute.cs: Annotation to mark persisted classes
 			<div class="codedownload">

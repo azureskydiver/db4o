@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-Configuration hibernateConfig
+        <pre class="prettyprint" xml:space="preserve">Configuration hibernateConfig
         = <span style="color:Blue;">new</span> Configuration().configure(<span style="color:#A31515;">&quot;com/db4odoc/drs/rdms/hibernate.cfg.xml&quot;</span>);
 ObjectContainer container = openDB();
 
@@ -21,8 +20,7 @@ ReplicationSession replicationSession = Replication.begin(providerA, providerB);
         .objectsChangedSinceLastReplication();
 <span style="color:Blue;">for</span> (Object changedObject : changesInHibernate) {
     replicationSession.replicate(changedObject);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Db4oRDBMSReplicationExamples.java: Bidirectional replication
 			<div class="codedownload">

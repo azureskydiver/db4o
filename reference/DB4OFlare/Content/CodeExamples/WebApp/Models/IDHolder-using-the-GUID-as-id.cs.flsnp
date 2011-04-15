@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">abstract</span> <span style="color:Blue;">class</span> IDHolder
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">abstract</span> <span style="color:Blue;">class</span> IDHolder
 {
     [Indexed]
     <span style="color:Blue;">private</span> <span style="color:Blue;">readonly</span> Guid id;
@@ -17,8 +16,7 @@
     {
         <span style="color:Blue;">get</span> { <span style="color:Blue;">return</span> id; }
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			IDHolder.cs: using the GUID as id
 			<div class="codedownload">

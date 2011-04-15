@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Public</span> <span style="color:Blue;">NotInheritable</span> <span style="color:Blue;">Class</span> Color
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Public</span> <span style="color:Blue;">NotInheritable</span> <span style="color:Blue;">Class</span> Color
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">ReadOnly</span> Black <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> Color(0, 0, 0)
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">ReadOnly</span> White <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> Color(255, 255, 255)
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">ReadOnly</span> Red <span style="color:Blue;">As</span> <span style="color:Blue;">New</span> Color(255, 0, 0)
@@ -63,8 +62,7 @@
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Overrides</span> <span style="color:Blue;">Function</span> ToString() <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>
         <span style="color:Blue;">Return</span> <span style="color:Blue;">String</span>.Format(<span style="color:#A31515;">&quot;Red: {0}, Green: {1}, Blue: {2}&quot;</span>, m_red, m_green, m_blue)
     <span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			Color.vb: Class as enumeration
 			<div class="codedownload">

@@ -2,11 +2,9 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Dim</span> configuration <span style="color:Blue;">As</span> IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> configuration <span style="color:Blue;">As</span> IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
 configuration.Common.RegisterTypeHandler(
-    <span style="color:Blue;">New</span> SingleClassTypeHandlerPredicate(<span style="color:Blue;">GetType</span>(StringBuilder)), <span style="color:Blue;">New</span> StringBuilderHandler())
-</pre>
+    <span style="color:Blue;">New</span> SingleClassTypeHandlerPredicate(<span style="color:Blue;">GetType</span>(StringBuilder)), <span style="color:Blue;">New</span> StringBuilderHandler())</pre>
 		<div class="codesnippet-meta">
 			TypeHandlerExample.vb: Register type handler
 			<div class="codedownload">

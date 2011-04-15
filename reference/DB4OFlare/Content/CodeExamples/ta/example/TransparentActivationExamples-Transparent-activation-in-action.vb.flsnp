@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = OpenDatabaseTA()
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Using</span> container <span style="color:Blue;">As</span> IObjectContainer = OpenDatabaseTA()
     <span style="color:Blue;">Dim</span> joanna <span style="color:Blue;">As</span> Person = Person.PersonWithHistory()
     container.Store(joanna)
 <span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
@@ -23,8 +22,7 @@
     <span style="color:Green;">' Just change the objects and the call commit.</span>
     beginOfDynasty.Name = <span style="color:#A31515;">&quot;New Name&quot;</span>
     container.Commit()
-<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Using</span></pre>
 		<div class="codesnippet-meta">
 			TransparentActivationExamples.vb: Transparent activation in action
 			<div class="codedownload">

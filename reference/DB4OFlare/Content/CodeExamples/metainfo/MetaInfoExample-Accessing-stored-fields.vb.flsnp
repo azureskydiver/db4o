@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Dim</span> metaInfoForPerson <span style="color:Blue;">As</span> IStoredClass = container.Ext().StoredClass(<span style="color:Blue;">GetType</span>(Person))
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> metaInfoForPerson <span style="color:Blue;">As</span> IStoredClass = container.Ext().StoredClass(<span style="color:Blue;">GetType</span>(Person))
 <span style="color:Green;">' Access all existing fields</span>
 <span style="color:Blue;">For</span> <span style="color:Blue;">Each</span> field <span style="color:Blue;">As</span> IStoredField <span style="color:Blue;">In</span> metaInfoForPerson.GetStoredFields()
     Console.WriteLine(<span style="color:#A31515;">&quot;Field: &quot;</span> &amp; field.GetName())
@@ -18,8 +17,7 @@
 <span style="color:Blue;">Dim</span> isAgeFieldIndexed <span style="color:Blue;">As</span> <span style="color:Blue;">Boolean</span> = ageField.HasIndex()
 
 <span style="color:Green;">' Get the type of the field</span>
-<span style="color:Blue;">Dim</span> fieldType <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = ageField.GetStoredType().GetName()
-</pre>
+<span style="color:Blue;">Dim</span> fieldType <span style="color:Blue;">As</span> <span style="color:Blue;">String</span> = ageField.GetStoredType().GetName()</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.vb: Accessing stored fields
 			<div class="codedownload">

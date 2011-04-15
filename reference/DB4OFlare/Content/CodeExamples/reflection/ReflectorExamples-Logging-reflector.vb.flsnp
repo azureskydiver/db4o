@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Friend</span> <span style="color:Blue;">Class</span> LoggerReflector
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Friend</span> <span style="color:Blue;">Class</span> LoggerReflector
     <span style="color:Blue;">Implements</span> IReflector
     <span style="color:Blue;">Private</span> <span style="color:Blue;">ReadOnly</span> readReflector <span style="color:Blue;">As</span> IReflector
 
@@ -57,8 +56,7 @@
         <span style="color:Blue;">Implements</span> IReflector.DeepClone
         <span style="color:Blue;">Return</span> <span style="color:Blue;">New</span> LoggerReflector(<span style="color:Blue;">DirectCast</span>(readReflector.DeepClone(o), IReflector))
     <span style="color:Blue;">End</span> <span style="color:Blue;">Function</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			ReflectorExamples.vb: Logging reflector
 			<div class="codedownload">

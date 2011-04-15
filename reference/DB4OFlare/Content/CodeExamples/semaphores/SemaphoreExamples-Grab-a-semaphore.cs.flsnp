@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Green;">// Grab the lock. Specify the name and a timeout in milliseconds</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Green;">// Grab the lock. Specify the name and a timeout in milliseconds</span>
 <span style="color:Blue;">bool</span> hasLock = container.Ext().SetSemaphore(<span style="color:#A31515;">&quot;LockName&quot;</span>, 1000);
 <span style="color:Blue;">try</span>
 {
@@ -21,8 +20,7 @@
 {
     <span style="color:Green;">// release the lock</span>
     container.Ext().ReleaseSemaphore(<span style="color:#A31515;">&quot;LockName&quot;</span>);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			SemaphoreExamples.cs: Grab a semaphore
 			<div class="codedownload">

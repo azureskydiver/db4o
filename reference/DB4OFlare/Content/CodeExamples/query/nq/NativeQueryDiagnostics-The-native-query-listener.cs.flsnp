@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">class</span> NativeQueryListener :IDiagnosticListener
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">class</span> NativeQueryListener :IDiagnosticListener
 {
     <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> OnDiagnostic(IDiagnostic diagnostic)
     {
@@ -13,8 +12,7 @@
             Console.WriteLine(<span style="color:#A31515;">&quot;Missing native query optimisation assemblies&quot;</span> + diagnostic);
         }
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			NativeQueryDiagnostics.cs: The native query listener
 			<div class="codedownload">

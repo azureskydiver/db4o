@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">public</span> <span style="color:Blue;">final</span> <span style="color:Blue;">class</span> AnnotationFilter <span style="color:Blue;">implements</span> ClassFilter{
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">final</span> <span style="color:Blue;">class</span> AnnotationFilter <span style="color:Blue;">implements</span> ClassFilter{
 
     <span style="color:Blue;">public</span> <span style="color:Blue;">boolean</span> accept(Class&lt;?&gt; aClass) {
         <span style="color:Blue;">if</span>(<span style="color:Blue;">null</span>==aClass || aClass.equals(Object.<span style="color:Blue;">class</span>)){
@@ -25,8 +24,7 @@
         <span style="color:Blue;">return</span> <span style="color:Blue;">false</span>;
     }
 
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			AnnotationFilter.java: Build a filter
 			<div class="codedownload">

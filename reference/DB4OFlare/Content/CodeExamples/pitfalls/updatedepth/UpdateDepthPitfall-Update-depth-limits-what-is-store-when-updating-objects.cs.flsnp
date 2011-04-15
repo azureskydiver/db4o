@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">using</span> (IObjectContainer container = Db4oEmbedded.OpenFile(DatabaseFile))
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">using</span> (IObjectContainer container = Db4oEmbedded.OpenFile(DatabaseFile))
 {
     Car car = QueryForCar(container);
     car.CarName = <span style="color:#A31515;">&quot;New Mercedes&quot;</span>;
@@ -19,8 +18,7 @@
     Car car = QueryForCar(container);
     Console.WriteLine(<span style="color:#A31515;">&quot;Car-Name:&quot;</span> + car.CarName);
     Console.WriteLine(<span style="color:#A31515;">&quot;Driver-Name:&quot;</span> + car.Driver.Name);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			UpdateDepthPitfall.cs: Update depth limits what is store when updating objects
 			<div class="codedownload">

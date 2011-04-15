@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve">IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
 events.Committed +=
     <span style="color:Blue;">delegate</span>(<span style="color:Blue;">object</span> sender, CommitEventArgs args)
         {
@@ -21,8 +20,7 @@ events.Committed +=
                 <span style="color:Green;">//return the null.</span>
                 Console.WriteLine(<span style="color:#A31515;">&quot;Deleted &quot;</span> + reference.GetObject());
             }
-        };
-</pre>
+        };</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.cs: Commit-info
 			<div class="codedownload">

@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">void</span> ReferentialIntegrityCheck(<span style="color:Blue;">object</span> sender,
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">private</span> <span style="color:Blue;">static</span> <span style="color:Blue;">void</span> ReferentialIntegrityCheck(<span style="color:Blue;">object</span> sender,
                                               CancellableObjectEventArgs eventArguments)
 {
     Object toDelete = eventArguments.Object;
@@ -18,8 +17,7 @@
             eventArguments.Cancel();
         }
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			CallbackExamples.cs: Referential integrity
 			<div class="codedownload">

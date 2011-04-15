@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> ExampleTestCase
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Public</span> <span style="color:Blue;">Class</span> ExampleTestCase
     <span style="color:Blue;">Inherits</span> AbstractDb4oTestCase
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Sub</span> Main(<span style="color:Blue;">ByVal</span> args <span style="color:Blue;">As</span> <span style="color:Blue;">String</span>())
         <span style="color:Blue;">Dim</span> testCase = <span style="color:Blue;">New</span> ExampleTestCase()
@@ -20,8 +19,7 @@
     <span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> TestItem
 
     <span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			ExampleTestCase.vb: Basic test case
 			<div class="codedownload">

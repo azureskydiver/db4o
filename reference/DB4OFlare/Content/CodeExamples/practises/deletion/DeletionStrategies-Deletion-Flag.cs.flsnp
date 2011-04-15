@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve">IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
 events.Deleting +=
     (sender, args) =&gt;
         {
@@ -16,8 +15,7 @@ events.Deleting +=
                 args.ObjectContainer().Store(obj);
                 args.Cancel();
             }
-        };
-</pre>
+        };</pre>
 		<div class="codesnippet-meta">
 			DeletionStrategies.cs: Deletion-Flag
 			<div class="codedownload">

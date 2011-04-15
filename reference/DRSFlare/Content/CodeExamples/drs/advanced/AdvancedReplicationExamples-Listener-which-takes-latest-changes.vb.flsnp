@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> TakeLatestModificationOnConflictListener
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Private</span> <span style="color:Blue;">Class</span> TakeLatestModificationOnConflictListener
     <span style="color:Blue;">Implements</span> IReplicationEventListener
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> OnReplicate(<span style="color:Blue;">ByVal</span> replicationEvent <span style="color:Blue;">As</span> IReplicationEvent) _
                             <span style="color:Blue;">Implements</span> IReplicationEventListener.OnReplicate
@@ -18,8 +17,7 @@
             <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
         <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>
     <span style="color:Blue;">End</span> <span style="color:Blue;">Sub</span>
-<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span>
-</pre>
+<span style="color:Blue;">End</span> <span style="color:Blue;">Class</span></pre>
 		<div class="codesnippet-meta">
 			AdvancedReplicationExamples.vb: Listener which takes latest changes
 			<div class="codedownload">

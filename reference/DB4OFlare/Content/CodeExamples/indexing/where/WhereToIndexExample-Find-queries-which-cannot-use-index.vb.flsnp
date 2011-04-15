@@ -2,9 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-configuration.Common.Diagnostic.AddListener(<span style="color:Blue;">New</span> IndexDiagnostics())
-</pre>
+        <pre class="prettyprint" xml:space="preserve">configuration.Common.Diagnostic.AddListener(<span style="color:Blue;">New</span> IndexDiagnostics())</pre>
 		<div class="codesnippet-meta">
 			WhereToIndexExample.vb: Find queries which cannot use index
 			<div class="codedownload">

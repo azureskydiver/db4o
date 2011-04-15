@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-Person personOnClient1 = QueryForPerson(client1);
+        <pre class="prettyprint" xml:space="preserve">Person personOnClient1 = QueryForPerson(client1);
 Person personOnClient2 = QueryForPerson(client2);
 Console.Write(QueryForPerson(client2).Name);
 
@@ -17,8 +16,7 @@ Console.Write(QueryForPerson(client2).Name);
 client2.Ext().Refresh(personOnClient2, <span style="color:Blue;">int</span>.MaxValue);
 
 <span style="color:Green;">// After refreshing the date is visible</span>
-Console.Write(QueryForPerson(client2).Name);
-</pre>
+Console.Write(QueryForPerson(client2).Name);</pre>
 		<div class="codesnippet-meta">
 			ReferenceCacheExamples.cs: Reference cache in client server
 			<div class="codedownload">

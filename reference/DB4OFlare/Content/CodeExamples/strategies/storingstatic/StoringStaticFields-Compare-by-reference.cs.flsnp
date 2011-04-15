@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Green;">// When you enable persist static field values, you can compare by reference</span>
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Green;">// When you enable persist static field values, you can compare by reference</span>
 <span style="color:Green;">// because db4o stores the static field</span>
 <span style="color:Blue;">if</span> (car.Color == Color.Black)
 {
@@ -12,8 +11,7 @@
 <span style="color:Blue;">else</span> <span style="color:Blue;">if</span> (car.Color == Color.Red)
 {
     Console.WriteLine(<span style="color:#A31515;">&quot;Fire engine?&quot;</span>);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			StoringStaticFields.cs: Compare by reference
 			<div class="codedownload">

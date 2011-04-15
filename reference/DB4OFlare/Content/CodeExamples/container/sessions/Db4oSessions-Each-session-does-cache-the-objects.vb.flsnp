@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">Dim</span> personOnSession1 <span style="color:Blue;">As</span> Person = session1.Query(Of Person)()(0)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> personOnSession1 <span style="color:Blue;">As</span> Person = session1.Query(Of Person)()(0)
 <span style="color:Blue;">Dim</span> personOnSession2 <span style="color:Blue;">As</span> Person = session2.Query(Of Person)()(0)
 
 personOnSession1.Name = <span style="color:#A31515;">&quot;NewName&quot;</span>
@@ -15,8 +14,7 @@ session1.Commit()
 Console.WriteLine(personOnSession2.Name)
 <span style="color:Green;">' you can explicitly refresh it</span>
 session2.Ext().Refresh(personOnSession2, <span style="color:Blue;">Integer</span>.MaxValue)
-Console.WriteLine(personOnSession2.Name)
-</pre>
+Console.WriteLine(personOnSession2.Name)</pre>
 		<div class="codesnippet-meta">
 			Db4oSessions.vb: Each session does cache the objects
 			<div class="codedownload">

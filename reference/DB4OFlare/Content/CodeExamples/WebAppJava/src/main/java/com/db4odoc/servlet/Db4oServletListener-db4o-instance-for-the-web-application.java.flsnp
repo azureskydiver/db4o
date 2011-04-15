@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-@Override
+        <pre class="prettyprint" xml:space="preserve">@Override
 <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> contextInitialized(ServletContextEvent event) {
     ServletContext context = event.getServletContext();
     String filePath = context.getRealPath(<span style="color:#A31515;">&quot;WEB-INF/&quot;</span>
@@ -21,8 +20,7 @@
     context.removeAttribute(KEY_DB4O_SERVER);
     close(rootContainer);
     context.log(<span style="color:#A31515;">&quot;db4o shutdown&quot;</span>);
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Db4oServletListener.java: db4o-instance for the web-application
 			<div class="codedownload">

@@ -2,12 +2,10 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">using</span>(IObjectContainer container = rootContainer.Ext().OpenSession())
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">using</span>(IObjectContainer container = rootContainer.Ext().OpenSession())
 {
     <span style="color:Green;">// We do our operations in this transaction</span>
-} 
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			Transactions.cs: Opening a new transaction
 			<div class="codedownload">

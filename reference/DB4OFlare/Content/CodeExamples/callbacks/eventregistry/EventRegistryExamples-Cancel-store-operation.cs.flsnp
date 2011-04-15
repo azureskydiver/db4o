@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
+        <pre class="prettyprint" xml:space="preserve">IEventRegistry events = EventRegistryFactory.ForObjectContainer(container);
 events.Creating +=
     <span style="color:Blue;">delegate</span>(<span style="color:Blue;">object</span> sender, CancellableObjectEventArgs args)
         {
@@ -15,9 +14,7 @@ events.Creating +=
                     args.Cancel();
                 }
             }
-        };
-
-</pre>
+        };</pre>
 		<div class="codesnippet-meta">
 			EventRegistryExamples.cs: Cancel store operation
 			<div class="codedownload">

@@ -2,16 +2,14 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-Car beetle = <span style="color:Blue;">new</span> Car(<span style="color:#A31515;">&quot;VW Beetle&quot;</span>);
+        <pre class="prettyprint" xml:space="preserve">Car beetle = <span style="color:Blue;">new</span> Car(<span style="color:#A31515;">&quot;VW Beetle&quot;</span>);
 Car ferrari = <span style="color:Blue;">new</span> Car(<span style="color:#A31515;">&quot;Ferrari&quot;</span>);
 
 Driver driver = <span style="color:Blue;">new</span> Driver(<span style="color:#A31515;">&quot;John&quot;</span>, ferrari);
 driver.addOwnedCar(beetle);
 driver.addOwnedCar(ferrari);
 
-container.store(driver);
-</pre>
+container.store(driver);</pre>
 		<div class="codesnippet-meta">
 			UpdateConcept.java: Store a driver and his cars
 			<div class="codedownload">

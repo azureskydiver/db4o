@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-<span style="color:Blue;">class</span> ExampleTranslator <span style="color:Blue;">implements</span> ObjectConstructor {
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">class</span> ExampleTranslator <span style="color:Blue;">implements</span> ObjectConstructor {
 
     <span style="color:Green;">// This is called to store the object</span>
     <span style="color:Blue;">public</span> Object onStore(ObjectContainer objectContainer, Object objToStore) {
@@ -26,8 +25,7 @@
     <span style="color:Blue;">public</span> Object onInstantiate(ObjectContainer objectContainer, Object storedObject) {
         <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> NonStorableType(<span style="color:#A31515;">&quot;&quot;</span>);
     }
-}
-</pre>
+}</pre>
 		<div class="codesnippet-meta">
 			ExampleTranslator.java: An example translator
 			<div class="codedownload">

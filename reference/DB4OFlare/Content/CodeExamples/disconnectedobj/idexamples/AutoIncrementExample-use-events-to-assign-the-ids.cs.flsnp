@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve">
-AutoIncrement increment = <span style="color:Blue;">new</span> AutoIncrement(container);
+        <pre class="prettyprint" xml:space="preserve">AutoIncrement increment = <span style="color:Blue;">new</span> AutoIncrement(container);
 IEventRegistry eventRegistry = EventRegistryFactory.ForObjectContainer(container);
 
 eventRegistry.Creating+=
@@ -19,8 +18,7 @@ eventRegistry.Committing +=
     <span style="color:Blue;">delegate</span>(<span style="color:Blue;">object</span> sender, CommitEventArgs args)
         {
             increment.StoreState();    
-        };
-</pre>
+        };</pre>
 		<div class="codesnippet-meta">
 			AutoIncrementExample.cs: use events to assign the ids
 			<div class="codedownload">

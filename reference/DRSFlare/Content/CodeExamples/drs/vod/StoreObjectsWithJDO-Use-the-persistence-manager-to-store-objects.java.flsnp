@@ -2,8 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">
-PersistenceManagerFactory factory = JDOUtilities.createPersistenceFactory();
+        <pre class="prettyprint" xml:space="preserve">PersistenceManagerFactory factory = JDOUtilities.createPersistenceFactory();
 
 PersistenceManager persistence = factory.getPersistenceManager();
 persistence.currentTransaction().begin();
@@ -14,8 +13,7 @@ Car car = <span style="color:Blue;">new</span> Car(john,<span style="color:#A315
 persistence.makePersistent(car);
 
 persistence.currentTransaction().commit();
-persistence.close();
-</pre>
+persistence.close();</pre>
 		<div class="codesnippet-meta">
 			StoreObjectsWithJDO.java: Use the persistence manager to store objects
 			<div class="codedownload">
