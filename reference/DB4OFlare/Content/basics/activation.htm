@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1433" MadCap:lastWidth="586">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1473" MadCap:lastWidth="576">
     <head>
     </head>
     <body>
@@ -9,7 +9,7 @@
         <P>
             <img src="activation_concept/without_activation.png" />
         </P>
-        <P>Luckily db4o does not behave like this.When a query retrieves objects, their fields are loaded into memory (activated in db4o terms) only to a certain activation depth. In this case depth means "number of member references away from the original object". All the fields at lower levels, below activation depth are set to null or to default values. So db4o doesn't load the whole object graph from the database. Instead, db4o loads only parts of the object graph you're interested in. </P>
+        <P>Luckily db4o does not behave like this. When a query returns objects, they are loaded into memory (activated in db4o terms) only to a certain activation depth. In this case depth means "number of member references away from the original object". All the fields beyond the activation depth are set to null or to default values. So db4o does not load the whole object graph. Instead, db4o loads only the parts of the object graph you are interested in.</P>
         <P>
             <img src="activation_concept/with_activation.png" />
         </P>

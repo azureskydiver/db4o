@@ -1286,12 +1286,12 @@
     StartSection="false"
     StartChapter="false"
     AutoMerge="after-head"
-    AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/workingCopy/DRSFlare/Reference.flprj#JavaWeb"></TocEntry>
+    AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/newTutorial/DRSFlare/Reference.flprj#JavaWeb"></TocEntry>
   <TocEntry
     Title="db4o Replication System"
     conditions="Primary..NET"
     Link="../../../DRSFlare/Reference.flprj#NetWeb"
-    AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/workingCopy/DRSFlare/Reference.flprj#NetWeb"></TocEntry>
+    AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/newTutorial/DRSFlare/Reference.flprj#NetWeb"></TocEntry>
   <TocEntry
     Title="Object Manager Enterprise"
     Link="/Content/object_manager_enterprise.htm">
@@ -1311,6 +1311,11 @@
       Title="Custom Configuration"
       Link="/Content/object_manager_enterprise/ome_for_eclipse/custom_config.htm"
       conditions="Primary.Java" />
+    <TocEntry
+      Title="Problems?"
+      Link="/Content/object_manager_enterprise/ome_for_eclipse/problems.htm"
+      conditions="Primary.Java"
+      ReplaceMergeNode="false" />
     <TocEntry
       Title="OME Interface"
       Link="/Content/object_manager_enterprise/ome_for_visual_studio/ome_interface.htm"

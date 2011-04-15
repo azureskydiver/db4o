@@ -21,7 +21,7 @@ namespace Db4oDoc.Code.Basics
 
         private static void StoreObject()
         {
-            // #example: Store a object
+            // #example: Store an object
             using (IObjectContainer container = Db4oEmbedded.OpenFile("databaseFile.db4o"))
             {
                 Pilot pilot = new Pilot("Joe");

@@ -7,9 +7,12 @@ package com.db4odoc.tutorial.utils;
 public final class ExceptionUtils {
     private ExceptionUtils(){}
 
-    public static <TException extends Throwable,TReturnValue> TReturnValue reThrow(TException exception){
-        return ExceptionUtils.<RuntimeException,TReturnValue>reThrowInternal(exception);
+
+
+    public static <TException extends Throwable> RuntimeException reThrow(TException exception){
+        return ExceptionUtils.<RuntimeException,RuntimeException>reThrowInternal(exception);
     }
+
 
     private static <TException extends Throwable,TReturnValue> TReturnValue reThrowInternal(Throwable exception) throws TException {
         throw (TException) exception;

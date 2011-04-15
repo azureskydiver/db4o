@@ -1,4 +1,4 @@
-package info.gamlor.icoodb.desktop.utils;
+package com.db4odoc.tutorial.utils;
 
 /**
  * @author roman.stoffel@gamlor.info
