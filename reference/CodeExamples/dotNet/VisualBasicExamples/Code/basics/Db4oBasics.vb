@@ -15,7 +15,7 @@ Namespace Db4oDoc.Code.Basics
         End Sub
 
         Private Shared Sub StoreObject()
-            ' #example: Store a object
+            ' #example: Store an object
             Using container As IObjectContainer = Db4oEmbedded.OpenFile("databaseFile.db4o")
                 Dim pilot As New Pilot("Joe")
                 container.Store(pilot)

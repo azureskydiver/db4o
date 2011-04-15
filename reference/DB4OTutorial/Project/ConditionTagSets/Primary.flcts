@@ -22,12 +22,4 @@
     BackgroundColor="#3ffb00"
     Name=".NET"
     Comment="" />
-  <ConditionTag
-    BackgroundColor="#c0c0c0"
-    Name="All languages"
-    Comment="java + .NET" />
-  <ConditionTag
-    BackgroundColor="#800080"
-    Name="TobeReviewed"
-    Comment="topics that are removed from the current generation, but should be updated and added back" />
 </CatapultConditionTagSet>

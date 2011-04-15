@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="6007" MadCap:lastWidth="840">
+    <head>
+    </head>
+    <body>
+        <h1>Basics</h1>
+        <p>Lets start with the basics. For this tutorial we create a tiny domain model, consisting out of drivers and cars. (<MadCap:toggler targets="model">Click here</MadCap:toggler> to see the domain model classes)</p>
+        <div MadCap:targetName="model">
+            <MadCap:snippetBlock src="CodeExamples/firststeps/Car-Domain-model-for-cars.all.flsnp" />
+            <MadCap:snippetBlock src="CodeExamples/firststeps/Driver-Domain-model-for-drivers.all.flsnp" />
+        </div>
+        <h2><a name="OpenDB"></a>Open a Database</h2>
+        <p>For all operations we first need to open the database. To open the database we pass a file-path to db4o. db4o will open or create that database an return a object container. The object container is the connection to our database. We do all our operations through the object container.</p>
+        <MadCap:snippetBlock src="CodeExamples/firststeps/BasicOperations-Open-and-close-db4o.all.flsnp" />
+        <h2><a name="StoreObject"></a>Store an Object</h2>
+        <p>To store a object in the database, we simply call the store-method on the object container. </p>
+        <MadCap:snippetBlock src="CodeExamples/firststeps/BasicOperations-Store-an-object.all.flsnp" />
+        <h2><a name="QueryDB"></a>Query the Database</h2>
+        <p>After storing objects we want to query for our stored objects. We can do this with <MadCap:variable name="Primary.native queries" />. </p>
+        <MadCap:snippetBlock src="CodeExamples/firststeps/BasicOperations-Query-for-objects.all.flsnp" />
+        <h2><a name="UpdateObject"></a>Update an Object</h2>
+        <p>In order to update an object we first query for it. Then we change it and store it again. db4o will recognize the updated object and store the changes in the database.</p>
+        <MadCap:snippetBlock src="CodeExamples/firststeps/BasicOperations-Update-an-object.all.flsnp" />
+        <h2><a name="DeleteObject"></a>Delete an Object</h2>
+        <p>Deleting an object is easy. First we query for the object and then delete it.</p>
+        <MadCap:snippetBlock src="CodeExamples/firststeps/BasicOperations-Delete-an-object.all.flsnp" />
+    </body>
+</html>

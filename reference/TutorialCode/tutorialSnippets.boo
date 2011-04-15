@@ -17,6 +17,7 @@ tsCondition = TimeStampStorage()
 # regular examples
 snippetGenerator = CodeToSnippets("../SnippetGenerator/SnippetGenerator/CodeSnippetTemplate.flsnp",zipFileGenerator,tsCondition)
 snippetGenerator.CreateCodeSnippets("java/db4o-tutorial/src/main/com/db4odoc/tutorial","../DB4OTutorial/Content/CodeExamples","java")
+snippetGenerator.CreateCodeSnippets("java/db4o-tutorial/","../DB4OTutorial/Content/CodeExamples","")
 snippetGenerator.CreateCodeSnippets("dotNet/CSharpExamples/Code","../DB4OTutorial/Content/CodeExamples","csharp")
 snippetGenerator.CreateCodeSnippets("dotNet/VisualBasicExamples/Code","../DB4OTutorial/Content/CodeExamples","vb")
 

@@ -20,7 +20,7 @@ public class Db4oBasics {
     }
 
     private static void storeObject() {
-        // #example: Store a object
+        // #example: Store an object
         ObjectContainer container = Db4oEmbedded.openFile("databaseFile.db4o");
         try {
             Pilot pilot = new Pilot("Joe");
@@ -31,8 +31,7 @@ public class Db4oBasics {
         // #end example
     }
 
-    private static void query()
-    {
+    private static void query() {
         // #example: Query for objects
         ObjectContainer container = Db4oEmbedded.openFile("databaseFile.db4o");
         try {
@@ -49,8 +48,8 @@ public class Db4oBasics {
         }
         // #end example
     }
-    private static void updateDatabase()
-    {
+
+    private static void updateDatabase() {
         // #example: Update a pilot
         ObjectContainer container = Db4oEmbedded.openFile("databaseFile.db4o");
         try {

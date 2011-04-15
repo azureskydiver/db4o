@@ -94,4 +94,8 @@
     Name="Packages"
     Comment=""
     Definition="Some text">packages</Variable>
+  <Variable
+    Name="native queries"
+    Comment=""
+    Definition="Some text">native queries</Variable>
 </CatapultVariableSet>

@@ -731,7 +731,7 @@
   </WebHelpOptions>
   <Toolbar
     EnableCustomLayout="true"
-    Buttons="AddTopicToFavorites|ToggleNavigationPane|Print|Separator|RemoveHighlight|Separator|Back|Forward|Separator|SelectTOC|SelectIndex|SelectSearch|SelectGlossary|SelectFavorites|Separator|PreviousTopic|CurrentTopicIndex|NextTopic">
+    Buttons="AddTopicToFavorites|ToggleNavigationPane|Print|Separator|RemoveHighlight|Separator|Back|Forward|Separator|SelectTOC|SelectIndex|SelectSearch|SelectGlossary|SelectFavorites|Separator">
     <Script></Script>
   </Toolbar>
   <Toc
