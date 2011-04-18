@@ -9,7 +9,7 @@
   Left="0"
   Bottom="286px"
   Right="0"
-  Tabs="TOC,Index,Search,Glossary,Favorites"
+  Tabs="TOC,Search"
   DefaultTab="TOC"
   UseBrowserDefaultSize="true"
   UseDefaultBrowserSetup="false"
