@@ -94,6 +94,9 @@
     Title="Indexes"
     Link="/Content/indexes.htm" />
   <TocEntry
+    Title="Configuration"
+    Link="/Content/configuration.htm" />
+  <TocEntry
     Title="Client Server Mode"
     Link="/Content/client-server.htm">
     <TocEntry
@@ -106,4 +109,7 @@
       Title="Shared Classes"
       Link="/Content/client-server.htm#SharedClasses" />
   </TocEntry>
+  <TocEntry
+    Title="Object Manager"
+    Link="/Content/object-manager.htm" />
 </CatapultToc>
