@@ -164,7 +164,11 @@ public final class Assert {
 	}
 
 	public static void isInstanceOf(Class expectedClass, Object actual) {
-		isTrue(expectedClass.isInstance(actual), failureMessage(expectedClass, actual == null ? null : actual.getClass()));
+		isInstanceOf(expectedClass, actual, failureMessage(expectedClass, actual == null ? null : actual.getClass()));
+	}
+
+	public static void isInstanceOf(Class expectedClass, Object actual, String message) {
+		isTrue(expectedClass.isInstance(actual), message);
 	}
 
 	public static void isGreater(long expected, long actual) {

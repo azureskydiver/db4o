@@ -122,6 +122,9 @@
 				<fileset dir="${dir.j.core}">
 					<include name="**/*.java"  />
 				</fileset>
+				<fileset dir="${dir.j.generated}">
+					<include name="**/*.java"  />
+				</fileset>
 			</sources>
 		</prepare-workspace>
 
@@ -171,6 +174,9 @@
 		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j.tests}">
 			<sources>
 				<fileset dir="${dir.j.tests}">
+					<include name="src/**/*.java" />
+				</fileset>
+				<fileset dir="${dir.j.tests}/generated">
 					<include name="**/*.java" />
 				</fileset>
 			</sources>
@@ -1710,7 +1716,7 @@
         		<pathelement location="${file.decaf.annotations}" />
         	</classpath>
         						
-        	<bottom><![CDATA[<i>Copyright 2009 Versant Corporation. All rights reserved.</i>]]></bottom>
+        	<bottom><![CDATA[<i>Copyright ${CURRENT_YEAR} Versant Corporation. All rights reserved.</i>]]></bottom>
             <fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
             <group title="OSGi Services" packages="com.db4o.osgi" />
         </javadoc>

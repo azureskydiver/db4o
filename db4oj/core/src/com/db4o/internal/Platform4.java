@@ -2,11 +2,13 @@
 
 package com.db4o.internal;
 
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
@@ -685,5 +687,18 @@ public final class Platform4 {
 
 	public static Storage newStorage() {
 		return new FileStorage();
-	}	
+	}
+
+	public static String asUtf8(byte[] byteArray) {
+		try {
+			return new String(byteArray, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new Db4oIllegalStateException(e);
+		}
+	}
+	
+	public static void printStackTrace(Throwable t, PrintWriter out) {
+		t.printStackTrace(out);
+	}
+
 }

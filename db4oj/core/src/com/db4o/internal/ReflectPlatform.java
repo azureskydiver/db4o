@@ -2,12 +2,19 @@
 
 package com.db4o.internal;
 
+import java.lang.reflect.*;
+
+import com.db4o.ext.*;
+
 
 /**
  * @sharpen.ignore
  */
 public class ReflectPlatform {
 	
+	public static final char INNER_CLASS_SEPARATOR = '$';
+
+
 	/**
 	 * @param className
 	 * @return the Class object for specified className. Returns null if an
@@ -62,4 +69,32 @@ public class ReflectPlatform {
 			? name
 			: name.substring(lastDot + 1);
 	}
+	
+	
+	public static <T> T newInstance(Constructor<T> ctor, Object... args) throws Db4oException {
+		try {
+			return ctor.newInstance(args);
+		} catch (IllegalArgumentException e) {
+			throw new Db4oException(e);
+		} catch (InstantiationException e) {
+			throw new Db4oException(e);
+		} catch (IllegalAccessException e) {
+			throw new Db4oException(e);
+		} catch (InvocationTargetException e) {
+			throw new Db4oException(e);
+		}
+	}
+
+	public static String getJavaInterfaceSimpleName(Class clazz) {
+		return ReflectPlatform.simpleName(clazz);
+	}
+	
+	public static String containerName(Class clazz) {
+		return clazz.getPackage().getName();
+	}
+	
+	public static String adjustClassName(String className, Class clazz) {
+		return className;
+	}
+	
 }

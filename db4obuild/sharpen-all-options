@@ -37,6 +37,7 @@
 -propertyMapping db4ounit.TestPlatform.getExceptionCause InnerException
 -propertyMapping java.util.Date.getTime Ticks
 -propertyMapping java.lang.Class.getSimpleName Name
+-propertyMapping java.lang.Class.getEnclosingClass DeclaringType
 
 -methodMapping com.db4o.db4ounit.util.Strings.replace Replace
 
