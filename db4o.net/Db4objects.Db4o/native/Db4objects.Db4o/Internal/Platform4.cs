@@ -755,5 +755,15 @@ namespace Db4objects.Db4o.Internal
 		{
 			return ReferenceEquals(Type.GetType("Mono.Runtime"), null) == false;
 		}
+
+		public static void PrintStackTrace(Exception e, PrintWriter writer)
+		{
+ 			writer.Println(e.ToString());
+ 		}
+
+		public static string AsUtf8(byte[] byteArray)
+		{
+			return System.Text.Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
+		}
 	}
 }
