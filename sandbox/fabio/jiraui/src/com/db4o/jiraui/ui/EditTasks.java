@@ -359,7 +359,7 @@ public final class EditTasks extends Composite {
 		long milliseconds2 = calendar2.getTimeInMillis();
 		long diff = milliseconds2 - milliseconds1;
 		long diffWeeks = (long) (diff / (7 * 24 * 60 * 60 * 1000.));
-		return (int) (diffWeeks + 189);
+		return (int) (diffWeeks + 188);
 	}
 	
 	private void addMenuIteration(Menu parent) {
