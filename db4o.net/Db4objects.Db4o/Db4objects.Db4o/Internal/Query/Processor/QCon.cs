@@ -249,7 +249,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			a_candidateCollection.Add(i_candidates);
 		}
 
-		internal virtual void DoNotInclude(QCandidate a_root)
+		internal virtual void DoNotInclude(IInternalCandidate root)
 		{
 			if (DTrace.enabled)
 			{
@@ -257,11 +257,11 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			}
 			if (i_parent != null)
 			{
-				i_parent.Visit1(a_root, this, false);
+				i_parent.Visit1(root, this, false);
 			}
 			else
 			{
-				a_root.DoNotInclude();
+				root.DoNotInclude();
 			}
 		}
 
@@ -271,7 +271,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 		}
 
 		/// <param name="candidate"></param>
-		internal virtual bool Evaluate(QCandidate candidate)
+		internal virtual bool Evaluate(IInternalCandidate candidate)
 		{
 			throw Exceptions4.VirtualException();
 		}
@@ -833,16 +833,16 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 
 		public virtual void Visit(object obj)
 		{
-			QCandidate qc = (QCandidate)obj;
-			Visit1(qc.GetRoot(), this, Evaluate(qc));
+			IInternalCandidate candidate = (IInternalCandidate)obj;
+			Visit1(candidate.GetRoot(), this, Evaluate(candidate));
 		}
 
-		internal virtual void Visit(QCandidate a_root, bool res)
+		internal virtual void Visit(IInternalCandidate root, bool res)
 		{
-			Visit1(a_root, this, i_evaluator.Not(res));
+			Visit1(root, this, i_evaluator.Not(res));
 		}
 
-		internal virtual void Visit1(QCandidate root, Db4objects.Db4o.Internal.Query.Processor.QCon
+		internal virtual void Visit1(IInternalCandidate root, Db4objects.Db4o.Internal.Query.Processor.QCon
 			 reason, bool res)
 		{
 			// The a_reason parameter makes it eays to distinguish
@@ -865,7 +865,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			}
 		}
 
-		internal void VisitOnNull(QCandidate a_root)
+		internal void VisitOnNull(IInternalCandidate a_root)
 		{
 			// TODO: It may be more efficient to rule out 
 			// all possible keepOnNull issues when starting

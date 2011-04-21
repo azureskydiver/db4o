@@ -43,8 +43,8 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return false;
 		}
 
-		internal override bool Evaluate(QConObject a_constraint, QCandidate a_candidate, 
-			object a_value)
+		internal override bool Evaluate(QConObject a_constraint, IInternalCandidate a_candidate
+			, object a_value)
 		{
 			return !i_evaluator.Evaluate(a_constraint, a_candidate, a_value);
 		}

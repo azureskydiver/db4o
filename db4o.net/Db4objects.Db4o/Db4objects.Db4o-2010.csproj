@@ -36,6 +36,10 @@
     
   
 
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -626,6 +630,12 @@
 <Compile Include="Db4objects.Db4o\Internal\LocalPersistentBase.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\LocalTransaction.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\LockedTree.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Logging\ILogging.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Logging\ILoggingInterceptor.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Logging\Level.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Logging\Logger.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Logging\LoggingWrapper.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Logging\PrintWriterLoggerInterceptor.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Mapping\IIDMapping.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Mapping\IdSource.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Mapping\MappedIDPair.cs"/>
@@ -710,8 +720,12 @@
 <Compile Include="Db4objects.Db4o\Internal\Query\IDb4oQueryExecutionListener.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\NQOptimizationInfo.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\PredicateEvaluation.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Query\Processor\IFieldFilterable.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Query\Processor\IInternalCandidate.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\IInternalQuery.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Query\Processor\IParentCandidate.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QCandidate.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Query\Processor\QCandidateBase.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QCandidates.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QCon.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QConClass.cs"/>
@@ -735,6 +749,7 @@
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QEStringCmp.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QField.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QPending.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Query\Processor\QPrimitiveCandidate.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QQuery.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QQueryBase.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Query\Processor\QueryResultCandidates.cs"/>
@@ -1017,6 +1032,7 @@
 <Compile Include="native\Sharpen\IO\IOutputStream.cs"/>
 <Compile Include="native\Sharpen\IO\InputStream.cs"/>
 <Compile Include="native\Sharpen\IO\OutputStream.cs"/>
+<Compile Include="native\Sharpen\IO\PrintWriter.cs"/>
 <Compile Include="native\Sharpen\IO\RandomAccessFile.cs"/>
 <Compile Include="native\Sharpen\IO\StreamAdaptor.cs"/>
 <Compile Include="native\Sharpen\Lang\IdentityHashCodeProvider.cs"/>

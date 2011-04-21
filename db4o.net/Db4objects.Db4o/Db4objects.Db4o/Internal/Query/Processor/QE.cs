@@ -39,8 +39,8 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return true;
 		}
 
-		internal virtual bool Evaluate(QConObject constraint, QCandidate candidate, object
-			 obj)
+		internal virtual bool Evaluate(QConObject constraint, IInternalCandidate candidate
+			, object obj)
 		{
 			IPreparedComparison prepareComparison = constraint.PrepareComparison(candidate);
 			if (obj == null)
