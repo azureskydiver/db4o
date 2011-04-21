@@ -4,7 +4,6 @@ package com.db4o.db4ounit.common.assorted;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.consistency.*;
-import com.db4o.consistency.ConsistencyChecker.*;
 import com.db4o.query.*;
 
 import db4ounit.*;

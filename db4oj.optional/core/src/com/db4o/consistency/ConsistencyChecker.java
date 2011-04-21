@@ -15,98 +15,10 @@ import com.db4o.internal.slots.*;
 
 public class ConsistencyChecker {
 
+	private final List<SlotWithSource> _bogusSlots = new ArrayList<SlotWithSource>();
 	private final LocalObjectContainer _db;
-	private final List<SlotWithSource> bogusSlots = new ArrayList<SlotWithSource>();
-	private TreeIntObject mappings;
+	private final OverlapMap _overlaps;
 
-	public static class SlotSource {
-		public final static SlotSource ID_SYSTEM = new SlotSource("IdSystem");
-		public final static SlotSource FREESPACE = new SlotSource("Freespace");
-
-		private final String _name;
-		
-		private SlotSource(String name) {
-			_name = name;
-		}
-		
-		@Override
-		public String toString() {
-			return _name;
-		}
-	}
-
-	public static class SlotWithSource {
-		public final Slot slot;
-		public final SlotSource source;
-
-		public SlotWithSource(Slot slot, SlotSource source) {
-			this.slot = slot;
-			this.source = source;
-		}
-		
-		@Override
-		public String toString() {
-			return slot + "(" + source + ")";
-		}
-	}
-	
-	public static class ConsistencyReport {
-		
-		private static final int MAX_REPORTED_ITEMS = 50;
-		final List<SlotWithSource> bogusSlots;
-		final List<Pair<SlotWithSource,SlotWithSource>> overlaps;
-		final List<Pair<String,Integer>> invalidObjectIds;
-		final List<Pair<String,Integer>> invalidFieldIndexEntries;
-		
-		public ConsistencyReport(
-				List<SlotWithSource> bogusSlots, 
-				List<Pair<SlotWithSource,SlotWithSource>> overlaps, 
-				List<Pair<String,Integer>> invalidClassIds, 
-				List<Pair<String,Integer>> invalidFieldIndexEntries) {
-			this.bogusSlots = bogusSlots;
-			this.overlaps = overlaps;
-			this.invalidObjectIds = invalidClassIds;
-			this.invalidFieldIndexEntries = invalidFieldIndexEntries;
-		}
-		
-		public boolean consistent() {
-			return bogusSlots.size() == 0 && overlaps.size() == 0 && invalidObjectIds.size() == 0 && invalidFieldIndexEntries.size() == 0;
-		}
-		
-		@Override
-		public String toString() {
-			if(consistent()) {
-				return "no inconsistencies detected";
-			}
-			StringBuffer message = new StringBuffer("INCONSISTENCIES DETECTED\n")
-				.append(overlaps.size() + " overlaps\n")
-				.append(bogusSlots.size() + " bogus slots\n")
-				.append(invalidObjectIds.size() + " invalid class ids\n")
-				.append(invalidFieldIndexEntries.size() + " invalid field index entries\n");
-			message.append("(slot lengths are non-blocked)\n");
-			appendInconsistencyReport(message, "OVERLAPS", overlaps);
-			appendInconsistencyReport(message, "BOGUS SLOTS", bogusSlots);
-			appendInconsistencyReport(message, "INVALID OBJECT IDS", invalidObjectIds);
-			appendInconsistencyReport(message, "INVALID FIELD INDEX ENTRIES", invalidFieldIndexEntries);
-			return message.toString();
-		}
-		
-		private <T> void appendInconsistencyReport(StringBuffer str, String title, List<T> entries) {
-			if(entries.size() != 0) {
-				str.append(title + "\n");
-				int count = 0;
-				for (T entry : entries) {
-					str.append(entry).append("\n");
-					count++;
-					if(count > MAX_REPORTED_ITEMS) {
-						str.append("and more...\n");
-						break;
-					}
-				}
-			}
-		}
-	}
-	
 	public static void main(String[] args) {
 		EmbeddedObjectContainer db = Db4oEmbedded.openFile(args[0]);
 		try {
@@ -119,13 +31,22 @@ public class ConsistencyChecker {
 	
 	public ConsistencyChecker(ObjectContainer db) {
 		_db = (LocalObjectContainer) db;
-		
+		_overlaps = new OverlapMap(_db.blockConverter());
 	}
 	
 	public ConsistencyReport checkSlotConsistency() {
-		mapIdSystem();
-		mapFreespace();
-		return new ConsistencyReport(bogusSlots, collectOverlaps(), checkClassIndices(), checkFieldIndices());
+		return _db.syncExec(new Closure4<ConsistencyReport>() {
+			@Override
+			public ConsistencyReport run() {
+				mapIdSystem();
+				mapFreespace();
+				return new ConsistencyReport(
+						_bogusSlots, 
+						_overlaps, 
+						checkClassIndices(), 
+						checkFieldIndices());
+			}
+		});
 	}
 
 	private List<Pair<String,Integer>> checkClassIndices() {
@@ -186,65 +107,37 @@ public class ConsistencyChecker {
 		}
 	}
 
-	private List<Pair<SlotWithSource, SlotWithSource>> collectOverlaps() {
-		final BlockConverter blockConverter = _db.blockConverter();
-		final List<Pair<SlotWithSource,SlotWithSource>> overlaps = new ArrayList<Pair<SlotWithSource,SlotWithSource>>();
-		final ByRef<SlotWithSource> prevSlot = ByRef.newInstance();
-		mappings.traverse(new Visitor4<TreeIntObject>() {
-			public void visit(TreeIntObject obj) {
-				SlotWithSource curSlot = (SlotWithSource) obj._object;
-				if(prevSlot.value != null) {
-					if(prevSlot.value.slot.address() + blockConverter.toBlockedLength(prevSlot.value.slot).length() > curSlot.slot.address()) {
-						overlaps.add(new Pair<SlotWithSource, SlotWithSource>(prevSlot.value, curSlot));
-					}
-				}
-				prevSlot.value = curSlot;
-			}
-		});
-		return overlaps;
-	}
-
 	private void mapFreespace() {
 		_db.freespaceManager().traverse(new Visitor4<Slot>() {
 			public void visit(Slot slot) {
-				if(slot.address() < 0) {
-					bogusSlots.add(new SlotWithSource(slot, SlotSource.FREESPACE));
+				if(isBogusSlot(slot.address(), slot.length())) {
+					_bogusSlots.add(new SlotWithSource(slot, SlotSource.FREESPACE));
 				}
-				addMapping(slot, SlotSource.FREESPACE);
+				_overlaps.add(slot, SlotSource.FREESPACE);
 			}
 		});
 	}
 
 	private void mapIdSystem() {
 		IdSystem idSystem= _db.idSystem();
-		if(idSystem instanceof BTreeIdSystem) {
-			((BTreeIdSystem)idSystem).traverseIds(new Visitor4<IdSlotMapping>() {
-				public void visit(IdSlotMapping mapping) {
-					if(mapping._address < 0) {
-						bogusSlots.add(new SlotWithSource(mapping.slot(), SlotSource.ID_SYSTEM));
-					}
-					if(mapping._address > 0) {
-						addMapping(mapping.slot(), SlotSource.ID_SYSTEM);
-					}
-				}
-			});
+		if(!(idSystem instanceof BTreeIdSystem)) {
+			System.err.println("No btree id system found - not mapping ids.");
+			return;
 		}
+		((BTreeIdSystem)idSystem).traverseIds(new Visitor4<IdSlotMapping>() {
+			public void visit(IdSlotMapping mapping) {
+				if(isBogusSlot(mapping._address, mapping._length)) {
+					_bogusSlots.add(new SlotWithSource(mapping.slot(), SlotSource.ID_SYSTEM));
+				}
+				if(mapping._address > 0) {
+					_overlaps.add(mapping.slot(), SlotSource.ID_SYSTEM);
+				}
+			}
+		});
 	}
 
-	private void addMapping(Slot slot, SlotSource source) {
-		mappings = Tree.add(mappings, new MappingTree(slot, source));
+	private boolean isBogusSlot(int address, int length) {
+		return address < 0 || (long)address + length > _db.fileLength();
 	}
 	
-	private static class MappingTree extends TreeIntObject<SlotWithSource> {
-
-		public MappingTree(Slot slot, SlotSource source) {
-			super(slot.address(), new SlotWithSource(slot, source));
-		}
-		
-		@Override
-		public boolean duplicates() {
-			return true;
-		}
-		
-	}
 }
