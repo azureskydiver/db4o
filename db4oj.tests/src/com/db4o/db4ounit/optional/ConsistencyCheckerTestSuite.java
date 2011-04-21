@@ -15,11 +15,29 @@ import db4ounit.fixtures.*;
 
 public class ConsistencyCheckerTestSuite extends FixtureBasedTestSuite {
 
+	public static class BlockSizeSpec implements Labeled {
+		private int _blockSize;
+		
+		public BlockSizeSpec(int blockSize) {
+			_blockSize = blockSize;
+		}
+
+		public int blockSize() {
+			return _blockSize;
+		}
+		
+		@Override
+		public String label() {
+			return String.valueOf(_blockSize);
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		new ConsoleTestRunner(ConsistencyCheckerTestSuite.class).run();		
 	}
 
-	private final static FixtureVariable<Integer> BLOCK_SIZE = FixtureVariable.newInstance("blockSize");
+	private final static FixtureVariable<BlockSizeSpec> BLOCK_SIZE = FixtureVariable.newInstance("blockSize");
 	
 	@Override
 	public Class[] testUnits() {
@@ -31,7 +49,7 @@ public class ConsistencyCheckerTestSuite extends FixtureBasedTestSuite {
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
-			new SimpleFixtureProvider<Integer>(BLOCK_SIZE, 1, 13),
+			new SimpleFixtureProvider<BlockSizeSpec>(BLOCK_SIZE, new BlockSizeSpec(1), new BlockSizeSpec(13)),
 		};
 	}
 
@@ -99,7 +117,7 @@ public class ConsistencyCheckerTestSuite extends FixtureBasedTestSuite {
 		public void setUp() throws Exception {
 			EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 			config.file().storage(new MemoryStorage());
-			config.file().blockSize(BLOCK_SIZE.value());
+			config.file().blockSize(BLOCK_SIZE.value().blockSize());
 			_db = (LocalObjectContainer) Db4oEmbedded.openFile(config, "inmem.db4o");
 		}
 	
