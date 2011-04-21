@@ -61,10 +61,10 @@ namespace Db4objects.Db4o.Internal.Query.Result
 
 		public virtual void Visit(object a_tree)
 		{
-			QCandidate candidate = (QCandidate)a_tree;
+			IInternalCandidate candidate = (IInternalCandidate)a_tree;
 			if (candidate.Include())
 			{
-				AddKeyCheckDuplicates(candidate._key);
+				AddKeyCheckDuplicates(candidate.Id());
 			}
 		}
 

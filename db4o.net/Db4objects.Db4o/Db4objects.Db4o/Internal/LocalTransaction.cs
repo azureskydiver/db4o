@@ -481,15 +481,24 @@ namespace Db4objects.Db4o.Internal
 			ObjectReference @ref = ReferenceForId(id);
 			if (@ref != null)
 			{
+				if (IsStruct(@ref))
+				{
+					return null;
+				}
 				return new FrozenObjectInfo(this, @ref, true);
 			}
 			@ref = Container().PeekReference(SystemTransaction(), id, new FixedActivationDepth
 				(0), true);
-			if (@ref == null || @ref.GetObject() == null)
+			if (@ref == null || @ref.GetObject() == null || IsStruct(@ref))
 			{
 				return null;
 			}
 			return new FrozenObjectInfo(SystemTransaction(), @ref, true);
+		}
+
+		private bool IsStruct(ObjectReference @ref)
+		{
+			return @ref.ClassMetadata().IsStruct();
 		}
 
 		public virtual LazyObjectReference LazyReferenceFor(int id)

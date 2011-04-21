@@ -26,7 +26,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			a_candidates.Filter(this);
 		}
 
-		internal override bool Evaluate(QCandidate a_candidate)
+		internal override bool Evaluate(IInternalCandidate a_candidate)
 		{
 			return _value;
 		}

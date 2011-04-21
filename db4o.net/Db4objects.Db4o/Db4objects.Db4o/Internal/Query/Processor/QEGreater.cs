@@ -9,8 +9,8 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 	/// <exclude></exclude>
 	public class QEGreater : QEAbstract
 	{
-		internal override bool Evaluate(QConObject constraint, QCandidate candidate, object
-			 obj)
+		internal override bool Evaluate(QConObject constraint, IInternalCandidate candidate
+			, object obj)
 		{
 			if (obj == null)
 			{

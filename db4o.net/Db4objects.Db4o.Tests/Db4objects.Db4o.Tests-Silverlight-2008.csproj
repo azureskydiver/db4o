@@ -97,6 +97,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\IndexCreateDropTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\IndexedBlockSizeQueryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\InvalidOffsetInDeleteTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\KnownClassesIndexTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\KnownClassesTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\LazyObjectReferenceTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\LockedTreeTestCase.cs"/>
@@ -550,6 +551,8 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Internal\SerializerTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Internal\TransactionLocalTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Internal\TransactionTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Logging\LoggingTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Logging\LoggingTestCase_TestLogger_LoggingSupport.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Migration\AllCommonTests.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Migration\Db4oLibrary.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Migration\Db4oLibraryEnvironmentProvider.cs"/>

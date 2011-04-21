@@ -24,10 +24,10 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 				), typeof(ExceptionsOnNotStorableFalseTestCase), typeof(ExceptionsOnNotStorableIsDefaultTestCase
 				), typeof(GetSingleSimpleArrayTestCase), typeof(HandlerRegistryTestCase), typeof(
 				IndexCreateDropTestCase), typeof(IndexedBlockSizeQueryTestCase), typeof(InvalidOffsetInDeleteTestCase
-				), typeof(KnownClassesTestCase), typeof(LazyObjectReferenceTestCase), typeof(LockedTreeTestCase
-				), typeof(LongLinkedListTestCase), typeof(ManyRollbacksTestCase), typeof(MultiDeleteTestCase
-				), typeof(ObjectUpdateFileSizeTestCase), typeof(ObjectConstructorTestCase), typeof(
-				ObjectContainerMemberTestCase), typeof(PlainObjectTestCase), typeof(PeekPersistedTestCase
+				), typeof(KnownClassesTestCase), typeof(KnownClassesIndexTestCase), typeof(LazyObjectReferenceTestCase
+				), typeof(LockedTreeTestCase), typeof(LongLinkedListTestCase), typeof(ManyRollbacksTestCase
+				), typeof(MultiDeleteTestCase), typeof(ObjectUpdateFileSizeTestCase), typeof(ObjectConstructorTestCase
+				), typeof(ObjectContainerMemberTestCase), typeof(PlainObjectTestCase), typeof(PeekPersistedTestCase
 				), typeof(PersistentIntegerArrayTestCase), typeof(PersistStaticFieldValuesTestSuite
 				), typeof(PreventMultipleOpenTestCase), typeof(QueryByInterface), typeof(ReAddCascadedDeleteTestCase
 				), typeof(RepeatDeleteReaddTestCase), typeof(RollbackDeleteTestCase), typeof(RollbackTestCase

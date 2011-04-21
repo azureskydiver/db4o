@@ -55,7 +55,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return false;
 		}
 
-		internal override bool Evaluate(QCandidate candidate)
+		internal override bool Evaluate(IInternalCandidate candidate)
 		{
 			bool result = true;
 			QCandidates qCandidates = candidate.Candidates();
@@ -69,13 +69,13 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 						return i_evaluator.Not(true);
 					}
 					BTree btree = index.Btree();
-					object searchResult = btree.Search(candidate.Transaction(), candidate._key);
+					object searchResult = btree.Search(candidate.Transaction(), candidate.Id());
 					result = searchResult != null;
 				}
 			}
 			else
 			{
-				IReflectClass claxx = candidate.ClassReflector();
+				IReflectClass claxx = candidate.ClassMetadata().ClassReflector();
 				if (claxx == null)
 				{
 					result = false;

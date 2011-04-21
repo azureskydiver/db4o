@@ -227,6 +227,7 @@ namespace Db4objects.Db4o.Reflect.Generic
 					(), fieldInfo.IsPrimitive(), fieldInfo.IsArray(), fieldInfo.IsNArray());
 			}
 			_builder.InitFields(clazz, fields);
+			_listeners.NotifyListeners(clazz);
 		}
 
 		private void Register(string className, IReflectClass clazz)
@@ -237,7 +238,6 @@ namespace Db4objects.Db4o.Reflect.Generic
 			}
 			_classByName.Put(className, clazz);
 			_classes.Add(clazz);
-			_listeners.NotifyListeners(clazz);
 		}
 
 		private IReflectClass ReflectClassForFieldSpec(RawFieldSpec fieldInfo, IReflector

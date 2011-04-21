@@ -39,11 +39,11 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return false;
 		}
 
-		internal override bool Evaluate(QCandidate a_candidate)
+		internal override bool Evaluate(IInternalCandidate candidate)
 		{
-			if (!a_candidate.FieldIsAvailable())
+			if (!candidate.FieldIsAvailable())
 			{
-				VisitOnNull(a_candidate.GetRoot());
+				VisitOnNull(candidate.GetRoot());
 			}
 			return true;
 		}

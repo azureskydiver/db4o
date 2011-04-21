@@ -7,7 +7,7 @@ using Db4objects.Db4o.Internal.Query.Processor;
 namespace Db4objects.Db4o.Internal.Query.Processor
 {
 	/// <exclude></exclude>
-	internal class QPending : Tree
+	public class QPending : Tree
 	{
 		internal readonly QConJoin _join;
 
