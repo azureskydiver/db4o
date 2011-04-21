@@ -362,13 +362,18 @@ public class LocalTransaction extends Transaction {
 	public ObjectInfo frozenReferenceFor(final int id) {
 		ObjectReference ref = referenceForId(id);
 		if(ref != null){
+			if (isStruct(ref)) return null;
 			return new FrozenObjectInfo(this, ref, true);
 		}
 		ref = container().peekReference(systemTransaction(), id, new FixedActivationDepth(0), true);
-		if(ref == null || ref.getObject() == null){
+		if(ref == null || ref.getObject() == null || isStruct(ref)){
 			return null;
 		}
 		return new FrozenObjectInfo(systemTransaction(), ref, true);
+	}
+
+	private boolean isStruct(ObjectReference ref) {
+		return ref.classMetadata().isStruct();
 	}
 	
 	public LazyObjectReference lazyReferenceFor(final int id) {
