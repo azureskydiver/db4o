@@ -12,8 +12,9 @@ public class AllTests extends ComposibleTestSuite {
 						com.db4o.db4ounit.optional.handlers.AllTests.class,
 						com.db4o.db4ounit.optional.monitoring.AllTests.class,
 						BigMathSupportTestCase.class,
-						ConsistencyCheckerTestCase.class,
-						UuidSupportTestCase.class, } );
+						ConsistencyCheckerTestSuite.class,
+						UuidSupportTestCase.class, 
+				} );
 	}
 	
 	/** @sharpen.if !SILVERLIGHT */
