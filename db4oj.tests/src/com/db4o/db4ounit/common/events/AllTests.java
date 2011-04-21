@@ -20,6 +20,7 @@ public class AllTests extends ComposibleTestSuite {
 						DeletionEventsTestCase.class,
 						EventArgsTransactionTestCase.class,			
 						EventCountTestCase.class,
+						ExceptionInUpdatingCallbackCorruptionTestCase.class,
 						ExceptionPropagationInEventsTestSuite.class,
 						InstantiationEventsTestCase.class,
 						ObjectContainerEventsTestCase.class,
