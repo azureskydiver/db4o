@@ -33,10 +33,17 @@ class OverlapMap {
 		TreeIntObject.traverse(_slots, new Visitor4<TreeIntObject>() {
 			public void visit(TreeIntObject tree) {
 				SlotWithSource curSlot = (SlotWithSource) tree._object;
-				if(prevSlot.value != null && prevSlot.value._slot.address() + _blockConverter.bytesToBlocks(prevSlot.value._slot.length()) > curSlot._slot.address()) {
+				if(isOverlap(prevSlot.value, curSlot)) {
 					overlaps.add(new Pair<SlotWithSource, SlotWithSource>(prevSlot.value, curSlot));
 				}
 				prevSlot.value = curSlot;
+			}
+
+			private boolean isOverlap(SlotWithSource prevSlot, SlotWithSource curSlot) {
+				if(prevSlot == null){
+					return false;
+				}
+				return prevSlot._slot.address() + _blockConverter.bytesToBlocks(prevSlot._slot.length()) > curSlot._slot.address();
 			}
 		});
 		return overlaps;
