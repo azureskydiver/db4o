@@ -53,7 +53,7 @@ public class ConsistencyCheckerTestSuite extends FixtureBasedTestSuite {
 					new BlockSizeSpec(1), 
 					new BlockSizeSpec(7), 
 					new BlockSizeSpec(9), 
-					new BlockSizeSpec(13), 
+					new BlockSizeSpec(13)
 //					new BlockSizeSpec(17), 
 //					new BlockSizeSpec(19)
 			),
