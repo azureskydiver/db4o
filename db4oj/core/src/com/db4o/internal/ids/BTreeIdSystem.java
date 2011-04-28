@@ -217,4 +217,15 @@ public class BTreeIdSystem implements StackableIdSystem {
 	public void traverseIds(Visitor4<IdSlotMapping> visitor) {
 		_bTree.traverseKeys(_container.systemTransaction(), visitor);
 	}
+
+	@Override
+	public void traverseOwnSlots(Procedure4<Slot> block) {
+		_parentIdSystem.traverseOwnSlots(block);
+		block.apply(_parentIdSystem.committedSlot(_persistentState.getID()));
+		block.apply(_parentIdSystem.committedSlot(_bTree.getID()));
+		Iterator4<Integer> nodeIds = _bTree.allNodeIds(_container.systemTransaction());
+		while(nodeIds.moveNext()) {
+			block.apply(_parentIdSystem.committedSlot(nodeIds.current()));
+		}
+	}
 }

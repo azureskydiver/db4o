@@ -22,4 +22,5 @@ public interface IdSystem {
 
 	public void commit(Visitable<SlotChange> slotChanges, FreespaceCommitter freespaceCommitter);
 
+	public void traverseOwnSlots(Procedure4<Slot> block);
 }

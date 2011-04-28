@@ -41,4 +41,9 @@ public class DelegatingIdSystem implements IdSystem {
 		_delegate.returnUnusedIds(visitable);
 	}
 
+	@Override
+	public void traverseOwnSlots(Procedure4<Slot> block) {
+		_delegate.traverseOwnSlots(block);
+	}
+
 }
