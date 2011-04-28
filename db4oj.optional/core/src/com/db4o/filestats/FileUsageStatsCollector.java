@@ -211,24 +211,15 @@ public class FileUsageStatsCollector {
 	}
 	
 	private long idSystemUsage() {
-		IdSystem idSystem = _db.idSystem();
-		long usage = 0;
-		while(idSystem instanceof BTreeIdSystem) {
-			IdSystem parentIdSystem = fieldValue(idSystem, "_parentIdSystem");
-			usage += bTreeUsage(_db.systemTransaction(), parentIdSystem, (BTree)fieldValue(idSystem, "_bTree"), _slots);
-			PersistentIntegerArray persistentState = (PersistentIntegerArray)fieldValue(idSystem, "_persistentState");
-			int persistentStateId = persistentState.getID();
-			Slot persistentStateSlot = parentIdSystem.committedSlot(persistentStateId);
-			_slots.add(persistentStateSlot);
-			usage += persistentStateSlot.length();
-			idSystem = parentIdSystem;
-		}
-		if(idSystem instanceof InMemoryIdSystem) {
-			Slot idSystemSlot = fieldValue(idSystem, "_slot");
-			usage += idSystemSlot.length();
-			_slots.add(idSystemSlot);
-		}
-		return usage;
+		final IntByRef usage = new IntByRef();
+		_db.idSystem().traverseOwnSlots(new Procedure4<Slot>() {			
+			@Override
+			public void apply(Slot slot) {
+				usage.value += slot.length();
+				_slots.add(slot);
+			}
+		});
+		return usage.value;
 	}
 	
 	private long classMetadataUsage() {

@@ -73,4 +73,8 @@ public final class PointerBasedIdSystem implements IdSystem {
 		_transactionLogHandler.completeInterruptedTransaction(transactionId1, transactionId2);
 	}
 
+	@Override
+	public void traverseOwnSlots(Procedure4<Slot> block) {
+	}
+
 }

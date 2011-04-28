@@ -245,4 +245,9 @@ public class InMemoryIdSystem implements StackableIdSystem {
 		_childId = id;
 	}
 
+	@Override
+	public void traverseOwnSlots(Procedure4<Slot> block) {
+		block.apply(_slot);
+	}
+
 }
