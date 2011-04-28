@@ -134,6 +134,15 @@ public class ConsistencyChecker {
 				}
 			}
 		});
+		idSystem.traverseOwnSlots(new Procedure4<Slot>() {
+			@Override
+			public void apply(Slot slot) {
+				if(isBogusSlot(slot.address(), slot.length())) {
+					_bogusSlots.add(new SlotWithSource(slot, SlotSource.ID_SYSTEM));
+				}
+				_overlaps.add(slot, SlotSource.ID_SYSTEM);
+			}
+		});
 	}
 
 	private boolean isBogusSlot(int address, int length) {
