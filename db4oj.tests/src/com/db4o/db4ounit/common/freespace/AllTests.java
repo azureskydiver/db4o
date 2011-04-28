@@ -17,6 +17,7 @@ public class AllTests extends ComposibleTestSuite {
         					FreespaceManagerReopenTestCase.class,
         					FreespaceManagerTestCase.class,
         					FreespaceManagerTypeChangeTestCase.class,
+        					FreespaceRemainderLimitTestCase.class,
         			});
     }
 

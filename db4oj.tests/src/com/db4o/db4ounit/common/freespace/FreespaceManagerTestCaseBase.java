@@ -18,11 +18,11 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
 	protected void db4oSetupAfterStore() throws Exception {
 		LocalObjectContainer container = (LocalObjectContainer) db();
 		
-		BTreeFreespaceManager btreeFm = new BTreeFreespaceManager(container, null, container.configImpl().discardFreeSpace());
+		BTreeFreespaceManager btreeFm = new BTreeFreespaceManager(container, null, container.configImpl().discardFreeSpace(), AbstractFreespaceManager.REMAINDER_SIZE_LIMIT);
 		btreeFm.start(0);
 		
 		fm = new FreespaceManager[]{
-			new InMemoryFreespaceManager(null, container.configImpl().discardFreeSpace()),
+			new InMemoryFreespaceManager(null, container.configImpl().discardFreeSpace(), AbstractFreespaceManager.REMAINDER_SIZE_LIMIT),
 			btreeFm,
 		};
 	}

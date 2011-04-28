@@ -89,7 +89,7 @@ public class PrefetchIDCountTestCase extends TestWithTempFile {
 	public static class DebugFreespaceManager extends AbstractFreespaceManager {
 		
 		public DebugFreespaceManager(LocalObjectContainer file) {
-			super(null, 0);
+			super(null, 0, 0);
 		}
 
 		private final List<Integer> _freedSlots = new ArrayList<Integer>();

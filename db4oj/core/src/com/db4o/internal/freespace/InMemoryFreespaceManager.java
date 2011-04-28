@@ -18,8 +18,8 @@ public class InMemoryFreespaceManager extends AbstractFreespaceManager {
     
 	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
     
-	public InMemoryFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit) {
-		super(slotFreedCallback, discardLimit);
+	public InMemoryFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit, int remainderSizeLimit) {
+		super(slotFreedCallback, discardLimit, remainderSizeLimit);
 	}
 	
     private void addFreeSlotNodes(int address, int length) {

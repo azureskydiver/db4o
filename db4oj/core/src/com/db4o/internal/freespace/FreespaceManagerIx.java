@@ -14,8 +14,8 @@ import com.db4o.internal.slots.*;
 public class FreespaceManagerIx extends AbstractFreespaceManager{
     
     
-	public FreespaceManagerIx(int discardLimit) {
-		super(null, discardLimit);
+	public FreespaceManagerIx(int discardLimit, int remainderSizeLimit) {
+		super(null, discardLimit, 0);
 	}
 
 	public Slot allocateSafeSlot(int length) {
