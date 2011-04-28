@@ -29,10 +29,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
 	private TransactionalIdSystem _idSystem;
 	
-	public BTreeFreespaceManager(LocalObjectContainer file, Procedure4<Slot> slotFreedCallback,  int discardLimit) {
-		super(slotFreedCallback, discardLimit);
+	public BTreeFreespaceManager(LocalObjectContainer file, Procedure4<Slot> slotFreedCallback,  int discardLimit, int remainderSizeLimit) {
+		super(slotFreedCallback, discardLimit, remainderSizeLimit);
 		_file = file;
-		_delegate = new InMemoryFreespaceManager(slotFreedCallback, discardLimit);
+		_delegate = new InMemoryFreespaceManager(slotFreedCallback, discardLimit, remainderSizeLimit);
 		_idSystem = file.systemData().freespaceIdSystem();
 	}
 	

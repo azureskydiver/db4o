@@ -18,8 +18,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     public static final byte FM_BTREE = 4;
     
     private static final int INTS_IN_SLOT = 12;
-    
-	public static final int REMAINDER_SIZE_LIMIT = 20; 
+    public static final int REMAINDER_SIZE_LIMIT = 20;
     
     public static byte checkType(byte systemType){
         if(systemType == FM_DEFAULT){
@@ -31,10 +30,12 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     protected Procedure4<Slot> _slotFreedCallback;
     
     private final int _discardLimit;
+	private final int _remainderSizeLimit;
     
-    public AbstractFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit){
+    public AbstractFreespaceManager(Procedure4<Slot> slotFreedCallback, int discardLimit, int remainderSizeLimit){
     	_slotFreedCallback = slotFreedCallback;
     	_discardLimit = discardLimit;
+		_remainderSizeLimit = remainderSizeLimit;
     }
     
     public static AbstractFreespaceManager createNew(LocalObjectContainer file){
@@ -47,6 +48,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         int blockedDiscardLimit = unblockedDiscardLimit == Integer.MAX_VALUE ? 
         		unblockedDiscardLimit :
         		file.blockConverter().bytesToBlocks(unblockedDiscardLimit);
+        int remainderSizeLimit = file.blockConverter().bytesToBlocks(REMAINDER_SIZE_LIMIT);
         Procedure4<Slot> slotFreedCallback = new Procedure4<Slot>() {
 			public void apply(Slot slot) {
 				file.overwriteDeletedBlockedSlot(slot);	
@@ -54,11 +56,11 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
 		}; 
         switch(systemType){
         	case FM_IX:
-        		return new FreespaceManagerIx(blockedDiscardLimit);
+        		return new FreespaceManagerIx(blockedDiscardLimit, remainderSizeLimit);
         	case FM_BTREE:
-        		return new BTreeFreespaceManager(file, slotFreedCallback, blockedDiscardLimit);
+        		return new BTreeFreespaceManager(file, slotFreedCallback, blockedDiscardLimit, remainderSizeLimit);
             default:
-                return new InMemoryFreespaceManager(slotFreedCallback, blockedDiscardLimit);
+                return new InMemoryFreespaceManager(slotFreedCallback, blockedDiscardLimit, remainderSizeLimit);
         }
     }
     
@@ -111,7 +113,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
 		if(canDiscard(length)){
 			return false;
 		}
-		return length > REMAINDER_SIZE_LIMIT;
+		return length > _remainderSizeLimit;
 	}
     
     final boolean canDiscard(int length) {

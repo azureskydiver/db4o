@@ -12,13 +12,13 @@ import com.db4o.internal.slots.*;
 import db4ounit.*;
 
 @decaf.Remove(decaf.Platform.JDK11)
-public class BlockAwareFreespaceManagerTestCase implements TestLifeCycle {
+public class BlockAwareFreespaceManagerTestCase implements TestCase {
 	
 	private static final int BLOCK_SIZE = 7;
 	
 	private final BlockConverter _blockConverter = new BlockSizeBlockConverter(BLOCK_SIZE);
 	
-	private final InMemoryFreespaceManager _blocked = new InMemoryFreespaceManager(null, 0);
+	private final InMemoryFreespaceManager _blocked = new InMemoryFreespaceManager(null, 0, 0);
 	
 	private final BlockAwareFreespaceManager _nonBlocked = new BlockAwareFreespaceManager(_blocked , new BlockSizeBlockConverter(BLOCK_SIZE));
 
@@ -52,16 +52,6 @@ public class BlockAwareFreespaceManagerTestCase implements TestLifeCycle {
 			}
 		});
 		IteratorAssert.sameContent(slots, foundSlots);
-	}
-
-	public void setUp() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void tearDown() throws Exception {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
