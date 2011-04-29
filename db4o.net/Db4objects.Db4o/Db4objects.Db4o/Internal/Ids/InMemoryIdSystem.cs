@@ -332,5 +332,10 @@ namespace Db4objects.Db4o.Internal.Ids
 		{
 			_childId = id;
 		}
+
+		public virtual void TraverseOwnSlots(IProcedure4 block)
+		{
+			block.Apply(_slot);
+		}
 	}
 }

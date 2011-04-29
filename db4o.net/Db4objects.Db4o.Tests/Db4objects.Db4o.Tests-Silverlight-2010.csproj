@@ -317,6 +317,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\EventCountTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\EventInfo.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\EventsTestCaseBase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Events\ExceptionInUpdatingCallbackCorruptionTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\ExceptionPropagationInEventsTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\ExceptionPropagationInEventsTestUnit.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\ExceptionPropagationInEventsTestVariables.cs"/>
@@ -452,6 +453,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Freespace\FreespaceManagerTestCaseBase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Freespace\FreespaceManagerTypeChangeSlotCountTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Freespace\FreespaceManagerTypeChangeTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Freespace\FreespaceRemainderLimitTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Freespace\IxFreespaceMigrationTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Handlers\AbstractObjectContainerAdapter.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Handlers\AllTests.cs"/>
@@ -925,7 +927,7 @@
 <Compile Include="Db4objects.Db4o.Tests\NativeQueries\Mocks\MockMethodRef.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\NativeQueries\Mocks\MockTypeRef.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Optional\AllTests.cs"/>
-<Compile Include="Db4objects.Db4o.Tests\Optional\ConsistencyCheckerTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Optional\ConsistencyCheckerTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Optional\FileUsageStatsTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Optional\Handlers\AllTests.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Optional\Monitoring\CS\CountingServerSocket4.cs"/>

@@ -56,8 +56,8 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 		public virtual void Test()
 		{
 			UpdateAll();
-			ConsistencyChecker.ConsistencyReport consistencyReport = new ConsistencyChecker(FileSession
-				()).CheckSlotConsistency();
+			ConsistencyReport consistencyReport = new ConsistencyChecker(FileSession()).CheckSlotConsistency
+				();
 			Assert.IsTrue(consistencyReport.Consistent(), consistencyReport.ToString());
 		}
 

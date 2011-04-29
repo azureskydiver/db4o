@@ -11,7 +11,7 @@ namespace Db4objects.Db4o.Tests.Optional
 		protected override Type[] TestCases()
 		{
 			return ComposeTests(new Type[] { typeof(Db4objects.Db4o.Tests.Optional.Handlers.AllTests
-				), typeof(ConsistencyCheckerTestCase) });
+				), typeof(ConsistencyCheckerTestSuite) });
 		}
 
 		#if !SILVERLIGHT

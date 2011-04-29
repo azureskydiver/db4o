@@ -47,5 +47,10 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 		{
 			_delegate.ReturnUnusedIds(visitable);
 		}
+
+		public virtual void TraverseOwnSlots(IProcedure4 block)
+		{
+			_delegate.TraverseOwnSlots(block);
+		}
 	}
 }

@@ -20,5 +20,7 @@ namespace Db4objects.Db4o.Internal.Ids
 		void CompleteInterruptedTransaction(int transactionId1, int transactionId2);
 
 		void Commit(IVisitable slotChanges, FreespaceCommitter freespaceCommitter);
+
+		void TraverseOwnSlots(IProcedure4 block);
 	}
 }

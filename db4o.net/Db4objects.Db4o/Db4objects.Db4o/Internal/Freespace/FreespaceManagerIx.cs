@@ -17,7 +17,8 @@ namespace Db4objects.Db4o.Internal.Freespace
 	/// </remarks>
 	public class FreespaceManagerIx : AbstractFreespaceManager
 	{
-		public FreespaceManagerIx(int discardLimit) : base(null, discardLimit)
+		public FreespaceManagerIx(int discardLimit, int remainderSizeLimit) : base(null, 
+			discardLimit, 0)
 		{
 		}
 
