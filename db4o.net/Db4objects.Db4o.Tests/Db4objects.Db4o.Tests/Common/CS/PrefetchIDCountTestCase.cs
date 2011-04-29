@@ -155,7 +155,7 @@ namespace Db4objects.Db4o.Tests.Common.CS
 
 		public class DebugFreespaceManager : AbstractFreespaceManager
 		{
-			public DebugFreespaceManager(LocalObjectContainer file) : base(null, 0)
+			public DebugFreespaceManager(LocalObjectContainer file) : base(null, 0, 0)
 			{
 			}
 

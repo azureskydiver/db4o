@@ -18,9 +18,10 @@ namespace Db4objects.Db4o.Tests.Common.Events
 			return ComposeTests(new Type[] { typeof(ActivationEventsTestCase), typeof(ClassRegistrationEventsTestCase
 				), typeof(CreationEventsTestCase), typeof(DeleteEventOnClientTestCase), typeof(DeletionEventExceptionTestCase
 				), typeof(DeletionEventsTestCase), typeof(EventArgsTransactionTestCase), typeof(
-				EventCountTestCase), typeof(ExceptionPropagationInEventsTestSuite), typeof(InstantiationEventsTestCase
-				), typeof(ObjectContainerEventsTestCase), typeof(ObjectContainerOpenEventTestCase
-				), typeof(QueryEventsTestCase), typeof(UpdateInCallbackThrowsTestCase) });
+				EventCountTestCase), typeof(ExceptionInUpdatingCallbackCorruptionTestCase), typeof(
+				ExceptionPropagationInEventsTestSuite), typeof(InstantiationEventsTestCase), typeof(
+				ObjectContainerEventsTestCase), typeof(ObjectContainerOpenEventTestCase), typeof(
+				QueryEventsTestCase), typeof(UpdateInCallbackThrowsTestCase) });
 		}
 
 		#if !SILVERLIGHT

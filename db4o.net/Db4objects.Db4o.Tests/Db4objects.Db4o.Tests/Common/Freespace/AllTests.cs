@@ -17,7 +17,7 @@ namespace Db4objects.Db4o.Tests.Common.Freespace
 		{
 			return ComposeTests(new Type[] { typeof(FreespaceManagerDiscardLimitTestCase), typeof(
 				FreespaceManagerReopenTestCase), typeof(FreespaceManagerTestCase), typeof(FreespaceManagerTypeChangeTestCase
-				) });
+				), typeof(FreespaceRemainderLimitTestCase) });
 		}
 
 		#if !SILVERLIGHT

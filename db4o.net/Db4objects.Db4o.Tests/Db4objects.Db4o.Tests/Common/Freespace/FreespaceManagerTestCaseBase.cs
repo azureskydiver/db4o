@@ -18,10 +18,10 @@ namespace Db4objects.Db4o.Tests.Common.Freespace
 		{
 			LocalObjectContainer container = (LocalObjectContainer)Db();
 			BTreeFreespaceManager btreeFm = new BTreeFreespaceManager(container, null, container
-				.ConfigImpl.DiscardFreeSpace());
+				.ConfigImpl.DiscardFreeSpace(), AbstractFreespaceManager.RemainderSizeLimit);
 			btreeFm.Start(0);
 			fm = new IFreespaceManager[] { new InMemoryFreespaceManager(null, container.ConfigImpl
-				.DiscardFreeSpace()), btreeFm };
+				.DiscardFreeSpace(), AbstractFreespaceManager.RemainderSizeLimit), btreeFm };
 		}
 
 		protected virtual void Clear(IFreespaceManager freespaceManager)

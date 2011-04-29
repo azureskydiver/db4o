@@ -20,8 +20,9 @@ namespace Db4objects.Db4o.Internal.Freespace
 
 		private IFreespaceListener _listener = NullFreespaceListener.Instance;
 
-		public InMemoryFreespaceManager(IProcedure4 slotFreedCallback, int discardLimit) : 
-			base(slotFreedCallback, discardLimit)
+		public InMemoryFreespaceManager(IProcedure4 slotFreedCallback, int discardLimit, 
+			int remainderSizeLimit) : base(slotFreedCallback, discardLimit, remainderSizeLimit
+			)
 		{
 		}
 

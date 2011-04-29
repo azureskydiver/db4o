@@ -30,10 +30,12 @@ namespace Db4objects.Db4o.Internal.Freespace
 		private ITransactionalIdSystem _idSystem;
 
 		public BTreeFreespaceManager(LocalObjectContainer file, IProcedure4 slotFreedCallback
-			, int discardLimit) : base(slotFreedCallback, discardLimit)
+			, int discardLimit, int remainderSizeLimit) : base(slotFreedCallback, discardLimit
+			, remainderSizeLimit)
 		{
 			_file = file;
-			_delegate = new InMemoryFreespaceManager(slotFreedCallback, discardLimit);
+			_delegate = new InMemoryFreespaceManager(slotFreedCallback, discardLimit, remainderSizeLimit
+				);
 			_idSystem = file.SystemData().FreespaceIdSystem();
 		}
 

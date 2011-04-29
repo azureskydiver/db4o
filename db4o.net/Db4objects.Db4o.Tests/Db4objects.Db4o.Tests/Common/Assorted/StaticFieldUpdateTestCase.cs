@@ -94,8 +94,8 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 
 		private void AssertCount(StaticFieldUpdateTestCase.SimpleEnum value, int count)
 		{
-			ConsistencyChecker.ConsistencyReport consistencyReport = new ConsistencyChecker(FileSession
-				()).CheckSlotConsistency();
+			ConsistencyReport consistencyReport = new ConsistencyChecker(FileSession()).CheckSlotConsistency
+				();
 			if (!consistencyReport.Consistent())
 			{
 				Sharpen.Runtime.Err.WriteLine(consistencyReport);
