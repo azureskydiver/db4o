@@ -61,7 +61,7 @@ public class ConsistencyCheckerTestSuite extends FixtureBasedTestSuite {
 	}
 
 	public static class Item {
-		byte[] bytes = new byte[BLOCK_SIZE.value().blockSize()];
+		public byte[] bytes = new byte[BLOCK_SIZE.value().blockSize()];
 	}
 
 	public static class ConsistencyCheckerTestUnit implements TestLifeCycle {
