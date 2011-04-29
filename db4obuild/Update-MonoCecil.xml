@@ -32,7 +32,13 @@
 	</ItemGroup>			
 	
 	<ItemGroup Condition="'$(TargetProject)' == 'Mono.Cecil'" >
-		<Sources Include="$(CecilSourcesDirectory)\Mono\**\*.cs" />
+		<Sources Include="$(CecilSourcesDirectory)\Mono\**\*.cs" />		
+		<Sources Include="$(CecilSourcesDirectory)\Mono.Cecil.Metadata\**\*.cs" />		
+		<Sources Include="$(CecilSourcesDirectory)\Mono.Cecil.PE\**\*.cs" />		
+		<Sources Include="$(CecilSourcesDirectory)\Mono.Security.Cryptography\**\*.cs" />		
+		<Sources Include="$(CecilSourcesDirectory)\Mono.Cecil\**\*.cs" />		
+		<Sources Include="$(CecilSourcesDirectory)\Mono.Cecil.Cil\**\*.cs" />		
+		<Sources Include="$(CecilSourcesDirectory)\Mono.Collections.Generic\**\*.cs" />
 	</ItemGroup>	
 	
 	<!-- MS ASSEMBLY REFERENCES -->
@@ -67,21 +73,25 @@
 		<Exec Command="$(GitExecutable) init $(CecilSourcesDirectory)" />
 		<Exec Command="$(GitExecutable) pull https://github.com/jbevain/cecil.git" WorkingDirectory="$(CecilSourcesDirectory)" />		
 
+		<Message Text="Building Mono.Cecil on Silverlight" />
 		<MSBuild 
 			Projects="$(MSBuildProjectFile)" 
 			Targets="Csc" 
-			Properties="OutputAssemblyFile=Mono.Cecil.dll;TargetProject=Mono.Cecil;TargetPlatform=SILVERLIGHT" />		
+			Properties="OutputAssemblyFile=Mono.Cecil.dll;TargetProject=Mono.Cecil;TargetPlatform=SILVERLIGHT" />
 			
+		<Message Text="Building Mono.Cecil on CF" />
 		<MSBuild 
 			Projects="$(MSBuildProjectFile)" 
 			Targets="Csc" 
 			Properties="OutputAssemblyFile=Mono.Cecil.dll;TargetProject=Mono.Cecil;TargetPlatform=CF" />
 			
+		<Message Text="Building Mono.Cecil on Net3.5" />
 		<MSBuild 
 			Projects="$(MSBuildProjectFile)" 
 			Targets="Csc" 
 			Properties="OutputAssemblyFile=Mono.Cecil.dll;TargetProject=Mono.Cecil;TargetPlatform=NET_3_5" />
 		
+		<Message Text="Building Mono.Cecil.Pdb on Net3.5" />
 		<MSBuild 
 			Projects="$(MSBuildProjectFile)" 
 			Targets="Csc" 
