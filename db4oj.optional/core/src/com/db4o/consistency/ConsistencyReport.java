@@ -28,6 +28,14 @@ public class ConsistencyReport {
 		return bogusSlots.size() == 0 && overlaps.overlaps().size() == 0 && overlaps.dupes().size() == 0 && invalidObjectIds.size() == 0 && invalidFieldIndexEntries.size() == 0;
 	}
 	
+	public Set<Pair<SlotDetail, SlotDetail>> overlaps() {
+		return overlaps.overlaps();
+	}
+
+	public Set<Pair<SlotDetail, SlotDetail>> dupes() {
+		return overlaps.dupes();
+	}
+
 	@Override
 	public String toString() {
 		if(consistent()) {

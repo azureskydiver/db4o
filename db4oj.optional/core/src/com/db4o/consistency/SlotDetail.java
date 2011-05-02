@@ -3,7 +3,7 @@ package com.db4o.consistency;
 
 import com.db4o.internal.slots.*;
 
-abstract class SlotDetail {
+public abstract class SlotDetail {
 	public final Slot _slot;
 
 	public SlotDetail(Slot slot) {
