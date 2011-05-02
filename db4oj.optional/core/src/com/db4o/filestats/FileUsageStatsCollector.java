@@ -212,9 +212,10 @@ public class FileUsageStatsCollector {
 	
 	private long idSystemUsage() {
 		final IntByRef usage = new IntByRef();
-		_db.idSystem().traverseOwnSlots(new Procedure4<Slot>() {			
+		_db.idSystem().traverseOwnSlots(new Procedure4<Pair<Integer, Slot>>() {			
 			@Override
-			public void apply(Slot slot) {
+			public void apply(Pair<Integer, Slot> idSlot) {
+				Slot slot = idSlot.second;
 				usage.value += slot.length();
 				_slots.add(slot);
 			}

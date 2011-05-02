@@ -42,7 +42,7 @@ public class DelegatingIdSystem implements IdSystem {
 	}
 
 	@Override
-	public void traverseOwnSlots(Procedure4<Slot> block) {
+	public void traverseOwnSlots(Procedure4<Pair<Integer, Slot>> block) {
 		_delegate.traverseOwnSlots(block);
 	}
 
