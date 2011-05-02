@@ -141,7 +141,7 @@ public class ConsistencyChecker {
 			public void apply(Pair<Integer, Slot> idSlot) {
 				int id = idSlot.first;
 				Slot slot = idSlot.second;
-				SlotDetail detail = id > 0 ? new IdObjectSlotDetail(id, slot) : new RawObjectSlotDetail(slot);
+				SlotDetail detail = id > 0 ? (SlotDetail)new IdObjectSlotDetail(id, slot) : (SlotDetail)new RawObjectSlotDetail(slot);
 				if(isBogusSlot(idSlot.second.address(), idSlot.second.length())) {
 					_bogusSlots.add(detail);
 				}
