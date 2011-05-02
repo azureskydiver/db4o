@@ -15,7 +15,7 @@ import com.db4o.internal.slots.*;
 
 public class ConsistencyChecker {
 
-	private final List<SlotWithSource> _bogusSlots = new ArrayList<SlotWithSource>();
+	private final List<SlotDetail> _bogusSlots = new ArrayList<SlotDetail>();
 	private final LocalObjectContainer _db;
 	private final OverlapMap _overlaps;
 
@@ -110,10 +110,11 @@ public class ConsistencyChecker {
 	private void mapFreespace() {
 		_db.freespaceManager().traverse(new Visitor4<Slot>() {
 			public void visit(Slot slot) {
+				FreespaceSlotDetail detail = new FreespaceSlotDetail(slot);
 				if(isBogusSlot(slot.address(), slot.length())) {
-					_bogusSlots.add(new SlotWithSource(slot, SlotSource.FREESPACE));
+					_bogusSlots.add(detail);
 				}
-				_overlaps.add(slot, SlotSource.FREESPACE);
+				_overlaps.add(detail);
 			}
 		});
 	}
@@ -126,21 +127,25 @@ public class ConsistencyChecker {
 		}
 		((BTreeIdSystem)idSystem).traverseIds(new Visitor4<IdSlotMapping>() {
 			public void visit(IdSlotMapping mapping) {
+				SlotDetail detail = new IdObjectSlotDetail(mapping._id, mapping.slot());
 				if(isBogusSlot(mapping._address, mapping._length)) {
-					_bogusSlots.add(new SlotWithSource(mapping.slot(), SlotSource.ID_SYSTEM));
+					_bogusSlots.add(detail);
 				}
 				if(mapping._address > 0) {
-					_overlaps.add(mapping.slot(), SlotSource.ID_SYSTEM);
+					_overlaps.add(detail);
 				}
 			}
 		});
-		idSystem.traverseOwnSlots(new Procedure4<Slot>() {
+		idSystem.traverseOwnSlots(new Procedure4<Pair<Integer, Slot>>() {
 			@Override
-			public void apply(Slot slot) {
-				if(isBogusSlot(slot.address(), slot.length())) {
-					_bogusSlots.add(new SlotWithSource(slot, SlotSource.ID_SYSTEM));
+			public void apply(Pair<Integer, Slot> idSlot) {
+				int id = idSlot.first;
+				Slot slot = idSlot.second;
+				SlotDetail detail = id > 0 ? new IdObjectSlotDetail(id, slot) : new RawObjectSlotDetail(slot);
+				if(isBogusSlot(idSlot.second.address(), idSlot.second.length())) {
+					_bogusSlots.add(detail);
 				}
-				_overlaps.add(slot, SlotSource.ID_SYSTEM);
+				_overlaps.add(detail);
 			}
 		});
 	}

@@ -8,13 +8,13 @@ import com.db4o.foundation.*;
 public class ConsistencyReport {
 	
 	private static final int MAX_REPORTED_ITEMS = 50;
-	final List<SlotWithSource> bogusSlots;
+	final List<SlotDetail> bogusSlots;
 	final OverlapMap overlaps;
 	final List<Pair<String,Integer>> invalidObjectIds;
 	final List<Pair<String,Integer>> invalidFieldIndexEntries;
 	
 	ConsistencyReport(
-			List<SlotWithSource> bogusSlots, 
+			List<SlotDetail> bogusSlots, 
 			OverlapMap overlaps, 
 			List<Pair<String,Integer>> invalidClassIds, 
 			List<Pair<String,Integer>> invalidFieldIndexEntries) {
