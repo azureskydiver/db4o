@@ -514,18 +514,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 
 	// primitive wrapper equality
-
-	boolean sampleFieldDateEqualsComp(Data data) {
-		return data.getDate().equals(dateMember);
-	}
-
-	public void testFieldDateEqualsComp() throws Exception {
-		assertComparison("sampleFieldDateEqualsComp",DATE_FIELDNAME,
-				fieldValue(PredicateFieldRoot.INSTANCE,"dateMember",java.util.Date.class),
-				ComparisonOperator.VALUE_EQUALITY,
-				false);
-	}
-
+	
 	boolean sampleFieldIntWrapperEqualsComp(Data data) {
 		return data.getIdWrapped().equals(intWrapperCmpVal);
 	}
@@ -546,10 +535,8 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 				fieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal",Integer.class),
 				ComparisonOperator.VALUE_EQUALITY,
 				false);
-	}	
-	
-	// date equality
-	
+	}		
+
 	boolean sampleFieldBooleanWrapperEqualsComp(Data data) {
 		return data.boolWrapper.booleanValue();
 	}
@@ -560,6 +547,30 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 				Boolean.TRUE,
 				ComparisonOperator.VALUE_EQUALITY,
 				false);
+	}
+	
+	// date equality
+
+	boolean sampleFieldDateEqualsComp(Data data) {
+		return data.getDate().equals(dateMember);
+	}
+
+	public void testFieldDateEqualsComp() throws Exception {
+		assertComparison("sampleFieldDateEqualsComp",DATE_FIELDNAME,
+				fieldValue(PredicateFieldRoot.INSTANCE,"dateMember",java.util.Date.class),
+				ComparisonOperator.VALUE_EQUALITY,
+				false);
+	}
+
+	boolean sampleFieldDateCompareToComp(Data data) {
+		return data.getDate().compareTo(dateMember) >= 0;
+	}
+
+	public void testFieldDateCompareToComp() throws Exception {
+		assertComparison("sampleFieldDateCompareToComp",DATE_FIELDNAME,
+				fieldValue(PredicateFieldRoot.INSTANCE,"dateMember",java.util.Date.class),
+				ComparisonOperator.SMALLER,
+				true);
 	}
 	
 	// descend into primitive wrapper
@@ -966,6 +977,16 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		OrExpression orExpr=(OrExpression)expr.right();
 		NQOptimizationAssertUtil.assertComparison(orExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.SMALLER,false);
 		NQOptimizationAssertUtil.assertComparison(orExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.VALUE_EQUALITY,false);
+	}
+
+	boolean sampleDateCompareToAnd(Data data) {
+		return data.date.compareTo(dateMember) >= 0 && data.date.compareTo(dateMember) <= 0;
+	}
+	
+	public void testDateCompareToAnd() throws Exception {
+		AndExpression expr = (AndExpression) expression("sampleDateCompareToAnd");
+		NQOptimizationAssertUtil.assertComparison(expr.left(), new String[]{DATE_FIELDNAME}, fieldValue(PredicateFieldRoot.INSTANCE,"dateMember",java.util.Date.class), ComparisonOperator.SMALLER, true);
+		NQOptimizationAssertUtil.assertComparison(expr.right(), new String[]{DATE_FIELDNAME}, fieldValue(PredicateFieldRoot.INSTANCE,"dateMember",java.util.Date.class), ComparisonOperator.GREATER, true);
 	}
 
 	// arithmetic
