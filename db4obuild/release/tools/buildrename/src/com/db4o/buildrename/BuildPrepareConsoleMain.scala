@@ -9,16 +9,16 @@ object BuildPrepareConsoleMain {
  
 	def main(args: Array[String]) {
 		args match {
-		  	case BuildPrepareArgs(dryRun, folder, version2category) => 
-		  		run(dryRun, folder, version2category)
+		  	case BuildPrepareArgs(unattended, dryRun, folder, version2category) => 
+		  		run(unattended, dryRun, folder, version2category)
 		  	case _ => {
-		  		println("Usage: BuildPrepareConsoleMain [-dry] <folder> [<version>  <category>['/''c'|'a']]*")
+		  		println("Usage: BuildPrepareConsoleMain [-unattended] [-dry] <folder> [<version>  <category>['/''c'|'a']]*")
 		  		println("Ex.: BuildPrepareConsoleMain ./data 7.12 Stable/a 8.0 Production/c 8.1 Development/c")
 		  	}
 		}
 	}		
  
-	private def run(dryRun: Boolean, folder: File, version2category: Map[String, Category]) {
+	private def run(unattended: Boolean, dryRun: Boolean, folder: File, version2category: Map[String, Category]) {
 		val files = filterFolder(folder)
 		files.foreach(logFile(_, "? "))
 		println()
@@ -28,11 +28,13 @@ object BuildPrepareConsoleMain {
 			return
 		}
 		println()
-		println("Hit y and Return to proceed.")
-		val readByte = System.in.read()
-		if(readByte != 'y') {
-			println("Rename operation cancelled.")
-			return
+		if(!unattended) {
+			println("Hit y and Return to proceed.")
+			val readByte = System.in.read()
+			if(readByte != 'y') {
+				println("Rename operation cancelled.")
+				return
+			}
 		}
 		files.foreach(f => {
 			logFile(f, "")
@@ -60,11 +62,16 @@ object BuildPrepareConsoleMain {
 object BuildPrepareArgs {
 	val CategoryPattern = """([^/]+)(\/([ca]))?""".r
 	
-	def unapply(args: Array[String]): Option[(Boolean, File, Map[String, Category])] = {
+	def unapply(args: Array[String]): Option[(Boolean, Boolean, File, Map[String, Category])] = {
 		if(args == null || args.size == 0) {
 			return None
 		}
 		var remainingArgs = args
+		var unattended = false
+		if("-unattended".equals(remainingArgs(0))) {
+			unattended = true
+			remainingArgs = remainingArgs.drop(1)
+		}
 		var dryRun = false
 		if("-dry".equals(remainingArgs(0))) {
 			dryRun = true
@@ -75,9 +82,9 @@ object BuildPrepareArgs {
 		}
 		val folder = new File(remainingArgs(0))
 		val version2category = arr2map(remainingArgs.drop(1), str2Category)
-		Some((dryRun, folder, version2category))
+		Some((unattended, dryRun, folder, version2category))
 	}
- 
+	
 	private def str2Category(s: String) = {
 		def op(id: String) = id match {
 			case "c" => ClearOp
