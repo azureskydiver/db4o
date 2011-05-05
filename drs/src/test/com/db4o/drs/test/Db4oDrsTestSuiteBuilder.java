@@ -1,13 +1,25 @@
+/* Copyright (C) 2011 Versant Inc.  http://www.db4o.com */
 package com.db4o.drs.test;
 
 import com.db4o.foundation.*;
 
 import db4ounit.*;
 
+/** @sharpen.partial **/
 public class Db4oDrsTestSuiteBuilder implements TestSuiteBuilder {
 	
 	public static void main(String[] args) {
-		new ConsoleTestRunner(new Db4oDrsTestSuiteBuilder()).run();
+		int errorCount = runTests();	
+		exit(errorCount);
+	}
+
+	/** @sharpen.ignore **/
+	private static void exit(int errorCount) {
+		System.exit(errorCount);
+	}
+
+	public static int runTests() {
+		return new ConsoleTestRunner(new Db4oDrsTestSuiteBuilder()).run();
 	}
 	
 	public Iterator4 iterator() {
