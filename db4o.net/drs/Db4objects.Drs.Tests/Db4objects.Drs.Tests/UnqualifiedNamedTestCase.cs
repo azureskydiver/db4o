@@ -10,7 +10,7 @@ using Db4objects.Drs.Tests.Data;
 
 namespace Db4objects.Drs.Tests
 {
-	public class TheSimplest : DrsTestCase
+	public class UnqualifiedNamedTestCase : DrsTestCase
 	{
 		public virtual void Test()
 		{
@@ -24,67 +24,59 @@ namespace Db4objects.Drs.Tests
 
 		private void StoreInA()
 		{
-			string name = "c1";
-			SPCChild child = CreateChildObject(name);
-			A().Provider().StoreNew(child);
+			UnqualifiedNamed unqualifiedNamed = new UnqualifiedNamed("storedInA");
+			A().Provider().StoreNew(unqualifiedNamed);
 			A().Provider().Commit();
-			EnsureNames(A(), "c1");
+			EnsureData(A(), "storedInA");
 		}
 
 		private void Replicate()
 		{
 			ReplicateAll(A().Provider(), B().Provider());
-			EnsureNames(A(), "c1");
-			EnsureNames(B(), "c1");
+			EnsureData(A(), "storedInA");
+			EnsureData(B(), "storedInA");
 		}
 
 		private void ModifyInB()
 		{
-			SPCChild child = GetTheObject(B());
-			child.SetName("c2");
-			B().Provider().Update(child);
+			UnqualifiedNamed unqualifiedNamed = (UnqualifiedNamed)GetOneInstance(B(), typeof(
+				UnqualifiedNamed));
+			unqualifiedNamed.SetData("modifiedInB");
+			B().Provider().Update(unqualifiedNamed);
 			B().Provider().Commit();
-			EnsureNames(B(), "c2");
+			EnsureData(B(), "modifiedInB");
 		}
 
 		private void Replicate2()
 		{
 			ReplicateAll(B().Provider(), A().Provider());
-			EnsureNames(A(), "c2");
-			EnsureNames(B(), "c2");
+			EnsureData(A(), "modifiedInB");
+			EnsureData(B(), "modifiedInB");
 		}
 
 		private void ModifyInA()
 		{
-			SPCChild child = GetTheObject(A());
-			child.SetName("c3");
-			A().Provider().Update(child);
+			UnqualifiedNamed unqualifiedNamed = (UnqualifiedNamed)GetOneInstance(A(), typeof(
+				UnqualifiedNamed));
+			unqualifiedNamed.SetData("modifiedInA");
+			A().Provider().Update(unqualifiedNamed);
 			A().Provider().Commit();
-			EnsureNames(A(), "c3");
+			EnsureData(A(), "modifiedInA");
 		}
 
 		private void Replicate3()
 		{
-			ReplicateClass(A().Provider(), B().Provider(), typeof(SPCChild));
-			EnsureNames(A(), "c3");
-			EnsureNames(B(), "c3");
+			ReplicateClass(A().Provider(), B().Provider(), typeof(UnqualifiedNamed));
+			EnsureData(A(), "modifiedInA");
+			EnsureData(B(), "modifiedInA");
 		}
 
-		protected virtual SPCChild CreateChildObject(string name)
+		private void EnsureData(IDrsProviderFixture fixture, object data)
 		{
-			return new SPCChild(name);
-		}
-
-		private void EnsureNames(IDrsProviderFixture fixture, string childName)
-		{
-			EnsureOneInstance(fixture, typeof(SPCChild));
-			SPCChild child = GetTheObject(fixture);
-			Assert.AreEqual(childName, child.GetName());
-		}
-
-		private SPCChild GetTheObject(IDrsProviderFixture fixture)
-		{
-			return (SPCChild)GetOneInstance(fixture, typeof(SPCChild));
+			EnsureOneInstance(fixture, typeof(UnqualifiedNamed));
+			UnqualifiedNamed unqualifiedNamed = (UnqualifiedNamed)GetOneInstance(fixture, typeof(
+				UnqualifiedNamed));
+			Assert.AreEqual(data, unqualifiedNamed.GetData());
 		}
 
 		protected override void ReplicateClass(ITestableReplicationProviderInside providerA

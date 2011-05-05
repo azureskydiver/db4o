@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2011  Versant Inc.  http://www.db4o.com */
 
 using System.Collections;
 using Db4oUnit;
@@ -7,11 +7,17 @@ using Db4objects.Drs.Tests;
 
 namespace Db4objects.Drs.Tests
 {
-	public class Db4oDrsTestSuiteBuilder : ITestSuiteBuilder
+	public partial class Db4oDrsTestSuiteBuilder : ITestSuiteBuilder
 	{
 		public static void Main(string[] args)
 		{
-			new ConsoleTestRunner(new Db4oDrsTestSuiteBuilder()).Run();
+			int errorCount = RunTests();
+			Exit(errorCount);
+		}
+
+		public static int RunTests()
+		{
+			return new ConsoleTestRunner(new Db4oDrsTestSuiteBuilder()).Run();
 		}
 
 		public virtual IEnumerator GetEnumerator()

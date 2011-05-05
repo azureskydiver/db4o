@@ -111,7 +111,6 @@
 <Compile Include="Db4objects.Drs\Db4o\Db4oReplicationReferenceImpl.cs"/>
 <Compile Include="Db4objects.Drs\Db4o\Db4oSignatureMap.cs"/>
 <Compile Include="Db4objects.Drs\Db4o\IDb4oReplicationProvider.cs"/>
-<Compile Include="Db4objects.Drs\Db4o\ReplicationRecord.cs"/>
 <Compile Include="Db4objects.Drs\Foundation\DrsUUIDImpl.cs"/>
 <Compile Include="Db4objects.Drs\Foundation\IDrsUUID.cs"/>
 <Compile Include="Db4objects.Drs\Foundation\LinePrinter.cs"/>

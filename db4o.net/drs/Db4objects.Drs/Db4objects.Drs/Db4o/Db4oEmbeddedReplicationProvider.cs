@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2011  Versant Inc.  http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -36,7 +36,7 @@ namespace Db4objects.Drs.Db4o
 
 		private readonly IProcedure4 _activationStrategy;
 
-		private long _commitTimestamp;
+		protected long _commitTimestamp;
 
 		public Db4oEmbeddedReplicationProvider(IObjectContainer objectContainer, string name
 			)
@@ -166,10 +166,15 @@ namespace Db4objects.Drs.Db4o
 			_container.UseDefaultTransactionTimestamp();
 		}
 
-		private void StoreReplicationRecord()
+		protected virtual void StoreReplicationRecord()
 		{
 			_replicationRecord._version = _commitTimestamp;
 			_replicationRecord.Store(_container);
+		}
+
+		protected virtual long ReplicationRecordId()
+		{
+			return _container.GetID(_replicationRecord);
 		}
 
 		public virtual void RollbackReplication()
@@ -299,13 +304,13 @@ namespace Db4objects.Drs.Db4o
 		{
 			if (_referencesByObject != null)
 			{
-				_referencesByObject.Traverse(new _IVisitor4_284(visitor));
+				_referencesByObject.Traverse(new _IVisitor4_287(visitor));
 			}
 		}
 
-		private sealed class _IVisitor4_284 : IVisitor4
+		private sealed class _IVisitor4_287 : IVisitor4
 		{
-			public _IVisitor4_284(IVisitor4 visitor)
+			public _IVisitor4_287(IVisitor4 visitor)
 			{
 				this.visitor = visitor;
 			}
@@ -352,8 +357,17 @@ namespace Db4objects.Drs.Db4o
 		/// <param name="query">the Query to be constrained</param>
 		public virtual void WhereModified(IQuery query)
 		{
-			query.Descend(VirtualField.CommitTimestamp).Constrain(GetLastReplicationVersion()
-				).Greater();
+			IQuery qTimestamp = query.Descend(VirtualField.CommitTimestamp);
+			IConstraint constraint = qTimestamp.Constrain(GetLastReplicationVersion()).Greater
+				();
+			long[] concurrentTimestamps = _replicationRecord._concurrentTimestamps;
+			if (concurrentTimestamps != null)
+			{
+				for (int i = 0; i < concurrentTimestamps.Length; i++)
+				{
+					constraint = constraint.Or(qTimestamp.Constrain(concurrentTimestamps[i]));
+				}
+			}
 		}
 
 		public virtual IObjectSet GetStoredObjects(Type type)
@@ -408,7 +422,24 @@ namespace Db4objects.Drs.Db4o
 		public virtual bool WasModifiedSinceLastReplication(IReplicationReference reference
 			)
 		{
-			return reference.Version() > GetLastReplicationVersion();
+			long timestamp = reference.Version();
+			if (timestamp > _replicationRecord._version)
+			{
+				return true;
+			}
+			long[] concurrentTimestamps = _replicationRecord.ConcurrentTimestamps();
+			if (concurrentTimestamps == null)
+			{
+				return false;
+			}
+			for (int i = 0; i < concurrentTimestamps.Length; i++)
+			{
+				if (timestamp == concurrentTimestamps[i])
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public virtual bool SupportsMultiDimensionalArrays()
