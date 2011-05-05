@@ -53,7 +53,7 @@ public class Db4oDrsFixture implements DrsProviderFixture {
 		String path = System.getProperty(RAM_DRIVE_PROPERTY);
 		
 		if(path == null){
-			path = System.getenv(RAM_DRIVE_PROPERTY);
+			path = ramDrivePath();
 		}
 		
 		if(path == null || path.length() == 0){
@@ -64,7 +64,11 @@ public class Db4oDrsFixture implements DrsProviderFixture {
 		}
 		PATH = path;
 	}
-	
+
+	/** @sharpen.remove null */
+	private static String ramDrivePath() {
+		return System.getenv(RAM_DRIVE_PROPERTY);
+	}	
 	
 	public Db4oDrsFixture(String name) {
 		this(name, null);

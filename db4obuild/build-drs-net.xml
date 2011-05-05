@@ -112,6 +112,10 @@
     		<sources refid="drs.sources" />
         </updatecsharpproject>
     	
+       	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs-CF-2008.csproj">
+       		<sources refid="drs.sources" />
+        </updatecsharpproject>    	
+    	
         <!--.NET: drs.tests -->
     	<reset-src-dir dir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests" />
         <copy todir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests">
@@ -133,6 +137,10 @@
     	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-2008.csproj">
         	<sources refid="drs.tests.sources" />
         </updatecsharpproject>
+    	
+       	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-CF-2008.csproj">
+           	<sources refid="drs.tests.sources" />
+        </updatecsharpproject>    	
 
         <!--.NET: QuickStart -->
         <updateAssemblyInfo	version="${drs.net.version}">
