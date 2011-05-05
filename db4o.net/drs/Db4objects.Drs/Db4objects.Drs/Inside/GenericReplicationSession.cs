@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2011  Versant Inc.  http://www.db4o.com */
 
 using System;
 using System.Collections;
@@ -324,12 +324,12 @@ namespace Db4objects.Drs.Inside
 			 sourceProvider, IReplicationProviderInside targetProvider)
 		{
 			return _collectionHandler.CloneWithCounterparts(sourceProvider, original, claxx, 
-				new _ICounterpartFinder_248(this, sourceProvider, targetProvider));
+				new _ICounterpartFinder_250(this, sourceProvider, targetProvider));
 		}
 
-		private sealed class _ICounterpartFinder_248 : ICounterpartFinder
+		private sealed class _ICounterpartFinder_250 : ICounterpartFinder
 		{
-			public _ICounterpartFinder_248(GenericReplicationSession _enclosing, IReplicationProviderInside
+			public _ICounterpartFinder_250(GenericReplicationSession _enclosing, IReplicationProviderInside
 				 sourceProvider, IReplicationProviderInside targetProvider)
 			{
 				this._enclosing = _enclosing;
@@ -388,13 +388,13 @@ namespace Db4objects.Drs.Inside
 			{
 				return;
 			}
-			destination.VisitCachedReferences(new _IVisitor4_280(this, destination));
-			source.VisitCachedReferences(new _IVisitor4_286(this, destination));
+			destination.VisitCachedReferences(new _IVisitor4_282(this, destination));
+			source.VisitCachedReferences(new _IVisitor4_288(this, destination));
 		}
 
-		private sealed class _IVisitor4_280 : IVisitor4
+		private sealed class _IVisitor4_282 : IVisitor4
 		{
-			public _IVisitor4_280(GenericReplicationSession _enclosing, IReplicationProviderInside
+			public _IVisitor4_282(GenericReplicationSession _enclosing, IReplicationProviderInside
 				 destination)
 			{
 				this._enclosing = _enclosing;
@@ -411,9 +411,9 @@ namespace Db4objects.Drs.Inside
 			private readonly IReplicationProviderInside destination;
 		}
 
-		private sealed class _IVisitor4_286 : IVisitor4
+		private sealed class _IVisitor4_288 : IVisitor4
 		{
-			public _IVisitor4_286(GenericReplicationSession _enclosing, IReplicationProviderInside
+			public _IVisitor4_288(GenericReplicationSession _enclosing, IReplicationProviderInside
 				 destination)
 			{
 				this._enclosing = _enclosing;
