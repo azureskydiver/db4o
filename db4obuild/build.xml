@@ -319,6 +319,13 @@
 	
 	<target name="build-drs-before-checkin" depends="run-drs-tests, sharpen-drs-net, run-drs-net-tests" />
 	
+	<target name="build-drs-before-checkin.net" depends="buildjava15, sharpen-drs-net, run-drs-net-tests" />
+	
+	<target name="buildjava15" depends="clean.java" description="java 1.5 build">
+			<ant antfile="build-java.xml" target="build.db4ojdk1.5.tests" />
+	</target>
+
+	
     <target name="build-before-checkin" depends="prepare-test-environment,build-net-before-checkin" />
 	
 	<target name="build-cf35" depends="init">
