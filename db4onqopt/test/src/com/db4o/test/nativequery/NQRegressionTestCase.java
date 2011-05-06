@@ -926,6 +926,20 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase implements OptOut
 		assertNQResult(new DateFieldEqualsPredicate());
 	}
 
+	private static final class DateFieldCompareToAndPredicate extends ExpectingPredicate<Data> {
+		private static Date MAX_DATE = new Date(Long.MAX_VALUE);
+		
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.curDate.compareTo(DATE) > 0 && candidate.curDate.compareTo(MAX_DATE) < 0;
+		}
+	}
+
+	public void testDateFieldCompareToAnd() throws Exception {
+		assertNQResult(new DateFieldCompareToAndPredicate());
+	}
+
 	private static final class IntWrapperEqualsStaticAccessorPredicate extends ExpectingPredicate<Data> {
 		public int expected() { return 1;}
 
