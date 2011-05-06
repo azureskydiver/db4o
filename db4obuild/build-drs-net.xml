@@ -257,7 +257,7 @@
 
         <antcall target="prepare-sandcastle-output"/>
 
-        <exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator">
+        <exec executable="${dir.build}/lib/boo/booi" taskname="MRefConfigGenerator" failonerror="true">
             <arg file="src/sandcastle/MRefConfigGenerator.boo"/>
 			<arg path="${dir.build}/config" />
 			<arg path="${dir.dist}" />
@@ -332,7 +332,7 @@
 			<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
 		
 			<!-- Generate HTML help project -->
-			<exec executable="${XslTransform}">
+			<exec executable="${XslTransform}" failonerror="true">
 				<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
 				<arg value="${dir.dist.ndoc}/reflection.xml" />
 				<arg value="/out:${dir.dist.ndoc}/Output/dRS.hhp" />
@@ -340,20 +340,20 @@
 			</exec>	 
 		
 			<!--  Generate table of contents for HTML help project -->
-			<exec executable="${XslTransform}">
+			<exec executable="${XslTransform}" failonerror="true">
 				<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
 				<arg value="${dir.dist.ndoc}/reflection.xml" />
 				<arg value="/out:${dir.dist.ndoc}/toc.xml" />
 			</exec>
 
-			<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
+			<exec executable="${XslTransform}" dir="${dir.dist.ndoc}" failonerror="true">
 				<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
 				<arg value="${dir.dist.ndoc}/toc.xml" />
 				<arg value="/out:${dir.dist.ndoc}/Output/dRS.hhc" />
 			</exec>
 		
 			<!-- Generate Index information -->
-			<exec executable="${XslTransform}">
+			<exec executable="${XslTransform}" failonerror="true">
 				<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
 				<arg value="${dir.dist.ndoc}/reflection.xml" />
 				<arg value="/out:${dir.dist.ndoc}/Output/dRS.hhk" />
