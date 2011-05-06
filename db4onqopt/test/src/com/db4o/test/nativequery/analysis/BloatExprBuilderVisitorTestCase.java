@@ -603,13 +603,21 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testFieldWrapperIntSameComp() throws Exception {
 		assertComparison("sampleFieldWrapperIntSameComp",
-				INT_FIELDNAME,
+			INT_FIELDNAME,
+			methodCallValue(
 				fieldValue(
-						staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
-						"INT_WRAPPER_CMPVAL",
-						Integer.class),
-				ComparisonOperator.VALUE_EQUALITY,
-				false);
+					staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
+					"INT_WRAPPER_CMPVAL",
+					Integer.class),
+				CallingConvention.VIRTUAL, 
+				Integer.class, 
+				"intValue",
+				new Class[0], 
+				new ComparisonOperand[0]
+			),
+			ComparisonOperator.VALUE_EQUALITY,
+			false
+		);
 	}
 
 	private StaticFieldRoot staticFieldRoot(final Class declaringClass) {
@@ -622,13 +630,20 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testBoolWrapperFieldSameComp() throws Exception {
 		assertComparison("sampleBoolWrapperFieldSameComp",
-				BOOLEAN_FIELDNAME,
-					fieldValue(
-						staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
-						"BOOLEAN_WRAPPER_CMPVAL",
-						Boolean.class),
-				ComparisonOperator.VALUE_EQUALITY,
-				false);
+			BOOLEAN_FIELDNAME,
+			methodCallValue(
+				fieldValue(
+					staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
+					"BOOLEAN_WRAPPER_CMPVAL",
+					Boolean.class),
+				CallingConvention.VIRTUAL, 
+				Boolean.class, 
+				"booleanValue",
+				new Class[0], 
+				new ComparisonOperand[0]
+				),
+			ComparisonOperator.VALUE_EQUALITY,
+			false);
 	}	
 
 	// wrapper comparison
@@ -1052,15 +1067,6 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 				false);
 	}
 
-	private FieldValue fieldValue(final ComparisonOperandAnchor instance,
-			final String fieldName, final Class fieldType) {
-		return new FieldValue(instance, fieldRef(fieldName, fieldType));
-	}
-
-	private FieldRef fieldRef(String fieldName, Class fieldType) {
-		return new MockFieldRef(fieldName, new MockTypeRef(fieldType));
-	}
-
 	boolean sampleObjectArrayAccess(Data data) {
 		return data.next.id==objArrayMember[0].id;
 	}
@@ -1087,14 +1093,17 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testIntAddInPredicateMethod() throws Exception {
 		assertComparison("sampleIntAddInPredicateMethod",
-				INT_FIELDNAME,
-				new ArithmeticExpression(
-						fieldValue(PredicateFieldRoot.INSTANCE, "intMember", Integer.TYPE),
-						new ConstValue(1),
-						ArithmeticOperator.ADD
-				),
-				ComparisonOperator.VALUE_EQUALITY,
-				false);
+			INT_FIELDNAME,
+			methodCallValue(
+				PredicateFieldRoot.INSTANCE,
+				CallingConvention.VIRTUAL, 
+				BloatExprBuilderVisitorTestCase.class, 
+				"intMemberPlusOne",
+				new Class[0], 
+				new ComparisonOperand[0]
+			),
+			ComparisonOperator.VALUE_EQUALITY,
+			false);
 	}
 
 	boolean sampleStaticMethodCall(Data data) {
@@ -1102,7 +1111,18 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 
 	public void testStaticMethodCall() throws Exception {
-		assertInvalid("sampleStaticMethodCall");
+		assertComparison("sampleStaticMethodCall",
+			INT_FIELDNAME,
+			methodCallValue(
+				staticFieldRoot(Integer.class),
+				CallingConvention.STATIC, 
+				Integer.class, 
+				"parseInt",
+				new Class[] { String.class }, 
+				new ComparisonOperand[] { fieldValue(PredicateFieldRoot.INSTANCE, "stringMember", String.class) }
+			),
+			ComparisonOperator.VALUE_EQUALITY,
+			false);
 	}
 
 	boolean sampleTwoParamMethodCall(Data data) {
@@ -1112,10 +1132,14 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testTwoParamMethodCall() throws Exception {
 		assertComparison("sampleTwoParamMethodCall",
 				INT_FIELDNAME,
-				new ArithmeticExpression(
-					fieldValue(PredicateFieldRoot.INSTANCE, "intMember", Integer.TYPE),
-					new ConstValue(0),
-					ArithmeticOperator.ADD),
+				methodCallValue(
+					PredicateFieldRoot.INSTANCE,
+					CallingConvention.VIRTUAL, 
+					BloatExprBuilderVisitorTestCase.class, 
+					"sum",
+					new Class[] { Integer.TYPE, Integer. TYPE }, 
+					new ComparisonOperand[] { fieldValue(PredicateFieldRoot.INSTANCE, "intMember", Integer.TYPE), new ConstValue(new Integer(0)) }
+				),
 				ComparisonOperator.VALUE_EQUALITY,
 				false);
 	}
@@ -1454,6 +1478,25 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		}
 		return expr;		
 	}
+
+	private FieldValue fieldValue(final ComparisonOperandAnchor instance,
+			final String fieldName, final Class fieldType) {
+		return new FieldValue(instance, fieldRef(fieldName, fieldType));
+	}
+
+	private FieldRef fieldRef(String fieldName, Class fieldType) {
+		return new MockFieldRef(fieldName, new MockTypeRef(fieldType));
+	}
+
+	private MethodCallValue methodCallValue(final ComparisonOperandAnchor parent, CallingConvention convention, Class clazz,
+			final String methodName, final Class[] argTypes, ComparisonOperand[] args) throws NoSuchMethodException {
+		return new MethodCallValue(methodRef(clazz, methodName, argTypes), convention, parent, args);
+	}
+
+	private MethodRef methodRef(Class clazz, String name, Class[] argTypes) throws NoSuchMethodException {
+		return new MockMethodRef(clazz.getDeclaredMethod(name, argTypes));
+	}
+
 
 	public void tearDown() throws Exception {
 		_context = null;
