@@ -109,18 +109,14 @@ buildConfigPath = { path | Path.Combine(baseConfigPath, path) }
 configTemplatePath = buildConfigPath("sandcastle/MRefBuilder.config")
 configPath = buildDistPath("ndoc/Output/MRefBuilder.config")
 
-try:
-	File.Copy(configTemplatePath, configPath, true)
+File.Copy(configTemplatePath, configPath, true)
 
+documentedNamespaces = namespacesFromXmlSummary(namespaceSelection)
+filters = resetApiFilters(configPath)	
 
-	documentedNamespaces = namespacesFromXmlSummary(namespaceSelection)
-	filters = resetApiFilters(configPath)	
+for assemblyName in Directory.GetFiles(dllPath, "Db4objects.*.dll"):
+	processAssembly(buildAssemblyPath("${assemblyName}"), filters, documentedNamespaces)
 	
-	for assemblyName in Directory.GetFiles(dllPath, "Db4objects.*.dll"):
-		processAssembly(buildAssemblyPath("${assemblyName}"), filters, documentedNamespaces)
-	
-	filters.OwnerDocument.Save(configPath)
+filters.OwnerDocument.Save(configPath)
 			
-	print "MRefBuilder.config successfully saved to '${configPath}'"
-except x:
-	print x
+print "MRefBuilder.config successfully saved to '${configPath}'"
