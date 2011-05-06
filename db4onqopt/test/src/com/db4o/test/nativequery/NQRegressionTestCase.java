@@ -33,6 +33,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	
 	private static Data _prevData=null;
 	
+
 	private static abstract class Base {
 		int id;
 		Integer idWrap;
@@ -119,546 +120,928 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	private abstract static class ExpectingPredicate<E> extends Predicate<E> {
-		private String _name;
-		private boolean _loadTime;
+
+		public ExpectingPredicate() {
+		}
 		
-		public ExpectingPredicate(String name) {
-			this(name, true);
-		}
-
-		public ExpectingPredicate(String name, boolean loadTime) {
-			_name=name;
-			_loadTime = loadTime;
-		}
-
-		public ExpectingPredicate(String name,Class<? extends E> extentType) {
+		public ExpectingPredicate(Class<? extends E> extentType) {
 			super(extentType);
-			_name=name;
 		}
 
 		public abstract int expected();
-		
-		public boolean loadTime() {
-			return _loadTime;
+	}	
+
+	private static final class UnconditionalUntypedPredicate extends ExpectingPredicate<Object> {
+		public int expected() { return 5;}
+
+		public boolean match(Object candidate) {
+			return true;
 		}
-		
-		public String toString() {
-			return _name;
+	}
+
+	public void testUnconditionalUntyped() throws Exception {
+		assertNQResult(new UnconditionalUntypedPredicate());
+	}
+
+	private static class UnconditionalBaseTypedPredicate extends ExpectingPredicate<Base> {
+		public int expected() { return 5;}
+
+		public boolean match(Base candidate) {
+			return true;
+		}
+	}
+
+	public void testUnconditionalBaseTyped() throws Exception {
+		assertNQResult(new UnconditionalBaseTypedPredicate());
+	}
+
+	private static final class UnconditionalDataTypedPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 4;}
+
+		public boolean match(Data candidate) {
+			return true;
+		}
+	}
+
+	public void testUnconditionalDataTyped() throws Exception {
+		assertNQResult(new UnconditionalDataTypedPredicate());
+	}
+
+	private static final class BoolFieldPredicate extends ExpectingPredicate<Data> {
+		public int expected() {
+			return 1;
+		}
+
+		public boolean match(Data candidate) {
+			return candidate.bool;
+		}
+	}
+
+	public void testBoolField() throws Exception {
+		assertNQResult(new BoolFieldPredicate());
+	}
+
+	private static final class NegatedBoolFieldPredicate extends ExpectingPredicate<Data> {
+		public int expected() {
+			return 3;
+		}
+
+		public boolean match(Data candidate) {
+			return !candidate.bool;
+		}
+	}
+
+	public void testNegatedBoolField() throws Exception {
+		assertNQResult(new NegatedBoolFieldPredicate());
+	}
+
+	private static final class DataIntFieldConstantComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.id2==0;
+		}
+	}
+
+	public void testDataIntFieldConstantComparison() throws Exception {
+		assertNQResult(new DataIntFieldConstantComparisonPredicate());
+	}
+
+	private static final class BaseIntFieldConstantOneComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.id==1;
+		}
+	}
+
+	public void testBaseIntFieldConstantOneComparison() throws Exception {
+		assertNQResult(new BaseIntFieldConstantOneComparisonPredicate());
+	}
+
+	private static final class BaseIntFieldConstantThreeComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.id==3;
+		}
+	}
+
+	public void testBaseIntFieldConstantThreeComparison() throws Exception {
+		assertNQResult(new BaseIntFieldConstantThreeComparisonPredicate());
+	}
+
+	private static final class FloatFieldConstantOneComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.value==1.1f;
+		}
+	}
+
+	public void testFloatFieldConstantOneComparison() throws Exception {
+		assertNQResult(new FloatFieldConstantOneComparisonPredicate());
+	}
+
+	private static final class FloatFieldConstantThreeComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.value==3.3f;
+		}
+	}
+
+	public void testFloatFieldConstantThreeComparison() throws Exception {
+		assertNQResult(new FloatFieldConstantThreeComparisonPredicate());
+	}
+
+	private static final class StringFieldEqualsAComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.equals(ASTR);
+		}
+	}
+
+	public void testStringFieldEqualsAComparison() throws Exception {
+		assertNQResult(new StringFieldEqualsAComparisonPredicate());
+	}
+
+	private static final class StringFieldEqualsCComparisonPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.equals(CSTR);
+		}
+	}
+
+	public void testStringFieldEqualsCComparison() throws Exception {
+		assertNQResult(new StringFieldEqualsCComparisonPredicate());
+	}
+
+	private static final class StringFieldStartsWithCPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.startsWith("C");
+		}
+	}
+
+	public void testStringFieldStartsWithC() throws Exception {
+		assertNQResult(new StringFieldStartsWithCPredicate());
+	}
+
+	private static final class StringFieldStartsWithAPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 0;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.startsWith("a");
+		}
+	}
+
+	public void testStringFieldStartsWithA() throws Exception {
+		assertNQResult(new StringFieldStartsWithAPredicate());
+	}
+
+	private static final class StringFieldEndsWithLowerCaseAPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.endsWith("a");
+		}
+	}
+
+	public void testStringFieldEndsWithLowerCaseA() throws Exception {
+		assertNQResult(new StringFieldEndsWithLowerCaseAPredicate());
+	}
+
+	private static final class StringFieldEndsWithUpperCaseAPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 0;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.endsWith("A");
+		}
+	}
+
+	public void testStringFieldEndsWithUpperCaseA() throws Exception {
+		assertNQResult(new StringFieldEndsWithUpperCaseAPredicate());
+	}
+
+	private static final class StringFieldStartsWithCNegatedPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return !candidate.name.startsWith("C");
+		}
+	}
+
+	public void testStringFieldStartsWithCNegated() throws Exception {
+		assertNQResult(new StringFieldStartsWithCNegatedPredicate());
+	}
+
+	private static final class IntFieldSmallerTwoPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.id<2;
+		}
+	}
+
+	public void testIntFieldSmallerTwo() throws Exception {
+		assertNQResult(new IntFieldSmallerTwoPredicate());
+	}
+
+	private static final class IntFieldGreaterPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.id>2;
+		}
+	}
+
+	public void testIntFieldGreater() throws Exception {
+		assertNQResult(new IntFieldGreaterPredicate());
+	}
+
+	private static final class IntFieldSmallerEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.id<=2;
+		}
+	}
+
+	public void testIntFieldSmallerEquals() throws Exception {
+		assertNQResult(new IntFieldSmallerEqualsPredicate());
+	}
+
+	private static final class IntFieldGreaterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return candidate.id>=2;
+		}
+	}
+
+	public void testIntFieldGreaterEquals() throws Exception {
+		assertNQResult(new IntFieldGreaterEqualsPredicate());
+	}
+
+	private static final class FloatFieldGreaterPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.value>2.9f;
+		}
+	}
+
+	public void testFloatFieldGreater() throws Exception {
+		assertNQResult(new FloatFieldGreaterPredicate());
+	}
+
+	private static final class FloatFieldSmallerEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return 1.5f >= candidate.value;
+		}
+	}
+
+	public void testFloatFieldSmallerEquals() throws Exception {
+		assertNQResult(new FloatFieldSmallerEqualsPredicate());
+	}
+
+	private static final class IntFieldEqualsFloatPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.id==1.0f;
+		}
+	}
+
+	public void testIntFieldEqualsFloat() throws Exception {
+		assertNQResult(new IntFieldEqualsFloatPredicate());
+	}
+
+	private static final class IntFieldNotEqualsFloatPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return candidate.id!=1.0f;
+		}
+	}
+
+	public void testIntFieldNotEqualsFloat() throws Exception {
+		assertNQResult(new IntFieldNotEqualsFloatPredicate());
+	}
+
+	private static final class FloatFieldNotEqualsIntPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 4;}
+
+		public boolean match(Data candidate) {
+			return candidate.value!=1;
+		}
+	}
+
+	public void testFloatFieldNotEqualsInt() throws Exception {
+		assertNQResult(new FloatFieldNotEqualsIntPredicate());
+	}
+
+	private static final class DescendPrevIdGreaterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.getPrev()!=null&&candidate.getPrev().getId()>=1;
+		}
+	}
+
+	public void testDescendPrevIdGreaterEquals() throws Exception {
+		assertNQResult(new DescendPrevIdGreaterEqualsPredicate());
+	}
+
+	private static final class DescendPrevNameEqualsConstantPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return (candidate.getPrev()!=null)&&(BSTR.equals(candidate.getPrev().getName()));
+		}
+	}
+
+	public void testDescendPrevNameEqualsConstant() throws Exception {
+		assertNQResult(new DescendPrevNameEqualsConstantPredicate());
+	}
+
+	private static final class DescendPrevNameEqualsLiteralPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 0;}
+
+		public boolean match(Data candidate) {
+			return candidate.getPrev()!=null&&candidate.getPrev().getName().equals("");
+		}
+	}
+
+	public void testDescendPrevNameEqualsLiteral() throws Exception {
+		assertNQResult(new DescendPrevNameEqualsLiteralPredicate());
+	}
+
+	private static final class IntGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.getId()==2;
+		}
+	}
+
+	public void testIntGetterEquals() throws Exception {
+		assertNQResult(new IntGetterEqualsPredicate());
+	}
+
+	private static final class IntGetterSmallerPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.getId()<2;
+		}
+	}
+
+	public void testIntGetterSmaller() throws Exception {
+		assertNQResult(new IntGetterSmallerPredicate());
+	}
+
+	private static final class IntGetterGreaterPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.getId()>2;
+		}
+	}
+
+	public void testIntGetterGreater() throws Exception {
+		assertNQResult(new IntGetterGreaterPredicate());
+	}
+
+	private static final class IntGetterSmallerEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.getId()<=2;
+		}
+	}
+
+	public void testIntGetterSmallerEquals() throws Exception {
+		assertNQResult(new IntGetterSmallerEqualsPredicate());
+	}
+
+	private static final class IntGetterGreaterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return candidate.getId()>=2;
+		}
+	}
+
+	public void testIntGetterGreaterEquals() throws Exception {
+		assertNQResult(new IntGetterGreaterEqualsPredicate());
+	}
+
+	private static final class StringGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.getName().equals(CSTR);
+		}
+	}
+
+	public void testStringGetterEquals() throws Exception {
+		assertNQResult(new StringGetterEqualsPredicate());
+	}
+
+	private static final class NotIntFieldEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return !(candidate.id==1);
+		}
+	}
+
+	public void testNotIntFieldEquals() throws Exception {
+		assertNQResult(new NotIntFieldEqualsPredicate());
+	}
+
+	private static final class NotIntGetterGreaterPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return !(candidate.getId()>2);
+		}
+	}
+
+	public void testNotIntGetterGreater() throws Exception {
+		assertNQResult(new NotIntGetterGreaterPredicate());
+	}
+
+	private static final class NotStringGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return !(candidate.getName().equals(CSTR));
+		}
+	}
+
+	public void testNotStringGetterEquals() throws Exception {
+		assertNQResult(new NotStringGetterEqualsPredicate());
+	}
+
+	private static final class BoolFieldAndNotBoolGetterPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 0;}
+
+		public boolean match(Data candidate) {
+			return candidate.bool&&!candidate.getBool();
+		}
+	}
+
+	public void testBoolFieldAndNotBoolGetter() throws Exception {
+		assertNQResult(new BoolFieldAndNotBoolGetterPredicate());
+	}
+
+	private static final class IdFieldGreaterAndNameGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return (candidate.id>1)&&candidate.getName().equals(CSTR);
+		}
+	}
+
+	public void testIdFieldGreaterAndNameGetterEquals() throws Exception {
+		assertNQResult(new IdFieldGreaterAndNameGetterEqualsPredicate());
+	}
+
+	private static final class IdFieldGreaterAndIdGetterSmallerEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return (candidate.id>1)&&(candidate.getId()<=2);
+		}
+	}
+
+	public void testIdFieldGreaterAndIdGetterSmallerEquals() throws Exception {
+		assertNQResult(new IdFieldGreaterAndIdGetterSmallerEqualsPredicate());
+	}
+
+	private static final class IdFieldGreaterAndIdGetterSmallerPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 0;}
+
+		public boolean match(Data candidate) {
+			return (candidate.id>1)&&(candidate.getId()<1);
+		}
+	}
+
+	public void testIdFieldGreaterAndIdGetterSmaller() throws Exception {
+		assertNQResult(new IdFieldGreaterAndIdGetterSmallerPredicate());
+	}
+
+	private static final class BoolFieldOrIdGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.bool||candidate.getId()==1;
+		}
+	}
+
+	public void testBoolFieldOrIdGetterEquals() throws Exception {
+		assertNQResult(new BoolFieldOrIdGetterEqualsPredicate());
+	}
+
+	private static final class IdFieldEqualsOrNameGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return (candidate.id==1)||candidate.getName().equals(CSTR);
+		}
+	}
+
+	public void testIdFieldEqualsOrNameGetterEquals() throws Exception {
+		assertNQResult(new IdFieldEqualsOrNameGetterEqualsPredicate());
+	}
+
+	private static final class IdFieldGreaterOrIdGetterSmallerEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 4;}
+
+		public boolean match(Data candidate) {
+			return (candidate.id>1)||(candidate.getId()<=2);
+		}
+	}
+
+	public void testIdFieldGreaterOrIdGetterSmallerEquals() throws Exception {
+		assertNQResult(new IdFieldGreaterOrIdGetterSmallerEqualsPredicate());
+	}
+
+	private static final class IdFieldSmallerEqualsOrIdGetterGreaterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return (candidate.id<=1)||(candidate.getId()>=3);
+		}
+	}
+
+	public void testIdFieldSmallerEqualsOrIdGetterGreaterEquals() throws Exception {
+		assertNQResult(new IdFieldSmallerEqualsOrIdGetterGreaterEqualsPredicate());
+	}
+
+	private static final class IdFieldGreaterEqualsOrNameGetterEqualsAndIdGetterSmallerPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return ((candidate.id>=1)||candidate.getName().equals(CSTR))&&candidate.getId()<3;
+		}
+	}
+
+	public void testIdFieldGreaterEqualsOrNameGetterEqualsAndIdGetterSmaller() throws Exception {
+		assertNQResult(new IdFieldGreaterEqualsOrNameGetterEqualsAndIdGetterSmallerPredicate());
+	}
+
+	private static final class IdFieldEqualsOrIdGetterSmallerEqualsAndNotNameGetterEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return ((candidate.id==2)||candidate.getId()<=1)&&!candidate.getName().equals(BSTR);
+		}
+	}
+
+	public void testIdFieldEqualsOrIdGetterSmallerEqualsAndNotNameGetterEquals() throws Exception {
+		assertNQResult(new IdFieldEqualsOrIdGetterSmallerEqualsAndNotNameGetterEqualsPredicate());
+	}
+
+	private static final class IdFieldGreaterEqualsPredicateFieldPredicate extends ExpectingPredicate<Data> {
+		private int id=2;
+
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return candidate.id>=id;
+		}
+	}
+
+	public void testIdFieldGreaterEqualsPredicateField() throws Exception {
+		assertNQResult(new IdFieldGreaterEqualsPredicateFieldPredicate());
+	}
+
+	private static final class NameGetterEqualsPredicateFieldPredicate extends ExpectingPredicate<Data> {
+		private String name=BSTR;
+
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.getName().equals(name);
+		}
+	}
+
+	public void testNameGetterEqualsPredicateField() throws Exception {
+		assertNQResult(new NameGetterEqualsPredicateFieldPredicate());
+	}
+
+	private static final class IdFieldGreaterEqualsPredicateFieldPlusOnePredicate extends ExpectingPredicate<Data> {
+		private int id=2;
+
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.id>=id+1;
+		}
+	}
+
+	public void testIdFieldGreaterEqualsPredicateFieldPlusOne() throws Exception {
+		assertNQResult(new IdFieldGreaterEqualsPredicateFieldPlusOnePredicate());
+	}
+
+	private static final class IdFieldGreaterEqualsPredicateArithmeticMethodPredicate extends ExpectingPredicate<Data> {
+		private int factor=2;
+
+		private int calc() {
+			return factor+1;
+		}
+
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.id>=calc();
+		}
+	}
+
+	public void testIdFieldGreaterEqualsPredicateArithmeticMethod() throws Exception {
+		assertNQResult(new IdFieldGreaterEqualsPredicateArithmeticMethodPredicate());
+	}
+
+	private static final class FloatFieldEqualsPredicateArithmeticMethodPredicate extends ExpectingPredicate<Data> {
+		private float predFactor=2.0f;
+
+		private float calc() {
+			return predFactor*1.1f;
+		}
+
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.getValue()==calc();
+		}
+	}
+
+	public void testFloatFieldEqualsPredicateArithmeticMethod() throws Exception {
+		assertNQResult(new FloatFieldEqualsPredicateArithmeticMethodPredicate());
+	}
+
+	private static final class ForceExtentPredicate extends ExpectingPredicate<Object> {
+		private ForceExtentPredicate() {
+			super(Data.class);
+		}
+
+		public int expected() { return 1;}
+
+		public boolean match(Object candidate) {
+			return ((Data)candidate).getId()==1;
+		}
+	}
+
+	public void testForceExtent() throws Exception {
+		assertNQResult(new ForceExtentPredicate());
+	}
+
+	private static final class IdFieldEqualsArrayElementPredicate extends ExpectingPredicate<Data> {
+		private int[] data={0,1,2,3,4};
+
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.id==data[3];
+		}
+	}
+
+	public void testIdFieldEqualsArrayElement() throws Exception {
+		assertNQResult(new IdFieldEqualsArrayElementPredicate());
+	}
+
+	private static final class DataFieldEqIdentityArrayElementPredicate extends ExpectingPredicate<Data> {
+		private Data[] data={null,null,null,null};
+
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.prev==data[3];
+		}
+	}
+
+	public void testDataFieldEqIdentityArrayElement() throws Exception {
+		assertNQResult(new DataFieldEqIdentityArrayElementPredicate());
+	}
+
+	private static final class IdFieldEqualsPredicateTwoArgsArithmeticMethodPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		private int sum(int a,int b) {
+			return a+b;
+		}
+
+		public boolean match(Data candidate) {
+			return candidate.id==sum(3,0);
+		}
+	}
+
+	public void testIdFieldEqualsPredicateTwoArgsArithmeticMethod() throws Exception {
+		assertNQResult(new IdFieldEqualsPredicateTwoArgsArithmeticMethodPredicate());
+	}
+
+	private static final class BoolWrapperFieldPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.boolWrap.booleanValue();
+		}
+	}
+
+	public void testBoolWrapperField() throws Exception {
+		assertNQResult(new BoolWrapperFieldPredicate());
+	}
+
+	private static final class IntWrapperFieldEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return NQRegressionTestCase.INTWRAPPER.equals(candidate.idWrap);
+		}
+	}
+
+	public void testIntWrapperFieldEquals() throws Exception {
+		assertNQResult(new IntWrapperFieldEqualsPredicate());
+	}
+
+	private static final class IntWrapperFieldValueEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.idWrap.intValue()==1;
+		}
+	}
+
+	public void testIntWrapperFieldValueEquals() throws Exception {
+		assertNQResult(new IntWrapperFieldValueEqualsPredicate());
+	}
+
+	private static final class IntWrapperFieldEqualsValuePredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.id==INTWRAPPER.intValue();
+		}
+	}
+
+	public void testIntWrapperFieldEqualsValue() throws Exception {
+		assertNQResult(new IntWrapperFieldEqualsValuePredicate());
+	}
+
+	private static final class IntWrapperFieldCompareToPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return candidate.idWrap.compareTo(INTWRAPPER)>0;
+		}
+	}
+
+	public void testIntWrapperFieldCompareTo() throws Exception {
+		assertNQResult(new IntWrapperFieldCompareToPredicate());
+	}
+
+	private static final class DateFieldEqualsPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return candidate.curDate.equals(DATE);
+		}
+	}
+
+	public void testDateFieldEquals() throws Exception {
+		assertNQResult(new DateFieldEqualsPredicate());
+	}
+
+	private static final class IntWrapperEqualsStaticAccessorPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return NQRegressionTestCase.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
+		}
+	}
+
+	public void testIntWrapperEqualsStaticAccessor() throws Exception {
+		assertNQResult(new IntWrapperEqualsStaticAccessorPredicate());
+	}
+
+	private static final class IntWrapperEqualsStaticPredicateFieldPredicate extends ExpectingPredicate<Data> {
+		private final static Integer PREDICATE_INTWRAPPER=new Integer(1);
+
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return PREDICATE_INTWRAPPER.equals(candidate.idWrap);
+		}
+	}
+
+	public void testIntWrapperEqualsStaticPredicateField() throws Exception {
+		assertNQResult(new IntWrapperEqualsStaticPredicateFieldPredicate());
+	}
+
+	private static final class ActivationCallPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			candidate.activate(ActivationPurpose.READ);
+			return candidate.id2==0;
+		}
+	}
+
+	public void testActivationCall() throws Exception {
+		assertNQResult(new ActivationCallPredicate());
+	}
+
+	private static final class FloatFieldGreaterDoublePredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.value>2.9d;
+		}
+	}
+
+	// SODA coercion is broken for greater/smaller comparisons
+	public void _testFloatFieldGreaterDouble() throws Exception {
+		assertNQResult(new FloatFieldGreaterDoublePredicate());
+	}
+
+	private static final class DataGetterEqIdentityStaticMemberPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.getPrev()==_prevData;
+		}
+	}
+
+	// FIXME
+	public void _testDataGetterEqIdentityStaticMember() throws Exception {
+		assertNQResult(new DataGetterEqIdentityStaticMemberPredicate());
+	}
+	
+	@decaf.Remove(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	private static final class NameFieldContainsLowerCaseAPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.contains("a");
 		}
 	}
 	
-	@SuppressWarnings("serial")
-	private static ExpectingPredicate[] COMMON_PREDICATES={
-		// unconditional/untyped
-		new ExpectingPredicate<Object>("unconditional/untyped") {
-			public int expected() { return 5;}
-			public boolean match(Object candidate) {
-				return true;
-			}
-		},
-		// unconditional
-		new ExpectingPredicate<Base>("unconditional: Base") {
-			public int expected() { return 5;}
-			public boolean match(Base candidate) {
-				return true;
-			}
-		},
-		new ExpectingPredicate<Data>("unconditional: Data") {
-			public int expected() { return 4;}
-			public boolean match(Data candidate) {
-				return true;
-			}
-		},
-//		new ExpectingPredicate<Data>() {
-//			public int expected() { return 0;}
-//			public boolean match(Data candidate) {
-//				return false;
-//			}
-//		},
-		// primitive equals
-		new ExpectingPredicate<Data>("bool") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.bool;
-			}
-		},
-		new ExpectingPredicate<Data>("!bool") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return !candidate.bool;
-			}
-		},
-		new ExpectingPredicate<Data>("id2==0") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.id2==0;
-			}
-		},
-		new ExpectingPredicate<Data>("id==1") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.id==1;
-			}
-		},
-		new ExpectingPredicate<Data>("id==3") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id==3;
-			}
-		},
-		new ExpectingPredicate<Data>("value==1.1") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.value==1.1f;
-			}
-		},
-		new ExpectingPredicate<Data>("value==3.3") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.value==3.3f;
-			}
-		},
-		// string equals
-		new ExpectingPredicate<Data>("name.eq(ASTR)") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.name.equals(ASTR);
-			}
-		},
-		new ExpectingPredicate<Data>("name.eq(CSTR)") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.name.equals(CSTR);
-			}
-		},
-		// string specific comparisons
-		new ExpectingPredicate<Data>("name.startsWith('C')") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.name.startsWith("C");
-			}
-		},
-		new ExpectingPredicate<Data>("name.startsWith('a')") {
-			public int expected() { return 0;}
-			public boolean match(Data candidate) {
-				return candidate.name.startsWith("a");
-			}
-		},
-		new ExpectingPredicate<Data>("name.endsWith('A')") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.name.endsWith("a");
-			}
-		},
-		new ExpectingPredicate<Data>("name.endsWith('A')") {
-			public int expected() { return 0;}
-			public boolean match(Data candidate) {
-				return candidate.name.endsWith("A");
-			}
-		},
-		new ExpectingPredicate<Data>("!(name.startsWith('C'))") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return !candidate.name.startsWith("C");
-			}
-		},
-		// int field comparison
-		new ExpectingPredicate<Data>("id<2") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.id<2;
-			}
-		},
-		new ExpectingPredicate<Data>("id>2") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id>2;
-			}
-		},
-		new ExpectingPredicate<Data>("id<=2") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id<=2;
-			}
-		},
-		new ExpectingPredicate<Data>("id>=2") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return candidate.id>=2;
-			}
-		},
-		// float field comparison
-		new ExpectingPredicate<Data>("value>2.9") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.value>2.9f;
-			}
-		},
-		new ExpectingPredicate<Data>("1.5>=value") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return 1.5f >= candidate.value;
-			}
-		},
-		// mixed comparison (coercion)
-		new ExpectingPredicate<Data>("id==1.0") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.id==1.0f;
-			}
-		},
-		new ExpectingPredicate<Data>("id!=1.0") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return candidate.id!=1.0f;
-			}
-		},
-		new ExpectingPredicate<Data>("value!=1") {
-			public int expected() { return 4;}
-			public boolean match(Data candidate) {
-				return candidate.value!=1;
-			}
-		},
-// won't work: SODA coercion is broken for greater/smaller comparisons
-//		new ExpectingPredicate<Data>() {
-//			public int expected() { return 1;}
-//			public boolean match(Data candidate) {
-//				return candidate.value>2.9d;
-//			}
-//		},
-		// descend field
-		new ExpectingPredicate<Data>("getPrev().getId()>=1") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.getPrev()!=null&&candidate.getPrev().getId()>=1;
-			}
-		},
-		new ExpectingPredicate<Data>("BSTR.eq(getPrev().getName()") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return (candidate.getPrev()!=null)&&(BSTR.equals(candidate.getPrev().getName()));
-			}
-		},
-		new ExpectingPredicate<Data>("getPrev().getName().eq('')") {
-			public int expected() { return 0;}
-			public boolean match(Data candidate) {
-				return candidate.getPrev()!=null&&candidate.getPrev().getName().equals("");
-			}
-		},
-		// FIXME
-		new ExpectingPredicate<Data>("getPrev()==_dataPrev", false) {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.getPrev()==_prevData;
-			}
-		},
-		// getter comparisons
-		new ExpectingPredicate<Data>("getId()==2") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.getId()==2;
-			}
-		},
-		new ExpectingPredicate<Data>("getId()<2") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.getId()<2;
-			}
-		},
-		new ExpectingPredicate<Data>("getId()>2") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.getId()>2;
-			}
-		},
-		new ExpectingPredicate<Data>("getId()<=2") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.getId()<=2;
-			}
-		},
-		new ExpectingPredicate<Data>("getId()>=2") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return candidate.getId()>=2;
-			}
-		},
-		new ExpectingPredicate<Data>("getName().eq(CSTR)") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.getName().equals(CSTR);
-			}
-		},
-		// negation
-		new ExpectingPredicate<Data>("!(id==1)") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return !(candidate.id==1);
-			}
-		},
-		new ExpectingPredicate<Data>("!(getId()>2)") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return !(candidate.getId()>2);
-			}
-		},
-		new ExpectingPredicate<Data>("!getName().eq(CSTR)") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return !(candidate.getName().equals(CSTR));
-			}
-		},
-		// conjunction
-		new ExpectingPredicate<Data>("bool&&!getBool()") {
-			public int expected() { return 0;}
-			public boolean match(Data candidate) {
-				return candidate.bool&&!candidate.getBool();
-			}
-		},
-		new ExpectingPredicate<Data>("id>1&&getName().eq(CSTR)") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return (candidate.id>1)&&candidate.getName().equals(CSTR);
-			}
-		},
-		new ExpectingPredicate<Data>("id>1&&getId()<=2") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return (candidate.id>1)&&(candidate.getId()<=2);
-			}
-		},
-		new ExpectingPredicate<Data>("id>1&&getId()<1") {
-			public int expected() { return 0;}
-			public boolean match(Data candidate) {
-				return (candidate.id>1)&&(candidate.getId()<1);
-			}
-		},
-		// disjunction
-		new ExpectingPredicate<Data>("bool||getId()==1") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.bool||candidate.getId()==1;
-			}
-		},
-		new ExpectingPredicate<Data>("id==1||getName().eq(CSTR)") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return (candidate.id==1)||candidate.getName().equals(CSTR);
-			}
-		},
-		new ExpectingPredicate<Data>("id>1||getId()<=2") {
-			public int expected() { return 4;}
-			public boolean match(Data candidate) {
-				return (candidate.id>1)||(candidate.getId()<=2);
-			}
-		},
-		new ExpectingPredicate<Data>("id<=1||getId()>=3") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return (candidate.id<=1)||(candidate.getId()>=3);
-			}
-		},
-		// nested boolean
-		new ExpectingPredicate<Data>("id>=1||getName().eq(CSTR)&&getId()<3") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return ((candidate.id>=1)||candidate.getName().equals(CSTR))&&candidate.getId()<3;
-			}
-		},
-		new ExpectingPredicate<Data>("(id==2||getId()<=1)&&!(getName().eq(BSTR))") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return ((candidate.id==2)||candidate.getId()<=1)&&!candidate.getName().equals(BSTR);
-			}
-		},
-		// predicate member comparison
-		new ExpectingPredicate<Data>("id>=P.id") {
-			private int id=2;
-			
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return candidate.id>=id;
-			}
-		},
-		new ExpectingPredicate<Data>("getName().eq(P.name)") {
-			private String name=BSTR;
-			
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.getName().equals(name);
-			}
-		},
-		// arithmetic
-		new ExpectingPredicate<Data>("id>=P.id+1") {
-			private int id=2;
-			
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id>=id+1;
-			}
-		},
-		new ExpectingPredicate<Data>("id>=P.calc()") {
-			private int factor=2;
-			
-			private int calc() {
-				return factor+1;
-			}
-			
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id>=calc();
-			}
-		},
-		new ExpectingPredicate<Data>("getValue()==P.calc()") {
-			private float predFactor=2.0f;
-			
-			private float calc() {
-				return predFactor*1.1f;
-			}
-			
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.getValue()==calc();
-			}
-		},
-		// force extent
-		new ExpectingPredicate<Object>("force extent",Data.class) {
-			public int expected() { return 1;}
-			public boolean match(Object candidate) {
-				return ((Data)candidate).getId()==1;
-			}
-		},
-		// array access
-		new ExpectingPredicate<Data>("id==P.data[3]") {
-			private int[] data={0,1,2,3,4};
-			
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id==data[3];
-			}
-		},
-		new ExpectingPredicate<Data>("prev==P.data[3]") {
-			private Data[] data={null,null,null,null};
-			
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.prev==data[3];
-			}
-		},
-		// non-candidate method calls
-		new ExpectingPredicate<Data>("id==P.sum(3,0)") {
-			public int expected() { return 2;}
-			private int sum(int a,int b) {
-				return a+b;
-			}
-			public boolean match(Data candidate) {
-				return candidate.id==sum(3,0);
-			}
-		},
-		// primitive wrappers
-		new ExpectingPredicate<Data>("boolWrapper") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.boolWrap.booleanValue();
-			}
-		},
-		new ExpectingPredicate<Data>("INTWRAPPER.eq(idwrap)") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return NQRegressionTestCase.INTWRAPPER.equals(candidate.idWrap);
-			}
-		},
-		new ExpectingPredicate<Data>("idwrap.value==1") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.idWrap.intValue()==1;
-			}
-		},
-		new ExpectingPredicate<Data>("id==INTWRAPPER.intValue()") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.id==INTWRAPPER.intValue();
-			}
-		},
-		new ExpectingPredicate<Data>("idwrap.compareTo(INTWRAPPER)<2") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return candidate.idWrap.compareTo(INTWRAPPER)>0;
-			}
-		},
-		new ExpectingPredicate<Data>("curDate.equals(DATE)") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return candidate.curDate.equals(DATE);
-			}
-		},
-		// Note: We never get to see a static field access here - non-static inner class
-		// stuff converts this to NQRegressionTests#access$0()
-		new ExpectingPredicate<Data>("PRIVATE_INTWRAPPER.eq(idWrap)") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return NQRegressionTestCase.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
-			}
-		},
-		// activate calls
-		new ExpectingPredicate<Data>("act;id2==0") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				candidate.activate(ActivationPurpose.READ);
-				return candidate.id2==0;
-			}
-		},
-	};
-	
-	@decaf.ReplaceFirst(value="return null;", platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
-	private static ExpectingPredicate[] jdk5Predicates() {
-		return new ExpectingPredicate[] {
-			new ExpectingPredicate<Data>("name.contains('a')") {
-				public int expected() { return 2;}
-				public boolean match(Data candidate) {
-					return candidate.name.contains("a");
-				}
-			},
-			new ExpectingPredicate<Data>("name.contains('A')") {
-				public int expected() { return 1;}
-				public boolean match(Data candidate) {
-					return candidate.name.contains("A");
-				}
-			},
-			new ExpectingPredicate<Data>("name.contains('C')") {
-				public int expected() { return 2;}
-				public boolean match(Data candidate) {
-					return candidate.name.contains("C");
-				}
-			},
-			new ExpectingPredicate<Data>("!(name.contains('A'))") {
-				public int expected() { return 3;}
-				public boolean match(Data candidate) {
-					return !candidate.name.contains("A");
-				}
-			},			
-		};
+	@decaf.Ignore(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	public void testNameFieldContainsLowerCaseA() throws Exception {
+		assertNQResult(new NameFieldContainsLowerCaseAPredicate());
 	}
-	
-	private static ExpectingPredicate[] mergePredicates(ExpectingPredicate[] common, ExpectingPredicate[] specific) {
-		if(specific == null) {
-			return common;
-		}
-		ExpectingPredicate[] all = new ExpectingPredicate[common.length +  specific.length];
-		System.arraycopy(common, 0, all, 0, common.length);
-		System.arraycopy(specific, 0, all, common.length, specific.length);
-		return all;
-	}
-	
-	private static ExpectingPredicate[] PREDICATES = mergePredicates(COMMON_PREDICATES, jdk5Predicates());
-	
-	public void testAll() throws Exception {
-		_prevData = (Data) db().queryByExample(_prevData).next();
-		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
-			ExpectingPredicate predicate = PREDICATES[predIdx];
-			assertNQResult(predicate);
+
+	@decaf.Remove(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	private static final class NameFieldContainsUpperCaseAPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.contains("A");
 		}
 	}
+
+	@decaf.Ignore(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	public void testNameFieldContainsUpperCaseA() throws Exception {
+		assertNQResult(new NameFieldContainsUpperCaseAPredicate());
+	}
+
+	@decaf.Remove(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	private static final class NameFieldContainsUpperCaseCPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 2;}
+
+		public boolean match(Data candidate) {
+			return candidate.name.contains("C");
+		}
+	}
+
+	@decaf.Ignore(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	public void testNameFieldContainsUpperCaseC() throws Exception {
+		assertNQResult(new NameFieldContainsUpperCaseCPredicate());
+	}
+
+	@decaf.Remove(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	private static final class NameFieldNotContainsUpperCaseAPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 3;}
+
+		public boolean match(Data candidate) {
+			return !candidate.name.contains("A");
+		}
+	}
+
+	@decaf.Ignore(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
+	public void testNameFieldNotContainsUpperCaseA() throws Exception {
+		assertNQResult(new NameFieldNotContainsUpperCaseAPredicate());
+	}
+
 	
 	private void assertNQResult(final ExpectingPredicate predicate) throws Exception {
 		final String predicateId = predicateId(predicate);
@@ -714,7 +1097,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(raw,optimized,predicateId);
 		Assert.areEqual(predicate.expected(),raw.size(),predicateId);
 
-		if(RUN_LOADTIME && predicate.loadTime()) {
+		if(RUN_LOADTIME) {
 			if(NQDebug.LOG) {
 				System.out.println("LOAD TIME: " + predicateId);
 			}
@@ -735,11 +1118,11 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		Constructor constr=null;
 		Object[] args=null;
 		try {
-			constr=filterClass.getDeclaredConstructor(new Class[]{String.class});
-			args=new Object[]{filterClass.getName()};
+			constr=filterClass.getDeclaredConstructor(new Class[0]);
+			args=new Object[0];
 		} catch(NoSuchMethodException exc) {
-			constr=filterClass.getDeclaredConstructor(new Class[]{String.class,Class.class});
-			args=new Object[]{filterClass.getName(),Data.class};
+			constr=filterClass.getDeclaredConstructor(new Class[]{Class.class});
+			args=new Object[]{Data.class};
 		}
 		constr.setAccessible(true);
 		Predicate clPredicate=(Predicate)constr.newInstance(args);
