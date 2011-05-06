@@ -334,22 +334,46 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return params;
 	}
 
-	private boolean handledAsSafeMethod(CallExpr expr, ComparisonOperandAnchor rcvRetval, List params) {
-//		if (rcvRetval != null && rcvRetval.root() == CandidateFieldRoot.INSTANCE) {
-//			return false;
-//		}
-//		if (rcvRetval == null) {
-//			rcvRetval = new StaticFieldRoot(typeRef(expr.method().declaringClass()));
-//		}
-//		params.remove(0);
-//		retval(
-//			new MethodCallValue(
-//				methodRef(expr.method()),
-//				callingConvention(expr),
-//				rcvRetval,
-//				(ComparisonOperand[]) params.toArray(new ComparisonOperand[params.size()])));
-//		return true;
-		return false;
+	private boolean handledAsSafeMethod(CallExpr expr, ComparisonOperandAnchor rcvRetval, List<ComparisonOperand> params) {
+		if(!isSafe(rcvRetval)) {
+			return false;
+		}
+		for (ComparisonOperand param : params) {
+			if(!isSafe(param)) {
+				return false;
+			}
+		}
+		if (rcvRetval == null) {
+			rcvRetval = new StaticFieldRoot(typeRef(expr.method().declaringClass()));
+		}
+		params.remove(0);
+		retval(
+			new MethodCallValue(
+				methodRef(expr.method()),
+				callingConvention(expr),
+				rcvRetval,
+				(ComparisonOperand[]) params.toArray(new ComparisonOperand[params.size()])));
+		return true;
+	}
+	
+	private boolean isSafe(ComparisonOperand op) {
+		if(!(op instanceof ComparisonOperandAnchor)) {
+			return true;
+		}
+		ComparisonOperandAnchor anchor = (ComparisonOperandAnchor) op;
+		if(anchor.root() == CandidateFieldRoot.INSTANCE) {
+			return false;
+		}
+		if(!(anchor instanceof MethodCallValue)) {
+			return true;
+		}
+		MethodCallValue call = (MethodCallValue) anchor;
+		for (ComparisonOperand arg : call.args()) {
+			if(!isSafe(arg)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private boolean isActivateMethod(MemberRef method) {
