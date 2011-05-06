@@ -10,7 +10,6 @@ import com.db4o.activation.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.*;
-import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
@@ -21,7 +20,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class NQRegressionTestCase extends AbstractDb4oTestCase {
+public class NQRegressionTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 	private final static boolean RUN_LOADTIME = true;
 	
 	private static final String CSTR = "Cc";
@@ -31,10 +30,16 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	public final static Date DATE=new Date(0);
 	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
 	
-	private static Data _prevData=null;
 	
+	public static class ConstantHolder {
+		public static Data _prevData = null;
+		
+		public static Data prevData() {
+			return _prevData;
+		}
+	}
 
-	private static abstract class Base {
+	public static abstract class Base {
 		int id;
 		Integer idWrap;
 		
@@ -54,7 +59,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	private static class Data extends Base implements Activatable {
+	public static class Data extends Base implements Activatable {
 		boolean bool;
 		float value;
 		String name;
@@ -116,7 +121,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		db.store(c);
 		db.store(cc);
 		db.store(new Other());
-		_prevData=a;
+		ConstantHolder._prevData = a;
 	}
 	
 	private abstract static class ExpectingPredicate<E> extends Predicate<E> {
@@ -977,15 +982,26 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		public int expected() { return 1;}
 
 		public boolean match(Data candidate) {
-			return candidate.getPrev()==_prevData;
+			return candidate.getPrev() == ConstantHolder._prevData;
 		}
 	}
 
-	// FIXME
-	public void _testDataGetterEqIdentityStaticMember() throws Exception {
+	public void testDataGetterEqIdentityStaticMember() throws Exception {
 		assertNQResult(new DataGetterEqIdentityStaticMemberPredicate());
 	}
-	
+
+	private static final class DataGetterEqIdentityStaticGetterPredicate extends ExpectingPredicate<Data> {
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.getPrev() == ConstantHolder.prevData();
+		}
+	}
+
+	public void testDataGetterEqIdentityStaticGetter() throws Exception {
+		assertNQResult(new DataGetterEqIdentityStaticGetterPredicate());
+	}
+
 	@decaf.Remove(platforms={decaf.Platform.JDK11, decaf.Platform.JDK12})
 	private static final class NameFieldContainsLowerCaseAPredicate extends ExpectingPredicate<Data> {
 		public int expected() { return 2;}
@@ -1044,31 +1060,31 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 
 	
 	private void assertNQResult(final ExpectingPredicate predicate) throws Exception {
-		final String predicateId = predicateId(predicate);
 		ObjectContainer db=db();
+		ConstantHolder._prevData = (Data)db.queryByExample(ConstantHolder._prevData).next();
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
 			private int run=0;
 			
 			public void notifyQueryExecuted(NQOptimizationInfo info) {
 				if(run<2) {
-					Assert.areEqual(info.predicate(),predicate,predicateId);
+					Assert.areEqual(info.predicate(),predicate);
 				}
 				String expMsg=null;
 				switch(run) {
 					case 0:
 						expMsg=NativeQueryHandler.UNOPTIMIZED;
-						Assert.isNull(info.optimized(),predicateId);
+						Assert.isNull(info.optimized());
 						break;
 					case 1:
 						expMsg=NativeQueryHandler.DYNOPTIMIZED;
-						Assert.isTrue(info.optimized() instanceof Expression,predicateId);
+						Assert.isTrue(info.optimized() instanceof Expression);
 						break;
 					case 2:
 						expMsg=NativeQueryHandler.PREOPTIMIZED;
-						Assert.isNull(info.optimized(),predicateId);
+						Assert.isNull(info.optimized());
 						break;
 				}
-				Assert.areEqual(expMsg,info.message(),predicateId);
+				Assert.areEqual(expMsg,info.message());
 				run++;
 			}
 		};
@@ -1076,9 +1092,6 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(predicate);
 		db.ext().configure().optimizeNativeQueries(true);
-		if(NQDebug.LOG) {
-			System.err.println(predicateId(predicate));
-		}
 		ObjectSet optimized=db.query(predicate);
 		if(!raw.equals(optimized)) {
 			System.out.println("RAW");
@@ -1094,26 +1107,27 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			}
 			optimized.reset();
 		}
-		Assert.areEqual(raw,optimized,predicateId);
-		Assert.areEqual(predicate.expected(),raw.size(),predicateId);
+		Assert.areEqual(raw,optimized);
+		Assert.areEqual(predicate.expected(),raw.size());
 
 		if(RUN_LOADTIME) {
-			if(NQDebug.LOG) {
-				System.out.println("LOAD TIME: " + predicateId);
-			}
 			runLoadTimeTest(db, predicate, raw, optimized);
 		} 
 		((InternalObjectContainer)db).getNativeQueryHandler().clearListeners();
 		db.ext().configure().optimizeNativeQueries(true);
 	}
 
-	private void runLoadTimeTest(ObjectContainer db,
-			final ExpectingPredicate predicate, ObjectSet raw,
-			ObjectSet optimized) throws ClassNotFoundException,
-			NoSuchMethodException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
+	private void runLoadTimeTest(ObjectContainer db, final ExpectingPredicate predicate, ObjectSet raw, ObjectSet optimized) throws Exception {
 		db.ext().configure().optimizeNativeQueries(false);
-		NQEnhancingClassloader loader=new NQEnhancingClassloader(getClass().getClassLoader());
+		NQEnhancingClassloader loader=new NQEnhancingClassloader(getClass().getClassLoader()) {
+			@Override
+			protected boolean mustDelegate(String name) {
+				return super.mustDelegate(name) 
+					|| name.equals(ConstantHolder.class.getName())
+					|| name.equals(Base.class.getName())
+					|| name.equals(Data.class.getName());
+			}
+		};
 		Class filterClass=loader.loadClass(predicate.getClass().getName());
 		Constructor constr=null;
 		Object[] args=null;
@@ -1129,12 +1143,8 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		
 		ObjectSet preoptimized=db.query(clPredicate);
 		
-		Assert.areEqual(predicate.expected(),preoptimized.size(),predicateId(predicate));
-		Assert.areEqual(raw,preoptimized,predicateId(predicate));
-		Assert.areEqual(optimized,preoptimized,predicateId(predicate));
-	}
-
-	private String predicateId(final ExpectingPredicate predicate) {
-		return "PREDICATE: "+predicate;
+		Assert.areEqual(predicate.expected(),preoptimized.size());
+		Assert.areEqual(raw,preoptimized);
+		Assert.areEqual(optimized,preoptimized);
 	}
 }
