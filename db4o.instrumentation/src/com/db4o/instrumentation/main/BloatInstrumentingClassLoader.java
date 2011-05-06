@@ -48,7 +48,7 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 		return clazz;
 	}
 
-	private boolean mustDelegate(String name) {
+	protected boolean mustDelegate(String name) {
 		return BloatUtil.isPlatformClassName(name)
 				||((name.startsWith("com.db4o.") && name.indexOf("test.")<0 && name.indexOf("samples.")<0));
 	}
