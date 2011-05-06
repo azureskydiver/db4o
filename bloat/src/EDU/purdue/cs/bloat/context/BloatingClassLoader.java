@@ -68,7 +68,7 @@ public abstract class BloatingClassLoader extends URLClassLoader {
 	 * loader.
 	 */
 	public BloatingClassLoader(final URL[] urls, final ClassLoader parent) {
-		super(urls);
+		super(urls, parent);
 	}
 
 	/**
