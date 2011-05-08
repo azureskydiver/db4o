@@ -36,6 +36,7 @@ object BuildPrepareConsoleMain {
 				return
 			}
 		}
+		writeXMLFile(new File(folder, "downloads.xml"), files, version2category)
 		files.foreach(f => {
 			logFile(f, "")
 			if(!dryRun) {
@@ -45,7 +46,6 @@ object BuildPrepareConsoleMain {
 		    	println("DRY")
 		    }
 		})
-		writeXMLFile(new File(folder, "downloads.xml"), files, version2category)
 		println()
 		println("Path: " + folder.getAbsolutePath)
 		println(files.size + " files renamed.")
