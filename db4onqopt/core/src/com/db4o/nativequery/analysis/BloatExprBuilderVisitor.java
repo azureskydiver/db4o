@@ -297,14 +297,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private boolean containsCandidateAsParam(List<ComparisonOperand> params) {
-		boolean containsCandidate = false;
 		for (ComparisonOperand param : excludeReceiverParam(params)) {
 			if ((param instanceof ComparisonOperandAnchor)
 					&& (((ComparisonOperandAnchor) param).root() == CandidateFieldRoot.INSTANCE)) {
-				containsCandidate = true;
+				return true;
 			}
 		}
-		return containsCandidate;
+		return false;
 	}
 
 	private List<ComparisonOperand> excludeReceiverParam(List<ComparisonOperand> params) {

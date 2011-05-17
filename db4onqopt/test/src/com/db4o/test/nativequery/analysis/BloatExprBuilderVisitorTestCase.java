@@ -745,7 +745,6 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertComparison("sampleGetterBoolComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
-	// TODO fails when run via Ant?!?
 	boolean sampleBoolGetterNotEqualsComp(Data data) {
 		return BOOLEAN_CMPVAL!=data.getBool();
 	}
@@ -1439,6 +1438,14 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testStaticIndirectActivateThenFieldIntEqualsComp() throws Exception {
 		assertComparison("sampleStaticIndirectActivateThenFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
+	}
+
+	boolean sampleIllegalPrivateFieldAccess(Data data) {
+		return predicateData.sameSecret(data);
+	}
+
+	public void testIllegalPrivateFieldAccess() throws Exception {
+		assertInvalid("sampleIllegalPrivateFieldAccess");
 	}
 
 	// internal
