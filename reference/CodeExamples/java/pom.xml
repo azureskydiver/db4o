@@ -75,43 +75,64 @@
             <version>4.8</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>db4o.com</id>
-            <url>http://source.db4o.com/maven/</url>
-        </repository>
-        <repository>
-            <id>unknown-jars-temp-repo</id>
-            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
-                replace the dependencies in this repository with correct ones and delete this repository.
-            </name>
-            <url>file:${project.basedir}./lib</url>
-        </repository>
-        <repository>
-            <id>repository.springsource.com.release</id>
-            <name>SpringSource OBR - Release</name>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-        </repository>
-        <repository>
-            <id>repository.springsource.com.external</id>
-            <name>SpringSource OBR - External</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>
-    </repositories>
-
 
     <build>
         <sourceDirectory>src</sourceDirectory>
 
         <plugins>
             <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <!-- #example: Enhance persisted classes during the build# -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <dependencies>
+                    <!-- We need the db4o tooling for enhancing stuff -->
+                    <dependency>
+                        <groupId>com.db4o</groupId>
+                        <artifactId>db4o-tools-java5</artifactId>
+                        <version>8.1-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <!-- We enhance with an additional Ant-run step. You can put this also in an extra file -->
+                                <typedef resource="instrumentation-def.properties"
+                                         classpathref="maven.compile.classpath"/>
+
+                                <!-- We filter by our annotation -->
+                                <typedef name="annotation-filter"
+                                         classname="com.db4odoc.tp.enhancement.AnnotationFilter"
+                                         classpathref="maven.compile.classpath"/>
+
+                                <db4o-instrument classTargetDir="target/classes">
+                                    <classpath refid="maven.compile.classpath"/>
+                                    <sources dir="target/classes">
+                                        <include name="**/*.class"/>
+                                    </sources>
+
+                                    <transparent-activation-step>
+                                        <annotation-filter/>
+                                    </transparent-activation-step>
+                                </db4o-instrument>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- #end example -->
         </plugins>
     </build>
 </project>

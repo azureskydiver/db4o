@@ -34,6 +34,7 @@ public class TextViewModel{
 
     public void clear() {
         this.text = "";
+        events.invoker().invoke();
     }
 
 

@@ -5,9 +5,6 @@
     Title="Introduction"
     Link="/Content/welcome.htm" />
   <TocEntry
-    Title="Why db4o?"
-    Link="/Content/why-db4o.htm" />
-  <TocEntry
     Title="Basics"
     Link="/Content/basics.htm">
     <TocEntry
@@ -112,4 +109,20 @@
   <TocEntry
     Title="Object Manager"
     Link="/Content/object-manager.htm" />
+  <TocEntry
+    Title="Community"
+    Link="/Content/db4ocommunity.htm">
+    <TocEntry
+      Title="Forums"
+      Link="/Content/db4ocommunity.htm#forums" />
+    <TocEntry
+      Title="Additional Resources"
+      Link="/Content/db4ocommunity.htm#resources" />
+    <TocEntry
+      Title="Report Bugs"
+      Link="/Content/db4ocommunity.htm#bugRepors" />
+  </TocEntry>
+  <TocEntry
+    Title="Contact"
+    Link="/Content/contact.htm" />
 </CatapultToc>

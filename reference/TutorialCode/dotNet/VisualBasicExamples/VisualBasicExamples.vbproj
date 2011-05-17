@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="Code\activation\ActivationConcept.vb" />
     <Compile Include="Code\activation\Person.vb" />
+    <Compile Include="Code\configuration\ConfigurationExamples.vb" />
     <Compile Include="Code\cs\ClientServer.vb" />
     <Compile Include="Code\firststeps\BasicOperations.vb" />
     <Compile Include="Code\firststeps\Car.vb" />

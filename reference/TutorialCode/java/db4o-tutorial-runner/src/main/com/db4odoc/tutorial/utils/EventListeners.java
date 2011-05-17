@@ -22,11 +22,17 @@ public final class EventListeners<T> implements Disposable {
 
     @Override
     public void dispose() {
-        inLockDispose();
+        listeners.clear();
     }
 
-    public Disposable add(T event) {
-        return inLockAdd(event);
+    public Disposable add(final T event) {
+        listeners.add(event);
+        return new Disposable() {
+            @Override
+            public void dispose() {
+                removeHandler(event);
+            }
+        };
     }
 
     public T invoker() {
@@ -37,25 +43,12 @@ public final class EventListeners<T> implements Disposable {
         return new EventListeners<T>(classInfo);
     }
 
-    private Disposable inLockAdd(final T event) {
-        listeners.add(event);
-        return new Disposable() {
-            @Override
-            public void dispose() {
-                removeHandler(event);
-            }
-        };
-    }
 
     private void removeHandler(T event) {
         listeners.remove(event);
     }
 
     private void invokeEventHandling(Method method, Object[] args) {
-        inLockEventHandling(method, args);
-    }
-
-    private void inLockEventHandling(Method method, Object[] args) {
         for (T listener : listeners) {
             try {
                 method.invoke(listener, args);
@@ -65,9 +58,6 @@ public final class EventListeners<T> implements Disposable {
         }
     }
 
-    private void inLockDispose() {
-        listeners.clear();
-    }
 
 
     private T buildInvoker(Class classInfo) {

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="6065" MadCap:lastWidth="831">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="5687" MadCap:lastWidth="616">
     <head>
     </head>
     <body>
@@ -13,21 +13,21 @@
             <img src="with-activation.png" style="width: 614px;height: 464px;" />
         </p>
         <h2><a name="ActivationInAction"></a>Activation in Action</h2>
-        <p>Let's see db4o's activation in action. To do so we need a deep object-graph. We create a person class with a mother-field and then create a deep hierarchy of people, for example a hierarchy of seven people. (<MadCap:toggler targets="domainModel">Click here</MadCap:toggler> to see the domain model classes for the examples)</p>
+        <p>Let's see db4o's activation in action. To do so we need a deep object-graph. We create a person class with a mother-field and then create a deep hierarchy of people, for example a hierarchy of seven people.<MadCap:snippetText src="Snippets/See-domain-model.flsnp" /></p>
         <MadCap:snippetBlock src="CodeExamples/activation/Person-Domain-model-for-people.all.flsnp" MadCap:targetName="domainModel" />
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-Store-a-deep-object-hierarchy.all.flsnp" />
-        <p>After that we close the database, reopen it and query for a person. Then we start to traverse the object graph. At a certain point we will reach objects which aren't activated anymore. In those object all fields are null or have the default value:</p>
+        <p>After that we close the database, reopen it and query for a person. Then we start to traverse the object graph. At a certain point we will reach objects which aren't activated anymore. In those objects all fields are null or have the default value:</p>
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-Activation-depth-in-action.all.flsnp" />
-        <p>Since not activate objects have set all there fields to null, they can cause null pointer exceptions:</p>
+        <p>Since not activate objects have set all their fields to null, they can cause null pointer exceptions:</p>
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-NullPointer-exception-due-to-not-activated-objects.all.flsnp" />
         <h2><a name="DealWithActivation"></a>Deal with Activation</h2>
-        <p>We've seen that activation can cause issues and we have to deal with it.There are different strategies to deal with it.</p>
+        <p>We've seen that activation can cause issues and we have to deal with it. There are different strategies for that.</p>
         <h3>Directly Activating Objects</h3>
         <p>We can explicitly activate objects or ask about their activation state. This way we can activate objects when needed. However as soon as we need to activate objects explicitly all over the place in our code, we should look for alternatives.</p>
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-Check-if-an-instance-is-activated.all.flsnp" />
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-Activate-instance-to-a-depth-of-five.all.flsnp" />
         <h3>Changing Activation Depth</h3>
-        <p>Another alternative we can use it to increase the activation depth globally or for certain types. However we need to be aware that a high activation depth decreases performance. That's why we should be very careful with increasing the activation depth.</p>
+        <p>Alternatively we can increase the activation depth globally or for certain types. However we need to be aware that a high activation depth decreases performance. That's why we should be very careful with increasing the activation depth.</p>
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-Increase-the-activation-depth-to-10.all.flsnp" />
         <p>We can even more fine tune the activation depth. However the fundamental issue is the same. When we increase the activation depth it will hurt performance.</p>
         <MadCap:snippetBlock src="CodeExamples/activation/ActivationConcept-More-activation-options.all.flsnp" />

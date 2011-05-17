@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Code\activation\ActivationConcept.cs" />
     <Compile Include="Code\activation\Person.cs" />
+    <Compile Include="Code\configuration\ConfigurationExamples.cs" />
     <Compile Include="Code\cs\ClientServer.cs" />
     <Compile Include="Code\firststeps\BasicOperations.cs" />
     <Compile Include="Code\firststeps\Car.cs" />

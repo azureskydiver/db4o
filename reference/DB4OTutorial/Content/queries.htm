@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="5678" MadCap:lastWidth="791">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="7621" MadCap:lastWidth="686">
     <head>
     </head>
     <body>
         <h1>Queries</h1>
-        <p>Let's take a look at a few examples of queries against db4o. (<MadCap:toggler targets="domainModel">Click here</MadCap:toggler> to see the domain model classes for the examples)</p>
+        <p>Let's take a look at a few examples of queries against db4o.<MadCap:snippetText src="Snippets/See-domain-model.flsnp" /></p>
         <div MadCap:targetName="domainModel">
             <MadCap:snippetBlock src="CodeExamples/queries/Car-Domain-model-for-cars.all.flsnp" />
             <MadCap:snippetBlock src="CodeExamples/queries/Driver-Domain-model-for-drivers.all.flsnp" />
@@ -16,11 +16,11 @@
             <p>This query finds all drivers named Joe:</p>
             <MadCap:snippetBlock src="CodeExamples/queries/Queries-Query-for-drivers-named-Joe.all.flsnp" />
             <h3>More Complex Query</h3>
-            <p>We can combine many criteria in a query by using the regular logical operators. For example to query all adult drivers with powerful cars.</p>
+            <p>We can combine many criteria in a query by using logical operators. For example to query for all adult drivers with powerful cars.</p>
             <MadCap:snippetBlock src="CodeExamples/queries/Queries-Query-for-people-with-powerful-cars.all.flsnp" />
             <h3>Native Query Optimization</h3>
-            <p>db4o tries to optimize native queries by translating them to the <a href="#SODA">db4o low level query API</a>. In cases which that doesn't work db4o actually instantiates all objects and runs them through the predicate. Unfortunatly that is an order of magnitude slower than a query which can be optimized. </p>
-            <p>How do we find out that a query couldn't be optimized? The simplest way is to use the debugger. Just add a break-point in query method. If the debugger stops there, the query couldn't be optimized. In that case try to simplify our query or use the <a href="#SODA">low level query API</a> directly. </p>
+            <p>db4o tries to optimize native queries by translating them to the <a href="#SODA">db4o low level query API</a>. In cases which that doesn't work db4o actually instantiates all objects and runs them through the predicate. Unfortunately that’s an order of magnitude slower than an optimized query.</p>
+            <p>How do we find out that a query couldn't be optimized? The simplest way is to use the debugger. We add a break-point in query method. When the debugger stops there, then query couldn't be optimized. In that case try to simplify our query or use the <a href="#SODA">low level query API</a> directly. </p>
             <MadCap:snippetBlock src="CodeExamples/queries/Queries-Unoptimized-query.all.flsnp" />
         </div>
         <div MadCap:conditions="Primary..NET">
@@ -43,7 +43,7 @@
             <MadCap:snippetBlock src="CodeExamples/queries/Queries-Unoptimizable-query.all.flsnp" />
         </div>
         <h2><a name="SODA"></a>SODA-Queries</h2>
-        <p>SODA is db4o's the low level query API. Prefer <a href="#NativeQueries">native queries</a> over this API. We create SODA queries by creating a query object. Then we add different criteria to that query object. Finally we execute the query and get the result. Lets take a look at two example queries:</p>
+        <p>SODA is db4o's the low level query API. Prefer <a href="#NativeQueries">native queries</a> over this API. We create SODA queries by creating a query object. Then we add different criteria to that query object. Finally we execute the query and get the result. Let's take a look at two example queries:</p>
         <h3>Query for a Certain Person</h3>
         <p>Here we query for a driver named Joe with SODA:</p>
         <MadCap:snippetBlock src="CodeExamples/queries/Queries-Query-for-drivers-named-Joe-with-SODA.all.flsnp" />
