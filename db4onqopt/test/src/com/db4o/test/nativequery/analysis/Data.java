@@ -16,6 +16,8 @@ class Data extends Base {
 	Boolean boolWrapper;
 	Date date;
 	
+	private int secret;
+	
 	public boolean getBool() {
 		return bool;
 	}
@@ -45,6 +47,10 @@ class Data extends Base {
 		System.out.println();
 	}
 
+	public boolean sameSecret(Data other) {
+		return secret == other.secret;
+	}
+	
 	public void activate(ActivationPurpose purpose) {
 	}
 
