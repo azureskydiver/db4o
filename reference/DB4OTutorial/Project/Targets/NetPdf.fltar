@@ -12,7 +12,7 @@
   TargetLanguage="en"
   MasterStylesheet="/Content/Resources/Stylesheets/PrintStyle.css"
   OutputFolder=""
-  OutputFile="db4o-reference-net.pdf">
+  OutputFile="db4o-tutorial-net.pdf">
   <DocumentProperties
     Subject="db4o"
     Title="db4o Reference Documentation"

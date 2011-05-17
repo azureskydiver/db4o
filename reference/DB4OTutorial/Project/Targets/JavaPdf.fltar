@@ -11,7 +11,7 @@
   PatchHeadingLevels="true"
   TargetLanguage="en"
   MasterStylesheet="/Content/Resources/Stylesheets/PrintStyle.css"
-  OutputFile="db4o-reference-java.pdf"
+  OutputFile="db4o-tutorial-java.pdf"
   OutputFolder=""
   MasterToc="/Project/TOCs/Primary TOC.fltoc">
   <DocumentProperties
