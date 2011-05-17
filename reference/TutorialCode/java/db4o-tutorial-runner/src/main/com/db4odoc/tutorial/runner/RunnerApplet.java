@@ -1,14 +1,13 @@
 package com.db4odoc.tutorial.runner;
 
 
+import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 
-public class RunnerApplet  extends Applet {
+import static com.db4odoc.tutorial.utils.ExceptionUtils.reThrow;
 
-    private static final String CLASS_TO_RUN = "classToRun";
-    private static final String METHOD_TO_RUN = "methodToRun";
-    private ExampleRunner runner;
+public class RunnerApplet  extends Applet {
 
     public RunnerApplet() throws HeadlessException {
         super();
@@ -17,18 +16,15 @@ public class RunnerApplet  extends Applet {
     @Override
     public void init() {
         super.init();
-        TextViewModel model = new TextViewModel();
-        this.runner = ExampleRunner.create(model.getWriter());
-        this.setLayout(new FlowLayout());
-        this.add(OutputPanel.create(model));
+        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        setupLookAndFeel();
+        final RunningCodeViewModel model = setupDemo();
+        this.add(ExampleRunningPanel.create(model));
     }
 
     @Override
     public void start() {
         super.start();
-        String classToRun = getParameter(CLASS_TO_RUN);
-        String method = getParameter(METHOD_TO_RUN);
-        runner.run(classToRun, method);
     }
 
     @Override
@@ -39,6 +35,23 @@ public class RunnerApplet  extends Applet {
     @Override
     public void destroy() {
         super.destroy();
+    }
+
+    private RunningCodeViewModel setupDemo() {
+        DemoPack demoPack = DemoPackLoader.loadByName(getParameter("demoClassName"));
+        final RunningCodeViewModel model = RunningCodeViewModel.create(demoPack.preparation());
+        for (ExampleSnippet snippet : demoPack.snippets()) {
+            model.addSnippet(snippet);
+        }
+        return model;
+    }
+
+    private static void setupLookAndFeel()  {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            reThrow(e);
+        }
     }
 
 }

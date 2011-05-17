@@ -6,23 +6,51 @@ import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.io.PagingMemoryStorage;
 import com.db4o.reflect.jdk.JdkReflector;
+import com.db4odoc.tutorial.faulttolerance.OperationResult;
 import com.db4odoc.tutorial.utils.NoArgAction;
+import com.db4odoc.tutorial.utils.OneArgAction;
 
 import java.io.PrintStream;
-import java.lang.reflect.Method;
 
+import static com.db4odoc.tutorial.runner.RunPreparation.NO_PREPARATION;
 import static com.db4odoc.tutorial.utils.ExceptionUtils.reThrow;
 
 public class ExampleRunner {
     private final PrintStream writer;
-    private final ClassLoader loader;
+    private final ExecutableClassGenerator generator = ExecutableClassGenerator.create();
+    private final RunPreparation preparation;
     private final ObjectContainer container;
 
-    private ExampleRunner(PrintStream writer, ObjectContainer container) {
+    private ExampleRunner(PrintStream writer, RunPreparation preparation, ObjectContainer container) {
         this.writer = writer;
-        this.loader = ExampleRunner.class.getClassLoader();
+        this.preparation = preparation;
         this.container = container;
+    }
 
+    public static ExampleRunner create(PrintStream writer){
+        return create(writer, NO_PREPARATION);
+    }
+    public static ExampleRunner create(PrintStream writer,RunPreparation preparation){
+        return create(writer, preparation,
+                openContainer(ExampleRunner.class.getClassLoader()));
+    }
+    public static ExampleRunner create(PrintStream writer,RunPreparation preparation,
+                                       ObjectContainer container){
+        return new ExampleRunner(writer,preparation,container);
+    }
+
+    public void run(String codeToRun) {
+        try {
+            final OperationResult<OneArgAction<ObjectContainer>> result
+                    = generator.generateWithBody(codeToRun,preparation.packages());
+            if(result.wasSuccessful()){
+                runSnippet(result);
+            } else{
+                printError(result.getException());
+            }
+        } catch (Exception e) {
+            throw reThrow(e);
+        }
     }
 
     private static ObjectContainer openContainer(ClassLoader loader) {
@@ -32,38 +60,26 @@ public class ExampleRunner {
         return Db4oEmbedded.openFile(config,"!In:Memory!");
     }
 
-    public static ExampleRunner create(PrintStream writer){
-        return create(writer,openContainer(ExampleRunner.class.getClassLoader()));
-    }
-    public static ExampleRunner create(PrintStream writer, ObjectContainer container){
-        return new ExampleRunner(writer,container);
+    private void printError(final Exception exception) {
+        writer.print("Compile error: ");
+        writer.print(exception.getMessage());
+        writer.flush();
     }
 
-    public void run(String name, String exampleToRun) {
-        try {
-            final Class classToRun = loader.loadClass(name);
-            final Method methodToRun = classToRun.getMethod(exampleToRun,
-                    new Class[]{ObjectContainer.class});
-
-            withRedirectedOut(new NoArgAction() {
-                @Override
-                public void invoke() {
-                    ExampleRunner.this.invoke(methodToRun, classToRun);
+    private void runSnippet(final OperationResult<OneArgAction<ObjectContainer>> result) {
+        withRedirectedOut(new NoArgAction() {
+            @Override
+            public void invoke() {
+                try {
+                    preparation.prepareDB(container);
+                    result.getResultData().invoke(container);
+                } catch (Exception e) {
+                    e.printStackTrace(writer);
                 }
-            });
-        } catch (Exception e) {
-            throw reThrow(e);
-        }
+            }
+        });
     }
 
-    private void invoke(Method methodToRun,
-                        Class classToRun) {
-        try {
-            methodToRun.invoke(classToRun.newInstance(), new Object[]{container});
-        } catch (Exception e) {
-            throw reThrow(e);
-        }
-    }
 
     private void withRedirectedOut(NoArgAction toRun) {
         PrintStream oldout = System.out;

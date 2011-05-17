@@ -5,9 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExamples", "CSharpExa
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VisualBasicExamples", "VisualBasicExamples\VisualBasicExamples.vbproj", "{3CAF686B-6504-4D47-95A8-185AAF528CC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit-2010", "..\libs\net\Db4oUnit\Db4oUnit-2010.csproj", "{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit-2010", "..\..\libs\net\Db4oUnit\Db4oUnit-2010.csproj", "{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit.Extensions-2010", "..\libs\net\Db4oUnit.Extensions\Db4oUnit.Extensions-2010.csproj", "{9446B00C-E8A6-4CEB-83DE-2CAC5168DFE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit.Extensions-2010", "..\..\libs\net\Db4oUnit.Extensions\Db4oUnit.Extensions-2010.csproj", "{9446B00C-E8A6-4CEB-83DE-2CAC5168DFE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

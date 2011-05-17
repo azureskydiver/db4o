@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="8124" MadCap:lastWidth="910">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="7980" MadCap:lastWidth="903">
     <head>
     </head>
     <body>
@@ -9,7 +9,7 @@
         <p>The first step for transparent persistence it to enhance the persisted classes. For that we introduce an <MadCap:variable name="Primary.Annotation" />:</p>
         <MadCap:snippetBlock src="CodeExamples/transparentpersistence/TransparentPersisted-Annotation-to-mark-persisted-classes.all.flsnp" />
         <MadCap:snippetBlock src="CodeExamples/transparentpersistence/TransparentPersistedAttribute-Annotation-to-mark-persisted-classes.all.flsnp" />
-        <p>After that we can mark the persistent classes with the <MadCap:variable name="Primary.Annotation" />. (<MadCap:toggler targets="domainModel">Click here</MadCap:toggler> to see annotated domain model)</p>
+        <p>After that we can mark the persistent classes with the <MadCap:variable name="Primary.Annotation" />.<MadCap:snippetText src="Snippets/See-domain-model.flsnp" /></p>
         <div MadCap:targetName="domainModel">
             <MadCap:snippetBlock src="CodeExamples/transparentpersistence/Car-Domain-model-for-cars.all.flsnp" />
             <MadCap:snippetBlock src="CodeExamples/transparentpersistence/Driver-Domain-model-for-drivers.all.flsnp" />
@@ -30,7 +30,7 @@
             <p>
                 <img src="after-build-events-vs.png" style="width: 532px;height: 321px;" />
             </p>
-            <p>For C# find the post build events in the project properties.Right click on the project, choose properties. On the project properties dialog choose 'Build Events'. Add the command there.</p>
+            <p>For C# find the post build events in the project properties. Right click on the project, choose properties. On the project properties dialog choose 'Build Events'. Add the command there.</p>
             <p>For VB.NET find the post build events in the project properties. Right click on the project, choose properties. There navigate to the 'Compile'-tab and click the 'Build Events...'-button there. </p>
             <p>On the post build event add this command:</p>
             <pre class="prettyprint" xml:space="preserve">$(ProjectDir)\lib\Db4oTool.exe -tp -debug -by-attribute:YourNamespace.TransparentPersistedAttribute $(TargetPath)</pre>

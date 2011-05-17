@@ -19,9 +19,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.db4odoc.tutorial</groupId>
-            <artifactId>db4o-tutorial</artifactId>
-            <version>8.1-SNAPSHOT</version>
+            <groupId>org.eclipse.jdt.core.compiler</groupId>
+            <artifactId>ecj</artifactId>
+            <version>3.5.1</version>
         </dependency>
     </dependencies>
 
@@ -29,6 +29,49 @@
     <build>
         <sourceDirectory>src/main</sourceDirectory>
         <testSourceDirectory>src/test</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!--<descriptors>-->
+                        <!--<descriptor>application-assembly.xml</descriptor>-->
+                    <!--</descriptors>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <keystore>${basedir}/signing-jar.keystore</keystore>
+                            <alias>applet</alias>
+                            <storepass>applet</storepass>
+                            <keypass>applet</keypass>
+                            <jarPath>${project.build.directory}/${project.build.FinalName}-${project.packaging}-with-dependencies.${project.packaging}</jarPath>
+                            <verify>true</verify>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <repositories>

@@ -34,26 +34,33 @@ public class TestTextViewModel {
     public void writeIsReflectedInText(){
         PrintStream writer = toTest.getWriter();
         writer.println(TEXT_TO_WRITE);
-        assertEquals(toTest.getText(), TEXT_TO_WRITE+SysInfo.NEW_LINE);
+        assertEquals(toTest.getText(), TEXT_TO_WRITE+ SystemInfo.NEW_LINE);
     }
     @Test
     public void writeMultipleTimes(){
         PrintStream writer = toTest.getWriter();
         writer.println("42");
         writer.println(TEXT_TO_WRITE);
-        assertEquals(toTest.getText(),"42"+SysInfo.NEW_LINE+ TEXT_TO_WRITE+SysInfo.NEW_LINE);
+        assertEquals(toTest.getText(),"42"+ SystemInfo.NEW_LINE+ TEXT_TO_WRITE+ SystemInfo.NEW_LINE);
     }
     @Test
     public void writeMultipleTimesFromDifferentStreams(){
         toTest.getWriter().println("42");
         toTest.getWriter().println(TEXT_TO_WRITE);
-        assertEquals(toTest.getText(),"42"+SysInfo.NEW_LINE+ TEXT_TO_WRITE+SysInfo.NEW_LINE);
+        assertEquals(toTest.getText(),"42"+ SystemInfo.NEW_LINE+ TEXT_TO_WRITE+ SystemInfo.NEW_LINE);
     }
     @Test
     public void firesEventOnWrite(){
         final WasInvoked check = new WasInvoked();
         toTest.addEventListener(check);
         toTest.getWriter().println("42");
+        check.assertWasInvoked();
+    }
+    @Test
+    public void clearFiredEvent(){
+        final WasInvoked check = new WasInvoked();
+        toTest.addEventListener(check);
+        toTest.clear();
         check.assertWasInvoked();
     }
     @Test

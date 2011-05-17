@@ -1,23 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="423" MadCap:lastWidth="543">
-  <head />
-  <body>
-    <h1>
-      <MadCap:keyword term="Persistence" />
-      <MadCap:keyword term="Transparent Persistence" />Transparent Persistence</h1>
-    <p>One of db4o's goals is to make the database transparent to the
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="240" MadCap:lastWidth="586">
+    <head />
+    <body>
+        <h1>
+            <MadCap:keyword term="Persistence" />
+            <MadCap:keyword term="Transparent Persistence" />Transparent Persistence</h1>
+        <p>One of db4o's goals is to make the database transparent to the
 application logic. Wouldn't it be nice to initially register an
 object  with a single store()-call and then let the database manage all future object modifications? Transparent Persistence does exactly that.It keeps track of changes and stores all modified objects automatically when committing. </p>
-    <p>This has several benefits:</p>
-    <ul>
-      <li>Clean an refactorable code. The code doesn't depend on the right activation-depth. </li>
-      <li>Performance-benefits. Only the objects which are needed are loaded into memory. And only modified objects are stored.</li>
-      <li>No changes can be lost due to miss configured update-depth.</li>
-    </ul>
-    <p>Transparent persistence takes care of activating the objects and storing changes. Take a look a simple example. <MadCap:xref href="transparent_persistence/transparent_persistence_example.htm" target="" title="" alt="">See "Transparent Persistence Example"</MadCap:xref></p>
-    <p>In order to support transparent persistence the persisted object need to implement certain interfaces. To manually implementing this interface is time consuming. Therefore it can be automated with enhancement tools. <MadCap:xref href="transparent_persistence/tp_enhanced_example.htm" target="" title="" alt="">See "Transparent Persistence Enhancement"</MadCap:xref></p>
-    <p>When using Transparent Persistence collections might need special attention. <MadCap:xref href="transparent_persistence/collection_example.htm" target="" title="" alt="">See "Transparent Persistence Collections"</MadCap:xref></p>
-    <p>For a deeper understanding of the mechanism: <MadCap:xref href="transparent_persistence/transparent_persistence_implementation.htm" target="" title="" alt="">See "Transparent Persistence Implementation"</MadCap:xref></p>
-    <p> </p>
-  </body>
+        <p>This has several benefits:</p>
+        <ul>
+            <li>Clean an refactorable code. The code doesn't depend on the right activation-depth. </li>
+            <li>Performance-benefits. Only the objects which are needed are loaded into memory. And only modified objects are stored.</li>
+            <li>No changes can be lost due to miss configured update-depth.</li>
+        </ul>
+        <p>To get started go to the <a href="../transparent_persistence.htm">transparent activation/persistence topics</a>.</p>
+    </body>
 </html>
