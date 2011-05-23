@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="5669" MadCap:lastWidth="560">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="5637" MadCap:lastWidth="560">
     <head>
     </head>
     <body>
         <h1>Basics</h1>
-        <p>Let's start with the basics. For this first introduction we create a tiny domain model, consisting out of drivers and cars. <MadCap:snippetText src="Snippets/See-domain-model.flsnp" /></p>
+        <p>Let's start with the basics. First we create a tiny domain model, consisting out of drivers and cars. <MadCap:snippetText src="Snippets/See-domain-model.flsnp" /></p>
         <div MadCap:targetName="domainModel">
             <MadCap:snippetBlock src="CodeExamples/firststeps/Car-Domain-model-for-cars.all.flsnp" />
             <MadCap:snippetBlock src="CodeExamples/firststeps/Driver-Domain-model-for-drivers.all.flsnp" />
         </div>
         <h2><a name="OpenDB"></a>Open a Database</h2>
-        <p>For all operations we need to open the database first. To open the database we pass a file-path to db4o. db4o will open or create that database an return an object container. The object container is the connection to our database. We do all our operations through the object container.</p>
+        <p>For all operations we need to open the database first. To open the database we pass a file-path to db4o. db4o will open or create that database-file an return an object container. The object container is the connection to our database. All operations go through it.</p>
         <MadCap:snippetBlock src="CodeExamples/firststeps/BasicOperations-Open-and-close-db4o.all.flsnp" />
         <h2><a name="StoreObject"></a>Store an Object</h2>
         <p>To store an object in the database, we simply call the store-method on the object container. </p>
