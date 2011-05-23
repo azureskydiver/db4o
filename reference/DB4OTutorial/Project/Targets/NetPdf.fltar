@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <CatapultTarget
   Version="1"
   Comment="test pdf target"
@@ -68,5 +68,7 @@
       Name="Primary/Artefacts">assemblies</Variable>
     <Variable
       Name="Primary/Packages">namespace</Variable>
+    <Variable
+      Name="Primary/native queries">LINQ</Variable>
   </Variables>
 </CatapultTarget>

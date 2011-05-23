@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="7980" MadCap:lastWidth="903">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="7946" MadCap:lastWidth="903">
     <head>
     </head>
     <body>
         <h1>Transparent Persistence</h1>
-        <p>In the previous topics we've seen that <a href="activation.htm">activation</a> and the <a href="update-concept.htm">update depth</a> can be annoying and cause unexpected errors. That's why we want to get rid of it. That's where transparent persistence comes to our rescue. It manages the activation and updating of our updates. Lets get started.</p>
+        <p>In the previous topics we've seen that <a href="activation.htm">activation</a> and the <a href="update-concept.htm">update depth</a> can be annoying and cause unexpected errors. That's why we want to get rid of it. That's where transparent persistence comes to our rescue. It manages the activation and updating of our updates. Let's get started.</p>
         <h2><a name="Enhance"></a>Enhance Persistent Classes</h2>
         <p>The first step for transparent persistence it to enhance the persisted classes. For that we introduce an <MadCap:variable name="Primary.Annotation" />:</p>
         <MadCap:snippetBlock src="CodeExamples/transparentpersistence/TransparentPersisted-Annotation-to-mark-persisted-classes.all.flsnp" />
@@ -41,7 +41,7 @@
         <h2><a name="UsingIt"></a>Using Transparent Persistence</h2>
         <p>In order to use transparent persistence we need to configure it first:</p>
         <MadCap:snippetBlock src="CodeExamples/transparentpersistence/TransparentPersistence-Configure-transparent-persistence.all.flsnp" />
-        <p>After that transparent persistence is active. It solves lots of issues for us. Activation is fully managed by transparent persistence.</p>
+        <p>After that transparent persistence is active and manages the activation and updates for us.</p>
         <MadCap:snippetBlock src="CodeExamples/transparentpersistence/TransparentPersistence-Transparent-persistence-manages-activation.all.flsnp" />
         <p>Transparent persistence also manages updates. You just can change existing objects as you please. Later when you commit the transaction all updates are persisted. You don't need to store objects in order to update them. You only need to call store once for objects which are new and are not referenced by an existing object.</p>
         <MadCap:snippetBlock src="CodeExamples/transparentpersistence/TransparentPersistence-Just-update-and-commit.all.flsnp" />
