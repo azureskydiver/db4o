@@ -250,14 +250,14 @@
 	
 	<target name="buildnet35" depends="init" description=".NET 3.5 (LINQ) full build">
 		<ant antfile="build-java.xml" target="doctor"/>
-		<ant antfile="build-dotnet.xml" target="package-net35" >
+		<ant antfile="build-dotnet.xml" target="build-prepare-package-net35" >
 		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
 		</ant>
 	</target>
 	
 	<target name="buildnet40" depends="init" description=".NET 4.0 full build">
 		<ant antfile="build-java.xml" target="doctor"/>
-		<ant antfile="build-dotnet.xml" target="package-net40" >
+		<ant antfile="build-dotnet.xml" target="build-prepare-package-net40" >
 		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
 		</ant>
 	</target>

@@ -728,7 +728,7 @@
 
 	</target>
 
-	<target name="run.tests.android.jdk1.5" depends="build.nodep1.5,build.db4ojdk1.5.tests" if="dir.android.home">
+	<target name="run.tests.android.jdk1.5" depends="build.nodep1.5,build.db4ojdk1.5.tests" if="dir.android.home" unless="skip.tests">
 		<mkdir dir="${dir.dist.android}"/>
 		<antcall target="db4oandroid-tests.run-tests"></antcall>
 	</target>
@@ -1239,7 +1239,7 @@
 			run.tests.osgi1.5"
 	/>
 	
-	<target name="run.tests.jdk1.2" depends="init, build.db4ojdk1.2.tests">
+	<target name="run.tests.jdk1.2" depends="init, build.db4ojdk1.2.tests" unless="skip.tests">
         <path id="tests.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
         	<pathelement location="${file.jdk1.2.jar}" />
@@ -1315,7 +1315,7 @@
 		<ant antfile="${dir.dist.taj.tests.integration}/build.xml" dir="${dir.dist.taj.tests.integration}"/>
 	</target>
 
-	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests">
+	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests" unless="skip.tests">
         <path id="tests.jdk1.5.runtime.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
         	<path refid="tests.jdk1.5.cp" />
@@ -1380,7 +1380,7 @@
 		</java>
 	</target>
 	
-	<target name="run.tests.nqopt1.2" depends="build.nqopt.tests1.2">
+	<target name="run.tests.nqopt1.2" depends="build.nqopt.tests1.2" unless="skip.tests">
         <path id="tests.nqopt.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
             <pathelement location="${file.jdk1.2.jar}" />
@@ -1407,7 +1407,7 @@
 		</java>
 	</target>
 
-	<target name="run.tests.nqopt1.5" depends="build.nqopt.tests1.5">
+	<target name="run.tests.nqopt1.5" depends="build.nqopt.tests1.5" unless="skip.tests">
         <path id="tests.nqopt.jdk1.5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
         	<pathelement location="${file.jdk1.5.jar}" />
@@ -1434,7 +1434,7 @@
 		</java>
 	</target>
 
-    <target name="run.tests.concurrency" depends="build.db4ojdk1.5.tests">
+    <target name="run.tests.concurrency" depends="build.db4ojdk1.5.tests" unless="skip.tests">
         <java taskname="conc/j12" jvm="${file.jvm.jdk1.2}" 
 			jvmargs="${java.vmargs}"
         	fork="true" 
@@ -1504,38 +1504,43 @@
 	</target>
 
 	<target name="run.tests.osgi1.5" depends="build.osgi.tests1.5" unless="ignore.run.tests.osgi">
-		<delete dir="${dir.test.osgi}"/>
-		<mkdir dir="${dir.test.osgi}"/>
-		<mkdir dir="${dir.test.osgi.conf}"/>
-		<copy tofile="${file.test.osgi.conf}" file="${file.osgi}"/>
-		<copy tofile="${dir.test.osgi}/db4o-osgi-test.jar" file="${file.osgi1.5.test.jar}"/>
-		<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi1.5.jar}"/>
-		
-		<java 
-			taskname="osgi/cdc"
-			classname="com.db4o.osgi.test.launch.TestLauncher" 
-			fork="true" 
-			jvm="${file.jvm.cdc_fp}" 
-			jvmargs="${java.vmargs}"
-			failonerror="true" 
-			timeout="3600000">
-			<!-- TODO extract reference to build classpath in common.xml -->
-			<classpath>
-				<dirset dir="${dir.build.bin}"/>
-				<fileset dir="${dir.build.lib}">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-			<jvmarg value="-Xmx64m"/>
-			<jvmarg value="-Dosgi.configuration.area=${dir.test.osgi.conf}"/>
-			<jvmarg value="-Dosgi.instance.area=${dir.test.osgi}/data"/>
-			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<arg value="${dir.test.osgi}/db4o-osgi-edition.jar" />
-			<arg value="${dir.test.osgi}/db4o-osgi-test.jar" />
-		</java>
+		<if>
+			<equals arg1="${skip.tests}" arg2="true" />
+			<else>
+				<delete dir="${dir.test.osgi}"/>
+				<mkdir dir="${dir.test.osgi}"/>
+				<mkdir dir="${dir.test.osgi.conf}"/>
+				<copy tofile="${file.test.osgi.conf}" file="${file.osgi}"/>
+				<copy tofile="${dir.test.osgi}/db4o-osgi-test.jar" file="${file.osgi1.5.test.jar}"/>
+				<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi1.5.jar}"/>
+				
+				<java 
+					taskname="osgi/cdc"
+					classname="com.db4o.osgi.test.launch.TestLauncher" 
+					fork="true" 
+					jvm="${file.jvm.cdc_fp}" 
+					jvmargs="${java.vmargs}"
+					failonerror="true" 
+					timeout="3600000">
+					<!-- TODO extract reference to build classpath in common.xml -->
+					<classpath>
+						<dirset dir="${dir.build.bin}"/>
+						<fileset dir="${dir.build.lib}">
+							<include name="*.jar" />
+						</fileset>
+					</classpath>
+					<jvmarg value="-Xmx64m"/>
+					<jvmarg value="-Dosgi.configuration.area=${dir.test.osgi.conf}"/>
+					<jvmarg value="-Dosgi.instance.area=${dir.test.osgi}/data"/>
+					<sysproperty key="dir.workspace" value="${dir.base}" />
+					<arg value="${dir.test.osgi}/db4o-osgi-edition.jar" />
+					<arg value="${dir.test.osgi}/db4o-osgi-test.jar" />
+				</java>
+			</else>
+		</if>
 	</target>
 
-	<target name="run.tests.taj" depends="build.taj.tests">
+	<target name="run.tests.taj" depends="build.taj.tests" unless="skip.tests">
 		<java taskname="ta/j13" classname="com.db4o.ta.instrumentation.test.AllTests"
 			jvmargs="${java.vmargs}"
 			fork="true"
@@ -1576,7 +1581,7 @@
 		</java>
 	</target>
 
-	<target name="run.tests.ant.instrumentation" depends="build.db4otools.tests, build.nodep1.5">
+	<target name="run.tests.ant.instrumentation" depends="build.db4otools.tests, build.nodep1.5" unless="skip.tests">
 		<reset-dir dir="${dir.db4otools.ant.instrumentation.test}" />
 		<mkdir dir="${dir.db4otools.ant.instrumentation.test}/testscript" />
 		<copy todir="${dir.db4otools.ant.instrumentation.test}/testscript">
@@ -1603,7 +1608,7 @@
 		</java>
 	</target>
 	
-	<target name="run.tests.instrumentation" depends="build.instrumentation.tests">
+	<target name="run.tests.instrumentation" depends="build.instrumentation.tests"  unless="skip.tests">
 		<java taskname="instr/j13" classname="com.db4o.instrumentation.test.AllTests"
 			jvmargs="${java.vmargs}"
 			fork="true"
@@ -1969,7 +1974,7 @@
 		</zip>
 	</target>
 	
-	<target name="run.tests.jdk1.5.instrumented">
+	<target name="run.tests.jdk1.5.instrumented" unless="skip.tests">
 		<ant antfile="run-tests-java-instrumented.xml" />
 	</target>
 	

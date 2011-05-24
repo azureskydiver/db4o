@@ -27,7 +27,7 @@
 			workspace="${dir.base}" 
 			inputsource="${dir.j.tutorial.src}/" 
 			sourceextension="java" 
-			outputfile="${db4o.file}tutorial" 
+			outputfile="${db4o.file}-tutorial" 
 			outputpath="${dir.j.tutorial.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.jdk1.5.cs.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}"

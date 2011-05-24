@@ -28,14 +28,12 @@
 		<property name="csharp.definitions" value="MONO,NET_2_0" />
 		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
 		<property name="csc.executable" value="gmcs" />
-		<property name="installer.package.suffix" value="mono2" />
-	
 		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
 	</target>
 	
 	<target name="configure-net35" unless="mono">
 		<echo>Configuring .net 3.5 build.</echo>
-			
+		
 		<property name="target.framework.version" value="3.5" />		
 		<property name="csc.executable.path.net35" location="${env.SystemRoot}/Microsoft.NET/Framework/v3.5" />		
 		<property name="msbuild.executable.net35" location="${csc.executable.path.net35}/MSBuild.exe" />
@@ -43,7 +41,7 @@
 		<property name="msbuild.target.platform" value="2008" />
 		<property name="msbuild.target.configuration" value="Release" />
 	
-		<property name="installer.package.suffix" value="net35" />
+		<!-- TODO: check if can be removed: installer.package.guid / installer.upgrade.guid -->
 		<property name="installer.package.guid" value="${installer.package.guid.net35}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net35}" />
 		
@@ -60,7 +58,6 @@
 		<property name="msbuild.target.platform" value="2010" />
 		<property name="msbuild.target.configuration" value="Release" />
 	
-		<property name="installer.package.suffix" value="net40" />
 		<property name="installer.package.guid" value="${installer.package.guid.net40}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net40}" />
 		

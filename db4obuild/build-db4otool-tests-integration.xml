@@ -40,10 +40,8 @@
 		
 	</target>
 
-	<target name="run" depends="enhance">
-		
-		<exec executable="${file.test-app-executable}" failonerror="true"/>
-		
+	<target name="run" depends="enhance" unless="skip.tests">
+		<exec executable="${file.test-app-executable}" failonerror="true"/>		
 	</target>
 
 </project>

@@ -140,13 +140,13 @@
 		<antcall target="run-core-tests-instrumented" />
 	</target>
 	
-	<target name="run-tests-core" depends="build-core">
+	<target name="run-tests-core" depends="build-core" unless="skip.tests">
 		<exec taskname="core.net" executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="7200000">
 			<env key="TEMP" value="${Tests.Temp.Path}"/>
 		</exec>
 	</target>
 	
-	<target name="run-tests-admin" depends="build-admin" unless="skip.admin">
+	<target name="run-tests-admin" depends="build-admin" unless="skip.tests">
 		<exec taskname="tool.net" executable="${dir.dist.dll.net}/Db4oTool.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
 			<env key="TEMP" value="${Tests.Temp.Path}"/>
 		</exec>
@@ -156,7 +156,7 @@
 	</target>
 	
 	<target name="run-tests-integration-ta" unless="mono">
-			<ant antfile="build-db4otool-tests-integration.xml" taskname=".Net TA Integration Tests" />
+		<ant antfile="build-db4otool-tests-integration.xml" taskname=".Net TA Integration Tests" />
 	</target>
 	
 	<target name="run-tests-mono" depends="build-core-mono" if="mono">
@@ -174,18 +174,27 @@
 		</exec>
 	</target>
 	
-	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 3.5 distros">
-	</target>
-
-	<target name="package-net40" depends="build-net40, meta-package" description="Builds the complete set of .net 4.0 distros">
-	</target>
+	<target name="build-prepare-package-net35" depends="build-net35, ndoc, prepare-package-structure, prepare-final-package" description="Builds the complete set of .net 3.5 distros" />
+	<target name="build-prepare-package-net40" depends="build-net40, ndoc, prepare-package-structure, prepare-final-package" description="Builds the complete set of .net 4.0 distros" />
+	
+	<target name="meta-package-new" depends="configure-net35, build-zip-new, build-net-installer-new" />
 	
 	<target name="package-net35-standalone" depends="properties, configure-net35, meta-package" />
 	
-	<target name="package-net40-standalone" depends="properties, configure-net40, meta-package" />
+	<target name="package-net40-standalone" depends="properties, configure-net40, meta-package" />	
 	
 	<target name="meta-package" depends="ndoc, build-zip, build-net-installer">
 	</target>
+	
+	<target name="prepare-final-package" depends="properties">
+		<mkdir dir="${dir.dist.net.package}" />
+		<copy todir="${dir.dist.net.package}" overwrite="true">			
+			<fileset dir="${dir.dist.net.build}">
+				<include name="*/**/*" />
+				<include name="*.*" />
+			</fileset>
+		</copy>		
+	</target>	
 	
 	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
 		
@@ -348,20 +357,39 @@
 
 	</target>
 	
-	
 	<target name="build-zip" depends="prepare-package-structure">
 	
-		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
+		<zip destfile="${dir.dist}/${db4o.file}.zip">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
 		</zip>			
 		
 	</target>
-
-	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer" />
+	
+	<!-- this assumes all the .net artifacts were correctly generated on -->
+	<target name="build-zip-new" depends="properties">
+	
+		<zip destfile="${dir.dist}/${db4o.file}.zip">
+			<fileset dir="${dir.dist.net.package.root}" includes="${folder.build}/**" />
+		</zip>
+		
+	</target>
+	
+	<target name="build-net-installer-new"  depends="properties" unless="mono">
+		<ant antfile="build-net-installer.xml" inheritall="false">
+			<property name="installer.msi" location="${dir.dist}/${db4o.file}.msi" />
+			<property name="installer.package.guid" value="${installer.package.guid}" />
+			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
+			<property name="target.framework.version" value="${target.framework.version}" />
+			<property name="target.vs.version" value="${msbuild.target.platform}" />
+		</ant>
+	</target>
+	
+	
+	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer-new" />
 	
 	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
 		<ant antfile="build-net-installer.xml" inheritall="false">
-			<property name="installer.msi" location="${dir.dist}/${db4o.file}${installer.package.suffix}.msi" />
+			<property name="installer.msi" location="${dir.dist}/${db4o.file}.msi" />
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
 			<property name="target.framework.version" value="${target.framework.version}" />
@@ -439,12 +467,12 @@
 		</exec>
 	</target>
 	
-	<target name="run-additional-linq-tests" depends="build-core">
+	<target name="run-additional-linq-tests" depends="build-core" unless="skip.tests">
 		<exec taskname="linq/vb" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.VB.Tests.exe" failonerror="true"/>
 		<exec taskname="linq/astoria" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Data.Services.Tests.exe" failonerror="true"/>
 	</target>
 	
-	<target name="run-msbuild-tests" depends="build-admin">
+	<target name="run-msbuild-tests" depends="build-admin" unless="skip.tests">
 		<exec executable="${dir.dist.dll}/Db4oTool.MSBuild.Tests.exe" failonerror="true"/>
 	</target>	
 	
