@@ -377,14 +377,13 @@
 	<target name="build-net-installer-new"  depends="properties" unless="mono">
 		<ant antfile="build-net-installer.xml" inheritall="false">
 			<property name="installer.msi" location="${dir.dist}/${db4o.file}.msi" />
-			<property name="installer.package.guid" value="${installer.package.guid}" />
+			<property name="installer.product.guid" value="${installer.product.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
 			<property name="target.framework.version" value="${target.framework.version}" />
 			<property name="target.vs.version" value="${msbuild.target.platform}" />
 		</ant>
 	</target>
-	
-	
+		
 	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer-new" />
 	
 	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">

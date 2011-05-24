@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
-  <Product Id="@installer.package.guid@" Name="db4o @db4o.version.dotted@" Language="1033" Version="@db4o.version.full@" Manufacturer="Versant Corp." UpgradeCode="@installer.upgrade.guid@">
+  <Product Id="@installer.product.guid@" Name="db4o @db4o.version.dotted@" Language="1033" Version="@db4o.version.full@" Manufacturer="Versant Corp." UpgradeCode="@installer.upgrade.guid@">
 	<Package Id="*" Keywords="Installer" Description="db4o @db4o.version.dotted@ Installer" Comments="db4o is a registered trademark of Versant Corp." Manufacturer="Versant Corp." InstallerVersion="200" Languages="1033" Compressed="yes" />
 	<!--
 			TARGETDIR is the installation directory
