@@ -46,7 +46,7 @@
 		<msbuild outputPath="${output.dir}" solutionFile="src/WixBuilder/WixBuilder.sln" />
 		
 		<exec executable="${output.dir}/WixBuilder.exe" failonerror="true">
-			<arg file="${dir.dist.net.build}" />
+			<arg file="${dir.dist.net.package}" />
 			<arg file="${output.dir}/extra-parameters.xml" />
 			<arg file="${output.dir}/files.wxs" />
 		</exec>		

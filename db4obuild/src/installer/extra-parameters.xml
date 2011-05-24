@@ -7,9 +7,14 @@
 		</KnownId>
 		
 		<KnownId>
-			<Id>omn.ObjectManagerEnterprise</Id>
-			<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs@target.vs.version@.msi</Path>
+			<Id>omn.ObjectManagerEnterprise_2008</Id>
+			<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs2008.msi</Path>
 		</KnownId>			
+		
+		<KnownId>
+			<Id>omn.ObjectManagerEnterprise_2010</Id>
+			<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs2010.msi</Path>
+		</KnownId>		
 	</KnownIds>
 
 	<Features>
@@ -33,18 +38,23 @@
 		
 	  </Feature>
     
-	  <Feature 
+	<Feature 
 		Id="OMN"
 		Title="ObjectManager Enterprise"
 		Description ="Visual Studio plugin with support for db4o databse object browsing">
 		<Content Include="omn/ObjectManagerEnterprise-*.*" />
 		
-		<Shortcuts>		
+		<Shortcuts>
 			<Shortcut>
-				<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs@target.vs.version@.msi</Path>
-				<Name>Install ObjectManager VS plugin</Name>
+				<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs2008.msi</Path>
+				<Name>Install ObjectManager VS 2008 plugin</Name>
 			</Shortcut>
-		</Shortcuts>
+			
+			<Shortcut>
+				<Path>omn/ObjectManagerEnterprise-@db4o.version.dotted@-vs2010.msi</Path>
+				<Name>Install ObjectManager VS 2010 plugin</Name>
+			</Shortcut>
+		</Shortcuts>		
 	  </Feature>
 	 </Features>	
 

@@ -10,8 +10,7 @@
 	<CustomAction Id="InitializeTargetDir" Property="TARGETDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
 	<CustomAction Id="UpdateTargetDir" Property="TARGETDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
 	<CustomAction Id="Launch_Tutorial" FileKey="doc.tutorial.Db4oTutorial.exe" ExeCommand="" Execute="firstSequence" Return="asyncNoWait" />
-	<CustomAction Id="action.InstallOME" FileKey="omn.ObjectManagerEnterprise" ExeCommand="" Return="asyncWait" />
-	
+
 	<!-- INSTALLATION SEQUENCE PROPERTIES -->
 	<Property Id="LAUNCHTUTORIAL">1</Property>
 	<!-- -->
@@ -36,7 +35,9 @@
 	<InstallExecuteSequence>
 	  <FindRelatedProducts />
 	  <Custom Action="InitializeTargetDir" Before="CostInitialize" />
+	  <!-- 
 	  <Custom Action="action.InstallOME" After="InstallFinalize">&amp;OMN = 3</Custom>
+	  -->
 	  <RemoveExistingProducts Before="InstallInitialize" />
 	</InstallExecuteSequence>
 
