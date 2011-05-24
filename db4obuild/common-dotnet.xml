@@ -40,11 +40,7 @@
 		<property name="msbuild.executable" location="${msbuild.executable.net35}" />
 		<property name="msbuild.target.platform" value="2008" />
 		<property name="msbuild.target.configuration" value="Release" />
-	
-		<!-- TODO: check if can be removed: installer.package.guid / installer.upgrade.guid -->
-		<property name="installer.package.guid" value="${installer.package.guid.net35}" />
-		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net35}" />
-		
+
 		<property name="silverlight.version" value="3.0" />
 	</target>
 	
@@ -58,9 +54,6 @@
 		<property name="msbuild.target.platform" value="2010" />
 		<property name="msbuild.target.configuration" value="Release" />
 	
-		<property name="installer.package.guid" value="${installer.package.guid.net40}" />
-		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net40}" />
-		
 		<property name="silverlight.version" value="4.0" />
 		<property name="cf.not.supported" value="true" />
 	</target>
