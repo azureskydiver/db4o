@@ -28,7 +28,7 @@
 				<filter token="db4o.version.dotted" value="${db4o.version.dotted}" />
 				<filter token="db4o.version.full" value="${db4o.version.full}" />
 				<filter token="target.vs.version" value="${target.vs.version}" />
-				<filter token="installer.package.guid" value="${installer.package.guid}" />
+				<filter token="installer.product.guid" value="${installer.product.guid}" />
 				<filter token="installer.upgrade.guid" value="${installer.upgrade.guid}" />
 			</filterset>
 		</copy>
