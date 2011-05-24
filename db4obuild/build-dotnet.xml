@@ -174,17 +174,10 @@
 		</exec>
 	</target>
 	
-	<target name="build-prepare-package-net35" depends="build-net35, ndoc, prepare-package-structure, prepare-final-package" description="Builds the complete set of .net 3.5 distros" />
-	<target name="build-prepare-package-net40" depends="build-net40, ndoc, prepare-package-structure, prepare-final-package" description="Builds the complete set of .net 4.0 distros" />
+	<target name="build-prepare-package-net35" depends="build-net35, ndoc, prepare-package-structure, prepare-final-package" description="Build and prepares the complete set of .net 3.5 distros for packaging" />
+	<target name="build-prepare-package-net40" depends="build-net40, ndoc, prepare-package-structure, prepare-final-package" description="Build and prepares the complete set of .net 4.0 distros for packaging" />
 	
-	<target name="meta-package-new" depends="configure-net35, build-zip-new, build-net-installer-new" />
-	
-	<target name="package-net35-standalone" depends="properties, configure-net35, meta-package" />
-	
-	<target name="package-net40-standalone" depends="properties, configure-net40, meta-package" />	
-	
-	<target name="meta-package" depends="ndoc, build-zip, build-net-installer">
-	</target>
+	<target name="meta-package" depends="configure-net35, build-zip, build-net-installer" />
 	
 	<target name="prepare-final-package" depends="properties">
 		<mkdir dir="${dir.dist.net.package}" />
@@ -357,16 +350,8 @@
 
 	</target>
 	
-	<target name="build-zip" depends="prepare-package-structure">
-	
-		<zip destfile="${dir.dist}/${db4o.file}.zip">
-			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
-		</zip>			
-		
-	</target>
-	
 	<!-- this assumes all the .net artifacts were correctly generated on -->
-	<target name="build-zip-new" depends="properties">
+	<target name="build-zip" depends="properties" >
 	
 		<zip destfile="${dir.dist}/${db4o.file}.zip">
 			<fileset dir="${dir.dist.net.package.root}" includes="${folder.build}/**" />
@@ -374,7 +359,7 @@
 		
 	</target>
 	
-	<target name="build-net-installer-new"  depends="properties" unless="mono">
+	<target name="build-net-installer"  depends="properties" unless="mono">
 		<ant antfile="build-net-installer.xml" inheritall="false">
 			<property name="installer.msi" location="${dir.dist}/${db4o.file}.msi" />
 			<property name="installer.product.guid" value="${installer.product.guid}" />
@@ -384,17 +369,7 @@
 		</ant>
 	</target>
 		
-	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer-new" />
-	
-	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
-		<ant antfile="build-net-installer.xml" inheritall="false">
-			<property name="installer.msi" location="${dir.dist}/${db4o.file}.msi" />
-			<property name="installer.package.guid" value="${installer.package.guid}" />
-			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
-			<property name="target.framework.version" value="${target.framework.version}" />
-			<property name="target.vs.version" value="${msbuild.target.platform}" />
-		</ant>
-	</target>
+	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer" />
 	
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
 	</target>
