@@ -2,7 +2,6 @@ package com.db4odoc.concurrency;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
-import com.db4o.config.ConfigScope;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.events.*;
@@ -16,11 +15,11 @@ public class OptimisticLocking {
     public static void main(String[] args) {
         cleanUp();
         ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
-        configuration.file().generateVersionNumbers(ConfigScope.GLOBALLY);
-        ObjectServer server = Db4oClientServer.openServer(configuration,"database.db4o",1337);
-        server.grantAccess("sa","sa");
+        configuration.file().generateCommitTimestamps(true);
+        ObjectServer server = Db4oClientServer.openServer(configuration, "database.db4o", 1337);
+        server.grantAccess("sa", "sa");
         installOptimisticLocking(server);
-        try{
+        try {
             storeInitialObject();
 
             updateObject();
@@ -31,11 +30,11 @@ public class OptimisticLocking {
     }
 
     private static void installOptimisticLocking(ObjectServer server) {
-        final EventRegistry events = EventRegistryFactory.forObjectContainer(server.ext().objectContainer());
+        final EventRegistry events = EventRegistryFactory.forObjectContainer(server.openClient());
         events.committing().addListener(new EventListener4<CommitEventArgs>() {
             @Override
             public void onEvent(Event4<CommitEventArgs> event, CommitEventArgs commitInfo) {
-                for(Iterator4<LazyObjectReference> it = commitInfo.updated().iterator();it.moveNext();){
+                for (Iterator4<LazyObjectReference> it = commitInfo.updated().iterator(); it.moveNext(); ) {
                     versionCheck(commitInfo, it.current());
                 }
             }
@@ -43,33 +42,23 @@ public class OptimisticLocking {
     }
 
     private static void versionCheck(CommitEventArgs commitInfo, LazyObjectReference ref) {
-        ObjectContainer container = commitInfo.objectContainer();
-        Object committerVersionObject = ref.getObject();
-        if(committerVersionObject instanceof VersionedObject){
-            VersionedObject committerVersion = committerVersion(container, committerVersionObject);
-            VersionedObject currentVersionObject = currentVersion(ref, container);
-
-            if(committerVersion.getVersion()==(currentVersionObject.getVersion()+1)){
-                throw new VersionConflictException(committerVersion.getVersion(),
-                        currentVersionObject.getVersion(),committerVersionObject);
+        long currentVersion = commitInfo.objectContainer().ext().version();
+        Object object = ref.getObject();
+        if (object instanceof VersionedObject) {
+            VersionedObject versioned = (VersionedObject) commitInfo.objectContainer().ext().peekPersisted(object,1,false);
+            if(currentVersion<versioned.getVersion()){
+                throw new VersionConflictException(currentVersion,versioned.getVersion(),versioned);
             }
         }
     }
 
-    private static VersionedObject currentVersion(LazyObjectReference ref, ObjectContainer container) {
-        VersionedObject currentVersionObject = container.ext().getByID(ref.getInternalID());
-        currentVersionObject = container.ext().peekPersisted(currentVersionObject,1,true);
-        return currentVersionObject;
-    }
-
-    private static VersionedObject committerVersion(ObjectContainer container, Object currentObject) {
-        VersionedObject commiterVersion = (VersionedObject) currentObject;
-        container.ext().activate(commiterVersion);
-        return commiterVersion;
-    }
-
     private static void concurrentUpdate() {
         ObjectContainer client1 = openClient();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         ObjectContainer client2 = openClient();
 
 
@@ -81,11 +70,11 @@ public class OptimisticLocking {
 
 
         client2.store(toUpdate2);
-        try{
+        try {
             client2.commit();
 
-        } catch (EventException ex){
-            ex.getCause().printStackTrace();    
+        } catch (EventException ex) {
+            ex.getCause().printStackTrace();
         }
     }
 
@@ -96,36 +85,41 @@ public class OptimisticLocking {
                 VersionedObject toUpdate = objectToUpdate(container);
                 container.store(toUpdate);
                 container.store(toUpdate);
+                System.out.println("before commit: " + container.ext().version());
                 container.commit();
+                System.out.println("after commit: " + container.ext().version());
+
                 container.store(toUpdate);
-                container.commit();  
+                System.out.println("before commit: " + container.ext().version());
+                container.commit();
+                System.out.println("after commit: " + container.ext().version());
             }
         });
     }
 
-    private static void storeInitialObject(){
+    private static void storeInitialObject() {
         doWithClient(new DatabaseOperation() {
             @Override
             public void invoke(ObjectContainer container) {
-                container.store(new VersionedObject());
+                container.store(new VersionedObject("data"));
             }
         });
     }
 
     private static void doWithClient(DatabaseOperation operation) {
         ObjectContainer container = openClient();
-        try{
-            doWithClient(container,operation);
+        try {
+            doWithClient(container, operation);
         } finally {
             container.close();
         }
     }
 
     private static ObjectContainer openClient() {
-        ObjectContainer container =  Db4oClientServer.openClient("localhost",1337,"sa","sa");
+        ObjectContainer container = Db4oClientServer.openClient("localhost", 1337, "sa", "sa");
         EventRegistry events = EventRegistryFactory.forObjectContainer(container);
-        events.creating().addListener(new VersionIncreaseListener());
-        events.updating().addListener(new VersionIncreaseListener());
+        events.creating().addListener(new IncreaseVersionNumber());
+        events.updating().addListener(new IncreaseVersionNumber());
         return container;
     }
 
@@ -142,13 +136,15 @@ public class OptimisticLocking {
         operation.invoke(container);
     }
 
-    private static class VersionIncreaseListener implements EventListener4<CancellableObjectEventArgs> {
+    private static class IncreaseVersionNumber implements EventListener4<CancellableObjectEventArgs> {
         @Override
-        public void onEvent(Event4<CancellableObjectEventArgs> event,
-                            CancellableObjectEventArgs objectInfo) {
-            if(objectInfo.object() instanceof VersionedObject) {
-                VersionedObject versioned = (VersionedObject) objectInfo.object();
-                versioned.increment();
+        public void onEvent(Event4<CancellableObjectEventArgs> events, CancellableObjectEventArgs eventInfo) {
+            long currentVersion = eventInfo.objectContainer().ext().version();
+            Object object = eventInfo.object();
+            if (object instanceof VersionedObject) {
+                VersionedObject versioned = (VersionedObject) object;
+                eventInfo.objectContainer().ext().activate(versioned, 1);
+                versioned.setVersion(currentVersion);
             }
         }
     }

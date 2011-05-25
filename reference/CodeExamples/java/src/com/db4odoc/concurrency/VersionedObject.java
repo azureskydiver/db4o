@@ -5,24 +5,29 @@ package com.db4odoc.concurrency;
 * @since 16.09.2010
 */
 public class VersionedObject {
-    private int version = 0;
-    private transient boolean alreadyIncremented;
+    private String data;
+    private long version;
 
-    public void increment(){
-        if(!alreadyIncremented){
-            version++;
-            alreadyIncremented = true;
-        }
+    public VersionedObject(String data) {
+        this.data = data;
     }
 
-    public int getVersion(){
+    public String getData() {
+        return data;
+    }
+
+    public long getVersion() {
         return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 
     @Override
     public String toString() {
         return "VersionedObject{" +
-                "version=" + version +
+                "version="+getVersion()+
                 '}';
     }
 }

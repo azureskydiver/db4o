@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="5958" MadCap:lastWidth="792">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="5855" MadCap:lastWidth="924">
     <head>
     </head>
     <body>
         <h1>
             <MadCap:keyword term="Transparent Activation:Example;Transparent Persistence:Example" />Transparent Activation/Persistence Example</h1>
-        <p>In this example first transparent activation is implemented and then transparent persistence.</p>
+        <p>In this example demonstrates how to use transparent activation and later on transparent persistence.</p>
         <h2><a name="dependencies"></a>Required <MadCap:variable name="Primary.Artefacts" /></h2>
-        <p>For transparent activation/persistence you need following dependencies at compile time . (see also the <a href="../../dependency_overview.htm">dependency overview</a>)</p>
+        <p>For transparent activation/persistence you need following dependencies at compile time. (see also the <a href="../../dependency_overview.htm">dependency overview</a>)</p>
         <ul MadCap:conditions="Primary.Java">
             <li>bloat-1.0.jar</li>
             <li>db4o-X.XX-instrumentation.jar</li>
@@ -18,16 +18,16 @@
             <li>The Db4oTool.exe and all its dependencies</li>
         </ul>
         <h2><a name="Enhance"></a>Enhance Persistent Classes</h2>
-        <p>The first step for transparent persistence it to enhance the persisted classes. One possibility is to introduce an <MadCap:variable name="Primary.Annotation" /> to mark you persisted classes.</p>
+        <p>The first step for transparent persistence it to enhance the persisted classes. One possibility is to introduce an <MadCap:variable name="Primary.Annotation" /> to mark your persisted classes.</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistedAttribute-Annotation-to-mark-persisted-classes.all.flsnp" />
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersisted-Annotation-to-mark-persisted-classes.all.flsnp" />
-        <p>This <MadCap:variable name="Primary.Annotation" /> is then used to marked all persisted classes. </p>
+        <p>This <MadCap:variable name="Primary.Annotation" /> is then used to mark all persisted classes. </p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/Person-Mark-your-domain-model-with-the-annotations.all.flsnp" />
-        <p MadCap:conditions="Primary.Java">The next step it to create a class filter which reports all classes  which should be enhanced. There we can check for the presence of the annotation.</p>
+        <p MadCap:conditions="Primary.Java">The next step is to create a class filter which reports all classes  which should be enhanced. There we can check for the presence of the annotation.</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/AnnotationFilter-Build-a-filter.all.flsnp" MadCap:conditions="Primary.Java" />
         <div MadCap:conditions="Primary.Java">
             <h2>Enhancing Classes Using Ant</h2>
-            <p>An enhancement step is required to inject bytecode into the domain classes to support transparent activation/persistence.</p>
+            <p>An enhancement step is required to inject <MadCap:variable name="Primary.ByteCode" /> into the domain classes to support transparent activation/persistence.</p>
             <MadCap:snippetBlock src="../../CodeExamples/enhance-with-annotation-Ant-target-for-enhancing-your-classes-after-building-them.all.flsnp" />
             <h2>Enhancing Classes Using Maven</h2>
             <p>It's also possible to enhance with Maven by using the Ant plugin.</p>
@@ -50,12 +50,12 @@
         <h2><a name="UsingTP"></a>Using Transparent Activation</h2>
         <p>Configure the transparent activation in order to use it.</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistence-Add-transparent-activation.all.flsnp" />
-        <p>After that transparent activation is working properly. You can transverse along the object graph and never have to worry about not activated objects:</p>
+        <p>After that transparent activation is working properly. You can transverse along the object graph and don’t have to worry about not activated objects:</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistence-Activation-just-works.all.flsnp" />
         <h2>Using Transparent Persistence</h2>
-        <p>Transparent Persistence not only manages the activation, but also manages updating the objects. Configure transparent persistence in order to use it:</p>
+        <p>Transparent persistence not only manages the activation, but also manages updating the objects. Configure transparent persistence in order to use it:</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistence-Add-transparent-persistence.all.flsnp" />
-        <p>After that updates objects are automatically stored every time you commit.</p>
+        <p>After that updated objects are automatically stored every time you commit.</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistence-Just-update-and-commit.all.flsnp" />
     </body>
 </html>
