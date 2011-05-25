@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="10" MadCap:lastHeight="4984" MadCap:lastWidth="588">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="10" MadCap:lastHeight="5261" MadCap:lastWidth="686">
     <head>
     </head>
     <body>
         <h1>Implementation</h1>
-        <p>This topic explains how transparent activation/persistence is implemented and how you can implement the required interfaces by hand. In practice you should use the <a href="../../advanced_topics/enhancement_tools.htm">provider enhancer's</a> instead of implementing the interfaces yourself. <MadCap:xref href="simple_example_tp.htm" target="" title="" alt="">See "Transparent Activation/Persistence Example"</MadCap:xref></p>
+        <p>This topic explains how transparent activation/persistence is implemented and how you can implement the required interfaces by hand. In practice you should use the <a href="../../advanced_topics/enhancement_tools.htm">provided enhancer's</a> instead of implementing the interfaces yourself. <MadCap:xref href="simple_example_tp.htm" target="" title="" alt="">See "Transparent Activation/Persistence Example"</MadCap:xref></p>
         <h2><a name="Adding"></a>Adding the Configuration</h2>
         <p>We need to explicitly configure transparent activation/persistence. </p>
         <h3>Transparent Activation</h3>
@@ -12,7 +12,7 @@
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistence-Add-transparent-activation.all.flsnp" />
         <h3>Transparent Persistence</h3>
         <p>This adds transparent persistence, which automatically activates objects and manages changes on objects. Includes implicitly the transparent activation support. </p>
-        <p>Optionally you can specify how rollbacks are handled.</p>
+        <p>Optionally you can specify how <a href="automatic_deactivation.htm">rollbacks</a> are handled.</p>
         <MadCap:snippetBlock src="../../CodeExamples/tp/enhancement/TransparentPersistence-Add-transparent-persistence.all.flsnp" />
         <h2><a name="Implemen"></a>Implementing the Activatable Interface</h2>
         <p>In order to support Transparent Activation, the objects which are stored in the database need to implement the <MadCap:variable name="Primary.Activatable" />-interface.</p>
