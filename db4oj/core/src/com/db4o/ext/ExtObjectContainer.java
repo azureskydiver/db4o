@@ -27,7 +27,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * activates an object with the current activation strategy.
      * In regular activation mode the object will be activated to the 
-     * global activation depth, ( see {@link Configuration#activationDepth()} )
+     * global activation depth, ( see {@link CommonConfiguration#activationDepth()} )
      * and all configured settings for {@link ObjectClass#maximumActivationDepth(int)} 
      * and {@link ObjectClass#maximumActivationDepth(int)} will be respected.<br><br>   
      * In Transparent Activation Mode ( see {@link TransparentActivationSupport} ) 
@@ -91,7 +91,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * reference with the object parameter. The method may be used to replace
      * objects or to reassociate an object with it's stored instance
      * after closing and opening a database file. A subsequent call to 
-     * {@link com.db4o.ObjectContainer#set set(Object)} is
+     * {@link com.db4o.ObjectContainer#store store(Object)} is
      * necessary to update the stored object.<br><br>
      * <b>Requirements:</b><br>- The ID needs to be a valid internal object ID, 
      * previously retrieved with 
@@ -108,17 +108,9 @@ public interface ExtObjectContainer extends ObjectContainer {
 
     /**
      * returns the Configuration context for this ObjectContainer.
-     * <br><br>
-     * Upon opening an ObjectContainer with any of the factory methods in the
-     * {@link com.db4o.Db4o Db4o class}, the global 
-     * {@link com.db4o.config.Configuration Configuration} context
-     * is copied into the ObjectContainer. The 
-     * {@link com.db4o.config.Configuration Configuration}
-     * can be modified individually for
-     * each ObjectContainer without any effects on the global settings.<br><br>
+     * <br>
      * @return {@link com.db4o.config.Configuration Configuration} the Configuration
      * context for this ObjectContainer
-     * @see Db4o#configure
      */
     public Configuration configure();
     
@@ -139,17 +131,12 @@ public interface ExtObjectContainer extends ObjectContainer {
      * IDs can be obtained with {@link #getID getID(Object)}.
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
-     * Passing invalid id values to this method may result in all kinds of 
-     * exceptions being thrown. OutOfMemoryError and arithmetic exceptions 
-     * may occur. If an application is known to use invalid IDs, it is
-     * recommended to call this method within a catch-all block.
      * @param ID the internal ID
      * @return the object associated with the passed ID or <code>null</code>, 
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
-     * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
-     * @throws InvalidIDException when the provided id is outside the scope of the
-     * file length.
+     * @throws InvalidIDException when an invalid id is passed
      */
     public <T> T getByID(long ID) throws DatabaseClosedException, InvalidIDException;
     
@@ -163,7 +150,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * activation state they are currently in, in the local cache.<br><br>
      * @param uuid the UUID
      * @return the object for the UUID
-     * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
@@ -284,8 +271,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 
     /**
     * unloads all clean indices from memory and frees unused objects.
-    * <br><br>Call commit() and purge() consecutively to achieve the best
-    * result possible. This method can have a negative impact 
+    * <br><br> This method can have a negative impact
     * on performance since indices will have to be reread before further 
     * inserts, updates or queries can take place.
     */
@@ -296,10 +282,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * <br><br>db4o keeps references to all newly stored and 
      * instantiated objects in memory, to be able to manage object identities. 
      * <br><br>With calls to this method it is possible to remove an object from the
-     * reference mechanism, to allow it to be garbage collected. You are not required to
-     * call this method in the .NET and JDK 1.2 versions, since objects are
-     * referred to by weak references and garbage collection happens
-     * automatically.<br><br>An object removed with  <code>purge(Object)</code> is not
+     * reference mechanism.<br>An object removed with  <code>purge(Object)</code> is not
      * "known" to the <code>ObjectContainer</code> afterwards, so this method may also be
      * used to create multiple copies of  objects.<br><br> <code>purge(Object)</code> has
      * no influence on the persistence state of objects. "Purged" objects can be
@@ -336,11 +319,11 @@ public interface ExtObjectContainer extends ObjectContainer {
 	/**
      * deep update interface to store or update objects.
      * <br><br>In addition to the normal storage interface, 
-     * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
+     * {@link com.db4o.ObjectContainer#store ObjectContainer#store(Object)},
      * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
      * @param obj the object to be stored or updated.
      * @param depth the depth to which the object is to be updated
-     * @see com.db4o.ObjectContainer#set
+     * @see com.db4o.ObjectContainer#store
      */
     public void store (Object obj, int depth);
     
