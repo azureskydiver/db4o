@@ -44,7 +44,7 @@ import com.db4o.io.*;
  * process will skip all classes that have instances stored within the db4o file,
  * but that are not available on the class path (through the current
  * classloader). Custom db4o configuration options are read from the
- * {@link com.db4o.config.Configuration Configuration} passed as db4oConfig.
+ * {@link com.db4o.config.EmbeddedConfiguration Configuration} passed as db4oConfig.
  * 
  * <strong>Note:</strong> For some specific, non-default configuration settings like
  * UUID generation, etc., you <strong>must</strong> pass an appropriate db4o configuration,

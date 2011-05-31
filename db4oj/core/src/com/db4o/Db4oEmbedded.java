@@ -48,10 +48,10 @@ public class Db4oEmbedded {
 	 * @throws DatabaseFileLockedException the required database file is locked by 
 	 * another process.
 	 * @throws IncompatibleFileFormatException runtime 
-	 * {@link com.db4o.config.Configuration configuration} is not compatible
+	 * {@link com.db4o.config.EmbeddedConfiguration configuration} is not compatible
 	 * with the configuration of the database file. 
 	 * @throws OldFormatException open operation failed because the database file
-	 * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+	 * is in old format and {@link com.db4o.config.CommonConfiguration#allowVersionUpdates(boolean)}
 	 * is set to false.
 	 * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */

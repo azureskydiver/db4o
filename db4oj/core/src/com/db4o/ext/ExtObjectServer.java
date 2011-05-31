@@ -37,13 +37,7 @@ public interface ExtObjectServer extends ObjectServer{
 	 /**
 	 * returns the {@link Configuration} context for this ObjectServer.
 	 * <br><br>
-	 * Upon opening an ObjectServer with any of the factory methods in the
-	 * {@link Db4o} class, the global {@link Configuration} context
-	 * is copied into the ObjectServer. The {@link Configuration}
-	 * can be modified individually for
-	 * each ObjectServer without any effects on the global settings.<br><br>
 	 * @return the Configuration context for this ObjectServer
-     * @see com.db4o.Db4o#configure
      */
 	public Configuration configure();
 	

@@ -29,7 +29,7 @@ public interface ObjectInfo {
      * returns a UUID representation of the referenced object.
 	 * UUID generation has to be turned on, in order to be able
 	 * to use this feature:
-	 * {@link com.db4o.config.Configuration#generateUUIDs(int)}
+	 * {@link com.db4o.config.FileConfiguration#generateUUIDs(com.db4o.config.ConfigScope)}
      * @return the UUID of the referenced object.
      */
     public Db4oUUID getUUID();
@@ -38,10 +38,10 @@ public interface ObjectInfo {
 	 * returns the transaction serial number ("version") the referenced object
 	 * was stored with last. Version number generation has to be turned on, in
 	 * order to be able to use this feature:
-	 * {@link com.db4o.config.Configuration#generateVersionNumbers(int)} <br>
+	 * {@link com.db4o.config.FileConfiguration#generateVersionNumbers(com.db4o.config.ConfigScope)} <br>
 	 * This feature was replaced by {@link #getCommitTimestamp()}. The main
-	 * difference is that the old version mechamism used to assign a serial
-	 * timestamp to the object upon storing time, and the new commiTimestamp
+	 * difference is that the old version mechanism used to assign a serial
+	 * timestamp to the object upon storing time, and the new commitTimestamp
 	 * approach, assigns it upon commit time.<br>
 	 * 
 	 * @return the version number.
@@ -51,7 +51,7 @@ public interface ObjectInfo {
     public long getVersion();
 	
 	/**
-	 * The serial timestamp the object is assigned to when it is commited.<br>
+	 * The serial timestamp the object is assigned to when it is committed.<br>
 	 * <br>
 	 * You need to enable this feature before using it in {@link FileConfiguration#generateCommitTimestamps(boolean)}.<br>
 	 * <br>

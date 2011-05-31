@@ -6,13 +6,13 @@ import com.db4o.ext.*;
 
 /**
  * the db4o server interface.
- * <br><br>- db4o servers can be opened with {@link Db4o#openServer(String, int)}.<br>
+ * <br><br>- db4o servers can be opened with {@link Db4oClientServer#openServer(String, int)}.<br>
  * - Direct in-memory connections to servers can be made with {@link #openClient()} <br>
- * - TCP connections are available through {@link Db4o#openClient(String, int, String, String)}.
+ * - TCP connections are available through {@link Db4oClientServer#openClient(String, int, String, String)}.
  * <br><br>Before connecting clients over TCP, you have to 
  * {@link #grantAccess(String, String)} to the username and password combination
  * that you want to use. 
- * @see Db4o#openServer(java.lang.String, int) Db4o.openServer
+ * @see Db4oClientServer#openServer(java.lang.String, int) Db4o.openServer
  * @see ExtObjectServer ExtObjectServer for extended functionality
  * 
  * @sharpen.extends System.IDisposable
@@ -52,10 +52,10 @@ public interface ObjectServer {
      * as the server. Since an embedded client can use direct communication, without
      * an in-between socket connection, performance will be better than a client
      * opened with 
-     * {@link Db4o#openClient(java.lang.String, int, java.lang.String, java.lang.String)}
+     * {@link Db4oClientServer#openClient(java.lang.String, int, java.lang.String, java.lang.String)}
      * 
      * <br><br>Every client has it's own transaction and uses it's own cache
-     * for it's own version of all peristent objects.  
+     * for it's own version of all persistent objects.
      * 
      */
     public ObjectContainer openClient();

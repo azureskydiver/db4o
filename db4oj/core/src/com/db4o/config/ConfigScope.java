@@ -12,8 +12,7 @@ import com.db4o.foundation.*;
  * - enabled globally; <br>
  * - enabled individually for a specified class; <br>
  * - disabled.<br><br>
- * @see com.db4o.config.Configuration#generateUUIDs(ConfigScope)
- * @see com.db4o.config.Configuration#generateVersionNumbers(ConfigScope)
+ * @see com.db4o.config.FileConfiguration#generateUUIDs(ConfigScope)
  */
 public final class ConfigScope implements Serializable {
 
