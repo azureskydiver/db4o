@@ -22,7 +22,7 @@ public interface ClientConfigurationItem {
 	/**
 	 * Gives a chance for the item to configure the just opened ObjectContainer.
 	 * 
-	 * @param container the ObjectContainer to configure
+	 * @param client the ObjectContainer to configure
 	 */
 	public void apply(ExtClient client);
 

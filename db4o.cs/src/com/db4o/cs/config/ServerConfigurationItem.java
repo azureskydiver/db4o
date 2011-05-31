@@ -22,7 +22,7 @@ public interface ServerConfigurationItem {
 	/**
 	 * Gives a chance for the item to configure the just opened ObjectContainer.
 	 * 
-	 * @param container the ObjectContainer to configure
+	 * @param server the ObjectContainer to configure
 	 */
 	public void apply(ObjectServer server);
 

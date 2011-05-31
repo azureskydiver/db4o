@@ -7,8 +7,8 @@ import com.db4o.ext.*;
 
 /**
  * factory to open C/S server and client implementations.
- * @see Db4o#openClient(ClientConfiguration, String, int, String, String)
- * @see Db4o#openServer(ServerConfiguration, String, int) 
+ * @see com.db4o.cs.Db4oClientServer#openClient(ClientConfiguration, String, int, String, String)
+ * @see com.db4o.cs.Db4oClientServer#openServer(ServerConfiguration, String, int)
  */
 public interface ClientServerFactory {
 	

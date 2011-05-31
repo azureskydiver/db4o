@@ -45,8 +45,7 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 
 	/**
 	 * Sets the depth to which prefetched objects will be activated.
-	 * 
-	 * @param value
+	 *
 	 * 
 	 * @sharpen.property
 	 */
@@ -68,7 +67,7 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	 * Default value: 600000ms (10 minutes)<br>
 	 * <br>
      * It is recommended to use the same values for {@link #timeoutClientSocket(int)}
-     * and {@link #timeoutServerSocket(int)}.
+     * and {@link ServerConfiguration#timeoutServerSocket(int)}.
      * <br>
 	 * @param milliseconds
 	 *            time in milliseconds
