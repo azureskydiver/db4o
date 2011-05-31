@@ -47,10 +47,10 @@ public interface ObjectContainer {
      * {@link com.db4o.config.ObjectClass ObjectClass interface}.<br><br>
      * A successful call to activate triggers Activating and Activated callbacks,
      * which can be used for cascaded activation.<br><br>
-     * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
      * @see ObjectCallbacks Using callbacks
      * @param obj the object to be activated.
-     * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
+     * @param depth the member {@link com.db4o.config.CommonConfiguration#activationDepth depth}
      *  to which activate is to cascade.
      *  @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 *  @throws DatabaseClosedException db4o database file was closed or failed to open.
@@ -302,7 +302,7 @@ public interface ObjectContainer {
 	 * might also be used for cascaded updates.<br><br>
      * @param obj the object to be stored or updated.
 	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
-	 * @see com.db4o.config.Configuration#updateDepth
+	 * @see com.db4o.config.CommonConfiguration#updateDepth
 	 * @see com.db4o.config.ObjectClass#updateDepth
 	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate
 	 * @see com.db4o.config.ObjectField#cascadeOnUpdate

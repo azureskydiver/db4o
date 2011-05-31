@@ -8,7 +8,7 @@ package com.db4o.constraints;
  * This exception can be thrown by a 
  * {@link com.db4o.constraints.UniqueFieldValueConstraint} on commit.
  * @see com.db4o.config.ObjectField#indexed(boolean)
- * @see com.db4o.config.Configuration#add(com.db4o.config.ConfigurationItem)
+ * @see com.db4o.config.CommonConfiguration#add(com.db4o.config.ConfigurationItem)
  */
 public class UniqueFieldValueConstraintViolationException extends ConstraintViolationException {
 

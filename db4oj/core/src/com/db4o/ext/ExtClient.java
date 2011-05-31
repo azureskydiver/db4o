@@ -7,7 +7,7 @@ package com.db4o.ext;
  * extended client functionality for the
  * {@link ExtObjectContainer ExtObjectContainer} interface.
  * <br><br>Both 
- * {@link com.db4o.Db4o#openClient Db4o.openClient()} methods always
+ * {@link com.db4o.Db4oClientServer#openClient Db4oClientServer.openClient()} methods always
  * return an <code>ExtClient</code> object so a cast is possible.<br><br>
  * The ObjectContainer functionality is split into multiple interfaces to allow newcomers to
  * focus on the essential methods.

@@ -49,7 +49,7 @@ public interface ObjectSet<T> extends List<T>, Iterable<T> {
 	 * <br><br>
 	 * Before returning the Object, next() triggers automatic activation of the
 	 * Object with the respective
-	 * {@link com.db4o.config.Configuration#activationDepth global} or
+	 * {@link com.db4o.config.CommonConfiguration#activationDepth global} or
 	 * {@link com.db4o.config.ObjectClass#maximumActivationDepth class specific}
 	 * setting.<br><br>
      * @return the next object in the <code>ObjectSet</code>.

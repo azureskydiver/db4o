@@ -9,7 +9,6 @@ import com.db4o.ext.*;
  * setting is attempted on an open object container.
  *@see com.db4o.config.Configuration#blockSize(int)
  *@see com.db4o.config.Configuration#encrypt(boolean)
- *@see com.db4o.config.Configuration#io(com.db4o.io.IoAdapter)
  *@see com.db4o.config.Configuration#password(String)
  */
 public class GlobalOnlyConfigException extends Db4oRecoverableException {
