@@ -15,14 +15,12 @@ import com.db4o.query.*;
  * to store, query and delete objects and to commit and rollback
  * transactions.<br><br>
  * An ObjectContainer can either represent a stand-alone database
- * or a connection to a {@link Db4o#openServer(String, int) db4o server}.
+ * or a connection to a db4o server.
  * <br><br>An ObjectContainer also represents a transaction. All work
  * with db4o always is transactional. Both {@link #commit()} and
  * {@link #rollback()} start new transactions immediately. For working 
- * against the same database with multiple transactions, open a db4o server
- * with {@link Db4o#openServer(String, int)} and 
- * {@link ObjectServer#openClient() connect locally} or
- * {@link Db4o#openClient(String, int, String, String) over TCP}.
+ * against the same database with multiple transactions, open a new object container
+ * with {@link #ext()}.{@link ExtObjectContainer#openSession() openSession()}
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
  * @sharpen.ignore
  */
@@ -31,7 +29,7 @@ public interface ObjectContainer {
     /**
      * activates all members on a stored object to the specified depth.
      * <br><br>
-     * See {@link com.db4o.config.Configuration#activationDepth(int) "Why activation"}
+     * See {@link com.db4o.config.CommonConfiguration#activationDepth(int) "Why activation"}
      * for an explanation why activation is necessary.<br><br>
      * The activate method activates a graph of persistent objects in memory.
      * Only deactivated objects in the graph will be touched: their
@@ -63,11 +61,7 @@ public interface ObjectContainer {
      * closes the <code>ObjectContainer</code>.
      * <br><br>A call to <code>close()</code> automatically performs a 
      * {@link #commit commit()}.
-     * <br><br>Note that every session opened with Db4o.openFile() requires one
-     * close()call, even if the same filename was used multiple times.<br><br>
-     * Use <code>while(!close()){}</code> to kill all sessions using this container.<br><br>
-     * @return success - true denotes that the last used instance of this container
-     * and the database file were closed.
+     * @return success - true denotes that the object container was closed, false if it was allready closed
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      */
 	public boolean close () throws Db4oIOException;
@@ -95,9 +89,9 @@ public interface ObjectContainer {
      * 1 sets members on member objects to null. This may have side effects 
      * in other places of the application.<br><br>
 	 * @see ObjectCallbacks Using callbacks
-  	 * @see com.db4o.config.Configuration#activationDepth Why activation?
+  	 * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
      * @param obj the object to be deactivated.
-	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth} 
+	 * @param depth the member {@link com.db4o.config.CommonConfiguration#activationDepth depth}
 	 * to which deactivate is to cascade.
 	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	*/
@@ -115,7 +109,7 @@ public interface ObjectContainer {
      * <br><br>The method has no effect, if
      * the passed object is not stored in the <code>ObjectContainer</code>.
      * <br><br>A subsequent call to
-     * <code>set()</code> with the same object newly stores the object
+     * {@link #store(Object)} with the same object newly stores the object
      * to the <code>ObjectContainer</code>.<br><br>
      * <code>delete()</code> triggers Deleting and Deleted callbacks,
      * which can be also used for cascaded deletes.<br><br>
@@ -156,14 +150,12 @@ public interface ObjectContainer {
      * <br><br>Arrays and all supported <code>Collection</code> classes are
      * evaluated for containment. Differences in <code>length/size()</code> are
      * ignored.
-     * <br><br>Consult the documentation of the Configuration package to
-     * configure class-specific behaviour.<br><br><br>
      * <b>Returned Objects</b><br>
      * The objects returned in the
      * {@link ObjectSet ObjectSet} are instantiated
      * and activated to the preconfigured depth of 5. The
-	 * {@link com.db4o.config.Configuration#activationDepth activation depth}
-	 * may be configured {@link com.db4o.config.Configuration#activationDepth globally} or
+	 * {@link com.db4o.config.CommonConfiguration#activationDepth activation depth}
+	 * may be configured {@link com.db4o.config.CommonConfiguration#activationDepth globally} or
      * {@link com.db4o.config.ObjectClass individually for classes}.
 	 * <br><br>
      * db4o keeps track of all instantiatied objects. Queries will return
@@ -174,7 +166,7 @@ public interface ObjectContainer {
      * <br><br>
      * @param template object to be used as an example to find all matching objects.<br><br>
      * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
-	 * @see com.db4o.config.Configuration#activationDepth Why activation?
+	 * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
 	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
@@ -217,30 +209,12 @@ public interface ObjectContainer {
      * depending on the language version used. Here are some examples:<br><br>
      * 
      * <code>
-     * <b>// Java JDK 5</b><br>
      * List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br>
      * &#160;&#160;&#160;public boolean match(Cat cat) {<br>
      * &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br>
      * &#160;&#160;&#160;}<br>
      * });<br>
      * <br>
-     * <br>
-     * <b>// Java JDK 1.2 to 1.4</b><br>
-     * List cats = db.query(new Predicate() {<br>
-     * &#160;&#160;&#160;public boolean match(Cat cat) {<br>
-     * &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br>
-     * &#160;&#160;&#160;}<br>
-     * });<br>
-     * <br>
-     * <br>
-     * <b>// Java JDK 1.1</b><br>
-     * ObjectSet cats = db.query(new CatOccam());<br>
-     * <br>
-     * public static class CatOccam extends Predicate {<br>
-     * &#160;&#160;&#160;public boolean match(Cat cat) {<br>
-     * &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br>
-     * &#160;&#160;&#160;}<br>
-     * });<br>
      * </code>
      *
      * <br>
@@ -317,7 +291,7 @@ public interface ObjectContainer {
      * - object members that are already stored will <b>not</b> be updated
      * themselves.<br>Every object member needs to be updated individually with a
 	 * call to <code>store()</code> unless a deep
-	 * {@link com.db4o.config.Configuration#updateDepth global} or 
+	 * {@link com.db4o.config.CommonConfiguration#updateDepth global} or
      * {@link com.db4o.config.ObjectClass#updateDepth class-specific}
      * update depth was configured or cascaded updates were 
      * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
