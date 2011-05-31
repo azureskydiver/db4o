@@ -37,7 +37,7 @@ public interface ServerConfiguration extends FileConfigurationProvider, Networki
      * <br>
 	 * Default value: 600000ms (10 minutes)<br>
 	 * <br>
-	 * It is recommended to use the same values for {@link #timeoutClientSocket(int)}
+	 * It is recommended to use the same values for {@link ClientConfiguration#timeoutClientSocket(int)}
 	 * and {@link #timeoutServerSocket(int)}.
 	 * <br>
 	 * This setting can be used on both client and server.<br><br>

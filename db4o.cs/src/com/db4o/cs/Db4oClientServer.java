@@ -30,22 +30,17 @@ public class Db4oClientServer {
      * <br><br>
 	 * @param config a custom {@link ServerConfiguration} instance to be obtained via {@link #newServerConfiguration()}
      * @param databaseFileName an absolute or relative path to the database file
-     * @param port the port to be used or 0 if the server should not open a port, specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
+     * @param port the port to be used or 0 if the server should not open a port, specify a value < 0 if an arbitrary free port should be chosen - see {@link com.db4o.ext.ExtObjectServer#port()}.
 	 * @return an {@link ObjectServer ObjectServer} listening
 	 * on the specified port.
-     * @see Configuration#readOnly
-     * @see Configuration#encrypt
-     * @see Configuration#password
-     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
-     * @throws DatabaseFileLockedException the required database file is locked by 
+     * @throws com.db4o.ext.Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws com.db4o.ext.DatabaseFileLockedException the required database file is locked by
      * another process.
-     * @throws IncompatibleFileFormatException runtime 
-     * {@link com.db4o.config.Configuration configuration} is not compatible
-     * with the configuration of the database file. 
-     * @throws OldFormatException open operation failed because the database file
+     * @throws com.db4o.ext.IncompatibleFileFormatException runtime
+     * @throws com.db4o.ext.OldFormatException open operation failed because the database file
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
-     * @throws DatabaseReadOnlyException database was configured as read-only. 
+     * @throws com.db4o.ext.DatabaseReadOnlyException database was configured as read-only.
 	 */
 	public static ObjectServer openServer(ServerConfiguration config,
 			String databaseFileName, int port) {
