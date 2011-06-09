@@ -237,7 +237,7 @@
       </TocEntry>
     </TocEntry>
     <TocEntry
-      Title="ACID Properties And Transactions"
+      Title="Transactions and ACID Properties "
       Link="/Content/basics/acid_and_transactions.htm">
       <TocEntry
         Title="db4o Transactions"
@@ -736,6 +736,34 @@
     <TocEntry
       Title="System Info"
       Link="/Content/advanced_topics/system_info.htm" />
+    <TocEntry
+      Title="Concurrency and db4o"
+      Link="/Content/advanced_topics/concurrency.htm">
+      <TocEntry
+        Title="Sharing an Object Container Across Threads"
+        Link="/Content/advanced_topics/concurrency/share_object_container_threads.htm">
+        <TocEntry
+          Title="Example"
+          Link="/Content/advanced_topics/concurrency/share_object_container_threads.htm#Example" />
+        <TocEntry
+          Title="Improving the Locking"
+          Link="/Content/advanced_topics/concurrency/share_object_container_threads.htm#Improving">
+          <TocEntry
+            Title="Read Write Lock Example"
+            Link="/Content/advanced_topics/concurrency/read_write_lock_example.htm"></TocEntry>
+        </TocEntry>
+        <TocEntry
+          Title="Creating a Transaction Model"
+          Link="/Content/advanced_topics/concurrency/share_object_container_threads.htm#TransactionModel">
+          <TocEntry
+            Title="Read Write Transaction Example"
+            Link="/Content/advanced_topics/concurrency/read_write_lock_example.htm#Read" />
+        </TocEntry>
+      </TocEntry>
+      <TocEntry
+        Title="Object Container per Unit of Work"
+        Link="/Content/advanced_topics/concurrency/object_container_per_unit_of_work.htm" />
+    </TocEntry>
     <TocEntry
       Title="Defragment"
       Link="/Content/advanced_topics/defragment.htm">

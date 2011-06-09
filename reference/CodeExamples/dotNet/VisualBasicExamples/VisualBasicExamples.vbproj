@@ -115,6 +115,15 @@
     <Compile Include="Code\callbacks\examples\CallbackExamples.vb" />
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.vb" />
     <Compile Include="Code\collections\bigset\BigSetExample.vb" />
+    <Compile Include="Code\concurrency\locking\ReadWriteLockingOperations.vb" />
+    <Compile Include="Code\concurrency\locking\LockingOperations.vb" />
+    <Compile Include="Code\concurrency\locking\Person.vb" />
+    <Compile Include="Code\concurrency\transactions\ReadWriteTransactionOperations.vb" />
+    <Compile Include="Code\concurrency\transactions\DatabaseSupportWithReadWriteLock.vb" />
+    <Compile Include="Code\concurrency\transactions\DatabaseSupport.vb" />
+    <Compile Include="Code\concurrency\transactions\TransactionOperations.vb" />
+    <Compile Include="Code\concurrency\transactions\Person.vb" />
+    <Compile Include="Code\concurrency\units\UnitsOfWork.vb" />
     <Compile Include="Code\configuration\basics\ConfigurationBasics.vb" />
     <Compile Include="Code\configuration\file\FileConfiguration.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
@@ -152,6 +161,7 @@
     <Compile Include="Code\tp\enhancement\TransparentPersistence.vb" />
     <Compile Include="Code\tp\rollback\RollbackExample.vb" />
     <Compile Include="Code\tp\TransparentActivationExample.vb" />
+    <Compile Include="Code\transactions\InconsistentStateRead.vb" />
     <Compile Include="Code\typehandling\blob\BlobStorage.vb" />
     <Compile Include="Code\typehandling\translator\ExampleTranslator.vb" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.vb" />

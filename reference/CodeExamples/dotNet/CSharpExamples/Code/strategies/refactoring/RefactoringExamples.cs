@@ -55,7 +55,7 @@ namespace Db4oDoc.Code.Strategies.Refactoring
 
 
             IEmbeddedConfiguration configuration = RefactorClassAndFieldName();
-            using (IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile))
+            using (IObjectContainer container = Db4oEmbedded.OpenFile(configuration,DatabaseFile))
             {
                 IList<PersonNew> persons = container.Query<PersonNew>();
                 foreach (PersonNew person in persons)
@@ -84,11 +84,11 @@ namespace Db4oDoc.Code.Strategies.Refactoring
             StoreInDB(new PersonOld(), new PersonOld("Papa Joe"));
         }
 
-        private static void StoreInDB(params Object[] objects)
+        private static void StoreInDB(params object[] objects)
         {
             using (IObjectContainer container = Db4oEmbedded.OpenFile(DatabaseFile))
             {
-                foreach (Object obj in objects)
+                foreach (object obj in objects)
                 {
                     container.Store(obj);
                 }
