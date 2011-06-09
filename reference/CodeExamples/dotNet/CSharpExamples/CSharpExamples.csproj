@@ -114,6 +114,15 @@
     <Compile Include="Code\clientserver\refresh\RefreshingObjects.cs" />
     <Compile Include="Code\clientserver\ssl\SSLExample.cs" />
     <Compile Include="Code\collections\bigset\BigSetExample.cs" />
+    <Compile Include="Code\concurrency\locking\ReadWriteLockingOperations.cs" />
+    <Compile Include="Code\concurrency\locking\LockingOperations.cs" />
+    <Compile Include="Code\concurrency\locking\Person.cs" />
+    <Compile Include="Code\concurrency\transactions\ReadWriteTransactionOperations.cs" />
+    <Compile Include="Code\concurrency\transactions\DatabaseSupportWithReadWriteLock.cs" />
+    <Compile Include="Code\concurrency\transactions\DatabaseSupport.cs" />
+    <Compile Include="Code\concurrency\transactions\TransactionOperations.cs" />
+    <Compile Include="Code\concurrency\transactions\Person.cs" />
+    <Compile Include="Code\concurrency\units\UnitsOfWork.cs" />
     <Compile Include="Code\configuration\alias\AliasExamples.cs" />
     <Compile Include="Code\configuration\basics\ConfigurationBasics.cs" />
     <Compile Include="Code\configuration\client\ClientConfigurationExamples.cs" />
@@ -192,6 +201,7 @@
     <Compile Include="Code\tp\enhancement\TransparentPersistence.cs" />
     <Compile Include="Code\tp\rollback\RollbackExample.cs" />
     <Compile Include="Code\tp\TransparentActivationExample.cs" />
+    <Compile Include="Code\transactions\InconsistentStateRead.cs" />
     <Compile Include="Code\transactions\Transactions.cs" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
     <Compile Include="Code\tuning\monitoring\IOMonitoring.cs" />
