@@ -75,9 +75,6 @@
       <TocEntry
         Title="Example Scripts"
         Link="/Content/db4o_replication_system_drs/vod/setup-event-processing.htm#ExampleScripts" />
-      <TocEntry
-        Title="Creating the Event Schema"
-        Link="/Content/db4o_replication_system_drs/vod/setup-event-processing.htm" />
     </TocEntry>
     <TocEntry
       Title="VOD Replication"
@@ -94,6 +91,22 @@
       <TocEntry
         Title="Bidirectional Replication"
         Link="/Content/db4o_replication_system_drs/vod/vod_replication.htm#Bidirectional" />
+    </TocEntry>
+    <TocEntry
+      Title="Replicating to a Mobile Device"
+      Link="/Content/db4o_replication_system_drs/vod/replicating_to_mobile_device.htm">
+      <TocEntry
+        Title="The Workaround"
+        Link="/Content/db4o_replication_system_drs/vod/replicating_to_mobile_device.htm#Workaround" />
+      <TocEntry
+        Title="Setup the Intermediate db4o Server"
+        Link="/Content/db4o_replication_system_drs/vod/replicating_to_mobile_device.htm#Intermediate" />
+      <TocEntry
+        Title="Setup Periodic Replication"
+        Link="/Content/db4o_replication_system_drs/vod/replicating_to_mobile_device.htm#Periodic" />
+      <TocEntry
+        Title="The Client"
+        Link="/Content/db4o_replication_system_drs/vod/replicating_to_mobile_device.htm#Client" />
     </TocEntry>
   </TocEntry>
   <TocEntry

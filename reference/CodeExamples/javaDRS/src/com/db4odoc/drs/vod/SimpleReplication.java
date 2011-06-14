@@ -8,7 +8,7 @@ import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationProvider;
 import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.db4o.Db4oClientServerReplicationProvider;
+import com.db4o.drs.db4o.Db4oEmbeddedReplicationProvider;
 import com.db4o.drs.versant.VodDatabase;
 import com.db4o.drs.versant.VodReplicationProvider;
 import com.db4o.drs.versant.jdo.reflect.JdoReflector;
@@ -40,11 +40,11 @@ public class SimpleReplication {
 
             // #example: Open the db4o replication provider
             ReplicationProvider mobileDatabase
-                    = new Db4oClientServerReplicationProvider(container);
+                    = new Db4oEmbeddedReplicationProvider(container);
             // #end example
 
             // #example: Open the VOD replication provider
-            VodDatabase vodDatabase = JDOUtilities.createDatabase(factory);
+            VodDatabase vodDatabase = new VodDatabase(factory);
             vodDatabase.configureEventProcessor("localhost",4088);
             VodReplicationProvider centralDatabase
                     = new VodReplicationProvider(vodDatabase);
@@ -78,10 +78,10 @@ public class SimpleReplication {
 
 
             ReplicationProvider mobileDatabase
-                    = new Db4oClientServerReplicationProvider(container);
+                    = new Db4oEmbeddedReplicationProvider(container);
 
             VodReplicationProvider centralDatabase
-                    = new VodReplicationProvider(JDOUtilities.createDatabase(factory));
+                    = new VodReplicationProvider(new VodDatabase(factory));
             centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);
 
             // #example: From VOD to db4o
@@ -112,10 +112,10 @@ public class SimpleReplication {
 
 
             ReplicationProvider mobileDatabase
-                    = new Db4oClientServerReplicationProvider(container);
+                    = new Db4oEmbeddedReplicationProvider(container);
 
             VodReplicationProvider centralDatabase
-                    = new VodReplicationProvider(JDOUtilities.createDatabase(persistenceFactory));
+                    = new VodReplicationProvider(new VodDatabase(persistenceFactory));
             centralDatabase.listenForReplicationEvents(Car.class, Pilot.class);
 
             // #example: Bidirectional replication
@@ -140,7 +140,6 @@ public class SimpleReplication {
             container.close();
         }
     }
-
 
     private static void listAll(ObjectContainer rootContainer) {
         ObjectContainer container = rootContainer.ext().openSession();

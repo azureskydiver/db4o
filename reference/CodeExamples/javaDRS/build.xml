@@ -34,6 +34,7 @@
     </target>
 
     <target name="compile">
+        <mkdir dir="${dir.build.output}"  />
         <javac srcdir="${dir.build.source}"
             destdir="${dir.build.output}"
             target="6"
@@ -47,6 +48,12 @@
                     <pathelement path="${dir.lib}/*"/>
                 </classpath>
 			</javac>
+        <copy todir="${dir.build.output}">
+            <fileset dir="${dir.build.source}" casesensitive="yes">
+              <include name="**/*.*"/>
+              <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
     </target>
 </project>
 <!-- #end example -->

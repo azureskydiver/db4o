@@ -1,14 +1,11 @@
 package com.db4odoc.drs.vod;
 
 
-import com.db4o.drs.versant.VodDatabase;
-
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
 class JDOUtilities {
     static final String VERSANT_PROPERTY_FILE = "versant.properties";
@@ -42,16 +39,6 @@ class JDOUtilities {
         } finally {
             manager.close();
         }
-    }
-
-
-    public static VodDatabase createDatabase(PersistenceManagerFactory sessionFactory){
-        Properties properties = sessionFactory.getProperties();
-        String connectionURL = properties.getProperty("javax.jdo.option.ConnectionURL");
-        if(isEmpty(connectionURL) || notVersantDBConnection(connectionURL)){
-            throw new IllegalArgumentException("Requires a valid database connection URL for VOD");
-        }
-        return new VodDatabase(extractName(connectionURL),properties);
     }
 
     private static String extractName(String connectionURL) {
