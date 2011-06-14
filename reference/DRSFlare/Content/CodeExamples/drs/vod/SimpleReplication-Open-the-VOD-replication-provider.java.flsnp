@@ -2,7 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.Java">
-        <pre class="prettyprint" xml:space="preserve">VodDatabase vodDatabase = JDOUtilities.createDatabase(factory);
+        <pre class="prettyprint" xml:space="preserve">VodDatabase vodDatabase = <span style="color:Blue;">new</span> VodDatabase(factory);
 vodDatabase.configureEventProcessor(<span style="color:#A31515;">&quot;localhost&quot;</span>,4088);
 VodReplicationProvider centralDatabase
         = <span style="color:Blue;">new</span> VodReplicationProvider(vodDatabase);

@@ -12,7 +12,10 @@
 
     <modules>
         <module>CodeExamples/java</module>
+        <module>CodeExamples/javaDRS</module>
         <module>TutorialCode/java</module>
+        <!-- Shadow projects -->
+        <module>libs\java</module>
     </modules>
 
     <properties>
