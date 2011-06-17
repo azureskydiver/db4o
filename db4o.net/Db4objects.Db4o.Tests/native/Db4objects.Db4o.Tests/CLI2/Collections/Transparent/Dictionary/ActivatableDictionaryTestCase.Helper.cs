@@ -30,6 +30,11 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent.Dictionary
 			return new ActivatableDictionary<string, ICollectionElement>(template);
 		}
 
+		protected override IDictionary<string, ICollectionElement> NewActivatableCollection()
+		{
+			return new ActivatableDictionary<string, ICollectionElement>();
+		}
+		
 		protected override KeyValuePair<string, ICollectionElement> NewElement(string value)
 		{
 			return new KeyValuePair<string, ICollectionElement>(value, new Element(value));
