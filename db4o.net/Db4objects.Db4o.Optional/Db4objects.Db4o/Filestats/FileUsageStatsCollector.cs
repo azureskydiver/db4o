@@ -315,10 +315,12 @@ namespace Db4objects.Db4o.Filestats
 				this.usage = usage;
 			}
 
-			public void Apply(object slot)
+			public void Apply(object idSlot)
 			{
-				usage.value += ((Db4objects.Db4o.Internal.Slots.Slot)slot).Length();
-				this._enclosing._slots.Add(((Db4objects.Db4o.Internal.Slots.Slot)slot));
+				Db4objects.Db4o.Internal.Slots.Slot slot = ((Db4objects.Db4o.Internal.Slots.Slot)
+					((Pair)idSlot).second);
+				usage.value += slot.Length();
+				this._enclosing._slots.Add(slot);
 			}
 
 			private readonly FileUsageStatsCollector _enclosing;

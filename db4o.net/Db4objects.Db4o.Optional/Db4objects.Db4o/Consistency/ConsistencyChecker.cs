@@ -209,12 +209,12 @@ namespace Db4objects.Db4o.Consistency
 
 			public void Visit(object slot)
 			{
+				FreespaceSlotDetail detail = new FreespaceSlotDetail(((Slot)slot));
 				if (this._enclosing.IsBogusSlot(((Slot)slot).Address(), ((Slot)slot).Length()))
 				{
-					this._enclosing._bogusSlots.Add(new SlotWithSource(((Slot)slot), SlotSource.Freespace
-						));
+					this._enclosing._bogusSlots.Add(detail);
 				}
-				this._enclosing._overlaps.Add(((Slot)slot), SlotSource.Freespace);
+				this._enclosing._overlaps.Add(detail);
 			}
 
 			private readonly ConsistencyChecker _enclosing;
@@ -228,50 +228,54 @@ namespace Db4objects.Db4o.Consistency
 				Sharpen.Runtime.Err.WriteLine("No btree id system found - not mapping ids.");
 				return;
 			}
-			((BTreeIdSystem)idSystem).TraverseIds(new _IVisitor4_126(this));
-			idSystem.TraverseOwnSlots(new _IProcedure4_136(this));
+			((BTreeIdSystem)idSystem).TraverseIds(new _IVisitor4_127(this));
+			idSystem.TraverseOwnSlots(new _IProcedure4_138(this));
 		}
 
-		private sealed class _IVisitor4_126 : IVisitor4
+		private sealed class _IVisitor4_127 : IVisitor4
 		{
-			public _IVisitor4_126(ConsistencyChecker _enclosing)
+			public _IVisitor4_127(ConsistencyChecker _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
 			public void Visit(object mapping)
 			{
+				SlotDetail detail = new IdObjectSlotDetail(((IdSlotMapping)mapping)._id, ((IdSlotMapping
+					)mapping).Slot());
 				if (this._enclosing.IsBogusSlot(((IdSlotMapping)mapping)._address, ((IdSlotMapping
 					)mapping)._length))
 				{
-					this._enclosing._bogusSlots.Add(new SlotWithSource(((IdSlotMapping)mapping).Slot(
-						), SlotSource.IdSystem));
+					this._enclosing._bogusSlots.Add(detail);
 				}
 				if (((IdSlotMapping)mapping)._address > 0)
 				{
-					this._enclosing._overlaps.Add(((IdSlotMapping)mapping).Slot(), SlotSource.IdSystem
-						);
+					this._enclosing._overlaps.Add(detail);
 				}
 			}
 
 			private readonly ConsistencyChecker _enclosing;
 		}
 
-		private sealed class _IProcedure4_136 : IProcedure4
+		private sealed class _IProcedure4_138 : IProcedure4
 		{
-			public _IProcedure4_136(ConsistencyChecker _enclosing)
+			public _IProcedure4_138(ConsistencyChecker _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public void Apply(object slot)
+			public void Apply(object idSlot)
 			{
-				if (this._enclosing.IsBogusSlot(((Slot)slot).Address(), ((Slot)slot).Length()))
+				int id = (((int)((Pair)idSlot).first));
+				Slot slot = ((Slot)((Pair)idSlot).second);
+				SlotDetail detail = id > 0 ? (SlotDetail)new IdObjectSlotDetail(id, slot) : (SlotDetail
+					)new RawObjectSlotDetail(slot);
+				if (this._enclosing.IsBogusSlot(((Slot)((Pair)idSlot).second).Address(), ((Slot)(
+					(Pair)idSlot).second).Length()))
 				{
-					this._enclosing._bogusSlots.Add(new SlotWithSource(((Slot)slot), SlotSource.IdSystem
-						));
+					this._enclosing._bogusSlots.Add(detail);
 				}
-				this._enclosing._overlaps.Add(((Slot)slot), SlotSource.IdSystem);
+				this._enclosing._overlaps.Add(detail);
 			}
 
 			private readonly ConsistencyChecker _enclosing;

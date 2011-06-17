@@ -5,21 +5,23 @@ using Db4objects.Db4o.Internal.Slots;
 
 namespace Db4objects.Db4o.Consistency
 {
-	internal class SlotWithSource
+	public class IdObjectSlotDetail : SlotDetail
 	{
-		public readonly Slot _slot;
+		private readonly int _id;
 
-		public readonly SlotSource _source;
-
-		public SlotWithSource(Slot slot, SlotSource source)
+		public IdObjectSlotDetail(int id, Slot slot) : base(slot)
 		{
-			this._slot = slot;
-			this._source = source;
+			_id = id;
+		}
+
+		public virtual int Id()
+		{
+			return _id;
 		}
 
 		public override string ToString()
 		{
-			return _slot + "(" + _source + ")";
+			return "OBJ: " + _slot + "(" + _id + ")";
 		}
 	}
 }

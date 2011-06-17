@@ -11,9 +11,7 @@ namespace Db4objects.Db4o.Config
 	/// - enabled individually for a specified class; <br />
 	/// - disabled.<br /><br />
 	/// </summary>
-	/// <seealso cref="IConfiguration.GenerateUUIDs(ConfigScope)">IConfiguration.GenerateUUIDs(ConfigScope)
-	/// 	</seealso>
-	/// <seealso cref="IConfiguration.GenerateVersionNumbers(ConfigScope)">IConfiguration.GenerateVersionNumbers(ConfigScope)
+	/// <seealso cref="IFileConfiguration.GenerateUUIDs(ConfigScope)">IFileConfiguration.GenerateUUIDs(ConfigScope)
 	/// 	</seealso>
 	[System.Serializable]
 	public sealed class ConfigScope

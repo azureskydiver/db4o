@@ -35,8 +35,8 @@ namespace Db4objects.Db4o.Ext
 		/// returns a UUID representation of the referenced object.
 		/// UUID generation has to be turned on, in order to be able
 		/// to use this feature:
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration.GenerateUUIDs(Db4objects.Db4o.Config.ConfigScope)
-		/// 	">Db4objects.Db4o.Config.IConfiguration.GenerateUUIDs(Db4objects.Db4o.Config.ConfigScope)
+		/// <see cref="Db4objects.Db4o.Config.IFileConfiguration.GenerateUUIDs(Db4objects.Db4o.Config.ConfigScope)
+		/// 	">Db4objects.Db4o.Config.IFileConfiguration.GenerateUUIDs(Db4objects.Db4o.Config.ConfigScope)
 		/// 	</see>
 		/// </remarks>
 		/// <returns>the UUID of the referenced object.</returns>
@@ -50,15 +50,15 @@ namespace Db4objects.Db4o.Ext
 		/// returns the transaction serial number ("version") the referenced object
 		/// was stored with last. Version number generation has to be turned on, in
 		/// order to be able to use this feature:
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration.GenerateVersionNumbers(Db4objects.Db4o.Config.ConfigScope)
-		/// 	">Db4objects.Db4o.Config.IConfiguration.GenerateVersionNumbers(Db4objects.Db4o.Config.ConfigScope)
+		/// <see cref="Db4objects.Db4o.Config.IFileConfiguration.GenerateVersionNumbers(Db4objects.Db4o.Config.ConfigScope)
+		/// 	">Db4objects.Db4o.Config.IFileConfiguration.GenerateVersionNumbers(Db4objects.Db4o.Config.ConfigScope)
 		/// 	</see>
 		/// <br />
 		/// This feature was replaced by
 		/// <see cref="GetCommitTimestamp()">GetCommitTimestamp()</see>
 		/// . The main
-		/// difference is that the old version mechamism used to assign a serial
-		/// timestamp to the object upon storing time, and the new commiTimestamp
+		/// difference is that the old version mechanism used to assign a serial
+		/// timestamp to the object upon storing time, and the new commitTimestamp
 		/// approach, assigns it upon commit time.<br />
 		/// </remarks>
 		/// <returns>the version number.</returns>
@@ -67,7 +67,7 @@ namespace Db4objects.Db4o.Ext
 		long GetVersion();
 
 		/// <summary>
-		/// The serial timestamp the object is assigned to when it is commited.<br />
+		/// The serial timestamp the object is assigned to when it is committed.<br />
 		/// <br />
 		/// You need to enable this feature before using it in
 		/// <see cref="Db4objects.Db4o.Config.IFileConfiguration.GenerateCommitTimestamps(bool)

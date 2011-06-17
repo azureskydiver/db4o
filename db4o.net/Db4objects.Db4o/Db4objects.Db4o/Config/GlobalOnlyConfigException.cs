@@ -16,8 +16,6 @@ namespace Db4objects.Db4o.Config
 	/// </remarks>
 	/// <seealso cref="IConfiguration.BlockSize(int)">IConfiguration.BlockSize(int)</seealso>
 	/// <seealso cref="IConfiguration.Encrypt(bool)">IConfiguration.Encrypt(bool)</seealso>
-	/// <seealso cref="com.db4o.config.Configuration#io(com.db4o.io.IoAdapter)">com.db4o.config.Configuration#io(com.db4o.io.IoAdapter)
-	/// 	</seealso>
 	/// <seealso cref="IConfiguration.Password(string)">IConfiguration.Password(string)</seealso>
 	[System.Serializable]
 	public class GlobalOnlyConfigException : Db4oRecoverableException
