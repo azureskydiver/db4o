@@ -47,7 +47,8 @@ namespace Db4objects.Db4o.CS.Config
 		/// Default value: 600000ms (10 minutes)<br />
 		/// <br />
 		/// It is recommended to use the same values for
-		/// <see cref="#timeoutClientSocket(int)">#timeoutClientSocket(int)</see>
+		/// <see cref="IClientConfiguration.TimeoutClientSocket(int)">IClientConfiguration.TimeoutClientSocket(int)
+		/// 	</see>
 		/// and
 		/// <see cref="TimeoutServerSocket(int)">TimeoutServerSocket(int)</see>
 		/// .

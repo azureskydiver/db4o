@@ -41,21 +41,8 @@ namespace Db4objects.Db4o.Ext
 		/// 	</see>
 		/// context for this ObjectServer.
 		/// <br /><br />
-		/// Upon opening an ObjectServer with any of the factory methods in the
-		/// <see cref="Db4objects.Db4o.Db4oFactory">Db4objects.Db4o.Db4oFactory</see>
-		/// class, the global
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration">Db4objects.Db4o.Config.IConfiguration
-		/// 	</see>
-		/// context
-		/// is copied into the ObjectServer. The
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration">Db4objects.Db4o.Config.IConfiguration
-		/// 	</see>
-		/// can be modified individually for
-		/// each ObjectServer without any effects on the global settings.<br /><br />
 		/// </summary>
 		/// <returns>the Configuration context for this ObjectServer</returns>
-		/// <seealso cref="Db4objects.Db4o.Db4oFactory.Configure()">Db4objects.Db4o.Db4oFactory.Configure()
-		/// 	</seealso>
 		IConfiguration Configure();
 
 		/// <summary>returns the ObjectContainer used by the server.</summary>

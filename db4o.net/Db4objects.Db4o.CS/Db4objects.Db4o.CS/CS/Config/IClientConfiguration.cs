@@ -46,7 +46,6 @@ namespace Db4objects.Db4o.CS.Config
 
 		/// <summary>Sets the depth to which prefetched objects will be activated.</summary>
 		/// <remarks>Sets the depth to which prefetched objects will be activated.</remarks>
-		/// <value></value>
 		int PrefetchDepth
 		{
 			set;
@@ -73,7 +72,8 @@ namespace Db4objects.Db4o.CS.Config
 		/// It is recommended to use the same values for
 		/// <see cref="TimeoutClientSocket(int)">TimeoutClientSocket(int)</see>
 		/// and
-		/// <see cref="#timeoutServerSocket(int)">#timeoutServerSocket(int)</see>
+		/// <see cref="IServerConfiguration.TimeoutServerSocket(int)">IServerConfiguration.TimeoutServerSocket(int)
+		/// 	</see>
 		/// .
 		/// <br />
 		/// </remarks>

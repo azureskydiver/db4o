@@ -34,6 +34,16 @@ namespace Db4objects.Db4o.Consistency
 				 0;
 		}
 
+		public virtual Sharpen.Util.ISet Overlaps()
+		{
+			return overlaps.Overlaps();
+		}
+
+		public virtual Sharpen.Util.ISet Dupes()
+		{
+			return overlaps.Dupes();
+		}
+
 		public override string ToString()
 		{
 			if (Consistent())

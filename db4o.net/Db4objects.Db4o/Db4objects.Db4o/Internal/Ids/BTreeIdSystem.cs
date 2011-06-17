@@ -314,13 +314,18 @@ namespace Db4objects.Db4o.Internal.Ids
 		public virtual void TraverseOwnSlots(IProcedure4 block)
 		{
 			_parentIdSystem.TraverseOwnSlots(block);
-			block.Apply(_parentIdSystem.CommittedSlot(_persistentState.GetID()));
-			block.Apply(_parentIdSystem.CommittedSlot(_bTree.GetID()));
+			block.Apply(OwnSlotInfo(_persistentState.GetID()));
+			block.Apply(OwnSlotInfo(_bTree.GetID()));
 			IEnumerator nodeIds = _bTree.AllNodeIds(_container.SystemTransaction());
 			while (nodeIds.MoveNext())
 			{
-				block.Apply(_parentIdSystem.CommittedSlot((((int)nodeIds.Current))));
+				block.Apply(OwnSlotInfo((((int)nodeIds.Current))));
 			}
+		}
+
+		private Pair OwnSlotInfo(int id)
+		{
+			return Pair.Of(id, _parentIdSystem.CommittedSlot(id));
 		}
 	}
 }

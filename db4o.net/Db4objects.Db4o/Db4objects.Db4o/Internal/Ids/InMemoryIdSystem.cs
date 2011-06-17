@@ -335,7 +335,7 @@ namespace Db4objects.Db4o.Internal.Ids
 
 		public virtual void TraverseOwnSlots(IProcedure4 block)
 		{
-			block.Apply(_slot);
+			block.Apply(Pair.Of(0, _slot));
 		}
 	}
 }

@@ -49,7 +49,8 @@ namespace Db4objects.Db4o.CS
 		/// <param name="databaseFileName">an absolute or relative path to the database file</param>
 		/// <param name="port">
 		/// the port to be used or 0 if the server should not open a port, specify a value &lt; 0 if an arbitrary free port should be chosen - see
-		/// <see cref="ExtObjectServer#port()">ExtObjectServer#port()</see>
+		/// <see cref="Db4objects.Db4o.Ext.IExtObjectServer.Port()">Db4objects.Db4o.Ext.IExtObjectServer.Port()
+		/// 	</see>
 		/// .
 		/// </param>
 		/// <returns>
@@ -58,22 +59,14 @@ namespace Db4objects.Db4o.CS
 		/// listening
 		/// on the specified port.
 		/// </returns>
-		/// <seealso cref="Configuration#readOnly">Configuration#readOnly</seealso>
-		/// <seealso cref="Configuration#encrypt">Configuration#encrypt</seealso>
-		/// <seealso cref="Configuration#password">Configuration#password</seealso>
-		/// <exception cref="Db4oIOException">I/O operation failed or was unexpectedly interrupted.
+		/// <exception cref="Db4objects.Db4o.Ext.Db4oIOException">I/O operation failed or was unexpectedly interrupted.
 		/// 	</exception>
-		/// <exception cref="DatabaseFileLockedException">
+		/// <exception cref="Db4objects.Db4o.Ext.DatabaseFileLockedException">
 		/// the required database file is locked by
 		/// another process.
 		/// </exception>
-		/// <exception cref="IncompatibleFileFormatException">
-		/// runtime
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration">configuration</see>
-		/// is not compatible
-		/// with the configuration of the database file.
-		/// </exception>
-		/// <exception cref="OldFormatException">
+		/// <exception cref="Db4objects.Db4o.Ext.IncompatibleFileFormatException">runtime</exception>
+		/// <exception cref="Db4objects.Db4o.Ext.OldFormatException">
 		/// open operation failed because the database file
 		/// is in old format and
 		/// <see cref="Db4objects.Db4o.Config.IConfiguration.AllowVersionUpdates(bool)">Db4objects.Db4o.Config.IConfiguration.AllowVersionUpdates(bool)
@@ -81,7 +74,7 @@ namespace Db4objects.Db4o.CS
 		/// 
 		/// is set to false.
 		/// </exception>
-		/// <exception cref="DatabaseReadOnlyException">database was configured as read-only.
+		/// <exception cref="Db4objects.Db4o.Ext.DatabaseReadOnlyException">database was configured as read-only.
 		/// 	</exception>
 		public static IObjectServer OpenServer(IServerConfiguration config, string databaseFileName
 			, int port)

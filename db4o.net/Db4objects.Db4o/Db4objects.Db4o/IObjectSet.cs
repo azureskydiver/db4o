@@ -53,7 +53,7 @@ namespace Db4objects.Db4o
 		/// <br /><br />
 		/// Before returning the Object, next() triggers automatic activation of the
 		/// Object with the respective
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth()">global</see>
+		/// <see cref="Db4objects.Db4o.Config.ICommonConfiguration.ActivationDepth()">global</see>
 		/// or
 		/// <see cref="Db4objects.Db4o.Config.IObjectClass.MaximumActivationDepth(int)">class specific
 		/// 	</see>

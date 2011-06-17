@@ -3,7 +3,6 @@
 using Db4objects.Db4o.Consistency;
 using Db4objects.Db4o.Foundation;
 using Db4objects.Db4o.Internal;
-using Db4objects.Db4o.Internal.Slots;
 using Sharpen.Util;
 
 namespace Db4objects.Db4o.Consistency
@@ -21,12 +20,7 @@ namespace Db4objects.Db4o.Consistency
 			_blockConverter = blockConverter;
 		}
 
-		public virtual void Add(Slot slot, SlotSource source)
-		{
-			Add(new SlotWithSource(slot, source));
-		}
-
-		public virtual void Add(SlotWithSource slot)
+		public virtual void Add(SlotDetail slot)
 		{
 			if (TreeIntObject.Find(_slots, new TreeIntObject(slot._slot.Address())) != null)
 			{
@@ -40,13 +34,13 @@ namespace Db4objects.Db4o.Consistency
 		{
 			Sharpen.Util.ISet overlaps = new HashSet();
 			ByRef prevSlot = ByRef.NewInstance();
-			TreeIntObject.Traverse(_slots, new _IVisitor4_33(this, prevSlot, overlaps));
+			TreeIntObject.Traverse(_slots, new _IVisitor4_29(this, prevSlot, overlaps));
 			return overlaps;
 		}
 
-		private sealed class _IVisitor4_33 : IVisitor4
+		private sealed class _IVisitor4_29 : IVisitor4
 		{
-			public _IVisitor4_33(OverlapMap _enclosing, ByRef prevSlot, Sharpen.Util.ISet overlaps
+			public _IVisitor4_29(OverlapMap _enclosing, ByRef prevSlot, Sharpen.Util.ISet overlaps
 				)
 			{
 				this._enclosing = _enclosing;
@@ -56,15 +50,15 @@ namespace Db4objects.Db4o.Consistency
 
 			public void Visit(object tree)
 			{
-				SlotWithSource curSlot = (SlotWithSource)((TreeIntObject)tree)._object;
-				if (this.IsOverlap(((SlotWithSource)prevSlot.value), curSlot))
+				SlotDetail curSlot = (SlotDetail)((TreeIntObject)tree)._object;
+				if (this.IsOverlap(((SlotDetail)prevSlot.value), curSlot))
 				{
-					overlaps.Add(new Pair(((SlotWithSource)prevSlot.value), curSlot));
+					overlaps.Add(new Pair(((SlotDetail)prevSlot.value), curSlot));
 				}
 				prevSlot.value = curSlot;
 			}
 
-			private bool IsOverlap(SlotWithSource prevSlot, SlotWithSource curSlot)
+			private bool IsOverlap(SlotDetail prevSlot, SlotDetail curSlot)
 			{
 				if (prevSlot == null)
 				{
@@ -86,11 +80,11 @@ namespace Db4objects.Db4o.Consistency
 			return _dupes;
 		}
 
-		private SlotWithSource ByAddress(int address)
+		private SlotDetail ByAddress(int address)
 		{
 			TreeIntObject tree = (TreeIntObject)TreeIntObject.Find(_slots, new TreeIntObject(
 				address, null));
-			return tree == null ? null : (SlotWithSource)tree._object;
+			return tree == null ? null : (SlotDetail)tree._object;
 		}
 	}
 }
