@@ -31,9 +31,9 @@ namespace Db4objects.Db4o.Collections
 		}
 
 		public IEnumerator<T> GetEnumerator()
-		{
+		{			
 			Activate(ActivationPurpose.Read);
-			return _list.GetEnumerator();
+			return AsList().GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()

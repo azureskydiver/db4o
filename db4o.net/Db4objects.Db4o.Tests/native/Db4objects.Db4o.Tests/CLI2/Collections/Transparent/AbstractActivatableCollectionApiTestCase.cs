@@ -4,10 +4,11 @@ using Db4objects.Db4o.Config;
 using Db4objects.Db4o.TA;
 using Db4oUnit;
 using Db4oUnit.Extensions;
+using Db4objects.Db4o.Collections;
 
 namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent
 {
-	public abstract partial class AbstractActivatableCollectionApiTestCase<TColl, TElem> : AbstractDb4oTestCase where TColl : ICollection<TElem>
+	public abstract partial class AbstractActivatableCollectionApiTestCase<TColl, TElem> : AbstractDb4oTestCase where TColl : class,ICollection<TElem>
 	{
 		protected static readonly IList<string> Names = new List<string>(new string[] {"one", "two", "three", "four"});
 
@@ -20,6 +21,13 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent
 		{
 			CollectionHolder<TColl> item = new CollectionHolder<TColl>(NewPopulatedActivatableCollection());
 			Store(item);
+		}
+
+		public void TestIteratorOnEmptyCollection()
+		{
+			foreach (var item in NewActivatableCollection())
+			{
+			}
 		}
 
 		public void TestAdd()
@@ -85,6 +93,7 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent
 		protected abstract TColl NewPlainCollection();
 		protected abstract TColl SingleCollection();
 		protected abstract TColl NewActivatableCollection(TColl template);
+		protected abstract TColl NewActivatableCollection();
 		
 		protected abstract TElem NewElement(string value);
 		protected abstract TElem NewActivatableElement(string value);

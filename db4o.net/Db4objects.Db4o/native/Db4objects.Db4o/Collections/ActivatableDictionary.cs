@@ -24,6 +24,7 @@ namespace Db4objects.Db4o.Collections
 	{
 		public ActivatableDictionary()
 		{
+			_dictionary = new Dictionary<TKey, TValue>();
 		}
 
 		public ActivatableDictionary(IEqualityComparer<TKey> comparer)

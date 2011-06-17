@@ -37,6 +37,11 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent.List
 			return new ActivatableList<ICollectionElement>(template);
 		}
 
+		protected override IList<ICollectionElement> NewActivatableCollection()
+		{
+			return new ActivatableList<ICollectionElement>();
+		}
+
 		protected override ICollectionElement NewActivatableElement(string value)
 		{
 			return new ActivatableElement(value);

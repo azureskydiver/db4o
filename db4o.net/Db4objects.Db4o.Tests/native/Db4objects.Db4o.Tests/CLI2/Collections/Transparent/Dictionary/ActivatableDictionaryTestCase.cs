@@ -121,6 +121,13 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent.Dictionary
 			});
 		}
 
+		public void TestEmptyDictionary()
+		{
+			var dictionary = new ActivatableDictionary<int, int>();
+			var keys = dictionary.Keys;
+			var values = dictionary.Values;
+		}
+
 		#endregion
 
 		#region Tests for IDictionary members
