@@ -372,6 +372,9 @@
       <TocEntry
         Title="Check For Existing Indexes"
         Link="/Content/basics/indexing/check_for_index.htm" />
+      <TocEntry
+        Title="Traversing the Index Values"
+        Link="/Content/basics/indexing/traverse_index.htm" />
     </TocEntry>
   </TocEntry>
   <TocEntry

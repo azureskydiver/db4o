@@ -5,7 +5,7 @@
         <pre class="prettyprint" xml:space="preserve">&lt;Indexed()&gt; _
 <span style="color:Blue;">Private</span> m_zipCode <span style="color:Blue;">As</span> <span style="color:Blue;">String</span></pre>
 		<div class="codesnippet-meta">
-			ObjectFieldConfigurations.vb: Index a field
+			City.vb: Index a field
 			<div class="codedownload">
 				<a href="Example-configuration-objectfield-vb.zip" class="codedownload" MadCap:conditions="Primary.Online">Download Code</a>
 			</div>
