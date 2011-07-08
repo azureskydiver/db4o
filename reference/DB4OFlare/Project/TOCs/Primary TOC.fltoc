@@ -354,7 +354,7 @@
         Title="Cascading Deletion"
         Link="/Content/basics/delete_behavior/cascading_deletion.htm" />
       <TocEntry
-        Title="Collections And Arrays"
+        Title="Collections and Arrays"
         Link="/Content/basics/delete_behavior/collections.htm" />
     </TocEntry>
     <TocEntry
@@ -975,6 +975,38 @@
         Title="GenericReflector"
         Link="/Content/advanced_topics/db4o_reflection_api/genericreflector.htm" />
     </TocEntry>
+    <TocEntry
+      Title="Runtime Statistics"
+      Link="/Content/advanced_topics/runtime_statistics.htm">
+      <TocEntry
+        Title="Install and Monitor"
+        Link="/Content/advanced_topics/Runtime_Statistics/install_and_monitor.htm" />
+      <TocEntry
+        Title="Monitoring Queries"
+        Link="/Content/advanced_topics/Runtime_Statistics/monitor_queries.htm" />
+      <TocEntry
+        Title="Monitor Object Lifecycle"
+        Link="/Content/advanced_topics/Runtime_Statistics/monitor_object_lifecycle.htm" />
+      <TocEntry
+        Title="Monitor IO"
+        Link="/Content/advanced_topics/Runtime_Statistics/monitor_io.htm" />
+      <TocEntry
+        Title="Monitor Freespace"
+        Link="/Content/advanced_topics/Runtime_Statistics/monitor_freespace.htm" />
+      <TocEntry
+        Title="Monitor Network"
+        Link="/Content/advanced_topics/Runtime_Statistics/monitor_network.htm" />
+      <TocEntry
+        Title="Monitor Reference System"
+        Link="/Content/advanced_topics/Runtime_Statistics/monitor_reference_system.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Diagnostics"
+      Link="/Content/advanced_topics/diagnostics.htm">
+      <TocEntry
+        Title="Diagnostic Messages Filter"
+        Link="/Content/advanced_topics/diagnostics/diagnostic_messages_filter.htm" />
+    </TocEntry>
   </TocEntry>
   <TocEntry
     Title="Best Practices"
@@ -1157,102 +1189,6 @@
       conditions="Primary.Java" />
   </TocEntry>
   <TocEntry
-    Title="Tuning"
-    Link="/Content/tuning.htm">
-    <TocEntry
-      Title="Selective Persistence"
-      Link="/Content/tuning/selective_persistence.htm">
-      <TocEntry
-        Title="Transient Fields In Java"
-        Link="/Content/tuning/selective_persistence/transient_fields_in_java.htm"
-        conditions="Primary.Java,Primary.All languages" />
-      <TocEntry
-        Title="Transient Fields In .NET"
-        Link="/Content/tuning/selective_persistence/transient_fields_in_.net.htm"
-        conditions="Primary..NET,Primary.All languages" />
-      <TocEntry
-        Title="Transient Classes"
-        Link="/Content/tuning/selective_persistence/transient_classes.htm"></TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Performance Hints"
-      Link="/Content/tuning/performance_hints.htm">
-      <TocEntry
-        Title="Discarding Free Space"
-        Link="/Content/tuning/performance_hints/discarding_free_space.htm" />
-      <TocEntry
-        Title="Defragment"
-        Link="/Content/tuning/performance_hints/defragment.htm" />
-      <TocEntry
-        Title="Activation Strategies"
-        Link="/Content/tuning/performance_hints/activation_strategies.htm" />
-      <TocEntry
-        Title="No Class Index"
-        Link="/Content/tuning/performance_hints/no_class_index.htm" />
-      <TocEntry
-        Title="Commit Strategies"
-        Link="/Content/tuning/performance_hints/commit_strategies.htm" />
-      <TocEntry
-        Title="Increasing The Maximum Database File Size"
-        Link="/Content/tuning/performance_hints/increasing_the_maximum_database_file_size.htm" />
-      <TocEntry
-        Title="Database Size"
-        Link="/Content/tuning/performance_hints/database_size.htm" />
-      <TocEntry
-        Title="Inheritance Hierarchies"
-        Link="/Content/tuning/performance_hints/inheritance_hierarchies.htm" />
-      <TocEntry
-        Title="Persistent And Transient Fields"
-        Link="/Content/tuning/performance_hints/persistent_and_transient_fields.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Runtime Statistics"
-      Link="/Content/tuning/runtime_statistics.htm">
-      <TocEntry
-        Title="Install and Monitor"
-        Link="/Content/tuning/Runtime_Statistics/install_and_monitor.htm" />
-      <TocEntry
-        Title="Monitoring Queries"
-        Link="/Content/tuning/Runtime_Statistics/monitor_queries.htm" />
-      <TocEntry
-        Title="Monitor Object Lifecycle"
-        Link="/Content/tuning/Runtime_Statistics/monitor_object_lifecycle.htm" />
-      <TocEntry
-        Title="Monitor IO"
-        Link="/Content/tuning/Runtime_Statistics/monitor_io.htm" />
-      <TocEntry
-        Title="Monitor Freespace"
-        Link="/Content/tuning/Runtime_Statistics/monitor_freespace.htm" />
-      <TocEntry
-        Title="Monitor Network"
-        Link="/Content/tuning/Runtime_Statistics/monitor_network.htm" />
-      <TocEntry
-        Title="Monitor Reference System"
-        Link="/Content/tuning/Runtime_Statistics/monitor_reference_system.htm" />
-    </TocEntry>
-    <TocEntry
-      Title="Debugging db4o"
-      Link="/Content/tuning/debugging_db4o.htm">
-      <TocEntry
-        Title="Debug Messaging System"
-        Link="/Content/tuning/debugging_db4o/debug_messaging_system.htm" />
-      <TocEntry
-        Title="Using Dtrace"
-        Link="/Content/tuning/debugging_db4o/using_dtrace.htm"
-        conditions="Primary.Java,Primary.All languages" />
-      <TocEntry
-        Title="Reading db4o File"
-        Link="/Content/tuning/debugging_db4o/reading_db4o_file.htm"></TocEntry>
-    </TocEntry>
-    <TocEntry
-      Title="Diagnostics"
-      Link="/Content/tuning/diagnostics.htm">
-      <TocEntry
-        Title="Diagnostic Messages Filter"
-        Link="/Content/tuning/diagnostics/diagnostic_messages_filter.htm" />
-    </TocEntry>
-  </TocEntry>
-  <TocEntry
     Title="Usage Pitfalls"
     Link="/Content/usage_pitfalls.htm">
     <TocEntry
@@ -1293,6 +1229,42 @@
     <TocEntry
       Title="Working With Large Amounts Of Data"
       Link="/Content/usage_pitfalls/working_with_large_amounts_of_data.htm" />
+  </TocEntry>
+  <TocEntry
+    Title="Troubleshooting"
+    Link="/Content/trouble_shooting.htm">
+    <TocEntry
+      Title="General Diagnostics"
+      Link="/Content/trouble_shooting.htm#General" />
+    <TocEntry
+      Title="Investigate a Corrupt Database"
+      Link="/Content/troubleshoot/corrupt_db.htm" />
+    <TocEntry
+      Title="Speed and Scalability Issues"
+      Link="/Content/troubleshoot/speed_issues.html.htm">
+      <TocEntry
+        Title="Understand db4o's Limits"
+        Link="/Content/troubleshoot/speed_issues.html.htm#Limits" />
+      <TocEntry
+        Title="Loading-Performance: Monitor Your Activation"
+        Link="/Content/troubleshoot/speed_issues.html.htm#LoadingIssues" />
+      <TocEntry
+        Title="Query Performance"
+        Link="/Content/troubleshoot/queries.htm"></TocEntry>
+      <TocEntry
+        Title="Increasing The Maximum Database File Size"
+        Link="/Content/troubleshoot/increasing_the_maximum_database_file_size.htm">
+        <TocEntry
+          Title="What Contributes to the Database Size"
+          Link="/Content/troubleshoot/database_size.htm" />
+      </TocEntry>
+      <TocEntry
+        Title="Commit Strategies"
+        Link="/Content/troubleshoot/commit_strategies.htm" />
+    </TocEntry>
+    <TocEntry
+      Title="Ask for Help and Advice on the db4o Forums"
+      Link="/Content/trouble_shooting.htm#Ask" />
   </TocEntry>
   <TocEntry
     Title="db4o Replication System"
