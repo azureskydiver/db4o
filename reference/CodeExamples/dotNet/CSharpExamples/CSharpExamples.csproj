@@ -134,6 +134,7 @@
     <Compile Include="Code\configuration\io\LRUCachingStorage.cs" />
     <Compile Include="Code\configuration\network\NetworkConfigurationExample.cs" />
     <Compile Include="Code\configuration\objectconfig\ObjectConfigurationExamples.cs" />
+    <Compile Include="Code\configuration\objectfield\City.cs" />
     <Compile Include="Code\configuration\objectfield\ObjectFieldConfigurations.cs" />
     <Compile Include="Code\configuration\server\ServerConfigurationExamples.cs" />
     <Compile Include="Code\container\sessions\Db4oSessions.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Code\disconnectedobj\merging\Pilot.cs" />
     <Compile Include="Code\disconnectedobj\objectidentity\ObjectIdentityExamples.cs" />
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
+    <Compile Include="Code\indexing\traverse\TraverseIndexExample.cs" />
     <Compile Include="Code\PersistanceAwareAttribute.cs" />
     <Compile Include="Code\features\uniqueconstrain\UniqueConstrainExample.cs" />
     <Compile Include="Code\identiy\DataModel.cs" />

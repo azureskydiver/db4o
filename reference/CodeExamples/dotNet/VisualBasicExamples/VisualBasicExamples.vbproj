@@ -127,6 +127,7 @@
     <Compile Include="Code\configuration\basics\ConfigurationBasics.vb" />
     <Compile Include="Code\configuration\file\FileConfiguration.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
+    <Compile Include="Code\configuration\objectfield\City.vb" />
     <Compile Include="Code\container\sessions\Db4oSessions.vb" />
     <Compile Include="Code\db4otests\ExampleTestCase.vb" />
     <Compile Include="Code\disconnectedobj\idexamples\AutoIncrement.vb" />
@@ -146,6 +147,7 @@
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.vb" />
     <Compile Include="Code\features\uniqueconstrain\UniqueConstrainExample.vb" />
     <Compile Include="Code\indexing\check\CheckForAndIndex.vb" />
+    <Compile Include="Code\indexing\traverse\TraverseIndexExample.vb" />
     <Compile Include="Code\metainfo\MetaInfoExample.vb" />
     <Compile Include="Code\PersistanceAware.vb" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.vb" />
