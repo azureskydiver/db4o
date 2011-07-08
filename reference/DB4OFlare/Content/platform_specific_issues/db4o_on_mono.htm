@@ -6,7 +6,7 @@
     <body>
         <h1>
             <MadCap:keyword term="Mono" />db4o On Mono</h1>
-        <p>Currently db4o is only build for .NET and tested on .NET. However it's possible to use db4o on Mono. Some features are not supported on Mono: The <a href="wcf_data_services.htm">data services</a> and the <a href="../tuning/runtime_statistics.htm">monitoring-support</a>.</p>
+        <p>Currently db4o is only build for .NET and tested on .NET. However it's possible to use db4o on Mono. Some features are not supported on Mono: The <a href="wcf_data_services.htm">data services</a> and the <a href="../advanced_topics/runtime_statistics.htm">monitoring-support</a>.</p>
         <p>In the regular build, db4o also uses some API's which are not available on Mono. To avoid that, you need to build db4o from source and define the build constant 'Mono'. The source is in the 'src'-folder of the db4o distribution. </p>
         <h2>Build For Mono With Regular .NET</h2>
         <p>The easiest way to build db4o for Mono is actually to use the regular MSBuild and just define the 'Mono' built-time constant. Open the Windows console and navigate to the db4o source folder. Then you can run the MSBuild command:</p>

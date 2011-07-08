@@ -164,6 +164,7 @@
     <Compile Include="Code\tp\rollback\RollbackExample.vb" />
     <Compile Include="Code\tp\TransparentActivationExample.vb" />
     <Compile Include="Code\transactions\InconsistentStateRead.vb" />
+    <Compile Include="Code\troubleshooting\restore\TryToReadSingleObjects.vb" />
     <Compile Include="Code\typehandling\blob\BlobStorage.vb" />
     <Compile Include="Code\typehandling\translator\ExampleTranslator.vb" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.vb" />

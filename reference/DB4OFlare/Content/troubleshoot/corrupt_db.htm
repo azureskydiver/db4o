@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="806" MadCap:lastWidth="637">
+    <head>
+    </head>
+    <body>
+        <h1>Deal With a Corrupt Database</h1>
+        <p>In general you should do regular <a href="../advanced_topics/backup.htm">backups</a> of your database. db4o tried to do best it can to never corrupt the database. However due to bugs or external reasons corruption can occur. Check also your configuration that you don't use <a href="../basics/acid_and_transactions/dangerous_practises.htm">any risky settings</a>.</p>
+        <p>If find corrupted database you may think about reporting it: <MadCap:xref href="../community/report_bugs.htm" target="" title="" alt="">See "Report Bugs"</MadCap:xref></p>
+        <p>The fist step is to run the consistency check on your database. If the database is really corrupt we can try to attempt to restore some data.</p>
+        <MadCap:snippetBlock src="../Snippets/ConsistencyCheck.flsnp" />
+        <p>When the tool reports inconsistencies you've defiantly a corrupted database. Then you should fall back to backup or try to recover some parts of it.</p>
+        <p>In case the tool doesn't report any issues you maybe still have a corrupted object in your database. In that case you usually can read all intact objects and copy them to a new database.</p>
+        <h2>Try to Read Intact Objects</h2>
+        <p>When you cannot read some particular object then you can try to read and copy at least the intact objects over to a new database. You can get the id of all object for a certain type. With these ids you then can load each single object. When loading the object fails the that object is lost. However you still can store the other objects to another storage.</p>
+        <MadCap:snippetBlock src="../CodeExamples/troubleshooting/restore/TryToReadSingleObjects-Try-to-read-the-intact-objects.all.flsnp" />
+    </body>
+</html>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="721" MadCap:lastWidth="571">
+    <head>
+    </head>
+    <body>
+        <h1>Performance and Scalability Issues</h1>
+        <p>You are experiencing speed or scalability problems with db4o? In this section.</p>
+        <h2><a name="Limits"></a>Understand db4o's Limits</h2>
+        <p>db4o is build from embedded use cases with small databases. It isn't optimized for database larger than a few gigabytes. <MadCap:xref href="increasing_the_maximum_database_file_size.htm" target="" title="" alt="">See "Increasing The Maximum Database File Size"</MadCap:xref></p>
+        <p>Another limitation of db4o is that it is internally single threaded and therefore cannot handle a huge concurrent load. </p>
+        <h2><a name="LoadingIssues"></a>Loading-Performance: Monitor Your Activation</h2>
+        <p>One of the most common performance issues is that to many objects are <a href="../basics/activation.htm">activated</a>. You should try to keep the activation to a minimum. You can monitor the activation of your object either by installing a <a href="../advanced_topics/callbacks.htm">event handler</a> or by using the <a href="../advanced_topics/runtime_statistics.htm">monitoring capabilities</a>.</p>
+        <p>Check your configuration for the <a href="../configuration/common/activation_depth.htm">global activation</a> depth and <a href="../configuration/objectclass/cascade_on-activate.htm">cascading activations</a>. These settings are often responsible for activating many objects. In general consider <a href="../basics/transparent_persistence.htm">transparent activation</a> to avoid activating unnecessary objects.</p>
+        <h2>Query Performance</h2>
+        <p>If you have trouble with query performance take <a href="queries.htm">a look here</a>.</p>
+        <h2>Degrading Performance Over Time</h2>
+        <p>If your performance degrades over time you might need to defragement your database. <MadCap:xref href="../advanced_topics/defragment.htm" target="" title="" alt="">See "Defragment"</MadCap:xref></p>
+        <h2>Database Size Issues.</h2>
+        <p>By default db4o databases can only grow up to two Gigabytes. For increasing that size take a look <a href="increasing_the_maximum_database_file_size.htm">here</a>. Also take a look what contributes to the <a href="database_size.htm">database file size</a>.</p>
+        <h2>Tune Storage Adapters</h2>
+        <p>A big performance point is how db4o stores the data to disk. By default db4o uses a relatively small file cache. A <a href="../configuration/file/storage/cachingstorage.htm">bigger cache</a> might improve the performance. In general the <a href="../configuration/file/storage.htm">right storage</a> can increase performance significantly. </p>
+        <h2>In Client-Server Mode: Tune Prefetching Options</h2>
+        <p>In client server mode a major performance bottleneck are network roundtrip's. You can reduce these roundtrip's by prefetching objects. Try to tune the <a href="../configuration/client_configuration.htm">prefetch options</a> on the client settings.</p>
+        <h2>Tune B-Tree Node Size</h2>
+        <p>Another parameter which can influence the performance quite bit is the size of the B-tree nodes. You can tune this parameter in the <a href="../configuration/common/btree_node_size.htm">common-configuration</a>.</p>
+    </body>
+</html>

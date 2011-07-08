@@ -205,6 +205,7 @@
     <Compile Include="Code\tp\TransparentActivationExample.cs" />
     <Compile Include="Code\transactions\InconsistentStateRead.cs" />
     <Compile Include="Code\transactions\Transactions.cs" />
+    <Compile Include="Code\troubleshooting\restore\TryToReadSingleObjects.cs" />
     <Compile Include="Code\tuning\diagnostics\DiagnosticsExamples.cs" />
     <Compile Include="Code\tuning\monitoring\IOMonitoring.cs" />
     <Compile Include="Code\tuning\monitoring\CSMonitoring.cs" />
