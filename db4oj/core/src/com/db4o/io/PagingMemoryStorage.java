@@ -37,7 +37,7 @@ public class PagingMemoryStorage implements Storage {
 	 * opens a MemoryBin for the given URI (name can be freely chosen).
 	 */
 	public Bin open(BinConfiguration config) throws Db4oIOException {
-		final Bin bin = produceBin(config);
+		final Bin bin = acquireBin(config);
 		return config.readOnly() ? new ReadOnlyBin(bin) : bin;
 	}
 
@@ -55,15 +55,19 @@ public class PagingMemoryStorage implements Storage {
 		_binsByUri.put(uri, bin);
 	}
 
-	private Bin produceBin(BinConfiguration config) {
+	private Bin acquireBin(BinConfiguration config) {
 	    final Bin storage = bin(config.uri());
 		if (null != storage) {
 			return storage;
 		}
-		final Bin newStorage = new PagingMemoryBin(_pageSize, config.initialLength());
+		final Bin newStorage = produceBin(config, _pageSize);
 		_binsByUri.put(config.uri(), newStorage);
 		return newStorage;
     }
+
+	protected Bin produceBin(BinConfiguration config, int pageSize) {
+		return new PagingMemoryBin(pageSize, config.initialLength());
+	}
 
 	public void delete(String uri) throws IOException {
 		_binsByUri.remove(uri);

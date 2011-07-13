@@ -9,7 +9,6 @@ import db4ounit.fixtures.*;
 /**
  * @sharpen.partial
  */
-@SuppressWarnings("deprecation")
 public class StorageTestSuite extends FixtureTestSuiteDescription implements OptOutVerySlow {
 
 	/**
