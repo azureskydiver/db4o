@@ -51,7 +51,7 @@ namespace Db4objects.Db4o.IO
 		/// <exception cref="Db4objects.Db4o.Ext.Db4oIOException"></exception>
 		public virtual IBin Open(BinConfiguration config)
 		{
-			IBin bin = ProduceBin(config);
+			IBin bin = AcquireBin(config);
 			return config.ReadOnly() ? new ReadOnlyBin(bin) : bin;
 		}
 
@@ -69,16 +69,21 @@ namespace Db4objects.Db4o.IO
 			_binsByUri[uri] = bin;
 		}
 
-		private IBin ProduceBin(BinConfiguration config)
+		private IBin AcquireBin(BinConfiguration config)
 		{
 			IBin storage = Bin(config.Uri());
 			if (null != storage)
 			{
 				return storage;
 			}
-			IBin newStorage = new PagingMemoryBin(_pageSize, config.InitialLength());
+			IBin newStorage = ProduceBin(config, _pageSize);
 			_binsByUri[config.Uri()] = newStorage;
 			return newStorage;
+		}
+
+		protected virtual IBin ProduceBin(BinConfiguration config, int pageSize)
+		{
+			return new PagingMemoryBin(pageSize, config.InitialLength());
 		}
 
 		/// <exception cref="System.IO.IOException"></exception>

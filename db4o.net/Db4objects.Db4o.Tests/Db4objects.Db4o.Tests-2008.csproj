@@ -595,6 +595,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\MemoryBinIsReusableTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\MockBin.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\NonFlushingStorageTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\IO\PagingMemoryStorageTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\RandomAccessFileFactoryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\RandomAccessFileStorageFactoryTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\IO\ReadOnlyBinTest.cs"/>

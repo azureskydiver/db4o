@@ -18,7 +18,8 @@ namespace Db4objects.Db4o.Tests.Common.IO
 		{
 			return ComposeTests(new Type[] { typeof(BlockAwareBinTestSuite), typeof(MemoryBinGrowthTestCase
 				), typeof(MemoryBinIsReusableTestCase), typeof(NonFlushingStorageTestCase), typeof(
-				RandomAccessFileStorageFactoryTestCase), typeof(StorageTestSuite) });
+				PagingMemoryStorageTestCase), typeof(RandomAccessFileStorageFactoryTestCase), typeof(
+				StorageTestSuite) });
 		}
 
 		// SaveAsStorageTestCase.class,  COR-2036
