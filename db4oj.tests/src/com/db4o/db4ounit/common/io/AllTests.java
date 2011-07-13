@@ -17,6 +17,7 @@ public class AllTests extends ComposibleTestSuite {
 									MemoryBinGrowthTestCase.class,
 									MemoryBinIsReusableTestCase.class,
 									NonFlushingStorageTestCase.class,
+									PagingMemoryStorageTestCase.class,
 									RandomAccessFileStorageFactoryTestCase.class,
 									// SaveAsStorageTestCase.class,  COR-2036
 									StorageTestSuite.class,

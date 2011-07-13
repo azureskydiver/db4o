@@ -8,7 +8,7 @@ import com.db4o.ext.*;
 /**
  * @exclude
  */
-class PagingMemoryBin implements Bin {
+public class PagingMemoryBin implements Bin {
 
 	private final int _pageSize;
 	private List<byte[]> _pages = new ArrayList<byte[]>();
