@@ -9,7 +9,7 @@ using Sharpen.Lang;
 namespace Db4objects.Db4o.IO
 {
 	/// <exclude></exclude>
-	internal class PagingMemoryBin : IBin
+	public class PagingMemoryBin : IBin
 	{
 		private readonly int _pageSize;
 
