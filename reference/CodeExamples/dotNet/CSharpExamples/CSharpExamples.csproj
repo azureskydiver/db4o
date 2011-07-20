@@ -75,6 +75,8 @@
     <Reference Include="Db4objects.Drs">
       <HintPath>..\..\..\libs\net\Db4objects.Drs.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\nunit.framework.dll</HintPath>
@@ -88,6 +90,7 @@
     <Reference Include="System.Data.Services">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -95,6 +98,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +186,14 @@
     <Compile Include="Code\query\soda\SodaQueryExamples.cs" />
     <Compile Include="Code\query\soda\SodaSorting.cs" />
     <Compile Include="Code\reflection\ReflectorExamples.cs" />
+    <Compile Include="Code\Reporting\Address.cs" />
+    <Compile Include="Code\Reporting\Person.cs" />
+    <Compile Include="Code\Reporting\ReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Reporting\ReportForm.Designer.cs">
+      <DependentUpon>ReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\semaphores\SemaphoreExamples.cs" />
     <Compile Include="Code\strategies\exceptions\ImportantExceptionCases.cs" />
     <Compile Include="Code\strategies\paging\PagingUtility.cs" />
@@ -252,6 +264,13 @@
       <Project>{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}</Project>
       <Name>Db4oUnit-2010</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\DataSources\Db4oDoc.Code.Reporting.Address.datasource" />
+    <None Include="Properties\DataSources\Db4oDoc.Code.Reporting.Person.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Code\Reporting\ExampleReport.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

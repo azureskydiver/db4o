@@ -20,7 +20,6 @@ public class HiLoExample {
         final WithID idObject = new WithID();
         client1.store(idObject);
             System.out.println("Id generated: "+idObject.getId());
-
         }
 
 

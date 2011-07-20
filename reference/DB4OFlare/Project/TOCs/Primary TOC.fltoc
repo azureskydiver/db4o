@@ -1085,6 +1085,18 @@
         Link="/Content/platform_specific_issues/web/asp.net_mvc_example.htm" />
     </TocEntry>
     <TocEntry
+      Title="Reporting"
+      Link="/Content/platform_specific_issues/reporting.htm">
+      <TocEntry
+        Title="Reporting Example With MS Report Viewer"
+        Link="/Content/platform_specific_issues/reporting/reporting_with_ms_report_viewer.htm"
+        conditions="Primary..NET" />
+      <TocEntry
+        Title="db4o with Jasper Reports Example"
+        Link="/Content/platform_specific_issues/reporting/db4o_with_jasper.htm"
+        conditions="Primary.Java" />
+    </TocEntry>
+    <TocEntry
       Title="Maven"
       Link="/Content/platform_specific_issues/maven.htm"
       conditions="Primary.Java"

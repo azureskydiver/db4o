@@ -2,7 +2,7 @@
 using Db4objects.Db4o;
 using Db4objects.Db4o.Linq;
 
-namespace Db4oDoc.Code.concurrency.UnitsOfWork
+namespace Db4oDoc.Code.Concurrency.UnitsOfWork
 {
     public class UnitsOfWork
     {
