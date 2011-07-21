@@ -43,10 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.boo" />
-    <Compile Include="Tests.boo">
+    <Compile Include="TestTimeStampStorage.boo">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestSyntaxHighLighter.boo">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestZipFile.boo">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -61,4 +64,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(BooBinPath)\Boo.Microsoft.Build.targets" />
+  <Target Name="AfterBuild">
+    <Exec Command="xcopy /i/y ..\Libs\Boo.Lang.dll .\bin\Debug\" />
+  </Target>
 </Project>

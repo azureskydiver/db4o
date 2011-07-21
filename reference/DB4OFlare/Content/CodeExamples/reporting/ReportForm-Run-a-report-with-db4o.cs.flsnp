@@ -12,6 +12,7 @@
 };
 
 <span style="color:Green;">// Put the data into the datasource which you are using</span>
+<span style="color:Green;">// in your report. Here it's named 'MainData'</span>
 reportViewer.LocalReport.DataSources.Add(
     <span style="color:Blue;">new</span> ReportDataSource(<span style="color:#A31515;">&quot;MainData&quot;</span>, dataToShow));
 reportViewer.Dock = DockStyle.Fill;
