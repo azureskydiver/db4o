@@ -11,6 +11,7 @@ public class AllTests extends Db4oTestSuite {
 			AccessOldFieldVersionsTestCase.class,
 			AccessRemovedFieldTestCase.class,
 			ClassRenameByConfigTestCase.class,
+			ClassRenameByConfigExcludingOldClassTestCase.class,
 			ClassRenameByStoredClassTestCase.class,
 			ReAddFieldTestCase.class,
 			RefactorBooleanWrapperToPrimitiveTestCase.class,

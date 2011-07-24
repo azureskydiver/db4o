@@ -267,12 +267,14 @@ public final class ClassMetadataRepository extends PersistentBase {
 	}
 	
     public ClassMetadata getClassMetadata(String name) {
-        ClassMetadata classMetadata = (ClassMetadata)_classMetadataByBytes.remove(getNameBytes(name));
+        byte[] nameBytes = getNameBytes(name);
+		ClassMetadata classMetadata = (ClassMetadata)_classMetadataByBytes.get(nameBytes);
         if (classMetadata == null) {
             classMetadata = findInitializedClassByName(name);
         }
         if(classMetadata != null){
             classMetadata = readClassMetadata(classMetadata, null);
+            _classMetadataByBytes.remove(nameBytes);
         }
         return classMetadata;
     }
