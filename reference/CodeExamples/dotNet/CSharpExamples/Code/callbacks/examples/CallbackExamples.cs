@@ -39,7 +39,7 @@ namespace Db4oDoc.Code.Callbacks.Examples
         private static void ReferentialIntegrityCheck(object sender,
                                                       CancellableObjectEventArgs eventArguments)
         {
-            Object toDelete = eventArguments.Object;
+            object toDelete = eventArguments.Object;
             if (toDelete is Pilot)
             {
                 IObjectContainer container = eventArguments.ObjectContainer();

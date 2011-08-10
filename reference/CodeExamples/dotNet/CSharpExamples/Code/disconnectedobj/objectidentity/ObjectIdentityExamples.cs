@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.DisconnectedObj.ObjectIdentity
 {
@@ -77,7 +79,9 @@ namespace Db4oDoc.Code.DisconnectedObj.ObjectIdentity
 
         private static Pilot QueryByName(IObjectContainer container, string name)
         {
-            return container.Query(delegate(Pilot p) { return p.Name.Equals(name); })[0];
+            return (from Pilot p in container
+                    where p.Name.Equals(name)
+                    select p).First();
         }
 
         private static void StoreJoe()

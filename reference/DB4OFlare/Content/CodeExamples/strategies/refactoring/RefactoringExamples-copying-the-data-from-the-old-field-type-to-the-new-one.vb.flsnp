@@ -12,7 +12,7 @@
         <span style="color:Blue;">Dim</span> oldField <span style="color:Blue;">As</span> IStoredField = dbClass.StoredField(<span style="color:#A31515;">&quot;id&quot;</span>, <span style="color:Blue;">GetType</span>(<span style="color:Blue;">Integer</span>))
         <span style="color:Blue;">If</span> oldField <span style="color:Blue;">IsNot</span> <span style="color:Blue;">Nothing</span> <span style="color:Blue;">Then</span>
             <span style="color:Green;">' Access the old data and copy it to the new field!</span>
-            <span style="color:Blue;">Dim</span> oldValue <span style="color:Blue;">As</span> [<span style="color:Blue;">Object</span>] = oldField.[<span style="color:Blue;">Get</span>](person)
+            <span style="color:Blue;">Dim</span> oldValue <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span> = oldField.<span style="color:Blue;">Get</span>(person)
             <span style="color:Blue;">If</span> oldValue <span style="color:Blue;">IsNot</span> <span style="color:Blue;">Nothing</span> <span style="color:Blue;">Then</span>
                 person.id = <span style="color:Blue;">New</span> Identity(<span style="color:Blue;">CInt</span>(oldValue))
                 container.Store(person)

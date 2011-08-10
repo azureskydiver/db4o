@@ -39,14 +39,14 @@ namespace Db4oDoc.Code.TypeHandling.Translator
     internal class ExampleTranslator : IObjectConstructor
     {
         // This is called to store the object
-        public Object OnStore(IObjectContainer objectContainer, Object objToStore)
+        public object OnStore(IObjectContainer objectContainer, object objToStore)
         {
             NonStorableType notStorable = (NonStorableType) objToStore;
             return notStorable.Data;
         }
 
         // This is called when the object is activated
-        public void OnActivate(IObjectContainer objectContainer, Object targetObject, Object storedObject)
+        public void OnActivate(IObjectContainer objectContainer, object targetObject, object storedObject)
         {
             NonStorableType notStorable = (NonStorableType) targetObject;
             notStorable.Data = (String) storedObject;
@@ -59,7 +59,7 @@ namespace Db4oDoc.Code.TypeHandling.Translator
         }
 
         // This method is called when a new instance is needed
-        public Object OnInstantiate(IObjectContainer objectContainer, Object storedObject)
+        public object OnInstantiate(IObjectContainer objectContainer, object storedObject)
         {
             return new NonStorableType("");
         }

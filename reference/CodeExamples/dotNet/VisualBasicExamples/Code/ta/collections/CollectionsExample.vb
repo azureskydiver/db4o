@@ -7,7 +7,7 @@ Imports Db4objects.Db4o.TA
 
 Namespace Db4oDoc.Code.TA.Collections
     Public Class CollectionsExample
-        Private Const DatabaseFileName As [String] = "database.db4o"
+        Private Const DatabaseFileName As String = "database.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             CleanUp()

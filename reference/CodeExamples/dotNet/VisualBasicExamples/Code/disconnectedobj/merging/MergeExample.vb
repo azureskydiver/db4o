@@ -3,6 +3,7 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Code.DisconnectedObj.Merging
     Public Class MergeExample
@@ -75,14 +76,16 @@ Namespace Db4oDoc.Code.DisconnectedObj.Merging
         End Sub
 
         Private Shared Function GetCarById(ByVal container As IObjectContainer, ByVal id As Guid) As Car
-            Return container.Query(Function(car As Car) car.ObjectId.Equals(id))(0)
+            Return (From car As Car In container _
+                Where car.ObjectId.Equals(id) _
+                Select car).Single()
         End Function
 
         Private Shared Function GetCarByName(ByVal carName As String) As Car
             Using container As IObjectContainer = OpenDatabase()
-                Dim result As Car = container.Query(Function(car As Car) car.Name.Equals(carName))(0)
-
-                Return result
+                Return (From car As Car In container _
+                        Where car.Name.Equals(carName) _
+                        Select car).First()
             End Using
         End Function
 

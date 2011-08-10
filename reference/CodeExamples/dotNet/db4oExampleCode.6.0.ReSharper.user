@@ -1,0 +1,370 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:ta/d:example/f:TransparentActivationExamples.cs" caret="3704" fromTop="12" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:tuning/d:diagnostics/f:DiagnosticsExamples.cs" caret="1571" fromTop="6" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:tuning/d:monitoring/f:QueryMonitoring.cs" caret="234" fromTop="9" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:query/d:linq/f:LinqExamples.vb" caret="0" fromTop="0" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:callbacks/d:eventregistry/f:EventRegistryExamples.vb" caret="5588" fromTop="17" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:disconnectedobj/d:idexamples/f:AutoIncrementExample.vb" caret="1386" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:disconnectedobj/d:idexamples/f:IdExamples.vb" caret="3759" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:disconnectedobj/d:idexamples/f:UuidOnObject.vb" caret="706" fromTop="13" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:disconnectedobj/d:merging/f:MergeExample.vb" caret="3108" fromTop="28" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:disconnectedobj/d:objectidentity/f:ObjectIdentityExamples.vb" caret="2686" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:query/d:nq/f:NativeQueryDiagnostics.vb" caret="1396" fromTop="23" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:ta/d:example/f:TransparentActivationExamples.vb" caret="148" fromTop="5" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:tuning/d:diagnostics/f:DiagnosticsExamples.vb" caret="921" fromTop="25" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:StopWatchUtil.vb" caret="245" fromTop="7" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/f:ItemHolder.cs" caret="100" fromTop="4" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/d:query/d:soda/f:GoodPerformance.cs" caret="3532" fromTop="22" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/f:ObjectHolder.cs" caret="103" fromTop="4" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:soda/f:GoodPerformance.vb" caret="0" fromTop="0" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:GenericHolder.vb" caret="124" fromTop="4" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/f:GenericHolder.cs" caret="611" fromTop="27" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/d:query/d:linq/f:GoodPerformance.cs" caret="332" fromTop="9" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/d:query/d:soda/f:BadPerformance.cs" caret="7059" fromTop="8" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:GoodPerformance.vb" caret="7571" fromTop="17" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/f:CollectionHolder.cs" caret="136" fromTop="6" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:soda/f:BadPerformance.vb" caret="1071" fromTop="0" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:CollectionHolder.vb" caret="472" fromTop="15" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/f:Item.cs" caret="1367" fromTop="35" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/d:query/d:linq/f:BadPerformance.cs" caret="5003" fromTop="41" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:Item.vb" caret="900" fromTop="13" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="114" fromTop="4" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:GoodPerformance.vb" caret="6583" fromTop="16" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:GoodPerformance.vb" caret="6844" fromTop="20" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:GoodPerformance.vb" caret="4237" fromTop="21" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:GoodPerformance.vb" caret="7574" fromTop="17" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/d:query/d:soda/f:BadPerformance.cs" caret="8684" fromTop="17" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="4809" fromTop="35" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="1470" fromTop="23" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="1023" fromTop="16" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="925" fromTop="12" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="2063" fromTop="16" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="2063" fromTop="15" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="2063" fromTop="15" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="1624" fromTop="15" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="2657" fromTop="25" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="2159" fromTop="18" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="3142" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="2742" fromTop="14" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="3799" fromTop="22" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="4234" fromTop="16" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="4619" fromTop="24" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="3985" fromTop="18" />
+      <File id="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF/d:Code/d:performance/f:CollectionHolder.cs" caret="91" fromTop="3" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:CollectionHolder.vb" caret="589" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:CollectionHolder.vb" caret="143" fromTop="5" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:CollectionHolder.vb" caret="477" fromTop="15" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="3799" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="3696" fromTop="19" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="1812" fromTop="14" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/f:Item.vb" caret="1531" fromTop="35" />
+      <File id="3CAF686B-6504-4D47-95A8-185AAF528CC5/d:Code/d:performance/d:query/d:linq/f:BadPerformance.vb" caret="114" fromTop="4" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="CSharpCodeCompletionContext">
+      <Item value="psvm" priority="30" />
+      <Item value="Person`0" priority="60" />
+      <Item value="Console`0" priority="124" />
+      <Item value="return" priority="157" />
+      <Item value="from" priority="254" />
+      <Item value="where" priority="444" />
+      <Item value="p" priority="250" />
+      <Item value="nameOfPerson" priority="30" />
+      <Item value="select" priority="666" />
+      <Item value="TransparentPersistenceSupport" priority="28" />
+      <Item value="new" priority="223" />
+      <Item value="DeactivatingRollbackStrategy" priority="27" />
+      <Item value="RefactoringExamples" priority="15" />
+      <Item value="readonly" priority="252" />
+      <Item value="ThreadPool" priority="15" />
+      <Item value="toRun" priority="92" />
+      <Item value="ThreadPool`0" priority="30" />
+      <Item value="var" priority="381" />
+      <Item value="null" priority="62" />
+      <Item value="lock" priority="30" />
+      <Item value="Action`0" priority="62" />
+      <Item value="transactionClosure" priority="61" />
+      <Item value="container" priority="371" />
+      <Item value="const" priority="61" />
+      <Item value="public" priority="188" />
+      <Item value="delegate" priority="29" />
+      <Item value="using" priority="93" />
+      <Item value="IDisposable`0" priority="30" />
+      <Item value="IObjectContainer`0" priority="89" />
+      <Item value="Transactions" priority="26" />
+      <Item value="ReaderWriterLockSlim" priority="31" />
+      <Item value="finally" priority="30" />
+      <Item value="byte" priority="30" />
+      <Item value="rootContainer" priority="30" />
+      <Item value="typeof" priority="63" />
+      <Item value="class" priority="124" />
+      <Item value="IVisitor4" priority="16" />
+      <Item value="int" priority="31" />
+      <Item value="obj" priority="31" />
+      <Item value="out" priority="159" />
+      <Item value="value" priority="31" />
+      <Item value="e" priority="63" />
+      <Item value="private" priority="95" />
+      <Item value="string" priority="63" />
+      <Item value="IObjectContainer" priority="16" />
+      <Item value="Db4oEmbedded`0" priority="31" />
+      <Item value="Address" priority="50" />
+      <Item value="City" priority="21" />
+      <Item value="ReportForm" priority="29" />
+      <Item value="st" priority="31" />
+      <Item value="bool" priority="31" />
+      <Item value="TestCase" priority="16" />
+      <Item value="TestFixture" priority="31" />
+      <Item value="SetUp" priority="63" />
+      <Item value="TearDown" priority="31" />
+      <Item value="object" priority="31" />
+      <Item value="IEvaluation" priority="16" />
+      <Item value="override" priority="31" />
+      <Item value="o" priority="31" />
+      <Item value="car" priority="31" />
+      <Item value="T`0" priority="63" />
+      <Item value="GenericHolder&lt;T&gt;" priority="28" />
+      <Item value="Item`0" priority="30" />
+      <Item value="Int16`0" priority="31" />
+      <Item value="in" priority="191" />
+      <Item value="i" priority="319" />
+      <Item value="StringBuilder" priority="16" />
+      <Item value="result" priority="63" />
+      <Item value="criteria" priority="95" />
+      <Item value="h2" priority="31" />
+      <Item value="item" priority="31" />
+      <Item value="h" priority="95" />
+      <Item value="date" priority="31" />
+      <Item value="CollectionHolder`0" priority="32" />
+      <Item value="itemToQueryFor" priority="22" />
+      <Item value="if" priority="31" />
+      <Item value="AnEvent" priority="31" />
+      <Item value="PersistanceAware" priority="16" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Db4oDoc.Code.Tp.Enhancement.Person">
+      <Item value="PersonWithHistory`0" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Console">
+      <Item value="WriteLine`0" priority="105" />
+      <Item value="Read`0" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Tp.Enhancement.Person">
+      <Item value="Name" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Concurrency.Locking.Person">
+      <Item value="Name" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="Equals`0" priority="54" />
+      <Item value="Contains`0" priority="77" />
+      <Item value="StartsWith`0" priority="22" />
+      <Item value="Count`1" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Threading.ThreadPool">
+      <Item value="QueueUserWorkItem`0" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Action">
+      <Item value="BeginInvoke`0" priority="25" />
+      <Item value="EndInvoke`0" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="VBCodeCompletionContextSimple">
+      <Item value="Asc`0" priority="26" />
+      <Item value="lockOps" priority="8" />
+      <Item value="Dim" priority="8" />
+      <Item value="Action`0" priority="17" />
+      <Item value="Function" priority="9" />
+      <Item value="ValueType`0" priority="8" />
+      <Item value="Return" priority="8" />
+      <Item value="As" priority="78" />
+      <Item value="Boolean`0" priority="17" />
+      <Item value="True" priority="8" />
+      <Item value="Of" priority="36" />
+      <Item value="Func`2" priority="8" />
+      <Item value="IObjectContainer`0" priority="8" />
+      <Item value="AddressOf" priority="8" />
+      <Item value="toRun" priority="8" />
+      <Item value="Nothing" priority="17" />
+      <Item value="ReaderWriterLockSlim`0" priority="6" />
+      <Item value="startInstance" priority="8" />
+      <Item value="Implements" priority="23" />
+      <Item value="IVisitor4`0" priority="12" />
+      <Item value="From" priority="41" />
+      <Item value="Person`0" priority="13" />
+      <Item value="Select" priority="97" />
+      <Item value="Linq" priority="72" />
+      <Item value="Car`0" priority="13" />
+      <Item value="container" priority="13" />
+      <Item value="fields" priority="13" />
+      <Item value="out" priority="13" />
+      <Item value="field1" priority="13" />
+      <Item value="Is`0" priority="13" />
+      <Item value="Item`0" priority="13" />
+      <Item value="ItemHolder`0" priority="13" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:VisualBasicExamples.Db4oDoc.Code.Concurrency.Locking.LockingOperations">
+      <Item value="Main`0" priority="7" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Action`1">
+      <Item value="BeginInvoke`0" priority="41" />
+      <Item value="EndInvoke`0" priority="33" />
+    </ItemStatistics>
+    <ItemStatistics item="VBCodeCompletionContextSmart">
+      <Item value="container" priority="13" />
+      <Item value="waitHandle" priority="13" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Concurrency.Transactions.Person">
+      <Item value="Name" priority="25" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Threading.ReaderWriterLockSlim">
+      <Item value="EnterReadLock`0" priority="52" />
+      <Item value="ExitReadLock`0" priority="52" />
+      <Item value="ExitWriteLock`0" priority="53" />
+      <Item value="EnterWriteLock`0" priority="48" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Concurrency.Transactions.DatabaseSupportWithReadWriteLock">
+      <Item value="InReadTransaction`1" priority="26" />
+      <Item value="InWriteTransaction`1" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.IObjectContainer">
+      <Item value="Ext`0" priority="93" />
+      <Item value="Dispose`0" priority="77" />
+      <Item value="Store`0" priority="26" />
+      <Item value="Commit`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Ext.IExtObjectContainer">
+      <Item value="OpenSession`0" priority="25" />
+      <Item value="SystemInfo`0" priority="49" />
+      <Item value="Configure`0" priority="26" />
+      <Item value="StoredClass`0" priority="11" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Foundation.IVisitor4">
+      <Item value="Visit`0" priority="12" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Db4objects.Db4o.Db4oEmbedded">
+      <Item value="OpenFile`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Reporting.Person">
+      <Item value="FirstName" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Reporting.WinForms.LocalReport">
+      <Item value="ReportPath" priority="45" />
+      <Item value="ReportEmbeddedResource" priority="22" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Ext.ISystemInfo">
+      <Item value="TotalSize`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Config.IConfiguration">
+      <Item value="BlockSize`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Diagnostics.Stopwatch">
+      <Item value="ElapsedMilliseconds" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Int32">
+      <Item value="ToString`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.IObjectSet">
+      <Item value="Count" priority="83" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Query.IEvaluation">
+      <Item value="Evaluate`0" priority="12" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Ext.IStoredClass">
+      <Item value="GetStoredFields`0" priority="11" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Ext.IStoredField">
+      <Item value="HasIndex`0" priority="11" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Performance.Item">
+      <Item value="IndexedString" priority="135" />
+      <Item value="IndexNumber" priority="72" />
+      <Item value="IndexDate" priority="26" />
+      <Item value="IndexedStringWhichFiresEvent" priority="22" />
+      <Item value="ComplexMethod`0" priority="22" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Text.StringBuilder">
+      <Item value="Append`0" priority="103" />
+      <Item value="ToString`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Performance.ItemHolder">
+      <Item value="IndexedReference" priority="22" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4objects.Db4o.Linq.IDb4oLinqQuery`1">
+      <Item value="First`1" priority="26" />
+      <Item value="ToList`1" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Performance.GenericHolder`1">
+      <Item value="IndexedReference" priority="22" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List`1">
+      <Item value="Count" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Db4oDoc.Code.Performance.Query.Soda.CollectionHolder">
+      <Item value="Items" priority="22" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList`1">
+      <Item value="Contains`0" priority="26" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <UnitTestSessions>
+    <Session>
+      <Name>Session #2</Name>
+      <Elements>
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestFixtureElement" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestFixtureElement" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestFixtureElement" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestFixtureElement" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance.AdvancedLinqQueries" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="AdvancedLinqQueries" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.BadPerformance.AdvancedLinqQueries" ParentId="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="AdvancedLinqQueries" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.BiggerThan" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="BiggerThan" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.BiggerThan" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="BiggerThan" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.BadPerformance.CallingAMethod" ParentId="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="CallingAMethod" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance.CallingAMethod" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="CallingAMethod" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance.Contains" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="Contains" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.BadPerformance.Contains" ParentId="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="Contains" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.EqualsAcrossIndexedFields" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="EqualsAcrossIndexedFields" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.EqualsAcrossIndexedFields" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="EqualsAcrossIndexedFields" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.EqualsOnIndexedField" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="EqualsOnIndexedField" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.EqualsOnIndexedField" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="EqualsOnIndexedField" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.FindADate" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="FindADate" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.FindADate" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="FindADate" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.InBetween" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="InBetween" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.InBetween" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="InBetween" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.NewerData" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="NewerData" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.NewerData" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="NewerData" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.NotEquals" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="NotEquals" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.NotEquals" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="NotEquals" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance.PropertiesWithSideEffects" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="PropertiesWithSideEffects" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.BadPerformance.PropertiesWithSideEffects" ParentId="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="PropertiesWithSideEffects" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance.QueryForItemInCollection" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="QueryForItemInCollection" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.BadPerformance.QueryForItemInCollection" ParentId="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.BadPerformance" MethodName="QueryForItemInCollection" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.SearchByGenericField" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="SearchByGenericField" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.SearchByGenericField" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="SearchByGenericField" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+        <UnitTestElement Provider="nUnit" Id="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.SearchByReference" ParentId="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="SearchByReference" Project="2F121B0F-4E79-4DB7-92A0-7A7BB36BF6BF" />
+        <UnitTestElement Provider="nUnit" Id="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance.SearchByReference" ParentId="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" type="NUnitTestElement" TypeName="VisualBasicExamples.Db4oDoc.Code.Performance.Query.Linq.GoodPerformance" MethodName="SearchByReference" Project="3CAF686B-6504-4D47-95A8-185AAF528CC5" />
+      </Elements>
+    </Session>
+  </UnitTestSessions>
+</Configuration>

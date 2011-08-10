@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 {
@@ -23,7 +25,9 @@ namespace Db4oDoc.Code.DisconnectedObj.IdExamples
         public object ObjectForID(Guid idForObject, IObjectContainer container)
         {
             // #example: get an object its UUID
-            IDHolder instance = container.Query(delegate(IDHolder o) { return o.ObjectId.Equals(idForObject); })[0];
+            var instance = (from IDHolder o in container
+                                where o.ObjectId.Equals(idForObject)
+                                select o).Single();
             // #end example
             return instance;
         }

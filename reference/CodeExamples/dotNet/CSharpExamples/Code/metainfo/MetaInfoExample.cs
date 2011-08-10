@@ -43,7 +43,7 @@ namespace Db4oDoc.Code.MetaInfo
                 bool isAgeFieldIndexed = ageField.HasIndex();
 
                 // Get the type of the field
-                String fieldType = ageField.GetStoredType().GetName();
+                string fieldType = ageField.GetStoredType().GetName();
                 // #end example
 
                 // #example: Access via meta data

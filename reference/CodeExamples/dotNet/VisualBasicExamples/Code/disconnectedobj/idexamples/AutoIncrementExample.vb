@@ -2,7 +2,7 @@ Imports System.Collections
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Events
-Imports Db4objects.Db4o.Internal
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
     Public Class AutoIncrementExample
@@ -29,7 +29,9 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 
             Dim id As Integer = idForObject
             ' #example: get an object by its id
-            Dim instance As Object = container.Query(Function(o As IDHolder) o.Id = id)(0)
+            Dim instance = (From o As IDHolder In container _
+                            Where o.Id = id _
+                            Select o).Single()
             ' #end example
             Return instance
         End Function

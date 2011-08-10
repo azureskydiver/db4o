@@ -17,7 +17,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.ObjectIdentity
             End Set
         End Property
 
-        Public Overloads Overrides Function ToString() As [String]
+        Public Overloads Overrides Function ToString() As String
             Return m_name
         End Function
     End Class

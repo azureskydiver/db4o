@@ -4,8 +4,8 @@
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Private</span> <span style="color:Blue;">Shared</span> <span style="color:Blue;">Sub</span> HandleCreatingEvent(<span style="color:Blue;">ByVal</span> sender <span style="color:Blue;">As</span> <span style="color:Blue;">Object</span>, _
      <span style="color:Blue;">ByVal</span> args <span style="color:Blue;">As</span> CancellableObjectEventArgs)
-    <span style="color:Blue;">If</span> <span style="color:Blue;">TypeOf</span> args.[<span style="color:Blue;">Object</span>] <span style="color:Blue;">Is</span> Person <span style="color:Blue;">Then</span>
-        <span style="color:Blue;">Dim</span> p <span style="color:Blue;">As</span> Person = <span style="color:Blue;">DirectCast</span>(args.[<span style="color:Blue;">Object</span>], Person)
+    <span style="color:Blue;">If</span> <span style="color:Blue;">TypeOf</span> args.Object <span style="color:Blue;">Is</span> Person <span style="color:Blue;">Then</span>
+        <span style="color:Blue;">Dim</span> p <span style="color:Blue;">As</span> Person = <span style="color:Blue;">DirectCast</span>(args.Object, Person)
         <span style="color:Blue;">If</span> p.Name.<span style="color:Blue;">Equals</span>(<span style="color:#A31515;">&quot;Joe Junior&quot;</span>) <span style="color:Blue;">Then</span>
             args.Cancel()
         <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>

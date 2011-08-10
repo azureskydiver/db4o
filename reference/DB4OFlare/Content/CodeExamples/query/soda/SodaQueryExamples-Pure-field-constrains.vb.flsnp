@@ -4,7 +4,7 @@
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> query <span style="color:Blue;">As</span> IQuery = container.Query()
 <span style="color:Green;">' You can simple filter objects which have a certain field</span>
-query.Descend(<span style="color:#A31515;">&quot;name&quot;</span>).Constrain(<span style="color:Blue;">Nothing</span>).[<span style="color:Blue;">Not</span>]()
+query.Descend(<span style="color:#A31515;">&quot;name&quot;</span>).Constrain(<span style="color:Blue;">Nothing</span>).<span style="color:Blue;">Not</span>()
 
 <span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IObjectSet = query.Execute()</pre>
 		<div class="codesnippet-meta">

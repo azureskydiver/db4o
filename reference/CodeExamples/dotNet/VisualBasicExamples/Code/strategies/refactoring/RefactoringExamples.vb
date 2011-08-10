@@ -28,7 +28,7 @@ Namespace Db4oDoc.Code.Strategies.Refactoring
                     Dim oldField As IStoredField = dbClass.StoredField("id", GetType(Integer))
                     If oldField IsNot Nothing Then
                         ' Access the old data and copy it to the new field!
-                        Dim oldValue As [Object] = oldField.[Get](person)
+                        Dim oldValue As Object = oldField.Get(person)
                         If oldValue IsNot Nothing Then
                             person.id = New Identity(CInt(oldValue))
                             container.Store(person)
@@ -69,9 +69,9 @@ Namespace Db4oDoc.Code.Strategies.Refactoring
             StoreInDB(New PersonOld(), New PersonOld("Papa Joe"))
         End Sub
 
-        Private Shared Sub StoreInDB(ByVal ParamArray objects As [Object]())
+        Private Shared Sub StoreInDB(ByVal ParamArray objects As Object())
             Using container As IObjectContainer = Db4oEmbedded.OpenFile(DatabaseFile)
-                For Each obj As [Object] In objects
+                For Each obj As Object In objects
                     container.Store(obj)
                 Next
             End Using
@@ -119,9 +119,9 @@ Namespace Db4oDoc.Code.Strategies.Refactoring
         '    public int id = new Random().nextInt();
         ' #end example
 
-        Private m_name As [String]
+        Private m_name As String
 
-        Public Sub New(ByVal name As [String])
+        Public Sub New(ByVal name As String)
             Me.m_name = name
         End Sub
 
@@ -161,7 +161,7 @@ Namespace Db4oDoc.Code.Strategies.Refactoring
         End Sub
 
         Public Shared Function NewId() As Identity
-            Return New Identity(New Random().[Next]())
+            Return New Identity(New Random().Next())
         End Function
 
         Public Overrides Function ToString() As String

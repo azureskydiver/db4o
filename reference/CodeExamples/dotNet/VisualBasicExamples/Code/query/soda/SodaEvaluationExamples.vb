@@ -99,7 +99,7 @@ Namespace Db4oDoc.Code.Query.Soda
         Implements IEvaluation
         Private ReadOnly pattern As Regex
 
-        Public Sub New(ByVal pattern As [String])
+        Public Sub New(ByVal pattern As String)
             Me.pattern = New Regex(pattern)
         End Sub
 

@@ -4,7 +4,7 @@
 	<div class="codesnippet" MadCap:conditions="Primary.VB.NET">
         <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">Dim</span> query <span style="color:Blue;">As</span> IQuery = container.Query()
 query.Constrain(<span style="color:Blue;">GetType</span>(Pilot))
-query.Descend(<span style="color:#A31515;">&quot;age&quot;</span>).Constrain(42).Greater().[<span style="color:Blue;">Or</span>](query.Descend(<span style="color:#A31515;">&quot;age&quot;</span>).Constrain(30).Smaller())
+query.Descend(<span style="color:#A31515;">&quot;age&quot;</span>).Constrain(42).Greater().<span style="color:Blue;">Or</span>(query.Descend(<span style="color:#A31515;">&quot;age&quot;</span>).Constrain(30).Smaller())
 
 <span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IObjectSet = query.Execute()</pre>
 		<div class="codesnippet-meta">

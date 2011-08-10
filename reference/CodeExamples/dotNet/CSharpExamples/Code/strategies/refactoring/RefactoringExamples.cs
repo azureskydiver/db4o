@@ -36,7 +36,7 @@ namespace Db4oDoc.Code.Strategies.Refactoring
                     if(null!=oldField)
                     {
                         // Access the old data and copy it to the new field!
-                        Object oldValue = oldField.Get(person);
+                        object oldValue = oldField.Get(person);
                         if (null != oldValue)
                         {
                             person.id = new Identity((int)oldValue);
@@ -136,7 +136,7 @@ namespace Db4oDoc.Code.Strategies.Refactoring
         //    public int id = new Random().nextInt();
         // #end example
 
-        private String name;
+        private string name;
 
         public Person(String name)
         {

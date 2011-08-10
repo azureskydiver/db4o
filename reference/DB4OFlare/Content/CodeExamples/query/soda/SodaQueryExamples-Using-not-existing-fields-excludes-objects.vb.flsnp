@@ -6,7 +6,7 @@
 query.Constrain(<span style="color:Blue;">GetType</span>(Pilot))
 <span style="color:Green;">' using not existing fields doesn't throw an exception</span>
 <span style="color:Green;">' but rather exclude all object which don't use this field</span>
-query.Descend(<span style="color:#A31515;">&quot;notExisting&quot;</span>).Constrain(<span style="color:Blue;">Nothing</span>).[<span style="color:Blue;">Not</span>]()
+query.Descend(<span style="color:#A31515;">&quot;notExisting&quot;</span>).Constrain(<span style="color:Blue;">Nothing</span>).<span style="color:Blue;">Not</span>()
 
 <span style="color:Blue;">Dim</span> result <span style="color:Blue;">As</span> IObjectSet = query.Execute()</pre>
 		<div class="codesnippet-meta">

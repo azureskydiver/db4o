@@ -27,6 +27,7 @@ namespace Db4oDoc.Code.Pitfalls.Activation
 
             FixItWithHigherActivationDepth();
             FixItWithExplicitlyActivating();
+            Deactivate();
         }
 
         private static void FixItWithHigherActivationDepth()
@@ -59,6 +60,23 @@ namespace Db4oDoc.Code.Pitfalls.Activation
                 Console.WriteLine(joannaName);
                 // #end example
             }
+        }
+        
+        private static void Deactivate() {
+            using(IObjectContainer container = Db4oEmbedded.OpenFile("database.db4o"))
+            {
+                var jodie = QueryForJodie(container);
+
+                container.Activate(jodie,5);
+
+                // #example: Deactivate an object
+                Console.WriteLine(jodie.Name);
+                // Now all fields will be null or 0
+                // The same applies for all references objects up to a depth of 5 
+                container.Deactivate(jodie,5);
+                Console.WriteLine(jodie.Name);
+                // #end example
+            } 
         }
 
         private static void RunIntoActivationIssue()

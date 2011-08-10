@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 {
@@ -75,7 +77,7 @@ namespace Db4oDoc.Code.DisconnectedObj.IdExamples
             }
         }
 
-        private static void AssertEquals(Object expected, Object actual)
+        private static void AssertEquals(object expected, object actual)
         {
             if (!expected.Equals(actual))
             {
@@ -124,7 +126,9 @@ namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 
         private static Pilot QueryByName(IObjectContainer container, string name)
         {
-            return container.Query(delegate(Pilot p) { return p.Name.Equals(name); })[0];
+            return (from Pilot p in container
+                       where  p.Name.Equals(name)
+                       select p).First();
         }
 
         private void StoreJoe()

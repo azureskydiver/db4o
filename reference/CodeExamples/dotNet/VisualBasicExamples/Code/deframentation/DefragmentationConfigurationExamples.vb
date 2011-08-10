@@ -71,7 +71,7 @@ Namespace Db4oDoc.Code.Deframentation
         Public Sub DisableReadOnlyForBackup()
             ' #example: Disable readonly on backup
             Dim config As New DefragmentConfig("database.db4o")
-            config.[ReadOnly](False)
+            config.ReadOnly(False)
 
             Defragment.Defrag(config)
             ' #end example

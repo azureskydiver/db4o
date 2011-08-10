@@ -189,7 +189,7 @@ namespace Db4oDoc.Code.Pitfalls.UpdateDepth
         private Person driver;
         private string carName;
 
-        internal Car(Person driver, String carName)
+        internal Car(Person driver, string carName)
         {
             this.driver = driver;
             this.carName = carName;

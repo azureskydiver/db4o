@@ -15,7 +15,7 @@
     <span style="color:Blue;">Public</span> <span style="color:Blue;">Sub</span> OnDiagnostic(<span style="color:Blue;">ByVal</span> diagnostic <span style="color:Blue;">As</span> IDiagnostic) _
         <span style="color:Blue;">Implements</span> IDiagnosticListener.OnDiagnostic
 
-        <span style="color:Blue;">Dim</span> type <span style="color:Blue;">As</span> Type = diagnostic.[<span style="color:Blue;">GetType</span>]()
+        <span style="color:Blue;">Dim</span> type <span style="color:Blue;">As</span> Type = diagnostic.<span style="color:Blue;">GetType</span>()
         <span style="color:Blue;">If</span> filterFor.Contains(type) <span style="color:Blue;">Then</span>
             target.OnDiagnostic(diagnostic)
         <span style="color:Blue;">End</span> <span style="color:Blue;">If</span>

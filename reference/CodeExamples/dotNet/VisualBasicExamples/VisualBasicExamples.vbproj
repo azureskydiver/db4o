@@ -149,6 +149,16 @@
     <Compile Include="Code\indexing\check\CheckForAndIndex.vb" />
     <Compile Include="Code\indexing\traverse\TraverseIndexExample.vb" />
     <Compile Include="Code\metainfo\MetaInfoExample.vb" />
+    <Compile Include="Code\performance\GenericHolder.vb" />
+    <Compile Include="Code\performance\Item.vb" />
+    <Compile Include="Code\performance\ItemHolder.vb" />
+    <Compile Include="Code\performance\ObjectHolder.vb" />
+    <Compile Include="Code\performance\query\linq\BadPerformance.vb" />
+    <Compile Include="Code\performance\query\linq\GoodPerformance.vb" />
+    <Compile Include="Code\performance\query\soda\BadPerformance.vb" />
+    <Compile Include="Code\performance\CollectionHolder.vb" />
+    <Compile Include="Code\performance\query\soda\GoodPerformance.vb" />
+    <Compile Include="Code\performance\StopWatchUtil.vb" />
     <Compile Include="Code\PersistanceAware.vb" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.vb" />
     <Compile Include="Code\reflection\ReflectorExamples.vb" />
