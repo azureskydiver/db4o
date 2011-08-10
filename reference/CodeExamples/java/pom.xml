@@ -74,6 +74,12 @@
             <artifactId>jasperreports</artifactId>
             <version>4.0.1</version>
         </dependency>
+        <!-- sane date handling -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6.2</version>
+        </dependency>
 
         <!-- others -->
         <dependency>
@@ -81,6 +87,7 @@
             <artifactId>junit</artifactId>
             <version>4.8</version>
         </dependency>
+
     </dependencies>
 
     <build>

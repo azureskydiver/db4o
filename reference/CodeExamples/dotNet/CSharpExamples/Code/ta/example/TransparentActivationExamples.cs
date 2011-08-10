@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Linq;
 using Db4objects.Db4o.TA;
 
 namespace Db4oDoc.Ta.Example
@@ -98,7 +100,9 @@ namespace Db4oDoc.Ta.Example
 
         private static Person QueryByName(IObjectContainer container, string name)
         {
-            return container.Query(delegate(Person p) { return p.Name.Equals(name); })[0];
+            return (from Person p in container
+                   where p.Name.Equals(name)
+                   select p).First();
         }
 
         private static IObjectContainer OpenDatabaseTP()

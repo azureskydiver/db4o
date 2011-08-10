@@ -5,6 +5,7 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.CS
 Imports Db4objects.Db4o.Events
 Imports Db4objects.Db4o.Internal
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Code.Callbacks.EventRegistry
     Public Class EventRegistryExamples
@@ -80,8 +81,8 @@ Namespace Db4oDoc.Code.Callbacks.EventRegistry
         ' #example: Cancel store operation Handler
         Private Shared Sub HandleCreatingEvent(ByVal sender As Object, _
              ByVal args As CancellableObjectEventArgs)
-            If TypeOf args.[Object] Is Person Then
-                Dim p As Person = DirectCast(args.[Object], Person)
+            If TypeOf args.Object Is Person Then
+                Dim p As Person = DirectCast(args.Object, Person)
                 If p.Name.Equals("Joe Junior") Then
                     args.Cancel()
                 End If
@@ -139,7 +140,9 @@ Namespace Db4oDoc.Code.Callbacks.EventRegistry
         ' #end example
 
         Private Shared Sub RunOperations(ByVal container As IObjectContainer)
-            Dim joe As Person = container.Query(Function(p As Person) p.Name.Equals("Joe"))(0)
+            Dim joe = (From p As Person In container _
+                                Where p.Name.Equals("Joe") _
+                                Select p).First()
             joe.Name = "Joe Senior"
             container.Store(joe)
             container.Store(New Person("Joe Junior"))

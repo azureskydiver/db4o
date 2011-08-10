@@ -10,8 +10,8 @@ Namespace Db4oDoc.Code.Tuning.Monitoring
 
         Private Shared Function NewString(ByVal rnd As Random) As String
             Dim buffer As New StringBuilder()
-            For i As Integer = 0 To rnd.[Next](4096) - 1
-                Dim charNr As Integer = 65 + rnd.[Next](26)
+            For i As Integer = 0 To rnd.Next(4096) - 1
+                Dim charNr As Integer = 65 + rnd.Next(26)
                 buffer.Append(ChrW(charNr))
             Next
             Return buffer.ToString()

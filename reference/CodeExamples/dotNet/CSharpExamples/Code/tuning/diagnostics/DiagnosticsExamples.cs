@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Diagnostic;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.Tuning.Diagnostics
 {
@@ -40,10 +42,9 @@ namespace Db4oDoc.Code.Tuning.Diagnostics
 
         private static IList<SimpleClass> RunQuery(IObjectContainer container)
         {
-            return container.Query(delegate(SimpleClass cwf)
-                                       {
-                                           return cwf.Number < 100;
-                                       });
+            return (from SimpleClass cwf in container
+                    where cwf.Number < 100
+                    select cwf).ToList();
         }
 
         private static void PrintResult(IEnumerable<SimpleClass> result)

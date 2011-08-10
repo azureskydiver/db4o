@@ -41,7 +41,7 @@ Namespace Db4oDoc.Code.Tuning.Monitoring
 
         Private Shared Sub RunLINQNotOptimizedQuery(ByVal container As IObjectContainer)
             Dim result = (From o As DataObject In container _
-             Where o.IndexedNumber = New Random().[Next]() _
+             Where o.IndexedNumber = New Random().Next() _
              Select o).ToArray()
         End Sub
 
@@ -54,13 +54,13 @@ Namespace Db4oDoc.Code.Tuning.Monitoring
         End Sub
 
         Private Shared Sub RunUnoptimizedQuery(ByVal container As IObjectContainer)
-            Dim result As IList(Of DataObject) = container.Query(Function(o As DataObject) o.Number = New Random().[Next]())
+            Dim result As IList(Of DataObject) = container.Query(Function(o As DataObject) o.Number = New Random().Next())
         End Sub
 
         Private Shared Sub StoreALotOfObjects(ByVal container As IObjectContainer)
             Dim rnd As New Random()
             For i As Integer = 0 To 9999
-                container.Store(New DataObject(rnd.[Next]()))
+                container.Store(New DataObject(rnd.Next()))
             Next
         End Sub
 

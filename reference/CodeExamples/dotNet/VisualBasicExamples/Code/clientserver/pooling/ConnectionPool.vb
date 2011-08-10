@@ -8,7 +8,7 @@ Namespace Db4oDoc.Code.ClientServer.Pooling
         Private ReadOnly connectionFactory As ClientConnectionFactory
         Private ReadOnly availableClients As New Queue(Of IObjectContainer)()
         Private ReadOnly leasedClients As IDictionary(Of IObjectContainer, IObjectContainer) = New Dictionary(Of IObjectContainer, IObjectContainer)()
-        Private ReadOnly sync As New [Object]()
+        Private ReadOnly sync As New Object()
 
         Public Sub New(ByVal connectionFactory As ClientConnectionFactory)
             Me.connectionFactory = connectionFactory

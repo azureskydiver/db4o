@@ -20,6 +20,7 @@ Namespace Db4oDoc.Code.Pitfalls.Activation
 
             FixItWithHigherActivationDepth()
             FixItWithExplicitlyActivating()
+            Deactivate()
         End Sub
 
         Private Shared Sub FixItWithHigherActivationDepth()
@@ -47,6 +48,22 @@ Namespace Db4oDoc.Code.Pitfalls.Activation
                 Dim joannaName As String = julia.Mother.Name
                 ' #end example
                 Console.WriteLine(joannaName)
+            End Using
+        End Sub
+
+        Private Shared Sub Deactivate()
+            Using container As IObjectContainer = Db4oEmbedded.OpenFile("database.db4o")
+                Dim jodie = QueryForJodie(container)
+
+                container.Activate(jodie, 5)
+
+                ' #example: Deactivate an object
+                Console.WriteLine(jodie.Name)
+                container.Deactivate(jodie, 5)
+                ' Now all fields will be null or 0
+                ' The same applies for all references objects up to a depth of 5 
+                Console.WriteLine(jodie.Name)
+                ' #end example
             End Using
         End Sub
 

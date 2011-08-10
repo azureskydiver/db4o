@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Events;
 using Db4objects.Db4o.Internal;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 {
@@ -26,7 +28,9 @@ namespace Db4oDoc.Code.DisconnectedObj.IdExamples
         {
             int id = idForObject;
             // #example: get an object by its id
-            object instance = container.Query(delegate(IDHolder o) { return o.Id == id; })[0];
+            var instance = (from IDHolder o in container
+                              where o.Id == id
+                              select o).Single();
             // #end example
             return instance;
         }

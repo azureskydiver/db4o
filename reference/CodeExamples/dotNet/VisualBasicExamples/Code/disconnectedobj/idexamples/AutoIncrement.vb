@@ -57,7 +57,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
         Public Sub HandleCreating(ByVal sender As Object, ByVal e As CancellableObjectEventArgs)
             If TypeOf e.Object Is IDHolder Then
                 Dim idHolder As IDHolder = DirectCast(e.Object, IDHolder)
-                idHolder.Id = GetNextID(idHolder.[GetType]())
+                idHolder.Id = GetNextID(idHolder.GetType())
             End If
         End Sub
 

@@ -70,11 +70,25 @@
             Link="/Content/basics/querying/linq/linq_examples.htm#Sorting" />
           <TocEntry
             Title="IQueryable"
-            Link="/Content/basics/querying/linq/linq_examples.htm#Get" />
+            Link="/Content/basics/querying/linq/linq_examples.htm#Get"></TocEntry>
+        </TocEntry>
+        <TocEntry
+          Title="LINQ Performance Characteristics"
+          Link="/Content/basics/querying/linq/linq_performance_characteristics.htm">
+          <TocEntry
+            Title="Good Performance Characteristics"
+            Link="/Content/basics/querying/linq/linq_performance_characteristics.htm#GoodPerf"></TocEntry>
+          <TocEntry
+            Title="Bad Performance Characteristics"
+            Link="/Content/basics/querying/linq/linq_performance_characteristics.htm#BadPerf"></TocEntry>
+          <TocEntry
+            Title="Detect Slow Queries"
+            Link="/Content/basics/querying/linq/linq_performance_characteristics.htm#Detect" />
         </TocEntry>
         <TocEntry
           Title="LINQ Optimization"
-          Link="/Content/basics/querying/linq/optimization.htm" />
+          Link="/Content/basics/querying/linq/optimization.htm"
+          ComputeToc="false"></TocEntry>
         <TocEntry
           Title="LINQ For Compact Framework"
           Link="/Content/basics/querying/linq/linq_for_compact_framework.htm" />
@@ -112,6 +126,25 @@
         <TocEntry
           Title="Native Query Sorting"
           Link="/Content/basics/querying/native_queries/native_query_sorting.htm" />
+        <TocEntry
+          Title="NQ Performance Characteristics"
+          Link="/Content/basics/querying/native_queries/nq_performance_characteristics.htm"
+          conditions="Primary.Java"
+          VolumeNumberReset="same"
+          SectionNumberReset="continue"
+          ChapterNumberReset="continue"
+          ComputeToc="false"
+          ReplaceMergeNode="false">
+          <TocEntry
+            Title="Good Performance Characteristics"
+            Link="/Content/basics/querying/native_queries/nq_performance_characteristics.htm#GoodPerf" />
+          <TocEntry
+            Title="Bad Performance Characteristics"
+            Link="/Content/basics/querying/native_queries/nq_performance_characteristics.htm#BadPerf" />
+          <TocEntry
+            Title="Detect Slow Queries"
+            Link="/Content/basics/querying/native_queries/nq_performance_characteristics.htm#Detect" />
+        </TocEntry>
         <TocEntry
           Title="Native Query Optimization"
           Link="/Content/basics/querying/native_queries/native_query_optimization.htm">
@@ -230,6 +263,19 @@
           <TocEntry
             Title="Sorting With A Comperator"
             Link="/Content/basics/querying/soda/soda_sorting.htm#CostumSorting" />
+        </TocEntry>
+        <TocEntry
+          Title="SODA Performance Characteristics"
+          Link="/Content/basics/querying/soda/soda_performance_characteristics.htm">
+          <TocEntry
+            Title="Good Performance"
+            Link="/Content/basics/querying/soda/soda_performance_characteristics.htm#GoodPerf" />
+          <TocEntry
+            Title="Bad Performance"
+            Link="/Content/basics/querying/soda/soda_performance_characteristics.htm#BadPerf" />
+          <TocEntry
+            Title="Detect Slow Queries"
+            Link="/Content/basics/querying/soda/soda_performance_characteristics.htm#DetectSlowQueries" />
         </TocEntry>
         <TocEntry
           Title="SODA Processing"

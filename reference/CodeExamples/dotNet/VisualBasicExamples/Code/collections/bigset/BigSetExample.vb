@@ -80,7 +80,7 @@ Namespace Db4oDoc.Code.Collections.BigSet
             Dim persons As IList(Of Person) = container.Query(Of Person)()
             Dim personCount As Integer = persons.Count
             For i As Integer = 0 To 9
-                Dim aPerson As Person = persons(random.[Next](personCount))
+                Dim aPerson As Person = persons(random.Next(personCount))
                 PrintCitizenStatus(city, aPerson)
             Next
         End Sub

@@ -10,7 +10,7 @@ namespace Db4oDoc.Code.ClientServer.Pooling
     private readonly ClientConnectionFactory connectionFactory;
     private readonly Queue<IObjectContainer> availableClients = new Queue<IObjectContainer>();
     private readonly IDictionary<IObjectContainer, IObjectContainer> leasedClients = new Dictionary<IObjectContainer, IObjectContainer>();
-    private readonly Object sync = new Object();
+    private readonly object sync = new object();
 
     public ConnectionPool(ClientConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;

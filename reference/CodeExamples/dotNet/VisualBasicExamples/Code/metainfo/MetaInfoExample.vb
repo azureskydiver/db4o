@@ -45,7 +45,7 @@ Namespace Db4oDoc.Code.MetaInfo
 
                 Dim persons As IList(Of Person) = container.Query(Of Person)()
                 For Each person As Person In persons
-                    Dim name As String = DirectCast(metaNameField.Get(person), [String])
+                    Dim name As String = DirectCast(metaNameField.Get(person), String)
                     Console.WriteLine("Name is " & name)
                     ' #end example
                 Next

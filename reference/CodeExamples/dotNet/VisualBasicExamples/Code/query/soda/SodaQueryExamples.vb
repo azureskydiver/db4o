@@ -99,7 +99,7 @@ Namespace Db4oDoc.Code.Query.Soda
             ' #example: Logical combination of constrains
             Dim query As IQuery = container.Query()
             query.Constrain(GetType(Pilot))
-            query.Descend("age").Constrain(42).Greater().[Or](query.Descend("age").Constrain(30).Smaller())
+            query.Descend("age").Constrain(42).Greater().Or(query.Descend("age").Constrain(30).Smaller())
 
             Dim result As IObjectSet = query.Execute()
             ' #end example
@@ -115,7 +115,7 @@ Namespace Db4oDoc.Code.Query.Soda
             ' Or like, which is like .contains(), but case insensitive
             ' The .endsWith and .startWith constrains are also there,
             ' the true for case-sensitive, false for case-insensitive
-            query.Descend("name").Constrain("oh").Contains().[Or](query.Descend("name").Constrain("AnN").[Like]()).[Or](query.Descend("name").Constrain("NY").EndsWith(False))
+            query.Descend("name").Constrain("oh").Contains().Or(query.Descend("name").Constrain("AnN").Like()).Or(query.Descend("name").Constrain("NY").EndsWith(False))
 
             Dim result As IObjectSet = query.Execute()
             ' #end example
@@ -204,7 +204,7 @@ Namespace Db4oDoc.Code.Query.Soda
             ' #example: Pure field constrains
             Dim query As IQuery = container.Query()
             ' You can simple filter objects which have a certain field
-            query.Descend("name").Constrain(Nothing).[Not]()
+            query.Descend("name").Constrain(Nothing).Not()
 
             Dim result As IObjectSet = query.Execute()
             ' #end example
@@ -218,7 +218,7 @@ Namespace Db4oDoc.Code.Query.Soda
             query.Constrain(GetType(Pilot))
             ' using not existing fields doesn't throw an exception
             ' but rather exclude all object which don't use this field
-            query.Descend("notExisting").Constrain(Nothing).[Not]()
+            query.Descend("notExisting").Constrain(Nothing).Not()
 
             Dim result As IObjectSet = query.Execute()
             ' #end example

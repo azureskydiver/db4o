@@ -9,7 +9,7 @@ namespace Db4oDoc.Code.TA.Collections
 {
     public class CollectionsExample
     {
-        private const String DatabaseFileName = "database.db4o";
+        private const string DatabaseFileName = "database.db4o";
 
         public static void Main(string[] args)
         {
@@ -98,7 +98,7 @@ namespace Db4oDoc.Code.TA.Collections
             }
         }
 
-        public String toString()
+        public override string ToString()
         {
             return Name;
         }

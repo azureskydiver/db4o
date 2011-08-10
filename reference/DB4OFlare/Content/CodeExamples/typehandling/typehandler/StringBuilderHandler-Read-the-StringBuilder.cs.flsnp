@@ -2,7 +2,7 @@
 <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="157" MadCap:lastWidth="1148">
     <body>
 	<div class="codesnippet" MadCap:conditions="Primary.c#">
-        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> Object Read(IReadContext readContext)
+        <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">public</span> <span style="color:Blue;">object</span> Read(IReadContext readContext)
     {
         <span style="color:Blue;">int</span> length = readContext.ReadInt();
         <span style="color:Blue;">byte</span>[] data = <span style="color:Blue;">new</span> <span style="color:Blue;">byte</span>[length];

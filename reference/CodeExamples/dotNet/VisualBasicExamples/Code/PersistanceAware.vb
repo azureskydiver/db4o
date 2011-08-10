@@ -1,5 +1,5 @@
 Namespace Db4oDoc.Code
-    <AttributeUsage(AttributeTargets.[Class])> _
+    <AttributeUsage(AttributeTargets.Class)> _
     Public Class PersistanceAwareAttribute
         Inherits Attribute
 

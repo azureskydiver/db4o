@@ -28,8 +28,8 @@ Namespace Db4oDoc.Code.Tuning.Monitoring
 
         Private Shared Sub DeleteData(ByVal container As IObjectContainer, ByVal rnd As Random)
             Dim data As IList(Of DataObject) = container.Query(Of DataObject)()
-            For i As Integer = 0 To rnd.[Next](4096) - 1
-                Dim obj As DataObject = data(rnd.[Next](data.Count))
+            For i As Integer = 0 To rnd.Next(4096) - 1
+                Dim obj As DataObject = data(rnd.Next(data.Count))
                 If obj IsNot Nothing Then
                     container.Delete(obj)
                 End If
@@ -37,7 +37,7 @@ Namespace Db4oDoc.Code.Tuning.Monitoring
         End Sub
 
         Private Shared Sub StoreData(ByVal container As IObjectContainer, ByVal rnd As Random)
-            For i As Integer = 0 To rnd.[Next](4096) - 1
+            For i As Integer = 0 To rnd.Next(4096) - 1
                 container.Store(New DataObject(rnd))
             Next
         End Sub

@@ -11,7 +11,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 
         Public Function IdForObject(ByVal obj As Object, _
                                     ByVal container As IObjectContainer) As Guid _
-                                    Implements IIdExample(Of System.Guid).IdForObject
+                                    Implements IIdExample(Of Guid).IdForObject
 
             ' #example: get the uuid
             Dim uuidHolder As IDHolder = DirectCast(obj, IDHolder)
@@ -31,7 +31,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
         End Function
 
         Public Sub Configure(ByVal configuration As IEmbeddedConfiguration) _
-                Implements IIdExample(Of System.Guid).Configure
+                Implements IIdExample(Of Guid).Configure
 
             ' #example: index the uuid-field
             configuration.Common.ObjectClass(GetType(IDHolder)).ObjectField("guid").Indexed(True)
@@ -39,7 +39,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
         End Sub
 
         Public Sub RegisterEventOnContainer(ByVal container As IObjectContainer) _
-                Implements IIdExample(Of System.Guid).RegisterEventOnContainer
+                Implements IIdExample(Of Guid).RegisterEventOnContainer
 
             ' no events required for internal ids
         End Sub

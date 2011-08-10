@@ -2,6 +2,7 @@ Imports System
 Imports System.Collections.Generic
 Imports System.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Code.DisconnectedObj.ObjectIdentity
     Public Class ObjectIdentityExamples
@@ -64,7 +65,9 @@ Namespace Db4oDoc.Code.DisconnectedObj.ObjectIdentity
         End Sub
 
         Private Shared Function QueryByName(ByVal container As IObjectContainer, ByVal name As String) As Pilot
-            Return container.Query(Function(p As Pilot) p.Name.Equals(name))(0)
+            Return (From p As Pilot In container _
+                    Where p.Name.Equals(name) _
+                    Select p).First()
         End Function
 
         Private Shared Sub StoreJoe()

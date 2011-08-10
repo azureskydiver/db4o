@@ -17,7 +17,7 @@ namespace Db4oDoc.Code.DisconnectedObj.ObjectIdentity
             set { name = value; }
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return name;
         }

@@ -1,10 +1,12 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.Events;
 using Db4objects.Db4o.Internal;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.Callbacks.EventRegistry
 {
@@ -149,7 +151,9 @@ namespace Db4oDoc.Code.Callbacks.EventRegistry
 
         private static void RunOperations(IObjectContainer container)
         {
-            Person joe = container.Query(delegate(Person p) { return p.Name.Equals("Joe"); })[0];
+            var joe = (from Person p in container
+                             where p.Name.Equals("Joe")
+                             select p).First();
             joe.Name = "Joe Senior";
             container.Store(joe);
             container.Store(new Person("Joe Junior"));

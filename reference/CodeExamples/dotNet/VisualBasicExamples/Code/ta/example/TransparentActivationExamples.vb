@@ -3,6 +3,7 @@ Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.TA
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Ta.Example
     Public Class TransparentActivationExamples
@@ -84,7 +85,9 @@ Namespace Db4oDoc.Ta.Example
         End Sub
 
         Private Shared Function QueryByName(ByVal container As IObjectContainer, ByVal name As String) As Person
-            Return container.Query(Function(p As Person) p.Name.Equals(name))(0)
+            Return (From p As Person In container _
+                Where p.Name.Equals(name) _
+                Select p).First()
         End Function
 
         Private Shared Function OpenDatabaseTP() As IObjectContainer

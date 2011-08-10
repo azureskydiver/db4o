@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="2944" MadCap:lastWidth="490">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3141" MadCap:lastWidth="493">
     <head>
     </head>
     <body>
@@ -17,5 +17,9 @@
         <p>However remember that activation is there to improve the performance and save memory. If you set the activation depth to high it will hurt the performance.</p>
         <h2>Transparent Activation</h2>
         <p>If you have a very complex model or don't want to deal with all the activation hassle then transparent activation is the best option. Transparent activation will manage the activation for you. <MadCap:xref href="transparent_activation_framework.htm" target="" title="" alt="">See "Transparent Activation Framework"</MadCap:xref></p>
+        <h2>
+            <MadCap:keyword term="Activation::Deactivate" />Deactivation</h2>
+        <p>It's also possible to deactivate an object. When you deactivate an object db4o sets all its fields back to their default value and considers it as deactivated. Deactivation is useful in rare cases where you want to return to the inactivated state for some reason.</p>
+        <MadCap:snippetBlock src="../../CodeExamples/pitfalls/activation/ActivationDepthPitfall-Deactivate-an-object.all.flsnp" />
     </body>
 </html>

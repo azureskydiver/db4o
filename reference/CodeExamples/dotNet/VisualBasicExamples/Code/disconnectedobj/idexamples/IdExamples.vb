@@ -3,6 +3,7 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Linq
 
 Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
     Public Module IdExamples
@@ -38,7 +39,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 
 
         Public Sub Run() Implements IRunnable.Run
-            Console.WriteLine("Running: " & toRun.[GetType]().Name)
+            Console.WriteLine("Running: " & toRun.GetType().Name)
             CleanUp()
             StoreJoe()
 
@@ -61,7 +62,7 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
             End Using
         End Sub
 
-        Private Shared Sub AssertEquals(ByVal expected As [Object], ByVal actual As [Object])
+        Private Shared Sub AssertEquals(ByVal expected As Object, ByVal actual As Object)
             If Not expected.Equals(actual) Then
                 Throw New InvalidOperationException(("Expected to be " & expected & " but is ") + actual)
             End If
@@ -99,7 +100,9 @@ Namespace Db4oDoc.Code.DisconnectedObj.IdExamples
 
 
         Private Shared Function QueryByName(ByVal container As IObjectContainer, ByVal name As String) As Pilot
-            Return container.Query(Function(p As Pilot) p.Name.Equals(name))(0)
+            Return (From p As Pilot In container _
+                Where p.Name.Equals(name) _
+                Select p).First()
         End Function
 
         Private Sub StoreJoe()

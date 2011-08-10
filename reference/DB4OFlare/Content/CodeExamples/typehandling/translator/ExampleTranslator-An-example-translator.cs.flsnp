@@ -5,14 +5,14 @@
         <pre class="prettyprint" xml:space="preserve"><span style="color:Blue;">internal</span> <span style="color:Blue;">class</span> ExampleTranslator : IObjectConstructor
 {
     <span style="color:Green;">// This is called to store the object</span>
-    <span style="color:Blue;">public</span> Object OnStore(IObjectContainer objectContainer, Object objToStore)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">object</span> OnStore(IObjectContainer objectContainer, <span style="color:Blue;">object</span> objToStore)
     {
         NonStorableType notStorable = (NonStorableType) objToStore;
         <span style="color:Blue;">return</span> notStorable.Data;
     }
 
     <span style="color:Green;">// This is called when the object is activated</span>
-    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> OnActivate(IObjectContainer objectContainer, Object targetObject, Object storedObject)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> OnActivate(IObjectContainer objectContainer, <span style="color:Blue;">object</span> targetObject, <span style="color:Blue;">object</span> storedObject)
     {
         NonStorableType notStorable = (NonStorableType) targetObject;
         notStorable.Data = (String) storedObject;
@@ -25,7 +25,7 @@
     }
 
     <span style="color:Green;">// This method is called when a new instance is needed</span>
-    <span style="color:Blue;">public</span> Object OnInstantiate(IObjectContainer objectContainer, Object storedObject)
+    <span style="color:Blue;">public</span> <span style="color:Blue;">object</span> OnInstantiate(IObjectContainer objectContainer, <span style="color:Blue;">object</span> storedObject)
     {
         <span style="color:Blue;">return</span> <span style="color:Blue;">new</span> NonStorableType(<span style="color:#A31515;">&quot;&quot;</span>);
     }

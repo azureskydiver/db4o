@@ -45,7 +45,7 @@ namespace Db4oDoc.Code.TypeHandling.TypeHandler
         // #end example
 
         // #example: Read the StringBuilder
-        public Object Read(IReadContext readContext)
+        public object Read(IReadContext readContext)
         {
             int length = readContext.ReadInt();
             byte[] data = new byte[length];

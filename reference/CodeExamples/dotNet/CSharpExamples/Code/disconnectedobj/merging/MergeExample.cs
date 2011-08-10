@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Linq;
 
 namespace Db4oDoc.Code.DisconnectedObj.Merging
 {
@@ -93,11 +95,14 @@ namespace Db4oDoc.Code.DisconnectedObj.Merging
 
         private static Car GetCarByName(string carName)
         {
-             using(IObjectContainer container = OpenDatabase()){
-             Car result = container.Query(delegate(Car car) { return car.Name.Equals(carName); })[0];
+            using (IObjectContainer container = OpenDatabase())
+            {
+                var result = (from Car car in container
+                              where car.Name.Equals(carName)
+                              select car).First();
 
-             return result;
-             }
+                return result;
+            }
         }
 
 

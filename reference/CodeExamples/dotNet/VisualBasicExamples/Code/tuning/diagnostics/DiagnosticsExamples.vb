@@ -59,7 +59,7 @@ Namespace Db4oDoc.Code.Tuning.Diagnostics
             Public Sub OnDiagnostic(ByVal diagnostic As IDiagnostic) _
                 Implements IDiagnosticListener.OnDiagnostic
 
-                Dim type As Type = diagnostic.[GetType]()
+                Dim type As Type = diagnostic.GetType()
                 If filterFor.Contains(type) Then
                     target.OnDiagnostic(diagnostic)
                 End If

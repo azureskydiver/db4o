@@ -18,7 +18,7 @@ IStoredField ageField = metaInfoForPerson.StoredField(<span style="color:#A31515
 <span style="color:Blue;">bool</span> isAgeFieldIndexed = ageField.HasIndex();
 
 <span style="color:Green;">// Get the type of the field</span>
-String fieldType = ageField.GetStoredType().GetName();</pre>
+<span style="color:Blue;">string</span> fieldType = ageField.GetStoredType().GetName();</pre>
 		<div class="codesnippet-meta">
 			MetaInfoExample.cs: Accessing stored fields
 			<div class="codedownload">

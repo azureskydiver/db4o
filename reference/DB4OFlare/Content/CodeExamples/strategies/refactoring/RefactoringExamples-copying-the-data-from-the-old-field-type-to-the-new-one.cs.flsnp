@@ -15,7 +15,7 @@
         <span style="color:Blue;">if</span>(<span style="color:Blue;">null</span>!=oldField)
         {
             <span style="color:Green;">// Access the old data and copy it to the new field!</span>
-            Object oldValue = oldField.Get(person);
+            <span style="color:Blue;">object</span> oldValue = oldField.Get(person);
             <span style="color:Blue;">if</span> (<span style="color:Blue;">null</span> != oldValue)
             {
                 person.id = <span style="color:Blue;">new</span> Identity((<span style="color:Blue;">int</span>)oldValue);

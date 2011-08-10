@@ -23,6 +23,7 @@ public class ActivationDepthPitfall {
 
         fixItWithExplicitlyActivating();
         fixItWithHigherActivationDepth();
+        deactivate();
     }
 
     private static void fixItWithExplicitlyActivating() {
@@ -37,6 +38,24 @@ public class ActivationDepthPitfall {
             System.out.println(julia.getName());
             String joannaName = julia.mother().getName();
             System.out.println(joannaName);
+            // #end example
+        } finally {
+            container.close();
+        }
+    }
+    private static void deactivate() {
+        ObjectContainer container = Db4oEmbedded.openFile("database.db4o");
+        try {
+            final Person jodie = queryForJodie(container);
+
+            container.activate(jodie,5);
+
+            // #example: Deactivate an object
+            System.out.println(jodie.getName());
+            container.deactivate(jodie,5);
+            // Now all fields will be null or 0
+            // The same applies for all references objects up to a depth of 5
+            System.out.println(jodie.getName());
             // #end example
         } finally {
             container.close();

@@ -9,7 +9,7 @@ Namespace Db4oDoc.Code.Pitfalls.UpdateDepth
     Public Class UpdateDepthPitfall
         Public Const DatabaseFile As String = "database.db4o"
 
-        Public Shared Sub Main(ByVal args As [String]())
+        Public Shared Sub Main(ByVal args As String())
             CleanUpAndPrepare()
 
             ToLowUpdateDepthOnObject()
@@ -159,7 +159,7 @@ Namespace Db4oDoc.Code.Pitfalls.UpdateDepth
         Private m_driver As Person
         Private m_carName As String
 
-        Friend Sub New(ByVal driver As Person, ByVal carName As [String])
+        Friend Sub New(ByVal driver As Person, ByVal carName As String)
             Me.m_driver = driver
             Me.m_carName = carName
         End Sub
