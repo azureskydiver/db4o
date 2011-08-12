@@ -8,6 +8,9 @@ public class UnqualifiedNamed {
 	
     private String data;
 
+    public UnqualifiedNamed() {
+    }
+    
     public UnqualifiedNamed(String data) {
         this.data = data;
     }
