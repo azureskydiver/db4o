@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4918" MadCap:lastWidth="420">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="4202" MadCap:lastWidth="455">
     <head>
     </head>
     <body>
@@ -29,6 +29,7 @@
         <h2><a name="DynamicTypedNature"></a>Dynamically Typed</h2>
         <p>SODA is a dynamically query language. By default SODA acts like a filter on all stored objects. You just add constrains which filters the objects to the desired output. </p>
         <p>An example for this behavior: You just add an field-constraint without any <a href="soda_example_catelog.htm#TypeConstraint">type-constrain</a> on the object. This will return all objects which have such a field and match the constrain.</p>
+        <p>Note that such queries do not utilize any index  and therefore show bad performance.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Pure-field-constrains.all.flsnp" />
         <p>This also means that you can query for not existing fields. SODA will not complain if a field doesn't exist. Instead it won't return any object, because no object could satisfy the constrain.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-Using-not-existing-fields-excludes-objects.all.flsnp" />
