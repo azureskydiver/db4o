@@ -11,9 +11,10 @@ namespace Db4objects.Db4o.Tests.Common.Refactor
 		protected override Type[] TestCases()
 		{
 			return new Type[] { typeof(AccessOldFieldVersionsTestCase), typeof(AccessRemovedFieldTestCase
-				), typeof(ClassRenameByConfigTestCase), typeof(ClassRenameByStoredClassTestCase)
-				, typeof(ReAddFieldTestCase), typeof(RefactorFieldToTransientTestCase), typeof(RemoveArrayFieldTestCase
-				), typeof(RemovedClassRefactoringTestSuite) };
+				), typeof(ClassRenameByConfigTestCase), typeof(ClassRenameByConfigExcludingOldClassTestCase
+				), typeof(ClassRenameByStoredClassTestCase), typeof(ReAddFieldTestCase), typeof(
+				RefactorFieldToTransientTestCase), typeof(RemoveArrayFieldTestCase), typeof(RemovedClassRefactoringTestSuite
+				) };
 		}
 	}
 }
