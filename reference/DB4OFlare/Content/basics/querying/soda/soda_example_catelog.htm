@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="5955" MadCap:lastWidth="1134">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="5185" MadCap:lastWidth="936">
     <head>
     </head>
     <body>
@@ -30,6 +30,7 @@
         <p>There are special compare operations for strings. By default strings are compared by equality and the comparison is case sensitive.</p>
         <p>There's the contains-comparison which checks if a field contains a substring. The like-comparison is the case-insensitive version of the contains-comparison.</p>
         <p>Also a start-with- and a ends-with-caparison is available for strings. For this you can specify if the comparison is case sensitive or not.</p>
+        <p>Note that string comparison do not utilize any index in db4o and therefore show bad performance.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/query/soda/SodaQueryExamples-String-comparison.all.flsnp" />
         <h2><a name="CheckForObject"></a>Compare Field With Existing Object</h2>
         <p>When you have a reference type field, you can compare this field with a certain object. It will compare the field and the object by object identity.</p>
