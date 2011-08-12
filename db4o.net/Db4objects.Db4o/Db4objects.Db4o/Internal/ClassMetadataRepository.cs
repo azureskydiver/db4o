@@ -347,8 +347,8 @@ namespace Db4objects.Db4o.Internal
 
 		public ClassMetadata GetClassMetadata(string name)
 		{
-			ClassMetadata classMetadata = (ClassMetadata)_classMetadataByBytes.Remove(GetNameBytes
-				(name));
+			byte[] nameBytes = GetNameBytes(name);
+			ClassMetadata classMetadata = (ClassMetadata)_classMetadataByBytes.Get(nameBytes);
 			if (classMetadata == null)
 			{
 				classMetadata = FindInitializedClassByName(name);
@@ -356,6 +356,7 @@ namespace Db4objects.Db4o.Internal
 			if (classMetadata != null)
 			{
 				classMetadata = ReadClassMetadata(classMetadata, null);
+				_classMetadataByBytes.Remove(nameBytes);
 			}
 			return classMetadata;
 		}

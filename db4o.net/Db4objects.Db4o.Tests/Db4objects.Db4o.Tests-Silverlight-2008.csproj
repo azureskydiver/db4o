@@ -613,6 +613,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\AccessOldFieldVersionsTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\AccessRemovedFieldTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\AllTests.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Refactor\ClassRenameByConfigExcludingOldClassTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\ClassRenameByConfigTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\ClassRenameByStoredClassTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Refactor\ReAddFieldTestCase.cs"/>
@@ -1064,6 +1065,8 @@
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Reflect\Net\UninitializedObjectsWithFinalizerTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\ShutdownMultipleContainer.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Soda\AllTests.cs"/>
+<Compile Include="native\Db4objects.Db4o.Tests\CLI1\Soda\CoerceUnsignedTypesTestSuite.cs"/>
+<Compile Include="native\Db4objects.Db4o.Tests\CLI1\Soda\CoerceUnsignedTypesTestUnit.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Soda\STValueTypeOrderByTestSuite.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Soda\STValueTypesOrderByTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Soda\ValueTypeFixture.cs"/>
