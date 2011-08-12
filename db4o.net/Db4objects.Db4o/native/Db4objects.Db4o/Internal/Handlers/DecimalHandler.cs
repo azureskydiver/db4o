@@ -8,29 +8,40 @@ namespace Db4objects.Db4o.Internal.Handlers
 {
 	public class DecimalHandler : IntegralTypeHandler
 	{
-        public override Object DefaultValue(){
+        public override Object DefaultValue()
+		{
             return (decimal)0;
         }
+
+		public override object Coerce(Db4o.Reflect.IReflectClass claxx, object obj)
+		{
+			return Coercion4.ToDecimal(obj);
+		}
       
-        public override Object Read(byte[] bytes, int offset){
-            int[] ints = new int[4];
+        public override Object Read(byte[] bytes, int offset)
+		{
+            var ints = new int[4];
             offset += 3;
-            for(int i = 0; i < 4; i ++){
+            for(int i = 0; i < 4; i ++)
+			{
                 ints[i] = (bytes[offset] & 255 | (bytes[--offset] & 255) << 8 | (bytes[--offset] & 255) << 16 | bytes[--offset] << 24);
                 offset +=7;
             }
             return new Decimal(ints);
         }
 
-        public override int TypeID(){
+        public override int TypeID()
+		{
             return 21;
         }
       
-        public override void Write(Object obj, byte[] bytes, int offset){
+        public override void Write(Object obj, byte[] bytes, int offset)
+		{
             decimal dec = (decimal)obj;
             int[] ints = Decimal.GetBits(dec);
             offset += 4;
-            for(int i = 0; i < 4; i ++){
+            for(int i = 0; i < 4; i ++)
+			{
                 bytes[--offset] = (byte)ints[i];
                 bytes[--offset] = (byte)(ints[i] >>= 8);
                 bytes[--offset] = (byte)(ints[i] >>= 8);
@@ -38,6 +49,7 @@ namespace Db4objects.Db4o.Internal.Handlers
                 offset += 8;
             }
         }
+
         public override object Read(IReadContext context)
         {
             byte[] bytes = new byte[16];

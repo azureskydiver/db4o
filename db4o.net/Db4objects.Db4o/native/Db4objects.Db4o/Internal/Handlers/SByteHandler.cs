@@ -14,19 +14,23 @@ namespace Db4objects.Db4o.Internal.Handlers
 			return Coercion4.ToSByte(obj);
 		}
 	
-        public override Object DefaultValue(){
+        public override Object DefaultValue()
+		{
             return (sbyte)0;
         }
       
-        public override Object Read(byte[] bytes, int offset){
+        public override Object Read(byte[] bytes, int offset)
+		{
             return (sbyte)  ((bytes[offset]) - 128) ;
         }
 
-        public override int TypeID(){
+        public override int TypeID()
+		{
             return 20;
         }
       
-        public override void Write(Object obj, byte[] bytes, int offset){
+        public override void Write(Object obj, byte[] bytes, int offset)
+		{
             bytes[offset] = (byte)(((sbyte)obj) + 128);
         }
 

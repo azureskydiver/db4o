@@ -23,17 +23,25 @@ namespace Db4objects.Db4o.Tests.CLI1.Soda
 		}
 	}
 
-	class TestVariables
+	public class TestVariables
 	{
 		public static readonly FixtureVariable Types = new FixtureVariable("Types");
 		
 		public static readonly IFixtureProvider FieldTypeFixtureProvider = new SimpleFixtureProvider(
 				Types,
-				new object[]
+				new[]
 				{
+					new TypeSpec(typeof(ushort), ushort.MinValue, ushort.MaxValue),
+					new TypeSpec(typeof(byte), byte.MinValue, byte.MaxValue),
 					new TypeSpec(typeof(uint), uint.MinValue, uint.MaxValue),
-					//new TypeSpec(typeof(ulong), ulong.MinValue, ulong.MaxValue),
-					//new TypeSpec(typeof(ushort), ushort.MinValue, ushort.MaxValue)
+					new TypeSpec(typeof(ulong), ulong.MinValue, ulong.MaxValue),
+					
+					new TypeSpec(typeof(sbyte), sbyte.MinValue, sbyte.MaxValue, sbyte.MinValue - 1),
+					new TypeSpec(typeof(short), short.MinValue, short.MaxValue, short.MinValue - 1),
+					new TypeSpec(typeof(int), int.MinValue, int.MaxValue, (long) int.MinValue - 1),
+					new TypeSpec(typeof(long), long.MinValue, long.MaxValue, (decimal) long.MinValue - 1),
+					
+					new TypeSpec(typeof(decimal), decimal.MinValue, decimal.MaxValue, -42)
 				});
 
 		public static TypeSpec Current
@@ -45,23 +53,33 @@ namespace Db4objects.Db4o.Tests.CLI1.Soda
 		}
 	}
 
-	internal class TypeSpec
+	public class TypeSpec : ILabeled
 	{
 		public readonly Type Type;
 		public readonly object MinValue;
 		public readonly object MaxValue;
-		public readonly object InvalidValue = -42;
+		public object InvalidValue = -42;
 
-		public TypeSpec(Type type, object minValue, object maxValue)
+		public TypeSpec(Type type, object minValue, object maxValue, object invalidValue)
 		{
 			Type = type;
 			MinValue = minValue;
 			MaxValue = maxValue;
+			InvalidValue = invalidValue;
+		}
+
+		public TypeSpec(Type type, object minValue, object maxValue) : this(type, minValue, maxValue, -42)
+		{
 		}
 
 		public string TypeName
 		{
 			get { return Type.Name; }
+		}
+
+		public bool SupportsRangeErrorTests
+		{
+			get { return Type != typeof(decimal); }
 		}
 
 		public object NewMinValue()
@@ -74,10 +92,10 @@ namespace Db4objects.Db4o.Tests.CLI1.Soda
 			return NewInstance(MaxValue);
 		}
 		
-		private object NewInstance(object value)
+		public object NewInstance(object value)
 		{
 			var genericItem = typeof(UnsignedItem<>).MakeGenericType(Type);
-			var ctor = genericItem.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { Type } , null);
+			var ctor = genericItem.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { Type } , null);
 			return ctor.Invoke(new[]{ value });
 		}
 
@@ -85,13 +103,22 @@ namespace Db4objects.Db4o.Tests.CLI1.Soda
 		{
 			return "UnsignedItem<" + Type.Name + ">[" + MinValue + ", "  + MaxValue + "]";
 		}
+
+		public string Label()
+		{
+			return Type.Name;
+		}
 	}
 
-	internal class UnsignedItem<T> where T : struct, IComparable<T>
+	public class UnsignedItem<T> where T : struct, IComparable<T>
 	{
+#if SILVERLIGHT
+		public T _value;
+#else
 		private readonly T _value;
+#endif
 
-		internal UnsignedItem(T value)
+		public UnsignedItem(T value)
 		{
 			_value = value;
 		}
