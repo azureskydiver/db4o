@@ -9,7 +9,11 @@ namespace Db4objects.Db4o.Tests.CLI1.Soda
 	{
 		protected override Type[] TestCases()
 		{
-			return new Type[] {typeof(STValueTypeOrderByTestSuite)};
+			return new []
+			       	{
+						typeof(CoerceUnsignedTypesTestSuite),
+			       		typeof(STValueTypeOrderByTestSuite),
+			       	};
 		}
 	}
 }

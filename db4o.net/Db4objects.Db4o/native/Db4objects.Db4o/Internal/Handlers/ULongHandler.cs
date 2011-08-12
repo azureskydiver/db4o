@@ -6,26 +6,33 @@ using Db4objects.Db4o.Marshall;
 
 namespace Db4objects.Db4o.Internal.Handlers
 {
-    public class ULongHandler : IntegralTypeHandler {
+    public class ULongHandler : IntegralTypeHandler 
+	{
 
-        public override Object DefaultValue(){
+        public override Object DefaultValue()
+		{
             return (ulong)0;
         }
       
-        public override void Write(object obj, byte[] bytes, int offset){
+        public override void Write(object obj, byte[] bytes, int offset)
+		{
             ulong ul = (ulong)obj;
-            for (int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++)
+			{
                 bytes[offset++] = (byte)(int)(ul >> (7 - i) * 8);
             }
         }
 
-        public override int TypeID(){
+        public override int TypeID()
+		{
             return 23;
         }
 
-        public override Object Read(byte[] bytes, int offset){
+        public override Object Read(byte[] bytes, int offset)
+		{
             ulong ul = 0;
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++) 
+			{
                 ul = (ul << 8) + (ulong)(bytes[offset++] & 255);
             }
             return ul;
@@ -67,5 +74,10 @@ namespace Db4objects.Db4o.Internal.Handlers
         {
             return new PreparedComparisonFor<ulong>(((ulong)obj));
         }
+
+		public override object Coerce(Db4o.Reflect.IReflectClass claxx, object value)
+		{
+			return Coercion4.ToULong(value);
+		}
     }
 }
