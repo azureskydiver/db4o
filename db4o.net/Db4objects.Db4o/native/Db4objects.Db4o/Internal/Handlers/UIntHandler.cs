@@ -3,6 +3,8 @@
 using System;
 using Db4objects.Db4o.Foundation;
 using Db4objects.Db4o.Marshall;
+using Db4objects.Db4o.Reflect;
+using Db4objects.Db4o.Reflect.Net;
 
 namespace Db4objects.Db4o.Internal.Handlers
 {
@@ -20,6 +22,12 @@ namespace Db4objects.Db4o.Internal.Handlers
         public override int TypeID(){
             return 22;
         }
+
+		public override object Coerce(IReflectClass @class, object value)
+		{
+			var netClass = (NetClass) @class.GetDelegate();
+			return System.Convert.ToUInt32(value);
+		}
       
         public override void Write(Object obj, byte[] bytes, int offset){
             uint ui = (uint)obj;
