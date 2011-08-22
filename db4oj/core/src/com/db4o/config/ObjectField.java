@@ -68,7 +68,7 @@ public interface ObjectField {
      * client and server. <br/><br/>
      * This setting can be applied to an open object container. <br/><br/>
 	 * @param flag whether updates are to be cascaded to the member object.
-	 * @see com.db4o.ObjectContainer#set
+	 * @see com.db4o.ObjectContainer#store(Object)
 	 * @see ObjectClass#cascadeOnUpdate
 	 * @see ObjectClass#updateDepth
 	 * @see com.db4o.ext.ObjectCallbacks Using callbacks

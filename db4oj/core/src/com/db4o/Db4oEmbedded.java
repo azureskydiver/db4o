@@ -35,15 +35,10 @@ public class Db4oEmbedded {
 	 * another {@link ObjectContainer ObjectContainer} against the same file will result in
 	 * a {@link DatabaseFileLockedException DatabaseFileLockedException}.<br><br>
 	 * Database files can only be accessed for read/write access from one process 
-	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
-	 * internal mechanism to lock the database file for other processes. 
-	 * <br><br>
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link newConfiguration}
+	 * at one time.
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link #newConfiguration}
 	 * @param databaseFileName an absolute or relative path to the database file
 	 * @return an open {@link ObjectContainer ObjectContainer}
-	 * @see Configuration#readOnly
-	 * @see Configuration#encrypt
-	 * @see Configuration#password
 	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 * @throws DatabaseFileLockedException the required database file is locked by 
 	 * another process.
