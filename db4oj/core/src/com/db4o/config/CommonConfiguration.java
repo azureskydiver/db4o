@@ -503,9 +503,9 @@ public interface CommonConfiguration {
     /**
      * <p>Sets the max stack depth that will be used for recursive storing and activating an object.
      * <p>The default value is set to {@link Const4#DEFAULT_MAX_STACK_DEPTH}
-     * <p>On Android platform, we recomend setting this to 2.
+     * <p>On Android platform, we recommend setting this to 2.
 
-     * @param depth the desired max stack depth.
+     * @param maxStackDepth the desired max stack depth.
      * 
      * @sharpen.property
      */

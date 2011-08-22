@@ -19,14 +19,13 @@ public interface ObjectClass {
      * attempt, to follow the setting as good as the environment supports.
      * In doing so, it may call implementation-specific features like
      * sun.reflect.ReflectionFactory#newConstructorForSerialization on the
-     * Sun Java 1.4.x/5 VM (not available on other VMs) and 
+     * Oracle JVM (not available on other VMs) and
      * FormatterServices.GetUninitializedObject() on
      * the .NET framework (not available on CompactFramework).<br><br>
      * This setting may also be set globally for all classes in
-     * {@link Configuration#callConstructors(boolean)}.<br><br>
+     * {@link CommonConfiguration#callConstructors(boolean)}.<br><br>
      * In client-server environment this setting should be used on both 
      * client and server. <br><br>
-     * This setting can be applied to an open object container. <br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
 	 * @see Configuration#callConstructors
