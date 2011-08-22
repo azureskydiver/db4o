@@ -155,6 +155,17 @@ Namespace Db4oDoc.Code.Configuration.Common
             container.Close()
         End Sub
 
+        Private Shared Sub MaxStackSize()
+            ' #example: Set the stack size
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.MaxStackDepth = 16
+            ' #end example
+
+            Dim container As IObjectContainer = Db4oEmbedded.OpenFile(configuration, DatabaseFile)
+
+            container.Close()
+        End Sub
+
         Private Shared Sub NameProvider()
             ' #example: set a name-provider
             Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()

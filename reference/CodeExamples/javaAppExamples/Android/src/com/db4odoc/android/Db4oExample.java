@@ -1,21 +1,18 @@
 package com.db4odoc.android;
 
 
-import java.io.File;
-import java.util.Date;
-
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.TextView;
-
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.AndroidSupport;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.query.Predicate;
-import com.db4o.query.Query;
+
+import java.io.File;
+import java.util.Date;
 
 
 public class Db4oExample {
@@ -152,6 +149,7 @@ public class Db4oExample {
 	private static EmbeddedConfiguration configure(){
 		// #example: configure db4o
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().add(new AndroidSupport());
 		configuration.common().objectClass(Car.class).objectField("pilot").indexed(true);
 		configuration.common().objectClass(Pilot.class).objectField("points").indexed(true);
 		// #end example
