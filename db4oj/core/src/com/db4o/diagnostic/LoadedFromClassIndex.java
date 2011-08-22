@@ -24,7 +24,7 @@ public class LoadedFromClassIndex extends DiagnosticBase{
 
     public String solution() {
         return "Consider indexing fields that you query for: "
-            + "configuration.common().objectClass([class]).objectField([fieldName]).indexed(true)" ;
+            + "configuration.common().objectClass("+_className+").objectField([fieldName]).indexed(true)" ;
     }
 
 }
