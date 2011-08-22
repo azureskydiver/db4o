@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3526" MadCap:lastWidth="721" MadCap:conditions="Primary.Java">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="3675" MadCap:lastWidth="721" MadCap:conditions="Primary.Java">
     <head>
     </head>
     <body>
-        <h1>Native Queries Performance Characteristics</h1>
-        <p>This overview shows which query operations perform well or badly on large datasets. It should give an idea which operations can be used on large datasets and which operations can only be applied for small datasets.</p>
-        <p>Native queries are translated to SODA and therefore they share more or less the same <a href="../soda/soda_performance_characteristics.htm">performance characteristics</a>.</p>
+        <h1>
+            <MadCap:keyword term="Native Queries:Performance" />Native Queries Performance Characteristics</h1>
+        <p>This overview shows which query operations perform well or badly on large datasets. It should give you an idea which operations can be used on large datasets and which operations can only be applied to small datasets.</p>
+        <p>Native queries are translated to SODA and therefore they share the same basic <![CDATA[ ]]><a href="../soda/soda_performance_characteristics.htm">performance characteristics</a>.</p>
         <h2><a name="GoodPerf"></a>Good Performance Characteristics</h2>
-        <p>For a good query performance the fields which are used in the query have to be <a href="../../indexing.htm">indexed</a>. Otherwise db4o needs to scan through all objects. With an index these operations should scale logarithmically with the amount of data. The following queries all assume that the fields are indexed.</p>
+        <p>For a good query performance fields which are used in a query have to be <a href="../../indexing.htm">indexed</a>. Otherwise db4o needs to scan through all objects. With an index these operations should scale logarithmically with the amount of data. The following queries all assume that the fields are indexed.</p>
         <h3>Equals Operation on Indexed Field</h3>
         <p>Simple equals operations on indexed fields’ perform very well.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/performance/query/nq/GoodPerformance-Equals-operation.all.flsnp" />

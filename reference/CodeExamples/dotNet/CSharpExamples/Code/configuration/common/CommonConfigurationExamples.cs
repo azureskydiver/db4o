@@ -171,6 +171,18 @@ namespace Db4oDoc.Code.Configuration.Common
             container.Close();
         }
 
+        private static void MaxStackSize()
+        {
+            // #example: Set the stack size
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.MaxStackDepth = 16;
+            // #end example
+
+            IObjectContainer container = Db4oEmbedded.OpenFile(configuration, DatabaseFile);
+
+            container.Close();
+        }
+
         private static void NameProvider()
         {
             // #example: set a name-provider

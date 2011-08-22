@@ -10,13 +10,16 @@ import com.db4o.constraints.UniqueFieldValueConstraintViolationException;
 public class UniqueConstrainExample {
 
     public static void main(String[] args) {
+        uniqueConstrainOnEmbedded();
+    }
 
-        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+    private static void uniqueConstrainOnEmbedded() {
+        EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
         // #example: Add the index the field and then the unique constrain
-        configuration.common().objectClass(UniqueId.class).objectField("id").indexed(true);
-        configuration.common().add(new UniqueFieldValueConstraint(UniqueId.class, "id"));
+        config.common().objectClass(UniqueId.class).objectField("id").indexed(true);
+        config.common().add(new UniqueFieldValueConstraint(UniqueId.class, "id"));
         // #end example
-        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        ObjectContainer container = Db4oEmbedded.openFile(config, "database.db4o");
         try {
             container.store(new UniqueId(44));
             // #example: Violating the constrain throws an exception
@@ -33,13 +36,12 @@ public class UniqueConstrainExample {
         }
     }
 
+
     private static class UniqueId {
         private final int id;
 
         private UniqueId(int id) {
             this.id = id;
         }
-
-
     }
 }

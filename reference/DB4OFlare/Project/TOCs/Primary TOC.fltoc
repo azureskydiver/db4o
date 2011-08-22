@@ -771,6 +771,9 @@
         Title="Message Level"
         Link="/Content/configuration/common/message_level.htm" />
       <TocEntry
+        Title="Max Stack Size"
+        Link="/Content/configuration/common/max_stack_size.htm" />
+      <TocEntry
         Title="Name Provider"
         Link="/Content/configuration/common/name_provider.htm" />
       <TocEntry

@@ -7,7 +7,9 @@
     @Override
     <span style="color:Blue;">public</span> <span style="color:Blue;">void</span> onCreate(Bundle savedInstanceState) {
 		String filePath = <span style="color:Blue;">this</span>.getFilesDir() + <span style="color:#A31515;">&quot;/android.db4o&quot;</span>;
-		ObjectContainer db = Db4oEmbedded.openFile(filePath);
+        <span style="color:Blue;">final</span> EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+        config.common().add(<span style="color:Blue;">new</span> AndroidSupport());
+        ObjectContainer db = Db4oEmbedded.openFile(config,filePath);
 		<span style="color:Green;">// do your stuff</span>
 		db.close();
     	

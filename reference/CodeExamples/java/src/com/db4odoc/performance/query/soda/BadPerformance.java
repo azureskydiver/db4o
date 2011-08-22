@@ -10,10 +10,7 @@ import com.db4o.query.Candidate;
 import com.db4o.query.Evaluation;
 import com.db4o.query.Query;
 import com.db4odoc.javalang.NoArgAction;
-import com.db4odoc.performance.CollectionHolder;
-import com.db4odoc.performance.GenericItemHolder;
-import com.db4odoc.performance.Item;
-import com.db4odoc.performance.StopWatch;
+import com.db4odoc.performance.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -24,7 +21,7 @@ import java.util.Random;
 
 public class BadPerformance {
     private static final String DATABASE_FILE = "good-performance.db4o";
-    private static final int NUMBER_OF_ITEMS = 50000;
+    private static final int NUMBER_OF_ITEMS = 200000;
     private ObjectContainer container;
     private Random rnd = new Random();
 

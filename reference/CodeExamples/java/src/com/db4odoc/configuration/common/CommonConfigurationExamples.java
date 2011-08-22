@@ -196,6 +196,17 @@ public class CommonConfigurationExamples {
         container.close();
     }
 
+    private static void maxStackSize() {
+        // #example: Set the stack size
+        EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+        configuration.common().maxStackDepth(16);
+        // #end example
+
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
+        
+        container.close();
+    }
+
     private static void nameProvider() {
         // #example: set a name-provider
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
@@ -203,7 +214,7 @@ public class CommonConfigurationExamples {
         // #end example
 
         ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
-        
+
         container.close();
     }
 
