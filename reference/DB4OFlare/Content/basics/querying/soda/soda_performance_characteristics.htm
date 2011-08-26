@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="7324" MadCap:lastWidth="595">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1384" MadCap:lastWidth="572">
     <head>
     </head>
     <body>
@@ -39,7 +39,7 @@
         <p>All string operations beside the simple equals operation cannot use indexes at the moment. Therefore all string operations like contains, like, starts with etc. run slowly.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/performance/query/soda/BadPerformance-Contains-is-slow.all.flsnp" />
         <MadCap:snippetBlock src="../../../CodeExamples/performance/query/soda/BadPerformance-Like-is-slow.all.flsnp" />
-        <h3>Queries on Collections / Arrays</h3>
+        <h3><a name="CollectionContains"></a>Queries on Collections / Arrays</h3>
         <p>Any query which does contains operations on collections/arrays or navigates across a collection/array field will run slowly. The reason is that db4o cannot index collections.</p>
         <MadCap:snippetBlock src="../../../CodeExamples/performance/query/soda/BadPerformance-Contains-on-collection.all.flsnp" />
         <MadCap:snippetBlock src="../../../CodeExamples/performance/query/soda/BadPerformance-Navigate-into-collection.all.flsnp" />

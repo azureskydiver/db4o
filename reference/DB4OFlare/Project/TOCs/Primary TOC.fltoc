@@ -1061,6 +1061,25 @@
     Title="Best Practices"
     Link="/Content/best_practises.htm">
     <TocEntry
+      Title="Managing Relations"
+      Link="/Content/best_practises/managing_relations.htm">
+      <TocEntry
+        Title="1-N Relation: Navigating from 1 to N"
+        Link="/Content/best_practises/managing_relations.htm#1toN-nav" />
+      <TocEntry
+        Title="1-N Relation: Navigating from N to 1"
+        Link="/Content/best_practises/managing_relations.htm#Nto1-nav" />
+      <TocEntry
+        Title="1-N Relation: Bidirectional"
+        Link="/Content/best_practises/managing_relations.htm#1toN-bidirect" />
+      <TocEntry
+        Title="N-N Relations: One Way Navigation"
+        Link="/Content/best_practises/managing_relations.htm#NtoN-nav" />
+      <TocEntry
+        Title="N-N Relations: Bidirectional Navigation"
+        Link="/Content/best_practises/managing_relations.htm#NtoN-bidirect" />
+    </TocEntry>
+    <TocEntry
       Title="Paging"
       Link="/Content/best_practises/paging.htm" />
     <TocEntry
