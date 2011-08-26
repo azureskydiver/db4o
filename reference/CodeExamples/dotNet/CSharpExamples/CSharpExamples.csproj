@@ -199,6 +199,15 @@
     <Compile Include="Code\pitfalls\updatedepth\UpdateDepthPitfall.cs" />
     <Compile Include="Code\platform\autoproperties\AutoProperties.cs" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.cs" />
+    <Compile Include="Code\practises\relations\Club.cs" />
+    <Compile Include="Code\practises\relations\Country.cs" />
+    <Compile Include="Code\practises\relations\Dog.cs" />
+    <Compile Include="Code\practises\relations\Item.cs" />
+    <Compile Include="Code\practises\relations\Person.cs" />
+    <Compile Include="Code\practises\relations\RelationManagementExamples.cs" />
+    <Compile Include="Code\practises\relations\ShoppingCard.cs" />
+    <Compile Include="Code\practises\relations\TestClubPersonRelationship.cs" />
+    <Compile Include="Code\practises\relations\TestDogPersonRelation.cs" />
     <Compile Include="Code\query\linq\LinqExamples.cs" />
     <Compile Include="Code\query\nq\DataModel.cs" />
     <Compile Include="Code\query\nq\NativeQueriesSorting.cs" />

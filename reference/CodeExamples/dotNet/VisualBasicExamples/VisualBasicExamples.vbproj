@@ -161,6 +161,15 @@
     <Compile Include="Code\performance\StopWatchUtil.vb" />
     <Compile Include="Code\PersistanceAware.vb" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.vb" />
+    <Compile Include="Code\practises\relations\Club.vb" />
+    <Compile Include="Code\practises\relations\Country.vb" />
+    <Compile Include="Code\practises\relations\Dog.vb" />
+    <Compile Include="Code\practises\relations\Item.vb" />
+    <Compile Include="Code\practises\relations\Person.vb" />
+    <Compile Include="Code\practises\relations\RelationManagementExamples.vb" />
+    <Compile Include="Code\practises\relations\ShoppingCard.vb" />
+    <Compile Include="Code\practises\relations\TestClubPersonRelationship.vb" />
+    <Compile Include="Code\practises\relations\TestDogPersonRelation.vb" />
     <Compile Include="Code\reflection\ReflectorExamples.vb" />
     <Compile Include="Code\systeminfo\SystemInfoExamples.vb" />
     <Compile Include="Code\ta\collectionEnhanceIssues\EnhancementLimitations.vb" />
