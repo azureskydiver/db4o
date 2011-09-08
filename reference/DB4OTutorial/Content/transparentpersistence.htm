@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="7946" MadCap:lastWidth="903">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="7998" MadCap:lastWidth="903">
     <head>
     </head>
     <body>
@@ -20,6 +20,7 @@
             <h3>Enhancing Classes Using Ant</h3>
             <p>The next step is to run the enhancement step when compiling the source. You can do this with a Ant task.</p>
             <MadCap:snippetBlock src="CodeExamples/enhance-Ant-target-for-enhancing-your-classes-after-building-them.all.flsnp" />
+            <p>We can configure Eclipse to run the Ant build with each compile step. Right click on our project and choose 'Properties'. Then switch to 'Builders' and add a new one. The we choose the 'Ant Builder'. On the new window we choose the build-file which contains the example-code.Then switch to the 'Targets'-Tab. There we choose the enhance-target for the 'Auto-Build'. Now the enhancer-task will be run by Eclipse automatically. </p>
             <h3>Enhance Classes Using Maven</h3>
             <p>The next step is to run the enhancement step when compiling the source. You can do this by adding a small Ant task to your Maven file:</p>
             <MadCap:snippetBlock src="CodeExamples/pom-Enhance-persisted-classes-during-the-build.all.flsnp" />

@@ -46,7 +46,7 @@
             <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
                 replace the dependencies in this repository with correct ones and delete this repository.
             </name>
-            <url>file:${project.basedir}./lib</url>
+            <url>file:${project.basedir}./lib/</url>
         </repository>
         <repository>
             <id>repository.springsource.com.release</id>
@@ -74,8 +74,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>

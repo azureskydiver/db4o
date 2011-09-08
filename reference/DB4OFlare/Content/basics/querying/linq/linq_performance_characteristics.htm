@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:conditions="Primary..NET" MadCap:lastBlockDepth="8" MadCap:lastHeight="4021" MadCap:lastWidth="581">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:conditions="Primary..NET" MadCap:lastBlockDepth="8" MadCap:lastHeight="3953" MadCap:lastWidth="581">
     <head>
     </head>
     <body>
         <h1>
-            <MadCap:keyword term="LINQ:Performance" />LINQ Performance Characteristics </h1>
+            <MadCap:keyword term="LINQ:Performance;Performance:LINQ-Queries" />LINQ Performance Characteristics </h1>
         <p>This overview shows which query operations perform well or badly on large datasets. It should give you an idea which operations can be used on large datasets and which operations can only be applied to small datasets.</p>
-        <p>LINQ queries are translated to SODA and therefore they share the same basic <![CDATA[ ]]><a href="../soda/soda_performance_characteristics.htm">performance characteristics</a>.</p>
+        <p>LINQ queries are translated to SODA and therefore they share the same basic  <![CDATA[ ]]><a href="../soda/soda_performance_characteristics.htm">performance characteristics</a>.</p>
         <p>When you run a LINQ query the first time db4o has to initialize the LINQ query subsystem and do various analyses. Therefore the first run of a query can be quite slow. However subsequent runs are fast.</p>
         <h2><a name="GoodPerf"></a>Good Performance Characteristics</h2>
         <p>For a good query performance fields which are used in a query have to be <a href="../../indexing.htm">indexed</a>. Otherwise db4o needs to scan through all objects. With an index these operations should scale logarithmically with the amount of data. The following queries all assume that the fields are indexed.</p>
