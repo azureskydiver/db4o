@@ -26,7 +26,8 @@
                  classpathref="project.classpath"
                  loaderRef="instrumentation.loader"/>
 
-        <db4o-instrument classTargetDir="${target}">
+        <db4o-instrument classTargetDir="${target}"
+                      verbose="true">
             <classpath refid="project.classpath"/>
             <sources dir="${target}">
                 <include name="**/*.class"/>
@@ -36,6 +37,22 @@
                 <annotation-filter/>
             </transparent-activation-step>
         </db4o-instrument>
+    </target>
+    <!-- #end example -->
+
+
+    <!-- #example: Simple enhancing step# -->
+    <target name="simpleEnhanceStep">
+        <db4o-enhance classtargetdir="${basedir}/bin"
+                      jartargetdir="../libs/java/"
+                      nq="false" ta="true"
+                      collections="true"
+                      verbose="true">
+            <classpath refid="project.classpath"/>
+            <sources dir="${basedir}/bin">
+                      <include name="com/db4odoc/tp/**/*.class"/>
+            </sources>
+        </db4o-enhance>
     </target>
     <!-- #end example -->
 

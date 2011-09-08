@@ -4,7 +4,7 @@
 
     <groupId>com.db4odoc.reference</groupId>
     <artifactId>db4o-reference-examples</artifactId>
-    <version>${project.parent.project.version}</version>
+    <version>8.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>db4o reference examples</name>
@@ -98,8 +98,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <!-- #example: Enhance persisted classes during the build# -->
@@ -128,7 +128,8 @@
                                          classname="com.db4odoc.tp.enhancement.AnnotationFilter"
                                          classpathref="maven.compile.classpath"/>
 
-                                <db4o-instrument classTargetDir="target/classes">
+                                <db4o-instrument classTargetDir="target/classes"
+                                          verbose="true">
                                     <classpath refid="maven.compile.classpath"/>
                                     <sources dir="target/classes">
                                         <include name="**/*.class"/>

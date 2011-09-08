@@ -335,19 +335,6 @@
       Title="Transparent Activation/Persistence"
       Link="/Content/basics/transparent_persistence.htm">
       <TocEntry
-        Title="Example"
-        Link="/Content/basics/transparentpersistence/simple_example_tp.htm">
-        <TocEntry
-          Title="Depedencies"
-          Link="/Content/basics/transparentpersistence/simple_example_tp.htm#dependencies" />
-        <TocEntry
-          Title="Enhance Persistent Classes"
-          Link="/Content/basics/transparentpersistence/simple_example_tp.htm#Enhance" />
-        <TocEntry
-          Title="Using Transparent Persistence"
-          Link="/Content/basics/transparentpersistence/simple_example_tp.htm#UsingTP" />
-      </TocEntry>
-      <TocEntry
         Title="Manual Implementation"
         Link="/Content/basics/transparentpersistence/implementation.htm">
         <TocEntry
@@ -361,20 +348,20 @@
           Link="/Content/basics/transparentpersistence/implementation.htm#Behavior" />
       </TocEntry>
       <TocEntry
-        Title="Enhanced Example"
+        Title="Enhancement Example"
         Link="/Content/basics/transparentpersistence/ta_enhanced_example.htm">
         <TocEntry
-          Title="TA Enhancement At Build Time"
-          Link="/Content/basics/transparentpersistence/ta_enhanced_example/ta_enhancement_at_build_time.htm"
-          conditions="Primary.All languages,Primary.Java"></TocEntry>
+          Title="Required Depedencies"
+          Link="/Content/basics/transparentpersistence/ta_enhanced_example.htm#dependencies" />
         <TocEntry
-          Title="TA Enhancement At Load Time"
-          Link="/Content/basics/transparentpersistence/ta_enhanced_example/ta_enhancement_at_load_time.htm"
-          conditions="Primary.All languages,Primary.Java" />
+          Title="Enhance Persistent Classes"
+          Link="/Content/basics/transparentpersistence/ta_enhanced_example.htm#Enhance" />
         <TocEntry
-          Title="TA Enhancement With db4otool"
-          Link="/Content/basics/transparentpersistence/ta_enhanced_example/ta_enhancement_with_db4otool.htm"
-          conditions="Primary..NET,Primary.All languages" />
+          Title="Check Enhancement"
+          Link="/Content/basics/transparentpersistence/ta_enhanced_example.htm#Check" />
+        <TocEntry
+          Title="Using Transparent Activation / Persistence"
+          Link="/Content/basics/transparentpersistence/ta_enhanced_example.htm#UsingTP"></TocEntry>
       </TocEntry>
       <TocEntry
         Title="Collections"
@@ -520,15 +507,12 @@
       Title="Enhancement Tools"
       Link="/Content/advanced_topics/enhancement_tools.htm">
       <TocEntry
-        Title="Example Built Time Enhancement"
-        Link="/Content/advanced_topics/enhancement_tools/build_time_enhancement.htm" />
+        Title="Enhancement Example"
+        Link="/Content/basics/transparentpersistence/ta_enhanced_example.htm" />
       <TocEntry
-        Title="Enhancement For Java"
-        Link="/Content/advanced_topics/enhancement_tools/enhancement_for_java.htm"
-        conditions="Primary.Java,Primary.All languages"></TocEntry>
-      <TocEntry
-        Title="Load Time Enhancement"
-        Link="/Content/advanced_topics/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.htm" />
+        Title="Build Time Enhancement"
+        Link="/Content/advanced_topics/enhancement_tools/enhancement_for_java/build_time_enhancement.htm"
+        conditions="Primary.Java" />
       <TocEntry
         Title="Db4otool"
         Link="/Content/advanced_topics/enhancement_tools/enhancement_for_.net/db4otool.htm"
