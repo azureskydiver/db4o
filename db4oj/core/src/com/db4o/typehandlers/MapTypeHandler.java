@@ -54,11 +54,11 @@ public class MapTypeHandler implements ReferenceTypeHandler, CascadingTypeHandle
     }
 
     private void writeElements(WriteContext context, Map map, KeyValueHandlerPair handlers) {
-        final Iterator elements = map.keySet().iterator();
+        final Iterator elements = map.entrySet().iterator();
         while (elements.hasNext()) {
-            Object key = elements.next();
-            context.writeObject(handlers._keyHandler, key);
-            context.writeObject(handlers._valueHandler, map.get(key));
+            Map.Entry entry = (Map.Entry) elements.next();
+            context.writeObject(handlers._keyHandler, entry.getKey());
+            context.writeObject(handlers._valueHandler, entry.getValue());
         }
     }
 
