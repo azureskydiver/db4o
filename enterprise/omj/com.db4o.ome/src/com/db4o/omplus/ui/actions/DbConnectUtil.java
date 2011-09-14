@@ -15,7 +15,6 @@ public final class DbConnectUtil {
 	public static boolean connect(ConnectionParams params, Shell shell) throws DBConnectException {
 		ObjectContainer db = params.connect(new BooleanUserCallbackDialog(shell));
 		Activator.getDefault().dbModel().connect(db, params.getPath());
-		enableDBMaintenanceActions(true);
 		shell.setText(params.getPath());
 		showPerspective();
 		return true;
@@ -32,13 +31,6 @@ public final class DbConnectUtil {
 			exc.printStackTrace();
 		}
 
-	}
-
-	// FIXME should go to application state (see ConnectToDBAction#disable...())
-	private static void enableDBMaintenanceActions(boolean enabled) {
-		BackupDBAction.enableAction(enabled);
-		if (enabled)
-			ConnectToDBAction.setStatus("Disconnect");
 	}
 
 	private DbConnectUtil() {

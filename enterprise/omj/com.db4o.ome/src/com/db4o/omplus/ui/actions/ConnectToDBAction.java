@@ -3,6 +3,7 @@ package com.db4o.omplus.ui.actions;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 
 import com.db4o.omplus.*;
@@ -13,12 +14,30 @@ import com.db4o.omplus.ui.dialog.login.*;
 import com.db4o.omplus.ui.dialog.login.model.*;
 
 
-public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
+public class ConnectToDBAction implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 	
 	private IWorkbenchWindow window;
+	private DatabaseModelListener listener;
 	
-	private static IAction action;
+	public void init(final IAction action) {
+		DatabaseModel model = Activator.getDefault().dbModel();
+		listener = new DatabaseModelListener() {
+			public void connectedStatusChangedTo(boolean connected) {
+				setToolTip(action, connected);
+			}
+		};
+		model.registerListener(listener);
+		setToolTip(action, model.connected());
+	}
+
+	private void setToolTip(IAction action, boolean connected) {
+		action.setToolTipText(connected ? "Disconnect" : "Connect");
+	}
 	
+	public void runWithEvent(IAction action, Event event) {
+		run(action);
+	}
+
 	public void run(IAction action) {
 		ConnectionStatus connStatus = new ConnectionStatus();
 		boolean connectionClosed = true;
@@ -27,7 +46,6 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 			if(connectionClosed){
 				connStatus.closeExistingDB();
 				action.setToolTipText("Connect");
-				disableDBMaintenanceActions();
 				closeOMEPerspective();// FIX for Close db & refresh views
 				showOMEPerspective(); 
 			}
@@ -43,9 +61,6 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 			LoginDialog myWindow = new LoginDialog(window.getShell(), recentConnections, connector, errHandler);
 			myWindow.open();
 		}
-	}
-	private void disableDBMaintenanceActions() {
-		BackupDBAction.enableAction(false);
 	}
 
 	private boolean showMessageForConnClose(String fileName) {
@@ -68,20 +83,13 @@ public class ConnectToDBAction implements IWorkbenchWindowActionDelegate {
 		} catch (WorkbenchException e) {}
 	}
 
-	public static void enableAction(boolean enabled){
-		action.setEnabled(enabled);
-	}
-	
-	public static void setStatus(String status){
-		action.setToolTipText(status);
-	}
-	
 	public void selectionChanged(IAction actn, ISelection selection) {
-		if(action == null)
-			action = actn;
 	}
 
 	public void dispose() {
+		if(listener != null) {
+			Activator.getDefault().dbModel().unregisterListener(listener);
+		}
 	}
 
 	public void init(IWorkbenchWindow window) {

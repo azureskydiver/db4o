@@ -1,44 +1,52 @@
 package com.db4o.omplus.ui.actions;
 
-import java.io.File;
+import java.io.*;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 
-import com.db4o.omplus.datalayer.DbMaintenance;
-import com.db4o.omplus.datalayer.OMPlusConstants;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 
-public class BackupDBAction implements IWorkbenchWindowActionDelegate {
+public class BackupDBAction implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 
 	private final String BACKUP_REMOTE_MESSAGE = "Backup not possible for remote connection";
 	private final String BACKUP_REPLACE_MESSAGE = "Replace the existing file ?";
 	private final String BACKUP_SUCCESS_MESSAGE = "Database Backup was successful";
 	
-	private static IAction action;
-	
-	public BackupDBAction(){
-		
-	}
-	
 	private IWorkbenchWindow window;
+	private DatabaseModelListener listener = null;
 	
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		if(listener != null) {
+			Activator.getDefault().dbModel().unregisterListener(listener);
+		}
 	}
 
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
+	
+	public void init(final IAction action) {
+		DatabaseModel model = Activator.getDefault().dbModel();
+		action.setEnabled(model.connected());
+		listener = new DatabaseModelListener() {
+			public void connectedStatusChangedTo(boolean connected) {
+				action.setEnabled(connected);
+			}
+		};
+		model.registerListener(listener);
+	}
 
+	public void runWithEvent(IAction action, Event event) {
+		run(action);
+	}
+	
 	public void run(IAction action) {
 		boolean backupComplete = true;
 		DbMaintenance main = new DbMaintenance();
@@ -65,14 +73,6 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 				}
 			}
 		}
-		action.addPropertyChangeListener(new IPropertyChangeListener(){
-
-			public void propertyChange(PropertyChangeEvent event) {
-				System.out.println(event.getProperty());
-				
-			}
-			
-		});
 	}
 
 	private void showMessage() {
@@ -81,8 +81,6 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	private boolean isFileExists(String backupFile) {
-		/*if(backupFile == null)
-			return false;*/
 		boolean replace = true;
 		if(new File(backupFile).exists()){
 			replace = MessageDialog.openQuestion(window.getShell(), OMPlusConstants.DIALOG_BOX_TITLE, 
@@ -100,15 +98,6 @@ public class BackupDBAction implements IWorkbenchWindowActionDelegate {
 		new ShellErrorMessageSink(window.getShell()).showExc(msg, exc);
 	}
 	
-	public static void enableAction(boolean enabled){
-		action.setEnabled(enabled);
-	}
-	
 	public void selectionChanged(IAction actn, ISelection selection) {
-		if(action == null){
-			action = actn;
-			action.setEnabled(false);
-		}
-			
 	}
 }
