@@ -12,7 +12,8 @@ import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
 
 /**
- * configures a field of a class to allow unique values only.
+ * Configures a field of a class to allow unique values only. In C/S mode, this configuration
+ * should be set on the server side only.
  */
 public class UniqueFieldValueConstraint implements ConfigurationItem {
 	
