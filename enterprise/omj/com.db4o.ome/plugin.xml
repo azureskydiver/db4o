@@ -140,17 +140,6 @@
         
          <!--*********************** Normal DB connect/discoonect menus and icons************************* -->
          
-         <!-- Disconnect  Use Connect -->
-         <!--<action
-               label="Disconnect DB"
-               icon="icons/db_disconnect.gif"
-               class="com.db4o.omplus.ui.actions.DisconnectDBAction"
-               tooltip="Disconnect"
-               menubarPath="sampleMenu/loginSep"
-               toolbarPath="sampleGroup"
-               id="com.db4o.omplus.ui.actions.DisconnectDBId">
-         </action>
-         -->
          <!-- Connect -->
          <action
                label="&amp;Connect/Disconnect DB"
