@@ -262,13 +262,11 @@
 				<include name="**/*.config" />
 				
 				<include name="Libs/**/*" />
-				
-				<!-- tutorial files -->
+
 				<include name="**/*.resources" />
 				<include name="**/*.resx" />
 				<include name="**/*.ico" />
 				<include name="**/*.PNG" />
-				<include name="Db4oTutorial/Libs/*" />
 				
 				<include name="db4objects.snk" />
 				
@@ -302,15 +300,6 @@
 		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
 	</target>
 	
-	<target name="package-tutorial">
-		<copy todir="${dir.dist.net.build.tutorial}">
-			<fileset dir="${dir.n.v6.tutorial.bin}">
-				<include name="**/**" />
-				<exclude name="**/*.pdb" />
-			</fileset>
-		</copy>
-	</target>
-	
 	<target name="package-api" depends="package-api-net, package-api-mono">
 	</target>
 	
@@ -333,7 +322,7 @@
 	</target>
 	
 	
-	<target name="package-docs" depends="package-tutorial, package-api, flare-net">
+	<target name="package-docs" depends="package-api,flare-tutorial-net, flare-net">
 	</target>
 
 	<target name="flare-net" depends="init" if="flare.executable">
@@ -343,6 +332,18 @@
 		
 		<flare output="${dir.dist.flare.temp}" target="NetWeb" projectDirectory="${flare.project.db4o.folder}"  />
 		<copy todir="${dir.dist.net.build.reference}">
+			<fileset dir="${dir.dist.flare.temp}/Output/NetWeb">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="flare-tutorial-net" depends="init" if="flare.executable">
+
+		<flare output="${dir.dist.flare.temp}" target="NetPdf" projectDirectory="${flare.project.db4otutorial.folder}" />
+		<copy file="${dir.dist.flare.temp}/Output/NetPdf/db4o-tutorial-net.pdf" todir="${dir.dist.net.build.tutorial}" />
+		
+		<flare output="${dir.dist.flare.temp}" target="NetWeb" projectDirectory="${flare.project.db4otutorial.folder}"  />
+		<copy todir="${dir.dist.net.build.tutorial}">
 			<fileset dir="${dir.dist.flare.temp}/Output/NetWeb">
 				<include name="**/*" />
 			</fileset>
@@ -386,7 +387,7 @@
 	
 	</target>
 
-	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial, build-omn">
+	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-omn">
 	</target>
 	
 	<target name="api-diff">
@@ -452,14 +453,6 @@
 	
 	<target name="build-admin" depends="build-core" unless="skip.admin">
 		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />		
-	</target>
-
-	<target name="build-tutorial" unless="mono">
-		<ant antfile="build-dotnet-tutorial.xml">
-		</ant>
-	</target>
-	
-	<target name="build-tutorial-standalone" depends="configure, build-tutorial">
 	</target>
 	
 	<target name="build-omn" unless="mono">
