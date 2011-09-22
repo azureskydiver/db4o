@@ -1641,26 +1641,6 @@
 		</java>
 	</target>
 
-	<!-- Doctor -->
-	<target name="doctor" depends="build.jtutorial">
-		<ant antfile="run-doctor.xml" />
-	</target>
-	
-	<target name="build.jtutorial" depends="build.db4ojdk1.5, build.db4otools1.5, build.db4otools.bench">
-		<mkdir dir="${dir.dist.classes.tutorial}" />
-		<javac fork="true" 
-            srcdir="${dir.j.tutorial.src}" 
-            destdir="${dir.dist.classes.tutorial}"
-			target="5" 
-			source="5" 
-			debug="on" 
-			encoding="UTF-8"> 
-            <classpath>
-				<pathelement path="${file.jdk1.5.jar}"/>
-				<pathelement path="${file.jdk1.5.cs.jar}"/>
-			</classpath>
-        </javac>
-	</target>
 
 	<target name="build.javadoc" depends="build.javadoc.db4oj, build.javadoc.osgi" />
 	
@@ -1905,17 +1885,22 @@
 		</copy>
 
 	</target>
-	
-	
-	<target name="prepare.docs" depends="init, doctor, build.javadoc, flare-java">
+	<target name="flare-tutorial-java" depends="init" if="flare.executable">
+
+		<flare output="${dir.dist.flare.temp}" target="JavaPdf" projectDirectory="${flare.project.db4otutorial.folder}" />
+		<copy file="${dir.dist.flare.temp}/Output/JavaPdf/db4o-tutorial-java.pdf" todir="${dir.dist.java.build.tutorial}" />
+		
+		<flare output="${dir.dist.flare.temp}" target="JavaWeb" projectDirectory="${flare.project.db4otutorial.folder}"  />
 		<copy todir="${dir.dist.java.build.tutorial}">
-			<fileset dir="${dir.j.tutorial.out.java}">
-				<include name="**/**" />
-			</fileset>
-			<fileset dir="${dir.j.tutorial}">
-				<include name="src/**/*.java" />
+			<fileset dir="${dir.dist.flare.temp}/Output/JavaWeb">
+				<include name="**/*" />
 			</fileset>
 		</copy>
+
+	</target>
+	
+	
+	<target name="prepare.docs" depends="init, flare-tutorial-java, build.javadoc, flare-java">
 		
 		<copy file="${dir.config}/readme.html" tofile="${dir.dist.java.build}/readme.html" >
 	    	<filterchain>	

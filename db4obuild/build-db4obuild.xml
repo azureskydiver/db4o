@@ -27,10 +27,6 @@
 			<include name="**/osgi/**/*.java" />
 		</javac>
 	</target>
-	
-	<target name="compiledoctor" depends="" description="Compile Doctor">
-		<ant antfile="${dir.build}/build-doctor.xml" dir="${dir.build}"/>
-	</target>
 
-	<target name="compileall" depends="compiledoctor,compiledb4obuild" description="Compile everything needed for the main ant script tasks"/>
+	<target name="compileall" depends="compiledb4obuild" description="Compile everything needed for the main ant script tasks"/>
 </project>

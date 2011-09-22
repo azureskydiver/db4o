@@ -4,20 +4,6 @@
 	<property name="path.machine.properties" value="machine.properties" />
 	<property file="${path.machine.properties}" />
 	<property file="ant.properties" />
-	
-	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
-		<classpath>
-			<pathelement location="${dir.dist.classes.jdk1.5}" />
-			<pathelement location="${dir.dist.classes.jdk1.5.cs}" />
-			<pathelement location="${dir.doctor.bin}" />
-			<pathelement location="${dir.doctor.lib}/iText.jar" />
-			<pathelement location="${dir.dist.classes.tutorial}" />
-			<pathelement location="${dir.dist.classes.reference}" />
-			<pathelement location="${dir.dist.classes.nqopt}" />
-			<pathelement location="${dir.dist.classes.db4obench}" />
-			<pathelement location="${file.bloat.jar}" />
-		</classpath>
-	</taskdef>
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
