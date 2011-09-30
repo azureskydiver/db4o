@@ -1,6 +1,8 @@
 /* Copyright (C) 2007   Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.foundation;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -32,6 +34,34 @@ public class CompositeIterator4TestCase implements TestCase {
 		
 		final CompositeIterator4 iterator = new CompositeIterator4(iterators.iterator());
 		return iterator;
+	}
+	
+	public void testRecursionFree() {
+		List<Iterator4<Object>> list = new ArrayList<Iterator4<Object>>();
+		Iterator4<Object> emptyIterator = new Iterator4<Object>() {
+			
+			@Override
+			public void reset() {
+				throw new java.lang.UnsupportedOperationException();
+			}
+			
+			@Override
+			public boolean moveNext() {
+				return false;
+			}
+			
+			@Override
+			public Object current() {
+				throw new java.lang.UnsupportedOperationException();
+			}
+		};
+		for(int i=0;i<1000000;i++) {
+			list.add(emptyIterator);
+		}
+		CompositeIterator4 ci = new CompositeIterator4(list.toArray(new Iterator4[list.size()]));
+		while(ci.moveNext()) {
+			ci.current();
+		}
 	}
 
 	

@@ -20,17 +20,13 @@ public class CompositeIterator4 implements Iterator4 {
 	}
 
 	public boolean moveNext() {
-		if (null == _currentIterator) {
+		while(_currentIterator == null || !_currentIterator.moveNext()) {
 			if (!_iterators.moveNext()) {
 				return false;
 			}
 			_currentIterator = nextIterator(_iterators.current());
 		}
-		if (!_currentIterator.moveNext()) {
-			_currentIterator = null;
-			return moveNext();
-		}
-		return true;
+		return _currentIterator != null;
 	}
 	
 	public void reset() {
