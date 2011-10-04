@@ -55,10 +55,25 @@ public class CompositeIterator4TestCase implements TestCase {
 				throw new java.lang.UnsupportedOperationException();
 			}
 		};
-		for(int i=0;i<1000000;i++) {
+		for(int i=0;i<100;i++) {
 			list.add(emptyIterator);
 		}
-		CompositeIterator4 ci = new CompositeIterator4(list.toArray(new Iterator4[list.size()]));
+		
+		Iterator4 ci = new CompositeIterator4(list.toArray(new Iterator4[list.size()])) {
+			boolean recursion = false;
+			@Override
+			public boolean moveNext() {
+				if (recursion) {
+					Assert.fail("Recursion in moveNext is not allowed");
+				}
+				recursion = true;
+				try {
+					return super.moveNext();
+				} finally {
+					recursion = false;
+				}
+			}
+		};
 		while(ci.moveNext()) {
 			ci.current();
 		}
