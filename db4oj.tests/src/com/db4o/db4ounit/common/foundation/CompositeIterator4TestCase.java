@@ -75,7 +75,8 @@ public class CompositeIterator4TestCase implements TestCase {
 			}
 		};
 		while(ci.moveNext()) {
-			ci.current();
+			// make .Net happy
+			Object current = ci.current();
 		}
 	}
 
