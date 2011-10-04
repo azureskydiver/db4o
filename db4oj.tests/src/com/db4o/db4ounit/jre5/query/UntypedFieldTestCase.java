@@ -6,6 +6,7 @@ import java.math.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.diagnostic.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -24,15 +25,38 @@ public class UntypedFieldTestCase extends AbstractDb4oTestCase {
 		public Object untypedBigInteger;
 	}
 	
+	public static class SimpleItem {
+		public Object obj = new Object();
+		
+	}
+	
 	@Override
 	protected void configure(Configuration config) throws Exception {
 		config.add(new BigMathSupport());
+		config.objectClass(SimpleItem.class).cascadeOnDelete(true);
+		config.diagnostic().addListener(new DiagnosticListener() {
+			
+			@Override
+			public void onDiagnostic(Diagnostic d) {
+				if (d instanceof DeletionFailed) {
+					Assert.fail("Deletion of object failed");
+				}
+			}
+		});
 	}
 	
 	@Override
 	protected void store() throws Exception {
 		store(new Item(VALUE));
 		store(new Item(BigInteger.valueOf(0)));
+	}
+	
+	public void _testCascadeDeleteOfUntypeConcreteObject() {
+		SimpleItem obj = new SimpleItem();
+		store(obj);
+		db().commit();
+		db().delete(obj);
+		db().commit();
 	}
 	
 	public void testDescendTwice() {
