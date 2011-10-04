@@ -51,7 +51,7 @@ public class UntypedFieldTestCase extends AbstractDb4oTestCase {
 		store(new Item(BigInteger.valueOf(0)));
 	}
 	
-	public void _testCascadeDeleteOfUntypeConcreteObject() {
+	public void testCascadeDeleteOfUntypeConcreteObject() {
 		SimpleItem obj = new SimpleItem();
 		store(obj);
 		db().commit();
