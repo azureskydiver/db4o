@@ -84,7 +84,8 @@ namespace Db4objects.Db4o.Config
 		/// This setting can be applied to an open object container. <br/><br/>
 		/// </remarks>
 		/// <param name="flag">whether updates are to be cascaded to the member object.</param>
-		/// <seealso cref="com.db4o.ObjectContainer#set">com.db4o.ObjectContainer#set</seealso>
+		/// <seealso cref="Db4objects.Db4o.IObjectContainer.Store(object)">Db4objects.Db4o.IObjectContainer.Store(object)
+		/// 	</seealso>
 		/// <seealso cref="IObjectClass.CascadeOnUpdate(bool)">IObjectClass.CascadeOnUpdate(bool)
 		/// 	</seealso>
 		/// <seealso cref="IObjectClass.UpdateDepth(int)">IObjectClass.UpdateDepth(int)</seealso>
