@@ -61,12 +61,12 @@ namespace Db4objects.Db4o.Typehandlers
 		private void WriteElements(IWriteContext context, IDictionary map, KeyValueHandlerPair
 			 handlers)
 		{
-			IEnumerator elements = map.Keys.GetEnumerator();
+			IEnumerator elements = map.GetEnumerator();
 			while (elements.MoveNext())
 			{
-				object key = elements.Current;
-				context.WriteObject(handlers._keyHandler, key);
-				context.WriteObject(handlers._valueHandler, map[key]);
+				DictionaryEntry entry = (DictionaryEntry)elements.Current;
+				context.WriteObject(handlers._keyHandler, entry.Key);
+				context.WriteObject(handlers._valueHandler, entry.Value);
 			}
 		}
 

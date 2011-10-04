@@ -64,7 +64,10 @@ namespace Db4objects.Db4o.Internal
 				();
 			if (typeHandler != null)
 			{
-				context.Delete(typeHandler);
+				if (!IsPlainObject(typeHandler))
+				{
+					context.Delete(typeHandler);
+				}
 			}
 			context.Seek(linkOffset);
 		}
@@ -248,7 +251,7 @@ namespace Db4objects.Db4o.Internal
 					readContext.Collector().AddId(readContext.ReadInt());
 					return;
 				}
-				CollectIdContext collectIdContext = new _CollectIdContext_201(readContext, readContext
+				CollectIdContext collectIdContext = new _CollectIdContext_203(readContext, readContext
 					.Transaction(), readContext.Collector(), null, readContext.Buffer());
 				Handlers4.CollectIdsInternal(collectIdContext, context.Container().Handlers.CorrectHandlerVersion
 					(typeHandler, context.HandlerVersion()), 0, false);
@@ -259,9 +262,9 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		private sealed class _CollectIdContext_201 : CollectIdContext
+		private sealed class _CollectIdContext_203 : CollectIdContext
 		{
-			public _CollectIdContext_201(QueryingReadContext readContext, Transaction baseArg1
+			public _CollectIdContext_203(QueryingReadContext readContext, Transaction baseArg1
 				, IdObjectCollector baseArg2, ObjectHeader baseArg3, IReadBuffer baseArg4) : base
 				(baseArg1, baseArg2, baseArg3, baseArg4)
 			{
@@ -275,12 +278,12 @@ namespace Db4objects.Db4o.Internal
 
 			public override SlotFormat SlotFormat()
 			{
-				return new _SlotFormatCurrent_207();
+				return new _SlotFormatCurrent_209();
 			}
 
-			private sealed class _SlotFormatCurrent_207 : SlotFormatCurrent
+			private sealed class _SlotFormatCurrent_209 : SlotFormatCurrent
 			{
-				public _SlotFormatCurrent_207()
+				public _SlotFormatCurrent_209()
 				{
 				}
 

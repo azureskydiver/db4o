@@ -13,8 +13,11 @@ using Db4objects.Db4o.Reflect.Core;
 
 namespace Db4objects.Db4o.Constraints
 {
-	/// <summary>configures a field of a class to allow unique values only.</summary>
-	/// <remarks>configures a field of a class to allow unique values only.</remarks>
+	/// <summary>Configures a field of a class to allow unique values only.</summary>
+	/// <remarks>
+	/// Configures a field of a class to allow unique values only. In C/S mode, this configuration
+	/// should be set on the server side only.
+	/// </remarks>
 	public class UniqueFieldValueConstraint : IConfigurationItem
 	{
 		protected readonly object _clazz;
@@ -47,12 +50,12 @@ namespace Db4objects.Db4o.Constraints
 					);
 			}
 			EventRegistryFactory.ForObjectContainer(objectContainer).Committing += new System.EventHandler<Db4objects.Db4o.Events.CommitEventArgs>
-				(new _IEventListener4_46(this, objectContainer).OnEvent);
+				(new _IEventListener4_47(this, objectContainer).OnEvent);
 		}
 
-		private sealed class _IEventListener4_46
+		private sealed class _IEventListener4_47
 		{
-			public _IEventListener4_46(UniqueFieldValueConstraint _enclosing, IInternalObjectContainer
+			public _IEventListener4_47(UniqueFieldValueConstraint _enclosing, IInternalObjectContainer
 				 objectContainer)
 			{
 				this._enclosing = _enclosing;

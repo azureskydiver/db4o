@@ -28,7 +28,7 @@ namespace Db4objects.Db4o.Foundation
 
 		public virtual bool MoveNext()
 		{
-			if (null == _currentIterator)
+			while (_currentIterator == null || !_currentIterator.MoveNext())
 			{
 				if (!_iterators.MoveNext())
 				{
@@ -36,12 +36,7 @@ namespace Db4objects.Db4o.Foundation
 				}
 				_currentIterator = NextIterator(_iterators.Current);
 			}
-			if (!_currentIterator.MoveNext())
-			{
-				_currentIterator = null;
-				return MoveNext();
-			}
-			return true;
+			return _currentIterator != null;
 		}
 
 		public virtual void Reset()
