@@ -52,7 +52,9 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
         int classMetadataID = context.readInt();
         TypeHandler4 typeHandler = container().classMetadataForID(classMetadataID).typeHandler();
         if(typeHandler != null){
-            context.delete(typeHandler);
+            if(! isPlainObject(typeHandler)){
+                context.delete(typeHandler);
+            }
         }
         context.seek(linkOffset);
 	}
