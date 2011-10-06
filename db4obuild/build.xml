@@ -121,7 +121,6 @@
 		<mkdir dir="${dir.dist.net.build.src}" />
 		<mkdir dir="${dir.dist.net.instrumentation}" />
 		<mkdir dir="${dir.dist.mono.build.src}" />
-		<mkdir dir="${dir.dist.doctor}" />
 		<mkdir dir="${dir.dist.doc.api}" />
 		<mkdir dir="${dir.dist.java.build.tutorial}" />
 		<mkdir dir="${dir.dist.java.build.tutorial.src}" />
@@ -249,14 +248,12 @@
 	</target>		
 	
 	<target name="buildnet35" depends="init" description=".NET 3.5 (LINQ) full build">
-		<ant antfile="build-java.xml" target="doctor"/>
 		<ant antfile="build-dotnet.xml" target="build-prepare-package-net35" >
 		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
 		</ant>
 	</target>
 	
 	<target name="buildnet40" depends="init" description=".NET 4.0 full build">
-		<ant antfile="build-java.xml" target="doctor"/>
 		<ant antfile="build-dotnet.xml" target="build-prepare-package-net40" >
 		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
 		</ant>
