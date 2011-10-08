@@ -9,7 +9,7 @@ using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.Connection
 {
-    class FavouriteList
+    public class FavouriteList
     {
         List<FavouriteFolder> m_lstFavfolder;
 
@@ -46,7 +46,7 @@ namespace OManager.DataLayer.Connection
         {
             try
             {
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 if (m_lstFavfolder != null)
                 {
                     FavouriteList favList = FetchAllFavouritesForAConnection();
@@ -109,7 +109,7 @@ namespace OManager.DataLayer.Connection
         {
             try
             {
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 FavouriteList favList = FetchAllFavouritesForAConnection();
 
 
@@ -147,7 +147,7 @@ namespace OManager.DataLayer.Connection
         {
             try
             {
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 FavouriteList favList = FetchAllFavouritesForAConnection();
 
 
@@ -189,7 +189,7 @@ namespace OManager.DataLayer.Connection
             FavouriteList FavList = null;
             try
             {
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 IQuery query = container.Query();
                 query.Constrain(typeof(FavouriteList));
                 query.Descend("m_connParam").Descend("m_connection").Constrain(m_connParam.Connection);
@@ -215,7 +215,7 @@ namespace OManager.DataLayer.Connection
             try
             {
 
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 IQuery query = container.Query();
                 query.Constrain(typeof(FavouriteList));
                 query.Descend("m_connParam").Descend("m_connection").Constrain(m_connParam.Connection);                

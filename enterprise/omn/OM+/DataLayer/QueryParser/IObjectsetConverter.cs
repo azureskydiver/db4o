@@ -70,7 +70,7 @@ namespace OManager.DataLayer.QueryParser
 
                     	    if (rowObj != null)
                     		{
-                    			hashFieldValue = checkforprimitives(reff, rowObj);
+								hashFieldValue = checkforprimitives(reff, rowObj, pgdata.ObjectId[i]);
                     			m_lstRowContent.Add(hashFieldValue);
                     		}
                     	}
@@ -78,16 +78,8 @@ namespace OManager.DataLayer.QueryParser
                 }
                 else
                 {
-                    int length = 0;
-                    foreach (string str in attribList.Keys)
-                    {
-                        string[] splitstring = str.Split('.');
-                        if (splitstring.Length > length)
-                        {
-                            length = splitstring.Length-1;
-                        }
-                    }
-                    
+                    int length = GetDepth(attribList);
+
                     for (int i = pgdata.StartIndex; i < pgdata.EndIndex; i++)
                     {
                         hashFieldValue = new Hashtable();
@@ -95,29 +87,29 @@ namespace OManager.DataLayer.QueryParser
 
                         foreach (string attribute in attribList.Keys)
                         {
-                            if (pgdata.ObjectId[i] != 0)
-                            {
-                                rowObj = objectContainer.Ext().GetByID(pgdata.ObjectId[i]);
-                                if (rowObj != null)
-                                {
-                                    if (m_refresh)
-                                    {
-                                        objectContainer.Ext().Refresh(rowObj, length);
-                                    }
-                                    else
-                                    {
-                                        objectContainer.Ext().Activate(rowObj, length);
-                                    }
+                            if (pgdata.ObjectId[i] == 0)
+                                continue;
 
-                                    hashFieldValue = UpdateResults(rowObj, attribute);
+                            rowObj = objectContainer.Ext().GetByID(pgdata.ObjectId[i]);
+                            if (rowObj != null)
+                            {
+                                if (m_refresh)
+                                {
+                                    objectContainer.Ext().Refresh(rowObj, length);
                                 }
+                                else
+                                {
+                                    objectContainer.Ext().Activate(rowObj, length);
+                                }
+
+                                hashFieldValue = UpdateResults(rowObj, attribute);
                             }
                         }
                         if (hashFieldValue.Count != 0)
                         {
                             if (!hashFieldValue.ContainsKey(BusinessConstants.DB4OBJECTS_REF))
                             {
-                                hashFieldValue.Add(BusinessConstants.DB4OBJECTS_REF, rowObj);
+								hashFieldValue.Add(BusinessConstants.DB4OBJECTS_REF, pgdata.ObjectId[i]);
                             }
                             m_lstRowContent.Add(hashFieldValue);
                         }
@@ -132,6 +124,20 @@ namespace OManager.DataLayer.QueryParser
                 LoggingHelper.HandleException(oEx);
                 return new List<Hashtable>( );
             }
+        }
+
+        private static int GetDepth(Hashtable attribList)
+        {
+            int length = 0;
+            foreach (string str in attribList.Keys)
+            {
+                string[] splitstring = str.Split('.');
+                if (splitstring.Length > length)
+                {
+                    length = splitstring.Length - 1;
+                }
+            }
+            return length;
         }
 
         public Hashtable UpdateResults(object rowObject, string attribute)
@@ -222,54 +228,18 @@ namespace OManager.DataLayer.QueryParser
             }
             return null;
         }
+     
 
-        public Hashtable ResultsWithAttributes(object obj,Hashtable attributeList)
-        {
-            try
-            {
-                Hashtable hash = new Hashtable();
-
-                if (attributeList.Count != 0)
-                {
-                    foreach (string attribute in attributeList.Keys)
-                    {                           
-
-                        hash = UpdateResults(obj, attribute);
-                    }
-                    if (hash != null)
-                        hash.Add(BusinessConstants.DB4OBJECTS_REF, obj);
-                }
-                else
-                {
-
-                    IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname); 
-                    if (rClass != null)
-                    {
-                        IReflectField[] reff = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
-                        if (reff != null)
-                        {
-                            hash = checkforprimitives(reff, obj);
-                        }
-                    }
-                }
-                return hash;
-            }
-
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return null;
-            }
-        }
-
-        public Hashtable checkforprimitives(IReflectField[] reff, object obj)
+        public Hashtable checkforprimitives(IReflectField[] reff, object obj, long id)
         {
             try
             {
             	Hashtable hash = new Hashtable();
-                hash.Add(BusinessConstants.DB4OBJECTS_REF, obj);
+                hash.Add(BusinessConstants.DB4OBJECTS_REF, id);
                 foreach (IReflectField reflectField in reff)
                 {
+                    if (reflectField.IsStatic())
+                        continue;
                     string name = reflectField.GetName();
                     object value = reflectField.Get(obj);
 

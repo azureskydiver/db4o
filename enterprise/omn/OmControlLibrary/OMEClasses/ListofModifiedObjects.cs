@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using OMAddinDataTransferLayer;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using System.Windows.Forms;
@@ -67,9 +68,10 @@ namespace OMControlLibrary
                         if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
                         {
 
-                            int hierarchyLevel = dbInteraction.GetDepth(row.Tag);
+                            int  hierarchyLevel = AssemblyInspectorObject.DataSave.GetDepth((long)row.Tag);
 
-                            Helper.DbInteraction.SaveCollection(row.Tag, hierarchyLevel);
+                            AssemblyInspectorObject.DataSave.SaveCollection((long)row.Tag, hierarchyLevel);
+                            
                         }
 					}
 				}
@@ -79,7 +81,8 @@ namespace OMControlLibrary
 					{
 						if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
 						{
-							dbInteraction.RefreshObject(row.Tag, 1);
+                            int hierarchyLevel = AssemblyInspectorObject.DataSave.GetDepth((long)row.Tag);
+                            AssemblyInspectorObject.DataSave.RefreshObject((long)row.Tag, hierarchyLevel);
 						}
 					}
 				}
@@ -91,10 +94,5 @@ namespace OMControlLibrary
 
 			return result;
 		}
-
-        //public static int CalculateLevel(object obj)
-        //{
-        //    return dbInteraction.GetDepth(obj);
-        //}
 	}
 }

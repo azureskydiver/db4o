@@ -5,6 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using EnvDTE;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.Connection;
+using OMAddinDataTransferLayer.DataBaseDetails;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.UIHelper;
@@ -28,7 +32,7 @@ namespace OMControlLibrary
 		private bool m_showClassProperties;
 
 		private static PropertiesTab instance;
-	    object m_selectedObject;
+		private long objId;
 
 		#endregion
 
@@ -102,23 +106,23 @@ namespace OMControlLibrary
 				dbGridViewProperties.PopulateDisplayGrid(Constants.VIEW_DBPROPERTIES, null);
 
 				dbGridViewProperties.Rows.Add(1);
-				if (Helper.DbInteraction.GetTotalDbSize() == -1)
+				if (AssemblyInspectorObject.Connection.GetTotalDbSize() == -1)
 				{
 					dbGridViewProperties.Rows[0].Cells[0].Value = "NA for Client/Server";
 				}
 				else
 				{
-					dbGridViewProperties.Rows[0].Cells[0].Value = Helper.DbInteraction.GetTotalDbSize() + " bytes";
+					dbGridViewProperties.Rows[0].Cells[0].Value = AssemblyInspectorObject.Connection.GetTotalDbSize() + " bytes";
 				}
 
-				dbGridViewProperties.Rows[0].Cells[1].Value = Helper.DbInteraction.NoOfClassesInDb().ToString();
-				if (Helper.DbInteraction.GetFreeSizeOfDb() == -1)
+				dbGridViewProperties.Rows[0].Cells[1].Value = AssemblyInspectorObject.Connection.NoOfClassesInDb().ToString();
+				if (AssemblyInspectorObject.Connection.GetFreeSizeOfDb()    == -1)
 				{
 					dbGridViewProperties.Rows[0].Cells[2].Value = "NA for Client/Server";
 				}
 				else
 				{
-					dbGridViewProperties.Rows[0].Cells[2].Value = Helper.DbInteraction.GetFreeSizeOfDb() + " bytes";
+					dbGridViewProperties.Rows[0].Cells[2].Value = AssemblyInspectorObject.Connection.GetFreeSizeOfDb() + " bytes";
 				}
 
 				if (!panelDatabaseProperties.Controls.Contains(dbGridViewProperties))
@@ -140,12 +144,15 @@ namespace OMControlLibrary
 
 				if (Helper.ClassName != null)
 				{
-					if (dbInteraction.GetCurrentRecentConnection() != null)
-						if (dbInteraction.GetCurrentRecentConnection().ConnParam != null)
+					if (OMEInteraction.GetCurrentRecentConnection() != null)
+					{
+						if (OMEInteraction.GetCurrentRecentConnection().ConnParam != null)
 						{
-							buttonSaveIndex.Enabled = dbInteraction.GetCurrentRecentConnection().ConnParam.Host == null;
+							buttonSaveIndex.Enabled = !OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly &&
+                                                    !AssemblyInspectorObject.Connection.CheckForClientServer()   ; 
 
-							labelNoOfObjects.Text = "Number of objects : " + dbInteraction.NoOfObjectsforAClass(Helper.ClassName);
+							labelNoOfObjects.Text = "Number of objects : " +
+							                        AssemblyInspectorObject.ClassProperties.GetObjectCountForAClass(Helper.ClassName);
 							dbGridViewProperties.Size = Size;
 							dbGridViewProperties.Rows.Clear();
 							dbGridViewProperties.Columns.Clear();
@@ -157,23 +164,24 @@ namespace OMControlLibrary
 							//Enable Disable IsIndexed Checkboxes
 							foreach (DataGridViewRow row in dbGridViewProperties.Rows)
 							{
-                                IType type = row.Cells["Type"].Value as IType;
-                                if (type.IsEditable)
+								ProxyType type = row.Cells["Type"].Value as ProxyType;
+                               if( type.IsEditable &&  (type.IsPrimitive || type.IsNullable))
+								//if (type.IsEditable)
 								{
 									row.Cells[2].ReadOnly = false;
 								}
-								else 
+								else
 									row.Cells[2].ReadOnly = true;
 							}
 
 							if (!panelForClassPropTable.Controls.Contains(dbGridViewProperties))
 								panelForClassPropTable.Controls.Add(dbGridViewProperties);
 							dbGridViewProperties.Dock = DockStyle.Fill;
-						}
-				}
-				else
-					buttonSaveIndex.Enabled = false;
 
+						}
+					}
+
+				}
 				OMETrace.WriteFunctionEnd();
 			}
 			catch (Exception oEx)
@@ -184,17 +192,17 @@ namespace OMControlLibrary
 
 		private static ArrayList GetFieldsForAllClass()
 		{
-			ClassPropertiesTable classPropTable = null;
+			ClassProperties classProp = null;
 			try
 			{
-				classPropTable = dbInteraction.GetClassProperties(Helper.ClassName);
+				classProp = AssemblyInspectorObject.ClassProperties.GetClassProperties(Helper.ClassName);
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 
-			return classPropTable.FieldEntries;
+			return classProp.FieldEntries;
 		}
 
 		private void DisplayObjectProperties()
@@ -203,10 +211,10 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 
-				if (m_selectedObject != null)
+				if (objId != 0)
 				{
 					ArrayList objectProperties = new ArrayList();
-					ObjectPropertiesTable objTable = dbInteraction.GetObjectProperties(m_selectedObject);
+					ObjectProperties objTable = AssemblyInspectorObject.ObjectProperties.GetObjectProperties(objId ); 
 					objectProperties.Add(objTable);
 
 					dbGridViewProperties.Rows.Clear();
@@ -281,7 +289,7 @@ namespace OMControlLibrary
 			else if (Helper.Tab_index.Equals(1))
 			{
 				DisplayClassProperties();
-				buttonSaveIndex.Enabled = !dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly;  
+                buttonSaveIndex.Enabled = !OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly && !AssemblyInspectorObject.Connection.CheckForClientServer();    
 			}
 			else if (Helper.Tab_index.Equals(2))
 			{
@@ -300,7 +308,7 @@ namespace OMControlLibrary
 			try
 			{
 				if (e.Item != null && e.ChangeType == OMETabStripItemChangeTypes.SelectionChanged)
-					RefreshPropertiesTab(m_selectedObject);
+					RefreshPropertiesTab(objId );
 			}
 			catch (Exception oEx)
 			{
@@ -311,11 +319,11 @@ namespace OMControlLibrary
 		#endregion
 
 		#region Public Methods
-		public void RefreshPropertiesTab(object selectedObject)
+		public void RefreshPropertiesTab(long  id)
 		{
 			try
 			{
-				m_selectedObject = selectedObject;
+				this.objId  = id;
 
 				if (tabItemDatabaseProperties.Visible &&
 					tabStripProperties.SelectedItem.Equals(tabItemDatabaseProperties))
@@ -326,7 +334,6 @@ namespace OMControlLibrary
 					tabStripProperties.SelectedItem.Equals(tabItemClassProperties))
 				{
 					DisplayClassProperties();
-					buttonSaveIndex.Enabled = !dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly;  
 				}
 				else if (tabItemObjectProperties.Visible &&
 					tabStripProperties.SelectedItem.Equals(tabItemObjectProperties))
@@ -349,9 +356,11 @@ namespace OMControlLibrary
 
 		private void SaveIndex()
 		{
+		    ConnParams conparam = null;
+		    SaveIndexClass saveIndexInstance = null;
 			try
 			{
-				SaveIndexClass saveIndexInstance = new SaveIndexClass(Helper.ClassName);
+				saveIndexInstance = new SaveIndexClass(Helper.ClassName);
 				
 				foreach (DataGridViewRow row in dbGridViewProperties.Rows)
 				{
@@ -361,36 +370,40 @@ namespace OMControlLibrary
 				}
 
 				CloseQueryResultToolWindows();
-				
-				ConnParams conparam = dbInteraction.GetCurrentRecentConnection().ConnParam;
-				dbInteraction.CloseCurrDb();
-				saveIndexInstance.SaveIndex();
 
-				RecentQueries currRecentConnection = new RecentQueries(conparam);
-				Db4oClient.conn = conparam;  
-				RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
-				if (tempRc != null)
-					currRecentConnection = tempRc;
-				currRecentConnection.Timestamp = DateTime.Now;
-				dbInteraction.ConnectoToDB(currRecentConnection);
-				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
+				conparam = OMEInteraction.GetCurrentRecentConnection().ConnParam;
+			    OMEInteraction.CloseOMEdb(); 
+				AssemblyInspectorObject.Connection.Closedb(); 
+				saveIndexInstance.SaveIndex(conparam.Connection  );
+                MessageBox.Show("Index Saved Successfully!", Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK);
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
+            try
+            {
+                RecentQueries currRecentConnection = new RecentQueries(conparam);
+                RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
+                if (tempRc != null)
+                    currRecentConnection = tempRc;
+                currRecentConnection.Timestamp = DateTime.Now;
+                AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection);
+                OMEInteraction.SetCurrentRecentConnection(currRecentConnection);
 
-				//Only if following line is added the index is saved.
-				OMQuery omQuery = new OMQuery(saveIndexInstance.Classname , DateTime.Now);
-				long[] objectid = dbInteraction.ExecuteQueryResults(omQuery);
+                if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
+                    ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbAssemblyTreeView);
+                else
+                    ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbtreeviewObject.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbtreeviewObject);
 
-				if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
-					ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbAssemblyTreeView);
-				else
-					ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbtreeviewObject.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbtreeviewObject);
+                tabStripProperties.SelectedItem = tabItemClassProperties;
 
-				tabStripProperties.SelectedItem = tabItemClassProperties;
-				MessageBox.Show("Index Saved Successfully!", Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK);
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+            }
+            catch (Exception Ex)
+            {
+                LoggingHelper.ShowMessage(Ex);
+            }
+			
 		}
 
 		private void CloseQueryResultToolWindows()

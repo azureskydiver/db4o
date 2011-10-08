@@ -4,6 +4,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
 using Db4objects.Db4o.Diagnostic;
+using Db4objects.Db4o.Events;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Internal;
@@ -20,7 +21,7 @@ namespace OManager.DataLayer.Connection
 		private static IObjectContainer objContainer;
 		private static IObjectContainer userConfigDatabase;
 		public static ConnParams conn;
-		public static string RecentConnFile;
+		public static string omnConnection;
 		public static string exceptionConnection = "";
 		public static bool boolExceptionForRecentConn;
 		private static bool isConnected;
@@ -59,6 +60,11 @@ namespace OManager.DataLayer.Connection
 				isConnected=value  ;
 			}
 		}
+        public static bool IsClient
+        {
+            get { return ((IInternalObjectContainer) objContainer).IsClient; }
+           
+        }
 
 		/// <summary>
 		/// Static property which either returns a new object container for a specific logon identity or returns the object container already 
@@ -101,31 +107,36 @@ namespace OManager.DataLayer.Connection
 				catch (InvalidPasswordException)
 				{
 					exceptionConnection = "Incorrect Credentials. Please enter again.";
+					embeddedConfig = null;
 				}
 				catch (DatabaseFileLockedException)
 				{
 					exceptionConnection = "Database is locked and is used by another application.";
+					embeddedConfig = null;
 				}
 				catch (IncompatibleFileFormatException ex)
 				{
 					exceptionConnection = ex.Message;
+					embeddedConfig = null;
 				}
 				catch (System.Net.Sockets.SocketException)
 				{
 					exceptionConnection = "No connection could be made because the target machine actively refused it.";
+					embeddedConfig = null;
 				}
 				catch (InvalidCastException)
 				{
 					exceptionConnection = "Java Database is not supproted.";
+					embeddedConfig = null;
 				}
 				catch (Exception oEx)
 				{
 					exceptionConnection = oEx.Message;
+					embeddedConfig = null;
 				}
 
 				return objContainer;
 			}
-
 		}
 
 		private static IObjectContainer ConnectEmbedded()
@@ -141,7 +152,7 @@ namespace OManager.DataLayer.Connection
 		{
 			IClientConfiguration config = Db4oClientServer.NewClientConfiguration();
 			ConfigureCommon(config.Common);
-			return  Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord);
+			return  Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord) ;
 			
 		}
 		public static void SetIndex (string fieldname, string className, bool isIndexed)
@@ -156,23 +167,22 @@ namespace OManager.DataLayer.Connection
 			config.Queries.EvaluationMode(QueryEvaluationMode.Lazy);
 			config.ActivationDepth = 1;
 			config.AllowVersionUpdates = true ;
-			config.Add(new JavaSupport());
 		}
 		
-		public static IObjectContainer RecentConn
+		public static IObjectContainer OMNConnection
 		{
 			get
 			{
 				try
 				{
-					RecentConnFile = GetOMNConfigdbPath();
-					if (userConfigDatabase == null && RecentConnFile != null)
+					omnConnection = GetOMNConfigdbPath();
+					if (userConfigDatabase == null && omnConnection != null)
 					{
 						IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
 						config.Common.Diagnostic.AddListener(new DiagnosticToTrace());
 						config.Common.UpdateDepth = int.MaxValue;
 						config.Common.ActivationDepth = int.MaxValue;
-						userConfigDatabase = Db4oEmbedded.OpenFile(config,RecentConnFile);
+						userConfigDatabase = Db4oEmbedded.OpenFile(config,omnConnection);
 					}
 				}
 				catch (Exception oEx)
@@ -216,9 +226,9 @@ namespace OManager.DataLayer.Connection
 			
 			try
 			{
-				if (RecentConn != null)
+				if (OMNConnection != null)
 				{
-					RecentConn.Close();
+					OMNConnection.Close();
 					userConfigDatabase = null;
 				}
 

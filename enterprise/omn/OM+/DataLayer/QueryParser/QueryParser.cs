@@ -70,7 +70,7 @@ namespace OManager.DataLayer.QueryParser
 
                             }
                         }
-                        if (qmclause.ClauseLogicalOperator == CommonValues.LogicalOperators.AND)
+                        if (qmclause.ClauseLogicalOperator ==CommonValues.LogicalOperators.AND)
                         {
                             if (buildClause != null)
                             {
@@ -83,13 +83,13 @@ namespace OManager.DataLayer.QueryParser
                                     ConCatClauses = buildClause.And(ConCatClauses);
                                 }
                             }
-                        }           
+                        }      
                     }
 
                 	IConstraint buildGroup = ConCatClauses ?? buildClause;
-                    if (qmGroup.GroupLogicalOperator != CommonValues.LogicalOperators.EMPTY)
+					if (qmGroup.GroupLogicalOperator != CommonValues.LogicalOperators.EMPTY)
                     {
-                        if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.OR)
+						if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.OR)
                         {
 
                             if (buildGroup != null)
@@ -97,7 +97,7 @@ namespace OManager.DataLayer.QueryParser
                                 conCatGroup = conCatGroup.Or(buildGroup);
                             }
                         }
-                        if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.AND)
+						if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.AND)
                         {
 
                             if (buildGroup != null)
@@ -110,7 +110,6 @@ namespace OManager.DataLayer.QueryParser
                     {
                         conCatGroup = buildGroup;
                     }                   
-
                 }
                 IObjectSet objSet= query.Execute();
                 return objSet;
@@ -214,8 +213,6 @@ namespace OManager.DataLayer.QueryParser
                                 c1 = q.Constrain(dt2).Greater();
                                 c2=q.Constrain(dt2.AddDays(1)).Smaller().And(q.Constrain(dt).Greater());
                                 cons =c1.Or(c2);
-                                c1 = null;
-                                c2 = null;
                             }
                             else if (clause.Operator.Equals(BusinessConstants.CONDITION_LESSTHAN))
                             {
@@ -225,7 +222,15 @@ namespace OManager.DataLayer.QueryParser
                             }
                                 break;
                         }
-                    
+                    case BusinessConstants.BOOLEAN:
+                        {
+                            bool check = bool.Parse(clause.Value);
+                            cons = q.Constrain(check);
+                            break;
+                        }
+
+
+
                     default:
                         cons = q.Constrain(type.Cast(clause.Value));
                         break;

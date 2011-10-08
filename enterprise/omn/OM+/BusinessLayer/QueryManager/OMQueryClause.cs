@@ -5,6 +5,7 @@ using OManager.BusinessLayer.Common;
 using OManager.DataLayer.CommonDatalayer;
 namespace OManager.BusinessLayer.QueryManager
 {
+	[Serializable ]
     public class OMQueryClause
     {
 
@@ -13,35 +14,30 @@ namespace OManager.BusinessLayer.QueryManager
         public string Classname
         {
             get { return m_Classname; }
-            //set { m_Classname = value; }
         }
         private string m_Operator;
 
         public string Operator
         {
             get { return m_Operator; }
-            //set { m_Operator = value; }
         }
         private string m_Value;
 
         public string Value
         {
             get { return m_Value; }
-            //set { m_Value = value; }
         }
-        private string m_Fieldname;//Field inside the above class.
+        private string m_Fieldname;
 
         public string Fieldname
         {
             get { return m_Fieldname; }
-            //set { m_Fieldname = value; }
         }
         private string m_FieldType;
 
         public string FieldType
         {
             get { return m_FieldType; }
-            //set { m_FieldType = value; }
         }
 
         private CommonValues.LogicalOperators m_clauseLogicalOperator;
@@ -60,8 +56,6 @@ namespace OManager.BusinessLayer.QueryManager
             m_Operator = fieldoperator;
             m_Value = fieldvalue;
             m_FieldType = fieldtype;  
- 
-
         }
         
 

@@ -49,7 +49,7 @@ namespace OManager.BusinessLayer.Config
                     temprc = recentQueries;
                     temprc.TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
                 }
-			    IObjectContainer dbrecentConn = Db4oClient.RecentConn;
+			    IObjectContainer dbrecentConn = Db4oClient.OMNConnection;
 				dbrecentConn.Store(temprc);
 				dbrecentConn.Commit();
 				Db4oClient.CloseRecentConnectionFile();
@@ -62,9 +62,7 @@ namespace OManager.BusinessLayer.Config
 			}
 
 			return true;
-		}
-
-
+		}	
 
 
 		public List<RecentQueries> GetRecentQueries(bool remote)
@@ -75,7 +73,7 @@ namespace OManager.BusinessLayer.Config
 #if DEBUG
 				CreateOMNDirectory();
 #endif
-				IObjectContainer dbrecentConn = Db4oClient.RecentConn;
+				IObjectContainer dbrecentConn = Db4oClient.OMNConnection;
 				IQuery query = dbrecentConn.Query();
 				query.Constrain(typeof (RecentQueries));
 				if (remote)
@@ -122,10 +120,10 @@ namespace OManager.BusinessLayer.Config
 		public void SaveAssemblySearchPath()
 		{
 
-			PathContainer pathContainer = PathContainerFor(Db4oClient.RecentConn);
-			Db4oClient.RecentConn.Delete(pathContainer.SearchPath);
+			PathContainer pathContainer = PathContainerFor(Db4oClient.OMNConnection);
+			Db4oClient.OMNConnection.Delete(pathContainer.SearchPath);
 			pathContainer.SearchPath = AssemblySearchPath;
-			Db4oClient.RecentConn.Store(pathContainer);
+			Db4oClient.OMNConnection.Store(pathContainer);
 			Db4oClient.CloseRecentConnectionFile();
 		}
 
@@ -137,7 +135,7 @@ namespace OManager.BusinessLayer.Config
 		
 		private static ISearchPath LoadSearchPath()
 		{
-			ISearchPath searchPath = PathContainerFor(Db4oClient.RecentConn).SearchPath;
+			ISearchPath searchPath = PathContainerFor(Db4oClient.OMNConnection).SearchPath;
 			Db4oClient.CloseRecentConnectionFile();
 			return searchPath;
 		}

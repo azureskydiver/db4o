@@ -20,12 +20,9 @@ namespace  OManager.DataLayer.Connection
 
         public void AddProxyInfoToDb(ProxyAuthentication proxyAuthObj)
         {
-            if (Db4oClient.RecentConnFile == null)
-            {
-            	Db4oClient.RecentConnFile = Config.OMNConfigDatabasePath();
-            }
+           
             _proxyAuthObj = proxyAuthObj;
-            _container = Db4oClient.RecentConn;
+            _container = Db4oClient.OMNConnection;
             ProxyAuthenticator proxyobj = ReturnProxyAuthenticationInfo();
             if (proxyobj == null)
             {
@@ -44,11 +41,11 @@ namespace  OManager.DataLayer.Connection
         {
             try
             {
-                if (Db4oClient.RecentConnFile == null)
+                if (Db4oClient.omnConnection == null)
                 {
-                	Db4oClient.RecentConnFile = Config.OMNConfigDatabasePath();
+                	Db4oClient.omnConnection = Config.OMNConfigDatabasePath();
                 }
-                _container = Db4oClient.RecentConn;
+                _container = Db4oClient.OMNConnection;
                 IObjectSet ObjSet = _container.QueryByExample(typeof(ProxyAuthenticator));
             	
 				return ObjSet.Count > 0 ? (ProxyAuthenticator) ObjSet.Next() : null;

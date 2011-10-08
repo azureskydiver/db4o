@@ -7,15 +7,16 @@ using Db4objects.Db4o.Reflect.Generic;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.Connection;
 using OME.Logging.Common;
+using OManager.DataLayer.Reflection;
 
 namespace OManager.DataLayer.CommonDatalayer
 {
     public class DataLayerCommon
     {
-    	public static string Db4oVersion
-    	{
-			get { return Db4oFactory.Version(); }
-    	}
+        public static string Db4oVersion
+        {
+            get { return Db4oFactory.Version(); }
+        }
 
         public static IReflectField GetDeclaredFieldInHeirarchy(IReflectClass aClass, string attribute)
         {
@@ -23,7 +24,7 @@ namespace OManager.DataLayer.CommonDatalayer
             {
                 while (aClass != null)
                 {
-					IReflectField refField = GetDeclaredField(aClass, attribute);
+                    IReflectField refField = GetDeclaredField(aClass, attribute);
                     if (refField != null)
                         return refField;
 
@@ -69,7 +70,7 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
-            	return aClass.GetDeclaredField(attribute);
+                return aClass.GetDeclaredField(attribute);
             }
             catch (Exception e)
             {
@@ -103,7 +104,7 @@ namespace OManager.DataLayer.CommonDatalayer
                 if (parent != null && !(parent.GetName().StartsWith("System.")))
                     ret.AddRange(GetFieldList(parent));
 
-				return ret;
+                return ret;
             }
             catch (Exception e)
             {
@@ -117,11 +118,11 @@ namespace OManager.DataLayer.CommonDatalayer
             try
             {
                 List<IReflectField> ret = new List<IReflectField>();
-            	foreach (IReflectField field in aClass.GetDeclaredFields())
-            	{
-					if (!(field is GenericVirtualField))
-						ret.Add(field);
-            	}
+                foreach (IReflectField field in aClass.GetDeclaredFields())
+                {
+                    if (!(field is GenericVirtualField))
+                        ret.Add(field);
+                }
                 return ret;
             }
             catch (Exception e)
@@ -130,11 +131,11 @@ namespace OManager.DataLayer.CommonDatalayer
             }
             return null;
         }
-       
+
 
         public static string RemoveGFromClassName(string name)
         {
-			return name.Contains("(G) ") ? name.Replace("(G) ", "") : name;
+            return name.Contains("(G) ") ? name.Replace("(G) ", "") : name;
         }
 
         public static IReflectClass ReflectClassForName(string classname)
@@ -144,7 +145,7 @@ namespace OManager.DataLayer.CommonDatalayer
                 IObjectContainer objectContainer = Db4oClient.Client;
                 if (classname != string.Empty)
                 {
-                   classname= RemoveGFromClassName(classname);
+                    classname = RemoveGFromClassName(classname);
                     return objectContainer.Ext().Reflector().ForName(classname);
                 }
             }
@@ -154,13 +155,13 @@ namespace OManager.DataLayer.CommonDatalayer
             }
             return null;
         }
-		public static IReflectClass ReflectClassFor(object obj)
+        public static IReflectClass ReflectClassFor(object obj)
         {
             try
             {
                 if (obj != null)
                 {
-                    IObjectContainer objectContainer = Db4oClient.Client;                   
+                    IObjectContainer objectContainer = Db4oClient.Client;
 
                     return objectContainer.Ext().Reflector().ForObject(obj);
                 }
@@ -170,7 +171,7 @@ namespace OManager.DataLayer.CommonDatalayer
                 LoggingHelper.HandleException(e);
             }
             return null;
-           
+
         }
         public static bool IsCollection(object expandedObj)
         {
@@ -178,11 +179,11 @@ namespace OManager.DataLayer.CommonDatalayer
             {
                 if (expandedObj != null)
                 {
-                    IObjectContainer objectContainer = Db4oClient.Client;
-                    IReflectClass refClass = objectContainer.Ext().Reflector().ForObject(expandedObj);
-                    return refClass.IsCollection();
+                   IReflectClass refClass = Db4oClient.Client.Ext().Reflector().ForObject(expandedObj);
+                    IType type = Db4oClient.TypeResolver.Resolve(refClass);
+                    return type.IsCollection;
                 }
-                return false; 
+                return false;
             }
             catch (Exception oEx)
             {
@@ -200,10 +201,13 @@ namespace OManager.DataLayer.CommonDatalayer
                     IReflectClass refClass = ReflectClassFor(expandedObj);
                     if (refClass != null)
                     {
-                        return refClass.IsArray();
+                      
+                        IType type = Db4oClient.TypeResolver.Resolve(refClass);
+                         return type.IsArray ;
+                
                     }
                 }
-                return false; 
+                return false;
 
             }
             catch (Exception oEx)
@@ -214,33 +218,15 @@ namespace OManager.DataLayer.CommonDatalayer
         }
 
 
-        public static  bool IsPrimitive(object expandedObj)
+        public static bool IsPrimitive(object expandedObj)
         {
             try
             {
-               IReflectClass refClass = ReflectClassFor(expandedObj);// objectContainer.Ext().Reflector().ForObject(expandedObj);              
-               if (refClass != null)
-               {
-                   string type = PrimitiveType(refClass.GetName());
-                   return CommonValues.IsPrimitive(type);
-               }
-               return false;
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return false;
-            }
-        }
-        public static bool CheckForDatetimeOrString(object expandedObj)
-        {
-            try
-            {
-                IReflectClass refClass = ReflectClassFor(expandedObj);// objectContainer.Ext().Reflector().ForObject(expandedObj);              
+                 IReflectClass refClass = ReflectClassFor(expandedObj);
                 if (refClass != null)
                 {
-                    string type = PrimitiveType(refClass.GetName());
-                    return CommonValues.IsDateTimeOrString(type); 
+                    IType type = Db4oClient.TypeResolver.Resolve(refClass);
+                    return type.IsPrimitive;  
                 }
                 return false;
             }
@@ -250,16 +236,8 @@ namespace OManager.DataLayer.CommonDatalayer
                 return false;
             }
         }
-
-        public static string PrimitiveType(string type)
-        {
-            if (type.Contains(","))
-            {
-                int Index = type.LastIndexOf(',');
-                type = type.Substring(0, Index);
-            }
-            return type;
-        }
        
+       
+
     }
 }

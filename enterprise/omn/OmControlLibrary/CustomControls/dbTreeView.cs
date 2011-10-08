@@ -5,6 +5,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.AssemblyInfo;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
@@ -166,7 +169,7 @@ namespace OMControlLibrary.Common
 								Fav.ListClass = lststr;
 							}
 
-							dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
+							OMEInteraction.SaveFavourite( Fav);
 						}
 					}
 				}
@@ -217,10 +220,10 @@ namespace OMControlLibrary.Common
                     return;
                 }
 
-				IType type = dbInteraction.ResolveType(tNode.Tag.ToString());
+				ProxyType  type = AssemblyInspectorObject.DataType.ResolveType(tNode.Tag.ToString());
                 if (tNode.Nodes.Count == 0)
                 {
-                    if (!type.IsEditable) 
+                    if (!(type.IsEditable && (type.IsPrimitive || type.IsNullable)  )) 
                         
                     {
                         DoDragDrop(e.Item, DragDropEffects.None);
@@ -319,9 +322,7 @@ namespace OMControlLibrary.Common
                                     string typeOfObject = string.Empty;
                                     if (treenode.Tag != null)
                                     {
-
-										IType fieldType = dbInteraction.ResolveType(treenode.Tag.ToString());
-											
+                                    	ProxyType  fieldType =AssemblyInspectorObject.DataType.ResolveType(treenode.Tag.ToString());
                                         if (fieldType.IsEditable)
                                         {
                                            
@@ -357,7 +358,7 @@ namespace OMControlLibrary.Common
 					if (SelectedNode.Tag != null && SelectedNode.Tag.ToString() == "Fav Folder")
 					{
 						Fav = new FavouriteFolder(null, SelectedNode.Text);
-						dbInteraction.UpdateFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
+						OMEInteraction.UpdateFavourite( Fav);
 						Nodes.Remove(SelectedNode);
 					}
 					else if (SelectedNode.Parent != null && SelectedNode.Parent.Tag != null &&
@@ -376,7 +377,7 @@ namespace OMControlLibrary.Common
 							}
 							Fav = new FavouriteFolder(lststr, tNode.Parent.Text);
 						}
-						dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
+						OMEInteraction.SaveFavourite( Fav);
 						SelectedNode.Remove();
 					}
 				}
@@ -456,15 +457,21 @@ namespace OMControlLibrary.Common
 		{
             try
             {
-                long TimeforFavCreation =
-                    dbInteraction.GetTimeforFavCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
-                long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
+
+
+
+
+
+				long TimeforFavCreation =
+				   OMEInteraction.GetTimeforFavCreation();
+            	long TimeforDbCreation = AssemblyInspectorObject.Connection.DbCreationTime();
                 if (TimeforFavCreation != 0)
                 {
                 if (TimeforFavCreation > TimeforDbCreation  )
                 {
-                    List<FavouriteFolder> lstfavFolder =
-                        dbInteraction.GetFavourites(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                	List<FavouriteFolder> lstfavFolder =OMEInteraction.GetFavourites();
+
+                       
 
                     if (lstfavFolder != null)
                     {
@@ -500,7 +507,7 @@ namespace OMControlLibrary.Common
                 else
 
                 {
-                    dbInteraction.RemoveFavFolder(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                    OMEInteraction.RemoveFavFolder();
                 }
                     }
             }
@@ -550,16 +557,15 @@ namespace OMControlLibrary.Common
 						AddDummyChildNode(treeNodeNew);
 						continue;
 					}
-
-					IType fieldType = dbInteraction.ResolveType(nodetype);
-						
+					ProxyType fieldType = AssemblyInspectorObject.DataType.ResolveType(nodetype);
                     treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(fieldType);
 
 					treenodeparent.Nodes.Add(treeNodeNew);
 
-                    if (!fieldType.IsEditable )
+                    if (!fieldType.IsEditable && !fieldType.FullName.EndsWith("mscorlib"))
 					{
-						if (dbInteraction.GetFieldCount(ClassNameFor(treeNodeNew)) > 0)
+						if (AssemblyInspectorObject.Connection.GetFieldCount(ClassNameFor(treeNodeNew)) > 0)
+							
 						{
                             if (!fieldType.IsCollection  || !fieldType.IsArray )
 							{
@@ -598,17 +604,18 @@ namespace OMControlLibrary.Common
 			return node.Name.LastIndexOf(',') > 0;
 		}
 
-		private static int SetImageIndex(IType  type)
+		private static int SetImageIndex(ProxyType   type)
 		{
 			int imageIndex = 0;
 
 			try
 			{
-                if (type.IsEditable )
+                if (type.IsEditable &&(type.IsPrimitive || type.IsNullable))	
+
 				{
 					imageIndex = 2;
 				}
-                else if (type.IsArray || type.IsCollection )
+                else if (type.IsArray || type.IsCollection || (type.IsEditable && !type.IsPrimitive))
 				{
 					imageIndex = 3;
 				}
@@ -831,12 +838,12 @@ namespace OMControlLibrary.Common
 				{
 					FavouriteFolder oldfav = new FavouriteFolder(null, folderName);
 					FavouriteFolder newFav = new FavouriteFolder(null, e.Node.Text);
-					dbInteraction.RenameFolderInDatabase(dbInteraction.GetCurrentRecentConnection().ConnParam, oldfav, newFav);
+					OMEInteraction.RenameFolderInDatabase(oldfav, newFav);
 				}
 				else
 				{
 					FavouriteFolder newFav = new FavouriteFolder(null, e.Node.Text);
-					dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, newFav);
+					OMEInteraction.SaveFavourite( newFav);
 				}
 			}
 			catch (Exception oEx)
@@ -891,9 +898,7 @@ namespace OMControlLibrary.Common
 							continue;
 						}
 
-
-						IType fieldType = dbInteraction.ResolveType(nodetype);
-							
+						ProxyType fieldType = AssemblyInspectorObject.DataType.ResolveType(nodetype);
                         treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(fieldType);
 
 					    treenodeparent.Nodes.Add(treeNodeNew);
@@ -917,12 +922,12 @@ namespace OMControlLibrary.Common
 							{
 								className = treenodeparent.Tag.ToString();
 							}
+                            bool collection = AssemblyInspectorObject.DataType.CheckIfCollection(className, nodevalue);
 
-							if (dbInteraction.GetFieldCount(param) > 0)
+                           
+							if (AssemblyInspectorObject.Connection.GetFieldCount(param) > 0)
 							{
-								bool collection = dbInteraction.CheckForCollection(className, nodevalue);
-								bool isarray = dbInteraction.CheckForArray(className, nodevalue);
-								if (!collection || !isarray)
+								if (!collection)
 								{
 									AddDummyChildNode(treeNodeNew);
 									treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 1; //Classes;
@@ -930,9 +935,7 @@ namespace OMControlLibrary.Common
 							}
 							else
 							{
-								bool collection = dbInteraction.CheckForCollection(className, nodevalue);
-								bool isarray = dbInteraction.CheckForArray(className, nodevalue);
-								if (collection || isarray)
+                                if (collection )
 								{
 									treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 3; //Classes;
 								}

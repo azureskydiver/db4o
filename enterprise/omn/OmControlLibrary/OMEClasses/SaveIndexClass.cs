@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using OMAddinDataTransferLayer;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OMControlLibrary.Common;
@@ -38,10 +39,9 @@ namespace OMControlLibrary
 			this.indexed = new ArrayList( );
 		}
 
-		internal void SaveIndex()
+		internal void SaveIndex(string path)
 		{
-
-			dbInteraction.SetIndexedConfiguration(fieldnames, classname, indexed);
+			dbInteraction.SetIndexedConfiguration(fieldnames, classname, indexed, path);
 
 
 		}

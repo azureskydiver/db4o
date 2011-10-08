@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Db4objects.Db4o; 
-using Db4objects.Db4o.Ext ;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.CommonDatalayer;
@@ -9,9 +9,8 @@ using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using System.Collections;
-using OManager.BusinessLayer.Common;
 
-namespace OManager.DataLayer.Modal
+namespace OManager.DataLayer.PropertyDetails
 {
     public class ObjectDetails 
     {
@@ -19,17 +18,29 @@ namespace OManager.DataLayer.Modal
 
 		int level;
         private readonly object m_genObject;
+    	private long id;
 		private readonly List<object> m_listforObjects = new List<object>();
 
-        public ObjectDetails(object genObject)
+        public ObjectDetails(long id)
         {
-            m_genObject = genObject;
-            objectContainer = Db4oClient.Client;
+        	this.id = id;
+			objectContainer = Db4oClient.Client;
+        	m_genObject = objectContainer.Ext().GetByID(id);
+        	objectContainer.Ext().Activate(m_genObject, 1);
+           
         }
+		public ObjectDetails(object obj)
+		{
+
+			m_genObject = obj;
+			
+
+		}
         public string GetUUID()
         {
             try
             {
+				
                 IObjectInfo objInfo = objectContainer.Ext().GetObjectInfo(m_genObject);
                 if (objInfo != null)
                 {
@@ -50,7 +61,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                IObjectInfo objInfo = objectContainer.Ext().GetObjectInfo(m_genObject);
+                IObjectInfo objInfo =  Db4oClient.Client.Ext().GetObjectInfo(m_genObject);
 				return objInfo != null ? objInfo.GetInternalID() : 0;
             }
             catch (Exception oEx)
@@ -60,11 +71,16 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-        public int GetDepth(object obj)
+        public int GetDepth(long id)
         {
-            try{
-            level++;
-            IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);
+
+            try
+            {
+
+                object obj = Db4oClient.Client.Ext().GetByID(id);
+                Db4oClient.Client.Ext().Activate(obj, 1);
+                level++;
+                IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);
                 if (rclass != null)
                 {
                     IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);
@@ -78,11 +94,11 @@ namespace OManager.DataLayer.Modal
                             IType fieldType = Db4oClient.TypeResolver.Resolve(getFieldType);
                             if (getObject != null)
                             {
-                                if (!fieldType.IsEditable )
+                                if (!fieldType.IsEditable)
                                 {
                                     if (fieldType.IsCollection)
                                     {
-                                        ICollection coll = (ICollection)field.Get(obj);
+                                        ICollection coll = (ICollection) field.Get(obj);
                                         ArrayList arrList = new ArrayList(coll);
 
                                         for (int i = 0; i < arrList.Count; i++)
@@ -95,14 +111,16 @@ namespace OManager.DataLayer.Modal
                                                     if (!m_listforObjects.Contains(colObject))
                                                     {
                                                         m_listforObjects.Add(colObject);
-                                                        level = GetDepth(colObject);
-                                                       
+                                                        long objId = new ObjectDetails(colObject).GetLocalID();
+
+                                                        level = GetDepth(objId);
+
                                                     }
                                                 }
                                             }
                                         }
-                                       
-                                       
+
+
                                     }
                                     else if (fieldType.IsArray)
                                     {
@@ -110,7 +128,8 @@ namespace OManager.DataLayer.Modal
                                         int length = objectContainer.Ext().Reflector().Array().GetLength(field.Get(obj));
                                         for (int i = 0; i < length; i++)
                                         {
-                                            object arrObject = objectContainer.Ext().Reflector().Array().Get(field.Get(obj), i);
+                                            object arrObject =
+                                                objectContainer.Ext().Reflector().Array().Get(field.Get(obj), i);
                                             if (arrObject != null)
                                             {
                                                 if (arrObject is GenericObject)
@@ -118,8 +137,8 @@ namespace OManager.DataLayer.Modal
                                                     if (!m_listforObjects.Contains(arrObject))
                                                     {
                                                         m_listforObjects.Add(arrObject);
-                                                        level=GetDepth(arrObject);
-                                                      
+                                                        long objId = new ObjectDetails(arrObject).GetLocalID();
+                                                        level = GetDepth(objId);
                                                     }
                                                 }
 
@@ -131,7 +150,8 @@ namespace OManager.DataLayer.Modal
                                         if (!m_listforObjects.Contains(getObject))
                                         {
                                             m_listforObjects.Add(getObject);
-                                             level=GetDepth(getObject);
+                                            long objId = new ObjectDetails(getObject).GetLocalID();
+                                            level = GetDepth(objId);
                                         }
                                     }
                                 }
@@ -142,9 +162,7 @@ namespace OManager.DataLayer.Modal
             }
             catch (Exception oEx)
             {
-               
                 LoggingHelper.HandleException(oEx);
-
             }
 
             return level;
@@ -155,12 +173,7 @@ namespace OManager.DataLayer.Modal
             IObjectContainer objectContainer = Db4oClient.Client;
             return objectContainer.Ext().GetByID(id);
         }
-
-        public bool checkReference(int objectId)
-        {
-            //not clear how to implemet now will be discussed later.
-            return false ;
-        }
+     
 
         public long GetVersion()
         {

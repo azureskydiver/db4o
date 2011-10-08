@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.ObjectExplorer;
 using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
@@ -316,40 +318,43 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 				string valueColumn = Helper.GetResourceString(Constants.QUERY_GRID_VALUE);
-			    IType type = dbDataGridView.Rows[e.RowIndex].Cells[5].Value as IType;
+			    string fieldName = dbDataGridView.Rows[e.RowIndex].Cells[0].Value.ToString() ;
+                string classname = dbDataGridView.Rows[e.RowIndex].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value.ToString() ;
+			    ProxyType type = dbDataGridView.Rows[e.RowIndex].Cells[5].Value as ProxyType;
 				object value = dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value;
-                
-				if (dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value != null
-					&& !string.IsNullOrEmpty(dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value.ToString()))
-				{
-					//gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value
-                    //Validate the entered value
-					bool isValid = Validations.ValidateDataType(FieldTypeForConstraint(dbDataGridView.CurrentCell.OwningRow), value);
 
-					if (!isValid)
-					{
-						//reset the previous value if value is not valid
-						dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = m_previousCellValue;
-					}
-					else
-					{
-					    //set the changed value if value is valid
-					    if (type.IsSameAs(typeof(DateTime)) && e.ColumnIndex ==2)
-					    {
+                if (dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value != null
+                    && !string.IsNullOrEmpty(dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value.ToString()))
+                {
+                    
+                    bool isValid =
+                        Validations.ValidateDataType(classname, fieldName, value);
+                  
+
+                    if (!isValid)
+                    {
+                        //reset the previous value if value is not valid
+                        dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = m_previousCellValue;
+                    }
+                    else
+                    {
+                        //set the changed value if value is valid
+                        if (AssemblyInspectorObject.DataType.CheckTypeIsSame(type.DisplayName , typeof(DateTime)) && e.ColumnIndex == 2)
+                        {
                             DateTime dt = DateTime.Parse(Convert.ToDateTime(value).ToString("MM/dd/yyyy hh:mm:ss tt"));
-					        dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = dt.ToString();
-					    }
-					    else
-					    {
-                            dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = value.ToString();    
-					    }
-					    
-					}
+                            dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = dt.ToString();
+                        }
+                        else
+                        {
+                            dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = value.ToString();
+                        }
 
-					m_previousCellValue = string.Empty;
+                    }
 
-					OMETrace.WriteFunctionEnd();
-				}
+                    m_previousCellValue = string.Empty;
+
+                    OMETrace.WriteFunctionEnd();
+                }
 			}
 			catch (Exception oEx)
 			{

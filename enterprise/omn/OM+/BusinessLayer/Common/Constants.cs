@@ -23,35 +23,6 @@ namespace OManager.BusinessLayer.Common
         public const string UINT64 = "System.UInt64";
         public const string UINTPTR = "System.UIntPtr";
 
-        public const string STRINGARRAY = "System.String[]";
-        public const string SINGLEARRAY = "System.Single[]";
-        public const string DATETIMEARRAY = "System.DateTime[]";
-        public const string BYTEARRAY = "System.Byte[]";
-        public const string CHARARRAY = "System.Char[]";
-        public const string BOOLEANARRAY = "System.Boolean[]";
-        public const string DECIMALARRAY = "System.Decimal[]";
-        public const string DOUBLEARRAY = "System.Double[]";
-        public const string INT16ARRAY = "System.Int16[]";
-        public const string INT32ARRAY = "System.Int32[]";
-        public const string INT64ARRAY = "System.Int64[]";
-        public const string SBYTEARRAY = "System.SByte[]";
-        public const string UINT16ARRAY = "System.UInt16[]";
-        public const string UINT32ARRAY = "System.UInt32[]";
-        public const string UINT64RRAY = "System.UInt64[]";
-
-        public const string COLLECTION_ILIST = "System.Collections.IList";
-        public const string COLLECTION_ICOLLECTION = "System.Collections.ICollection";
-
-        //public const string STARTSWITH = "STARTSWITH";
-        //public const string ENDSWITH = "ENDSWITH";
-        //public const string EQUALS = "EQUALS";
-        //public const string NOTEQUALS = "NOTEQUALS";
-        //public const string GREATERTHAN = "GREATERTHAN";
-        //public const string GREATERTHANEQUAL = "GREATERTHANEQUAL";
-        //public const string LESSTHAN = "LESSTHAN";
-        //public const string LESSTHANEQUAL = "LESSTHANEQUAL";
-        //public const string CONTAINS = "CONTAINS";
-
         #endregion
 
         #region Conditions for primitive type

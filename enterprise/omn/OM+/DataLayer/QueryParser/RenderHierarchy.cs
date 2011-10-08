@@ -150,7 +150,7 @@ namespace OManager.DataLayer.QueryParser
 					}
 					else if (DataLayerCommon.IsArray(parentObject))
 					{
-						RenderArray(parentNode, parentObject, field);
+					    RenderArray(parentNode, parentObject, field);
 					}
 					else
 					{
@@ -465,44 +465,44 @@ namespace OManager.DataLayer.QueryParser
 		 * 
 		 * For more details see OMNUnitTest.RenderHierarchyTestCase.
 		 */
-		public static bool TryUpdateValueType(TreeGridNode node, object newValue)
-		{
-			if (node == null || node.Parent == null)
-				return false;
+        public static bool TryUpdateValueType(TreeGridNode node, object newValue)
+        {
+            if (node == null || node.Parent == null)
+                return false;
 
-			ValueTypeChange change = ValueTypeChangeFor(node.Parent, 0);
-			if (change == null)
-				return false;
+            ValueTypeChange change = ValueTypeChangeFor(node.Parent, 0);
+            if (change == null)
+                return false;
 
-			FieldInfo fieldInfo = FieldInfoFor(node);
-			if (fieldInfo == null)
-				return false;
+            FieldInfo fieldInfo = FieldInfoFor(node);
+            if (fieldInfo == null)
+                return false;
 
-			fieldInfo.SetValueDirect(TypedReference.MakeTypedReference(change.TargetObject, change.FieldPath.ToArray()), newValue);
-			return true;
-		}
+            fieldInfo.SetValueDirect(TypedReference.MakeTypedReference(change.TargetObject, change.FieldPath.ToArray()), newValue);
+            return true;
+        }
 
-		private static ValueTypeChange ValueTypeChangeFor(TreeGridNode node, int depth)
-		{
-			IType omnType = FieldTypeFor(node);
-			if (omnType.IsCollection || omnType.IsArray)
-				return null;
+        private static ValueTypeChange ValueTypeChangeFor(TreeGridNode node, int depth)
+        {
+            IType omnType = FieldTypeFor(node);
+            if (omnType.IsCollection || omnType.IsArray)
+                return null;
 
-			Type type = Type.GetType(omnType.FullName);
-			if (type == null)
-				return null;
+            Type type = Type.GetType(omnType.FullName);
+            if (type == null)
+                return null;
 
-			if (type.IsValueType)
-			{
-				ValueTypeChange change = ValueTypeChangeFor(node.Parent, depth + 1);
-				if (change != null)
-					change.FieldPath.Add(FieldInfoFor(node));
+            if (type.IsValueType)
+            {
+                ValueTypeChange change = ValueTypeChangeFor(node.Parent, depth + 1);
+                if (change != null)
+                    change.FieldPath.Add(FieldInfoFor(node));
 
-				return change;
-			}
+                return change;
+            }
 
-			return depth == 0 ? null : new ValueTypeChange(node.Tag);
-		}
+            return depth == 0 ? null : new ValueTypeChange(node.Tag);
+        }
 
 
 		private static FieldInfo FieldInfoFor(TreeGridNode node)
@@ -520,7 +520,7 @@ namespace OManager.DataLayer.QueryParser
 
 		public long GetLocalID(object obj)
 		{
-			ObjectDetails objDetails = new ObjectDetails(obj);
+			ObjectDetails objDetails = new ObjectDetails((long)obj);
 			return objDetails.GetLocalID();
 		}
 

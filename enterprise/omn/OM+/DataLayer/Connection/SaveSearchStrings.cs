@@ -47,7 +47,7 @@ namespace OManager.DataLayer.Connection
         {
             try
             {
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 if (m_SearchStringList != null)
                 {
                     GroupofSearchStrings groupSearchString = FetchAllSearchStringsForAConnection();
@@ -155,7 +155,7 @@ namespace OManager.DataLayer.Connection
             GroupofSearchStrings grpSearchStrings = null;
             try
             {
-                container = Db4oClient.RecentConn;
+                container = Db4oClient.OMNConnection;
                 IQuery query = container.Query();
                 query.Constrain(typeof(GroupofSearchStrings));
                 query.Descend("m_connParam").Descend("m_connection").Constrain(m_connParam.Connection);

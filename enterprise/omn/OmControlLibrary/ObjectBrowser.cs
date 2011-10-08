@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
@@ -23,8 +25,8 @@ namespace OMControlLibrary
     {
         #region Private Member Variables
 
-        RecentQueries recConnection;
-        dbInteraction dbInteractionObject;
+        ConnParams  recentConnectioParam;
+    
         dbTreeView dbAssemblyTreeView;
 	
         internal dbTreeView DbAssemblyTreeView
@@ -160,23 +162,11 @@ namespace OMControlLibrary
 			DefaultSetting();
 
 			Helper.ClassName = null;
-			dbInteractionObject = new dbInteraction();
 
-			storedclasses = dbInteractionObject.FetchAllStoredClasses();
+			storedclasses = AssemblyInspectorObject.Connection.FetchAllStoredClasses();
 
 			if (storedclasses != null)
 				classCount = storedclasses.Count;
-
-			//Assembly view disabled for java db. I don't know any other way
-			ICollection keysCollection = storedclasses.Keys;
-			foreach (string str in keysCollection)
-			{
-				if (!str.Contains(","))
-				{
-					toolStripButtonAssemblyView.Enabled = false;
-					break;
-				}
-			}
 
 			//Populate the TreeView
 			dbtreeviewObject.AddFavouritFolderFromDatabase();
@@ -188,9 +178,8 @@ namespace OMControlLibrary
 				propertiesTab.ShowClassProperties = false;
 				toolStripButtonAssemblyView.Enabled = toolStripButtonFlatView.Enabled = false;
 			}
-			recConnection = dbInteraction.GetCurrentRecentConnection();
+			
 			PopulateSearchStrings();
-
 			dbtreeviewObject.Focus();
 			dbtreeviewObject.Refresh();
 			OMETrace.WriteFunctionEnd();
@@ -217,21 +206,21 @@ namespace OMControlLibrary
 			if (toolStripComboBoxFilter == null)
 				toolStripComboBoxFilter = new ToolStripComboBox();
 
-			long TimeforSearhStringCreation =
-				dbInteraction.GetTimeforSearchStringCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
-			long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
-			if (TimeforSearhStringCreation != 0)
+			long timeforSearhStringCreation =
+				OMEInteraction.GetTimeforSearchStringCreation();
+			long timeforDbCreation = AssemblyInspectorObject.Connection.DbCreationTime();   
+			if (timeforSearhStringCreation != 0)
 			{
-				if (TimeforSearhStringCreation > TimeforDbCreation)
+				if (timeforSearhStringCreation > timeforDbCreation)
 				{
-					listSearchStrings = dbInteraction.GetSearchString(recConnection.ConnParam);
+					listSearchStrings = OMEInteraction.GetSearchString();
 					FillFilterComboBox(listSearchStrings);
 
 				}
 				else
 				{
 
-					dbInteraction.RemoveSearchString(dbInteraction.GetCurrentRecentConnection().ConnParam);
+					OMEInteraction.RemoveSearchString();
 					AddSearchItem();
 
 				}
@@ -296,7 +285,7 @@ namespace OMControlLibrary
                 else
                     propertiesTab.ShowClassProperties = true;
 
-                propertiesTab.RefreshPropertiesTab(null);
+                propertiesTab.RefreshPropertiesTab(0);
 
                 ((dbTreeView)sender).UpdateTreeNodeSelection(e.Node, toolStripButtonAssemblyView.Checked);
 
@@ -332,7 +321,7 @@ namespace OMControlLibrary
                 //Get the name of selected item with the namespace
                 string nodeName = e.Node.Name.LastIndexOf(CONST_COMMA_CHAR) == -1 ? e.Node.Tag.ToString() : e.Node.Name;
 
-                Hashtable storedfields = dbInteraction.FetchStoredFields(nodeName);
+            	Hashtable storedfields = AssemblyInspectorObject.Connection.FetchStoredFields(nodeName);
 
                 dbtreeviewObject.AddTreeNode(storedfields, e.Node);
 
@@ -464,7 +453,7 @@ namespace OMControlLibrary
                 }
 
                 SeachString searchString = new SeachString(DateTime.Now, toolStripComboBoxFilter.Text.Trim());
-                dbInteraction.SaveSearchString(recConnection.ConnParam, searchString);
+                OMEInteraction.SaveSearchString(searchString);
                 toolStripButtonFolder.Enabled = false;
                 SetObjectBrowserImages();
                 toolStripButtonFilter.Checked = true;
@@ -476,7 +465,7 @@ namespace OMControlLibrary
             }
             finally
             {
-                listSearchStrings = dbInteraction.GetSearchString(recConnection.ConnParam);
+                listSearchStrings = OMEInteraction.GetSearchString();
                 FillFilterComboBox(listSearchStrings);
                 if (toolStripComboBoxFilter.Text != "")
                     EnableDisablePrevNextButtons();
@@ -642,7 +631,7 @@ namespace OMControlLibrary
 
                     case "Delete Folder":
 						FavouriteFolder Fav = new FavouriteFolder(null, ((TreeNode)e.Data).Text);
-                        dbInteraction.UpdateFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
+                        OMEInteraction.UpdateFavourite( Fav);
 						dbtreeviewObject.Nodes.Remove((TreeNode)e.Data);
                         break;
                     case "Delete Class":
@@ -666,7 +655,7 @@ namespace OMControlLibrary
                                 Fav.ListClass = lststr;
                             }
 
-                            dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
+                            OMEInteraction.SaveFavourite( Fav);
                         }
                         break;
                     default:
@@ -698,7 +687,7 @@ namespace OMControlLibrary
                
                 if (tempTreeNode.Parent != null)
                 {
-                	IType type = dbInteraction.ResolveType(tempTreeNode.Parent.Tag.ToString());
+					ProxyType type = AssemblyInspectorObject.DataType.ResolveType(tempTreeNode.Parent.Tag.ToString());
 					className = type != null ? type.FullName : tempTreeNode.Parent.Name;
                     
                 }
@@ -878,7 +867,7 @@ namespace OMControlLibrary
 				Instance.Enabled = false;
 				PropertiesTab.Instance.Enabled = false;
 				QueryBuilder.Instance.Enabled = false;
-				objectid = dbInteraction.ExecuteQueryResults(omQuery);
+				objectid = AssemblyInspectorObject.DataPopulation.ExecuteQueryResults(omQuery);
 				e.Result = objectid;
 				if (backgroundWorkerToRunQuery != null && backgroundWorkerToRunQuery.IsBusy)
 				{
@@ -1116,7 +1105,8 @@ namespace OMControlLibrary
                     //Get list of class grouped by assemblies
                     if (dbAssemblyTreeView.Nodes.Count < 1)
                     {
-                        storedAssemblies = Helper.DbInteraction.FetchAllStoredClassesForAssembly();
+                    	storedAssemblies = AssemblyInspectorObject.Connection.FetchAllStoredClassesForAssembly();  
+							
                     }
 
                     if (!string.IsNullOrEmpty(filterString) && filterString == toolStripComboBoxFilter.Text.Trim().ToLower())

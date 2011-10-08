@@ -1,8 +1,10 @@
 ﻿/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
+using System;
 using System.Collections.Generic;
 
 namespace OManager.BusinessLayer.Config
 {
+	[Serializable]
 	class SearchPathImpl : ISearchPath
 	{
 		public bool Add(string path)

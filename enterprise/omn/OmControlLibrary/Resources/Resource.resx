@@ -247,10 +247,10 @@
     <value>Depth</value>
   </data>
   <data name="OBJECT_PROPERTY_LOCALID" xml:space="preserve">
-    <value>LocalID</value>
+    <value>LocalId</value>
   </data>
   <data name="OBJECT_PROPERTY_UUID" xml:space="preserve">
-    <value>UUID</value>
+    <value>ObjectUuid</value>
   </data>
   <data name="OBJECT_PROPERTY_VERSION" xml:space="preserve">
     <value>Version</value>

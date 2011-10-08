@@ -1,16 +1,17 @@
 /* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
 
 using System;
+using System.Collections.Generic;
 using Db4objects.Db4o.Reflect;
 using OManager.DataLayer.Connection;
-using OManager.DataLayer.Modal;
-using System.Collections;
 using Db4objects.Db4o.Reflect.Generic;
+using OManager.DataLayer.PropertyDetails;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OManager.DataLayer.PropertyTable
 {
+	
     public class FieldProperties
     {
 		private string m_fieldName;
@@ -49,20 +50,20 @@ namespace OManager.DataLayer.PropertyTable
             get { return m_dataType; }
         }
 
-        public IType Type
-        {
-            get { return m_type; }
-        }
+		public IType Type
+		{
+			get { return m_type; }
+		}
 
-        public static ArrayList FieldsFrom(string className)
+		public static List<FieldProperties> FieldsFrom(string className)
         {
             try
             {
-                ArrayList listFieldProperties = new ArrayList();
+				List<FieldProperties> listFieldProperties = new List<FieldProperties>();
                 ClassDetails clDetails = new ClassDetails(className);
             	foreach (IReflectField field in clDetails.GetFieldList())
                 {
-                    if (!(field is GenericVirtualField))
+                    if (!(field is GenericVirtualField ||  field.IsStatic()  ))
                     {
                     	FieldProperties fp = FieldPropertiesFor(className, field);
                     	listFieldProperties.Add(fp);

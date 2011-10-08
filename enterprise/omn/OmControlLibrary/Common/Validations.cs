@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
@@ -7,15 +9,15 @@ namespace OMControlLibrary.Common
 {
 	class Validations
 	{
-		public static bool ValidateDataType(IType objectType, object data)
+		
+		public static bool ValidateDataType(string classname, string  fieldname, object data)
 		{
 			if (null == data && "null"==data.ToString() ) 
 				return false  ;
 
 			try
 			{
-				objectType.Cast(data);
-				return true;
+				return AssemblyInspectorObject.DataType.ValidateDataType(classname, fieldname , data);
 			}
 			catch (Exception oEx)
 			{
@@ -24,7 +26,39 @@ namespace OMControlLibrary.Common
 
 			return false;
 		}
+        public static bool ValidateDataType(string classname, ProxyType fieldname, object data)
+        {
+            if (null == data && "null" == data.ToString())
+                return false;
 
+            try
+            {
+                return AssemblyInspectorObject.DataType.ValidateDataType(classname, fieldname.DisplayName, data);
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
+
+            return false;
+        }
+        public static bool ValidateDataType(string className, object data)
+        {
+            if (null == data && "null" == data.ToString())
+                return false;
+
+            try
+            {
+                return AssemblyInspectorObject.DataType.CheckIfObjectCanBeCasted(className, data);
+                
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
+
+            return false;
+        }
 		public static bool ValidateRemoteLoginParams(ref ToolTipComboBox comboBoxFilePath, ref TextBox textBoxHost, ref TextBox textBoxPort, ref TextBox textBoxUserName, ref TextBox textBoxPassword)
 		{
 			try

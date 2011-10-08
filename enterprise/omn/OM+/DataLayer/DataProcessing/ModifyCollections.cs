@@ -2,122 +2,60 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.CommonDatalayer;
+using OManager.DataLayer.Modal;
+using OManager.DataLayer.PropertyDetails;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
-namespace OManager.DataLayer.ObjectsModification
+namespace OManager.DataLayer.DataProcessing
 {
     public class ModifyCollections
     {
-        private readonly IObjectContainer objectContainer;
-        public ModifyCollections()
-        {
-            objectContainer = Db4oClient.Client;
-        }
 
-        public void EditCollections(IList objList, IList<int> offsetList, IList<string> names, IList<IType> types, object value)
+
+        public static void SaveCollections(long id, int level)
         {
             try
             {
-                SetFieldForCollection(objList, offsetList, names, types, value);
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-            }
-        }
+                IObjectContainer objectContainer = Db4oClient.Client;
 
-        public static void SaveCollections(object topObject, int level)
-        {
-            try
-            {
+                if (id == 0)
+                    return;
+                object topObject = objectContainer.Ext().GetByID(id);
+                Db4oClient.Client.Ext().Activate(topObject, level);
                 Db4oClient.Client.Ext().Store(topObject, level);
-				Db4oClient.Client.Commit();
+                Db4oClient.Client.Commit();
             }
             catch (Exception oEx)
             {
-				Db4oClient.Client.Rollback();
+                Db4oClient.Client.Rollback();
                 LoggingHelper.HandleException(oEx);
 
             }
         }
 
-        public void SetFieldForCollection(IList objList, IList<int> offsetList, IList<string> names, IList<IType> types, object value)
+
+
+        private static object KeyAtIndex(IDictionary dictionary, int index)
         {
-            try
+           
+            foreach (DictionaryEntry entry in dictionary)
             {
-            	for (int i = 0; i < objList.Count; i++)
-                {
-                	if ( (objList[i]) == null && !types[i].IsNullable) 
-						continue;
+                if (index == 0)
+                    return entry.Key;
 
-                	object obj;
-                	if (CheckForCollections(objList[i]))
-                	{
-                		int offset = offsetList[i];
-
-                		object col = objList[i];
-
-                		if (offsetList[i + 1].Equals(-2))
-                		{
-                			if (col is Array || col is IList)
-                			{
-                				if (objList[i - 1] is IList)
-                				{
-                					obj = ((IList)objList[i - 1])[offset];
-                				}
-                				else
-                				{
-                					obj = objList[i - 1];
-                				}
-                				
-								SaveValues(obj, names[i], value, offsetList[i], types[i]);
-                				break;
-                			}
-
-                		}
-                		else if (col is Hashtable || col is IDictionary)
-                		{
-                			object key = col is Hashtable
-                			             	? ((DictionaryEntry) objList[i + 1]).Key
-                			             	: KeyAtIndex((IDictionary) col, offset);
-                			
-							SaveDictionary(objList[i - 1], names[i], value, key);
-                		}
-                	}
-                	else if (types[i].IsEditable)
-                	{
-                		obj = objList[i - 1];
-                		SaveValues(obj, names[i], value, offsetList[i - 1], types[i]);
-                	}
-                }
+                index--;
             }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-            }
+
+            return null;
         }
 
-    	private static object KeyAtIndex(IDictionary dictionary, int index)
-    	{
-    		foreach (DictionaryEntry entry in dictionary)
-    		{
-				if (index == 0)
-    				return entry.Key;
-    			
-				index--;
-    		}
-    		
-			return null;
-    	}
-
-    	public void SaveDictionary(object targetObject, string attribName, object newValue, object key)
+        public static void SaveDictionary(object targetObject, string attribName, object newValue, object key)
         {
             try
             {
@@ -127,20 +65,20 @@ namespace OManager.DataLayer.ObjectsModification
                     IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
                     if (rfield != null)
                     {
-                        if (!(rfield is GenericVirtualField))
+                        if (!(rfield is GenericVirtualField || rfield.IsStatic()))
                         {
-                            object objValue1 = rfield.Get(targetObject);
-                            ICollection col = (ICollection) objValue1;
+                            object obj = rfield.Get(targetObject);
+                            ICollection col = (ICollection)obj;
                             if (col is Hashtable)
                             {
-                                Hashtable hash = (Hashtable)col;
+                                Hashtable hash = (Hashtable) col;
                                 hash.Remove(key);
                                 hash.Add(key, newValue);
                                 rfield.Set(targetObject, hash);
                             }
                             else if (col is IDictionary)
                             {
-                                IDictionary dict = (IDictionary)col;
+                                IDictionary dict = (IDictionary) col;
                                 dict.Remove(key);
                                 dict.Add(key, newValue);
                                 rfield.Set(targetObject, dict);
@@ -152,67 +90,54 @@ namespace OManager.DataLayer.ObjectsModification
             }
             catch (Exception oEx)
             {
-                objectContainer.Rollback();
+                Db4oClient.Client.Rollback();
                 LoggingHelper.HandleException(oEx);
 
             }
 
         }
 
-    	public void SaveValues(object targetObject, string attribName, object newValue, int offset, IType type)
+        public static void SaveValues(long id, string attribName, object newValue, int offset)
         {
             try
             {
+                object targetObject = Db4oClient.Client.Ext().GetByID(id);
+                Db4oClient.Client.Ext().Activate(targetObject, 2);
                 IReflectClass rclass = DataLayerCommon.ReflectClassFor(targetObject);
                 IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
-                if (rfield != null && !(rfield is GenericVirtualField))
+                IType type = new FieldDetails(rclass.GetName(), attribName).GetFieldType();
+                object obj = rfield.Get(targetObject);
+
+                if (obj is IDictionary)
                 {
-                    if (type.IsArray || type.IsCollection)
+                    SaveDictionary(targetObject, attribName, newValue, KeyAtIndex((IDictionary)obj, offset/2));
+                }
+                else
+                {
+
+                    if (rfield != null && !(rfield is GenericVirtualField || rfield.IsStatic()))
                     {
-                    	IList list = rfield.Get(targetObject) as IList;
-						if (null != list)
+                        if (type.IsArray || type.IsCollection)
                         {
-							list[offset] = newValue;
-							rfield.Set(targetObject, list);
+                            IList list = obj as IList;
+                            if (null != list)
+                            {
+                                list[offset] = newValue;
+                                rfield.Set(targetObject, list);
+                            }
                         }
-                    }
-                    else
-                    {
-						SetObject(rfield, targetObject, newValue);
+
                     }
                 }
             }
             catch (Exception oEx)
             {
-                objectContainer.Rollback();
+                Db4oClient.Client.Rollback();
                 LoggingHelper.HandleException(oEx);
             }
         }
 
-        public bool CheckForCollections(object obj)
-        {
-            try
-            {
-                return DataLayerCommon.IsCollection(obj) || DataLayerCommon.IsArray(obj);
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return false;
-            }
-        }
 
-        public void SetObject(IReflectField rfield, object containingObject, object newValue)
-        {
-            try
-            {
-				rfield.Set(containingObject, newValue);
-            }
-            catch (Exception oEx)
-            {
-                objectContainer.Rollback();
-                LoggingHelper.HandleException(oEx);
-            }
-        }
+
     }
 }

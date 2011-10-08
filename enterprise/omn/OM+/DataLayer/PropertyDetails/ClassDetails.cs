@@ -1,16 +1,16 @@
 using System;
 using System.Collections;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Reflect;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.CommonDatalayer;
-using OManager.BusinessLayer.Common;
-
 using OME.Logging.Common;
+using OManager.DataLayer.Reflection;
 
-namespace OManager.DataLayer.Modal
+namespace OManager.DataLayer.PropertyDetails
 {
-    class ClassDetails 
+    public class ClassDetails 
     {
         private readonly IObjectContainer objectContainer;
         private readonly string m_className;
@@ -44,12 +44,12 @@ namespace OManager.DataLayer.Modal
 
                 foreach (IReflectField field in rFields)
                 {
-                    if (!FieldList.ContainsKey(field.GetName()))
+                   if (!FieldList.ContainsKey(field.GetName()))
                     {
-						
-                    	FieldList.Add(
-							field.GetName(), 
-							field.GetFieldType().GetName());
+
+                        FieldList.Add(
+                            field.GetName(),
+                            field.GetFieldType().GetName());
                     }
                 }
                 return FieldList;
@@ -57,10 +57,12 @@ namespace OManager.DataLayer.Modal
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
-                return null; 
+                return null;
             }
         }
 
+
+       
         public int GetFieldCount()
         {
             try
@@ -68,11 +70,9 @@ namespace OManager.DataLayer.Modal
                 IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_className);
                 if (rClass != null)
                 {
-                    string type1 = rClass.ToString();
-                    type1 = DataLayerCommon.PrimitiveType(type1);
-                    char[] arr = CommonValues.charArray;
-                    type1 = type1.Trim(arr);
-                    if (!CommonValues.IsPrimitive(type1) && !type1.Contains(BusinessConstants.DB4OBJECTS_SYS))
+                   
+                    IType type = Db4oClient.TypeResolver.Resolve(rClass);
+                    if (!type.IsEditable)
                     {
                         IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                         return rFields.Length;
@@ -101,6 +101,33 @@ namespace OManager.DataLayer.Modal
                 return null;
             }
            
-        }      
+        }
+		public void SetIndex(ArrayList fieldnames, string className, ArrayList Indexed, string path)
+		{
+		    IObjectContainer con = null;
+            try
+            {
+                IEmbeddedConfiguration embeddedConfig = Db4oEmbedded.NewConfiguration();
+
+                for (int i = 0; i < fieldnames.Count; i++)
+                {
+                    embeddedConfig.Common.ObjectClass(className).ObjectField(fieldnames[i].ToString()).Indexed(Convert.ToBoolean(Indexed[i]));
+                }
+
+                con = Db4oEmbedded.OpenFile(embeddedConfig, path);
+                IReflectClass clazz = con.Ext().Reflector().ForName(className);
+                con.QueryByExample(clazz);
+                
+            }
+            catch (Exception e)
+            {
+                
+                throw e;
+            }
+            finally
+            {
+                con.Close();
+            }
+		}
     }
 }

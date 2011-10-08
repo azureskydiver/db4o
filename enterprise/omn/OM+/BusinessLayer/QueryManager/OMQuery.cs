@@ -8,6 +8,7 @@ using OME.Logging.Tracing;
 
 namespace OManager.BusinessLayer.QueryManager
 {
+	[Serializable ]
     public class OMQuery
     {
         private List<OMQueryGroup> m_listQueryGroup ;
@@ -47,23 +48,15 @@ namespace OManager.BusinessLayer.QueryManager
             get { return queryString; }
             set { queryString = value; }
         }
-
-
-        
-
-        //OmQuery change name to QueryGroupList
+     
         public List<OMQueryGroup> ListQueryGroup
         {
             get { return m_listQueryGroup; }
             set { m_listQueryGroup = value; } 
         }
 
-        //public Common.Common.LogicalOperators logicalOperator;
-
         public void AddOMQuery(OMQueryGroup omQuerygroup)
         {
-
-            //ValidateOMQueryToAdd(omQueryClause);
             ListQueryGroup.Add(omQuerygroup);
         }      
 
@@ -76,7 +69,7 @@ namespace OManager.BusinessLayer.QueryManager
                 foreach (OMQueryGroup group in m_listQueryGroup)
                 {
 
-                    groupString = groupString + string.Format("{0}", group.ToString());
+                    groupString = groupString + string.Format("{0}", group);
                 }
 
                 groupString = groupString.Replace("EMPTY", "");
