@@ -7,6 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.Login;
 using EnvDTE;
@@ -25,14 +27,14 @@ namespace OMControlLibrary.Common
 	{
 		#region Member Variable
 
-		private static dbInteraction m_dbInteraction;
+		
 		private static string m_className;
 		private static string m_baseClass;
 		private static List<OMQuery> m_listOMQueries;
 		private static Hashtable m_OMResultedQuery = new Hashtable();
 		private static int m_tabIndex;
 
-		private static Window loginToolWindow;
+		
 		private static Window queryResultToolWindow;
 	
 		private static List<Hashtable> m_hashList;
@@ -48,14 +50,8 @@ namespace OMControlLibrary.Common
 		private const string GENERIC_TEXT = "(G) ";
 		private const string RECENT_QUERY_QUERY_COLUMN = "Query";
 		private const string RECENT_QUERY_OMQUERY_COLUMN = "OMQuery";
-		private const char CONST_COMMA = ',';
-		private const char CONST_DOT = '.';
-		private const string CONST_COLLECTION = "Collections";
-		internal const string STATUS_FULLFUNCTIONALITYMODE = "Connected - All OME functionality available";
-		internal const string STATUS_REDUCEDMODELOGGEDIN = "Connected -  OME Functionality is limited";
-
-		internal const string STATUS_LOGGEDOUT = "Not Connected -All Functionality is limited";
-
+		
+	
 		#endregion
 
 		#region Static Properties
@@ -110,21 +106,7 @@ namespace OMControlLibrary.Common
 			}
 
 		}
-		/// <summary>
-		/// Get the instace of dbInteaction Class
-		/// </summary>
-		public static dbInteraction DbInteraction
-		{
-			get
-			{
-				if (m_dbInteraction == null)
-					m_dbInteraction = new dbInteraction();
-				return m_dbInteraction;
-			}
-
-			set { m_dbInteraction = value; }
-		}
-
+		
 		/// <summary>
 		/// Get/Set the selected class
 		/// </summary>
@@ -167,7 +149,7 @@ namespace OMControlLibrary.Common
 		{
 			get
 			{
-				RecentQueries recQueries = dbInteraction.GetCurrentRecentConnection();
+				RecentQueries recQueries = OMEInteraction.GetCurrentRecentConnection();  
 				if (recQueries != null)
 				{
 					m_listOMQueries = recQueries.QueryList;
@@ -178,6 +160,7 @@ namespace OMControlLibrary.Common
 					m_listOMQueries.Sort(comp);
 				}
 				return m_listOMQueries;
+				
 			}
 			set { m_listOMQueries = value; }
 		}
@@ -264,12 +247,11 @@ namespace OMControlLibrary.Common
 				newRow[1] = null;
 
 				recentQueriesDatatable.Rows.Add(newRow);
-                long TimeForRecentQueriesCreation =
-			        dbInteraction.GetTimeforRecentQueriesCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
-                long TimeforDbCreation = DbInteraction.dbCreationTime();
-                if (TimeForRecentQueriesCreation != 0)
+				long timeForRecentQueriesCreation = OMEInteraction.GetTimeforRecentQueriesCreation();
+				long timeforDbCreation = AssemblyInspectorObject.Connection.DbCreationTime(); 
+                if (timeForRecentQueriesCreation != 0)
                 {
-                    if (TimeForRecentQueriesCreation > TimeforDbCreation)
+                    if (timeForRecentQueriesCreation > timeforDbCreation)
                     {
                         foreach (OMQuery qry in qrylist)
                         {
@@ -285,7 +267,7 @@ namespace OMControlLibrary.Common
                     }
                     else
                     {
-                        dbInteraction.RemoveRecentQueries(dbInteraction.GetCurrentRecentConnection().ConnParam);
+						OMEInteraction.RemoveRecentQueries();
                         ListOMQueries.Clear();
                     }
                 }
@@ -301,15 +283,7 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		public static string GetTypeOfObject(string nodetype)
-		{
-			int indexof = nodetype.IndexOf(CONST_COMMA);
-			string typeofObject = string.Empty;
-
-			if (indexof != -1)
-				typeofObject = nodetype.Substring(0, indexof);
-			return typeofObject;
-		}
+		
 
 		public static bool OnTreeViewAfterExpand(object sender, TreeViewEventArgs e)
 		{
@@ -323,44 +297,7 @@ namespace OMControlLibrary.Common
 			return false;
 		}
 
-		/// <summary>
-		/// Check for the primitive data type
-		/// </summary>
-		/// <param name="type"></param>
-		/// <returns></returns>
-		public static bool IsPrimitive(string type)
-		{
-			bool isPrimitive;
-
-			switch (type)
-			{
-				case OManager.BusinessLayer.Common.BusinessConstants.STRING:
-				case OManager.BusinessLayer.Common.BusinessConstants.SINGLE:
-				case OManager.BusinessLayer.Common.BusinessConstants.DATETIME:
-				case OManager.BusinessLayer.Common.BusinessConstants.BYTE:
-				case OManager.BusinessLayer.Common.BusinessConstants.CHAR:
-				case OManager.BusinessLayer.Common.BusinessConstants.BOOLEAN:
-				case OManager.BusinessLayer.Common.BusinessConstants.DECIMAL:
-				case OManager.BusinessLayer.Common.BusinessConstants.DOUBLE:
-				case OManager.BusinessLayer.Common.BusinessConstants.INT16:
-				case OManager.BusinessLayer.Common.BusinessConstants.INT32:
-				case OManager.BusinessLayer.Common.BusinessConstants.INT64:
-				case OManager.BusinessLayer.Common.BusinessConstants.INTPTR:
-				case OManager.BusinessLayer.Common.BusinessConstants.SBYTE:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINT16:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINT32:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINT64:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINTPTR:
-				case "":
-					isPrimitive = true;
-					break;
-				default:
-					isPrimitive = false;
-					break;
-			}
-
-			return isPrimitive;
-		}
+		
 
 	    public static string FormulateParentName(TreeNode tempTreeNode, IDictionaryEnumerator eNum)
 		{
@@ -431,39 +368,7 @@ namespace OMControlLibrary.Common
 			}
 			return string.Empty;
 		}
-
-		public static bool IsArrayOrCollection(string type)
-		{
-			bool isArrayOrCollection = false;
-
-			switch (type)
-			{
-				case OManager.BusinessLayer.Common.BusinessConstants.STRINGARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.SINGLEARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.DATETIMEARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.BYTEARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.CHARARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.BOOLEANARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.DECIMALARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.DOUBLEARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.INT16ARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.INT32ARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.INT64ARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.SBYTEARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINT16ARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINT32ARRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.UINT64RRAY:
-				case OManager.BusinessLayer.Common.BusinessConstants.COLLECTION_ICOLLECTION:
-				case OManager.BusinessLayer.Common.BusinessConstants.COLLECTION_ILIST:
-				case "":
-					isArrayOrCollection = true;
-					break;
-			}
-			if (type.Contains(CONST_COLLECTION))
-				isArrayOrCollection = true;
-
-			return isArrayOrCollection;
-		}
+       
 
 		public static bool CheckUniqueNessAttributes(string fullpath, dbDataGridView datagridAttributeList)
 		{
@@ -503,7 +408,6 @@ namespace OMControlLibrary.Common
 				BaseClass = string.Empty;
 
 				ClassName = string.Empty;
-				DbInteraction = null;
 				if (HashClassGUID != null)
 					HashClassGUID.Clear();
 
@@ -642,7 +546,7 @@ namespace OMControlLibrary.Common
 
         public static string GetCaption(string evaluateString)
         {
-            string caption=string.Empty ;
+            string caption = string.Empty;
 
 
             int index = evaluateString.LastIndexOf(Constants.CONST_COMMA_CHAR);
@@ -681,8 +585,8 @@ namespace OMControlLibrary.Common
         public delegate void delPassData(long[] objectid);
 		public static void CreateQueryResultToolwindow(long[] objectid)
 		{
-			string caption = GetCaption(BaseClass);
-			QueryResultToolWindow = ViewBase.CreateToolWindow(Constants.QUERYRESULT, caption, GetClassGUID(BaseClass));
+			
+            QueryResultToolWindow = ViewBase.CreateToolWindow(Constants.QUERYRESULT, BaseClass, GetClassGUID(BaseClass));
 			QueryResultToolWindow.IsFloating = false;
 			QueryResultToolWindow.Linkable = false;
 			if (QueryResultToolWindow.AutoHides)
@@ -707,6 +611,9 @@ namespace OMControlLibrary.Common
             dbDataGridAttributes.Rows[index].Cells[0].Tag = className;
             dbDataGridAttributes.ClearSelection();
             dbDataGridAttributes.Rows[index].Cells[0].Selected = true;
+            ProxyType type = AssemblyInspectorObject.DataType.ResolveType(className);
+            string newclassName = type != null ? type.FullName : className;
+            dbDataGridAttributes.Rows[index].Tag = newclassName;
         }
 
 		public static void SaveDataIfRequired()

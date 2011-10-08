@@ -1,6 +1,6 @@
 using System;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Ext ;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.Connection;
@@ -8,9 +8,9 @@ using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
-namespace OManager.DataLayer.Modal
+namespace OManager.DataLayer.PropertyDetails
 {
-    class FieldDetails 
+    public class FieldDetails 
     {
         private readonly IObjectContainer objectContainer;
         private readonly string m_classname; 
@@ -19,7 +19,7 @@ namespace OManager.DataLayer.Modal
         public FieldDetails(string classname, string fieldname)
         {
             string CorrectfieldName = fieldname;
-            int intIndexof = CorrectfieldName.IndexOf('.') + 1;
+            int intIndexof = CorrectfieldName.LastIndexOf('.') + 1;
             CorrectfieldName = CorrectfieldName.Substring(intIndexof, CorrectfieldName.Length - intIndexof);
 
             m_classname = DataLayerCommon.RemoveGFromClassName(classname);
@@ -87,51 +87,6 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-        public bool IsCollection()
-        {
-            try
-            {
-            	IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
-                if (rClass != null)
-                {
-                    IReflectField rField = DataLayerCommon.GetDeclaredFieldInHeirarchy(rClass, m_fieldname);
-                    if (rField != null)
-                    {
-                    	return rField.GetFieldType().IsCollection();
-                    }
-                }
-                return false;
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return false;
-            }
-        }
-
-        public bool IsArray()
-        {
-            try
-            {
-                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
-                if (rClass != null)
-                {
-                    IReflectField rField = DataLayerCommon.GetDeclaredFieldInHeirarchy(rClass, m_fieldname);
-                    if (rField != null)
-                    {
-                        return rField.GetFieldType().IsArray();
-                    }
-                }
-				return false;
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return false;
-            }
-        }       
-
-
         public IType GetFieldType()
         {
             GenericReflector reflecotr = objectContainer.Ext().Reflector();
@@ -141,5 +96,7 @@ namespace OManager.DataLayer.Modal
 
             return Db4oClient.TypeResolver.Resolve(rfield.GetFieldType());
         }
+
+       
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using OMAddinDataTransferLayer;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OMControlLibrary.Common;
@@ -26,8 +27,9 @@ namespace OMControlLibrary
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
 				currRecentConnection.ConnParam = conparam;
-				dbInteraction.ConnectoToDB(currRecentConnection);
-				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
+				AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection);
+				OMEInteraction.SetCurrentRecentConnection(currRecentConnection);
+                OMEInteraction.SaveRecentConnection(currRecentConnection);
 
 
 			}

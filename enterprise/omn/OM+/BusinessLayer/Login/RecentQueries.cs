@@ -15,14 +15,14 @@ namespace OManager.BusinessLayer.Login
 
     //Comments
     //check for some data structures which give uniqueness of the queries.
-    public class RecentQueries
+
+	[Serializable ]
+    public class RecentQueries 
     {
         #region Declaration
         DateTime m_timestamp;
         ConnParams m_connParam;
         List<OMQuery> m_queryList;
-        [Transient]
-        IObjectContainer container = null;
         private long m_TimeOfCreation;
         public long TimeOfCreation
         {
@@ -36,9 +36,7 @@ namespace OManager.BusinessLayer.Login
         public RecentQueries(ConnParams connParam)
         {
             m_queryList = new List<OMQuery>();
-            this.m_connParam = connParam;
-          //  container = Db4oClient.RecentConn;
-           
+            m_connParam = connParam;
         }
 
         public List<OMQuery> QueryList
@@ -59,29 +57,16 @@ namespace OManager.BusinessLayer.Login
             set { m_timestamp = value; }
         }
 
-
-        //public RecentQueries PopulateParameters(DateTime date)
-        //{
-        //    this.Timestamp = date;
-        //    this.ConnParam = m_connParam;
-        //    return this;
-        //}
-
-
-
         public void AddQueryToList(OMQuery query)
         {
 			try
 			{
-				container = Db4oClient.RecentConn;
+				IObjectContainer  container = Db4oClient.OMNConnection;
 				if (QueryList != null)
 				{
 					CompareQueryTimestamps comp = new CompareQueryTimestamps();
 
 					List<OMQuery> qList = FetchAllQueries();
-					//  qList.Sort(comp);
-
-
 					if (qList.Count >= 20)
 					{
 						bool check = false;
@@ -158,7 +143,7 @@ namespace OManager.BusinessLayer.Login
 										//if query string is same as already in the list then remove from the list
 										//so that same string can be added again with updated timestamp
 
-										foreach (OMQuery qry1 in this.QueryList)
+										foreach (OMQuery qry1 in QueryList)
 										{
 											if (q.QueryString.Equals(qry1.QueryString))
 											{
@@ -172,7 +157,7 @@ namespace OManager.BusinessLayer.Login
 						}
 					}
 					//add query with latest timestamp.
-					this.QueryList.Add(query);
+					QueryList.Add(query);
 					RecentQueries temprc = this.ChkIfRecentConnIsInDb();
 					if (temprc != null)
 					{
@@ -186,7 +171,6 @@ namespace OManager.BusinessLayer.Login
 					}
 					container.Ext().Store(temprc, 5);
 					container.Commit();
-					container = null;
 					Db4oClient.CloseRecentConnectionFile();
 
 
@@ -195,14 +179,14 @@ namespace OManager.BusinessLayer.Login
 			catch (Exception oEx)
 			{
 				LoggingHelper.HandleException(oEx);
-				container = null;
+				
 				Db4oClient.CloseRecentConnectionFile();
 			}
         }
 
         private List<OMQuery> FetchAllQueries()
         {
-            container = Db4oClient.RecentConn;
+            IObjectContainer  container = Db4oClient.OMNConnection;
             IQuery query = container.Query();
             query.Constrain(typeof(RecentQueries));
             IObjectSet os = query.Execute();
@@ -234,7 +218,7 @@ namespace OManager.BusinessLayer.Login
             IObjectSet objSet;
             try
             {
-                container = Db4oClient.RecentConn;
+                IObjectContainer container = Db4oClient.OMNConnection;
                 IQuery query = container.Query();
                 query.Constrain(typeof(RecentQueries));
                 query.Descend("m_connParam").Descend("m_connection").Constrain(m_connParam.Connection);    
@@ -257,7 +241,7 @@ namespace OManager.BusinessLayer.Login
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
-                container = null;
+             
                 Db4oClient.CloseRecentConnectionFile();
                 
             }
@@ -288,7 +272,7 @@ namespace OManager.BusinessLayer.Login
             IObjectSet objSet = null;
             try
             {
-                container = Db4oClient.RecentConn;
+                IObjectContainer  container = Db4oClient.OMNConnection;
                 IQuery qry = container.Query();
                 qry.Constrain(typeof(RecentQueries));
                 if (m_connParam.Host == null)
@@ -322,11 +306,11 @@ namespace OManager.BusinessLayer.Login
 
         public void deleteRecentQueriesForAConnection()
         {
-            List<OMQuery> qList = new List<OMQuery>();           
+            
             IObjectSet objSet = null;
             try
             {
-                container = Db4oClient.RecentConn;
+               IObjectContainer  container = Db4oClient.OMNConnection;
                 IQuery query = container.Query();
                 query.Constrain(typeof(RecentQueries));
                 query.Descend("m_connParam").Descend("m_connection").Constrain(m_connParam.Connection);
@@ -339,9 +323,8 @@ namespace OManager.BusinessLayer.Login
                     {
 
                         OMQuery q = recQueries.m_queryList[0]; 
-                        if (q != null)
-                        {
-                           // m_queryList.Remove(q); 
+                        if (q != null){
+                           
                             container.Delete(q);
                             
                         }

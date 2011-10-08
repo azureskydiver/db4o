@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{73E41A2F-EDD6-4547-BB46-0D33965994EC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -73,6 +73,7 @@
     <Compile Include="AboutOME.Designer.cs">
       <DependentUpon>AboutOME.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppDomainDetails.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\dbImages.cs" />
     <Compile Include="Common\Enums.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="TabStrip\Design\OMETabStripItemDesigner.cs" />
     <Compile Include="TabStrip\Enums.cs" />
     <Compile Include="TabStrip\Helpers\CollectionWithEvents.cs" />
+    <Compile Include="TreeGridViewRendering\RenderTreeGridView.cs" />
     <Compile Include="ViewBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -273,6 +275,10 @@
     <ProjectReference Include="..\OM+\OMPlus.csproj">
       <Project>{E4ED4CBB-BD2F-4DC8-8C01-5413216DCB9A}</Project>
       <Name>OMPlus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OMAddinDataTransferLayer\OMAddinDataTransferLayer-2008.csproj">
+      <Project>{FAD4092B-6902-48D4-ADC5-673D4C799AEA}</Project>
+      <Name>OMAddinDataTransferLayer-2008</Name>
     </ProjectReference>
     <ProjectReference Include="..\TreeGridView\ExpandableGridView.csproj">
       <Project>{2EFE526F-79B3-49BC-9575-A7B258C59BB5}</Project>

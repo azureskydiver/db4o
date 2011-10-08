@@ -7,21 +7,21 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.QueryParser;
-using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
+using OMControlLibrary.TreeGridViewRendering;
 using OME.AdvancedDataGridView;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 using Constants=OMControlLibrary.Common.Constants;
-using Thread=System.Threading.Thread;
+
 
 namespace OMControlLibrary
 {
@@ -52,7 +52,7 @@ namespace OMControlLibrary
 		private const int m_pagingStartIndex = 0;
 		private int m_pageCount = 1;
 
-		private readonly WindowVisibilityEvents windowsVisEvents;
+	
 		private readonly WindowEvents _windowsEvents;
 		private static WindowVisibilityEvents _events;
 
@@ -92,8 +92,10 @@ namespace OMControlLibrary
 					labelNoOfObjects.Text = pagingData.ObjectId.Count.ToString();
 					if (lstObjIdLong.Count > 0)
 					{
-						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass,
-						                                                                  omQuery.AttributeList);
+						List<Hashtable> hashListResult = AssemblyInspectorObject.DataPopulation.ReturnQueryResults(pagingData, true,
+						                                                                                              omQuery.BaseClass,
+						                                                                                              omQuery.
+						                                                                                              	AttributeList);
 						masterView.SetDataGridColumnHeader(hashListResult, ClassName, omQuery.AttributeList);
 						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
 						ListofModifiedObjects.AddDatagrid(ClassName, masterView);
@@ -115,7 +117,7 @@ namespace OMControlLibrary
 					}
 
 				}
-				ApplyReadonlyCondition(dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly);
+				ApplyReadonlyCondition(OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly);
 			}
 			catch (Exception oEx)
 			{
@@ -242,63 +244,68 @@ namespace OMControlLibrary
 
 		#region DataGridView Events
 
-		private void masterView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-		{
-			try
-			{
-				OMETrace.WriteFunctionStart();
+        private void masterView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                OMETrace.WriteFunctionStart();
 
-				EnsureDetailViewItemNotSelected();
+                EnsureDetailViewItemNotSelected();
 
-				DataGridViewCell cell = masterView[e.ColumnIndex, e.RowIndex];
-				object currObj = cell.OwningRow.Tag;
-				string fieldName = masterView.Columns[e.ColumnIndex].HeaderText;
-				object value = cell.Value;
+                DataGridViewCell cell = masterView[e.ColumnIndex, e.RowIndex];
+                long id = (long) cell.OwningRow.Tag;
+                string fieldName = masterView.Columns[e.ColumnIndex].HeaderText;
+                object value = cell.Value;
+                if (value != "null" && Validations.ValidateDataType(cell.OwningColumn.Tag.ToString(), fieldName, value))
+                {
+                    if (strstoreValue != value.ToString())
+                    {
+                        if (id != 0)
+                        {
+                            UpdateMasterViewObjectEditedStatus(masterView.Rows[e.RowIndex], true);
+                            //masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value =
+                            //AssemblyInspectorObject.DataType.CastObject(cell.OwningColumn.Tag.ToString(), fieldName,
+                            //                                                value);
+                            AssemblyInspectorObject.DataSave.EditObject(id, fieldName, value);
 
-			    IType type = (IType) cell.Tag;
-			    if (Validations.ValidateDataType(type, value))
-				{
-					if (strstoreValue != value.ToString())
-					{
-						if (currObj != null)
-						{
-							UpdateMasterViewObjectEditedStatus(masterView.Rows[e.RowIndex], true);
-							dbInteraction.EditObject(currObj, fieldName, value.ToString());
+                            AssemblyInspectorObject.DataSave.AddObjectToObjectCache(id);
+                            masterView.Rows[e.RowIndex].Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Tag =
+                                fieldName.Split('.').Length;
+                            //TODO: Why double check the condition bellow here? )
+                            if (strstoreValue != value.ToString())
+                            {
+                                cell.Style.ForeColor = Color.Red;
+                                cell.Style.SelectionForeColor = Color.Red;
 
-                            masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = type.Cast(cell.Value);
-							//TODO: Why double check the condition bellow here? 
-							if (strstoreValue != value.ToString())
-							{
-								cell.Style.ForeColor = Color.Red;
-								cell.Style.SelectionForeColor = Color.Red;
+                                detailsTabs.SelectedItem.Name = CONST_TRUE;
 
-								detailsTabs.SelectedItem.Name = CONST_TRUE;
+                                UpdateDataTreeView(cell.OwningRow.Tag, cell.OwningRow);
+                            }
+                        }
 
-								UpdateDataTreeView(cell.OwningRow.Tag, cell.OwningRow);
-							}
-						}
+                        btnSave.Enabled = true;
+                    }
+                    cell.OwningColumn.SortMode = sortStore;
 
-						btnSave.Enabled = true;
-					}
-					cell.OwningColumn.SortMode = sortStore;
+                    OMETrace.WriteFunctionEnd();
+                }
+                else
+                {
 
-					OMETrace.WriteFunctionEnd();
-				}
-				else
-				{
-                    masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = type.Cast(strstoreValue);
-					strstoreValue = string.Empty;
-					cell.Style.ForeColor = Color.Black;
-					cell.Style.SelectionForeColor = Color.White;
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
+                    masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value =
+                        AssemblyInspectorObject.DataType.CheckIfObjectCanBeCasted(cell.OwningColumn.Tag.ToString(), fieldName, strstoreValue);
+                    strstoreValue = string.Empty;
+                    cell.Style.ForeColor = Color.Black;
+                    cell.Style.SelectionForeColor = Color.White;
+                }
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
+        }
 
-		private void EnsureDetailViewItemNotSelected()
+	    private void EnsureDetailViewItemNotSelected()
 		{
 			TreeGridView treeview = TreeViewFor(detailsTabs.SelectedItem);
 			if (treeview.SelectedRows.Count > 0)
@@ -323,7 +330,8 @@ namespace OMControlLibrary
                     string[] splitString = fieldName.Split('.');
                     fieldName = splitString[splitString.Length - 1];
                 }
-                IType fieldType = dbInteraction.GetFieldType(cell.OwningColumn.Tag.ToString(), fieldName);
+				ProxyType  fieldType = AssemblyInspectorObject.DataType.GetFieldType(cell.OwningColumn.Tag.ToString(), fieldName);
+					
                 if (!fieldType.IsEditable)
 				{
 					e.Cancel = true;
@@ -351,10 +359,15 @@ namespace OMControlLibrary
 				if (masterView.SelectedRows.Count > 0 && detailsTabs.SelectedItem != null)
 				{
 					object selectedObject = masterView.SelectedRows[0].Tag;
-					if (selectedObject != null && selectedObject.Equals(ReferencedObjectFor(detailsTabs.SelectedItem)))
+					if (selectedObject == null)
+
+						return;
+
+					long selectedId = (long) selectedObject;
+					if (selectedId != 0 && selectedId == ReferencedObjectFor(detailsTabs.SelectedItem))
 					{
 						PropertiesTab.Instance.ShowObjectPropertiesTab = true;
-						PropertiesTab.Instance.RefreshPropertiesTab(selectedObject);
+						PropertiesTab.Instance.RefreshPropertiesTab(selectedId);
 						return;
 					}
 				}
@@ -374,8 +387,9 @@ namespace OMControlLibrary
 						detailsTabs.SelectedItem = foundTab;
 						return;
 					}
-
-					TreeGridView treeview = dbInteraction.GetObjectHierarchy(row.Tag, ClassName);
+					 
+					TreeGridView treeview = new RenderTreeGridView().RenderTreeGridViewDetails((long)row.Tag, ClassName);
+					
 
 					OMETabStripItem tabPage = new OMETabStripItem(DetailsTabCaptionFor(row), treeview);
 					tabPage.Name = tabPage.Title;
@@ -387,7 +401,7 @@ namespace OMControlLibrary
 					{
 						detailsTabs.SelectedItem = tabPage;
 					}
-					
+
 				}
 				else
 					row.Selected = false;
@@ -398,9 +412,9 @@ namespace OMControlLibrary
 			}
 		}
 
-		private static object ReferencedObjectFor(OMETabStripItem item)
+		private static long ReferencedObjectFor(OMETabStripItem item)
 		{
-			return TreeViewFor(item).Nodes[0].Tag;
+			return (long)TreeViewFor(item).Nodes[0].Tag;
 		}
 
 		private static string DetailsTabCaptionFor(DataGridViewRow row)
@@ -441,7 +455,7 @@ namespace OMControlLibrary
 		private void treeview_Click(object sender, EventArgs e)
 		{
 			TreeGridView treeview = (TreeGridView) sender;
-			CheckForObjectPropertiesTab(treeview.Nodes[0].Tag);
+			CheckForObjectPropertiesTab((long)treeview.Nodes[0].Tag);
 		}
 
 		private void treeview_OnContextMenuItemClicked(object sender, ContextItemClickedEventArg e)
@@ -462,36 +476,31 @@ namespace OMControlLibrary
 		            return;
 
 		        TreeGridNode node = (TreeGridNode) treeview.SelectedCells[0].OwningRow;
+                long id = (long)node.Parent.Tag;	
+		    	    
+		           
 
-		        long id = dbInteraction.GetLocalID(treeview.Nodes[0].Tag);
-
-		       
-		            dbInteraction.SetFieldToNull(
-		                ParentObjectFor(node),
-		                CommonValues.UndecorateFieldName(node.Cells[0].Value.ToString()));
-
-	           object obj = null;
+                AssemblyInspectorObject.DataSave.SetFieldToNull(id, CommonValues.UndecorateFieldName(node.Cells[0].Value.ToString()));
+	           bool objectExist = false;
 				if (id != 0)
 				{
-					obj = dbInteraction.GetObjById(id);
+					objectExist =  AssemblyInspectorObject.DataPopulation.CheckIfObjectExists (id); 
 				}
 				else
 				{
 					MessageBox.Show("This object is already Null.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
-					                MessageBoxButtons.OK, MessageBoxIcon.Information);
-				    return;
+										MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
 				}
-                
-				if (obj != null)
-				{
-					dbInteraction.RefreshObject(obj, DepthFor(node));
 
+                if (objectExist)
+				{
+					AssemblyInspectorObject.DataSave.RefreshObject(id, DepthFor(node));
 					UpdateResultTable(treeview.SelectedCells[0].OwningRow.Cells[0],
 					                  "null",
 					                  (TreeGridNode) treeview.SelectedCells[0].OwningRow.Cells[0].OwningRow,
 					                  (OMETabStripItem) treeview.Parent, true);
-
-					treeview = dbInteraction.GetObjectHierarchy(obj, FieldTypeNameFor(treeview.Nodes[0]));
+                    treeview = new RenderTreeGridView().RenderTreeGridViewDetails((long)treeview.Nodes[0].Tag, FieldTypeNameFor(treeview.Nodes[0]));
 					detailsTabs.SelectedItem.Controls.Clear();
 					detailsTabs.SelectedItem.Controls.Add(treeview);
 					RegisterTreeviewEvents(treeview);
@@ -515,7 +524,7 @@ namespace OMControlLibrary
 					pgData.ObjectId = lstObjIdLong;
 					if (lstObjIdLong.Count > 0)
 					{
-						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pgData, false, omQuery.BaseClass,
+						List<Hashtable> hashListResult = AssemblyInspectorObject.DataPopulation.ReturnQueryResults(pgData, false, omQuery.BaseClass,
 						                                                                  omQuery.AttributeList);
 						Hashtable hAttributes = null;
 
@@ -526,7 +535,7 @@ namespace OMControlLibrary
 						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
 					}
 
-					treeview = dbInteraction.GetObjectHierarchy(ReferencedObjectFor(detailsTabs.SelectedItem), ClassName);
+					treeview = new RenderTreeGridView().RenderTreeGridViewDetails(ReferencedObjectFor(detailsTabs.SelectedItem), ClassName);
 
 				    if (detailsTabs.SelectedItem != null) detailsTabs.SelectedItem.Controls.Add(treeview);
 				    RegisterTreeviewEvents(treeview);
@@ -543,9 +552,7 @@ namespace OMControlLibrary
 
 		private static bool IsObjectInMasterViewEdited(DataGridViewRow row)
 		{
-			return row != null 
-				? Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value)
-				: false;
+			return row != null && Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value);
 		}
 
 		private static int DepthFor(TreeGridNode node)
@@ -563,10 +570,7 @@ namespace OMControlLibrary
 			return depth;
 		}
 
-		private static object ParentObjectFor(TreeGridNode node)
-		{
-			return node.Parent.Tag;
-		}
+		
 
 		private static void treeview_OnContextMenuOpening(object sender, ContextItemClickedEventArg e)
 		{
@@ -576,11 +580,11 @@ namespace OMControlLibrary
 				treeview.EndEdit();
 
 				CancelEventArgs args = e.CancelEventArguments;
-				if(dbInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly)
-				{
-					args.Cancel = true;
-					return;
-				}
+                if (OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly)
+                {
+                    args.Cancel = true;
+                    return;
+                }
 				if (treeview.SelectedRows.Count > 0)
 				{
 					DataGridViewRow selectedRow = treeview.SelectedCells[0].OwningRow;
@@ -600,9 +604,10 @@ namespace OMControlLibrary
 			}
 		}
 
-		private static bool IsSetToNullOperationValidFor(IType targetFieldType, object containingObject)
+		private static bool IsSetToNullOperationValidFor(ProxyType  targetFieldType, object containingObject)
 		{
-          return (targetFieldType.HasIdentity || targetFieldType.IsNullable) && (containingObject != null);
+		    return targetFieldType != null &&
+		           ((targetFieldType.HasIdentity || targetFieldType.IsNullable) && (containingObject != null));
 		}
 
 	    private static string FieldTypeNameFor(DataGridViewRow fieldRow)
@@ -610,11 +615,24 @@ namespace OMControlLibrary
 			return FieldTypeForObjectInRow(fieldRow).FullName;
 		}
 
-		private static IType FieldTypeForObjectInRow(DataGridViewRow fieldRow)
+		private static ProxyType FieldTypeForObjectInRow(DataGridViewRow fieldRow)
 		{
-		   return (IType) fieldRow.Cells[2].Tag;
+		   return (ProxyType ) fieldRow.Cells[2].Tag;
 		}
 
+	   
+	    private string fieldName;
+        private string FieldNameForObjectInRow(TreeGridNode node)
+        {
+            if (node.Cells[2].Tag != null)
+            {
+                fieldName = node.Cells[1].Tag.ToString() ;
+                return fieldName;
+            }
+            FieldNameForObjectInRow(node.Parent);
+
+            return fieldName;
+        }
 	    #endregion
 
 		#region TreeView Events
@@ -631,7 +649,9 @@ namespace OMControlLibrary
 
 				e.Node.Nodes.RemoveAt(0);
 				TreeGridView tree = e.Node.DataGridView as TreeGridView;
-				Helper.DbInteraction.ExpandTreeNode(e.Node, ((tree.Parent)).Name == CONST_TRUE);
+				new RenderTreeGridView().AddNodesToTreeview(e.Node, ((tree.Parent)).Name == CONST_TRUE);
+				
+				
 			}
 			catch (Exception oEx)
 			{
@@ -639,92 +659,130 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void treeview_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-		{
-			OMETrace.WriteFunctionStart();
+	    private long id1;
+        private long getId(TreeGridNode row)
+        {
+           
+            if (row != null)
+            {
 
-			if (masterView.SelectedRows.Count > 0)
-				masterView.SelectedRows[0].Selected = false;
+                if (!(row.Parent.Tag is ICollection || row.Parent.Tag is DictionaryEntry)
+                    && long.Parse(row.Parent.Tag.ToString()) > 0 && !AssemblyInspectorObject.DataType.CheckIfCollection((long)row.Parent.Tag))
+                {
+                    id1 = (long)row.Parent.Tag;
+                    return id1;
+                }
 
-			DataGridViewCell cell = ((TreeGridView) sender).CurrentCell;
 
-			if (Validations.ValidateDataType(FieldTypeForObjectInRow(cell.OwningRow), cell.Value))
-			{
-				if (strstoreTreeValue != cell.Value.ToString())
-				{
-					ArrayList hierarchy = new ArrayList();
-					List<int> offset = new List<int>();
-					List<string> nameList = new List<string>();
-					List<IType> typeList = new List<IType>();
-					try
-					{
-						TreeGridNode currNode = (TreeGridNode) cell.OwningRow;
+                getId(row.Parent);
+            }
 
-						hierarchy.Add(currNode.Tag);
-						nameList.Add((string) currNode.Cells[0].Value);
-						offset.Add(-2);
-						typeList.Add(FieldTypeForObjectInRow(currNode));
+            return id1;
+        }
 
-						TreeGridNode node = currNode;
-						while (node.Parent.Tag != null)
-						{
-							hierarchy.Add(node.Parent.Tag);
-							typeList.Add(FieldTypeForObjectInRow(node.Parent));
-							int level = -1;
 
-							if (dbInteraction.IsArray(node.Parent.Tag) || dbInteraction.IsCollection(node.Parent.Tag))
-							{
-								string name = (string) node.Parent.Cells[0].Value;
-								level = node.Parent.Nodes.IndexOf(node);
-								int index = name.IndexOf(CONST_SPACE);
-								name = name.Substring(0, index);
-								nameList.Add(name);
-							}
-							else
-							{
-								nameList.Add((string) node.Parent.Cells[0].Value);
-							}
 
-							offset.Add(level);
 
-							node = node.Parent;
-						}
-						hierarchy.Reverse();
-						nameList.Reverse();
-						typeList.Reverse();
-						offset.Reverse();
 
-						object newValue = ValueType(typeList).Cast(cell.Value);
-						if (!RenderHierarchy.TryUpdateValueType(currNode, newValue))
-						{
-							Helper.DbInteraction.UpdateCollection(hierarchy, offset, nameList, typeList, newValue);
-						}
+        private void treeview_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            OMETrace.WriteFunctionStart();
+            string className = string.Empty;
+            if (masterView.SelectedRows.Count > 0)
+                masterView.SelectedRows[0].Selected = false;
 
-						OMETabStripItem pg = (OMETabStripItem)((TreeGridView)sender).Parent;
-						pg.Name = CONST_TRUE;
-						UpdateDeepestFieldChanged(pg, hierarchy.Count);
+            DataGridViewCell cell = ((TreeGridView) sender).CurrentCell;
+            TreeGridNode node = cell.OwningRow as TreeGridNode;
+            ProxyType type = node.Cells[2].Tag as ProxyType;
+            if (type == null || type.FullName == string.Empty)
+                className = node.Cells[2].Value.ToString();
+            else
+                className = type.FullName;
 
-						UpdateResultTable(cell, cell.Value, currNode, pg, false);
-						cell.OwningRow.Selected = true;
-					}
-					catch (Exception ex)
-					{
-						LoggingHelper.ShowMessage(ex);
-					}
-				}
-			}
-			else
-			{
-				cell.Style.ForeColor = Color.Black;
-				cell.Style.SelectionForeColor = Color.White;
-				cell.Value = strstoreTreeValue;
-				strstoreTreeValue = string.Empty;
-			}
+           
+            if (Validations.ValidateDataType(className, cell.Value))
+            {
+                if (strstoreTreeValue != cell.Value.ToString())
+                {
+                    try
+                    {
+                     
+                        int level;
+                        long id;
+                        if (
+                            !AssemblyInspectorObject.DataType.CheckIfCollection(getId(node),
+                                                                                FieldNameForObjectInRow(node)))
+                        {
+                            TreeGridNode currNode = node;
+                            string fName = currNode.Cells[0].Value.ToString();
+                            id = GetIdOfObject(currNode);
+                            level = GetNodeLevel(node);
+                            AssemblyInspectorObject.DataSave.EditObject(id, fName, cell.Value.ToString());
+                        }
+                        else
+                        {
 
-			OMETrace.WriteFunctionEnd();
-		}
+                            string fName = FieldNameForObjectInRow(node);
+                            id = getId(node);
+                            int index = node.Parent.Nodes.IndexOf(node);
+                            object newvalue = AssemblyInspectorObject.DataType.ReturnCastObject(
+                                node.Cells[2].Value.ToString(), cell.Value);
+                            level = GetNodeLevel(node);
+                            AssemblyInspectorObject.DataSave.SaveCollection(id, fName, newvalue, index);
+                        }
+                        AssemblyInspectorObject.DataSave.AddObjectToObjectCache(id);
+                        OMETabStripItem pg = (OMETabStripItem) ((TreeGridView) sender).Parent;
+                        pg.Name = CONST_TRUE;
+                        UpdateDeepestFieldChanged(pg, level);
 
-		private OMETabStripItem FindDetailsTabFor(object candidate)
+                        UpdateResultTable(cell, cell.Value, node, pg, false);
+                        cell.OwningRow.Selected = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingHelper.ShowMessage(ex);
+                    }
+                }
+            }
+            else
+            {
+                cell.Style.ForeColor = Color.Black;
+                cell.Style.SelectionForeColor = Color.White;
+                cell.Value = strstoreTreeValue;
+                strstoreTreeValue = string.Empty;
+            }
+
+            OMETrace.WriteFunctionEnd();
+        }
+
+
+	    private static long GetIdOfObject(TreeGridNode currNode)
+	    {
+	        long id=0;
+	        while (currNode.Parent != null)
+	        {
+	            currNode = currNode.Parent;
+	            id = (long) currNode.Tag;
+
+	            if (id > 0)
+	                break;
+	        }
+	        return id;
+	    }
+
+	    private static int GetNodeLevel(TreeGridNode currNode)
+	    {
+	        int level = 0;
+	        
+	        while (currNode.Parent != null)
+	        {
+	            currNode = currNode.Parent;
+	            level++;
+	        }
+	        return level;
+	    }
+
+	    private OMETabStripItem FindDetailsTabFor(long candidate)
 		{
 			foreach(OMETabStripItem current in detailsTabs.Controls)
 			{
@@ -737,7 +795,7 @@ namespace OMControlLibrary
 			return null;
 		}
 
-		private int UpdateDethForObject(object obj)
+		private int UpdateDethForObject(long obj)
 		{
 			OMETabStripItem detailsPage = FindDetailsTabFor(obj);
 			return UpdateDethFor(detailsPage);
@@ -745,7 +803,7 @@ namespace OMControlLibrary
 
 		private static int UpdateDethFor(OMETabStripItem detailsTab)
 		{
-			return detailsTab.Tag != null ?  (int) detailsTab.Tag : 0;
+			return detailsTab.Tag != null ?  (int) detailsTab.Tag : 1;
 		}
 
 		private static void UpdateDeepestFieldChanged(Control detailsTab, int depth)
@@ -832,7 +890,6 @@ namespace OMControlLibrary
 				if (masterView.SelectedRows.Count > 0)
 					masterView.SelectedRows[0].Selected = false;
 
-				//DataGridViewCell cell = ((TreeGridView) sender).CurrentCell;
 				strstoreTreeValue = cell.Value != null ? cell.Value.ToString() : string.Empty;
 			}
 			catch (Exception oEx)
@@ -856,7 +913,9 @@ namespace OMControlLibrary
 					if (IsObjectInMasterViewEdited(row))
 					{
 						UpdateMasterViewObjectEditedStatus(row, false);
-						dbInteraction.SaveObjects(row.Tag);
+					    AssemblyInspectorObject.DataSave.SaveObjects((long) row.Tag,(int)row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Tag);
+                                
+					
 					}
 				}
 				int startindex = (int) masterView.Rows[masterView.Rows.Count - 1].Cells[1].Value;
@@ -868,8 +927,8 @@ namespace OMControlLibrary
 
 				PagingData pagingData = new PagingData(startindex, endindex);
 				pagingData.ObjectId = lstObjIdLong;
-				dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass, omQuery.AttributeList);
 
+				AssemblyInspectorObject.DataPopulation.ReturnQueryResults(pagingData, true, omQuery.BaseClass, omQuery.AttributeList);
 				MakeAllElementsInGridBlack(masterView);
 				btnSave.Enabled = false;
 				buttonSaveResult.Enabled = false;
@@ -891,7 +950,7 @@ namespace OMControlLibrary
 				if (masterView.SelectedRows.Count > 0)
 				{
 					DataGridViewRow row = masterView.SelectedRows[0];
-                    long deletedId = dbInteraction.GetLocalID(row.Tag);
+					long deletedId =(long) row.Tag;
                     int objectIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
 					if (deletedId > 0)
 					{
@@ -905,9 +964,9 @@ namespace OMControlLibrary
 
 						if (dialogRes == DialogResult.OK)
 						{
-							dbInteraction.DeleteObject(row.Tag);
+							AssemblyInspectorObject.DataSave.DeleteObject((long) row.Tag);
 
-							RemoveObjectFromDetailsView(row.Tag);
+							RemoveObjectFromDetailsView((long)row.Tag);
 
 							UpdateObjectDetailTablCaptions(objectIndex);
 
@@ -925,9 +984,7 @@ namespace OMControlLibrary
 							masterView.Rows.Clear();
 							if (lstObjIdLong.Count > 0)
 							{
-								List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagData, true,
-								                                                                  omQuery.BaseClass,
-								                                                                  omQuery.AttributeList);
+								List<Hashtable> hashListResult = AssemblyInspectorObject.DataPopulation.ReturnQueryResults(pagData, true, omQuery.BaseClass, omQuery.AttributeList);
 								Hashtable hAttributes = (omQuery != null) ? omQuery.AttributeList : null;
 								masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, pagData.StartIndex + 1);
 
@@ -969,7 +1026,7 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void RemoveObjectFromDetailsView(object obj)
+		private void RemoveObjectFromDetailsView(long obj)
 		{
 			OMETabStripItem found = FindDetailsTabFor(obj);
 			if (found != null)
@@ -993,7 +1050,7 @@ namespace OMControlLibrary
 				}
 				PagingData pagingData = new PagingData(startindex, endindex);
 				pagingData.ObjectId = lstObjIdLong;
-				dbInteraction.ReturnQueryResults(pagingData, false, omQuery.BaseClass, omQuery.AttributeList);
+				AssemblyInspectorObject.DataPopulation.ReturnQueryResults(pagingData, false, omQuery.BaseClass, omQuery.AttributeList);
 				btnSave.Enabled = false;
 				buttonSaveResult.Enabled = false;
 				OMETrace.WriteFunctionEnd();
@@ -1010,8 +1067,7 @@ namespace OMControlLibrary
 			{
 				if (detailsPage.Name.Equals(CONST_TRUE))
 				{
-					Helper.DbInteraction.SaveCollection(ReferencedObjectFor(detailsPage), UpdateDethFor(detailsPage));
-
+                    AssemblyInspectorObject.DataSave.SaveCollection(ReferencedObjectFor(detailsPage), UpdateDethFor(detailsPage));
 					PaintBlack(TreeViewFor(detailsPage));
 					detailsPage.Name = CONST_FALSE;
 
@@ -1143,7 +1199,7 @@ namespace OMControlLibrary
 						{
 							if (IsObjectInMasterViewEdited(row))
 							{
-								dbInteraction.RefreshObject(row.Tag, UpdateDethForObject(row.Tag));
+								AssemblyInspectorObject.DataSave.RefreshObject((long)row.Tag, UpdateDethForObject((long)row.Tag));
 								UpdateDataTreeView(row.Tag, row);
 							}
 						}
@@ -1231,7 +1287,8 @@ namespace OMControlLibrary
 						pagingData.ObjectId = lstObjIdLong;
 						if (lstObjIdLong.Count > 0)
 						{
-							List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagingData, true, omQuery.BaseClass, omQuery.AttributeList);
+							List<Hashtable> hashListResult =AssemblyInspectorObject.DataPopulation.ReturnQueryResults(pagingData, false, omQuery.BaseClass, omQuery.AttributeList);
+								
 							if (omQuery != null)
 							{
 								hAttributes = omQuery.AttributeList;
@@ -1532,7 +1589,7 @@ namespace OMControlLibrary
 				CheckForObjectPropertiesTab(ReferencedObjectFor(item));
 		}
 
-		private void CheckForObjectPropertiesTab(object SelectedObject)
+		private void CheckForObjectPropertiesTab(long SelectedObject)
 		{
 			try
 			{
@@ -1585,6 +1642,8 @@ namespace OMControlLibrary
         
 		private void masterView_Click(object sender, EventArgs e)
 		{
+			//new RenderTreeGridView().RenderTreeGridViewDetails((long)masterView.SelectedRows[0].Tag,ClassName  ); 
+			//AssemblyInspectorObject.DataSave.GetObject((long)masterView.SelectedRows[0].Tag);
 			masterView_SelectionChanged(sender, e);
 		}
 
@@ -1599,8 +1658,8 @@ namespace OMControlLibrary
 					OMETabStripItem detailsTab = FindDetailsTabForObjectIndex(DetailsTabCaptionFor(row));
 					if (detailsTab != null)
 					{
-						TreeGridView treeview = dbInteraction.GetObjectHierarchy(objUpdated, ClassName);
-
+						
+						TreeGridView treeview =new RenderTreeGridView().RenderTreeGridViewDetails((long)objUpdated, ClassName);
 						detailsTab.Controls.Clear();
 						detailsTab.Controls.Add(treeview);
 						RegisterTreeviewEvents(treeview);
@@ -1666,7 +1725,7 @@ namespace OMControlLibrary
                     if (treenodeParent.Cells[0].Value.ToString().IndexOf(CONST_COMMA) != -1)
                     {
                         //Set the base class name for selected field
-                        Helper.BaseClass = parentName;
+                        Helper.BaseClass = fieldName;
                         fieldName = treenodeParent.Cells[0].Value.ToString().Split(CONST_COMMA.ToCharArray())[0];
                     }
                     string[] completename = fieldName.Split('.');
@@ -1698,7 +1757,7 @@ namespace OMControlLibrary
 			return fillpathString;
 		}
 
-		private static IType ValueType(IList<IType> types)
+		private static ProxyType  ValueType(IList<ProxyType > types)
 		{
 			return types[types.Count - 1];
 		}

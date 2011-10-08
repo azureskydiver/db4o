@@ -70,7 +70,7 @@ namespace OME.Logging.Common
                 }
             }
 
-            FileStream traceFileStream = new FileStream(traceFileNameWithPath, fileOpenMode, FileAccess.Write);
+            FileStream traceFileStream = new FileStream(traceFileNameWithPath, fileOpenMode, FileAccess.Write,FileShare.ReadWrite  );
             return traceFileStream;
         }
         #endregion

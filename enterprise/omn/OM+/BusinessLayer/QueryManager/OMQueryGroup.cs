@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OManager.BusinessLayer.Common;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
+
 
 namespace OManager.BusinessLayer.QueryManager
 {
+	[Serializable ]
     public class OMQueryGroup
     {
         private List<OMQueryClause> m_listQueryClauses;

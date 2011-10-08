@@ -1,29 +1,19 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.Connection;
-using OManager.BusinessLayer.Common;
 using OManager.DataLayer.CommonDatalayer;
+using OManager.DataLayer.QueryParser;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
-namespace OManager.DataLayer.ObjectsModification
+namespace OManager.DataLayer.DataProcessing
 {
-    class ModifyObjects
+    public class ModifyObjects
     {
-        private readonly IObjectContainer objectContainer;
-		private readonly object m_objectToProcess;
 
-        public ModifyObjects(object MainObjects)
-        {
-            objectContainer = Db4oClient.Client;
-            m_objectToProcess = MainObjects;
-        }
-
-        public static object EditObjects(object obj, string attribute, string value)
+        public static void EditObjects(long id, string attribute, object  value)
         {
             try
             {
@@ -32,14 +22,58 @@ namespace OManager.DataLayer.ObjectsModification
                 fieldName = fieldName.Substring(intIndexof, fieldName.Length - intIndexof);
 
                 string[] splitstring = fieldName.Split('.');
-                object holdParentObject = obj;
 
+                object holdParentObject = Db4oClient.Client.Ext().GetByID(id);
+                Db4oClient.Client.Ext().Activate(holdParentObject, 2);
                 foreach (string str in splitstring)
                 {
-                    holdParentObject = SetField(str, holdParentObject, fieldName, value);
+                    holdParentObject = SetField(str, holdParentObject, value);
                 }
+               
 
-                return obj;
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+             
+
+            }
+        }
+
+        private static object SetField(string attribName, object subObject, object  newValue)
+        {
+            try
+            {
+               
+                IReflectClass rclass = DataLayerCommon.ReflectClassFor(subObject);
+                if (rclass == null)
+                    return null;
+
+                IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
+                if (rfield == null)
+                    return null;
+
+                if (rfield is GenericVirtualField || rfield.IsStatic())
+                    return null;
+
+
+
+                IType fieldType = Db4oClient.TypeResolver.Resolve(rfield.GetFieldType());
+                if (!fieldType.IsEditable)
+                {
+                    if (!fieldType.IsCollection && !fieldType.IsArray)
+                    {
+                        subObject = rfield.Get(subObject);
+                        Db4oClient.Client.Ext().Activate(subObject, 2);
+                        return subObject;
+                    }
+                }
+                else if (subObject != null)
+                {
+                    rfield.Set(subObject, fieldType.Cast(newValue));
+                    return subObject;
+                }
+                return null;
             }
             catch (Exception oEx)
             {
@@ -47,96 +81,71 @@ namespace OManager.DataLayer.ObjectsModification
                 return null;
             }
         }
+
        
-        private static object SetField(string attribName, object subObject, string fullattribName, string fieldValue)
+
+        public static object GetObjects(long id)
         {
-            try
-            {
-            	IReflectClass rclass = DataLayerCommon.ReflectClassFor(subObject);
-            	if (rclass == null)
-            		return null;
+            IObjectContainer objectContainer = Db4oClient.Client;
 
-            	IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
-            	if (rfield == null)
-            		return null;
-
-            	if (rfield is GenericVirtualField)
-            		return null;
-
-            	IType fieldType = Db4oClient.TypeResolver.Resolve(rfield.GetFieldType());
-            	if (!fieldType.IsEditable)
-            	{
-					if (!fieldType.IsCollection && !fieldType.IsArray)
-            			return rfield.Get(subObject);
-            	}
-            	else if (subObject != null)
-				{
-					SetObject(rfield, subObject, fieldType, fieldValue);
-            	}
-
-            	return null;
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
+            if (id == 0)
                 return null;
-            }
+            object obj = objectContainer.Ext().GetByID(id);
+            Db4oClient.Client.Ext().Activate(obj, 1);
+            return obj;
+
         }
 
-		public static void SetObject(IReflectField rfield, object containingObject, IType fieldType, string newValue)
+
+        public static void SaveObjects(long id, int depth)
         {
-            try
+        	IObjectContainer objectContainer = Db4oClient.Client;
+			try
             {
-				rfield.Set(containingObject, fieldType.Cast(newValue));
+            	if (id == 0)
+            		return ;
+            	object obj=objectContainer.Ext().GetByID(id);
+                Db4oClient.Client.Ext().Activate(obj, depth);
+                objectContainer.Ext().Store(obj, depth);
+            	objectContainer.Commit();
+                ObjectCache.RemoveObject(id);
             }
             catch (Exception oEx)
             {
                 Db4oClient.Client.Rollback();
                 LoggingHelper.HandleException(oEx);
+
             }
+           
         }
 
-        public static object SaveObjects(object obj)
+    	public static void DeleteObject(long id)
         {
-        	IObjectContainer objectContainer = Db4oClient.Client;
+			IObjectContainer objectContainer = Db4oClient.Client;
 			try
-            {
-            	if (obj == null)
-            		return obj;
-            	
-				objectContainer.Store(obj);
-            	objectContainer.Commit();
-            }
-            catch (Exception oEx)
-            {
-                objectContainer.Rollback();
-                LoggingHelper.HandleException(oEx);
+			{
+				if (id == 0)
+					return;
+				object obj = objectContainer.Ext().GetByID(id);
+                Db4oClient.Client.Delete(obj);
+                Db4oClient.Client.Ext().Purge();
+                Db4oClient.Client.Commit();
 
-            }
-            return obj;
+                ObjectCache.RemoveObject(id);
+			}
+			catch (Exception oEx)
+			{
+				objectContainer.Rollback();
+				LoggingHelper.HandleException(oEx);
+			}
         }
 
-    	public void DeleteObject()
-        {
-            try
-            {
-               
-                    if (m_objectToProcess != null)
-                    {
-                        objectContainer.Delete(m_objectToProcess);
-                    	objectContainer.Ext().Purge();
-                        objectContainer.Commit();
-                    }
-                
-            }
-            catch (Exception oEx)
-            {
-                objectContainer.Rollback();  
-                LoggingHelper.HandleException(oEx);
-                
-            }
-        }
-
-        
+		public static void RefreshObject(long id, int level)
+		{
+			if (id == 0)
+				return;
+			object obj = Db4oClient.Client.Ext().GetByID(id);
+			Db4oClient.Client.Ext().Refresh(obj, level);
+		}
     }
 }

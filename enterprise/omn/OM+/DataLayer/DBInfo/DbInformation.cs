@@ -8,9 +8,9 @@ using OME.Logging.Common;
 
 namespace OManager.DataLayer.Modal
 {
-    public class DbInformation
+    public static class DbInformation
     {
-        public Hashtable StoredClasses()
+        public static Hashtable StoredClasses()
         {
 			Hashtable storedClassHashtable = new Hashtable();
         	try
@@ -33,7 +33,7 @@ namespace OManager.DataLayer.Modal
 			return storedClassHashtable;
 		}
 
-    	public Hashtable StoredClassesByAssembly()
+    	public static Hashtable StoredClassesByAssembly()
         {
     		try
             {
@@ -64,7 +64,7 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-    	public long GetFreeSizeofDatabase()
+    	public static long GetFreeSizeofDatabase()
         {
             IObjectContainer objectContainer = Db4oClient.Client;
         	long freeSizeOfDB;
@@ -87,12 +87,9 @@ namespace OManager.DataLayer.Modal
             return freeSizeOfDB;
         }
 
-        public long getObjectsize()
-        {
-            return 0;
-        }
+       
 
-        public long getTotalDatabaseSize()
+        public static long getTotalDatabaseSize()
         {
             IObjectContainer objectContainer = Db4oClient.Client;
         	try
@@ -110,7 +107,7 @@ namespace OManager.DataLayer.Modal
 			}
         }
 
-        public int GetNumberOfClassesinDB()
+        public static int GetNumberOfClassesinDB()
         {
             try
             {
@@ -142,10 +139,11 @@ namespace OManager.DataLayer.Modal
 
 		private static bool ExcludeClass(string className)
 		{
+
+            if (className.EndsWith("mscorlib"))
+                return true;
 			Type type = Type.GetType(className, false);
-			return type != null
-							? typeof(IInternal4).IsAssignableFrom(type)
-							: false;
+			return type != null && typeof(IInternal4).IsAssignableFrom(type);
 		}
 
 		private static Hashtable SortHashtable(IDictionary original)
@@ -161,7 +159,7 @@ namespace OManager.DataLayer.Modal
 			return sortedHashtable;
 		}
 
-        public  long getDatabaseCreationTime()
+        public  static long getDatabaseCreationTime()
         {
             IObjectContainer objectContainer = Db4oClient.Client;
             Db4oDatabase db = objectContainer.Ext().Identity();

@@ -1,13 +1,19 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace OManager.BusinessLayer.Login
 {
-    public class ConnParams
-    {
+	[Serializable ]
+	public class ConnParams 
+	{
         private readonly string m_connection;
         private readonly string m_host;
         private readonly int m_port;
         private readonly string m_userName;
         private readonly string m_passWord;
 		private bool m_readonly;
+	
+		
 
 		public ConnParams(string connection,bool readOnly) : this(connection, null, null, null, 0)
 		{
@@ -51,6 +57,6 @@ namespace OManager.BusinessLayer.Login
         {
 
             get { return m_passWord; }
-        }        
-    }
+        }
+	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace OManager.BusinessLayer.UIHelper
 {
+	[Serializable ]
 	public class PagingData
 	{
 		public static readonly int PAGE_SIZE = 50;

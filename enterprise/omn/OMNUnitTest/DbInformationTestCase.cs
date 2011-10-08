@@ -15,16 +15,16 @@ namespace OMNUnitTest
 		[Test]
 		public void TestStoredClasses()
 		{
-			Hashtable classes = new DbInformation().StoredClasses();
-			CollectionAssert.AreEqual(ClassesCollection(typeof(Item), typeof(Element), typeof(ArrayList)), classes);
+			Hashtable classes =DbInformation.StoredClasses();
+			CollectionAssert.AreEqual(ClassesCollection(typeof(Item), typeof(Element)), classes);
 		}
 
 		[Test]
 		public void TestStoredClassesByAssembly()
 		{
-			Hashtable classesByAssembly = new DbInformation().StoredClassesByAssembly();
+			Hashtable classesByAssembly = DbInformation.StoredClassesByAssembly();
 
-			foreach (DictionaryEntry entry in ClassesCollectionByAssembly(typeof(Item), typeof(Element), typeof(ArrayList)))
+			foreach (DictionaryEntry entry in ClassesCollectionByAssembly(typeof(Item), typeof(Element)))
 			{
 				Assert.IsTrue(classesByAssembly.ContainsKey(entry.Key));
 				CollectionAssert.AreEqual((IEnumerable) entry.Value, (IEnumerable) classesByAssembly[entry.Key]);

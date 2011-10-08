@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
@@ -44,11 +46,9 @@ namespace OMControlLibrary.Common
 					dataGridViewCellStyle);
 
 				string typeOfValue = string.Empty;
-                IType type = this.Tag as IType;
+                ProxyType type = this.Tag as ProxyType;
                 if (type == null || type.IsNullable)
-                 type =
-                        this.DataGridView.Rows[rowIndex].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value as
-                        IType;
+                 type =DataGridView.Rows[rowIndex].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value as ProxyType ;
                     if(type.IsNullable )
                     {
                         typeOfValue = CommonValues.GetSimpleNameForNullable(type.FullName);
@@ -59,8 +59,7 @@ namespace OMControlLibrary.Common
                     }
                // }
 
-			    if (typeOfValue == typeof(System.DateTime).ToString() ||
-					(type != null && type.IsSameAs(typeof(DateTime))))
+                    if (typeOfValue == typeof(DateTime).ToString() || AssemblyInspectorObject.DataType.CheckTypeIsSame(type.DisplayName, typeof(DateTime)))
 				{
 					dbDataGridViewDateTimePickerEditingControl ctl =
 						DataGridView.EditingControl as dbDataGridViewDateTimePickerEditingControl;
@@ -82,8 +81,7 @@ namespace OMControlLibrary.Common
 						}
 					}
 				}
-				else if (typeOfValue == typeof(System.Boolean).ToString() ||
-                    (type != null && type.IsSameAs(typeof(Boolean ))))
+                    else if ((typeOfValue == typeof(Boolean).ToString()) || AssemblyInspectorObject.DataType.CheckTypeIsSame(type.DisplayName, typeof(Boolean)))
 				{
 					//intializing editing control (DataGridViewComboBoxEditingControl)
 					DataGridViewComboBoxEditingControl ctl =

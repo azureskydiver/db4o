@@ -4,17 +4,7 @@ namespace OManager.BusinessLayer.Common
 {
     public static class CommonValues
     {
-        public enum PrimitiveTypes
-        {
-            
-            STRING=1,
-            FLOAT,
-            LONG,
-            DOUBLE,
-            BOOL,
-            SINGLE
-        }
-
+       
         public enum LogicalOperators
         {   
             EMPTY=1,
@@ -61,75 +51,7 @@ namespace OManager.BusinessLayer.Common
                                                 };
         public static char[] charArray = new char[] { 'G', 'e', 'n', 'e', 'r', 'i', 'c', 'C', 'l', 'a', 's', 's', ' ' };
 
-        public static bool IsPrimitive(string type)
-        {
-            bool isPrimitive;
-
-            switch (type)
-            {
-                case BusinessConstants.STRING:
-                case BusinessConstants.SINGLE:
-                case BusinessConstants.DATETIME:
-                case BusinessConstants.BYTE:
-                case BusinessConstants.CHAR:
-                case BusinessConstants.BOOLEAN:
-                case BusinessConstants.DECIMAL:
-                case BusinessConstants.DOUBLE:
-                case BusinessConstants.INT16:
-                case BusinessConstants.INT32:
-                case BusinessConstants.INT64:
-                case BusinessConstants.INTPTR:
-                case BusinessConstants.SBYTE:
-                case BusinessConstants.UINT16:
-                case BusinessConstants.UINT32:
-                case BusinessConstants.UINT64:
-                case BusinessConstants.UINTPTR:
-                case "":
-                    isPrimitive = true;
-                    break;
-                default:
-                    isPrimitive = false;
-                    break;
-            }
-
-            return isPrimitive;
-        }
-
-        public static bool IsDateTimeOrString(string type)
-        {
-            bool isDateTimeOrString;
-
-            switch (type)
-            {
-                case BusinessConstants.SINGLE:
-                case BusinessConstants.BYTE:
-                case BusinessConstants.CHAR:
-                case BusinessConstants.BOOLEAN:
-                case BusinessConstants.DECIMAL:
-                case BusinessConstants.DOUBLE:
-                case BusinessConstants.INT16:
-                case BusinessConstants.INT32:
-                case BusinessConstants.INT64:
-                case BusinessConstants.INTPTR:
-                case BusinessConstants.SBYTE:
-                case BusinessConstants.UINT16:
-                case BusinessConstants.UINT32:
-                case BusinessConstants.UINT64:
-                case BusinessConstants.UINTPTR:
-                    isDateTimeOrString = false;
-                    break;
-                case BusinessConstants.DATETIME :
-                case BusinessConstants.STRING: 
-                    isDateTimeOrString = true;
-                    break;
-                default:
-                    isDateTimeOrString = false;
-                    break;
-            }
-
-            return isDateTimeOrString;
-        }
-
+    
     	public static string DecorateNullableName(string nullableTypeName)
     	{
 			GenericTypeReference typeRef = (GenericTypeReference) TypeReference.FromString(nullableTypeName);

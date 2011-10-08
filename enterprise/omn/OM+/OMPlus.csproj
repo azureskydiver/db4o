@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E4ED4CBB-BD2F-4DC8-8C01-5413216DCB9A}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -42,15 +42,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=8.0.148.14479, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o, Version=8.0.184.15484, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Dependencies\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.CS, Version=8.0.148.14479, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.CS, Version=8.0.184.15484, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Dependencies\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Optional, Version=8.0.148.14479, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.Optional, Version=8.0.184.15484, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Dependencies\Db4objects.Db4o.Optional.dll</HintPath>
     </Reference>
@@ -77,10 +77,12 @@
     <Compile Include="BusinessLayer\Login\SearchString.cs" />
     <Compile Include="BusinessLayer\QueryBuilder\DBBrowsing.cs" />
     <Compile Include="BusinessLayer\QueryManager\OMQueryGroup.cs" />
+    <Compile Include="BusinessLayer\QueryRenderer\TreeGridViewRenderer.cs" />
     <Compile Include="BusinessLayer\UIHelper\dbInteraction.cs" />
     <Compile Include="BusinessLayer\Login\ConnParams.cs" />
     <Compile Include="BusinessLayer\Login\RecentQueries.cs" />
     <Compile Include="BusinessLayer\QueryManager\OMQueryClause.cs" />
+    <Compile Include="BusinessLayer\UIHelper\OMEInteraction.cs" />
     <Compile Include="BusinessLayer\UIHelper\PagingData.cs" />
     <Compile Include="DataLayer\Connection\ProxyAuthenticator.cs" />
     <Compile Include="DataLayer\Connection\SaveFavouriteClasses.cs" />
@@ -94,10 +96,9 @@
     <Compile Include="DataLayer\DemoDBCreation\DemoDatabaseCreation.cs" />
     <Compile Include="DataLayer\DemoDBCreation\Pilot.cs" />
     <Compile Include="DataLayer\Maintanence\db4oBackup.cs" />
-    <Compile Include="DataLayer\PropertyTable\ClassPropertiesTable.cs" />
     <Compile Include="DataLayer\PropertyTable\FieldProperties.cs" />
-    <Compile Include="DataLayer\PropertyTable\ObjectPropertiesTable.cs" />
     <Compile Include="DataLayer\QueryParser\IObjectsetConverter.cs" />
+    <Compile Include="DataLayer\QueryParser\ObjectCache.cs" />
     <Compile Include="DataLayer\QueryParser\QueryParser.cs" />
     <Compile Include="DataLayer\PropertyDetails\ClassDetails.cs" />
     <Compile Include="DataLayer\Connection\DBConnect.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="DataLayer\PropertyDetails\FieldDetails.cs" />
     <Compile Include="DataLayer\PropertyDetails\ObjectDetails.cs" />
     <Compile Include="BusinessLayer\QueryManager\OMQuery.cs" />
-    <Compile Include="DataLayer\QueryParser\RenderHierarchy.cs" />
+    <Compile Include="DataLayer\QueryParser\RenderHierarcyDetails.cs" />
     <Compile Include="DataLayer\QueryParser\RunQuery.cs" />
     <Compile Include="DataLayer\Reflection\IType.cs" />
     <Compile Include="DataLayer\Reflection\Reflection.cs" />

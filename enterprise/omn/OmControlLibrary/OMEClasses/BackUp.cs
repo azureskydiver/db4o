@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using OMAddinDataTransferLayer;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
@@ -23,10 +24,10 @@ namespace OMControlLibrary
 				dialog.ShowDialog();
 
 				string filepath = dialog.FileName;
-				bool checkForException = dbInteraction.BackUpDatabase(filepath);
+			    bool checkForException = AssemblyInspectorObject.DataSave.BackUpData(filepath);
 				if (checkForException == false)
 				{
-					MessageBox.Show("Backup Successful!", "ObjectManager Enterprise");
+                    MessageBox.Show("Backup Successful!", Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,MessageBoxIcon.Information);
 				}
 			}
 			catch (Exception oEx)

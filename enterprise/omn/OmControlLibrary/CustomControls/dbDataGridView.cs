@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.AssemblyInfo;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
 using OManager.BusinessLayer.UIHelper;
@@ -624,7 +626,7 @@ namespace OMControlLibrary.Common
 	            string fieldName = entry.Key.ToString();
 	            if (!fieldName.Equals(BusinessConstants.DB4OBJECTS_REF))
 	            {
-	                IType fieldType = FieldTypeFor(containingClass, fieldName, hashAttributes);
+	                ProxyType  fieldType = FieldTypeFor(containingClass, fieldName, hashAttributes);
 	                if (fieldType == null)
 	                    continue;
 
@@ -634,7 +636,7 @@ namespace OMControlLibrary.Common
 	                cell.ReadOnly = !(fieldType.IsEditable);
                     if (fieldType.IsEditable  )
 	                {
-	                    cell.Value = CastedValueOrNullConstant(entry.Value, fieldType);
+						cell.Value =  AssemblyInspectorObject.DataType.CastedValueOrNullConstant(entry.Value, fieldName, fieldType.ContainingClassName);
 	                }
 	                else
 	                {
@@ -648,22 +650,25 @@ namespace OMControlLibrary.Common
 	        }
 	    }
 
-	    private IType FieldTypeFor(string className, string fieldName, Hashtable hashAttributes)
+	    private ProxyType FieldTypeFor(string className, string fieldName, Hashtable hashAttributes)
 	    {
-	        IType fieldType = null;
+	        ProxyType fieldType = null;
 	        if (hashAttributes.Count == 0)
 	        {
-	            fieldType = dbInteraction.GetFieldType(className, fieldName);
+				fieldType = AssemblyInspectorObject.DataType.GetFieldType(className, fieldName);
+	        	fieldType.ContainingClassName = className;
 	        }
 	        else
 	        {
 	            int intIndex = fieldName.LastIndexOf('.');
 	            string strAttribName = fieldName.Substring(intIndex + 1);
 	            string clsName = Columns[fieldName].Tag.ToString();
-                if (clsName != null && strAttribName != null)
-	            {
-                    fieldType = dbInteraction.GetFieldType(clsName, strAttribName);
-	            }
+				if (clsName != null && strAttribName != null)
+				{
+					fieldType = AssemblyInspectorObject.DataType.GetFieldType(clsName, strAttribName);
+					fieldType.ContainingClassName = clsName;
+				}
+
 	        }
 	        return fieldType;
 	    }
@@ -679,16 +684,11 @@ namespace OMControlLibrary.Common
             
             // For checking if row is edited or not
             row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
+	        row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Tag = 1; //(for saving object, this will work as updatedepth)
 
 	        return row;
 	    }
-
-	    private static object CastedValueOrNullConstant(object value, IType fieldType)
-	    {
-	        //return value != null  && VALUE_NULL != (string) value
-           
-            return value != null && value.ToString() !="null"? fieldType.Cast(value) : VALUE_NULL;
-	    }
+	    
 
 	    #endregion
 
@@ -1222,7 +1222,7 @@ namespace OMControlLibrary.Common
 							Rows[dataIndex].Cells[colname].Style.WrapMode = DataGridViewTriState.True;
 							
 							AutoResizeRow(dataIndex);
-                            if (dataObjectValue is IType )
+                            if (dataObjectValue is ProxyType  )
 							Rows[dataIndex].Cells[colname].Value = dataObjectValue;
                             else
                             {
@@ -1244,15 +1244,13 @@ namespace OMControlLibrary.Common
 
 		#region Query Helper Methods
 
-		internal void FillConditionsCombobox(IType type, int selectedrowindex)
+		internal void FillConditionsCombobox(ProxyType  type, int selectedrowindex)
 		{
 			try
 			{
-                string typeName = type.IsNullable 
-                                            ? type.UnderlyingType.DisplayName 
-                                            : type.DisplayName;
+                string typeName = AssemblyInspectorObject.DataType.ReturnDisplayNameOfType(type.FullName );
 
-			    string[] conditionList = QueryHelper.ConditionsFor(typeName);
+                string[] conditionList = QueryHelper.ConditionsFor(typeName);
 
 				string conditionColumnName = Helper.GetResourceString(Constants.QUERY_GRID_CONDITION);
 				DataGridViewComboBoxCell conditionColumn = (DataGridViewComboBoxCell)Rows[selectedrowindex].Cells[conditionColumnName];
@@ -1298,9 +1296,9 @@ namespace OMControlLibrary.Common
 			string className = string.Empty;
 			try
 			{
-				IType itemType = dbInteraction.ResolveType(tempTreeNode.Tag.ToString());
+				ProxyType itemType = AssemblyInspectorObject.DataType.ResolveType(tempTreeNode.Tag.ToString());
 					
-				if (!itemType.IsEditable)
+				if (!(itemType.IsEditable &&  (itemType.IsPrimitive || itemType.IsNullable) ) )
 					return false;
 
 				if (tempTreeNode.Parent != null)
@@ -1308,7 +1306,7 @@ namespace OMControlLibrary.Common
 					className = FullyQualifiedClassNameFor(tempTreeNode.Parent);
 				}
 
-				//If field is not selected and Query Group has no clauses then reset the base class.
+				//If field is not selected and Query Group has no clauses then reset the base class. 
 				if (queryBuilder.QueryGroupCount == 0 && Rows.Count == 0 && queryBuilder.AttributeCount == 0)
 				{
 					Helper.HashTableBaseClass.Clear();
@@ -1335,7 +1333,7 @@ namespace OMControlLibrary.Common
 
         private static string FullyQualifiedClassNameFor(TreeNode node)
         {
-        	IType type = dbInteraction.ResolveType(node.Tag.ToString()); 
+			ProxyType  type = AssemblyInspectorObject.DataType.ResolveType(node.Tag.ToString()); 
             return type == null ? (node.Parent != null ? node.Parent.Name : node.Text) : type.FullName;
         }
 
@@ -1351,14 +1349,15 @@ namespace OMControlLibrary.Common
 						return false;
 
 				string className = FullyQualifiedClassNameFor(tempTreeNode);
-				Hashtable storedfields = dbInteraction.FetchStoredFields(className);
+				Hashtable storedfields = AssemblyInspectorObject.Connection.FetchStoredFields(className);
+					
 				if (storedfields != null)
 				{
 					IDictionaryEnumerator eNum = storedfields.GetEnumerator();
 					while (eNum.MoveNext())
 					{
-						IType itemType = dbInteraction.ResolveType(eNum.Value.ToString());  
-						if (!itemType.IsEditable )
+						ProxyType  itemType = AssemblyInspectorObject.DataType.ResolveType(eNum.Value.ToString());
+                        if (!(itemType.IsEditable && (itemType.IsPrimitive || itemType.IsNullable) ))
 							continue;
 							
 						if (queryBuilder.QueryGroupCount == 0 && Rows.Count == 0 && queryBuilder.AttributeCount == 0)
@@ -1369,7 +1368,7 @@ namespace OMControlLibrary.Common
 						//Chech whether dragged item is from same class or not,
 						//if not dont allow to drop that item in query builder
 						string parentName = Helper.FormulateParentName(tempTreeNode, eNum);
-						AddRowsToGrid(itemType, className, parentName);
+                        AddRowsToGrid(itemType, className, parentName);
 					}
 				}
 			}
@@ -1382,11 +1381,11 @@ namespace OMControlLibrary.Common
 			return Rows.Count > 0;
 		}
 
-		private void AddRowsToGrid(IType type, string className, string parentName)
+		private void AddRowsToGrid(ProxyType  type, string className, string parentName)
 		{
 			try
 			{
-			 
+				
 				Rows.Add(1);
 				int index = Rows.Count - 1;
 				Rows[index].Cells[0].Value = parentName;
@@ -1396,16 +1395,16 @@ namespace OMControlLibrary.Common
 			    Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value = type;
 			   // Rows[index].Tag = type;
 			    string nullableStringType = string.Empty;
-			   if(type.IsNullable )
+				if (type.IsNullable)
 			   {
 			       nullableStringType = CommonValues.GetSimpleNameForNullable(type.FullName );
 			   }
 
-               if (type.IsSameAs(typeof(Boolean)) || nullableStringType == "System.Boolean")
+                if (AssemblyInspectorObject.DataType.CheckTypeIsSame(type.DisplayName , typeof(Boolean)) || nullableStringType == "System.Boolean")
 				{
 					Rows[index].Cells[2].Value = "True";
 				}
-				if (type.IsSameAs(typeof(DateTime)))
+                if (AssemblyInspectorObject.DataType.CheckTypeIsSame(type.DisplayName , typeof(DateTime)))
                 {
 					Rows[index].Cells[2].Value =DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
 				}
@@ -1416,12 +1415,11 @@ namespace OMControlLibrary.Common
 				if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 					Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
 
-				FillConditionsCombobox(type, index);
+				FillConditionsCombobox(type  , index);
 
 				//Select the Default operator for Query
 				Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
-
-				//OM MISHRA: disable operator cell for other than fist row 
+				
 				if (index > 0)
 				{
 					Rows[index].Cells[3].Value = Rows[0].Cells[3].Value;

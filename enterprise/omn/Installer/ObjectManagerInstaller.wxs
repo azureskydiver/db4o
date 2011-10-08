@@ -29,6 +29,10 @@
 								<File Id="OMPlus.id" 
 									  Name="OMPlus.dll" 
 									  Source="@dir.omn.output@\OMPlus.dll" DiskId="1" Vital="yes" />
+									  
+							   <File Id="OMAddinDataTransferLayer.id" 
+									  Name="OMAddinDataTransferLayer.dll" 
+									  Source="@dir.omn.output@\OMAddinDataTransferLayer.dll" DiskId="1" Vital="yes" />
 							  
 								<File Id="OMAddin.id" 
 									  Name="OMAddin.dll" 

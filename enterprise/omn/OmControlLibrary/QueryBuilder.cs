@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
+using OMAddinDataTransferLayer;
+using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
@@ -189,7 +191,7 @@ namespace OMControlLibrary
 		{
 			if (GotFocus.Caption == Constants.QUERYBUILDER )
 			{
-				if (dbInteraction.CheckIfDbConnected())
+				if (AssemblyInspectorObject.Connection.DbConnectionStatus())
 				{
 					PropertiesTab.Instance.ShowObjectPropertiesTab = false;
 					PropertiesTab.Instance.ShowClassProperties = true;
@@ -373,7 +375,8 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				objectid = dbInteraction.ExecuteQueryResults(omQuery);
+				objectid = AssemblyInspectorObject.DataPopulation.ExecuteQueryResults(omQuery);
+					
 				e.Result = objectid;
 
 				for (int i = 0; i < 10000; i++)
@@ -666,11 +669,11 @@ namespace OMControlLibrary
 						}
 						else
 						{
-							IType fieldType = dbInteraction.ResolveType(tempTreeNode.Tag.ToString()); 
-								
-
+							ProxyType fieldType = AssemblyInspectorObject.DataType.ResolveType(tempTreeNode.Tag.ToString());
+							
 							//If selected item is not a primitive type than dont allow to drage item)
-							if (!fieldType.IsEditable)
+                            if (!(fieldType.IsEditable && (fieldType.IsPrimitive || fieldType.IsNullable)  ))
+                              
 								return;
 
 							//If field is not selected and Query Group has no clauses then reset the base class.
@@ -689,8 +692,7 @@ namespace OMControlLibrary
 								return;
 							if (tempTreeNode.Parent != null)
 							{
-								IType type = dbInteraction.ResolveType(tempTreeNode.Parent.Tag.ToString());
-									
+								ProxyType type = AssemblyInspectorObject.DataType.ResolveType(tempTreeNode.Parent.Tag.ToString());
 							    className = type != null ? type.FullName : tempTreeNode.Parent.Name;
 							  
 							}
@@ -722,14 +724,13 @@ namespace OMControlLibrary
 				Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
             
 		    string tempClassName = string.Empty;
-			IType type = dbInteraction.ResolveType(tempTreeNode.Tag.ToString());
-				
+			ProxyType type = AssemblyInspectorObject.DataType.ResolveType(tempTreeNode.Tag.ToString());
 		    tempClassName = type != null
 		                        ? type.FullName
 		                        : (tempTreeNode.Parent != null ? tempTreeNode.Parent.Name : tempTreeNode.Text);
 
 
-		    Hashtable storedfields = dbInteraction.FetchStoredFields(tempClassName);
+			Hashtable storedfields = AssemblyInspectorObject.Connection.FetchStoredFields(tempClassName);   
 			if (storedfields == null) 
 				return;
 
@@ -739,10 +740,10 @@ namespace OMControlLibrary
 			{
 				while (eNum.MoveNext())
 				{
-					IType fieldType = dbInteraction.ResolveType(eNum.Value.ToString()); 
-						
-					if (!fieldType.IsEditable)
-						continue;
+                    ProxyType itemType = AssemblyInspectorObject.DataType.ResolveType(eNum.Value.ToString());
+                    if (!(itemType.IsEditable && (itemType.IsPrimitive || itemType.IsNullable)))
+                        continue;
+					
 						
 					//Check whether attributes is allready added in list, if yes dont allow to added again. 
 
@@ -994,8 +995,9 @@ namespace OMControlLibrary
 			{
 				if (!string.IsNullOrEmpty(query.QueryString))
 				{
-					RecentQueries currentConnection = dbInteraction.GetCurrentRecentConnection();
+					RecentQueries currentConnection = OMEInteraction.GetCurrentRecentConnection();
 					currentConnection.AddQueryToList(query);
+					
 				}
 			}
 			catch (Exception oEx)
@@ -1063,14 +1065,10 @@ namespace OMControlLibrary
 			return objectManagerQueryGroup;
 		}
 
-	    private static string FieldNameFor(DataGridViewRow row)
-	    {
-	        IType fieldType = (IType) row.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
-	        return fieldType.DisplayName;
-	    }
+	   
         private static string FieldTypeFor(DataGridViewRow row)
         {
-            IType fieldType = (IType)row.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
+			ProxyType fieldType = (ProxyType)row.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
             return fieldType.FullName ;
         }
 
@@ -1372,10 +1370,11 @@ namespace OMControlLibrary
 							dbDataGridView gridQuery = group.DataGridViewQuery;
 							gridQuery.Rows.Add(1);
 
-							IType fieldType = dbInteraction.ResolveType(omQueryClause.FieldType);
+							ProxyType fieldType = AssemblyInspectorObject.DataType.ResolveType(omQueryClause.FieldType);
+						
                             
                             //Fill the Conditions depending upon the field name
-							gridQuery.FillConditionsCombobox(fieldType, j);
+                            gridQuery.FillConditionsCombobox(fieldType, j);
 							gridQuery.FillOperatorComboBox();
 
 							gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_FIELD)].Value = omQueryClause.Fieldname;

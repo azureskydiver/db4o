@@ -5,13 +5,14 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using System.Reflection;
+using OMAddinDataTransferLayer;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using Microsoft.VisualStudio.CommandBars;
 using OME.Logging.Common;
 using Constants = OMControlLibrary.Common.Constants;
-
+using OManager.BusinessLayer.Config;
 
 namespace OMControlLibrary
 {
@@ -32,20 +33,21 @@ namespace OMControlLibrary
 		internal static CommandBarButton m_cmdBarBtnConnect;
 		private static Assembly m_AddIn_Assembly;
 		//Private variables
-		private IList<RecentQueries> m_recentConnections;
-
+		
+		private IList<RecentQueries> m_ListrecentConnections;
 		//Constants
 
         private const string IMAGE_DISCONNECT = "OMAddin.Images.DB_DISCONNECT2_a.GIF";
         private const string IMAGE_DISCONNECT_MASKED = "OMAddin.Images.DB_DISCONNECT2_b.BMP";
 
 		private const string OPEN_FILE_DIALOG_FILTER = "db4o Database Files(*.yap, *.db4o)|*.yap;*.db4o|All Files(*.*)|*.*";
+        private const string OPEN_FILE_ADDASSEMBLY_FILTER = "Assemblies(*.exe, *.dll)|*.exe;*.dll";
 		private const string STRING_SERVER = "server:";
 		private const string STRING_COLON = ":";
 		private const char CHAR_COLON = ':';
 
 		static Window queryBuilderToolWindow;
-	
+        public static AppDomainDetails appdomain;
 
 		#endregion
 
@@ -94,7 +96,7 @@ namespace OMControlLibrary
 				}
                 loginToolWindow.Visible = true;
                 loginToolWindow.Width = 425;
-                loginToolWindow.Height = 170;
+                loginToolWindow.Height = 210;
 				Helper.CheckIfLoginWindowIsVisible = true;
 				
 			}
@@ -106,15 +108,15 @@ namespace OMControlLibrary
 
 		private static string NewFormattedGuid()
 		{
-			return Guid.NewGuid().ToString(Helper.GetResourceString(Common.Constants.GUID_FORMATTER_STRING));
+			return Guid.NewGuid().ToString(Helper.GetResourceString(Constants.GUID_FORMATTER_STRING));
 		}
 	
 		public static void CreateQueryBuilderToolWindow()
 		{
 			try
 			{
-				string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
-				queryBuilderToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER );
+				string caption = Helper.GetResourceString(Constants.QUERY_BUILDER_CAPTION);
+				queryBuilderToolWindow = CreateToolWindow(Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER );
 				
 				if (queryBuilderToolWindow.AutoHides)
 				{
@@ -135,18 +137,20 @@ namespace OMControlLibrary
 		{
 			ClearPanelControls();
 			ShowAppropriatePanel(true);
-			m_recentConnections = dbInteraction.FetchRecentQueries(false);
-			if (m_recentConnections != null)
+			m_ListrecentConnections = OMEInteraction.FetchRecentQueries(false);
+			if (m_ListrecentConnections != null)
 			{
-				PopulateConnections(m_recentConnections);
+				PopulateConnections(m_ListrecentConnections);
 				m_cmdBarCtrlBackup.Enabled = false;
 				m_cmdBarCtrlCreateDemoDb.Enabled = true;
 			}
+            InitializePaths();
 		}
 
 		private void ClearPanelControls()
 		{
 			toolTipForTextBox.RemoveAll();
+		    toolTipForAssembly.RemoveAll();
 			comboBoxFilePath.Items.Clear();
 			textBoxConnection.Clear();
 			textBoxHost.Clear();
@@ -190,6 +194,7 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
 		private void PopulateConnections(IList<RecentQueries> listConnections)
 		{
 			try
@@ -226,6 +231,7 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+	
 	private void Login_Load(object sender, EventArgs e)
 		{
 			try
@@ -249,14 +255,16 @@ namespace OMControlLibrary
 				ClearPanelControls();
 				if (radioButtonLocal.Checked)
 				{
-					PopulateConnections(dbInteraction.FetchRecentQueries(false));
+					
+					PopulateConnections(OMEInteraction.FetchRecentQueries(false));
 					panelLocal.Visible = true;
 					panelRemote.Visible = false;
 				}
 				else
 				{
 					
-					PopulateConnections(dbInteraction.FetchRecentQueries(true));
+				
+					PopulateConnections(OMEInteraction.FetchRecentQueries(true));
 					panelLocal.Visible = false;
 					panelRemote.Visible = true;
 					
@@ -279,7 +287,7 @@ namespace OMControlLibrary
 			{
 				
 				openFileDialog.Filter = OPEN_FILE_DIALOG_FILTER;
-				openFileDialog.Title = Helper.GetResourceString(Common.Constants.LOGIN_OPEN_FILE_DIALOG_CAPTION);
+				openFileDialog.Title = Helper.GetResourceString(Constants.LOGIN_OPEN_FILE_DIALOG_CAPTION);
 				if (openFileDialog.ShowDialog() != DialogResult.Cancel)
 				{
 					textBoxConnection.Text = openFileDialog.FileName;
@@ -320,44 +328,52 @@ namespace OMControlLibrary
 					                          textBoxPassword.Text.Trim(), Convert.ToInt32(textBoxPort.Text.Trim()));
 
 				}
-				
-				 RecentQueries currRecentQueries = new RecentQueries(conparam);
-				 RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
-				 if (tempRecentQueries != null)
-				 {
-				 	currRecentQueries = tempRecentQueries;
-				 	currRecentQueries.ConnParam.ConnectionReadOnly = chkReadOnly.Checked;      
-				 }
-				string  exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
+                bool check=CreateAppDomain();
+                if (check)
+                {
+                    RecentQueries currRecentQueries = new RecentQueries(conparam);
+                    RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
+                    if (tempRecentQueries != null)
+                    {
+                        currRecentQueries = tempRecentQueries;
+                        currRecentQueries.ConnParam.ConnectionReadOnly = chkReadOnly.Checked;
+                    }
 
-				if (exceptionString == string.Empty)
-				{
-					dbInteraction.SetCurrentRecentConnection(currRecentQueries);
-					dbInteraction.SaveRecentConnection(currRecentQueries);
-					AfterSuccessfullyConnected();
+                    string exceptionString = AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentQueries);
+                    if (exceptionString == string.Empty)
+                    {
+                        OMEInteraction.SetCurrentRecentConnection(currRecentQueries);
+                        OMEInteraction.SaveRecentConnection(currRecentQueries);
 
-					loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
-					Helper.CheckIfLoginWindowIsVisible = false;
-					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
-					ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;
 
-					PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
-					PropertyPaneToolWin.PropWindow.Visible = true;
+                        AfterSuccessfullyConnected();
 
-					CreateQueryBuilderToolWindow();
+                        loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
+                        Helper.CheckIfLoginWindowIsVisible = false;
+                        ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
+                        ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;
 
-				}
-				else
-				{
-					dbInteraction.CloseCurrDb(); 
-					textBoxConnection.Clear();
-					MessageBox.Show(exceptionString,
-					                Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
-					                MessageBoxButtons.OK,
-					                MessageBoxIcon.Error);
-					return;
-				}
+                        PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
+                        PropertyPaneToolWin.PropWindow.Visible = true;
 
+                        CreateQueryBuilderToolWindow();
+
+
+
+                    }
+                    else
+                    {
+
+                        AssemblyInspectorObject.Connection.Closedb();
+                        textBoxConnection.Clear();
+                        MessageBox.Show(exceptionString,
+                                        Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                 
+                    }
+
+                }
 			}
 			catch (Exception oEx)
 			{
@@ -365,7 +381,14 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void comboBoxFilePath_SelectedIndexChanged(object sender, EventArgs e)
+        public bool CreateAppDomain()
+        {
+            appdomain = new AppDomainDetails();
+            return appdomain.LoadAppDomain(toolTipComboBoxAssembly.SelectedItem == null ? 
+                string.Empty : toolTipComboBoxAssembly.SelectedItem.ToString());
+        }
+
+	    private void comboBoxFilePath_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			try
 			{
@@ -497,5 +520,65 @@ namespace OMControlLibrary
 			}
 
 		}
+
+        private void btnAddAssemblies_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Filter = OPEN_FILE_ADDASSEMBLY_FILTER;
+            openFileDialog.Title = "Add Assemblies";
+
+            if (openFileDialog.ShowDialog() != DialogResult.Cancel)
+            {
+               
+                if (_searchPath.Add(openFileDialog.FileName))
+                {
+
+                    toolTipComboBoxAssembly.Items.Add(openFileDialog.FileName);
+                    Config.Instance.SaveAssemblySearchPath();
+                }
+                toolTipComboBoxAssembly.SelectedItem = openFileDialog.FileName; 
+            }
+
+        }
+
+        
+       
+
+        private void InitializePaths()
+        {
+            toolTipComboBoxAssembly.Items.Clear();
+            toolTipComboBoxAssembly.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
+            foreach (string path in _searchPath.Paths)
+            {
+                toolTipComboBoxAssembly.Items.Add(path);  
+            }
+
+            if (toolTipComboBoxAssembly.Items.Count > 0)
+            {
+                toolTipComboBoxAssembly.SelectedIndex = 0;
+            }
+           
+        }
+        private readonly ISearchPath _searchPath = Config.Instance.AssemblySearchPath;
+
+
+
+        private void toolTipComboBoxAssembly_DropdownItemSelected(object sender, ToolTipComboBox.DropdownItemSelectedEventArgs e)
+        {
+            try
+            {
+                if (e.SelectedItem < 0 || e.Scrolled)
+                    toolTipForAssembly.Hide(toolTipComboBoxAssembly);
+                else
+                    toolTipForAssembly.Show(toolTipComboBoxAssembly.Items[e.SelectedItem].ToString(),
+                                             toolTipComboBoxAssembly, e.Bounds.Location.X + Cursor.Size.Width,
+                                            e.Bounds.Location.Y + Cursor.Size.Height);
+            }
+            catch (Exception ex)
+            {
+                LoggingHelper.HandleException(ex);
+            }
+        }
+
+        
 	}
 }

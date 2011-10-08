@@ -10,13 +10,13 @@ namespace OMControlLibrary
 	{
 		public SearchPathDialog()
 		{
-			InitializeComponent();
+            //InitializeComponent();
 
-			InitializePaths();
+            //InitializePaths();
 			
-			InitializeDatabinding();
+            //InitializeDatabinding();
 
-			StartPosition = FormStartPosition.CenterParent;
+            //StartPosition = FormStartPosition.CenterParent;
 		}
 
 		private void InitializePaths()
