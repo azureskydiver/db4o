@@ -13,7 +13,9 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 				com.db4o.db4ounit.common.types.arrays.AllTests.class,
-				StoreTopLevelPrimitiveTestCase.class
+				StoreExceptionTestCase.class,
+				StoreTopLevelPrimitiveTestCase.class,
+				UnmodifiableListTestCase.class,
 		};
     }
 }

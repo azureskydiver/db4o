@@ -26,6 +26,7 @@ public class AllTests extends Db4oTestSuite {
             CloseServerBeforeClientTestCase.class,
             CsCascadedDeleteReaddChildReferenceTestCase.class,
             CsDeleteReaddTestCase.class,
+            CsSchemaUpdateTestCase.class,
             IsAliveConcurrencyTestCase.class,
             IsAliveTestCase.class,
             NoTestConstructorsQEStringCmpTestCase.class,
@@ -47,7 +48,7 @@ public class AllTests extends Db4oTestSuite {
             ServerTransactionCountTestCase.class,
             SetSemaphoreTestCase.class,
             SSLSocketTestCase.class,
-            CsSchemaUpdateTestCase.class,
+            UniqueConstraintOnServerTestCase.class,
 		};
 	}
 	
