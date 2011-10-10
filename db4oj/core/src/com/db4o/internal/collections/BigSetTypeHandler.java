@@ -78,9 +78,14 @@ public class BigSetTypeHandler implements ReferenceTypeHandler, CascadingTypeHan
 		
 	}
 
-	public void collectIDs(QueryingReadContext context) {
-		// TODO Auto-generated method stub
-		
+	public void collectIDs(final QueryingReadContext context) {
+		int id = context.readInt();
+		BTree bTree = newBTree(context, id);
+		bTree.traverseKeys(context.transaction(), new Visitor4<Integer>() {
+			public void visit(Integer id) {
+				context.addId(id);
+			}
+		});
 	}
 
 	public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
