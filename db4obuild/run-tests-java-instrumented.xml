@@ -58,7 +58,8 @@
 			failonerror="true" 
 			jvm="${file.jvm.jdk1.5}"
 			timeout="10000000"
-		>
+			jvmargs="${java.vmargs}">
+			
 			<jvmarg value="-Xmx512m"/>
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath>
