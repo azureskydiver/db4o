@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Db4objects.Db4o, Version=8.0.184.15484, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OM+\bin\.Net3.5\Db4objects.Db4o.dll</HintPath>
+      <HintPath>..\OM+\bin\Dependencies\Db4objects.Db4o.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
