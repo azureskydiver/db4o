@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.collections.*;
 import com.db4o.internal.collections.*;
+import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 import com.db4o.typehandlers.internal.*;
 
@@ -52,6 +53,9 @@ public class TypeHandlerConfigurationJDK_1_2 extends TypeHandlerConfiguration{
 				return new ActivatableTreeSet(comparator);
 			}
 		});
+		registerTypeHandlerFor("java.util.Collections$UnmodifiableRandomAccessList", new UnmodifiableListTypeHandler());
+		ignoreFieldsOn("java.util.Collections$UnmodifiableList");
+		ignoreFieldsOn("java.util.Collections$UnmodifiableCollection");
 	}
 
 }

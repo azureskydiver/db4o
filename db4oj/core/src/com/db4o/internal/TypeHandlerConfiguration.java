@@ -39,7 +39,11 @@ public abstract class TypeHandlerConfiguration {
     }
     
     protected void ignoreFieldsOn(Class clazz){
-    	_config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), IgnoreFieldsTypeHandler.INSTANCE);
+    	registerTypeHandlerFor(clazz, IgnoreFieldsTypeHandler.INSTANCE);
+    }
+    
+    protected void ignoreFieldsOn(String className){
+    	registerTypeHandlerFor(className, IgnoreFieldsTypeHandler.INSTANCE);
     }
     
     private void registerListTypeHandlerFor(Class clazz){
@@ -53,5 +57,10 @@ public abstract class TypeHandlerConfiguration {
     protected void registerTypeHandlerFor(Class clazz, TypeHandler4 typeHandler){
         _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), typeHandler);
     }
+    
+    protected void registerTypeHandlerFor(String className, TypeHandler4 typeHandler){
+        _config.registerTypeHandler(new SingleNamedClassTypeHandlerPredicate(className), typeHandler);
+    }
+
 
 }

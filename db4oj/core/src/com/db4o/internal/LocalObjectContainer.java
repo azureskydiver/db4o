@@ -418,7 +418,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public StatefulBuffer readStatefulBufferById(Transaction trans, int id, boolean lastCommitted) {
 		if (id <= 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("id=" + id);
 		}
 
 		Slot slot = lastCommitted ? trans.idSystem().committedSlot(id) :  trans.idSystem().currentSlot(id);

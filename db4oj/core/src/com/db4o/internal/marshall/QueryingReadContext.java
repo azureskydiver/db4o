@@ -61,7 +61,7 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
         return _handlerVersion;
     }
     
-    private void addId(int id) {
+    public void addId(int id) {
         _collector.addId(id);
     }
     
