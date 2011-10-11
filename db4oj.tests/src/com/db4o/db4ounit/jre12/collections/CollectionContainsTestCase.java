@@ -6,11 +6,12 @@ import com.db4o.collections.CollectionFactory;
 import com.db4o.query.Query;
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
 import java.util.*;
 
 @decaf.Remove(decaf.Platform.JDK11)
-public class CollectionContainsTestCase extends AbstractDb4oTestCase{
+public class CollectionContainsTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 
     public static void main(String[] args) {
         new CollectionContainsTestCase().runSolo();
