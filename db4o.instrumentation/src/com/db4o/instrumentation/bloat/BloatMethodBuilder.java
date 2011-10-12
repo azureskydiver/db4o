@@ -188,6 +188,10 @@ class BloatMethodBuilder implements MethodBuilder {
 		addInstruction(divOpcode(operandType));
 	}
 
+	public void modulo(TypeRef operandType) {
+		addInstruction(modOpcode(operandType));
+	}
+
 	private int divOpcode(TypeRef operandType) {
 		if(operandType==doubleType()) {
 			return Opcode.opc_ddiv;
@@ -199,6 +203,19 @@ class BloatMethodBuilder implements MethodBuilder {
 			return Opcode.opc_ldiv;
 		}
 		return Opcode.opc_idiv;
+	}
+
+	private int modOpcode(TypeRef operandType) {
+		if(operandType==doubleType()) {
+			return Opcode.opc_drem;
+		}
+		if(operandType==floatType()) {
+			return Opcode.opc_frem;
+		}
+		if(operandType==longType()) {
+			return Opcode.opc_lrem;
+		}
+		return Opcode.opc_irem;
 	}
 
 	public void invoke(Method method) {

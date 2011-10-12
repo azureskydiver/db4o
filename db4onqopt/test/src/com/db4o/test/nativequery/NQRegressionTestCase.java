@@ -758,6 +758,20 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase implements OptOut
 		assertNQResult(new IdFieldGreaterEqualsPredicateFieldPlusOnePredicate());
 	}
 
+	private static final class IdFieldEqualsIdFieldModuloThreePredicate extends ExpectingPredicate<Data> {
+		private int val = 3;
+		
+		public int expected() { return 1;}
+
+		public boolean match(Data candidate) {
+			return candidate.id == 7 % val;
+		}
+	}
+
+	public void testIdFieldEqualsIdFieldModuloThreePredicate() throws Exception {
+		assertNQResult(new IdFieldEqualsIdFieldModuloThreePredicate());
+	}
+
 	private static final class IdFieldGreaterEqualsPredicateArithmeticMethodPredicate extends ExpectingPredicate<Data> {
 		private int factor=2;
 

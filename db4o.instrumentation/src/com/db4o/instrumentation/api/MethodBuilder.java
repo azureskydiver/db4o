@@ -31,6 +31,8 @@ public interface MethodBuilder {
 
 	void divide(TypeRef operandType);
 
+	void modulo(TypeRef operandType);
+
 	void invoke(MethodRef method, CallingConvention convention);
 	
 	void invoke(Method method);	
