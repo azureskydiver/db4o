@@ -56,10 +56,6 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void commit() {
-    	if (isSystemTransaction()) {
-    		commitTimestampSupport().ensureInitialized();
-    	}
-
     	commit(_committedCallbackDispatcher);
     }
     
@@ -430,6 +426,15 @@ public class LocalTransaction extends Transaction {
 			return _concurrentReplicationTimestamps;
 		}
 		return new ArrayList<Long>();
+	}
+	
+	@Override
+	public void postOpen(){
+		super.postOpen();
+    	if (isSystemTransaction()) {
+    		
+    		commitTimestampSupport().ensureInitialized();
+    	}
 	}
 
 }

@@ -19,45 +19,30 @@ public class CommitTimestampSupport {
 	}
 
 	public void ensureInitialized() {
-		idToTimestamp();
-	}
-	
-	public BTree idToTimestamp() {
-
-		if (_idToTimestamp != null) {
-			return _idToTimestamp;
+		if (! _container.config().generateCommitTimestamps().definiteYes()) {
+			return;
 		}
-
-		if (!_container.config().generateCommitTimestamps().definiteYes()) {
-			return null;
-		}
-
 		initialize();
+	}
 
+	public BTree idToTimestamp() {
 		return _idToTimestamp;
-
 	}
 	
 	public BTree timestampToId() {
-
-		if (_timestampToId != null) {
-			return _timestampToId;
-		}
-
-		if (!_container.config().generateCommitTimestamps().definiteYes()) {
-			return null;
-		}
-
-		initialize();
-
 		return _timestampToId;
-
 	}
 
 	private void initialize() {
 		
 		int idToTimestampIndexId = _container.systemData().idToTimestampIndexId();
 		int timestampToIdIndexId = _container.systemData().timestampToIdIndexId();
+		
+		if(_container.config().isReadOnly()){
+			if(idToTimestampIndexId == 0){
+				return;
+			}
+		}
 		
 		_idToTimestamp = new BTree(_container.systemTransaction(), idToTimestampIndexId, new TimestampEntryById());
 		_timestampToId = new BTree(_container.systemTransaction(), timestampToIdIndexId, new IdEntryByTimestamp());
