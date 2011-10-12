@@ -331,5 +331,11 @@ public abstract class Transaction {
 	public abstract long generateTransactionTimestamp(long forcedTimeStamp);
 	
 	public abstract void useDefaultTransactionTimestamp();
+	
+	public void postOpen(){
+		if(_systemTransaction != null){
+			_systemTransaction.postOpen();
+		}
+	}
 
 }

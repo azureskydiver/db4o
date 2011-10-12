@@ -1137,7 +1137,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         initializeEssentialClasses();
 		rename(configImpl());
 		_classCollection.initOnUp(_systemTransaction);
-		
+		_transaction.postOpen();
         if (configImpl().detectSchemaChanges()) {
         	if(! configImpl().isReadOnly()){
         		_systemTransaction.commit();
