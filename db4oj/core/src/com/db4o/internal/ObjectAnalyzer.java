@@ -41,7 +41,7 @@ class ObjectAnalyzer {
             return;
         }
         if (isValueType(_classMetadata) ) {
-        	notStorable(_obj, _classMetadata.classReflector());
+        	notStorable(_obj, _classMetadata.classReflector(), " Value types can only be stored embedded in parent objects.");
         }
     }
 
@@ -70,9 +70,13 @@ class ObjectAnalyzer {
         
         return true;
     }
-
+    
     private void notStorable(Object obj, ReflectClass claxx) {
-        _container.notStorable(claxx, obj);
+    	notStorable(obj, claxx, null);
+    }
+
+    private void notStorable(Object obj, ReflectClass claxx, String message) {
+        _container.notStorable(claxx, obj, message);
         _notStorable = true;
     }
     

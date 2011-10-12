@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
 				com.db4o.db4ounit.common.types.arrays.AllTests.class,
 				StoreExceptionTestCase.class,
 				StoreTopLevelPrimitiveTestCase.class,
+				StringBuilderHandlerTestCase.class,
 				UnmodifiableListTestCase.class,
 		};
     }
