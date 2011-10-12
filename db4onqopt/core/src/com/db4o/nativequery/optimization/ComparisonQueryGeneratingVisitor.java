@@ -92,6 +92,19 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 	    return new Integer(((Integer)a).intValue() / ((Integer)b).intValue());
 	}
 
+	Object modulo(Object a,Object b) {
+	    if(a instanceof Double||b instanceof Double) {
+	        return new Double(((Double)a).doubleValue() % ((Double)b).doubleValue());
+	    }
+	    if(a instanceof Float||b instanceof Float) {
+	        return new Float(((Float)a).floatValue() % ((Float)b).floatValue());
+	    }
+	    if(a instanceof Long||b instanceof Long) {
+	        return new Long(((Long)a).longValue() % ((Long)b).longValue());
+	    }
+	    return new Integer(((Integer)a).intValue() % ((Integer)b).intValue());
+	}
+
 	public void visit(ArithmeticExpression operand) {
 		operand.left().accept(this);
 		Object left=_value;
@@ -109,6 +122,9 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 				break;
 			case ArithmeticOperator.DIVIDE_ID: 
 				_value=divide(left,right);
+				break;
+			case ArithmeticOperator.MODULO_ID: 
+				_value=modulo(left,right);
 				break;
 		}
 	}

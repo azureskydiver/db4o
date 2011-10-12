@@ -106,6 +106,9 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			case ArithmeticOperator.DIVIDE_ID:
 				_methodBuilder.divide(operandType);
 				break;
+			case ArithmeticOperator.MODULO_ID:
+				_methodBuilder.modulo(operandType);
+				break;
 			default:
 				throw new RuntimeException("Unknown operand: "+operand.op());
 		}

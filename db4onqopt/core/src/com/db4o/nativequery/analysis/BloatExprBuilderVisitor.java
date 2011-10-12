@@ -661,29 +661,27 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				swapped = true;
 			}
 		}
+		ArithmeticOperator arithOp = arithmeticOperator(expr.operation());
+		if(arithOp != null) {
+			retval(new ArithmeticExpression(left, right, arithOp));
+			return;
+		}
 		switch (expr.operation()) {
-		case ArithExpr.ADD:
-		case ArithExpr.SUB:
-		case ArithExpr.MUL:
-		case ArithExpr.DIV:
-			retval(new ArithmeticExpression(left, right,
-					arithmeticOperator(expr.operation())));
-			break;
-		case ArithExpr.CMP:
-		case ArithExpr.CMPG:
-		case ArithExpr.CMPL:
-			if (left instanceof FieldValue) {
-				retval(new ThreeWayComparison((FieldValue) left, right, swapped));
-			}
-			break;
-		case ArithExpr.XOR:
-			if (left instanceof FieldValue) {
-				retval(EXP_BUILDER.not(comparisonExpression((FieldValue) left,
-						right, ComparisonOperator.VALUE_EQUALITY)));
-			}
-			break;
-		default:
-			break;
+			case ArithExpr.CMP:
+			case ArithExpr.CMPG:
+			case ArithExpr.CMPL:
+				if (left instanceof FieldValue) {
+					retval(new ThreeWayComparison((FieldValue) left, right, swapped));
+				}
+				break;
+			case ArithExpr.XOR:
+				if (left instanceof FieldValue) {
+					retval(EXP_BUILDER.not(comparisonExpression((FieldValue) left,
+							right, ComparisonOperator.VALUE_EQUALITY)));
+				}
+				break;
+			default:
+				throw new EarlyExitException();
 		}
 	}
 
@@ -706,16 +704,18 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private ArithmeticOperator arithmeticOperator(int bloatOp) {
 		switch (bloatOp) {
-		case ArithExpr.ADD:
-			return ArithmeticOperator.ADD;
-		case ArithExpr.SUB:
-			return ArithmeticOperator.SUBTRACT;
-		case ArithExpr.MUL:
-			return ArithmeticOperator.MULTIPLY;
-		case ArithExpr.DIV:
-			return ArithmeticOperator.DIVIDE;
-		default:
-			return null;
+			case ArithExpr.ADD:
+				return ArithmeticOperator.ADD;
+			case ArithExpr.SUB:
+				return ArithmeticOperator.SUBTRACT;
+			case ArithExpr.MUL:
+				return ArithmeticOperator.MULTIPLY;
+			case ArithExpr.DIV:
+				return ArithmeticOperator.DIVIDE;
+			case ArithExpr.REM:
+				return ArithmeticOperator.MODULO;
+			default:
+				return null;
 		}
 	}
 

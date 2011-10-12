@@ -1029,6 +1029,22 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertComparison("sampleMemberIntMultiply",INT_FIELDNAME,new ArithmeticExpression(new ConstValue(new Integer(2)),intMemberFieldValue(),ArithmeticOperator.MULTIPLY),ComparisonOperator.SMALLER,false);
 	}
 
+	boolean sampleMemberIntModulo(Data data) {
+		return data.id < (2 % intMember);
+	}
+	
+	public void testMemberIntModulo() throws Exception {
+		assertComparison("sampleMemberIntModulo",INT_FIELDNAME,new ArithmeticExpression(new ConstValue(new Integer(2)),intMemberFieldValue(),ArithmeticOperator.MODULO),ComparisonOperator.SMALLER,false);
+	}
+
+	boolean sampleMemberStringUnknownOperatorInMethodCall(Data data) {
+		return data.name.contains(String.valueOf(intMember & 42));
+	}
+	
+	public void testMemberStringUnknownOperatorInMethodCall() throws Exception {
+		assertInvalid("sampleMemberStringUnknownOperatorInMethodCall");
+	}
+
 	private FieldValue intMemberFieldValue() {
 		return fieldValue(PredicateFieldRoot.INSTANCE,"intMember",Integer.TYPE);
 	}
