@@ -66,14 +66,13 @@ public class LocalTransaction extends Transaction {
     public void commit(CommittedCallbackDispatcher dispatcher) {
         synchronized (container().lock()) {
         	
+        	commitListeners();
         	dispatchCommittingCallback();   
         	
         	if (!doCommittedCallbacks(dispatcher)) {
-        		commitListeners();
         		commitImpl();
         		commitClearAll();
     		} else {
-    			commitListeners();
     			Collection4 deleted = collectCommittedCallbackDeletedInfo();
                 commitImpl();
                 final CallbackObjectInfoCollections committedInfo = collectCommittedCallbackInfo(deleted);

@@ -6,6 +6,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			CommitTimeStampsWithTPTestCase.class,
 			DeactivateDeletedObjectOnRollbackStrategyTestCase.class,
 			QueryConsistencyTestCase.class,
 			RollbackStrategyTestCase.class,
