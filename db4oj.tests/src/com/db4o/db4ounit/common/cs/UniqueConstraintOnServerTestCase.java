@@ -11,13 +11,18 @@ import db4ounit.extensions.fixtures.*;
 public class UniqueConstraintOnServerTestCase extends Db4oClientServerTestCase implements CustomClientServerConfiguration{
 
     public static void main(String[] args) {
-        new UniqueConstraintOnServerTestCase().runNetworking();
+        new UniqueConstraintOnServerTestCase().runAll();
+    }
+    
+    @Override
+    protected void configure(Configuration config) throws Exception {
+        config.objectClass(UniqueId.class).objectField("id").indexed(true);
+        config.add(new UniqueFieldValueConstraint(UniqueId.class, "id"));
     }
     
 	@Override
 	public void configureServer(Configuration config) throws Exception {
-        config.objectClass(UniqueId.class).objectField("id").indexed(true);
-        config.add(new UniqueFieldValueConstraint(UniqueId.class, "id"));
+		configure(config);
 	}
 
 	@Override
