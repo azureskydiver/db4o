@@ -20,4 +20,9 @@ public class ObjectNotStorableException extends Db4oRecoverableException{
     public ObjectNotStorableException(String message){
         super(message);
     }
+    
+    public ObjectNotStorableException(ReflectClass clazz, String message){
+        super(clazz.getName() + ": " + message);
+    }
+
 }

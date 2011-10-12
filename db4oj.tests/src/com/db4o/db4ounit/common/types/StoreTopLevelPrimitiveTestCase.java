@@ -19,7 +19,7 @@ public class StoreTopLevelPrimitiveTestCase extends AbstractDb4oTestCase {
 		}
 		catch(ObjectNotStorableException onsex){
 			exceptionHappened = true;
-			StringAssert.contains("Primitive types", onsex.getMessage());
+			StringAssert.contains("Value types", onsex.getMessage());
 		}
 		
 		Assert.isTrue(exceptionHappened);

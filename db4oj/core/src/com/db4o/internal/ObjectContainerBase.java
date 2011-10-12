@@ -1651,7 +1651,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         _stillToSet = postponedStillToSet;
     }
     
-    void notStorable(ReflectClass claxx, Object obj){
+    void notStorable(ReflectClass claxx, Object obj, String message){
         if(! configImpl().exceptionsOnNotStorable()){
             return;
         }
@@ -1662,6 +1662,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         
         if(_handlers.isTransient(claxx)){
         	return;
+        }
+        if(message != null){
+        	throw new ObjectNotStorableException(claxx, message);
         }
         throw new ObjectNotStorableException(claxx);
     }
