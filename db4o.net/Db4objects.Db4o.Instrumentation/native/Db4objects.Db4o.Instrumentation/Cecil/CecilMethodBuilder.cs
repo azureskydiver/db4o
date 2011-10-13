@@ -95,6 +95,12 @@ namespace Db4objects.Db4o.Instrumentation.Cecil
 			throw new NotImplementedException();
 		}
 
+        public void Modulo(ITypeRef operandType)
+        {
+            throw new NotImplementedException();
+        }
+
+
 		public void Invoke(IMethodRef method, CallingConvention convention)
 		{
 			_il.Emit(OpCodeForConvention(convention), CecilMethodRef.GetReference(method));
