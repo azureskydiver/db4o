@@ -14,6 +14,7 @@ import db4ounit.*;
 /**
  * @sharpen.remove
  */
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class StringBuilderHandlerTestCase  implements TestLifeCycle {
 	
     private static final String DATABASE_FILE = "!In:MemoryDB!";
