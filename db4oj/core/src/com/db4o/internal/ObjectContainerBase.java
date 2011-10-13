@@ -337,6 +337,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     final public boolean close() {
 		synchronized (_lock) {
+			if(isClosed()){
+				return false;
+			}
 			callbacks().closeOnStarted(this);
 			if(DTrace.enabled){
 				DTrace.CLOSE_CALLED.log(this.toString());
