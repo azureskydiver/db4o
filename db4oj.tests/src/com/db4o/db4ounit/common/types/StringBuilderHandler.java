@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.types;
 
-import com.db4o.ext.Db4oIOException;
+import com.db4o.ext.*;
 import com.db4o.internal.DefragmentContext;
 import com.db4o.internal.delete.DeleteContext;
 import com.db4o.marshall.ReadBuffer;
@@ -8,14 +8,15 @@ import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
 import com.db4o.typehandlers.ValueTypeHandler;
 
-import java.nio.charset.Charset;
+import java.io.*;
 
 /**
  * @sharpen.remove
  */
 @decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class StringBuilderHandler implements ValueTypeHandler {
-    static final Charset CHAR_SET = Charset.forName("UTF-8");
+	
+    static final String CHAR_SET_NAME = "UTF-8";
 
 
     // #example: Delete the content
@@ -42,7 +43,12 @@ public class StringBuilderHandler implements ValueTypeHandler {
     public void write(WriteContext writeContext, Object o) {
         StringBuilder builder = (StringBuilder) o;
         String str = builder.toString();
-        final byte[] bytes = str.getBytes(CHAR_SET);
+        byte[] bytes;
+		try {
+			bytes = str.getBytes(CHAR_SET_NAME);
+		} catch (UnsupportedEncodingException e) {
+			throw new Db4oException(e);
+		}
         writeContext.writeInt(bytes.length);
         writeContext.writeBytes(bytes);
     }
@@ -54,7 +60,11 @@ public class StringBuilderHandler implements ValueTypeHandler {
         final int length = readContext.readInt();
         byte[] data = new byte[length];
         readContext.readBytes(data);
-        return new StringBuilder(new String(data,CHAR_SET));
+        try {
+			return new StringBuilder(new String(data,CHAR_SET_NAME));
+		} catch (UnsupportedEncodingException e) {
+			throw new Db4oException(e);
+		}
     }
     // #end example
 }
