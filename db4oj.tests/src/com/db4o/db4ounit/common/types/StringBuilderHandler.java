@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 /**
  * @sharpen.remove
  */
+@decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
 public class StringBuilderHandler implements ValueTypeHandler {
     static final Charset CHAR_SET = Charset.forName("UTF-8");
 
