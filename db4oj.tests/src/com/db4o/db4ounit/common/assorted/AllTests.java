@@ -44,6 +44,7 @@ public class AllTests extends ComposibleTestSuite {
 			            LockedTreeTestCase.class,
 			            LongLinkedListTestCase.class,
 			            ManyRollbacksTestCase.class,
+			            MaximumDatabaseSizeTestCase.class,
 			            MultiDeleteTestCase.class,
 			            ObjectUpdateFileSizeTestCase.class,
 			            ObjectConstructorTestCase.class,

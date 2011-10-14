@@ -100,7 +100,9 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	
 	static LocalObjectContainer freshTargetFile(DefragmentConfig  config) throws IOException {
 		config.db4oConfig().storage().delete(config.origPath());
-		return (LocalObjectContainer) Db4o.openFile(config.clonedDb4oConfig(),config.origPath());
+		Configuration clonedDb4oConfig = config.clonedDb4oConfig();
+		clonedDb4oConfig.readOnly(false);
+		return (LocalObjectContainer) Db4o.openFile(clonedDb4oConfig,config.origPath());
 	}
 	
 	public int mappedID(int oldID,int defaultID) {

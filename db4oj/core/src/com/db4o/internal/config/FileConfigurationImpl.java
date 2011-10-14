@@ -79,4 +79,9 @@ class FileConfigurationImpl implements FileConfiguration {
 		_config.asynchronousSync(flag);
 		
 	}
+
+	@Override
+	public void maximumDatabaseFileSize(long bytes) {
+		_config.maximumDatabaseFileSize(bytes);
+	}
 }

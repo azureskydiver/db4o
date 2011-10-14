@@ -12,4 +12,8 @@ package com.db4o.ext;
  */
 public class DatabaseMaximumSizeReachedException extends Db4oRecoverableException {
 
+	public DatabaseMaximumSizeReachedException(int size) {
+		super("Maximum database file size reached. Last valid size: " + size + ". From now on opening only works in read-only mode.");
+	}
+
 }
