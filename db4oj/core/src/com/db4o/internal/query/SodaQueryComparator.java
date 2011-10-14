@@ -113,14 +113,16 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 
 	private List<FieldMetadata> resolveFieldPath(String[] fieldPath) {
 		List<FieldMetadata> fields = new ArrayList<FieldMetadata>(fieldPath.length);
-
 		ClassMetadata currentType = _extentType;
 		for (String fieldName : fieldPath) {
 			FieldMetadata field = currentType.fieldMetadataForName(fieldName);
+			if(field == null){
+				fields.clear();
+				break;
+			}
 			currentType = field.fieldType();
 			fields.add(field);
 		}
-
 		return fields;
 	}
 
@@ -130,7 +132,11 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 	
 	public int compare(int x, int y) {
 		for (Ordering ordering : _orderings) {
-			int result = compareByField(x, y, ordering._resolvedPath);
+			List<FieldMetadata> resolvedPath = ordering._resolvedPath;
+			if(resolvedPath.size() == 0){
+				continue;
+			}
+			int result = compareByField(x, y, resolvedPath);
 			if (result != 0) {
 				return ordering.direction().equals(Direction.ASCENDING)
 					? result
