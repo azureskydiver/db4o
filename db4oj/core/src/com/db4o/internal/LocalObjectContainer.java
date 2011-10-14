@@ -44,11 +44,19 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
 	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
-	protected final ByteArrayBuffer _pointerIo = new ByteArrayBuffer(Const4.POINTER_LENGTH);    
+	protected final ByteArrayBuffer _pointerIo = new ByteArrayBuffer(Const4.POINTER_LENGTH);
+	
+	private long _maximumDatabaseFileSize;
 
     LocalObjectContainer(Configuration config) {
         super(config);
+        Config4Impl configImpl = (Config4Impl)config;
+		_maximumDatabaseFileSize = maximumDatabaseFileSize(configImpl);
     }
+
+	protected long maximumDatabaseFileSize(Config4Impl configImpl) {
+		return configImpl.maximumDatabaseFileSize();
+	}
     
     public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem, boolean isSystemTransaction) {
     	TransactionalIdSystem systemIdSystem = null; 
@@ -313,20 +321,17 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	int blockCount = _blockConverter.bytesToBlocks(bytes);
 		int blockedStartAddress = _blockEndAddress;
 		int blockedEndAddress = _blockEndAddress + blockCount;
-		checkBlockedAddress(blockedEndAddress);
+		int blockedMaximumFileSize = _blockConverter.bytesToBlocks(_maximumDatabaseFileSize);
+		if(blockedEndAddress < 0 || blockedEndAddress >= blockedMaximumFileSize){
+    		switchToReadOnlyMode();
+    		throw new DatabaseMaximumSizeReachedException(_blockConverter.blocksToBytes(_blockEndAddress));
+		}
 		_blockEndAddress = blockedEndAddress;
 		Slot slot = new Slot(blockedStartAddress, blockCount);
 		if (Debug4.xbytes && Deploy.overwrite) {
 		    overwriteDeletedBlockedSlot(slot);
 		}
     	return _blockConverter.toNonBlockedLength(slot);
-    }
-    
-    private void checkBlockedAddress(int blockedAddress) {
-    	if(blockedAddress < 0) {
-    		switchToReadOnlyMode();
-    		throw new DatabaseMaximumSizeReachedException();
-    	}
     }
 
 	private void switchToReadOnlyMode() {

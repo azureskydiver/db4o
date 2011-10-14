@@ -127,6 +127,18 @@ public interface FileConfiguration {
 	 * @since 8.0
 	 */
     public void generateCommitTimestamps(boolean flag);
+    
+    
+    /**
+     * Configures an upper limit for the  maximum database file size.
+     * There is an upper limit to the possible size:
+     * A value that is greater than Integer.MAX_VALUE * {@link #blockSize(int)}
+     * will be ignored and this limit will be used instead.
+     * @param bytes - the number of bytes
+     * @sharpen.property
+     * @since 8.1
+     */
+    public void maximumDatabaseFileSize(long bytes);
 
     /**
      * allows to configure db4o to use a customized byte IO storage mechanism.

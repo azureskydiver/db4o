@@ -45,6 +45,10 @@ public class KeySpecHashtable4 implements DeepClone {
     	return ((Integer)get(spec)).intValue();
     }
 
+    public long getAsLong(KeySpec spec) {
+    	return ((Long)get(spec)).longValue();
+    }
+
     public TernaryBool getAsTernaryBool(KeySpec spec) {
     	return (TernaryBool)get(spec);
     }

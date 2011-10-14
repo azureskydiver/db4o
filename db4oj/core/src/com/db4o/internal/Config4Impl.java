@@ -190,6 +190,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	private final static KeySpec TAINTED_KEY = new KeySpec(false);
 	
+	private final static KeySpec MAX_DATABASE_FILE_SIZE = new KeySpec(0L);
+	
 	private final static KeySpec REFERENCE_SYSTEM_FACTORY_KEY = new KeySpec(new ReferenceSystemFactory() {
 		public ReferenceSystem newReferenceSystem(InternalObjectContainer container) {
 			return new TransactionalReferenceSystem();
@@ -1166,6 +1168,19 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public void maxStackDepth(int maxStackDepth) {
 		_config.put(MAX_STACK_DEPTH_KEY, maxStackDepth);
+	}
+	
+	public void maximumDatabaseFileSize(long bytes){
+		_config.put(MAX_DATABASE_FILE_SIZE, bytes);
+	}
+	
+	public long maximumDatabaseFileSize(){
+		long max = _config.getAsLong(MAX_DATABASE_FILE_SIZE);
+		long physicalMax = (long)blockSize() * (long)Integer.MAX_VALUE;
+		if(max == 0 || max > physicalMax){
+			return physicalMax; 
+		}
+		return max;
 	}
 
 }

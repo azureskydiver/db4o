@@ -38,6 +38,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	    _lock = parent.lock();
 	    _showInternalClasses = parent._showInternalClasses;
 	    open();
+	    
 	} 
 	
 	protected void initialize1(Configuration config){
@@ -346,6 +347,11 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	
 	public void syncFiles(Runnable runnable){
 		runnable.run();
+	}
+	
+	@Override
+	protected long maximumDatabaseFileSize(Config4Impl configImpl) {
+		return Integer.MAX_VALUE;
 	}
 
 
