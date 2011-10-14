@@ -21,7 +21,8 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	private final ClassFilter _filter;
 	private final BloatClassEdit _edit;
 	private final BloatLoaderContext _loaderContext = new BloatLoaderContext(getEditorContext());
-
+	private final ClassLoader _filterLoader;
+	
 	public BloatInstrumentingClassLoader(URL[] urls, ClassLoader parent, BloatClassEdit edit) {
 		this(urls, parent, new AcceptAllClassesFilter(), edit);
 	}
@@ -30,17 +31,22 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 		super(urls, parent);
 		_filter = filter;
 		_edit = edit;
+		_filterLoader = new URLClassLoader(urls, parent);
 	}
 
 	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		if(_cache.containsKey(name)) {
 			return (Class)_cache.get(name);
 		}
-		Class originalClazz = super.loadClass(name, resolve);
 		if(mustDelegate(name)) {
-			return originalClazz;
+			try {
+				Class originalClazz = getParent().loadClass(name);
+				return originalClazz;
+			}
+			catch(ClassNotFoundException exc) {
+			}
 		}
-		Class clazz=(_filter.accept(originalClazz) ? findClass(name) : findRawClass(name));
+		Class clazz = shouldLoadRaw(name) ? findRawClass(name) : findClass(name);
 		_cache.put(clazz.getName(), clazz);
 		if(resolve) {
 			resolveClass(clazz);
@@ -51,6 +57,14 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	protected boolean mustDelegate(String name) {
 		return BloatUtil.isPlatformClassName(name)
 				||((name.startsWith("com.db4o.") && name.indexOf("test.")<0 && name.indexOf("samples.")<0));
+	}
+	
+	protected boolean shouldLoadRaw(String name) throws ClassNotFoundException {
+		if(mustDelegate(name)) {
+			return true;
+		}
+		Class bogusClazz = _filterLoader.loadClass(name);
+		return !_filter.accept(bogusClazz);
 	}
 	
 	private Class findRawClass(String className) throws ClassNotFoundException {
