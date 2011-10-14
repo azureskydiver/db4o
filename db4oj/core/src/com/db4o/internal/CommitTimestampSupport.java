@@ -19,6 +19,9 @@ public class CommitTimestampSupport {
 	}
 
 	public void ensureInitialized() {
+		if(_idToTimestamp != null){
+			return;
+		}
 		if (! _container.config().generateCommitTimestamps().definiteYes()) {
 			return;
 		}
@@ -26,10 +29,18 @@ public class CommitTimestampSupport {
 	}
 
 	public BTree idToTimestamp() {
+		if(_idToTimestamp != null){
+			return _idToTimestamp;
+		}
+		ensureInitialized();
 		return _idToTimestamp;
 	}
 	
 	public BTree timestampToId() {
+		if(_timestampToId != null){
+			return _timestampToId;
+		}
+		ensureInitialized();
 		return _timestampToId;
 	}
 
