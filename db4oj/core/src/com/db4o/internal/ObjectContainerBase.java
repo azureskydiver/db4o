@@ -304,7 +304,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
     
-	protected final void checkReadOnly() throws DatabaseReadOnlyException {
+	protected void checkReadOnly() throws DatabaseReadOnlyException {
 		if(_config.isReadOnly()) {
     		throw new DatabaseReadOnlyException();
     	}

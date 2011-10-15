@@ -8,11 +8,12 @@ import com.db4o.internal.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class MaximumDatabaseSizeTestCase extends AbstractDb4oTestCase{
+public class MaximumDatabaseSizeTestCase extends AbstractDb4oTestCase implements OptOutNetworkingCS{
 	
 	public static void main(String[] args) {
-		new MaximumDatabaseSizeTestCase().runSolo();
+		new MaximumDatabaseSizeTestCase().runAll();
 	}
 	
 	@Override
