@@ -221,6 +221,11 @@ public class TransportObjectContainer extends LocalObjectContainer {
     }
     
     @Override
+    protected final void checkReadOnly() throws DatabaseReadOnlyException {
+    	
+    }
+    
+    @Override
     public Object getByID2(Transaction ta, int id) {
     	Object obj = super.getByID2(ta, id);
     	if(obj instanceof KnownObjectIdentity){
