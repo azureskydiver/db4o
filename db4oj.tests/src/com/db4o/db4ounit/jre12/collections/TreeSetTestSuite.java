@@ -14,13 +14,10 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-/**
- * @exclude
- */
 @decaf.Remove(decaf.Platform.JDK11)
 public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4oTestCase {
 	
-	static final Comparator<String> comparator = new Comparator<String>() {
+	static final Comparator<String> stringComparator = new Comparator<String>() {
 		public int compare(String x, String y) {
 			return y.compareTo(x);
         }
@@ -37,7 +34,7 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 				}},
 				new Deferred4<TreeSet>() { public TreeSet value() {
 					
-					return new TreeSet(comparator);
+					return new TreeSet(stringComparator);
 					
 				}}
 			)
@@ -128,12 +125,17 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 			}
 		}
 		
-		static class NamedItem {
+		static class NamedItem implements Comparable<NamedItem>{
 
 			public String name;
 
 			public NamedItem(String name) {
 				this.name = name;
+			}
+
+			@Override
+			public int compareTo(NamedItem o) {
+				return name.compareTo(o.name);
 			}
 			
 		}
