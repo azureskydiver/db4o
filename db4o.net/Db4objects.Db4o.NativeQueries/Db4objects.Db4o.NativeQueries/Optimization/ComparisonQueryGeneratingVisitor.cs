@@ -116,6 +116,23 @@ namespace Db4objects.Db4o.NativeQueries.Optimization
 			return ((int)a) / ((int)b);
 		}
 
+		internal object Modulo(object a, object b)
+		{
+			if (a is double || b is double)
+			{
+				return ((double)a) % ((double)b);
+			}
+			if (a is float || b is float)
+			{
+				return ((float)a) % ((float)b);
+			}
+			if (a is long || b is long)
+			{
+				return ((long)a) % ((long)b);
+			}
+			return ((int)a) % ((int)b);
+		}
+
 		public void Visit(ArithmeticExpression operand)
 		{
 			operand.Left().Accept(this);
@@ -145,6 +162,12 @@ namespace Db4objects.Db4o.NativeQueries.Optimization
 				case ArithmeticOperator.DivideId:
 				{
 					_value = Divide(left, right);
+					break;
+				}
+
+				case ArithmeticOperator.ModuloId:
+				{
+					_value = Modulo(left, right);
 					break;
 				}
 			}

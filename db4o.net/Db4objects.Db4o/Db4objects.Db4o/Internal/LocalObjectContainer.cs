@@ -51,8 +51,17 @@ namespace Db4objects.Db4o.Internal
 		protected readonly ByteArrayBuffer _pointerIo = new ByteArrayBuffer(Const4.PointerLength
 			);
 
+		private long _maximumDatabaseFileSize;
+
 		internal LocalObjectContainer(IConfiguration config) : base(config)
 		{
+			Config4Impl configImpl = (Config4Impl)config;
+			_maximumDatabaseFileSize = MaximumDatabaseFileSize(configImpl);
+		}
+
+		protected virtual long MaximumDatabaseFileSize(Config4Impl configImpl)
+		{
+			return configImpl.MaximumDatabaseFileSize();
 		}
 
 		public override Transaction NewTransaction(Transaction parentTransaction, IReferenceSystem
@@ -63,16 +72,16 @@ namespace Db4objects.Db4o.Internal
 			{
 				systemIdSystem = SystemTransaction().IdSystem();
 			}
-			IClosure4 idSystem = new _IClosure4_58(this);
+			IClosure4 idSystem = new _IClosure4_66(this);
 			ITransactionalIdSystem transactionalIdSystem = NewTransactionalIdSystem(systemIdSystem
 				, idSystem);
 			return new LocalTransaction(this, parentTransaction, transactionalIdSystem, referenceSystem
 				);
 		}
 
-		private sealed class _IClosure4_58 : IClosure4
+		private sealed class _IClosure4_66 : IClosure4
 		{
-			public _IClosure4_58(LocalObjectContainer _enclosing)
+			public _IClosure4_66(LocalObjectContainer _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -88,13 +97,13 @@ namespace Db4objects.Db4o.Internal
 		public virtual ITransactionalIdSystem NewTransactionalIdSystem(ITransactionalIdSystem
 			 systemIdSystem, IClosure4 idSystem)
 		{
-			return new TransactionalIdSystemImpl(new _IClosure4_69(this), idSystem, (TransactionalIdSystemImpl
+			return new TransactionalIdSystemImpl(new _IClosure4_77(this), idSystem, (TransactionalIdSystemImpl
 				)systemIdSystem);
 		}
 
-		private sealed class _IClosure4_69 : IClosure4
+		private sealed class _IClosure4_77 : IClosure4
 		{
-			public _IClosure4_69(LocalObjectContainer _enclosing)
+			public _IClosure4_77(LocalObjectContainer _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -379,7 +388,14 @@ namespace Db4objects.Db4o.Internal
 			int blockCount = _blockConverter.BytesToBlocks(bytes);
 			int blockedStartAddress = _blockEndAddress;
 			int blockedEndAddress = _blockEndAddress + blockCount;
-			CheckBlockedAddress(blockedEndAddress);
+			int blockedMaximumFileSize = _blockConverter.BytesToBlocks(_maximumDatabaseFileSize
+				);
+			if (blockedEndAddress < 0 || blockedEndAddress >= blockedMaximumFileSize)
+			{
+				SwitchToReadOnlyMode();
+				throw new DatabaseMaximumSizeReachedException(_blockConverter.BlocksToBytes(_blockEndAddress
+					));
+			}
 			_blockEndAddress = blockedEndAddress;
 			Slot slot = new Slot(blockedStartAddress, blockCount);
 			if (Debug4.xbytes && Deploy.overwrite)
@@ -387,15 +403,6 @@ namespace Db4objects.Db4o.Internal
 				OverwriteDeletedBlockedSlot(slot);
 			}
 			return _blockConverter.ToNonBlockedLength(slot);
-		}
-
-		private void CheckBlockedAddress(int blockedAddress)
-		{
-			if (blockedAddress < 0)
-			{
-				SwitchToReadOnlyMode();
-				throw new DatabaseMaximumSizeReachedException();
-			}
 		}
 
 		private void SwitchToReadOnlyMode()
@@ -504,7 +511,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (id <= 0)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException("id=" + id);
 			}
 			Slot slot = lastCommitted ? trans.IdSystem().CommittedSlot(id) : trans.IdSystem()
 				.CurrentSlot(id);
@@ -655,12 +662,12 @@ namespace Db4objects.Db4o.Internal
 					return;
 				}
 			}
-			_semaphoresLock.Run(new _IClosure4_574(this, trans, name));
+			_semaphoresLock.Run(new _IClosure4_579(this, trans, name));
 		}
 
-		private sealed class _IClosure4_574 : IClosure4
+		private sealed class _IClosure4_579 : IClosure4
 		{
-			public _IClosure4_574(LocalObjectContainer _enclosing, Transaction trans, string 
+			public _IClosure4_579(LocalObjectContainer _enclosing, Transaction trans, string 
 				name)
 			{
 				this._enclosing = _enclosing;
@@ -692,13 +699,13 @@ namespace Db4objects.Db4o.Internal
 			if (_semaphores != null)
 			{
 				Hashtable4 semaphores = _semaphores;
-				_semaphoresLock.Run(new _IClosure4_588(this, semaphores, trans));
+				_semaphoresLock.Run(new _IClosure4_593(this, semaphores, trans));
 			}
 		}
 
-		private sealed class _IClosure4_588 : IClosure4
+		private sealed class _IClosure4_593 : IClosure4
 		{
-			public _IClosure4_588(LocalObjectContainer _enclosing, Hashtable4 semaphores, Transaction
+			public _IClosure4_593(LocalObjectContainer _enclosing, Hashtable4 semaphores, Transaction
 				 trans)
 			{
 				this._enclosing = _enclosing;
@@ -708,14 +715,14 @@ namespace Db4objects.Db4o.Internal
 
 			public object Run()
 			{
-				semaphores.ForEachKeyForIdentity(new _IVisitor4_589(semaphores), trans);
+				semaphores.ForEachKeyForIdentity(new _IVisitor4_594(semaphores), trans);
 				this._enclosing._semaphoresLock.Awake();
 				return null;
 			}
 
-			private sealed class _IVisitor4_589 : IVisitor4
+			private sealed class _IVisitor4_594 : IVisitor4
 			{
-				public _IVisitor4_589(Hashtable4 semaphores)
+				public _IVisitor4_594(Hashtable4 semaphores)
 				{
 					this.semaphores = semaphores;
 				}
@@ -766,13 +773,13 @@ namespace Db4objects.Db4o.Internal
 				}
 			}
 			BooleanByRef acquired = new BooleanByRef();
-			_semaphoresLock.Run(new _IClosure4_625(this, trans, name, acquired, timeout));
+			_semaphoresLock.Run(new _IClosure4_630(this, trans, name, acquired, timeout));
 			return acquired.value;
 		}
 
-		private sealed class _IClosure4_625 : IClosure4
+		private sealed class _IClosure4_630 : IClosure4
 		{
-			public _IClosure4_625(LocalObjectContainer _enclosing, Transaction trans, string 
+			public _IClosure4_630(LocalObjectContainer _enclosing, Transaction trans, string 
 				name, BooleanByRef acquired, int timeout)
 			{
 				this._enclosing = _enclosing;
@@ -989,13 +996,13 @@ namespace Db4objects.Db4o.Internal
 		public override long[] GetIDsForClass(Transaction trans, ClassMetadata clazz)
 		{
 			IntArrayList ids = new IntArrayList();
-			clazz.Index().TraverseIds(trans, new _IVisitor4_792(ids));
+			clazz.Index().TraverseIds(trans, new _IVisitor4_797(ids));
 			return ids.AsLong();
 		}
 
-		private sealed class _IVisitor4_792 : IVisitor4
+		private sealed class _IVisitor4_797 : IVisitor4
 		{
-			public _IVisitor4_792(IntArrayList ids)
+			public _IVisitor4_797(IntArrayList ids)
 			{
 				this.ids = ids;
 			}

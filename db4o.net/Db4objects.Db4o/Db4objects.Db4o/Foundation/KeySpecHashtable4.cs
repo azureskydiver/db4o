@@ -53,6 +53,11 @@ namespace Db4objects.Db4o.Foundation
 			return ((int)Get(spec));
 		}
 
+		public virtual long GetAsLong(KeySpec spec)
+		{
+			return ((long)Get(spec));
+		}
+
 		public virtual TernaryBool GetAsTernaryBool(KeySpec spec)
 		{
 			return (TernaryBool)Get(spec);

@@ -143,5 +143,14 @@ namespace Db4objects.Db4o.Internal.Config
 				_config.AsynchronousSync(flag);
 			}
 		}
+
+		public virtual long MaximumDatabaseFileSize
+		{
+			set
+			{
+				long bytes = value;
+				_config.MaximumDatabaseFileSize(bytes);
+			}
+		}
 	}
 }

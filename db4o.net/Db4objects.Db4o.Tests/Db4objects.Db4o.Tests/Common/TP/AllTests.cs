@@ -10,8 +10,8 @@ namespace Db4objects.Db4o.Tests.Common.TP
 	{
 		protected override Type[] TestCases()
 		{
-			return new Type[] { typeof(DeactivateDeletedObjectOnRollbackStrategyTestCase), typeof(
-				QueryConsistencyTestCase), typeof(RollbackStrategyTestCase), typeof(TransparentPersistenceTestCase
+			return new Type[] { typeof(CommitTimeStampsWithTPTestCase), typeof(DeactivateDeletedObjectOnRollbackStrategyTestCase
+				), typeof(QueryConsistencyTestCase), typeof(RollbackStrategyTestCase), typeof(TransparentPersistenceTestCase
 				) };
 		}
 	}

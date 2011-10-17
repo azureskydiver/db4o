@@ -235,6 +235,11 @@ namespace Db4objects.Db4o.Internal
 			return base.StoreInternal(trans, obj, depth, checkJustSet);
 		}
 
+		/// <exception cref="Db4objects.Db4o.Ext.DatabaseReadOnlyException"></exception>
+		protected sealed override void CheckReadOnly()
+		{
+		}
+
 		public override object GetByID2(Transaction ta, int id)
 		{
 			object obj = base.GetByID2(ta, id);
@@ -375,6 +380,11 @@ namespace Db4objects.Db4o.Internal
 		public override void SyncFiles(IRunnable runnable)
 		{
 			runnable.Run();
+		}
+
+		protected override long MaximumDatabaseFileSize(Config4Impl configImpl)
+		{
+			return int.MaxValue;
 		}
 	}
 }

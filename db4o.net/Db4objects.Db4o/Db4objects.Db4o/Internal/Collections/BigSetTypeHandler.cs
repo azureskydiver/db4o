@@ -90,9 +90,26 @@ namespace Db4objects.Db4o.Internal.Collections
 		// TODO Auto-generated method stub
 		public virtual void CollectIDs(QueryingReadContext context)
 		{
+			int id = context.ReadInt();
+			BTree bTree = NewBTree(context, id);
+			bTree.TraverseKeys(context.Transaction(), new _IVisitor4_83(context));
 		}
 
-		// TODO Auto-generated method stub
+		private sealed class _IVisitor4_83 : IVisitor4
+		{
+			public _IVisitor4_83(QueryingReadContext context)
+			{
+				this.context = context;
+			}
+
+			public void Visit(object id)
+			{
+				context.AddId((((int)id)));
+			}
+
+			private readonly QueryingReadContext context;
+		}
+
 		public virtual ITypeHandler4 ReadCandidateHandler(QueryingReadContext context)
 		{
 			// TODO Auto-generated method stub

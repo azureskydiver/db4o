@@ -147,6 +147,21 @@ namespace Db4objects.Db4o.Config
 			set;
 		}
 
+		/// <summary>Configures an upper limit for the  maximum database file size.</summary>
+		/// <remarks>
+		/// Configures an upper limit for the  maximum database file size.
+		/// There is an upper limit to the possible size:
+		/// A value that is greater than Integer.MAX_VALUE *
+		/// <see cref="BlockSize(int)">BlockSize(int)</see>
+		/// will be ignored and this limit will be used instead.
+		/// </remarks>
+		/// <value>- the number of bytes</value>
+		/// <since>8.1</since>
+		long MaximumDatabaseFileSize
+		{
+			set;
+		}
+
 		/// <summary>allows to configure db4o to use a customized byte IO storage mechanism.</summary>
 		/// <remarks>
 		/// allows to configure db4o to use a customized byte IO storage mechanism.

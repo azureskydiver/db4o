@@ -133,8 +133,10 @@ namespace Db4objects.Db4o.Defragment
 		internal static LocalObjectContainer FreshTargetFile(DefragmentConfig config)
 		{
 			config.Db4oConfig().Storage.Delete(config.OrigPath());
-			return (LocalObjectContainer)Db4oFactory.OpenFile(config.ClonedDb4oConfig(), config
-				.OrigPath());
+			IConfiguration clonedDb4oConfig = config.ClonedDb4oConfig();
+			clonedDb4oConfig.ReadOnly(false);
+			return (LocalObjectContainer)Db4oFactory.OpenFile(clonedDb4oConfig, config.OrigPath
+				());
 		}
 
 		public virtual int MappedID(int oldID, int defaultID)
@@ -323,12 +325,12 @@ namespace Db4objects.Db4o.Defragment
 		public virtual void RegisterBTreeIDs(BTree btree, IDMappingCollector collector)
 		{
 			collector.CreateIDMapping(this, btree.GetID(), false);
-			TraverseAllIndexSlots(btree, new _IVisitor4_244(this, collector));
+			TraverseAllIndexSlots(btree, new _IVisitor4_246(this, collector));
 		}
 
-		private sealed class _IVisitor4_244 : IVisitor4
+		private sealed class _IVisitor4_246 : IVisitor4
 		{
-			public _IVisitor4_244(DefragmentServicesImpl _enclosing, IDMappingCollector collector
+			public _IVisitor4_246(DefragmentServicesImpl _enclosing, IDMappingCollector collector
 				)
 			{
 				this._enclosing = _enclosing;
@@ -434,13 +436,13 @@ namespace Db4objects.Db4o.Defragment
 			{
 				return;
 			}
-			source.IdToTimestamp().TraverseKeys(sourceTransaction, new _IVisitor4_336(this, target
+			source.IdToTimestamp().TraverseKeys(sourceTransaction, new _IVisitor4_338(this, target
 				, targetTransaction));
 		}
 
-		private sealed class _IVisitor4_336 : IVisitor4
+		private sealed class _IVisitor4_338 : IVisitor4
 		{
-			public _IVisitor4_336(DefragmentServicesImpl _enclosing, CommitTimestampSupport target
+			public _IVisitor4_338(DefragmentServicesImpl _enclosing, CommitTimestampSupport target
 				, LocalTransaction targetTransaction)
 			{
 				this._enclosing = _enclosing;

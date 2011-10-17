@@ -12,6 +12,8 @@ namespace Db4objects.Db4o.NativeQueries.Expr.Cmp
 
 		public const int DivideId = 3;
 
+		public const int ModuloId = 4;
+
 		public static readonly Db4objects.Db4o.NativeQueries.Expr.Cmp.ArithmeticOperator 
 			Add = new Db4objects.Db4o.NativeQueries.Expr.Cmp.ArithmeticOperator(AddId, "+");
 
@@ -26,6 +28,10 @@ namespace Db4objects.Db4o.NativeQueries.Expr.Cmp
 		public static readonly Db4objects.Db4o.NativeQueries.Expr.Cmp.ArithmeticOperator 
 			Divide = new Db4objects.Db4o.NativeQueries.Expr.Cmp.ArithmeticOperator(DivideId, 
 			"/");
+
+		public static readonly Db4objects.Db4o.NativeQueries.Expr.Cmp.ArithmeticOperator 
+			Modulo = new Db4objects.Db4o.NativeQueries.Expr.Cmp.ArithmeticOperator(ModuloId, 
+			"%");
 
 		private string _op;
 

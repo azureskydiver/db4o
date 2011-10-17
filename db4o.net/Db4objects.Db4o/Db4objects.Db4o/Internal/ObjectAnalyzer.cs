@@ -44,7 +44,8 @@ namespace Db4objects.Db4o.Internal
 			}
 			if (IsValueType(_classMetadata))
 			{
-				NotStorable(_obj, _classMetadata.ClassReflector());
+				NotStorable(_obj, _classMetadata.ClassReflector(), " Value types can only be stored embedded in parent objects."
+					);
 			}
 		}
 
@@ -75,7 +76,12 @@ namespace Db4objects.Db4o.Internal
 
 		private void NotStorable(object obj, IReflectClass claxx)
 		{
-			_container.NotStorable(claxx, obj);
+			NotStorable(obj, claxx, null);
+		}
+
+		private void NotStorable(object obj, IReflectClass claxx, string message)
+		{
+			_container.NotStorable(claxx, obj, message);
 			_notStorable = true;
 		}
 

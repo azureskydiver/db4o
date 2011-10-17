@@ -398,7 +398,7 @@ namespace Db4objects.Db4o.Internal
 		}
 
 		/// <exception cref="Db4objects.Db4o.Ext.DatabaseReadOnlyException"></exception>
-		protected void CheckReadOnly()
+		protected virtual void CheckReadOnly()
 		{
 			if (_config.IsReadOnly())
 			{
@@ -1471,6 +1471,7 @@ namespace Db4objects.Db4o.Internal
 			InitializeEssentialClasses();
 			Rename(ConfigImpl);
 			_classCollection.InitOnUp(_systemTransaction);
+			_transaction.PostOpen();
 			if (ConfigImpl.DetectSchemaChanges())
 			{
 				if (!ConfigImpl.IsReadOnly())
@@ -2154,7 +2155,8 @@ namespace Db4objects.Db4o.Internal
 			_stillToSet = postponedStillToSet;
 		}
 
-		internal virtual void NotStorable(IReflectClass claxx, object obj)
+		internal virtual void NotStorable(IReflectClass claxx, object obj, string message
+			)
 		{
 			if (!ConfigImpl.ExceptionsOnNotStorable())
 			{
@@ -2167,6 +2169,10 @@ namespace Db4objects.Db4o.Internal
 			if (_handlers.IsTransient(claxx))
 			{
 				return;
+			}
+			if (message != null)
+			{
+				throw new ObjectNotStorableException(claxx, message);
 			}
 			throw new ObjectNotStorableException(claxx);
 		}
