@@ -139,6 +139,12 @@ namespace Db4objects.Db4o.NativeQueries.Instrumentation
 					break;
 				}
 
+				case ArithmeticOperator.ModuloId:
+				{
+					_methodBuilder.Modulo(operandType);
+					break;
+				}
+
 				default:
 				{
 					throw new Exception("Unknown operand: " + operand.Op());

@@ -27,7 +27,15 @@ namespace Db4objects.Db4o.Internal
 
 		public virtual void EnsureInitialized()
 		{
-			IdToTimestamp();
+			if (_idToTimestamp != null)
+			{
+				return;
+			}
+			if (!_container.Config().GenerateCommitTimestamps().DefiniteYes())
+			{
+				return;
+			}
+			Initialize();
 		}
 
 		public virtual BTree IdToTimestamp()
@@ -36,11 +44,7 @@ namespace Db4objects.Db4o.Internal
 			{
 				return _idToTimestamp;
 			}
-			if (!_container.Config().GenerateCommitTimestamps().DefiniteYes())
-			{
-				return null;
-			}
-			Initialize();
+			EnsureInitialized();
 			return _idToTimestamp;
 		}
 
@@ -50,11 +54,7 @@ namespace Db4objects.Db4o.Internal
 			{
 				return _timestampToId;
 			}
-			if (!_container.Config().GenerateCommitTimestamps().DefiniteYes())
-			{
-				return null;
-			}
-			Initialize();
+			EnsureInitialized();
 			return _timestampToId;
 		}
 
@@ -62,6 +62,13 @@ namespace Db4objects.Db4o.Internal
 		{
 			int idToTimestampIndexId = _container.SystemData().IdToTimestampIndexId();
 			int timestampToIdIndexId = _container.SystemData().TimestampToIdIndexId();
+			if (_container.Config().IsReadOnly())
+			{
+				if (idToTimestampIndexId == 0)
+				{
+					return;
+				}
+			}
 			_idToTimestamp = new BTree(_container.SystemTransaction(), idToTimestampIndexId, 
 				new CommitTimestampSupport.TimestampEntryById());
 			_timestampToId = new BTree(_container.SystemTransaction(), timestampToIdIndexId, 
@@ -71,12 +78,12 @@ namespace Db4objects.Db4o.Internal
 				StoreBtreesIds();
 			}
 			EventRegistryFactory.ForObjectContainer(_container).Committing += new System.EventHandler<Db4objects.Db4o.Events.CommitEventArgs>
-				(new _IEventListener4_69(this).OnEvent);
+				(new _IEventListener4_65(this).OnEvent);
 		}
 
-		private sealed class _IEventListener4_69
+		private sealed class _IEventListener4_65
 		{
-			public _IEventListener4_69(CommitTimestampSupport _enclosing)
+			public _IEventListener4_65(CommitTimestampSupport _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -166,12 +173,12 @@ namespace Db4objects.Db4o.Internal
 			public virtual IPreparedComparison PrepareComparison(IContext context, object first
 				)
 			{
-				return new _IPreparedComparison_139(first);
+				return new _IPreparedComparison_135(first);
 			}
 
-			private sealed class _IPreparedComparison_139 : IPreparedComparison
+			private sealed class _IPreparedComparison_135 : IPreparedComparison
 			{
-				public _IPreparedComparison_139(object first)
+				public _IPreparedComparison_135(object first)
 				{
 					this.first = first;
 				}
@@ -217,12 +224,12 @@ namespace Db4objects.Db4o.Internal
 			public override IPreparedComparison PrepareComparison(IContext context, object first
 				)
 			{
-				return new _IPreparedComparison_168(first);
+				return new _IPreparedComparison_164(first);
 			}
 
-			private sealed class _IPreparedComparison_168 : IPreparedComparison
+			private sealed class _IPreparedComparison_164 : IPreparedComparison
 			{
-				public _IPreparedComparison_168(object first)
+				public _IPreparedComparison_164(object first)
 				{
 					this.first = first;
 				}

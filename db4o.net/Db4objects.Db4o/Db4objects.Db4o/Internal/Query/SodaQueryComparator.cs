@@ -135,6 +135,11 @@ namespace Db4objects.Db4o.Internal.Query
 			{
 				string fieldName = fieldPath[fieldNameIndex];
 				FieldMetadata field = currentType.FieldMetadataForName(fieldName);
+				if (field == null)
+				{
+					fields.Clear();
+					break;
+				}
 				currentType = field.FieldType();
 				fields.Add(field);
 			}
@@ -151,7 +156,12 @@ namespace Db4objects.Db4o.Internal.Query
 			for (int orderingIndex = 0; orderingIndex < _orderings.Length; ++orderingIndex)
 			{
 				SodaQueryComparator.Ordering ordering = _orderings[orderingIndex];
-				int result = CompareByField(x, y, ordering._resolvedPath);
+				IList resolvedPath = ordering._resolvedPath;
+				if (resolvedPath.Count == 0)
+				{
+					continue;
+				}
+				int result = CompareByField(x, y, resolvedPath);
 				if (result != 0)
 				{
 					return ordering.Direction().Equals(SodaQueryComparator.Direction.Ascending) ? result

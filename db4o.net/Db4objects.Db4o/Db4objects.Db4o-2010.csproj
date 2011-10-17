@@ -60,6 +60,10 @@
 
 
 
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -922,6 +926,7 @@
 <Compile Include="Db4objects.Db4o\Typehandlers\Internal\KeyValueHandlerPair.cs"/>
 <Compile Include="Db4objects.Db4o\Typehandlers\MapTypeHandler.cs"/>
 <Compile Include="Db4objects.Db4o\Typehandlers\SingleClassTypeHandlerPredicate.cs"/>
+<Compile Include="Db4objects.Db4o\Typehandlers\SingleNamedClassTypeHandlerPredicate.cs"/>
 <Compile Include="Db4objects.Db4o\Types\IBlob.cs"/>
 <Compile Include="Db4objects.Db4o\Types\IDb4oType.cs"/>
 <Compile Include="Db4objects.Db4o\Types\ITransientClass.cs"/>

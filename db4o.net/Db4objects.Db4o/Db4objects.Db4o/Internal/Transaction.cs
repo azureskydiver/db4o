@@ -403,5 +403,13 @@ namespace Db4objects.Db4o.Internal
 		public abstract long GenerateTransactionTimestamp(long forcedTimeStamp);
 
 		public abstract void UseDefaultTransactionTimestamp();
+
+		public virtual void PostOpen()
+		{
+			if (_systemTransaction != null)
+			{
+				_systemTransaction.PostOpen();
+			}
+		}
 	}
 }

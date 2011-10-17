@@ -26,5 +26,10 @@ namespace Db4objects.Db4o.Ext
 		public ObjectNotStorableException(string message) : base(message)
 		{
 		}
+
+		public ObjectNotStorableException(IReflectClass clazz, string message) : base(clazz
+			.GetName() + ": " + message)
+		{
+		}
 	}
 }

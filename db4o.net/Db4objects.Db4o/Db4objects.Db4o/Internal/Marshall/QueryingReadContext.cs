@@ -71,7 +71,7 @@ namespace Db4objects.Db4o.Internal.Marshall
 			return _handlerVersion;
 		}
 
-		private void AddId(int id)
+		public virtual void AddId(int id)
 		{
 			_collector.AddId(id);
 		}

@@ -6,7 +6,7 @@ using Db4objects.Db4o.Tests.Common.Types;
 
 namespace Db4objects.Db4o.Tests.Common.Types
 {
-	public class AllTests : Db4oTestSuite
+	public class AllTests : ComposibleTestSuite
 	{
 		public static void Main(string[] args)
 		{
@@ -15,8 +15,16 @@ namespace Db4objects.Db4o.Tests.Common.Types
 
 		protected override Type[] TestCases()
 		{
-			return new Type[] { typeof(Db4objects.Db4o.Tests.Common.Types.Arrays.AllTests), typeof(
-				StoreTopLevelPrimitiveTestCase) };
+			return ComposeTests(new Type[] { typeof(Db4objects.Db4o.Tests.Common.Types.Arrays.AllTests
+				), typeof(StoreTopLevelPrimitiveTestCase) });
 		}
+
+		#if !SILVERLIGHT
+		protected override Type[] ComposeWith()
+		{
+			return new Type[] { typeof(StoreExceptionTestCase) };
+		}
+		#endif // !SILVERLIGHT
+		// Storing exceptions is not supported on Silverlight. 
 	}
 }

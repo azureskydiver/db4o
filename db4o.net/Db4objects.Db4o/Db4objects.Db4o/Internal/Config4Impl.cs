@@ -233,9 +233,11 @@ namespace Db4objects.Db4o.Internal
 
 		private static readonly KeySpec TaintedKey = new KeySpec(false);
 
-		private sealed class _IReferenceSystemFactory_193 : IReferenceSystemFactory
+		private static readonly KeySpec MaxDatabaseFileSize = new KeySpec(0L);
+
+		private sealed class _IReferenceSystemFactory_195 : IReferenceSystemFactory
 		{
-			public _IReferenceSystemFactory_193()
+			public _IReferenceSystemFactory_195()
 			{
 			}
 
@@ -245,12 +247,12 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		private static readonly KeySpec ReferenceSystemFactoryKey = new KeySpec(new _IReferenceSystemFactory_193
+		private static readonly KeySpec ReferenceSystemFactoryKey = new KeySpec(new _IReferenceSystemFactory_195
 			());
 
-		private sealed class _INameProvider_199 : INameProvider
+		private sealed class _INameProvider_201 : INameProvider
 		{
-			public _INameProvider_199()
+			public _INameProvider_201()
 			{
 			}
 
@@ -260,7 +262,7 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		private static readonly KeySpec NameProviderKey = new KeySpec(new _INameProvider_199
+		private static readonly KeySpec NameProviderKey = new KeySpec(new _INameProvider_201
 			());
 
 		private static readonly KeySpec MaxStackDepthKey = new KeySpec("Dalvik".Equals(Runtime
@@ -1434,6 +1436,22 @@ namespace Db4objects.Db4o.Internal
 		public void MaxStackDepth(int maxStackDepth)
 		{
 			_config.Put(MaxStackDepthKey, maxStackDepth);
+		}
+
+		public void MaximumDatabaseFileSize(long bytes)
+		{
+			_config.Put(MaxDatabaseFileSize, bytes);
+		}
+
+		public long MaximumDatabaseFileSize()
+		{
+			long max = _config.GetAsLong(MaxDatabaseFileSize);
+			long physicalMax = (long)BlockSize() * (long)int.MaxValue;
+			if (max == 0 || max > physicalMax)
+			{
+				return physicalMax;
+			}
+			return max;
 		}
 	}
 }

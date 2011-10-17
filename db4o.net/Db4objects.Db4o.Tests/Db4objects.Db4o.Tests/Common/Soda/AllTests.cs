@@ -22,17 +22,18 @@ namespace Db4objects.Db4o.Tests.Common.Soda
 				), typeof(InterfaceFieldConstraintTestCase), typeof(NullIdentityConstraintTestCase
 				), typeof(OrderByParentFieldTestCase), typeof(OrderByWithComparableTestCase), typeof(
 				OrderByWithNullValuesTestCase), typeof(OrderedOrConstraintTestCase), typeof(OrderFollowedByConstraintTestCase
-				), typeof(QueryUnknownClassTestCase), typeof(SODAClassTypeDescend), typeof(SortMultipleTestCase
-				), typeof(STBooleanTestCase), typeof(STBooleanWUTestCase), typeof(STByteTestCase
-				), typeof(STByteWUTestCase), typeof(STCharTestCase), typeof(STCharWUTestCase), typeof(
-				STDoubleTestCase), typeof(STDoubleWUTestCase), typeof(STETH1TestCase), typeof(STFloatTestCase
-				), typeof(STFloatWUTestCase), typeof(STIntegerTestCase), typeof(STIntegerWUTestCase
-				), typeof(STLongTestCase), typeof(STLongWUTestCase), typeof(STOrTTestCase), typeof(
-				STOrUTestCase), typeof(STOStringTestCase), typeof(STOIntegerTestCase), typeof(STOIntegerWTTestCase
-				), typeof(STRTH1TestCase), typeof(STSDFT1TestCase), typeof(STShortTestCase), typeof(
-				STShortWUTestCase), typeof(STStringUTestCase), typeof(STRUH1TestCase), typeof(STTH1TestCase
-				), typeof(STUH1TestCase), typeof(TopLevelOrderExceptionTestCase), typeof(UntypedEvaluationTestCase
-				), typeof(JointEqualsIdentityTestCase) };
+				), typeof(QueryUnknownClassTestCase), typeof(SODAClassTypeDescend), typeof(SortingNotAvailableField
+				), typeof(SortMultipleTestCase), typeof(STBooleanTestCase), typeof(STBooleanWUTestCase
+				), typeof(STByteTestCase), typeof(STByteWUTestCase), typeof(STCharTestCase), typeof(
+				STCharWUTestCase), typeof(STDoubleTestCase), typeof(STDoubleWUTestCase), typeof(
+				STETH1TestCase), typeof(STFloatTestCase), typeof(STFloatWUTestCase), typeof(STIntegerTestCase
+				), typeof(STIntegerWUTestCase), typeof(STLongTestCase), typeof(STLongWUTestCase)
+				, typeof(STOrTTestCase), typeof(STOrUTestCase), typeof(STOStringTestCase), typeof(
+				STOIntegerTestCase), typeof(STOIntegerWTTestCase), typeof(STRTH1TestCase), typeof(
+				STSDFT1TestCase), typeof(STShortTestCase), typeof(STShortWUTestCase), typeof(STStringUTestCase
+				), typeof(STRUH1TestCase), typeof(STTH1TestCase), typeof(STUH1TestCase), typeof(
+				TopLevelOrderExceptionTestCase), typeof(UntypedEvaluationTestCase), typeof(JointEqualsIdentityTestCase
+				) };
 		}
 
 		public static void Main(string[] args)

@@ -24,7 +24,7 @@ namespace Db4objects.Db4o.Tests.Common.Types
 			catch (ObjectNotStorableException onsex)
 			{
 				exceptionHappened = true;
-				StringAssert.Contains("Primitive types", onsex.Message);
+				StringAssert.Contains("Value types", onsex.Message);
 			}
 			Assert.IsTrue(exceptionHappened);
 		}

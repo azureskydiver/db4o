@@ -75,10 +75,6 @@ namespace Db4objects.Db4o.Internal
 
 		public override void Commit()
 		{
-			if (IsSystemTransaction())
-			{
-				CommitTimestampSupport().EnsureInitialized();
-			}
 			Commit(_committedCallbackDispatcher);
 		}
 
@@ -86,16 +82,15 @@ namespace Db4objects.Db4o.Internal
 		{
 			lock (Container().Lock())
 			{
+				CommitListeners();
 				DispatchCommittingCallback();
 				if (!DoCommittedCallbacks(dispatcher))
 				{
-					CommitListeners();
 					CommitImpl();
 					CommitClearAll();
 				}
 				else
 				{
-					CommitListeners();
 					Collection4 deleted = CollectCommittedCallbackDeletedInfo();
 					CommitImpl();
 					CallbackObjectInfoCollections committedInfo = CollectCommittedCallbackInfo(deleted
@@ -264,7 +259,7 @@ namespace Db4objects.Db4o.Internal
 			{
 				Tree delete = _delete;
 				_delete = null;
-				delete.Traverse(new _IVisitor4_229(this));
+				delete.Traverse(new _IVisitor4_224(this));
 			}
 			// if the object has been deleted
 			// We need to hold a hard reference here, otherwise we can get 
@@ -275,9 +270,9 @@ namespace Db4objects.Db4o.Internal
 			_writtenUpdateAdjustedIndexes = null;
 		}
 
-		private sealed class _IVisitor4_229 : IVisitor4
+		private sealed class _IVisitor4_224 : IVisitor4
 		{
-			public _IVisitor4_229(LocalTransaction _enclosing)
+			public _IVisitor4_224(LocalTransaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -327,13 +322,13 @@ namespace Db4objects.Db4o.Internal
 		private Collection4 CollectCommittedCallbackDeletedInfo()
 		{
 			Collection4 deleted = new Collection4();
-			CollectCallBackInfo(new _ICallbackInfoCollector_279(this, deleted));
+			CollectCallBackInfo(new _ICallbackInfoCollector_274(this, deleted));
 			return deleted;
 		}
 
-		private sealed class _ICallbackInfoCollector_279 : ICallbackInfoCollector
+		private sealed class _ICallbackInfoCollector_274 : ICallbackInfoCollector
 		{
-			public _ICallbackInfoCollector_279(LocalTransaction _enclosing, Collection4 deleted
+			public _ICallbackInfoCollector_274(LocalTransaction _enclosing, Collection4 deleted
 				)
 			{
 				this._enclosing = _enclosing;
@@ -371,13 +366,13 @@ namespace Db4objects.Db4o.Internal
 			}
 			Collection4 added = new Collection4();
 			Collection4 updated = new Collection4();
-			CollectCallBackInfo(new _ICallbackInfoCollector_302(this, added, updated));
+			CollectCallBackInfo(new _ICallbackInfoCollector_297(this, added, updated));
 			return NewCallbackObjectInfoCollections(added, updated, deleted);
 		}
 
-		private sealed class _ICallbackInfoCollector_302 : ICallbackInfoCollector
+		private sealed class _ICallbackInfoCollector_297 : ICallbackInfoCollector
 		{
-			public _ICallbackInfoCollector_302(LocalTransaction _enclosing, Collection4 added
+			public _ICallbackInfoCollector_297(LocalTransaction _enclosing, Collection4 added
 				, Collection4 updated)
 			{
 				this._enclosing = _enclosing;
@@ -415,14 +410,14 @@ namespace Db4objects.Db4o.Internal
 			Collection4 added = new Collection4();
 			Collection4 deleted = new Collection4();
 			Collection4 updated = new Collection4();
-			CollectCallBackInfo(new _ICallbackInfoCollector_325(this, added, updated, deleted
+			CollectCallBackInfo(new _ICallbackInfoCollector_320(this, added, updated, deleted
 				));
 			return NewCallbackObjectInfoCollections(added, updated, deleted);
 		}
 
-		private sealed class _ICallbackInfoCollector_325 : ICallbackInfoCollector
+		private sealed class _ICallbackInfoCollector_320 : ICallbackInfoCollector
 		{
-			public _ICallbackInfoCollector_325(LocalTransaction _enclosing, Collection4 added
+			public _ICallbackInfoCollector_320(LocalTransaction _enclosing, Collection4 added
 				, Collection4 updated, Collection4 deleted)
 			{
 				this._enclosing = _enclosing;
@@ -572,6 +567,15 @@ namespace Db4objects.Db4o.Internal
 				return _concurrentReplicationTimestamps;
 			}
 			return new ArrayList();
+		}
+
+		public override void PostOpen()
+		{
+			base.PostOpen();
+			if (IsSystemTransaction())
+			{
+				CommitTimestampSupport().EnsureInitialized();
+			}
 		}
 	}
 }

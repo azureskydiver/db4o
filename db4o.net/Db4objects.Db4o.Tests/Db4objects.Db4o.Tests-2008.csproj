@@ -162,6 +162,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\CascadedDeleteReadTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\ChangeIdentity.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\CloseUnlocksFileTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\CommitTimeStampsNoSchemaChangesTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\CommitTimestampTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\ComparatorSortTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\ConcurrentRenameTestCase.cs"/>
@@ -188,6 +189,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\LockedTreeTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\LongLinkedListTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\ManyRollbacksTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\MaximumDatabaseSizeTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\Molecule.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\MultiDeleteTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\ObjectConstructorTestCase.cs"/>
@@ -285,6 +287,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\CS\ServerTransactionCountTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\CS\SetSemaphoreTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\CS\StandaloneCSTestCaseBase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\CS\UniqueConstraintOnServerTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Caching\AllTests.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Caching\CacheTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Caching\CacheTestUnit.cs"/>
@@ -820,6 +823,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Soda\QueryUnknownClassTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Soda\SODAClassTypeDescend.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Soda\SortMultipleTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Soda\SortingNotAvailableField.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Soda\UntypedEvaluationTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Soda\Util\SodaBaseTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Soda\Util\SodaTestUtil.cs"/>
@@ -944,6 +948,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\TA\TransparentActivationSupportTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\TA\TransparentActivationTestCaseBase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\TP\AllTests.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\TP\CommitTimeStampsWithTPTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\TP\DeactivateDeletedObjectOnRollbackStrategyTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\TP\Item.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\TP\QueryConsistencyTestCase.cs"/>
@@ -960,6 +965,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Types\Arrays\SimpleTypeArrayInUntypedVariableTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Types\Arrays\TypedArrayInObjectTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Types\Arrays\TypedDerivedArrayTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Types\StoreExceptionTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Types\StoreTopLevelPrimitiveTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Updatedepth\AllTests.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Updatedepth\NegativeUpdateDepthTestCase.cs"/>

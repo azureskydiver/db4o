@@ -22,5 +22,9 @@ namespace Db4objects.Db4o.Ext
 	[System.Serializable]
 	public class DatabaseMaximumSizeReachedException : Db4oRecoverableException
 	{
+		public DatabaseMaximumSizeReachedException(int size) : base("Maximum database file size reached. Last valid size: "
+			 + size + ". From now on opening only works in read-only mode.")
+		{
+		}
 	}
 }

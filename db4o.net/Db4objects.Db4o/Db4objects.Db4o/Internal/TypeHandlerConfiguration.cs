@@ -44,8 +44,12 @@ namespace Db4objects.Db4o.Internal
 
 		protected virtual void IgnoreFieldsOn(Type clazz)
 		{
-			_config.RegisterTypeHandler(new SingleClassTypeHandlerPredicate(clazz), IgnoreFieldsTypeHandler
-				.Instance);
+			RegisterTypeHandlerFor(clazz, IgnoreFieldsTypeHandler.Instance);
+		}
+
+		protected virtual void IgnoreFieldsOn(string className)
+		{
+			RegisterTypeHandlerFor(className, IgnoreFieldsTypeHandler.Instance);
 		}
 
 		private void RegisterListTypeHandlerFor(Type clazz)
@@ -63,6 +67,13 @@ namespace Db4objects.Db4o.Internal
 		{
 			_config.RegisterTypeHandler(new SingleClassTypeHandlerPredicate(clazz), typeHandler
 				);
+		}
+
+		protected virtual void RegisterTypeHandlerFor(string className, ITypeHandler4 typeHandler
+			)
+		{
+			_config.RegisterTypeHandler(new SingleNamedClassTypeHandlerPredicate(className), 
+				typeHandler);
 		}
 	}
 }
