@@ -64,7 +64,7 @@ public class CommitTimeStampsWithTPTestCase extends AbstractDb4oTestCase{
 
         private transient Activator _activator;
 
-        private String name = "default";
+        public String name = "default";
 
         public void setName(String name) {
             activate(ActivationPurpose.WRITE);
