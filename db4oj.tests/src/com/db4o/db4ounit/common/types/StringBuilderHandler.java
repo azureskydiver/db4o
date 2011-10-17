@@ -1,70 +1,26 @@
 package com.db4o.db4ounit.common.types;
 
-import com.db4o.ext.*;
-import com.db4o.internal.DefragmentContext;
-import com.db4o.internal.delete.DeleteContext;
-import com.db4o.marshall.ReadBuffer;
-import com.db4o.marshall.ReadContext;
-import com.db4o.marshall.WriteContext;
-import com.db4o.typehandlers.ValueTypeHandler;
-
-import java.io.*;
+import com.db4o.internal.handlers.*;
 
 /**
  * @sharpen.remove
  */
 @decaf.Remove(unlessCompatible=decaf.Platform.JDK15)
-public class StringBuilderHandler implements ValueTypeHandler {
+public class StringBuilderHandler extends StringBasedValueTypeHandlerBase<StringBuilder> {
+
+	public StringBuilderHandler() {
+		super(StringBuilder.class);
+	}
+
+	@Override
+	protected String convertObject(StringBuilder obj) {
+		return obj.toString();
+	}
+
+	@Override
+	protected StringBuilder convertString(String str) {
+		return new StringBuilder(str);
+	}
 	
-    static final String CHAR_SET_NAME = "UTF-8";
 
-
-    // #example: Delete the content
-    @Override
-    public void delete(DeleteContext deleteContext) throws Db4oIOException {
-        skipData(deleteContext);
-    }
-
-    private void skipData(ReadBuffer deleteContext) {
-        int numBytes = deleteContext.readInt();
-        deleteContext.seek(deleteContext.offset()+ numBytes);
-    }
-    // #end example
-
-    // #example: Defragment the content
-    @Override
-    public void defragment(DefragmentContext defragmentContext) {
-        skipData(defragmentContext);
-    }
-    // #end example
-
-    // #example: Write the StringBuilder
-    @Override
-    public void write(WriteContext writeContext, Object o) {
-        StringBuilder builder = (StringBuilder) o;
-        String str = builder.toString();
-        byte[] bytes;
-		try {
-			bytes = str.getBytes(CHAR_SET_NAME);
-		} catch (UnsupportedEncodingException e) {
-			throw new Db4oException(e);
-		}
-        writeContext.writeInt(bytes.length);
-        writeContext.writeBytes(bytes);
-    }
-    // #end example
-
-    // #example: Read the StringBuilder
-    @Override
-    public Object read(ReadContext readContext) {
-        final int length = readContext.readInt();
-        byte[] data = new byte[length];
-        readContext.readBytes(data);
-        try {
-			return new StringBuilder(new String(data,CHAR_SET_NAME));
-		} catch (UnsupportedEncodingException e) {
-			throw new Db4oException(e);
-		}
-    }
-    // #end example
 }
