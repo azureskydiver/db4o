@@ -15,14 +15,20 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 	
 	public static void main(String[] args) {
 		new ConsoleTestRunner(
-			Iterators.concat(
-				new VersantDrsTestSuiteBuilder().iterator(), 
-				new VodStandaloneTests().iterator()
-			)).run();
+				Iterators.concat(
+					new VersantDrsTestSuiteBuilder().iterator(), 
+					new VodStandaloneTests().iterator()
+				)).run();
 	}
 
 	public Iterator4 iterator() {
-		
+		if(false){
+			return new DrsTestSuiteBuilder(
+					new VodDrsFixture("vod-drs-a"), 
+					new Db4oDrsFixture("db4o-drs-b", reflector),
+					TheSimplestTestSuite.class, 
+					reflector).iterator();
+		}
 		if(false){
 			return new DrsTestSuiteBuilder(
 					new VodDrsFixture("vod-drs-a"), 
@@ -30,7 +36,6 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 					VersantDrsTestSuite.class, 
 					reflector).iterator();
 		}
-		
 		if(false){
 			return new DrsTestSuiteBuilder(
 					new Db4oDrsFixture("db4o-drs-a", reflector),
@@ -39,21 +44,17 @@ public class VersantDrsTestSuiteBuilder implements TestSuiteBuilder {
 					reflector).iterator();
  
 		}
-		
 		return Iterators.concat(
-			
 			new DrsTestSuiteBuilder(
 				new VodDrsFixture("vod-drs-a"), 
 				new Db4oDrsFixture("db4o-drs-b", reflector), 
 				VersantDrsTestSuite.class, 
 				reflector),
-				
 			new DrsTestSuiteBuilder(
 				new Db4oDrsFixture("db4o-drs-a", reflector),
 				new VodDrsFixture("vod-drs-b"), 
 				VersantDrsTestSuite.class, 
 				reflector)
-
 		)
 		.iterator();
 	}

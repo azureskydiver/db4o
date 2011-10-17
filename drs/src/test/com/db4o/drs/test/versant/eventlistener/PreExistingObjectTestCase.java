@@ -19,12 +19,17 @@ public class PreExistingObjectTestCase implements TestCase {
 	
 	private static final String DATABASE_NAME = "PreExisting";
 	
+	private static final String USER_NAME = "drs";
+	
+	private static final String PASSWORD = "drs";
+	
 	public void test(){
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
+		VodDatabase vod = new VodDatabase(DATABASE_NAME, USER_NAME, PASSWORD);
 		
 		try{
 			vod.removeDb();
 			vod.produceDb();
+			vod.addUser();
 			vod.addJdoMetaDataFile(com.db4o.drs.test.versant.data.Item.class.getPackage());
 			vod.createEventSchema();
 			

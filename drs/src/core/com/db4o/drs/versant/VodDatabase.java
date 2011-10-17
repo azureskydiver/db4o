@@ -30,13 +30,16 @@ public class VodDatabase {
 
 	private static final long STARTUP_TIMEOUT = DrsDebug.timeout(10000);
 
-	private static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
+	public static final String USER_NAME_KEY = "javax.jdo.option.ConnectionUserName";
+
+	public static final String PASSWORD_KEY = "javax.jdo.option.ConnectionPassword";
+
+	public static final String CONNECTION_URL_KEY = "javax.jdo.option.ConnectionURL";
 	
 	private static final String JDO_METADATA_KEY = "versant.metadata."; 
 
 	public static final String VED_DRIVER = "veddriver";
 	
-
 	private static final int DEFAULT_PORT = 5019;
 
 	private final Properties _properties;
@@ -60,14 +63,28 @@ public class VodDatabase {
 	}
 	
 	public VodDatabase(String name, Properties properties){
-		this(new EventConfiguration(name, name + "event.log", "localhost", nextPort(), "localhost",
-									new IncrementingEventClientPortSelectionStrategy(nextPort()), 
-									"localhost", EVENT_PROCESSOR_PORT, DrsDebug.verbose),
+		this(new EventConfiguration(
+				name, 
+				properties.getProperty(USER_NAME_KEY), 
+				properties.getProperty(PASSWORD_KEY), 
+				name + "event.log", 
+				"localhost", 
+				nextPort(), 
+				"localhost",
+				new IncrementingEventClientPortSelectionStrategy(nextPort()), 
+				"localhost", EVENT_PROCESSOR_PORT, DrsDebug.verbose),
 				properties);
 	}
 	
-	public VodDatabase(String name){
-		this(name, new Properties());
+	public VodDatabase(String name, String userName, String password){
+		this(name, createProperties(userName, password));
+	}
+	
+	private static Properties createProperties(String userName, String password){
+		Properties properties = new Properties();
+		properties.put(VodDatabase.USER_NAME_KEY, userName);
+		properties.put(VodDatabase.PASSWORD_KEY, password);
+		return properties;
 	}
 	
     public VodDatabase (PersistenceManagerFactory pmf){
@@ -75,7 +92,7 @@ public class VodDatabase {
     }
     
     public VodDatabase(EventConfiguration eventConfiguration) {
-    	this(eventConfiguration, new Properties());
+    	this(eventConfiguration, createProperties(eventConfiguration.userName, eventConfiguration.password));
 	}
 
 	public void configureEventProcessor(String host, int port){
@@ -219,18 +236,20 @@ public class VodDatabase {
 	
 	private synchronized DatastoreManagerFactory datastoreManagerFactory(){
 		if(_datastoreManagerFactory == null){
-			ConnectionInfo con = new ConnectionInfo(name(), host(), port(), userName(), passWord());
-			_datastoreManagerFactory = new DatastoreManagerFactory(con, new ConnectionProperties());
+			DatabaseImp db = new DatabaseImp(name(), host(), port());
+			ConnectionInfo con = new ConnectionInfo(db, userName(), passWord());
+			ConnectionProperties connectionProperties = new ConnectionProperties();
+			_datastoreManagerFactory = new DatastoreManagerFactory(con, connectionProperties);
 		}
 		return _datastoreManagerFactory;
 	}
 	
-	private String userName(){
-        return _properties.getProperty("javax.jdo.option.ConnectionUserName");
+	public String userName(){
+        return _properties.getProperty(USER_NAME_KEY);
 	}
 	
-	private String passWord(){
-		return _properties.getProperty("javax.jdo.option.ConnectionPassword");
+	public String passWord(){
+		return _properties.getProperty(PASSWORD_KEY);
 	}
 	
 	private int port(){
@@ -453,6 +472,10 @@ public class VodDatabase {
 	
 	public int eventProcessorPort() {
 		return eventConfiguration().eventProcessorPort;
+	}
+
+	public void addUser() {
+		DBUtility.addDBUser(name(), userName(), passWord(), "rw");
 	}
 	
 }

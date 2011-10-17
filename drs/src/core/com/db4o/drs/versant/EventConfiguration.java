@@ -13,7 +13,11 @@ public class EventConfiguration {
 
 	public final String databaseName;
 	
+	public final String userName;
+	
 	public final String logFileName;
+	
+	public final String password;
 	
 	public final String serverHost;
 	
@@ -24,12 +28,17 @@ public class EventConfiguration {
 	private final int clientPort;
 	
 	public String eventProcessorHost;
+	
 	public int eventProcessorPort;
 	
 	public final boolean verbose;
+
+
 	
-	public EventConfiguration(String databaseName, String logFileName, String serverHost, int serverPort, String clientHost, EventClientPortSelectionStrategy clientPortStrategy, String eventProcessorHost, int eventProcessorPort, boolean verbose) {
+	public EventConfiguration(String databaseName, String userName, String password, String logFileName, String serverHost, int serverPort, String clientHost, EventClientPortSelectionStrategy clientPortStrategy, String eventProcessorHost, int eventProcessorPort, boolean verbose) {
 		this.databaseName = databaseName;
+		this.userName = userName;
+		this.password = password;
 		this.logFileName = logFileName;
 		this.serverHost = serverHost;
 		this.serverPort = serverPort;

@@ -20,6 +20,10 @@ public class EventProcessorApplication {
 
 		public static final String DATABASE = "database";
 		
+		public static final String USER_NAME = "username";
+		
+		public static final String PASSWORD = "password";
+		
 		public static final String VERBOSE = "verbose";
 		
 		public static final String LOGFILE = "logfile";
@@ -60,6 +64,20 @@ public class EventProcessorApplication {
 	        	.isRequired()
 	        	.withDescription(  "to generate replication events for" )
 	        	.create(DATABASE ));
+		
+		options.addOption(OptionBuilder
+				.withArgName( "username" )
+	        	.hasArg()
+	        	.isRequired()
+	        	.withDescription(  "database user name" )
+	        	.create(USER_NAME ));
+		
+		options.addOption(OptionBuilder
+				.withArgName( "password" )
+	        	.hasArg()
+	        	.isRequired()
+	        	.withDescription(  "database user password" )
+	        	.create(PASSWORD));
 		
 		options.addOption(OptionBuilder
 				.withArgName( "filename" )
@@ -126,7 +144,9 @@ public class EventProcessorApplication {
 			String client = optionValue(line, CLIENT, LOCALHOST);
 			
 			_eventConfiguration = new EventConfiguration(
-					line.getOptionValue(DATABASE), 
+					line.getOptionValue(DATABASE),
+					line.getOptionValue(USER_NAME),
+					line.getOptionValue(PASSWORD),
 					line.getOptionValue(LOGFILE),
 					server,
 					optionAsInt(line, SERVER_PORT),

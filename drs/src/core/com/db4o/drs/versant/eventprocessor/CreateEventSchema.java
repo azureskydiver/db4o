@@ -2,6 +2,8 @@
 
 package com.db4o.drs.versant.eventprocessor;
 
+import java.util.*;
+
 import javax.jdo.*;
 
 import com.db4o.drs.versant.*;
@@ -9,12 +11,13 @@ import com.db4o.drs.versant.*;
 public class CreateEventSchema {
 	
 	public static void main(String[] args) {
+		
 		if(args.length != 1){
 			System.out.println("Usage: CreateEventSchema [databaseName]");
 			return;
 		}
 		String databaseName = args[0];
-		VodDatabase vod = new VodDatabase(databaseName);
+		VodDatabase vod = new VodDatabase(databaseName, new Properties());
 		
 		if(! vod.dbExists()){
 			System.out.println("Database '" + databaseName + "' does not exist.");

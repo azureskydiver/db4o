@@ -29,6 +29,7 @@ public class VodJvi {
 	}
 	
 	public void createEventSchema() {
+		System.out.println("-------> Creating event schema");
 		defineSchema(CHANNEL_SCHEMA);
 		defineSchema(VEDSECHN_SCHEMA);
 	}

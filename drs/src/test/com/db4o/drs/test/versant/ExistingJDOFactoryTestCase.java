@@ -91,7 +91,9 @@ public class ExistingJDOFactoryTestCase extends VodProviderTestCaseBase{
     private static PersistenceManagerFactory createFactory() {
     	Properties properties = new Properties();
     	properties.setProperty("javax.jdo.PersistenceManagerFactoryClass", "com.versant.core.jdo.BootstrapPMF");
-    	properties.setProperty("javax.jdo.option.ConnectionURL", "versant:VodProviderTestCaseBase");
+    	properties.setProperty(VodDatabase.CONNECTION_URL_KEY, "versant:VodProviderTestCaseBase");
+    	properties.setProperty(VodDatabase.PASSWORD_KEY, "drs");
+    	properties.setProperty(VodDatabase.USER_NAME_KEY, "drs");
     	properties.setProperty("versant.metadata.0", "com/db4o/drs/test/versant/data/package.jdo");
     	return JDOHelper.getPersistenceManagerFactory(properties);
     }

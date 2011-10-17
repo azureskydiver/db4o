@@ -151,7 +151,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	private DatastoreObject newDatastoreObject(Class clazz) {
-		DatastoreObject datastoreObject = new DatastoreObject(_dm.getNewLoid(), datastoreSchemaClass(clazz), _dm.getDefaultDatastore());
+		DatastoreObject datastoreObject = new DatastoreObject(_dm.getNewLoid(_dm.getPrimaryDatastoreInfo()), datastoreSchemaClass(clazz), _dm.getPrimaryDatastoreInfo());
 		datastoreObject.setTimestamp(1);
 		datastoreObject.setIsNew(true);
 		datastoreObject.allocate();
@@ -242,7 +242,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	public DatastoreSchemaClass datastoreSchemaClass(String name) {
-		return _dm.getSchemaEditor().findClass(name, _dm.getDefaultDatastore());
+		return _dm.getSchemaEditor().findClass(name, _dm.getPrimaryDatastoreInfo());
 	}
 	
 	public boolean isKnownClass(Class clazz) {
@@ -369,7 +369,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public short databaseId(){
-		return _dm.getDefaultDatastore().getDBID();	
+		return _dm.getPrimaryDatastoreInfo().getDBID();	
 	}
 	
 	public String databaseName(){
@@ -402,7 +402,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	      Set<String> classNames = new HashSet<String>();
 	      String classclazzNam = CLASS_CLASS_NAME;
 	      DatastoreObject[] dsos = datastoreObjects(classclazzNam);
-	      DatastoreSchemaClass dsc = _dm.getSchemaEditor().findClass(classclazzNam, _dm.getDefaultDatastore());
+	      DatastoreSchemaClass dsc = _dm.getSchemaEditor().findClass(classclazzNam, _dm.getPrimaryDatastoreInfo());
 	      DatastoreSchemaField dsf = dsc.findField(CLASS_NAME_FIELD_NAME);
 	      for(int i = 0; i < dsos.length;i++){
 	    	  String className = dsos[i].readObject(dsf).toString();
