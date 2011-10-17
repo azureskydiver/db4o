@@ -1,13 +1,11 @@
 package com.db4o.db4ounit.common.types;
 
-import com.db4o.Db4oEmbedded;
-import com.db4o.EmbeddedObjectContainer;
-import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.defragment.Defragment;
-import com.db4o.defragment.DefragmentConfig;
-import com.db4o.io.MemoryStorage;
-import com.db4o.io.Storage;
-import com.db4o.typehandlers.SingleClassTypeHandlerPredicate;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.defragment.*;
+import com.db4o.internal.*;
+import com.db4o.io.*;
+import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 
@@ -69,6 +67,7 @@ public class StringBuilderHandlerTestCase  implements TestLifeCycle {
     private EmbeddedConfiguration newConfig() {
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         configuration.file().storage(storage);
+        configuration.common().reflectWith(Platform4.reflectorForType(Holder.class));
         configuration.common().registerTypeHandler(new SingleClassTypeHandlerPredicate(StringBuilder.class),
                 new StringBuilderHandler());
         return configuration;
