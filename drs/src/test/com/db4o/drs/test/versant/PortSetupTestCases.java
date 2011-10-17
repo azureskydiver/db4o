@@ -60,8 +60,14 @@ public class PortSetupTestCases extends VodProviderTestCaseBase {
         File tempFile = File.createTempFile("logFile", "tmp");
         tempFile.deleteOnExit();
 
-        EventConfiguration config = new EventConfiguration(_vod.name(),
-                tempFile.getAbsolutePath(),"localhost",_vod.eventConfiguration().serverPort,"localhost",
+        EventConfiguration config = new EventConfiguration(
+        		_vod.name(),
+        		_vod.userName(),
+        		_vod.passWord(),
+                tempFile.getAbsolutePath(),
+                "localhost",
+                _vod.eventConfiguration().serverPort,
+                "localhost",
                 new FixedEventClientPortSelectionStrategy(4100),"localhost", PORT_NUMBER,true);
 
 

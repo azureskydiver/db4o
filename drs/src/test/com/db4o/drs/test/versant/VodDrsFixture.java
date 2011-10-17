@@ -10,6 +10,10 @@ import com.db4o.drs.versant.*;
 
 public class VodDrsFixture implements DrsProviderFixture{
 	
+	private static final String USER_NAME = "drs";
+	
+	private static final String PASSWORD = "drs";
+	
 	private VodDatabase _vod;
 	
 	protected VodReplicationProvider _provider;
@@ -24,9 +28,10 @@ public class VodDrsFixture implements DrsProviderFixture{
 	}
 
 	private void init() {
-		_vod = new VodDatabase(_name);
+		_vod = new VodDatabase(_name, USER_NAME, PASSWORD);
 		_vod.removeDb();
 		_vod.produceDb();
+		_vod.addUser();
 		
 		Set<Package> packages = new HashSet<Package>();
 		for (Class clazz : DrsTestCase.mappings) {

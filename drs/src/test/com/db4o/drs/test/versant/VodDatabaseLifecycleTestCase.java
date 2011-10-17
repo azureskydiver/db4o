@@ -4,17 +4,18 @@ package com.db4o.drs.test.versant;
 
 
 
+import java.util.*;
+
 import com.db4o.drs.versant.*;
 
 import db4ounit.*;
 
 public class VodDatabaseLifecycleTestCase implements TestCase {
 	
-	
 	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
 	public void testLifeCycle(){
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
+		VodDatabase vod = new VodDatabase(DATABASE_NAME, new Properties());
 		vod.removeDb();
 		Assert.isFalse(vod.dbExists());
 		vod.produceDb();
@@ -24,7 +25,7 @@ public class VodDatabaseLifecycleTestCase implements TestCase {
 	}
 	
 	public void testEnhancer() {
-		VodDatabase vod = new VodDatabase(DATABASE_NAME);
+		VodDatabase vod = new VodDatabase(DATABASE_NAME, new Properties());
 		
 		// TODO: Test if some known class is PersistenceCapable
 		

@@ -8,11 +8,16 @@ import db4ounit.*;
 
 public abstract class VodDatabaseTestCaseBase implements TestCase, ClassLevelFixtureTest {
 	
+	private static final String USER_NAME = "drs";
+	
+	private static final String PASSWORD = "drs";
+	
 	private static final String DATABASE_NAME = "VodDatabaseTestCaseBase";
 	
 	public static void classSetUp() {
-		_vod = new VodDatabase(DATABASE_NAME);
+		_vod = new VodDatabase(DATABASE_NAME, USER_NAME, PASSWORD);
 		_vod.produceDb();
+		_vod.addUser();
 	}
 
 	public static void classTearDown() {

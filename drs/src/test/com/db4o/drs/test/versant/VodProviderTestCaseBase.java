@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.versant.*;
@@ -16,6 +18,10 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 	    public void beforeCommit(){}
 	    public void afterCommit(){}
 	}
+
+	private static final String USER_NAME = "drs";
+	
+	private static final String PASSWORD = "drs";
 
 	protected static final String DATABASE_NAME = "VodProviderTestCaseBase";
 	
@@ -65,9 +71,10 @@ public abstract class VodProviderTestCaseBase  implements TestLifeCycle, ClassLe
 		if(_vod != null){
 			throw new IllegalStateException();
 		}
-		_vod = new VodDatabase(DATABASE_NAME);
+		_vod = new VodDatabase(DATABASE_NAME, USER_NAME, PASSWORD);
 		_vod.removeDb();
 		_vod.produceDb();
+		_vod.addUser();
 		_vod.addJdoMetaDataFile(com.db4o.drs.test.versant.data.Item.class.getPackage());
 		_vod.createEventSchema();
 		_vod.startEventDriver();

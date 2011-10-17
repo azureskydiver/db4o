@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test.versant;
 
+import java.util.*;
+
 import com.db4o.drs.versant.*;
 
 import db4ounit.*;
@@ -11,7 +13,7 @@ public class VodStandaloneEventProcessorTestCase implements TestCase {
 	protected static final String DATABASE_NAME = "Standalone";
 	
 	public void test(){
-		VodDatabase _vod = new VodDatabase(DATABASE_NAME);
+		VodDatabase _vod = new VodDatabase(DATABASE_NAME, new Properties());
 		_vod.produceDb();
 		_vod.createEventSchema();
 		_vod.startEventDriver();
