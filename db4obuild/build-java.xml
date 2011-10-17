@@ -1380,6 +1380,44 @@
 		</java>
 	</target>
 	
+	<target name="run.tests.jdk1.7" depends="init, build.db4ojdk1.5.tests" unless="skip.tests">
+        <path id="tests.jdk1.5.runtime.cp">
+            <pathelement path="${dir.dist.classes.test.jdk1.5}" />
+        	<path refid="tests.jdk1.5.cp" />
+        </path>
+		<java taskname="core/j17" jvm="${file.jvm.jdk1.7}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" 
+			failonerror="true" 
+			timeout="10000000">
+			<jvmarg value="-Xmx512m"/>
+			<sysproperty key="dir.workspace" value="${dir.base}" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
+		</java>
+
+		<java taskname="opt/j17" jvm="${file.jvm.jdk1.7}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.db4ounit.jre11.AllTestsOptional" 
+			failonerror="true" 
+			timeout="10000000">
+			<jvmarg value="-Xmx512m"/>
+			<sysproperty key="dir.workspace" value="${dir.base}" />
+			<classpath refid="tests.jdk1.5.runtime.cp"/>
+		</java>
+
+		<java taskname="core+ta/j17" jvm="${file.jvm.jdk1.7}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.db4ounit.jre5.AllTestsWithTAJdk5" 
+			failonerror="true" 
+			timeout="3000000">
+			<sysproperty key="dir.workspace" value="${dir.base}" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
+		</java>
+	</target>
+	
 	<target name="run.tests.nqopt1.2" depends="build.nqopt.tests1.2" unless="skip.tests">
         <path id="tests.nqopt.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
@@ -1979,6 +2017,7 @@
 				run.tests.concurrency, 
 				run.tests.osgi1.5,
 				run.tests.jdk1.5.instrumented,
+				run.tests.jdk1.7,
 				package.java" />
 	
 	<target name="update.osgi.tests" depends="build.db4ojdk1.2.tests">
