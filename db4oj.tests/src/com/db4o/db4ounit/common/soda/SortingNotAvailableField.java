@@ -36,7 +36,7 @@ public class SortingNotAvailableField extends AbstractDb4oTestCase{
     }
     
     public static class OrderedItem {
-        private int myOrder = 42;
+        public int myOrder = 42;
     }
 }
 
