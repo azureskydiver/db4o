@@ -1,3 +1,4 @@
+using System;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 
@@ -9,8 +10,8 @@ public class ClientServer {
     public static void Main(string[] args) {
 
         SessionContainers();
-        StartServer();
         RunClientServer();
+        StartServer();
     }
 
     private static void SessionContainers() {
@@ -33,6 +34,9 @@ public class ClientServer {
             server.GrantAccess("user","password");
 
             // Keep server running as long as you need it
+            Console.Out.WriteLine("Press any key to exit.");
+            Console.Read();
+            Console.Out.WriteLine("Exiting...");
         }
         // #end example
     }

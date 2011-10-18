@@ -160,6 +160,7 @@
     <Compile Include="Code\performance\query\soda\GoodPerformance.vb" />
     <Compile Include="Code\performance\StopWatchUtil.vb" />
     <Compile Include="Code\PersistanceAware.vb" />
+    <Compile Include="Code\platform\Asp\DynamicAssembliesIssue.vb" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.vb" />
     <Compile Include="Code\practises\relations\Club.vb" />
     <Compile Include="Code\practises\relations\Country.vb" />

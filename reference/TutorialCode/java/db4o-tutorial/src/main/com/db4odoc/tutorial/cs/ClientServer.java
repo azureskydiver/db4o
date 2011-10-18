@@ -9,10 +9,10 @@ import com.db4o.cs.Db4oClientServer;
 public class ClientServer {
     private static final String DATABASE_FILE = "database.db4o";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         sessionContainers();
-        startServer();
         clientServer();
+        startServer();
     }
 
     private static void sessionContainers() {
@@ -31,7 +31,7 @@ public class ClientServer {
         }
     }
 
-    private static void startServer() {
+    private static void startServer() throws Exception {
         // #example: Open server
         ObjectServer server = Db4oClientServer.openServer("database.db4o",8080);
         try{
@@ -39,6 +39,9 @@ public class ClientServer {
             server.grantAccess("user","password");
 
             // Keep server running as long as you need it
+            System.out.println("Press any key to exit.");
+            System.in.read();
+            System.out.println("Exiting...");
         }finally {
             server.close();
         }

@@ -6,11 +6,11 @@
         <h1>Client Server Mode</h1>
         <p>Let's take a look at the client server modes of db4o.</p>
         <h2><a name="SessionContainers"></a>Embedded Clients aka Session Containers</h2>
-        <p>db4o allows you to open lightweight session containers (aka embedded clients), which have their own transaction. We can use these session containers when we need multiple transactions running at the same time. </p>
+        <p>db4o allows us to open lightweight session containers (aka embedded clients), which have their own transaction. We can use these session containers when we need multiple transactions running at the same time. </p>
         <MadCap:snippetBlock src="CodeExamples/cs/ClientServer-Creating-a-session-container.all.flsnp" />
         <h2><a name="NetworkCS"></a>Network Client Server Mode</h2>
-        <p>db4o supports a client server mode over the network. However db4o was designed for embedded use cases. Therefore the client server mode isn't a core feature but more an add-on. Not all db4o features work in the client server mode and the performance characteristics for db4o aren't optimized for client server mode. </p>
-        <p>For all these reasons we should prefer the embedded mode with session containers instead of full blown clients. Nevertheless the client server mode can be useful to us.</p>
+        <p>db4o supports a client server mode over the network. However db4o was designed for embedded use cases. Therefore the client server mode isn't a core functionality but more an add-on. Not all db4o features work in the client server mode and the performance characteristics of db4o aren't optimized for client server mode. </p>
+        <p>For all these reasons we should prefer the embedded mode with session containers instead of full blown clients. Nevertheless the client server mode can be useful to for some scenarios.</p>
         <h3>Starting a Server</h3>
         <p>First we start the server:</p>
         <MadCap:snippetBlock src="CodeExamples/cs/ClientServer-Open-server.all.flsnp" />

@@ -1288,9 +1288,6 @@
       Title="Dangerous Practices"
       Link="/Content/usage_pitfalls/dangerous_practices.htm" />
     <TocEntry
-      Title="Persistent Hashtables"
-      Link="/Content/usage_pitfalls/persistent_hashtables.htm" />
-    <TocEntry
       Title="Working With Large Amounts Of Data"
       Link="/Content/usage_pitfalls/working_with_large_amounts_of_data.htm" />
   </TocEntry>

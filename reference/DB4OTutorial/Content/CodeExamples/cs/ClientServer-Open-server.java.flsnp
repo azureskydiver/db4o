@@ -8,6 +8,9 @@
     server.grantAccess(<span style="color:#A31515;">&quot;user&quot;</span>,<span style="color:#A31515;">&quot;password&quot;</span>);
 
     <span style="color:Green;">// Keep server running as long as you need it</span>
+    System.out.println(<span style="color:#A31515;">&quot;Press any key to exit.&quot;</span>);
+    System.in.read();
+    System.out.println(<span style="color:#A31515;">&quot;Exiting...&quot;</span>);
 }<span style="color:Blue;">finally</span> {
     server.close();
 }</pre>

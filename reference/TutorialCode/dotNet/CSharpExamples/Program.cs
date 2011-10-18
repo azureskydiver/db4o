@@ -1,3 +1,4 @@
+using Db4oTutorialCode.Code.ClientServer;
 using Db4oTutorialCode.Code.TransparentPersistence;
 
 namespace Db4oTutorialCode
@@ -6,7 +7,7 @@ namespace Db4oTutorialCode
     {
         public static void Main(string[] args)
         {
-            TransparentPersistence.Main(args);
+            ClientServer.Main(args);
         }
     }
 }
