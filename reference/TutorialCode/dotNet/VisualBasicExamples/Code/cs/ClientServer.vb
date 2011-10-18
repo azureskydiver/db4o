@@ -8,8 +8,8 @@ Namespace Db4oTutorialCode.Code.ClientServer
         Public Shared Sub Main(args As String())
 
             SessionContainers()
-            StartServer()
             RunClientServer()
+            StartServer()
         End Sub
 
         Private Shared Sub SessionContainers()
@@ -26,9 +26,12 @@ Namespace Db4oTutorialCode.Code.ClientServer
             ' #example: Open server
             Using server As IObjectServer = Db4oClientServer.OpenServer("database.db4o", 8080)
                 ' allow access to this server
+                server.GrantAccess("user", "password")
 
                 ' Keep server running as long as you need it
-                server.GrantAccess("user", "password")
+                Console.Out.WriteLine("Press any key to exit.")
+                Console.Read()
+                Console.Out.WriteLine("Exiting...")
             End Using
             ' #end example
         End Sub

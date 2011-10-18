@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="4" MadCap:lastHeight="1090" MadCap:lastWidth="612">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="4" MadCap:lastHeight="1446" MadCap:lastWidth="624">
     <head><title>Introduction	<link href="Resources/Stylesheets/OnlineStyle.css" type="text/css" rel="stylesheet" /><script type="text/javascript"></script></title>
     </head>
     <body onload="prettyPrint()">
@@ -17,6 +17,7 @@
         <p MadCap:conditions="Primary.Java">
             <img src="contentjava.png" />
         </p>
+        <p>&#160;</p>
         <div MadCap:conditions="Primary.Java">
             <h3>Using Maven</h3>
             <p>Another way to grab db4o is via <a href="http://maven.apache.org/" target="_parent">Maven</a>. For the tutorial we just grab the full db4o distribution.</p>
@@ -39,5 +40,18 @@
             <p>Another way to grab db4o is with <a href="http://nuget.codeplex.com/" target="_parent">NuGet</a>. I recommend you to use the 'db4o-devel'-package for this tutorial. Open the NuGet console and use the install-command:</p>
             <pre class="prettyprint">Install-Package&#160;db4o-devel </pre>
         </div>
+        <h2>Adding db4o to a Project</h2>
+        <p>When you are using <span MadCap:conditions="Primary.Java">Maven</span><span MadCap:conditions="Primary..NET">NuGet</span> it will add the needed dependencies for your project. When you downloaded the distribution add following dependencies for this tutorial:</p>
+        <ul>
+            <li MadCap:conditions="Primary.Java">db4o-8.1.209.15862-all-java5.jar</li>
+            <li MadCap:conditions="Primary..NET">Db4objects.Db4o.dll</li>
+            <li MadCap:conditions="Primary..NET">Db4objects.Db4o.Linq.dll</li>
+            <li MadCap:conditions="Primary..NET">Db4objects.Db4o.CS.dll</li>
+            <li MadCap:conditions="Primary..NET">Mono.Reflection.dll</li>
+        </ul>
+        <p>A detailed overview of the dependencies is available in the reference documentation.</p>
+        <h2>db4o Area of Use</h2>
+        <p>db4o is intended for embedded use with smaller databases around 2-16 GByte. As a general rule, if you expect your database to grow beyond 16 gigabytes, you should look at the <a href="http://www.versant.com/" target="_top">Versant object database</a>.</p>
+        <p>db4o is explicitly single-threaded. Concurrent accesses will be synchronized against a global database lock.That means db4o cannot deal with a highly concurrent access, since it blocks on all operations. When you expect a high load and concurrent access, then you should consider a larger database like the <a href="http://www.versant.com/" target="_top">Versant object database</a>.</p>
     </body>
 </html>

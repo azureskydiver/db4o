@@ -197,6 +197,7 @@
     <Compile Include="Code\pitfalls\activation\ActivationDepthPitfall.cs" />
     <Compile Include="Code\pitfalls\activation\Person.cs" />
     <Compile Include="Code\pitfalls\updatedepth\UpdateDepthPitfall.cs" />
+    <Compile Include="Code\platform\asp\DynamicAssembliesIssue.cs" />
     <Compile Include="Code\platform\autoproperties\AutoProperties.cs" />
     <Compile Include="Code\practises\deletion\DeletionStrategies.cs" />
     <Compile Include="Code\practises\relations\Club.cs" />
