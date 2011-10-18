@@ -213,6 +213,7 @@ public class ActivatableArrayList<E> extends ArrayList<E> implements Activatable
 
 	@Override
 	public String toString() {
+		activate(ActivationPurpose.READ);
 		return super.toString();
 	}
 	
