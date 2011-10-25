@@ -69,7 +69,7 @@ public class TestStringBuilderHandler {
 
 
     private void storeInstance() {
-        container.store(new Holder().getBuilder());
+        container.store(new Holder());
     }
 
     private static class Holder{
