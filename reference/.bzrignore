@@ -9,5 +9,11 @@ TutorialCode/Output
 *.idea
 **/bin
 **/obj
+**/obj
 
 **/_ReSharper.*
+**.ReSharper.user
+**.suo
+**/target/**
+
+.settings
