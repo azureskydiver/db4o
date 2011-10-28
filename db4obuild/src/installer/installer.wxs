@@ -9,7 +9,7 @@
 		-->
 	<CustomAction Id="InitializeTargetDir" Property="TARGETDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
 	<CustomAction Id="UpdateTargetDir" Property="TARGETDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
-	<CustomAction Id="Launch_Tutorial" FileKey="doc.tutorial.Db4oTutorial.exe" ExeCommand="" Execute="firstSequence" Return="asyncNoWait" />
+	<CustomAction Id="Launch_Tutorial" FileKey="doc.tutorial.Db4oTutorial" ExeCommand="" Execute="firstSequence" Return="asyncNoWait" />
 
 	<!-- INSTALLATION SEQUENCE PROPERTIES -->
 	<Property Id="LAUNCHTUTORIAL">1</Property>
