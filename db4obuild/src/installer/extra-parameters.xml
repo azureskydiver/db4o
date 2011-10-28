@@ -2,8 +2,8 @@
 <WixBuilderParameters InstallationFolder="PFiles[ProgramFilesFolder]\db4o[PFiles.Db4objects]\db4o-@db4o.version.dotted@[INSTALLDIR]">
 	<KnownIds>
 		<KnownId>
-			<Id>doc.tutorial.Db4oTutorial.exe</Id>
-			<Path>doc/tutorial/Db4oTutorial.exe</Path>
+			<Id>doc.tutorial.Db4oTutorial</Id>
+			<Path>doc/tutorial/db4o-tutorial-net.pdf</Path>
 		</KnownId>
 		
 		<KnownId>
@@ -26,7 +26,7 @@
 		
 		<Shortcuts>		
 			<Shortcut>
-				<Path>doc/tutorial/Db4oTutorial.exe</Path>
+				<Path>doc/tutorial/db4o-tutorial-net.pdf</Path>
 				<Name>Db4o Tutorial</Name>
 			</Shortcut>
 			
