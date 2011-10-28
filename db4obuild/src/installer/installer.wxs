@@ -593,6 +593,7 @@
 	<Binary Id="new.bmp" SourceFile="$(env.resources.dir)/new.bmp" />
 
 	<Icon Id="exe.ico" SourceFile="$(env.resources.dir)/exe.ico" />
+	<Icon Id="pdf.ico" SourceFile="$(env.resources.dir)/pdf.ico" />
 	<Icon Id="chm.ico" SourceFile="$(env.resources.dir)/chm.ico" />
 	<Icon Id="msi.ico" SourceFile="$(env.resources.dir)/insticon.ico" />
   </Product>
