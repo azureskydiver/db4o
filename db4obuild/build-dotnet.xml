@@ -354,7 +354,7 @@
 	<!-- this assumes all the .net artifacts were correctly generated on -->
 	<target name="build-zip" depends="properties" >
 	
-		<zip destfile="${dir.dist}/${db4o.file}.zip">
+		<zip destfile="${dir.dist}/${db4o.file}-net.zip">
 			<fileset dir="${dir.dist.net.package.root}" includes="${folder.build}/**" />
 		</zip>
 		
@@ -362,7 +362,7 @@
 	
 	<target name="build-net-installer"  depends="properties" unless="mono">
 		<ant antfile="build-net-installer.xml" inheritall="false">
-			<property name="installer.msi" location="${dir.dist}/${db4o.file}.msi" />
+			<property name="installer.msi" location="${dir.dist}/${db4o.file}-net.msi" />
 			<property name="installer.product.guid" value="${installer.product.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
 			<property name="target.framework.version" value="${target.framework.version}" />
