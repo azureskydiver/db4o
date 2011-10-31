@@ -19,7 +19,7 @@ object BuildPrepareConsoleMain {
 	}		
  
 	private def run(unattended: Boolean, dryRun: Boolean, folder: File, version2category: Map[String, Category]) {
-		val files = filterFolder(folder)
+		val files = filterFolder(folder, version2category)
 		files.foreach(logFile(_, "? "))
 		println()
 		println("Path: " + folder.getAbsolutePath)

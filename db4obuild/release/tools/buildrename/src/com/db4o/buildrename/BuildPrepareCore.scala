@@ -41,20 +41,21 @@ object Product {
 	def apply(id: String) = ID2PRODUCT.get(id)
 }
 
-case class VersionedFile(sourceFile: File, product: Product, major: String, minor: String, platform: Platform, extension: String) {
-	def targetFile = new File(sourceFile.getParent, simpleName)
+case class VersionedFile(sourceFile: File, product: Product, major: String, minor: String, platform: Platform, extension: String, category: Category) {
+	def targetFile = new File(sourceFile.getParent, if(category.name == Category.CONTINUOUS_CATEGORY_NAME) plainName else simpleName)
 	def simpleName = product.id + "-" + major + "-" + platform.id + "." + extension
+	def plainName = product.id + "-" + platform.id + "." + extension
 	def fullVersion = major + "." + minor
 }
 
 object VersionedFile {
   	private val NAME_PATTERN = ("""([^-]+)-((\d+\.\d+)\.(\d+\.\d+))-(.+)\.(""" + FileExtensions.extensions.mkString("|") + ")").r
 
-   def apply(file: File): Option[VersionedFile] =
+   def apply(file: File, version2Category: Map[String, Category]): Option[VersionedFile] =
 		file.getName match {
 		  	case NAME_PATTERN(productID, full, major, minor, platformID, extension) =>
-		  		for(product <- Product(productID); platform <- Platform(platformID))
-		  			yield VersionedFile(file, product, major, minor, platform, extension)
+		  		for(product <- Product(productID); platform <- Platform(platformID); category <- version2Category.get(major))
+		  			yield VersionedFile(file, product, major, minor, platform, extension, category)
 		  	case _ => None
   		} 
 }
@@ -93,7 +94,11 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
       	</Download>
 
     private def categoryTag(file: VersionedFile): Iterable[Elem] = {
-    	version2category.get(file.major).map(category => <Releases>{if(category.op == ClearOp) List(<clear />) else Nil}<add name={category.name} archivePrevious={(category.op == ArchiveOp).toString} /></Releases>)
+    	val categoryOption = version2category.get(file.major).flatMap(cat => cat.name match {
+    	  	case Category.CONTINUOUS_CATEGORY_NAME => None
+    	  	case _ => Some(cat)
+    	})
+    	categoryOption.map(category => <Releases>{if(category.op == ClearOp) List(<clear />) else Nil}<add name={category.name} archivePrevious={(category.op == ArchiveOp).toString} /></Releases>)
     }
 }
 
@@ -104,10 +109,13 @@ object ArchiveOp extends PreviousOp
 
 case class Category(name: String, op: PreviousOp)
 
+object Category {
+	val CONTINUOUS_CATEGORY_NAME = "Continuous"
+}
 
 object BuildPrepareCore {
- 	def filterFolder(folder: File) =
-		folder.listFiles.flatMap(VersionedFile(_))
+ 	def filterFolder(folder: File, version2Category: Map[String, Category]) =
+		folder.listFiles.flatMap(VersionedFile(_, version2Category))
 
   	def writeXMLFile(file: File, files: Iterable[VersionedFile], version2category: Map[String, Category]) =
   		new VersionedFileMetaRenderer(file, files, version2category).render()
