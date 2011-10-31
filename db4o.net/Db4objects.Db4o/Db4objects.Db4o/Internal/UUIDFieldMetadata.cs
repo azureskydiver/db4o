@@ -105,7 +105,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (isUpdate)
 			{
-				context.Seek(context.Offset() + LinkLength());
+				context.Seek(context.Offset() + LinkLength(context));
 				return;
 			}
 			context.Seek(context.Offset() + Const4.IntLength);
@@ -192,7 +192,7 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		public override int LinkLength()
+		public override int LinkLength(IHandlerVersionContext context)
 		{
 			return Const4.LongLength + Const4.IdLength;
 		}

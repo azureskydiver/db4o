@@ -47,7 +47,7 @@ namespace Db4objects.Db4o.Internal
 		{
 		}
 
-		public override int LinkLength()
+		public override int LinkLength(IHandlerVersionContext context)
 		{
 			return 0;
 		}

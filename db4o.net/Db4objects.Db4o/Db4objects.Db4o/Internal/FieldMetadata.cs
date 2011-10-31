@@ -44,8 +44,6 @@ namespace Db4objects.Db4o.Internal
 
 		private IDb4oTypeImpl _db4oType;
 
-		private int _linkLength;
-
 		private BTree _index;
 
 		protected ClassMetadata _fieldType;
@@ -114,7 +112,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (!HasIndex())
 			{
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 				return;
 			}
 			try
@@ -434,12 +432,12 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (!Alive())
 			{
-				IncrementOffset(context.Buffer());
+				IncrementOffset(context.Buffer(), context);
 				return;
 			}
 			ITypeHandler4 handler = HandlerRegistry.CorrectHandlerVersion(context, GetHandler
 				());
-			Handlers4.CollectIdsInternal(context, handler, LinkLength(), true);
+			Handlers4.CollectIdsInternal(context, handler, LinkLength(context), true);
 		}
 
 		internal virtual void Configure(IReflectClass clazz, bool isPrimitive)
@@ -514,7 +512,7 @@ namespace Db4objects.Db4o.Internal
 		/// <exception cref="Db4objects.Db4o.Internal.FieldIndexException"></exception>
 		public override void Delete(DeleteContextImpl context, bool isUpdate)
 		{
-			if (!CheckAlive(context))
+			if (!CheckAlive(context, context))
 			{
 				return;
 			}
@@ -523,13 +521,13 @@ namespace Db4objects.Db4o.Internal
 				RemoveIndexEntry(context);
 				if (isUpdate && !IsStruct())
 				{
-					IncrementOffset(context);
+					IncrementOffset(context, context);
 					return;
 				}
 				StatefulBuffer buffer = (StatefulBuffer)context.Buffer();
 				DeleteContextImpl childContext = new DeleteContextImpl(context, GetStoredType(), 
 					_config);
-				context.SlotFormat().DoWithSlotIndirection(buffer, GetHandler(), new _IClosure4_445
+				context.SlotFormat().DoWithSlotIndirection(buffer, GetHandler(), new _IClosure4_443
 					(this, childContext));
 			}
 			catch (CorruptionException exc)
@@ -538,9 +536,9 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		private sealed class _IClosure4_445 : IClosure4
+		private sealed class _IClosure4_443 : IClosure4
 		{
-			public _IClosure4_445(FieldMetadata _enclosing, DeleteContextImpl childContext)
+			public _IClosure4_443(FieldMetadata _enclosing, DeleteContextImpl childContext)
 			{
 				this._enclosing = _enclosing;
 				this.childContext = childContext;
@@ -768,13 +766,13 @@ namespace Db4objects.Db4o.Internal
 
 		public override void Activate(UnmarshallingContext context)
 		{
-			if (!CheckAlive(context))
+			if (!CheckAlive(context, context))
 			{
 				return;
 			}
 			if (!ShouldStoreField())
 			{
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 				return;
 			}
 			object toSet = Read(context);
@@ -786,7 +784,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (!Updating())
 			{
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 				return;
 			}
 			int savedOffset = context.Offset();
@@ -802,20 +800,21 @@ namespace Db4objects.Db4o.Internal
 			{
 				// FIXME: COR-547 Diagnostics here please.
 				context.Buffer().Seek(savedOffset);
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 			}
 		}
 
-		private bool CheckAlive(IAspectVersionContext context)
+		private bool CheckAlive(IAspectVersionContext context, IHandlerVersionContext versionContext
+			)
 		{
-			if (!CheckEnabled(context))
+			if (!CheckEnabled(context, versionContext))
 			{
 				return false;
 			}
 			bool alive = Alive();
 			if (!alive)
 			{
-				IncrementOffset((IReadBuffer)context);
+				IncrementOffset((IReadBuffer)context, versionContext);
 			}
 			return alive;
 		}
@@ -833,19 +832,16 @@ namespace Db4objects.Db4o.Internal
 			return _isArray;
 		}
 
-		public override int LinkLength()
+		public override int LinkLength(IHandlerVersionContext context)
 		{
 			Alive();
-			if (_linkLength == 0)
-			{
-				_linkLength = CalculateLinkLength();
-			}
-			return _linkLength;
+			return CalculateLinkLength(context);
 		}
 
-		private int CalculateLinkLength()
+		private int CalculateLinkLength(IHandlerVersionContext context)
 		{
-			return Handlers4.CalculateLinkLength(GetHandler());
+			return Handlers4.CalculateLinkLength(HandlerRegistry.CorrectHandlerVersion(context
+				, GetHandler()));
 		}
 
 		public virtual void LoadFieldTypeById()
@@ -974,7 +970,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (!CanReadFromSlot((IAspectVersionContext)context))
 			{
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 				return null;
 			}
 			return context.Read(GetHandler());
@@ -1066,13 +1062,13 @@ namespace Db4objects.Db4o.Internal
 			lock (stream.Lock())
 			{
 				IContext context = transaction.Context();
-				_index.TraverseKeys(transaction, new _IVisitor4_866(this, userVisitor, context));
+				_index.TraverseKeys(transaction, new _IVisitor4_861(this, userVisitor, context));
 			}
 		}
 
-		private sealed class _IVisitor4_866 : IVisitor4
+		private sealed class _IVisitor4_861 : IVisitor4
 		{
-			public _IVisitor4_866(FieldMetadata _enclosing, IVisitor4 userVisitor, IContext context
+			public _IVisitor4_861(FieldMetadata _enclosing, IVisitor4 userVisitor, IContext context
 				)
 			{
 				this._enclosing = _enclosing;
@@ -1294,12 +1290,12 @@ namespace Db4objects.Db4o.Internal
 			ITypeHandler4 correctTypeHandlerVersion = HandlerRegistry.CorrectHandlerVersion(context
 				, GetHandler(), _fieldType);
 			context.SlotFormat().DoWithSlotIndirection(context, correctTypeHandlerVersion, new 
-				_IClosure4_1029(context, correctTypeHandlerVersion));
+				_IClosure4_1024(context, correctTypeHandlerVersion));
 		}
 
-		private sealed class _IClosure4_1029 : IClosure4
+		private sealed class _IClosure4_1024 : IClosure4
 		{
-			public _IClosure4_1029(IDefragmentContext context, ITypeHandler4 correctTypeHandlerVersion
+			public _IClosure4_1024(IDefragmentContext context, ITypeHandler4 correctTypeHandlerVersion
 				)
 			{
 				this.context = context;

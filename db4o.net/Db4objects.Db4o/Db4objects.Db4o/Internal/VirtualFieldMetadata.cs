@@ -157,7 +157,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (!context.Transaction().SupportsVirtualFields())
 			{
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 				return;
 			}
 			Instantiate1(context);
