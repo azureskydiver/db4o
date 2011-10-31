@@ -16,13 +16,15 @@ public class ClassUsageStats {
 	private final long _classIndexUsage;
 	private final long _fieldIndexUsage;
 	private final long _miscUsage;	
+	private final int _numInstances;
 	
-	ClassUsageStats(String className, long slotSpace, long classIndexUsage, long fieldIndexUsage, long miscUsage) {
+	ClassUsageStats(String className, long slotSpace, long classIndexUsage, long fieldIndexUsage, long miscUsage, int numInstances) {
 		_className = className;
 		_slotUsage = slotSpace;
 		_classIndexUsage = classIndexUsage;
 		_fieldIndexUsage = fieldIndexUsage;
 		_miscUsage = miscUsage;
+		_numInstances = numInstances;
 	}
 	
 	/**
@@ -58,6 +60,13 @@ public class ClassUsageStats {
 	 */
 	public long miscUsage() {
 		return _miscUsage;
+	}
+
+	/**
+	 * @return number of persistent instances of this class
+	 */
+	public int numInstances() {
+		return _numInstances;
 	}
 
 	/**

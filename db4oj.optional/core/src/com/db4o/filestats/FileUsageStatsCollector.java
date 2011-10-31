@@ -113,7 +113,7 @@ public class FileUsageStatsCollector {
 		InstanceUsage instanceUsage = classSlotUsage(clazz);
 		long totalSlotUsage = instanceUsage.slotUsage;
 		long ownSlotUsage = totalSlotUsage - subClassSlotUsage;
-		ClassUsageStats classStats = new ClassUsageStats(clazz.getName(), ownSlotUsage, classIndexUsage, fieldIndexUsage, instanceUsage.miscUsage);
+		ClassUsageStats classStats = new ClassUsageStats(clazz.getName(), ownSlotUsage, classIndexUsage, fieldIndexUsage, instanceUsage.miscUsage, instanceUsage.numInstances);
 		stats.addClassStats(classStats);
 		return totalSlotUsage;
 	}
@@ -155,21 +155,23 @@ public class FileUsageStatsCollector {
 
 	private InstanceUsage classSlotUsage(ClassMetadata clazz) {
 		if(!clazz.hasClassIndex()) {
-			return new InstanceUsage(0, 0);
+			return new InstanceUsage(0, 0, 0);
 		}
 		final MiscCollector miscCollector = MISC_COLLECTORS.get(clazz.getName());
 		final LongByRef slotUsage = new LongByRef();
 		final LongByRef miscUsage = new LongByRef();
+		final IntByRef numInstances = new IntByRef();
 		BTreeClassIndexStrategy index = (BTreeClassIndexStrategy) clazz.index();
 		index.traverseIds(_db.systemTransaction(), new Visitor4<Integer>() {
 			public void visit(Integer id) {
+				numInstances.value++;
 				slotUsage.value += slotSizeForId(id);
 				if(miscCollector != null) {
 					miscUsage.value += miscCollector.collectFor(_db, id, _slots);
 				}
 			}
 		});
-		return new InstanceUsage(slotUsage.value, miscUsage.value);
+		return new InstanceUsage(slotUsage.value, miscUsage.value, numInstances.value);
 	}
 
 	private void collectClassSlots(ClassMetadata clazz) {
@@ -281,10 +283,12 @@ public class FileUsageStatsCollector {
 	private static class InstanceUsage {
 		public final long slotUsage;
 		public final long miscUsage;
+		public final int numInstances;
 		
-		public InstanceUsage(long slotUsage, long miscUsage) {
+		public InstanceUsage(long slotUsage, long miscUsage, int numInstances) {
 			this.slotUsage = slotUsage;
 			this.miscUsage = miscUsage;
+			this.numInstances = numInstances;
 		}
 	}
 	
