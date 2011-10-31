@@ -36,7 +36,7 @@ object BuildPrepareConsoleMain {
 				return
 			}
 		}
-		writeXMLFile(new File(folder, "downloads.xml"), files, version2category)
+		writeXMLFile(new File(folder, "downloads.xml"), files)
 		files.foreach(f => {
 			logFile(f, "")
 			if(!dryRun) {

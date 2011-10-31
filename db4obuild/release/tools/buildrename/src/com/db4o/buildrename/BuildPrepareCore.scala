@@ -60,7 +60,7 @@ object VersionedFile {
   		} 
 }
 
-class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], version2category: Map[String, Category]) {
+class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile]) {
 	private val DATE = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date) + "T00:00:00"
  
    	def render() {
@@ -94,10 +94,10 @@ class VersionedFileMetaRenderer(file: File, files: Iterable[VersionedFile], vers
       	</Download>
 
     private def categoryTag(file: VersionedFile): Iterable[Elem] = {
-    	val categoryOption = version2category.get(file.major).flatMap(cat => cat.name match {
+    	val categoryOption = file.category.name match {
     	  	case Category.CONTINUOUS_CATEGORY_NAME => None
-    	  	case _ => Some(cat)
-    	})
+    	  	case _ => Some(file.category)
+    	}
     	categoryOption.map(category => <Releases>{if(category.op == ClearOp) List(<clear />) else Nil}<add name={category.name} archivePrevious={(category.op == ArchiveOp).toString} /></Releases>)
     }
 }
@@ -117,8 +117,8 @@ object BuildPrepareCore {
  	def filterFolder(folder: File, version2Category: Map[String, Category]) =
 		folder.listFiles.flatMap(VersionedFile(_, version2Category))
 
-  	def writeXMLFile(file: File, files: Iterable[VersionedFile], version2category: Map[String, Category]) =
-  		new VersionedFileMetaRenderer(file, files, version2category).render()
+  	def writeXMLFile(file: File, files: Iterable[VersionedFile]) =
+  		new VersionedFileMetaRenderer(file, files).render()
 
   	def renameFile(file: VersionedFile) =
  		file.sourceFile.renameTo(file.targetFile)
