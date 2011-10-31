@@ -1423,12 +1423,13 @@ namespace Db4objects.Db4o.Internal
 			return ClassReflector().IsCollection();
 		}
 
-		internal virtual void IncrementFieldsOffset1(ByteArrayBuffer a_bytes)
+		internal virtual void IncrementFieldsOffset1(ByteArrayBuffer a_bytes, IHandlerVersionContext
+			 context)
 		{
 			int length = ReadAspectCount(a_bytes);
 			for (int i = 0; i < length; i++)
 			{
-				_aspects[i].IncrementOffset(a_bytes);
+				_aspects[i].IncrementOffset(a_bytes, context);
 			}
 		}
 
@@ -1822,7 +1823,7 @@ namespace Db4objects.Db4o.Internal
 					context.Seek(context.Offset() + Const4.IntLength);
 					return new ArrayHandler(null, false);
 				}
-				IncrementFieldsOffset1((ByteArrayBuffer)context.Buffer());
+				IncrementFieldsOffset1((ByteArrayBuffer)context.Buffer(), context);
 				if (_ancestor != null)
 				{
 					return _ancestor.SeekCandidateHandler(context);

@@ -26,7 +26,7 @@ namespace Db4objects.Db4o.Internal
 
 		public override void Delete(DeleteContextImpl context, bool isUpdate)
 		{
-			context.Seek(context.Offset() + LinkLength());
+			context.Seek(context.Offset() + LinkLength(context));
 		}
 
 		internal override void Instantiate1(ObjectReferenceContext context)
@@ -52,7 +52,7 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		public override int LinkLength()
+		public override int LinkLength(IHandlerVersionContext context)
 		{
 			return Const4.LongLength;
 		}

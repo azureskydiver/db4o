@@ -466,7 +466,7 @@ namespace Db4objects.Db4o.Internal.Handlers
 				}
 				else
 				{
-					aspect.IncrementOffset(context);
+					aspect.IncrementOffset(context, context);
 				}
 			}
 
@@ -537,7 +537,7 @@ namespace Db4objects.Db4o.Internal.Handlers
 				}
 				else
 				{
-					aspect.IncrementOffset(subContext);
+					aspect.IncrementOffset(subContext, subContext);
 				}
 			}
 
@@ -621,7 +621,7 @@ namespace Db4objects.Db4o.Internal.Handlers
 					}
 					else
 					{
-						aspect.IncrementOffset(context);
+						aspect.IncrementOffset(context, context);
 					}
 				}
 			}
@@ -661,7 +661,7 @@ namespace Db4objects.Db4o.Internal.Handlers
 				}
 				else
 				{
-					aspect.IncrementOffset(context.Buffer());
+					aspect.IncrementOffset(context.Buffer(), context);
 				}
 			}
 
@@ -713,7 +713,7 @@ namespace Db4objects.Db4o.Internal.Handlers
 		{
 			BooleanByRef found = new BooleanByRef(false);
 			ITraverseAspectCommand command = new _MarshallingInfoTraverseAspectCommand_456(aspect
-				, found, EnsureFieldList(context));
+				, found, context, EnsureFieldList(context));
 			TraverseAllAspects(context, command);
 			return found.value;
 		}
@@ -721,10 +721,11 @@ namespace Db4objects.Db4o.Internal.Handlers
 		private sealed class _MarshallingInfoTraverseAspectCommand_456 : MarshallingInfoTraverseAspectCommand
 		{
 			public _MarshallingInfoTraverseAspectCommand_456(ClassAspect aspect, BooleanByRef
-				 found, IMarshallingInfo baseArg1) : base(baseArg1)
+				 found, ObjectHeaderContext context, IMarshallingInfo baseArg1) : base(baseArg1)
 			{
 				this.aspect = aspect;
 				this.found = found;
+				this.context = context;
 			}
 
 			public override bool Accept(ClassAspect aspect)
@@ -743,13 +744,15 @@ namespace Db4objects.Db4o.Internal.Handlers
 				}
 				if (!isNull)
 				{
-					curField.IncrementOffset(this._marshallingInfo.Buffer());
+					curField.IncrementOffset(this._marshallingInfo.Buffer(), context);
 				}
 			}
 
 			private readonly ClassAspect aspect;
 
 			private readonly BooleanByRef found;
+
+			private readonly ObjectHeaderContext context;
 		}
 
 		public object IndexEntryToObject(IContext context, object indexEntry)

@@ -1009,6 +1009,7 @@
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\EnumTypeHandlerTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\GUIDHandlerUpdateTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\GuidTypeHandlerTestCase.cs"/>
+<Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\HandlerVersionWhenSeekingToFieldTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\HashtableUpdateTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\IndexedDateTimeUpdateTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI1\Handlers\LenientHandlerUpdateTestCaseBase.cs"/>

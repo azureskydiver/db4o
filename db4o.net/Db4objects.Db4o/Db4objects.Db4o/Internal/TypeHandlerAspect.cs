@@ -64,7 +64,7 @@ namespace Db4objects.Db4o.Internal
 		{
 			if (!Handlers4.IsCascading(_typeHandler))
 			{
-				IncrementOffset(context);
+				IncrementOffset(context, context);
 				return;
 			}
 			context.SlotFormat().DoWithSlotIndirection(context, new _IClosure4_58(this, context
@@ -118,7 +118,7 @@ namespace Db4objects.Db4o.Internal
 			private readonly IDefragmentContext context;
 		}
 
-		public override int LinkLength()
+		public override int LinkLength(IHandlerVersionContext context)
 		{
 			return Const4.IndirectionLength;
 		}
@@ -155,7 +155,7 @@ namespace Db4objects.Db4o.Internal
 
 		public override void Activate(UnmarshallingContext context)
 		{
-			if (!CheckEnabled(context))
+			if (!CheckEnabled(context, context))
 			{
 				return;
 			}

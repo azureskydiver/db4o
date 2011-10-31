@@ -23,11 +23,11 @@ namespace Db4objects.Db4o.Internal
 
 		public abstract void CascadeActivation(IActivationContext context);
 
-		public abstract int LinkLength();
+		public abstract int LinkLength(IHandlerVersionContext context);
 
-		public void IncrementOffset(IReadBuffer buffer)
+		public void IncrementOffset(IReadBuffer buffer, IHandlerVersionContext context)
 		{
-			buffer.Seek(buffer.Offset() + LinkLength());
+			buffer.Seek(buffer.Offset() + LinkLength(context));
 		}
 
 		public abstract void DefragAspect(IDefragmentContext context);
@@ -47,11 +47,12 @@ namespace Db4objects.Db4o.Internal
 
 		public abstract bool CanBeDisabled();
 
-		protected virtual bool CheckEnabled(IAspectVersionContext context)
+		protected virtual bool CheckEnabled(IAspectVersionContext context, IHandlerVersionContext
+			 versionContext)
 		{
 			if (!IsEnabledOn(context))
 			{
-				IncrementOffset((IReadBuffer)context);
+				IncrementOffset((IReadBuffer)context, versionContext);
 				return false;
 			}
 			return true;

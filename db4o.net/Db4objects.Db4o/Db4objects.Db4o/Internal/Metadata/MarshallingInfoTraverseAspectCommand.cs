@@ -52,7 +52,8 @@ namespace Db4objects.Db4o.Internal.Metadata
 			{
 				return;
 			}
-			aspect.IncrementOffset(_marshallingInfo.Buffer());
+			aspect.IncrementOffset(_marshallingInfo.Buffer(), (IHandlerVersionContext)_marshallingInfo
+				);
 		}
 
 		public virtual void ProcessAspect(ClassAspect aspect, int currentSlot)
