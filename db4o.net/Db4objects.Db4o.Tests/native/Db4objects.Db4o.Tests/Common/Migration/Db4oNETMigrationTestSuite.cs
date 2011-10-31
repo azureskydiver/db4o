@@ -50,6 +50,7 @@ namespace Db4objects.Db4o.Tests.Common.Migration
                 typeof(UIntHandlerUpdateTestCase),
                 typeof(ULongHandlerUpdateTestCase),
                 typeof(UShortHandlerUpdateTestCase),
+				typeof(HandlerVersionWhenSeekingToFieldTestCase),
             };
 
             list.AddRange(netTypes);

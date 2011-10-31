@@ -43,8 +43,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
     private Db4oTypeImpl     _db4oType;
     
-    private int _linkLength;
-    
     private BTree _index;
 
 	protected ClassMetadata _fieldType;
@@ -102,7 +100,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
 	public void addFieldIndex(ObjectIdContextImpl context)  throws FieldIndexException {
         if (! hasIndex()) {
-            incrementOffset(context);
+            incrementOffset(context, context);
             return;
         }
         try {
@@ -368,12 +366,12 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     
     public final void collectIDs(CollectIdContext context) throws FieldIndexException {
         if (! alive()) {
-        	incrementOffset(context.buffer());
+        	incrementOffset(context.buffer(), context);
             return ;
         }
         
         final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, getHandler());
-        Handlers4.collectIdsInternal(context, handler, linkLength(), true);
+        Handlers4.collectIdsInternal(context, handler, linkLength(context), true);
     }
 
     void configure(ReflectClass clazz, boolean isPrimitive) {
@@ -431,13 +429,13 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	}
 
     public void delete(DeleteContextImpl context, boolean isUpdate) throws FieldIndexException {
-        if (! checkAlive(context)) {
+        if (! checkAlive(context, context)) {
             return;
         }
         try {
             removeIndexEntry(context);
             if(isUpdate && ! isStruct()){
-            	incrementOffset(context);
+            	incrementOffset(context, context);
             	return;
             }
             StatefulBuffer buffer = (StatefulBuffer) context.buffer();
@@ -631,11 +629,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public void activate(UnmarshallingContext context) {
-        if(! checkAlive(context)) {
+        if(! checkAlive(context, context)) {
             return;
         }
         if(!shouldStoreField()) {
-            incrementOffset(context);
+            incrementOffset(context, context);
             return;
         }
         Object toSet = read(context);
@@ -645,7 +643,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     
     public void attemptUpdate(UnmarshallingContext context) {
         if(! updating()){
-            incrementOffset(context);
+            incrementOffset(context, context);
             return;
         }
         int savedOffset = context.offset();
@@ -659,17 +657,17 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             // FIXME: COR-547 Diagnostics here please.
             
             context.buffer().seek(savedOffset);
-            incrementOffset(context);
+            incrementOffset(context, context);
         }
     }
     
-    private boolean checkAlive(AspectVersionContext context){
-    	if(! checkEnabled(context)){
+    private boolean checkAlive(AspectVersionContext context, HandlerVersionContext versionContext){
+    	if(! checkEnabled(context, versionContext)){
 			return false;
 		}		
 		boolean alive = alive(); 
 		if (!alive) {
-		    incrementOffset((ReadBuffer)context);
+		    incrementOffset((ReadBuffer)context, versionContext);
 		}
 		return alive;
     }
@@ -684,17 +682,14 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return _isArray;
     }
     
-    public int linkLength() {
+    public int linkLength(HandlerVersionContext context) {
         alive();
         
-        if(_linkLength == 0){
-            _linkLength = calculateLinkLength();
-        }
-        return _linkLength;
+        return calculateLinkLength(context);
     }
     
-    private int calculateLinkLength(){
-    	return Handlers4.calculateLinkLength(getHandler());
+    private int calculateLinkLength(HandlerVersionContext context){
+    	return Handlers4.calculateLinkLength(HandlerRegistry.correctHandlerVersion(context, getHandler()));
     }
     
     public void loadFieldTypeById() {
@@ -792,7 +787,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
     public Object read(ObjectIdContext context) {
         if(!canReadFromSlot((AspectVersionContext) context)) {
-			incrementOffset(context);
+			incrementOffset(context, context);
             return null;
         }
         return context.read(getHandler());

@@ -1081,10 +1081,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
       return classReflector().isCollection();
     }
 
-    void incrementFieldsOffset1(ByteArrayBuffer a_bytes) {
+    void incrementFieldsOffset1(ByteArrayBuffer a_bytes, HandlerVersionContext context) {
         int length = readAspectCount(a_bytes);
         for (int i = 0; i < length; i++) {
-            _aspects[i].incrementOffset(a_bytes);
+            _aspects[i].incrementOffset(a_bytes, context);
         }
     }
 
@@ -1420,7 +1420,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
                 context.seek(context.offset() + Const4.INT_LENGTH);
                 return new ArrayHandler(null, false);
             }
-            incrementFieldsOffset1((ByteArrayBuffer)context.buffer());
+            incrementFieldsOffset1((ByteArrayBuffer)context.buffer(), context);
             if (_ancestor != null) {
                 return _ancestor.seekCandidateHandler(context);
             }
