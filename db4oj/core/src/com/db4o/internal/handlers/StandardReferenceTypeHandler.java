@@ -328,7 +328,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                 if (predicate.match(aspect)) {
                     aspect.collectIDs(context);
                 } else {
-                    aspect.incrementOffset(context);
+                    aspect.incrementOffset(context, context);
                 }
             }
         };
@@ -368,7 +368,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                 	aspectFound.value = true;
                 	aspect.collectIDs(subContext);
                 }else {
-                	aspect.incrementOffset(subContext);
+                	aspect.incrementOffset(subContext, subContext);
                 }
             }
         };
@@ -415,7 +415,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                     if(aspect instanceof VirtualFieldMetadata){
                         ((VirtualFieldMetadata)aspect).readVirtualAttribute(context);
                     } else {
-                        aspect.incrementOffset(context);
+                        aspect.incrementOffset(context, context);
                     }
                 }
             }
@@ -436,7 +436,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 	                    field.addFieldIndex(context);
 	                }
             	}else{
-            		aspect.incrementOffset(context.buffer());
+            		aspect.incrementOffset(context.buffer(), context);
             	}
             }
         	
@@ -467,7 +467,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         traverseAllAspects(context, command);
     }
 
-    public boolean seekToField(ObjectHeaderContext context, final ClassAspect aspect) {
+    public boolean seekToField(final ObjectHeaderContext context, final ClassAspect aspect) {
         final BooleanByRef found = new BooleanByRef(false);
         TraverseAspectCommand command=new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
         	
@@ -484,7 +484,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                     return;
                 }
                 if(!isNull){
-                    curField.incrementOffset(_marshallingInfo.buffer());
+                    curField.incrementOffset(_marshallingInfo.buffer(), context);
                 }
             }
         };

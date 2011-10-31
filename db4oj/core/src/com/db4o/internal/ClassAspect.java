@@ -24,10 +24,10 @@ public abstract class ClassAspect {
     
     public abstract void cascadeActivation(ActivationContext context);
     
-    public abstract int linkLength();
+    public abstract int linkLength(HandlerVersionContext context);
     
-    public final void incrementOffset(ReadBuffer buffer) {
-        buffer.seek(buffer.offset() + linkLength());
+    public final void incrementOffset(ReadBuffer buffer, HandlerVersionContext context) {
+        buffer.seek(buffer.offset() + linkLength(context));
     }
 
     public abstract void defragAspect(DefragmentContext context);
@@ -46,9 +46,9 @@ public abstract class ClassAspect {
 	
 	public abstract boolean canBeDisabled();
 	
-    protected boolean checkEnabled(AspectVersionContext context){
+    protected boolean checkEnabled(AspectVersionContext context, HandlerVersionContext versionContext){
     	if(! isEnabledOn(context)){
-    		incrementOffset((ReadBuffer)context);
+    		incrementOffset((ReadBuffer)context, versionContext);
     		return false;
     	}
     	return true;

@@ -145,7 +145,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     public void readVirtualAttribute(ObjectReferenceContext context) {
         if(! context.transaction().supportsVirtualFields()){
-            incrementOffset(context);
+            incrementOffset(context, context);
             return;
         }
         instantiate1(context);

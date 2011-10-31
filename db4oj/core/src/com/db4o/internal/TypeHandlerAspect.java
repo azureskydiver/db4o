@@ -52,7 +52,7 @@ public class TypeHandlerAspect extends ClassAspect {
 
     public void collectIDs(final CollectIdContext context) {
     	if(! Handlers4.isCascading(_typeHandler)){
-    		incrementOffset(context);
+    		incrementOffset(context, context);
     		return;
     	}
     	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
@@ -74,7 +74,7 @@ public class TypeHandlerAspect extends ClassAspect {
 		});
     }
 
-    public int linkLength() {
+    public int linkLength(HandlerVersionContext context) {
         return Const4.INDIRECTION_LENGTH;
     }
 
@@ -104,7 +104,7 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void activate(final UnmarshallingContext context) {
-    	if(! checkEnabled(context)){
+    	if(! checkEnabled(context, context)){
     		return;
     	}
     	context.slotFormat().doWithSlotIndirection(context, new Closure4() {

@@ -93,7 +93,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 
     public void delete(DeleteContextImpl context, boolean isUpdate){
         if(isUpdate){
-            context.seek(context.offset() + linkLength());
+            context.seek(context.offset() + linkLength(context));
             return;
         }
         context.seek(context.offset() + Const4.INT_LENGTH);
@@ -164,7 +164,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         }
     }
 
-    public int linkLength() {
+    public int linkLength(HandlerVersionContext context) {
         return Const4.LONG_LENGTH + Const4.ID_LENGTH;
     }
     

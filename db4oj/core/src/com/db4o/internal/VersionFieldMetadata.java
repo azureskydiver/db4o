@@ -24,7 +24,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
     }
     
     public void delete(DeleteContextImpl context, boolean isUpdate){
-        context.seek(context.offset() + linkLength());
+        context.seek(context.offset() + linkLength(context));
     }
 
     void instantiate1(ObjectReferenceContext context) {
@@ -43,7 +43,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         }
     }
 
-    public int linkLength() {
+    public int linkLength(HandlerVersionContext context) {
         return Const4.LONG_LENGTH;
     }
     

@@ -40,7 +40,7 @@ public class CommitTimestampFieldMetadata extends VirtualFieldMetadata {
     void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean isMigrating, boolean isNew) {
     }
 
-    public int linkLength() {
+    public int linkLength(HandlerVersionContext context) {
         return 0;
     }
     
@@ -79,6 +79,5 @@ public class CommitTimestampFieldMetadata extends VirtualFieldMetadata {
     	long version = context.transaction().systemTransaction().versionForId(objectId);
 		return version;
     }
-
-
+    
 }

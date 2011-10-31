@@ -44,7 +44,7 @@ public abstract class MarshallingInfoTraverseAspectCommand implements TraverseAs
 		if(_marshallingInfo.isNull(currentSlot)){
 			return;
 		}
-    	aspect.incrementOffset(_marshallingInfo.buffer());
+    	aspect.incrementOffset(_marshallingInfo.buffer(), (HandlerVersionContext) _marshallingInfo);
     }
     
     public void processAspect(ClassAspect aspect,int currentSlot){
