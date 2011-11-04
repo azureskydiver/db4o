@@ -8,7 +8,7 @@ namespace Db4oTool.Tests
 	{
 		protected override Type[] TestCases()
 		{
-			return new Type[]
+			return new[]
 				{
 					typeof(ProgramOptionsTestCase),
 					typeof(Core.AllTests),

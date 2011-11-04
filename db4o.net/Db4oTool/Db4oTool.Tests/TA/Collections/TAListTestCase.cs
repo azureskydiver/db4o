@@ -14,6 +14,12 @@ namespace Db4oTool.Tests.TA.Collections
 			AssertConstructorInstrumentation("CollectionInitInterface");
 		}
 
+		public void TestEnumerableAsArgumentToParams()
+		{
+			AssertConstructorInstrumentation("Create", typeof(IEnumerable<>));
+			AssertConstructorInstrumentation("Create", typeof(IEnumerable<string>));
+		}
+
 		public void TestLocalsAsInterface()
 		{
 			AssertConstructorInstrumentation("LocalsAsIList");
