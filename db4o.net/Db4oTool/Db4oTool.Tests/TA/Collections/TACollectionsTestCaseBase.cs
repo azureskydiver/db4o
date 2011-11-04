@@ -1,5 +1,6 @@
 ﻿/* Copyright (C) 2010 Versant Inc.   http://www.db4o.com */
 using System;
+using System.Linq;
 using Db4objects.Db4o;
 using Db4oTool.Core;
 using Db4oTool.Tests.Core;
@@ -27,7 +28,9 @@ namespace Db4oTool.Tests.TA.Collections
 			Assert.AreEqual(opCode, actual.OpCode);
 			MethodReference actualCtor = (MethodReference)actual.Operand;
 			Assert.AreEqual(expectedCtor.DeclaringType.Name, actualCtor.DeclaringType.Name, opCode.ToString());
-			Assert.AreEqual(expectedCtor, actualCtor.Resolve(), opCode.ToString());
+
+			MethodReference resolvedActualCtor = actualCtor.Resolve();
+			Assert.AreEqual(expectedCtor, resolvedActualCtor, opCode.ToString());
 		}
 
 		protected void AssertWarning(Action<AssemblyDefinition> action, string expectedWarning)
@@ -51,10 +54,10 @@ namespace Db4oTool.Tests.TA.Collections
 			InstrumentAndRunInIsolatedAppDomain(new CastAsserter(ReplacementType, TestResource, testMethodName).AssertIt);
 		}
 
-		internal static MethodReference ContructorFor(TypeReference type, params Type[] parameterTypes)
+		internal static MethodReference ConstructorFor(TypeReference type, params Type[] parameterTypes)
 		{
 			TypeDefinition definition = type.Resolve();
-			return CecilReflector.GetMethod(definition, ".ctor", parameterTypes);
+			return CecilReflector.GetMethod(definition, ".ctor", parameterTypes.Select( p => p.IsGenericType ? p.GetGenericTypeDefinition() : p).ToArray());
 		}
 
 		private string InstrumentAndRunInIsolatedAppDomain(Action<AssemblyDefinition> action)
@@ -142,8 +145,8 @@ namespace Db4oTool.Tests.TA.Collections
 		public void AssertIt(AssemblyDefinition assembly)
 		{
 			Instruction current = ReflectionServices.FindInstruction(assembly, _testTypeName, _methodName, OpCodes.Newobj);
-			MethodReference foundCtor = TACollectionsTestCaseBase.ContructorFor(TACollectionsTestCaseBase.Import(assembly, _type), _parameterTypes);
-			Assert.IsNotNull(foundCtor);
+			MethodReference foundCtor = TACollectionsTestCaseBase.ConstructorFor(TACollectionsTestCaseBase.Import(assembly, _type), _parameterTypes);
+			Assert.IsNotNull(foundCtor, string.Format("Constructor not found. Type = {0} / Parameters = {1}", _type, _parameterTypes.Aggregate("", (acc, curr) => acc + curr.Name + ", ") ));
 			TACollectionsTestCaseBase.AssertInstruction(current, OpCodes.Newobj, foundCtor);
 		}
 

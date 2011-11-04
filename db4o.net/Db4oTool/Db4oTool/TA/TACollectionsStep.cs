@@ -136,23 +136,23 @@ namespace Db4oTool.TA
 			newObj.Operand = newCtor;
 		}
 
-		private bool IsAssignmentToConcreteType(StackAnalysisResult stackAnalysis)
+		private bool IsAssignmentToConcreteType(StackAnalysisResult analysisResult)
 		{
 			TypeReference assignmentTargetType;
-			if (InstrumentationUtil.IsCallInstruction(stackAnalysis.Consumer))
+			if (analysisResult.Consumer.IsNewObj() || analysisResult.Consumer.IsCall())
 			{
-				assignmentTargetType = stackAnalysis.AssignedParameter().ParameterType;
+				assignmentTargetType = analysisResult.AssignedParameter().ParameterType;
 			}
 			else
 			{
-				FieldReference assignmentTarget = stackAnalysis.Consumer.Operand as FieldReference;
+				var assignmentTarget = analysisResult.Consumer.Operand as FieldReference;
 				if (assignmentTarget != null)
 				{
 					assignmentTargetType = assignmentTarget.FieldType;
 				}
 				else
 				{
-					VariableReference variableDefinition = stackAnalysis.Consumer.Operand as VariableReference;
+					var variableDefinition = analysisResult.Consumer.Operand as VariableReference;
 					if (variableDefinition != null)
 					{
 						assignmentTargetType = variableDefinition.VariableType;

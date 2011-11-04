@@ -9,6 +9,16 @@ public class TACollectionsScenarios
 	private ICollection<string> _icollection;
 	private List<string> _list;
 
+	public TACollectionsScenarios(IList<string> items)
+	{
+		_ilist = items;
+	}
+
+	public static TACollectionsScenarios Create(params string[] items)
+	{
+		return new TACollectionsScenarios(new List<string>(items));
+	}
+
 	public void InitInterface(IList<string> list)
 	{
 		InitInterface(new List<string>());
@@ -61,6 +71,12 @@ public class TACollectionsScenarios
 	public void ConstructorTakingInitialSize()
 	{
 	    _ilist = new List<string>(10);
+	}
+
+	public void ConstructorTakingEnumerable()
+	{
+		IEnumerable<string> enumerable = null;
+		_ilist = new List<string>(enumerable);
 	}
 
 	public List<string> PublicCreateConcreteList()
