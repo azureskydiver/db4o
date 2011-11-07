@@ -2,7 +2,7 @@
 MONO = mono
 MCS = gmcs
 KEY_FILE = ../db4objects.snk
-MCS_FLAGS = -debug+ -keyfile:$(KEY_FILE) -define:NET_2_0,MONO,EMBEDDED
+MCS_FLAGS = -debug+ -keyfile:$(KEY_FILE) -define:NET_2_0,NET_3_5,MONO,EMBEDDED
 OUTDIR = ../bin
 WORKDIR = .
 RESPONSE_FILE = $(WORKDIR)/sources
@@ -10,6 +10,7 @@ RESPONSE_FILE = $(WORKDIR)/sources
 CORE = Db4objects.Db4o.dll
 CS = Db4objects.Db4o.CS.dll
 OPTIONAL = Db4objects.Db4o.Optional.dll
+CSOPTIONAL = Db4objects.Db4o.CS.Optional.dll
 TESTS = Db4objects.Db4o.Tests.exe
 UNIT = Db4oUnit.dll
 UNIT_EXT = Db4oUnit.Extensions.dll
@@ -24,6 +25,7 @@ LINQ_INSTR_TESTS = Db4objects.Db4o.Linq.Instrumentation.Tests.exe
 CECIL = Mono.Cecil.dll
 FLOWANALYSIS = Cecil.FlowAnalysis.dll
 GETOPTIONS = Mono.GetOptions.dll
+REFLECTION = Mono.Reflection.dll
 
 build: precompile compile postcompile
 
