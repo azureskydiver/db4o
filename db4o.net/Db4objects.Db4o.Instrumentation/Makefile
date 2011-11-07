@@ -1,7 +1,7 @@
 
-include ../../db4o.net/include.mk
+include ../include.mk
 
-OUTDIR = ../../db4o.net/bin
+OUTDIR = ../bin
 
 TARGET = library
 ASSEMBLY = $(INSTR)
