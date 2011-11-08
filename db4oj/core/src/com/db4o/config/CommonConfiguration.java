@@ -478,8 +478,17 @@ public interface CommonConfiguration {
     public void weakReferenceCollectionInterval(int milliseconds);
     
     /**
-     * allows registering special TypeHandlers for customized marshalling
-     * and customized comparisons. 
+     * Allows registering special TypeHandlers for customized marshalling
+     * and customized comparisons.  <br/>
+     *
+     * This is only for adventurous people, since type handlers work a the lowest levels:<br/>
+     * <ul>
+     * 	<li>There is no versioning support: If you need to change the serialisation scheme of the type your are on your own.</li>
+     * 	<li>The typehandler-API is mostly undocumented and not as stable as other db4o APIs.</li>
+     * 	<li>Elaborate type handlers need deep knowledge of  undocumented, internal implementation details of db4o. </li>
+     * 	<li>Mistakes in typehandlers can lead to cryptic error messages and database corruption.</li>
+     * </ul>
+     *
      * @param predicate to specify for which classes and versions the
      * TypeHandler is to be used.
      * @param typeHandler to be used for the classes that match the predicate.
