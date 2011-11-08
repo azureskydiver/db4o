@@ -614,9 +614,6 @@
         Title="Typehandlers"
         Link="/Content/advanced_topics/type_handling/typehandlers.htm">
         <TocEntry
-          Title="Pluggable Typehandler Benefits"
-          Link="/Content/advanced_topics/type_handling/typehandlers/pluggable_typehandler_benefits.htm" />
-        <TocEntry
           Title="Custom Typehandler Example"
           Link="/Content/advanced_topics/type_handling/typehandlers/custom_typehandler_example.htm" />
       </TocEntry>
@@ -1219,6 +1216,9 @@
           Title="Schema Evolution"
           Link="/Content/platform_specific_issues/android/schema_evolution.htm" />
       </TocEntry>
+      <TocEntry
+        Title="Proguard"
+        Link="/Content/platform_specific_issues/android/proguard.htm" />
     </TocEntry>
     <TocEntry
       Title="db4o On Java Platforms"
