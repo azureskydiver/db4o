@@ -4,9 +4,6 @@
     Comment=""
     Name="CompanyName">Versant Inc</Variable>
   <Variable
-    Comment=""
-    Name="PhoneNumber">858 123 4567</Variable>
-  <Variable
     Name="CurrentVersion"
     Comment=""
     Definition="Some text">X.XX</Variable>

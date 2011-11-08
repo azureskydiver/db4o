@@ -2,7 +2,6 @@ package com.db4odoc.android;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.TextView;
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
@@ -40,7 +39,7 @@ public class Db4oExample {
 				container = db;
 			}
 		} catch (Exception e) {
-			Log.e(Db4oExample.class.getName(), e.toString());
+            e.printStackTrace();
 			return null;
 		}
 		logToConsole(startTime, "Database opened: ", false);

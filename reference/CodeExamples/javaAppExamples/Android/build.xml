@@ -80,12 +80,15 @@
          in order to avoid having your file be overridden by tools such as "android update project"
     -->
     <!-- version-tag: 1 -->
+    <!--#example: Run the enhancer step during the build# -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
 
+    <!-- Add the db4o step below the predefined android targets -->
     <import file="android-db4o-optimisation.xml" />
 
 
     <target name="-post-compile" depends="enhance">
     </target>
+    <!--#end example-->
 
 </project>
