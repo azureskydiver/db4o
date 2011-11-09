@@ -121,7 +121,7 @@ namespace Db4objects.Db4o.Filestats
 			long totalSlotUsage = instanceUsage.slotUsage;
 			long ownSlotUsage = totalSlotUsage - subClassSlotUsage;
 			ClassUsageStats classStats = new ClassUsageStats(clazz.GetName(), ownSlotUsage, classIndexUsage
-				, fieldIndexUsage, instanceUsage.miscUsage);
+				, fieldIndexUsage, instanceUsage.miscUsage, instanceUsage.numInstances);
 			stats.AddClassStats(classStats);
 			return totalSlotUsage;
 		}
@@ -189,24 +189,26 @@ namespace Db4objects.Db4o.Filestats
 		{
 			if (!clazz.HasClassIndex())
 			{
-				return new FileUsageStatsCollector.InstanceUsage(0, 0);
+				return new FileUsageStatsCollector.InstanceUsage(0, 0, 0);
 			}
 			IMiscCollector miscCollector = ((IMiscCollector)MiscCollectors[clazz.GetName()]);
 			LongByRef slotUsage = new LongByRef();
 			LongByRef miscUsage = new LongByRef();
+			IntByRef numInstances = new IntByRef();
 			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy)clazz.Index();
-			index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_166(this, slotUsage, miscCollector
-				, miscUsage));
+			index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_167(this, numInstances, 
+				slotUsage, miscCollector, miscUsage));
 			return new FileUsageStatsCollector.InstanceUsage(slotUsage.value, miscUsage.value
-				);
+				, numInstances.value);
 		}
 
-		private sealed class _IVisitor4_166 : IVisitor4
+		private sealed class _IVisitor4_167 : IVisitor4
 		{
-			public _IVisitor4_166(FileUsageStatsCollector _enclosing, LongByRef slotUsage, IMiscCollector
-				 miscCollector, LongByRef miscUsage)
+			public _IVisitor4_167(FileUsageStatsCollector _enclosing, IntByRef numInstances, 
+				LongByRef slotUsage, IMiscCollector miscCollector, LongByRef miscUsage)
 			{
 				this._enclosing = _enclosing;
+				this.numInstances = numInstances;
 				this.slotUsage = slotUsage;
 				this.miscCollector = miscCollector;
 				this.miscUsage = miscUsage;
@@ -214,6 +216,7 @@ namespace Db4objects.Db4o.Filestats
 
 			public void Visit(object id)
 			{
+				numInstances.value++;
 				slotUsage.value += this._enclosing.SlotSizeForId((((int)id)));
 				if (miscCollector != null)
 				{
@@ -223,6 +226,8 @@ namespace Db4objects.Db4o.Filestats
 			}
 
 			private readonly FileUsageStatsCollector _enclosing;
+
+			private readonly IntByRef numInstances;
 
 			private readonly LongByRef slotUsage;
 
@@ -238,12 +243,12 @@ namespace Db4objects.Db4o.Filestats
 				return;
 			}
 			BTreeClassIndexStrategy index = (BTreeClassIndexStrategy)clazz.Index();
-			index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_182(this));
+			index.TraverseIds(_db.SystemTransaction(), new _IVisitor4_184(this));
 		}
 
-		private sealed class _IVisitor4_182 : IVisitor4
+		private sealed class _IVisitor4_184 : IVisitor4
 		{
-			public _IVisitor4_182(FileUsageStatsCollector _enclosing)
+			public _IVisitor4_184(FileUsageStatsCollector _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -258,13 +263,13 @@ namespace Db4objects.Db4o.Filestats
 
 		private long Freespace()
 		{
-			_db.FreespaceManager().Traverse(new _IVisitor4_190(this));
+			_db.FreespaceManager().Traverse(new _IVisitor4_192(this));
 			return _db.FreespaceManager().TotalFreespace();
 		}
 
-		private sealed class _IVisitor4_190 : IVisitor4
+		private sealed class _IVisitor4_192 : IVisitor4
 		{
-			public _IVisitor4_190(FileUsageStatsCollector _enclosing)
+			public _IVisitor4_192(FileUsageStatsCollector _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -303,13 +308,13 @@ namespace Db4objects.Db4o.Filestats
 		private long IdSystemUsage()
 		{
 			IntByRef usage = new IntByRef();
-			_db.IdSystem().TraverseOwnSlots(new _IProcedure4_217(this, usage));
+			_db.IdSystem().TraverseOwnSlots(new _IProcedure4_219(this, usage));
 			return usage.value;
 		}
 
-		private sealed class _IProcedure4_217 : IProcedure4
+		private sealed class _IProcedure4_219 : IProcedure4
 		{
-			public _IProcedure4_217(FileUsageStatsCollector _enclosing, IntByRef usage)
+			public _IProcedure4_219(FileUsageStatsCollector _enclosing, IntByRef usage)
 			{
 				this._enclosing = _enclosing;
 				this.usage = usage;
@@ -401,10 +406,13 @@ namespace Db4objects.Db4o.Filestats
 
 			public readonly long miscUsage;
 
-			public InstanceUsage(long slotUsage, long miscUsage)
+			public readonly int numInstances;
+
+			public InstanceUsage(long slotUsage, long miscUsage, int numInstances)
 			{
 				this.slotUsage = slotUsage;
 				this.miscUsage = miscUsage;
+				this.numInstances = numInstances;
 			}
 		}
 

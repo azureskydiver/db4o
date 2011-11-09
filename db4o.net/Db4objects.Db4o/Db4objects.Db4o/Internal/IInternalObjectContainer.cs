@@ -62,5 +62,7 @@ namespace Db4objects.Db4o.Internal
 		IUpdateDepthProvider UpdateDepthProvider();
 
 		EventRegistryImpl NewEventRegistry();
+
+		bool InCallback();
 	}
 }

@@ -56,6 +56,8 @@ namespace Db4objects.Db4o.Internal.Events
 
 		protected System.EventHandler<Db4objects.Db4o.Events.ObjectContainerEventArgs> _opened;
 
+		private bool _inCallback = false;
+
 		// Callbacks implementation
 		public virtual void QueryOnFinished(Transaction transaction, IQuery query)
 		{
@@ -63,12 +65,12 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandling(new _IRunnable_50(this, transaction, query));
+			WithExceptionHandling(new _IRunnable_52(this, transaction, query));
 		}
 
-		private sealed class _IRunnable_50 : IRunnable
+		private sealed class _IRunnable_52 : IRunnable
 		{
-			public _IRunnable_50(EventRegistryImpl _enclosing, Transaction transaction, IQuery
+			public _IRunnable_52(EventRegistryImpl _enclosing, Transaction transaction, IQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -95,12 +97,12 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandling(new _IRunnable_59(this, transaction, query));
+			WithExceptionHandling(new _IRunnable_61(this, transaction, query));
 		}
 
-		private sealed class _IRunnable_59 : IRunnable
+		private sealed class _IRunnable_61 : IRunnable
 		{
-			public _IRunnable_59(EventRegistryImpl _enclosing, Transaction transaction, IQuery
+			public _IRunnable_61(EventRegistryImpl _enclosing, Transaction transaction, IQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -180,12 +182,12 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandling(new _IRunnable_104(this, clazz));
+			WithExceptionHandling(new _IRunnable_106(this, clazz));
 		}
 
-		private sealed class _IRunnable_104 : IRunnable
+		private sealed class _IRunnable_106 : IRunnable
 		{
-			public _IRunnable_104(EventRegistryImpl _enclosing, ClassMetadata clazz)
+			public _IRunnable_106(EventRegistryImpl _enclosing, ClassMetadata clazz)
 			{
 				this._enclosing = _enclosing;
 				this.clazz = clazz;
@@ -219,13 +221,13 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandlingInCallback(new _IRunnable_121(this, transaction, objectInfoCollections
+			WithExceptionHandlingInCallback(new _IRunnable_123(this, transaction, objectInfoCollections
 				));
 		}
 
-		private sealed class _IRunnable_121 : IRunnable
+		private sealed class _IRunnable_123 : IRunnable
 		{
-			public _IRunnable_121(EventRegistryImpl _enclosing, Transaction transaction, CallbackObjectInfoCollections
+			public _IRunnable_123(EventRegistryImpl _enclosing, Transaction transaction, CallbackObjectInfoCollections
 				 objectInfoCollections)
 			{
 				this._enclosing = _enclosing;
@@ -253,13 +255,13 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandlingInCallback(new _IRunnable_132(this, transaction, objectInfoCollections
+			WithExceptionHandlingInCallback(new _IRunnable_134(this, transaction, objectInfoCollections
 				, isOwnCommit));
 		}
 
-		private sealed class _IRunnable_132 : IRunnable
+		private sealed class _IRunnable_134 : IRunnable
 		{
-			public _IRunnable_132(EventRegistryImpl _enclosing, Transaction transaction, CallbackObjectInfoCollections
+			public _IRunnable_134(EventRegistryImpl _enclosing, Transaction transaction, CallbackObjectInfoCollections
 				 objectInfoCollections, bool isOwnCommit)
 			{
 				this._enclosing = _enclosing;
@@ -289,12 +291,12 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandlingInCallback(new _IRunnable_143(this, container));
+			WithExceptionHandlingInCallback(new _IRunnable_145(this, container));
 		}
 
-		private sealed class _IRunnable_143 : IRunnable
+		private sealed class _IRunnable_145 : IRunnable
 		{
-			public _IRunnable_143(EventRegistryImpl _enclosing, IObjectContainer container)
+			public _IRunnable_145(EventRegistryImpl _enclosing, IObjectContainer container)
 			{
 				this._enclosing = _enclosing;
 				this.container = container;
@@ -317,12 +319,12 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandlingInCallback(new _IRunnable_154(this, container));
+			WithExceptionHandlingInCallback(new _IRunnable_156(this, container));
 		}
 
-		private sealed class _IRunnable_154 : IRunnable
+		private sealed class _IRunnable_156 : IRunnable
 		{
-			public _IRunnable_154(EventRegistryImpl _enclosing, IObjectContainer container)
+			public _IRunnable_156(EventRegistryImpl _enclosing, IObjectContainer container)
 			{
 				this._enclosing = _enclosing;
 				this.container = container;
@@ -627,13 +629,13 @@ namespace Db4objects.Db4o.Internal.Events
 			}
 			CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, objectInfo
 				, o);
-			WithExceptionHandlingInCallback(new _IRunnable_258(e, args));
+			WithExceptionHandlingInCallback(new _IRunnable_260(e, args));
 			return !args.IsCancelled;
 		}
 
-		private sealed class _IRunnable_258 : IRunnable
+		private sealed class _IRunnable_260 : IRunnable
 		{
-			public _IRunnable_258(System.EventHandler<CancellableObjectEventArgs> e, CancellableObjectEventArgs
+			public _IRunnable_260(System.EventHandler<CancellableObjectEventArgs> e, CancellableObjectEventArgs
 				 args)
 			{
 				this.e = e;
@@ -657,12 +659,12 @@ namespace Db4objects.Db4o.Internal.Events
 			{
 				return;
 			}
-			WithExceptionHandlingInCallback(new _IRunnable_270(e, transaction, o));
+			WithExceptionHandlingInCallback(new _IRunnable_272(e, transaction, o));
 		}
 
-		private sealed class _IRunnable_270 : IRunnable
+		private sealed class _IRunnable_272 : IRunnable
 		{
-			public _IRunnable_270(System.EventHandler<ObjectInfoEventArgs> e, Transaction transaction
+			public _IRunnable_272(System.EventHandler<ObjectInfoEventArgs> e, Transaction transaction
 				, IObjectInfo o)
 			{
 				this.e = e;
@@ -684,9 +686,10 @@ namespace Db4objects.Db4o.Internal.Events
 
 		private void WithExceptionHandlingInCallback(IRunnable runnable)
 		{
+			_inCallback = true;
 			try
 			{
-				InCallback.Run(runnable);
+				runnable.Run();
 			}
 			catch (Db4oException e)
 			{
@@ -695,6 +698,10 @@ namespace Db4objects.Db4o.Internal.Events
 			catch (Exception x)
 			{
 				throw new EventException(x);
+			}
+			finally
+			{
+				_inCallback = false;
 			}
 		}
 
@@ -727,6 +734,16 @@ namespace Db4objects.Db4o.Internal.Events
 				_opened = (System.EventHandler<Db4objects.Db4o.Events.ObjectContainerEventArgs>)System.Delegate.Remove
 					(_opened, value);
 			}
+		}
+
+		public static bool InCallback(IInternalObjectContainer container)
+		{
+			if (container.Callbacks() is EventRegistryImpl)
+			{
+				EventRegistryImpl er = (EventRegistryImpl)container.Callbacks();
+				return er._inCallback;
+			}
+			return false;
 		}
 	}
 }
