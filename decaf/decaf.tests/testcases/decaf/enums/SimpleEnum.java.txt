@@ -1,5 +1,6 @@
 package decaf.enums;
 
+/** a simple enum */
 enum Animal {
 	Cow,
 	Cat,
