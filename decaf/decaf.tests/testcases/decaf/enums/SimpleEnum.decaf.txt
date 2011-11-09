@@ -1,5 +1,8 @@
 package decaf.enums;
 
+/**
+ * a simple enum 
+ */
 class Animal extends com.db4o.foundation.Enum4 {
 	public static class CowAnimal extends Animal {
 		public static final int ORDINAL = 0;

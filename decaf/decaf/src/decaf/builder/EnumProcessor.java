@@ -21,6 +21,7 @@ public class EnumProcessor {
 	public TypeDeclaration run(EnumDeclaration enumNode) {
 		final TypeDeclaration newEnumType = newConcreteEnumClass(enumNode);
 		
+		copyJavadocFrom(enumNode, newEnumType);
 		addEnumConstantClassesTo(enumNode, newEnumType);		
 		List<SimpleName> enumConstants = addEnumConstantFieldsTo(enumNode, newEnumType);		
 		addEnumConstructors(enumNode, newEnumType);		
@@ -30,6 +31,11 @@ public class EnumProcessor {
 		return newEnumType;
 	}
 	
+	private void copyJavadocFrom(EnumDeclaration enumNode, TypeDeclaration newEnumType) {
+		Javadoc clonedJavadoc = _context.builder().clone(enumNode.getJavadoc());
+		newEnumType.setJavadoc(clonedJavadoc);
+	}
+
 	public SwitchStatement transformEnumSwitchStatement(SwitchStatement originalSwitch) {
 		final SwitchStatement statement = builder().clone(originalSwitch);
 		
