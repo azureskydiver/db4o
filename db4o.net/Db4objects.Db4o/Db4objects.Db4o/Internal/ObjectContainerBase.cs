@@ -2240,7 +2240,7 @@ namespace Db4objects.Db4o.Internal
 
 		private void AssertNotInCallback()
 		{
-			if (InCallback.Value())
+			if (InCallback())
 			{
 				throw new Db4oIllegalStateException("Objects must not be updated in callback");
 			}
@@ -2883,6 +2883,8 @@ namespace Db4objects.Db4o.Internal
 		public abstract IStoredClass StoredClass(object arg1);
 
 		public abstract IStoredClass[] StoredClasses();
+
+		public abstract bool InCallback();
 
 		public abstract int InstanceCount(ClassMetadata arg1, Transaction arg2);
 

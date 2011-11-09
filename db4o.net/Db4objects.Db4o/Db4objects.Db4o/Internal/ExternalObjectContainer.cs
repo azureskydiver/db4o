@@ -7,6 +7,7 @@ using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.IO;
 using Db4objects.Db4o.Internal;
 using Db4objects.Db4o.Internal.Activation;
+using Db4objects.Db4o.Internal.Events;
 using Db4objects.Db4o.Query;
 
 namespace Db4objects.Db4o.Internal
@@ -189,5 +190,10 @@ namespace Db4objects.Db4o.Internal
 		public abstract override void Backup(IStorage targetStorage, string path);
 
 		public abstract override Db4oDatabase Identity();
+
+		public override bool InCallback()
+		{
+			return EventRegistryImpl.InCallback(this);
+		}
 	}
 }

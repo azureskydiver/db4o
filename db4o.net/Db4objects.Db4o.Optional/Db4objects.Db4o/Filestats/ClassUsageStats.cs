@@ -23,14 +23,17 @@ namespace Db4objects.Db4o.Filestats
 
 		private readonly long _miscUsage;
 
+		private readonly int _numInstances;
+
 		internal ClassUsageStats(string className, long slotSpace, long classIndexUsage, 
-			long fieldIndexUsage, long miscUsage)
+			long fieldIndexUsage, long miscUsage, int numInstances)
 		{
 			_className = className;
 			_slotUsage = slotSpace;
 			_classIndexUsage = classIndexUsage;
 			_fieldIndexUsage = fieldIndexUsage;
 			_miscUsage = miscUsage;
+			_numInstances = numInstances;
 		}
 
 		/// <returns>the name of the persistent class</returns>
@@ -66,6 +69,12 @@ namespace Db4objects.Db4o.Filestats
 		public virtual long MiscUsage()
 		{
 			return _miscUsage;
+		}
+
+		/// <returns>number of persistent instances of this class</returns>
+		public virtual int NumInstances()
+		{
+			return _numInstances;
 		}
 
 		/// <returns>aggregated byte usage for this persistent class</returns>

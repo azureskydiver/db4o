@@ -601,5 +601,10 @@ namespace Db4objects.Db4o.Internal
 		{
 			return new QLinRoot(Query(), clazz);
 		}
+
+		public virtual bool InCallback()
+		{
+			return EventRegistryImpl.InCallback(this);
+		}
 	}
 }

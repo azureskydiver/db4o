@@ -60,6 +60,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -649,7 +659,6 @@
 <Compile Include="Db4objects.Db4o\Internal\Ids\TransactionalIdSystemImpl.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Ids\TransportIdSystem.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\IllegalComparisonException.cs"/>
-<Compile Include="Db4objects.Db4o\Internal\InCallback.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\IntMatcher.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\InterfaceTypeHandler.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\IoAdaptedObjectContainer.cs"/>
