@@ -7,6 +7,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.events.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 
@@ -141,5 +142,10 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
     	NotSupportedException;
 
     public abstract Db4oDatabase identity();
+    
+    @Override
+    public boolean inCallback() {
+        return EventRegistryImpl.inCallback(this);
+    }
     
 }

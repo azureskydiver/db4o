@@ -33,6 +33,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _closing = new Event4Impl();
 	protected final Event4Impl _opened = new Event4Impl();
 	
+	private boolean _inCallback = false;
+	
 	/**
 	 * @sharpen.ignore
 	 */
@@ -275,12 +277,15 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
     }
 
 	private void withExceptionHandlingInCallback(final Runnable runnable) {
+	    _inCallback = true;
 	    try {
-        	InCallback.run(runnable);
+	        runnable.run();
 	    } catch (Db4oException e) {
 	    	throw e;
         } catch (Throwable x) {
         	throw new EventException(x);
+        } finally {
+            _inCallback = false;
         }
     }
 	
@@ -297,4 +302,13 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public Event4<ObjectContainerEventArgs> opened() {
 		return _opened;
 	}
+	
+    public static boolean inCallback(InternalObjectContainer container) {
+        if (container.callbacks() instanceof EventRegistryImpl) {
+            EventRegistryImpl er = (EventRegistryImpl) container.callbacks();
+            return er._inCallback;
+        }
+        return false;
+    }
+
 }
