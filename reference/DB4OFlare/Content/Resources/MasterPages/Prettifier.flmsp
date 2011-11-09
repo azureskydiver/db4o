@@ -6,7 +6,7 @@
         <MadCap:breadcrumbsProxy />		
 		<script type="text/javascript"><![CDATA[
 			document.write("<a href=\"" + location.href +"\">");
-			document.write("Direct Link");
+			document.write("Direct Link to this Article");
 			document.write('</a>');]]>
 		</script>
         <MadCap:bodyProxy />

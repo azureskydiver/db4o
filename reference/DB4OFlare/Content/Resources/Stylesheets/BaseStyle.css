@@ -1,106 +1,104 @@
 /*<meta />*/
 
-body
-{
-	margin-left: 0em;
-	padding-left: 1.5em;
-	padding-right: 1em;
-	border-bottom-width: .5em;
-	border-left-width: .5em;
-	border-right-width: .5em;
-	border-top-width: .5em;
-	background-repeat: repeat-x;
+body {
+    background-color: white;
+    font-family: Tahoma,Helvetica,Arial,sans-serif;
 	font-size: 10pt;
-	font-family: Arial;
-	color: #435055;
-	background-color: #ffffff;
+    margin: 1em 2em 1em 2em;
 }
 
-body,
-p,
-div,
-td,
-li
+p,div,td,li
 {
-	font-family: Arial, Helvetica, sans-serif;
+    font-family: Tahoma,Arial,Helvetica,sans-serif;
 }
 
-body a
+a, a:link 
 {
 	text-decoration: none;
+	color: #45ABBF;
+}
+a:visited 
+{
+	color: #003366;
 }
 
-body a:hover
+a:hover
 {
 	text-decoration: underline;
 }
 
-PRE
+a.MCXref, a.MCXref:link { 
+	text-decoration: none;
+	color: #45ABBF;	
+}
+a.MCXref:hover 
+{
+	text-decoration: underline;
+}
+a.MCXref:visited 
+{
+	color: #003366;
+}
+
+a.MCTextPopupSpot, a.MCTextPopupSpot:link { 
+	text-decoration: none;
+	color: #45ABBF;	
+}
+a.MCTextPopupSpot:hover 
+{
+	text-decoration: underline;
+}
+a.MCTextPopupSpot:visited 
+{
+	color: #003366;
+}
+
+a.MCPopupSpot, a.MCPopupSpot:link { 
+	text-decoration: none;
+	color: #45ABBF;	
+}
+a.MCPopupSpot:hover 
+{
+	text-decoration: underline;
+}
+a.MCPopupSpot:visited 
+{
+	color: #003366;
+}
+
+
+
+pre
 {
 	font-family: Consolas, "Lucida Console", Courier, Monospace;
 }
 
 h1
 {
-	font-size: 125%;
+	font-size: 15.5pt;
 	margin-bottom: .5em;
-	clear: both;
-	width: 85%;
-	font-family: Verdana;
-	color: #435055;
+	color: #333333;
 }
 
 h2
 {
-	font-size: 110%;
-	margin-top: 1.5em;
+	font-size: 13.5pt;
 	margin-bottom: .5em;
-	clear: both;
-	color: #435055;
+	color: #333333;
 }
 
 h3
 {
-	font-size: 100%;
-	margin-top: 1.2em;
+	font-size: 10.5pt;
 	margin-bottom: .5em;
-	clear: both;
-	color: #435055;
+	color: #333333;
 }
 
 h4
 {
-	font-size: 100%;
-	margin-top: 1.2em;
+	font-size: 10.5pt;
 	margin-bottom: .5em;
-	clear: both;
-	color: #435055;
-}
-
-a:link
-{
-	text-decoration: underline;
-	color: #800000;
-}
-
-a:visited
-{
-	text-decoration: underline;
-	color: #600000;
-}
-
-a:active
-{
-	cursor: hand;
-	text-decoration: underline;
-	color: #008000;
-}
-
-a:hover
-{
-	color: #FF0000;
-	cursor: hand;
-	text-decoration: underline;
+	color: #333333;
 }
 
 p
@@ -266,48 +264,4 @@ code
 	}
 }
 
-a
-{
-	color: #800000;
-}
-
-MadCap|conceptLink
-{
-	color: #800000;
-}
-
-MadCap|keywordLink
-{
-	color: #800000;
-}
-
-MadCap|relatedTopics
-{
-	color: #800000;
-}
-
-MadCap|xref
-{
-	color: #800000;
-}
-
-MadCap|popupHead
-{
-	color: #800000;
-}
-
-MadCap|shortcut
-{
-	color: #800000;
-}
-
-MadCap|helpControlMenuItem.Highlighted
-{
-	background-color: #b87a7c;
-}
-
-MadCap|glossaryTerm
-{
-	color: #000000;
-}
 
