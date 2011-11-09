@@ -2,6 +2,13 @@
 
 @import url('BaseStyle.css');
 
+body{
+    background-color: white;
+    font-family: Calibri,Tahoma,Helvetica,Arial,sans-serif;
+	font-size: 10pt;
+    margin: 1em 2em 1em 2em;	
+}
+
 p
 {
 	text-align: justify;
@@ -67,13 +74,13 @@ a
 	color: #0000EE;
 }
 
+/* Code Snippet */
+
 MadCap|xref.TOCPageNumber
 {
 	color: #0000EE;
 	mc-format: 'See {quote}{paraxml}{quote} ';
 }
-
-/* Code Snippet */
 
 MadCap|xref.TOCPageNumber
 {
@@ -119,5 +126,10 @@ div.codesnippet-meta
 a.codedownload
 {
 	visibility: none;
+}
+
+MadCap|glossaryTerm
+{
+	color: #45abbf;
 }
 

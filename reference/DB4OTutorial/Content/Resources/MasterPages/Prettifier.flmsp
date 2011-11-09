@@ -11,8 +11,8 @@
         <MadCap:bodyProxy />
         <div id="footer" MadCap:conditions="Primary.Online">
             <p align="center">Do you have any questions, suggestions or feedback? 
-			Ask your questions in the <a href="http://developer.db4o.com/Forums.aspx" target="_top">db4o forums</a>. 
-			Join the <a href="http://developer.db4o.com" target="_top">db4o community</a> for additional resources and news.
+			Ask your questions in the <a href="http://community.versant.com/Forums.aspx" target="_top">db4o forums</a>. 
+			Join the <a href="http://community.versant.com" target="_top">db4o community</a> for additional resources and news.
 			<br /><br /><a href="http://www.db4o.com/" target="_top">www.db4o.com</a></p>
         </div>
         <script src="../Code/jquery.min.js">

@@ -4,16 +4,6 @@
 
 /* rest */
 
-body
-{
-	font-family: sans-serif;
-	font-size: 10pt;
-}
-
-body a
-{
-	padding-right: 1px;
-}
 
 tr
 {
@@ -32,49 +22,27 @@ table
 	border-collapse: collapse;
 }
 
-a
-{
-	color: #0000EE;
-}
-
-a:visited
-{
-	color: #551A8B;
-}
-
 /* Code Snippet */
-
-a:hover
-{
-	color: #4444EE;
-}
-
 pre.prettyprint
 {
 	text-align: left;
 	border-bottom: #AAAAAA solid 1px;
-	background-color: #EEEEEE;
+	background-color:#EEEEEE;
 	margin: 0;
 	padding: 4px;
 }
-
-div.codesnippet
-{
+div.codesnippet{
 	border: #AAAAAA solid 1px;
 	margin: 8px 0px 0px 0px;
 	padding: 0;
-	text-align: left;
+	text-align:left;
 }
-
-div.codesnippet-meta
-{
+div.codesnippet-meta{
 	padding: 4px;
 }
-
-div.codedownload
-{
-	float: right;
-	margin-left: 1pt;
+div.codedownload{
+	float:right;
+	margin-left:1pt;
 }
 
 MadCap|xref.TOCPageNumber
@@ -102,4 +70,3 @@ MadCap|xref.TOCPageNumber:hover
 	padding: 4px;
 	margin: 40px 40px 10px 40px;
 }
-
