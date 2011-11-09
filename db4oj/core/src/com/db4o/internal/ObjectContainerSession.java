@@ -448,4 +448,9 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
 	public <T> QLin<T> from(Class<T> clazz) {
 		return new QLinRoot<T>(query(), clazz);
 	}
+	
+	@Override
+	public boolean inCallback() {
+		return EventRegistryImpl.inCallback(this);
+	}
 }

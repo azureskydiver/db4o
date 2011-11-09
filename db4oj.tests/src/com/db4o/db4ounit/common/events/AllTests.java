@@ -13,6 +13,7 @@ public class AllTests extends ComposibleTestSuite {
 		return composeTests(
 				new Class[] {			
 						ActivationEventsTestCase.class,
+						CallbackTrackingTestCase.class, 
 						ClassRegistrationEventsTestCase.class,
 						CreationEventsTestCase.class,
 						DeleteEventOnClientTestCase.class,

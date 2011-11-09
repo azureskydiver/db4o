@@ -62,4 +62,6 @@ public interface InternalObjectContainer extends ExtObjectContainer {
 	public UpdateDepthProvider updateDepthProvider();
 
 	public EventRegistryImpl newEventRegistry();
+	
+	boolean inCallback();
 }
