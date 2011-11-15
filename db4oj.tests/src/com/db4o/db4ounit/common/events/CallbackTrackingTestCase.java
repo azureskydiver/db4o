@@ -7,7 +7,6 @@ import com.db4o.foundation.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
-import decaf.*;
 
 public class CallbackTrackingTestCase extends AbstractDb4oTestCase implements OptOutAllButNetworkingCS {
 

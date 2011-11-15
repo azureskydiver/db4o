@@ -39,6 +39,7 @@ public class AllTests extends ComposibleTestSuite {
 		return new Class[] {
 				DeleteOnDeletingCallbackTestCase.class,
 				OwnCommitCallbackFlaggedNetworkingTestSuite.class,
+				QueryInCallBackCSCallback.class,
 			};
 	}
 
