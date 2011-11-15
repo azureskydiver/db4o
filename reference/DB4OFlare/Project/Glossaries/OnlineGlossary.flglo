@@ -38,13 +38,6 @@
   </GlossaryEntry>
   <GlossaryEntry>
     <Terms>
-      <Term>Callback</Term>
-    </Terms>
-    <Definition
-      Link="/Content/advanced_topics/callbacks.htm"></Definition>
-  </GlossaryEntry>
-  <GlossaryEntry>
-    <Terms>
       <Term>Storage</Term>
     </Terms>
     <Definition
