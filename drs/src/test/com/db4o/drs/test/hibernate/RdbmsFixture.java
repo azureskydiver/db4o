@@ -27,11 +27,8 @@ import com.db4o.drs.hibernate.impl.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.*;
 import com.db4o.drs.test.data.*;
-import com.db4o.drs.test.regression.*;
 
 public abstract class RdbmsFixture implements DrsProviderFixture {
-	
-	public static final Class[] mappings;
 	
 	protected String _name;
 	
@@ -41,37 +38,18 @@ public abstract class RdbmsFixture implements DrsProviderFixture {
 	
 	protected String dbUrl;
 	
-	static {
-		mappings = new Class[]{
-				ActivatableItem.class,
-				Car.class,
-				CollectionHolder.class, 
-				IByteArrayHolder.class,
-				ItemDates.class,
-				ListContent.class,
-				ListHolder.class, 
-				MapContent.class,
-				MapHolder.class,
-				NewPilot.class,
-				Pilot.class, 
-				R0.class, 
-				Replicated.class,
-				SimpleArrayContent.class, 
-				SimpleArrayHolder.class,
-				SimpleItem.class,				
-				SimpleListHolder.class, 
-				SPCParent.class, 
-				SPCChild.class,
-				UnqualifiedNamed.class,
-         };
-	}
-	
 	public static Configuration addAllMappings(Configuration cfg) {
-		for (int i = 0; i < mappings.length; i++) {
-			cfg.addClass(mappings[i]);
+	    for(Class clazz : DrsTestCase.mappings) {
+			if (isSupportedForRdbms(clazz)) {
+			    cfg.addClass(clazz);
+			}
 		}
 		return cfg;
 	}
+
+    protected static boolean isSupportedForRdbms(Class clazz) {
+        return clazz.getAnnotation(OptOutRdbms.class) == null;
+    }
 	
 	public RdbmsFixture(String name) {
 		_name = name;

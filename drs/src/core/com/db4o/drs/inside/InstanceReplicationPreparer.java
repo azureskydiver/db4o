@@ -105,10 +105,18 @@ class InstanceReplicationPreparer implements Visitor {
 		ReplicationReference refA = _providerA.produceReference(_obj, _referencingObject, _fieldName);
 		ReplicationReference refB = _providerB.produceReference(_obj, _referencingObject, _fieldName);
 
-		if (refA == null && refB == null)
-			throw new RuntimeException("" + _obj.getClass() + " " + _obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
-		if (refA != null && refB != null)
+		if (refA == null && refB == null) {
+			if (_obj.getClass().isEnum()) {
+				return false;
+			}
+			throw new RuntimeException("" + _obj.getClass() + " " + _obj + " must be stored in one of the databases being replicated.");
+		}
+		if (refA != null && refB != null) {
+			if (_obj.getClass().isEnum()) {
+				return false;
+			}
 			throw new RuntimeException("" + _obj.getClass() + " " + _obj + " cannot be referenced by both databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
+		}
 
 		ReplicationProviderInside owner = refA == null ? _providerB : _providerA;
 		ReplicationReference ownerRef = refA == null ? refB : refA;
@@ -326,6 +334,9 @@ class InstanceReplicationPreparer implements Visitor {
 		ownerRef.markForReplicating(true);
 	
 		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
+		if (otherRef == null) {
+			return false;
+		}
 		otherRef.setCounterpart(obj);
 	
 		putCounterpartRef(obj, otherRef);

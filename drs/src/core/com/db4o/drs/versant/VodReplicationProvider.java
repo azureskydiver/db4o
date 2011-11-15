@@ -385,6 +385,10 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 	}
 	
 	public void storeReplica(Object obj){
+		if (shouldIgnore(obj)) {
+			return;
+		}
+		
 		logIdentity(obj, getName());
 		
 		if (!(obj instanceof PersistenceCapable)) {
@@ -562,6 +566,9 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		if(obj == null){
 			throw new IllegalArgumentException();
 		}
+		if (shouldIgnore(obj)) {
+			return null;
+		}
 		long loid = _jdo.loid(obj);
 		if(loid == 0) {
 			return null;
@@ -589,10 +596,21 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 		DrsUUIDImpl uuid = new DrsUUIDImpl(signature, info.uuidLongPart());
 		return new ReplicationReferenceImpl(obj, uuid, info.version());
 	}
-	
+
+	protected boolean shouldIgnore(Class aClass) {
+		return aClass != null && aClass.isEnum();
+	}
+
+	protected boolean shouldIgnore(Object obj) {
+		return obj.getClass().isEnum();
+	}
+
 	public ReplicationReferenceImpl produceReferenceByUUID(DrsUUID uuid, Class hint) {
 		if(uuid == null){
 			throw new IllegalArgumentException();
+		}
+		if (shouldIgnore(hint)) {
+			return null;
 		}
 		ReplicationReferenceImpl reference = _replicationReferences.getByUUID(uuid);
 		if(reference != null){

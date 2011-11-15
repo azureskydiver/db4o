@@ -41,15 +41,15 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	static {
 		mappings = new Class[]{
+				ItemWithCloneable.class,
+				ItemWithUntypedField.class,
+				NamedList.class,
 				Car.class, 
 				CollectionHolder.class,
 				ItemDates.class,
-				ItemWithCloneable.class,
-				ItemWithUntypedField.class,
 				ListContent.class,
 				ListHolder.class, 
 				MapContent.class,
-				NamedList.class,
 				Pilot.class, 
 				R0.class,
 				Replicated.class,
@@ -60,6 +60,11 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				SPCChild.class,
 				SPCParent.class,
 				UnqualifiedNamed.class,
+				MapHolder.class,
+				NewPilot.class,
+				IByteArrayHolder.class,
+				ActivatableItem.class,
+				SimpleEnumContainer.class
 		};
 	}
 
@@ -161,7 +166,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		Assert.areEqual(count, objectSet.size());
 	}
 
-	protected Object getOneInstance(DrsProviderFixture fixture, Class clazz) {
+	protected <T> T getOneInstance(DrsProviderFixture fixture, Class<T> clazz) {
 		Iterator objectSet = fixture.provider().getStoredObjects(clazz).iterator();
 		Object candidate = null;
 		if (objectSet.hasNext()) {
@@ -170,7 +175,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);
 			}
 		}
-		return candidate;
+		return (T) candidate;
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
@@ -224,5 +229,21 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	protected ReplicationReflector replicationReflector() {
 		return _reflector;
+	}
+
+	public static void updateTo(DrsProviderFixture fixture, Object... objs) {
+		TestableReplicationProviderInside provider = fixture.provider();
+		for(Object obj : objs) {
+			provider.update(obj);
+		}
+		provider.commit();
+	}
+
+	public static void storeNewTo(DrsProviderFixture fixture, Object... objs) {
+		TestableReplicationProviderInside provider = fixture.provider();
+		for(Object obj : objs) {
+			provider.storeNew(obj);
+		}
+		provider.commit();
 	}
 }

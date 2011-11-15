@@ -1,5 +1,6 @@
 package com.db4o.drs.test.data;
 
+@OptOutRdbms
 public class ItemWithUntypedField {
 	
 	private Object _array;

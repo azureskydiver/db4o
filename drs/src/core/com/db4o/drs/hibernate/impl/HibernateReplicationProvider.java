@@ -223,13 +223,21 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 	}
 
 	public final ObjectSet getStoredObjects(Class aClass) {
-		if (_collectionHandler.canHandleClass(aClass))
-			throw new IllegalArgumentException("Hibernate does not query by Collection");
+		if (shouldIgnore(aClass))
+			throw new IllegalArgumentException("Hibernate does not query by Collection or Enums");
 
 		getSession().flush();
 
 		return new ObjectSetCollectionFacade(getSession().createCriteria(aClass).list());
 	}
+
+    protected boolean shouldIgnore(Class aClass) {
+        return _collectionHandler.canHandleClass(aClass) || aClass.isEnum();
+    }
+    
+    protected boolean shouldIgnore(Object obj) {
+        return _collectionHandler.canHandle(obj) || obj.getClass().isEnum();
+    }
 
 	public final ObjectSet objectsChangedSinceLastReplication() {
 		ensureReplicationActive();
@@ -272,7 +280,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		if (existing != null)
 			return existing;
 
-		if (_collectionHandler.canHandle(obj))
+		if (shouldIgnore(obj))
 			return null;
 		else
 			return produceObjectReference(obj);
@@ -289,7 +297,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		ReplicationReference exist = _replicationReferences.getByUUID(uuid);
 		if (exist != null) return exist;
 
-		if (_collectionHandler.canHandleClass(hint)) {
+		if (shouldIgnore(hint)) {
 			return null;
 		} else {
 			return produceObjectReferenceByUUID(uuid);
@@ -306,7 +314,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		if (counterpartReference == null)
 			throw new NullPointerException("counterpartReference is null");
 
-		if (_collectionHandler.canHandle(obj))
+		if (shouldIgnore(obj))
 			return null;
 		else {
 			DrsUUID uuid = counterpartReference.uuid();
@@ -410,7 +418,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		getSession().flush();
 
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
-		if (_collectionHandler.canHandle(entity)) return;
+		if (shouldIgnore(entity)) return;
 
 		ReplicationReference ref = _replicationReferences.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
@@ -452,7 +460,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 
 	public final void update(Object obj) {
 		ensureReplicationInActive();
-		if (!_collectionHandler.canHandle(obj)) {
+		if (!shouldIgnore(obj)) {
 			getSession().flush();
 			getSession().update(obj);
 			getSession().flush();
@@ -466,7 +474,7 @@ public final class HibernateReplicationProvider implements TestableReplicationPr
 		getSession().flush();
 
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
-		if (_collectionHandler.canHandle(entity)) return;
+		if (shouldIgnore(entity)) return;
 
 		ReplicationReference ref = _replicationReferences.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");

@@ -230,6 +230,10 @@ public final class GenericReplicationSession implements ReplicationSession {
 			return collectionClone(value, claxx, sourceProvider, targetProvider);
 		}
 		
+		if (value.getClass().isEnum()) {
+		    return value;
+		}
+		
 		//if value is a Collection, result should be found by passing in just the value
 		ReplicationReference ref = sourceProvider.produceReference(value, null, null);
 		if (ref == null){
