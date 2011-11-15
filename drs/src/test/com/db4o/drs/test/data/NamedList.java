@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.db4o.drs.test.*;
 
+@OptOutRdbms
 public class NamedList extends DelegatingList {
 	
 	private String _name;

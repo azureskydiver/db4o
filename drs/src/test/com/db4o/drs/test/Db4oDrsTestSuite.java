@@ -44,6 +44,7 @@ public class Db4oDrsTestSuite extends VersantDrsTestSuite implements Db4oTestCas
 			com.db4o.drs.test.UntypedFieldTestCase.class,
 			com.db4o.drs.test.db4o.PartialCollectionReplicationTestCase.class,
 			TheSimplestWithCallConstructors.class,
+			Db4oEnumTestCase.class,
 		};
 	}
 }

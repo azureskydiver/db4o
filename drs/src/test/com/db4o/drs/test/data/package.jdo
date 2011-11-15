@@ -47,6 +47,7 @@
     	<class name="com.db4o.drs.test.data.NamedList"/>
     	<class name="com.db4o.drs.test.data.ItemWithCloneable"/>
     	<class name="UnqualifiedNamed"/>
+    	<class name="com.db4o.drs.test.data.SimpleEnumContainer"/>
     </package>    
 </jdo>    
 

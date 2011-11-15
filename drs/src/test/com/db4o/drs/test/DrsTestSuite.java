@@ -34,17 +34,20 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		
 		if(RUN_ONE_SINGLE_TEST){
 			return new Class[]{
-				UnqualifiedNamedTestCase.class,
+			        GenericEnumTestCase.class,
 			};
 		}
 		
 		return new Class[] {
+
+		        TheSimplest.class, 
+		        
+		        GenericEnumTestCase.class,
 				
 				com.db4o.drs.test.DateReplicationTestCase.class,
 				com.db4o.drs.test.foundation.AllTests.class,
 				
 				// Simple
-				TheSimplest.class, 
 				ReplicationEventTest.class,
 				ReplicationProviderTest.class,
 				ReplicationAfterDeletionTest.class,
