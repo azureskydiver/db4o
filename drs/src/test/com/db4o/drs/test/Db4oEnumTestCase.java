@@ -1,7 +1,6 @@
 package com.db4o.drs.test;
 
 import static com.db4o.drs.test.data.SimpleEnum.*;
-import static junit.framework.Assert.*;
 
 import com.db4o.*;
 import com.db4o.drs.db4o.*;
@@ -9,6 +8,11 @@ import com.db4o.drs.test.data.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
+import db4ounit.*;
+
+/**
+ * @sharpen.remove
+ */
 public class Db4oEnumTestCase extends DrsTestCase {
 
 	public void testBasicQuery() {
@@ -23,8 +27,7 @@ public class Db4oEnumTestCase extends DrsTestCase {
 		q.constrain(SimpleEnumContainer.class);
 		q.descend("value").descend("value").constrain(1);
 		ObjectSet<Object> list = q.execute();
-		assertEquals(1, list.size());
-
+		Assert.areEqual(1, list.size());
 	}
 
 	public void testQueryWithMutableEnumContainer() {
@@ -46,7 +49,7 @@ public class Db4oEnumTestCase extends DrsTestCase {
 		q.constrain(SimpleEnumContainer.class);
 		q.descend("value").descend("value").constrain(2);
 		ObjectSet<Object> list = q.execute();
-		assertEquals(1, list.size());
+		Assert.areEqual(1, list.size());
 
 	}
 }

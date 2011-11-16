@@ -1,5 +1,8 @@
 package com.db4o.drs.test.data;
 
+/**
+ * @sharpen.remove
+ */
 public class SimpleEnumContainer {
     
     private SimpleEnum value;

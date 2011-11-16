@@ -1,5 +1,8 @@
 package com.db4o.drs.test.data;
 
+/**
+ * @sharpen.ignore
+ */
 public enum SimpleEnum {
     ONE(1),
     TWO(2);
