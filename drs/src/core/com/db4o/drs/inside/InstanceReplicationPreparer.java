@@ -26,6 +26,7 @@ import com.db4o.drs.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.traversal.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 class InstanceReplicationPreparer implements Visitor {
@@ -104,15 +105,18 @@ class InstanceReplicationPreparer implements Visitor {
 
 		ReplicationReference refA = _providerA.produceReference(_obj, _referencingObject, _fieldName);
 		ReplicationReference refB = _providerB.produceReference(_obj, _referencingObject, _fieldName);
+		
+		ReflectClass claxx = _reflector.forObject(_obj);
+		Reflector reflector = claxx.reflector();
 
 		if (refA == null && refB == null) {
-			if (_obj.getClass().isEnum()) {
+			if (Platform4.isEnum(reflector, claxx)) {
 				return false;
 			}
 			throw new RuntimeException("" + _obj.getClass() + " " + _obj + " must be stored in one of the databases being replicated.");
 		}
 		if (refA != null && refB != null) {
-			if (_obj.getClass().isEnum()) {
+			if (Platform4.isEnum(reflector, claxx)) {
 				return false;
 			}
 			throw new RuntimeException("" + _obj.getClass() + " " + _obj + " cannot be referenced by both databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.

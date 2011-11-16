@@ -36,7 +36,7 @@ public class Db4oEnumTestCase extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider());
 
-		SimpleEnumContainer containerInB = getOneInstance(b(), SimpleEnumContainer.class);
+		SimpleEnumContainer containerInB = (SimpleEnumContainer) getOneInstance(b(), SimpleEnumContainer.class);
 
 		containerInB.setValue(TWO);
 		updateTo(b(), containerInB);

@@ -166,7 +166,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		Assert.areEqual(count, objectSet.size());
 	}
 
-	protected <T> T getOneInstance(DrsProviderFixture fixture, Class<T> clazz) {
+	protected Object getOneInstance(DrsProviderFixture fixture, Class clazz) {
 		Iterator objectSet = fixture.provider().getStoredObjects(clazz).iterator();
 		Object candidate = null;
 		if (objectSet.hasNext()) {
@@ -175,7 +175,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 				throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);
 			}
 		}
-		return (T) candidate;
+		return candidate;
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
