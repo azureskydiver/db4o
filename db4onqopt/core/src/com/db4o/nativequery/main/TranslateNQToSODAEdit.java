@@ -21,15 +21,14 @@ public class TranslateNQToSODAEdit implements BloatClassEdit {
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 		    Class enhancedPredicateClass = origLoader.loadClass(Db4oEnhancedFilter.class.getName());
-            Class clazz = BloatUtil.classForEditor(ce, origLoader);
-            if(enhancedPredicateClass.isAssignableFrom(clazz)) {
-                return InstrumentationStatus.FAILED;
+            if(BloatUtil.implementsInHierarchy(ce, enhancedPredicateClass, loaderContext)) {
+                return InstrumentationStatus.FAILED; // why failed?!?
             }
 
 			Type type=ce.superclass();
 			while(type!=null) {
 				if(BloatUtil.normalizeClassName(type.className()).equals(Predicate.class.getName())) {
-					boolean success = _enhancer.enhance(loaderContext,ce,PredicatePlatform.PREDICATEMETHOD_NAME,null,origLoader, new DefaultClassSource());
+					boolean success = _enhancer.enhance(loaderContext,ce,PredicatePlatform.PREDICATEMETHOD_NAME,null,new DefaultClassSource());
 					return (success ? InstrumentationStatus.INSTRUMENTED : InstrumentationStatus.NOT_INSTRUMENTED);
 				}
 				type = loaderContext.superType(type);
