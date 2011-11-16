@@ -16,14 +16,13 @@ class CheckApplicabilityEdit implements BloatClassEdit {
 
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
-			Class clazz = BloatUtil.classForEditor(ce, origLoader);
-			if (clazz.isInterface()) {
+			if (ce.isInterface()) {
 				return InstrumentationStatus.FAILED;
 			}
-			if (clazz.isEnum()) {
+			if (BloatUtil.extendsInHierarchy(ce, Enum.class, loaderContext)) {
 				return InstrumentationStatus.FAILED;
 			}
-			if (!isApplicableClass(clazz)) {
+			if (!isApplicableClass(ce, loaderContext)) {
 				return InstrumentationStatus.FAILED;
 			}
 		} catch (ClassNotFoundException e) {
@@ -32,29 +31,32 @@ class CheckApplicabilityEdit implements BloatClassEdit {
 		return InstrumentationStatus.NOT_INSTRUMENTED;
 	}
 
-	private boolean isApplicableClass(Class clazz) {
-		Class curClazz = clazz;
-		while (curClazz != Object.class && curClazz != null && !isApplicablePlatformClass(curClazz)) {
-			if (BloatUtil.isPlatformClassName(curClazz.getName())) {
-				return false;
+	private boolean isApplicableClass(ClassEditor ce, BloatLoaderContext loaderContext) {
+		ClassEditor curEditor = ce;
+		try {
+			while (curEditor != null && !isApplicablePlatformClass(curEditor)) {
+				if (BloatUtil.isPlatformClassName(BloatUtil.normalizeClassName(curEditor.type()))) {
+					return false;
+				}
+				curEditor = loaderContext.classEditor(curEditor.superclass());
 			}
-			curClazz = curClazz.getSuperclass();
+		} catch (ClassNotFoundException exc) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean isApplicablePlatformClass(Class curClazz) {
-		return isEnum(curClazz) || isSupportedCollection(curClazz);
+	private boolean isApplicablePlatformClass(ClassEditor ce) {
+		String className = BloatUtil.normalizeClassName(ce.name());
+		return Enum.class.getName().equals(className) || isSupportedCollection(className) || Object.class.getName().equals(className);
 	}
 
-	private boolean isSupportedCollection(Class curClazz) {
-		return curClazz == ArrayList.class;
+	private boolean isSupportedCollection(String className) {
+		return ArrayList.class.getName().equals(className);
 	}
 
 	private boolean isEnum(Class curClazz) {
-		// FIXME string reference to Enum is rather fragile
-		return curClazz.getName().equals("java.lang.Enum");
+		return curClazz == Enum.class;
 	}
-
 	
 }

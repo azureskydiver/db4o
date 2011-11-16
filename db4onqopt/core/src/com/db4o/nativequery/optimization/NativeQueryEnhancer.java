@@ -16,7 +16,7 @@ import com.db4o.nativequery.instrumentation.*;
 
 public class NativeQueryEnhancer {
 	
-	public boolean enhance(BloatLoaderContext bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
+	public boolean enhance(BloatLoaderContext bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassSource classSource) throws Exception {
 		if(NQDebug.LOG) {
 			System.err.println("Enhancing "+classEditor.name());
 		}

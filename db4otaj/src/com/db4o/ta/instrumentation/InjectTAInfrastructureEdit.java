@@ -31,7 +31,7 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			Class activatableClazz = origLoader.loadClass(Activatable.class.getName());
-			if(activatableClazz.isAssignableFrom(clazz)) {
+			if(BloatUtil.implementsInHierarchy(ce, activatableClazz, loaderContext)) {
 				return InstrumentationStatus.NOT_INSTRUMENTED;
 			}
 			if(!_instrumentedClassesFilter.accept(clazz)) {

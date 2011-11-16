@@ -68,6 +68,16 @@ public class BloatUtil {
 		return false;
 	}
 
+	public static boolean extendsInHierarchy(ClassEditor ce, Class superClazz, BloatLoaderContext context) throws ClassNotFoundException {
+		while(ce != null) {
+			if(normalizeClassName(ce.name()).equals(superClazz.getName())) {
+				return true;
+			}
+			ce = context.classEditor(ce.superclass());
+		}
+		return false;
+	}
+
 	public static boolean implementsDirectly(ClassEditor ce, Class markerInterface) {
 		if(markerInterface.getName().equals(normalizeClassName(ce.type()))) {
 			return true;
