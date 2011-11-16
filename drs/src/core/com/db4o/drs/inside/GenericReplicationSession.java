@@ -230,7 +230,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 			return collectionClone(value, claxx, sourceProvider, targetProvider);
 		}
 		
-		if (value.getClass().isEnum()) {
+		if(Platform4.isEnum(claxx.reflector(), claxx)){
 		    return value;
 		}
 		

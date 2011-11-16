@@ -23,7 +23,7 @@ public class GenericEnumTestCase extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider());
 
-		SimpleEnumContainer containerInB = getOneInstance(b(), SimpleEnumContainer.class);
+		SimpleEnumContainer containerInB = (SimpleEnumContainer) getOneInstance(b(), SimpleEnumContainer.class);
 		Assert.areSame(ONE, containerInB.getValue());
 
 	}
@@ -34,14 +34,14 @@ public class GenericEnumTestCase extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider());
 
-		SimpleEnumContainer containerInB = getOneInstance(b(), SimpleEnumContainer.class);
+		SimpleEnumContainer containerInB = (SimpleEnumContainer) getOneInstance(b(), SimpleEnumContainer.class);
 
 		containerInB.setValue(TWO);
 		updateTo(b(), containerInB);
 
 		replicateAll(b().provider(), a().provider());
 
-		SimpleEnumContainer containerInA = getOneInstance(a(), SimpleEnumContainer.class);
+		SimpleEnumContainer containerInA = (SimpleEnumContainer) getOneInstance(a(), SimpleEnumContainer.class);
 		Assert.areSame(TWO, containerInA.getValue());
 	}
 
@@ -54,7 +54,7 @@ public class GenericEnumTestCase extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider());
 		
-		SimpleEnumContainer containerInA = getOneInstance(a(), SimpleEnumContainer.class);
+		SimpleEnumContainer containerInA = (SimpleEnumContainer) getOneInstance(a(), SimpleEnumContainer.class);
 
 		containerInA.setOpaque(42);
 		ONE.setValue(3);
@@ -63,7 +63,7 @@ public class GenericEnumTestCase extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider());
 
-		SimpleEnumContainer containerInB = getOneInstance(b(), SimpleEnumContainer.class);
+		SimpleEnumContainer containerInB = (SimpleEnumContainer) getOneInstance(b(), SimpleEnumContainer.class);
 		
 		int value = containerInB.getValue().getValue();
 		

@@ -622,7 +622,7 @@ namespace Db4objects.Db4o.Internal
 			return false;
 		}
 
-		internal static bool IsEnum(IReflector genericReflector, IReflectClass iReflectClass)
+		public static bool IsEnum(IReflector genericReflector, IReflectClass iReflectClass)
 		{
 		    Type type = GetNetType(iReflectClass);
             if(type == null)
