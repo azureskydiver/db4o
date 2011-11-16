@@ -1,10 +1,14 @@
 package com.db4o.drs.test;
 
 import static com.db4o.drs.test.data.SimpleEnum.*;
-import static junit.framework.Assert.*;
 
 import com.db4o.drs.test.data.*;
 
+import db4ounit.*;
+
+/**
+ * @sharpen.remove
+ */
 public class GenericEnumTestCase extends DrsTestCase {
 
 	@Override
@@ -20,7 +24,7 @@ public class GenericEnumTestCase extends DrsTestCase {
 		replicateAll(a().provider(), b().provider());
 
 		SimpleEnumContainer containerInB = getOneInstance(b(), SimpleEnumContainer.class);
-		assertSame(ONE, containerInB.getValue());
+		Assert.areSame(ONE, containerInB.getValue());
 
 	}
 
@@ -38,7 +42,7 @@ public class GenericEnumTestCase extends DrsTestCase {
 		replicateAll(b().provider(), a().provider());
 
 		SimpleEnumContainer containerInA = getOneInstance(a(), SimpleEnumContainer.class);
-		assertSame(TWO, containerInA.getValue());
+		Assert.areSame(TWO, containerInA.getValue());
 	}
 
 	/**
@@ -63,7 +67,7 @@ public class GenericEnumTestCase extends DrsTestCase {
 		
 		int value = containerInB.getValue().getValue();
 		
-		assertTrue(value == 3 || value == 1); // <------- this should expect 3, not 1
+		Assert.isTrue(value == 3 || value == 1); // <------- this should expect 3, not 1
 	}
 
 }
