@@ -151,6 +151,8 @@
     <Compile Include="Code\configuration\freespace\FreeSpaceConfiguration.cs" />
     <Compile Include="Code\configuration\idsystem\IdSystemConfigurationExamples.cs" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.cs" />
+    <Compile Include="Code\configuration\io\LoggingBin.cs" />
+    <Compile Include="Code\configuration\io\LoggingStorage.cs" />
     <Compile Include="Code\configuration\io\LRUCachingStorage.cs" />
     <Compile Include="Code\configuration\network\NetworkConfigurationExample.cs" />
     <Compile Include="Code\configuration\objectconfig\ObjectConfigurationExamples.cs" />

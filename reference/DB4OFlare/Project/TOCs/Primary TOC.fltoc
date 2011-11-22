@@ -854,25 +854,21 @@
           Title="FileStorage"
           Link="/Content/configuration/file/storage/filestorage.htm" />
         <TocEntry
+          Title="CachingStorage"
+          Link="/Content/configuration/file/storage/cachingstorage.htm" />
+        <TocEntry
           Title="Memory Storage"
           Link="/Content/configuration/file/storage/memory_storage.htm">
           <TocEntry
-            Title="Storing MemoryBin Data"
+            Title="Storing a In-Memory Database"
             Link="/Content/configuration/file/storage/memory_storage/storing_memorybin_data.htm" />
         </TocEntry>
-        <TocEntry
-          Title="CachingStorage"
-          Link="/Content/configuration/file/storage/cachingstorage.htm" />
         <TocEntry
           Title="NonFlushingStorage"
           Link="/Content/configuration/file/storage/nonflushingstorage.htm" />
         <TocEntry
           Title="Pluggable Storage"
-          Link="/Content/configuration/file/storage/pluggable_storage.htm">
-          <TocEntry
-            Title="Logging Storage"
-            Link="/Content/configuration/file/storage/pluggable_storage/logging_storage.htm" />
-        </TocEntry>
+          Link="/Content/configuration/file/storage/pluggable_storage.htm"></TocEntry>
         <TocEntry
           Title="Isolated Storage For Silverlight"
           Link="/Content/configuration/file/storage/isolated_storage.htm"
