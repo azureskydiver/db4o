@@ -7,7 +7,7 @@ import com.db4o.ext.*;
 
 /**
  * Wrapper base class for all classes that wrap Storage.
- * Each class that adds functionality to a Storage must
+ * Each class that adds functionality to a Storage can
  * extend this class.
  * @see BinDecorator 
  */
