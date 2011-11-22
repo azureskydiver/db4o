@@ -1,30 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="456" MadCap:lastWidth="624">
-  <head />
-  <body>
-    <h1>Pluggable Storage</h1>
-    <p>Pluggable nature of db4o Storage adapters allows you to
-implement any persistent storage behind the database engine. It can be memory,
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1672" MadCap:lastWidth="644">
+    <head />
+    <body>
+        <h1>Pluggable Storage</h1>
+        <p>You can implement a storage mechanism yourself. It can be memory,
 native IO, encrypted storage, mirrored storage etc.</p>
-    <p>The implementation is guided by 2 interfaces:</p>
-    <p MadCap:conditions="Primary.Java,Primary.All languages">
-      <p>Java:</p>
-      <p>
-        <code>Storage</code> and <code>Bin</code></p>
-    </p>
-    <p MadCap:conditions="Global.Primary:java" />
-    <p MadCap:conditions="Primary..NET">
-      <p>.NET:</p>
-      <p>
-        <code>IStorage</code> and <code>IBin</code></p>
-    </p>
-    <p MadCap:conditions="Global.Primary:net" />
-    <p>Storage/IStorage interface defines the presence of this
-particular storage implementation and Bin/IBin implements actual physical access
-to the information stored. To simplify the implementation db4o provides
-StorageDecorator and BinDecorator classes with the base functionality, that can
-be extended/overridden.</p>
-    <p>To sort out the details of the implementation let's look at
-an <a href="pluggable_storage/logging_storage.htm">example</a>.</p>
-  </body>
+        <p>The implementation is guided by two interfaces. The storage interface which represents a 'file'-system where multiple stored databases can live. And the bin interface which represents the storage access.</p>
+        <p>When you only need a decorator for existing storage implementations, then you can base your implementation on the StorageDecorator and BinDecorator classes. These classes delegate all calls to the underlying implementation, but give you a chance to override certain methods to intercept the calls.</p>
+        <h2>Logging-Storage Example</h2>
+        <p>This example just logs all calls to the storage system:</p>
+        <MadCap:snippetBlock src="../../../CodeExamples/configuration/io/LoggingStorage-A-logging-storage-decorator.all.flsnp" />
+        <MadCap:snippetBlock src="../../../CodeExamples/configuration/io/LoggingBin-A-logging-bin-decorator.all.flsnp" />
+    </body>
 </html>

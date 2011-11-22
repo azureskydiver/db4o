@@ -127,6 +127,8 @@
     <Compile Include="Code\configuration\basics\ConfigurationBasics.vb" />
     <Compile Include="Code\configuration\file\FileConfiguration.vb" />
     <Compile Include="Code\configuration\io\IOConfigurationExamples.vb" />
+    <Compile Include="Code\configuration\io\LoggingBin.vb" />
+    <Compile Include="Code\configuration\io\LoggingStorage.vb" />
     <Compile Include="Code\configuration\objectfield\City.vb" />
     <Compile Include="Code\container\sessions\Db4oSessions.vb" />
     <Compile Include="Code\db4otests\ExampleTestCase.vb" />
