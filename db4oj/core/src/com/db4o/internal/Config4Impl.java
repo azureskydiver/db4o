@@ -236,7 +236,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     		// FIXME: circular cs dependancy. Improve.
 			 return (LegacyClientServerFactory) Class.forName("com.db4o.cs.internal.config.LegacyClientServerFactoryImpl").newInstance();
 		} catch (Exception e) {
-			throw new Db4oException("ClientServer jar db4o-[version]-cs-java.jar not in CLASSPATH", e);
+			throw new Db4oException("ClientServer jar db4o-cs-java.jar not in CLASSPATH", e);
 		}
 	}
 

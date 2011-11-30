@@ -11,7 +11,7 @@ import com.db4o.internal.config.*;
  * 
  * <br><br>
  * @see com.db4o.cs.Db4oClientServer class in
- * db4o-[version]-cs-java[java-version].jar
+ * db4o-X.XX-cs-java.jar
  * for methods to open db4o servers and db4o clients.
  * @since 7.5
  * 
