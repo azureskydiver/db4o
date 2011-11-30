@@ -33,6 +33,16 @@ code{
 	font-family: Consolas, "Droid Sans Mono", "DejaVu Sans Mono", "Courier New", Courier, monospace;
 }
 
+pre.prettyprint
+{
+	font-family: Consolas, "Droid Sans Mono", "DejaVu Sans Mono", "Courier New", Courier, monospace;
+	text-align: left;
+	border-bottom: #AAAAAA solid 1px;
+	background-color:#EEEEEE;
+	margin: 0;
+	padding: 4px;
+}
+
 /* Table colors */
 .TableHeadingColor {
     background: #D5D5D5;
