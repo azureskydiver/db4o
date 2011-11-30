@@ -10,8 +10,7 @@ import com.db4o.internal.config.*;
  * Factory class to open db4o instances in embedded mode.
  * 
  * <br><br>
- * @see com.db4o.cs.Db4oClientServer class in
- * db4o-X.XX-cs-java.jar
+ * For client server scenarious please use the com.db4o.cs.Db4oClientServer factory from the db4o-cs-java.jar
  * for methods to open db4o servers and db4o clients.
  * @since 7.5
  * 
@@ -19,7 +18,7 @@ import com.db4o.internal.config.*;
 public class Db4oEmbedded {
 
 	/**
-	 * Creates a fresh {@link EmbeddedConfiguration EmbeddedConfiguration} instance.
+	 * Creates a fresh {@link EmbeddedConfiguration} instance.
 	 * 
 	 * @return a fresh, independent configuration with all options set to their default values
 	 */
@@ -29,14 +28,19 @@ public class Db4oEmbedded {
 	}
 
 	/**
-	 * opens an {@link ObjectContainer ObjectContainer}
+	 * Opens an {@link ObjectContainer ObjectContainer}
 	 * on the specified database file for local use.
-	 * <br><br>A database file can only be opened once, subsequent attempts to open
-	 * another {@link ObjectContainer ObjectContainer} against the same file will result in
-	 * a {@link DatabaseFileLockedException DatabaseFileLockedException}.<br><br>
-	 * Database files can only be accessed for read/write access from one process 
-	 * at one time.
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link #newConfiguration}
+	 * <br><br>
+     * Database files can only be accessed for access from one process
+	 * at one time. Subsequent attempts to open the same file will result in
+	 * a {@link DatabaseFileLockedException}. <br/>
+     * For multiple object containers against the same database
+     * use the {@link com.db4o.ObjectContainer}.{@link ObjectContainer#ext() ext()}.{@link com.db4o.ext.ExtObjectContainer#openSession() openSession()}() method.
+     * Or use the client server mode from the db4o-cs-java.jar
+     *
+     *
+     * <br/><br/>
+	 * @param config a {@link EmbeddedConfiguration} instance to be obtained via {@link #newConfiguration}
 	 * @param databaseFileName an absolute or relative path to the database file
 	 * @return an open {@link ObjectContainer ObjectContainer}
 	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.

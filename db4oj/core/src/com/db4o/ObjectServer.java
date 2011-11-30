@@ -5,7 +5,7 @@ package com.db4o;
 import com.db4o.ext.*;
 
 /**
- * the db4o server interface.
+ * The db4o server interface.
  * <br><br>- db4o servers can be opened with {@link Db4oClientServer#openServer(String, int)}.<br>
  * - Direct in-memory connections to servers can be made with {@link #openClient()} <br>
  * - TCP connections are available through {@link Db4oClientServer#openClient(String, int, String, String)}.
@@ -20,7 +20,7 @@ import com.db4o.ext.*;
 public interface ObjectServer {
     
     /**
-    * closes the {@link ObjectServer } and writes all cached data.
+    * Closes the {@link ObjectServer } and writes all cached data.
     * <br><br>
     * @return true - denotes that the last instance connected to the
     * used database file was closed.
@@ -28,16 +28,15 @@ public interface ObjectServer {
     public boolean close();
 
     /**
-     * returns an  {@link ObjectServer } with extended functionality.
-     * <br><br>Use this method as a convenient accessor to extended methods. 
-     * Every  {@link ObjectServer } can be casted to an {@link com.db4o.ext.ExtObjectServer}.
+     * Returns an  {@link ExtObjectServer} with extended functionality.
+     * <br><br>Use this method to conveniently access extended methods.
      * <br><br>The functionality is split to two interfaces to allow newcomers to
      * focus on the essential methods.
      */
     public ExtObjectServer ext();
 
     /**
-     * grants client access to the specified user with the specified password.
+     * Grants client access to the specified user with the specified password.
      * <br><br>If the user already exists, the password is changed to 
      * the specified password.<br><br>
      * @param userName the name of the user
@@ -46,10 +45,10 @@ public interface ObjectServer {
     public void grantAccess(String userName, String password);
 
     /**
-     * opens a client against this server.
+     * Opens a client against this server.
      * 
      * <br><br>A client opened with this method operates within the same VM
-     * as the server. Since an embedded client can use direct communication, without
+     * as the server. Since an embedded client use direct communication, without
      * an in-between socket connection, performance will be better than a client
      * opened with 
      * {@link Db4oClientServer#openClient(java.lang.String, int, java.lang.String, java.lang.String)}
