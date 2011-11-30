@@ -2,18 +2,17 @@
 
 package  com.db4o;
 
-import java.util.*;
+import com.db4o.ext.ExtObjectSet;
 
-import com.db4o.ext.*;
+import java.util.List;
 
 /**
- * An ObjectSet is a representation for a set of objects returned 
- * by a query.
- * <br><br>ObjectSet extends the system collection interfaces 
- * java.util.List/System.Collections.IList where they are available. It is
- * recommended, never to reference ObjectSet directly in code but to use
- * List / IList instead.
- * <br><br>Note that the underlying 
+ * An ObjectSet is a representation for a set of objects returned  by a query.
+ * <br><br>
+ * ObjectSet extends the list interface. It is
+ * recommended to never reference ObjectSet directly in code but to use the list interface instead.
+ * <br><br>
+ * Note that the underlying
  * {@link ObjectContainer ObjectContainer} of an ObjectSet
  * needs to remain open as long as an ObjectSet is used. This is necessary
  * for lazy instantiation. The objects in an ObjectSet are only instantiated
@@ -26,45 +25,48 @@ public interface ObjectSet<T> extends List<T>, Iterable<T> {
 	
 	
 	/**
-     * returns an ObjectSet with extended functionality.
-     * <br><br>Every ObjectSet that db4o provides can be casted to
+     * Returns an ObjectSet with extended functionality.
+     * <br><br>
+     * Every ObjectSet that db4o provides can be casted to
      * an ExtObjectSet. This method is supplied for your convenience
      * to work without a cast.
-     * <br><br>The ObjectSet functionality is split to two interfaces
+     * <br><br>
+     * The ObjectSet functionality is split to two interfaces
      * to allow newcomers to focus on the essential methods.
      */
     public ExtObjectSet ext();
 	
 	
     /**
-	 * returns <code>true</code> if the <code>ObjectSet</code> has more elements.
+	 * Returns true if the ObjectSet has more elements.
 	 *
-     * @return boolean - <code>true</code> if the <code>ObjectSet</code> has more
+     * @return boolean - true if the ObjectSet has more
 	 * elements.
      */
     public boolean hasNext ();
 
     /**
-	 * returns the next object in the <code>ObjectSet</code>.
+	 * Returns the next object in the ObjectSet.
 	 * <br><br>
-	 * Before returning the Object, next() triggers automatic activation of the
-	 * Object with the respective
+	 * Before returning the object, next() triggers automatic activation of the
+	 * object with the respective
 	 * {@link com.db4o.config.CommonConfiguration#activationDepth global} or
 	 * {@link com.db4o.config.ObjectClass#maximumActivationDepth class specific}
-	 * setting.<br><br>
-     * @return the next object in the <code>ObjectSet</code>.
+	 * setting.
+     * <br><br>
+     * @return the next object in the ObjectSet.
      */
     public T next ();
 
     /**
-	 * resets the <code>ObjectSet</code> cursor before the first element.
-	 * <br><br>A subsequent call to <code>next()</code> will return the first element.
+	 * Resets the ObjectSet cursor before the first element.
+     * A subsequent call to {@link #next()} will return the first element.
      */
     public void reset ();
 
     /**
-	 * returns the number of elements in the <code>ObjectSet</code>.
-     * @return the number of elements in the <code>ObjectSet</code>.
+	 * Returns the number of elements in the ObjectSet.
+     * @return the number of elements in the ObjectSet.
      * 
      * @sharpen.ignore
      */
