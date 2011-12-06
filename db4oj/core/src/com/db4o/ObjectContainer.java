@@ -17,7 +17,7 @@ import java.util.Comparator;
  * transactions.<br><br>
  * <br><br>An ObjectContainer also represents a transaction. All work
  * with db4o always is transactional. Both {@link #commit()} and
- * {@link #rollback()} start new transactions immediately. For working 
+ * {@link #rollback()} start a new transaction immediately. For working
  * against the same database with multiple transactions, open a new object container
  * with {@link #ext()}.{@link ExtObjectContainer#openSession() openSession()}
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
@@ -54,8 +54,8 @@ public interface ObjectContainer {
     public void activate (Object obj, int depth) throws Db4oIOException, DatabaseClosedException;
     
     /**
-     * Closes the <code>ObjectContainer</code>.
-     * <br><br>A call to <code>close()</code> automatically performs a 
+     * Closes the ObjectContainer.
+     * <br><br>Calling close() automatically performs a
      * {@link #commit commit()}.
      * @return success - true denotes that the object container was closed, false if it was already closed
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
@@ -103,7 +103,7 @@ public interface ObjectContainer {
      * <br><br>Referenced objects of the passed object remain untouched, unless
      * cascaded deletes are  
      * {@link com.db4o.config.ObjectClass#cascadeOnDelete configured for the class}
-     * or for {@link com.db4o.config.ObjectField#cascadeOnDelete one of the member fields}.
+     * or  {@link com.db4o.config.ObjectField#cascadeOnDelete for member fields}.
      * <br><br>The method has no effect, if
      * the passed object is not stored in the object container.
      * <br><br>A subsequent call to
@@ -136,18 +136,16 @@ public interface ObjectContainer {
      * queryByExample() creates an {@link ObjectSet ObjectSet} containing
      * all objects in the database that match the passed
      * template object.<br><br>
-	 * Calling <code>queryByExample(NULL)</code> returns all objects stored in the database.
-     * <br><br><br>
+	 * Calling queryByExample(NULL) returns all objects stored in the database.
+     * <br><br>
      * <b>Query Evaluation:</b>
      * <ul><li>All non-null members of the template object are compared against
      * all stored objects of the same class.</li>
      * <li>Primitive type members are ignored if they are 0 or false respectively.</li>
      * <li>Arrays and  collections  are
-     * evaluated for containment. Differences in <code>length/size()</code> are
+     * evaluated for containment. Differences in length/size() are
      * ignored.</li>
      * </ul>
-     * {@link ObjectSet ObjectSet} are instantiated
-     * and activated according to configured activation depth. See See {@link com.db4o.config.CommonConfiguration#activationDepth(int) "Why activation"}
      * @param template object to be used as an example to find all matching objects.<br><br>
      * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
 	 * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
@@ -170,7 +168,7 @@ public interface ObjectContainer {
     /**
      * Queries for all instances of a class.
      * @param clazz the class to query for.
-     * @return the {@link ObjectSet} returned by the query.
+     * @return all instances of the given class
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
@@ -190,7 +188,7 @@ public interface ObjectContainer {
      * That is an order of magnitude slower than a optimized native query.<br><br>
      * 
      * <pre class="prettyprint"/><code>
-     * List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {
+     * List&lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {
      *     public boolean match(Cat cat) {
      *         return cat.getName().equals("Occam");
      *     }
@@ -211,7 +209,7 @@ public interface ObjectContainer {
      * - The query expression  should return true to include a object. False otherwise.<br><br>
      *   
      * @param predicate the {@link Predicate} containing the native query expression.
-     * @return the {@link ObjectSet} returned by the query.
+     * @return the query result
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
@@ -219,11 +217,11 @@ public interface ObjectContainer {
 
     /**
      * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
-     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link com.db4o.query.QueryComparator}.
+     * but will sort the result according to the given comperator.
      * 
      * @param predicate the {@link Predicate} containing the native query expression.
      * @param comparator the {@link QueryComparator} specifying the sort order of the result
-     * @return the {@link ObjectSet} returned by the query.
+     * @return the query result
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
@@ -253,8 +251,8 @@ public interface ObjectContainer {
      * The easiest way to do this is by creating a new object container:
      * {@link #ext()}.{@link com.db4o.ext.ExtObjectContainer#openSession() openSession()}.
      * </li><li>Alternatively you can deactivate objects or {@link ExtObjectContainer#refresh(Object, int) refresh} them to get back to the state in the database.
-     * <li>In case you are using transparent persistence you can use a {@link com.db4o.ta.RollbackStrategy rollback strategy} to rollback
-     * the in memory objects aswell. </li></ul>
+     * </li><li>In case you are using transparent persistence you can use a {@link com.db4o.ta.RollbackStrategy rollback strategy} to rollback
+     * the in memory objects as well. </li></ul>
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws DatabaseReadOnlyException database was configured as read-only.
