@@ -1,12 +1,16 @@
 /* Copyright (C) 2004 - 1010  Versant Inc.   http://www.db4o.com */
+
+using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Qlin;
 using Db4objects.Db4o.Query;
+using Db4objects.Db4o.TA;
 
 namespace Db4objects.Db4o
 {
-	/// <summary>the interface to a db4o database, stand-alone or client/server.</summary>
+	/// <summary>The interface to a db4o database, stand-alone or client/server.</summary>
 	/// <remarks>
-	/// the interface to a db4o database, stand-alone or client/server.
+	/// The interface to a db4o database, stand-alone or client/server.
 	/// <br /><br />The IObjectContainer interface provides methods
 	/// to store, query and delete objects and to commit and rollback
 	/// transactions.<br /><br />
@@ -14,55 +18,37 @@ namespace Db4objects.Db4o
 	/// or a connection to a
 	/// <see cref="Db4objects.Db4o.Db4o.OpenServer">db4o server</see>
 	/// .
-	/// <br /><br />An IObjectContainer also represents a transaction. All work
-	/// with db4o always is transactional. Both
-	/// <see cref="Db4objects.Db4o.IObjectContainer.Commit">Db4objects.Db4o.IObjectContainer.Commit</see>
-	/// and
-	/// <see cref="Db4objects.Db4o.IObjectContainer.Rollback">Db4objects.Db4o.IObjectContainer.Rollback</see>
-	/// start new transactions immediately. For working
-	/// against the same database with multiple transactions, open a db4o server
-	/// with
-	/// <see cref="Db4objects.Db4o.Db4o.OpenServer">Db4objects.Db4o.Db4o.OpenServer</see>
-	/// and
-	/// <see cref="Db4objects.Db4o.ObjectServer.OpenClient">connect locally</see>
-	/// or
-	/// <see cref="Db4objects.Db4o.Db4o.OpenClient">over TCP</see>
-	/// .
-	/// </remarks>
+    /// <br/><br/>An object container also represents a transaction. All work
+    /// with db4o always is transactional. Both <see cref="Commit"/> and
+    /// <see cref="Rollback"/> start a new transaction immediately. For working 
+    /// against the same database with multiple transactions, open a new object container
+    /// with <see cref="Ext"/>.<see cref="IExtObjectContainer.OpenSession">OpenSession()</see></remarks>
 	/// <seealso cref="Db4objects.Db4o.Ext.IExtObjectContainer">IExtObjectContainer for extended functionality.
-	/// 	</seealso>
+	/// </seealso>
 	public interface IObjectContainer : System.IDisposable, ISodaQueryFactory
 	{
-		/// <summary>activates all members on a stored object to the specified depth.</summary>
+        /// <summary>Activates all members on a stored object to the specified depth.</summary>
 		/// <remarks>
-		/// activates all members on a stored object to the specified depth.
+        /// Activates all members on a stored object to the specified depth.
 		/// <br /><br />
-		/// See
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">"Why activation"</see>
-		/// for an explanation why activation is necessary.<br /><br />
-		/// The activate method activates a graph of persistent objects in memory.
-		/// Only deactivated objects in the graph will be touched: their
-		/// fields will be loaded from the database.
-		/// The activate methods starts from a
-		/// root object and traverses all member objects to the depth specified by the
-		/// depth parameter. The depth parameter is the distance in "field hops"
-		/// (object.field.field) away from the root object. The nodes at 'depth' level
-		/// away from the root (for a depth of 3: object.member.member) will be instantiated
-		/// but deactivated, their fields will be null.
-		/// The activation depth of individual classes can be overruled
-		/// with the methods
-		/// <see cref="Db4objects.Db4o.Config.IObjectClass.MaximumActivationDepth">MaximumActivationDepth()
-		/// 	</see>
-		/// and
-		/// <see cref="Db4objects.Db4o.Config.IObjectClass.MinimumActivationDepth">MinimumActivationDepth()
-		/// 	</see>
-		/// in the
-		/// <see cref="Db4objects.Db4o.Config.IObjectClass">ObjectClass interface</see>
-		/// .<br /><br />
-		/// A successful call to activate triggers Activating and Activated callback methods,
-		/// which can be used for cascaded activation.<br /><br />
-		/// </remarks>
-		/// <seealso cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">Why activation?</seealso>
+        /// See <see cref="ICommonConfiguration.ActivationDepth"> "Why activation"</see>
+        /// for an explanation why activation is necessary.<br/><br/>
+        /// Calling this method activates a graph of persistent objects in memory.
+        /// Only deactivated objects in the graph will be touched: Their
+        /// fields will be loaded from the database. 
+        /// When called it starts from the given
+        /// object, traverses all member objects and activates them up to the given depth.
+        /// The depth parameter is the distance in "field hops"
+        /// (object.field.field) away from the root object. The nodes at 'depth' level
+        /// away from the root (for a depth of 3: object.member.member) will be instantiated
+        /// but not populated with data. Its fields will be null.
+    	/// The activation depth of individual classes can be overruled
+    	/// with the methods
+        /// <see cref="IObjectClass.MaximumActivationDepth"/> and
+        /// <see cref="IObjectClass.MinimumActivationDepth(int)"/> in the
+        /// <see cref="IObjectClass"/>-interface.<br/><br/>
+        /// </remarks>
+        /// <seealso cref="ICommonConfiguration.ActivationDepth">Why activation?</seealso>
 		/// <seealso cref="Db4objects.Db4o.Ext.IObjectCallbacks">Using callbacks</seealso>
 		/// <param name="obj">the object to be activated.</param>
 		/// <param name="depth">
@@ -72,74 +58,65 @@ namespace Db4objects.Db4o
 		/// </param>
 		void Activate(object obj, int depth);
 
-		/// <summary>closes this IObjectContainer.</summary>
+		/// <summary>Closes this object container.</summary>
 		/// <remarks>
-		/// closes this IObjectContainer.
-		/// <br /><br />A call to Close() automatically performs a
-		/// <see cref="Db4objects.Db4o.IObjectContainer.Commit">Commit()</see>
-		/// .
-		/// <br /><br />Note that every session opened with Db4oFactory.OpenFile() requires one
-		/// Close()call, even if the same filename was used multiple times.<br /><br />
-		/// Use <code>while(!Close()){}</code> to kill all sessions using this container.<br /><br />
-		/// </remarks>
+        /// Closes this object container.
+		/// <br /><br />Calling Close() automatically performs a
+        /// <see cref="Db4objects.Db4o.IObjectContainer.Commit">Commit()</see>.
+        /// </remarks>
 		/// <returns>
-		/// success - true denotes that the last used instance of this container
-		/// and the database file were closed.
+        /// success - true denotes that the object container was closed, false if it was already closed
 		/// </returns>
 		bool Close();
 
-		/// <summary>commits the running transaction.</summary>
+        /// <summary>Commits the running transaction.</summary>
 		/// <remarks>
-		/// commits the running transaction.
-		/// <br /><br />Transactions are back-to-back. A call to commit will starts
-		/// a new transaction immedidately.
+        /// Commits the running transaction.
+		/// <br /><br />Transactions are back-to-back. A call to commit will start
+        /// a new transaction immediately.
 		/// </remarks>
 		void Commit();
 
-		/// <summary>deactivates a stored object by setting all members to <code>NULL</code>.
+        /// <summary>Deactivates a stored object by setting all members to null.
 		/// 	</summary>
-		/// <remarks>
-		/// deactivates a stored object by setting all members to <code>NULL</code>.
-		/// <br />Primitive types will be set to their default values.
-		/// Calls to this method save memory.
-		/// The method has no effect, if the passed object is not stored in the
-		/// <code>IObjectContainer</code>.<br /><br />
-		/// <code>Deactivate()</code> triggers Deactivating and Deactivated callbacks.
-		/// <br /><br />
-		/// Be aware that calling this method with a depth parameter greater than
-		/// 1 sets members on member objects to null. This may have side effects
-		/// in other places of the application.<br /><br />
+        /// <remarks>
+        /// Deactivates a stored object by setting all members to null.
+        /// <br/><br/>Primitive types will be set to their default values.
+        /// The method has no effect, if the passed object is not stored in the
+        /// object container.
+        /// <br/><br/>
+        /// Be aware that calling may have side effects, which assume that a object is filled with data.
+        /// <br/><br/>
+        /// In general you should not deactivate objects, since it makes you application more
+        /// complex and confusing.
+        /// To control the scope of objects you should use session containers
+        /// for your unit of work. Use <see cref="Ext"/>.<see cref="IExtObjectContainer.OpenSession"/>
+        /// to create a new session.
 		/// </remarks>
 		/// <seealso cref="Db4objects.Db4o.Ext.IObjectCallbacks">Using callbacks</seealso>
 		/// <seealso cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">Why activation?</seealso>
 		/// <param name="obj">the object to be deactivated.</param>
 		/// <param name="depth">
 		/// the member
-		/// <see cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">depth</see>
-		/// 
-		/// to which deactivate is to cascade.
+		/// <see cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">depth</see> 
+        /// the object-graph depth up to which object are deactivated
 		/// </param>
 		void Deactivate(object obj, int depth);
 
-		/// <summary>deletes a stored object permanently.</summary>
+        /// <summary>Deletes a stored object permanently from the database.</summary>
 		/// <remarks>
-		/// deletes a stored object permanently.
-		/// <br /><br />Note that this method has to be called <b>for every single object
-		/// individually</b>. Delete does not recurse to object members. Simple
-		/// and array member types are destroyed.
-		/// <br /><br />Object members of the passed object remain untouched, unless
-		/// cascaded deletes are
-		/// <see cref="Db4objects.Db4o.Config.IObjectClass.CascadeOnDelete">configured for the class</see>
-		/// or for
-		/// <see cref="Db4objects.Db4o.Config.IObjectField.CascadeOnDelete">one of the member fields</see>
-		/// .
-		/// <br /><br />The method has no effect, if
-		/// the passed object is not stored in the <code>IObjectContainer</code>.
-		/// <br /><br />A subsequent call to
-		/// <code>Store()</code> with the same object newly stores the object
-		/// to the <code>IObjectContainer</code>.<br /><br />
-		/// <code>Delete()</code> triggers Deleting and Deleted callbacks,
-		/// which can be also used for cascaded deletes.<br /><br />
+        /// Deletes a stored object permanently from the database.
+        /// Note that this method has to be called <b>for every single object
+        /// individually</b>. Delete does not recurs to object members. Primitives, strings
+        /// and array member types are deleted.
+        /// <br/><br/>Referenced objects of the passed object remain untouched, unless
+        /// cascaded deletes are  
+        /// <see cref="IObjectClass.CascadeOnDelete">configured for the class</see> 
+        /// or <see cref="IObjectField.CascadeOnDelete"> for member fields</see>.
+        /// <br/><br/>The method has no effect, if
+        /// the passed object is not stored in the object container.
+        /// <br/><br/>A subsequent call to
+        /// <see cref="Store"/> with the same object stores the object again in the database.<br/><br/>
 		/// </remarks>
 		/// <seealso cref="Db4objects.Db4o.Config.IObjectClass.CascadeOnDelete">Db4objects.Db4o.Config.IObjectClass.CascadeOnDelete
 		/// 	</seealso>
@@ -147,19 +124,18 @@ namespace Db4objects.Db4o
 		/// 	</seealso>
 		/// <seealso cref="Db4objects.Db4o.Ext.IObjectCallbacks">Using callbacks</seealso>
 		/// <param name="obj">
-		/// the object to be deleted from the
-		/// <code>IObjectContainer</code>.<br />
+		/// the object to be deleted from the object container.<br />
 		/// </param>
 		void Delete(object obj);
 
-		/// <summary>returns an IObjectContainer with extended functionality.</summary>
+        /// <summary>Returns an ObjectContainer with extended functionality.</summary>
 		/// <remarks>
-		/// returns an IObjectContainer with extended functionality.
-		/// <br /><br />Every IObjectContainer that db4o provides can be casted to
-		/// an IExtObjectContainer. This method is supplied for your convenience
-		/// to work without a cast.
-		/// <br /><br />The IObjectContainer functionality is split to two interfaces
-		/// to allow newcomers to focus on the essential methods.<br /><br />
+        /// Returns an ObjectContainer with extended functionality.
+        /// <br/><br/>Every ObjectContainer that db4o provides can be casted to
+        /// an ExtObjectContainer. This method is supplied for your convenience
+        /// to work without a cast.
+        /// <br/><br/>The object container functionality is split to two interfaces
+        /// to allow newcomers to focus on the essential methods.<br/><br/>
 		/// </remarks>
 		/// <returns>this, casted to IExtObjectContainer</returns>
 		Db4objects.Db4o.Ext.IExtObjectContainer Ext();
@@ -167,42 +143,22 @@ namespace Db4objects.Db4o
         /// <summary>Query-By-Example interface to retrieve objects.</summary>
         /// <remarks>
         /// Query-By-Example interface to retrieve objects.
-        /// <br /><br /><code>QueryByExample()</code> creates an
-        /// <see cref="Db4objects.Db4o.IObjectSet">IObjectSet</see>
-        /// containing
-        /// all objects in the <code>IObjectContainer</code> that match the passed
-        /// template object.<br /><br />
-        /// Calling <code>QueryByExample(null)</code> returns all objects stored in the
-        /// <code>IObjectContainer</code>.<br /><br /><br />
-        /// <b>Query Evaluation</b>
-        /// <br />All non-null members of the template object are compared against
-        /// all stored objects of the same class.
-        /// Primitive type members are ignored if they are 0 or false respectively.
-        /// <br /><br />Arrays and all supported <code>Collection</code> classes are
-        /// evaluated for containment. Differences in <code>Length/Count/Size()</code> are
-        /// ignored.
-        /// <br /><br />Consult the documentation of the IConfiguration package to
-        /// configure class-specific behaviour.<br /><br /><br />
-        /// <b>Returned Objects</b><br />
-        /// The objects returned in the
-        /// <see cref="Db4objects.Db4o.IObjectSet">IObjectSet</see>
-        /// are instantiated
-        /// and activated to the preconfigured depth of 5. The
-        /// <see cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">activation depth</see>
-        /// may be configured
-        /// <see cref="Db4objects.Db4o.Config.IConfiguration.ActivationDepth">globally</see>
-        /// or
-        /// <see cref="Db4objects.Db4o.Config.IObjectClass">individually for classes</see>
-        /// .
-        /// <br /><br />
-        /// db4o keeps track of all instantiatied objects. Queries will return
-        /// references to these objects instead of instantiating them a second time.
-        /// <br /><br />
-        /// Objects newly activated by <code>QueryByExample()</code> can respond to the Activating callback
-        /// method.
-        /// <br /><br />
+        /// <br/><br/>
+        /// QueryByExample() creates an object set containing
+        /// all objects in the database that match the passed
+        /// template object.<br/><br/>
+        /// Calling QueryByExample(null) returns all objects stored in the database.
+        /// <br/><br/>
+        /// <b>Query Evaluation:</b>
+        /// <ul><li>All non-null members of the template object are compared against
+        /// all stored objects of the same class.</li>
+        /// <li>Primitive type members are ignored if they are 0 or false respectively.</li>
+        /// <li>Arrays and  collections  are
+        /// evaluated for containment. Differences in length/size() are
+        /// ignored.</li>
+        /// </ul>
         /// </remarks>
-        /// <param name="template">object to be used as an example to find all matching objects.<br /><br />
+        /// <param name="template">object to be used as an example to find all matching objects.
         /// 	</param>
         /// <returns>
         /// 
@@ -215,166 +171,137 @@ namespace Db4objects.Db4o
 
 
 		/// <summary>
-		/// creates a new SODA
+		/// Creates a new SODA
 		/// <see cref="Db4objects.Db4o.Query.IQuery">Query</see>
-		/// .
+		/// , the low level db4o query api.
 		/// <br /><br />
-		/// Linq queries are the recommended main db4o query interface.
+		/// <b>Prefer LINQ over SODA, unless you need a specific SODA featuere</b>
 		/// <br /><br />
-		/// Use
-		/// <see cref="Db4objects.Db4o.IObjectContainer.QueryByExample">QueryByExample(Object template)</see>
-		/// for simple Query-By-Example.<br /><br />
 		/// </summary>
 		/// <returns>a new IQuery object</returns>
 		Db4objects.Db4o.Query.IQuery Query();
 
-		/// <summary>queries for all instances of a class.</summary>
-		/// <remarks>queries for all instances of a class.</remarks>
+        /// <summary>Queries for all instances of a class.</summary>
+        /// <remarks>Queries for all instances of a class.</remarks>
 		/// <param name="clazz">the class to query for.</param>
-		/// <returns>
-		/// the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// returned by the query.
+        /// <returns>all instances of the given class
 		/// </returns>
 		Db4objects.Db4o.IObjectSet Query(System.Type clazz);
 
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
-		/// Native Query Interface.
-		/// <br /><br />Native Queries allow typesafe, compile-time checked and refactorable
-		/// querying, following object-oriented principles. Native Queries expressions
-		/// are written as if one or more lines of code would be run against all
-		/// instances of a class. A Native Query expression should return true to mark
-		/// specific instances as part of the result set.
-		/// db4o will  attempt to optimize native query expressions and execute them
-		/// against indexes and without instantiating actual objects, where this is
-		/// possible.<br /><br />
-		/// Example:<br /><br />
-		/// <code>
-		/// <br />
-		/// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br />
-		/// &#160;&#160;&#160;return cat.Name == "Occam";<br />
-		/// });<br />
-		/// <br />
-		/// Summing up the above:<br />
-		/// In order to run a Native Query, you can use the delegate notation 
-	        /// with a delegate method taking the extend type as a parameter and 
-		/// returning bool. True is returned for the objects that are to be included in the result.<br />
-		/// <br /><br />
+        /// Native Query Interface.<br/><br/>
+        /// <b>Prefer LINQ over Native Queries.</b>
+        /// <br/><br/>
+        /// Make sure that you reference Db4objects.Db4o.NativeQueries.dll, Mono.Cecil.dll and Cecil.FlowAnalysis.dll in your application
+        /// when using native queries.<br/><br/>
+        /// db4o will attempt to optimize native query expressions and execute them
+        /// against indexes and without instantiating actual objects.
+        /// Otherwise db4o falls back and instantiates objects to run them against the given predicate.
+        /// That is an order of magnitude slower than a optimized native query.<br/><br/>
+        /// 
+        /// <code>
+        /// IList&lt;Cat&gt; cats = db.query(delegate(Cat) { return cat.getName().equals("Occam")}); 
+        /// </code>
+        /// 
+        /// Summing up the above:<br/>
+        /// In order to execute a Native Query, you provide a predicate delegate<br/><br/>
 		/// </remarks>
 		/// <param name="predicate">
-		/// the
-		/// <see cref="Db4objects.Db4o.Query.Predicate">Db4objects.Db4o.Query.Predicate</see>
-		/// containing the native query expression.
+		/// the predicate containing the native query expression.
 		/// </param>
 		/// <returns>
-		/// the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// returned by the query.
+		/// the query result
 		/// </returns>
 		Db4objects.Db4o.IObjectSet Query(Db4objects.Db4o.Query.Predicate predicate);
 
 		/// <summary>Native Query Interface.</summary>
-		/// <remarks>
-		/// Native Query Interface. Queries as with
-		/// <see cref="M:Db4objects.Db4o.IObjectContainer.Query(Db4objects.Db4o.Query.Predicate)">Db4objects.Db4o.IObjectContainer.Query(Predicate)</see>
-		/// ,
-		/// but will sort the resulting
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// according to the given
-		/// <see cref="Db4objects.Db4o.Query.IQueryComparator">Db4objects.Db4o.Query.IQueryComparator</see>
-		/// .
+        /// <remarks>
+        /// <b>Prefer LINQ over Native Queries.</b>
+        /// <br/><br/>
+        /// Native Query Interface. Queries as with <see cref="Query(Predicate)"/>,
+        /// but will sort the resulting result according to the given comperator.
+        /// 
 		/// </remarks>
 		/// <param name="predicate">
 		/// the
-		/// <see cref="Db4objects.Db4o.Query.Predicate">Db4objects.Db4o.Query.Predicate</see>
+		/// <see cref="Db4objects.Db4o.Query.Predicate">predicate</see>
 		/// containing the native query expression.
 		/// </param>
 		/// <param name="comparator">
 		/// the
-		/// <see cref="Db4objects.Db4o.Query.IQueryComparator">Db4objects.Db4o.Query.IQueryComparator</see>
+		/// <see cref="Db4objects.Db4o.Query.IQueryComparator">comperator</see>
 		/// specifiying the sort order of the result
 		/// </param>
-		/// <returns>
-		/// the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// returned by the query.
+        /// <returns>
+        /// the query result
 		/// </returns>
 		Db4objects.Db4o.IObjectSet Query(Db4objects.Db4o.Query.Predicate predicate, Db4objects.Db4o.Query.IQueryComparator
 			 comparator);
 
-		/// <summary>Native Query Interface.</summary>
-		/// <remarks>
-		/// Native Query Interface. Queries as with
-		/// <see cref="M:Db4objects.Db4o.IObjectContainer.Query(Db4objects.Db4o.Query.Predicate)">Db4objects.Db4o.IObjectContainer.Query(Predicate)</see>
-		/// ,
-		/// but will sort the resulting
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// according to the given
-		/// <see cref="System.Collections.IComparer">System.Collections.IComparer</see>
-		/// .
-		/// </remarks>
-		/// <param name="predicate">
-		/// the
-		/// <see cref="Db4objects.Db4o.Query.Predicate">Db4objects.Db4o.Query.Predicate</see>
-		/// containing the native query expression.
-		/// </param>
-		/// <param name="comparator">
-		/// the
-		/// <see cref="System.Collections.IComparer">System.Collections.IComparer</see>
-		/// specifiying the sort order of the result
-		/// </param>
-		/// <returns>
-		/// the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// returned by the query.
-		/// </returns>
+        /// <summary>Native Query Interface.</summary>
+        /// <remarks>
+        /// <b>Prefer LINQ over Native Queries.</b>
+        /// <br/><br/>
+        /// Native Query Interface. Queries as with <see cref="Query(Predicate)"/>,
+        /// but will sort the resulting result according to the given comperator.
+        /// 
+        /// </remarks>
+        /// <param name="predicate">
+        /// the
+        /// <see cref="Db4objects.Db4o.Query.Predicate">predicate</see>
+        /// containing the native query expression.
+        /// </param>
+        /// <param name="comparator">
+        /// the
+        /// <see cref="Db4objects.Db4o.Query.IQueryComparator">comperator</see>
+        /// specifiying the sort order of the result
+        /// </param>
+        /// <returns>
+        /// the query result
+        /// </returns>
 		Db4objects.Db4o.IObjectSet Query(Db4objects.Db4o.Query.Predicate predicate, System.Collections.IComparer comparer);
 
-		/// <summary>rolls back the running transaction.</summary>
+        /// <summary>Rolls back the running transaction.</summary>
 		/// <remarks>
-		/// rolls back the running transaction.
-		/// <br /><br />Transactions are back-to-back. A call to rollback will starts
-		/// a new transaction immedidately.
-		/// <br /><br />rollback will not restore modified objects in memory. They
-		/// can be refreshed from the database by calling
-		/// <see cref="Db4objects.Db4o.Ext.IExtObjectContainer.Refresh">Db4objects.Db4o.Ext.IExtObjectContainer.Refresh
-		/// 	</see>
-		/// .
+        /// Rolls back the running transaction.<br/><br/>
+        /// <b>This only rolls back the changes in the database, but not the state of in memory objects</b>.
+        /// <br/><br/>
+        /// 
+        /// Dealing with stale state of in memory objects after a rollback:<br/>
+        /// <ul><li>Since in memory objects are not rolled back you probably want start with a clean state.
+        /// The easiest way to do this is by creating a new object container:
+        /// <see cref="Ext"/>.<see cref="IExtObjectContainer.OpenSession"/>.
+        /// </li><li>Alternatively you can deactivate objects or <see cref="Ext"/>.<see cref="IExtObjectContainer.Refresh"/> them to get back to the state in the database.
+        /// </li><li>In case you are using transparent persistence you can use a <see cref="IRollbackStrategy"/> to rollback
+        /// the in memory objects as well. </li></ul>
 		/// </remarks>
 		void Rollback();
 
-        /// <summary>newly stores objects or updates stored objects.</summary>
+        /// <summary>Stores objects or updates stored objects..</summary>
         /// <remarks>
-        /// newly stores objects or updates stored objects.
-        /// <br /><br />An object not yet stored in the <code>IObjectContainer</code> will be
-        /// stored when it is passed to <code>Store()</code>. An object already stored
-        /// in the <code>IObjectContainer</code> will be updated.
-        /// <br /><br /><b>Updates</b><br />
-        /// - will affect all simple type object members.<br />
-        /// - links to object members that are already stored will be updated.<br />
-        /// - new object members will be newly stored. The algorithm traverses down
-        /// new members, as long as further new members are found.<br />
-        /// - object members that are already stored will <b>not</b> be updated
-        /// themselves.<br />Every object member needs to be updated individually with a
-        /// call to <code>Store()</code> unless a deep
-        /// <see cref="Db4objects.Db4o.Config.IConfiguration.UpdateDepth">global</see>
-        /// or
-        /// <see cref="Db4objects.Db4o.Config.IObjectClass.UpdateDepth">class-specific</see>
-        /// update depth was configured or cascaded updates were
-        /// <see cref="Db4objects.Db4o.Config.IObjectClass.CascadeOnUpdate">defined in the class</see>
-        /// or in
-        /// <see cref="Db4objects.Db4o.Config.IObjectField.CascadeOnUpdate">one of the member fields</see>
-        /// .
-       	/// Depending if the passed object is newly stored or updated, Creating/Created or
-       	/// Updaing/Updated callback method is triggered.
-       	/// Callbacks
-       	/// might also be used for cascaded updates.<br /><br />
+        /// Stores objects or updates stored objects.
+        /// <br/><br/>An object not yet stored in the database will be
+        /// stored. An object already stored in database will be updated.
+        /// <br/><br/>
+        /// <b>Updates:</b>
+        /// <ul>
+        /// <li>Will update all primitive types, strings and arrays of a object</li>
+        /// <li>References to other object that are already stored will be updated.</li>
+        /// <li>New object members will be stored.</li>
+        /// <li>Referenced object members that are already stored are <b>not</b> updated
+        /// themselves. Every object member needs to be updated individually with a
+        /// call to store(). Unless a deeper update depth has been configured with on of these options:
+        /// <see cref="ICommonConfiguration.UpdateDepth"/>- or
+        /// <see cref="IObjectClass.UpdateDepth">class-specific update depth</see>,
+        /// <see cref="IObjectClass.CascadeOnUpdate"> cascde on update for type</see> or
+        /// <see cref="IObjectField.CascadeOnUpdate">field</see>.</li>
+        /// </ul>
         /// </remarks>
         /// <param name="obj">the object to be stored or updated.</param>
         /// <seealso cref="Db4objects.Db4o.Ext.IExtObjectContainer.Store">IExtObjectContainer#Store(object, depth)
         /// 	</seealso>
-        /// <seealso cref="Db4objects.Db4o.Config.IConfiguration.UpdateDepth">Db4objects.Db4o.Config.IConfiguration.UpdateDepth
+        /// <seealso cref="Db4objects.Db4o.Config.IConfiguration.UpdateDepth">Db4objects.Db4o.Config.ICommonConfiguration.UpdateDepth
         /// 	</seealso>
         /// <seealso cref="Db4objects.Db4o.Config.IObjectClass.UpdateDepth">Db4objects.Db4o.Config.IObjectClass.UpdateDepth
         /// 	</seealso>
@@ -385,111 +312,91 @@ namespace Db4objects.Db4o
         /// <seealso cref="Db4objects.Db4o.Ext.IObjectCallbacks">Using callbacks</seealso>
         void Store(object obj);
 
-        /// <summary>.NET 2.0 Native Query interface.</summary>
+        /// <summary>Native Query Interface.</summary>
         /// <remarks>
-        /// Native Query Interface.
-        /// <br /><br />Native Queries allow typesafe, compile-time checked and refactorable
-        /// querying, following object-oriented principles. Native Queries expressions
-        /// are written as if one or more lines of code would be run against all
-        /// instances of a class. A Native Query expression should return true to mark
-        /// specific instances as part of the result set.
-        /// db4o will  attempt to optimize native query expressions and execute them
-        /// against indexes and without instantiating actual objects, where this is
-        /// possible.<br /><br />
-	/// Example:<br /><br />
-       	/// <code>
-       	/// <br />
-       	/// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br />
-       	/// &#160;&#160;&#160;return cat.Name == "Occam";<br />
-       	/// });<br />
-       	/// <br />
-       	/// Summing up the above:<br />
-       	/// In order to run a Native Query, you can use the delegate notation 
-               /// with a delegate method taking the extend type as a parameter and 
-       	/// returning bool. True is returned for the objects that are to be included in the result.<br />
-       	/// <br /><br />
+        /// Native Query Interface.<br/><br/>
+        /// <b>Prefer LINQ over Native Queries.</b>
+        /// <br/><br/>
+        /// Make sure that you reference Db4objects.Db4o.NativeQueries.dll, Mono.Cecil.dll and Cecil.FlowAnalysis.dll in your application
+        /// when using native queries.<br/><br/>
+        /// db4o will attempt to optimize native query expressions and execute them
+        /// against indexes and without instantiating actual objects.
+        /// Otherwise db4o falls back and instantiates objects to run them against the given predicate.
+        /// That is an order of magnitude slower than a optimized native query.<br/><br/>
+        /// 
+        /// <code>
+        /// IList&lt;Cat&gt; cats = db.query(delegate(Cat) { return cat.getName().equals("Occam")}); 
+        /// </code>
+        /// 
+        /// Summing up the above:<br/>
+        /// In order to execute a Native Query, you provide a predicate delegate<br/><br/>
         /// </remarks>
-        /// <param name="match">
-        /// use an anonymous delegate that takes a single paramter and returns
-        /// a bool value, see the syntax example above
+        /// <param name="predicate">
+        /// the predicate containing the native query expression.
         /// </param>
         /// <returns>
-        /// the
-        /// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-        /// returned by the query.
+        /// the query result
         /// </returns>
         System.Collections.Generic.IList<Extent> Query<Extent>(System.Predicate<Extent> match);
-        
-		/// <summary>Native Query Interface.</summary>
-		/// <remarks>
-		/// Native Query Interface. Queries as with
-		/// <see cref="M:Db4objects.Db4o.IObjectContainer.Query(Db4objects.Db4o.Query.Predicate)">Db4objects.Db4o.IObjectContainer.Query(Predicate)</see>
-		/// ,
-		/// but will sort the resulting
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// according to the given
-		/// <see cref="System.Collections.Generic.IComparer">System.Collections.Generic.IComparer</see>
-		/// .
-		/// </remarks>
-		/// <param name="predicate">
-		/// the
-		/// <see cref="Db4objects.Db4o.Query.Predicate">Db4objects.Db4o.Query.Predicate</see>
-		/// containing the native query expression.
-		/// </param>
-		/// <param name="comparator">
-		/// the
-		/// <see cref="System.Collections.Generic.IComparer">System.Collections.Generic.IComparer</see>
-		/// specifiying the sort order of the result
-		/// </param>
-		/// <returns>
-		/// the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// returned by the query.
-		/// </returns>
+
+        /// <summary>Native Query Interface.</summary>
+        /// <remarks>
+        /// <b>Prefer LINQ over Native Queries.</b>
+        /// <br/><br/>
+        /// Native Query Interface. Queries as with <see cref="Query(Predicate)"/>,
+        /// but will sort the resulting result according to the given comperator.
+        /// 
+        /// </remarks>
+        /// <param name="predicate">
+        /// the
+        /// <see cref="Db4objects.Db4o.Query.Predicate">predicate</see>
+        /// containing the native query expression.
+        /// </param>
+        /// <param name="comparator">
+        /// the
+        /// <see cref="Db4objects.Db4o.Query.IQueryComparator">comperator</see>
+        /// specifiying the sort order of the result
+        /// </param>
+        /// <returns>
+        /// the query result
+        /// </returns>
 		System.Collections.Generic.IList<Extent> Query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
 
-		/// <summary>Native Query Interface.</summary>
-		/// <remarks>
-		/// Native Query Interface. Queries as with
-		/// <see cref="M:Db4objects.Db4o.IObjectContainer.Query(Db4objects.Db4o.Query.Predicate)">Db4objects.Db4o.IObjectContainer.Query(Predicate)</see>
-		/// ,
-		/// but will sort the resulting
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// according to the given
-		/// <see cref="System.Comparison">System.Comparison</see>
-		/// .
-		/// </remarks>
-		/// <param name="predicate">
-		/// the
-		/// <see cref="Db4objects.Db4o.Query.Predicate">Db4objects.Db4o.Query.Predicate</see>
-		/// containing the native query expression.
-		/// </param>
-		/// <param name="comparator">
-		/// the
-		/// <see cref="System.Comparison">System.Comparison</see>
-		/// specifiying the sort order of the result
-		/// </param>
-		/// <returns>
-		/// the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// returned by the query.
-		/// </returns>
+        /// <summary>Native Query Interface.</summary>
+        /// <remarks>
+        /// <b>Prefer LINQ over Native Queries.</b>
+        /// <br/><br/>
+        /// Native Query Interface. Queries as with <see cref="Query(Predicate)"/>,
+        /// but will sort the resulting result according to the given comperator.
+        /// 
+        /// </remarks>
+        /// <param name="predicate">
+        /// the
+        /// <see cref="Db4objects.Db4o.Query.Predicate">predicate</see>
+        /// containing the native query expression.
+        /// </param>
+        /// <param name="comparator">
+        /// the
+        /// <see cref="Db4objects.Db4o.Query.IQueryComparator">comperator</see>
+        /// specifiying the sort order of the result
+        /// </param>
+        /// <returns>
+        /// the query result
+        /// </returns>
 		System.Collections.Generic.IList<Extent> Query<Extent>(System.Predicate<Extent> match, System.Comparison<Extent> comparison);
 
 		/// <summary>
-		/// queries for all instances of the type extent, returning
-		/// a IList of ElementType which must be assignable from
-		/// extent.
+		/// Queries for all instances of the given type
 		/// </summary>
 		System.Collections.Generic.IList<ElementType> Query<ElementType>(System.Type extent);
-		
-		/// <summary>
-		/// queries for all instances of the type extent.
+
+        /// <summary>
+        /// Queries for all instances of the given generic argument
 		/// </summary>
 		System.Collections.Generic.IList<Extent> Query<Extent>();
 
 		/// <summary>
-		/// queries for all instances of the type extent sorting with the specified comparer.
+		/// Queries for all instances of the given type sorting with the specified comparer.
 		/// </summary>
 		System.Collections.Generic.IList<Extent> Query<Extent>(System.Collections.Generic.IComparer<Extent> comparer);
 	}
