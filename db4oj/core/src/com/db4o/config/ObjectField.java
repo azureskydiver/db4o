@@ -83,14 +83,14 @@ public interface ObjectField {
 	 * or not an index on a field achieves the desired result is the completed application
 	 * - with a data load that is typical for it's use.<br/><br/>This configuration setting
 	 * is only checked when the {@link com.db4o.ObjectContainer} is opened. If the
-	 * setting is set to <code>true</code> and an index does not exist, the index will be
-	 * created. If the setting is set to <code>false</code> and an index does exist the
+	 * setting is set to true and an index does not exist, the index will be
+	 * created. If the setting is set to false and an index does exist the
 	 * index will be dropped.<br/><br/>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br/><br/>
      * If this setting is applied to an open ObjectContainer it will take an effect on the next
      * time ObjectContainer is opened.<br/><br/>
-	 * @param flag specify <code>true</code> or <code>false</code> to turn indexing on for
+	 * @param flag specify true or false to turn indexing on for
 	 * this field
 	 */
 	public void indexed(boolean flag);

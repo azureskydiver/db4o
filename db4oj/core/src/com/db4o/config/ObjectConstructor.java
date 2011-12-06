@@ -11,7 +11,7 @@ import com.db4o.ObjectContainer;
  * define which constructor is to be used during the instantiation of a stored object.
  * <br><br>
  * Before starting a db4o session, translator classes that implement the 
- * <code>ObjectConstructor</code> or 
+ * ObjectConstructor or
  * {@link ObjectTranslator ObjectTranslator}
  * need to be registered.<br><br>
  * Example:<br>

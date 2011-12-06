@@ -295,8 +295,7 @@ public interface Configuration {
      * be modified any further in the future.<br><br>
      * In a client/server environment this setting should be configured both on the 
      * client and and on the server.
-     * <br><br>Default value:<br>
-     * <code>true</code>
+     * <br><br>Default value: true
      * @param flag the desired setting
      */
     public void detectSchemaChanges(boolean flag);
@@ -489,9 +488,9 @@ public interface Configuration {
      * database file immediately.<br><br> This method
      * has no effect on open ObjectContainers. It will only affect how
      * ObjectContainers are opened.<br><br>
-     * The default setting is <code>true</code>.<br><br>
+     * The default setting is true.<br><br>
      * In client-server environment this setting should be used on both client and server.<br><br>  
-     * @param flag <code>false</code> to turn database file locking off.
+     * @param flag false to turn database file locking off.
      */
     public void lockDatabaseFile(boolean flag);
 
@@ -517,7 +516,7 @@ public interface Configuration {
      * optimization (db4o-X.x-nqopt.jar, bloat-X.x.jar) have to be 
      * on the classpath at runtime for this
      * switch to have effect. 
-     * <br><br>The default setting is <code>true</code>.<br><br>
+     * <br><br>The default setting is true.<br><br>
      * In client-server environment this setting should be used on both client and server.<br><br>  
      * @param optimizeNQ true, if db4o should try to optimize
      * native queries at query execution time, false otherwise
@@ -563,8 +562,8 @@ public interface Configuration {
      * for deploying db4o database files on CD-ROM.<br><br>
      * In client-server environment this setting should be used on the server side 
      * in embedded mode and ONLY on client side in networked mode.<br><br>
-     * @param flag <code>true</code> for configuring readOnly mode for subsequent
-     * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
+     * @param flag true for configuring readOnly mode for subsequent
+     * calls to {@link com.db4o.Db4oEmbedded#openFile Db4o.openFile()}.
      */
     public void readOnly(boolean flag);
     
@@ -576,7 +575,7 @@ public interface Configuration {
      * instead of throwing exceptions.<br><br>
      * Use this method with care as a last resort to get data out of a
      * corrupted database.
-     * @param flag <code>true</code> to turn recover mode on.
+     * @param flag true to turn recover mode on.
      */
     public void recoveryMode(boolean flag);
 
@@ -636,7 +635,7 @@ public interface Configuration {
      * console.<br><br>
      * In client-server environment this setting should be used on the same side
      * where {@link Configuration#messageLevel(int)} is used.<br><br>
-     * @param outStream the new <code>PrintStream</code> for messages.
+     * @param outStream the new PrintStream for messages.
      * @see #messageLevel
      */
     public void setOut(PrintStream outStream);
@@ -663,13 +662,12 @@ public interface Configuration {
     /**
      * tuning feature: configures whether db4o should try to instantiate one instance
      * of each persistent class on system startup.
-     * <br><br>In a production environment this setting can be set to <code>false</code>,
+     * <br><br>In a production environment this setting can be set to false,
      * if all persistent classes have public default constructors.
      * <br><br>
      * In client-server environment this setting should be used on both client and server
      * side. <br><br>
-     * Default value:<br>
-     * <code>true</code>
+     * Default value: true
      * @param flag the desired setting
      */
     public void testConstructors(boolean flag);
@@ -702,10 +700,10 @@ public interface Configuration {
      * memory consumption or by alternatively implementing a manual
      * memory management scheme using 
      * {@link com.db4o.ext.ExtObjectContainer#purge(java.lang.Object)}
-     * <br><br>Setting the value to <code>false</code> causes db4o to use hard
+     * <br><br>Setting the value to false causes db4o to use hard
      * references to objects, preventing the garbage collection process 
      * from disposing of unused objects.
-     * <br><br>The default setting is <code>true</code>.
+     * <br><br>The default setting is true.
      */
     public void weakReferences(boolean flag);
     

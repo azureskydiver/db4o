@@ -256,7 +256,7 @@ public interface ObjectClass {
 
     /**
 	 * allows to specify if transient fields are to be stored.
-	 * <br>The default for every class is <code>false</code>.<br><br>
+	 * <br>The default for every class is false.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * This setting can be applied to an open object container. <br><br>

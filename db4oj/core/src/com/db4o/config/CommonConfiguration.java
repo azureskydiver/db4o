@@ -223,8 +223,7 @@ public interface CommonConfiguration {
      * be modified any further in the future.<br><br>
      * In a client/server environment it is good practice to configure the
      * client and the server in exactly the same way. 
-     * <br><br>Default value:<br>
-     * <code>true</code>
+     * <br><br>Default value: true
      * @param flag the desired setting
      * 
      * @sharpen.property
@@ -333,7 +332,7 @@ public interface CommonConfiguration {
      * optimization (db4o-X.x-nqopt.jar, bloat-X.x.jar) have to be 
      * on the classpath at runtime for this
      * switch to have effect. 
-     * <br><br>The default setting is <code>true</code>.<br><br>
+     * <br><br>The default setting is true.<br><br>
      * In a client/server environment it is good practice to configure the
      * client and the server in exactly the same way. <br><br>  
      * @param optimizeNQ true, if db4o should try to optimize
@@ -383,7 +382,7 @@ public interface CommonConfiguration {
      * console.<br><br>
      * In client-server environment this setting should be used on the same side
      * where {@link Configuration#messageLevel(int)} is used.<br><br>
-     * @param outStream the new <code>PrintStream</code> for messages.
+     * @param outStream the new PrintStream for messages.
      * @see #messageLevel
      * 
      * @sharpen.property
@@ -414,13 +413,12 @@ public interface CommonConfiguration {
     /**
      * tuning feature: configures whether db4o should try to instantiate one instance
      * of each persistent class on system startup.
-     * <br><br>In a production environment this setting can be set to <code>false</code>,
+     * <br><br>In a production environment this setting can be set to false,
      * if all persistent classes have public default constructors.
      * <br><br>
      * In a client/server environment it is good practice to configure the
      * client and the server in exactly the same way. <br><br>
-     * Default value:<br>
-     * <code>true</code>
+     * Default value: true
      * @param flag the desired setting
      * 
      * @sharpen.property
@@ -457,10 +455,10 @@ public interface CommonConfiguration {
      * memory consumption or by alternatively implementing a manual
      * memory management scheme using 
      * {@link com.db4o.ext.ExtObjectContainer#purge(java.lang.Object)}
-     * <br><br>Setting the value to <code>false</code> causes db4o to use hard
+     * <br><br>Setting the value to false causes db4o to use hard
      * references to objects, preventing the garbage collection process 
      * from disposing of unused objects.
-     * <br><br>The default setting is <code>true</code>.
+     * <br><br>The default setting is true.
      * 
      * @sharpen.property
      */

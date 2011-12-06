@@ -2,11 +2,14 @@
 
 package com.db4o.config;
 
-import java.io.*;
+import com.db4o.ext.DatabaseReadOnlyException;
+import com.db4o.foundation.NotSupportedException;
+import com.db4o.io.CachingStorage;
+import com.db4o.io.FileStorage;
+import com.db4o.io.MemoryStorage;
+import com.db4o.io.Storage;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.io.*;
+import java.io.IOException;
 
 /**
  * File-related configuration methods, applicable 
@@ -177,8 +180,8 @@ public interface FileConfiguration {
      * database file immediately.<br><br> This method
      * has no effect on open ObjectContainers. It will only affect how
      * ObjectContainers are opened.<br><br>
-     * The default setting is <code>true</code>.<br><br>
-     * @param flag <code>false</code> to turn database file locking off.
+     * The default setting is true.<br><br>
+     * @param flag false to turn database file locking off.
      * 
      * @sharpen.property
      */
@@ -225,7 +228,7 @@ public interface FileConfiguration {
      * <br><br>Readonly mode allows to open an unlimited number of reading
      * processes on one database file. It is also convenient
      * for deploying db4o database files on CD-ROM.<br><br>
-     * @param flag <code>true</code> for configuring readOnly mode for subsequent
+     * @param flag true for configuring readOnly mode for subsequent
      * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
      * 
      * TODO: this is rather embedded + client than base?
@@ -243,7 +246,7 @@ public interface FileConfiguration {
      * instead of throwing exceptions.<br><br>
      * Use this method with care as a last resort to get data out of a
      * corrupted database.
-     * @param flag <code>true</code> to turn recover mode on.
+     * @param flag true to turn recover mode on.
      * 
      * @sharpen.property
      */

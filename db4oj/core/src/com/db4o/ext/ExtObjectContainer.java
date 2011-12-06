@@ -14,7 +14,7 @@ import com.db4o.ta.*;
  * extended functionality for the
  * {@link com.db4o.ObjectContainer ObjectContainer} interface.
  * <br><br>Every db4o {@link com.db4o.ObjectContainer ObjectContainer}
- * always is an <code>ExtObjectContainer</code> so a cast is possible.<br><br>
+ * always is an ExtObjectContainer so a cast is possible.<br><br>
  * {@link com.db4o.ObjectContainer#ext ObjectContainer.ext()}
  * is a convenient method to perform the cast.<br><br>
  * The ObjectContainer functionality is split to two interfaces to allow newcomers to
@@ -132,8 +132,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
      * @param ID the internal ID
-     * @return the object associated with the passed ID or <code>null</code>, 
-     * if no object is associated with this ID in this <code>ObjectContainer</code>.
+     * @return the object associated with the passed ID or null,
+     * if no object is associated with this ID in this ObjectContainer.
      * @see com.db4o.config.CommonConfiguration#activationDepth Why activation?
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws InvalidIDException when an invalid id is passed
@@ -159,7 +159,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * returns the internal unique object ID.
      * <br><br>db4o assigns an internal ID to every object that is stored. IDs are 
-     * guaranteed to be unique within one <code>ObjectContainer</code>. 
+     * guaranteed to be unique within one ObjectContainer. 
      * An object carries the same ID in every db4o session. Internal IDs can 
      * be used to look up objects with the very fast 
      * {@link #getByID getByID} method.<br><br>
@@ -169,14 +169,14 @@ public interface ExtObjectContainer extends ObjectContainer {
      * objects.<br><br>  
      * @param obj any object
      * @return the associated internal ID or <code>0</code>, if the passed
-     * object is not stored in this <code>ObjectContainer</code>.
+     * object is not stored in this ObjectContainer.
      */
     public long getID(Object obj);
     
     /**
      * returns the {@link ObjectInfo} for a stored object.
      * <br><br>This method will return null, if the passed
-     * object is not stored to this <code>ObjectContainer</code>.<br><br>
+     * object is not stored to this ObjectContainer.<br><br>
      * @param obj the stored object 
      * @return the {@link ObjectInfo} 
      */
@@ -190,10 +190,10 @@ public interface ExtObjectContainer extends ObjectContainer {
 
     /**
      * tests if an object is activated.
-     * <br><br><code>isActive</code> returns <code>false</code> if an object is not
-     * stored within the <code>ObjectContainer</code>.<br><br>
+     * <br><br>isActive returns false if an object is not
+     * stored within the ObjectContainer.<br><br>
      * @param obj to be tested<br><br>
-     * @return <code>true</code> if the passed object is active.
+     * @return true if the passed object is active.
      */
     public boolean isActive(Object obj);
 
@@ -205,17 +205,17 @@ public interface ExtObjectContainer extends ObjectContainer {
     public boolean isCached(long ID);
 
     /**
-     * tests if this <code>ObjectContainer</code> is closed.
+     * tests if this ObjectContainer is closed.
      * <br><br>
-     * @return <code>true</code> if this <code>ObjectContainer</code> is closed.
+     * @return true if this ObjectContainer is closed.
      */
     public boolean isClosed();
 
     /**
-     * tests if an object is stored in this <code>ObjectContainer</code>.
+     * tests if an object is stored in this ObjectContainer.
      * <br><br>
      * @param obj to be tested<br><br>
-     * @return <code>true</code> if the passed object is stored.
+     * @return true if the passed object is stored.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public boolean isStored(Object obj) throws DatabaseClosedException;
@@ -254,7 +254,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	 * to the values that are currently stored to the database.  
 	 * <br><br>
 	 * The returned objects have no connection to the database.<br><br> 
-	 * With the <code>committed</code> parameter it is possible to specify,
+	 * With the committed parameter it is possible to specify,
 	 * whether the desired object should contain the committed values or the
 	 * values that were set by the running transaction with 
 	 * {@link ObjectContainer#store(java.lang.Object)}.
@@ -282,9 +282,9 @@ public interface ExtObjectContainer extends ObjectContainer {
      * <br><br>db4o keeps references to all newly stored and 
      * instantiated objects in memory, to be able to manage object identities. 
      * <br><br>With calls to this method it is possible to remove an object from the
-     * reference mechanism.<br>An object removed with  <code>purge(Object)</code> is not
-     * "known" to the <code>ObjectContainer</code> afterwards, so this method may also be
-     * used to create multiple copies of  objects.<br><br> <code>purge(Object)</code> has
+     * reference mechanism.<br>An object removed with  purge(Object) is not
+     * "known" to the ObjectContainer afterwards, so this method may also be
+     * used to create multiple copies of  objects.<br><br> purge(Object) has
      * no influence on the persistence state of objects. "Purged" objects can be
      * reretrieved with queries.<br><br>
      * @param obj the object to be removed from the reference mechanism.
@@ -363,9 +363,9 @@ public interface ExtObjectContainer extends ObjectContainer {
      * transactions to release the semaphore. The parameter may be zero, if
      * the method is to return immediately. 
      * @return boolean flag 
-     * <br><code>true</code>, if the semaphore could be set or if the 
+     * <br>true, if the semaphore could be set or if the
      * calling transaction already owned the semaphore.
-     * <br><code>false</code>, if the semaphore is owned by another
+     * <br>false, if the semaphore is owned by another
      * transaction.
      */
     public boolean setSemaphore(String name, int waitForAvailability);

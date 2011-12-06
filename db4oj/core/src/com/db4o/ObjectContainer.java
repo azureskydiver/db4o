@@ -111,8 +111,7 @@ public interface ObjectContainer {
 	 * @see com.db4o.config.ObjectClass#cascadeOnDelete
 	 * @see com.db4o.config.ObjectField#cascadeOnDelete
 	 * @see ObjectCallbacks Using callbacks
-     * @param obj the object to be deleted from the
-     * <code>ObjectContainer</code>.<br>
+     * @param obj the object to be deleted from the object container
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws DatabaseReadOnlyException database was configured as read-only.

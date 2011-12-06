@@ -21,11 +21,11 @@ public interface FreespaceConfiguration {
      * number of updates or deletes have been executed, the lists can become large, causing
      * RAM consumption and performance loss for maintenance. With this method you can 
      * specify an upper bound for the byte slot size to discard. 
-     * <br><br>Pass <code>Integer.MAX_VALUE</code> to this method to discard all free slots for
+     * <br><br>Pass Integer.MAX_VALUE to this method to discard all free slots for
      * the best possible startup time.<br><br>
      * The downside of setting this value: Database files will necessarily grow faster. 
      * <br><br>Default value:<br>
-     * <code>0</code> all space is reused
+     * 0 all space is reused
      * @param byteCount Slots with this size or smaller will be lost.
      */
     public void discardSmallerThan(int byteCount);
