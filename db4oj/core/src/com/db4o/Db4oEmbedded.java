@@ -65,7 +65,7 @@ public class Db4oEmbedded {
 	}
 	
 	/**
-	 * Same as calling {@link #openFile(EmbeddedConfiguration, String)} with a fresh configuration ({@link #newConfiguration()}).
+	 * Same (from java) as calling {@link #openFile(EmbeddedConfiguration, String)} with a fresh configuration ({@link #newConfiguration()}).
 	 * @param databaseFileName an absolute or relative path to the database file
 	 * @see #openFile(EmbeddedConfiguration, String)
 	 */
