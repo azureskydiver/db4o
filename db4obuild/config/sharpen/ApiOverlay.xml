@@ -20,10 +20,14 @@
 			<summary>Factory class to open db4o instances in embedded
 				mode.</summary>
 			<remarks> Factory class to open db4o instances in embedded mode.
+                <br/>
+                <br/>
+                Use Db4objects.Db4o.CS.Db4oClientServer in
+				Db4objects.Db4o.CS.dll for opening db4o servers and db4o
+				clients.
+
 			</remarks>
-			<seealso cref="Db4objects.Db4o.CS.Db4oClientServer"> Db4objects.Db4o.CS.Db4oClientServer in
-				Db4objects.Db4o.CS.dll for methods to open db4o servers and db4o
-				clients.</seealso>
+			<seealso cref="Db4objects.Db4o.CS.Db4oClientServer">Db4objects.Db4o.CS.Db4oClientServer</seealso>
 			<since>7.5</since>
 		</doc>
 		<member name="OpenFile(IEmbeddedConfiguration, string)">
@@ -40,12 +44,6 @@
 					against the same file will result in a
 					<see cref="Db4objects.Db4o.Ext.DatabaseFileLockedException"> DatabaseFileLockedException</see>
 					.
-					<br />
-					<br />
-					Database files can only be accessed for readwrite access from one
-					process at one time. All versions except for db4o mobile edition
-					use an internal mechanism to lock the database file for other
-					processes.
 					<br />
 					<br />
 				</summary>
@@ -285,8 +283,7 @@
 				Diagnostic listeners can be be added and removed with calls to this
 				interface. To install the most basic listener call:
 				<br />
-				<code>commonConfig.Diagnostic.AddListener(new
-					DiagnosticToConsole());</code>
+				<code>commonConfig.Diagnostic.AddListener(new DiagnosticToConsole());</code>
 			</remarks>
 			<seealso cref="IConfiguration.Diagnostic">IConfiguration.Diagnostic
 			</seealso>
@@ -325,9 +322,7 @@
 				<br />
 				<br />
 				<code>
-					DefragmentConfig config=new
-					DefragmentConfig("sample.yap","sample.bap",new
-					BTreeIDMapping("sample.map"));
+					DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new BTreeIDMapping("sample.map"));
 					<br />
 					config.ForceBackupDelete(true);
 					<br />
@@ -370,8 +365,7 @@
         By writing classes that implement this interface, it is possible to
         define which constructor is to be used during the instantiation of a stored object.
         <br /><br />
-        Before starting a db4o session, translator classes that implement the
-        <code>ObjectConstructor</code> or
+        Before starting a db4o session, translator classes that implement the ObjectConstructor or
         <see cref="IObjectTranslator">IObjectTranslator</see>
         need to be registered.<br /><br />
         Example:<br />

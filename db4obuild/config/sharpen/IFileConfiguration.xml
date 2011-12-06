@@ -14,7 +14,7 @@
 		database file immediately.<br /><br /> This method
 		has no effect on open ObjectContainers. It will only affect how
 		ObjectContainers are opened.<br /><br />
-		The default setting is <code>true</code>.<br /><br />
+		The default setting is true.<br /><br />
 		
 		</remarks>
 	    </doc>

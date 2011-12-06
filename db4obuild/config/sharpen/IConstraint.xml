@@ -26,9 +26,9 @@
 	be merged, to construct combined evaluation rules.
 	Examples:
 	<ul>
-	<li> <code>Constraint.Smaller().Equal()</code> for "smaller or equal" </li>
-	<li> <code>Constraint.Not().Like()</code> for "not like" </li>
-	<li> <code>Constraint.Not().Greater().Equal()</code> for "not greater or equal" </li>
+	<li> Constraint.Smaller().Equal() for "smaller or equal" </li>
+	<li> Constraint.Not().Like() for "not like" </li>
+	<li> Constraint.Not().Greater().Equal() for "not greater or equal" </li>
 	</ul>
 	</summary>
 </doc>
@@ -38,8 +38,8 @@
 		 <remarks>
 		 links two Constraints for AND evaluation.
 		 For example:<br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("points").Constrain(101).Smaller().And(query.Descend("name").Constrain("Test Pilot0"));	</code><br />
+		 <code>query.Constrain(typeof(Pilot));
+		 query.Descend("points").Constrain(101).Smaller().And(query.Descend("name").Constrain("Test Pilot0"));	</code><br />
 		 will retrieve all pilots with points less than 101 and name as "Test Pilot0"<br />
 		 </remarks>
 		 <param name="with">
@@ -64,8 +64,8 @@
 		 <remarks>
 		 links two Constraints for OR evaluation.
 		 For example:<br /><br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("points").Constrain(101).Greater().Or(query.Descend("name").Constrain("Test Pilot0"));</code><br />
+		 <code>query.Constrain(typeof(Pilot));<br/>
+         query.Descend("points").Constrain(101).Greater().Or(query.Descend("name").Constrain("Test Pilot0"));</code><br />
 		 will retrieve all pilots with points more than 101 or pilots with the name "Test Pilot0"<br />
 		 </remarks>
 		 <param name="with">
