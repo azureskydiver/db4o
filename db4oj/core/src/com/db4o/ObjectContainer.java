@@ -51,7 +51,7 @@ public interface ObjectContainer {
      *  @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 *  @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
-    public void activate (Object obj, int depth) throws Db4oIOException, DatabaseClosedException;
+    public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException;
     
     /**
      * Closes the ObjectContainer.
@@ -60,7 +60,7 @@ public interface ObjectContainer {
      * @return success - true denotes that the object container was closed, false if it was already closed
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      */
-	public boolean close () throws Db4oIOException;
+	public boolean close() throws Db4oIOException;
 
     /**
      * Commits the running transaction.
@@ -70,7 +70,7 @@ public interface ObjectContainer {
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws DatabaseReadOnlyException database was configured as read-only.
      */
-    public void commit () throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
+    public void commit() throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
 
     /**
@@ -155,6 +155,7 @@ public interface ObjectContainer {
     
     /**
      * Creates a new S.O.D.A. {@link Query Query}.
+     * <b>NOTE: Soda queries silently ignore invalid specified fields, constraints etc.</b>
      * <br><br>
      * {@link #query(Predicate) Native queries } are the recommended main db4o query
      * interface. 

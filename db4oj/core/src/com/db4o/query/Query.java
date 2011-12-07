@@ -2,17 +2,19 @@
 
 package  com.db4o.query;
 
-import java.util.*;
+import com.db4o.ObjectSet;
+import com.db4o.ta.Activatable;
+import com.db4o.ta.TransparentActivationSupport;
 
-import com.db4o.*;
-import com.db4o.ta.*;
+import java.util.Comparator;
 
 
 /**
- * handle to a node in a S.O.D.A. query graph.
+ * Handle to a node in a S.O.D.A. query graph.
+ * <b>NOTE: Soda queries silently ignore invalid specified fields, constraints etc.</b>
  * <br/><br/>
- * A node in the query graph can represent multiple 
- * classes, one class or an attribute of a class.<br/><br/>The graph 
+ * A node in the query graph can represent a
+ * class or an attribute of a class.<br/><br/>The graph
  * is automatically extended with attributes of added constraints 
  * (see {@link #constrain(Object)}) and upon calls to  {@link #descend(java.lang.String)} that request nodes that do not yet exist.
  * <br/><br/>
@@ -28,14 +30,14 @@ import com.db4o.ta.*;
  * objects of the class/classes that the node, it was called from,
  * represents.<br/><br/>
  * <b>Note:<br/>
- * {@link Predicate Native queries} are the recommended main query 
+ * {@link com.db4o.ObjectContainer#query(Predicate)}  Native queries} are the recommended main query
  * interface of db4o.</b> 
  */
 public interface Query {
 
 
     /**
-	 * adds a constraint to this node.
+	 * Adds a constraint to this node.
 	 * <br/><br/>
 	 * If the constraint contains attributes that are not yet
 	 * present in the query graph, the query graph is extended
@@ -45,19 +47,19 @@ public interface Query {
 	 * <ul>
 	 * <li> class {@link Class}: confine the result to objects of one
 	 * class or to objects implementing an interface.</li>
-	 * <li> interface {@link Evaluation}: run
+	 * <li> {@link Evaluation}-instance: run
 	 * evaluation callbacks against all candidates.</li>
 	 * </ul>
      * @param constraint the constraint to be added to this Query.
-     * @return {@link Constraint} a new {@link Constraint} for this
-     * query node or <code>null</code> for objects implementing the 
+     * @return a new {@link Constraint} for this
+     * query node or null for objects implementing the
      * {@link Evaluation} interface.
      */
-    public Constraint constrain (Object constraint);
+    public Constraint constrain(Object constraint);
 
     
     /**
-     * returns a {@link Constraints}
+     * Returns a {@link Constraints}
      * object that holds an array of all constraints on this node.
      * @return {@link Constraints} on this query node.
      */
@@ -65,7 +67,7 @@ public interface Query {
 
 
     /**
-	 * returns a reference to a descendant node in the query graph.
+	 * Returns a reference to a descendant node in the query graph.
 	 * <br/><br/>If the node does not exist, it will be created.
 	 * <br/><br/>
 	 * All classes represented in the query node are tested, whether
@@ -75,18 +77,18 @@ public interface Query {
      * @param fieldName path to the descendant.
      * @return descendant {@link Query} node
      */
-    public Query descend (String fieldName);
+    public Query descend(String fieldName);
 
 
     /**
-	 * executes the {@link Query}.
+	 * Executes the {@link Query}.
      * @return {@link ObjectSet} - the result of the {@link Query}.
      */
-    public <T> ObjectSet<T> execute ();
+    public <T> ObjectSet<T> execute();
 
     
     /**
-	 * adds an ascending ordering criteria to this node of the query graph. 
+	 * Adds an ascending ordering criteria to this node of the query graph.
 	 * <p>
 	 * If multiple ordering criteria are applied, the chronological
 	 * order of method calls is relevant: criteria created by 'earlier' calls are
@@ -104,17 +106,17 @@ public interface Query {
 	 * </p>
      * @return this {@link Query} object to allow the chaining of method calls.
      */
-    public Query orderAscending ();
+    public Query orderAscending();
 
 
     /**
-	 * adds a descending order criteria to this node of
+	 * Adds a descending order criteria to this node of
 	 * the query graph. 
 	 * <br/><br/>
 	 * For semantics of multiple calls setting ordering criteria, see {@link #orderAscending()}.
      * @return this {@link Query} object to allow the chaining of method calls.
      */
-    public Query orderDescending ();
+    public Query orderDescending();
     
     /**
      * Sort the resulting ObjectSet by the given comparator.
