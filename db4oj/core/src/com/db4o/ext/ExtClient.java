@@ -8,7 +8,7 @@ package com.db4o.ext;
  * {@link ExtObjectContainer ExtObjectContainer} interface.
  * <br><br>Both 
  * {@link com.db4o.Db4oClientServer#openClient Db4oClientServer.openClient()} methods always
- * return an <code>ExtClient</code> object so a cast is possible.<br><br>
+ * return an ExtClient object so a cast is possible.<br><br>
  * The ObjectContainer functionality is split into multiple interfaces to allow newcomers to
  * focus on the essential methods.
  */

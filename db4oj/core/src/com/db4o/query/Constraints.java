@@ -3,7 +3,7 @@
 package com.db4o.query;
 
 /**
- * set of {@link Constraint} objects.
+ * A set of {@link Constraint} objects.
  * <br><br>This extension of the {@link Constraint} interface allows
  * setting the evaluation mode of all contained {@link Constraint}
  * objects with single calls.
