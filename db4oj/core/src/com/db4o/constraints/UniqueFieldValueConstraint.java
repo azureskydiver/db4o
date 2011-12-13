@@ -12,8 +12,13 @@ import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
 
 /**
- * Configures a field of a class to allow unique values only. In C/S mode, this configuration
- * should be set on the server side only.
+ * Configures a field of a class to allow unique values only.
+ * In C/S mode, add this configuration-item to the server side only.
+ *
+ * <b>You need to turn on indexing for the given field, otherwise the unique constrain won't work.</b>
+ *
+ *
+ * Add this to your configuration with {@link CommonConfiguration#add(com.db4o.config.ConfigurationItem)}
  */
 public class UniqueFieldValueConstraint implements ConfigurationItem {
 	
@@ -53,7 +58,7 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 				while(i.moveNext()){					
 					final ObjectInfo objectInfo = (ObjectInfo) i.current();
 		
-					if (reflectClass() != reflectorFor(trans, objectInfo.getObject()))
+					if (!reflectClass().isAssignableFrom(reflectorFor(trans, objectInfo.getObject())))
 						continue;
 					
 					final Object obj = objectFor(trans, objectInfo);
