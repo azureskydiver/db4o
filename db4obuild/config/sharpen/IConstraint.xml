@@ -5,67 +5,54 @@
   <type name="Db4objects.Db4o.Query.IConstraint">
     <doc>
 	<summary>
-	constraint to limit the objects returned upon
-	<see cref="Db4objects.Db4o.Query.IQuery.Execute">query execution</see>
-	.
-	<br /><br />
-	Constraints are constructed by calling
-	<see cref="Db4objects.Db4o.Query.IQuery.Constrain">Db4objects.Db4o.Query.IQuery.Constrain
-		</see>
-	.
-	<br /><br />
-	Constraints can be joined with the methods
-	<see cref="Db4objects.Db4o.Query.IConstraint.And">Db4objects.Db4o.Query.IConstraint.And
-		</see>
-	and
-	<see cref="Db4objects.Db4o.Query.IConstraint.Or">Db4objects.Db4o.Query.IConstraint.Or
-		</see>
-	.
-	<br /><br />
-	The methods to modify the constraint evaluation algorithm may
-	be merged, to construct combined evaluation rules.
-	Examples:
-	<ul>
-	<li> Constraint.Smaller().Equal() for "smaller or equal" </li>
-	<li> Constraint.Not().Like() for "not like" </li>
-	<li> Constraint.Not().Greater().Equal() for "not greater or equal" </li>
-	</ul>
+        Constraint to limit the objects returned upon <see cref="IQuery.Execute">query execution</see>.
+        <br/><br/>
+        Constraints are constructed by calling <see cref="IQuery.Constrain">query execution</see>
+        <br/><br/>
+        Constraints can be joined with the methods <see cref="And"/>
+        and <see cref="Or"/>.
+        <br/><br/>
+        The methods to modify the constraint evaluation algorithm may
+        be merged, to construct combined evaluation rules.
+        Examples:
+        <ul>
+          <li>For "smaller or equal": <pre>Constraint.Smaller().Equal()</pre>  </li>
+          <li>For "not like": <pre>Constraint.Not().Like()</pre> </li>
+          <li>For "not greater or equal": <pre>Constraint.Not().Greater().Equal()</pre> </li>
+        </ul>
 	</summary>
 </doc>
 	<member name="And(IConstraint)">
 		<doc>
-		 <summary>links two Constraints for AND evaluation.</summary>
+		 <summary>Links two Constraints for AND evaluation.</summary>
 		 <remarks>
-		 links two Constraints for AND evaluation.
+             Links two Constraints for AND evaluation.
 		 For example:<br />
-		 <code>query.Constrain(typeof(Pilot));
-		 query.Descend("points").Constrain(101).Smaller().And(query.Descend("name").Constrain("Test Pilot0"));	</code><br />
-		 will retrieve all pilots with points less than 101 and name as "Test Pilot0"<br />
+		 <code> 
+  query.Constrain(typeof(Pilot));
+ query.Descend("points").Constrain(101).Smaller().And(query.Descend("name").Constrain("John"));	</code><br />
+		 will retrieve all pilots with points less than 101 and name as "John"<br />
 		 </remarks>
 		 <param name="with">
 		 the other
 		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
 		 </param>
 		 <returns>
-		 a new
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 , that can be used for further calls
-		 to
-		 <see cref="Db4objects.Db4o.Query.IConstraint.And">And</see>
-		 and
-		 <see cref="Db4objects.Db4o.Query.IConstraint.Or">Or</see>
+             a new constrain, that can be used for further calls
+          	 to <see cref="And"/> and <see cref="Or"/>
 		 </returns>
 
 		</doc>
 	</member>
 	<member name="Or(IConstraint)">
 		<doc>
-		 <summary>links two Constraints for OR evaluation.</summary>
+		 <summary>Links two Constraints for OR evaluation.</summary>
 		 <remarks>
 		 links two Constraints for OR evaluation.
 		 For example:<br /><br />
-		 <code>query.Constrain(typeof(Pilot));<br/>
-         query.Descend("points").Constrain(101).Greater().Or(query.Descend("name").Constrain("Test Pilot0"));</code><br />
+		 <code> 
+  query.Constrain(typeof(Pilot));
+ query.Descend("points").Constrain(101).Greater().Or(query.Descend("name").Constrain("Test Pilot0"));</code><br />
 		 will retrieve all pilots with points more than 101 or pilots with the name "Test Pilot0"<br />
 		 </remarks>
 		 <param name="with">
@@ -73,13 +60,8 @@
 		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
 		 </param>
 		 <returns>
-		 a new
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 , that can be used for further calls
-		 to
-		 <see cref="Db4objects.Db4o.Query.IConstraint.And">And</see>
-		 and
-		 <see cref="Db4objects.Db4o.Query.IConstraint.Or">Or</see>
+		 a new constrain, that can be used for further calls
+		 to <see cref="And"/> and <see cref="Or"/>
 		 </returns>
 
 		</doc>
@@ -89,22 +71,19 @@
 		<doc>
                  <summary>
 		 Used in conjunction with
-		 <see cref="Db4objects.Db4o.Query.IConstraint.Smaller">Db4objects.Db4o.Query.IConstraint.Smaller
-		 	</see>
+		 <see cref="Smaller"/>
 		 or
-		 <see cref="Db4objects.Db4o.Query.IConstraint.Greater">Db4objects.Db4o.Query.IConstraint.Greater
-		 	</see>
+		 <see cref="Greater"/>
 		 to create constraints
 		 like "smaller or equal", "greater or equal".
 		 For example:<br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("points").Constrain(101).Smaller().Equal();</code><br />
+		 <code> 
+  query.Constrain(typeof(Pilot));
+ query.Descend("points").Constrain(101).Smaller().Equal();</code><br />
 		 will return all pilots with points &lt;= 101.<br />
 		 </summary>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -112,18 +91,17 @@
 
 	<member name="Greater()">
 		<doc>
-		 <summary>sets the evaluation mode to <code>&gt;</code>.</summary>
+		 <summary>Sets the evaluation mode to &gt;.</summary>
 		 <remarks>
-		 sets the evaluation mode to <code>&gt;</code>.
+		 Sets the evaluation mode to &gt;.
 		 For example:<br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("points").Constrain(101).Greater()</code><br />
+		 <code> 
+  query.Constrain(typeof(Pilot));
+ query.Descend("points").Constrain(101).Greater()</code><br />
 		 will return all pilots with points &gt; 101.<br />
 		 </remarks>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -131,18 +109,17 @@
 
 	<member name="Smaller()">
 		<doc>
-		 <summary>sets the evaluation mode to <code>&lt;</code>.</summary>
+		 <summary>Sets the evaluation mode to >&lt;.</summary>
 		 <remarks>
-		 sets the evaluation mode to <code>&lt;</code>.
+		 Sets the evaluation mode to &lt;.
 		 For example:<br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("points").Constrain(101).Smaller()</code><br />
+		 <code> 
+  query.Constrain(typeof(Pilot));
+ query.Descend("points").Constrain(101).Smaller()</code><br />
 		 will return all pilots with points &lt; 101.<br />
 		 </remarks>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+		 this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -150,30 +127,25 @@
 
 	<member name="Identity()">
 		<doc>
-		 <summary>sets the evaluation mode to identity comparison.</summary>
+		 <summary>Sets the evaluation mode to identity comparison.</summary>
 		 <remarks>
-		 sets the evaluation mode to identity comparison. In this case only
+		 Sets the evaluation mode to identity comparison. In this case only
 		 objects having the same database identity will be included in the result set.
 		 For example:<br />
-		 <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br />
-		 <code>Car car = new Car("BMW", pilot);</code><br />
-		 <code>container.Store(car);</code><br />
-		 <code>// Change the name, the pilot instance stays the same</code><br />
-		 <code>pilot.SetName("Test Pilot2");</code><br />
-		 <code>// create a new car</code><br />
-		 <code>car = new Car("Ferrari", pilot);</code><br />
-		 <code>container.Store(car);</code><br />
-		 <code>IQuery query = container.Query();</code><br />
-		 <code>query.Constrain(typeof(Car));</code><br />
-		 <code>// All cars having pilot with the same database identity</code><br />
-		 <code>// will be retrieved. As we only created Pilot object once</code><br />
-		 <code>// it should mean all car objects</code><br />
-		 <code>query.Descend("_pilot").Constrain(pilot).Identity();</code><br /><br />
+             <code> 
+  var pilot = new Pilot("Test Pilot1", 100);
+ var car = new Car("Ferrari", pilot);
+ container.Store(car);
+ var otherCar = new Car("Ferrari", pilot);
+ container.Store(otherCar);
+ Query query = container.Query();
+ query.Constrain(typeof(Car));
+ // All cars having pilot with the same database identity
+ // will be retrieved.
+ query.Descend("pilot").Constrain(pilot).Identity();</code>
 		 </remarks>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -181,22 +153,21 @@
 
 	<member name="Like()">
 		<doc>
-		 <summary>sets the evaluation mode to "like" comparison.</summary>
+		 <summary>Sets the evaluation mode to "like" comparison.</summary>
 		 <remarks>
-		 sets the evaluation mode to "like" comparison. This mode will include
-		 all objects having the constrain expression somewhere inside the string field.
-		 For example:<br />
-		 <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br />
-		 <code>container.Store(pilot);</code><br />
-		 <code> ...</code><br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>// All pilots with the name containing "est" will be retrieved</code><br />
-		 <code>query.Descend("name").Constrain("est").Like();</code><br />
+         This is a contains comparison which is case insensitive. This only works on strings. This mode will include
+         all objects having the constrain expression somewhere inside the string field.
+         For example:<br/>
+         <code> 
+  var pilot = new Pilot("Test Pilot1", 100);
+ container.Store(pilot);
+  ...
+ query.Constrain(typeof(Pilot));
+ // All pilots with the name containing "est" will be retrieved
+ query.Descend("name").Constrain("est").Like();</code>
 		 </remarks>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -206,42 +177,40 @@
 		<doc>
 		 <summary>Sets the evaluation mode to string contains comparison.</summary>
 		 <remarks>
-		 Sets the evaluation mode to string contains comparison. The contains comparison is case sensitive.<br/>
-		 For example:<br />
-		 <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br />
-		 <code>container.Store(pilot);</code><br />
-		 <code> ...</code><br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>// All pilots with the name containing "est" will be retrieved</code><br />
-		 <code>query.Descend("name").Constrain("est").Contains();</code><br />
-		 <see cref="Db4objects.Db4o.Query.IConstraint.Like">Like() for case insensitive string comparison</see>		 
+             Sets the evaluation mode to string contains comparison. This only works on strings.
+             The contains comparison is case sensitive.
+             For example:<br/>
+             <code> 
+  Pilot pilot = new Pilot("Test Pilot1", 100);
+             container.Store(pilot);
+              ...
+             query.Constrain(typeof(Pilot));
+             // All pilots with the name containing "est" will be retrieved
+             query.Descend("name").Constrain("est").Contains();</code>
 		 </remarks>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
 	</member>       
 	<member name="StartsWith(bool)">
 		<doc>
-		 <summary>sets the evaluation mode to string StartsWith comparison.</summary>
+		 <summary>Sets the evaluation mode to string StartsWith comparison.</summary>
 		 <remarks>
-		 sets the evaluation mode to string StartsWith comparison.
+		 Sets the evaluation mode to string StartsWith comparison.
 		 For example:<br />
-		 <code>Pilot pilot = new Pilot("Test Pilot0", 100);</code><br />
-		 <code>container.Store(pilot);</code><br />
-		 <code> ...</code><br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("name").Constrain("Test").StartsWith(true);</code><br />
+		 <code> 
+  Pilot pilot = new Pilot("Test Pilot0", 100);
+ container.Store(pilot);
+  ...
+ query.Constrain(typeof(Pilot));
+ query.Descend("name").Constrain("Test").StartsWith(true);</code><br />
 		 </remarks>
 		 <param name="caseSensitive">comparison will be case sensitive if true, case insensitive otherwise
 		 	</param>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -249,22 +218,21 @@
 
 	<member name="EndsWith(bool)">
 		<doc>
-		 <summary>sets the evaluation mode to string EndsWith comparison.</summary>
+		 <summary>Sets the evaluation mode to string EndsWith comparison.</summary>
 		 <remarks>
-		 sets the evaluation mode to string EndsWith comparison.
+		 Sets the evaluation mode to string EndsWith comparison.
 		 For example:<br />
-		 <code>Pilot pilot = new Pilot("Test Pilot0", 100);</code><br />
-		 <code>container.Store(pilot);</code><br />
-		 <code> ...</code><br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("name").Constrain("T0").EndsWith(false);</code><br />
+         <code>
+ Pilot pilot = new Pilot("Test Pilot0", 100);
+ container.Store(pilot);
+  ...
+ query.Constrain(typeof(Pilot));
+ query.Descend("name").Constrain("T0").EndsWith(false);</code><br />
 		 </remarks>
 		 <param name="caseSensitive">comparison will be case sensitive if true, case insensitive otherwise
 		 	</param>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
@@ -272,20 +240,19 @@
 
 	<member name="Not()">
 		<doc>
-		 <summary>turns on Not() comparison.</summary>
+		 <summary>Turns on Not() comparison.</summary>
 		 <remarks>
-		 turns on Not() comparison. All objects not fullfilling the constrain condition will be returned.
+		 Turns on Not() comparison. All objects not full filling the constrain condition will be returned.
 		 For example:<br />
-		 <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br />
-		 <code>container.Store(pilot);</code><br />
-		 <code> ...</code><br />
-		 <code>query.Constrain(typeof(Pilot));</code><br />
-		 <code>query.Descend("name").Constrain("t0").EndsWith(true).Not();</code><br />
+		 <code>
+ Pilot pilot = new Pilot("Test Pilot1", 100);
+ container.Store(pilot);
+ ...
+ query.Constrain(typeof(Pilot));
+ query.Descend("name").Constrain("t0").EndsWith(true).Not();</code><br />
 		 </remarks>
 		 <returns>
-		 this
-		 <see cref="Db4objects.Db4o.Query.IConstraint">Db4objects.Db4o.Query.IConstraint</see>
-		 to allow the chaining of method calls.
+             this constrain to allow the chaining of method calls.
 		 </returns>
 
 		</doc>
