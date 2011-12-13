@@ -10,7 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Base class for native queries. See com.db4o.ObjectContainer#query(Predicate)
+ * Base class for native queries. See {@link com.db4o.ObjectContainer#query(Predicate)}
  * <br><br>
  * @see com.db4o.ObjectContainer#query(Predicate)
  */

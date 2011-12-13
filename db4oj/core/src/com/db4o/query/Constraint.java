@@ -89,8 +89,8 @@ public interface Constraint {
      * <pre class="prettyprint"><code> Pilot pilot = new Pilot("Test Pilot1", 100);
 	 * Car car = new Car("Ferrari", pilot);
 	 * container.store(car);
-	 * car = new Car("Ferrari", pilot);
-	 * container.store(car);
+	 * Car otherCar = new Car("Ferrari", pilot);
+	 * container.store(otherCar);
 	 * Query query = container.query();
 	 * query.constrain(Car.class);
 	 * // All cars having pilot with the same database identity

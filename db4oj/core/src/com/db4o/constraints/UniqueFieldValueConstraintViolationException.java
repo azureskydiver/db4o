@@ -4,9 +4,7 @@ package com.db4o.constraints;
 
 
 /**
- * db4o-specific exception.<br><br>
- * This exception can be thrown by a 
- * {@link com.db4o.constraints.UniqueFieldValueConstraint} on commit.
+ * This exception is thrown when a {@link UniqueFieldValueConstraint} is violated.<br><br>
  * @see com.db4o.config.ObjectField#indexed(boolean)
  * @see com.db4o.config.CommonConfiguration#add(com.db4o.config.ConfigurationItem)
  */

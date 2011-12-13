@@ -19,7 +19,7 @@ package com.db4o.query;
 public interface Evaluation extends java.io.Serializable {
 	
 	/**
-	 * callback method during {@link Query#execute() query execution}.
+	 * Callback method during {@link Query#execute() query execution}.
 	 * @param candidate reference to the candidate persistent object.
 	 */
 	public void evaluate(Candidate candidate);
