@@ -181,7 +181,7 @@
              The contains comparison is case sensitive.
              For example:<br/>
              <code> 
-  Pilot pilot = new Pilot("Test Pilot1", 100);
+             Pilot pilot = new Pilot("Test Pilot1", 100);
              container.Store(pilot);
               ...
              query.Constrain(typeof(Pilot));
