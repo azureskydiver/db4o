@@ -409,13 +409,13 @@
         <code>
           private static void OnCreated(object sender, ObjectInfoEventArgs args)
           {
-          Object obj = args.Object;
-          if (obj is Pilot)
-          {
-          Console.WriteLine(obj.ToString());
+          &#160;&#160; Object obj = args.Object;
+          &#160;&#160; if (obj is Pilot)
+          &#160;&#160; {
+          &#160;&#160; &#160;&#160; Console.WriteLine(obj.ToString());
+          &#160;&#160; }
           }
-          }
-          registry.Created+=new System.EventHandler&lt;ObjectInfoEventArgs&gt;(OnCreated);
+          registry.Created+=OnCreated;
         </code>
         <seealso cref="EventRegistryFactory">EventRegistryFactory</seealso>
       </summary>
