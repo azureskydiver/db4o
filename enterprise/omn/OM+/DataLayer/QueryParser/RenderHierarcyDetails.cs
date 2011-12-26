@@ -370,7 +370,7 @@ namespace OManager.DataLayer.QueryParser
 				IType type = ResolveFieldType(field);
 				TreeviewRenderer.FieldType = SetFieldType(type );
 				TreeviewRenderer.ObjectType = type;
-				TreeviewRenderer.ReadOnlyStatus = readOnly;
+				TreeviewRenderer.ReadOnlyStatus = true ;
 				listTreeGridViewRenderers.Add(TreeviewRenderer);
 				return listTreeGridViewRenderers;
 			}
@@ -427,22 +427,41 @@ namespace OManager.DataLayer.QueryParser
 					PopulateDictionaryEntry(item);
 				else
 				{
-					TreeGridViewRenderer TreeviewRenderer = new TreeGridViewRenderer();
-                    TreeviewRenderer.DisplayFieldName = AppendIDTo(itemType.DisplayName , GetLocalID(item), itemType);
-				    TreeviewRenderer.FieldName = itemType.FullName;
-                    TreeviewRenderer.QualifiedName = DataLayerCommon.RemoveGFromClassName(container.Ext().Reflector().ForObject(item ).GetName());
-                    TreeviewRenderer.FieldValue = ClassNameFor(itemType.FullName);
-					TreeviewRenderer.FieldType = SetFieldType(itemType);
-					TreeviewRenderer.ReadOnlyStatus = true;
-					TreeviewRenderer.ObjectId = GetLocalID(item);
-					TreeviewRenderer.ObjectType = itemType ;
-					listTreeGridViewRenderers.Add(TreeviewRenderer);
+                    TreeGridViewRenderer treeviewRenderer = PopulateTreeGridViewRenderer(item, itemType);
+                    listTreeGridViewRenderers.Add(treeviewRenderer);
 					
 				}
 				
 			}
 		}
 
+        private TreeGridViewRenderer PopulateTreeGridViewRenderer(object item, IType itemType)
+        {
+            TreeGridViewRenderer treeviewRenderer = new TreeGridViewRenderer();
+            treeviewRenderer.DisplayFieldName = AppendIDTo(itemType.DisplayName, GetLocalID(item), itemType);
+            treeviewRenderer.FieldName = itemType.FullName;
+            treeviewRenderer.QualifiedName = DataLayerCommon.RemoveGFromClassName(container.Ext().Reflector().ForObject(item).GetName());
+            treeviewRenderer.FieldValue = ClassNameFor(itemType.FullName);
+            treeviewRenderer.FieldType = SetFieldType(itemType);
+            treeviewRenderer.ReadOnlyStatus = true;
+            treeviewRenderer.ObjectId = GetLocalID(item);
+            treeviewRenderer.ObjectType = itemType;
+            treeviewRenderer.HasSubNode = itemType.IsCollection || itemType.IsArray;
+            if (treeviewRenderer.HasSubNode)
+            {
+                long longid = GetLocalID(itemType);
+                if (itemType is GenericObject)
+                    treeviewRenderer.ObjectId = longid;
+
+                else if (longid != 0)
+                    treeviewRenderer.ObjectId = longid;
+                else
+                {
+                    treeviewRenderer.SubObject = item;
+                }
+            }
+            return treeviewRenderer;
+        }
 		public List< TreeGridViewRenderer > ExpandObjectNode(object obj, bool activate)
 		{
 			try

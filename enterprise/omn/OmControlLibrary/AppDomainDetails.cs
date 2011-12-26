@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -15,7 +16,7 @@ using OMAddinDataTransferLayer.DataEditing;
 using OMAddinDataTransferLayer.DataPopulation;
 using OMAddinDataTransferLayer.TypeMauplation;
 using OMControlLibrary.Common;
-
+using OManager.BusinessLayer.Config;
 
 
 namespace OMControlLibrary
@@ -23,46 +24,44 @@ namespace OMControlLibrary
 	public class AppDomainDetails
 	{
 		public AppDomain workerAppDomain;
-		byte[] assemblyBuffer;
-        public bool LoadAppDomain(string path)
+
+        public bool LoadAppDomain(ISearchPath searchPath)
         {
 
             try
             {
 
-
                 AppDomainSetup setup = new AppDomainSetup();
-                setup.ApplicationBase = GetPath() + "\\";
 #if DEBUG
-                setup.ApplicationBase = @"E:\db4object\db4o\Trunk\omn\OMADDIN\bin\";
-
+                 setup.ApplicationBase = @"E:\db4object\db4o\Trunk\omn\OMADDIN\bin\";
 #else 
+                  setup.ApplicationBase = GetPath() + "\\";
+#endif             
                 setup.ShadowCopyDirectories = Path.GetTempPath();
-#endif
                 setup.ShadowCopyFiles = "true";
-
-
                 workerAppDomain = AppDomain.CreateDomain("WorkerAppDomain", null, setup);
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-                if (path != string.Empty && path != (Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT)))
-                {
-                    if (!File.Exists(path))
-                    {
-                        MessageBox.Show(path + Properties.Resources.AppDomainDetails_LoadAppDomain__does_not_exists,
-                                        Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                        return false;
-                    }
 
-                    assemblyBuffer = File.ReadAllBytes(path);
+                if (searchPath.Paths.Count() > 0)
+                {
                     object anObject = CreateGlobalObjects("OMAddinDataTransferLayer",
                                                           "OMAddinDataTransferLayer.AssemblyInfo.AssemblyInspector");
 
                     IAssemblyInspector assemblyInspector = anObject as IAssemblyInspector;
-                    assemblyInspector.LoadAssembly(assemblyBuffer);
-                    AssemblyInspectorObject.AssemblyInspector = assemblyInspector;
+                    if (assemblyInspector.LoadAssembly(searchPath))
+                    {
+                        AssemblyInspectorObject.AssemblyInspector = assemblyInspector;
+                    }
+                    else
+                    {
 
+                        AppDomain.Unload(workerAppDomain);
+                        workerAppDomain = null;
+                        AssemblyInspectorObject.ClearAll();
+                        return false;
+
+                    }
                 }
 
                 object anObject1 = CreateGlobalObjects("OMAddinDataTransferLayer",
@@ -123,7 +122,7 @@ namespace OMControlLibrary
 
 		private object  CreateGlobalObjects(string assemblyName, string typeName)
 		{
-			return workerAppDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
+            return workerAppDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
 		}
 
 		Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
