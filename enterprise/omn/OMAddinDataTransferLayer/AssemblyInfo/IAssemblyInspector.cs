@@ -1,8 +1,10 @@
-﻿namespace OMAddinDataTransferLayer.AssemblyInfo
+﻿using OManager.BusinessLayer.Config;
+
+namespace OMAddinDataTransferLayer.AssemblyInfo
 {
 	public interface IAssemblyInspector
 	{
-		void LoadAssembly(byte[] assembly);
+		bool LoadAssembly(ISearchPath searchPath );
 	}
 }
 	

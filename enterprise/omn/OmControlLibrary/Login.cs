@@ -144,7 +144,7 @@ namespace OMControlLibrary
 				m_cmdBarCtrlBackup.Enabled = false;
 				m_cmdBarCtrlCreateDemoDb.Enabled = true;
 			}
-            InitializePaths();
+          
 		}
 
 		private void ClearPanelControls()
@@ -294,7 +294,7 @@ namespace OMControlLibrary
 					toolTipForTextBox.SetToolTip(textBoxConnection, textBoxConnection.Text);
 					if (comboBoxFilePath.Items.Contains(textBoxConnection.Text))
 						comboBoxFilePath.SelectedItem = textBoxConnection.Text;
-					buttonConnect.Focus();
+					
 				}
 
 			}
@@ -329,6 +329,9 @@ namespace OMControlLibrary
 
 				}
                 bool check=CreateAppDomain();
+              
+                
+
                 if (check)
                 {
                     RecentQueries currRecentQueries = new RecentQueries(conparam);
@@ -340,12 +343,14 @@ namespace OMControlLibrary
                     }
 
                     string exceptionString = AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentQueries);
+                    
                     if (exceptionString == string.Empty)
                     {
+                       
                         OMEInteraction.SetCurrentRecentConnection(currRecentQueries);
                         OMEInteraction.SaveRecentConnection(currRecentQueries);
-
-
+                        Config.Instance.SaveAssemblySearchPath(currRecentQueries.ConnParam.Connection );
+                        Config.Instance.AssemblySearchPath = null;
                         AfterSuccessfullyConnected();
 
                         loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
@@ -384,14 +389,16 @@ namespace OMControlLibrary
         public bool CreateAppDomain()
         {
             appdomain = new AppDomainDetails();
-            return appdomain.LoadAppDomain(toolTipComboBoxAssembly.SelectedItem == null ? 
-                string.Empty : toolTipComboBoxAssembly.SelectedItem.ToString());
+            Config.Instance.DbPath = textBoxConnection.Text;
+            return appdomain.LoadAppDomain(Config.Instance.AssemblySearchPath);
+
         }
 
 	    private void comboBoxFilePath_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			try
 			{
+               
 				if (radioButtonRemote.Checked)
 				{
 					if (!comboBoxFilePath.Text.Equals(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT)))
@@ -523,62 +530,16 @@ namespace OMControlLibrary
 
         private void btnAddAssemblies_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = OPEN_FILE_ADDASSEMBLY_FILTER;
-            openFileDialog.Title = "Add Assemblies";
-
-            if (openFileDialog.ShowDialog() != DialogResult.Cancel)
+            Config.Instance.AssemblySearchPath = null;
+            if(radioButtonLocal.Checked  )
+            new ChooseAssemblies(textBoxConnection.Text.Trim()).Show();
+            else
             {
-               
-                if (_searchPath.Add(openFileDialog.FileName))
-                {
-
-                    toolTipComboBoxAssembly.Items.Add(openFileDialog.FileName);
-                    Config.Instance.SaveAssemblySearchPath();
-                }
-                toolTipComboBoxAssembly.SelectedItem = openFileDialog.FileName; 
-            }
-
-        }
-
-        
-       
-
-        private void InitializePaths()
-        {
-            toolTipComboBoxAssembly.Items.Clear();
-            toolTipComboBoxAssembly.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
-            foreach (string path in _searchPath.Paths)
-            {
-                toolTipComboBoxAssembly.Items.Add(path);  
-            }
-
-            if (toolTipComboBoxAssembly.Items.Count > 0)
-            {
-                toolTipComboBoxAssembly.SelectedIndex = 0;
-            }
-           
-        }
-        private readonly ISearchPath _searchPath = Config.Instance.AssemblySearchPath;
-
-
-
-        private void toolTipComboBoxAssembly_DropdownItemSelected(object sender, ToolTipComboBox.DropdownItemSelectedEventArgs e)
-        {
-            try
-            {
-                if (e.SelectedItem < 0 || e.Scrolled)
-                    toolTipForAssembly.Hide(toolTipComboBoxAssembly);
-                else
-                    toolTipForAssembly.Show(toolTipComboBoxAssembly.Items[e.SelectedItem].ToString(),
-                                             toolTipComboBoxAssembly, e.Bounds.Location.X + Cursor.Size.Width,
-                                            e.Bounds.Location.Y + Cursor.Size.Height);
-            }
-            catch (Exception ex)
-            {
-                LoggingHelper.HandleException(ex);
+                string connection = STRING_SERVER + textBoxHost.Text.Trim() + STRING_COLON + textBoxPort.Text.Trim() + STRING_COLON +
+					                    textBoxUserName.Text.Trim();
+                new ChooseAssemblies(connection).Show( );
             }
         }
-
         
 	}
 }

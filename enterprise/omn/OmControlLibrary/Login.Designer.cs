@@ -55,7 +55,6 @@ namespace OMControlLibrary
             this.toolTipForTextBox = new System.Windows.Forms.ToolTip(this.components);
             this.btnAddAssemblies = new System.Windows.Forms.Button();
             this.toolTipForAssembly = new System.Windows.Forms.ToolTip(this.components);
-            this.toolTipComboBoxAssembly = new ToolTipComboBox();
             this.groupBoxToggle.SuspendLayout();
             this.panelLocal.SuspendLayout();
             this.panelRemote.SuspendLayout();
@@ -88,7 +87,7 @@ namespace OMControlLibrary
             // buttonConnect
             // 
             this.buttonConnect.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.buttonConnect.Location = new System.Drawing.Point(251, 181);
+            this.buttonConnect.Location = new System.Drawing.Point(253, 144);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(75, 23);
             this.buttonConnect.TabIndex = 9;
@@ -294,7 +293,7 @@ namespace OMControlLibrary
             // buttonCancel
             // 
             this.buttonCancel.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.buttonCancel.Location = new System.Drawing.Point(332, 181);
+            this.buttonCancel.Location = new System.Drawing.Point(332, 144);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
@@ -311,7 +310,7 @@ namespace OMControlLibrary
             // 
             // btnAddAssemblies
             // 
-            this.btnAddAssemblies.Location = new System.Drawing.Point(314, 141);
+            this.btnAddAssemblies.Location = new System.Drawing.Point(154, 145);
             this.btnAddAssemblies.Name = "btnAddAssemblies";
             this.btnAddAssemblies.Size = new System.Drawing.Size(93, 23);
             this.btnAddAssemblies.TabIndex = 11;
@@ -326,29 +325,17 @@ namespace OMControlLibrary
             this.toolTipForAssembly.ReshowDelay = 0;
             this.toolTipForAssembly.ShowAlways = true;
             // 
-            // toolTipComboBoxAssembly
-            // 
-            this.toolTipComboBoxAssembly.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolTipComboBoxAssembly.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.toolTipComboBoxAssembly.FormattingEnabled = true;
-            this.toolTipComboBoxAssembly.Location = new System.Drawing.Point(14, 143);
-            this.toolTipComboBoxAssembly.Name = "toolTipComboBoxAssembly";
-            this.toolTipComboBoxAssembly.Size = new System.Drawing.Size(294, 21);
-            this.toolTipComboBoxAssembly.TabIndex = 14;
-            this.toolTipComboBoxAssembly.DropdownItemSelected += new ToolTipComboBox.DropdownItemSelectedEventHandler(this.toolTipComboBoxAssembly_DropdownItemSelected);
-            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.Controls.Add(this.toolTipComboBoxAssembly);
             this.Controls.Add(this.btnAddAssemblies);
             this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxToggle);
             this.Name = "Login";
-            this.Size = new System.Drawing.Size(427, 208);
+            this.Size = new System.Drawing.Size(427, 171);
             this.Load += new System.EventHandler(this.Login_Load);
             this.groupBoxToggle.ResumeLayout(false);
             this.groupBoxToggle.PerformLayout();
@@ -388,7 +375,6 @@ namespace OMControlLibrary
 		private System.Windows.Forms.CheckBox chkReadOnly;
         private System.Windows.Forms.Button btnAddAssemblies;
         private System.Windows.Forms.ToolTip toolTipForAssembly;
-        private ToolTipComboBox toolTipComboBoxAssembly;
         //private ToolTipComboBox comboAssemblies;
 	}
 }

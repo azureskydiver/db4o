@@ -131,6 +131,7 @@ namespace OManager.DataLayer.Connection
 				}
 				catch (Exception oEx)
 				{
+                    
 					exceptionConnection = oEx.Message;
 					embeddedConfig = null;
 				}
@@ -155,12 +156,7 @@ namespace OManager.DataLayer.Connection
 			return  Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord) ;
 			
 		}
-		public static void SetIndex (string fieldname, string className, bool isIndexed)
-		{
-			if (embeddedConfig == null)
-				embeddedConfig = Db4oEmbedded.NewConfiguration();
-			embeddedConfig.Common.ObjectClass(className).ObjectField(fieldname).Indexed(isIndexed);
-		}
+		
 
 		protected static void ConfigureCommon(ICommonConfiguration config)
 		{
