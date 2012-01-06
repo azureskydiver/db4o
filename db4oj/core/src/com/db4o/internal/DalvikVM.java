@@ -79,5 +79,10 @@ class DalvikVM extends JDK_5 {
 		}
 		return supportSkipConstructorCall.definiteYes();
 	}
+	
+	@Override
+	public String generateSignature() {
+		return DalvikSignatureGenerator.generateSignature();
+	}
 
 }
