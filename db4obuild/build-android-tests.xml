@@ -1,8 +1,8 @@
 <project name="db4oandroid-tests" default="run-tests">
 	<import file="common.xml" />
 	
-	<property name="android.apilevel" value="android-7" />
-	<property name="emulator.device" value="android-2.1-db4otests" />
+	<property name="android.apilevel" value="android-13" />
+	<property name="emulator.device" value="android-3.2-db4otests" />
 	
 	<property name="android.emulator.port" value="5568" />
 	<property name="android.emulator.serial.number" value="emulator-${android.emulator.port}" />
@@ -27,10 +27,10 @@
 		
 	<property name="dir.android.tools" value="${dir.android.home}/tools" />
 	<property name="dir.android.platform.home" value="${dir.android.home}/platforms/${android.apilevel}" />
-	<property name="dir.android.platform.tools" value="${dir.android.platform.home}/tools" />
+	<property name="dir.android.platform.tools" value="${dir.android.home}/platform-tools" />
 	<property name="file.jar.android" value="${dir.android.platform.home}/android.jar" />
 	
-	<property name="file.android.tool.adb" value="${dir.android.tools}/${android.tool.adb}" />
+	<property name="file.android.tool.adb" value="${dir.android.platform.tools}/${android.tool.adb}" />
 	
 	<property name="file.keystore" value="${user.home}/.keystore" />
 	<property name="keystore.password" value="kistoa" />
@@ -93,7 +93,7 @@
 			<arg value="p" />
 			<arg line="-M ${dir.config}/android/AndroidManifest.xml" />
 			<arg line="-F ${file.apk.unsigned}" />
-			<arg line="-I ${file.jar.android}" />
+			<arg line='-I "${file.jar.android}"' />
 			<arg value="-f" />
 			<arg line="${dir.android.artifacts}" />
 			<arg line="${dir.db4ojunit}/res" />
