@@ -192,6 +192,10 @@ public class JDK {
 	protected static final boolean classIsAvailable(String className) {
     	return ReflectPlatform.forName(className) != null;
     }
+	
+	public String generateSignature() {
+		return JdkSignatureGenerator.generateSignature();
+	}
 
 
 }
