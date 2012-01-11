@@ -30,33 +30,16 @@ class DalvikVM extends JDK_5 {
 		
 		return new ReflectConstructor() {
 			
+			private final ObjectFactory factory = factory().newFactory(clazz);
+			
 			public Object newInstance(Object[] parameters) {
-				try {
-					return DalvikVM.this.newInstanceSkippingConstructor(clazz);
-				} catch (SecurityException e) {
-					throw new RuntimeException(e);
-				} catch (IllegalArgumentException e) {
-					throw new RuntimeException(e);
-				} catch (NoSuchMethodException e) {
-					throw new RuntimeException(e);
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				} catch (InvocationTargetException e) {
-					throw new RuntimeException(e);
-				}
+				return factory.newInstance(clazz);
 			}
 			
 			public ReflectClass[] getParameterTypes() {
 				return new ReflectClass[0];
 			}
 		};
-	}
-
-	private Object newInstanceSkippingConstructor(final Class clazz) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-			
-		Method newInstance = ObjectInputStream.class.getDeclaredMethod("newInstance", Class.class, Class.class);
-		newInstance.setAccessible(true);
-		return newInstance.invoke(null, clazz, Object.class);
 	}
 	
 	public static class SkipConstructorCheck {
@@ -67,22 +50,138 @@ class DalvikVM extends JDK_5 {
 	
 	private TernaryBool supportSkipConstructorCall = TernaryBool.UNSPECIFIED;
 	
+	private ObjectFactoryFactory _factory;
+	
 	@Override
 	boolean supportSkipConstructorCall() {
-		if (supportSkipConstructorCall.isUnspecified()) {
-			try {
-				newInstanceSkippingConstructor(SkipConstructorCheck.class);
-				supportSkipConstructorCall = TernaryBool.YES;
-			} catch (Exception e) {
-				supportSkipConstructorCall = TernaryBool.NO;
-			}
-		}
+		factory();
 		return supportSkipConstructorCall.definiteYes();
+	}
+	
+	private ObjectFactoryFactory factory(){
+		if(supportSkipConstructorCall.definiteNo()){
+			return null;
+		}
+		if(_factory != null){
+			return _factory;
+		}
+		try {
+			_factory = new Dalvik2ObjectFactoryFactory();
+			_factory.newFactory(SkipConstructorCheck.class).newInstance(SkipConstructorCheck.class);
+			supportSkipConstructorCall = TernaryBool.YES;
+			return _factory;
+		} catch (UnsupportedOperationException e){
+			// didn't work, let's try Dalvik 3
+		}
+		try {
+			_factory = new Dalvik3ObjectFactoryFactory();
+			_factory.newFactory(SkipConstructorCheck.class).newInstance(SkipConstructorCheck.class);
+			supportSkipConstructorCall = TernaryBool.YES;
+			return _factory;
+		} catch (UnsupportedOperationException e){
+			e.printStackTrace();
+			// didn't work, maybe log that we need to find a new way?
+		} 
+		supportSkipConstructorCall = TernaryBool.NO;
+		return null;
 	}
 	
 	@Override
 	public String generateSignature() {
 		return DalvikSignatureGenerator.generateSignature();
+	}
+	
+	private static interface ObjectFactory {
+		public Object newInstance(Class clazz);
+	}
+	
+	private static interface ObjectFactoryFactory {
+		public ObjectFactory newFactory(Class clazz);
+	}
+	
+	private static class Dalvik2ObjectFactoryFactory implements ObjectFactoryFactory{
+
+		private final Dalvik2ObjectFactory factory = new Dalvik2ObjectFactory();
+		
+		public ObjectFactory newFactory(Class clazz) {
+			return factory;
+		}
+		
+	}
+	
+	private static class Dalvik3ObjectFactoryFactory implements ObjectFactoryFactory{
+		
+		private int _methodId;
+
+		public Dalvik3ObjectFactoryFactory() {
+			try {
+				Method constructorIdMethod = ObjectStreamClass.class.getDeclaredMethod("getConstructorId", Class.class);
+				constructorIdMethod.setAccessible(true);
+				_methodId = (Integer) constructorIdMethod.invoke(null, Object.class);
+			} catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			} 
+
+		}
+		
+		public ObjectFactory newFactory(Class clazz) {
+			return new Dalvik3ObjectFactory(clazz, _methodId);
+		}
+	}
+	
+	private static class Dalvik2ObjectFactory implements ObjectFactory {
+		
+		private Method _method;
+		
+		public Dalvik2ObjectFactory(){
+			try {
+				_method = ObjectInputStream.class.getDeclaredMethod("newInstance", Class.class, Class.class);
+				_method.setAccessible(true);
+			} catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			} 
+		}
+
+		public Object newInstance(Class clazz) {
+			try {
+				return _method.invoke(null, clazz, Object.class);
+			} catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			} 
+		}
+		
+	}
+	
+	private static class Dalvik3ObjectFactory implements ObjectFactory {
+		
+		private Method _method;
+		
+		private final Class _clazz;
+		
+		private int _methodId;
+		
+		public Dalvik3ObjectFactory(Class clazz, int methodId) {
+			_clazz = clazz;
+			_methodId = methodId;
+			try {
+				_method = ObjectStreamClass.class.getDeclaredMethod("newInstance", Class.class, Integer.TYPE);
+				_method.setAccessible(true);
+			} catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			} 
+		}
+
+		public Object newInstance(Class clazz) {
+			if(clazz != _clazz){
+				throw new IllegalArgumentException();
+			}
+			try {
+				return _method.invoke(null, _clazz, _methodId);
+			} catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			} 
+		}
+		
 	}
 
 }

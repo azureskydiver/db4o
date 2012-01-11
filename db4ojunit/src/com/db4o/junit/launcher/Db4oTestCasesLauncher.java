@@ -6,6 +6,7 @@ import java.util.*;
 
 import junit.framework.*;
 
+import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.extensions.*;
@@ -17,6 +18,7 @@ public class Db4oTestCasesLauncher extends TestCase {
 	private static final String SDCARD_PATH = "Dalvik".equals(System.getProperty("java.vm.name")) ? "/sdcard" : Path4.getTempPath();
 	private static final String ACCEPTED_CLASSES_FILE = SDCARD_PATH + "/accepted-classes.txt";
 	private static final String TESTS_OUTPUT_FILE = SDCARD_PATH + "/db4o-tests-output.txt";
+	private static final String TESTS_ERR_FILE = SDCARD_PATH + "/db4o-tests-err.txt";
 
 	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException {
 		new Db4oTestCasesLauncher().test(new PrintWriter(System.out, true));
@@ -26,13 +28,16 @@ public class Db4oTestCasesLauncher extends TestCase {
 
 	public void test() throws FileNotFoundException, ClassNotFoundException {
 		PrintWriter out = new PrintWriter(TESTS_OUTPUT_FILE);
+		PrintStream printStream = new PrintStream(TESTS_ERR_FILE);
+		System.setErr(printStream);
+		System.setOut(printStream);
 		test(out);
 		out.flush();
 		out.close();
 	}
 
 	private void test(final PrintWriter out) {
-
+		
 		System.setProperty("db4ounit.file.path", SDCARD_PATH);
 
 		final Collection<String> ignoreList = ignoreList();
@@ -45,7 +50,7 @@ public class Db4oTestCasesLauncher extends TestCase {
 
 		try {
 			Class<?>[] classes = new Class[] { 
-//					BlockAwareBinTestSuite.class
+//					ConstructorNotRequiredTestCase.class,
 					com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class,
 			};
 
