@@ -188,6 +188,7 @@
     <Compile Include="Code\transactions\InconsistentStateRead.vb" />
     <Compile Include="Code\troubleshooting\restore\TryToReadSingleObjects.vb" />
     <Compile Include="Code\typehandling\blob\BlobStorage.vb" />
+    <Compile Include="Code\typehandling\notstored\StoredEntity.vb" />
     <Compile Include="Code\typehandling\translator\ExampleTranslator.vb" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.vb" />
     <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.vb" />

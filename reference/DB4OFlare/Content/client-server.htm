@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1494" MadCap:lastWidth="728">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1416" MadCap:lastWidth="728">
     <head>
     </head>
     <body>
@@ -13,6 +13,11 @@
         <h2>Connect To The Server</h2>
         <p>After the server is up an running you can connect to it. Pass the URL, port, user name and password to the client server factory. This will return a client object container. After that the container is ready to use.</p>
         <MadCap:snippetBlock src="CodeExamples/clientserver/basics/Db4oClientExample-Connect-to-the-server.all.flsnp" />
-        <p>&#160;</p>
+        <h2>Client-Server Setup</h2>
+        <p>When using a client server setup you should check following things:</p>
+        <ul>
+            <li>Ensure that the client and server use the same db4o version.</li>
+            <li>Both, the server and client should have access to classes of the stored objects. When the classes differ  between the client and server or are missing unspecified behavior can occur.</li>
+        </ul>
     </body>
 </html>

@@ -186,7 +186,7 @@ span.MadCap1
 pre
 {
 	text-align: left;
-	font-family: Consolas, "Droid Sans Mono", "DejaVu Sans Mono", "Courier New", courier, monospace;
+	font-family: Consolas, "Droid Sans Mono", "DejaVu Sans Mono", "Courier New", Courier, monospace;
 }
 
 pre.monospace
