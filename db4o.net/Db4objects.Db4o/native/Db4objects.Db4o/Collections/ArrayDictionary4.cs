@@ -6,6 +6,7 @@ using Db4objects.Db4o.TA;
 
 namespace Db4objects.Db4o.Collections
 {
+    [Obsolete("Use Db4objects.Db4o.Collections.ActivatableDictionary instead")]
 	public partial class ArrayDictionary4<K, V> : IDictionary<K, V>, IActivatable
 	{	
 		public bool IsReadOnly

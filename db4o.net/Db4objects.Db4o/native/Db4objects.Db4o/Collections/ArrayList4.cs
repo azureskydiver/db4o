@@ -10,6 +10,7 @@ using Db4objects.Db4o.TA;
 
 namespace Db4objects.Db4o.Collections
 {
+    [Obsolete("Use Db4objects.Db4o.Collections.ActivatableList instead")]
     public partial class ArrayList4<E> : IList<E>, IList, IActivatable
     {
         #region Instance Variables
