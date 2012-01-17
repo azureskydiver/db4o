@@ -563,6 +563,9 @@
         Link="/Content/advanced_topics/type_handling/uuid_support.htm"
         conditions="Primary.Java" />
       <TocEntry
+        Title="Transient Fields"
+        Link="/Content/advanced_topics/type_handling/transient_fields.htm" />
+      <TocEntry
         Title="Big Math"
         Link="/Content/advanced_topics/type_handling/bigmath.htm" />
       <TocEntry

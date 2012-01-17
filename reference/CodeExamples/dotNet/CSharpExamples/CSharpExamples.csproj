@@ -266,15 +266,18 @@
     <Compile Include="Code\tuning\monitoring\QueryMonitoring.cs" />
     <Compile Include="Code\tuning\monitoring\ReferenceSystemMonitoring.cs" />
     <Compile Include="Code\typehandling\blob\BlobStorage.cs" />
+    <Compile Include="Code\typehandling\notstored\StoredEntity.cs" />
     <Compile Include="Code\typehandling\translator\ExampleTranslator.cs" />
     <Compile Include="Code\typehandling\typehandler\StringBuilderHandler.cs" />
     <Compile Include="Code\typehandling\typehandler\TypeHandlerExample.cs" />
     <Compile Include="Code\validation\DataValidation.cs" />
     <Compile Include="Code\xml\XMLSerialisationExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScratchPad.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code\platform\dataservices\" />
+    <Folder Include="Code\typehandling\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
