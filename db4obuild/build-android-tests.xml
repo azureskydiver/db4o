@@ -196,7 +196,7 @@
 	</target>
 
 	<target name="uninstall-package" depends="start-emu">
-		<sleep seconds="300"/>
+		<sleep seconds="600"/>
 		<exec executable="${file.android.tool.adb}">
 			<arg line="-s ${android.emulator.serial.number}" />
 			<arg value="uninstall" />
