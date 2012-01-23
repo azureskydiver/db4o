@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.migration;
 
 import com.db4o.db4ounit.common.assorted.*;
+import com.db4o.db4ounit.common.cs.*;
 import com.db4o.db4ounit.common.freespace.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.db4ounit.util.*;
@@ -42,6 +43,10 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	protected Class[] testCases() {
+		
+		if(true){
+			return new Class[]{MsgProtocolOrderTestCase.class};
+		}
 		
 	    final Class[] classes = new Class[] {
             BooleanHandlerUpdateTestCase.class,
@@ -84,6 +89,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             ArrayListUpdateTestCase.class,
             HashtableUpdateTestCase.class,
             KnownClassesMigrationTestCase.class,
+            // MsgProtocolOrderTestCase.class,
             TreeSetHandlerUpdateTestCase.class,
             VectorUpdateTestCase.class,
 	    };
