@@ -4,7 +4,7 @@
 	<property name="android.apilevel" value="android-13" />
 	<property name="emulator.device" value="android-3.2-db4otests" />
 	
-	<property name="android.emulator.port" value="5568" />
+	<property name="android.emulator.port" value="5554" />
 	<property name="android.emulator.serial.number" value="emulator-${android.emulator.port}" />
 
 	<property name="android.emulator.packageManager.timeout" value="300000" />
@@ -24,6 +24,13 @@
 			<pathelement location="${dir.build.bin}"/>
 		</classpath>
 	</taskdef>
+	
+	<taskdef name="rerununtil" classname="com.db4o.devtools.ant.RerunUntilPatternTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}"/>
+		</classpath>
+	</taskdef>
+
 		
 	<property name="dir.android.tools" value="${dir.android.home}/tools" />
 	<property name="dir.android.platform.home" value="${dir.android.home}/platforms/${android.apilevel}" />
@@ -133,24 +140,20 @@
 			<arg line="-avd ${emulator.device}" />
 			<arg value="-no-window" />
 			<arg value="-noaudio" />
+			<!-- 
 			<arg value="-port" />
 			<arg value="${android.emulator.port}" />
+			-->
 		</exec>
 		
 		<!-- Big fat hack to stay away (but not rid) of race conditions between running the adb deamon and waiting for the device in windows -->
-		<sleep seconds="3" />
+		<sleep seconds="5" />
 		
 		<echo message="Waiting for device..." />
 		
-		<exec executable="${file.android.tool.adb}">
-			<arg line="-s ${android.emulator.serial.number}" />
-			<arg value="wait-for-device" />
-		</exec>
-
-		<waitprocess pattern="Time to scan packages" command="${file.android.tool.adb} -s ${android.emulator.serial.number} logcat" timeout="${android.emulator.packageManager.timeout}" />
+		<rerununtil pattern="framework-res" command="${file.android.tool.adb} -s ${android.emulator.serial.number} shell pm path android" timeout="${android.emulator.packageManager.timeout}" sleepBetweenRetries="1000" />
 		
 		<echo message="Device online." />
-
 		
 	</target>
 	
@@ -196,7 +199,6 @@
 	</target>
 
 	<target name="uninstall-package" depends="start-emu">
-		<sleep seconds="600"/>
 		<exec executable="${file.android.tool.adb}">
 			<arg line="-s ${android.emulator.serial.number}" />
 			<arg value="uninstall" />
