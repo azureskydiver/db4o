@@ -29,5 +29,11 @@ public abstract class AbstractObjectContainerAdapter implements ObjectContainerA
 	public AbstractObjectContainerAdapter() {
 		super();
 	}
+	
+	@Override
+	public Object objectContainer() {
+		return db;
+	}
+
 
 }

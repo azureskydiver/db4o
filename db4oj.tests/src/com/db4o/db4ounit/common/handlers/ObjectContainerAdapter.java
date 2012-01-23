@@ -5,11 +5,18 @@ import com.db4o.ext.*;
 import com.db4o.query.*;
 
 public interface ObjectContainerAdapter {
+	
 	void store(Object obj);
+	
 	void store(Object obj, int depth);
+	
 	void commit();
+	
 	void delete(Object obj);
+	
 	Query query();
 	
 	ObjectContainerAdapter forContainer(ExtObjectContainer db);
+	
+	Object objectContainer();
 }

@@ -11,4 +11,5 @@ class Post7_1ObjectContainerAdapter extends AbstractObjectContainerAdapter {
 	public void store(Object obj, int depth) {
 		db.store(obj, depth);
 	}
+
 }
