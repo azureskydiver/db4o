@@ -7,7 +7,7 @@
 	<property name="android.emulator.port" value="5554" />
 	<property name="android.emulator.serial.number" value="emulator-${android.emulator.port}" />
 
-	<property name="android.emulator.packageManager.timeout" value="300000" />
+	<property name="android.emulator.packageManager.timeout" value="3000000" />
 	
 	<property name="db4o.junit.package.name" value="com.db4o.junit.launcher" />
 	<property name="db4o.junit.class.test.main" value="${db4o.junit.package.name}/Db4oTestCasesLauncher" />
@@ -133,17 +133,15 @@
 	</target>
 	
 	<target name="start-emu" unless="emulator-available" depends="create-avd">
-		<exec executable="${file.android.tool.adb}" spawn="true">
+		<exec executable="${file.android.tool.adb}" >
 			<arg value="start-server" />
 		</exec>
 		<exec executable="${dir.android.tools}/${android.tool.emulator}" spawn="true">
 			<arg line="-avd ${emulator.device}" />
 			<arg value="-no-window" />
 			<arg value="-noaudio" />
-			<!-- 
 			<arg value="-port" />
 			<arg value="${android.emulator.port}" />
-			-->
 		</exec>
 		
 		<!-- Big fat hack to stay away (but not rid) of race conditions between running the adb deamon and waiting for the device in windows -->
@@ -151,7 +149,7 @@
 		
 		<echo message="Waiting for device..." />
 		
-		<rerununtil pattern="framework-res" command="${file.android.tool.adb} -s ${android.emulator.serial.number} shell pm path android" timeout="${android.emulator.packageManager.timeout}" sleepBetweenRetries="1000" />
+		<rerununtil pattern="com.android.mms" command="${file.android.tool.adb} -s ${android.emulator.serial.number} shell ps com.android.mms" timeout="${android.emulator.packageManager.timeout}" sleepBetweenRetries="5000" />
 		
 		<echo message="Device online." />
 		
