@@ -94,13 +94,18 @@ public class RerunUntilPatternTask extends Task {
 
 		try {
 			
-			if (getTimeout() != 0) {
-				setupTimeoutThread(process);
-			}
+			boolean timeoutThreadStarted = false;
 			
 			while(true) {
 
 				startProcess();
+				
+				if(!timeoutThreadStarted){
+					if (getTimeout() != 0) {
+						setupTimeoutThread();
+					}
+					timeoutThreadStarted = true;
+				}
 	
 				setupStdReaders();
 	
@@ -161,7 +166,7 @@ public class RerunUntilPatternTask extends Task {
 		process = Runtime.getRuntime().exec(getCommand());
 	}
 
-	private void setupTimeoutThread(final Process process) {
+	private void setupTimeoutThread() {
 		timeoutThread = new Thread() {
 			@Override
 			public void run() {
