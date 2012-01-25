@@ -133,9 +133,6 @@
 	</target>
 	
 	<target name="start-emu" unless="emulator-available" depends="create-avd">
-		<exec executable="${file.android.tool.adb}" >
-			<arg value="start-server" />
-		</exec>
 		<exec executable="${dir.android.tools}/${android.tool.emulator}" spawn="true">
 			<arg line="-avd ${emulator.device}" />
 			<arg value="-no-window" />
@@ -144,12 +141,13 @@
 			<arg value="${android.emulator.port}" />
 		</exec>
 		
-		<!-- Big fat hack to stay away (but not rid) of race conditions between running the adb deamon and waiting for the device in windows -->
-		<sleep seconds="5" />
+		<!-- Big big fat hack to stay away (but not rid) of race conditions between running the adb deamon and waiting for the device in windows -->
+		<echo message="Waiting for 10 minutes first..." />
+		<sleep seconds="600" />
 		
 		<echo message="Waiting for device..." />
 		
-		<rerununtil pattern="com.android.mms" command="${file.android.tool.adb} -s ${android.emulator.serial.number} shell ps com.android.mms" timeout="${android.emulator.packageManager.timeout}" sleepBetweenRetries="5000" />
+		<rerununtil pattern="com.android.mms" command="${file.android.tool.adb} -s ${android.emulator.serial.number} shell ps com.android.mms" timeout="${android.emulator.packageManager.timeout}" sleepBetweenRetries="60000" />
 		
 		<echo message="Device online." />
 		
