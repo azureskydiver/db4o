@@ -1513,30 +1513,27 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		return container().stringIO().write(str);
 	}
 
-    final void createConfigAndConstructor(
-        Hashtable4 a_byteHashTable,
-        ReflectClass claxx) {
+    final void resolveNameConfigAndReflector(ClassMetadataRepository repository, ReflectClass claxx) {
     	setName(resolveName(claxx));
+        if (i_nameBytes != null) {
+        	repository.classMetadataNameResolved(this, i_nameBytes);
+            i_nameBytes = null;
+        }
         setConfig(configImpl().configClass(getName()));
         if (claxx == null) {
             resolveClassReflector(getName());
         } else {
         	classReflector(claxx);
-//            createConstructor(true);
-        }
-        if (i_nameBytes != null) {
-            a_byteHashTable.remove(i_nameBytes);
-            i_nameBytes = null;
         }
     }
 
     String resolveName(ReflectClass claxx) {
-        if (claxx != null) {
-            return claxx.getName();
-        }
         if (i_nameBytes != null) {
         	String name = _container.stringIO().read(i_nameBytes);
         	return configImpl().resolveAliasStoredName(name);
+        }
+        if (claxx != null) {
+            return configImpl().resolveAliasStoredName(claxx.getName());
         }
         throw new IllegalStateException();
     }

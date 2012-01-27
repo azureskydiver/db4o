@@ -13,6 +13,7 @@ public class AllTests extends ComposibleTestSuite {
 	protected Class[] testCases() {
 		return composeTests(
 				new Class[] {
+						AliasesQueryingTestCase.class,
 						AliasesTestCase.class,
 			            CallbackTestCase.class,
 			            CanUpdateFalseRefreshTestCase.class,
