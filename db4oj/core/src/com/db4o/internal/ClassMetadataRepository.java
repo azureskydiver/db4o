@@ -190,6 +190,10 @@ public final class ClassMetadataRepository extends PersistentBase {
         if (cached != null) {
         	return cached;
         }
+        ClassMetadata byName = (ClassMetadata) _classMetadataByName.get(reflectClazz.getName());
+        if(byName != null){
+        	return byName;
+        }
         return readClassMetadata(reflectClazz);
     }
 
@@ -453,7 +457,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         }
         _classMetadataCreationDepth++;
         try {
-	        classMetadata.createConfigAndConstructor(_classMetadataByBytes, clazz);
+	        classMetadata.resolveNameConfigAndReflector(this,clazz);
 	        ReflectClass claxx = classMetadata.classReflector();
 	        if(claxx != null){
 	            _classMetadataByClass.put(claxx, classMetadata);
@@ -593,6 +597,11 @@ public final class ClassMetadataRepository extends PersistentBase {
 
 	private LocalTransaction localSystemTransaction() {
 		return ((LocalTransaction)_systemTransaction);
+	}
+
+	public void classMetadataNameResolved(ClassMetadata classMetadata, byte[] nameBytes) {
+		 _classMetadataByBytes.remove(nameBytes);
+		 _classMetadataByName.put(classMetadata.getName(), classMetadata);
 	}
 	
 }

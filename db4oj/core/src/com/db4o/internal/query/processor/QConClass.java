@@ -31,11 +31,23 @@ public class QConClass extends QConObject{
 		// C/S
 	}
 	
-	QConClass(Transaction a_trans, QCon a_parent, QField a_field, ReflectClass claxx){
-		super(a_trans, a_parent, a_field, null);
+	QConClass(Transaction trans, QCon parent, QField field, ReflectClass claxx){
+		super(trans, parent, field, null);
 		if(claxx != null){
-			_classMetadata = a_trans.container().produceClassMetadata(claxx);
-			if(claxx.equals(a_trans.container()._handlers.ICLASS_OBJECT)){
+			ObjectContainerBase container = trans.container();
+			_classMetadata = container.classMetadataForReflectClass(claxx);
+			if(_classMetadata == null){
+				// could be an aliased class, try to resolve.
+				String className = claxx.getName();
+				String aliasRunTimeName = container.config().resolveAliasStoredName(className);
+				if(! className.equals(aliasRunTimeName)){
+					_classMetadata = container.classMetadataForName(aliasRunTimeName);
+				}
+			}
+			if(_classMetadata == null){
+				_classMetadata = container.produceClassMetadata(claxx);
+			}
+			if(claxx.equals(container._handlers.ICLASS_OBJECT)){
 				_classMetadata = (ClassMetadata)_classMetadata.typeHandler();
 			}
 		}
