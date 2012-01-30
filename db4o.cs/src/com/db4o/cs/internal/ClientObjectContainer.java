@@ -1019,6 +1019,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		expectedResponse(Msg.OK);
 	}
 	
+	@Override
+	public ClassMetadata classMetadataForReflectClass(ReflectClass claxx) {
+		ClassMetadata classMetadata = super.classMetadataForReflectClass(claxx);
+		if(classMetadata != null){
+			return classMetadata;
+		}
+		String className = config().resolveAliasRuntimeName(claxx.getName());
+		if( classMetadataIdForName(className) == 0){
+			return null;
+		}
+		return produceClassMetadata(claxx);
+	}
+	
 	public int classMetadataIdForName(String name) {
         MsgD msg = Msg.CLASS_METADATA_ID_FOR_NAME.getWriterForString(systemTransaction(), name);
         msg.write(_socket);

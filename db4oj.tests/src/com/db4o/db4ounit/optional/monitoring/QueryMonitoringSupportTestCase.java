@@ -36,12 +36,15 @@ public class QueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase 
 		return QueriesMBean.class;
 	}
 	
+	@Override
+	protected void store() throws Exception {
+		db().store(new Item("foo"));
+	}
+	
 	public void testClassIndexScan() throws Exception {
-		
 		exercisePerSecondCounter("ClassIndexScansPerSecond", new Runnable() { public void run() {
 			triggerClassIndexScan();
 		}});
-		
 	}
 	
 	public void testAverageQueryExecutionTime() {

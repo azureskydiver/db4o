@@ -25,6 +25,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 	}
 	
 	protected void store() {
+		container().produceClassMetadata(reflectClass(NonIndexedFieldIndexItem.class));
 		storeItems(new int[] { 3, 4, 7, 9 });
 		storeComplexItems(
 						new int[] { 3, 4, 7, 9 },
