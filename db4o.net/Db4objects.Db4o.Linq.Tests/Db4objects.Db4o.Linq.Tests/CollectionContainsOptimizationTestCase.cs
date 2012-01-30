@@ -9,7 +9,17 @@ namespace Db4objects.Db4o.Linq.Tests
 {
 	public class CollectionContainsOptimizationTestCase : AbstractDb4oLinqTestCase
 	{
+
+
 #if !CF //csc fails to find S.R.FieldInfo.GetFieldFromHandle
+
+
+        protected override void Db4oSetupAfterStore()
+        {
+            Container().ProduceClassMetadata(ReflectClass(typeof(ListHolder)));
+        }
+
+
 		public class CollectionHolder<T> where T : ICollection<string>
 		{
 			public T Items;

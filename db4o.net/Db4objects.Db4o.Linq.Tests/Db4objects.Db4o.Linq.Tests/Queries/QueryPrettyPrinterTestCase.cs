@@ -9,12 +9,19 @@ namespace Db4objects.Db4o.Linq.Tests.Queries
 {
 	public class QueryPrettyPrinterTestCase : AbstractDb4oTestCase
 	{
+        
+
 		public class Person
 		{
 			public int Age;
 			public string Name;
 			public Person Parent;
 		}
+
+        protected override void Db4oSetupAfterStore()
+        {
+            Container().ProduceClassMetadata(ReflectClass(typeof(Person)));
+        }
 
 		public void TestDoubleDescending()
 		{
