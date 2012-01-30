@@ -989,7 +989,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return _transaction;
     }
     
-    public final ClassMetadata classMetadataForReflectClass(ReflectClass claxx){
+    public ClassMetadata classMetadataForReflectClass(ReflectClass claxx){
     	if (null == claxx) {
     		throw new ArgumentNullException();
     	}

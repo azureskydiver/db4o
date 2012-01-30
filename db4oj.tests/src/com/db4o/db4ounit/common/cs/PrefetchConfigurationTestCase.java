@@ -15,9 +15,10 @@ import db4ounit.extensions.fixtures.*;
 public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase implements OptOutAllButNetworkingCS{
 	
 	@Override
-	protected void db4oSetupAfterStore() throws Exception {
+	protected void db4oSetupBeforeStore() throws Exception {
 		ensureQueryGraphClassMetadataHasBeenExchanged();
 	}
+	
 	
 	public void testDefaultPrefetchDepth() {
 		Assert.areEqual(0, client().config().prefetchDepth());
@@ -32,7 +33,6 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 	}
 	
 	public void testPrefetchingBehaviorForConstrainedQuery() {
-		
 		final Query query = client().query();
 		query.constrain(Item.class);
 		query.descend("child").constrain(null);
@@ -315,6 +315,9 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
     }
 
 	private void ensureQueryGraphClassMetadataHasBeenExchanged() {
+		
+		container().produceClassMetadata(reflectClass(Item.class));
+		
 		// ensures classmetadata exists for query objects
 	    final Query query = client().query();
 	    query.constrain(Item.class);

@@ -85,7 +85,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             ArrayListUpdateTestCase.class,
             HashtableUpdateTestCase.class,
             KnownClassesMigrationTestCase.class,
-          //  MsgProtocolOrderTestCase.class,
+            MsgProtocolOrderTestCase.class,
             TreeSetHandlerUpdateTestCase.class,
             VectorUpdateTestCase.class,
 	    };

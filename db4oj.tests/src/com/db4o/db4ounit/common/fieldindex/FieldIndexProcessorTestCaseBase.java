@@ -55,15 +55,11 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected BTree fieldIndexBTree(Class clazz, String fieldName) {
-		return getYapClass(clazz).fieldMetadataForName(fieldName).getIndex(null);
-	}
-
-	private ClassMetadata getYapClass(Class clazz) {
-		return classMetadataFor(clazz);
+		return classMetadataFor(clazz).fieldMetadataForName(fieldName).getIndex(null);
 	}
 
 	protected BTree classIndexBTree(Class clazz) {
-		return ((BTreeClassIndexStrategy)getYapClass(clazz).index()).btree();
+		return ((BTreeClassIndexStrategy)classMetadataFor(clazz).index()).btree();
 	}
 
 	private BTree complexItemIndex(String fieldName) {

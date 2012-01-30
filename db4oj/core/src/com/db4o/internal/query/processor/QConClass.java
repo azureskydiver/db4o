@@ -44,9 +44,6 @@ public class QConClass extends QConObject{
 					_classMetadata = container.classMetadataForName(aliasRunTimeName);
 				}
 			}
-			if(_classMetadata == null){
-				_classMetadata = container.produceClassMetadata(claxx);
-			}
 			if(claxx.equals(container._handlers.ICLASS_OBJECT)){
 				_classMetadata = (ClassMetadata)_classMetadata.typeHandler();
 			}
