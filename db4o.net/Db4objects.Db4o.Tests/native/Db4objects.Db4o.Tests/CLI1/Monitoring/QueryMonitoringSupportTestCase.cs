@@ -26,6 +26,12 @@ namespace Db4objects.Db4o.Tests.CLI1.Monitoring
 		{
 		}
 
+        protected override void Db4oSetupAfterStore()
+        {
+            Container().ProduceClassMetadata(ReflectClass(typeof(Item)));
+        }
+
+
 		public void TestQueriesPerSecond()
 		{
             using (PerformanceCounter counter = PerformanceCounterSpec.QueriesPerSec.PerformanceCounter(FileSession()))
