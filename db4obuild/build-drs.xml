@@ -10,48 +10,32 @@
 	    
 	    OR wherever the location of the font is if you are on Linux
 	-->	
-	<property file="machine.properties" />
-	<property file="ant.properties" />
-	<property environment="env" />
 	
-	<import file="common.xml" />
+	<import file="drs.common.xml" />
 	
-	<property name="drs.dir.base" value="${dir.base}/drs" />
-	<property name="drs.dir.src" value="${drs.dir.base}/src" />
-	<property name="drs.dir.src.core" value="${drs.dir.src}/core" />
-	<property name="drs.dir.src.test" value="${drs.dir.src}/test" />
-	<property name="drs.dir.src.tutorial" value="${drs.dir.src}/tutorial" />
-	<property name="drs.dir.dist" value="${dir.dist}/drs/java" />
-	<property name="drs.dir.dist.lib" value="${drs.dir.dist}/lib" />
-	<property name="drs.dir.dist.classes" value="${drs.dir.dist}/classes" />
 	<property name="drs.dir.dist.api" value="${drs.dir.dist}/api" />
 	<property name="drs.dir.dist.temp" value="${drs.dir.dist}/tmp" />
+	<property name="drs.dir.dist.src" value="${drs.dir.dist}/src" />
 	
 	<target name="init" depends="properties">
+		<mkdir dir="${drs.dir.dist.lib}" />
+		<mkdir dir="${drs.dir.dist.api}" />
+
 		<path id="class.path" description="universal classpath for all targets">
-			<fileset dir="${drs.dir.base}/lib">
-				<include name="**/*_patch.jar" />
-			</fileset>
-	
-			<fileset dir="${drs.dir.base}/lib">
+			<!--
+			<fileset dir="${drs.dir.lib}">
 				<include name="**/*.jar" />
 			</fileset>
-			
+			-->			
 			<fileset dir="${drs.dir.dist.lib}">
 				<include name="**/*.jar" />
 			</fileset>
 
-			<fileset dir="${dir.vod.lib}">
-				<include name="**/*.jar" />
-			</fileset>
-
-			<pathelement location="${drs.dir.dist.classes}" />
 			<pathelement location="${file.jdk1.5.jar}" />
 			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
 			<pathelement location="${file.jdk1.5.cs.jar}" />
 			<pathelement location="${file.jdk1.5.optional.jar}" />
 		</path>
-		
 		<property name="drs.file" value="dRS-${db4o.version.iteration.revision}-" />
 		<property name="filename.drs.core.jar" value="${drs.file}core.jar" />
 		<property name="filename.drs.test.jar" value="${drs.file}test.jar" />
@@ -63,135 +47,22 @@
 		<property name="file.drs.tutorial.jar" value="${drs.dir.dist.lib}/${filename.drs.tutorial.jar}" />
 		<property name="file.drs.zip" value="${dir.dist}/${filename.drs.zip}" />
 		
-		<mkdir dir="${drs.dir.dist.lib}" />
-		<mkdir dir="${drs.dir.dist.api}" />
-		<mkdir dir="${drs.dir.dist.temp}" />
-		
-		<if>
-			<os family="windows" />
-			<then>
-				<property name="key.drs.vod.regression.bin" value="Path" />
-			</then>
-			<else>
-				<property name="key.drs.vod.regression.bin" value="PATH" />
-			</else>
-		</if>
-		<if>
-			<equals arg1="${run.vod.drs.tests}" arg2="true" />
-			<then>
-				<property name="jvmarg.drs.vod.regression.enhancer" value="-javaagent:${drs.dir.base}/lib/jdo-enhancer/dRS-jdo-enhancer.jar=com.db4o.drs.test.data,com.db4o.drs.test.versant.data" />
-				<if>
-					<os family="windows" />
-					<then>
-						<property name="path.drs.vod.regression.bin" value="${path.vod.bin};${path.vod.lib};${env.Path}" />
-						<property name="path.drs.vod.regression.lib" value="" />
-					</then>
-					<else>
-						<property name="path.drs.vod.regression.bin" value="${path.vod.bin}:${env.PATH}" />
-						<property name="path.drs.vod.regression.lib" value="${path.vod.lib}:${env.LD_LIBRARY_PATH}" />
-					</else>
-				</if>
-			</then>
-			<else>
-				<property name="jvmarg.drs.vod.regression.enhancer" value="" />
-				<if>
-					<os family="windows" />
-					<then>
-						<property name="path.drs.vod.regression.bin" value="${env.Path}" />
-						<property name="path.drs.vod.regression.lib" value="" />
-					</then>
-					<else>
-						<property name="path.drs.vod.regression.bin" value="${env.PATH}" />
-						<property name="path.drs.vod.regression.lib" value="${env.LD_LIBRARY_PATH}" />
-					</else>
-				</if>
-			</else>
-		</if>
 	</target>
     
-	<macrodef name="buildjar" description="compile, jar classes for various src folders">
-		<attribute name="srcdir" />
-		<attribute name="classpathrefid" />
-		<attribute name="jar" />
-
-		<sequential>
-			<property name="temp.dir" value="${drs.dir.dist.classes}" />
-			<delete dir="${temp.dir}" />
-			<mkdir dir="${temp.dir}" />
-
-			<javac srcdir="@{srcdir}" destdir="${temp.dir}" debug="true" target="1.5" source="1.5" failonerror="true">
-				<classpath refid="@{classpathrefid}" />
-			</javac>
-			<copy todir="${temp.dir}">
-				<fileset dir="@{srcdir}">
-					<exclude name="log4j.xml" />
-					<include name="**/*.jdo" />
-					<include name="**/*.xml" />
-				</fileset>
-			</copy>
-			<jar jarfile="@{jar}" basedir="${temp.dir}" />
-			<delete dir="${temp.dir}" />
-		</sequential>
-	</macrodef>
-
-	<target name="build-core" description="jar the core src of drs">
-		<property name="temp.dir" value="${drs.dir.dist.classes}" />
-		<delete dir="${temp.dir}" />
-		<mkdir dir="${temp.dir}" />
-		
-
-		<javac srcdir="${drs.dir.src.core}" destdir="${temp.dir}" debug="true" target="1.5" source="1.5" failonerror="true">
-			<classpath refid="class.path" />
-		</javac>
-		
-		<copy todir="${temp.dir}">
-			<fileset dir="${drs.dir.src.core}">
-				<exclude name="log4j.xml" />
-				<include name="**/*.jdo" />
-				<include name="**/*.xml" />
-				<include name="versant.properties" />
-			</fileset>
-		</copy>
-		
-		<taskdef resource="versant.tasks">
-			<classpath>
-				<fileset dir="${dir.vod.lib}" includes="**/*.jar"/>
-				<fileset dir="${drs.dir.base}/lib" includes="**/*.jar"/>
-				<pathelement location="${temp.dir}"/>
-				<pathelement location="${dir.dist.classes.jdk1.5}"/>
-				<pathelement location="${dir.dist.classes.db4ounit.jdk1.5}"/>
-				
-			</classpath>
-		</taskdef>
-		
-		<jdo-enhance  project="versant.properties" outputdir="${temp.dir}" >
-			<persistentaware dir="${temp.dir}"/>
-		</jdo-enhance>
-		
-		<jar jarfile="${file.drs.core.jar}" basedir="${temp.dir}" />
-		<delete dir="${temp.dir}" />
-	</target>
-	
-	<target name="build-example" description="jar the example src of drs">
-		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" />
+	<target name="build-all" depends="init">
+		<ant antfile="build-drs-core.xml" target="build-all" />
+		<ant antfile="build-drsvod.xml" target="build-all" />
 	</target>
 
-	<target name="build-regression" description="jar the test src of drs">
-		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" />
-	</target>
-
-	<target name="build-all" depends="clean, init">
-		<antcall target="build-core" />
-		<antcall target="build-example" />
-		<antcall target="build-regression" />
-	</target>
-
-	<target name="javadoc">
+	<target name="javadoc" depends="init">
 		<javadoc destdir="${drs.dir.dist.api}" author="true" version="true" use="true" windowtitle="dRS"
 			classpathref="class.path">
             <header><![CDATA[<b>db4o Replication System (dRS)</b>]]></header>
             <doctitle><![CDATA[<h1>db4o Replication System (dRS)</h1><p align="left">This document is the API specification for db4o Replication System (dRS)]]></doctitle>
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
+				<include name="com/db4o/drs/*.java" />
+			</fileset>
+			<fileset dir="${drs.vod.dir.src.core}" defaultexcludes="yes">
 				<include name="com/db4o/drs/*.java" />
 			</fileset>
 		</javadoc>
@@ -234,7 +105,7 @@
 		<zip destfile="${file.drs.zip}" >
 			<zipfileset dir="${drs.dir.base}" prefix="${zipbasedir}" includes="readme.html, drs.license.html" />
 			<zipfileset dir="${drs.dir.dist.temp}" prefix="${zipbasedir}" includes="compatibility.html" />
-			<zipfileset dir="${drs.dir.base}/lib" prefix="${zipbasedir}/lib" >
+			<zipfileset dir="${drs.dir.lib}" prefix="${zipbasedir}/lib" >
 				<include name="**/*.jar"/>
 				<include name="**/*.html"/>
 				<exclude name="derby/" />
@@ -244,61 +115,52 @@
 			</zipfileset>
 			<zipfileset file="${file.jdk1.5.jar}" prefix="${zipbasedir}/lib" />
 			<zipfileset file="${file.jdk1.5.db4ounit.jar}" prefix="${zipbasedir}/lib" />
-			<zipfileset dir="${drs.dir.src}" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
+			<zipfileset dir="${drs.dir.dist.src}" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
 			<zipfileset dir="${drs.dir.dist.temp}/doc/reference" prefix="${zipbasedir}/doc/reference" />
 
-			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
-			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
-			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
+			<zipfileset dir="${drs.dir.dist.lib}" prefix="${zipbasedir}/lib" includes="*.jar" />
 		</zip>
 	</target>
     
     <target name="add-gplheader">
         <loadfile property="content.gplheader" srcfile="${dir.build}/config/gpl_comment.txt" encoding="iso-8859-1" />
+    	<delete dir="${drs.dir.dist.src}" />
+    	<mkdir dir="${drs.dir.dist.src}" />
+    	<copy todir="${drs.dir.dist.src}">
+    		<fileset dir="${drs.dir.src.core}">
+    			<include name="**/*.java" />
+    			<include name="**/*.jdo" />
+				<include name="**/*.xml" />
+    		</fileset>
+    	</copy>
+    	<copy todir="${drs.dir.dist.src}">
+    		<fileset dir="${drs.vod.dir.src.core}">
+    			<include name="**/*.java" />
+    			<include name="**/*.jdo" />
+				<include name="**/*.xml" />
+    		</fileset>
+    	</copy>
         <filehead beforePattern="package" header="${content.gplheader}" >
-			<sources dir="src">
+			<sources dir="${drs.dir.dist.src}">
 				<include name="**/*.java" />
 			</sources>
 		</filehead>
     </target>
 
 	<target name="run-example" depends="init">
-		<java fork="true" classname="f1.stepbystep.StepByStepExample">
-			<classpath refid="class.path" />
-		</java>
+		<ant antfile="build-drs-core.xml" target="run-example" />
 	</target>
 	
-	<target name="run-regression-with-debug" depends="init" if="run-drs-tests-with-debug">
-		<java jvm="${file.jvm.jdk1.6}" fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
-			<classpath refid="class.path" />
-			<jvmarg line="-DrunVodTests=${run.vod.drs.tests}" />
-			<jvmarg line="${jvmarg.drs.vod.regression.enhancer}" />
-			<jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y"/>
-			<env key="${key.drs.vod.regression.bin}" path="${path.drs.vod.regression.bin}" />
-			<env key="LD_LIBRARY_PATH" path="${path.drs.vod.regression.lib}" />
-		</java>
-	</target>
-
-	<target name="run-regression-without-debug" depends="init" unless="run-drs-tests-with-debug">
-		<java jvm="${file.jvm.jdk1.6}" fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
-			<classpath refid="class.path" />
-			<jvmarg line="-DrunVodTests=${run.vod.drs.tests}" />
-			<jvmarg line="${jvmarg.drs.vod.regression.enhancer}" />
-			<env key="${key.drs.vod.regression.bin}" path="${path.drs.vod.regression.bin}" />
-			<env key="LD_LIBRARY_PATH" path="${path.drs.vod.regression.lib}" />
-		</java>
-	</target>
-
-	<target name="run-regression" depends="run-regression-with-debug, run-regression-without-debug">
+	<target name="run-regression" depends="init">
+		<ant antfile="build-drs-core.xml" target="run-regression" />
+		<ant antfile="build-drsvod.xml" target="run-regression" />
 	</target>
 
 	<target name="clean">
 		<delete dir="${drs.dir.dist}" />
-		<delete dir="${drs.dir.test}/temp" />
 		<delete file="${file.drs.zip}" />
 	</target>
 	
 </project>
-
