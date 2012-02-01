@@ -10,9 +10,10 @@ import com.db4o.db4ounit.common.api.*;
 import com.db4o.db4ounit.common.assorted.AliasesQueryingTestCase.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public class RenamingClassAfterQueryingTestCase extends TestWithTempFile {
+public class RenamingClassAfterQueryingTestCase extends TestWithTempFile implements OptOutSilverlight{
 	
 
     public void testNoQueryBeforeRenaming()

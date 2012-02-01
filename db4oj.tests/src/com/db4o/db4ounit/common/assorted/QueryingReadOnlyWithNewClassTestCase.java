@@ -9,8 +9,9 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
-public class QueryingReadOnlyWithNewClassTestCase extends TestWithTempFile {
+public class QueryingReadOnlyWithNewClassTestCase extends TestWithTempFile implements OptOutSilverlight{
 	
     public void testWithoutReadOnly(){
         createData();
