@@ -9,9 +9,14 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public class AliasesQueryingTestCase extends TestWithTempFile{
+public class AliasesQueryingTestCase extends TestWithTempFile implements OptOutSilverlight{
+	
+	public static void main(String[] args) {
+		new ConsoleTestRunner(AliasesQueryingTestCase.class).run();
+	}
 	
         public void testQuery_B_Before_A_AfterAliasing(){
             createData();
