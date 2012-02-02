@@ -234,7 +234,7 @@ public class VodDatabase {
 		return datastoreManagerFactory().getDatastoreManager();
 	}
 	
-	private synchronized DatastoreManagerFactory datastoreManagerFactory(){
+	public synchronized DatastoreManagerFactory datastoreManagerFactory(){
 		if(_datastoreManagerFactory == null){
 			DatabaseImp db = new DatabaseImp(name(), host(), port());
 			ConnectionInfo con = new ConnectionInfo(db, userName(), passWord());

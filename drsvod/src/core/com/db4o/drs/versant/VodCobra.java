@@ -44,6 +44,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		_dm.beginTransaction();
 	}
 	
+	private DatastoreManagerFactory datastoreManagerFactory(){
+		return _vod.datastoreManagerFactory();
+	}
+	
 	public static long loidAsLong(String loidAsString){
 		return DatastoreLoid.asValue(loidAsString);
 	}
@@ -71,6 +75,11 @@ public class VodCobra implements QLinable, VodCobraFacade{
 			return INVALID_TIMESTAMP;
 		}
 		return storedInfo.uuidLongPart();
+	}
+	
+	public void produceSchema(Class clazz){
+		UserSchemaModel userSchemaModel = VodCobraSchemaManager.buildUserSchemaModel(clazz);
+		VodCobraSchemaManager.defineSchema(datastoreManagerFactory(), userSchemaModel);
 	}
 
 	public long store(Object obj) {
@@ -382,6 +391,14 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		//      Find out if Cobra has a nicer asynchronous delete 
 		//      that just takes a long
 		_dm.deleteObject(existingDatastoreObject(loid));
+	}
+	
+	public void delete(Object obj) {
+		if(! (obj instanceof VodLoidAwareObject)){
+			throw new IllegalArgumentException("Can only delete instanceof VodLoidAwareObject");
+		}
+		long loid = ((VodLoidAwareObject)obj).loid();
+		delete(loid);
 	}
 
 	public void deleteAll() {
