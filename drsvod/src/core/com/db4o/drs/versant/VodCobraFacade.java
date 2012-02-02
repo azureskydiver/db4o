@@ -45,6 +45,8 @@ public interface VodCobraFacade {
 
 	void delete(long loid);
 	
+	void delete(Object obj);
+	
 	void deleteAll();
 	
 	public String schemaName(String fullyQualifiedName);
@@ -56,6 +58,8 @@ public interface VodCobraFacade {
 	byte[] signatureBytes(long databaseId);
 
 	long[] loidsForStoredObjectsOfClass(String className);
+	
+	public void produceSchema(Class clazz);
 
 	
 }
