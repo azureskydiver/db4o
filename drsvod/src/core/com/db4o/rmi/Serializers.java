@@ -4,9 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-import com.db4o.foundation.*;
 
-
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class Serializers {
 
 	private static final Map<Class<?>, Serializer<?>> serializers = new HashMap<Class<?>, Serializer<?>>();
@@ -18,7 +17,6 @@ public class Serializers {
 		return serializer;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> Serializer<T> serializerFor(Class<T> t) {
 		return (Serializer<T>) serializers.get(t);
 	}
@@ -116,41 +114,44 @@ public class Serializers {
 		}
 	}, String[].class);
 	
-	public final static Serializer<long[]> longArray = addSerializer(new Serializer<long[]>() {
+    public final static Serializer<long[]> longArray = addSerializer(new Serializer<long[]>() {
 
-		public void serialize(DataOutput out, long[] arr) throws IOException {
-			out.writeInt(arr.length);
-			for (int i = 0; i < arr.length; i++) {
-				out.writeLong(arr[i]);	
-			}
-		}
+        public void serialize(DataOutput out, long[] arr) throws IOException {
+            out.writeInt(arr.length);
+            for (int i = 0; i < arr.length; i++) {
+                out.writeLong(arr[i]);  
+            }
+        }
 
-		public long[] deserialize(DataInput in) throws IOException {
-			int length = in.readInt();
-			long[] result = new long[length];
-			for (int i = 0; i < result.length; i++) {
-				result[i] = in.readLong();	
-			}
-			return result;
-		}
-	}, long[].class);
+        public long[] deserialize(DataInput in) throws IOException {
+            int length = in.readInt();
+            long[] result = new long[length];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = in.readLong();  
+            }
+            return result;
+        }
+    }, long[].class);
 
-	
-	public final static Serializer<Pair<Long, Long>> pairOfLong = addSerializer(new Serializer<Pair<Long, Long>>() {
+    
+    public final static Serializer<byte[]> byteArray = addSerializer(new Serializer<byte[]>() {
 
-		public void serialize(DataOutput out, Pair<Long, Long> pair) throws IOException {
-			out.writeLong(pair.first);
-			out.writeLong(pair.second);
-		}
+        public void serialize(DataOutput out, byte[] arr) throws IOException {
+            out.writeInt(arr.length);
+            out.write(arr);
+        }
 
-		public Pair<Long, Long> deserialize(DataInput in) throws IOException {
-			return new Pair(in.readLong(), in.readLong());
-		}
-	}, Pair.class);
+        public byte[] deserialize(DataInput in) throws IOException {
+            byte[] buffer = new byte[in.readInt()];
+            in.readFully(buffer);
+            return buffer;
+        }
+    }, byte[].class);
 
-	public final static Serializer<HashSet> hashset = addSerializer(new Serializer<HashSet>() {
+    
+    public final static Serializer<HashSet> hashset = addSerializer(new Serializer<HashSet>() {
 
-		public void serialize(DataOutput out, HashSet item) throws IOException {
+        public void serialize(DataOutput out, HashSet item) throws IOException {
 			out.writeInt(item.size());
 			for (Object object : item) {
 				out.writeUTF(object.getClass().getName());
@@ -214,7 +215,7 @@ public class Serializers {
 			}
 		}
 
-		public HashMap deserialize(DataInput in) throws IOException {
+        public HashMap deserialize(DataInput in) throws IOException {
 			HashMap ret = new HashMap();
 			
 			int len = in.readInt();
