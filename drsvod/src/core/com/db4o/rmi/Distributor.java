@@ -1,7 +1,9 @@
 package com.db4o.rmi;
 
 import java.io.*;
+import java.lang.annotation.*;
 import java.lang.reflect.*;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -14,8 +16,6 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 
 	private ConcurrentMap<Long, Request> requests = new ConcurrentHashMap<Long, Request>();
 
-	private DataOutputStream out;
-
 	private Runnable feeder;
 
 	private ByteArrayConsumer consumer;
@@ -25,7 +25,8 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 	private ConcurrentMap<Object, ServerObject> serving = new ConcurrentHashMap<Object, ServerObject>();
 	private ConcurrentMap<Long, ServerObject> servingById = new ConcurrentHashMap<Long, ServerObject>();
 	
-	private ConcurrentMap<Long, ProxyObject> proxying = new ConcurrentHashMap<Long, ProxyObject>();
+	private volatile ConcurrentMap<Long, ProxyObject<?>> proxying = new ConcurrentHashMap<Long, ProxyObject<?>>();
+    private Map<Class<?>, Serializer<?>> serializers = new HashMap<Class<?>, Serializer<?>>();
 
 	public Distributor(ByteArrayConsumer consumer, Class<T> rootFacade) {
 		this(consumer, null, rootFacade);
@@ -36,7 +37,7 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 	}
 
 	private Distributor(ByteArrayConsumer consumer, T root, Class<T> rootFacade) {
-		initStream();
+	    addDefaultSerializers();
 		setConsumer(consumer);
 
 		if (root == null) {
@@ -46,7 +47,13 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		}
 	}
 
-	private void initStream() {
+	private void addDefaultSerializers() {
+        addSerializer(new InputStreamSerializer(this), InputStream.class);
+        addSerializer(new OutputStreamSerializer(this), OutputStream.class);
+    }
+
+
+    private DataOutputStream newFlusher() {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream() {
 			@Override
 			public void flush() throws IOException {
@@ -55,7 +62,7 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 				reset();
 			}
 		};
-		this.out = new DataOutputStream(bout);
+		return new DataOutputStream(bout);
 	}
 
 	public void setConsumer(ByteArrayConsumer consumer) {
@@ -114,38 +121,51 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		r.deserialize(in);
 		r.invoke();
 		if (requestId != -1) {
-			sendResponse(requestId, r.getInternal());
+			sendResponse(requestId, r.getResult(), r.getResultDeclaredType());
 		}
 	}
 
-	private void sendRequest(long objectId, long requestId, Request r) throws IOException {
-		synchronized (out) {
-			out.writeByte(REQUEST);
-			out.writeLong(objectId);
-			out.writeLong(requestId);
-			r.serialize(out);
-			out.writeBoolean(false);
-			out.flush();
-		}
+    private void sendRequest(long objectId, long requestId, Request r) throws IOException {
+		DataOutputStream out = newFlusher();
+		out.writeByte(REQUEST);
+		out.writeLong(objectId);
+		out.writeLong(requestId);
+		r.serialize(out);
+		out.writeBoolean(false);
+		out.flush();
 	}
 
-	private void sendResponse(long requestId, Object value) throws IOException {
-		synchronized (out) {
-			out.writeByte(RESPONSE);
-			out.writeLong(requestId);
-			if (value == null) {
-				out.writeBoolean(false);
-			} else {
-				out.writeBoolean(true);
-				Class clazz = value.getClass();
-				out.writeUTF(clazz.getName());
-				Serializer s = Request.serializerFor(clazz);
-				s.serialize(out, value);
-			}
+	private void sendResponse(long requestId, Object value, Class<?> declaredType) throws IOException {
+        DataOutputStream out = newFlusher();
+		out.writeByte(RESPONSE);
+		out.writeLong(requestId);
+		if (value == null) {
 			out.writeBoolean(false);
-			out.flush();
+		} else {
+			out.writeBoolean(true);
+			Class<?> clazz = value.getClass();
+			out.writeUTF(clazz.getName());
+			Serializer<Object> s = serializerFor(clazz, declaredType);
+			s.serialize(out, value);
 		}
+		out.writeBoolean(false);
+		out.flush();
 	}
+
+    protected Serializer<Object> serializerFor(Class<?> first, Class<?> second) {
+        Serializer<Object> s = getSerializerFor(first);
+        if (s != null) {
+            return s;
+        }
+        if (second == null || first == second) {
+            throw new RuntimeException("No serializer registered for " + first);
+        }
+        s = getSerializerFor(second);
+        if (s != null) {
+            return s;
+        }
+        throw new RuntimeException("No serializer registered for neither " + first + " or " + second);
+    }
 
 	private void processResponse(DataInputStream in) throws IOException {
 		long requestId = in.readLong();
@@ -157,7 +177,7 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 
 		Object o = null;
 		if (in.readBoolean()) {
-			o = Request.serializerFor(in.readUTF()).deserialize(in);
+			o = serializerFor(classForName(in.readUTF()), r.getResultDeclaredType()).deserialize(in);
 		}
 		r.set(o);
 	}
@@ -197,15 +217,23 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		return server;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <S> ProxyObject<S> proxyFor(long id, Class<S> clazz) {
 
-		ProxyObject<S> proxy = proxying.get(id);
+        ProxyObject<S> proxy = (ProxyObject<S>) proxying.get(id);
 
 		if (proxy == null) {
+		    
+		    synchronized (proxying) {
+		        proxy = (ProxyObject<S>) proxying.get(id);
+		        if (proxy != null) {
+		            return proxy;
+		        }
 
-			proxy = new ProxyObject<S>(this, id, clazz);
-
-			proxying.put(proxy.getId(), proxy);
+    			proxy = new ProxyObject<S>(this, id, clazz);
+    
+    			proxying.put(proxy.getId(), proxy);
+		    }
 		}
 
 		return proxy;
@@ -217,5 +245,46 @@ public class Distributor<T> implements Peer<T>, ByteArrayConsumer {
 		}
 		feeder.run();
 	}
+	
+    public <R> Serializer<R> addSerializer(Serializer<R> serializer, Class<?>... classes) {
+        for (Class<?> clazz : classes) {
+            serializers.put(clazz, serializer);
+        }
+        return serializer;
+    }
+	
+    public Serializer<Object> serializerFor(String className) {
+        return serializerFor(classForName(className));
+    }
+
+    public Serializer<Object> serializerFor(Class<?> clazz) {
+        return serializerFor(clazz, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Serializer<Object> getSerializerFor(Class<?> clazz) {
+        Serializer<Object> s = (Serializer<Object>) serializers.get(clazz);
+        if (s != null) {
+            return s;
+        }
+        return (Serializer<Object>) Serializers.serializerFor(clazz);
+    }
+
+    public static boolean hasAnnotation(Annotation[] anns, Class<? extends Annotation> clazz) {
+        for (Annotation ann : anns) {
+            if (clazz == ann.annotationType()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Class<?> classForName(String className) {
+        try {
+            return ClassResolver.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

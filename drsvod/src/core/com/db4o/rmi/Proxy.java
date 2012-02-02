@@ -2,8 +2,6 @@ package com.db4o.rmi;
 
 import java.lang.annotation.*;
 
-import com.db4o.rmi.*;
-
 /**
  * <p>Parameters annotated with this should not be serialized, they rather must
  * registered in the {@link Distributor} and a proxy must be instantiated on the

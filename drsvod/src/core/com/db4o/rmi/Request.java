@@ -5,10 +5,11 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 class Request {
 
-	private Object value;
-	private boolean done = false;
+	private volatile Object value;
+	private volatile boolean done = false;
 	private Method method;
 	private Object[] args;
 	private List<Callback<?>> callbacks;
@@ -33,11 +34,11 @@ class Request {
 		return value;
 	}
 
-	public Object getInternal() {
+	public Object getResult() {
 		return value;
 	}
 
-	public synchronized void set(Object value) {
+    public synchronized void set(Object value) {
 		this.value = value;
 		done = true;
 		notifyAll();
@@ -49,7 +50,7 @@ class Request {
 		}
 	}
 
-	public synchronized void addCallback(Callback callback) {
+    public synchronized void addCallback(Callback callback) {
 		if (done) {
 			callback.returned(value);
 			return;
@@ -78,12 +79,12 @@ class Request {
 
 			Annotation[] anns = method.getParameterAnnotations()[i];
 			
-			boolean proxy = hasAnnotation(anns, Proxy.class);
+			boolean proxy = Distributor.hasAnnotation(anns, Proxy.class);
 
 			out.writeBoolean(proxy);
 			if (proxy) {
 				
-				out.writeBoolean(hasAnnotation(anns, Async.class));
+				out.writeBoolean(Distributor.hasAnnotation(anns, Async.class));
 
 				ServerObject server = distributor.serverFor(o);
 
@@ -92,36 +93,11 @@ class Request {
 
 			} else {
 
-				serializerFor(t).serialize(out, o);
+				distributor.serializerFor(t).serialize(out, o);
 			}
 		}
 	}
 	
-	public static Serializer<Object> serializerFor(String className) {
-		Serializer<Object> s = (Serializer<Object>) Serializers.serializerFor(classForName(className));
-		if (s == null) {
-			throw new RuntimeException("No serializer registered for: " + className);
-		}
-		return s;
-	}
-
-	public static Serializer<Object> serializerFor(Class<?> t) {
-		Serializer<Object> s = (Serializer<Object>) Serializers.serializerFor(t);
-		if (s == null) {
-			throw new RuntimeException("No serializer registered for: " + t);
-		}
-		return s;
-	}
-
-	public static boolean hasAnnotation(Annotation[] anns, Class<? extends Annotation> clazz) {
-		for (Annotation ann : anns) {
-			if (clazz == ann.annotationType()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void deserialize(DataInput in) throws IOException {
 
 		String name = in.readUTF();
@@ -130,7 +106,7 @@ class Request {
 
 		for (int i = 0; i < paramTypes.length; i++) {
 
-			Class<?> t = classForName(in.readUTF());
+			Class<?> t = distributor.classForName(in.readUTF());
 			paramTypes[i] = t;
 
 			if (!in.readBoolean()) {
@@ -145,14 +121,14 @@ class Request {
 				boolean async = in.readBoolean();
 				
 				long id = in.readLong();
-				Class<?> clazz = classForName(in.readUTF());
+				Class<?> clazz = distributor.classForName(in.readUTF());
 
 				ProxyObject<?> peer = distributor.proxyFor(id, clazz);
 				args[i] = async ? peer.async() : peer.sync();
 
 			} else {
 
-				args[i] = serializerFor(t).deserialize(in);
+				args[i] = distributor.serializerFor(t).deserialize(in);
 			}
 		}
 		resolveMethod(name, paramTypes);
@@ -165,14 +141,6 @@ class Request {
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static Class<?> classForName(String className) {
-		try {
-			return ClassResolver.forName(className);
-		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -192,5 +160,9 @@ class Request {
 	public boolean hasValue() {
 		return done;
 	}
+
+    public Class<?> getResultDeclaredType() {
+        return method.getReturnType();
+    }
 
 }

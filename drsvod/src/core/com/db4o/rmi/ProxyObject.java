@@ -19,7 +19,8 @@ public class ProxyObject<T> implements Peer<T> {
 		this.distributor = distributor;
 	}
 
-	public T sync() {
+	@SuppressWarnings("unchecked")
+    public T sync() {
 		if (syncFacade == null) {
 			syncFacade = (T) java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { facade }, new InvocationHandler() {
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -47,7 +48,8 @@ public class ProxyObject<T> implements Peer<T> {
 		return asyncFacade;
 	}
 
-	public <R> T async(final Callback<R> callback) {
+	@SuppressWarnings("unchecked")
+    public <R> T async(final Callback<R> callback) {
 		return (T) java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] { facade }, new InvocationHandler() {
 
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

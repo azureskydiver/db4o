@@ -1,10 +1,10 @@
 package com.db4o.rmi.test;
 
 import java.io.*;
+import java.util.*;
+import java.util.concurrent.*;
 
-import com.db4o.foundation.*;
 import com.db4o.rmi.*;
-import com.db4o.util.*;
 
 public class Feeder extends TheSimplest {
 
@@ -12,15 +12,15 @@ public class Feeder extends TheSimplest {
 
 	public static class AccConsumer implements ByteArrayConsumer {
 
-		private BlockingQueue4<byte[]> q = new BlockingQueue<byte[]>();
+		private BlockingQueue<byte[]> q = new LinkedBlockingQueue<byte[]>();
 
 		public void consume(byte[] buffer, int offset, int length) throws IOException {
 
-			q.add(ArrayUtil.copy(buffer, offset, offset + length));
+			q.add(Arrays.copyOfRange(buffer, offset, offset + length));
 		}
 
 		public byte[] take() throws InterruptedException {
-			return q.hasNext() ? q.next() : null;
+			return q.poll();
 		}
 
 	}
@@ -33,9 +33,10 @@ public class Feeder extends TheSimplest {
 
 		server = new Distributor<Facade>(serverProducedBuffers, concreteFacade);
 		client = new Distributor<Facade>(server, Facade.class);
+		
+        addCustomClassSerializer();
 
-		final Distributor c = (Distributor) client;
-		c.setFeeder(new Runnable() {
+		client.setFeeder(new Runnable() {
 
 			public void run() {
 
@@ -62,7 +63,7 @@ public class Feeder extends TheSimplest {
 				try {
 					while (true) {
 						Thread.sleep(1);
-						c.getFeeder().run();
+						client.getFeeder().run();
 					}
 				} catch (InterruptedException e) {
 				}
@@ -73,14 +74,12 @@ public class Feeder extends TheSimplest {
 
 	}
 
-	@Override
 	public void tearDown() throws Exception {
 		clientFeederThread.interrupt();
 		try {
 			clientFeederThread.join();
 		} catch (InterruptedException e) {
 		}
-		super.tearDown();
 	}
 
 }
