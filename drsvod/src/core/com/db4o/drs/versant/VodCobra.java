@@ -2,14 +2,17 @@
 
 package com.db4o.drs.versant;
 
-import static com.db4o.qlin.QLinSupport.prototype;
+import static com.db4o.qlin.QLinSupport.*;
 
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.versant.cobra.qlin.*;
 import com.db4o.drs.versant.metadata.*;
+import com.db4o.drs.versant.metadata.ClassMetadata;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.qlin.*;
@@ -18,6 +21,10 @@ import com.versant.odbms.model.*;
 import com.versant.odbms.query.*;
 
 public class VodCobra implements QLinable, VodCobraFacade{
+	
+	private static final long LOCK_TIMEOUT = 30000;
+	
+	private static final int WAIT_BEFORE_LOCK_RETRY = 10;
 	
 	private static final String CLASS_NAME_FIELD_NAME = "name";
 
@@ -32,6 +39,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	private DatastoreManager _dm;
 	
 	private Set<String> _storedClassNames;
+	
+	private long _defaultSignatureLoid;
+	
+	private Map<Class, ClassMetadata> _classToClassMetadata = new HashMap<Class, ClassMetadata>();
 	
 	public static VodCobraFacade createInstance(VodDatabase vod) {
 		return new VodCobra(vod);
@@ -77,7 +88,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return storedInfo.uuidLongPart();
 	}
 	
-	public void produceSchema(Class clazz){
+	public void produceSchema(Class<?> clazz){
 		UserSchemaModel userSchemaModel = VodCobraSchemaManager.buildUserSchemaModel(clazz);
 		VodCobraSchemaManager.defineSchema(datastoreManagerFactory(), userSchemaModel);
 	}
@@ -104,7 +115,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		if(DrsDebug.verbose) {
 			System.out.println(String.format("Created loid: %d (%x) for object of type %s" , loid, loid, obj.getClass().getName()));
 		}
-		DatastoreInfo info = _dm.getPrimaryDatastoreInfo();
+		DatastoreInfo info = datastoreInfo();
 		SchemaEditor editor = _dm.getSchemaEditor();
 
 		DatastoreSchemaClass dsc = editor.findClass(obj.getClass().getName(), info);
@@ -118,6 +129,10 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		if (obj instanceof VodLoidAwareObject) {
 			((VodLoidAwareObject)obj).loid(loid);
 		}
+	}
+
+	private DatastoreInfo datastoreInfo() {
+		return _dm.getPrimaryDatastoreInfo();
 	}
 
 	private void writeFields(Object obj, DatastoreObject datastoreObject) {
@@ -160,7 +175,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	private DatastoreObject newDatastoreObject(Class clazz) {
-		DatastoreObject datastoreObject = new DatastoreObject(_dm.getNewLoid(_dm.getPrimaryDatastoreInfo()), datastoreSchemaClass(clazz), _dm.getPrimaryDatastoreInfo());
+		DatastoreObject datastoreObject = new DatastoreObject(_dm.getNewLoid(datastoreInfo()), datastoreSchemaClass(clazz), datastoreInfo());
 		datastoreObject.setTimestamp(1);
 		datastoreObject.setIsNew(true);
 		datastoreObject.allocate();
@@ -251,7 +266,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 	
 	public DatastoreSchemaClass datastoreSchemaClass(String name) {
-		return _dm.getSchemaEditor().findClass(name, _dm.getPrimaryDatastoreInfo());
+		return _dm.getSchemaEditor().findClass(name, datastoreInfo());
 	}
 	
 	public boolean isKnownClass(Class clazz) {
@@ -378,7 +393,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	}
 
 	public short databaseId(){
-		return _dm.getPrimaryDatastoreInfo().getDBID();	
+		return datastoreInfo().getDBID();	
 	}
 	
 	public String databaseName(){
@@ -419,7 +434,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	      Set<String> classNames = new HashSet<String>();
 	      String classclazzNam = CLASS_CLASS_NAME;
 	      DatastoreObject[] dsos = datastoreObjects(classclazzNam);
-	      DatastoreSchemaClass dsc = _dm.getSchemaEditor().findClass(classclazzNam, _dm.getPrimaryDatastoreInfo());
+	      DatastoreSchemaClass dsc = _dm.getSchemaEditor().findClass(classclazzNam, datastoreInfo());
 	      DatastoreSchemaField dsf = dsc.findField(CLASS_NAME_FIELD_NAME);
 	      for(int i = 0; i < dsos.length;i++){
 	    	  String className = dsos[i].readObject(dsf).toString();
@@ -466,7 +481,7 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return executeQuery(new DatastoreQuery(storedClassName(className)));
 	}
 	
-	private String storedClassName(String className){
+	public String storedClassName(String className){
 		initializeStoredClassNames();
 		if(_storedClassNames.contains(className)){
 			return className;
@@ -518,6 +533,134 @@ public class VodCobra implements QLinable, VodCobraFacade{
 			result[i] = datastoreLoid.value();
 		}
 		return result;
+	}
+
+	@Override
+	public boolean lockClass(Class<?> clazz) {
+		try{
+			_dm.lockObject(datastoreObjectFor(clazz), DataStoreLockMode.WLOCK, Options.NO_WAIT_OPTION);
+			return true;
+		} catch(DatastoreException exc) {
+	        if( exc.getDatastoreErrorCode() == DatastoreErrorCodes.SM_LOCK_WOULDBLOCK ) {
+	        	return false;
+	        }
+	        throw exc;
+		}
+	}
+
+	@Override
+	public void unlockClass(Class<?> clazz) {
+		try{
+			DatastoreObject dso = datastoreObjectFor(clazz);
+			_dm.lockObject(dso, DataStoreLockMode.NOLOCK, Options.DOWNGRADE_LOCKS_OPTION);
+		} catch(DatastoreException exc) {
+	        if( exc.getDatastoreErrorCode() == DatastoreErrorCodes.SM_LOCK_WOULDBLOCK ) {
+	        	exc.printStackTrace();
+	        }
+	        throw exc;
+		}
+	}
+	
+	private DatastoreObject datastoreObjectFor(Class<?> clazz) {
+		DatastoreSchemaClass datastoreSchemaClass = datastoreSchemaClass(clazz);
+		long loid = datastoreSchemaClass.getLOID();
+		DatastoreObject datastoreObject = new DatastoreObject(loid);
+		datastoreObject.setDatastoreInfo(datastoreInfo());
+		return datastoreObject;
+	}
+
+	@Override
+	public <T> T withLock(final Class<?> clazz, Closure4<T> closure) {
+		retryWithTimeOut(new Closure4<Boolean>() {
+			@Override
+			public Boolean run() {
+				return lockClass(clazz);
+			}
+		}, LOCK_TIMEOUT, WAIT_BEFORE_LOCK_RETRY);
+		try {
+			return closure.run();
+		} finally {
+			unlockClass(clazz);
+		}
+	}
+
+	private static void retryWithTimeOut(Closure4<Boolean> closure, long timeout, int waitBetweenRetry) {
+		if(closure.run()){
+			return;
+		}
+		long start = System.currentTimeMillis();
+		while(! closure.run()){
+			if(System.currentTimeMillis() - start > timeout){
+				throw new TimeoutException();
+			}
+			try {
+				Thread.sleep(waitBetweenRetry);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
+	public long defaultSignatureLoid() {
+		if (_defaultSignatureLoid > 0) {
+			return _defaultSignatureLoid;
+		}
+		_defaultSignatureLoid = queryForMySignatureLoid();
+		if (_defaultSignatureLoid != 0) {
+			return _defaultSignatureLoid;
+		}
+		return withLock(DatabaseSignature.class, new Closure4<Long>() {
+			@Override
+			public Long run() {
+				DatabaseSignature databaseSignature = new DatabaseSignature(signatureBytes(databaseId()));
+				store(databaseSignature);
+				commit();
+				_defaultSignatureLoid = databaseSignature.loid();
+				return _defaultSignatureLoid;
+			}
+		});
+	}
+	
+	public ClassMetadata classMetadata(Class clazz){
+		ClassMetadata classMetadata = _classToClassMetadata.get(clazz);
+		if(classMetadata != null){
+			return classMetadata;
+		}
+		return ensureClassMetadata(clazz);
+	}
+	
+	private ClassMetadata ensureClassMetadata(final Class clazz) {
+		final String fullyQualifiedName = clazz.getName();
+		final String schemaName = schemaName(fullyQualifiedName);
+		ClassMetadata classMetadata = queryForClassMetadata(clazz, schemaName);
+		if(classMetadata != null){
+			return classMetadata;
+		}
+		return withLock(ClassMetadata.class, new Closure4<ClassMetadata>() {
+			@Override
+			public ClassMetadata run() {
+				
+				ClassMetadata classMetadata = queryForClassMetadata(clazz, schemaName);
+				if(classMetadata != null){
+					return classMetadata;
+				}
+				classMetadata = new ClassMetadata(schemaName, fullyQualifiedName);
+				store(classMetadata);
+				commit();
+				_classToClassMetadata.put(clazz, classMetadata);
+				return classMetadata;
+			}
+		});
+	}
+
+	private ClassMetadata queryForClassMetadata(Class clazz, String schemaName) {
+		ClassMetadata classMetadata = prototype(ClassMetadata.class);
+		ClassMetadata storedClassMetadata = from(ClassMetadata.class).where(classMetadata.name()).equal(schemaName).singleOrDefault(null);
+		if(storedClassMetadata != null){
+			_classToClassMetadata.put(clazz, storedClassMetadata);
+			return storedClassMetadata;
+		}
+		return null;
 	}
 
 }

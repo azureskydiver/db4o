@@ -2,16 +2,21 @@
 
 package com.db4o.drs.test.versant.timestamp;
 
+import com.db4o.drs.test.versant.*;
+import com.db4o.drs.versant.*;
 import com.db4o.drs.versant.timestamp.*;
 
 import db4ounit.*;
 
-public class TimestampGeneratorTestCase implements TestCase{
+public class TimestampGeneratorTestCase extends VodCobraTestCaseBase {
 	
 	public void test(){
-		TimestampGenerator timestampGenerator = new TimestampGenerator();
+		CobraReplicationSupport.initialize(_cobra);
+		TimestampGenerator timestampGenerator = new TimestampGenerator(_cobra);
 		long timestamp = timestampGenerator.generate();
 		Assert.isGreater(0, timestamp);
+		long timestamp2 = timestampGenerator.generate();
+		Assert.isGreater(timestamp, timestamp2);
 	}
 
 }

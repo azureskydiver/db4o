@@ -3,35 +3,26 @@
 package com.db4o.drs.test.cobra;
 
 
-import com.db4o.drs.versant.*;
 import static com.db4o.qlin.QLinSupport.*;
+
+import com.db4o.drs.test.versant.*;
 
 import db4ounit.*;
 
-public class CobraObjectLifecycleTestCase implements TestCase {
+public class CobraObjectLifecycleTestCase extends VodCobraTestCaseBase {
 	
 	public void test(){
-		VodDatabase vod = new VodDatabase("drscobra", "drs", "drs");
-		vod.removeDb();
-		vod.produceDb();
-		vod.addUser();
-		VodCobraFacade cobra = VodCobra.createInstance(vod);
-		cobra.produceSchema(Item.class);
+		_cobra.produceSchema(Item.class);
 		Item item = new Item("one");
 		item.setLongs(new long[] {1, 2});
-		cobra.store(item);
-		cobra.commit();
-		
+		_cobra.store(item);
+		_cobra.commit();
 		Item i = prototype(Item.class);
-		Item retrievedItem = cobra.from(Item.class).where(i.getName()).equal("one").single();
-		
+		Item retrievedItem = _cobra.from(Item.class).where(i.getName()).equal("one").single();
 		Assert.areEqual("one", retrievedItem.getName());
 		ArrayAssert.areEqual(new long[]{1,2}, retrievedItem.getLongs());
-		
-		cobra.delete(retrievedItem);
-		cobra.commit();
-		
-		cobra.close();
+		_cobra.delete(retrievedItem);
+		_cobra.commit();
 	}
 
 }

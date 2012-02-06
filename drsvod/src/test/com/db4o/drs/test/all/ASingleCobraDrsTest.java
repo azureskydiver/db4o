@@ -28,12 +28,12 @@ import com.db4o.reflect.*;
 
 import db4ounit.*;
 
-public class ASingleDrsTest implements TestSuiteBuilder {
+public class ASingleCobraDrsTest implements TestSuiteBuilder {
 	
 	Reflector reflector = new JdoReflector(getClass().getClassLoader());
 	
 	public static void main(String[] args) {
-		int errors = new ConsoleTestRunner(new ASingleDrsTest()).run();
+		int errors = new ConsoleTestRunner(new ASingleCobraDrsTest()).run();
 		if (errors != 0) {
 			System.exit(errors);
 		}
@@ -42,7 +42,7 @@ public class ASingleDrsTest implements TestSuiteBuilder {
 	public Iterator4 iterator() {
 		return new DrsTestSuiteBuilder(
 				new Db4oDrsFixture("db4o-a"),
-				new VodDrsFixture("vod-drs-b"),
+				new VodCobraDrsFixture("vod-drs-b"),
 				TheSimplest.class,
 				reflector).iterator();
 	}

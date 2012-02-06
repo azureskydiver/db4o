@@ -16,6 +16,9 @@ public class ObjectInfo extends VodLoidAwareObject {
 	
 	private long version;
 	
+	private long internalTimestamp;  // This is where o_ts_timestamp goes.
+	
+	
 	public ObjectInfo(long signatureLoid, long classMetadataLoid, long objectLoid,  long longPart, long version, int operation) {
 		this.signatureLoid = signatureLoid; 
 		this.classMetadataLoid = classMetadataLoid;
