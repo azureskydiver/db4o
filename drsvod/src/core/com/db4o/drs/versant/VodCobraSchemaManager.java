@@ -4,6 +4,7 @@ package com.db4o.drs.versant;
 
 import java.lang.reflect.*;
 
+import com.db4o.drs.versant.jdo.reflect.*;
 import com.versant.odbms.*;
 import com.versant.odbms.model.*;
 import com.versant.odbms.model.transcriber.*;
@@ -11,13 +12,22 @@ import com.versant.odbms.model.transcriber.*;
 public class VodCobraSchemaManager {
 
 	public static UserSchemaModel buildUserSchemaModel(Class clazz) {
+		
 		UserSchemaModel userSchemaModel = new UserSchemaModel();
 		UserSchemaClass userSchemaClass = new UserSchemaClass(clazz.getName(),
 				new UserSchemaClass[0], userSchemaModel);
 
 		Field[] declaredFields = clazz.getDeclaredFields();
 		for (Field field : declaredFields) {
-
+			if(field.isSynthetic()){
+				continue;
+			}
+			if (Modifier.isTransient(field.getModifiers())) {
+				continue;
+			}
+			if(JdoMirror.isJdoInjectedField(field.getName())){
+				continue;
+			}
 			int nullFlags = SchemaFieldConstants.NULL_ALLOWED
 					| SchemaFieldConstants.NULL_ELEMENTS_ALLOWED;
 			if (field.getType() == String.class) {
@@ -32,11 +42,9 @@ public class VodCobraSchemaManager {
 						field.getName(), arrayType, valueTypeDomain, nullFlags);
 
 			} else {
-				SchemaClass fieldDomain = userSchemaModel.getSchemaClass(field
-						.getType().getName());
+				SchemaClass fieldDomain = userSchemaModel.getSchemaClass(field.getType().getName());
 				if (fieldDomain == null) {
-					userSchemaField = userSchemaClass.newField(field.getName(),
-							field.getType(), nullFlags);
+					userSchemaField = userSchemaClass.newField(field.getName(), field.getType(), nullFlags);
 				} else {
 					userSchemaField = userSchemaClass.newField(field.getName(),
 							fieldDomain);
@@ -44,9 +52,11 @@ public class VodCobraSchemaManager {
 			}
 
 			if (field.getAnnotation(Indexed.class) != null) {
-				System.out.println("Creating index " + clazz.getSimpleName() + "_" + field.getName());
+				
+				// System.out.println("Creating index " + clazz.getSimpleName() + "_" + field.getName());
+				
 				userSchemaClass.newIndex(
-						clazz.getSimpleName() + "_" + field.getName() + "X", 
+						clazz.getSimpleName() + "_" + field.getName(), 
 						new UserSchemaField[]{userSchemaField}, 
 						SchemaIndexType.BTREE_INDEX);
 			}

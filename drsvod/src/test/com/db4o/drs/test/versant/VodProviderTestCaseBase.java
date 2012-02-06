@@ -2,8 +2,6 @@
 
 package com.db4o.drs.test.versant;
 
-import java.util.*;
-
 import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.versant.*;

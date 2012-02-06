@@ -60,13 +60,23 @@ public class VodCobraTestCase extends VodDatabaseTestCaseBase implements TestLif
 		Assert.areEqual(1, events.size());
 	}
 	
+	public void testLockClass(){
+		Assert.isTrue(_cobra.lockClass(ObjectInfo.class));
+		VodCobraFacade cobra2 = VodCobra.createInstance(_vod);
+		Assert.isFalse(cobra2.lockClass(ObjectInfo.class));
+		_cobra.unlockClass(ObjectInfo.class);
+		Assert.isTrue(cobra2.lockClass(ObjectInfo.class));
+		cobra2.unlockClass(ObjectInfo.class);
+	}
+	
 	private void ensureSchemaCreated() {
-		VodJdo.createInstance(_vod).close();
+		// VodJdo.createInstance(_vod).close();
 	}
 
 	public void setUp() throws Exception {
 		_cobra = VodCobra.createInstance(_vod);
-		ensureSchemaCreated();
+		CobraReplicationSupport.initialize(_cobra);
+		// ensureSchemaCreated();
 	}
 
 	public void tearDown() throws Exception {

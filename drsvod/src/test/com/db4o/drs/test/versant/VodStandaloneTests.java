@@ -26,7 +26,6 @@ public class VodStandaloneTests extends ReflectionTestSuite {
 					ListenForClassesTestCase.class,
 					TriangleReplicationTestCase.class,
 					UuidConverterTestCase.class,
-					VodCobraTestCase.class,
 					VodDatabaseLifecycleTestCase.class,
 					VodDatabaseTestCase.class,
 					VodEventTestCase.class,

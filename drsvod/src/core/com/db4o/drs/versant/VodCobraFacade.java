@@ -2,6 +2,8 @@ package com.db4o.drs.versant;
 
 import java.util.*;
 
+import com.db4o.drs.versant.metadata.*;
+import com.db4o.foundation.*;
 import com.db4o.qlin.*;
 import com.versant.odbms.query.*;
 
@@ -59,7 +61,19 @@ public interface VodCobraFacade {
 
 	long[] loidsForStoredObjectsOfClass(String className);
 	
-	public void produceSchema(Class clazz);
+	public void produceSchema(Class<?> clazz);
 
+	boolean lockClass(Class<?> clazz);
+
+	void unlockClass(Class<?> clazz);
+
+	<T> T withLock(Class<?> clazz, Closure4<T> closure);
+	
+	String storedClassName(String className);
+	
+	ClassMetadata classMetadata(Class clazz);
+	
+	long defaultSignatureLoid();
+	
 	
 }
