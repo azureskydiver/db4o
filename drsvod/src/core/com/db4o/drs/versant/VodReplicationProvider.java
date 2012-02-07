@@ -418,7 +418,7 @@ public class VodReplicationProvider implements TestableReplicationProviderInside
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			long signatureLoid = produceSignature(signature);
 			long otherLongPart = ref.uuid().getLongPart();
-			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimestamp, Operations.CREATE.value);
+			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimestamp, Operations.CREATE.value, 0);
 		} else{
 			objectInfo.version(_commitTimestamp);
 			objectInfo.operation(Operations.UPDATE.value);
