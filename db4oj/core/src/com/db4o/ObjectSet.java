@@ -16,7 +16,9 @@ import java.util.List;
  * {@link ObjectContainer ObjectContainer} of an ObjectSet
  * needs to remain open as long as an ObjectSet is used. This is necessary
  * for lazy instantiation. The objects in an ObjectSet are only instantiated
- * when they are actually being used by the application. 
+ * when they are actually being used by the application. In case you want to use a query
+ * result after the object container has been closed, you need to copy the result set.
+ *
  * @see ExtObjectSet for extended functionality.
  * 
  */
