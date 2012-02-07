@@ -2,30 +2,64 @@
 
 package com.db4o.drs.versant;
 
+import java.util.*;
+
+import com.db4o.*;
 import com.db4o.drs.versant.metadata.*;
 import com.db4o.drs.versant.metadata.ObjectInfo.*;
 import com.db4o.drs.versant.timestamp.*;
 import com.versant.odbms.*;
 import com.versant.odbms.query.*;
 import com.versant.odbms.query.Operator.UnaryOperator;
+import static com.db4o.qlin.QLinSupport.*;
 
 public class ObjectInfoMaintainer {
 
-	private static final int OBJECTINO_STORED_THRESHOLD = Integer.MAX_VALUE / 2;
+	public static final int OBJECTINO_STORED_THRESHOLD = Integer.MAX_VALUE / 2;
 	
-	private static final long OBJECT_VERSION_FOR_PREEXISTING = 1; 	// can't use 0 because we query for > 0
-
 	private final VodCobraFacade _cobra;
 	
 	private final TimestampGenerator _timestampGenerator;
+	
+	private final List<Long> _newLoids = new ArrayList<Long>();
 
 	public ObjectInfoMaintainer(VodCobraFacade cobra) {
 		_cobra = cobra;
 		_timestampGenerator = new TimestampGenerator(cobra);
 		System.err.println("TODO: Replace TimestampGenerator with more efficient algorithm that reserves timestamps and doesn't call commit for every timestamp.");
 	}
+	
+	public void updateObjectInfos(Class<?> clazz, long updateToVersion) {
+		ensureObjectInfosExist(clazz, updateToVersion);
+		ensureObjectInfosInSync(clazz, updateToVersion);
+		_cobra.commit();
+	}
 
-	public void ensureObjectInfosExist(Class<?> clazz) {
+	private void ensureObjectInfosInSync(Class<?> clazz, long updateToVersion) {
+		long classMetadataLoid = _cobra.classMetadata(clazz).loid();
+		ObjectInfo info = prototype(ObjectInfo.class);
+		ObjectSet<ObjectInfo> objectSet = _cobra.from(ObjectInfo.class).where(info.classMetadataLoid()).equal(classMetadataLoid).select();
+		int count = 0;
+		ObjectInfo[] objectInfos = new ObjectInfo[objectSet.size()];
+		long[] loids = new long[objectSet.size()];
+		Iterator<ObjectInfo> it = objectSet.iterator();
+		while(it.hasNext()){
+			objectInfos[count] = it.next();
+			loids[count] = objectInfos[count].objectLoid();
+			count++;
+		}
+		int[] timestamps = _cobra.getTimestamps(loids);
+		for (int i = 0; i < loids.length; i++) {
+			ObjectInfo objectInfo = objectInfos[i];
+			if(timestamps[i] > objectInfo.internalTimestamp()){
+				objectInfo.internalTimestamp(timestamps[i]);
+				objectInfo.version(updateToVersion);
+			}
+			_cobra.store(objectInfo);
+		}
+	}
+
+	private void ensureObjectInfosExist(Class<?> clazz, long versionForNewObjectInfo) {
 		DatastoreQuery query = new DatastoreQuery(_cobra.storedClassName(clazz.getName()));
 		Expression expression = new Expression(
 				new SubExpression(new Field("o_ts_timestamp")),
@@ -39,24 +73,37 @@ public class ObjectInfoMaintainer {
 		// FIXME: Group write all changes to improve performance.
 		System.err.println("TODO: group write objects");
 		
-		for (Object loid : loids) {
-			DatastoreLoid dsl = (DatastoreLoid) loid;
-			long loidAsLong = dsl.value();
+		long[] loidsAsLong = new long[loids.length];
+		
+		for (int i = 0; i < loids.length; i++) {
+			loidsAsLong[i] = ((DatastoreLoid)loids[i]).value();
 			ObjectInfo objectInfo = new ObjectInfo(
 					_cobra.defaultSignatureLoid(), 
 					classMetadataLoid, 
-					loidAsLong, 
+					loidsAsLong[i], 
 					_timestampGenerator.generate(), 
-					OBJECT_VERSION_FOR_PREEXISTING, 
-					Operations.CREATE.value);
+					versionForNewObjectInfo, 
+					Operations.CREATE.value,
+					0);
 			_cobra.store(objectInfo);
-			
-			System.err.println("Next step: set the o_ts_timestamp in ObjectInfo");
 		}
-		
-		
-		_cobra.commit();
-
+		_cobra.updateTimestamps(OBJECTINO_STORED_THRESHOLD, loidsAsLong);
 	}
+	
+	public void addNewLoid(long loid){
+		_newLoids.add(loid);
+	}
+	
+	public void commitNewLoids(){
+		long[] newLoidsArray = new long[_newLoids.size()];
+		for (int i = 0; i < newLoidsArray.length; i++) {
+			newLoidsArray[i] = _newLoids.get(i);
+		}
+		_cobra.updateTimestamps(OBJECTINO_STORED_THRESHOLD, newLoidsArray);
+		_cobra.commit();
+		_newLoids.clear();
+	}
+	
+	
 
 }

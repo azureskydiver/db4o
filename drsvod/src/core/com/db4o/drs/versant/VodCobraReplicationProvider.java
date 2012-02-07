@@ -166,9 +166,9 @@ public class VodCobraReplicationProvider implements TestableReplicationProviderI
 		}
 	}
 	
-	
 	public void commit() {
 		_jdo.commit();
+		_objectInfoMaintainer.commitNewLoids();
 	}
 
 	public void delete(Object obj) {
@@ -232,6 +232,7 @@ public class VodCobraReplicationProvider implements TestableReplicationProviderI
 	public void commitReplicationTransaction() {
 		updateReplicationCommitToken();
 		_jdo.commit();
+		_objectInfoMaintainer.commitNewLoids();
 		storeReplicationCommitRecord();
 		_replicationReferences = new GenericObjectReferenceMap<ReplicationReferenceImpl>();
 	}
@@ -398,7 +399,9 @@ public class VodCobraReplicationProvider implements TestableReplicationProviderI
 			Signature signature = new Signature(ref.uuid().getSignaturePart());
 			long signatureLoid = produceSignature(signature);
 			long otherLongPart = ref.uuid().getLongPart();
-			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimestamp, Operations.CREATE.value);
+			objectInfo = new ObjectInfo(signatureLoid, classMetadataLoid, loid,  otherLongPart, _commitTimestamp, Operations.CREATE.value, ObjectInfoMaintainer.OBJECTINO_STORED_THRESHOLD);
+			_objectInfoMaintainer.addNewLoid(loid);
+			
 		} else{
 			objectInfo.version(_commitTimestamp);
 			objectInfo.operation(Operations.UPDATE.value);
@@ -476,10 +479,10 @@ public class VodCobraReplicationProvider implements TestableReplicationProviderI
 		if(clazz == null){
 			Class[] knownClasses = knownClasses();
 			for (Class claxx : knownClasses) {
-				_objectInfoMaintainer.ensureObjectInfosExist(claxx);
+				_objectInfoMaintainer.updateObjectInfos(claxx, _commitTimestamp - 1);
 			}
 		} else {
-			_objectInfoMaintainer.ensureObjectInfosExist(clazz);
+			_objectInfoMaintainer.updateObjectInfos(clazz, _commitTimestamp - 1);
 		}
 		
 		String filter = "((this.version > " + getLastReplicationVersion() + " && this.version < " + _commitTimestamp + ")";

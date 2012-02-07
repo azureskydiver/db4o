@@ -74,6 +74,10 @@ public interface VodCobraFacade {
 	ClassMetadata classMetadata(Class clazz);
 	
 	long defaultSignatureLoid();
+
+	void updateTimestamps(int newTimestamp, long... loids);
+
+	int[] getTimestamps(long... objectLoid);
 	
 	
 }

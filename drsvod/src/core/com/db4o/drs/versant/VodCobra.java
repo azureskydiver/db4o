@@ -663,4 +663,61 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		return null;
 	}
 
+	@Override
+	public void updateTimestamps(int newTimestamp, long... loids) {
+		
+		if(loids == null || loids.length == 0){
+			return;
+		}
+
+		DatastoreObject[] objs = new DatastoreObject[loids.length];
+		int count = 0;
+		for(long loid : loids) {
+			objs[count++] = new DatastoreObject(new DatastoreLoid(loid));
+		}
+		GroupOperationResult readResult = _dm.groupReadObjects(objs, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		if (readResult != null) {
+			throw new RuntimeException("Failure in groupReadObjects when updating timestamp.");
+		}
+		DatastoreObject[] writes = new DatastoreObject[loids.length];
+
+		for(int i=0;i<count;i++) {
+			DatastoreObject dso = objs[i];
+			DatastoreSchemaClass clazz = dso.getSchemaClass();
+			
+			DatastoreObject write = new DatastoreObject(dso.getLOID(), clazz, dso.getDatastoreInfo());
+			write.allocate();
+			
+			for (DatastoreSchemaField field : clazz.getAllFields()) {
+				DatastoreObject.copyField(dso, field, write, field);
+			}
+			
+			write.setTimestamp(newTimestamp);
+			writes[i] = write;
+		}
+
+		if (_dm.groupWriteObjects(writes, Options.NO_OPTIONS) != null) {
+			throw new RuntimeException("Failure in groupWriteObjects when updating timestamp.");
+		}
+	}
+
+	@Override
+	public int[] getTimestamps(long ...loids) {
+		int[] result = new int[loids.length];
+		DatastoreObject[] objs = new DatastoreObject[loids.length];
+		int count = 0;
+		for(long loid : loids) {
+			objs[count++] = new DatastoreObject(new DatastoreLoid(loid));
+		}
+		GroupOperationResult readResult = _dm.groupReadObjects(objs, DataStoreLockMode.NOLOCK, Options.NO_OPTIONS);
+		if (readResult != null) {
+			throw new RuntimeException("Failure in groupReadObjects when updating timestamp.");
+		}
+		for(int i=0;i<count;i++) {
+			DatastoreObject dso = objs[i];
+			result[i] = dso.getTimestamp();
+		}
+		return result;
+	}
+
 }

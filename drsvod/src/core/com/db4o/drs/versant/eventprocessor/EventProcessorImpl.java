@@ -412,7 +412,8 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 						loid,
 						_timeStamp,
 						_timeStamp,
-						_operation.value);
+						_operation.value,
+						0);
 			List<ObjectInfo> infos = _objectInfos.get(_transactionId);
 			if(infos == null){
 				infos = new java.util.LinkedList<ObjectInfo>();
@@ -512,8 +513,9 @@ public class EventProcessorImpl implements Runnable, EventProcessor {
 					classMetadataLoid, 
 					loids[i],
 					_timeStampIdGenerator.generate(),
-					OBJECT_VERSION_FOR_PREEXISTING,
-					Operations.CREATE.value  );
+					OBJECT_VERSION_FOR_PREEXISTING,  // this looks broken, pre-existing objects would not be found.
+					Operations.CREATE.value,
+					0);
 			_cobra.store(objectInfo);
 		}
 		_cobra.commit();

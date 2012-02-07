@@ -16,16 +16,17 @@ public class ObjectInfo extends VodLoidAwareObject {
 	
 	private long version;
 	
-	private long internalTimestamp;  // This is where o_ts_timestamp goes.
+	private int internalTimestamp;  // This is where o_ts_timestamp goes.
 	
 	
-	public ObjectInfo(long signatureLoid, long classMetadataLoid, long objectLoid,  long longPart, long version, int operation) {
+	public ObjectInfo(long signatureLoid, long classMetadataLoid, long objectLoid,  long longPart, long version, int operation, int internalTimestamp) {
 		this.signatureLoid = signatureLoid; 
 		this.classMetadataLoid = classMetadataLoid;
 		this.objectLoid = objectLoid;
 		uuidLongPart = longPart;
 		this.version = version;
 		this.operation = operation;
+		this.internalTimestamp = internalTimestamp;
 	}
 
 	public ObjectInfo(){
@@ -72,10 +73,17 @@ public class ObjectInfo extends VodLoidAwareObject {
 	public long version() {
 		return version;
 	}
-
 	
 	public void version(long version) {
 		this.version = version;
+	}
+	
+	public int internalTimestamp(){
+		return this.internalTimestamp;
+	}
+	
+	public void internalTimestamp(int newValue){
+		this.internalTimestamp = newValue;
 	}
 
 
