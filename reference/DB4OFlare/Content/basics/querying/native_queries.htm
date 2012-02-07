@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1141" MadCap:lastWidth="553">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="8" MadCap:lastHeight="1208" MadCap:lastWidth="553">
     <head>
     </head>
     <body>
@@ -20,5 +20,6 @@
         <H2>Native Query Performance</H2>
         <p>There's one drawback of native queries: Under the hood db4o tries to analyze native queries to convert them to <a href="soda_query.htm">SODA</a>. This is not possible for all queries. For some queries it is very difficult to analyze the flowgraph. In this case db4o will have to instantiate some of the persistent objects to actually run the native query code. db4o will try to analyze parts of native query expressions to keep object instantiation to the minimum.</p>
         <p>The current state of the query optimization process is detailed in the chapter on <a href="native_queries/native_query_optimization.htm">Native Query Optimization</a></p>
+        <MadCap:snippetBlock src="../../Snippets/lazy-query-result.flsnp" />
     </body>
 </html>

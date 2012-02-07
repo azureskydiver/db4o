@@ -30,8 +30,21 @@ public class RelationManagementExamples {
         container.store(new Person("Wang","Long",china));
         container.store(new Person("Tekashi","Amuro",japan));
         container.store(new Person("Miller","John",usa));
-        container.store(new Person("Smith","Paul",usa));
-        container.store(new Person("Müller","Hans",germany));
+
+        final Person smith = new Person("Smith", "Paul", usa);
+        final Person mueller = new Person("Müller", "Hans", germany);
+        final Club theClub = new Club();
+        theClub.addMember(mueller);
+        theClub.addMember(smith);
+
+        container.store(theClub);
+
+
+        final Dog dog = new Dog();
+        mueller.addOwnerShipOf(dog);
+
+        container.store(smith);
+        container.store(mueller);
 
     }
 
