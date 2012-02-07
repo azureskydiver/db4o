@@ -27,7 +27,7 @@ public class ActivationDepthPitfall {
     }
 
     private static void fixItWithExplicitlyActivating() {
-        ObjectContainer container = Db4oEmbedded.openFile("database.db4o");
+        ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
         try {
             final Person jodie = queryForJodie(container);
 
@@ -44,7 +44,7 @@ public class ActivationDepthPitfall {
         }
     }
     private static void deactivate() {
-        ObjectContainer container = Db4oEmbedded.openFile("database.db4o");
+        ObjectContainer container = Db4oEmbedded.openFile(DATABASE_FILE);
         try {
             final Person jodie = queryForJodie(container);
 
@@ -65,7 +65,7 @@ public class ActivationDepthPitfall {
 
         EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
         configuration.common().activationDepth(16);
-        ObjectContainer container = Db4oEmbedded.openFile(configuration, "database.db4o");
+        ObjectContainer container = Db4oEmbedded.openFile(configuration, DATABASE_FILE);
         try {
             final Person jodie = queryForJodie(container);
 
