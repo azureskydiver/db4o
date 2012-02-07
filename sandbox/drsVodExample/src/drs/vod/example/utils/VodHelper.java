@@ -18,6 +18,8 @@ public class VodHelper {
 	public static Properties properties() {
 		Properties properties = new Properties();
 		properties.setProperty("javax.jdo.option.ConnectionURL", "versant:dRSVodExample@localhost");
+		properties.setProperty("javax.jdo.option.ConnectionUserName", "drs");
+		properties.setProperty("javax.jdo.option.ConnectionPassword", "drs");
 		properties.setProperty("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 		properties.setProperty("javax.jdo.PersistenceManagerFactoryClass","com.versant.core.jdo.BootstrapPMF");
 		properties.setProperty("versant.metadata.0", "drs/vod/example/model/package.jdo");
@@ -26,11 +28,10 @@ public class VodHelper {
 	}
 	
 	public static void ensureVodDatabaseExists(){
-		VodDatabase vod = new VodDatabase("dRSVodExample");
+		VodDatabase vod = new VodDatabase("dRSVodExample", "drs", "drs");
 		if(! vod.dbExists()){
 			throw new RuntimeException("Database 'dRSVodExample' does not exist. You can create it with /scripts/createDatabase.");
 		}
-		
 	}
 
 }

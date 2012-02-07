@@ -10,6 +10,6 @@ VED_CONFIGFILE=config.ved.linux
 LOG_FILE="drsLogFile.log"
 SERVER_PORT=4000
 CLIENT_PORT=4100
-EVENTPROCESSOR_PORT=4200
+EVENTPROCESSOR_PORT=4088
 VED_CONFIGFILE=$SCRIPT_DIR/config.ved.linux
 LOCAL_CLASSPATH="$(find $EXAMPLE_HOME/lib -iname "*.jar" | tr '\n' ':')$(find $VERSANT_LIB -iname "*.jar" | tr '\n' ':' | sed 's/:$//')"
