@@ -483,6 +483,19 @@ public class VodCobra implements QLinable, VodCobraFacade{
 	
 	public String storedClassName(String className){
 		initializeStoredClassNames();
+		String storedClassName = lookupStoredClassName(className);
+		if(storedClassName != null) {
+			return storedClassName;
+		}
+		_storedClassNames.addAll(classNames(true));
+		storedClassName = lookupStoredClassName(className);
+		if(storedClassName != null) {
+			return storedClassName;
+		}
+		throw new IllegalStateException("Classname not found: " + className);
+	}
+
+	private String lookupStoredClassName(String className) {
 		if(_storedClassNames.contains(className)){
 			return className;
 		}
@@ -490,9 +503,8 @@ public class VodCobra implements QLinable, VodCobraFacade{
 		if(_storedClassNames.contains(unqualifiedName)){
 			return unqualifiedName;
 		}
-		throw new IllegalStateException("Classname not found: " + className);
+		return null;
 	}
-
 	private void initializeStoredClassNames() {
 		if(_storedClassNames != null){
 			return;
