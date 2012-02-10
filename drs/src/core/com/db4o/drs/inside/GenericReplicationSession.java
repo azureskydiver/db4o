@@ -190,6 +190,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 		if (!sourceRef.isMarkedForReplicating()) {
 			return;
 		}
+		if(sourceRef.isMarkedForDeleting()){
+			return;
+		}
 		Object source = sourceRef.object();
 		Object target = sourceRef.counterpart();
 		if(source == null){
@@ -243,9 +246,12 @@ public final class GenericReplicationSession implements ReplicationSession {
 		if (result != null){
 			return result;
 		}
+		if(ref.isMarkedForDeleting()){
+			return null;
+		}
 		ReplicationReference targetRef = targetProvider.produceReferenceByUUID(ref.uuid(), value.getClass());
 		if(targetRef == null){
-			throw new IllegalStateException("unable to find the counterpart of " + value + " of class " + value.getClass());
+			throw new IllegalStateException("unable to find the counterpart of " + value + " of class " + value.getClass() + " uuid " + ref.uuid());
 		}
 		return targetRef.object();
 	}
