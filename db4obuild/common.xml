@@ -321,8 +321,8 @@
 	</target>
 	
 	<target name="get-svn-revision" unless="svn.revision">
-		<!--<svnRevision property="svn.revision" />-->
-		<property name="svn.revision" value="1337"/>
+		<svnRevision property="svn.revision" />
+		<!-- <property name="svn.revision" value="1337"/> -->
 		<echo>Revision: ${svn.revision}</echo>
 	</target>
 
