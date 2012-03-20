@@ -9,7 +9,7 @@ public class AspectVersionContextImpl implements AspectVersionContext{
 	
 	private final int _declaredAspectCount;
 
-	private  AspectVersionContextImpl(int count) {
+	private AspectVersionContextImpl(int count) {
 		_declaredAspectCount = count;
 	}
 
@@ -24,6 +24,10 @@ public class AspectVersionContextImpl implements AspectVersionContext{
 	public static final AspectVersionContextImpl ALWAYS_ENABLED = new AspectVersionContextImpl(Integer.MAX_VALUE);
 	
 	public static final AspectVersionContextImpl CHECK_ALWAYS_ENABLED = new AspectVersionContextImpl(Integer.MAX_VALUE - 1);
+
+	public static AspectVersionContext forSize(int count) {
+		return new AspectVersionContextImpl(count);
+	}
 	
 
 }

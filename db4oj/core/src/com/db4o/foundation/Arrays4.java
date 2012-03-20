@@ -9,6 +9,7 @@ import java.util.*;
 
 /**
  * @exclude
+ * @sharpen.partial
  */
 public class Arrays4 {
 	
@@ -148,6 +149,13 @@ public class Arrays4 {
 			arr[i] = list.get(i);
 		}
 		return arr;
+	}
+
+	/**
+	 * @sharpen.ignore
+	 */
+	public static String toString(Object[] array) {
+		return Arrays.toString(array);
 	}
 
 }

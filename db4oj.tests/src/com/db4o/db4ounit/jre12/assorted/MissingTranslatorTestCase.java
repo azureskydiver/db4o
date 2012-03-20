@@ -1,29 +1,55 @@
 /* Copyright (C) 2012 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.jre12.assorted;
 
-import java.util.*;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.delete.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
+import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
+public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	public static void main(String[] args) {
 		new MissingTranslatorTestCase().runSolo();
 	}
 	
+	public static class ItemTypeHandler implements ReferenceTypeHandler {
+
+		@Override
+		public void delete(DeleteContext context) throws Db4oIOException {
+		}
+
+		@Override
+		public void defragment(DefragmentContext context) {
+		}
+
+		@Override
+		public void write(WriteContext context, Object obj) {
+			Item item = (Item) obj;
+			context.writeInt(item.value);
+		}
+
+		@Override
+		public void activate(ReferenceActivationContext context) {
+			Item item = (Item) context.persistentObject();
+			item.value = context.readInt();
+		}		
+	}
+	
     public static class Item {
         
-        String name;
+        int value;
         
-        public Item(String name){
-            this.name = name;
+        public Item(int name){
+            this.value = name;
         }
 
 		@Override
@@ -34,12 +60,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 			if (getClass() != obj.getClass()) return false;
 			
 			Item other = (Item) obj;
-			if (name == null) {
-				if (other.name != null)
-					return false;
-			} else if (!name.equals(other.name))
-				return false;
-			return true;
+			return value == other.value;
 		}
         
     }
@@ -55,9 +76,10 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 	@Override
 	protected void store() throws Exception {
 		configureTranslator(fixture().config());
+		fixture().config().generateUUIDs(ConfigScope.GLOBALLY);
 		reopen();
 		
-		store(new Item("foo"));
+		store(new Item(42));
 		fixture().resetConfig();
 		reopen();
 	}
@@ -66,7 +88,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 
         public Object onInstantiate(ObjectContainer container, Object storedObject) {
             callCount++;
-        	return new Item((String)storedObject);
+        	return new Item((Integer) storedObject);
         }
 
         public void onActivate(ObjectContainer container, Object applicationObject, Object storedObject) {
@@ -75,11 +97,11 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 
         public Object onStore(ObjectContainer container, Object applicationObject) {
             callCount++;
-            return ((Item)applicationObject).name;
+            return ((Item)applicationObject).value;
         }
 
         public Class storedClass() {
-            return String.class;
+            return Integer.class;
         }
         
         public void resetCounter() {
@@ -99,6 +121,22 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 			}		
 		});
 		
+	}
+	
+	public void testTypeHandlerAfterTranslator() throws Exception {
+
+		fixture().clean();
+		
+		fixture().config().registerTypeHandler(new TypeHandlerPredicate() {			
+			public boolean match(ReflectClass classReflector) {
+				return classReflector.getName().equals(Item.class.getName());
+			}
+		}, new ItemTypeHandler());
+		
+		reopen();
+
+		LocalObjectContainer loc = (LocalObjectContainer) db();		
+		loc.classMetadataForName(Item.class.getName());
 	}
 	
 	public void testMissingTranslatorDoesNotThrowsInRecoveryMode() throws Exception {
@@ -132,7 +170,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 		
 		ObjectSet<Object> result = query.execute();
 		Assert.areEqual(1, result.size());
-		Assert.areEqual(new Item("foo"), result.get(0));
+		Assert.areEqual(new Item(42), result.get(0));
 	}
 	
 	public void testTranslatorInstalled() {
@@ -140,12 +178,12 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testConfiguringTranslatorForExistingClass() throws Exception {
-		// get rid of translator config by deleting the databse and starting fresh
+		// get rid of translator config by deleting the database and starting fresh
 		db().close();
 		fixture().clean();
 		reopen();
 		
-		store(new Item("bar - no translator"));
+		store(new Item(1));
 		fixture().clean();
 		configureTranslator(fixture().config());
 		reopen();
