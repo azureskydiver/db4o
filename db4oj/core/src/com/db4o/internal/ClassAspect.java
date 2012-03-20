@@ -70,4 +70,8 @@ public abstract class ClassAspect {
 
 	public abstract void deactivate(ActivationContext context);
 
+	public boolean isVirtual() {
+		return false;
+	}
+
 }

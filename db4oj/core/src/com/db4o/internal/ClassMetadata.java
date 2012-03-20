@@ -248,7 +248,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
 		}
 		
-		validateAspects(aspects);
+		validateTranslatorAspects(aspects);
 
 		if (dirty || ! defaultFieldBehaviour) {
 			_aspects = toClassAspectArray(aspects);
@@ -271,14 +271,14 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		setStateOK();
 	}
 
-	private void validateAspects(Collection4 aspects) {
+	private void validateTranslatorAspects(Collection4 aspects) {
 		if (hasIncompatibleTranslatorAspect(aspects)) {
 			
 			if (!configImpl().recoveryMode()) {
 				String newLine = System.getProperty("line.separator");
 				throw new Db4oFatalException(
-						"Class " + getName() + " has incompatible aspects configured: " + newLine
-						+ Arrays.toString(aspects.toArray()) + newLine
+						"Class " + getName() + " was used with and without translators configured. Found aspects:" + newLine
+						+ Arrays4.toString(aspects.toArray()) + newLine
 						+ "No changes were made to the database. " + newLine 
 						+ "If you want to run with this configuration you can configure recovery mode (see FileConfiguration#recoveryMode()).");
 			}
@@ -286,13 +286,25 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	private boolean hasIncompatibleTranslatorAspect(Collection4 aspects) {
-		if (aspects.size() < 2) return false;
-		
-		for(int i = 0; i < aspects.size(); i++) {
+
+		boolean translatorFound = false;
+		boolean enabledAspectFound = false;
+
+		int size = aspects.size();
+		AspectVersionContext context = AspectVersionContextImpl.forSize(size);
+		for(int i = 0; i < size; i++) {
 			ClassAspect current = (ClassAspect) aspects.get(i);
-			if (current.aspectType() == AspectType.TRANSLATOR) return true;
+			if (!current.isEnabledOn(context)) continue;
+			if (current.isVirtual()) continue;
+				
+			if (current.aspectType() == AspectType.TRANSLATOR) {
+				translatorFound = true;
+			} else {
+				enabledAspectFound = true;
+			}
 		}
-		return false;
+		
+		return enabledAspectFound && translatorFound;
 	}
 
 	private ClassAspect[] toClassAspectArray(Collection4 aspects) {

@@ -151,6 +151,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         instantiate1(context);
     }
     
+    @Override
     public boolean isVirtual() {
         return true;
     }

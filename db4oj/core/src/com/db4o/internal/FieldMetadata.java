@@ -926,10 +926,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return _index;
     }
 
-    public boolean isVirtual() {
-        return false;
-    }
-
     public boolean isPrimitive() {
         return _isPrimitive;
     }
