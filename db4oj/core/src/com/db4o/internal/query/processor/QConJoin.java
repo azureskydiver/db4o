@@ -128,17 +128,6 @@ public class QConJoin extends QCon {
 		return "";
 	}
 	
-	
-	boolean removeForParent(QCon a_constraint) {
-		if (i_and) {
-			QCon other = getOtherConstraint(a_constraint);
-			other.removeJoin(this); // prevents circular call
-			other.remove();
-			return true;
-		}
-		return false;
-	}
-	
 	public String toString(){
 		String str = "QConJoin " + (i_and ? "AND ": "OR");
 		if(constraint1() != null){

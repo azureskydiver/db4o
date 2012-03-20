@@ -278,11 +278,6 @@ public class QConObject extends QCon implements FieldFilterable {
         }
     }
 
-    void removeChildrenJoins() {
-        super.removeChildrenJoins();
-        _children = null;
-    }
-
     @Override
     QCon shareParent(Object a_object, BooleanByRef removeExisting) {
         if(i_parent == null){
@@ -405,10 +400,6 @@ public class QConObject extends QCon implements FieldFilterable {
         	}
         	
             getObjectID();
-            
-            // TODO: this may not be correct for NOT
-            // It may be necessary to add an if(i_evaluator.identity())
-            removeChildrenJoins();
             i_evaluator = i_evaluator.add(new QEIdentity());
             return this;
         }
