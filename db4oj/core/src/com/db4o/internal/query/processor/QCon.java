@@ -50,10 +50,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     @decaf.Public
     protected QCon i_parent;
 
-    // prevents circular calls on removal
-    @decaf.Public
-    private boolean i_removed = false;
-
     // our transaction to get a stream object anywhere
     transient Transaction i_trans;
     
@@ -582,41 +578,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         synchronized (streamLock()) {
             return join(orWith, false);
         }
-    }
-
-    boolean remove() {
-        if (!i_removed) {
-            i_removed = true;
-            removeChildrenJoins();
-            return true;
-        }
-        return false;
-    }
-
-    void removeChildrenJoins() {
-        if (! hasJoins()) {
-        	return;
-        }
-        final Collection4 toBeRemoved = collectJoinsToBeRemoved();
-        i_joins.removeAll(toBeRemoved);
-        checkLastJoinRemoved();
-    }
-
-	private Collection4 collectJoinsToBeRemoved() {
-		final Collection4 toBeRemoved = new Collection4();
-        final Iterator4 joinIter = iterateJoins();
-        while(joinIter.moveNext()){
-        	QConJoin join = (QConJoin) joinIter.current();
-        	if (join.removeForParent(this)) {
-        		toBeRemoved.add(join);
-        	}
-        }
-		return toBeRemoved;
-	}
-
-    void removeJoin(QConJoin a_join) {
-        i_joins.remove(a_join);
-        checkLastJoinRemoved();
     }
 
     void removeNot() {

@@ -28,6 +28,7 @@ public class AllTests extends Db4oTestSuite {
 				OrderByWithNullValuesTestCase.class,
 				OrderedOrConstraintTestCase.class,
 				OrderFollowedByConstraintTestCase.class,
+				PreserveJoinsTestCase.class,
 				QueryUnknownClassTestCase.class,
 				SODAClassTypeDescend.class,
 				SortingNotAvailableField.class,
