@@ -102,8 +102,8 @@ namespace Db4objects.Db4o.Config
 		/// is only checked when the
 		/// <see cref="Db4objects.Db4o.IObjectContainer">Db4objects.Db4o.IObjectContainer</see>
 		/// is opened. If the
-		/// setting is set to <code>true</code> and an index does not exist, the index will be
-		/// created. If the setting is set to <code>false</code> and an index does exist the
+		/// setting is set to true and an index does not exist, the index will be
+		/// created. If the setting is set to false and an index does exist the
 		/// index will be dropped.<br/><br/>
 		/// In client-server environment this setting should be used on both
 		/// client and server. <br/><br/>
@@ -111,7 +111,7 @@ namespace Db4objects.Db4o.Config
 		/// time ObjectContainer is opened.<br/><br/>
 		/// </remarks>
 		/// <param name="flag">
-		/// specify <code>true</code> or <code>false</code> to turn indexing on for
+		/// specify true or false to turn indexing on for
 		/// this field
 		/// </param>
 		void Indexed(bool flag);

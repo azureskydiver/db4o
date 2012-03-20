@@ -40,9 +40,6 @@ namespace Db4objects.Db4o.CS.Internal.Messages
 
 		public static readonly MCommit Commit = new MCommit();
 
-		public static readonly MCommitReplication CommitReplication = new MCommitReplication
-			();
-
 		public static readonly MCommittedCallBackRegistry CommittedCallbackRegister = new 
 			MCommittedCallBackRegistry();
 
@@ -62,9 +59,6 @@ namespace Db4objects.Db4o.CS.Internal.Messages
 		public static readonly MError Error = new MError();
 
 		public static readonly MFailed Failed = new MFailed();
-
-		public static readonly MGenerateTransactionTimestamp GenerateTransactionTimestamp
-			 = new MGenerateTransactionTimestamp();
 
 		public static readonly MGetAll GetAll = new MGetAll();
 
@@ -154,11 +148,6 @@ namespace Db4objects.Db4o.CS.Internal.Messages
 
 		public static readonly MTaIsDeleted TaIsDeleted = new MTaIsDeleted();
 
-		public static readonly MVersionForId VersionForId = new MVersionForId();
-
-		public static readonly MUseDefaultTransactionTimestamp UseDefaultTransactionTimestamp
-			 = new MUseDefaultTransactionTimestamp();
-
 		public static readonly MUserMessage UserMessage = new MUserMessage();
 
 		public static readonly MUseTransaction UseTransaction = new MUseTransaction();
@@ -181,6 +170,17 @@ namespace Db4objects.Db4o.CS.Internal.Messages
 
 		public static readonly MRequestExceptionWithoutResponse RequestExceptionWithoutResponse
 			 = new MRequestExceptionWithoutResponse();
+
+		public static readonly MCommitReplication CommitReplication = new MCommitReplication
+			();
+
+		public static readonly MGenerateTransactionTimestamp GenerateTransactionTimestamp
+			 = new MGenerateTransactionTimestamp();
+
+		public static readonly MVersionForId VersionForId = new MVersionForId();
+
+		public static readonly MUseDefaultTransactionTimestamp UseDefaultTransactionTimestamp
+			 = new MUseDefaultTransactionTimestamp();
 
 		internal Msg()
 		{

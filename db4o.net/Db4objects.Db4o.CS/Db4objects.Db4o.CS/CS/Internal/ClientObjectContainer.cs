@@ -1310,6 +1310,21 @@ namespace Db4objects.Db4o.CS.Internal
 			ExpectedResponse(Msg.Ok);
 		}
 
+		public override ClassMetadata ClassMetadataForReflectClass(IReflectClass claxx)
+		{
+			ClassMetadata classMetadata = base.ClassMetadataForReflectClass(claxx);
+			if (classMetadata != null)
+			{
+				return classMetadata;
+			}
+			string className = Config().ResolveAliasRuntimeName(claxx.GetName());
+			if (ClassMetadataIdForName(className) == 0)
+			{
+				return null;
+			}
+			return ProduceClassMetadata(claxx);
+		}
+
 		public override int ClassMetadataIdForName(string name)
 		{
 			MsgD msg = Msg.ClassMetadataIdForName.GetWriterForString(SystemTransaction(), name

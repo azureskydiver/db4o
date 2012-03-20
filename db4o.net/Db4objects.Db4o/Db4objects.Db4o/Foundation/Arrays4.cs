@@ -8,7 +8,7 @@ using Sharpen;
 namespace Db4objects.Db4o.Foundation
 {
 	/// <exclude></exclude>
-	public class Arrays4
+	public partial class Arrays4
 	{
 		public static int[] CopyOf(int[] src, int newLength)
 		{
@@ -150,12 +150,12 @@ namespace Db4objects.Db4o.Foundation
 
 		public static void Sort(object[] array, IComparison4 comparator)
 		{
-			Algorithms4.Sort(new _ISortable4_128(array, comparator));
+			Algorithms4.Sort(new _ISortable4_129(array, comparator));
 		}
 
-		private sealed class _ISortable4_128 : ISortable4
+		private sealed class _ISortable4_129 : ISortable4
 		{
-			public _ISortable4_128(object[] array, IComparison4 comparator)
+			public _ISortable4_129(object[] array, IComparison4 comparator)
 			{
 				this.array = array;
 				this.comparator = comparator;

@@ -345,8 +345,7 @@ namespace Db4objects.Db4o.Config
 		/// be modified any further in the future.<br /><br />
 		/// In a client/server environment this setting should be configured both on the
 		/// client and and on the server.
-		/// <br /><br />Default value:<br />
-		/// <code>true</code>
+		/// <br /><br />Default value: true
 		/// </remarks>
 		/// <param name="flag">the desired setting</param>
 		void DetectSchemaChanges(bool flag);
@@ -553,7 +552,7 @@ namespace Db4objects.Db4o.Config
 
 		/// <summary>can be used to turn the database file locking thread off.</summary>
 		/// <param name="flag">
-		/// <code>false</code> to turn database file locking off.
+		/// false to turn database file locking off.
 		/// </param>
 		void LockDatabaseFile(bool flag);
 
@@ -587,7 +586,7 @@ namespace Db4objects.Db4o.Config
 		/// run native queries in unoptimized mode as SODA evaluations.
 		/// The following assemblies should be available for native query switch to take effect:
 		/// Db4objects.Db4o.NativeQueries.dll, Db4objects.Db4o.Instrumentation.dll.
-		/// <br/><br/>The default setting is <code>true</code>.<br/><br/>
+		/// <br/><br/>The default setting is true.<br/><br/>
 		/// In client-server environment this setting should be used on both client and server.<br/><br/>
 		/// </remarks>
 		/// <param name="optimizeNQ">
@@ -642,9 +641,9 @@ namespace Db4objects.Db4o.Config
 		/// in embedded mode and ONLY on client side in networked mode.<br /><br />
 		/// </remarks>
 		/// <param name="flag">
-		/// <code>true</code> for configuring readOnly mode for subsequent
+		/// true for configuring readOnly mode for subsequent
 		/// calls to
-		/// <see cref="Db4objects.Db4o.Db4oFactory.OpenFile(string)">Db4o.openFile()</see>
+		/// <see cref="Db4objects.Db4o.Db4oEmbedded.OpenFile(string)">Db4o.openFile()</see>
 		/// .
 		/// </param>
 		void ReadOnly(bool flag);
@@ -663,7 +662,7 @@ namespace Db4objects.Db4o.Config
 		/// Use this method with care as a last resort to get data out of a
 		/// corrupted database.
 		/// </remarks>
-		/// <param name="flag"><code>true</code> to turn recover mode on.</param>
+		/// <param name="flag">true to turn recover mode on.</param>
 		void RecoveryMode(bool flag);
 
 		/// <summary>configures the use of a specially designed reflection implementation.</summary>
@@ -738,7 +737,7 @@ namespace Db4objects.Db4o.Config
 		/// <see cref="MessageLevel(int)">MessageLevel(int)</see>
 		/// is used.<br /><br />
 		/// </summary>
-		/// <param name="outStream">the new <code>PrintStream</code> for messages.</param>
+		/// <param name="outStream">the new PrintStream for messages.</param>
 		/// <seealso cref="MessageLevel(int)">MessageLevel(int)</seealso>
 		void SetOut(TextWriter outStream);
 
@@ -774,13 +773,12 @@ namespace Db4objects.Db4o.Config
 		/// <remarks>
 		/// tuning feature: configures whether db4o should try to instantiate one instance
 		/// of each persistent class on system startup.
-		/// <br /><br />In a production environment this setting can be set to <code>false</code>,
+		/// <br /><br />In a production environment this setting can be set to false,
 		/// if all persistent classes have public default constructors.
 		/// <br /><br />
 		/// In client-server environment this setting should be used on both client and server
 		/// side. <br /><br />
-		/// Default value:<br />
-		/// <code>true</code>
+		/// Default value: true
 		/// </remarks>
 		/// <param name="flag">the desired setting</param>
 		void TestConstructors(bool flag);
@@ -816,10 +814,10 @@ namespace Db4objects.Db4o.Config
 		/// memory consumption or by alternatively implementing a manual
 		/// memory management scheme using
 		/// <see cref="IExtObjectContainer.Purge">IExtObjectContainer.Purge</see>
-		/// <br/><br/>Setting the value to <code>false</code> causes db4o to use hard
+		/// <br/><br/>Setting the value to false causes db4o to use hard
 		/// references to objects, preventing the garbage collection process
 		/// from disposing of unused objects.
-		/// <br/><br/>The default setting is <code>true</code>.
+		/// <br/><br/>The default setting is true.
 		/// </remarks>
 		void WeakReferences(bool flag);
 

@@ -5,7 +5,7 @@ using Db4objects.Db4o.Query;
 namespace Db4objects.Db4o.Query
 {
 	/// <summary>
-	/// set of
+	/// A set of
 	/// <see cref="IConstraint">IConstraint</see>
 	/// objects.
 	/// <br /><br />This extension of the

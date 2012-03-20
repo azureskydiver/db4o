@@ -1286,7 +1286,7 @@ namespace Db4objects.Db4o.Internal
 			}
 		}
 
-		public ClassMetadata ClassMetadataForReflectClass(IReflectClass claxx)
+		public virtual ClassMetadata ClassMetadataForReflectClass(IReflectClass claxx)
 		{
 			if (null == claxx)
 			{

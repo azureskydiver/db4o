@@ -76,5 +76,10 @@ namespace Db4objects.Db4o.Internal
 		}
 
 		public abstract void Deactivate(IActivationContext context);
+
+		public virtual bool IsVirtual()
+		{
+			return false;
+		}
 	}
 }

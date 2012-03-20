@@ -5,67 +5,68 @@ using Db4objects.Db4o.Ext;
 
 namespace Db4objects.Db4o
 {
-	/// <summary>
-	/// An ObjectSet is a representation for a set of objects returned
-	/// by a query.
-	/// </summary>
+	/// <summary>An ObjectSet is a representation for a set of objects returned  by a query.
+	/// 	</summary>
 	/// <remarks>
-	/// An ObjectSet is a representation for a set of objects returned
-	/// by a query.
-	/// <br /><br />ObjectSet extends the system collection interfaces
-	/// java.util.List/System.Collections.IList where they are available. It is
-	/// recommended, never to reference ObjectSet directly in code but to use
-	/// List / IList instead.
-	/// <br /><br />Note that the underlying
+	/// An ObjectSet is a representation for a set of objects returned  by a query.
+	/// <br /><br />
+	/// ObjectSet extends the list interface. It is
+	/// recommended to never reference ObjectSet directly in code but to use the list interface instead.
+	/// <br /><br />
+	/// Note that the underlying
 	/// <see cref="IObjectContainer">IObjectContainer</see>
 	/// of an ObjectSet
 	/// needs to remain open as long as an ObjectSet is used. This is necessary
 	/// for lazy instantiation. The objects in an ObjectSet are only instantiated
-	/// when they are actually being used by the application.
+	/// when they are actually being used by the application. In case you want to use a query
+	/// result after the object container has been closed, you need to copy the result set.
 	/// </remarks>
 	/// <seealso cref="Db4objects.Db4o.Ext.IExtObjectSet">for extended functionality.</seealso>
 	public interface IObjectSet : IList, IEnumerable
 	{
-		/// <summary>returns an ObjectSet with extended functionality.</summary>
+		/// <summary>Returns an ObjectSet with extended functionality.</summary>
 		/// <remarks>
-		/// returns an ObjectSet with extended functionality.
-		/// <br /><br />Every ObjectSet that db4o provides can be casted to
+		/// Returns an ObjectSet with extended functionality.
+		/// <br /><br />
+		/// Every ObjectSet that db4o provides can be casted to
 		/// an ExtObjectSet. This method is supplied for your convenience
 		/// to work without a cast.
-		/// <br /><br />The ObjectSet functionality is split to two interfaces
+		/// <br /><br />
+		/// The ObjectSet functionality is split to two interfaces
 		/// to allow newcomers to focus on the essential methods.
 		/// </remarks>
 		IExtObjectSet Ext();
 
-		/// <summary>returns <code>true</code> if the <code>ObjectSet</code> has more elements.
-		/// 	</summary>
-		/// <remarks>returns <code>true</code> if the <code>ObjectSet</code> has more elements.
-		/// 	</remarks>
+		/// <summary>Returns true if the ObjectSet has more elements.</summary>
+		/// <remarks>Returns true if the ObjectSet has more elements.</remarks>
 		/// <returns>
-		/// boolean - <code>true</code> if the <code>ObjectSet</code> has more
+		/// boolean - true if the ObjectSet has more
 		/// elements.
 		/// </returns>
 		bool HasNext();
 
-		/// <summary>returns the next object in the <code>ObjectSet</code>.</summary>
+		/// <summary>Returns the next object in the ObjectSet.</summary>
 		/// <remarks>
-		/// returns the next object in the <code>ObjectSet</code>.
+		/// Returns the next object in the ObjectSet.
 		/// <br /><br />
-		/// Before returning the Object, next() triggers automatic activation of the
-		/// Object with the respective
+		/// Before returning the object, next() triggers automatic activation of the
+		/// object with the respective
 		/// <see cref="Db4objects.Db4o.Config.ICommonConfiguration.ActivationDepth()">global</see>
 		/// or
 		/// <see cref="Db4objects.Db4o.Config.IObjectClass.MaximumActivationDepth(int)">class specific
 		/// 	</see>
-		/// setting.<br /><br />
+		/// setting.
+		/// <br /><br />
 		/// </remarks>
-		/// <returns>the next object in the <code>ObjectSet</code>.</returns>
+		/// <returns>the next object in the ObjectSet.</returns>
 		object Next();
 
-		/// <summary>resets the <code>ObjectSet</code> cursor before the first element.</summary>
+		/// <summary>Resets the ObjectSet cursor before the first element.</summary>
 		/// <remarks>
-		/// resets the <code>ObjectSet</code> cursor before the first element.
-		/// <br /><br />A subsequent call to <code>next()</code> will return the first element.
+		/// Resets the ObjectSet cursor before the first element.
+		/// A subsequent call to
+		/// <see cref="Next()">Next()</see>
+		/// will return the first element.
 		/// </remarks>
 		void Reset();
 	}

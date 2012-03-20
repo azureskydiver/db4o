@@ -8,7 +8,7 @@ namespace Db4objects.Db4o.IO
 	/// <summary>Wrapper baseclass for all classes that wrap Bin.</summary>
 	/// <remarks>
 	/// Wrapper baseclass for all classes that wrap Bin.
-	/// Each class that adds functionality to a Bin must
+	/// Each class that adds functionality to a Bin can
 	/// extend this class to allow db4o to access the
 	/// delegate instance with
 	/// <see cref="StorageDecorator.Decorate(BinConfiguration, IBin)">StorageDecorator.Decorate(BinConfiguration, IBin)

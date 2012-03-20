@@ -78,6 +78,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Api\EnvironmentConfigurationTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Api\StoreAllTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Api\TestWithTempFile.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\AliasesQueryingTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\AliasesTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\AllTests.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\Atom.cs"/>
@@ -127,7 +128,10 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\PlainObjectTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\PreventMultipleOpenTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\QueryByInterface.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\QueryingDoesNotProduceClassMetadataTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\QueryingReadOnlyWithNewClassTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\ReAddCascadedDeleteTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Assorted\RenamingClassAfterQueryingTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\RepeatDeleteReaddTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\RollbackDeleteTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Assorted\RollbackTestCase.cs"/>
@@ -331,6 +335,7 @@
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\OwnCommitCallbackFlaggedNetworkingTestSuite.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\OwnCommittedCallbacksFixture.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\QueryEventsTestCase.cs"/>
+<Compile Include="Db4objects.Db4o.Tests\Common\Events\QueryInCallBackCSCallback.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Events\UpdateInCallbackThrowsTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Exceptions\ActivationExceptionBubblesUpTestCase.cs"/>
 <Compile Include="Db4objects.Db4o.Tests\Common\Exceptions\AllTests.cs"/>

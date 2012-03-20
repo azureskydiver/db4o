@@ -5,9 +5,9 @@ using Db4objects.Db4o.Ext;
 
 namespace Db4objects.Db4o
 {
-	/// <summary>the db4o server interface.</summary>
+	/// <summary>The db4o server interface.</summary>
 	/// <remarks>
-	/// the db4o server interface.
+	/// The db4o server interface.
 	/// <br /><br />- db4o servers can be opened with
 	/// <see cref="Db4oClientServer#openServer(String,int)">Db4oClientServer#openServer(String,int)
 	/// 	</see>
@@ -31,7 +31,7 @@ namespace Db4objects.Db4o
 	public interface IObjectServer : System.IDisposable
 	{
 		/// <summary>
-		/// closes the
+		/// Closes the
 		/// <see cref="IObjectServer"></see>
 		/// and writes all cached data.
 		/// <br /><br />
@@ -43,24 +43,19 @@ namespace Db4objects.Db4o
 		bool Close();
 
 		/// <summary>
-		/// returns an
-		/// <see cref="IObjectServer"></see>
-		/// with extended functionality.
-		/// <br /><br />Use this method as a convenient accessor to extended methods.
-		/// Every
-		/// <see cref="IObjectServer"></see>
-		/// can be casted to an
+		/// Returns an
 		/// <see cref="Db4objects.Db4o.Ext.IExtObjectServer">Db4objects.Db4o.Ext.IExtObjectServer
 		/// 	</see>
-		/// .
+		/// with extended functionality.
+		/// <br /><br />Use this method to conveniently access extended methods.
 		/// <br /><br />The functionality is split to two interfaces to allow newcomers to
 		/// focus on the essential methods.
 		/// </summary>
 		IExtObjectServer Ext();
 
-		/// <summary>grants client access to the specified user with the specified password.</summary>
+		/// <summary>Grants client access to the specified user with the specified password.</summary>
 		/// <remarks>
-		/// grants client access to the specified user with the specified password.
+		/// Grants client access to the specified user with the specified password.
 		/// <br /><br />If the user already exists, the password is changed to
 		/// the specified password.<br /><br />
 		/// </remarks>
@@ -68,11 +63,11 @@ namespace Db4objects.Db4o
 		/// <param name="password">the password to be used</param>
 		void GrantAccess(string userName, string password);
 
-		/// <summary>opens a client against this server.</summary>
+		/// <summary>Opens a client against this server.</summary>
 		/// <remarks>
-		/// opens a client against this server.
+		/// Opens a client against this server.
 		/// <br /><br />A client opened with this method operates within the same VM
-		/// as the server. Since an embedded client can use direct communication, without
+		/// as the server. Since an embedded client use direct communication, without
 		/// an in-between socket connection, performance will be better than a client
 		/// opened with
 		/// <see cref="Db4oClientServer#openClient(java.lang.String,int,java.lang.String,java.lang.String)

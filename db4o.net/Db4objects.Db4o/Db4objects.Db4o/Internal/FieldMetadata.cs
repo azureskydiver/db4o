@@ -1161,11 +1161,6 @@ namespace Db4objects.Db4o.Internal
 			return _index;
 		}
 
-		public virtual bool IsVirtual()
-		{
-			return false;
-		}
-
 		public virtual bool IsPrimitive()
 		{
 			return _isPrimitive;
@@ -1290,12 +1285,12 @@ namespace Db4objects.Db4o.Internal
 			ITypeHandler4 correctTypeHandlerVersion = HandlerRegistry.CorrectHandlerVersion(context
 				, GetHandler(), _fieldType);
 			context.SlotFormat().DoWithSlotIndirection(context, correctTypeHandlerVersion, new 
-				_IClosure4_1024(context, correctTypeHandlerVersion));
+				_IClosure4_1020(context, correctTypeHandlerVersion));
 		}
 
-		private sealed class _IClosure4_1024 : IClosure4
+		private sealed class _IClosure4_1020 : IClosure4
 		{
-			public _IClosure4_1024(IDefragmentContext context, ITypeHandler4 correctTypeHandlerVersion
+			public _IClosure4_1020(IDefragmentContext context, ITypeHandler4 correctTypeHandlerVersion
 				)
 			{
 				this.context = context;

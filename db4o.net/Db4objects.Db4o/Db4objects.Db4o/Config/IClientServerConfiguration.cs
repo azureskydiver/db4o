@@ -119,12 +119,12 @@ namespace Db4objects.Db4o.Config
 		/// configures the client messaging system to be single threaded
 		/// or multithreaded.
 		/// <br /><br />Recommended settings:<br />
-		/// - <code>true</code> for low resource systems.<br />
-		/// - <code>false</code> for best asynchronous performance and fast
+		/// - true for low resource systems.<br />
+		/// - false for best asynchronous performance and fast
 		/// GUI response.
 		/// <br /><br />Default value:<br />
-		/// - .NET Compactframework: <code>true</code><br />
-		/// - all other platforms: <code>false</code><br /><br />
+		/// - .NET Compactframework: true<br />
+		/// - all other platforms: false<br /><br />
 		/// This setting can be used on both client and server.<br /><br />
 		/// </remarks>
 		/// <param name="flag">the desired setting</param>
@@ -142,7 +142,7 @@ namespace Db4objects.Db4o.Config
 		/// <summary>Configures the maximum memory buffer size for batched message.</summary>
 		/// <remarks>
 		/// Configures the maximum memory buffer size for batched message. If the
-		/// size of batched messages is greater than <code>maxSize</code>, batched
+		/// size of batched messages is greater than maxSize, batched
 		/// messages will be sent to server.<br /><br />
 		/// This setting can be used on both client and server.<br /><br />
 		/// </remarks>

@@ -15,7 +15,7 @@ namespace Db4objects.Db4o.Ext
 	/// interface.
 	/// <br /><br />Every db4o
 	/// <see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
-	/// always is an <code>ExtObjectContainer</code> so a cast is possible.<br /><br />
+	/// always is an ExtObjectContainer so a cast is possible.<br /><br />
 	/// <see cref="Db4objects.Db4o.IObjectContainer.Ext()">ObjectContainer.ext()</see>
 	/// is a convenient method to perform the cast.<br /><br />
 	/// The ObjectContainer functionality is split to two interfaces to allow newcomers to
@@ -187,8 +187,8 @@ namespace Db4objects.Db4o.Ext
 		/// </remarks>
 		/// <param name="Id">the internal ID</param>
 		/// <returns>
-		/// the object associated with the passed ID or <code>null</code>,
-		/// if no object is associated with this ID in this <code>ObjectContainer</code>.
+		/// the object associated with the passed ID or null,
+		/// if no object is associated with this ID in this ObjectContainer.
 		/// </returns>
 		/// <seealso cref="Db4objects.Db4o.Config.ICommonConfiguration.ActivationDepth()">Why activation?
 		/// 	</seealso>
@@ -232,7 +232,7 @@ namespace Db4objects.Db4o.Ext
 		/// <remarks>
 		/// returns the internal unique object ID.
 		/// <br /><br />db4o assigns an internal ID to every object that is stored. IDs are
-		/// guaranteed to be unique within one <code>ObjectContainer</code>.
+		/// guaranteed to be unique within one ObjectContainer.
 		/// An object carries the same ID in every db4o session. Internal IDs can
 		/// be used to look up objects with the very fast
 		/// <see cref="GetByID(long)">getByID</see>
@@ -249,7 +249,7 @@ namespace Db4objects.Db4o.Ext
 		/// <param name="obj">any object</param>
 		/// <returns>
 		/// the associated internal ID or <code>0</code>, if the passed
-		/// object is not stored in this <code>ObjectContainer</code>.
+		/// object is not stored in this ObjectContainer.
 		/// </returns>
 		long GetID(object obj);
 
@@ -258,7 +258,7 @@ namespace Db4objects.Db4o.Ext
 		/// <see cref="IObjectInfo">IObjectInfo</see>
 		/// for a stored object.
 		/// <br /><br />This method will return null, if the passed
-		/// object is not stored to this <code>ObjectContainer</code>.<br /><br />
+		/// object is not stored to this ObjectContainer.<br /><br />
 		/// </summary>
 		/// <param name="obj">the stored object</param>
 		/// <returns>
@@ -276,11 +276,11 @@ namespace Db4objects.Db4o.Ext
 		/// <summary>tests if an object is activated.</summary>
 		/// <remarks>
 		/// tests if an object is activated.
-		/// <br /><br /><code>isActive</code> returns <code>false</code> if an object is not
-		/// stored within the <code>ObjectContainer</code>.<br /><br />
+		/// <br /><br />isActive returns false if an object is not
+		/// stored within the ObjectContainer.<br /><br />
 		/// </remarks>
 		/// <param name="obj">to be tested<br /><br /></param>
-		/// <returns><code>true</code> if the passed object is active.</returns>
+		/// <returns>true if the passed object is active.</returns>
 		bool IsActive(object obj);
 
 		/// <summary>tests if an object with this ID is currently cached.</summary>
@@ -291,21 +291,21 @@ namespace Db4objects.Db4o.Ext
 		/// <param name="Id">the internal ID</param>
 		bool IsCached(long Id);
 
-		/// <summary>tests if this <code>ObjectContainer</code> is closed.</summary>
+		/// <summary>tests if this ObjectContainer is closed.</summary>
 		/// <remarks>
-		/// tests if this <code>ObjectContainer</code> is closed.
+		/// tests if this ObjectContainer is closed.
 		/// <br /><br />
 		/// </remarks>
-		/// <returns><code>true</code> if this <code>ObjectContainer</code> is closed.</returns>
+		/// <returns>true if this ObjectContainer is closed.</returns>
 		bool IsClosed();
 
-		/// <summary>tests if an object is stored in this <code>ObjectContainer</code>.</summary>
+		/// <summary>tests if an object is stored in this ObjectContainer.</summary>
 		/// <remarks>
-		/// tests if an object is stored in this <code>ObjectContainer</code>.
+		/// tests if an object is stored in this ObjectContainer.
 		/// <br /><br />
 		/// </remarks>
 		/// <param name="obj">to be tested<br /><br /></param>
-		/// <returns><code>true</code> if the passed object is stored.</returns>
+		/// <returns>true if the passed object is stored.</returns>
 		/// <exception cref="DatabaseClosedException">db4o database file was closed or failed to open.
 		/// 	</exception>
 		/// <exception cref="Db4objects.Db4o.Ext.DatabaseClosedException"></exception>
@@ -356,7 +356,7 @@ namespace Db4objects.Db4o.Ext
 		/// to the values that are currently stored to the database.
 		/// <br /><br />
 		/// The returned objects have no connection to the database.<br /><br />
-		/// With the <code>committed</code> parameter it is possible to specify,
+		/// With the committed parameter it is possible to specify,
 		/// whether the desired object should contain the committed values or the
 		/// values that were set by the running transaction with
 		/// <see cref="Db4objects.Db4o.IObjectContainer.Store(object)">Db4objects.Db4o.IObjectContainer.Store(object)
@@ -387,9 +387,9 @@ namespace Db4objects.Db4o.Ext
 		/// <br /><br />db4o keeps references to all newly stored and
 		/// instantiated objects in memory, to be able to manage object identities.
 		/// <br /><br />With calls to this method it is possible to remove an object from the
-		/// reference mechanism.<br />An object removed with  <code>purge(Object)</code> is not
-		/// "known" to the <code>ObjectContainer</code> afterwards, so this method may also be
-		/// used to create multiple copies of  objects.<br /><br /> <code>purge(Object)</code> has
+		/// reference mechanism.<br />An object removed with  purge(Object) is not
+		/// "known" to the ObjectContainer afterwards, so this method may also be
+		/// used to create multiple copies of  objects.<br /><br /> purge(Object) has
 		/// no influence on the persistence state of objects. "Purged" objects can be
 		/// reretrieved with queries.<br /><br />
 		/// </remarks>
@@ -490,9 +490,9 @@ namespace Db4objects.Db4o.Ext
 		/// </param>
 		/// <returns>
 		/// boolean flag
-		/// <br /><code>true</code>, if the semaphore could be set or if the
+		/// <br />true, if the semaphore could be set or if the
 		/// calling transaction already owned the semaphore.
-		/// <br /><code>false</code>, if the semaphore is owned by another
+		/// <br />false, if the semaphore is owned by another
 		/// transaction.
 		/// </returns>
 		bool SetSemaphore(string name, int waitForAvailability);

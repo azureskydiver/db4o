@@ -29,6 +29,7 @@ namespace Db4objects.Db4o.Tests.Common.Fieldindex
 
 		protected override void Store()
 		{
+			Container().ProduceClassMetadata(ReflectClass(typeof(NonIndexedFieldIndexItem)));
 			StoreItems(new int[] { 3, 4, 7, 9 });
 			StoreComplexItems(new int[] { 3, 4, 7, 9 }, new int[] { 2, 2, 8, 8 });
 		}
@@ -324,13 +325,13 @@ namespace Db4objects.Db4o.Tests.Common.Fieldindex
 				return;
 			}
 			ByRef treeInts = ByRef.NewInstance();
-			result.Traverse(new _IIntVisitor_302(treeInts));
+			result.Traverse(new _IIntVisitor_303(treeInts));
 			AssertTreeInt(expectedIds, ((TreeInt)treeInts.value));
 		}
 
-		private sealed class _IIntVisitor_302 : IIntVisitor
+		private sealed class _IIntVisitor_303 : IIntVisitor
 		{
-			public _IIntVisitor_302(ByRef treeInts)
+			public _IIntVisitor_303(ByRef treeInts)
 			{
 				this.treeInts = treeInts;
 			}

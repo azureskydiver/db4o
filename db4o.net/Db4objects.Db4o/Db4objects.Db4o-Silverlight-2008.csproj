@@ -57,6 +57,10 @@
 
 
 
+
+
+
+
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -943,6 +947,7 @@
 <Compile Include="native\Db4objects.Db4o\Defragment\AvailableTypeFilter.cs"/>
 <Compile Include="native\Db4objects.Db4o\Diagnostic\DiagnosticToTrace.cs"/>
 <Compile Include="native\Db4objects.Db4o\Dynamic.cs"/>
+<Compile Include="native\Db4objects.Db4o\Foundation\Arrays4.cs"/>
 <Compile Include="native\Db4objects.Db4o\Foundation\CRC32.cs"/>
 <Compile Include="native\Db4objects.Db4o\Foundation\Closures4.cs"/>
 <Compile Include="native\Db4objects.Db4o\Foundation\Coercion4.cs"/>

@@ -15,9 +15,9 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 
 		protected override Type[] TestCases()
 		{
-			return ComposeTests(new Type[] { typeof(AliasesTestCase), typeof(CallbackTestCase
-				), typeof(CanUpdateFalseRefreshTestCase), typeof(CascadeDeleteDeletedTestCase), 
-				typeof(CascadedDeleteReadTestCase), typeof(ChangeIdentity), typeof(CommitTimeStampsNoSchemaChangesTestCase
+			return ComposeTests(new Type[] { typeof(AliasesQueryingTestCase), typeof(AliasesTestCase
+				), typeof(CallbackTestCase), typeof(CanUpdateFalseRefreshTestCase), typeof(CascadeDeleteDeletedTestCase
+				), typeof(CascadedDeleteReadTestCase), typeof(ChangeIdentity), typeof(CommitTimeStampsNoSchemaChangesTestCase
 				), typeof(CommitTimestampTestCase), typeof(CloseUnlocksFileTestCase), typeof(ComparatorSortTestCase
 				), typeof(DatabaseGrowthSizeTestCase), typeof(DatabaseUnicityTest), typeof(DbPathDoesNotExistTestCase
 				), typeof(DeleteSetTestCase), typeof(DeleteReaddChildReferenceTestSuite), typeof(
@@ -31,8 +31,10 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 				), typeof(ObjectConstructorTestCase), typeof(ObjectContainerMemberTestCase), typeof(
 				PlainObjectTestCase), typeof(PeekPersistedTestCase), typeof(PersistentIntegerArrayTestCase
 				), typeof(PersistStaticFieldValuesTestSuite), typeof(PreventMultipleOpenTestCase
-				), typeof(QueryByInterface), typeof(ReAddCascadedDeleteTestCase), typeof(RepeatDeleteReaddTestCase
-				), typeof(RollbackDeleteTestCase), typeof(RollbackTestCase), typeof(RollbackUpdateTestCase
+				), typeof(QueryByInterface), typeof(QueryingDoesNotProduceClassMetadataTestCase)
+				, typeof(QueryingReadOnlyWithNewClassTestCase), typeof(ReAddCascadedDeleteTestCase
+				), typeof(RenamingClassAfterQueryingTestCase), typeof(RepeatDeleteReaddTestCase)
+				, typeof(RollbackDeleteTestCase), typeof(RollbackTestCase), typeof(RollbackUpdateTestCase
 				), typeof(RollbackUpdateCascadeTestCase), typeof(SimplestPossibleNullMemberTestCase
 				), typeof(SimplestPossibleTestCase), typeof(SimplestPossibleParentChildTestCase)
 				, typeof(StaticFieldUpdateTestCase), typeof(StaticFieldUpdateConsistencyTestCase

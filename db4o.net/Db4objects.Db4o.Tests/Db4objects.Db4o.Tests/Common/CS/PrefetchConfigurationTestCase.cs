@@ -18,7 +18,7 @@ namespace Db4objects.Db4o.Tests.Common.CS
 	public class PrefetchConfigurationTestCase : ClientServerTestCaseBase, IOptOutAllButNetworkingCS
 	{
 		/// <exception cref="System.Exception"></exception>
-		protected override void Db4oSetupAfterStore()
+		protected override void Db4oSetupBeforeStore()
 		{
 			EnsureQueryGraphClassMetadataHasBeenExchanged();
 		}
@@ -325,6 +325,8 @@ namespace Db4objects.Db4o.Tests.Common.CS
 
 		private void EnsureQueryGraphClassMetadataHasBeenExchanged()
 		{
+			Container().ProduceClassMetadata(ReflectClass(typeof(PrefetchConfigurationTestCase.Item
+				)));
 			// ensures classmetadata exists for query objects
 			IQuery query = Client().Query();
 			query.Constrain(typeof(PrefetchConfigurationTestCase.Item));

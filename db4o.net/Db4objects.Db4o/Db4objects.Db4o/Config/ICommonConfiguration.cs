@@ -287,8 +287,7 @@ namespace Db4objects.Db4o.Config
 		/// be modified any further in the future.<br /><br />
 		/// In a client/server environment it is good practice to configure the
 		/// client and the server in exactly the same way.
-		/// <br /><br />Default value:<br />
-		/// <code>true</code>
+		/// <br /><br />Default value: true
 		/// </remarks>
 		/// <value>the desired setting</value>
 		bool DetectSchemaChanges
@@ -478,7 +477,7 @@ namespace Db4objects.Db4o.Config
 		/// <see cref="IConfiguration.MessageLevel(int)">IConfiguration.MessageLevel(int)</see>
 		/// is used.<br /><br />
 		/// </summary>
-		/// <value>the new <code>PrintStream</code> for messages.</value>
+		/// <value>the new PrintStream for messages.</value>
 		/// <seealso cref="MessageLevel(int)">MessageLevel(int)</seealso>
 		TextWriter OutStream
 		{
@@ -522,13 +521,12 @@ namespace Db4objects.Db4o.Config
 		/// <remarks>
 		/// tuning feature: configures whether db4o should try to instantiate one instance
 		/// of each persistent class on system startup.
-		/// <br /><br />In a production environment this setting can be set to <code>false</code>,
+		/// <br /><br />In a production environment this setting can be set to false,
 		/// if all persistent classes have public default constructors.
 		/// <br /><br />
 		/// In a client/server environment it is good practice to configure the
 		/// client and the server in exactly the same way. <br /><br />
-		/// Default value:<br />
-		/// <code>true</code>
+		/// Default value: true
 		/// </remarks>
 		/// <value>the desired setting</value>
 		bool TestConstructors
@@ -572,10 +570,10 @@ namespace Db4objects.Db4o.Config
 		/// memory management scheme using
 		/// <see cref="Db4objects.Db4o.Ext.IExtObjectContainer.Purge(object)">Db4objects.Db4o.Ext.IExtObjectContainer.Purge(object)
 		/// 	</see>
-		/// <br /><br />Setting the value to <code>false</code> causes db4o to use hard
+		/// <br /><br />Setting the value to false causes db4o to use hard
 		/// references to objects, preventing the garbage collection process
 		/// from disposing of unused objects.
-		/// <br /><br />The default setting is <code>true</code>.
+		/// <br /><br />The default setting is true.
 		/// </remarks>
 		bool WeakReferences
 		{
@@ -596,12 +594,19 @@ namespace Db4objects.Db4o.Config
 		}
 
 		/// <summary>
-		/// allows registering special TypeHandlers for customized marshalling
+		/// Allows registering special TypeHandlers for customized marshalling
 		/// and customized comparisons.
 		/// </summary>
 		/// <remarks>
-		/// allows registering special TypeHandlers for customized marshalling
-		/// and customized comparisons.
+		/// Allows registering special TypeHandlers for customized marshalling
+		/// and customized comparisons.  <br/>
+		/// This is only for adventurous people, since type handlers work a the lowest levels:<br/>
+		/// <ul>
+		/// <li>There is no versioning support: If you need to change the serialisation scheme of the type your are on your own.</li>
+		/// <li>The typehandler-API is mostly undocumented and not as stable as other db4o APIs.</li>
+		/// <li>Elaborate type handlers need deep knowledge of  undocumented, internal implementation details of db4o. </li>
+		/// <li>Mistakes in typehandlers can lead to cryptic error messages and database corruption.</li>
+		/// </ul>
 		/// </remarks>
 		/// <param name="predicate">
 		/// to specify for which classes and versions the

@@ -257,6 +257,12 @@ namespace Db4objects.Db4o.Internal
 			{
 				return cached;
 			}
+			ClassMetadata byName = (ClassMetadata)_classMetadataByName.Get(reflectClazz.GetName
+				());
+			if (byName != null)
+			{
+				return byName;
+			}
 			return ReadClassMetadata(reflectClazz);
 		}
 
@@ -568,7 +574,7 @@ namespace Db4objects.Db4o.Internal
 			_classMetadataCreationDepth++;
 			try
 			{
-				classMetadata.CreateConfigAndConstructor(_classMetadataByBytes, clazz);
+				classMetadata.ResolveNameConfigAndReflector(this, clazz);
 				IReflectClass claxx = classMetadata.ClassReflector();
 				if (claxx != null)
 				{
@@ -741,6 +747,13 @@ namespace Db4objects.Db4o.Internal
 		private LocalTransaction LocalSystemTransaction()
 		{
 			return ((LocalTransaction)_systemTransaction);
+		}
+
+		public void ClassMetadataNameResolved(ClassMetadata classMetadata, byte[] nameBytes
+			)
+		{
+			_classMetadataByBytes.Remove(nameBytes);
+			_classMetadataByName.Put(classMetadata.GetName(), classMetadata);
 		}
 	}
 }

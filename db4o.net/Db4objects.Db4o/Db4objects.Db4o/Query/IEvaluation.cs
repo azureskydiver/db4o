@@ -4,41 +4,26 @@ using Db4objects.Db4o.Query;
 
 namespace Db4objects.Db4o.Query
 {
-	/// <summary>for implementation of callback evaluations.</summary>
+	/// <summary>For implementation of callback evaluations.</summary>
 	/// <remarks>
-	/// for implementation of callback evaluations.
+	/// For implementation of callback evaluations.
 	/// <br /><br />
-	/// To constrain a
-	/// <see cref="IQuery">IQuery</see>
-	/// node with your own callback
-	/// <code>Evaluation</code>, construct an object that implements the
-	/// <code>Evaluation</code> interface and register it by passing it
-	/// to
+	/// This is for adding your own constrains to a given query.
+	/// Note that evaluations force db4o to instantiate your objects in order
+	/// to execute the query which slows down to query by an order of magnitude.
+	/// Pass your implementation of this interface to
 	/// <see cref="IQuery.Constrain(object)">IQuery.Constrain(object)</see>
-	/// .
 	/// <br /><br />
 	/// Evaluations are called as the last step during query execution,
-	/// after all other constraints have been applied. Evaluations in higher
-	/// level
-	/// <see cref="IQuery">IQuery</see>
-	/// nodes in the query graph are called first.
-	/// <br /><br />Java client/server only:<br />
-	/// db4o first attempts to use Java Serialization to allow to pass final
-	/// variables to the server. Please make sure that all variables that are
-	/// used within the
-	/// <see cref="Evaluate(ICandidate)">Evaluate(ICandidate)</see>
-	/// method are Serializable. This may include
-	/// the class an anonymous Evaluation object is created in. If db4o is
-	/// not successful at using Serialization, the Evaluation is transported
-	/// to the server in a db4o
-	/// <see cref="Db4objects.Db4o.IO.MemoryBin">Db4objects.Db4o.IO.MemoryBin</see>
-	/// . In this case final variables can
-	/// not be restored.
+	/// after all other constraints have been applied.
+	/// <br /><br />Client-Server over a network only:<br />
+	/// Avoid evaluations, because the evaluation object needs to be serialized, which is hard
+	/// to manage correctly.
 	/// </remarks>
 	public interface IEvaluation
 	{
 		/// <summary>
-		/// callback method during
+		/// Callback method during
 		/// <see cref="IQuery.Execute()">query execution</see>
 		/// .
 		/// </summary>
