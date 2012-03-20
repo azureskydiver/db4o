@@ -247,6 +247,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 			}
 
 		}
+		
+		validateAspects(aspects);
 
 		if (dirty || ! defaultFieldBehaviour) {
 			_aspects = toClassAspectArray(aspects);
@@ -267,6 +269,30 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		}
 		_container.callbacks().classOnRegistered(this);
 		setStateOK();
+	}
+
+	private void validateAspects(Collection4 aspects) {
+		if (hasIncompatibleTranslatorAspect(aspects)) {
+			
+			if (!configImpl().recoveryMode()) {
+				String newLine = System.getProperty("line.separator");
+				throw new Db4oFatalException(
+						"Class " + getName() + " has incompatible aspects configured: " + newLine
+						+ Arrays.toString(aspects.toArray()) + newLine
+						+ "No changes were made to the database. " + newLine 
+						+ "If you want to run with this configuration you can configure recovery mode (see FileConfiguration#recoveryMode()).");
+			}
+		}
+	}
+
+	private boolean hasIncompatibleTranslatorAspect(Collection4 aspects) {
+		if (aspects.size() < 2) return false;
+		
+		for(int i = 0; i < aspects.size(); i++) {
+			ClassAspect current = (ClassAspect) aspects.get(i);
+			if (current.aspectType() == AspectType.TRANSLATOR) return true;
+		}
+		return false;
 	}
 
 	private ClassAspect[] toClassAspectArray(Collection4 aspects) {
